@@ -3,7 +3,7 @@ const sign_in_exp = {
   description: '로그인 화면을 브랜드에 맞게 커스터마이징 그리고 실시간으로 확인해보세요.',
   tabs: {
     branding: '브랜딩',
-    methods: '로그인 방법',
+    sign_up_and_sign_in: 'Sign up and Sign in', // UNTRANSLATED
     others: '기타',
   },
   welcome: {
@@ -34,6 +34,22 @@ const sign_in_exp = {
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
     slogan: '슬로건',
     slogan_placeholder: 'Unleash your creativity',
+  },
+  sign_up_and_sign_in: {
+    identifiers: 'Sign up identifiers', // UNTRANSLATED
+    identifiers_email: 'Email address', // UNTRANSLATED
+    identifiers_phone: 'Phone number', // UNTRANSLATED
+    identifiers_username: 'Username', // UNTRANSLATED
+    identifiers_email_or_phone: 'Email address or phone number', // UNTRANSLATED
+    identifiers_none: 'None', // UNTRANSLATED
+    sign_up: {
+      title: 'SIGN UP', // UNTRANSLATED
+      sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
+      sign_up_authentication: 'Sign up authentication', // UNTRANSLATED
+      set_a_password_option: 'Set a password', // UNTRANSLATED
+      verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
+      social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
+    },
   },
   sign_in_methods: {
     title: '로그인 방법',
@@ -107,11 +123,13 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector: '',
-    no_connector_sms:
+    no_connector_phone:
       'SMS 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
     no_connector_email:
       '이메일 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
-    no_connector_social:
+    no_connector_email_or_phone:
+      'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ', // UNTRANSLATED
+    no_connector_none:
       '소셜 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
     no_added_social_connector:
       '보다 많은 소셜 연동들을 설정하여, 고객에게 보다 나은 경험을 제공해보세요.',

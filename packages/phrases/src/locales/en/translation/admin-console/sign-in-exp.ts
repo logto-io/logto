@@ -3,7 +3,7 @@ const sign_in_exp = {
   description: 'Customize the sign in UI to match your brand and view in real time',
   tabs: {
     branding: 'Branding',
-    methods: 'Sign-in methods',
+    sign_up_and_sign_in: 'Sign up and Sign in', // UNTRANSLATED
     others: 'Others',
   },
   welcome: {
@@ -37,6 +37,22 @@ const sign_in_exp = {
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
     slogan: 'Slogan',
     slogan_placeholder: 'Unleash your creativity',
+  },
+  sign_up_and_sign_in: {
+    identifiers: 'Sign up identifiers', // UNTRANSLATED
+    identifiers_email: 'Email address', // UNTRANSLATED
+    identifiers_phone: 'Phone number', // UNTRANSLATED
+    identifiers_username: 'Username', // UNTRANSLATED
+    identifiers_email_or_phone: 'Email address or phone number', // UNTRANSLATED
+    identifiers_none: 'None', // UNTRANSLATED
+    sign_up: {
+      title: 'SIGN UP', // UNTRANSLATED
+      sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
+      sign_up_authentication: 'Sign up authentication', // UNTRANSLATED
+      set_a_password_option: 'Set a password', // UNTRANSLATED
+      verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
+      social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
+    },
   },
   sign_in_methods: {
     title: 'SIGN-IN METHODS',
@@ -110,11 +126,13 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector: '',
-    no_connector_sms:
+    no_connector_phone:
       'You haven’t set up a SMS connector yet. Your sign in experience won’t go live until you finish the settings first. ',
     no_connector_email:
       'You haven’t set up an Email connector yet. Your sign in experience won’t go live until you finish the settings first. ',
-    no_connector_social:
+    no_connector_email_or_phone:
+      'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
+    no_connector_none:
       'You haven’t set up any social connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
     no_added_social_connector:
       'You’ve set up a few social connectors now. Make sure to add some to your sign in experience.',

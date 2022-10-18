@@ -1,49 +1,58 @@
-import { ConnectorResponse, ConnectorType, SignInMethodKey } from '@logto/schemas';
+import { ConnectorResponse, ConnectorType, SignUpIdentifier } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { snakeCase } from 'snake-case';
 import useSWR from 'swr';
 
 import Alert from '@/components/Alert';
 import { RequestError } from '@/hooks/use-api';
 
 type Props = {
-  method: SignInMethodKey;
+  signUpIdentifier: SignUpIdentifier;
 };
 
-const ConnectorSetupWarning = ({ method }: Props) => {
+const ConnectorSetupWarning = ({ signUpIdentifier }: Props) => {
   const { data: connectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const type = useMemo(() => {
-    if (method === SignInMethodKey.Username) {
-      return;
+  const connectorTypes = useMemo(() => {
+    if (signUpIdentifier === SignUpIdentifier.Username) {
+      return [];
     }
 
-    if (method === SignInMethodKey.Sms) {
-      return ConnectorType.Sms;
+    if (signUpIdentifier === SignUpIdentifier.Email) {
+      return [ConnectorType.Email];
     }
 
-    if (method === SignInMethodKey.Email) {
-      return ConnectorType.Email;
+    if (signUpIdentifier === SignUpIdentifier.Phone) {
+      return [ConnectorType.Sms];
     }
 
-    return ConnectorType.Social;
-  }, [method]);
+    if (signUpIdentifier === SignUpIdentifier.EmailOrPhone) {
+      return [ConnectorType.Email, ConnectorType.Sms];
+    }
 
-  if (!type || !connectors) {
+    return [ConnectorType.Social];
+  }, [signUpIdentifier]);
+
+  if (connectorTypes.length === 0 || !connectors) {
     return null;
   }
 
-  if (connectors.some(({ type: connectorType, enabled }) => connectorType === type && enabled)) {
+  if (
+    connectorTypes.every((connectorType) =>
+      connectors.some(({ type, enabled }) => type === connectorType && enabled)
+    )
+  ) {
     return null;
   }
 
   return (
     <Alert
       action="general.set_up"
-      href={type === ConnectorType.Social ? '/connectors/social' : '/connectors'}
+      href={connectorTypes.includes(ConnectorType.Social) ? '/connectors/social' : '/connectors'}
     >
-      {t('sign_in_exp.setup_warning.no_connector', { context: type.toLowerCase() })}
+      {t('sign_in_exp.setup_warning.no_connector', { context: snakeCase(signUpIdentifier) })}
     </Alert>
   );
 };

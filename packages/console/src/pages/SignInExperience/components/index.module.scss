@@ -10,17 +10,17 @@
   }
 }
 
-.primaryTag {
-  color: var(--color-text-secondary);
+.socialOnlyDescription {
+  margin-left: _.unit(1);
+  color: var(--color-caption);
 }
 
-.method {
-  margin-top: _.unit(3);
+.signUpAuthentication {
+  > :not(:first-child) {
+    margin-top: _.unit(3);
+  }
 }
 
-.primarySocial {
-  margin-top: _.unit(2);
-}
 
 .darkModeTip {
   display: flex;

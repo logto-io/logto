@@ -4,7 +4,7 @@ const sign_in_exp = {
     "Personnalisez l'interface utilisateur pour qu'elle corresponde à votre marque et consultez-la en temps réel.",
   tabs: {
     branding: 'Image de marque',
-    methods: 'Méthodes de connexion',
+    sign_up_and_sign_in: 'Sign up and Sign in', // UNTRANSLATED
     others: 'Autres',
   },
   welcome: {
@@ -39,6 +39,22 @@ const sign_in_exp = {
     dark_logo_image_url_placeholder: 'https://votre.domaine.cdn/logo-dark.png',
     slogan: 'Slogan',
     slogan_placeholder: 'Libérez votre créativité',
+  },
+  sign_up_and_sign_in: {
+    identifiers: 'Sign up identifiers', // UNTRANSLATED
+    identifiers_email: 'Email address', // UNTRANSLATED
+    identifiers_phone: 'Phone number', // UNTRANSLATED
+    identifiers_username: 'Username', // UNTRANSLATED
+    identifiers_email_or_phone: 'Email address or phone number', // UNTRANSLATED
+    identifiers_none: 'None', // UNTRANSLATED
+    sign_up: {
+      title: 'SIGN UP', // UNTRANSLATED
+      sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
+      sign_up_authentication: 'Sign up authentication', // UNTRANSLATED
+      set_a_password_option: 'Set a password', // UNTRANSLATED
+      verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
+      social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
+    },
   },
   sign_in_methods: {
     title: 'METHODES DE CONNEXION',
@@ -112,11 +128,13 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector: '',
-    no_connector_sms:
+    no_connector_phone:
       "Vous n'avez pas encore configuré de connecteur SMS. Votre expérience de connexion ne sera pas disponible tant que vous n'aurez pas terminé les paramètres. ",
     no_connector_email:
       "Vous n'avez pas encore configuré de connecteur Email. Votre expérience de connexion ne sera pas disponible tant que vous n'aurez pas terminé les paramètres. ",
-    no_connector_social:
+    no_connector_email_or_phone:
+      'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ', // UNTRANSLATED
+    no_connector_none:
       "Vous n'avez pas encore configuré de connecteurs sociaux. Votre expérience de connexion ne sera pas disponible tant que vous n'aurez pas terminé les paramètres. ",
     no_added_social_connector:
       "Vous avez maintenant configuré quelques connecteurs sociaux. Assurez-vous d'en ajouter quelques-uns à votre expérience de connexion.",
