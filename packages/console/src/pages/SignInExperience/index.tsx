@@ -25,7 +25,7 @@ import usePreviewConfigs from './hooks';
 import * as styles from './index.module.scss';
 import BrandingTab from './tabs/BrandingTab';
 import OthersTab from './tabs/OthersTab';
-import SignInMethodsTab from './tabs/SignInMethodsTab';
+import SignUpAndSignInTab from './tabs/SignUpAndSignInTab';
 import { SignInExperienceForm } from './types';
 import { compareSignInMethods, signInExperienceParser } from './utilities';
 
@@ -124,8 +124,8 @@ const SignInExperience = () => {
             <TabNavItem href="/sign-in-experience/branding">
               {t('sign_in_exp.tabs.branding')}
             </TabNavItem>
-            <TabNavItem href="/sign-in-experience/methods">
-              {t('sign_in_exp.tabs.methods')}
+            <TabNavItem href="/sign-in-experience/sign-up-and-sign-in">
+              {t('sign_in_exp.tabs.sign_up_and_sign_in')}
             </TabNavItem>
             <TabNavItem href="/sign-in-experience/others">
               {t('sign_in_exp.tabs.others')}
@@ -139,8 +139,8 @@ const SignInExperience = () => {
                   {tab === 'branding' && (
                     <BrandingTab defaultData={defaultFormData} isDataDirty={isDirty} />
                   )}
-                  {tab === 'methods' && (
-                    <SignInMethodsTab defaultData={defaultFormData} isDataDirty={isDirty} />
+                  {tab === 'sign-up-and-sign-in' && (
+                    <SignUpAndSignInTab defaultData={defaultFormData} isDataDirty={isDirty} />
                   )}
                   {tab === 'others' && (
                     <OthersTab defaultData={defaultFormData} isDataDirty={isDirty} />

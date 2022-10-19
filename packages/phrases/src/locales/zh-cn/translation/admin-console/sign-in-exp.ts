@@ -3,7 +3,7 @@ const sign_in_exp = {
   description: '自定义登录界面，并实时预览真实效果',
   tabs: {
     branding: '品牌',
-    methods: '登录方式',
+    sign_up_and_sign_in: 'Sign up and Sign in', // UNTRANSLATED
     others: '其它',
   },
   welcome: {
@@ -35,6 +35,22 @@ const sign_in_exp = {
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
     slogan: '标语',
     slogan_placeholder: '释放你的创意',
+  },
+  sign_up_and_sign_in: {
+    identifiers: 'Sign up identifiers', // UNTRANSLATED
+    identifiers_email: 'Email address', // UNTRANSLATED
+    identifiers_phone: 'Phone number', // UNTRANSLATED
+    identifiers_username: 'Username', // UNTRANSLATED
+    identifiers_email_or_phone: 'Email address or phone number', // UNTRANSLATED
+    identifiers_none: 'None', // UNTRANSLATED
+    sign_up: {
+      title: 'SIGN UP', // UNTRANSLATED
+      sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
+      sign_up_authentication: 'Sign up authentication', // UNTRANSLATED
+      set_a_password_option: 'Set a password', // UNTRANSLATED
+      verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
+      social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
+    },
   },
   sign_in_methods: {
     title: '登录方式',
@@ -105,9 +121,11 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector: '',
-    no_connector_sms: '你还没有设置 SMS 连接器。你需完成设置后登录体验才会生效。',
+    no_connector_phone: '你还没有设置 SMS 连接器。你需完成设置后登录体验才会生效。',
     no_connector_email: '你还没有设置 email 连接器。你需完成设置后登录体验才会生效。',
-    no_connector_social: '你还没有设置社交连接器。你需完成设置后登录体验才会生效。',
+    no_connector_email_or_phone:
+      '你还没有设置 email 和 SMS 连接器。你需完成设置后登录体验才会生效。',
+    no_connector_none: '你还没有设置社交连接器。你需完成设置后登录体验才会生效。',
     no_added_social_connector: '你已经成功设置了一些社交连接器。点按「+」添加一些到你的登录体验。',
   },
   save_alert: {
