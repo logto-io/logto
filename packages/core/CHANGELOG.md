@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.11](https://github.com/logto-io/logto/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2022-10-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* update scripts
+
+### Features
+
+* **cli:** get/set db config key ([0eff1e3](https://github.com/logto-io/logto/commit/0eff1e3591129802f3e9b3286652ef6fc8619cf5))
+* **core,phrases:** add GET /phrase route ([#1959](https://github.com/logto-io/logto/issues/1959)) ([7ce55a8](https://github.com/logto-io/logto/commit/7ce55a8458166d1ca7453f3f637aed202860bf6c))
+
+
+### Bug Fixes
+
+* add redirectURI validation on frontend & backend ([#1874](https://github.com/logto-io/logto/issues/1874)) ([4b0970b](https://github.com/logto-io/logto/commit/4b0970b6d8c6647a6e68bf27fe3db3aeb635768e))
+* **core:** fix deletePasscodeByIds bug ([#2049](https://github.com/logto-io/logto/issues/2049)) ([11b605a](https://github.com/logto-io/logto/commit/11b605a3e7bcef5ecbe24c5a39b8a1a081a54e88))
+
+
+### Miscellaneous Chores
+
+* update scripts ([c96495a](https://github.com/logto-io/logto/commit/c96495ad4ef778a006f0307a9e0a4bf47d0bfdc7))
+
+
+
 ## [1.0.0-beta.10](https://github.com/logto-io/logto/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-09-28)
 
 

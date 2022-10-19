@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.11](https://github.com/logto-io/logto/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2022-10-19)
+
+
+### Features
+
+* **console:** auto detect language setting ([#1941](https://github.com/logto-io/logto/issues/1941)) ([cdfaf8b](https://github.com/logto-io/logto/commit/cdfaf8b1c7fd268f205e4679cfc762d7e3eedfea))
+* **console:** delete custom phrases ([#2065](https://github.com/logto-io/logto/issues/2065)) ([68e8884](https://github.com/logto-io/logto/commit/68e88840bfe4f50682c028188f32bc2480e8d8d7))
+* **console:** display unsaved alert on custom phrases changed ([#1994](https://github.com/logto-io/logto/issues/1994)) ([0679a6a](https://github.com/logto-io/logto/commit/0679a6a67c71203e0bae3489768184a6e564937d))
+* **console:** manage language ([#1981](https://github.com/logto-io/logto/issues/1981)) ([48832e5](https://github.com/logto-io/logto/commit/48832e50548421b876deaf10b1d3379674e7f562))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @logto/language-kit to v1.0.0-beta.16 ([89e4800](https://github.com/logto-io/logto/commit/89e4800ca8e30cbf62a0000fa350ee2f5dd094de))
+
+
+
 ## [1.0.0-beta.10](https://github.com/logto-io/logto/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-09-28)
 
 

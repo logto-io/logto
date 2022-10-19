@@ -1,6 +1,6 @@
 {
   "name": "@logto/create",
-  "version": "1.0.0-beta.10",
+  "version": "1.0.0-beta.11",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "publishConfig": {
@@ -14,6 +14,6 @@
     "node": "^16.0.0"
   },
   "dependencies": {
-    "@logto/cli": "^1.0.0-beta.10"
+    "@logto/cli": "^1.0.0-beta.11"
   }
 }

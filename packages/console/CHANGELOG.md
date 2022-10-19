@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.11](https://github.com/logto-io/logto/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2022-10-19)
+
+
+### Features
+
+* add vertical center support ([#2032](https://github.com/logto-io/logto/issues/2032)) ([5eeb06e](https://github.com/logto-io/logto/commit/5eeb06e301b06d3caad65ece1b7b05cf6e160dd4))
+* **console:** add a11y lint to ac ([#2066](https://github.com/logto-io/logto/issues/2066)) ([37d2b0c](https://github.com/logto-io/logto/commit/37d2b0ce5c09658d5e49be84b891d9a0d83f6f5c))
+* **console:** add custom language ([#2029](https://github.com/logto-io/logto/issues/2029)) ([800ac7f](https://github.com/logto-io/logto/commit/800ac7fcd9592875df29d897e3a704fc6a73fee1))
+* **console:** auto detect language setting ([#1941](https://github.com/logto-io/logto/issues/1941)) ([cdfaf8b](https://github.com/logto-io/logto/commit/cdfaf8b1c7fd268f205e4679cfc762d7e3eedfea))
+* **console:** delete custom phrases ([#2065](https://github.com/logto-io/logto/issues/2065)) ([68e8884](https://github.com/logto-io/logto/commit/68e88840bfe4f50682c028188f32bc2480e8d8d7))
+* **console:** display unsaved alert on custom phrases changed ([#1994](https://github.com/logto-io/logto/issues/1994)) ([0679a6a](https://github.com/logto-io/logto/commit/0679a6a67c71203e0bae3489768184a6e564937d))
+* **console:** manage language ([#1981](https://github.com/logto-io/logto/issues/1981)) ([48832e5](https://github.com/logto-io/logto/commit/48832e50548421b876deaf10b1d3379674e7f562))
+
+
+### Bug Fixes
+
+* add redirectURI validation on frontend & backend ([#1874](https://github.com/logto-io/logto/issues/1874)) ([4b0970b](https://github.com/logto-io/logto/commit/4b0970b6d8c6647a6e68bf27fe3db3aeb635768e))
+* **console:** checkbox styles ([7c85e50](https://github.com/logto-io/logto/commit/7c85e50c4597f6ed0a19384916ea6ef1bb3974a5))
+* **console:** clear select state on close modal ([#2071](https://github.com/logto-io/logto/issues/2071)) ([b6b9d7c](https://github.com/logto-io/logto/commit/b6b9d7ce80aefe7341b3167e18ce4af291052015))
+* **console:** language editor form should be dirty on clear button clicked ([#2037](https://github.com/logto-io/logto/issues/2037)) ([1223d23](https://github.com/logto-io/logto/commit/1223d23eb3f13cce707f6cd5eecd043c476f3514))
+* **console:** remove connector id and prevent text overflow ([#2072](https://github.com/logto-io/logto/issues/2072)) ([05b5025](https://github.com/logto-io/logto/commit/05b50250a387635649614aaeeec9757e7034a19d))
+* **console:** responsive modal items layout ([#2160](https://github.com/logto-io/logto/issues/2160)) ([ac38a7f](https://github.com/logto-io/logto/commit/ac38a7f3ac13b90ffb2ea8a94d40a390d652a62b))
+* **console:** save generated password in session storage ([#2116](https://github.com/logto-io/logto/issues/2116)) ([8a7f875](https://github.com/logto-io/logto/commit/8a7f875767f5d70edc41509ddd1973b87ad16ee9))
+* **console:** set undefined value to empty string in custom phrases ([#2074](https://github.com/logto-io/logto/issues/2074)) ([81f9fbc](https://github.com/logto-io/logto/commit/81f9fbc48379afc7de5d84e3614097ee37a1424b))
+* **console:** show correct password after reset ([#2063](https://github.com/logto-io/logto/issues/2063)) ([02c082c](https://github.com/logto-io/logto/commit/02c082cb71258a931925df87126060fa9d9a2c5d))
+* **console:** use fallback language in preview ([#1960](https://github.com/logto-io/logto/issues/1960)) ([f25ae4d](https://github.com/logto-io/logto/commit/f25ae4de1477feca5a8e077cb05146bb13719e6f))
+
+
+
 ## [1.0.0-beta.10](https://github.com/logto-io/logto/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-09-28)
 
 
