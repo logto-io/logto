@@ -3,6 +3,9 @@
   "version": "1.0.0-beta.10",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "logto-create": "./index.sh"
   },
