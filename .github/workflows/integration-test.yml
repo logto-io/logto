@@ -75,7 +75,7 @@ jobs:
       - name: Extract
         working-directory: tests
         run: |
-          npm run cli init -- -p ../logto --db postgres://postgres:postgres@localhost:5432 --no-oc --du ../logto.tar.gz
+          npm run cli init -- -p ../logto --db postgres://postgres:postgres@localhost:5432/postgres --no-oc --du ../logto.tar.gz
       
       - name: Add mock connectors
         working-directory: tests
@@ -83,12 +83,10 @@ jobs:
           npm run cli connector add @logto/connector-mock-sms @logto/connector-mock-email @logto/connector-mock-social -- -p ../logto
 
       - name: Run Logto
-        working-directory: logto/packages/core
-        run: node . &
+        working-directory: logto/
+        run: npm start &
         env:
           INTEGRATION_TEST: true
-          NODE_ENV: production
-          DB_URL: postgres://postgres:postgres@localhost:5432
 
       - name: Sleep for 5 seconds
         run: sleep 5
