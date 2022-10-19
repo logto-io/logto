@@ -10,18 +10,6 @@
   }
 }
 
-.socialOnlyDescription {
-  margin-left: _.unit(1);
-  color: var(--color-caption);
-}
-
-.signUpAuthentication {
-  > :not(:first-child) {
-    margin-top: _.unit(3);
-  }
-}
-
-
 .darkModeTip {
   display: flex;
   align-items: baseline;

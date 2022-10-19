@@ -8,9 +8,9 @@ import Checkbox from '@/components/Checkbox';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 
-import { SignInExperienceForm } from '../types';
-import ConnectorSetupWarning from './ConnectorSetupWarning';
-import * as styles from './index.module.scss';
+import ConnectorSetupWarning from '../../components/ConnectorSetupWarning';
+import { SignInExperienceForm } from '../../types';
+import * as styles from './SignUpForm.module.scss';
 
 const signUpIdentifiers = Object.values(SignUpIdentifier);
 
@@ -20,7 +20,7 @@ const requireVerifyIdentifiers = new Set([
   SignUpIdentifier.EmailOrPhone,
 ]);
 
-const SignUpAndSignInForm = () => {
+const SignUpForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { control, setValue, resetField, watch } = useFormContext<SignInExperienceForm>();
   const signUpIdentifier = watch('signUp.identifier');
@@ -120,4 +120,4 @@ const SignUpAndSignInForm = () => {
   );
 };
 
-export default SignUpAndSignInForm;
+export default SignUpForm;

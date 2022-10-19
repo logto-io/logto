@@ -3,8 +3,8 @@ import { useFormContext } from 'react-hook-form';
 
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
-import SignUpAndSignInForm from '../components/SignUpAndSignInForm';
-import { SignInExperienceForm } from '../types';
+import { SignInExperienceForm } from '../../types';
+import SignUpForm from './SignUpForm';
 
 type Props = {
   defaultData: SignInExperienceForm;
@@ -22,7 +22,7 @@ const SignUpAndSignInTab = ({ defaultData, isDataDirty }: Props) => {
 
   return (
     <>
-      <SignUpAndSignInForm />
+      <SignUpForm />
       <UnsavedChangesAlertModal hasUnsavedChanges={isDataDirty} />
     </>
   );
