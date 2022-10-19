@@ -21,11 +21,13 @@ export class RequestError extends Error {
 }
 
 const toastError = async (response: Response) => {
+  const fallbackErrorMessage = t('admin_console.errors.unknown_server_error');
+
   try {
     const data = await response.json<RequestErrorBody>();
-    toast.error([data.message, data.details].join('\n') || t('errors.unknown_server_error'));
+    toast.error([data.message, data.details].join('\n') || fallbackErrorMessage);
   } catch {
-    toast.error(t('errors.unknown_server_error'));
+    toast.error(fallbackErrorMessage);
   }
 };
 
