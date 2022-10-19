@@ -1,5 +1,6 @@
 import { SchemaLike } from '@logto/schemas';
 import { convertToPrimitiveOrSql } from '@logto/shared';
+import { assert } from '@silverhand/essentials';
 import decamelize from 'decamelize';
 import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
@@ -18,6 +19,7 @@ export const getDatabaseUrlFromConfig = async () =>
 
 export const createPoolFromConfig = async () => {
   const databaseUrl = await getDatabaseUrlFromConfig();
+  assert(parseDsn(databaseUrl).databaseName, new Error('Database name is required in URL'));
 
   return createPool(databaseUrl, {
     interceptors: createInterceptors(),

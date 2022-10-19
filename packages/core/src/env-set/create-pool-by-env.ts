@@ -1,6 +1,6 @@
-import { assertEnv } from '@silverhand/essentials';
+import { assert, assertEnv } from '@silverhand/essentials';
 import chalk from 'chalk';
-import { createMockPool, createMockQueryResult, createPool } from 'slonik';
+import { createMockPool, createMockQueryResult, createPool, parseDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 
 const createPoolByEnv = async (isTest: boolean) => {
@@ -14,6 +14,7 @@ const createPoolByEnv = async (isTest: boolean) => {
 
   try {
     const databaseDsn = assertEnv(key);
+    assert(parseDsn(databaseDsn).databaseName, new Error('Database name is required in `DB_URL`'));
 
     return await createPool(databaseDsn, { interceptors });
   } catch (error: unknown) {
