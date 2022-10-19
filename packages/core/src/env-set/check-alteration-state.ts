@@ -16,7 +16,7 @@ export const checkAlterationState = async (pool: DatabasePool) => {
       'npm run alteration deploy'
     )} command.\n\n` +
       ` See ${chalk.blue(
-        'https://docs.logto.io/docs/recipes/deployment/#database-alteration'
+        'https://docs.logto.io/docs/tutorials/using-cli/database-alteration'
       )} for reference.\n`
   );
 

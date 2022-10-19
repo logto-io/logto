@@ -13,6 +13,7 @@ Thanks for your interest in contributing to Logto. We respect the time of commun
     - [Prerequisites](#prerequisites)
     - [Clone and install dependencies](#clone-and-install-dependencies)
     - [Set up database](#set-up-database)
+    - [Database alteration](#database-alteration)
     - [Add connectors (optional)](#add-connectors-optional)
   - [Start dev](#start-dev)
   - [Make changes](#make-changes)
@@ -89,6 +90,12 @@ DB_URL=postgresql://your-postgres-dsn/logto # Replace with your own
 ```
 
 Then run `pnpm cli db seed` to seed data into your database.
+
+### Database alteration
+
+If you are upgrading your dev environment from an older version, or facing the `Found undeployed database alterations...` error when starting Logto, you need to deploy the database alteration first.
+
+Run `pnpm run alteration deploy` and start Logto again. See [Database alteration](https://docs.logto.io/docs/tutorials/using-cli/database-alteration) for reference.
 
 ### Add connectors (optional)
 
