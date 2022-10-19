@@ -8,9 +8,9 @@ import Checkbox from '@/components/Checkbox';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 
-import ConnectorSetupWarning from '../../components/ConnectorSetupWarning';
 import { SignInExperienceForm } from '../../types';
-import * as styles from './SignUpForm.module.scss';
+import ConnectorSetupWarning from './ConnectorSetupWarning';
+import * as styles from './index.module.scss';
 
 const signUpIdentifiers = Object.values(SignUpIdentifier);
 
