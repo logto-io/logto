@@ -460,7 +460,7 @@ importers:
   packages/integration-tests:
     specifiers:
       '@jest/types': ^29.1.2
-      '@logto/node': 1.0.0-beta.8
+      '@logto/node': 1.0.0-beta.9
       '@logto/schemas': ^1.0.0-beta.12
       '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': 1.2.0
@@ -485,7 +485,7 @@ importers:
       typescript: ^4.7.4
     devDependencies:
       '@jest/types': 29.1.2
-      '@logto/node': 1.0.0-beta.8
+      '@logto/node': 1.0.0-beta.9
       '@logto/schemas': link:../schemas
       '@peculiar/webcrypto': 1.3.3
       '@silverhand/eslint-config': 1.2.0_swk2g7ygmfleszo5c33j4vooni
@@ -2114,16 +2114,16 @@ packages:
   /@logto/browser/1.0.0-beta.8:
     resolution: {integrity: sha512-PaTtd4f5FBdwd5N4F5ByHh/+LrlqKYh951g47xdEzKdNn47HQAecxhXuvg8hYZXCopaWv73/7bsJgAoivhNM4Q==}
     dependencies:
-      '@logto/client': 1.0.0-beta.8
+      '@logto/client': 1.0.0-beta.9
       '@silverhand/essentials': 1.3.0
       js-base64: 3.7.2
     dev: true
 
-  /@logto/client/1.0.0-beta.8:
-    resolution: {integrity: sha512-pFqPTF8ZUrT1PhlRmI+04HjJ5YBqNM7CBJPYxy2fK3PN3IpzgV6zNvTW9K/JuxFSYlu/2VR7x7xJ46Qs3G6Kmg==}
+  /@logto/client/1.0.0-beta.9:
+    resolution: {integrity: sha512-Vndgkd3bs8gMVq+JoGPnJsZgwG6e+9QyuJo5AXay0Gk/Q/swjjI7hoIhMvsnesv4thvS6bYzqiljMoalcQOShQ==}
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.14
-      '@logto/js': 1.0.0-beta.8
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/js': 1.0.0-beta.9
       '@silverhand/essentials': 1.3.0
       camelcase-keys: 7.0.2
       jose: 4.6.0
@@ -2151,10 +2151,11 @@ packages:
       zod: 3.18.0
     dev: false
 
-  /@logto/core-kit/1.0.0-beta.14:
-    resolution: {integrity: sha512-nyRlOU92k65TRHA7WaeM2ktiy0OmCooD8OXW9XxEOx4d6tJUReuFisPmNEh8bV3wK41fSy3zRwo93SAF6nSlRQ==}
+  /@logto/core-kit/1.0.0-beta.16:
+    resolution: {integrity: sha512-6f03W+FczXOusWPB9PiMz8mIMIaylYEyPSmICmN8YmIUJgD7jN1tHRJSZjnuo/8h2L6szm/8oNGqcxgIpBjeWg==}
     engines: {node: ^16.0.0}
     dependencies:
+      '@logto/language-kit': 1.0.0-beta.19
       color: 4.2.3
       nanoid: 3.3.4
       zod: 3.18.0
@@ -2179,10 +2180,10 @@ packages:
       zod: 3.18.0
     dev: false
 
-  /@logto/js/1.0.0-beta.8:
-    resolution: {integrity: sha512-Xo63sYZHnoFV+UTCtxRvGk+RuC3yJ3aDEpVDqShSZyfqY0xwGU5naIWHQXOd4koqkAQtp613AdL0qsEshrSl7Q==}
+  /@logto/js/1.0.0-beta.9:
+    resolution: {integrity: sha512-U1858SD8EfFQtfDSY+wpTtGmSi02M65duiTFactEccTpmKxQ1iM0hifXlsmNAcExmTeUniCtcPgrALC5eXj5MA==}
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.14
+      '@logto/core-kit': 1.0.0-beta.16
       '@silverhand/essentials': 1.3.0
       camelcase-keys: 7.0.2
       jose: 4.6.0
@@ -2195,10 +2196,10 @@ packages:
     dependencies:
       zod: 3.18.0
 
-  /@logto/node/1.0.0-beta.8:
-    resolution: {integrity: sha512-IsQeFGhycUyX1R3/DiODK/nL2tsZaoeITKgqeJP68jiJnO51wPT9ewlFnJ656l/4bCA791oH71WTeeSvKJ8L2w==}
+  /@logto/node/1.0.0-beta.9:
+    resolution: {integrity: sha512-NxjcGEaKflaiFo4MlfKP+XZqHgAEbKh/nRE8Stm/NqR7EHeZTRANMLqIcu64B8YCN0DAWT01e8hsKh/g89+h1Q==}
     dependencies:
-      '@logto/client': 1.0.0-beta.8
+      '@logto/client': 1.0.0-beta.9
       '@silverhand/essentials': 1.3.0
       js-base64: 3.7.2
       node-fetch: 2.6.7

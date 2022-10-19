@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@jest/types": "^29.1.2",
-    "@logto/node": "1.0.0-beta.8",
+    "@logto/node": "1.0.0-beta.9",
     "@logto/schemas": "^1.0.0-beta.12",
     "@peculiar/webcrypto": "^1.3.3",
     "@silverhand/eslint-config": "1.2.0",
