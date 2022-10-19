@@ -6,9 +6,12 @@
   "license": "MPL-2.0",
   "files": [
     "lib",
-    "alterations"
+    "alterations",
+    "tables"
   ],
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "precommit": "lint-staged",
     "version": "./update-next.sh && git add alterations/",
