@@ -95,7 +95,9 @@ Then run `pnpm cli db seed` to seed data into your database.
 
 If you are upgrading your dev environment from an older version, or facing the `Found undeployed database alterations...` error when starting Logto, you need to deploy the database alteration first.
 
-Run `pnpm run alteration deploy` and start Logto again. See [Database alteration](https://docs.logto.io/docs/tutorials/using-cli/database-alteration) for reference.
+Run `pnpm alteration deploy` and start Logto again. See [Database alteration](https://docs.logto.io/docs/tutorials/using-cli/database-alteration) for reference of this command.
+
+If you are developing something with database alterations, see [packages/schemas/alteration](https://github.com/logto-io/logto/tree/master/packages/schemas/alterations) to learn more.
 
 ### Add connectors (optional)
 
@@ -109,7 +111,7 @@ Run the command below in the project root:
 pnpm dev
 ```
 
-The command will watch the changes of most of the packages and restart services when needed.
+The command will watch the changes in most of the packages and restart services when needed.
 
 ## Make changes
 
