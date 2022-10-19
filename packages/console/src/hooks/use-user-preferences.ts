@@ -1,4 +1,4 @@
-import { languageKeys } from '@logto/core-kit';
+import { builtInLanguages as builtInConsoleLanguages } from '@logto/phrases';
 import { useLogto } from '@logto/react';
 import { AppearanceMode } from '@logto/schemas';
 import { Nullable, Optional } from '@silverhand/essentials';
@@ -14,7 +14,7 @@ import useApi, { RequestError } from './use-api';
 import useLogtoUserId from './use-logto-user-id';
 
 const userPreferencesGuard = z.object({
-  language: z.enum(languageKeys).optional(),
+  language: z.enum(builtInConsoleLanguages).optional(),
   appearanceMode: z.nativeEnum(AppearanceMode),
   experienceNoticeConfirmed: z.boolean().optional(),
   getStartedHidden: z.boolean().optional(),
