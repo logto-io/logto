@@ -14,8 +14,7 @@ RUN pnpm i
 RUN pnpm -r build
 
 # Add official connectors
-WORKDIR /etc/logto
-RUN pnpm cli connector add --official
+RUN pnpm cli connector add --official -p .
 
 # Prune dependencies for production
 RUN rm -rf node_modules packages/*/node_modules

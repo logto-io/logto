@@ -4,6 +4,7 @@ import { mkdir } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 
+import { assert } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { remove, writeFile } from 'fs-extra';
 import inquirer from 'inquirer';
@@ -11,7 +12,15 @@ import * as semver from 'semver';
 import tar from 'tar';
 
 import { createPoolAndDatabaseIfNeeded } from '../../database';
-import { cliConfig, ConfigKey, downloadFile, log, oraPromise, safeExecSync } from '../../utilities';
+import {
+  cliConfig,
+  ConfigKey,
+  downloadFile,
+  isTty,
+  log,
+  oraPromise,
+  safeExecSync,
+} from '../../utilities';
 import { seedByPool } from '../database/seed';
 
 export const defaultPath = path.join(os.homedir(), 'logto');
@@ -38,6 +47,12 @@ const validatePath = (value: string) =>
     : true;
 
 export const inquireInstancePath = async (initialPath?: string) => {
+  if (!isTty()) {
+    assert(initialPath, new Error('Path is missing'));
+
+    return initialPath;
+  }
+
   const { instancePath } = await inquirer.prompt<{ instancePath: string }>(
     {
       name: 'instancePath',
@@ -61,7 +76,7 @@ export const inquireInstancePath = async (initialPath?: string) => {
 };
 
 export const validateDatabase = async () => {
-  if (cliConfig.has(ConfigKey.DatabaseUrl)) {
+  if (cliConfig.has(ConfigKey.DatabaseUrl) || !isTty()) {
     return;
   }
 
