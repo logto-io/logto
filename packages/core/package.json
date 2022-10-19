@@ -22,7 +22,7 @@
     "@logto/cli": "^1.0.0-beta.10",
     "@logto/connector-kit": "^1.0.0-beta.18",
     "@logto/core-kit": "^1.0.0-beta.18",
-    "@logto/language-kit": "^1.0.0-beta.16",
+    "@logto/language-kit": "1.0.0-beta.19",
     "@logto/phrases": "^1.0.0-beta.10",
     "@logto/phrases-ui": "^1.0.0-beta.10",
     "@logto/schemas": "^1.0.0-beta.10",
