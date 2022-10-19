@@ -6,7 +6,8 @@
   "license": "MPL-2.0",
   "files": [
     "lib",
-    "alterations"
+    "alterations",
+    "tables"
   ],
   "publishConfig": {
     "access": "public"
