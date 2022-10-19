@@ -1,7 +1,7 @@
-import { User } from '@logto/schemas';
+import { SignUpIdentifier, User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
-import { mockUser } from '@/__mocks__';
+import { mockSignInExperience, mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
@@ -10,6 +10,13 @@ import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const findDefaultSignInExperience = jest.fn(async () => ({
+  ...mockSignInExperience,
+  signUp: {
+    ...mockSignInExperience.signUp,
+    identifier: SignUpIdentifier.EmailOrPhone,
+  },
+}));
 
 jest.mock('@/lib/user', () => ({
   generateUserId: () => 'user1',
@@ -24,6 +31,10 @@ jest.mock('@/queries/user', () => ({
   hasUser: async (username: string) => username === 'username1',
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
+}));
+
+jest.mock('@/queries/sign-in-experience', () => ({
+  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
@@ -245,6 +256,21 @@ describe('session -> passwordlessRoutes', () => {
         .send({ phone: '13000000001', code: '1231' });
       expect(response.statusCode).toEqual(400);
     });
+
+    it('throws if sign up identifier does not contain phone', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signUp: {
+          ...mockSignInExperience.signUp,
+          identifier: SignUpIdentifier.Email,
+        },
+      });
+
+      const response = await sessionRequest
+        .post(`${registerRoute}/sms/verify-passcode`)
+        .send({ phone: '13000000001', code: '1234' });
+      expect(response.statusCode).toEqual(422);
+    });
   });
 
   describe('POST /session/register/passwordless/email/send-passcode', () => {
@@ -314,6 +340,21 @@ describe('session -> passwordlessRoutes', () => {
         .post(`${signInRoute}/email/verify-passcode`)
         .send({ email: 'a@a.com', code: '1231' });
       expect(response.statusCode).toEqual(400);
+    });
+
+    it('throws if sign up identifier does not contain email', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signUp: {
+          ...mockSignInExperience.signUp,
+          identifier: SignUpIdentifier.Phone,
+        },
+      });
+
+      const response = await sessionRequest
+        .post(`${registerRoute}/email/verify-passcode`)
+        .send({ email: 'b@a.com', code: '1234' });
+      expect(response.statusCode).toEqual(422);
     });
   });
 });

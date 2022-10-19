@@ -1,8 +1,8 @@
-import { User, UserRole } from '@logto/schemas';
+import { SignUpIdentifier, User, UserRole } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
-import { mockUser } from '@/__mocks__';
+import { mockSignInExperience, mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
@@ -12,6 +12,13 @@ const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const hasActiveUsers = jest.fn(async () => true);
+const findDefaultSignInExperience = jest.fn(async () => ({
+  ...mockSignInExperience,
+  signUp: {
+    ...mockSignInExperience.signUp,
+    identifier: SignUpIdentifier.Username,
+  },
+}));
 
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
@@ -25,6 +32,10 @@ jest.mock('@/queries/user', () => ({
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
   hasActiveUsers: async () => hasActiveUsers(),
+}));
+
+jest.mock('@/queries/sign-in-experience', () => ({
+  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
 jest.mock('@/lib/user', () => ({
@@ -207,6 +218,23 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest
         .post(registerRoute)
         .send({ username: 'username1', password: 'password' });
+      expect(response.statusCode).toEqual(422);
+    });
+
+    it('throws if sign up identifier is not username', async () => {
+      interactionDetails.mockResolvedValueOnce({ params: {} });
+
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signUp: {
+          ...mockSignInExperience.signUp,
+          identifier: SignUpIdentifier.Email,
+        },
+      });
+
+      const response = await sessionRequest
+        .post(registerRoute)
+        .send({ username: 'username', password: 'password' });
       expect(response.statusCode).toEqual(422);
     });
   });

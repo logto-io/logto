@@ -1,3 +1,4 @@
+import { SignUpIdentifier } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 
@@ -26,6 +27,7 @@ import {
   setUpConnector,
   readPasscode,
   createUserByAdmin,
+  setSignUpIdentifier,
 } from '@/helpers';
 import { generateUsername, generatePassword, generateEmail, generatePhone } from '@/utils';
 
@@ -45,6 +47,7 @@ describe('username and password flow', () => {
 describe('email passwordless flow', () => {
   beforeAll(async () => {
     await setUpConnector(mockEmailConnectorId, mockEmailConnectorConfig);
+    await setSignUpIdentifier(SignUpIdentifier.Email);
   });
 
   // Since we can not create a email register user throw admin. Have to run the register then sign-in concurrently.
@@ -118,6 +121,7 @@ describe('email passwordless flow', () => {
 describe('sms passwordless flow', () => {
   beforeAll(async () => {
     await setUpConnector(mockSmsConnectorId, mockSmsConnectorConfig);
+    await setSignUpIdentifier(SignUpIdentifier.Phone);
   });
 
   // Since we can not create a sms register user throw admin. Have to run the register then sign-in concurrently.
@@ -194,6 +198,7 @@ describe('sign-in and sign-out', () => {
 
   beforeAll(async () => {
     await createUserByAdmin(username, password);
+    await setSignUpIdentifier(SignUpIdentifier.Username);
   });
 
   it('verify sign-in and then sign-out', async () => {
