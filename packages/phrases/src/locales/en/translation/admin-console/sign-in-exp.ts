@@ -3,7 +3,7 @@ const sign_in_exp = {
   description: 'Customize the sign in UI to match your brand and view in real time',
   tabs: {
     branding: 'Branding',
-    sign_up_and_sign_in: 'Sign up and Sign in', // UNTRANSLATED
+    sign_up_and_sign_in: 'Sign up and Sign in',
     others: 'Others',
   },
   welcome: {
