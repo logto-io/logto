@@ -55,12 +55,12 @@ curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/docker-compose.
 TAG=prerelease docker compose -p logto -f - up
 ```
 
-#### One-liner script
+#### npm-init
 
 Requires [Node.js](https://nodejs.org/) `^16.13.0` + [PostgreSQL](https://postgresql.org/) `^14.0`.
 
 ```bash
-node -e "$(printf "%s" "$(curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/install.js)")"
+npm init @logto
 ```
 
 ## Language support
