@@ -561,7 +561,7 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-kit': 1.0.0-beta.18
+      '@logto/connector-kit': 1.0.0-beta.19
       '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.19
       '@logto/phrases': ^1.0.0-beta.12
@@ -586,7 +586,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.18.0
     dependencies:
-      '@logto/connector-kit': 1.0.0-beta.18
+      '@logto/connector-kit': 1.0.0-beta.19
       '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.19
       '@logto/phrases': link:../phrases
@@ -2141,6 +2141,16 @@ packages:
       zod: 3.18.0
     dev: false
 
+  /@logto/connector-kit/1.0.0-beta.19:
+    resolution: {integrity: sha512-ybSgeF841ondEm3zcOX1UH+0f5G5JyPwRV1Gwrr83MdYQ9HV/q1mBoeEqaCTI2fmTEhRdTS9l2QtPHkyipw/Vw==}
+    engines: {node: ^16.0.0}
+    dependencies:
+      '@logto/core-kit': 1.0.0-beta.19
+      '@logto/language-kit': 1.0.0-beta.19
+      '@silverhand/essentials': 1.3.0
+      zod: 3.18.0
+    dev: false
+
   /@logto/core-kit/1.0.0-beta.14:
     resolution: {integrity: sha512-nyRlOU92k65TRHA7WaeM2ktiy0OmCooD8OXW9XxEOx4d6tJUReuFisPmNEh8bV3wK41fSy3zRwo93SAF6nSlRQ==}
     engines: {node: ^16.0.0}
@@ -2158,6 +2168,16 @@ packages:
       color: 4.2.3
       nanoid: 3.3.4
       zod: 3.18.0
+
+  /@logto/core-kit/1.0.0-beta.19:
+    resolution: {integrity: sha512-cqwfz+Ic/t7mV23QUEXWeRaLTqN71NSv02adaul8VWZQg4IePOlWLLaiTyY6ods88f3ZOarIBlJ5fYexw3J8qg==}
+    engines: {node: ^16.0.0}
+    dependencies:
+      '@logto/language-kit': 1.0.0-beta.19
+      color: 4.2.3
+      nanoid: 3.3.4
+      zod: 3.18.0
+    dev: false
 
   /@logto/js/1.0.0-beta.8:
     resolution: {integrity: sha512-Xo63sYZHnoFV+UTCtxRvGk+RuC3yJ3aDEpVDqShSZyfqY0xwGU5naIWHQXOd4koqkAQtp613AdL0qsEshrSl7Q==}
@@ -7048,7 +7068,6 @@ packages:
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
-    dev: true
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
@@ -8935,7 +8954,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
 
   /jsonparse/1.3.1:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
