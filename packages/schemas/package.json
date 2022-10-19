@@ -8,7 +8,9 @@
     "lib",
     "alterations"
   ],
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "precommit": "lint-staged",
     "version": "./update-next.sh && git add alterations/",
