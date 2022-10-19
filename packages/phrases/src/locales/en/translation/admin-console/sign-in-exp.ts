@@ -39,19 +39,19 @@ const sign_in_exp = {
     slogan_placeholder: 'Unleash your creativity',
   },
   sign_up_and_sign_in: {
-    identifiers: 'Sign up identifiers', // UNTRANSLATED
-    identifiers_email: 'Email address', // UNTRANSLATED
-    identifiers_phone: 'Phone number', // UNTRANSLATED
-    identifiers_username: 'Username', // UNTRANSLATED
-    identifiers_email_or_phone: 'Email address or phone number', // UNTRANSLATED
-    identifiers_none: 'None', // UNTRANSLATED
+    identifiers: 'Sign up identifiers',
+    identifiers_email: 'Email address',
+    identifiers_phone: 'Phone number',
+    identifiers_username: 'Username',
+    identifiers_email_or_phone: 'Email address or phone number',
+    identifiers_none: 'None',
     sign_up: {
-      title: 'SIGN UP', // UNTRANSLATED
-      sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
-      sign_up_authentication: 'Sign up authentication', // UNTRANSLATED
-      set_a_password_option: 'Set a password', // UNTRANSLATED
-      verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
-      social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
+      title: 'SIGN UP',
+      sign_up_identifier: 'Sign up identifier',
+      sign_up_authentication: 'Sign up authentication',
+      set_a_password_option: 'Set a password',
+      verify_at_sign_up_option: 'Verify at sign up',
+      social_only_creation_description: '(This apply to social only account creation)',
     },
   },
   sign_in_methods: {
