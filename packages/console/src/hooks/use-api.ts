@@ -1,7 +1,6 @@
 import { useLogto } from '@logto/react';
 import { RequestErrorBody } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
-import { t } from 'i18next';
 import ky from 'ky';
 import { useMemo } from 'react';
 import { toast } from 'react-hot-toast';
@@ -20,15 +19,21 @@ export class RequestError extends Error {
   }
 }
 
-const toastError = async (response: Response) => {
-  const fallbackErrorMessage = t('admin_console.errors.unknown_server_error');
+const useToastError = () => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  try {
-    const data = await response.json<RequestErrorBody>();
-    toast.error([data.message, data.details].join('\n') || fallbackErrorMessage);
-  } catch {
-    toast.error(fallbackErrorMessage);
-  }
+  const toastError = async (response: Response) => {
+    const fallbackErrorMessage = t('errors.unknown_server_error');
+
+    try {
+      const data = await response.json<RequestErrorBody>();
+      toast.error([data.message, data.details].join('\n') || fallbackErrorMessage);
+    } catch {
+      toast.error(fallbackErrorMessage);
+    }
+  };
+
+  return toastError;
 };
 
 type Props = {
@@ -38,6 +43,7 @@ type Props = {
 const useApi = ({ hideErrorToast }: Props = {}) => {
   const { isAuthenticated, getAccessToken } = useLogto();
   const { i18n } = useTranslation();
+  const toastError = useToastError();
 
   const api = useMemo(
     () =>
@@ -64,7 +70,7 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
           ],
         },
       }),
-    [hideErrorToast, isAuthenticated, getAccessToken, i18n.language]
+    [hideErrorToast, toastError, isAuthenticated, getAccessToken, i18n.language]
   );
 
   return api;
