@@ -1,6 +1,6 @@
 {
   "name": "@logto/shared",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-beta.12",
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -43,7 +43,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/schemas": "^1.0.0-beta.11",
+    "@logto/schemas": "^1.0.0-beta.12",
     "@silverhand/essentials": "^1.3.0",
     "dayjs": "^1.10.5",
     "find-up": "^5.0.0",

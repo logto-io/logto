@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.12](https://github.com/logto-io/logto/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2022-10-19)
+
+
+### Bug Fixes
+
+* add tables to schemas files ([582f3d6](https://github.com/logto-io/logto/commit/582f3d615862c3d8b2c00d8e60a3617429d48e30))
+* handle versioning when no `next-*.ts` found ([#2202](https://github.com/logto-io/logto/issues/2202)) ([61336df](https://github.com/logto-io/logto/commit/61336dfbc833c96ddce88be5082b82a30527ee73))
+* make packages public ([e24fd04](https://github.com/logto-io/logto/commit/e24fd0479bc20c92bd38b5e214abe441404ce496))
+
+
+
 ## [1.0.0-beta.11](https://github.com/logto-io/logto/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2022-10-19)
 
 
