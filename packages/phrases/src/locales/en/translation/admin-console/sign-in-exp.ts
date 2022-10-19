@@ -53,6 +53,15 @@ const sign_in_exp = {
       verify_at_sign_up_option: 'Verify at sign up',
       social_only_creation_description: '(This apply to social only account creation)',
     },
+    sign_in: {
+      title: 'SIGN IN',
+      sign_in_identifier_and_auth: 'Sign in identifier and authentication',
+      description:
+        'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.',
+      password_auth: 'Password',
+      verification_code_auth: 'Verification code',
+      auth_swap_tip: 'Swap to change the priority',
+    },
   },
   sign_in_methods: {
     title: 'SIGN-IN METHODS',
@@ -126,13 +135,13 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector: '',
-    no_connector_phone:
+    no_connector_sms:
       'You haven’t set up a SMS connector yet. Your sign in experience won’t go live until you finish the settings first. ',
     no_connector_email:
       'You haven’t set up an Email connector yet. Your sign in experience won’t go live until you finish the settings first. ',
-    no_connector_email_or_phone:
+    no_connector_email_or_sms:
       'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
-    no_connector_none:
+    no_connector_social:
       'You haven’t set up any social connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
     no_added_social_connector:
       'You’ve set up a few social connectors now. Make sure to add some to your sign in experience.',

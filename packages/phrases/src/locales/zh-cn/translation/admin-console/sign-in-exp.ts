@@ -51,6 +51,15 @@ const sign_in_exp = {
       verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
       social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
     },
+    sign_in: {
+      title: 'SIGN IN', // UNTRANSLATED
+      sign_in_identifier_and_auth: 'Sign in identifier and authentication', // UNTRANSLATED
+      description:
+        'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.', // UNTRANSLATED
+      password_auth: 'Password', // UNTRANSLATED
+      verification_code_auth: 'Verification code', // UNTRANSLATED
+      auth_swap_tip: 'Swap to change the priority', // UNTRANSLATED
+    },
   },
   sign_in_methods: {
     title: '登录方式',
@@ -121,11 +130,10 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector: '',
-    no_connector_phone: '你还没有设置 SMS 连接器。你需完成设置后登录体验才会生效。',
+    no_connector_sms: '你还没有设置 SMS 连接器。你需完成设置后登录体验才会生效。',
     no_connector_email: '你还没有设置 email 连接器。你需完成设置后登录体验才会生效。',
-    no_connector_email_or_phone:
-      '你还没有设置 email 和 SMS 连接器。你需完成设置后登录体验才会生效。',
-    no_connector_none: '你还没有设置社交连接器。你需完成设置后登录体验才会生效。',
+    no_connector_email_or_sms: '你还没有设置 email 和 SMS 连接器。你需完成设置后登录体验才会生效。',
+    no_connector_social: '你还没有设置社交连接器。你需完成设置后登录体验才会生效。',
     no_added_social_connector: '你已经成功设置了一些社交连接器。点按「+」添加一些到你的登录体验。',
   },
   save_alert: {

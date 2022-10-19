@@ -54,6 +54,15 @@ const sign_in_exp = {
       verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
       social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
     },
+    sign_in: {
+      title: 'SIGN IN', // UNTRANSLATED
+      sign_in_identifier_and_auth: 'Sign in identifier and authentication', // UNTRANSLATED
+      description:
+        'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.', // UNTRANSLATED
+      password_auth: 'Password', // UNTRANSLATED
+      verification_code_auth: 'Verification code', // UNTRANSLATED
+      auth_swap_tip: 'Swap to change the priority', // UNTRANSLATED
+    },
   },
   sign_in_methods: {
     title: 'OTURUM AÇMA YÖNTEMLERİ',
@@ -127,13 +136,13 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector: '',
-    no_connector_phone:
+    no_connector_sms:
       'Henüz bir SMS bağlayıcısı kurmadınız. Öncelikle ayarları tamamlayana kadar oturum açma deneyiminiz yayınlanmayacaktır. ',
     no_connector_email:
       'Henüz bir e-posta adresi bağlayıcısı kurmadınız. Öncelikle ayarları tamamlayana kadar oturum açma deneyiminiz yayınlanmayacaktır. ',
-    no_connector_email_or_phone:
+    no_connector_email_or_sms:
       'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ', // UNTRANSLATED
-    no_connector_none:
+    no_connector_social:
       'Henüz herhangi bir social connector kurmadınız. Öncelikle ayarları tamamlayana kadar oturum açma deneyiminiz yayınlanmayacaktır. ',
     no_added_social_connector:
       'Şimdi birkaç social connector kurdunuz. Oturum açma deneyiminize bazı şeyler eklediğinizden emin olun.',
