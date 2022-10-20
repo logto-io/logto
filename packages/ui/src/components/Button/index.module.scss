@@ -11,8 +11,8 @@
   -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.2s ease-in-out;
-  white-space: nowrap;
   user-select: none;
+  overflow: hidden;
 }
 
 .large {
