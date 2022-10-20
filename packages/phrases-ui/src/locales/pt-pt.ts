@@ -1,4 +1,4 @@
-import { LocalePhrase } from '../types';
+import en from './en';
 
 const translation = {
   input: {
@@ -21,7 +21,6 @@ const translation = {
     enter_passcode: 'Digite a senha',
     confirm: 'Confirmar',
     cancel: 'Cancelar',
-    save_password: 'Save', // UNTRANSLATED
     bind: 'Agregar a {{address}}',
     back: 'Voltar',
     nav_back: 'Anterior',
@@ -58,7 +57,6 @@ const translation = {
     reset_password_description_sms:
       'Digite o número de telefone associado à sua conta e enviaremos uma mensagem de texto com o código de verificação para redefinir sua senha.',
     new_password: 'Nova Senha',
-    password_changed: 'Password Changed', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'O Utilizador e a password não correspondem',
@@ -80,7 +78,7 @@ const translation = {
   },
 };
 
-const ptPT: LocalePhrase = Object.freeze({
+const ptPT: typeof en = Object.freeze({
   translation,
 });
 

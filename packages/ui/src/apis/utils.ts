@@ -51,11 +51,7 @@ export const getSendPasscodeApi = (
 export const getVerifyPasscodeApi = (
   type: UserFlow,
   method: PasscodeChannel
-): ((
-  _address: string,
-  code: string,
-  socialToBind?: string
-) => Promise<{ redirectTo?: string; success?: boolean }>) => {
+): ((_address: string, code: string, socialToBind?: string) => Promise<{ redirectTo: string }>) => {
   if (type === 'forgot-password' && method === 'email') {
     return verifyForgotPasswordEmailPasscode;
   }

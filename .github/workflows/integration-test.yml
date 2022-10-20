@@ -19,10 +19,17 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
 
       - name: Build
-        run: pnpm -r build
+        run: pnpm -- lerna run build --stream
+
+      - name: Add the mock connectors for integration tests only
+        run: |
+          pnpm add-connector @logto/connector-mock-sms
+          pnpm add-connector @logto/connector-mock-email
+          pnpm add-connector @logto/connector-mock-social
+        working-directory: packages/core
 
       - name: Package
         run: ./package.sh
@@ -53,14 +60,15 @@ jobs:
           cp tests/package.json ./
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
         with:
           run-install: false
 
       # Setup integration test
       - name: Install dependencies
         run: |
-          cd tests
+          mv tests /tmp/tests
+          cd /tmp/tests
           pnpm i
           pnpm prepack
 
@@ -73,22 +81,15 @@ jobs:
           name: integration-test-${{ github.sha }}
 
       - name: Extract
-        working-directory: tests
-        run: |
-          npm run cli init -- -p ../logto --db postgres://postgres:postgres@localhost:5432 --no-oc --du ../logto.tar.gz
-      
-      - name: Add mock connectors
-        working-directory: tests
-        run: |
-          npm run cli connector add @logto/connector-mock-sms @logto/connector-mock-email @logto/connector-mock-social -- -p ../logto
+        run: tar -xzf logto.tar.gz
 
       - name: Run Logto
+        run: node . --from-root --all-yes &
         working-directory: logto/packages/core
-        run: node . &
         env:
           INTEGRATION_TEST: true
           NODE_ENV: production
-          DB_URL: postgres://postgres:postgres@localhost:5432
+          DB_URL_DEFAULT: postgres://postgres:postgres@localhost:5432
 
       - name: Sleep for 5 seconds
         run: sleep 5
@@ -96,7 +97,7 @@ jobs:
       # Test
       - name: Run tests
         run: |
-          cd tests/packages/integration-tests
+          cd /tmp/tests/packages/integration-tests
           pnpm start
         env:
           INTEGRATION_TESTS_LOGTO_URL: http://localhost:3001

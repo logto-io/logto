@@ -1,7 +1,7 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import ReactModal from 'react-modal';
 
-import Close from '@/assets/images/close.svg';
+import Close from '@/icons/Close';
 
 import CardTitle from '../CardTitle';
 import IconButton from '../IconButton';
@@ -20,8 +20,6 @@ const Drawer = ({ title, subtitle, isOpen, children, onClose }: Props) => {
   return (
     <ReactModal
       shouldCloseOnOverlayClick
-      // Styling purpose
-      // eslint-disable-next-line jsx-a11y/aria-role
       role="drawer"
       isOpen={isOpen}
       className={styles.content}

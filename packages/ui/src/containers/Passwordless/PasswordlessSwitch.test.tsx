@@ -33,10 +33,7 @@ describe('<PasswordlessSwitch />', () => {
     const link = getByText('action.switch_to');
     fireEvent.click(link);
 
-    expect(mockedNavigate).toBeCalledWith(
-      { pathname: '/forgot-password/email' },
-      { replace: true }
-    );
+    expect(mockedNavigate).toBeCalledWith({ pathname: '/forgot-password/email' });
   });
 
   test('render email passwordless switch', () => {
@@ -53,7 +50,7 @@ describe('<PasswordlessSwitch />', () => {
     const link = getByText('action.switch_to');
     fireEvent.click(link);
 
-    expect(mockedNavigate).toBeCalledWith({ pathname: '/forgot-password/sms' }, { replace: true });
+    expect(mockedNavigate).toBeCalledWith({ pathname: '/forgot-password/sms' });
   });
 
   test('should not render the switch if SIE setting does not has the supported sign in method', () => {

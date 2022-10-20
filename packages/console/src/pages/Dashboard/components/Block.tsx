@@ -4,11 +4,10 @@ import classNames from 'classnames';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ArrowDown from '@/assets/images/arrow-down.svg';
-import ArrowUp from '@/assets/images/arrow-up.svg';
-import Tip from '@/assets/images/tip.svg';
 import Card from '@/components/Card';
 import Tooltip from '@/components/Tooltip';
+import { ArrowDown, ArrowUp } from '@/icons/Arrow';
+import Tip from '@/icons/Tip';
 import { formatNumberWithComma } from '@/utilities/number';
 
 import * as styles from './Block.module.scss';

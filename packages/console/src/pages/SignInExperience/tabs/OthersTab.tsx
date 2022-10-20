@@ -25,7 +25,7 @@ const OthersTab = ({ defaultData, isDataDirty }: Props) => {
   return (
     <>
       <TermsForm />
-      <LanguagesForm isManageLanguageVisible />
+      <LanguagesForm />
       <AuthenticationForm />
       <UnsavedChangesAlertModal hasUnsavedChanges={isDataDirty} />
     </>

@@ -1,8 +1,6 @@
 import classNames from 'classnames';
 import ReactModal, { Props as ModalProps } from 'react-modal';
 
-import { onKeyDownHandler } from '@/utils/a11y';
-
 import * as styles from './index.module.scss';
 
 export { default as DropdownItem } from './DropdownItem';
@@ -21,17 +19,7 @@ const Dropdown = ({ onClose, children, className, ...rest }: Props) => {
       onRequestClose={onClose}
       {...rest}
     >
-      <ul
-        role="menu"
-        tabIndex={0}
-        className={styles.list}
-        onKeyDown={onKeyDownHandler({
-          Esc: onClose,
-          Enter: onClose,
-          ' ': onClose,
-        })}
-        onClick={onClose}
-      >
+      <ul className={styles.list} onClick={onClose}>
         {children}
       </ul>
     </ReactModal>

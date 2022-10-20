@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import Failed from '@/assets/images/failed.svg';
-import Success from '@/assets/images/success.svg';
+import Failed from '@/icons/Failed';
+import Success from '@/icons/Success';
 
 import * as styles from './index.module.scss';
 

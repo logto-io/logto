@@ -18,8 +18,8 @@ export const sendForgotPasswordSmsPasscode = async (phone: string) => {
   return { success: true };
 };
 
-export const verifyForgotPasswordSmsPasscode = async (phone: string, code: string) => {
-  await api
+export const verifyForgotPasswordSmsPasscode = async (phone: string, code: string) =>
+  api
     .post(`${forgotPasswordApiPrefix}/sms/verify-passcode`, {
       json: {
         phone,
@@ -27,9 +27,6 @@ export const verifyForgotPasswordSmsPasscode = async (phone: string, code: strin
       },
     })
     .json<Response>();
-
-  return { success: true };
-};
 
 export const sendForgotPasswordEmailPasscode = async (email: string) => {
   await api
@@ -43,8 +40,8 @@ export const sendForgotPasswordEmailPasscode = async (email: string) => {
   return { success: true };
 };
 
-export const verifyForgotPasswordEmailPasscode = async (email: string, code: string) => {
-  await api
+export const verifyForgotPasswordEmailPasscode = async (email: string, code: string) =>
+  api
     .post(`${forgotPasswordApiPrefix}/email/verify-passcode`, {
       json: {
         email,
@@ -53,15 +50,9 @@ export const verifyForgotPasswordEmailPasscode = async (email: string, code: str
     })
     .json<Response>();
 
-  return { success: true };
-};
-
-export const resetPassword = async (password: string) => {
-  await api
+export const resetPassword = async (password: string) =>
+  api
     .post(`${forgotPasswordApiPrefix}/reset`, {
       json: { password },
     })
     .json<Response>();
-
-  return { success: true };
-};

@@ -1,10 +1,10 @@
-import { LanguageTag } from '@logto/language-kit';
+import type { LanguageKey } from '@logto/core-kit';
 import resources from '@logto/phrases';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
-const initI18n = async (language?: LanguageTag) =>
+const initI18n = async (language?: LanguageKey) =>
   i18next
     .use(initReactI18next)
     .use(LanguageDetector)

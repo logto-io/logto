@@ -13,6 +13,7 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
   return [
     `export type ${databaseEntryType} = {`,
     ...fields.map(
+      // eslint-disable-next-line complexity
       ({ name, type, isArray, nullable, hasDefaultValue }) =>
         `  ${camelcase(name)}${conditionalString(
           (nullable || hasDefaultValue) && '?'

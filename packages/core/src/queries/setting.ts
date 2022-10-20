@@ -1,8 +1,8 @@
 import { Setting, CreateSetting, Settings } from '@logto/schemas';
-import { OmitAutoSetFields } from '@logto/shared';
 
 import { buildFindEntityById } from '@/database/find-entity-by-id';
 import { buildUpdateWhere } from '@/database/update-where';
+import { OmitAutoSetFields } from '@/database/utils';
 
 export const defaultSettingId = 'default';
 

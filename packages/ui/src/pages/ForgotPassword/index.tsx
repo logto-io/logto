@@ -18,12 +18,10 @@ const ForgotPassword = () => {
 
   const forgotPasswordForm = useMemo(() => {
     if (method === 'sms') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
       return <PhonePasswordless autoFocus hasSwitch type="forgot-password" hasTerms={false} />;
     }
 
     if (method === 'email') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
       return <EmailPasswordless autoFocus hasSwitch type="forgot-password" hasTerms={false} />;
     }
   }, [method]);

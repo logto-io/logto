@@ -20,11 +20,11 @@
     margin-left: _.unit(1);
     width: 16px;
     height: 16px;
-    color: var(--color-text-secondary);
+    color: var(--color-caption);
   }
 
   .required {
     font: var(--font-body-medium);
-    color: var(--color-text-secondary);
+    color: var(--color-caption);
   }
 }

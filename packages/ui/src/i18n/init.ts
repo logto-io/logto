@@ -1,30 +1,35 @@
+import resources from '@logto/phrases-ui';
 import { LanguageInfo } from '@logto/schemas';
 import i18next, { InitOptions } from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
-
-import { getI18nResource, detectLanguage } from '@/i18n/utils';
 
 const storageKey = 'i18nextLogtoUiLng';
 
-const initI18n = async (languageSettings?: LanguageInfo) => {
-  // Get language settings from the SIE
-  const locale = detectLanguage(languageSettings);
-
-  const { resources, lng } = await getI18nResource(locale);
-
+const initI18n = async (languageSettings?: LanguageInfo, isPreview = false) => {
   const options: InitOptions = {
     resources,
-    lng,
+    fallbackLng: languageSettings?.fallbackLanguage ?? 'en',
+    lng: languageSettings?.autoDetect === false ? languageSettings.fixedLanguage : undefined,
     interpolation: {
       escapeValue: false,
+    },
+    detection: {
+      lookupLocalStorage: storageKey,
+      lookupSessionStorage: storageKey,
     },
   };
 
   i18next.use(initReactI18next);
 
+  // Should not apply auto detect if is preview or fix
+  if (!isPreview && !(languageSettings?.autoDetect === false)) {
+    i18next.use(LanguageDetector);
+  }
+
   const i18n = i18next.init(options);
 
-  // @ts-expect-error - i18next doesn't have a type definition for this. Must called after i18next is initialized
+  // @ts-expect-error - i18next doesn't have a type definition for this. called after i18next is initialized
   i18next.services.formatter.add('zhOrSpaces', (value: string, lng) => {
     if (lng !== 'zh-CN') {
       return value;

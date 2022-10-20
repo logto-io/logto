@@ -1,11 +1,9 @@
-import { languages, languageTagGuard } from '@logto/language-kit';
 import { arbitraryObjectGuard, translationGuard } from '@logto/schemas';
 import { conditional, ValuesOf } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import {
   ZodArray,
   ZodBoolean,
-  ZodEffects,
   ZodEnum,
   ZodLiteral,
   ZodNativeEnum,
@@ -54,8 +52,6 @@ export const translationSchemas: Record<string, OpenAPIV3.SchemaObject> = {
 
 export type ZodStringCheck = ValuesOf<ZodStringDef['checks']>;
 
-// Switch-clause
-// eslint-disable-next-line complexity
 const zodStringCheckToSwaggerFormat = (zodStringCheck: ZodStringCheck) => {
   const { kind } = zodStringCheck;
 
@@ -128,8 +124,6 @@ const zodLiteralToSwagger = (zodLiteral: ZodLiteral<unknown>): OpenAPIV3.SchemaO
   }
 };
 
-// Too many zod types :-)
-// eslint-disable-next-line complexity
 export const zodTypeToSwagger = (
   config: unknown
 ): OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject => {
@@ -143,13 +137,6 @@ export const zodTypeToSwagger = (
   if (config === translationGuard) {
     return {
       $ref: '#/components/schemas/TranslationObject',
-    };
-  }
-
-  if (config === languageTagGuard) {
-    return {
-      type: 'string',
-      enum: Object.keys(languages),
     };
   }
 
@@ -220,14 +207,6 @@ export const zodTypeToSwagger = (
   if (config instanceof ZodBoolean) {
     return {
       type: 'boolean',
-    };
-  }
-
-  // TO-DO: Improve swagger output for zod schema with refinement (validate through JS functions)
-  if (config instanceof ZodEffects && config._def.effect.type === 'refinement') {
-    return {
-      type: 'object',
-      description: 'Validator function',
     };
   }
 

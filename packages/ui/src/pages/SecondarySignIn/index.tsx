@@ -19,16 +19,13 @@ const SecondarySignIn = () => {
 
   const signInForm = useMemo(() => {
     if (method === 'sms') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
       return <PhonePasswordless autoFocus type="sign-in" />;
     }
 
     if (method === 'email') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
       return <EmailPasswordless autoFocus type="sign-in" />;
     }
 
-    // eslint-disable-next-line jsx-a11y/no-autofocus
     return <UsernameSignIn autoFocus />;
   }, [method]);
 

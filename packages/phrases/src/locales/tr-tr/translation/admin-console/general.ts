@@ -36,7 +36,6 @@ const general = {
     'Bazı değişiklikler yaptınız. Bu sayfadan ayrılmak istediğine emin misin?',
   leave_page: 'Sayfayı terk et',
   stay_on_page: 'Bu sayfada kal',
-  type_to_search: 'Type to search', // UNTRANSLATED
 };
 
 export default general;

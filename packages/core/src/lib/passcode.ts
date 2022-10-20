@@ -90,8 +90,6 @@ export const sendPasscode = async (passcode: Passcode) => {
 export const passcodeExpiration = 10 * 60 * 1000; // 10 minutes.
 export const passcodeMaxTryCount = 10;
 
-// TODO: @sijie refactor me
-// eslint-disable-next-line complexity
 export const verifyPasscode = async (
   sessionId: string,
   type: PasscodeType,

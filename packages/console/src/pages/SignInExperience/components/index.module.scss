@@ -10,20 +10,21 @@
   }
 }
 
+.primaryTag {
+  color: var(--color-caption);
+}
+
+.method {
+  margin-top: _.unit(3);
+}
+
+.primarySocial {
+  margin-top: _.unit(2);
+}
+
 .darkModeTip {
   display: flex;
   align-items: baseline;
   font: var(--font-body-medium);
-  color: var(--color-text-secondary);
-  margin-top: _.unit(1);
-}
-
-.manageLanguageButton {
-  margin-top: _.unit(1);
-}
-
-.defaultLanguageDescription {
-  padding-top: _.unit(2);
-  font: var(--font-body-medium);
-  color: var(--color-text-secondary);
+  color: var(--color-caption);
 }

@@ -77,7 +77,7 @@ const ColorForm = () => {
             <div className={styles.darkModeTip}>
               {t('sign_in_exp.color.dark_mode_reset_tip')}
               <Button
-                type="text"
+                type="plain"
                 size="small"
                 title="sign_in_exp.color.reset"
                 onClick={handleResetColor}

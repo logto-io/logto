@@ -1,10 +1,8 @@
 import classNames from 'classnames';
 import { ReactEventHandler, ReactNode, useRef, useState } from 'react';
 
-import Close from '@/assets/images/close.svg';
-import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
-import KeyboardArrowUp from '@/assets/images/keyboard-arrow-up.svg';
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
+import Close from '@/icons/Close';
 
 import Dropdown, { DropdownItem } from '../Dropdown';
 import IconButton from '../IconButton';
@@ -67,12 +65,6 @@ const Select = <T extends string>({
           className
         )}
         role="button"
-        tabIndex={0}
-        onKeyDown={onKeyDownHandler(() => {
-          if (!isReadOnly) {
-            setIsOpen(true);
-          }
-        })}
         onClick={() => {
           if (!isReadOnly) {
             setIsOpen(true);

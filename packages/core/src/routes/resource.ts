@@ -1,5 +1,4 @@
 import { Resources } from '@logto/schemas';
-import { buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -12,6 +11,7 @@ import {
   updateResourceById,
   deleteResourceById,
 } from '@/queries/resource';
+import { buildIdGenerator } from '@/utils/id';
 
 import { AuthedRouter } from './types';
 

@@ -21,7 +21,7 @@
 
 @mixin text-hint {
   font: var(--font-caption);
-  color: var(--color-text-secondary);
+  color: var(--color-caption);
 }
 
 @mixin title {
@@ -42,14 +42,4 @@
 
 @function border($color: transparent, $width: 1) {
   @return #{$width}px solid #{$color};
-}
-
-@mixin multi-line-ellipsis($line) {
-  // https://css-tricks.com/almanac/properties/l/line-clamp/
-  /* stylelint-disable-next-line value-no-vendor-prefix */
-  display: -webkit-box;
-  -webkit-line-clamp: $line;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }

@@ -1,7 +1,7 @@
 import { FormEventHandler, KeyboardEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import SearchIcon from '@/assets/images/search.svg';
+import SearchIcon from '@/icons/Search';
 
 import Button from '../Button';
 import TextInput from '../TextInput';
@@ -45,7 +45,7 @@ const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearc
       </div>
       <Button title="general.search" onClick={handleClick} />
       {isClearable && (
-        <Button size="small" type="text" title="general.clear_result" onClick={onClearSearch} />
+        <Button size="small" type="plain" title="general.clear_result" onClick={onClearSearch} />
       )}
     </div>
   );

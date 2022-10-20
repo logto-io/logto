@@ -18,7 +18,7 @@ import SignIn from './pages/SignIn';
 import SocialLanding from './pages/SocialLanding';
 import SocialRegister from './pages/SocialRegister';
 import SocialSignIn from './pages/SocialSignInCallback';
-import { getSignInExperienceSettings } from './utils/sign-in-experience';
+import getSignInExperienceSettings from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
 
@@ -35,10 +35,9 @@ const App = () => {
     (async () => {
       const settings = await getSignInExperienceSettings();
 
-      // Note: i18n must be initialized ahead of page render
+      // Note: i18n must be initialized ahead of global experience settings
       await initI18n(settings.languageInfo);
 
-      // Init the page settings and render
       setExperienceSettings(settings);
     })();
   }, [isPreview, setExperienceSettings, setLoading]);

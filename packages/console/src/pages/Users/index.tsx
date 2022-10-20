@@ -7,7 +7,6 @@ import Modal from 'react-modal';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/images/plus.svg';
 import ApplicationName from '@/components/ApplicationName';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -19,9 +18,9 @@ import Search from '@/components/Search';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
-import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import { RequestError } from '@/hooks/use-api';
+import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
@@ -68,8 +67,7 @@ const Users = () => {
               setIsCreateFormOpen(false);
 
               if (createdUser && password) {
-                sessionStorage.setItem(generatedPasswordStorageKey, password);
-                navigate(`/users/${createdUser.id}`);
+                navigate(`/users/${createdUser.id}?password=${password}`);
               }
             }}
           />
@@ -131,13 +129,12 @@ const Users = () => {
               >
                 <td>
                   <ItemPreview
-                    title={name ?? t('users.unnamed')}
+                    title={name || t('users.unnamed')}
                     subtitle={id}
                     icon={
                       <img
-                        alt="avatar"
                         className={styles.avatar}
-                        src={avatar ?? generateAvatarPlaceHolderById(id)}
+                        src={avatar || generateAvatarPlaceHolderById(id)}
                       />
                     }
                     to={`/users/${id}`}

@@ -2,11 +2,10 @@ import { existsSync } from 'fs';
 import { readdir } from 'fs/promises';
 import path from 'path';
 
-import { connectorDirectory } from '@logto/cli/lib/constants';
 import { AllConnector, CreateConnector, validateConfig } from '@logto/connector-kit';
-import { findPackage } from '@logto/shared';
 import chalk from 'chalk';
 
+import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
@@ -22,21 +21,20 @@ const loadConnectors = async () => {
     return cachedConnectors;
   }
 
-  // Until we migrate to ESM
-  // eslint-disable-next-line unicorn/prefer-module
-  const coreDirectory = await findPackage(__dirname);
-  const directory = coreDirectory && path.join(coreDirectory, connectorDirectory);
+  const {
+    values: { connectorDirectory },
+  } = envSet;
 
-  if (!directory || !existsSync(directory)) {
+  if (!existsSync(connectorDirectory)) {
     return [];
   }
 
-  const connectorFolders = await readdir(directory);
+  const connectorFolders = await readdir(connectorDirectory);
 
   const connectors = await Promise.all(
     connectorFolders.map(async (folder) => {
       try {
-        const packagePath = path.join(directory, folder);
+        const packagePath = path.join(connectorDirectory, folder);
         // eslint-disable-next-line no-restricted-syntax
         const { default: createConnector } = (await import(packagePath)) as {
           default: CreateConnector<AllConnector>;

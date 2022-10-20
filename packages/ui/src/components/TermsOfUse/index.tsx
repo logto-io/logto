@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 
 import Checkbox from '@/components/Checkbox';
 import TextLink from '@/components/TextLink';
-import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';
 
@@ -21,24 +20,12 @@ const TermsOfUse = ({ name, className, termsUrl, isChecked, onChange, onTermsCli
 
   const prefix = t('description.agree_with_terms');
 
-  const toggle = () => {
-    onChange(!isChecked);
-  };
-
   return (
     <div
-      role="radio"
-      aria-checked={isChecked}
-      tabIndex={0}
       className={classNames(styles.terms, className)}
-      onClick={toggle}
-      onKeyDown={onKeyDownHandler({
-        Esc: () => {
-          onChange(false);
-        },
-        Enter: toggle,
-        ' ': toggle,
-      })}
+      onClick={() => {
+        onChange(!isChecked);
+      }}
     >
       <Checkbox name={name} checked={isChecked} className={styles.checkBox} />
       <div className={styles.content}>

@@ -123,12 +123,10 @@ const errors = {
       'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
     code_sign_in_must_be_enabled:
       'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
-    unsupported_default_language: 'This language - {{language}} is not supported at the moment.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:
-      '{{languageTag}} is set as your default language and can’t be deleted.', // UNTRANSLATED
-    invalid_translation_structure: 'Invalid data schemas. Please check your input and try again.', // UNTRANSLATED
+      'You cannot delete {{languageKey}} language since it is used as default language in sign-in experience.', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type: 'Type Zod non valide. Veuillez vérifier la configuration du garde-route.',

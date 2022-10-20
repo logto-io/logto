@@ -1,7 +1,7 @@
 import { mockSignInExperience } from '@/__mocks__/logto';
 import { getSignInExperience } from '@/apis/settings';
 
-import { getSignInExperienceSettings } from './sign-in-experience';
+import getSignInExperienceSettings from './sign-in-experience';
 
 jest.mock('@/apis/settings', () => ({
   getSignInExperience: jest.fn(),

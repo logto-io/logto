@@ -25,6 +25,7 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   languageInfo: {
     autoDetect: true,
     fallbackLanguage: 'en',
+    fixedLanguage: 'en',
   },
   termsOfUse: {
     enabled: false,

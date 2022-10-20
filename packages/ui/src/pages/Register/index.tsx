@@ -19,16 +19,13 @@ const Register = () => {
 
   const registerForm = useMemo(() => {
     if (method === 'sms') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
       return <PhonePasswordless autoFocus type="register" />;
     }
 
     if (method === 'email') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
       return <EmailPasswordless autoFocus type="register" />;
     }
 
-    // eslint-disable-next-line jsx-a11y/no-autofocus
     return <CreateAccount autoFocus />;
   }, [method]);
 

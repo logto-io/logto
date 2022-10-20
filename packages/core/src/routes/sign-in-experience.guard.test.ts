@@ -1,9 +1,5 @@
-import {
-  CreateSignInExperience,
-  LanguageInfo,
-  SignInExperience,
-  SignInMethodState,
-} from '@logto/schemas';
+import { languageKeys } from '@logto/core-kit';
+import { CreateSignInExperience, SignInExperience, SignInMethodState } from '@logto/schemas';
 
 import {
   mockAliyunDmConnector,
@@ -30,14 +26,6 @@ jest.mock('@/connectors', () => ({
   ]),
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const validateLanguageInfo = jest.fn(async (languageInfo: LanguageInfo): Promise<void> => {});
-
-jest.mock('@/lib/sign-in-experience', () => ({
-  ...jest.requireActual('@/lib/sign-in-experience'),
-  validateLanguageInfo: async (languageInfo: LanguageInfo) => validateLanguageInfo(languageInfo),
-}));
-
 jest.mock('@/queries/sign-in-experience', () => ({
   updateDefaultSignInExperience: jest.fn(
     async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
@@ -59,10 +47,6 @@ const expectPatchResponseStatus = async (
 
 const validBooleans = [true, false];
 const invalidBooleans = [undefined, null, 0, 1, '0', '1', 'true', 'false'];
-
-beforeEach(() => {
-  jest.clearAllMocks();
-});
 
 describe('terms of use', () => {
   describe('enabled', () => {
@@ -120,8 +104,8 @@ describe('languageInfo', () => {
     });
   });
 
-  const validLanguages = ['en', 'pt-PT', 'zh-HK', 'zh-TW'];
-  const invalidLanguages = [undefined, null, '', ' \t\n\r', 'ab', 'xx-XX'];
+  const validLanguages = languageKeys;
+  const invalidLanguages = [undefined, null, '', ' \t\n\r', 'abc'];
 
   describe('fallbackLanguage', () => {
     test.each(validLanguages)('%p should success', async (fallbackLanguage) => {
@@ -135,10 +119,16 @@ describe('languageInfo', () => {
     });
   });
 
-  it('should call validateLanguageInfo', async () => {
-    const signInExperience = { languageInfo: mockLanguageInfo };
-    await expectPatchResponseStatus(signInExperience, 200);
-    expect(validateLanguageInfo).toBeCalledWith(mockLanguageInfo);
+  describe('fixedLanguage', () => {
+    test.each(validLanguages)('%p should success', async (fixedLanguage) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, fixedLanguage } };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidLanguages)('%p should fail', async (fixedLanguage) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, fixedLanguage } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
   });
 });
 

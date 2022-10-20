@@ -36,7 +36,7 @@
 
     .role {
       font: var(--font-body-small);
-      color: var(--color-text-secondary);
+      color: var(--color-caption);
     }
   }
 }
@@ -58,7 +58,7 @@
   }
 
   .signOutIcon {
-    color: var(--color-text-secondary);
+    color: var(--color-icon);
   }
 
   .spinner {

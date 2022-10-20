@@ -20,10 +20,15 @@
     margin-top: _.unit(1);
     padding-right: _.unit(6);
     font: var(--font-body-medium);
-    color: var(--color-text-secondary);
+    color: var(--color-caption);
 
     .hideButton {
-      display: inline-block;
+      color: var(--color-text-link);
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -51,7 +56,7 @@
 
     .subtitle {
       font: var(--font-body-medium);
-      color: var(--color-text-secondary);
+      color: var(--color-caption);
     }
   }
 

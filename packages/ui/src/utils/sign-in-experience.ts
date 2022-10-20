@@ -30,7 +30,7 @@ export const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
     return methods;
   }, []);
 
-export const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {
+const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {
   const { signInMethods, socialConnectors, ...rest } =
     await getSignInExperience<SignInExperienceSettingsResponse>();
 
@@ -41,3 +41,5 @@ export const getSignInExperienceSettings = async (): Promise<SignInExperienceSet
     socialConnectors: filterSocialConnectors(socialConnectors),
   };
 };
+
+export default getSignInExperienceSettings;

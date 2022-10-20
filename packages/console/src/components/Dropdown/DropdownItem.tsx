@@ -1,12 +1,10 @@
 import classNames from 'classnames';
-import { MouseEvent, KeyboardEvent, ReactNode } from 'react';
-
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { MouseEvent, ReactNode } from 'react';
 
 import * as styles from './DropdownItem.module.scss';
 
 type Props = {
-  onClick?: (event: MouseEvent<HTMLLIElement> | KeyboardEvent<HTMLLIElement>) => void;
+  onClick?: (event: MouseEvent<HTMLLIElement>) => void;
   className?: string;
   children: ReactNode | Record<string, unknown>;
   icon?: ReactNode;
@@ -22,13 +20,7 @@ const DropdownItem = ({
   iconClassName,
   type = 'default',
 }: Props) => (
-  <li
-    role="menuitem"
-    tabIndex={0}
-    className={classNames(styles.item, styles[type], className)}
-    onKeyDown={onKeyDownHandler(onClick)}
-    onClick={onClick}
-  >
+  <li className={classNames(styles.item, styles[type], className)} onClick={onClick}>
     {icon && <span className={classNames(styles.icon, iconClassName)}>{icon}</span>}
     {children}
   </li>
