@@ -1,9 +1,7 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import { PropsWithChildren, useEffect, useRef, useState, useCallback } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
-import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
-import KeyboardArrowUp from '@/assets/images/keyboard-arrow-up.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
@@ -11,7 +9,7 @@ import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Index from '@/components/Index';
 import Spacer from '@/components/Spacer';
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
 
 import * as styles from './index.module.scss';
 
@@ -56,24 +54,13 @@ const Step = ({
     }
   }, [isExpanded]);
 
-  const onToggle = useCallback(() => {
-    setIsExpanded((expand) => !expand);
-  }, [setIsExpanded]);
-
   return (
     <Card key={title} ref={ref} className={styles.card}>
       <div
-        role="button"
-        tabIndex={0}
         className={styles.header}
-        onKeyDown={onKeyDownHandler({
-          Esc: () => {
-            setIsExpanded(false);
-          },
-          Enter: onToggle,
-          ' ': onToggle,
-        })}
-        onClick={onToggle}
+        onClick={() => {
+          setIsExpanded(!isExpanded);
+        }}
       >
         <Index
           className={styles.index}

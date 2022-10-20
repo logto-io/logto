@@ -10,8 +10,6 @@ import RequestError from '@/errors/RequestError';
  */
 
 export default function koaOIDCErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
-  // Too many error types :-)
-  // eslint-disable-next-line complexity
   return async (ctx, next) => {
     try {
       await next();

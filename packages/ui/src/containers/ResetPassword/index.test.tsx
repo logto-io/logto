@@ -5,13 +5,6 @@ import { resetPassword } from '@/apis/forgot-password';
 
 import ResetPassword from '.';
 
-const mockedNavigate = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockedNavigate,
-}));
-
 jest.mock('@/apis/forgot-password', () => ({
   resetPassword: jest.fn(async () => ({ redirectTo: '/' })),
 }));
@@ -21,12 +14,12 @@ describe('<ResetPassword />', () => {
     const { queryByText, container } = renderWithPageContext(<ResetPassword />);
     expect(container.querySelector('input[name="new-password"]')).not.toBeNull();
     expect(container.querySelector('input[name="confirm-new-password"]')).not.toBeNull();
-    expect(queryByText('action.save_password')).not.toBeNull();
+    expect(queryByText('action.confirm')).not.toBeNull();
   });
 
   test('password are required', () => {
     const { queryByText, getByText } = renderWithPageContext(<ResetPassword />);
-    const submitButton = getByText('action.save_password');
+    const submitButton = getByText('action.confirm');
     fireEvent.click(submitButton);
 
     expect(queryByText('password_required')).not.toBeNull();
@@ -35,7 +28,7 @@ describe('<ResetPassword />', () => {
 
   test('password less than 6 chars should throw', () => {
     const { queryByText, getByText, container } = renderWithPageContext(<ResetPassword />);
-    const submitButton = getByText('action.save_password');
+    const submitButton = getByText('action.confirm');
     const passwordInput = container.querySelector('input[name="new-password"]');
 
     if (passwordInput) {
@@ -62,7 +55,7 @@ describe('<ResetPassword />', () => {
 
   test('password mismatch with confirmPassword should throw', () => {
     const { queryByText, getByText, container } = renderWithPageContext(<ResetPassword />);
-    const submitButton = getByText('action.save_password');
+    const submitButton = getByText('action.confirm');
     const passwordInput = container.querySelector('input[name="new-password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
 
@@ -94,7 +87,7 @@ describe('<ResetPassword />', () => {
 
   test('should submit properly', async () => {
     const { queryByText, getByText, container } = renderWithPageContext(<ResetPassword />);
-    const submitButton = getByText('action.save_password');
+    const submitButton = getByText('action.confirm');
     const passwordInput = container.querySelector('input[name="new-password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
 

@@ -4,14 +4,22 @@ import { act } from 'react-dom/test-utils';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { signInBasic } from '@/apis/sign-in';
-import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
+import { termsOfUseConfirmModalPromise } from '@/containers/TermsOfUse/TermsOfUseConfirmModal';
+import { termsOfUseIframeModalPromise } from '@/containers/TermsOfUse/TermsOfUseIframeModal';
+import { ConfirmModalMessage } from '@/types';
 
 import UsernameSignIn from '.';
 
 jest.mock('@/apis/sign-in', () => ({ signInBasic: jest.fn(async () => 0) }));
-jest.mock('react-device-detect', () => ({
-  isMobile: true,
+jest.mock('@/containers/TermsOfUse/TermsOfUseConfirmModal', () => ({
+  termsOfUseConfirmModalPromise: jest.fn().mockResolvedValue(true),
 }));
+jest.mock('@/containers/TermsOfUse/TermsOfUseIframeModal', () => ({
+  termsOfUseIframeModalPromise: jest.fn().mockResolvedValue(true),
+}));
+
+const termsOfUseConfirmModalPromiseMock = termsOfUseConfirmModalPromise as jest.Mock;
+const termsOfUseIframeModalPromiseMock = termsOfUseIframeModalPromise as jest.Mock;
 
 describe('<UsernameSignIn>', () => {
   afterEach(() => {
@@ -62,11 +70,9 @@ describe('<UsernameSignIn>', () => {
   });
 
   test('should show terms confirm modal', async () => {
-    const { queryByText, getByText, container } = renderWithPageContext(
+    const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <ConfirmModalProvider>
-          <UsernameSignIn />
-        </ConfirmModalProvider>
+        <UsernameSignIn />
       </SettingsProvider>
     );
     const submitButton = getByText('action.sign_in');
@@ -82,21 +88,23 @@ describe('<UsernameSignIn>', () => {
       fireEvent.change(passwordInput, { target: { value: 'password' } });
     }
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(submitButton);
-    });
 
-    await waitFor(() => {
-      expect(queryByText('description.agree_with_terms_modal')).not.toBeNull();
+      await waitFor(() => {
+        expect(termsOfUseConfirmModalPromiseMock).toBeCalled();
+      });
     });
   });
 
   test('should show terms detail modal', async () => {
-    const { getByText, queryByText, container, queryByRole } = renderWithPageContext(
+    termsOfUseConfirmModalPromiseMock.mockRejectedValue(
+      ConfirmModalMessage.SHOW_TERMS_DETAIL_MODAL
+    );
+
+    const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <ConfirmModalProvider>
-          <UsernameSignIn />
-        </ConfirmModalProvider>
+        <UsernameSignIn />
       </SettingsProvider>
     );
     const submitButton = getByText('action.sign_in');
@@ -116,19 +124,10 @@ describe('<UsernameSignIn>', () => {
       fireEvent.click(submitButton);
     });
 
-    await waitFor(() => {
-      expect(queryByText('description.agree_with_terms_modal')).not.toBeNull();
-    });
-
-    const termsLink = getByText('description.terms_of_use');
-
-    act(() => {
-      fireEvent.click(termsLink);
-    });
+    expect(signInBasic).not.toBeCalled();
 
     await waitFor(() => {
-      expect(queryByText('action.agree')).not.toBeNull();
-      expect(queryByRole('article')).not.toBeNull();
+      expect(termsOfUseIframeModalPromiseMock).toBeCalled();
     });
   });
 

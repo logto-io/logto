@@ -13,7 +13,7 @@ export type Props = HTMLProps<HTMLInputElement> & {
   className?: string;
   error?: ErrorType;
   onClear?: () => void;
-  isErrorStyling?: boolean;
+  errorStyling?: boolean;
 };
 
 const Input = ({
@@ -21,13 +21,13 @@ const Input = ({
   type = 'text',
   value,
   error,
-  isErrorStyling = true,
+  errorStyling = true,
   onClear,
   ...rest
 }: Props) => {
   return (
     <div className={className}>
-      <div className={classNames(styles.wrapper, error && isErrorStyling && styles.error)}>
+      <div className={classNames(styles.wrapper, error && errorStyling && styles.error)}>
         <input type={type} value={value} {...rest} />
         {value && onClear && (
           <ClearIcon

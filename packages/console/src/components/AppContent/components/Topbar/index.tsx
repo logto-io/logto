@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import Logo from '@/assets/images/logo.svg';
 import Spacer from '@/components/Spacer';
+import Logo from '@/icons/Logo';
 import GetStartedProgress from '@/pages/GetStarted/components/GetStartedProgress';
 
 import UserInfo from '../UserInfo';

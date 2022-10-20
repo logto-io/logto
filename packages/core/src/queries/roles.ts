@@ -1,7 +1,7 @@
 import { Roles, Role } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 
+import { convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
 
 const { table, fields } = convertToIdentifiers(Roles);

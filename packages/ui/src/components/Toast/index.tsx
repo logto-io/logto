@@ -30,8 +30,6 @@ const Toast = ({ message, duration = 3000, callback }: Props) => {
 
   return (
     <ReactModal
-      // For styling use
-      // eslint-disable-next-line jsx-a11y/aria-role
       role="toast"
       isOpen={Boolean(message)}
       overlayClassName={styles.toastContainer}

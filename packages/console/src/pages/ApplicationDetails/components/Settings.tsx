@@ -1,9 +1,4 @@
-import {
-  Application,
-  ApplicationType,
-  SnakeCaseOidcConfig,
-  validateRedirectUrl,
-} from '@logto/schemas';
+import { Application, ApplicationType, SnakeCaseOidcConfig } from '@logto/schemas';
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +10,7 @@ import { MultiTextInputRule } from '@/components/MultiTextInput/types';
 import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { uriOriginValidator } from '@/utilities/validator';
+import { uriOriginValidator, uriValidator } from '@/utilities/validator';
 
 import * as styles from '../index.module.scss';
 
@@ -43,10 +38,9 @@ const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props
     };
   }, [reset, defaultData]);
 
-  const isNativeApp = applicationType === ApplicationType.Native;
   const uriPatternRules: MultiTextInputRule = {
     pattern: {
-      verify: (value) => !value || validateRedirectUrl(value, isNativeApp ? 'mobile' : 'web'),
+      verify: (value) => !value || uriValidator(value),
       message: t('errors.invalid_uri_format'),
     },
   };

@@ -1,13 +1,13 @@
 import { AppearanceMode } from '@logto/schemas';
 
-import CheckBoxSelectedDisabledDark from '@/assets/images/check-box-selected-disabled-dark.svg';
-import CheckBoxSelectedDisabled from '@/assets/images/check-box-selected-disabled.svg';
-import CheckBoxSelected from '@/assets/images/check-box-selected.svg';
-import CheckBoxUnselectedDark from '@/assets/images/check-box-unselected-dark.svg';
-import CheckBoxUnselectedDisabledDark from '@/assets/images/check-box-unselected-disabled-dark.svg';
-import CheckBoxUnselectedDisabled from '@/assets/images/check-box-unselected-disabled.svg';
-import CheckBoxUnselected from '@/assets/images/check-box-unselected.svg';
 import { useTheme } from '@/hooks/use-theme';
+import CheckBoxSelected from '@/icons/CheckBoxSelected';
+import CheckBoxSelectedDisabled from '@/icons/CheckBoxSelectedDisabled';
+import CheckBoxSelectedDisabledDark from '@/icons/CheckBoxSelectedDisabledDark';
+import CheckBoxUnselected from '@/icons/CheckBoxUnselected';
+import CheckBoxUnselectedDark from '@/icons/CheckBoxUnselectedDark';
+import CheckBoxUnselectedDisabled from '@/icons/CheckBoxUnselectedDisabled';
+import CheckBoxUnselectedDisabledDark from '@/icons/CheckBoxUnselectedDisabledDark';
 
 type Props = {
   className?: string;

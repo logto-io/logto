@@ -1,6 +1,6 @@
 import { RefObject, useCallback, useEffect, useState } from 'react';
 
-export type VerticalAlignment = 'top' | 'center' | 'bottom';
+export type VerticalAlignment = 'top' | 'bottom';
 
 export type HorizontalAlignment = 'start' | 'center' | 'end';
 
@@ -28,13 +28,11 @@ const windowSafePadding = 12;
 const selectVerticalAlignment = ({
   verticalAlign,
   verticalTop,
-  verticalCenter,
   verticalBottom,
   overlayHeight,
 }: {
   verticalAlign: VerticalAlignment;
   verticalTop: number;
-  verticalCenter: number;
   verticalBottom: number;
   overlayHeight: number;
 }) => {
@@ -42,32 +40,10 @@ const selectVerticalAlignment = ({
   const maxY = window.innerHeight - windowSafePadding;
 
   const isTopAllowed = verticalTop >= minY;
-  const isCenterAllowed =
-    verticalCenter - overlayHeight / 2 >= minY && verticalCenter + overlayHeight / 2 <= maxY;
   const isBottomAllowed = verticalBottom + overlayHeight <= maxY;
 
   switch (verticalAlign) {
     case 'top': {
-      if (isTopAllowed) {
-        return 'top';
-      }
-
-      if (isBottomAllowed) {
-        return 'bottom';
-      }
-
-      if (isCenterAllowed) {
-        return 'center';
-      }
-
-      return verticalAlign;
-    }
-
-    case 'center': {
-      if (isCenterAllowed) {
-        return 'center';
-      }
-
       if (isTopAllowed) {
         return 'top';
       }
@@ -86,10 +62,6 @@ const selectVerticalAlignment = ({
 
       if (isTopAllowed) {
         return 'top';
-      }
-
-      if (isCenterAllowed) {
-        return 'center';
       }
 
       return verticalAlign;
@@ -198,15 +170,9 @@ export default function usePosition({
     const { scrollTop, scrollLeft } = document.documentElement;
 
     const verticalTop = anchorRect.y - overlayRect.height + scrollTop - offset.vertical;
-    const verticalCenter =
-      anchorRect.y - anchorRect.height / 2 - overlayRect.height / 2 + scrollTop + offset.vertical;
     const verticalBottom = anchorRect.y + anchorRect.height + scrollTop + offset.vertical;
 
-    const verticalPositionMap = {
-      top: verticalTop,
-      center: verticalCenter,
-      bottom: verticalBottom,
-    };
+    const verticalPositionMap = { top: verticalTop, bottom: verticalBottom };
 
     const horizontalStart = anchorRect.x + scrollLeft + offset.horizontal;
     const horizontalCenter =
@@ -223,7 +189,6 @@ export default function usePosition({
     const selectedVerticalAlign = selectVerticalAlignment({
       verticalAlign,
       verticalTop,
-      verticalCenter,
       verticalBottom,
       overlayHeight: overlayRect.height,
     });

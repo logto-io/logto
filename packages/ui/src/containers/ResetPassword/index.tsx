@@ -1,16 +1,12 @@
 import classNames from 'classnames';
-import { useEffect, useCallback, useMemo, useContext } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import { resetPassword } from '@/apis/forgot-password';
 import Button from '@/components/Button';
-import ErrorMessage from '@/components/ErrorMessage';
 import Input from '@/components/Input';
-import useApi, { ErrorHandlers } from '@/hooks/use-api';
-import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
-import { PageContext } from '@/hooks/use-page-context';
 import { passwordValidation, confirmPasswordValidation } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
@@ -33,42 +29,14 @@ const defaultState: FieldState = {
 
 const ResetPassword = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
-  const { setToast } = useContext(PageContext);
-  const {
-    fieldValue,
-    formErrorMessage,
-    setFieldValue,
-    register,
-    validateForm,
-    setFormErrorMessage,
-  } = useForm(defaultState);
-  const { show } = useConfirmModal();
-  const navigate = useNavigate();
 
-  const resetPasswordErrorHandlers: ErrorHandlers = useMemo(
-    () => ({
-      'session.forgot_password_session_not_found': async (error) => {
-        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
-        navigate(-1);
-      },
-      'session.forgot_password_verification_expired': async (error) => {
-        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
-        navigate(-1);
-      },
-      'user.same_password': (error) => {
-        setFormErrorMessage(error.message);
-      },
-    }),
-    [navigate, setFormErrorMessage, show]
-  );
+  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
 
-  const { result, run: asyncRegister } = useApi(resetPassword, resetPasswordErrorHandlers);
+  const { result, run: asyncRegister } = useApi(resetPassword);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
-
-      setFormErrorMessage(undefined);
 
       if (!validateForm()) {
         return;
@@ -76,15 +44,14 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
 
       void asyncRegister(fieldValue.password);
     },
-    [setFormErrorMessage, validateForm, asyncRegister, fieldValue.password]
+    [validateForm, asyncRegister, fieldValue]
   );
 
   useEffect(() => {
-    if (result) {
-      setToast(t('description.password_changed'));
-      navigate('/sign-in', { replace: true });
+    if (result?.redirectTo) {
+      window.location.replace(result.redirectTo);
     }
-  }, [navigate, result, setToast, t]);
+  }, [result]);
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
@@ -94,7 +61,6 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
         type="password"
         autoComplete="new-password"
         placeholder={t('input.password')}
-        // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus={autoFocus}
         {...register('password', passwordValidation)}
         onClear={() => {
@@ -109,16 +75,13 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
         {...register('confirmPassword', (confirmPassword) =>
           confirmPasswordValidation(fieldValue.password, confirmPassword)
         )}
-        isErrorStyling={false}
+        errorStyling={false}
         onClear={() => {
           setFieldValue((state) => ({ ...state, confirmPassword: '' }));
         }}
       />
-      {formErrorMessage && (
-        <ErrorMessage className={styles.formErrors}>{formErrorMessage}</ErrorMessage>
-      )}
 
-      <Button title="action.save_password" onClick={async () => onSubmitHandler()} />
+      <Button title="action.confirm" onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
     </form>

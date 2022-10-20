@@ -26,14 +26,6 @@ const GetStarted = () => {
     navigate('/dashboard');
   };
 
-  const showConfirmModalHandler = () => {
-    setShowConfirmModal(true);
-  };
-
-  const hideConfirmModalHandler = () => {
-    setShowConfirmModal(false);
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -43,13 +35,14 @@ const GetStarted = () => {
           <Spacer />
           <span>
             {t('get_started.subtitle_part2')}
-            <Button
-              title="get_started.hide_this"
-              type="text"
-              size="small"
+            <span
               className={styles.hideButton}
-              onClick={showConfirmModalHandler}
-            />
+              onClick={() => {
+                setShowConfirmModal(true);
+              }}
+            >
+              {t('get_started.hide_this')}
+            </span>
           </span>
         </div>
       </div>
@@ -77,7 +70,9 @@ const GetStarted = () => {
         confirmButtonType="primary"
         confirmButtonText="get_started.hide_this"
         onConfirm={hideGetStarted}
-        onCancel={hideConfirmModalHandler}
+        onCancel={() => {
+          setShowConfirmModal(false);
+        }}
       >
         {t('get_started.confirm_message')}
       </ConfirmModal>

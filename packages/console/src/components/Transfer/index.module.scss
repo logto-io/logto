@@ -33,7 +33,7 @@
             cursor: move;
 
             .draggableIcon {
-              color: var(--color-text-secondary);
+              color: var(--color-icon);
             }
           }
 
@@ -64,7 +64,7 @@
 
   .footer {
     font: var(--font-body-medium);
-    color: var(--color-text-secondary);
+    color: var(--color-caption);
     margin-top: _.unit(2);
 
     a {

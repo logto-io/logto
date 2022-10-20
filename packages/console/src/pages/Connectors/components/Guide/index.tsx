@@ -6,7 +6,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import Close from '@/assets/images/close.svg';
 import CardTitle from '@/components/CardTitle';
 import CodeEditor from '@/components/CodeEditor';
 import DangerousRaw from '@/components/DangerousRaw';
@@ -14,6 +13,7 @@ import IconButton from '@/components/IconButton';
 import Markdown from '@/components/Markdown';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
+import Close from '@/icons/Close';
 import Step from '@/mdx-components/Step';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
 import { GuideForm } from '@/types/guide';

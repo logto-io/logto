@@ -1,5 +1,4 @@
 import { Applications } from '@logto/schemas';
-import { buildApplicationSecret, buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -13,6 +12,7 @@ import {
   updateApplicationById,
   findTotalNumberOfApplications,
 } from '@/queries/application';
+import { buildApplicationSecret, buildIdGenerator } from '@/utils/id';
 
 import { AuthedRouter } from './types';
 

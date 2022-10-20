@@ -38,14 +38,15 @@
         .connectorId {
           margin-top: _.unit(1);
           font: var(--font-body-small);
-          color: var(--color-text-secondary);
+          color: var(--color-caption);
         }
 
         .description {
           font: var(--font-body-small);
-          color: var(--color-text-secondary);
+          color: var(--color-caption);
           margin-top: _.unit(1);
-          @include _.multi-line-ellipsis(3);
+          height: 60px;
+          overflow: hidden;
         }
       }
     }

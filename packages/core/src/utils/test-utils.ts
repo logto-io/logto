@@ -98,8 +98,6 @@ export function createRequester(
       }
 ): request.SuperTest<request.Test>;
 
-// TODO: Refacttor me
-// eslint-disable-next-line complexity
 export function createRequester({
   anonymousRoutes,
   authedRoutes,

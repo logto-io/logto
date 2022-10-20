@@ -1,9 +1,9 @@
 import { Connector, CreateConnector, Connectors } from '@logto/schemas';
-import { convertToIdentifiers, manyRows } from '@logto/shared';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
 import { buildUpdateWhere } from '@/database/update-where';
+import { convertToIdentifiers, manyRows } from '@/database/utils';
 import envSet from '@/env-set';
 
 const { table, fields } = convertToIdentifiers(Connectors);

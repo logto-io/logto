@@ -35,7 +35,6 @@ const general = {
   unsaved_changes_warning: '还有未保存的变更, 确定要离开吗？',
   leave_page: '离开此页',
   stay_on_page: '留在此页',
-  type_to_search: '输入搜索',
 };
 
 export default general;

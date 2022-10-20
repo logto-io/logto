@@ -24,7 +24,6 @@ const Consent = () => {
   return (
     <div className={styles.wrapper}>
       <img
-        alt="logo"
         src={
           (theme === 'dark' && experienceSettings?.branding.darkLogoUrl) ||
           experienceSettings?.branding.logoUrl

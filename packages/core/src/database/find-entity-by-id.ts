@@ -1,7 +1,7 @@
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import { sql, NotFoundError } from 'slonik';
 
+import { convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';

@@ -74,8 +74,6 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
   const closeModal = () => {
     setIsGetStartedModalOpen(false);
     onClose?.(activeConnectorId);
-    setActiveGroupId(undefined);
-    setActiveConnectorId(undefined);
   };
 
   return (
@@ -121,12 +119,15 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
               >
                 <div className={styles.connector}>
                   <div className={styles.logo}>
-                    <img src={logo} alt="logo" />
+                    <img src={logo} />
                   </div>
                   <div className={styles.content}>
                     <div className={styles.name}>
                       <UnnamedTrans resource={name} />
                     </div>
+                    {type !== ConnectorType.Social && (
+                      <div className={styles.connectorId}>{id}</div>
+                    )}
                     <div className={styles.description}>
                       <UnnamedTrans resource={description} />
                     </div>

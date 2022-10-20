@@ -20,10 +20,7 @@ const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => 
     <div className={classNames(styles.container, className)}>
       <div className={styles.connector}>
         {connector ? (
-          <img
-            src={theme === 'dark' ? connector.logoDark ?? connector.logo : connector.logo}
-            alt="logo"
-          />
+          <img src={theme === 'dark' ? connector.logoDark ?? connector.logo : connector.logo} />
         ) : (
           connectorId
         )}

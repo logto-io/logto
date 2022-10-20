@@ -30,7 +30,7 @@
 }
 
 .secondary {
-  border: _.border(var(--color-border));
+  border: _.border(var(--color-outline));
   background: transparent;
   color: var(--color-text);
 

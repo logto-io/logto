@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Back from '@/assets/images/back.svg';
 import ApplicationName from '@/components/ApplicationName';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
@@ -17,6 +16,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
 import { RequestError } from '@/hooks/use-api';
+import Back from '@/icons/Back';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import EventIcon from './components/EventIcon';

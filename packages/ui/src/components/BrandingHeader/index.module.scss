@@ -43,6 +43,11 @@ $logo-height: 60px;
     font: var(--font-title-small);
     color: var(--color-text);
     text-align: center;
-    @include _.multi-line-ellipsis(2);
+    text-overflow: ellipsis;
+    /* stylelint-disable-next-line value-no-vendor-prefix */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

@@ -77,15 +77,8 @@ const Main = () => {
           </div>
         </div>
         <div
-          role="button"
-          tabIndex={0}
           className={styles.button}
           onClick={async () => signOut(`${window.location.origin}/demo-app`)}
-          onKeyDown={({ key }) => {
-            if (key === 'Enter' || key === ' ') {
-              void signOut(`${window.location.origin}/demo-app`);
-            }
-          }}
         >
           {t('sign_out')}
         </div>

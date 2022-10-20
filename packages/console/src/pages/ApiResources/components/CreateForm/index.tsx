@@ -55,7 +55,6 @@ const CreateForm = ({ onClose }: Props) => {
       <form>
         <FormField isRequired title="api_resources.api_name">
           <TextInput
-            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             {...register('name', { required: true })}
             placeholder={t('api_resources.api_name_placeholder')}

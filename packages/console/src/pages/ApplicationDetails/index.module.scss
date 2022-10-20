@@ -59,7 +59,7 @@
     align-items: center;
 
     .moreIcon {
-      color: var(--color-text-secondary);
+      color: var(--color-icon);
     }
 
     > :not(:first-child) {
@@ -96,7 +96,7 @@
 
       .text {
         font: var(--font-subhead-2);
-        color: var(--color-text-secondary);
+        color: var(--color-caption);
       }
 
       .verticalBar {

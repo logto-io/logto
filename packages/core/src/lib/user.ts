@@ -1,5 +1,4 @@
 import { User, CreateUser, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { buildIdGenerator } from '@logto/shared';
 import { argon2Verify } from 'hash-wasm';
 import pRetry from 'p-retry';
 
@@ -8,6 +7,7 @@ import envSet from '@/env-set';
 import { findRolesByRoleNames, insertRoles } from '@/queries/roles';
 import { findUserByUsername, hasUserWithId } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
+import { buildIdGenerator } from '@/utils/id';
 import { encryptPassword } from '@/utils/password';
 
 const userId = buildIdGenerator(12);
