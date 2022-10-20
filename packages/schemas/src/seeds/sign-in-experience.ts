@@ -42,6 +42,18 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
         verificationCode: false,
         isPasswordPrimary: true,
       },
+      {
+        identifier: SignInIdentifier.Email,
+        password: true,
+        verificationCode: true,
+        isPasswordPrimary: false,
+      },
+      {
+        identifier: SignInIdentifier.Phone,
+        password: true,
+        verificationCode: true,
+        isPasswordPrimary: false,
+      },
     ],
   },
   signInMethods: {

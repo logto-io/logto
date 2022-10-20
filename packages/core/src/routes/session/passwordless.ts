@@ -1,5 +1,5 @@
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
-import { PasscodeType, SignUpIdentifier } from '@logto/schemas';
+import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
@@ -55,6 +55,18 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     `${signInRoute}/sms/verify-passcode`,
     koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
     async (ctx, next) => {
+      const signInExperience = await findDefaultSignInExperience();
+      assertThat(
+        signInExperience.signIn.methods.some(
+          ({ identifier, verificationCode }) =>
+            identifier === SignInIdentifier.Phone && verificationCode
+        ),
+        new RequestError({
+          code: 'user.sign_in_method_not_enabled',
+          status: 422,
+        })
+      );
+
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
       const type = 'SignInSms';
@@ -103,6 +115,18 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     `${signInRoute}/email/verify-passcode`,
     koaGuard({ body: object({ email: string().regex(emailRegEx), code: string() }) }),
     async (ctx, next) => {
+      const signInExperience = await findDefaultSignInExperience();
+      assertThat(
+        signInExperience.signIn.methods.some(
+          ({ identifier, verificationCode }) =>
+            identifier === SignInIdentifier.Email && verificationCode
+        ),
+        new RequestError({
+          code: 'user.sign_in_method_not_enabled',
+          status: 422,
+        })
+      );
+
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
       const type = 'SignInEmail';

@@ -1,5 +1,5 @@
 import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
-import { SignUpIdentifier, UserRole } from '@logto/schemas';
+import { SignInIdentifier, SignUpIdentifier, UserRole } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
@@ -36,9 +36,18 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
       }),
     }),
     async (ctx, next) => {
-      const {
-        params: { client_id },
-      } = await provider.interactionDetails(ctx.req, ctx.res);
+      const signInExperience = await findDefaultSignInExperience();
+      assertThat(
+        signInExperience.signIn.methods.some(
+          ({ identifier, password }) => identifier === SignInIdentifier.Username && password
+        ),
+        new RequestError({
+          code: 'user.sign_in_method_not_enabled',
+          status: 422,
+        })
+      );
+
+      await provider.interactionDetails(ctx.req, ctx.res);
       const { username, password } = ctx.guard.body;
       const type = 'SignInUsernamePassword';
       ctx.log(type, { username });

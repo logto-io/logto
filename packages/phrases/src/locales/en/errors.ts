@@ -44,6 +44,7 @@ const errors = {
     cannot_delete_self: 'You cannot delete yourself.',
     same_password: 'Your new password can not be the same as current password.',
     sign_up_method_not_enabled: 'This sign up method is not enabled.',
+    sign_in_method_not_enabled: 'This sign in method is not enabled.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',

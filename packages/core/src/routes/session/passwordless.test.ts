@@ -1,7 +1,7 @@
-import { SignUpIdentifier, User } from '@logto/schemas';
+import { SignInIdentifier, SignUpIdentifier, User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience, mockUser } from '@/__mocks__';
+import { mockSignInExperience, mockSignInMethod, mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
@@ -123,6 +123,23 @@ describe('session -> passwordlessRoutes', () => {
         .send({ phone: '13000000000', code: '1231' });
       expect(response.statusCode).toEqual(400);
     });
+    it('throw error if sign in method is not enabled', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signIn: {
+          methods: [
+            {
+              ...mockSignInMethod,
+              identifier: SignInIdentifier.Username,
+            },
+          ],
+        },
+      });
+      const response = await sessionRequest
+        .post(`${signInRoute}/sms/verify-passcode`)
+        .send({ phone: '13000000000', code: '1234' });
+      expect(response.statusCode).toEqual(422);
+    });
   });
 
   describe('POST /session/sign-in/passwordless/email/send-passcode', () => {
@@ -171,6 +188,23 @@ describe('session -> passwordlessRoutes', () => {
         .post(`${signInRoute}/email/verify-passcode`)
         .send({ email: 'a@a.com', code: '1231' });
       expect(response.statusCode).toEqual(400);
+    });
+    it('throw error if sign in method is not enabled', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signIn: {
+          methods: [
+            {
+              ...mockSignInMethod,
+              identifier: SignInIdentifier.Username,
+            },
+          ],
+        },
+      });
+      const response = await sessionRequest
+        .post(`${signInRoute}/email/verify-passcode`)
+        .send({ email: 'a@a.com', code: '1234' });
+      expect(response.statusCode).toEqual(422);
     });
   });
 

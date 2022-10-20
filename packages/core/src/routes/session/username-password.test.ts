@@ -1,8 +1,8 @@
-import { SignUpIdentifier, User, UserRole } from '@logto/schemas';
+import { SignInIdentifier, SignUpIdentifier, User, UserRole } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience, mockUser } from '@/__mocks__';
+import { mockSignInExperience, mockSignInMethod, mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
@@ -143,6 +143,26 @@ describe('sessionRoutes', () => {
         password: '_password',
       });
       expect(response.statusCode).toEqual(400);
+    });
+
+    it('throw if sign in method is not enabled', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signIn: {
+          methods: [
+            {
+              ...mockSignInMethod,
+              identifier: SignInIdentifier.Phone,
+              password: false,
+            },
+          ],
+        },
+      });
+      const response = await sessionRequest.post(signInRoute).send({
+        username: 'username',
+        password: 'password',
+      });
+      expect(response.statusCode).toEqual(422);
     });
   });
 
