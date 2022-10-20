@@ -1,10 +1,10 @@
 import { CreateUser, Users, Applications, User } from '@logto/schemas';
+import { UpdateWhereData } from '@logto/shared';
 
 import envSet from '@/env-set';
 import { UpdateError } from '@/errors/SlonikError';
 import { createTestPool } from '@/utils/test-utils';
 
-import { UpdateWhereData } from './types';
 import { buildUpdateWhere } from './update-where';
 
 const poolSpy = jest.spyOn(envSet, 'pool', 'get');

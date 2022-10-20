@@ -90,6 +90,7 @@ const CreateForm = ({ onClose }: Props) => {
             {Object.values(ApplicationType).map((value) => (
               <Radio key={value} value={value}>
                 <TypeDescription
+                  type={value}
                   title={t(`${applicationTypeI18nKey[value]}.title`)}
                   subtitle={t(`${applicationTypeI18nKey[value]}.subtitle`)}
                   description={t(`${applicationTypeI18nKey[value]}.description`)}

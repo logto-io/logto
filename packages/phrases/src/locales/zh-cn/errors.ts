@@ -41,9 +41,7 @@ const errors = {
     identity_exists: '该社交帐号已被注册',
     invalid_role_names: '角色名称（{{roleNames}}）无效',
     cannot_delete_self: '你无法删除自己',
-    same_password: '新设置的密码不可与当前密码相同',
-    sign_up_method_not_enabled: '注册方式尚未启用',
-    sign_in_method_not_enabled: '登录方式尚未启用',
+    same_password: '为确保你的账户安全，新密码不能与旧密码一致',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',
@@ -57,8 +55,8 @@ const errors = {
     insufficient_info: '登录信息缺失，请检查你的输入。',
     connector_id_mismatch: '传入的连接器 ID 与 session 中保存的记录不一致',
     connector_session_not_found: '无法找到连接器登录信息，请尝试重新登录。',
-    forgot_password_session_not_found: '无法找到忘记密码验证信息，请尝试重新验证。',
-    forgot_password_verification_expired: '忘记密码验证已过期，请尝试重新验证。',
+    verification_session_not_found: '验证失败，请重新验证。',
+    verification_expired: '无密码验证已过期。请返回重新验证。',
     unauthorized: '请先登录',
     unsupported_prompt_name: '不支持的 prompt name',
     forgot_password_not_enabled: '忘记密码功能没有开启。',
@@ -101,16 +99,11 @@ const errors = {
     empty_social_connectors: '你启用了社交登录的方式。请至少选择一个社交连接器。',
     enabled_connector_not_found: '未找到已启用的 {{type}} 连接器',
     not_one_and_only_one_primary_sign_in_method: '主要的登录方式必须有且仅有一个，请检查你的输入。',
-    username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
-    passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
-    miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.', // UNTRANSLATED
-    password_sign_in_must_be_enabled:
-      'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
-    code_sign_in_must_be_enabled:
-      'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
+    unsupported_default_language: '{{language}}无法选择为默认语言。',
   },
   localization: {
-    cannot_delete_default_language: '不能删除「登录体验」正在使用的默认语言 {{languageKey}}。', // UNTRANSLATED
+    cannot_delete_default_language: '你已设置{{languageTag}}为你的默认语言，你无法删除默认语言。',
+    invalid_translation_structure: '无效的数据格式，请检查你的输入并重试。',
   },
   swagger: {
     invalid_zod_type: '无效的 Zod 类型，请检查路由 guard 配置。',
@@ -121,6 +114,9 @@ const errors = {
     not_exists: '该 {{name}} 不存在',
     not_exists_with_id: 'ID 为 `{{id}}` 的 {{name}} 不存在',
     not_found: '该资源不存在',
+  },
+  log: {
+    invalid_type: 'The log type is invalid.', // UNTRANSLATED
   },
 };
 

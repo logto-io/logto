@@ -42,9 +42,7 @@ const errors = {
     identity_exists: 'Sosyal platform hesabı kaydedildi.',
     invalid_role_names: '({{roleNames}}) rol adları geçerli değil.',
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
-    same_password: 'Your new password can not be the same as current password.', // UNTRANSLATED
-    sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
-    sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
+    same_password: 'Your new password can’t be the same as your current password.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '{{name}} şifreleme metodu desteklenmiyor.',
@@ -59,10 +57,10 @@ const errors = {
     connector_id_mismatch: 'connectorId, oturum kaydı ile eşleşmiyor.',
     connector_session_not_found:
       'Bağlayıcı oturum bulunamadı. Lütfen geri dönüp tekrardan giriş yapınız.',
-    forgot_password_session_not_found:
-      'Forgot password session not found. Please go back and verify.', // UNTRANSLATED
-    forgot_password_verification_expired:
-      'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
+    verification_session_not_found:
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
+    verification_expired:
+      'The connection has timed out. Verify again to ensure your account safety.', // UNTRANSLATED
     unauthorized: 'Lütfen önce oturum açın.',
     unsupported_prompt_name: 'Desteklenmeyen prompt adı.',
     forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
@@ -109,17 +107,12 @@ const errors = {
     enabled_connector_not_found: 'Etkin {{type}} bağlayıcı bulunamadı.',
     not_one_and_only_one_primary_sign_in_method:
       'Yalnızca bir tane birincil oturum açma yöntemi olmalıdır. Lütfen inputu kontrol ediniz.',
-    username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
-    passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
-    miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.', // UNTRANSLATED
-    password_sign_in_must_be_enabled:
-      'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
-    code_sign_in_must_be_enabled:
-      'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
+    unsupported_default_language: 'This language - {{language}} is not supported at the moment.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:
-      'You cannot delete {{languageKey}} language since it is used as default language in sign-in experience.', // UNTRANSLATED
+      '{{languageTag}} is set as your default language and can’t be deleted.', // UNTRANSLATED
+    invalid_translation_structure: 'Invalid data schemas. Please check your input and try again.', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type:
@@ -132,6 +125,9 @@ const errors = {
     not_exists: '{{name}} mevcut değil.',
     not_exists_with_id: ' `{{id}}` id kimliğine sahip {{name}} mevcut değil.',
     not_found: 'Kaynak mevcut değil.',
+  },
+  log: {
+    invalid_type: 'The log type is invalid.', // UNTRANSLATED
   },
 };
 

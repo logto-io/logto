@@ -1,8 +1,8 @@
-import en from '../en';
+import { LocalPhrase } from '../../types';
 import errors from './errors';
 import translation from './translation';
 
-const ptPT: typeof en = Object.freeze({
+const ptPT: LocalPhrase = Object.freeze({
   translation,
   errors,
 });

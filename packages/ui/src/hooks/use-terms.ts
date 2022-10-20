@@ -1,34 +1,54 @@
 import { useContext, useCallback } from 'react';
 
-import { termsOfUseConfirmModalPromise } from '@/containers/TermsOfUse/TermsOfUseConfirmModal';
-import { termsOfUseIframeModalPromise } from '@/containers/TermsOfUse/TermsOfUseIframeModal';
+import { createIframeConfirmModalContent } from '@/containers/TermsOfUse/IframeConfirmModalContent';
+import TermsOfUseConfirmModalContent from '@/containers/TermsOfUse/TermsOfUseConfirmModalContent';
 import { ConfirmModalMessage } from '@/types';
-import { flattenPromiseResult } from '@/utils/promisify';
 
+import * as styles from '../components/ConfirmModal/MobileModal.module.scss';
+import { useConfirmModal } from './use-confirm-modal';
 import { PageContext } from './use-page-context';
 
 const useTerms = () => {
   const { termsAgreement, setTermsAgreement, experienceSettings } = useContext(PageContext);
+  const { show } = useConfirmModal();
 
   const { termsOfUse } = experienceSettings ?? {};
 
   const termsOfUseIframeModalHandler = useCallback(async () => {
-    const [result] = await flattenPromiseResult<boolean>(termsOfUseIframeModalPromise());
+    const [result] = await show({
+      className: styles.iframeModal,
+      ModalContent: () => createIframeConfirmModalContent(termsOfUse?.contentUrl),
+      confirmText: 'action.agree',
+    });
 
-    return Boolean(result);
-  }, []);
-
-  const termsOfUseConfirmModalHandler = useCallback(async () => {
-    const [result, error] = await flattenPromiseResult<boolean>(termsOfUseConfirmModalPromise());
-
-    if (error === ConfirmModalMessage.SHOW_TERMS_DETAIL_MODAL) {
-      const result = await termsOfUseIframeModalHandler();
-
-      return result;
+    // Update the local terms status
+    if (result) {
+      setTermsAgreement(true);
     }
 
-    return Boolean(result);
-  }, [termsOfUseIframeModalHandler]);
+    return result;
+  }, [setTermsAgreement, show, termsOfUse?.contentUrl]);
+
+  const termsOfUseConfirmModalHandler = useCallback(async () => {
+    const [result, data] = await show({
+      ModalContent: TermsOfUseConfirmModalContent,
+      confirmText: 'action.agree',
+    });
+
+    // Show Terms Detail Confirm Modal
+    if (data === ConfirmModalMessage.SHOW_TERMS_DETAIL_MODAL) {
+      const detailResult = await termsOfUseIframeModalHandler();
+
+      return detailResult;
+    }
+
+    // Update the local terms status
+    if (result) {
+      setTermsAgreement(true);
+    }
+
+    return result;
+  }, [setTermsAgreement, show, termsOfUseIframeModalHandler]);
 
   const termsValidation = useCallback(async () => {
     if (termsAgreement || !termsOfUse?.enabled || !termsOfUse.contentUrl) {

@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.12](https://github.com/logto-io/logto/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2022-10-19)
+
+**Note:** Version bump only for package @logto/ui
+
+
+
+
+
+## [1.0.0-beta.11](https://github.com/logto-io/logto/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2022-10-19)
+
+
+### Features
+
+* **ui:** add a11y support ([#2076](https://github.com/logto-io/logto/issues/2076)) ([2249d71](https://github.com/logto-io/logto/commit/2249d717a8928597d00c383c268d6fdc506ac437))
+* **ui:** add reset password error handling flow ([#2079](https://github.com/logto-io/logto/issues/2079)) ([afa2ac4](https://github.com/logto-io/logto/commit/afa2ac47ee461e3526f61594e456d484fd3166af))
+* **ui:** global confirm modal ([#2018](https://github.com/logto-io/logto/issues/2018)) ([f1ca49c](https://github.com/logto-io/logto/commit/f1ca49c89253daef8b47ec88e30f69df818374d1))
+
+
+### Bug Fixes
+
+* **console:** remove connector id and prevent text overflow ([#2072](https://github.com/logto-io/logto/issues/2072)) ([05b5025](https://github.com/logto-io/logto/commit/05b50250a387635649614aaeeec9757e7034a19d))
+* **ui:** fix ut ([9ea6a8c](https://github.com/logto-io/logto/commit/9ea6a8c8e94e116d8efbbff63b39738162cbaec1))
+* **ui:** revert color token changes in ui as it uses different design system ([489e2b3](https://github.com/logto-io/logto/commit/489e2b3a1129fbbf824955e4697c1d64ff294d95))
+
+
+
 ## [1.0.0-beta.10](https://github.com/logto-io/logto/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-09-28)
 
 

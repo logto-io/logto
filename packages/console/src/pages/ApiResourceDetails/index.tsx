@@ -10,6 +10,9 @@ import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
 import ApiResource from '@/assets/images/api-resource.svg';
+import Back from '@/assets/images/back.svg';
+import Delete from '@/assets/images/delete.svg';
+import More from '@/assets/images/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -23,9 +26,6 @@ import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi, { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
-import Back from '@/icons/Back';
-import Delete from '@/icons/Delete';
-import More from '@/icons/More';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import * as styles from './index.module.scss';

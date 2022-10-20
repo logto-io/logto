@@ -23,7 +23,7 @@ import { claimToUserKey, getUserClaims } from './scope';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
   const { issuer, cookieKeys, privateJwks, defaultIdTokenTtl, defaultRefreshTokenTtl } =
-    envSet.values.oidc;
+    envSet.oidc;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
 
   const cookieConfig = Object.freeze({

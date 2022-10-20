@@ -6,13 +6,10 @@ import { useTranslation } from 'react-i18next';
 import * as styles from './index.module.scss';
 
 const Check = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-    <rect x="1" y="1" width="18" height="18" rx="9" fill="#4F37F9" />
+  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M8.31476 13.858L5.13295 10.441C4.95568 10.253 4.95568 9.947 5.13295 9.757L5.77568 9.074C5.95295 8.886 6.24113 8.886 6.4184 9.074L8.63657 11.466L13.5811 6.141C13.7584 5.953 14.0465 5.953 14.2238 6.141L14.8665 6.825C15.0438 7.013 15.0438 7.32 14.8665 7.507L8.95748 13.858C8.78021 14.046 8.49203 14.046 8.31476 13.858Z"
-      fill="white"
+      d="M8.66666 1.33334C4.99999 1.33334 1.99999 4.33334 1.99999 8.00001C1.99999 11.6667 4.99999 14.6667 8.66666 14.6667C12.3333 14.6667 15.3333 11.6667 15.3333 8.00001C15.3333 4.33334 12.3333 1.33334 8.66666 1.33334ZM11.4667 6.86668L8.26666 10.0667C7.99999 10.3333 7.59999 10.3333 7.33333 10.0667L5.86666 8.60001C5.59999 8.33334 5.59999 7.93334 5.86666 7.66668C6.13333 7.40001 6.53333 7.40001 6.79999 7.66668L7.79999 8.66668L10.5333 5.93334C10.8 5.66668 11.2 5.66668 11.4667 5.93334C11.7333 6.20001 11.7333 6.60001 11.4667 6.86668Z"
+      fill="#5D34F2"
     />
   </svg>
 );
@@ -29,7 +26,6 @@ export type Props = {
   type?: 'card' | 'plain';
   isDisabled?: boolean;
   disabledLabel?: AdminConsoleKey;
-  size?: 'normal' | 'small';
 };
 
 const Radio = ({
@@ -44,7 +40,6 @@ const Radio = ({
   type,
   isDisabled,
   disabledLabel,
-  size = 'normal',
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -68,21 +63,30 @@ const Radio = ({
         styles.radio,
         isChecked && styles.checked,
         isDisabled && styles.disabled,
-        styles[size],
         className
       )}
+      // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
+      role="radio"
       tabIndex={tabIndex}
       onClick={isDisabled ? undefined : onClick}
       onKeyPress={handleKeyPress}
     >
-      <input readOnly disabled type="radio" name={name} value={value} checked={isChecked} />
-      {type === 'card' && <Check />}
-      {children}
-      {type === 'plain' && <div className={styles.indicator} />}
-      {title && t(title)}
-      {isDisabled && disabledLabel && (
-        <div className={styles.disabledLabel}>{t(disabledLabel)}</div>
-      )}
+      <div className={styles.content}>
+        <input readOnly disabled type="radio" name={name} value={value} checked={isChecked} />
+        {type === 'card' && (
+          <div className={styles.indicator}>
+            <Check />
+          </div>
+        )}
+        {children}
+        {type === 'plain' && <div className={styles.indicator} />}
+        {title && t(title)}
+        {isDisabled && disabledLabel && (
+          <div className={classNames(styles.indicator, styles.disabledLabel)}>
+            {t(disabledLabel)}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

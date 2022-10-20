@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useCallback, useEffect, useState, useMemo, useContext } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,13 +9,10 @@ import Input from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
-import { PageContext } from '@/hooks/use-page-context';
 import useTerms from '@/hooks/use-terms';
-import { UserFlow, SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
+import { UserFlow } from '@/types';
 import { emailValidation } from '@/utils/field-validations';
 
-import PasswordlessConfirmModal from './PasswordlessConfirmModal';
 import PasswordlessSwitch from './PasswordlessSwitch';
 import * as styles from './index.module.scss';
 
@@ -41,7 +38,6 @@ const EmailPasswordless = ({
   hasSwitch = false,
   className,
 }: Props) => {
-  const { setToast } = useContext(PageContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -49,30 +45,13 @@ const EmailPasswordless = ({
   const { fieldValue, setFieldValue, setFieldErrors, register, validateForm } =
     useForm(defaultState);
 
-  const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
-
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.email_not_exists': (error) => {
-        const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-
-        // Directly display the  error if user is trying to bind with social
-        if (socialToBind) {
-          setToast(error.message);
-
-          return;
-        }
-
-        setShowPasswordlessConfirmModal(true);
-      },
-      'user.email_exists_register': () => {
-        setShowPasswordlessConfirmModal(true);
-      },
       'guard.invalid_input': () => {
         setFieldErrors({ email: 'invalid_email' });
       },
     }),
-    [setFieldErrors, setToast]
+    [setFieldErrors]
   );
 
   const sendPasscode = getSendPasscodeApi(type, 'email');
@@ -95,10 +74,6 @@ const EmailPasswordless = ({
     [validateForm, hasTerms, termsValidation, asyncSendPasscode, fieldValue.email]
   );
 
-  const onModalCloseHandler = useCallback(() => {
-    setShowPasswordlessConfirmModal(false);
-  }, []);
-
   useEffect(() => {
     if (result) {
       navigate(
@@ -112,38 +87,30 @@ const EmailPasswordless = ({
   }, [fieldValue.email, navigate, result, type]);
 
   return (
-    <>
-      <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-        <div className={styles.formFields}>
-          <Input
-            type="email"
-            name="email"
-            autoComplete="email"
-            inputMode="email"
-            placeholder={t('input.email')}
-            autoFocus={autoFocus}
-            className={styles.inputField}
-            {...register('email', emailValidation)}
-            onClear={() => {
-              setFieldValue((state) => ({ ...state, email: '' }));
-            }}
-          />
-          {hasSwitch && <PasswordlessSwitch target="sms" className={styles.switch} />}
-        </div>
+    <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
+      <div className={styles.formFields}>
+        <Input
+          type="email"
+          name="email"
+          autoComplete="email"
+          inputMode="email"
+          placeholder={t('input.email')}
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus={autoFocus}
+          className={styles.inputField}
+          {...register('email', emailValidation)}
+          onClear={() => {
+            setFieldValue((state) => ({ ...state, email: '' }));
+          }}
+        />
+        {hasSwitch && <PasswordlessSwitch target="sms" className={styles.switch} />}
+      </div>
 
-        {hasTerms && <TermsOfUse className={styles.terms} />}
-        <Button title="action.continue" onClick={async () => onSubmitHandler()} />
+      {hasTerms && <TermsOfUse className={styles.terms} />}
+      <Button title="action.continue" onClick={async () => onSubmitHandler()} />
 
-        <input hidden type="submit" />
-      </form>
-      <PasswordlessConfirmModal
-        isOpen={showPasswordlessConfirmModal}
-        type={type === 'sign-in' ? 'register' : 'sign-in'}
-        method="email"
-        value={fieldValue.email}
-        onClose={onModalCloseHandler}
-      />
-    </>
+      <input hidden type="submit" />
+    </form>
   );
 };
 

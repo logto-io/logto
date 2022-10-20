@@ -87,6 +87,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <div className={styles.formFields}>
         <Input
+          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={autoFocus}
           className={styles.inputField}
           name="new-username"
@@ -116,7 +117,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
           {...fieldRegister('confirmPassword', (confirmPassword) =>
             confirmPasswordValidation(fieldValue.password, confirmPassword)
           )}
-          errorStyling={false}
+          isErrorStyling={false}
           onClear={() => {
             setFieldValue((state) => ({ ...state, confirmPassword: '' }));
           }}

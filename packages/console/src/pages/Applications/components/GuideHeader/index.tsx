@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Close from '@/assets/images/close.svg';
 import GetSample from '@/assets/images/get-sample.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
@@ -8,7 +9,6 @@ import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
 import Tooltip from '@/components/Tooltip';
-import Close from '@/icons/Close';
 import { SupportedSdk } from '@/types/applications';
 
 import * as styles from './index.module.scss';
@@ -87,7 +87,7 @@ const GuideHeader = ({ appName, selectedSdk, isCompact = false, onClose }: Props
             subtitle="applications.guide.header_description"
           />
           <Spacer />
-          <Button type="plain" size="small" title="general.skip" onClick={onClose} />
+          <Button type="text" size="small" title="general.skip" onClick={onClose} />
           <Button
             className={styles.getSampleButton}
             type="outline"

@@ -1,8 +1,8 @@
-import en from '../en';
+import { LocalPhrase } from '../../types';
 import errors from './errors';
 import translation from './translation';
 
-const zhCN: typeof en = Object.freeze({
+const zhCN: LocalPhrase = Object.freeze({
   translation,
   errors,
 });

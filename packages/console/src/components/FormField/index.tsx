@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { ReactElement, ReactNode, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Tip from '@/icons/Tip';
+import Tip from '@/assets/images/tip.svg';
 
 import DangerousRaw from '../DangerousRaw';
 import Spacer from '../Spacer';

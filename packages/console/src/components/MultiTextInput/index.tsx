@@ -1,11 +1,10 @@
 import { AdminConsoleKey } from '@logto/phrases';
-import classNames from 'classnames';
 import { KeyboardEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import * as textButtonStyles from '@/components/TextButton/index.module.scss';
-import Minus from '@/icons/Minus';
+import Minus from '@/assets/images/minus.svg';
 
+import Button from '../Button';
 import ConfirmModal from '../ConfirmModal';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
@@ -85,9 +84,13 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder
           )}
         </div>
       ))}
-      <div className={classNames(textButtonStyles.button, styles.addAnother)} onClick={handleAdd}>
-        {t('general.add_another')}
-      </div>
+      <Button
+        size="small"
+        type="text"
+        title="general.add_another"
+        className={styles.addAnother}
+        onClick={handleAdd}
+      />
       <ConfirmModal
         isOpen={deleteFieldIndex !== undefined}
         confirmButtonText="general.delete"

@@ -1,4 +1,4 @@
-import en from './en';
+import { LocalePhrase } from '../types';
 
 const translation = {
   input: {
@@ -21,6 +21,7 @@ const translation = {
     enter_passcode: 'Digite a senha',
     confirm: 'Confirmar',
     cancel: 'Cancelar',
+    save_password: 'Save', // UNTRANSLATED
     bind: 'Agregar a {{address}}',
     back: 'Voltar',
     nav_back: 'Anterior',
@@ -47,6 +48,7 @@ const translation = {
     continue_with: 'Continuar com',
     create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de fazer login?',
     sign_in_id_does_not_exists: 'A conta com {{type}} {{value}} não existe, gostaria de criar uma?',
+    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
     bind_account_title: 'Agregar conta',
     social_create_account: 'Sem conta? Pode criar uma nova e agregar.',
     social_bind_account: 'Já tem uma conta? Faça login para agregar a sua identidade social.',
@@ -57,6 +59,7 @@ const translation = {
     reset_password_description_sms:
       'Digite o número de telefone associado à sua conta e enviaremos uma mensagem de texto com o código de verificação para redefinir sua senha.',
     new_password: 'Nova Senha',
+    password_changed: 'Password Changed', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'O Utilizador e a password não correspondem',
@@ -78,7 +81,7 @@ const translation = {
   },
 };
 
-const ptPT: typeof en = Object.freeze({
+const ptPT: LocalePhrase = Object.freeze({
   translation,
 });
 

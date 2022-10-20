@@ -1,87 +1,12 @@
-import { assertEnv, conditional, getEnv, Optional } from '@silverhand/essentials';
-import inquirer from 'inquirer';
-import { createPool } from 'slonik';
+import { assert, assertEnv } from '@silverhand/essentials';
+import chalk from 'chalk';
+import { createMockPool, createMockQueryResult, createPool, parseDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
-import { z } from 'zod';
-
-import { createDatabase, createDatabaseCli, replaceDsnDatabase } from '@/database/seed';
-
-import { appendDotEnv } from './dot-env';
-import { allYes, noInquiry } from './parameters';
-
-const defaultDatabaseUrl = getEnv('DB_URL_DEFAULT', 'postgres://@localhost:5432');
-const defaultDatabaseName = 'logto';
-
-const initDatabase = async (dsn: string): Promise<[string, boolean]> => {
-  try {
-    return [await createDatabase(dsn, defaultDatabaseName), true];
-  } catch (error: unknown) {
-    const result = z.object({ code: z.string() }).safeParse(error);
-
-    // https://www.postgresql.org/docs/12/errcodes-appendix.html
-    const databaseExists = result.success && result.data.code === '42P04';
-
-    if (!databaseExists) {
-      throw error;
-    }
-
-    if (allYes) {
-      return [replaceDsnDatabase(dsn, defaultDatabaseName), false];
-    }
-
-    const useCurrent = await inquirer.prompt({
-      type: 'confirm',
-      name: 'value',
-      message: `A database named "${defaultDatabaseName}" already exists. Would you like to use it without filling the initial data?`,
-    });
-
-    if (useCurrent.value) {
-      return [replaceDsnDatabase(dsn, defaultDatabaseName), false];
-    }
-
-    throw error;
-  }
-};
-
-const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boolean]> => {
-  if (allYes) {
-    return initDatabase(defaultDatabaseUrl);
-  }
-
-  const setUp = await inquirer.prompt({
-    type: 'confirm',
-    name: 'value',
-    message: `No Postgres DSN (${key}) found in env variables. Would you like to set up a new Logto database?`,
-  });
-
-  if (!setUp.value) {
-    const dsn = await inquirer.prompt({
-      name: 'value',
-      default: new URL(defaultDatabaseName, defaultDatabaseUrl).href,
-      message: 'Please input the DSN which points to an existing Logto database:',
-    });
-
-    return [conditional<string>(dsn.value && String(dsn.value)), false];
-  }
-
-  const dsnAnswer = await inquirer.prompt({
-    name: 'value',
-    default: new URL(defaultDatabaseUrl).href,
-    message: `Please input the DSN _WITHOUT_ database name:`,
-  });
-  const dsn = conditional<string>(dsnAnswer.value && String(dsnAnswer.value));
-
-  if (!dsn) {
-    return [dsn, false];
-  }
-
-  return initDatabase(dsn);
-};
 
 const createPoolByEnv = async (isTest: boolean) => {
   // Database connection is disabled in unit test environment
   if (isTest) {
-    return;
+    return createMockPool({ query: async () => createMockQueryResult([]) });
   }
 
   const key = 'DB_URL';
@@ -89,29 +14,28 @@ const createPoolByEnv = async (isTest: boolean) => {
 
   try {
     const databaseDsn = assertEnv(key);
+    assert(parseDsn(databaseDsn).databaseName, new Error('Database name is required in `DB_URL`'));
 
     return await createPool(databaseDsn, { interceptors });
   } catch (error: unknown) {
-    if (noInquiry) {
-      throw error;
+    if (error instanceof Error && error.message === `env variable ${key} not found`) {
+      console.error(
+        `${chalk.red('[error]')} No Postgres DSN (${chalk.green(
+          key
+        )}) found in env variables.\n\n` +
+          `  Either provide it in your env, or add it to the ${chalk.blue(
+            '.env'
+          )} file in the Logto project root.\n\n` +
+          `  If you want to set up a new Logto database, run ${chalk.green(
+            'npm run cli db seed'
+          )} before setting env ${chalk.green(key)}.\n\n` +
+          `  Visit ${chalk.blue(
+            'https://docs.logto.io/docs/references/core/configuration'
+          )} for more info about setting up env.\n`
+      );
     }
 
-    const [dsn, needsSeed] = await inquireForLogtoDsn(key);
-
-    if (!dsn) {
-      throw error;
-    }
-
-    const cli = await createDatabaseCli(dsn);
-
-    if (needsSeed) {
-      await cli.createTables();
-      await cli.seedTables();
-    }
-
-    appendDotEnv(key, dsn);
-
-    return cli.pool;
+    throw error;
   }
 };
 
