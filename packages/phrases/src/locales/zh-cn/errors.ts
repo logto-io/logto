@@ -42,7 +42,8 @@ const errors = {
     invalid_role_names: '角色名称（{{roleNames}}）无效',
     cannot_delete_self: '你无法删除自己',
     same_password: '新设置的密码不可与当前密码相同',
-    sign_up_method_not_enabled: '注册方式尚未启用', // UNTRANSLATED
+    sign_up_method_not_enabled: '注册方式尚未启用',
+    sign_in_method_not_enabled: '登录方式尚未启用',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',

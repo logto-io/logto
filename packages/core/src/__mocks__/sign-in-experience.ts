@@ -43,7 +43,19 @@ export const mockSignInExperience: SignInExperience = {
       {
         identifier: SignInIdentifier.Username,
         password: true,
-        verificationCode: false,
+        isPasswordPrimary: true,
+        verificationCode: true,
+      },
+      {
+        identifier: SignInIdentifier.Email,
+        password: true,
+        verificationCode: true,
+        isPasswordPrimary: true,
+      },
+      {
+        identifier: SignInIdentifier.Phone,
+        password: true,
+        verificationCode: true,
         isPasswordPrimary: true,
       },
     ],

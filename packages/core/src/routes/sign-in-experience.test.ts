@@ -154,6 +154,7 @@ describe('PATCH /sign-in-exp', () => {
         termsOfUse,
         signInMethods: mockSignInMethods,
         socialSignInConnectorTargets,
+        signIn: mockSignIn,
       },
     });
   });
