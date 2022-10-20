@@ -43,6 +43,7 @@ const errors = {
     invalid_role_names: '({{roleNames}}) rol adları geçerli değil.',
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
     same_password: 'Your new password can not be the same as current password.', // UNTRANSLATED
+    sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '{{name}} şifreleme metodu desteklenmiyor.',

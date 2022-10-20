@@ -1,5 +1,5 @@
 import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
-import { UserRole } from '@logto/schemas';
+import { SignUpIdentifier, UserRole } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
@@ -13,6 +13,7 @@ import {
   insertUser,
 } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
+import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import { hasUser, hasActiveUsers, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
@@ -64,6 +65,15 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
       const { username, password } = ctx.guard.body;
       const type = 'RegisterUsernamePassword';
       ctx.log(type, { username });
+
+      const signInExperience = await findDefaultSignInExperience();
+      assertThat(
+        signInExperience.signUp.identifier === SignUpIdentifier.Username,
+        new RequestError({
+          code: 'user.sign_up_method_not_enabled',
+          status: 422,
+        })
+      );
 
       assertThat(
         !(await hasUser(username)),

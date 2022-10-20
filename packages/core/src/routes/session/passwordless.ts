@@ -1,5 +1,5 @@
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
-import { PasscodeType } from '@logto/schemas';
+import { PasscodeType, SignUpIdentifier } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
@@ -8,6 +8,7 @@ import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import { assignInteractionResults } from '@/lib/session';
 import { generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
+import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
   updateUserById,
   hasUserWithEmail,
@@ -155,6 +156,16 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       const type = 'RegisterSms';
       ctx.log(type, { phone, code });
 
+      const signInExperience = await findDefaultSignInExperience();
+      assertThat(
+        signInExperience.signUp.identifier === SignUpIdentifier.Phone ||
+          signInExperience.signUp.identifier === SignUpIdentifier.EmailOrPhone,
+        new RequestError({
+          code: 'user.sign_up_method_not_enabled',
+          status: 422,
+        })
+      );
+
       assertThat(
         !(await hasUserWithPhone(phone)),
         new RequestError({ code: 'user.phone_exists_register', status: 422 })
@@ -202,6 +213,16 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       const { email, code } = ctx.guard.body;
       const type = 'RegisterEmail';
       ctx.log(type, { email, code });
+
+      const signInExperience = await findDefaultSignInExperience();
+      assertThat(
+        signInExperience.signUp.identifier === SignUpIdentifier.Email ||
+          signInExperience.signUp.identifier === SignUpIdentifier.EmailOrPhone,
+        new RequestError({
+          code: 'user.sign_up_method_not_enabled',
+          status: 422,
+        })
+      );
 
       assertThat(
         !(await hasUserWithEmail(email)),

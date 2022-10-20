@@ -42,6 +42,7 @@ const errors = {
     invalid_role_names: '({{roleNames}}) não são válidos',
     cannot_delete_self: 'Não se pode remover a si mesmo.',
     same_password: 'Your new password can not be the same as current password.', // UNTRANSLATED
+    sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: 'O método de enncriptação {{name}} não é suportado.',
