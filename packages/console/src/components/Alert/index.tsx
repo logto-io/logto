@@ -2,8 +2,8 @@ import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import { ReactNode } from 'react';
 
+import Info from '@/assets/images/info.svg';
 import LinkButton from '@/components/LinkButton';
-import Info from '@/icons/Info';
 
 import Button from '../Button';
 import * as styles from './index.module.scss';
@@ -38,7 +38,7 @@ const Alert = ({
       )}
       {action && onClick && (
         <div className={styles.action}>
-          <Button title={action} type="plain" onClick={onClick} />
+          <Button title={action} type="text" size="small" onClick={onClick} />
         </div>
       )}
     </div>

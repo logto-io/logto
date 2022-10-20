@@ -13,7 +13,7 @@ $font-family: -apple-system, system-ui, 'BlinkMacSystemFont', 'Segoe UI', 'Robot
   --color-divider: #e0e3e3;
   --color-text-disabled: #c4c7c7;
   --color-border: #c4c7c7;
-  --color-primary: var(--light-primary-color);
+  --color-primary: var(--color-light-brand);
   --color-layer: #eff1f1;
   --color-error: #ba1b1b;
   --color-dialogue: #fff;
@@ -33,7 +33,7 @@ $font-family: -apple-system, system-ui, 'BlinkMacSystemFont', 'Segoe UI', 'Robot
   --color-divider: #444748;
   --color-text-disabled: #5c5f60;
   --color-border: #5c5f60;
-  --color-primary: var(--dark-primary-color);
+  --color-primary: var(--color-dark-brand);
   --color-layer: #2a2c32;
   --color-error: #dd3730;
   --color-dialogue:

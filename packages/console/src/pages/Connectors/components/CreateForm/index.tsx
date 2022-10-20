@@ -1,4 +1,5 @@
 import { ConnectorType } from '@logto/schemas';
+import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import Modal from 'react-modal';
 
@@ -74,7 +75,21 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
   const closeModal = () => {
     setIsGetStartedModalOpen(false);
     onClose?.(activeConnectorId);
+    setActiveGroupId(undefined);
+    setActiveConnectorId(undefined);
   };
+
+  const modalSize = useMemo(() => {
+    if (!groups || groups.length <= 2) {
+      return 'medium';
+    }
+
+    if (groups.length === 3) {
+      return 'large';
+    }
+
+    return 'xlarge';
+  }, [groups]);
 
   return (
     <Modal
@@ -95,7 +110,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
           />
         }
         className={styles.body}
-        size="xlarge"
+        size={modalSize}
         onClose={onClose}
       >
         {isLoading && 'Loading...'}
@@ -105,36 +120,35 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
             name="group"
             value={activeGroupId}
             type="card"
-            className={styles.connectorGroup}
+            className={classNames(styles.connectorGroup, styles[modalSize])}
             onChange={handleGroupChange}
           >
-            {groups.map(({ id, name, logo, description, connectors }) => (
-              <Radio
-                key={id}
-                value={id}
-                className={styles.connectorRadio}
-                isDisabled={connectors.every(({ enabled }) => enabled)}
-                disabledLabel="general.added"
-                size="small"
-              >
-                <div className={styles.connector}>
-                  <div className={styles.logo}>
-                    <img src={logo} />
-                  </div>
-                  <div className={styles.content}>
-                    <div className={styles.name}>
-                      <UnnamedTrans resource={name} />
+            {groups.map(({ id, name, logo, description, connectors }) => {
+              const isDisabled = connectors.every(({ enabled }) => enabled);
+
+              return (
+                <Radio key={id} value={id} isDisabled={isDisabled} disabledLabel="general.added">
+                  <div className={styles.connector}>
+                    <div className={styles.logo}>
+                      <img src={logo} alt="logo" />
                     </div>
-                    {type !== ConnectorType.Social && (
-                      <div className={styles.connectorId}>{id}</div>
-                    )}
-                    <div className={styles.description}>
-                      <UnnamedTrans resource={description} />
+                    <div className={styles.content}>
+                      <div
+                        className={classNames(
+                          styles.name,
+                          isDisabled && styles.nameWithRightPadding
+                        )}
+                      >
+                        <UnnamedTrans resource={name} />
+                      </div>
+                      <div className={styles.description}>
+                        <UnnamedTrans resource={description} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Radio>
-            ))}
+                </Radio>
+              );
+            })}
           </RadioGroup>
         )}
         {activeGroup && (

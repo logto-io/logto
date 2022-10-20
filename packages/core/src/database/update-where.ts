@@ -1,4 +1,10 @@
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
+import {
+  UpdateWhereData,
+  convertToIdentifiers,
+  convertToPrimitiveOrSql,
+  conditionalSql,
+} from '@logto/shared';
 import { notFalsy, Truthy } from '@silverhand/essentials';
 import { sql } from 'slonik';
 
@@ -6,9 +12,6 @@ import envSet from '@/env-set';
 import { UpdateError } from '@/errors/SlonikError';
 import assertThat from '@/utils/assert-that';
 import { isKeyOf } from '@/utils/schema';
-
-import { UpdateWhereData } from './types';
-import { conditionalSql, convertToIdentifiers, convertToPrimitiveOrSql } from './utils';
 
 type BuildUpdateWhere = {
   <Schema extends SchemaLike, ReturnType extends SchemaLike>(

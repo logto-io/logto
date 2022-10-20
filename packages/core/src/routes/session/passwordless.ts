@@ -1,25 +1,28 @@
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
-import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { PasscodeType } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
-import { assignInteractionResults } from '@/lib/session';
-import { generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
-  updateUserById,
-  hasUserWithEmail,
-  hasUserWithPhone,
   findUserByEmail,
   findUserByPhone,
+  hasUserWithEmail,
+  hasUserWithPhone,
 } from '@/queries/user';
+import { passcodeTypeGuard } from '@/routes/session/types';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
-import { getRoutePrefix } from './utils';
+import {
+  smsSignInAction,
+  emailSignInAction,
+  smsRegisterAction,
+  emailRegisterAction,
+} from './middleware/passwordless-action';
+import { assignVerificationResult, getPasswordlessRelatedLogType, getRoutePrefix } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
 export const signInRoute = getRoutePrefix('sign-in', 'passwordless');
@@ -29,20 +32,23 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   provider: Provider
 ) {
   router.post(
-    `${signInRoute}/sms/send-passcode`,
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
+    '/session/passwordless/sms/send',
+    koaGuard({
+      body: object({
+        phone: string().regex(phoneRegEx),
+        flow: passcodeTypeGuard,
+      }),
+    }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone } = ctx.guard.body;
-      const type = 'SignInSmsSendPasscode';
+      const {
+        body: { phone, flow },
+      } = ctx.guard;
+
+      const type = getPasswordlessRelatedLogType(flow, 'sms', 'send');
       ctx.log(type, { phone });
 
-      assertThat(
-        await hasUserWithPhone(phone),
-        new RequestError({ code: 'user.phone_not_exists', status: 422 })
-      );
-
-      const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
+      const passcode = await createPasscode(jti, flow, { phone });
       const { dbEntry } = await sendPasscode(passcode);
       ctx.log(type, { connectorId: dbEntry.id });
       ctx.status = 204;
@@ -52,57 +58,23 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    `${signInRoute}/sms/verify-passcode`,
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
-    async (ctx, next) => {
-      const signInExperience = await findDefaultSignInExperience();
-      assertThat(
-        signInExperience.signIn.methods.some(
-          ({ identifier, verificationCode }) =>
-            identifier === SignInIdentifier.Phone && verificationCode
-        ),
-        new RequestError({
-          code: 'user.sign_in_method_not_enabled',
-          status: 422,
-        })
-      );
-
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone, code } = ctx.guard.body;
-      const type = 'SignInSms';
-      ctx.log(type, { phone, code });
-
-      assertThat(
-        await hasUserWithPhone(phone),
-        new RequestError({ code: 'user.phone_not_exists', status: 422 })
-      );
-
-      await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
-      const { id } = await findUserByPhone(phone);
-      ctx.log(type, { userId: id });
-
-      await updateUserById(id, { lastSignInAt: Date.now() });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
-
-      return next();
-    }
-  );
-
-  router.post(
-    `${signInRoute}/email/send-passcode`,
-    koaGuard({ body: object({ email: string().regex(emailRegEx) }) }),
+    '/session/passwordless/email/send',
+    koaGuard({
+      body: object({
+        email: string().regex(emailRegEx),
+        flow: passcodeTypeGuard,
+      }),
+    }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email } = ctx.guard.body;
-      const type = 'SignInEmailSendPasscode';
+      const {
+        body: { email, flow },
+      } = ctx.guard;
+
+      const type = getPasswordlessRelatedLogType(flow, 'email', 'send');
       ctx.log(type, { email });
 
-      assertThat(
-        await hasUserWithEmail(email),
-        new RequestError({ code: 'user.email_not_exists', status: 422 })
-      );
-
-      const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
+      const passcode = await createPasscode(jti, flow, { email });
       const { dbEntry } = await sendPasscode(passcode);
       ctx.log(type, { connectorId: dbEntry.id });
       ctx.status = 204;
@@ -112,155 +84,98 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    `${signInRoute}/email/verify-passcode`,
-    koaGuard({ body: object({ email: string().regex(emailRegEx), code: string() }) }),
-    async (ctx, next) => {
-      const signInExperience = await findDefaultSignInExperience();
-      assertThat(
-        signInExperience.signIn.methods.some(
-          ({ identifier, verificationCode }) =>
-            identifier === SignInIdentifier.Email && verificationCode
-        ),
-        new RequestError({
-          code: 'user.sign_in_method_not_enabled',
-          status: 422,
-        })
-      );
-
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email, code } = ctx.guard.body;
-      const type = 'SignInEmail';
-      ctx.log(type, { email, code });
-
-      assertThat(
-        await hasUserWithEmail(email),
-        new RequestError({ code: 'user.email_not_exists', status: 422 })
-      );
-
-      await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
-      const { id } = await findUserByEmail(email);
-      ctx.log(type, { userId: id });
-
-      await updateUserById(id, { lastSignInAt: Date.now() });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
-
-      return next();
-    }
-  );
-
-  router.post(
-    `${registerRoute}/sms/send-passcode`,
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
+    '/session/passwordless/sms/verify',
+    koaGuard({
+      body: object({
+        phone: string().regex(phoneRegEx),
+        code: string(),
+        flow: passcodeTypeGuard,
+      }),
+    }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone } = ctx.guard.body;
-      const type = 'RegisterSmsSendPasscode';
+
+      const {
+        body: { phone, code, flow },
+      } = ctx.guard;
+
+      const type = getPasswordlessRelatedLogType(flow, 'sms', 'verify');
       ctx.log(type, { phone });
 
-      assertThat(
-        !(await hasUserWithPhone(phone)),
-        new RequestError({ code: 'user.phone_exists_register', status: 422 })
-      );
+      await verifyPasscode(jti, flow, code, { phone });
 
-      const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
-      const { dbEntry } = await sendPasscode(passcode);
-      ctx.log(type, { connectorId: dbEntry.id });
-      ctx.status = 204;
+      if (flow === PasscodeType.ForgotPassword) {
+        assertThat(
+          await hasUserWithPhone(phone),
+          new RequestError({ code: 'user.phone_not_exists', status: 404 })
+        );
 
-      return next();
+        const { id } = await findUserByPhone(phone);
+        await assignVerificationResult(ctx, provider, { flow, userId: id });
+        ctx.status = 204;
+
+        return next();
+      }
+
+      await assignVerificationResult(ctx, provider, { flow, phone });
+
+      if (flow === PasscodeType.SignIn) {
+        return smsSignInAction(provider)(ctx, next);
+      }
+
+      return smsRegisterAction(provider)(ctx, next);
     }
   );
 
   router.post(
-    `${registerRoute}/sms/verify-passcode`,
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
+    '/session/passwordless/email/verify',
+    koaGuard({
+      body: object({
+        email: string().regex(emailRegEx),
+        code: string(),
+        flow: passcodeTypeGuard,
+      }),
+    }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone, code } = ctx.guard.body;
-      const type = 'RegisterSms';
-      ctx.log(type, { phone, code });
+      const {
+        body: { email, code, flow },
+      } = ctx.guard;
 
-      const signInExperience = await findDefaultSignInExperience();
-      assertThat(
-        signInExperience.signUp.identifier === SignUpIdentifier.Phone ||
-          signInExperience.signUp.identifier === SignUpIdentifier.EmailOrPhone,
-        new RequestError({
-          code: 'user.sign_up_method_not_enabled',
-          status: 422,
-        })
-      );
-
-      assertThat(
-        !(await hasUserWithPhone(phone)),
-        new RequestError({ code: 'user.phone_exists_register', status: 422 })
-      );
-
-      await verifyPasscode(jti, PasscodeType.Register, code, { phone });
-      const id = await generateUserId();
-      ctx.log(type, { userId: id });
-
-      await insertUser({ id, primaryPhone: phone, lastSignInAt: Date.now() });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-      return next();
-    }
-  );
-
-  router.post(
-    `${registerRoute}/email/send-passcode`,
-    koaGuard({ body: object({ email: string().regex(emailRegEx) }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email } = ctx.guard.body;
-      const type = 'RegisterEmailSendPasscode';
+      const type = getPasswordlessRelatedLogType(flow, 'email', 'verify');
       ctx.log(type, { email });
 
-      assertThat(
-        !(await hasUserWithEmail(email)),
-        new RequestError({ code: 'user.email_exists_register', status: 422 })
-      );
+      await verifyPasscode(jti, flow, code, { email });
 
-      const passcode = await createPasscode(jti, PasscodeType.Register, { email });
-      const { dbEntry } = await sendPasscode(passcode);
-      ctx.log(type, { connectorId: dbEntry.id });
-      ctx.status = 204;
+      if (flow === PasscodeType.ForgotPassword) {
+        assertThat(
+          await hasUserWithEmail(email),
+          new RequestError({ code: 'user.email_not_exists', status: 404 })
+        );
 
-      return next();
+        const { id } = await findUserByEmail(email);
+
+        await assignVerificationResult(ctx, provider, { flow, userId: id });
+        ctx.status = 204;
+
+        return next();
+      }
+
+      await assignVerificationResult(ctx, provider, { flow, email });
+
+      if (flow === PasscodeType.SignIn) {
+        return emailSignInAction(provider)(ctx, next);
+      }
+
+      return emailRegisterAction(provider)(ctx, next);
     }
   );
 
-  router.post(
-    `${registerRoute}/email/verify-passcode`,
-    koaGuard({ body: object({ email: string().regex(emailRegEx), code: string() }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email, code } = ctx.guard.body;
-      const type = 'RegisterEmail';
-      ctx.log(type, { email, code });
+  router.post(`${signInRoute}/sms`, smsSignInAction(provider));
 
-      const signInExperience = await findDefaultSignInExperience();
-      assertThat(
-        signInExperience.signUp.identifier === SignUpIdentifier.Email ||
-          signInExperience.signUp.identifier === SignUpIdentifier.EmailOrPhone,
-        new RequestError({
-          code: 'user.sign_up_method_not_enabled',
-          status: 422,
-        })
-      );
+  router.post(`${signInRoute}/email`, emailSignInAction(provider));
 
-      assertThat(
-        !(await hasUserWithEmail(email)),
-        new RequestError({ code: 'user.email_exists_register', status: 422 })
-      );
+  router.post(`${registerRoute}/sms`, smsRegisterAction(provider));
 
-      await verifyPasscode(jti, PasscodeType.Register, code, { email });
-      const id = await generateUserId();
-      ctx.log(type, { userId: id });
-
-      await insertUser({ id, primaryEmail: email, lastSignInAt: Date.now() });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-      return next();
-    }
-  );
+  router.post(`${registerRoute}/email`, emailRegisterAction(provider));
 }

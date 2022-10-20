@@ -180,7 +180,6 @@ export const mockSignInExperience: SignInExperience = {
   languageInfo: {
     autoDetect: true,
     fallbackLanguage: 'en',
-    fixedLanguage: 'zh-CN',
   },
   signUp: {
     identifier: SignUpIdentifier.Username,

@@ -1,16 +1,11 @@
 import { Resource, CreateResource, Resources } from '@logto/schemas';
+import { convertToIdentifiers, OmitAutoSetFields, conditionalSql, manyRows } from '@logto/shared';
 import { sql } from 'slonik';
 
 import { buildFindEntityById } from '@/database/find-entity-by-id';
 import { buildInsertInto } from '@/database/insert-into';
 import { getTotalRowCount } from '@/database/row-count';
 import { buildUpdateWhere } from '@/database/update-where';
-import {
-  convertToIdentifiers,
-  OmitAutoSetFields,
-  conditionalSql,
-  manyRows,
-} from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 

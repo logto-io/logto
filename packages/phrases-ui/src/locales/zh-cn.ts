@@ -1,4 +1,4 @@
-import en from './en';
+import { LocalePhrase } from '../types';
 
 const translation = {
   input: {
@@ -21,14 +21,15 @@ const translation = {
     enter_passcode: '输入验证码',
     cancel: '取消',
     confirm: '确认',
+    save_password: '保存密码',
     bind: '绑定到 {{address}}',
     back: '返回',
     nav_back: '返回',
     agree: '同意',
     got_it: '知道了',
     sign_in_with: '通过 {{name}} 登录',
-    forgot_password: '忘记密码？',
-    switch_to: '切换到{{method}}',
+    forgot_password: '重置密码',
+    switch_to: '用{{method}}登录',
   },
   description: {
     email: '邮箱',
@@ -47,16 +48,16 @@ const translation = {
     continue_with: '通过以下方式继续',
     create_account_id_exists: '{{ type }}为 {{ value }} 的帐号已存在，你要登录吗？',
     sign_in_id_does_not_exists: '{{ type }}为 {{ value }} 的帐号不存在，你要创建一个新帐号吗？',
+    forgot_password_id_does_not_exits: '{{ type }}为 {{ value }} 的帐号不存在。',
     bind_account_title: '绑定帐号',
     social_create_account: '没有帐号？你可以创建一个帐号并绑定。',
     social_bind_account: '已有帐号？登录以绑定社交身份。',
     social_bind_with_existing: '找到了一个匹配的帐号，你可以直接绑定。',
-    reset_password: '重置密码',
-    reset_password_description_email:
-      '输入与你的帐户关联的电子邮箱地址，我们将通过电子邮件向您发送验证码以重置你的密码。',
-    reset_password_description_sms:
-      '输入与你的帐户关联的电话号码，我们将向您发送验证码以重置你的密码。',
+    reset_password: '重设密码',
+    reset_password_description_email: '输入邮件地址，领取验证码以重设密码。',
+    reset_password_description_sms: '输入手机号，领取验证码以重设密码。',
     new_password: '新密码',
+    password_changed: '已重置密码！',
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',
@@ -68,7 +69,7 @@ const translation = {
     invalid_email: '无效的邮箱',
     invalid_phone: '无效的手机号',
     password_min_length: '密码最少需要{{min}}个字符',
-    passwords_do_not_match: '密码不匹配',
+    passwords_do_not_match: '你两次输入的密码不一致，请立即确认。',
     invalid_passcode: '无效的验证码',
     invalid_connector_auth: '登录失败',
     invalid_connector_request: '无效的登录请求',
@@ -77,7 +78,7 @@ const translation = {
   },
 };
 
-const zhCN: typeof en = Object.freeze({
+const zhCN: LocalePhrase = Object.freeze({
   translation,
 });
 

@@ -3,18 +3,19 @@
 @use '@/scss/desktop' as desktop;
 
 :root {
-  --light-primary-color: #5d34f2;
-  --light-focused-variant: rgba(93, 52, 242, 16%);
-  --light-hover-variant: rgba(93, 52, 242, 8%);
-  --light-pressed-variant: rgba(93, 52, 242, 12%);
-  --light-hover: #7350f4;
-  --light-pressed: #4718f0;
-  --dark-primary-color: #7958ff;
-  --dark-focused-variant: rgba(121, 88, 255, 16%);
-  --dark-hover-variant: rgba(121, 88, 255, 8%);
-  --dark-pressed-variant: rgba(121, 88, 255, 12%);
-  --dark-hover: #957aff;
-  --dark-pressed: #5d36ff;
+  --color-light-brand: #5d34f2;
+  --color-light-overlay-brand-focused: rgba(93, 52, 242, 16%);
+  --color-light-overlay-brand-hover: rgba(93, 52, 242, 8%);
+  --color-light-overlay-brand-pressed: rgba(93, 52, 242, 12%);
+  --color-light-brand-hover: #7350f4;
+  --color-light-brand-pressed: #4718f0;
+
+  --color-dark-brand: #7958ff;
+  --color-dark-overlay-brand-focused: rgba(121, 88, 255, 16%);
+  --color-dark-overlay-brand-hover: rgba(121, 88, 255, 8%);
+  --color-dark-overlay-brand-pressed: rgba(121, 88, 255, 12%);
+  --color-dark-brand-hover: #957aff;
+  --color-dark-brand-pressed: #5d36ff;
 }
 
 body {

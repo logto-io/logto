@@ -4,9 +4,12 @@
     "outDir": "lib",
     "declaration": true,
     "module": "node16",
-    "target": "es2022"
+    "target": "es2022",
+    "types": ["node", "jest"]
   },
   "include": [
-    "src"
-  ]
+    "src",
+    "jest.config.ts"
+  ],
+  "exclude": ["**/alteration-scripts"]
 }

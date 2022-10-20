@@ -1,8 +1,8 @@
 import { UserRole, Users } from '@logto/schemas';
+import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockUser } from '@/__mocks__';
-import { convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';

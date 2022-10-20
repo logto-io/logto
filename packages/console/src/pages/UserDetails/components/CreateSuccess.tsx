@@ -4,10 +4,10 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
+import Eye from '@/assets/images/eye.svg';
 import Button from '@/components/Button';
 import IconButton from '@/components/IconButton';
 import ModalLayout from '@/components/ModalLayout';
-import Eye from '@/icons/Eye';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import * as styles from './CreateSuccess.module.scss';

@@ -27,6 +27,16 @@
     top: 0%;
   }
 
+  &.arrowRight::after {
+    top: 50%;
+    left: 100%;
+  }
+
+  &.arrowLeft::after {
+    top: 50%;
+    left: 0%;
+  }
+
   &.start::after {
     left: _.unit(10);
   }
@@ -36,11 +46,6 @@
   }
 
   .content {
-    // https://css-tricks.com/almanac/properties/l/line-clamp/
-    /* stylelint-disable-next-line value-no-vendor-prefix */
-    display: -webkit-box;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    @include _.multi-line-ellipsis(6);
   }
 }
