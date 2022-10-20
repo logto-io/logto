@@ -61,6 +61,7 @@ const errors = {
       'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
     unauthorized: '로그인을 먼저 해주세요.',
     unsupported_prompt_name: '지원하지 않는 Prompt 이름이예요.',
+    forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
   },
   connector: {
     general: '연동 중에 알 수 없는 오류가 발생했어요. {{errorDescription}}',

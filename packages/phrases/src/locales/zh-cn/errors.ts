@@ -59,6 +59,7 @@ const errors = {
     forgot_password_verification_expired: '忘记密码验证已过期，请尝试重新验证。',
     unauthorized: '请先登录',
     unsupported_prompt_name: '不支持的 prompt name',
+    forgot_password_not_enabled: '忘记密码功能没有开启。',
   },
   connector: {
     general: '连接器发生未知错误{{errorDescription}}',

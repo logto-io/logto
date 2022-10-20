@@ -62,6 +62,7 @@ const errors = {
       'Forgot password verification has expired. Please go back and verify again.',
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name.',
+    forgot_password_not_enabled: 'Forgot password is not enabled.',
   },
   connector: {
     general: 'An unexpected error occurred in connector.{{errorDescription}}',
