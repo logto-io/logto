@@ -9,6 +9,7 @@ import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import { encryptUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
+import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
   findUserByEmail,
   findUserById,
@@ -131,6 +132,12 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
     `${forgotPasswordRoute}/reset`,
     koaGuard({ body: z.object({ password: z.string().regex(passwordRegEx) }) }),
     async (ctx, next) => {
+      const signInExperience = await findDefaultSignInExperience();
+      assertThat(
+        signInExperience.forgotPassword,
+        new RequestError({ code: 'session.forgot_password_not_enabled', status: 422 })
+      );
+
       const { result } = await provider.interactionDetails(ctx.req, ctx.res);
       const { password } = ctx.guard.body;
       const forgotPasswordVerificationResult = forgotPasswordVerificationGuard.safeParse(result);

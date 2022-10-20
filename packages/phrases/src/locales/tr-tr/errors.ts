@@ -64,6 +64,7 @@ const errors = {
       'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
     unauthorized: 'Lütfen önce oturum açın.',
     unsupported_prompt_name: 'Desteklenmeyen prompt adı.',
+    forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
   },
   connector: {
     general: 'Bağlayıcıda beklenmeyen bir hata oldu.{{errorDescription}}',

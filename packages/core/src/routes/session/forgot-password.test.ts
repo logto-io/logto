@@ -2,7 +2,7 @@ import { User } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
 
-import { mockPasswordEncrypted, mockUserWithPassword } from '@/__mocks__';
+import { mockPasswordEncrypted, mockSignInExperience, mockUserWithPassword } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
@@ -15,6 +15,10 @@ const encryptUserPassword = jest.fn(async (password: string) => ({
 }));
 const findUserById = jest.fn(async (): Promise<User> => mockUserWithPassword);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const findDefaultSignInExperience = jest.fn(async () => ({
+  ...mockSignInExperience,
+  forgotPassword: true,
+}));
 
 jest.mock('@/lib/user', () => ({
   ...jest.requireActual('@/lib/user'),
@@ -29,6 +33,10 @@ jest.mock('@/queries/user', () => ({
   findUserByEmail: async () => ({ id: 'id' }),
   findUserById: async () => findUserById(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
+}));
+
+jest.mock('@/queries/sign-in-experience', () => ({
+  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
@@ -282,6 +290,22 @@ describe('session -> forgotPasswordRoutes', () => {
         })
       );
       expect(response.statusCode).toEqual(204);
+    });
+    it('should throw when forgot password is not enabeld in SIE', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        forgotPassword: false,
+      });
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          forgotPassword: { userId: 'id', expiresAt: dayjs().add(1, 'day').toISOString() },
+        },
+      });
+      const response = await sessionRequest
+        .post(`${forgotPasswordRoute}/reset`)
+        .send({ password: mockPasswordEncrypted });
+      expect(response).toHaveProperty('status', 422);
+      expect(updateUserById).toBeCalledTimes(0);
     });
   });
 });
