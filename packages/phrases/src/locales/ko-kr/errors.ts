@@ -41,7 +41,7 @@ const errors = {
     identity_exists: '소셜 계정이 이미 등록되있어요.',
     invalid_role_names: '직책 명({{roleNames}})이 유효하지 않아요.',
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
-    same_password: 'Your new password can not be the same as current password.', // UNTRANSLATED
+    same_password: 'Your new password can’t be the same as your current password.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '{{name}} 암호화 방법을 지원하지 않아요.',
@@ -55,10 +55,10 @@ const errors = {
     insufficient_info: '로그인 정보가 충분하지 않아요.',
     connector_id_mismatch: '연동 ID가 세션 정보와 일치하지 않아요.',
     connector_session_not_found: '연동 세션을 찾을 수 없어요. 다시 로그인해주세요.',
-    forgot_password_session_not_found:
-      'Forgot password session not found. Please go back and verify.', // UNTRANSLATED
-    forgot_password_verification_expired:
-      'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
+    verification_session_not_found:
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
+    verification_expired:
+      'The connection has timed out. Verify again to ensure your account safety.', // UNTRANSLATED
     unauthorized: '로그인을 먼저 해주세요.',
     unsupported_prompt_name: '지원하지 않는 Prompt 이름이예요.',
   },
@@ -119,6 +119,9 @@ const errors = {
     not_exists: '{{name}}는 존재하지 않아요.',
     not_exists_with_id: '{{id}} ID를 가진 {{name}}는 존재하지 않아요.',
     not_found: '리소스가 존재하지 않아요.',
+  },
+  log: {
+    invalid_type: 'The log type is invalid.', // UNTRANSLATED
   },
 };
 

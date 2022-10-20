@@ -42,7 +42,7 @@ const errors = {
     identity_exists: 'Sosyal platform hesabı kaydedildi.',
     invalid_role_names: '({{roleNames}}) rol adları geçerli değil.',
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
-    same_password: 'Your new password can not be the same as current password.', // UNTRANSLATED
+    same_password: 'Your new password can’t be the same as your current password.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '{{name}} şifreleme metodu desteklenmiyor.',
@@ -57,10 +57,10 @@ const errors = {
     connector_id_mismatch: 'connectorId, oturum kaydı ile eşleşmiyor.',
     connector_session_not_found:
       'Bağlayıcı oturum bulunamadı. Lütfen geri dönüp tekrardan giriş yapınız.',
-    forgot_password_session_not_found:
-      'Forgot password session not found. Please go back and verify.', // UNTRANSLATED
-    forgot_password_verification_expired:
-      'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
+    verification_session_not_found:
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
+    verification_expired:
+      'The connection has timed out. Verify again to ensure your account safety.', // UNTRANSLATED
     unauthorized: 'Lütfen önce oturum açın.',
     unsupported_prompt_name: 'Desteklenmeyen prompt adı.',
   },
@@ -124,6 +124,9 @@ const errors = {
     not_exists: '{{name}} mevcut değil.',
     not_exists_with_id: ' `{{id}}` id kimliğine sahip {{name}} mevcut değil.',
     not_found: 'Kaynak mevcut değil.',
+  },
+  log: {
+    invalid_type: 'The log type is invalid.', // UNTRANSLATED
   },
 };
 

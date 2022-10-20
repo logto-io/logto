@@ -42,7 +42,7 @@ const errors = {
     identity_exists: 'The social account has been registered.',
     invalid_role_names: 'role names ({{roleNames}}) are not valid',
     cannot_delete_self: 'You cannot delete yourself.',
-    same_password: 'Your new password can not be the same as current password.',
+    same_password: 'Your new password can’t be the same as your current password.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',
@@ -56,10 +56,10 @@ const errors = {
     insufficient_info: 'Insufficient sign-in info.',
     connector_id_mismatch: 'The connectorId is mismatched with session record.',
     connector_session_not_found: 'Connector session not found. Please go back and sign in again.',
-    forgot_password_session_not_found:
-      'Forgot password session not found. Please go back and verify.',
-    forgot_password_verification_expired:
-      'Forgot password verification has expired. Please go back and verify again.',
+    verification_session_not_found:
+      'The verification was not successful. Restart the verification flow and try again.',
+    verification_expired:
+      'The connection has timed out. Verify again to ensure your account safety.',
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name.',
   },
@@ -122,6 +122,9 @@ const errors = {
     not_exists: 'The {{name}} does not exist.',
     not_exists_with_id: 'The {{name}} with ID `{{id}}` does not exist.',
     not_found: 'The resource does not exist.',
+  },
+  log: {
+    invalid_type: 'The log type is invalid.',
   },
 };
 

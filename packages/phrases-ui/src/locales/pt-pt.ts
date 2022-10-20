@@ -48,6 +48,7 @@ const translation = {
     continue_with: 'Continuar com',
     create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de fazer login?',
     sign_in_id_does_not_exists: 'A conta com {{type}} {{value}} não existe, gostaria de criar uma?',
+    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
     bind_account_title: 'Agregar conta',
     social_create_account: 'Sem conta? Pode criar uma nova e agregar.',
     social_bind_account: 'Já tem uma conta? Faça login para agregar a sua identidade social.',

@@ -1,3 +1,5 @@
+import { PasscodeType } from '@logto/schemas';
+
 import api from './api';
 
 type Response = {
@@ -8,9 +10,10 @@ const forgotPasswordApiPrefix = '/api/session/forgot-password';
 
 export const sendForgotPasswordSmsPasscode = async (phone: string) => {
   await api
-    .post(`${forgotPasswordApiPrefix}/sms/send-passcode`, {
+    .post('/api/session/passwordless/sms/send', {
       json: {
         phone,
+        flow: PasscodeType.ForgotPassword,
       },
     })
     .json();
@@ -20,22 +23,24 @@ export const sendForgotPasswordSmsPasscode = async (phone: string) => {
 
 export const verifyForgotPasswordSmsPasscode = async (phone: string, code: string) => {
   await api
-    .post(`${forgotPasswordApiPrefix}/sms/verify-passcode`, {
+    .post('/api/session/passwordless/sms/verify', {
       json: {
         phone,
         code,
+        flow: PasscodeType.ForgotPassword,
       },
     })
-    .json<Response>();
+    .json();
 
   return { success: true };
 };
 
 export const sendForgotPasswordEmailPasscode = async (email: string) => {
   await api
-    .post(`${forgotPasswordApiPrefix}/email/send-passcode`, {
+    .post('/api/session/passwordless/email/send', {
       json: {
         email,
+        flow: PasscodeType.ForgotPassword,
       },
     })
     .json();
@@ -45,13 +50,14 @@ export const sendForgotPasswordEmailPasscode = async (email: string) => {
 
 export const verifyForgotPasswordEmailPasscode = async (email: string, code: string) => {
   await api
-    .post(`${forgotPasswordApiPrefix}/email/verify-passcode`, {
+    .post('/api/session/passwordless/email/verify', {
       json: {
         email,
         code,
+        flow: PasscodeType.ForgotPassword,
       },
     })
-    .json<Response>();
+    .json();
 
   return { success: true };
 };

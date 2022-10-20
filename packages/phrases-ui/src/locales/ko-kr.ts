@@ -48,6 +48,7 @@ const translation = {
     continue_with: '계속하기',
     create_account_id_exists: '{{type}} {{value}} 계정이 이미 존재해요. 로그인하시겠어요?',
     sign_in_id_does_not_exists: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
+    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
     bind_account_title: '계정 연동',
     social_create_account: '계정이 없으신가요? 새로운 계정을 만들고 연동해보세요.',
     social_bind_account: '계정이 이미 있으신가요? 로그인하여 다른 계정과 연동해보세요.',
