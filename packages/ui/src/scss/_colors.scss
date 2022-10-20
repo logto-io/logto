@@ -1,0 +1,179 @@
+/* Color Theme */
+/* Foundation */
+
+/* Static */
+@mixin static {
+  --color-static-white: #fff;
+  --color-static-black: #000;
+}
+
+@mixin light {
+  /* Color Platte */
+  --color-neutral-0: #0000;
+  --color-neutral-10: #191c1d;
+  --color-neutral-20: #2d3132;
+  --color-neutral-50: #747778;
+  --color-neutral-80: #c4c7c7;
+  --color-neutral-90: #e0e3e3;
+  --color-neutral-95: #eff1f1;
+  --color-neutral-100: #fff;
+
+  --color-neutral-variant-80: #e5e1ec;
+
+  --color-danger-30: #930006;
+  --color-danger-40: #ba1b1b;
+  --color-danger-50: #dd3730;
+
+  --color-success-60: #32873d;
+  --color-success-70: #68be6c;
+  --color-success-80: #83da85;
+  --color-success-90: #9fe79f;
+
+  --color-brand-30: #4300da;
+  --color-brand-40: #5d34f2;
+  --color-brand-50: #7958ff;
+
+  /* Text & Icon */
+  --color-type-primary: var(--color-neutral-10);
+  --color-type-secondary: var(--color-neutral-50);
+  --color-type-disable: scale-color(var(--color-neutral-10), $alpha: -65%);
+  --color-type-link: var(--color-brand-default);
+
+  /* Line */
+  --color-line-divider: scale-color(var(--color-neutral-10), $alpha: -88%);
+  --color-line-border: var(--color-neutral-80);
+  --color-line-border-transparent: scale-color(var(--color-neutral-10), $alpha: -75%);
+
+  /* Background */
+  --color-bg-base: var(--color-neutral-95);
+  --color-bg-layer-1: var(--color-neutral-100);
+  --color-bg-layer-2: var(--color-neutral-95);
+  --color-bg-float: var(--color-neutral-100);
+  --color-bg-mask: scale-color(var(--color-neutral-0), $alpha: -60%);
+  --color-bg-toast: var(--color-neutral-20);
+  --color-bg-state-unselected: var(--color-neutral-90);
+  --color-bg-state-disabled: scale-color(var(--color-neutral-10), -92%);
+  --color-bg-desktop: var(--color-neutral-variant-80);
+
+  /* Brand */
+  // Note: System brand color. May be overwritten dynamically by js
+  --color-brand-default: var(--color-brand-40);
+  --color-brand-hover: var(--color-brand-50);
+  --color-brand-pressed: var(--color-brand-30);
+
+  /* Danger */
+  --color-danger-default: var(--color-danger-40);
+  --color-danger-hover: var(--color-danger-50);
+  --color-danger-pressed: var(--color-danger-30);
+
+  /* Success */
+  --color-success-default: var(--color-success-70);
+  --color-success-hover: var(--color-success-80);
+  --color-success-pressed: var(--color-success-60);
+  --color-success-disable: var(--color-success-90);
+
+  /* Overlay */
+  --color-overlay-neutral-hover: scale-color(var(--color-neutral-10), -92%);
+  --color-overlay-neutral-pressed: scale-color(var(--color-neutral-10), -88%);
+  --color-overlay-neutral-focused: scale-color(var(--color-neutral-10), -84%);
+  --color-overlay-danger-hover: scale-color(var(--color-danger-40), -92%);
+  --color-overlay-danger-pressed: scale-color(var(--color-danger-40), -88%);
+  --color-overlay-danger-focused: scale-color(var(--color-danger-40), -84%);
+  // Note: System brand color. May be overwritten dynamically by js
+  --color-overlay-brand-hover: scale-color(var(--color-brand-40), -92%);
+  --color-overlay-brand-pressed: scale-color(var(--color-brand-40), -88%);
+  --color-overlay-brand-focused: scale-color(var(--color-brand-40), -84%);
+}
+
+@mixin dark {
+  /* Color Platte */
+  --color-neutral-0: #fff;
+  --color-neutral-10: #f7f8f8;
+  --color-neutral-20: #f7f8f8;
+  --color-neutral-50: #a9acac;
+  --color-neutral-80: #a9acac;
+  --color-neutral-90: #444748;
+  --color-neutral-95: #2d3132;
+  --color-neutral-99: #191c1d;
+  --color-neutral-100: #000;
+
+  --color-neutral-variant-80: #5f5d67;
+  --color-neutral-variant-90: #47464e;
+
+  --color-danger-30: #ffdad4;
+  --color-danger-40: #ffb4a9;
+  --color-danger-50: #ff897a;
+  --color-danger-60: #ff5449;
+  --color-danger-70: #dd3730;
+  --color-danger-50: #ba1b1b;
+
+  --color-success-60: #4ea254;
+  --color-success-70: #32873d;
+  --color-success-80: #116d26;
+  --color-success-90: #005314;
+
+  --color-brand-30: #e6deff;
+  --color-brand-40: #cabeff;
+  --color-brand-50: #af9eff;
+  --color-brand-70: #7958ff;
+
+  --color-surface-2:
+    linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)),
+    linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)),
+    #191c1d;
+  --color-surface-4:
+    linear-gradient(0deg, rgba(202, 190, 255, 14%), rgba(202, 190, 255, 14%)),
+    linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)),
+    #191c1d;
+
+  /* Text & Icon */
+  --color-type-primary: var(--color-neutral-10);
+  --color-type-secondary: var(--color-neutral-50);
+  --color-type-disable: scale-color(var(--color-neutral-10), $alpha: -65%);
+  --color-type-link: var(--color-brand-default);
+
+  /* Line */
+  --color-line-divider: scale-color(var(--color-neutral-10), $alpha: -86%);
+  --color-line-border: var(--color-neutral-80);
+  --color-line-border-transparent: scale-color(var(--color-neutral-10), $alpha: -80%);
+
+  /* Background */
+  --color-bg-base: var(--color-neutral-99);
+  --color-bg-layer-1: var(--color-surface-2);
+  --color-bg-layer-2: var(--color-surface-4);
+  --color-bg-float: var(--color-surface-4);
+  --color-bg-mask: scale-color(var(--color-neutral-0), $alpha: -40%);
+  --color-bg-toast: var(--color-neutral-80);
+  --color-bg-state-unselected: var(--color-neutral-90);
+  --color-bg-state-disabled: scale-color(var(--color-neutral-10), -92%);
+  --color-bg-desktop: var(--color-neutral-variant-90);
+
+  /* Brand */
+  // Note: System brand color. May be overwritten dynamically by js
+  --color-brand-default: var(--color-brand-70);
+  --color-brand-hover: var(--color-brand-50);
+  --color-brand-pressed: var(--color-brand-30);
+
+  /* Danger */
+  --color-danger-default: var(--color-danger-70);
+  --color-danger-hover: var(--color-danger-60);
+  --color-danger-pressed: var(--color-danger-80);
+
+  /* Success */
+  --color-success-default: var(--color-success-70);
+  --color-success-hover: var(--color-success-60);
+  --color-success-pressed: var(--color-success-80);
+  --color-success-disable: var(--color-success-90);
+
+  /* Overlay */
+  --color-overlay-neutral-hover: scale-color(var(--color-neutral-10), -92%);
+  --color-overlay-neutral-pressed: scale-color(var(--color-neutral-10), -88%);
+  --color-overlay-neutral-focused: scale-color(var(--color-neutral-10), -84%);
+  --color-overlay-danger-hover: scale-color(var(--color-danger-40), -92%);
+  --color-overlay-danger-pressed: scale-color(var(--color-danger-40), -88%);
+  --color-overlay-danger-focused: scale-color(var(--color-danger-40), -84%);
+  // Note: System brand color. May be overwritten dynamically by js
+  --color-overlay-brand-hover: scale-color(var(--color-brand-40), -92%);
+  --color-overlay-brand-pressed: scale-color(var(--color-brand-40), -88%);
+  --color-overlay-brand-focused: scale-color(var(--color-brand-40), -84%);
+}
