@@ -105,7 +105,7 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@logto/phrases': workspace:^
       '@logto/phrases-ui': workspace:^
@@ -172,7 +172,7 @@ importers:
       zod: ^3.18.0
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
@@ -405,7 +405,7 @@ importers:
 
   packages/demo-app:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@logto/phrases': workspace:^
       '@logto/react': 1.0.0-beta.10
@@ -432,7 +432,7 @@ importers:
       stylelint: ^14.9.1
       typescript: ^4.7.4
     devDependencies:
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@logto/phrases': link:../phrases
       '@logto/react': 1.0.0-beta.10_react@18.2.0
@@ -513,7 +513,7 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/essentials': ^1.3.0
@@ -524,7 +524,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.18.0
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@silverhand/essentials': 1.3.0
       zod: 3.18.0
@@ -538,7 +538,7 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/essentials': ^1.3.0
@@ -549,7 +549,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.18.0
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@silverhand/essentials': 1.3.0
       zod: 3.18.0
@@ -564,7 +564,7 @@ importers:
   packages/schemas:
     specifiers:
       '@logto/connector-kit': 1.0.0-beta.19
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@logto/phrases': workspace:^
       '@logto/phrases-ui': workspace:^
@@ -589,7 +589,7 @@ importers:
       zod: ^3.18.0
     dependencies:
       '@logto/connector-kit': 1.0.0-beta.19
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
@@ -653,7 +653,7 @@ importers:
 
   packages/ui:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/phrases': workspace:^
       '@logto/phrases-ui': workspace:^
       '@logto/schemas': workspace:^
@@ -705,7 +705,7 @@ importers:
       typescript: ^4.7.4
       use-debounced-loader: ^0.1.1
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
     devDependencies:
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
@@ -2315,7 +2315,7 @@ packages:
     resolution: {integrity: sha512-V3QxKE2gjs5FpLBihHA4YLC0RFK8gW56qZkBKk0uWt2gxcs5eGJvBxV1rgskn6W/3Z8ohnK5FJRv6fIOsUWSKw==}
     engines: {node: ^16.0.0}
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.19
       '@logto/language-kit': 1.0.0-beta.19
       '@silverhand/essentials': 1.3.0
       zod: 3.18.0
@@ -2339,6 +2339,7 @@ packages:
       color: 4.2.3
       nanoid: 3.3.4
       zod: 3.18.0
+    dev: false
 
   /@logto/core-kit/1.0.0-beta.19:
     resolution: {integrity: sha512-cqwfz+Ic/t7mV23QUEXWeRaLTqN71NSv02adaul8VWZQg4IePOlWLLaiTyY6ods88f3ZOarIBlJ5fYexw3J8qg==}
