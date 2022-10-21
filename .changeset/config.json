@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@2.2.0/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [[
+    "@logto/console",
+    "@logto/core",
+    "@logto/demo-app",
+    "@logto/integration-tests",
+    "@logto/phrases",
+    "@logto/phrases-ui",
+    "@logto/schemas",
+    "@logto/ui"
+  ], [
+    "@logto/cli",
+    "@logto/create"
+  ]],
+  "access": "restricted",
+  "baseBranch": "master",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}

@@ -43,7 +43,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/schemas": "^1.0.0-beta.12",
+    "@logto/schemas": "workspace:^",
     "@silverhand/essentials": "^1.3.0",
     "dayjs": "^1.10.5",
     "find-up": "^5.0.0",
