@@ -6,3 +6,30 @@ find the full documentation for it [in our repository](https://github.com/change
 
 We have a quick list of common questions to get you started engaging with this project in
 [our documentation](https://github.com/changesets/changesets/blob/main/docs/common-questions.md)
+
+## Logto publish flow
+
+For now, changesets only supports tagging packages separately, instead of tagging a "release group". There is an [open issue](https://github.com/changesets/changesets/issues/683) which is still hanging in the air.
+
+So, we are using our own "grouping" release strategy in this monorepo:
+
+### Core
+
+The release group that includes the Logto core products, which consists of the following packages:
+
+- @logto/console
+- @logto/core
+- @logto/ui
+
+Their version will be in sync, and forms our main release.
+
+### CLI
+
+The release group that includes Logto CLI and its aliases:
+
+- @logto/cli
+- @logto/create
+
+### Others
+
+For simplicity, we will tag other **public** packages separately and publish them to NPM. But in most cases, no GitHub release will present.

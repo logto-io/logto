@@ -2,7 +2,16 @@
   "$schema": "https://unpkg.com/@changesets/config@2.2.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [],
+  "//": "CAUTION: When updating this field, you should also update README accordingly.",
+  "fixed": [[
+    "@logto/cli",
+    "@logto/create"
+  ], [
+    "@logto/console",
+    "@logto/core",
+    "@logto/ui"
+  ]],
+  "//": "CAUTION: When updating this field, you should also update README accordingly.",
   "linked": [[
     "@logto/console",
     "@logto/core",
@@ -12,9 +21,6 @@
     "@logto/phrases-ui",
     "@logto/schemas",
     "@logto/ui"
-  ], [
-    "@logto/cli",
-    "@logto/create"
   ]],
   "access": "restricted",
   "baseBranch": "master",
