@@ -80,9 +80,9 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
 
       setPlatform(platform);
 
-      setExperienceSettings(experienceSettings);
-
       await changeLanguage(language);
+
+      setExperienceSettings(experienceSettings);
     })();
   }, [isPreview, previewConfig, setExperienceSettings, setPlatform, setTheme]);
 
