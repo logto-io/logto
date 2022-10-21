@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { ReactNode, useMemo } from 'react';
+import type { ReactNode } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CircleMinus from '@/assets/images/circle-minus.svg';

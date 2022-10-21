@@ -1,4 +1,4 @@
-import { ConnectorMetadata } from '@logto/connector-kit';
+import type { ConnectorMetadata } from '@logto/connector-kit';
 import { SignInMode } from '@logto/schemas';
 import {
   adminConsoleApplicationId,
@@ -7,13 +7,14 @@ import {
 } from '@logto/schemas/lib/seeds';
 import etag from 'etag';
 import i18next from 'i18next';
-import { Provider, errors } from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
+import { errors } from 'oidc-provider';
 
 import { getLogtoConnectors } from '@/connectors';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import { hasActiveUsers } from '@/queries/user';
 
-import { AnonymousRouter } from './types';
+import type { AnonymousRouter } from './types';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.get(

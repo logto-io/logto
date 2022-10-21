@@ -1,11 +1,12 @@
-import { AdminConsoleKey } from '@logto/phrases';
+import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import { ReactElement, ReactNode, useRef } from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/images/tip.svg';
 
-import DangerousRaw from '../DangerousRaw';
+import type DangerousRaw from '../DangerousRaw';
 import Spacer from '../Spacer';
 import Tooltip from '../Tooltip';
 import * as styles from './index.module.scss';

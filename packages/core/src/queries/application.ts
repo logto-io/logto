@@ -1,5 +1,7 @@
-import { Application, CreateApplication, Applications } from '@logto/schemas';
-import { convertToIdentifiers, OmitAutoSetFields, conditionalSql, manyRows } from '@logto/shared';
+import type { Application, CreateApplication } from '@logto/schemas';
+import { Applications } from '@logto/schemas';
+import type { OmitAutoSetFields } from '@logto/shared';
+import { convertToIdentifiers, conditionalSql, manyRows } from '@logto/shared';
 import { sql } from 'slonik';
 
 import { buildFindEntityById } from '@/database/find-entity-by-id';

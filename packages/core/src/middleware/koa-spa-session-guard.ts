@@ -1,6 +1,6 @@
-import { MiddlewareType } from 'koa';
-import { IRouterParamContext } from 'koa-router';
-import { Provider } from 'oidc-provider';
+import type { MiddlewareType } from 'koa';
+import type { IRouterParamContext } from 'koa-router';
+import type { Provider } from 'oidc-provider';
 
 import envSet from '@/env-set';
 import { appendPath } from '@/utils/url';

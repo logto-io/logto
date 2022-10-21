@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { ChangeEvent, KeyboardEvent, useRef } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
+import { useRef } from 'react';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 

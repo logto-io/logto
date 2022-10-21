@@ -1,4 +1,4 @@
-import { SchemaLike, GeneratedSchema } from '@logto/schemas';
+import type { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { sql, NotFoundError } from 'slonik';
 

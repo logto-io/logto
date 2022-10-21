@@ -2,16 +2,18 @@ import { readFile } from 'fs/promises';
 
 import { toTitle } from '@silverhand/essentials';
 import { load } from 'js-yaml';
-import Router, { IMiddleware } from 'koa-router';
-import { OpenAPIV3 } from 'openapi-types';
+import type { IMiddleware } from 'koa-router';
+import type Router from 'koa-router';
+import type { OpenAPIV3 } from 'openapi-types';
 import { ZodObject, ZodOptional } from 'zod';
 
-import { isGuardMiddleware, WithGuardConfig } from '@/middleware/koa-guard';
+import type { WithGuardConfig } from '@/middleware/koa-guard';
+import { isGuardMiddleware } from '@/middleware/koa-guard';
 import { fallbackDefaultPageSize, isPaginationMiddleware } from '@/middleware/koa-pagination';
 import assertThat from '@/utils/assert-that';
 import { translationSchemas, zodTypeToSwagger } from '@/utils/zod';
 
-import { AnonymousRouter } from './types';
+import type { AnonymousRouter } from './types';
 
 type RouteObject = {
   path: string;

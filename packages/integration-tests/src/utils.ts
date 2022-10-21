@@ -1,4 +1,4 @@
-import { Response } from 'got';
+import type { Response } from 'got';
 
 export const extractCookie = (response: Response) => {
   const { headers } = response;

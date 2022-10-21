@@ -1,5 +1,5 @@
-import { MiddlewareType } from 'koa';
-import { IMiddleware } from 'koa-router';
+import type { MiddlewareType } from 'koa';
+import type { IMiddleware } from 'koa-router';
 import { number } from 'zod';
 
 import RequestError from '@/errors/RequestError';

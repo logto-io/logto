@@ -1,6 +1,6 @@
-import { I18nKey } from '@logto/phrases-ui';
+import type { I18nKey } from '@logto/phrases-ui';
 import classNames from 'classnames';
-import { HTMLProps } from 'react';
+import type { HTMLProps } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';

@@ -1,6 +1,6 @@
 import i18next from 'i18next';
-import { MiddlewareType } from 'koa';
-import { IRouterParamContext } from 'koa-router';
+import type { MiddlewareType } from 'koa';
+import type { IRouterParamContext } from 'koa-router';
 
 import detectLanguage from '@/i18n/detect-language';
 

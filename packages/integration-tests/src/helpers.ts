@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { User } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 

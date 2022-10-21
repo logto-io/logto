@@ -5,7 +5,7 @@ import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
 import { countLogs, findLogById, findLogs } from '@/queries/log';
 
-import { AuthedRouter } from './types';
+import type { AuthedRouter } from './types';
 
 export default function logRoutes<T extends AuthedRouter>(router: T) {
   router.get(

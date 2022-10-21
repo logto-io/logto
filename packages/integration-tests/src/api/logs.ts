@@ -1,4 +1,4 @@
-import { Log } from '@logto/schemas';
+import type { Log } from '@logto/schemas';
 
 import { authedAdminApi } from './api';
 

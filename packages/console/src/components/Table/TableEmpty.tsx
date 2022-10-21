@@ -1,5 +1,5 @@
 import { AppearanceMode } from '@logto/schemas';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import EmptyDark from '@/assets/images/table-empty-dark.svg';

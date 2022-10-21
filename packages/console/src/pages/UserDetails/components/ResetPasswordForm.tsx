@@ -1,4 +1,4 @@
-import { User } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import { nanoid } from 'nanoid';
 import { useTranslation } from 'react-i18next';
 

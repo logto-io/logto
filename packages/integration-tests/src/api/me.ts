@@ -1,4 +1,4 @@
-import { ArbitraryObject, UserInfo } from '@logto/schemas';
+import type { ArbitraryObject, UserInfo } from '@logto/schemas';
 
 import api from './api';
 

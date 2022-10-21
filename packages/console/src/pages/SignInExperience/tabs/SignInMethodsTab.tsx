@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
 import SignInMethodsForm from '../components/SignInMethodsForm';
-import { SignInExperienceForm } from '../types';
+import type { SignInExperienceForm } from '../types';
 
 type Props = {
   defaultData: SignInExperienceForm;

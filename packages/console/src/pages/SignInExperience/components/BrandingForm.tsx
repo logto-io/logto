@@ -7,7 +7,7 @@ import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
 import { uriValidator } from '@/utilities/validator';
 
-import { SignInExperienceForm } from '../types';
+import type { SignInExperienceForm } from '../types';
 import * as styles from './index.module.scss';
 
 const BrandingForm = () => {

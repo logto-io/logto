@@ -1,9 +1,5 @@
-import {
-  Application,
-  ApplicationType,
-  SnakeCaseOidcConfig,
-  validateRedirectUrl,
-} from '@logto/schemas';
+import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
+import { ApplicationType, validateRedirectUrl } from '@logto/schemas';
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import FormField from '@/components/FormField';
 import MultiTextInput from '@/components/MultiTextInput';
-import { MultiTextInputRule } from '@/components/MultiTextInput/types';
+import type { MultiTextInputRule } from '@/components/MultiTextInput/types';
 import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';

@@ -1,11 +1,13 @@
-import { LogPayload, LogResult } from '@logto/schemas';
+import type { LogPayload } from '@logto/schemas';
+import { LogResult } from '@logto/schemas';
 import i18next from 'i18next';
 
 import RequestError from '@/errors/RequestError';
 import { insertLog } from '@/queries/log';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaLog, { WithLogContext } from './koa-log';
+import type { WithLogContext } from './koa-log';
+import koaLog from './koa-log';
 
 const nanoIdMock = 'mockId';
 

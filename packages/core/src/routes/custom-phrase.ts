@@ -1,6 +1,7 @@
 import { languageTagGuard } from '@logto/language-kit';
 import resource from '@logto/phrases-ui';
-import { CustomPhrases, Translation, translationGuard } from '@logto/schemas';
+import type { Translation } from '@logto/schemas';
+import { CustomPhrases, translationGuard } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import { object } from 'zod';
 
@@ -16,7 +17,7 @@ import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import assertThat from '@/utils/assert-that';
 import { isValidStructure } from '@/utils/translation';
 
-import { AuthedRouter } from './types';
+import type { AuthedRouter } from './types';
 
 const cleanDeepTranslation = (translation: Translation) =>
   // Since `Translation` type actually equals `Partial<Translation>`, force to cast it back to `Translation`.

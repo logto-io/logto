@@ -1,12 +1,5 @@
-import {
-  useMemo,
-  useRef,
-  useCallback,
-  useEffect,
-  FormEventHandler,
-  KeyboardEventHandler,
-  ClipboardEventHandler,
-} from 'react';
+import type { FormEventHandler, KeyboardEventHandler, ClipboardEventHandler } from 'react';
+import { useMemo, useRef, useCallback, useEffect } from 'react';
 
 import ErrorMessage from '@/components/ErrorMessage';
 

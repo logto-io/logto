@@ -1,4 +1,5 @@
-import { CreateCustomPhrase, CustomPhrase, CustomPhrases } from '@logto/schemas';
+import type { CreateCustomPhrase, CustomPhrase } from '@logto/schemas';
+import { CustomPhrases } from '@logto/schemas';
 import { convertToIdentifiers, manyRows } from '@logto/shared';
 import { sql } from 'slonik';
 

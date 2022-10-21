@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export type Props = {
   children: ReactNode;

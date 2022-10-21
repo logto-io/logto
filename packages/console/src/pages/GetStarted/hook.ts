@@ -1,5 +1,6 @@
-import { AdminConsoleKey } from '@logto/phrases';
-import { AppearanceMode, Application } from '@logto/schemas';
+import type { AdminConsoleKey } from '@logto/phrases';
+import type { Application } from '@logto/schemas';
+import { AppearanceMode } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';

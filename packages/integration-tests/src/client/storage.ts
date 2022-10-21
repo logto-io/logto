@@ -1,5 +1,5 @@
-import { Storage, StorageKey } from '@logto/node';
-import { Nullable } from '@silverhand/essentials';
+import type { Storage, StorageKey } from '@logto/node';
+import type { Nullable } from '@silverhand/essentials';
 
 export class MemoryStorage implements Storage {
   private storage: { [key in StorageKey]: Nullable<string> } = {

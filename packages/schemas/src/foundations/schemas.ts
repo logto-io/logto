@@ -1,4 +1,4 @@
-import { ZodObject, ZodType, ZodOptional } from 'zod';
+import type { ZodObject, ZodType, ZodOptional } from 'zod';
 
 type ParseOptional<K> = undefined extends K
   ? ZodOptional<ZodType<Exclude<K, undefined>>>

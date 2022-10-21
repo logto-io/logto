@@ -1,4 +1,4 @@
-import { Connector } from '@logto/schemas';
+import type { Connector } from '@logto/schemas';
 
 import RequestError from '@/errors/RequestError';
 

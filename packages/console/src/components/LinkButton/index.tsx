@@ -1,10 +1,10 @@
-import { AdminConsoleKey } from '@logto/phrases';
+import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import { ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import DangerousRaw from '../DangerousRaw';
+import type DangerousRaw from '../DangerousRaw';
 import * as styles from './index.module.scss';
 
 type Props = {

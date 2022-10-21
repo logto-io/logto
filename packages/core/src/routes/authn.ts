@@ -5,7 +5,7 @@ import { verifyBearerTokenFromRequest } from '@/middleware/koa-auth';
 import koaGuard from '@/middleware/koa-guard';
 import assertThat from '@/utils/assert-that';
 
-import { AnonymousRouter } from './types';
+import type { AnonymousRouter } from './types';
 
 /**
  * Authn stands for authentication.

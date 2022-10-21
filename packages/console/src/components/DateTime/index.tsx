@@ -1,4 +1,4 @@
-import { Nullable } from '@silverhand/essentials';
+import type { Nullable } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 
 type Props = {

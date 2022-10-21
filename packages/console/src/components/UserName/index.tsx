@@ -1,9 +1,10 @@
-import { User, UserRole } from '@logto/schemas';
+import type { User } from '@logto/schemas';
+import { UserRole } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
-import { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
 
 import * as styles from './index.module.scss';
 

@@ -1,5 +1,6 @@
 import { getDefaultLanguage } from '@logto/core-kit';
-import { ConnectorResponse, ConnectorType } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { Controller, useForm } from 'react-hook-form';
@@ -16,7 +17,7 @@ import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 import Step from '@/mdx-components/Step';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
-import { GuideForm } from '@/types/guide';
+import type { GuideForm } from '@/types/guide';
 import { safeParseJson } from '@/utilities/json';
 
 import * as styles from './index.module.scss';

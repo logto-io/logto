@@ -1,4 +1,4 @@
-import { AdminConsoleKey } from '@logto/phrases';
+import type { AdminConsoleKey } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
 
 import DiscordDark from '@/assets/images/discord-dark.svg';

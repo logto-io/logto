@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 
-import { LogtoOidcConfigKey, LogtoOidcConfigType } from '@logto/schemas';
+import type { LogtoOidcConfigType } from '@logto/schemas';
+import { LogtoOidcConfigKey } from '@logto/schemas';
 import { createLocalJWKSet } from 'jose';
 
 import { exportJWK } from '@/utils/jwks';

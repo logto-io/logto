@@ -1,8 +1,10 @@
 import classNames from 'classnames';
-import { ReactNode, RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import type { ReactNode, RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import usePosition, { VerticalAlignment, HorizontalAlignment } from '@/hooks/use-position';
+import type { VerticalAlignment, HorizontalAlignment } from '@/hooks/use-position';
+import usePosition from '@/hooks/use-position';
 
 import * as styles from './index.module.scss';
 

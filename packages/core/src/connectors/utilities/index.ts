@@ -2,12 +2,8 @@ import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
 import path from 'path';
 
-import {
-  BaseConnector,
-  ConnectorError,
-  ConnectorErrorCodes,
-  ConnectorType,
-} from '@logto/connector-kit';
+import type { BaseConnector } from '@logto/connector-kit';
+import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
 
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors } from '@/queries/connector';

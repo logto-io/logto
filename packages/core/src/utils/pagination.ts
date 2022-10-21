@@ -1,4 +1,4 @@
-import { Request } from 'koa';
+import type { Request } from 'koa';
 import { stringify } from 'query-string';
 
 type LinkRelationType = 'first' | 'prev' | 'next' | 'last';

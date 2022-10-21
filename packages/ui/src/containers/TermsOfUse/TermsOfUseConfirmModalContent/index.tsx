@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
 import TextLink from '@/components/TextLink';
-import { ModalContentRenderProps } from '@/hooks/use-confirm-modal';
+import type { ModalContentRenderProps } from '@/hooks/use-confirm-modal';
 import { PageContext } from '@/hooks/use-page-context';
 import usePlatform from '@/hooks/use-platform';
 import { ConfirmModalMessage } from '@/types';

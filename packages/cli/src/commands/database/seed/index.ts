@@ -4,9 +4,10 @@ import path from 'path';
 import { logtoConfigGuards, LogtoOidcConfigKey, seeds } from '@logto/schemas';
 import { buildApplicationSecret } from '@logto/shared';
 import chalk from 'chalk';
-import { DatabasePool, DatabaseTransactionConnection, sql } from 'slonik';
+import type { DatabasePool, DatabaseTransactionConnection } from 'slonik';
+import { sql } from 'slonik';
 import { raw } from 'slonik-sql-tag-raw';
-import { CommandModule } from 'yargs';
+import type { CommandModule } from 'yargs';
 import { z } from 'zod';
 
 import { createPoolAndDatabaseIfNeeded, insertInto } from '../../../database';

@@ -1,4 +1,5 @@
-import { LogDto, LogResult } from '@logto/schemas';
+import type { LogDto } from '@logto/schemas';
+import { LogResult } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +12,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import UserName from '@/components/UserName';
-import { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import ApplicationSelector from './components/ApplicationSelector';

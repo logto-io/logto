@@ -1,10 +1,10 @@
 import path from 'path';
 
-import { LogtoErrorCode } from '@logto/phrases';
+import type { LogtoErrorCode } from '@logto/phrases';
 import { UserRole } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { conditional } from '@silverhand/essentials';
-import { Provider } from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
@@ -12,7 +12,7 @@ import { assignInteractionResults, saveUserFirstConsentedAppId } from '@/lib/ses
 import { findUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
-import { AnonymousRouter } from '../types';
+import type { AnonymousRouter } from '../types';
 import forgotPasswordRoutes from './forgot-password';
 import koaGuardSessionAction from './middleware/koa-guard-session-action';
 import passwordlessRoutes from './passwordless';

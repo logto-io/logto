@@ -1,4 +1,5 @@
-import { IdentifierSqlToken, sql } from 'slonik';
+import type { IdentifierSqlToken } from 'slonik';
+import { sql } from 'slonik';
 
 import envSet from '@/env-set';
 

@@ -1,4 +1,4 @@
-import { ConnectorResponse } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
 
 import { authedAdminApi } from './api';
 

@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { User } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
 import { mockLogtoConnectorList, mockUser } from '@/__mocks__';

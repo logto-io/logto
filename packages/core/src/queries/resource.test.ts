@@ -5,7 +5,8 @@ import { createMockPool, createMockQueryResult, sql } from 'slonik';
 import { mockResource } from '@/__mocks__';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
-import { expectSqlAssert, QueryType } from '@/utils/test-utils';
+import type { QueryType } from '@/utils/test-utils';
+import { expectSqlAssert } from '@/utils/test-utils';
 
 import {
   findTotalNumberOfResources,

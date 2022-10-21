@@ -1,11 +1,8 @@
-import { SchemaLike, GeneratedSchema } from '@logto/schemas';
-import {
-  UpdateWhereData,
-  convertToIdentifiers,
-  convertToPrimitiveOrSql,
-  conditionalSql,
-} from '@logto/shared';
-import { notFalsy, Truthy } from '@silverhand/essentials';
+import type { SchemaLike, GeneratedSchema } from '@logto/schemas';
+import type { UpdateWhereData } from '@logto/shared';
+import { convertToIdentifiers, convertToPrimitiveOrSql, conditionalSql } from '@logto/shared';
+import type { Truthy } from '@silverhand/essentials';
+import { notFalsy } from '@silverhand/essentials';
 import { sql } from 'slonik';
 
 import envSet from '@/env-set';

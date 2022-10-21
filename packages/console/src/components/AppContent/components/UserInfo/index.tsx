@@ -1,4 +1,5 @@
-import { useLogto, IdTokenClaims } from '@logto/react';
+import type { IdTokenClaims } from '@logto/react';
+import { useLogto } from '@logto/react';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

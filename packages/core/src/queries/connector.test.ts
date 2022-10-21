@@ -4,7 +4,8 @@ import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockConnector } from '@/__mocks__';
 import envSet from '@/env-set';
-import { expectSqlAssert, QueryType } from '@/utils/test-utils';
+import type { QueryType } from '@/utils/test-utils';
+import { expectSqlAssert } from '@/utils/test-utils';
 
 import { findAllConnectors, insertConnector, updateConnector } from './connector';
 

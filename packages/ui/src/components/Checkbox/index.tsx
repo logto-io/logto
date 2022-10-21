@@ -1,4 +1,5 @@
-import { forwardRef, InputHTMLAttributes, Ref } from 'react';
+import type { InputHTMLAttributes, Ref } from 'react';
+import { forwardRef } from 'react';
 
 import CheckBox from '@/assets/icons/checkbox-icon.svg';
 import RadioButton from '@/assets/icons/radio-button-icon.svg';

@@ -1,4 +1,4 @@
-import { ConnectorMetadata } from '@logto/schemas';
+import type { ConnectorMetadata } from '@logto/schemas';
 import { fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 

@@ -1,7 +1,8 @@
-import { ConnectorType, SignInExperience, SignInMethodState } from '@logto/schemas';
+import type { SignInExperience } from '@logto/schemas';
+import { ConnectorType, SignInMethodState } from '@logto/schemas';
 import useSWR from 'swr';
 
-import { RequestError } from './use-api';
+import type { RequestError } from './use-api';
 
 const useConnectorInUse = (type?: ConnectorType, target?: string): boolean | undefined => {
   const { data } = useSWR<SignInExperience, RequestError>(target && type && '/api/sign-in-exp');

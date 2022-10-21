@@ -1,4 +1,4 @@
-import { LanguageTag } from '@logto/language-kit';
+import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-ui';
 import { BrandingStyle, SignInMethodState, ConnectorType } from '@logto/schemas';
 

@@ -1,11 +1,13 @@
 import classNames from 'classnames';
-import { useMemo, ReactNode } from 'react';
-import { TFuncKey, useTranslation } from 'react-i18next';
+import type { ReactNode } from 'react';
+import { useMemo } from 'react';
+import type { TFuncKey } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
 
 import TextLink from '@/components/TextLink';
-import { LocalSignInMethod } from '@/types';
+import type { LocalSignInMethod } from '@/types';
 
 import * as styles from './index.module.scss';
 

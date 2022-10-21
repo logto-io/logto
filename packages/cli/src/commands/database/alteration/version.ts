@@ -4,7 +4,7 @@ import inquirer from 'inquirer';
 import { SemVer, compare, eq, gt } from 'semver';
 
 import { findLastIndex, isTty, log } from '../../../utilities';
-import { AlterationFile } from './type';
+import type { AlterationFile } from './type';
 
 const getVersionFromFilename = (filename: string) => {
   try {

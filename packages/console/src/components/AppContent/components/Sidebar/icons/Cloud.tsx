@@ -1,4 +1,4 @@
-import { SVGProps } from 'react';
+import type { SVGProps } from 'react';
 
 const Cloud = (props: SVGProps<SVGSVGElement>) => {
   return (

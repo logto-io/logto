@@ -1,7 +1,7 @@
 import { useState, useMemo, createContext } from 'react';
 import { isMobile } from 'react-device-detect';
 
-import { SignInExperienceSettings, Platform, Theme } from '@/types';
+import type { SignInExperienceSettings, Platform, Theme } from '@/types';
 
 export type Context = {
   theme: Theme;

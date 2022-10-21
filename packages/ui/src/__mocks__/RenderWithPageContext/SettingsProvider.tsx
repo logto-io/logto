@@ -1,7 +1,8 @@
-import { useContext, useEffect, ReactElement } from 'react';
+import type { ReactElement } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { PageContext } from '@/hooks/use-page-context';
-import { SignInExperienceSettings } from '@/types';
+import type { SignInExperienceSettings } from '@/types';
 
 import { mockSignInExperienceSettings } from '../logto';
 

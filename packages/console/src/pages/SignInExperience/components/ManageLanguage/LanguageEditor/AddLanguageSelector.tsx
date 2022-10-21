@@ -1,6 +1,8 @@
-import { LanguageTag, languages as uiLanguageNameMapping } from '@logto/language-kit';
+import type { LanguageTag } from '@logto/language-kit';
+import { languages as uiLanguageNameMapping } from '@logto/language-kit';
 import classNames from 'classnames';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import type { ChangeEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/images/plus.svg';

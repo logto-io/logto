@@ -1,4 +1,4 @@
-import { ErrorType } from '@/components/ErrorMessage';
+import type { ErrorType } from '@/components/ErrorMessage';
 
 const usernameRegex = /^[A-Z_a-z-][\w-]*$/;
 const emailRegex = /^\S+@\S+\.\S+$/;

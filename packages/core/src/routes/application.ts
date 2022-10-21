@@ -14,7 +14,7 @@ import {
   findTotalNumberOfApplications,
 } from '@/queries/application';
 
-import { AuthedRouter } from './types';
+import type { AuthedRouter } from './types';
 
 const applicationId = buildIdGenerator(21);
 

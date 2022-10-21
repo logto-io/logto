@@ -1,6 +1,7 @@
 import { fallback } from '@logto/core-kit';
-import { languages, LanguageTag } from '@logto/language-kit';
-import { NormalizeKeyPaths } from '@silverhand/essentials';
+import type { LanguageTag } from '@logto/language-kit';
+import { languages } from '@logto/language-kit';
+import type { NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import en from './locales/en';
@@ -9,7 +10,7 @@ import koKR from './locales/ko-kr';
 import ptPT from './locales/pt-pt';
 import trTR from './locales/tr-tr';
 import zhCN from './locales/zh-cn';
-import { LocalePhrase } from './types';
+import type { LocalePhrase } from './types';
 
 export type { LocalePhrase } from './types';
 

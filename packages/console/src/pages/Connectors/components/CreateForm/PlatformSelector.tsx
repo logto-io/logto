@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { connectorPlatformLabel } from '@/consts/connectors';
-import { ConnectorGroup } from '@/types/connector';
+import type { ConnectorGroup } from '@/types/connector';
 
 import * as styles from './PlatformSelector.module.scss';
 

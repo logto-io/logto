@@ -1,6 +1,6 @@
-import { LogtoErrorCode } from '@logto/phrases';
+import type { LogtoErrorCode } from '@logto/phrases';
 import decamelize from 'decamelize';
-import { Middleware } from 'koa';
+import type { Middleware } from 'koa';
 import { errors } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';

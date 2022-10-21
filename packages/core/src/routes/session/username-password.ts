@@ -1,7 +1,7 @@
 import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
 import { UserRole } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
-import { Provider } from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
@@ -16,7 +16,7 @@ import koaGuard from '@/middleware/koa-guard';
 import { hasUser, hasActiveUsers, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
-import { AnonymousRouter } from '../types';
+import type { AnonymousRouter } from '../types';
 import { getRoutePrefix } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'username-password');

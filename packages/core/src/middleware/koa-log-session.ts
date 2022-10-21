@@ -1,7 +1,7 @@
-import { MiddlewareType } from 'koa';
-import { Provider } from 'oidc-provider';
+import type { MiddlewareType } from 'koa';
+import type { Provider } from 'oidc-provider';
 
-import { WithLogContext } from '@/middleware/koa-log';
+import type { WithLogContext } from '@/middleware/koa-log';
 
 export default function koaLogSession<StateT, ContextT extends WithLogContext, ResponseBodyT>(
   provider: Provider

@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 
 import { userClaims } from '@logto/core-kit';
 import { CustomClientMetadataKey } from '@logto/schemas';
-import Koa from 'koa';
+import type Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';

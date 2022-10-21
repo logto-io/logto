@@ -7,9 +7,11 @@ import { useTimer } from 'react-timer-hook';
 import { getSendPasscodeApi, getVerifyPasscodeApi } from '@/apis/utils';
 import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
-import useApi, { ErrorHandlers } from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
-import { UserFlow, SearchParameters } from '@/types';
+import type { UserFlow } from '@/types';
+import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 
 import * as styles from './index.module.scss';

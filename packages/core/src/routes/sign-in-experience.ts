@@ -14,7 +14,7 @@ import {
   updateDefaultSignInExperience,
 } from '@/queries/sign-in-experience';
 
-import { AuthedRouter } from './types';
+import type { AuthedRouter } from './types';
 
 export default function signInExperiencesRoutes<T extends AuthedRouter>(router: T) {
   /**

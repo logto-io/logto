@@ -2,7 +2,7 @@
 
 // eslint-disable-next-line import/no-unassigned-import
 import 'react-i18next';
-import en from '@logto/phrases-ui/lib/locales/en.js';
+import type en from '@logto/phrases-ui/lib/locales/en.js';
 
 declare module 'react-i18next' {
   interface CustomTypeOptions {

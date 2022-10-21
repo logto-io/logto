@@ -1,4 +1,5 @@
-import { User, UserRole } from '@logto/schemas';
+import type { User } from '@logto/schemas';
+import { UserRole } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 

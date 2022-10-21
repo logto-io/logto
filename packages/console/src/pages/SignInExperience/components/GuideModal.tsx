@@ -1,4 +1,4 @@
-import { SignInExperience } from '@logto/schemas';
+import type { SignInExperience } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ import useUserPreferences from '@/hooks/use-user-preferences';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import usePreviewConfigs from '../hooks';
-import { SignInExperienceForm } from '../types';
+import type { SignInExperienceForm } from '../types';
 import { signInExperienceParser } from '../utilities';
 import BrandingForm from './BrandingForm';
 import ColorForm from './ColorForm';

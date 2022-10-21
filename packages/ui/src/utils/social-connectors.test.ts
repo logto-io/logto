@@ -1,4 +1,5 @@
-import { ConnectorPlatform, ConnectorMetadata } from '@logto/schemas';
+import type { ConnectorMetadata } from '@logto/schemas';
+import { ConnectorPlatform } from '@logto/schemas';
 
 import { SearchParameters } from '@/types';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
