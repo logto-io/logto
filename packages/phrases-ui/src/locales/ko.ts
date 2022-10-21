@@ -80,8 +80,8 @@ const translation = {
   },
 };
 
-const koKR: LocalePhrase = Object.freeze({
+const ko: LocalePhrase = Object.freeze({
   translation,
 });
 
-export default koKR;
+export default ko;

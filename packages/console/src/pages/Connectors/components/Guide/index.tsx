@@ -1,4 +1,4 @@
-import { getDefaultLanguage } from '@logto/core-kit';
+import { getDefaultLanguageTag } from '@logto/phrases';
 import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -32,7 +32,7 @@ const Guide = ({ connector, onClose }: Props) => {
   const { updateSettings } = useSettings();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { id: connectorId, type: connectorType, name, configTemplate, readme } = connector;
-  const connectorName = name[getDefaultLanguage(i18next.language)];
+  const connectorName = name[getDefaultLanguageTag(i18next.language)];
   const isSocialConnector =
     connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
   const methods = useForm<GuideForm>({ reValidateMode: 'onBlur' });
