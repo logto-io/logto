@@ -18,7 +18,8 @@ So, we are using our own "grouping" release strategy in this monorepo:
 The release group that includes the Logto core products, which consists of the following packages:
 
 - @logto/console
-- @logto/core
+- @logto/core (main)
+- @logto/integration-tests
 - @logto/ui
 
 Their version will be in sync, and forms our main release.
@@ -27,9 +28,9 @@ Their version will be in sync, and forms our main release.
 
 The release group that includes Logto CLI and its aliases:
 
-- @logto/cli
+- @logto/cli (main)
 - @logto/create
 
 ### Others
 
-For simplicity, we will tag other **public** packages separately and publish them to NPM. But in most cases, no GitHub release will present.
+For simplicity, we will tag other **public** packages separately and publish them to NPM. But in most cases, no GitHub release will present for these packages.
