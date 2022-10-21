@@ -104,7 +104,8 @@ jobs:
       - name: Create release pull request
         uses: changesets/action@v1
         with:
-          publish: changeset tag && git push --tags
+          # Disable temporarily. Wait for our first changeset publish.
+          # publish: pnpm changeset tag
           commit: 'release: version packages'
           title: 'release: version packages'
           setupGitUser: false
