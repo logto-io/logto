@@ -30,6 +30,11 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
           throw error;
         });
 
+      const [signInExperience, logtoConnectors] = await Promise.all([
+        findDefaultSignInExperience(),
+        getLogtoConnectors(),
+      ]);
+
       // Hard code AdminConsole sign-in methods settings.
       if (interaction?.params.client_id === adminConsoleApplicationId) {
         ctx.body = {
@@ -38,6 +43,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
             ...adminConsoleSignInExperience.branding,
             slogan: i18next.t('admin_console.welcome.title'),
           },
+          languageInfo: signInExperience.languageInfo,
           signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
           socialConnectors: [],
         };
@@ -46,10 +52,6 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
       }
 
       // Custom Applications
-      const [signInExperience, logtoConnectors] = await Promise.all([
-        findDefaultSignInExperience(),
-        getLogtoConnectors(),
-      ]);
 
       const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
         Array<ConnectorMetadata & { id: string }>
