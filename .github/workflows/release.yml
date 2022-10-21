@@ -78,6 +78,38 @@ jobs:
             az config set extension.use_dynamic_install=yes_without_prompt
             az containerapp update -n logto-dev -g LogtoDev --image svhd/logto:edge
 
+  release-changesets:
+    runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.BOT_GPG_KEY }}
+          passphrase: ${{ secrets.BOT_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          git_tag_gpgsign: true
+
+      - name: Configure Git user
+        run: |
+          git config --global user.email bot@silverhand.io
+          git config --global user.name silverhand-bot
+
+      - name: Create release pull request
+        uses: changesets/action@v1
+        with:
+          publish: changeset tag && git push --tags
+          commit: 'release: version packages'
+          title: 'release: version packages'
+          setupGitUser: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
 
   create-github-release:
     environment: release

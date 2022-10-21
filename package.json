@@ -4,7 +4,6 @@
   "license": "MPL-2.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "version": "pnpm i --frozen-lockfile=false && git add pnpm-lock.yaml",
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
     "prepack": "pnpm -r prepack",
     "dev": "pnpm -r prepack && pnpm start:dev",
@@ -18,6 +17,7 @@
     "ci:test": "pnpm -r --parallel test:ci"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.25.0",
     "@commitlint/cli": "^17.0.0",
     "@commitlint/config-conventional": "^17.0.0",
     "@commitlint/types": "^17.0.0",
