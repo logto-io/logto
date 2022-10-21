@@ -18,6 +18,18 @@
   --color-dark-brand-pressed: #5d36ff;
 }
 
+// Disable User Interaction Under Preview
+.preview {
+  pointer-events: none;
+  user-select: none;
+
+  main {
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+
 body {
   background-color: var(--color-base);
   -webkit-font-smoothing: antialiased;
