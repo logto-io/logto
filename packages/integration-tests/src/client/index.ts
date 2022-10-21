@@ -1,4 +1,5 @@
-import LogtoClient, { LogtoConfig } from '@logto/node';
+import type { LogtoConfig } from '@logto/node';
+import LogtoClient from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 import got from 'got';

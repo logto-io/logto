@@ -1,5 +1,6 @@
-import { RequestErrorBody } from '@logto/schemas';
-import { HttpError, Middleware } from 'koa';
+import type { RequestErrorBody } from '@logto/schemas';
+import type { Middleware } from 'koa';
+import { HttpError } from 'koa';
 
 import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';

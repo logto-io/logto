@@ -3,12 +3,8 @@
  * Reference [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js)
  */
 
-import {
-  parsePhoneNumberWithError,
-  CountryCallingCode,
-  ParseError,
-  CountryCode,
-} from 'libphonenumber-js/mobile';
+import type { CountryCallingCode, CountryCode } from 'libphonenumber-js/mobile';
+import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/mobile';
 import { useState } from 'react';
 
 import {

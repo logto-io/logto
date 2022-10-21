@@ -1,6 +1,7 @@
-import { Nullable } from '@silverhand/essentials';
+import type { Nullable } from '@silverhand/essentials';
 import type { Identifier } from 'dnd-core';
-import { ReactNode, useContext, useEffect, useRef } from 'react';
+import type { ReactNode } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
 import { DragDropContext } from './DragDropProvider';

@@ -1,4 +1,5 @@
-import { SignInMode, ConnectorMetadata } from '@logto/schemas';
+import type { ConnectorMetadata } from '@logto/schemas';
+import { SignInMode } from '@logto/schemas';
 
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
@@ -7,7 +8,7 @@ import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless'
 import SignInMethodsLink from '@/containers/SignInMethodsLink';
 import { PrimarySocialSignIn, SecondarySocialSignIn } from '@/containers/SocialSignIn';
 import UsernameSignIn from '@/containers/UsernameSignIn';
-import { SignInMethod, LocalSignInMethod } from '@/types';
+import type { SignInMethod, LocalSignInMethod } from '@/types';
 
 import * as styles from './index.module.scss';
 

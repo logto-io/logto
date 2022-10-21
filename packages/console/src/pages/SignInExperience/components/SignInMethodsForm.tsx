@@ -8,7 +8,7 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import Switch from '@/components/Switch';
 
-import { SignInExperienceForm } from '../types';
+import type { SignInExperienceForm } from '../types';
 import ConnectorSetupWarning from './ConnectorSetupWarning';
 import ConnectorsTransfer from './ConnectorsTransfer';
 import * as styles from './index.module.scss';

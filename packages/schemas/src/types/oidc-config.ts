@@ -1,4 +1,4 @@
-import { KeysToCamelCase } from '@silverhand/essentials';
+import type { KeysToCamelCase } from '@silverhand/essentials';
 
 export type SnakeCaseOidcConfig = {
   authorization_endpoint: string;

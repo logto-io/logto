@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import ReactModal from 'react-modal';
 
 import CloseIcon from '@/assets/icons/close-icon.svg';

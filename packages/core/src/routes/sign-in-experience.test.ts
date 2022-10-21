@@ -1,9 +1,5 @@
-import {
-  SignInExperience,
-  CreateSignInExperience,
-  TermsOfUse,
-  SignInMethodState,
-} from '@logto/schemas';
+import type { SignInExperience, CreateSignInExperience, TermsOfUse } from '@logto/schemas';
+import { SignInMethodState } from '@logto/schemas';
 
 import {
   mockFacebookConnector,

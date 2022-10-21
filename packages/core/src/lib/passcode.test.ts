@@ -1,5 +1,6 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { Passcode, PasscodeType } from '@logto/schemas';
+import type { Passcode } from '@logto/schemas';
+import { PasscodeType } from '@logto/schemas';
 import { any } from 'zod';
 
 import { mockConnector, mockMetadata } from '@/__mocks__';

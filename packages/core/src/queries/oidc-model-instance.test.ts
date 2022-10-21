@@ -1,9 +1,11 @@
-import { OidcModelInstances, CreateOidcModelInstance } from '@logto/schemas';
+import type { CreateOidcModelInstance } from '@logto/schemas';
+import { OidcModelInstances } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import envSet from '@/env-set';
-import { expectSqlAssert, QueryType } from '@/utils/test-utils';
+import type { QueryType } from '@/utils/test-utils';
+import { expectSqlAssert } from '@/utils/test-utils';
 
 import {
   upsertInstance,

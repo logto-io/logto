@@ -6,7 +6,7 @@ import { is } from 'superstruct';
 import { registerWithSocial, bindSocialRelatedUser } from '@/apis/social';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
-import { LocalSignInMethod } from '@/types';
+import type { LocalSignInMethod } from '@/types';
 import { bindSocialStateGuard } from '@/types/guard';
 
 const useBindSocial = () => {

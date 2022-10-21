@@ -4,7 +4,8 @@ import { string, boolean, number, object, nativeEnum, unknown, literal, union } 
 
 import RequestError from '@/errors/RequestError';
 
-import { ZodStringCheck, zodTypeToSwagger } from './zod';
+import type { ZodStringCheck } from './zod';
+import { zodTypeToSwagger } from './zod';
 
 describe('zodTypeToSwagger', () => {
   it('arbitrary object guard', () => {

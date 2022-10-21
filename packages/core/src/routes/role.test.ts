@@ -1,4 +1,4 @@
-import { Role } from '@logto/schemas';
+import type { Role } from '@logto/schemas';
 
 import { mockRole } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';

@@ -1,4 +1,5 @@
-import { PasscodeType, User } from '@logto/schemas';
+import type { User } from '@logto/schemas';
+import { PasscodeType } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
 

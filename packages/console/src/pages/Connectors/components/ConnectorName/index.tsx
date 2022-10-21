@@ -1,4 +1,5 @@
-import { AppearanceMode, ConnectorResponse, ConnectorType } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
+import { AppearanceMode, ConnectorType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 

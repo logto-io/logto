@@ -7,7 +7,7 @@ import {
   mockLogtoConnectorList,
   mockLogtoConnector,
 } from '@/__mocks__';
-import { LogtoConnector } from '@/connectors/types';
+import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { updateConnector } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';

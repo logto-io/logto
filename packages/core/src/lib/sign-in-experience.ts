@@ -1,15 +1,10 @@
 import { builtInLanguages } from '@logto/phrases-ui';
-import {
-  Branding,
-  BrandingStyle,
-  LanguageInfo,
-  SignInMethods,
-  SignInMethodState,
-  TermsOfUse,
-} from '@logto/schemas';
-import { Optional } from '@silverhand/essentials';
+import type { Branding, LanguageInfo, SignInMethods, TermsOfUse } from '@logto/schemas';
+import { BrandingStyle, SignInMethodState } from '@logto/schemas';
+import type { Optional } from '@silverhand/essentials';
 
-import { ConnectorType, LogtoConnector } from '@/connectors/types';
+import type { LogtoConnector } from '@/connectors/types';
+import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { findAllCustomLanguageTags } from '@/queries/custom-phrase';
 import assertThat from '@/utils/assert-that';

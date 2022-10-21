@@ -1,4 +1,4 @@
-import { CommandModule } from 'yargs';
+import type { CommandModule } from 'yargs';
 
 import { log } from '../../utilities';
 import { addConnectors, addOfficialConnectors, inquireInstancePath } from './utils';

@@ -1,4 +1,5 @@
-import { getTotalUsersCount, getNewUsersData, getActiveUsersData, StatisticsData } from '@/api';
+import type { StatisticsData } from '@/api';
+import { getTotalUsersCount, getNewUsersData, getActiveUsersData } from '@/api';
 import { createUserByAdmin, registerNewUser, signIn } from '@/helpers';
 import { generateUsername, generatePassword } from '@/utils';
 

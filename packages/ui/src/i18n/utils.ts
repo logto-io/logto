@@ -1,6 +1,8 @@
-import resource, { LocalePhrase } from '@logto/phrases-ui';
-import { LanguageInfo } from '@logto/schemas';
-import i18next, { Resource } from 'i18next';
+import type { LocalePhrase } from '@logto/phrases-ui';
+import resource from '@logto/phrases-ui';
+import type { LanguageInfo } from '@logto/schemas';
+import type { Resource } from 'i18next';
+import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 import { getPhrases } from '@/apis/settings';

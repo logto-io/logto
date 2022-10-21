@@ -1,15 +1,9 @@
 import en from '@logto/phrases-ui/lib/locales/en';
-import {
-  SignInExperience,
-  SignInMethodKey,
-  SignInMethods,
-  SignInMethodState,
-  SignInMode,
-  Translation,
-} from '@logto/schemas';
+import type { SignInExperience, SignInMethods, Translation } from '@logto/schemas';
+import { SignInMethodKey, SignInMethodState, SignInMode } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { SignInExperienceForm } from './types';
+import type { SignInExperienceForm } from './types';
 
 const findMethodState = (
   setup: SignInExperienceForm,

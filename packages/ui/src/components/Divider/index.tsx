@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { TFuncKey, useTranslation } from 'react-i18next';
+import type { TFuncKey } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 

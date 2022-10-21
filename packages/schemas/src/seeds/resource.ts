@@ -1,4 +1,4 @@
-import { CreateResource } from '../db-entries';
+import type { CreateResource } from '../db-entries';
 
 export const managementResource: Readonly<CreateResource> = Object.freeze({
   id: 'management-api',

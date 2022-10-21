@@ -1,4 +1,5 @@
-import { userInfoSelectFields, User, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import type { User } from '@logto/schemas';
+import { userInfoSelectFields, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import pick from 'lodash.pick';
 
 export const mockUser: User = {

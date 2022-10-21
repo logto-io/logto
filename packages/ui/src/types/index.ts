@@ -1,4 +1,4 @@
-import { SignInExperience, ConnectorMetadata, AppearanceMode } from '@logto/schemas';
+import type { SignInExperience, ConnectorMetadata, AppearanceMode } from '@logto/schemas';
 
 export type UserFlow = 'sign-in' | 'register' | 'forgot-password';
 export type SignInMethod = 'username' | 'email' | 'sms' | 'social';
@@ -12,6 +12,7 @@ export enum SearchParameters {
 
 export type Platform = 'web' | 'mobile';
 
+// TODO: @simeng, @sijie, @charles should we combine this with admin console?
 export type Theme = 'dark' | 'light';
 
 export type SignInExperienceSettingsResponse = SignInExperience & {

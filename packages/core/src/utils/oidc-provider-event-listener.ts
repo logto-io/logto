@@ -1,8 +1,8 @@
 import { GrantType, TokenType, LogResult } from '@logto/schemas';
 import { notFalsy } from '@silverhand/essentials';
-import { errors, KoaContextWithOIDC, Provider } from 'oidc-provider';
+import type { errors, KoaContextWithOIDC, Provider } from 'oidc-provider';
 
-import { WithLogContext } from '@/middleware/koa-log';
+import type { WithLogContext } from '@/middleware/koa-log';
 
 export const addOidcEventListeners = (provider: Provider) => {
   /**

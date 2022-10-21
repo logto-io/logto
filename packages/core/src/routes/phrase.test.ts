@@ -1,5 +1,5 @@
 import zhCN from '@logto/phrases-ui/lib/locales/zh-cn';
-import { SignInExperience } from '@logto/schemas';
+import type { SignInExperience } from '@logto/schemas';
 import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 

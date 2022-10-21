@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import https from 'https';
 
 import chalk from 'chalk';
-import Koa from 'koa';
+import type Koa from 'koa';
 import compose from 'koa-compose';
 import koaLogger from 'koa-logger';
 import mount from 'koa-mount';

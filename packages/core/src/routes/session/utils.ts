@@ -1,15 +1,17 @@
-import { logTypeGuard, LogType, PasscodeType } from '@logto/schemas';
-import { Truthy } from '@silverhand/essentials';
+import type { LogType, PasscodeType } from '@logto/schemas';
+import { logTypeGuard } from '@logto/schemas';
+import type { Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
-import { Context } from 'koa';
-import { Provider } from 'oidc-provider';
-import { z, ZodType } from 'zod';
+import type { Context } from 'koa';
+import type { Provider } from 'oidc-provider';
+import type { ZodType } from 'zod';
+import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
 import { verificationTimeout } from './consts';
-import { Method, Operation, VerificationResult, VerificationStorage } from './types';
+import type { Method, Operation, VerificationResult, VerificationStorage } from './types';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',

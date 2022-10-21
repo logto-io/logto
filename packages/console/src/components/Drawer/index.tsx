@@ -1,4 +1,4 @@
-import { AdminConsoleKey } from '@logto/phrases';
+import type { AdminConsoleKey } from '@logto/phrases';
 import ReactModal from 'react-modal';
 
 import Close from '@/assets/images/close.svg';

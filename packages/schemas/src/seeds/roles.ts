@@ -1,4 +1,4 @@
-import { CreateRole } from '../db-entries';
+import type { CreateRole } from '../db-entries';
 import { UserRole } from '../types';
 
 /**

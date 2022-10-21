@@ -2,7 +2,7 @@ import { UserRole } from '@logto/schemas';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import Router from 'koa-router';
-import { Provider } from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 
 import koaAuth from '@/middleware/koa-auth';
 import koaLogSession from '@/middleware/koa-log-session';
@@ -23,7 +23,7 @@ import statusRoutes from '@/routes/status';
 import swaggerRoutes from '@/routes/swagger';
 import wellKnownRoutes from '@/routes/well-known';
 
-import { AnonymousRouter, AuthedRouter } from './types';
+import type { AnonymousRouter, AuthedRouter } from './types';
 
 const createRouters = (provider: Provider) => {
   const sessionRouter: AnonymousRouter = new Router();

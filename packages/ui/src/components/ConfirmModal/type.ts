@@ -1,5 +1,5 @@
-import { ReactNode, MouseEventHandler } from 'react';
-import { TFuncKey } from 'react-i18next';
+import type { ReactNode, MouseEventHandler } from 'react';
+import type { TFuncKey } from 'react-i18next';
 
 export type ModalProps = {
   className?: string;

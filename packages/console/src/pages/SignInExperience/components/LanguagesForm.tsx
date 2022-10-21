@@ -1,5 +1,5 @@
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
-import { SignInExperience } from '@logto/schemas';
+import type { SignInExperience } from '@logto/schemas';
 import { useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -8,10 +8,10 @@ import useSWR from 'swr';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import Switch from '@/components/Switch';
-import { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
-import { SignInExperienceForm } from '../types';
+import type { SignInExperienceForm } from '../types';
 import ManageLanguageButton from './ManageLanguage/ManageLanguageButton';
 import * as styles from './index.module.scss';
 

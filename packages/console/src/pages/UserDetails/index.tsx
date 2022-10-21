@@ -1,4 +1,4 @@
-import { User } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -20,7 +20,8 @@ import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
-import useApi, { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 

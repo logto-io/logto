@@ -1,5 +1,6 @@
-import { arbitraryObjectGuard, User } from '@logto/schemas';
-import { Nullable } from '@silverhand/essentials';
+import type { User } from '@logto/schemas';
+import { arbitraryObjectGuard } from '@logto/schemas';
+import type { Nullable } from '@silverhand/essentials';
 import { useEffect } from 'react';
 import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';

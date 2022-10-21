@@ -4,7 +4,7 @@ import { conditionalString } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import pluralize from 'pluralize';
 
-import { TableWithType } from './types';
+import type { TableWithType } from './types';
 
 export const generateSchema = ({ name, fields }: TableWithType) => {
   const modelName = pluralize(camelcase(name, { pascalCase: true }), 1);

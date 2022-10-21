@@ -1,11 +1,12 @@
-import { AdminConsoleKey } from '@logto/phrases';
+import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import { HTMLProps, ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
+import type { HTMLProps, ReactElement, ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Ring as Spinner } from '@/components/Spinner';
 
-import DangerousRaw from '../DangerousRaw';
+import type DangerousRaw from '../DangerousRaw';
 import * as styles from './index.module.scss';
 
 export type ButtonType = 'primary' | 'danger' | 'outline' | 'text' | 'default' | 'branding';

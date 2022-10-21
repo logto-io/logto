@@ -1,4 +1,4 @@
-import { SignInExperience as SignInExperienceType } from '@logto/schemas';
+import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -12,7 +12,8 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import ConfirmModal from '@/components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import useApi, { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -26,7 +27,7 @@ import * as styles from './index.module.scss';
 import BrandingTab from './tabs/BrandingTab';
 import OthersTab from './tabs/OthersTab';
 import SignInMethodsTab from './tabs/SignInMethodsTab';
-import { SignInExperienceForm } from './types';
+import type { SignInExperienceForm } from './types';
 import { compareSignInMethods, signInExperienceParser } from './utilities';
 
 const SignInExperience = () => {

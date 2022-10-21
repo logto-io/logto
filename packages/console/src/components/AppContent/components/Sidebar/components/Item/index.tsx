@@ -1,6 +1,8 @@
 import classNames from 'classnames';
-import { ReactChild, ReactNode, useMemo, useState } from 'react';
-import { TFuncKey, useTranslation } from 'react-i18next';
+import type { ReactChild, ReactNode } from 'react';
+import { useMemo, useState } from 'react';
+import type { TFuncKey } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { getPath } from '../../utils';

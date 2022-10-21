@@ -1,4 +1,5 @@
-import { Application, ApplicationType } from '@logto/schemas';
+import type { Application } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 import { useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';

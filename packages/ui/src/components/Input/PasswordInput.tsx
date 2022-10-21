@@ -1,9 +1,11 @@
 import classNames from 'classnames';
-import { useState, useRef, HTMLProps } from 'react';
+import type { HTMLProps } from 'react';
+import { useState, useRef } from 'react';
 
 import PasswordHideIcon from '@/assets/icons/password-hide-icon.svg';
 import PasswordShowIcon from '@/assets/icons/password-show-icon.svg';
-import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
+import type { ErrorType } from '@/components/ErrorMessage';
+import ErrorMessage from '@/components/ErrorMessage';
 
 import * as styles from './index.module.scss';
 

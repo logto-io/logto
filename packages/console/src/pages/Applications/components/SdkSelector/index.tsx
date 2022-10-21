@@ -13,7 +13,7 @@ import RadioGroup, { Radio } from '@/components/RadioGroup';
 import Select from '@/components/Select';
 import Spacer from '@/components/Spacer';
 import { useTheme } from '@/hooks/use-theme';
-import { SupportedSdk } from '@/types/applications';
+import type { SupportedSdk } from '@/types/applications';
 
 import * as styles from './index.module.scss';
 

@@ -19,8 +19,8 @@
  * (reference)[https://github.com/gajus/slonik#error-handling]
  */
 
-import { SchemaLike } from '@logto/schemas';
-import { Middleware } from 'koa';
+import type { SchemaLike } from '@logto/schemas';
+import type { Middleware } from 'koa';
 import { SlonikError, NotFoundError } from 'slonik';
 
 import RequestError from '@/errors/RequestError';

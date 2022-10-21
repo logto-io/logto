@@ -1,7 +1,8 @@
-import { BaseLogPayload, LogPayload, LogPayloads, LogResult, LogType } from '@logto/schemas';
+import type { BaseLogPayload, LogPayload, LogPayloads, LogType } from '@logto/schemas';
+import { LogResult } from '@logto/schemas';
 import deepmerge from 'deepmerge';
-import { MiddlewareType } from 'koa';
-import { IRouterParamContext } from 'koa-router';
+import type { MiddlewareType } from 'koa';
+import type { IRouterParamContext } from 'koa-router';
 import pick from 'lodash.pick';
 import { nanoid } from 'nanoid';
 

@@ -1,4 +1,5 @@
-import { Connector, CreateConnector, Connectors } from '@logto/schemas';
+import type { Connector, CreateConnector } from '@logto/schemas';
+import { Connectors } from '@logto/schemas';
 import { convertToIdentifiers, manyRows } from '@logto/shared';
 import { sql } from 'slonik';
 

@@ -1,4 +1,5 @@
-import { SignInExperience, SignInMethodKey, SignInMethodState } from '@logto/schemas';
+import type { SignInExperience } from '@logto/schemas';
+import { SignInMethodKey, SignInMethodState } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 

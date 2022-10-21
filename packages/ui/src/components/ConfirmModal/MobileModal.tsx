@@ -5,7 +5,7 @@ import Button from '@/components/Button';
 
 import * as modalStyles from '../../scss/modal.module.scss';
 import * as styles from './MobileModal.module.scss';
-import { ModalProps } from './type';
+import type { ModalProps } from './type';
 
 const MobileModal = ({
   className,

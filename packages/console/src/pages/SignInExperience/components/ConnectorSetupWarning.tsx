@@ -1,10 +1,11 @@
-import { ConnectorResponse, ConnectorType, SignInMethodKey } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
+import { ConnectorType, SignInMethodKey } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Alert from '@/components/Alert';
-import { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
 
 type Props = {
   method: SignInMethodKey;

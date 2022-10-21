@@ -1,4 +1,4 @@
-import { LanguageTag } from '@logto/language-kit';
+import type { LanguageTag } from '@logto/language-kit';
 import { createContext, useMemo, useState } from 'react';
 
 const noop = () => {

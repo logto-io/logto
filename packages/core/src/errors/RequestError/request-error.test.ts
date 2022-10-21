@@ -1,4 +1,4 @@
-import { LogtoErrorI18nKey } from '@logto/phrases';
+import type { LogtoErrorI18nKey } from '@logto/phrases';
 import i18next from 'i18next';
 
 import initI18n from '@/i18n/init';

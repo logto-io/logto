@@ -1,4 +1,5 @@
-import { ConnectorResponse, ConnectorType } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';

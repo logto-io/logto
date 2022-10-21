@@ -1,12 +1,16 @@
-import { createMockContext, Options } from '@shopify/jest-koa-mocks';
-import Koa, { MiddlewareType, Context, Middleware } from 'koa';
-import Router, { IRouterParamContext } from 'koa-router';
-import { Provider } from 'oidc-provider';
-import { createMockPool, createMockQueryResult, QueryResult, QueryResultRow } from 'slonik';
-import { PrimitiveValueExpression } from 'slonik/dist/src/types.d';
+import type { Options } from '@shopify/jest-koa-mocks';
+import { createMockContext } from '@shopify/jest-koa-mocks';
+import type { MiddlewareType, Context, Middleware } from 'koa';
+import Koa from 'koa';
+import type { IRouterParamContext } from 'koa-router';
+import Router from 'koa-router';
+import type { Provider } from 'oidc-provider';
+import type { QueryResult, QueryResultRow } from 'slonik';
+import { createMockPool, createMockQueryResult } from 'slonik';
+import type { PrimitiveValueExpression } from 'slonik/dist/src/types.d';
 import request from 'supertest';
 
-import { AuthedRouter, AnonymousRouter } from '@/routes/types';
+import type { AuthedRouter, AnonymousRouter } from '@/routes/types';
 
 /**
  *  Slonik Query Mock Utils

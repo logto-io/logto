@@ -1,4 +1,4 @@
-import { GeneratedSchema, SchemaLike } from '@logto/schemas';
+import type { GeneratedSchema, SchemaLike } from '@logto/schemas';
 
 export const isKeyOf =
   <Schema extends SchemaLike>({ fieldKeys }: GeneratedSchema<Schema>) =>

@@ -1,8 +1,9 @@
 import classNames from 'classnames';
-import { HTMLProps } from 'react';
+import type { HTMLProps } from 'react';
 
 import ClearIcon from '@/assets/icons/clear-icon.svg';
-import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
+import type { ErrorType } from '@/components/ErrorMessage';
+import ErrorMessage from '@/components/ErrorMessage';
 
 import * as styles from './index.module.scss';
 

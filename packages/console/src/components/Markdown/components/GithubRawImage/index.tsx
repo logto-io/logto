@@ -1,4 +1,5 @@
-import { HTMLProps, useRef, useState } from 'react';
+import type { HTMLProps } from 'react';
+import { useRef, useState } from 'react';
 
 const githubRawUrlPrefix = 'https://raw.githubusercontent.com/logto-io/logto/master';
 

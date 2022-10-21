@@ -1,5 +1,5 @@
 import type { Identities, ConnectorResponse } from '@logto/schemas';
-import { Optional } from '@silverhand/essentials';
+import type { Optional } from '@silverhand/essentials';
 import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 

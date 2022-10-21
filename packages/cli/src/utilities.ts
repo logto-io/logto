@@ -2,9 +2,11 @@ import { execSync } from 'child_process';
 import { createWriteStream } from 'fs';
 import path from 'path';
 
-import { conditionalString, Optional } from '@silverhand/essentials';
+import type { Optional } from '@silverhand/essentials';
+import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
-import got, { Progress } from 'got';
+import type { Progress } from 'got';
+import got from 'got';
 import { HttpsProxyAgent } from 'hpagent';
 import inquirer from 'inquirer';
 import ora from 'ora';

@@ -1,9 +1,10 @@
-import { AdminConsoleKey } from '@logto/phrases';
+import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import ReactModal from 'react-modal';
 
-import Button, { ButtonType } from '@/components/Button';
+import type { ButtonType } from '@/components/Button';
+import Button from '@/components/Button';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import ModalLayout from '../ModalLayout';

@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { ErrorHandlers } from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 
 const useForgotPasswordWithEmailErrorHandler = (email: string) => {

@@ -1,4 +1,4 @@
-import { AdminConsoleKey } from '@logto/phrases';
+import type { AdminConsoleKey } from '@logto/phrases';
 import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 
 import EmailConnector from '@/assets/images/connector-email.svg';

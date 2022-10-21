@@ -1,4 +1,5 @@
-import { CreateUser, Role, User, userInfoSelectFields } from '@logto/schemas';
+import type { CreateUser, Role, User } from '@logto/schemas';
+import { userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
 
 import { mockUser, mockUserList, mockUserListResponse, mockUserResponse } from '@/__mocks__';

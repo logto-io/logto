@@ -1,5 +1,5 @@
 import { usernameRegEx } from '@logto/core-kit';
-import { User } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import { nanoid } from 'nanoid';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';

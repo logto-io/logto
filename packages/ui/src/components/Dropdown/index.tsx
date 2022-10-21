@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import ReactModal, { Props as ModalProps } from 'react-modal';
+import type { Props as ModalProps } from 'react-modal';
+import ReactModal from 'react-modal';
 
 import { onKeyDownHandler } from '@/utils/a11y';
 

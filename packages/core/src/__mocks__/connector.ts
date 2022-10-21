@@ -1,8 +1,9 @@
 import { ConnectorPlatform } from '@logto/connector-kit';
-import { Connector, ConnectorMetadata, ConnectorType } from '@logto/schemas';
+import type { Connector, ConnectorMetadata } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import { LogtoConnector } from '@/connectors/types';
+import type { LogtoConnector } from '@/connectors/types';
 
 export const mockMetadata: ConnectorMetadata = {
   id: 'id',

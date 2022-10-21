@@ -1,5 +1,5 @@
 import { useLogto } from '@logto/react';
-import { RequestErrorBody } from '@logto/schemas';
+import type { RequestErrorBody } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
 import ky from 'ky';
 import { useMemo } from 'react';

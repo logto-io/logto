@@ -7,11 +7,12 @@ import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import { PhoneInput } from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
-import useApi, { ErrorHandlers } from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import usePhoneNumber from '@/hooks/use-phone-number';
 import useTerms from '@/hooks/use-terms';
-import { UserFlow } from '@/types';
+import type { UserFlow } from '@/types';
 
 import PasswordlessSwitch from './PasswordlessSwitch';
 import * as styles from './index.module.scss';

@@ -1,5 +1,5 @@
 declare module 'slonik-interceptor-preset' {
-  import { Interceptor } from 'slonik';
+  import type { Interceptor } from 'slonik';
 
   export const createInterceptors: (config?: {
     benchmarkQueries: boolean;
