@@ -34,7 +34,7 @@
     "@logto/core-kit": "1.0.0-beta.19",
     "@logto/language-kit": "1.0.0-beta.20",
     "@silverhand/essentials": "^1.3.0",
-    "zod": "^3.18.0"
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.3.0",

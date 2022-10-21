@@ -64,7 +64,7 @@
     "slonik-sql-tag-raw": "^1.1.4",
     "snake-case": "^3.0.4",
     "snakecase-keys": "^5.1.0",
-    "zod": "^3.18.0"
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@shopify/jest-koa-mocks": "^5.0.0",
