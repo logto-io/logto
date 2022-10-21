@@ -1,11 +1,9 @@
-import path from 'path';
-
 import { getEnv, getEnvAsStringArray, Optional } from '@silverhand/essentials';
 import { DatabasePool } from 'slonik';
 
+import { getOidcConfigs } from '@/lib/logto-config';
 import { appendPath } from '@/utils/url';
 
-import { addConnectors } from './add-connectors';
 import { checkAlterationState } from './check-alteration-state';
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
@@ -18,9 +16,6 @@ export enum MountedApps {
   DemoApp = 'demo-app',
   Welcome = 'welcome',
 }
-
-// eslint-disable-next-line unicorn/prefer-module
-export const defaultConnectorDirectory = path.join(__dirname, '../../connectors');
 
 const loadEnvValues = async () => {
   const isProduction = getEnv('NODE_ENV') === 'production';
@@ -44,9 +39,7 @@ const loadEnvValues = async () => {
     userDefaultRoleNames: getEnvAsStringArray('USER_DEFAULT_ROLE_NAMES'),
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
     trustProxyHeader: isTrue(getEnv('TRUST_PROXY_HEADER')),
-    oidc: await loadOidcValues(appendPath(endpoint, '/oidc').toString()),
     adminConsoleUrl: appendPath(endpoint, '/console'),
-    connectorDirectory: getEnv('CONNECTOR_DIRECTORY', defaultConnectorDirectory),
   });
 };
 
@@ -60,6 +53,7 @@ const throwNotLoadedError = () => {
 function createEnvSet() {
   let values: Optional<Awaited<ReturnType<typeof loadEnvValues>>>;
   let pool: Optional<DatabasePool>;
+  let oidc: Optional<Awaited<ReturnType<typeof loadOidcValues>>>;
 
   return {
     get values() {
@@ -76,15 +70,22 @@ function createEnvSet() {
 
       return pool;
     },
+    get poolSafe() {
+      return pool;
+    },
+    get oidc() {
+      if (!oidc) {
+        return throwNotLoadedError();
+      }
 
+      return oidc;
+    },
     load: async () => {
       values = await loadEnvValues();
       pool = await createPoolByEnv(values.isTest);
-      await addConnectors(values.connectorDirectory);
 
-      if (pool) {
-        await checkAlterationState(pool);
-      }
+      const [, oidcConfigs] = await Promise.all([checkAlterationState(pool), getOidcConfigs(pool)]);
+      oidc = await loadOidcValues(appendPath(values.endpoint, '/oidc').toString(), oidcConfigs);
     },
   };
 }

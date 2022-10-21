@@ -29,11 +29,3 @@ export type LoadConnector<T extends AllConnector = AllConnector> = T & {
 export type LogtoConnector<T extends AllConnector = AllConnector> = LoadConnector<T> & {
   dbEntry: Connector;
 };
-
-export const npmPackResultGuard = z
-  .object({
-    name: z.string(),
-    version: z.string(),
-    filename: z.string(),
-  })
-  .array();

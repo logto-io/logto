@@ -1,4 +1,4 @@
-import { User } from '@logto/schemas';
+import { PasscodeType, User } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
 
@@ -6,7 +6,6 @@ import { mockPasswordEncrypted, mockSignInExperience, mockUserWithPassword } fro
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import { forgotPasswordVerificationTimeout } from './consts';
 import forgotPasswordRoutes, { forgotPasswordRoute } from './forgot-password';
 
 const encryptUserPassword = jest.fn(async (password: string) => ({
@@ -14,7 +13,7 @@ const encryptUserPassword = jest.fn(async (password: string) => ({
   passwordEncryptionMethod: 'Argon2i',
 }));
 const findUserById = jest.fn(async (): Promise<User> => mockUserWithPassword);
-const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const updateUserById = jest.fn(async (..._args: unknown[]) => ({ userId: 'id' }));
 const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
   forgotPassword: true,
@@ -28,9 +27,9 @@ jest.mock('@/lib/user', () => ({
 jest.mock('@/queries/user', () => ({
   ...jest.requireActual('@/queries/user'),
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
-  findUserByPhone: async () => ({ id: 'id' }),
+  findUserByPhone: async () => ({ userId: 'id' }),
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
-  findUserByEmail: async () => ({ id: 'id' }),
+  findUserByEmail: async () => ({ userId: 'id' }),
   findUserById: async () => findUserById(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
 }));
@@ -41,7 +40,7 @@ jest.mock('@/queries/sign-in-experience', () => ({
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
 jest.mock('@/lib/passcode', () => ({
-  createPasscode: async () => ({ id: 'id' }),
+  createPasscode: async () => ({ userId: 'id' }),
   sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {
     if (code !== '1234') {
@@ -83,108 +82,6 @@ describe('session -> forgotPasswordRoutes', () => {
     ],
   });
 
-  describe('POST /session/forgot-password/sms/send-passcode', () => {
-    beforeAll(() => {
-      interactionDetails.mockResolvedValueOnce({
-        jti: 'jti',
-      });
-    });
-    it('should call sendPasscode', async () => {
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/sms/send-passcode`)
-        .send({ phone: '13000000000' });
-      expect(response.statusCode).toEqual(204);
-      expect(sendPasscode).toHaveBeenCalled();
-    });
-  });
-
-  describe('POST /session/forgot-password/sms/verify-passcode', () => {
-    it('assign result and redirect', async () => {
-      const fakeTime = new Date();
-      jest.useFakeTimers().setSystemTime(fakeTime);
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/sms/verify-passcode`)
-        .send({ phone: '13000000000', code: '1234' });
-      expect(response.statusCode).toEqual(204);
-      expect(interactionResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({
-          forgotPassword: {
-            userId: 'id',
-            expiresAt: dayjs(fakeTime)
-              .add(forgotPasswordVerificationTimeout, 'second')
-              .toISOString(),
-          },
-        })
-      );
-      jest.useRealTimers();
-    });
-    it('throw error if phone number does not exist', async () => {
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/sms/verify-passcode`)
-        .send({ phone: '13000000001', code: '1234' });
-      expect(response.statusCode).toEqual(422);
-    });
-    it('throw error if verifyPasscode failed', async () => {
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/sms/verify-passcode`)
-        .send({ phone: '13000000000', code: '1231' });
-      expect(response.statusCode).toEqual(400);
-    });
-  });
-
-  describe('POST /session/forgot-password/email/send-passcode', () => {
-    beforeAll(() => {
-      interactionDetails.mockResolvedValueOnce({
-        jti: 'jti',
-      });
-    });
-    it('should call sendPasscode', async () => {
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/email/send-passcode`)
-        .send({ email: 'a@a.com' });
-      expect(response.statusCode).toEqual(204);
-      expect(sendPasscode).toHaveBeenCalled();
-    });
-  });
-
-  describe('POST /session/forgot-password/email/verify-passcode', () => {
-    it('assign result and redirect', async () => {
-      const fakeTime = new Date();
-      jest.useFakeTimers().setSystemTime(fakeTime);
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/email/verify-passcode`)
-        .send({ email: 'a@a.com', code: '1234' });
-      expect(response.statusCode).toEqual(204);
-      expect(interactionResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({
-          forgotPassword: {
-            userId: 'id',
-            expiresAt: dayjs(fakeTime)
-              .add(forgotPasswordVerificationTimeout, 'second')
-              .toISOString(),
-          },
-        })
-      );
-      jest.useRealTimers();
-    });
-    it('throw error if email does not exist', async () => {
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/email/verify-passcode`)
-        .send({ email: 'b@a.com', code: '1234' });
-      expect(response.statusCode).toEqual(422);
-    });
-    it('throw error if verifyPasscode failed', async () => {
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/sms/verify-passcode`)
-        .send({ email: 'a@a.com', code: '1231' });
-      expect(response.statusCode).toEqual(400);
-    });
-  });
-
   describe('POST /session/forgot-password/reset', () => {
     afterEach(() => {
       jest.clearAllMocks();
@@ -192,7 +89,11 @@ describe('session -> forgotPasswordRoutes', () => {
     it('assign result and redirect', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          forgotPassword: { userId: 'id', expiresAt: dayjs().add(1, 'day').toISOString() },
+          verification: {
+            userId: 'id',
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+            flow: PasscodeType.ForgotPassword,
+          },
         },
       });
       const response = await sessionRequest
@@ -207,10 +108,13 @@ describe('session -> forgotPasswordRoutes', () => {
       );
       expect(response.statusCode).toEqual(204);
     });
-    it('should throw when `accountId` is missing', async () => {
+    it('should throw when `id` is missing', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          forgotPassword: { expiresAt: dayjs().add(1, 'day').toISOString() },
+          verification: {
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+            flow: PasscodeType.ForgotPassword,
+          },
         },
       });
       const response = await sessionRequest
@@ -219,10 +123,26 @@ describe('session -> forgotPasswordRoutes', () => {
       expect(response).toHaveProperty('status', 404);
       expect(updateUserById).toBeCalledTimes(0);
     });
-    it('should throw when `forgotPassword.expiresAt` is not string', async () => {
+    it('should throw when flow is not `forgot-password`', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          forgotPassword: { userId: 'id', expiresAt: 0 },
+          verification: {
+            userId: 'id',
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+            flow: PasscodeType.SignIn,
+          },
+        },
+      });
+      const response = await sessionRequest
+        .post(`${forgotPasswordRoute}/reset`)
+        .send({ password: mockPasswordEncrypted });
+      expect(response).toHaveProperty('status', 404);
+      expect(updateUserById).toBeCalledTimes(0);
+    });
+    it('should throw when `verification.expiresAt` is not string', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: { userId: 'id', expiresAt: 0, flow: PasscodeType.ForgotPassword },
         },
       });
       const response = await sessionRequest
@@ -234,7 +154,11 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should throw when `expiresAt` is not a valid date string', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          forgotPassword: { userId: 'id', expiresAt: 'invalid date string' },
+          verification: {
+            userId: 'id',
+            expiresAt: 'invalid date string',
+            flow: PasscodeType.ForgotPassword,
+          },
         },
       });
       const response = await sessionRequest
@@ -246,7 +170,11 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should throw when verification expires', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          forgotPassword: { userId: 'id', expiresAt: dayjs().subtract(1, 'day').toISOString() },
+          verification: {
+            userId: 'id',
+            expiresAt: dayjs().subtract(1, 'day').toISOString(),
+            flow: PasscodeType.ForgotPassword,
+          },
         },
       });
       const response = await sessionRequest
@@ -258,7 +186,11 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should throw when new password is the same as old one', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          forgotPassword: { userId: 'id', expiresAt: dayjs().add(1, 'day').toISOString() },
+          verification: {
+            userId: 'id',
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+            flow: PasscodeType.ForgotPassword,
+          },
         },
       });
       mockArgon2Verify.mockResolvedValueOnce(true);
@@ -271,7 +203,11 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should redirect when there was no old password', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          forgotPassword: { userId: 'id', expiresAt: dayjs().add(1, 'day').toISOString() },
+          verification: {
+            userId: 'id',
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+            flow: PasscodeType.ForgotPassword,
+          },
         },
       });
       findUserById.mockResolvedValueOnce({

@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.12](https://github.com/logto-io/logto/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2022-10-19)
+
+
+### Bug Fixes
+
+* add tables to schemas files ([582f3d6](https://github.com/logto-io/logto/commit/582f3d615862c3d8b2c00d8e60a3617429d48e30))
+* handle versioning when no `next-*.ts` found ([#2202](https://github.com/logto-io/logto/issues/2202)) ([61336df](https://github.com/logto-io/logto/commit/61336dfbc833c96ddce88be5082b82a30527ee73))
+* make packages public ([e24fd04](https://github.com/logto-io/logto/commit/e24fd0479bc20c92bd38b5e214abe441404ce496))
+
+
+
+## [1.0.0-beta.11](https://github.com/logto-io/logto/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2022-10-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* update scripts
+
+### Features
+
+* `npm create` compatibility ([a5cd73d](https://github.com/logto-io/logto/commit/a5cd73d961766c7c72180795051feabe9793fc7d))
+* add vertical center support ([#2032](https://github.com/logto-io/logto/issues/2032)) ([5eeb06e](https://github.com/logto-io/logto/commit/5eeb06e301b06d3caad65ece1b7b05cf6e160dd4))
+* **cli:** `db alteration deploy` command ([a5280a2](https://github.com/logto-io/logto/commit/a5280a2afd3d5822e78d1f115ab6f6fdbb993261))
+* **cli:** `db seed oidc` command ([911117a](https://github.com/logto-io/logto/commit/911117a785fd43ea03473f42835f2680cccca7be))
+* **cli:** `db seed` command ([5c7000d](https://github.com/logto-io/logto/commit/5c7000ddc30e316bd17f34d71d51c17016efec76))
+* **cli:** add `download-url` option for install ([5dda0a6](https://github.com/logto-io/logto/commit/5dda0a6dd0e04468c078e3581e68a614ce23404c))
+* **cli:** add connector command ([4ccbe4a](https://github.com/logto-io/logto/commit/4ccbe4ac6566aff0db1cd98a74441640677f6060))
+* **cli:** command `init/i/install` ([f05691b](https://github.com/logto-io/logto/commit/f05691b4319279a49bf0bc87ba656b7990d52e53))
+* **cli:** database config command ([0eb306a](https://github.com/logto-io/logto/commit/0eb306a61cf88b8be3be86852cb66b1d99ad713f))
+* **cli:** get/set db config key ([0eff1e3](https://github.com/logto-io/logto/commit/0eff1e3591129802f3e9b3286652ef6fc8619cf5))
+* **cli:** init ([0c6462d](https://github.com/logto-io/logto/commit/0c6462dbdae1b2518003e5cb3ea5604300200196))
+* **cli:** list connectors ([dcb9142](https://github.com/logto-io/logto/commit/dcb91428e6ef1021e383270e66d3e67bfc83e593))
+* **cli:** remove connectors ([7d257c4](https://github.com/logto-io/logto/commit/7d257c45bfa37298c287b3ac867acd0606c4f028))
+* **console:** add a11y lint to ac ([#2066](https://github.com/logto-io/logto/issues/2066)) ([37d2b0c](https://github.com/logto-io/logto/commit/37d2b0ce5c09658d5e49be84b891d9a0d83f6f5c))
+* **console:** add custom language ([#2029](https://github.com/logto-io/logto/issues/2029)) ([800ac7f](https://github.com/logto-io/logto/commit/800ac7fcd9592875df29d897e3a704fc6a73fee1))
+* **console:** auto detect language setting ([#1941](https://github.com/logto-io/logto/issues/1941)) ([cdfaf8b](https://github.com/logto-io/logto/commit/cdfaf8b1c7fd268f205e4679cfc762d7e3eedfea))
+* **console:** delete custom phrases ([#2065](https://github.com/logto-io/logto/issues/2065)) ([68e8884](https://github.com/logto-io/logto/commit/68e88840bfe4f50682c028188f32bc2480e8d8d7))
+* **console:** display unsaved alert on custom phrases changed ([#1994](https://github.com/logto-io/logto/issues/1994)) ([0679a6a](https://github.com/logto-io/logto/commit/0679a6a67c71203e0bae3489768184a6e564937d))
+* **console:** manage language ([#1981](https://github.com/logto-io/logto/issues/1981)) ([48832e5](https://github.com/logto-io/logto/commit/48832e50548421b876deaf10b1d3379674e7f562))
+* **core,phrases:** add GET /phrase route ([#1959](https://github.com/logto-io/logto/issues/1959)) ([7ce55a8](https://github.com/logto-io/logto/commit/7ce55a8458166d1ca7453f3f637aed202860bf6c))
+* **ui:** add a11y support ([#2076](https://github.com/logto-io/logto/issues/2076)) ([2249d71](https://github.com/logto-io/logto/commit/2249d717a8928597d00c383c268d6fdc506ac437))
+* **ui:** add reset password error handling flow ([#2079](https://github.com/logto-io/logto/issues/2079)) ([afa2ac4](https://github.com/logto-io/logto/commit/afa2ac47ee461e3526f61594e456d484fd3166af))
+* **ui:** global confirm modal ([#2018](https://github.com/logto-io/logto/issues/2018)) ([f1ca49c](https://github.com/logto-io/logto/commit/f1ca49c89253daef8b47ec88e30f69df818374d1))
+
+
+### Bug Fixes
+
+* add publish config for public packages ([#2192](https://github.com/logto-io/logto/issues/2192)) ([38f664c](https://github.com/logto-io/logto/commit/38f664c27c4927970f40336b04154a5803cb5dc0))
+* add redirectURI validation on frontend & backend ([#1874](https://github.com/logto-io/logto/issues/1874)) ([4b0970b](https://github.com/logto-io/logto/commit/4b0970b6d8c6647a6e68bf27fe3db3aeb635768e))
+* alteration script in dev ([9ebb3dd](https://github.com/logto-io/logto/commit/9ebb3ddfd963f6459ea332dbe1384058f77b453b))
+* **cli:** `chooseAlterationsByVersion` should contain the last `next` version alteration script ([#2175](https://github.com/logto-io/logto/issues/2175)) ([fd50304](https://github.com/logto-io/logto/commit/fd50304f5ff5ffbc985695eaa73c1bc56b1ca061))
+* **cli:** fix skip-when-exists option ([#2180](https://github.com/logto-io/logto/issues/2180)) ([4ce2073](https://github.com/logto-io/logto/commit/4ce207369228d404d919c491ba398acedcfd55fa))
+* **console:** checkbox styles ([7c85e50](https://github.com/logto-io/logto/commit/7c85e50c4597f6ed0a19384916ea6ef1bb3974a5))
+* **console:** clear select state on close modal ([#2071](https://github.com/logto-io/logto/issues/2071)) ([b6b9d7c](https://github.com/logto-io/logto/commit/b6b9d7ce80aefe7341b3167e18ce4af291052015))
+* **console:** language editor form should be dirty on clear button clicked ([#2037](https://github.com/logto-io/logto/issues/2037)) ([1223d23](https://github.com/logto-io/logto/commit/1223d23eb3f13cce707f6cd5eecd043c476f3514))
+* **console:** remove connector id and prevent text overflow ([#2072](https://github.com/logto-io/logto/issues/2072)) ([05b5025](https://github.com/logto-io/logto/commit/05b50250a387635649614aaeeec9757e7034a19d))
+* **console:** responsive modal items layout ([#2160](https://github.com/logto-io/logto/issues/2160)) ([ac38a7f](https://github.com/logto-io/logto/commit/ac38a7f3ac13b90ffb2ea8a94d40a390d652a62b))
+* **console:** save generated password in session storage ([#2116](https://github.com/logto-io/logto/issues/2116)) ([8a7f875](https://github.com/logto-io/logto/commit/8a7f875767f5d70edc41509ddd1973b87ad16ee9))
+* **console:** set undefined value to empty string in custom phrases ([#2074](https://github.com/logto-io/logto/issues/2074)) ([81f9fbc](https://github.com/logto-io/logto/commit/81f9fbc48379afc7de5d84e3614097ee37a1424b))
+* **console:** show correct password after reset ([#2063](https://github.com/logto-io/logto/issues/2063)) ([02c082c](https://github.com/logto-io/logto/commit/02c082cb71258a931925df87126060fa9d9a2c5d))
+* **console:** use fallback language in preview ([#1960](https://github.com/logto-io/logto/issues/1960)) ([f25ae4d](https://github.com/logto-io/logto/commit/f25ae4de1477feca5a8e077cb05146bb13719e6f))
+* **core:** fix deletePasscodeByIds bug ([#2049](https://github.com/logto-io/logto/issues/2049)) ([11b605a](https://github.com/logto-io/logto/commit/11b605a3e7bcef5ecbe24c5a39b8a1a081a54e88))
+* **deps:** update dependency @logto/language-kit to v1.0.0-beta.16 ([89e4800](https://github.com/logto-io/logto/commit/89e4800ca8e30cbf62a0000fa350ee2f5dd094de))
+* **ui:** fix ut ([9ea6a8c](https://github.com/logto-io/logto/commit/9ea6a8c8e94e116d8efbbff63b39738162cbaec1))
+* **ui:** revert color token changes in ui as it uses different design system ([489e2b3](https://github.com/logto-io/logto/commit/489e2b3a1129fbbf824955e4697c1d64ff294d95))
+
+
+### Miscellaneous Chores
+
+* update scripts ([c96495a](https://github.com/logto-io/logto/commit/c96495ad4ef778a006f0307a9e0a4bf47d0bfdc7))
+
+
+
 ## [1.0.0-beta.10](https://github.com/logto-io/logto/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-09-28)
 
 

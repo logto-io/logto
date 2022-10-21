@@ -43,9 +43,9 @@ const errors = {
     identity_exists: 'Le compte social a été enregistré.',
     invalid_role_names: 'les noms de rôles ({{roleNames}}) ne sont pas valides',
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
-    same_password: 'Your new password can not be the same as current password.', // UNTRANSLATED
     sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
     sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
+    same_password: 'Your new password can’t be the same as your current password.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: "La méthode de cryptage {{name}} n'est pas prise en charge.",
@@ -63,10 +63,10 @@ const errors = {
     connector_id_mismatch: "Le connectorId ne correspond pas à l'enregistrement de la session.",
     connector_session_not_found:
       "La session du connecteur n'a pas été trouvée. Veuillez revenir en arrière et vous connecter à nouveau.",
-    forgot_password_session_not_found:
-      'Forgot password session not found. Please go back and verify.', // UNTRANSLATED
-    forgot_password_verification_expired:
-      'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
+    verification_session_not_found:
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
+    verification_expired:
+      'The connection has timed out. Verify again to ensure your account safety.', // UNTRANSLATED
     unauthorized: "Veuillez vous enregistrer d'abord.",
     unsupported_prompt_name: "Nom d'invite non supporté.",
     forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
@@ -123,10 +123,12 @@ const errors = {
       'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
     code_sign_in_must_be_enabled:
       'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
+    unsupported_default_language: 'This language - {{language}} is not supported at the moment.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:
-      'You cannot delete {{languageKey}} language since it is used as default language in sign-in experience.', // UNTRANSLATED
+      '{{languageTag}} is set as your default language and can’t be deleted.', // UNTRANSLATED
+    invalid_translation_structure: 'Invalid data schemas. Please check your input and try again.', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type: 'Type Zod non valide. Veuillez vérifier la configuration du garde-route.',
@@ -138,6 +140,9 @@ const errors = {
     not_exists: "Le {{name}} n'existe pas.",
     not_exists_with_id: "Le {{name}} avec l'ID `{{id}}` n'existe pas.",
     not_found: "La ressource n'existe pas.",
+  },
+  log: {
+    invalid_type: 'The log type is invalid.', // UNTRANSLATED
   },
 };
 

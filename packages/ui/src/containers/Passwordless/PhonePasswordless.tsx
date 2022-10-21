@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useCallback, useEffect, useState, useMemo, useContext } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,13 +9,10 @@ import { PhoneInput } from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
-import { PageContext } from '@/hooks/use-page-context';
 import usePhoneNumber from '@/hooks/use-phone-number';
 import useTerms from '@/hooks/use-terms';
-import { UserFlow, SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
+import { UserFlow } from '@/types';
 
-import PasswordlessConfirmModal from './PasswordlessConfirmModal';
 import PasswordlessSwitch from './PasswordlessSwitch';
 import * as styles from './index.module.scss';
 
@@ -41,7 +38,6 @@ const PhonePasswordless = ({
   hasSwitch = false,
   className,
 }: Props) => {
-  const { setToast } = useContext(PageContext);
   const { t } = useTranslation();
 
   const { termsValidation } = useTerms();
@@ -50,30 +46,13 @@ const PhonePasswordless = ({
   const { fieldValue, setFieldValue, setFieldErrors, validateForm, register } =
     useForm(defaultState);
 
-  const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
-
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.phone_not_exists': (error) => {
-        const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-
-        // Directly display the error if user is trying to bind with social
-        if (socialToBind) {
-          setToast(error.message);
-
-          return;
-        }
-
-        setShowPasswordlessConfirmModal(true);
-      },
-      'user.phone_exists_register': () => {
-        setShowPasswordlessConfirmModal(true);
-      },
       'guard.invalid_input': () => {
         setFieldErrors({ phone: 'invalid_phone' });
       },
     }),
-    [setFieldErrors, setToast]
+    [setFieldErrors]
   );
 
   const sendPasscode = getSendPasscodeApi(type, 'sms');
@@ -105,10 +84,6 @@ const PhonePasswordless = ({
     [validateForm, hasTerms, termsValidation, asyncSendPasscode, fieldValue.phone]
   );
 
-  const onModalCloseHandler = useCallback(() => {
-    setShowPasswordlessConfirmModal(false);
-  }, []);
-
   useEffect(() => {
     // Sync phoneNumber
     setFieldValue((previous) => ({
@@ -127,39 +102,31 @@ const PhonePasswordless = ({
   }, [fieldValue.phone, navigate, result, type]);
 
   return (
-    <>
-      <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-        <div className={styles.formFields}>
-          <PhoneInput
-            name="phone"
-            placeholder={t('input.phone_number')}
-            className={styles.inputField}
-            countryCallingCode={phoneNumber.countryCallingCode}
-            nationalNumber={phoneNumber.nationalNumber}
-            autoFocus={autoFocus}
-            countryList={countryList}
-            {...register('phone', phoneNumberValidation)}
-            onChange={(data) => {
-              setPhoneNumber((previous) => ({ ...previous, ...data }));
-            }}
-          />
-          {hasSwitch && <PasswordlessSwitch target="email" className={styles.switch} />}
-        </div>
+    <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
+      <div className={styles.formFields}>
+        <PhoneInput
+          name="phone"
+          placeholder={t('input.phone_number')}
+          className={styles.inputField}
+          countryCallingCode={phoneNumber.countryCallingCode}
+          nationalNumber={phoneNumber.nationalNumber}
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus={autoFocus}
+          countryList={countryList}
+          {...register('phone', phoneNumberValidation)}
+          onChange={(data) => {
+            setPhoneNumber((previous) => ({ ...previous, ...data }));
+          }}
+        />
+        {hasSwitch && <PasswordlessSwitch target="email" className={styles.switch} />}
+      </div>
 
-        {hasTerms && <TermsOfUse className={styles.terms} />}
+      {hasTerms && <TermsOfUse className={styles.terms} />}
 
-        <Button title="action.continue" onClick={async () => onSubmitHandler()} />
+      <Button title="action.continue" onClick={async () => onSubmitHandler()} />
 
-        <input hidden type="submit" />
-      </form>
-      <PasswordlessConfirmModal
-        isOpen={showPasswordlessConfirmModal}
-        type={type === 'sign-in' ? 'register' : 'sign-in'}
-        method="sms"
-        value={fieldValue.phone}
-        onClose={onModalCloseHandler}
-      />
-    </>
+      <input hidden type="submit" />
+    </form>
   );
 };
 

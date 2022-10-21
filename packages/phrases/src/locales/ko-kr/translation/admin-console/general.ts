@@ -35,6 +35,7 @@ const general = {
   unsaved_changes_warning: '수정된 내용이 있어요. 정말로 현재 페이지를 벗어날까요?',
   leave_page: '페이지 나가기',
   stay_on_page: '페이지 유지하기',
+  type_to_search: 'Type to search', // UNTRANSLATED
 };
 
 export default general;

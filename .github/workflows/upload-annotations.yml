@@ -22,13 +22,13 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+        uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
       - name: Prepack
         run: pnpm prepack
 
       - name: Lint with Report
-        run: pnpm -- lerna run --parallel lint:report && node merge-eslint-reports.js
+        run: pnpm -r --parallel lint:report && node merge-eslint-reports.js
 
       - name: Annotate Code Linting Results
         uses: ataylorme/eslint-annotate-action@1.2.0

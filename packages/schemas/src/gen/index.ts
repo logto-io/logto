@@ -135,7 +135,7 @@ const generate = async () => {
       const customTypes: string[] = [];
       const tableWithTypes = tables.map<TableWithType>(({ fields, ...rest }) => ({
         ...rest,
-        // eslint-disable-next-line complexity
+
         fields: fields.map(({ type, customType, tsType, ...rest }) => {
           const finalType =
             tsType ?? type ?? allTypes.find(({ name }) => name === customType)?.tsName;

@@ -1,8 +1,6 @@
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
+import { OmitAutoSetFields, UpdateWhereData } from '@logto/shared';
 import { SlonikError } from 'slonik';
-
-import { UpdateWhereData } from '@/database/types';
-import { OmitAutoSetFields } from '@/database/utils';
 
 export class DeletionError extends SlonikError {
   table?: string;

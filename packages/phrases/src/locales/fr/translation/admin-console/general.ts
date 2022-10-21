@@ -36,6 +36,7 @@ const general = {
     'Vous avez effectué des changements. Êtes-vous sûr de vouloir quitter cette page ?',
   leave_page: 'Quittez la page',
   stay_on_page: 'Rester sur la page',
+  type_to_search: 'Type to search', // UNTRANSLATED
 };
 
 export default general;

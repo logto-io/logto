@@ -1,4 +1,4 @@
-import en from './en';
+import { LocalePhrase } from '../types';
 
 const translation = {
   input: {
@@ -21,6 +21,7 @@ const translation = {
     enter_passcode: '비밀번호 입력',
     confirm: '확인',
     cancel: '취소',
+    save_password: 'Save', // UNTRANSLATED
     bind: '{{address}}로 연동',
     back: '뒤로 가기',
     nav_back: '뒤로',
@@ -28,7 +29,7 @@ const translation = {
     got_it: '알겠습니다',
     sign_in_with: '{{name}} 로그인',
     forgot_password: '비밀번호를 잊어버리셨나요?',
-    switch_to: 'Switch to {{method}}', // TODO: untranslated
+    switch_to: 'Switch to {{method}}', // UNTRANSLATED
   },
   description: {
     email: '이메일',
@@ -47,6 +48,7 @@ const translation = {
     continue_with: '계속하기',
     create_account_id_exists: '{{type}} {{value}} 계정이 이미 존재해요. 로그인하시겠어요?',
     sign_in_id_does_not_exists: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
+    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
     bind_account_title: '계정 연동',
     social_create_account: '계정이 없으신가요? 새로운 계정을 만들고 연동해보세요.',
     social_bind_account: '계정이 이미 있으신가요? 로그인하여 다른 계정과 연동해보세요.',
@@ -57,6 +59,7 @@ const translation = {
     reset_password_description_sms:
       '계정과 연결된 전화번호를 입력하면 비밀번호 재설정을 위한 인증 코드를 문자로 보내드립니다.',
     new_password: '새 비밀번호',
+    password_changed: 'Password Changed', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '사용자 이름 또는 비밀번호가 일치하지 않아요.',
@@ -77,7 +80,7 @@ const translation = {
   },
 };
 
-const koKR: typeof en = Object.freeze({
+const koKR: LocalePhrase = Object.freeze({
   translation,
 });
 

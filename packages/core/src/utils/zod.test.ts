@@ -1,3 +1,4 @@
+import { languages, languageTagGuard } from '@logto/language-kit';
 import { ApplicationType, arbitraryObjectGuard, translationGuard } from '@logto/schemas';
 import { string, boolean, number, object, nativeEnum, unknown, literal, union } from 'zod';
 
@@ -16,6 +17,13 @@ describe('zodTypeToSwagger', () => {
   it('translation object guard', () => {
     expect(zodTypeToSwagger(translationGuard)).toEqual({
       $ref: '#/components/schemas/TranslationObject',
+    });
+  });
+
+  it('language tag guard', () => {
+    expect(zodTypeToSwagger(languageTagGuard)).toEqual({
+      type: 'string',
+      enum: Object.keys(languages),
     });
   });
 

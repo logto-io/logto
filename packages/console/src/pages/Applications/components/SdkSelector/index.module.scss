@@ -31,10 +31,14 @@
     width: 100%;
     margin-top: _.unit(6);
     margin-right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: _.unit(5);
   }
 
   .radio {
     border-radius: _.unit(2);
+    padding: _.unit(5);
     width: 240px;
     max-width: unset;
     font: var(--font-subhead-2);

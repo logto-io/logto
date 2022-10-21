@@ -1,8 +1,8 @@
-import en from '../en';
+import { LocalPhrase } from '../../types';
 import errors from './errors';
 import translation from './translation';
 
-const koKR: typeof en = Object.freeze({
+const koKR: LocalPhrase = Object.freeze({
   translation,
   errors,
 });

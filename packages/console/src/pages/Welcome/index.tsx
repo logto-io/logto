@@ -4,11 +4,11 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useHref } from 'react-router-dom';
 
+import Logo from '@/assets/images/logo.svg';
 import AppError from '@/components/AppError';
 import Button from '@/components/Button';
 import SessionExpired from '@/components/SessionExpired';
 import { useTheme } from '@/hooks/use-theme';
-import Logo from '@/icons/Logo';
 
 import * as styles from './index.module.scss';
 

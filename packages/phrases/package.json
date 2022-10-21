@@ -1,12 +1,14 @@
 {
   "name": "@logto/phrases",
-  "version": "1.0.0-beta.10",
-  "description": "Logto shared phrases (l10n).",
+  "version": "1.0.0-beta.12",
+  "description": "Logto shared phrases (i18n).",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
   "license": "MPL-2.0",
   "main": "lib/index.js",
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "lib"
   ],
@@ -29,12 +31,14 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@logto/core-kit": "^1.0.0-beta.13",
-    "@silverhand/essentials": "^1.2.1"
+    "@logto/core-kit": "1.0.0-beta.18",
+    "@logto/language-kit": "1.0.0-beta.19",
+    "@silverhand/essentials": "^1.3.0",
+    "zod": "^3.18.0"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "1.0.0",
-    "@silverhand/ts-config": "1.0.0",
+    "@silverhand/eslint-config": "1.2.0",
+    "@silverhand/ts-config": "1.2.1",
     "eslint": "^8.21.0",
     "lint-staged": "^13.0.0",
     "prettier": "^2.7.1",

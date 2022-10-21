@@ -1,13 +1,15 @@
+import en from '@logto/phrases-ui/lib/locales/en';
 import {
   SignInExperience,
   SignInMethodKey,
   SignInMethods,
   SignInMethodState,
   SignInMode,
+  Translation,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { LanguageMode, SignInExperienceForm } from './types';
+import { SignInExperienceForm } from './types';
 
 const findMethodState = (
   setup: SignInExperienceForm,
@@ -40,10 +42,7 @@ export const signInExperienceParser = {
       (key) => signInExperience.signInMethods[key] === SignInMethodState.Secondary
     );
 
-    const {
-      languageInfo: { autoDetect, fallbackLanguage, fixedLanguage },
-      signInMode,
-    } = signInExperience;
+    const { signInMode } = signInExperience;
 
     return {
       ...signInExperience,
@@ -55,20 +54,11 @@ export const signInExperienceParser = {
         email: secondaryMethods.includes(SignInMethodKey.Email),
         social: secondaryMethods.includes(SignInMethodKey.Social),
       },
-      languageInfo: {
-        mode: autoDetect ? LanguageMode.Auto : LanguageMode.Fixed,
-        fallbackLanguage,
-        fixedLanguage,
-      },
       createAccountEnabled: signInMode !== SignInMode.SignIn,
     };
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
-    const {
-      branding,
-      languageInfo: { mode, fallbackLanguage, fixedLanguage },
-      createAccountEnabled,
-    } = setup;
+    const { branding, createAccountEnabled } = setup;
 
     return {
       ...setup,
@@ -83,11 +73,6 @@ export const signInExperienceParser = {
         sms: findMethodState(setup, 'sms'),
         email: findMethodState(setup, 'email'),
         social: findMethodState(setup, 'social'),
-      },
-      languageInfo: {
-        autoDetect: mode === LanguageMode.Auto,
-        fallbackLanguage,
-        fixedLanguage,
       },
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
     };
@@ -115,3 +100,34 @@ export const compareSignInMethods = (
 
   return Object.values(SignInMethodKey).every((key) => beforeMethods[key] === afterMethods[key]);
 };
+
+export const flattenTranslation = (
+  translation: Translation,
+  keyPrefix = ''
+): Record<string, string> =>
+  Object.keys(translation).reduce((result, key) => {
+    const prefix = keyPrefix ? `${keyPrefix}.` : keyPrefix;
+    const unwrappedKey = `${prefix}${key}`;
+    const unwrapped = translation[key];
+
+    return unwrapped === undefined
+      ? result
+      : {
+          ...result,
+          ...(typeof unwrapped === 'string'
+            ? { [unwrappedKey]: unwrapped }
+            : flattenTranslation(unwrapped, unwrappedKey)),
+        };
+  }, {});
+
+const emptyTranslation = (translation: Translation): Translation =>
+  Object.entries(translation).reduce((result, [key, value]) => {
+    return typeof value === 'string'
+      ? { ...result, [key]: '' }
+      : {
+          ...result,
+          [key]: emptyTranslation(value),
+        };
+  }, {});
+
+export const createEmptyUiTranslation = () => emptyTranslation(en.translation);

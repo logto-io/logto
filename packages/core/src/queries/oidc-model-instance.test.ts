@@ -1,7 +1,7 @@
 import { OidcModelInstances, CreateOidcModelInstance } from '@logto/schemas';
+import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import { convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
@@ -24,8 +24,8 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
   })
 );
 
-jest.mock('@/database/utils', () => ({
-  ...jest.requireActual('@/database/utils'),
+jest.mock('@logto/shared', () => ({
+  ...jest.requireActual('@logto/shared'),
   convertToTimestamp: () => 100,
 }));
 
