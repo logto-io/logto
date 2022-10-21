@@ -1,4 +1,15 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "packageRules": [{
+    "matchSourceUrlPrefixes": ["https://github.com/logto-io/js"],
+    "groupName": "Logto JS SDK monorepo packages"
+  }, {
+    "matchSourceUrlPrefixes": ["https://github.com/logto-io/toolkit"],
+    "groupName": "Logto standard toolkit monorepo packages"
+  }, {
+    "matchSourceUrlPrefixes": ["https://github.com/silverhand-io/configs"],
+    "groupName": "Silverhand configs monorepo packages"
+  }],
   "extends": [
     "config:base",
     ":preserveSemverRanges"
