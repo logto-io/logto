@@ -47,7 +47,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
     >
       {connectors.map((connector) => {
         const { id, name, logo, logoDark } = connector;
-        const localName = name[isLanguageTag(language) ? language : 'en'];
+        const localName = name[isLanguageTag(language) ? language : 'en'] ?? name.en;
 
         return (
           <DropdownItem
