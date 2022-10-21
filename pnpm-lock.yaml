@@ -654,6 +654,7 @@ importers:
   packages/ui:
     specifiers:
       '@logto/core-kit': 1.0.0-beta.19
+      '@logto/language-kit': 1.0.0-beta.20
       '@logto/phrases': workspace:^
       '@logto/phrases-ui': workspace:^
       '@logto/schemas': workspace:^
@@ -707,6 +708,7 @@ importers:
     dependencies:
       '@logto/core-kit': 1.0.0-beta.19
     devDependencies:
+      '@logto/language-kit': 1.0.0-beta.20
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
@@ -2364,7 +2366,7 @@ packages:
     resolution: {integrity: sha512-nBqWQo2xGAlVcD9O/txpCzRyy7eKXNXBAHm8J1y/u5Fp3BMObMmJv+v4Zk+UhckdFpsnFJF0wYIX45ta2+IipA==}
     engines: {node: ^16.0.0}
     dependencies:
-      zod: 3.18.0
+      zod: 3.19.1
 
   /@logto/node/1.0.0-beta.10:
     resolution: {integrity: sha512-4st77cD1h/bCIrt+BttDHva/I7ibLw0ilvi30uadEwuH0Ih8WFYvlyi2V1wOljd5Ym+fqSMbyKXQQIwba6CenQ==}
@@ -3504,7 +3506,7 @@ packages:
       '@jest/types': 29.1.2
       deepmerge: 4.2.2
       identity-obj-proxy: 3.0.0
-      jest: 29.1.2_@types+node@16.11.12
+      jest: 29.1.2
       jest-matcher-specific-error: 1.0.0
       jest-transform-stub: 2.0.0
       ts-jest: 29.0.3_37jxomqt5oevoqzq6g3r6n3ili
@@ -13527,7 +13529,7 @@ packages:
       '@jest/types': 29.1.2
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.1.2_@types+node@16.11.12
+      jest: 29.1.2
       jest-util: 29.1.2
       json5: 2.2.1
       lodash.memoize: 4.1.2
@@ -14369,7 +14371,6 @@ packages:
 
   /zod/3.19.1:
     resolution: {integrity: sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==}
-    dev: false
 
   /zwitch/1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}

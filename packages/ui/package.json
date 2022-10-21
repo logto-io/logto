@@ -19,6 +19,7 @@
     "@logto/core-kit": "1.0.0-beta.19"
   },
   "devDependencies": {
+    "@logto/language-kit": "1.0.0-beta.20",
     "@logto/phrases": "workspace:^",
     "@logto/phrases-ui": "workspace:^",
     "@logto/schemas": "workspace:^",

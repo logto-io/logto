@@ -1,4 +1,5 @@
-import { getDefaultLanguageTag } from '@logto/phrases';
+import useApi from '@/hooks/use-api';
+import { isLanguageTag } from '@logto/language-kit';
 import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -13,7 +14,6 @@ import CodeEditor from '@/components/CodeEditor';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Markdown from '@/components/Markdown';
-import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 import Step from '@/mdx-components/Step';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
@@ -32,7 +32,7 @@ const Guide = ({ connector, onClose }: Props) => {
   const { updateSettings } = useSettings();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { id: connectorId, type: connectorType, name, configTemplate, readme } = connector;
-  const connectorName = name[getDefaultLanguageTag(i18next.language)];
+  const connectorName = name[isLanguageTag(i18next.language) ? i18next.language : 'en'];
   const isSocialConnector =
     connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
   const methods = useForm<GuideForm>({ reValidateMode: 'onBlur' });

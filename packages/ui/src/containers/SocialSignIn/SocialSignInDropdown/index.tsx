@@ -1,9 +1,9 @@
-import Dropdown, { DropdownItem } from '@/components/Dropdown';
-import { getDefaultLanguageTag } from '@logto/phrases-ui';
+import { isLanguageTag } from '@logto/language-kit';
 import type { ConnectorMetadata } from '@logto/schemas';
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import useSocial from '@/hooks/use-social';
 
 import * as styles from './index.module.scss';
@@ -47,7 +47,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
     >
       {connectors.map((connector) => {
         const { id, name, logo, logoDark } = connector;
-        const localName = name[getDefaultLanguageTag(language)];
+        const localName = name[isLanguageTag(language) ? language : 'en'];
 
         return (
           <DropdownItem
