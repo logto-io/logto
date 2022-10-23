@@ -24,7 +24,7 @@ const AppContent = ({ children }: Props) => {
   }, [setToast]);
 
   // Set Primary Color
-  useColorTheme(experienceSettings?.color.primaryColor, experienceSettings?.color.darkPrimaryColor);
+  useColorTheme();
 
   // Set Theme Mode
   useEffect(() => {
