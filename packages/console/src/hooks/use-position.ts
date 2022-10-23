@@ -196,12 +196,11 @@ export default function usePosition({
 
     const anchorRect = anchorRef.current.getBoundingClientRect();
     const overlayRect = overlayRef.current.getBoundingClientRect();
-    const { scrollTop, scrollLeft } = document.documentElement;
 
-    const verticalTop = anchorRect.y - overlayRect.height + scrollTop - offset.vertical;
+    const verticalTop = anchorRect.y - overlayRect.height - offset.vertical;
     const verticalCenter =
-      anchorRect.y - anchorRect.height / 2 - overlayRect.height / 2 + scrollTop + offset.vertical;
-    const verticalBottom = anchorRect.y + anchorRect.height + scrollTop + offset.vertical;
+      anchorRect.y - anchorRect.height / 2 - overlayRect.height / 2 + offset.vertical;
+    const verticalBottom = anchorRect.y + anchorRect.height + offset.vertical;
 
     const verticalPositionMap = {
       top: verticalTop,
@@ -209,11 +208,10 @@ export default function usePosition({
       bottom: verticalBottom,
     };
 
-    const horizontalStart = anchorRect.x + scrollLeft + offset.horizontal;
+    const horizontalStart = anchorRect.x + offset.horizontal;
     const horizontalCenter =
-      anchorRect.x + anchorRect.width / 2 - overlayRect.width / 2 + scrollLeft + offset.horizontal;
-    const horizontalEnd =
-      anchorRect.x + anchorRect.width - overlayRect.width + scrollLeft + offset.horizontal;
+      anchorRect.x + anchorRect.width / 2 - overlayRect.width / 2 + offset.horizontal;
+    const horizontalEnd = anchorRect.x + anchorRect.width - overlayRect.width + offset.horizontal;
 
     const horizontalPositionMap = {
       start: horizontalStart,
