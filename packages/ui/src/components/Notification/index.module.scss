@@ -2,13 +2,10 @@
 
 .notification {
   padding: _.unit(3) _.unit(4);
-  font: var(--font-body);
-  color: var(--color-text);
-  background: var(--color-surface-variant);
-  border: _.border(var(--color-border-variant));
-  border-radius: var(--radius);
+  font: var(--font-body-2);
+  color: var(--color-type-primary);
+  background: var(--color-alert-99);
   margin: 0 auto _.unit(2);
-  box-shadow: var(--shadow-1);
   @include _.flex_row;
 
   &:focus-visible {
@@ -17,7 +14,7 @@
 }
 
 .icon {
-  color: var(--color-outline);
+  color: var(--color-alert-70);
   width: 20px;
   height: 20px;
   margin-right: _.unit(3);
@@ -35,9 +32,13 @@
 }
 
 :global(body.desktop) {
+  .notification {
+    border-radius: var(--radius);
+  }
+
   .link {
     &:hover {
-      color: var(--color-primary);
+      color: var(--color-brand-default);
     }
   }
 }

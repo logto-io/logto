@@ -42,7 +42,7 @@ const AppContent = ({ children }: Props) => {
     <ConfirmModalProvider>
       <div className={styles.container}>
         {platform === 'web' && <div className={styles.placeHolder} />}
-        <main className={styles.content}>{children}</main>
+        <main className={styles.main}>{children}</main>
         {platform === 'web' && <div className={styles.placeHolder} />}
         <Toast message={toast} callback={hideToast} />
       </div>

@@ -14,15 +14,14 @@
 }
 
 .container {
-  background: var(--color-dialogue);
-  border: _.border(var(--color-divider));
+  background: var(--color-bg-float-overlay);
   border-radius: 16px;
   padding: _.unit(6);
 }
 
 .header {
-  font: var(--font-header);
-  color: var(--color-text);
+  font: var(--font-title-1);
+  color: var(--color-type-primary);
   @include _.flex-row;
   justify-content: space-between;
   margin-bottom: _.unit(4);
@@ -34,8 +33,8 @@
 }
 
 .content {
-  font: var(--font-body);
-  color: var(--color-text);
+  font: var(--font-body-2);
+  color: var(--color-type-primary);
   margin-bottom: _.unit(6);
 }
 

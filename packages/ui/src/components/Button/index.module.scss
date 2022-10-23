@@ -6,8 +6,8 @@
   height: 44px;
   padding: 0 _.unit(4);
   border-radius: var(--radius);
-  font: var(--font-body-bold);
   cursor: pointer;
+  font: var(--font-label-1);
   -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.2s ease-in-out;
@@ -20,89 +20,85 @@
 }
 
 .small {
-  min-width: 50px;
+  min-width: 85px;
 }
 
 .primary {
   border: none;
-  background: var(--color-primary);
-  color: var(--color-primary-button-text);
+  background: var(--color-brand-default);
+  color: var(--color-static-white);
+
+  &.disabled,
+  &:disabled {
+    background: var(--color-bg-state-disabled);
+    color: var(--color-type-disable);
+  }
+
+  &:active {
+    background: var(--color-brand-pressed);
+  }
 }
 
 .secondary {
-  border: _.border(var(--color-border));
+  border: _.border(var(--color-line-border));
   background: transparent;
-  color: var(--color-text);
+  color: var(--color-type-primary);
 
-  &.disabled {
-    border-color: var(--color-border);
-    color: var(--color-text-disabled);
+  &.disabled,
+  &:disabled {
+    border-color: var(--color-type-disable);
+    color: var(--color-type-disable);
+  }
+
+  &:active {
+    background: var(--color-overlay-neutral-pressed);
   }
 }
 
 .outline {
-  border: _.border(var(--color-primary));
+  border: _.border(var(--color-brand-default));
   background: transparent;
-  color: var(--color-primary);
+  color: var(--color-type-link);
 
-  &.disabled {
-    border-color: var(--color-border);
-    color: var(--color-text-disabled);
-  }
-
-  &:focus-visible {
-    outline: 3px solid var(--color-focused-variant);
+  &.disabled,
+  &:disabled {
+    border-color: var(--color-type-disable);
+    color: var(--color-type-disable);
   }
 
   &:active {
-    background: var(--color-pressed-variant);
-  }
-
-  &:not(:disabled):not(:active):hover {
-    background: var(--color-hover-variant);
-  }
-}
-
-:global(body.mobile) {
-  .primary {
-    &.disabled {
-      background: var(--color-layer);
-      color: var(--color-text-disabled);
-    }
+    background: var(--color-overlay-brand-pressed);
   }
 }
 
 :global(body.desktop) {
   .primary {
-    &.disabled {
-      background: var(--color-inverse-on-surface);
-      color: var(--color-text-disabled);
-    }
-
     &:focus-visible {
-      outline: 3px solid var(--color-focused-variant);
-    }
-
-    &:active {
-      background: var(--color-primary-pressed);
+      outline: 3px solid var(--color-overlay-brand-focused);
     }
 
     &:not(:disabled):not(:active):hover {
-      background: var(--color-primary-hover);
+      background: var(--color-brand-hover);
     }
   }
 
   .secondary {
     &:focus-visible {
-      outline: 3px solid var(--color-focused);
-    }
-
-    &:active {
-      background: var(--color-pressed);
+      outline: 3px solid var(--color-overlay-neutral-focused);
     }
 
     &:not(:disabled):not(:active):hover {
-      background: var(--color-hover);
+      background: var(--color-overlay-neutral-hover);
+    }
+  }
+
+  .outline {
+    &:focus-visible {
+      outline: 3px solid var(--color-overlay-brand-focused);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background: var(--color-overlay-brand-hover);
     }
   }
 }

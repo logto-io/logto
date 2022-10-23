@@ -9,13 +9,9 @@
   margin-top: _.unit(2);
 }
 
-.title {
-  @include _.title;
-}
-
 .description {
   margin-bottom: _.unit(6);
-  color: var(--color-caption);
+  @include _.text-hint;
 }
 
 :global(body.mobile) {
@@ -24,6 +20,7 @@
   }
 
   .title {
+    @include _.title;
     margin-bottom: _.unit(6);
   }
 }
@@ -34,11 +31,7 @@
   }
 
   .title {
-    font: var(--font-title-medium);
+    @include _.title_desktop;
     margin-bottom: _.unit(4);
-  }
-
-  .description {
-    font: var(--font-caption);
   }
 }

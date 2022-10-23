@@ -6,32 +6,26 @@
 
 
   &.primary {
-    color: var(--color-primary);
-    font: var(--font-body-bold);
+    color: var(--color-brand-default);
     text-decoration: none;
+    font: var(--font-label-2);
   }
 
   &.secondary {
-    color: var(--color-caption);
-    font: var(--font-body);
+    color: var(--color-type-secondary);
     text-decoration: underline;
   }
 }
 
+
 :global(body.desktop) {
   .link {
-    &.primary {
-      font: var(--font-body);
-
-      &:hover {
-        text-decoration: underline;
-      }
+    &.primary:hover {
+      text-decoration: underline;
     }
 
-    &.secondary {
-      &:hover {
-        color: var(--color-primary);
-      }
+    &.secondary:hover {
+      color: var(--color-brand-default);
     }
   }
 }
