@@ -10,7 +10,11 @@ import Select from '@/components/Select';
 
 import type { SignInExperienceForm } from '../../types';
 import ConnectorSetupWarning from './components/ConnectorSetupWarning';
-import { requiredVerifySignUpIdentifiers, signUpIdentifiers } from './constants';
+import {
+  requiredVerifySignUpIdentifiers,
+  signUpIdentifiers,
+  signUpIdentifierToRequiredConnectorMapping,
+} from './constants';
 import * as styles from './index.module.scss';
 
 const SignUpForm = () => {
@@ -73,7 +77,9 @@ const SignUpForm = () => {
           )}
         />
         {signUpIdentifier !== SignUpIdentifier.None && (
-          <ConnectorSetupWarning signUpIdentifier={signUpIdentifier} />
+          <ConnectorSetupWarning
+            requiredConnectors={signUpIdentifierToRequiredConnectorMapping[signUpIdentifier]}
+          />
         )}
       </FormField>
       {signUpIdentifier !== SignUpIdentifier.None && (

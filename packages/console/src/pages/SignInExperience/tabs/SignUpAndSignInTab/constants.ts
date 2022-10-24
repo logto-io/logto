@@ -1,4 +1,4 @@
-import { SignUpIdentifier, SignInIdentifier } from '@logto/schemas';
+import { SignUpIdentifier, SignInIdentifier, ConnectorType } from '@logto/schemas';
 
 export const signUpIdentifiers = Object.values(SignUpIdentifier);
 
@@ -16,4 +16,22 @@ export const signUpToSignInIdentifierMapping: { [key in SignUpIdentifier]: SignI
   [SignUpIdentifier.Phone]: [SignInIdentifier.Phone],
   [SignUpIdentifier.EmailOrPhone]: [SignInIdentifier.Email, SignInIdentifier.Phone],
   [SignUpIdentifier.None]: [],
+};
+
+export const signUpIdentifierToRequiredConnectorMapping: {
+  [key in SignUpIdentifier]: ConnectorType[];
+} = {
+  [SignUpIdentifier.Username]: [],
+  [SignUpIdentifier.Email]: [ConnectorType.Email],
+  [SignUpIdentifier.Phone]: [ConnectorType.Sms],
+  [SignUpIdentifier.EmailOrPhone]: [ConnectorType.Email, ConnectorType.Sms],
+  [SignUpIdentifier.None]: [],
+};
+
+export const signInIdentifierToRequiredConnectorMapping: {
+  [key in SignInIdentifier]: ConnectorType[];
+} = {
+  [SignInIdentifier.Username]: [],
+  [SignInIdentifier.Email]: [ConnectorType.Email],
+  [SignInIdentifier.Phone]: [ConnectorType.Sms],
 };

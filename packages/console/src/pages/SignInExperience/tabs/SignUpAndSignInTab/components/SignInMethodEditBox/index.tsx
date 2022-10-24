@@ -1,10 +1,10 @@
-import type { SignInIdentifier } from '@logto/schemas';
+import type { ConnectorType, SignInIdentifier } from '@logto/schemas';
 import { useCallback, useEffect, useRef } from 'react';
 
 import DragDropProvider from '@/components/Transfer/DragDropProvider';
 import DraggableItem from '@/components/Transfer/DraggableItem';
 
-import { signInIdentifiers } from '../../constants';
+import { signInIdentifiers, signInIdentifierToRequiredConnectorMapping } from '../../constants';
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
 import AddSignInMethodButton from './AddSignInMethodButton';
 import SignInMethodItem from './SignInMethodItem';
@@ -125,7 +125,14 @@ const SignInMethodEditBox = ({
         ))}
       </DragDropProvider>
       {requiredSignInIdentifiers.length > 0 && (
-        <ConnectorSetupWarning signInIdentifiers={requiredSignInIdentifiers} />
+        <ConnectorSetupWarning
+          requiredConnectors={requiredSignInIdentifiers.reduce<ConnectorType[]>(
+            (previous, current) => {
+              return [...previous, ...signInIdentifierToRequiredConnectorMapping[current]];
+            },
+            []
+          )}
+        />
       )}
       <AddSignInMethodButton options={signInIdentifierOptions} onSelected={addSignInMethod} />
     </div>
