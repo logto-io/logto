@@ -1,5 +1,6 @@
 import { builtInLanguages } from '@logto/phrases-ui';
-import { Branding, BrandingStyle, LanguageInfo, TermsOfUse } from '@logto/schemas';
+import type { Branding, LanguageInfo, TermsOfUse } from '@logto/schemas';
+import { BrandingStyle } from '@logto/schemas';
 
 import RequestError from '@/errors/RequestError';
 import { findAllCustomLanguageTags } from '@/queries/custom-phrase';
