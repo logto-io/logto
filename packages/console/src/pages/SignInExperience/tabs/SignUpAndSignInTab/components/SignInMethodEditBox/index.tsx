@@ -56,23 +56,18 @@ const SignInMethodEditBox = ({
   );
 
   useEffect(() => {
+    const requiredSignInMethods = requiredSignInIdentifiers.reduce(
+      (previous, current) =>
+        appendSignInMethodIfNotExist(previous, current, isPasswordRequired, isVerificationRequired),
+      signInMethods.current
+    );
+
     handleChange(
-      requiredSignInIdentifiers
-        .reduce(
-          (previous, current) =>
-            appendSignInMethodIfNotExist(
-              previous,
-              current,
-              isPasswordRequired,
-              isVerificationRequired
-            ),
-          signInMethods.current
-        )
-        .map((method) => ({
-          ...method,
-          password: isPasswordRequired,
-          verificationCode: isVerificationRequired,
-        }))
+      requiredSignInMethods.map((method) => ({
+        ...method,
+        password: isPasswordRequired,
+        verificationCode: isVerificationRequired,
+      }))
     );
   }, [handleChange, isPasswordRequired, isVerificationRequired, requiredSignInIdentifiers]);
 

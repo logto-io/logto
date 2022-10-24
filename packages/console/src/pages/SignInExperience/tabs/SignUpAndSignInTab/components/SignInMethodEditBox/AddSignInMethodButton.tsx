@@ -17,14 +17,14 @@ const AddSignInMethodButton = ({ options, onSelected }: Props) => {
   const anchorRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
+  if (options.length === 0) {
+    return null;
+  }
+
   const candidates = options.map((identifier) => ({
     value: identifier,
     title: t('sign_in_exp.sign_up_and_sign_in.identifiers', { context: snakeCase(identifier) }),
   }));
-
-  if (candidates.length === 0) {
-    return null;
-  }
 
   return (
     <>
