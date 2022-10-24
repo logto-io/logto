@@ -15,6 +15,9 @@ type Props = {
   signInIdentifiers?: SignInIdentifier[];
 };
 
+// TODO: @yijun add this util to essentials
+const unreachableCaseGuardError = (guardedCase: never) => new Error(`Expect unreachable`);
+
 const getNoConnectorI18nContext = (connectorTypes: ConnectorType[]) => {
   const { length } = connectorTypes;
 
@@ -67,9 +70,7 @@ const ConnectorSetupWarning = ({ signUpIdentifier, signInIdentifiers }: Props) =
             }
 
             default: {
-              // Note: display an TS2322 error in the IDE when the cases are not fully listed.
-              const unreachableCase: never = current;
-              throw new Error(unreachableCase);
+              throw unreachableCaseGuardError(current);
             }
           }
         }, []);
