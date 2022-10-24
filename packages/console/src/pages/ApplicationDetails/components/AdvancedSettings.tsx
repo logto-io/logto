@@ -54,6 +54,13 @@ const AdvancedSettings = ({ applicationType, oidcConfig, defaultData, isDeleted 
           variant="border"
         />
       </FormField>
+      <FormField title="application_details.user_info_endpoint">
+        <CopyToClipboard
+          className={styles.textField}
+          value={oidcConfig.userinfo_endpoint}
+          variant="border"
+        />
+      </FormField>
       {applicationType === ApplicationType.MachineToMachine && (
         <FormField title="application_details.enable_admin_access">
           <Controller
