@@ -1,8 +1,9 @@
 import { useLogto } from '@logto/react';
-import { AdminConsoleConfig, Setting } from '@logto/schemas';
+import type { AdminConsoleConfig, Setting } from '@logto/schemas';
 import useSWR from 'swr';
 
-import useApi, { RequestError } from './use-api';
+import type { RequestError } from './use-api';
+import useApi from './use-api';
 
 const useSettings = () => {
   const { isAuthenticated, error: authError } = useLogto();

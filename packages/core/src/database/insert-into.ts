@@ -1,13 +1,14 @@
-import { GeneratedSchema, SchemaLike } from '@logto/schemas';
+import type { GeneratedSchema, SchemaLike } from '@logto/schemas';
+import type { OmitAutoSetFields } from '@logto/shared';
 import {
-  OmitAutoSetFields,
   convertToIdentifiers,
   excludeAutoSetFields,
   convertToPrimitiveOrSql,
   conditionalSql,
 } from '@logto/shared';
 import { has } from '@silverhand/essentials';
-import { IdentifierSqlToken, sql } from 'slonik';
+import type { IdentifierSqlToken } from 'slonik';
+import { sql } from 'slonik';
 
 import envSet from '@/env-set';
 import { InsertionError } from '@/errors/SlonikError';

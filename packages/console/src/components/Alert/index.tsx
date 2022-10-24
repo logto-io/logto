@@ -1,6 +1,6 @@
-import { AdminConsoleKey } from '@logto/phrases';
+import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import Info from '@/assets/images/info.svg';
 import LinkButton from '@/components/LinkButton';

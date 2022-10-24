@@ -1,4 +1,5 @@
-import { AppearanceMode, ConnectorResponse, ConnectorType } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
+import { AppearanceMode, ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -21,7 +22,8 @@ import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnnamedTrans from '@/components/UnnamedTrans';
-import useApi, { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';

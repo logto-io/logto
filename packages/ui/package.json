@@ -16,18 +16,19 @@
     "test": "jest"
   },
   "dependencies": {
-    "@logto/core-kit": "1.0.0-beta.18"
+    "@logto/core-kit": "1.0.0-beta.20"
   },
   "devDependencies": {
-    "@logto/phrases": "^1.0.0-beta.12",
-    "@logto/phrases-ui": "^1.0.0-beta.12",
-    "@logto/schemas": "^1.0.0-beta.12",
+    "@logto/language-kit": "1.0.0-beta.20",
+    "@logto/phrases": "workspace:^",
+    "@logto/phrases-ui": "workspace:^",
+    "@logto/schemas": "workspace:^",
     "@parcel/core": "2.7.0",
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-svg-react": "2.7.0",
     "@peculiar/webcrypto": "^1.3.3",
-    "@silverhand/eslint-config": "1.2.0",
-    "@silverhand/eslint-config-react": "1.2.1",
+    "@silverhand/eslint-config": "1.3.0",
+    "@silverhand/eslint-config-react": "1.3.0",
     "@silverhand/essentials": "^1.3.0",
     "@silverhand/jest-config": "1.2.2",
     "@silverhand/ts-config": "1.2.1",

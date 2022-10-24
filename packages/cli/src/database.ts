@@ -1,4 +1,4 @@
-import { SchemaLike } from '@logto/schemas';
+import type { SchemaLike } from '@logto/schemas';
 import { convertToPrimitiveOrSql } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import decamelize from 'decamelize';

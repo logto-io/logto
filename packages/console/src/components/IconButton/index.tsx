@@ -1,7 +1,8 @@
-import { AdminConsoleKey } from '@logto/phrases';
-import { Nullable } from '@silverhand/essentials';
+import type { AdminConsoleKey } from '@logto/phrases';
+import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { ForwardedRef, forwardRef, HTMLProps, useImperativeHandle, useRef } from 'react';
+import type { ForwardedRef, HTMLProps } from 'react';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Tooltip from '../Tooltip';

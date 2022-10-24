@@ -1,13 +1,15 @@
-import {
+import type {
   OidcModelInstance,
   CreateOidcModelInstance,
   OidcModelInstancePayload,
-  OidcModelInstances,
 } from '@logto/schemas';
+import { OidcModelInstances } from '@logto/schemas';
 import { convertToIdentifiers, convertToTimestamp } from '@logto/shared';
-import { conditional, Nullable } from '@silverhand/essentials';
+import type { Nullable } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import dayjs from 'dayjs';
-import { sql, ValueExpression } from 'slonik';
+import type { ValueExpression } from 'slonik';
+import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
 import envSet from '@/env-set';

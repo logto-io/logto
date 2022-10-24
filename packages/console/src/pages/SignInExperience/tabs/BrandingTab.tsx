@@ -5,7 +5,7 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
 import BrandingForm from '../components/BrandingForm';
 import ColorForm from '../components/ColorForm';
-import { SignInExperienceForm } from '../types';
+import type { SignInExperienceForm } from '../types';
 
 type Props = {
   defaultData: SignInExperienceForm;

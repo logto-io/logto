@@ -1,5 +1,6 @@
-import { getDefaultLanguage } from '@logto/core-kit';
-import { ConnectorResponse, ConnectorType } from '@logto/schemas';
+import { isLanguageTag } from '@logto/language-kit';
+import type { ConnectorResponse } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { Controller, useForm } from 'react-hook-form';
@@ -16,7 +17,7 @@ import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 import Step from '@/mdx-components/Step';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
-import { GuideForm } from '@/types/guide';
+import type { GuideForm } from '@/types/guide';
 import { safeParseJson } from '@/utilities/json';
 
 import * as styles from './index.module.scss';
@@ -31,7 +32,8 @@ const Guide = ({ connector, onClose }: Props) => {
   const { updateSettings } = useSettings();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { id: connectorId, type: connectorType, name, configTemplate, readme } = connector;
-  const connectorName = name[getDefaultLanguage(i18next.language)];
+  const { language } = i18next;
+  const connectorName = conditional(isLanguageTag(language) && name[language]) ?? name.en;
   const isSocialConnector =
     connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
   const methods = useForm<GuideForm>({ reValidateMode: 'onBlur' });

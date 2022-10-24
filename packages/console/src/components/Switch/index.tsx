@@ -1,4 +1,5 @@
-import { forwardRef, HTMLProps, ReactNode, Ref } from 'react';
+import type { HTMLProps, ReactNode, Ref } from 'react';
+import { forwardRef } from 'react';
 
 import * as styles from './index.module.scss';
 

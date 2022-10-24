@@ -1,4 +1,4 @@
-import { Setting, CreateSetting } from '@logto/schemas';
+import type { Setting, CreateSetting } from '@logto/schemas';
 
 import { mockSetting } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';

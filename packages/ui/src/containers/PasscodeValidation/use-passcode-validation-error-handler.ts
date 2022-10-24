@@ -1,4 +1,4 @@
-import { UserFlow } from '@/types';
+import type { UserFlow } from '@/types';
 
 import useForgotPasswordWithEmailErrorHandler from './use-forgot-password-with-email-error-handler';
 import useForgotPasswordWithSmsErrorHandler from './use-forgot-password-with-sms-error-handler';

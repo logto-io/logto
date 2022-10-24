@@ -1,6 +1,8 @@
 import classNames from 'classnames';
-import { MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react';
-import { TFuncKey, useTranslation } from 'react-i18next';
+import type { MouseEventHandler } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { TFuncKey } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import Copy from '@/assets/images/copy.svg';
 import EyeClosed from '@/assets/images/eye-closed.svg';

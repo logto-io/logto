@@ -1,5 +1,5 @@
-import { SchemaLike } from '@logto/schemas';
-import { IdentifierSqlToken } from 'slonik';
+import type { SchemaLike } from '@logto/schemas';
+import type { IdentifierSqlToken } from 'slonik';
 
 export type Table = { table: string; fields: Record<string, string> };
 export type FieldIdentifiers<Key extends string | number | symbol> = {

@@ -1,4 +1,5 @@
-import { Application, ApplicationType, SnakeCaseOidcConfig } from '@logto/schemas';
+import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -20,7 +21,8 @@ import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import useApi, { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import * as detailsStyles from '@/scss/details.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';

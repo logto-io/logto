@@ -1,4 +1,5 @@
-import { CreateLog, Log, Logs, LogType } from '@logto/schemas';
+import type { CreateLog, Log, LogType } from '@logto/schemas';
+import { Logs } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 

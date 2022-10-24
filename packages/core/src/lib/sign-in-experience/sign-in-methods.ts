@@ -1,7 +1,9 @@
-import { ConnectorType, SignInMethods, SignInMethodState } from '@logto/schemas';
-import { Optional } from '@silverhand/essentials';
+import type { SignInMethods } from '@logto/schemas';
+import { SignInMethodState } from '@logto/schemas';
+import type { Optional } from '@silverhand/essentials';
 
-import { LogtoConnector } from '@/connectors/types';
+import type { LogtoConnector } from '@/connectors/types';
+import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 

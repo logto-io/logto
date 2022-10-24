@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
 
-import { SignInExperienceForm } from '../types';
+import type { SignInExperienceForm } from '../types';
 import * as styles from './index.module.scss';
 
 const AuthenticationForm = () => {

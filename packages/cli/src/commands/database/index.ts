@@ -1,5 +1,5 @@
 import { noop } from '@silverhand/essentials';
-import { CommandModule } from 'yargs';
+import type { CommandModule } from 'yargs';
 
 import alteration from './alteration';
 import config from './config';

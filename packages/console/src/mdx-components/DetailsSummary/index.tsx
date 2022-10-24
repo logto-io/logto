@@ -1,6 +1,8 @@
 import classNames from 'classnames';
-import { ReactNode, useState, useCallback } from 'react';
-import AnimateHeight, { Height } from 'react-animate-height';
+import type { ReactNode } from 'react';
+import { useState, useCallback } from 'react';
+import type { Height } from 'react-animate-height';
+import AnimateHeight from 'react-animate-height';
 
 import ArrowRight from '@/assets/images/triangle-right.svg';
 import { onKeyDownHandler } from '@/utilities/a11y';

@@ -1,8 +1,9 @@
-import { IncomingHttpHeaders } from 'http';
+import type { IncomingHttpHeaders } from 'http';
 
-import { Optional, normalizeValueToStringArray } from '@silverhand/essentials';
-import { ParameterizedContext } from 'koa';
-import { IRouterParamContext } from 'koa-router';
+import type { Optional } from '@silverhand/essentials';
+import { normalizeValueToStringArray } from '@silverhand/essentials';
+import type { ParameterizedContext } from 'koa';
+import type { IRouterParamContext } from 'koa-router';
 
 /**
  * Resolve language and its q value from string.

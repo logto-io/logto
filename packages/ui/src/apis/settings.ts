@@ -3,7 +3,7 @@
  * The API will be deprecated in the future once SSR is implemented.
  */
 
-import { SignInExperience } from '@logto/schemas';
+import type { SignInExperience } from '@logto/schemas';
 import ky from 'ky';
 
 export const getSignInExperience = async <T extends SignInExperience>(): Promise<T> => {

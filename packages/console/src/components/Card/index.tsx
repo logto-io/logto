@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { forwardRef, Ref, ReactNode } from 'react';
+import type { Ref, ReactNode } from 'react';
+import { forwardRef } from 'react';
 
 import * as styles from './index.module.scss';
 

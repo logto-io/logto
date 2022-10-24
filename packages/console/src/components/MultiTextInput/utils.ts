@@ -2,7 +2,8 @@ import { t } from 'i18next';
 
 import { safeParseJson } from '@/utilities/json';
 
-import { MultiTextInputError, multiTextInputErrorGuard, MultiTextInputRule } from './types';
+import type { MultiTextInputError, MultiTextInputRule } from './types';
+import { multiTextInputErrorGuard } from './types';
 
 export const validate = (
   value?: string[],

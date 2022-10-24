@@ -21,7 +21,7 @@
     "test:ci": "jest"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "1.2.0",
+    "@silverhand/eslint-config": "1.3.0",
     "@silverhand/jest-config": "1.2.2",
     "@silverhand/ts-config": "1.2.1",
     "@types/jest": "^29.1.2",
@@ -43,7 +43,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/schemas": "^1.0.0-beta.12",
+    "@logto/schemas": "workspace:^",
     "@silverhand/essentials": "^1.3.0",
     "dayjs": "^1.10.5",
     "find-up": "^5.0.0",

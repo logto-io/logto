@@ -1,11 +1,12 @@
-import { LanguageTag } from '@logto/language-kit';
+import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages as builtInUiLanguages } from '@logto/phrases-ui';
 import { useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 
-import { CustomPhraseResponse } from '@/types/custom-phrase';
+import type { CustomPhraseResponse } from '@/types/custom-phrase';
 
-import useApi, { RequestError } from './use-api';
+import type { RequestError } from './use-api';
+import useApi from './use-api';
 
 const useUiLanguages = () => {
   const {

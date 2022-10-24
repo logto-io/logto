@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import { ChangeEventHandler, useState } from 'react';
+import type { ChangeEventHandler } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Area,
@@ -15,13 +16,13 @@ import useSWR from 'swr';
 import AppError from '@/components/AppError';
 import Card from '@/components/Card';
 import TextInput from '@/components/TextInput';
-import { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
 
 import Block from './components/Block';
 import ChartTooltip from './components/ChartTooltip';
 import Skeleton from './components/Skeleton';
 import * as styles from './index.module.scss';
-import { ActiveUsersResponse, NewUsersResponse, TotalUsersResponse } from './types';
+import type { ActiveUsersResponse, NewUsersResponse, TotalUsersResponse } from './types';
 
 const tickStyle = {
   fill: 'var(--color-text-secondary)',

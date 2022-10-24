@@ -20,7 +20,7 @@ import {
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
-import { AuthedRouter } from './types';
+import type { AuthedRouter } from './types';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.get(

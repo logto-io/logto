@@ -1,9 +1,11 @@
-import { SchemaValuePrimitive, SchemaValue } from '@logto/schemas';
-import { Falsy, notFalsy } from '@silverhand/essentials';
+import type { SchemaValuePrimitive, SchemaValue } from '@logto/schemas';
+import type { Falsy } from '@silverhand/essentials';
+import { notFalsy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
-import { sql, SqlSqlToken, SqlToken, QueryResult, IdentifierSqlToken } from 'slonik';
+import type { SqlSqlToken, SqlToken, QueryResult, IdentifierSqlToken } from 'slonik';
+import { sql } from 'slonik';
 
-import { FieldIdentifiers, Table } from './types';
+import type { FieldIdentifiers, Table } from './types';
 
 export const conditionalSql = <T>(value: T, buildSql: (value: Exclude<T, Falsy>) => SqlSqlToken) =>
   notFalsy(value) ? buildSql(value) : sql``;

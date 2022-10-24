@@ -2,7 +2,8 @@ import { generateKeyPair } from 'crypto';
 import { readFile } from 'fs/promises';
 import { promisify } from 'util';
 
-import { LogtoOidcConfigKey, LogtoOidcConfigType } from '@logto/schemas';
+import type { LogtoOidcConfigType } from '@logto/schemas';
+import { LogtoOidcConfigKey } from '@logto/schemas';
 import { getEnv, getEnvAsStringArray } from '@silverhand/essentials';
 import { nanoid } from 'nanoid';
 

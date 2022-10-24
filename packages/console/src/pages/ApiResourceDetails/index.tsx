@@ -1,4 +1,5 @@
-import { AppearanceMode, Resource } from '@logto/schemas';
+import type { Resource } from '@logto/schemas';
+import { AppearanceMode } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
@@ -24,7 +25,8 @@ import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import useApi, { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
 

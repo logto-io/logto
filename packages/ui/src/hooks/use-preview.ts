@@ -3,10 +3,10 @@ import { conditionalString } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 
 import * as styles from '@/App.module.scss';
-import { Context } from '@/hooks/use-page-context';
+import type { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';
-import { SignInExperienceSettings, PreviewConfig } from '@/types';
+import type { SignInExperienceSettings, PreviewConfig } from '@/types';
 import { parseQueryParameters } from '@/utils';
 import { getPrimarySignInMethod, getSecondarySignInMethods } from '@/utils/sign-in-experience';
 import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
@@ -76,11 +76,11 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     };
 
     (async () => {
-      await changeLanguage(language);
-
       setTheme(mode);
 
       setPlatform(platform);
+
+      await changeLanguage(language);
 
       setExperienceSettings(experienceSettings);
     })();

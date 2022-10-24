@@ -1,7 +1,8 @@
 import type { Blocker, Transition } from 'history';
 import { useCallback, useContext, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UNSAFE_NavigationContext, Navigator } from 'react-router-dom';
+import type { Navigator } from 'react-router-dom';
+import { UNSAFE_NavigationContext } from 'react-router-dom';
 
 import ConfirmModal from '../ConfirmModal';
 

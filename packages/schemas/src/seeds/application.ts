@@ -1,4 +1,5 @@
-import { ApplicationType, CreateApplication } from '../db-entries';
+import type { CreateApplication } from '../db-entries';
+import { ApplicationType } from '../db-entries';
 
 /**
  * The fixed application ID for Admin Console.

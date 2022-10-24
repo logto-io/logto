@@ -1,5 +1,5 @@
 import OpenApiSchemaValidator from 'openapi-schema-validator';
-import { OpenAPI } from 'openapi-types';
+import type { OpenAPI } from 'openapi-types';
 
 import { api } from '@/api';
 

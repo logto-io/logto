@@ -1,6 +1,7 @@
-import { AdminConsoleKey } from '@logto/phrases';
-import { Application } from '@logto/schemas';
-import { useRef, KeyboardEvent } from 'react';
+import type { AdminConsoleKey } from '@logto/phrases';
+import type { Application } from '@logto/schemas';
+import type { KeyboardEvent } from 'react';
+import { useRef } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -11,8 +12,9 @@ import FormField from '@/components/FormField';
 import MultiTextInput from '@/components/MultiTextInput';
 import { convertRhfErrorMessage, createValidatorForRhf } from '@/components/MultiTextInput/utils';
 import TextInput from '@/components/TextInput';
-import useApi, { RequestError } from '@/hooks/use-api';
-import { GuideForm } from '@/types/guide';
+import type { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
+import type { GuideForm } from '@/types/guide';
 import { uriValidator } from '@/utilities/validator';
 
 import * as styles from './index.module.scss';

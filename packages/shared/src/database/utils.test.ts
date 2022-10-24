@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { sql } from 'slonik';
 import { SqlToken } from 'slonik/dist/src/tokens.js';
 
-import { Table } from './types';
+import type { Table } from './types';
 import {
   excludeAutoSetFields,
   autoSetFields,

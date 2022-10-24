@@ -1,6 +1,6 @@
 import { getUndeployedAlterations } from '@logto/cli/lib/commands/database/alteration';
 import chalk from 'chalk';
-import { DatabasePool } from 'slonik';
+import type { DatabasePool } from 'slonik';
 
 export const checkAlterationState = async (pool: DatabasePool) => {
   const alterations = await getUndeployedAlterations(pool);

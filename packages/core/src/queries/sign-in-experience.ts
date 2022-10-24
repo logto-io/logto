@@ -1,4 +1,5 @@
-import { SignInExperience, CreateSignInExperience, SignInExperiences } from '@logto/schemas';
+import type { SignInExperience, CreateSignInExperience } from '@logto/schemas';
+import { SignInExperiences } from '@logto/schemas';
 
 import { buildFindEntityById } from '@/database/find-entity-by-id';
 import { buildUpdateWhere } from '@/database/update-where';

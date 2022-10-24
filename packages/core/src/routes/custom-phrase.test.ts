@@ -1,5 +1,5 @@
 import en from '@logto/phrases-ui/lib/locales/en';
-import { CustomPhrase, SignInExperience, Translation } from '@logto/schemas';
+import type { CustomPhrase, SignInExperience, Translation } from '@logto/schemas';
 
 import { mockSignInExperience } from '@/__mocks__';
 import { mockZhCnCustomPhrase, trTrTag, zhCnTag } from '@/__mocks__/custom-phrase';

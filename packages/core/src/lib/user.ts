@@ -1,4 +1,5 @@
-import { User, CreateUser, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import type { User, CreateUser } from '@logto/schemas';
+import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import { argon2Verify } from 'hash-wasm';
 import pRetry from 'p-retry';

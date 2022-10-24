@@ -1,6 +1,7 @@
 import { generateKeyPairSync } from 'crypto';
 
-import { LogtoOidcConfigKey, LogtoOidcConfigType } from '@logto/schemas';
+import type { LogtoOidcConfigType } from '@logto/schemas';
+import { LogtoOidcConfigKey } from '@logto/schemas';
 
 const { privateKey } = generateKeyPairSync('rsa', {
   modulusLength: 4096,

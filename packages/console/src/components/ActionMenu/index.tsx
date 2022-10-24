@@ -1,6 +1,7 @@
-import { ReactNode, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useRef, useState } from 'react';
 
-import { Props as ButtonProps } from '../Button';
+import type { Props as ButtonProps } from '../Button';
 import Dropdown from '../Dropdown';
 import ActionMenuButton from './ActionMenuButton';
 import * as styles from './index.module.scss';

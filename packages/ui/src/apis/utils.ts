@@ -1,4 +1,4 @@
-import { UserFlow } from '@/types';
+import type { UserFlow } from '@/types';
 
 import {
   sendForgotPasswordEmailPasscode,

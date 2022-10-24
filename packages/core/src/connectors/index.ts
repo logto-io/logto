@@ -3,7 +3,8 @@ import { readdir } from 'fs/promises';
 import path from 'path';
 
 import { connectorDirectory } from '@logto/cli/lib/constants';
-import { AllConnector, CreateConnector, validateConfig } from '@logto/connector-kit';
+import type { AllConnector, CreateConnector } from '@logto/connector-kit';
+import { validateConfig } from '@logto/connector-kit';
 import { findPackage } from '@logto/shared';
 import chalk from 'chalk';
 
@@ -11,7 +12,7 @@ import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
 import { defaultConnectorMethods } from './consts';
-import { LoadConnector, LogtoConnector } from './types';
+import type { LoadConnector, LogtoConnector } from './types';
 import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let

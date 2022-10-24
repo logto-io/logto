@@ -1,6 +1,6 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { conditional } from '@silverhand/essentials';
-import { Middleware } from 'koa';
+import type { Middleware } from 'koa';
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';

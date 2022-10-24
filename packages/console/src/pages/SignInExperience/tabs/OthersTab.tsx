@@ -6,7 +6,7 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import AuthenticationForm from '../components/AuthenticationForm';
 import LanguagesForm from '../components/LanguagesForm';
 import TermsForm from '../components/TermsForm';
-import { SignInExperienceForm } from '../types';
+import type { SignInExperienceForm } from '../types';
 
 type Props = {
   defaultData: SignInExperienceForm;

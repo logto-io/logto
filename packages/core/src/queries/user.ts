@@ -1,5 +1,7 @@
-import { User, CreateUser, Users, UserRole } from '@logto/schemas';
-import { conditionalSql, convertToIdentifiers, OmitAutoSetFields } from '@logto/shared';
+import type { User, CreateUser } from '@logto/schemas';
+import { Users, UserRole } from '@logto/schemas';
+import type { OmitAutoSetFields } from '@logto/shared';
+import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 
 import { buildUpdateWhere } from '@/database/update-where';

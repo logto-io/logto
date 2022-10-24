@@ -1,5 +1,5 @@
-import { SchemaLike, GeneratedSchema } from '@logto/schemas';
-import { OmitAutoSetFields, UpdateWhereData } from '@logto/shared';
+import type { SchemaLike, GeneratedSchema } from '@logto/schemas';
+import type { OmitAutoSetFields, UpdateWhereData } from '@logto/shared';
 import { SlonikError } from 'slonik';
 
 export class DeletionError extends SlonikError {

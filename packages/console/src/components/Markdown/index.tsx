@@ -1,4 +1,5 @@
-import { conditionalString, Optional } from '@silverhand/essentials';
+import type { Optional } from '@silverhand/essentials';
+import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { memo, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';

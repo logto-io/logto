@@ -1,4 +1,5 @@
-import { AppearanceMode, ApplicationType } from '@logto/schemas';
+import type { ApplicationType } from '@logto/schemas';
+import { AppearanceMode } from '@logto/schemas';
 
 import { darkModeApplicationIconMap, lightModeApplicationIconMap } from '@/consts';
 import { useTheme } from '@/hooks/use-theme';

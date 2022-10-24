@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { MiddlewareType } from 'koa';
+import type { MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
-import { IRouterParamContext } from 'koa-router';
+import type { IRouterParamContext } from 'koa-router';
 
 import envSet, { MountedApps } from '@/env-set';
 import serveStatic from '@/middleware/koa-serve-static';

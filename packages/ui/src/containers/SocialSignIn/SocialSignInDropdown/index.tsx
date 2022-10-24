@@ -1,5 +1,6 @@
-import { getDefaultLanguage } from '@logto/core-kit';
-import { ConnectorMetadata } from '@logto/schemas';
+import { isLanguageTag } from '@logto/language-kit';
+import type { ConnectorMetadata } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -47,7 +48,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
     >
       {connectors.map((connector) => {
         const { id, name, logo, logoDark } = connector;
-        const localName = name[getDefaultLanguage(language)];
+        const localName = conditional(isLanguageTag(language) && name[language]) ?? name.en;
 
         return (
           <DropdownItem

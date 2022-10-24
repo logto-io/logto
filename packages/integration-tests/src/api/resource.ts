@@ -1,5 +1,5 @@
 import type { Resource, CreateResource } from '@logto/schemas';
-import { OptionsOfTextResponseBody } from 'got';
+import type { OptionsOfTextResponseBody } from 'got';
 
 import { generateResourceIndicator, generateResourceName } from '@/utils';
 

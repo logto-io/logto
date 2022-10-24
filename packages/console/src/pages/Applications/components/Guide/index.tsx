@@ -1,13 +1,15 @@
-import { Application } from '@logto/schemas';
+import type { Application } from '@logto/schemas';
 import { MDXProvider } from '@mdx-js/react';
-import { Optional } from '@silverhand/essentials';
+import type { Optional } from '@silverhand/essentials';
 import i18next from 'i18next';
-import { MDXProps } from 'mdx/types';
-import { cloneElement, lazy, LazyExoticComponent, Suspense, useEffect, useState } from 'react';
+import type { MDXProps } from 'mdx/types';
+import type { LazyExoticComponent } from 'react';
+import { cloneElement, lazy, Suspense, useEffect, useState } from 'react';
 
 import CodeEditor from '@/components/CodeEditor';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
-import { applicationTypeAndSdkTypeMappings, SupportedSdk } from '@/types/applications';
+import type { SupportedSdk } from '@/types/applications';
+import { applicationTypeAndSdkTypeMappings } from '@/types/applications';
 
 import GuideHeader from '../GuideHeader';
 import SdkSelector from '../SdkSelector';

@@ -1,7 +1,7 @@
 import { builtInLanguages as builtInConsoleLanguages } from '@logto/phrases';
 import { useLogto } from '@logto/react';
 import { AppearanceMode } from '@logto/schemas';
-import { Nullable, Optional } from '@silverhand/essentials';
+import type { Nullable, Optional } from '@silverhand/essentials';
 import { t } from 'i18next';
 import { useCallback, useEffect, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
@@ -10,7 +10,8 @@ import { z } from 'zod';
 
 import { themeStorageKey } from '@/consts';
 
-import useApi, { RequestError } from './use-api';
+import type { RequestError } from './use-api';
+import useApi from './use-api';
 import useLogtoUserId from './use-logto-user-id';
 
 const userPreferencesGuard = z.object({

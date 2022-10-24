@@ -1,4 +1,5 @@
-import { TFuncKey, useTranslation } from 'react-i18next';
+import type { TFuncKey } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import ErrorImage from '@/assets/icons/error.svg';
@@ -17,7 +18,7 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const errorMessage = rawMessage || (message && t(message));
+  const errorMessage = rawMessage ?? (message && t(message));
 
   return (
     <div className={styles.wrapper}>

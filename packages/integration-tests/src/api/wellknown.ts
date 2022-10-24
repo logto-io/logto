@@ -1,4 +1,4 @@
-import { SignInExperience } from '@logto/schemas';
+import type { SignInExperience } from '@logto/schemas';
 
 import api from './api';
 

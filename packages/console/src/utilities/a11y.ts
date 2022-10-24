@@ -1,4 +1,4 @@
-import { KeyboardEventHandler, KeyboardEvent } from 'react';
+import type { KeyboardEventHandler, KeyboardEvent } from 'react';
 
 type callbackHandler<T> = ((event: KeyboardEvent<T>) => void) | undefined;
 

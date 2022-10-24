@@ -1,5 +1,6 @@
-import { CreateUser, Users, Applications, User } from '@logto/schemas';
-import { UpdateWhereData } from '@logto/shared';
+import type { CreateUser, User } from '@logto/schemas';
+import { Users, Applications } from '@logto/schemas';
+import type { UpdateWhereData } from '@logto/shared';
 
 import envSet from '@/env-set';
 import { UpdateError } from '@/errors/SlonikError';

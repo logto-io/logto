@@ -1,4 +1,4 @@
-import { Translation } from '@logto/schemas';
+import type { Translation } from '@logto/schemas';
 
 // LOG-4385: Refactor me
 // eslint-disable-next-line complexity

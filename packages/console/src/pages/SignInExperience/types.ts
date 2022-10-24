@@ -1,4 +1,4 @@
-import { SignInExperience, SignInMethodKey } from '@logto/schemas';
+import type { SignInExperience, SignInMethodKey } from '@logto/schemas';
 
 export type SignInExperienceForm = Omit<SignInExperience, 'signInMethods'> & {
   signInMethods: {

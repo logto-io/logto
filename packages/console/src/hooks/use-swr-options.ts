@@ -1,4 +1,4 @@
-import { SWRConfiguration } from 'swr';
+import type { SWRConfiguration } from 'swr';
 
 import { RequestError } from './use-api';
 import useSwrFetcher from './use-swr-fetcher';

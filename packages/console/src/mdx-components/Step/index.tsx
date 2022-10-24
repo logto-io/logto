@@ -1,6 +1,7 @@
-import { AdminConsoleKey } from '@logto/phrases';
+import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import { PropsWithChildren, useEffect, useRef, useState, useCallback } from 'react';
+import type { PropsWithChildren } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/images/keyboard-arrow-up.svg';

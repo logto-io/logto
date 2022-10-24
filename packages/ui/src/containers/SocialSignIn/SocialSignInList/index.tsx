@@ -1,4 +1,4 @@
-import { ConnectorMetadata } from '@logto/schemas';
+import type { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState, useMemo } from 'react';
 
@@ -6,6 +6,7 @@ import ExpandIcon from '@/assets/icons/expand-icon.svg';
 import IconButton from '@/components/Button/IconButton';
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useSocial from '@/hooks/use-social';
+import { getLogoUrl } from '@/utils/logo';
 
 import * as styles from './index.module.scss';
 
@@ -40,14 +41,14 @@ const SocialSignInList = ({
   return (
     <div className={classNames(styles.socialLinkList, className)}>
       {displayConnectors.map((connector) => {
-        const { id, name, logo, logoDark, target } = connector;
+        const { id, name, logo: logoUrl, logoDark: darkLogoUrl, target } = connector;
 
         return (
           <SocialLinkButton
             key={id}
             className={styles.socialLinkButton}
             name={name}
-            logo={(theme === 'dark' && logoDark) || logo}
+            logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
             target={target}
             onClick={() => {
               void invokeSocialSignIn(connector);

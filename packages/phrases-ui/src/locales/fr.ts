@@ -1,4 +1,4 @@
-import { LocalePhrase } from '../types';
+import type { LocalePhrase } from '../types';
 
 const translation = {
   input: {

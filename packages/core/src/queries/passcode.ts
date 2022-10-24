@@ -1,4 +1,5 @@
-import { PasscodeType, Passcode, Passcodes, CreatePasscode } from '@logto/schemas';
+import type { PasscodeType, Passcode, CreatePasscode } from '@logto/schemas';
+import { Passcodes } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 

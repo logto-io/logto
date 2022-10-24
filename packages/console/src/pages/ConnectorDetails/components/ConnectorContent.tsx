@@ -1,4 +1,5 @@
-import { Connector, ConnectorResponse, ConnectorMetadata, ConnectorType } from '@logto/schemas';
+import type { Connector, ConnectorResponse, ConnectorMetadata } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';

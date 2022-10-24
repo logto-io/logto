@@ -11,7 +11,7 @@ import uniq from 'lodash.uniq';
 import pluralize from 'pluralize';
 
 import { generateSchema } from './schema';
-import { FileData, Table, Field, Type, GeneratedType, TableWithType } from './types';
+import type { FileData, Table, Field, Type, GeneratedType, TableWithType } from './types';
 import {
   findFirstParentheses,
   normalizeWhitespaces,

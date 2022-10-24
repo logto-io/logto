@@ -1,5 +1,5 @@
 import resource from '@logto/phrases-ui';
-import { CustomPhrase } from '@logto/schemas';
+import type { CustomPhrase } from '@logto/schemas';
 import deepmerge from 'deepmerge';
 
 import {

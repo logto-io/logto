@@ -1,4 +1,4 @@
-import { CreateSetting } from '../db-entries';
+import type { CreateSetting } from '../db-entries';
 import { AppearanceMode } from '../foundations';
 
 export const defaultSettingId = 'default';

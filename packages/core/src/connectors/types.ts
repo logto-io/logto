@@ -1,5 +1,5 @@
-import { AllConnector } from '@logto/connector-kit';
-import { Connector, PasscodeType } from '@logto/schemas';
+import type { AllConnector } from '@logto/connector-kit';
+import type { Connector, PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
 export { ConnectorType } from '@logto/schemas';

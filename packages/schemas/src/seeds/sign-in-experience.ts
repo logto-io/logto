@@ -1,6 +1,7 @@
 import { generateDarkColor } from '@logto/core-kit';
 
-import { CreateSignInExperience, SignInMode } from '../db-entries';
+import type { CreateSignInExperience } from '../db-entries';
+import { SignInMode } from '../db-entries';
 import {
   BrandingStyle,
   SignInIdentifier,

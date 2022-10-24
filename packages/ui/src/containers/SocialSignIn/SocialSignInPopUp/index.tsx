@@ -1,4 +1,4 @@
-import { ConnectorMetadata } from '@logto/schemas';
+import type { ConnectorMetadata } from '@logto/schemas';
 
 import Drawer from '@/components/Drawer';
 

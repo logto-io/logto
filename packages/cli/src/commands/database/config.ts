@@ -1,7 +1,8 @@
-import { logtoConfigGuards, LogtoConfigKey, logtoConfigKeys } from '@logto/schemas';
+import type { LogtoConfigKey } from '@logto/schemas';
+import { logtoConfigGuards, logtoConfigKeys } from '@logto/schemas';
 import { deduplicate, noop } from '@silverhand/essentials';
 import chalk from 'chalk';
-import { CommandModule } from 'yargs';
+import type { CommandModule } from 'yargs';
 
 import { createPoolFromConfig } from '../../database';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config';

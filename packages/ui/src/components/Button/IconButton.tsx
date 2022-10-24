@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { HTMLProps, forwardRef, Ref } from 'react';
+import type { HTMLProps, Ref } from 'react';
+import { forwardRef } from 'react';
 
 import * as styles from './IconButton.module.scss';
 

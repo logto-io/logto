@@ -1,7 +1,8 @@
-import { languages as uiLanguageNameMapping, LanguageTag } from '@logto/language-kit';
+import type { LanguageTag } from '@logto/language-kit';
+import { languages as uiLanguageNameMapping } from '@logto/language-kit';
 import resource, { isBuiltInLanguageTag } from '@logto/phrases-ui';
 import en from '@logto/phrases-ui/lib/locales/en';
-import { SignInExperience, Translation } from '@logto/schemas';
+import type { SignInExperience, Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import deepmerge from 'deepmerge';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
@@ -17,7 +18,7 @@ import ConfirmModal from '@/components/ConfirmModal';
 import IconButton from '@/components/IconButton';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
-import { CustomPhraseResponse } from '@/types/custom-phrase';
+import type { CustomPhraseResponse } from '@/types/custom-phrase';
 
 import { createEmptyUiTranslation, flattenTranslation } from '../../../utilities';
 import EditSection from './EditSection';

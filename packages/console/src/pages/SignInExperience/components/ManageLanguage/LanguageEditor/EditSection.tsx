@@ -1,4 +1,4 @@
-import { Translation } from '@logto/schemas';
+import type { Translation } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 
 import Textarea from '@/components/Textarea';

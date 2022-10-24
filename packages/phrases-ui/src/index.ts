@@ -1,21 +1,22 @@
 import { fallback } from '@logto/core-kit';
-import { languages, LanguageTag } from '@logto/language-kit';
-import { NormalizeKeyPaths } from '@silverhand/essentials';
+import type { LanguageTag } from '@logto/language-kit';
+import { languages } from '@logto/language-kit';
+import type { NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import en from './locales/en';
 import fr from './locales/fr';
-import koKR from './locales/ko-kr';
+import ko from './locales/ko';
 import ptPT from './locales/pt-pt';
 import trTR from './locales/tr-tr';
 import zhCN from './locales/zh-cn';
-import { LocalePhrase } from './types';
+import type { LocalePhrase } from './types';
 
 export type { LocalePhrase } from './types';
 
 export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 
-export const builtInLanguages = ['en', 'fr', 'pt-PT', 'zh-CN', 'ko-KR', 'tr-TR'] as const;
+export const builtInLanguages = ['en', 'fr', 'pt-PT', 'zh-CN', 'ko', 'tr-TR'] as const;
 
 export const builtInLanguageOptions = builtInLanguages.map((languageTag) => ({
   value: languageTag,
@@ -33,7 +34,7 @@ const resource: Resource = {
   fr,
   'pt-PT': ptPT,
   'zh-CN': zhCN,
-  'ko-KR': koKR,
+  ko,
   'tr-TR': trTR,
 };
 

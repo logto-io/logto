@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { registerWithEmail } from '@/apis/register';
-import useApi, { ErrorHandlers } from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import { PageContext } from '@/hooks/use-page-context';
 import { SearchParameters } from '@/types';

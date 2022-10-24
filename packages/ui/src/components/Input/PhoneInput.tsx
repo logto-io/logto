@@ -3,8 +3,9 @@ import { useState, useMemo, useRef } from 'react';
 
 import DownArrowIcon from '@/assets/icons/arrow-down.svg';
 import ClearIcon from '@/assets/icons/clear-icon.svg';
-import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
-import { CountryCallingCode, CountryMetaData } from '@/hooks/use-phone-number';
+import type { ErrorType } from '@/components/ErrorMessage';
+import ErrorMessage from '@/components/ErrorMessage';
+import type { CountryCallingCode, CountryMetaData } from '@/hooks/use-phone-number';
 
 import * as styles from './index.module.scss';
 import * as phoneInputStyles from './phoneInput.module.scss';

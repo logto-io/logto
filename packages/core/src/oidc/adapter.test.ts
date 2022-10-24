@@ -1,4 +1,4 @@
-import { Application } from '@logto/schemas';
+import type { Application } from '@logto/schemas';
 import snakecaseKeys from 'snakecase-keys';
 
 import { mockApplication } from '@/__mocks__';

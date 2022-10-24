@@ -1,11 +1,11 @@
 import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
-import { MiddlewareType } from 'koa';
-import { Provider } from 'oidc-provider';
+import type { MiddlewareType } from 'koa';
+import type { Provider } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';
 import { assignInteractionResults } from '@/lib/session';
 import { generateUserId, insertUser } from '@/lib/user';
-import { WithLogContext } from '@/middleware/koa-log';
+import type { WithLogContext } from '@/middleware/koa-log';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
   hasUserWithPhone,

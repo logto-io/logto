@@ -1,6 +1,7 @@
-import { conditional, Optional, assert } from '@silverhand/essentials';
+import type { Optional } from '@silverhand/essentials';
+import { conditional, assert } from '@silverhand/essentials';
 
-import { Field } from './types';
+import type { Field } from './types';
 
 export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
 

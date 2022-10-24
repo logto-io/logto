@@ -1,7 +1,9 @@
-import { useState, useCallback, useEffect, useRef, FormEvent } from 'react';
+import type { FormEvent } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 
-import { ErrorType } from '@/components/ErrorMessage';
-import { entries, fromEntries, Entries } from '@/utils';
+import type { ErrorType } from '@/components/ErrorMessage';
+import type { Entries } from '@/utils';
+import { entries, fromEntries } from '@/utils';
 
 const useForm = <T extends Record<string, unknown>>(initialState: T) => {
   type ErrorState = {

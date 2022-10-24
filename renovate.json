@@ -1,6 +1,4 @@
 {
-  "extends": [
-    "config:base",
-    ":preserveSemverRanges"
-  ]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>logto-io/.github:renovate-config"]
 }

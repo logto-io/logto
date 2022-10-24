@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import BrandingHeader from '@/components/BrandingHeader';
 import AppNotification from '@/containers/AppNotification';
 import { PageContext } from '@/hooks/use-page-context';
+import { getLogoUrl } from '@/utils/logo';
 
 import * as styles from './index.module.scss';
 import { PrimarySection, SecondarySection, CreateAccountLink } from './registry';
@@ -25,7 +26,7 @@ const SignIn = () => {
         <BrandingHeader
           className={styles.header}
           headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
-          logo={(theme === 'dark' && darkLogoUrl) || logoUrl}
+          logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
         />
         <PrimarySection
           signInMethod={experienceSettings.primarySignInMethod}
