@@ -127,8 +127,11 @@ const SignInMethodEditBox = ({
       {requiredSignInIdentifiers.length > 0 && (
         <ConnectorSetupWarning
           requiredConnectors={requiredSignInIdentifiers.reduce<ConnectorType[]>(
-            (previous, current) => {
-              return [...previous, ...signInIdentifierToRequiredConnectorMapping[current]];
+            (connectors, signInIdentifier) => {
+              return [
+                ...connectors,
+                ...signInIdentifierToRequiredConnectorMapping[signInIdentifier],
+              ];
             },
             []
           )}
