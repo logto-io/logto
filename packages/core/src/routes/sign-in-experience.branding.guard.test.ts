@@ -1,4 +1,5 @@
-import { BrandingStyle, CreateSignInExperience, SignInExperience } from '@logto/schemas';
+import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
+import { BrandingStyle } from '@logto/schemas';
 
 import { mockBranding, mockSignInExperience } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';

@@ -1,7 +1,8 @@
 import { SignInMode } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
-import { MiddlewareType } from 'koa';
-import { Provider, errors } from 'oidc-provider';
+import type { MiddlewareType } from 'koa';
+import type { Provider } from 'oidc-provider';
+import { errors } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';

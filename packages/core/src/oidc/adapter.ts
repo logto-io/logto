@@ -1,7 +1,8 @@
-import { ApplicationType, CreateApplication, OidcClientMetadata } from '@logto/schemas';
+import type { CreateApplication, OidcClientMetadata } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 import { adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import dayjs from 'dayjs';
-import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
+import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
 import envSet, { MountedApps } from '@/env-set';

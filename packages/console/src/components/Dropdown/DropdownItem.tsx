@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { MouseEvent, KeyboardEvent, ReactNode } from 'react';
+import type { MouseEvent, KeyboardEvent, ReactNode } from 'react';
 
 import { onKeyDownHandler } from '@/utilities/a11y';
 

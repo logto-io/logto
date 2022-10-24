@@ -1,4 +1,4 @@
-import { LogDto, User } from '@logto/schemas';
+import type { LogDto, User } from '@logto/schemas';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +16,7 @@ import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
-import { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import EventIcon from './components/EventIcon';

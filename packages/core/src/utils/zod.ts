@@ -1,7 +1,9 @@
 import { languages, languageTagGuard } from '@logto/language-kit';
 import { arbitraryObjectGuard, translationGuard } from '@logto/schemas';
-import { conditional, ValuesOf } from '@silverhand/essentials';
-import { OpenAPIV3 } from 'openapi-types';
+import type { ValuesOf } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
+import type { OpenAPIV3 } from 'openapi-types';
+import type { ZodStringDef } from 'zod';
 import {
   ZodArray,
   ZodBoolean,
@@ -14,7 +16,6 @@ import {
   ZodObject,
   ZodOptional,
   ZodString,
-  ZodStringDef,
   ZodUnion,
   ZodUnknown,
 } from 'zod';

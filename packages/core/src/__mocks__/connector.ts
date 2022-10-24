@@ -1,8 +1,9 @@
 import { ConnectorPlatform } from '@logto/connector-kit';
-import { Connector, ConnectorMetadata, ConnectorType } from '@logto/schemas';
+import type { Connector, ConnectorMetadata } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import { LogtoConnector } from '@/connectors/types';
+import type { LogtoConnector } from '@/connectors/types';
 
 export const mockMetadata: ConnectorMetadata = {
   id: 'id',
@@ -13,7 +14,7 @@ export const mockMetadata: ConnectorMetadata = {
     'pt-PT': 'Conector',
     'zh-CN': '连接器',
     'tr-TR': 'Connector',
-    'ko-KR': 'Connector',
+    ko: 'Connector',
   },
   logo: './logo.png',
   logoDark: './logo-dark.png',
@@ -22,7 +23,7 @@ export const mockMetadata: ConnectorMetadata = {
     'pt-PT': 'Conector',
     'zh-CN': '连接器',
     'tr-TR': 'Connector',
-    'ko-KR': 'Connector',
+    ko: 'Connector',
   },
   readme: 'README.md',
   configTemplate: 'config-template.json',

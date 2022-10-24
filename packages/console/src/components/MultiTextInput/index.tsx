@@ -1,5 +1,6 @@
-import { AdminConsoleKey } from '@logto/phrases';
-import { KeyboardEvent, useMemo, useState } from 'react';
+import type { AdminConsoleKey } from '@logto/phrases';
+import type { KeyboardEvent } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Minus from '@/assets/images/minus.svg';
@@ -9,7 +10,7 @@ import ConfirmModal from '../ConfirmModal';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
 import * as styles from './index.module.scss';
-import { MultiTextInputError } from './types';
+import type { MultiTextInputError } from './types';
 
 type Props = {
   title: AdminConsoleKey;
@@ -53,7 +54,7 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder
           <div className={styles.deletableInput}>
             <TextInput
               hasError={Boolean(
-                error?.inputs?.[fieldIndex] || (fieldIndex === 0 && error?.required)
+                error?.inputs?.[fieldIndex] ?? (fieldIndex === 0 && error?.required)
               )}
               value={fieldValue}
               placeholder={placeholder}

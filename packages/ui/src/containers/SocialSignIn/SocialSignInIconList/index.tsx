@@ -1,10 +1,11 @@
-import { ConnectorMetadata } from '@logto/schemas';
+import type { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 
 import MoreSocialIcon from '@/assets/icons/more-social-icon.svg';
 import IconButton from '@/components/Button/IconButton';
 import SocialIconButton from '@/components/Button/SocialIconButton';
 import useSocial from '@/hooks/use-social';
+import { getLogoUrl } from '@/utils/logo';
 import { isAppleConnector } from '@/utils/social-connectors';
 
 import * as styles from './index.module.scss';
@@ -29,21 +30,13 @@ const SocialSignInIconList = ({
   return (
     <div className={classNames(styles.socialIconList, className)}>
       {connectors.map((connector) => {
-        const { id, target, logo, logoDark } = connector;
-
-        const getLogo = () => {
-          if (theme === 'dark') {
-            return (!isAppleConnector(target) && logoDark) || logo;
-          }
-
-          return (isAppleConnector(target) && logoDark) || logo;
-        };
+        const { id, target, logo: logoUrl, logoDark: darkLogoUrl } = connector;
 
         return (
           <SocialIconButton
             key={id}
             className={styles.socialButton}
-            logo={getLogo()}
+            logo={getLogoUrl({ theme, logoUrl, darkLogoUrl, isApple: isAppleConnector() })}
             target={target}
             onClick={() => {
               void invokeSocialSignIn(connector);

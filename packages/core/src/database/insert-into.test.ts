@@ -1,4 +1,5 @@
-import { CreateUser, Users } from '@logto/schemas';
+import type { CreateUser } from '@logto/schemas';
+import { Users } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import decamelize from 'decamelize';
 

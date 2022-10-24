@@ -1,9 +1,10 @@
-import { ConnectorResponse, ConnectorType } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
-import { RequestError } from '@/hooks/use-api';
-import { ConnectorGroup } from '@/types/connector';
+import type { RequestError } from '@/hooks/use-api';
+import type { ConnectorGroup } from '@/types/connector';
 
 // Group connectors by target
 const useConnectorGroups = () => {

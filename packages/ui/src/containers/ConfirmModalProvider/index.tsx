@@ -1,7 +1,8 @@
-import { Nullable } from '@silverhand/essentials';
+import type { Nullable } from '@silverhand/essentials';
 import { useState, useRef, useMemo, createContext, useCallback } from 'react';
 
-import { WebModal, MobileModal, ModalProps } from '@/components/ConfirmModal';
+import type { ModalProps } from '@/components/ConfirmModal';
+import { WebModal, MobileModal } from '@/components/ConfirmModal';
 import usePlatform from '@/hooks/use-platform';
 
 export type ModalContentRenderProps = {

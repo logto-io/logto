@@ -1,10 +1,12 @@
-import { ConnectorType, User } from '@logto/schemas';
-import { Nullable } from '@silverhand/essentials';
-import { InteractionResults } from 'oidc-provider';
+import type { User } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
+import type { Nullable } from '@silverhand/essentials';
+import type { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
 import { getLogtoConnectorById } from '@/connectors';
-import { SocialUserInfo, socialUserInfoGuard } from '@/connectors/types';
+import type { SocialUserInfo } from '@/connectors/types';
+import { socialUserInfoGuard } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   findUserByEmail,

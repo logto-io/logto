@@ -7,10 +7,11 @@ import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
-import useApi, { ErrorHandlers } from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import useTerms from '@/hooks/use-terms';
-import { UserFlow } from '@/types';
+import type { UserFlow } from '@/types';
 import { emailValidation } from '@/utils/field-validations';
 
 import PasswordlessSwitch from './PasswordlessSwitch';

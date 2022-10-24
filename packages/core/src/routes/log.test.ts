@@ -1,4 +1,4 @@
-import { LogCondition } from '@/queries/log';
+import type { LogCondition } from '@/queries/log';
 import logRoutes from '@/routes/log';
 import { createRequester } from '@/utils/test-utils';
 

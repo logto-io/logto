@@ -1,12 +1,8 @@
-import {
-  ApplicationType,
-  CustomClientMetadata,
-  customClientMetadataGuard,
-  GrantType,
-  OidcClientMetadata,
-} from '@logto/schemas';
+import type { CustomClientMetadata, OidcClientMetadata } from '@logto/schemas';
+import { ApplicationType, customClientMetadataGuard, GrantType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { AllClientMetadata, ClientAuthMethod, errors } from 'oidc-provider';
+import type { AllClientMetadata, ClientAuthMethod } from 'oidc-provider';
+import { errors } from 'oidc-provider';
 
 export const getConstantClientMetadata = (
   type: ApplicationType

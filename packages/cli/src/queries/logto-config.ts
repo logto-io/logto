@@ -1,14 +1,9 @@
-import {
-  AlterationState,
-  LogtoConfig,
-  logtoConfigGuards,
-  LogtoConfigKey,
-  LogtoConfigs,
-  AlterationStateKey,
-} from '@logto/schemas';
+import type { AlterationState, LogtoConfig, LogtoConfigKey } from '@logto/schemas';
+import { logtoConfigGuards, LogtoConfigs, AlterationStateKey } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
-import { Nullable } from '@silverhand/essentials';
-import { DatabasePool, DatabaseTransactionConnection, sql } from 'slonik';
+import type { Nullable } from '@silverhand/essentials';
+import type { DatabasePool, DatabaseTransactionConnection } from 'slonik';
+import { sql } from 'slonik';
 import { z } from 'zod';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);

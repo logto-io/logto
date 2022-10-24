@@ -1,5 +1,6 @@
-import { getEnv, getEnvAsStringArray, Optional } from '@silverhand/essentials';
-import { DatabasePool } from 'slonik';
+import type { Optional } from '@silverhand/essentials';
+import { getEnv, getEnvAsStringArray } from '@silverhand/essentials';
+import type { DatabasePool } from 'slonik';
 
 import { getOidcConfigs } from '@/lib/logto-config';
 import { appendPath } from '@/utils/url';

@@ -1,12 +1,12 @@
 import path from 'path';
 
-import { AlterationScript } from '@logto/schemas/lib/types/alteration';
+import type { AlterationScript } from '@logto/schemas/lib/types/alteration';
 import { findPackage } from '@logto/shared';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { copy, existsSync, remove, readdir } from 'fs-extra';
-import { DatabasePool } from 'slonik';
-import { CommandModule } from 'yargs';
+import type { DatabasePool } from 'slonik';
+import type { CommandModule } from 'yargs';
 
 import { createPoolFromConfig } from '../../../database';
 import {
@@ -14,7 +14,7 @@ import {
   updateDatabaseTimestamp,
 } from '../../../queries/logto-config';
 import { getPathInModule, log } from '../../../utilities';
-import { AlterationFile } from './type';
+import type { AlterationFile } from './type';
 import { chooseAlterationsByVersion } from './version';
 
 const alterationFilenameRegex = /-(\d+)-?.*\.js$/;

@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
-import { SignInExperienceForm } from '../../types';
+import type { SignInExperienceForm } from '../../types';
 import SignUpForm from './SignUpForm';
 
 type Props = {

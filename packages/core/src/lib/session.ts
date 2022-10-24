@@ -1,5 +1,5 @@
-import { Context } from 'koa';
-import { InteractionResults, Provider } from 'oidc-provider';
+import type { Context } from 'koa';
+import type { InteractionResults, Provider } from 'oidc-provider';
 
 import { findUserById, updateUserById } from '@/queries/user';
 

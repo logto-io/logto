@@ -1,4 +1,5 @@
-import { ConnectorResponse, ConnectorPlatform } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
+import { ConnectorPlatform } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,6 +1,6 @@
 import { passwordRegEx } from '@logto/core-kit';
 import { argon2Verify } from 'hash-wasm';
-import { Provider } from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
@@ -10,7 +10,7 @@ import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import { findUserById, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
-import { AnonymousRouter } from '../types';
+import type { AnonymousRouter } from '../types';
 import { forgotPasswordSessionResultGuard } from './types';
 import {
   clearVerificationResult,

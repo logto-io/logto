@@ -1,4 +1,4 @@
-import { ConnectorResponse } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
 
 export type ConnectorGroup = Pick<
   ConnectorResponse,

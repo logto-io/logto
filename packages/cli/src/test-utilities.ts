@@ -1,7 +1,7 @@
 // Copied from core
 
-import { QueryResult, QueryResultRow } from 'slonik';
-import { PrimitiveValueExpression } from 'slonik/dist/src/types.d';
+import type { QueryResult, QueryResultRow } from 'slonik';
+import type { PrimitiveValueExpression } from 'slonik/dist/src/types.d';
 
 export type QueryType = (
   sql: string,

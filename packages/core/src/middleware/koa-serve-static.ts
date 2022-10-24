@@ -3,7 +3,7 @@
 import path from 'path';
 
 import buildDebug from 'debug';
-import { MiddlewareType } from 'koa';
+import type { MiddlewareType } from 'koa';
 import send from 'koa-send';
 
 import assertThat from '@/utils/assert-that';

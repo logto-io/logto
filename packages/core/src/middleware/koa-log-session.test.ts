@@ -1,6 +1,6 @@
 import { Provider } from 'oidc-provider';
 
-import { WithLogContext } from '@/middleware/koa-log';
+import type { WithLogContext } from '@/middleware/koa-log';
 import koaLogSession from '@/middleware/koa-log-session';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 

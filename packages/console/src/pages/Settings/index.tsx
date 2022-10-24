@@ -15,7 +15,8 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import useUserPreferences, { UserPreferences } from '@/hooks/use-user-preferences';
+import type { UserPreferences } from '@/hooks/use-user-preferences';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import ChangePassword from './components/ChangePassword';

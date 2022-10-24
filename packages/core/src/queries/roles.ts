@@ -1,4 +1,5 @@
-import { Roles, Role } from '@logto/schemas';
+import type { Role } from '@logto/schemas';
+import { Roles } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 

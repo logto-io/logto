@@ -1,15 +1,11 @@
-import {
-  messageTypesGuard,
-  ConnectorError,
-  ConnectorErrorCodes,
-  EmailConnector,
-  SmsConnector,
-} from '@logto/connector-kit';
-import { Passcode, PasscodeType } from '@logto/schemas';
+import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
+import { messageTypesGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
+import type { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
 import { getLogtoConnectors } from '@/connectors';
-import { ConnectorType, LogtoConnector } from '@/connectors/types';
+import type { LogtoConnector } from '@/connectors/types';
+import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   consumePasscode,

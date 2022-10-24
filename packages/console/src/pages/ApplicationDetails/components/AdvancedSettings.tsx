@@ -1,4 +1,5 @@
-import { Application, ApplicationType, SnakeCaseOidcConfig, UserRole } from '@logto/schemas';
+import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
+import { ApplicationType, UserRole } from '@logto/schemas';
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -50,6 +51,13 @@ const AdvancedSettings = ({ applicationType, oidcConfig, defaultData, isDeleted 
         <CopyToClipboard
           className={styles.textField}
           value={oidcConfig.token_endpoint}
+          variant="border"
+        />
+      </FormField>
+      <FormField title="application_details.user_info_endpoint">
+        <CopyToClipboard
+          className={styles.textField}
+          value={oidcConfig.userinfo_endpoint}
           variant="border"
         />
       </FormField>

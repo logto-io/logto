@@ -1,13 +1,14 @@
 import { UserRole } from '@logto/schemas';
 import { jwtVerify } from 'jose';
-import { Context } from 'koa';
-import { IRouterParamContext } from 'koa-router';
+import type { Context } from 'koa';
+import type { IRouterParamContext } from 'koa-router';
 
 import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaAuth, { WithAuthContext } from './koa-auth';
+import type { WithAuthContext } from './koa-auth';
+import koaAuth from './koa-auth';
 
 jest.mock('jose', () => ({
   jwtVerify: jest.fn(() => ({ payload: { sub: 'fooUser', role_names: ['admin'] } })),

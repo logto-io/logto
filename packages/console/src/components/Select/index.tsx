@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { ReactEventHandler, ReactNode, useRef, useState } from 'react';
+import type { ReactEventHandler, ReactNode } from 'react';
+import { useRef, useState } from 'react';
 
 import Close from '@/assets/images/close.svg';
 import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';

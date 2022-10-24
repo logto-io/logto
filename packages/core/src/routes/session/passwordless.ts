@@ -1,6 +1,6 @@
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import { PasscodeType } from '@logto/schemas';
-import { Provider } from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
@@ -15,7 +15,7 @@ import {
 import { passcodeTypeGuard } from '@/routes/session/types';
 import assertThat from '@/utils/assert-that';
 
-import { AnonymousRouter } from '../types';
+import type { AnonymousRouter } from '../types';
 import {
   smsSignInAction,
   emailSignInAction,

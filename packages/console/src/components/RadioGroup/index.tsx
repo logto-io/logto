@@ -1,7 +1,9 @@
 import classNames from 'classnames';
-import { Children, cloneElement, forwardRef, isValidElement, LegacyRef, ReactNode } from 'react';
+import type { LegacyRef, ReactNode } from 'react';
+import { Children, cloneElement, forwardRef, isValidElement } from 'react';
 
-import Radio, { Props as RadioProps } from './Radio';
+import type { Props as RadioProps } from './Radio';
+import Radio from './Radio';
 import * as styles from './index.module.scss';
 
 type Props = {

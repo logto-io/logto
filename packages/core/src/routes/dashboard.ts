@@ -1,5 +1,6 @@
 import { dateRegex } from '@logto/core-kit';
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -9,7 +10,7 @@ import {
 } from '@/queries/log';
 import { countUsers, getDailyNewUserCountsByTimeInterval } from '@/queries/user';
 
-import { AuthedRouter } from './types';
+import type { AuthedRouter } from './types';
 
 const getDateString = (day: Dayjs) => day.format('YYYY-MM-DD');
 

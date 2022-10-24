@@ -1,8 +1,5 @@
-import {
-  isLanguageTag,
-  LanguageTag,
-  languages as uiLanguageNameMapping,
-} from '@logto/language-kit';
+import type { LanguageTag } from '@logto/language-kit';
+import { isLanguageTag, languages as uiLanguageNameMapping } from '@logto/language-kit';
 import { useContext } from 'react';
 
 import useUiLanguages from '@/hooks/use-ui-languages';

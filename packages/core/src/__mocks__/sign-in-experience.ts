@@ -1,17 +1,19 @@
-import {
+import type {
   Branding,
-  BrandingStyle,
   LanguageInfo,
   SignInExperience,
   SignInMethods,
-  SignInMethodState,
   TermsOfUse,
-  SignInMode,
   Color,
-  SignUpIdentifier,
-  SignInIdentifier,
   SignUp,
   SignIn,
+} from '@logto/schemas';
+import {
+  BrandingStyle,
+  SignInMethodState,
+  SignInMode,
+  SignUpIdentifier,
+  SignInIdentifier,
 } from '@logto/schemas';
 
 export const mockSignInExperience: SignInExperience = {

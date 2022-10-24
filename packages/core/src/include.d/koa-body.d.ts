@@ -1,6 +1,6 @@
 declare module 'koa-body' {
-  import { MiddlewareType } from 'koa';
-  import { IKoaBodyOptions } from 'node_modules/koa-body';
+  import type { MiddlewareType } from 'koa';
+  import type { IKoaBodyOptions } from 'node_modules/koa-body';
 
   declare function koaBody<
     StateT = Record<string, unknown>,

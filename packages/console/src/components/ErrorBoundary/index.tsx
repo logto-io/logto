@@ -1,5 +1,6 @@
 import { conditional } from '@silverhand/essentials';
-import { Component, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { Component } from 'react';
 
 import AppError from '../AppError';
 

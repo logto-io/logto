@@ -1,4 +1,5 @@
-import { Application, CreateApplication, ApplicationType } from '@logto/schemas';
+import type { Application, CreateApplication } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 
 import { mockApplication } from '@/__mocks__';
 import { findApplicationById } from '@/queries/application';

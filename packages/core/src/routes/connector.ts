@@ -1,16 +1,17 @@
 import { MessageTypes } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
-import { arbitraryObjectGuard, ConnectorResponse, Connectors, ConnectorType } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
+import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import { getLogtoConnectorById, getLogtoConnectors } from '@/connectors';
-import { LogtoConnector } from '@/connectors/types';
+import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
 
-import { AuthedRouter } from './types';
+import type { AuthedRouter } from './types';
 
 const transpileLogtoConnector = ({
   dbEntry,

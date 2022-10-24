@@ -1,9 +1,7 @@
 import i18next from 'i18next';
+import type { CountryCode, CountryCallingCode, E164Number } from 'libphonenumber-js/mobile';
 import {
   getCountries,
-  CountryCode,
-  CountryCallingCode,
-  E164Number,
   getCountryCallingCode,
   parsePhoneNumberWithError,
 } from 'libphonenumber-js/mobile';

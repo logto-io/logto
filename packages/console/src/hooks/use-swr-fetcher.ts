@@ -1,8 +1,8 @@
-import { RequestErrorBody } from '@logto/schemas';
+import type { RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BareFetcher } from 'swr';
+import type { BareFetcher } from 'swr';
 
 import useApi, { RequestError } from './use-api';
 

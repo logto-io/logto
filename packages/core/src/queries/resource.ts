@@ -1,5 +1,7 @@
-import { Resource, CreateResource, Resources } from '@logto/schemas';
-import { convertToIdentifiers, OmitAutoSetFields, conditionalSql, manyRows } from '@logto/shared';
+import type { Resource, CreateResource } from '@logto/schemas';
+import { Resources } from '@logto/schemas';
+import type { OmitAutoSetFields } from '@logto/shared';
+import { convertToIdentifiers, conditionalSql, manyRows } from '@logto/shared';
 import { sql } from 'slonik';
 
 import { buildFindEntityById } from '@/database/find-entity-by-id';

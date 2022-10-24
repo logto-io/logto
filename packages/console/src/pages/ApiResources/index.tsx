@@ -1,4 +1,5 @@
-import { AppearanceMode, Resource } from '@logto/schemas';
+import type { Resource } from '@logto/schemas';
+import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -19,7 +20,7 @@ import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
-import { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';

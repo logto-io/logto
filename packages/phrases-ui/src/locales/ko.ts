@@ -1,4 +1,4 @@
-import { LocalePhrase } from '../types';
+import type { LocalePhrase } from '../types';
 
 const translation = {
   input: {
@@ -80,8 +80,8 @@ const translation = {
   },
 };
 
-const koKR: LocalePhrase = Object.freeze({
+const ko: LocalePhrase = Object.freeze({
   translation,
 });
 
-export default koKR;
+export default ko;

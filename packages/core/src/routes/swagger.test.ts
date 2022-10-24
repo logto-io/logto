@@ -6,7 +6,7 @@ import { number, object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
-import { AnonymousRouter } from '@/routes/types';
+import type { AnonymousRouter } from '@/routes/types';
 
 import swaggerRoutes, { defaultResponses, paginationParameters } from './swagger';
 

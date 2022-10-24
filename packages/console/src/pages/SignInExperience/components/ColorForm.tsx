@@ -8,7 +8,7 @@ import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
 
-import { SignInExperienceForm } from '../types';
+import type { SignInExperienceForm } from '../types';
 import * as styles from './index.module.scss';
 
 const ColorForm = () => {

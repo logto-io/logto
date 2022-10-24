@@ -1,6 +1,7 @@
-import { ConnectorType, SignIn, SignInIdentifier, SignUp, SignUpIdentifier } from '@logto/schemas';
+import type { SignIn, SignUp } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
 
-import { LogtoConnector } from '@/connectors/types';
+import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 

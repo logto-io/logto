@@ -1,4 +1,4 @@
-import { User } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import { conditional, conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -21,7 +21,7 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
-import { RequestError } from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 

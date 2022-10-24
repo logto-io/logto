@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Nullable } from '@silverhand/essentials';
+import type { Nullable } from '@silverhand/essentials';
 import { useState, isValidElement, type ReactElement, cloneElement, useRef, Children } from 'react';
 
 import type { Props as TabItemProps } from '../TabItem';

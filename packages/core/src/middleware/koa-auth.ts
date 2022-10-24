@@ -1,11 +1,11 @@
-import { IncomingHttpHeaders } from 'http';
+import type { IncomingHttpHeaders } from 'http';
 
 import { UserRole } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
 import { conditional } from '@silverhand/essentials';
 import { jwtVerify } from 'jose';
-import { MiddlewareType, Request } from 'koa';
-import { IRouterParamContext } from 'koa-router';
+import type { MiddlewareType, Request } from 'koa';
+import type { IRouterParamContext } from 'koa-router';
 
 import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';

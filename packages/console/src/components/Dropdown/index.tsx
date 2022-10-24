@@ -1,8 +1,10 @@
 import classNames from 'classnames';
-import { ReactNode, RefObject, useRef } from 'react';
+import type { ReactNode, RefObject } from 'react';
+import { useRef } from 'react';
 import ReactModal from 'react-modal';
 
-import usePosition, { HorizontalAlignment } from '@/hooks/use-position';
+import type { HorizontalAlignment } from '@/hooks/use-position';
+import usePosition from '@/hooks/use-position';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import * as styles from './index.module.scss';

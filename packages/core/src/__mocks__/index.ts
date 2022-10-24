@@ -1,12 +1,5 @@
-import {
-  Application,
-  ApplicationType,
-  Passcode,
-  PasscodeType,
-  Resource,
-  Role,
-  Setting,
-} from '@logto/schemas';
+import type { Application, Passcode, Resource, Role, Setting } from '@logto/schemas';
+import { ApplicationType, PasscodeType } from '@logto/schemas';
 
 export * from './connector';
 export * from './sign-in-experience';

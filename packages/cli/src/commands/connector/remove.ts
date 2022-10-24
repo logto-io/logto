@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import fsExtra from 'fs-extra';
-import { CommandModule } from 'yargs';
+import type { CommandModule } from 'yargs';
 
 import { log } from '../../utilities';
 import { getConnectorPackagesFrom } from './utils';

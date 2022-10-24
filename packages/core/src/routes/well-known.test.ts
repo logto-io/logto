@@ -100,7 +100,6 @@ describe('GET /.well-known/sign-in-exp', () => {
   it('should return admin console settings', async () => {
     interactionDetails.mockResolvedValue({ params: { client_id: adminConsoleApplicationId } });
     const response = await sessionRequest.get('/.well-known/sign-in-exp');
-    expect(signInExperienceQuerySpyOn).not.toBeCalled();
     expect(response.status).toEqual(200);
 
     expect(response.body).toMatchObject({
@@ -109,6 +108,7 @@ describe('GET /.well-known/sign-in-exp', () => {
         ...adminConsoleSignInExperience.branding,
         slogan: 'admin_console.welcome.title',
       },
+      languageInfo: mockSignInExperience.languageInfo,
       socialConnectors: [],
       signInMode: SignInMode.SignIn,
     });

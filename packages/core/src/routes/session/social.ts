@@ -1,7 +1,7 @@
 import { validateRedirectUrl } from '@logto/core-kit';
 import { ConnectorType, userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
-import { Provider } from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';
 
 import { getLogtoConnectorById } from '@/connectors';
@@ -23,7 +23,7 @@ import {
 import assertThat from '@/utils/assert-that';
 import { maskUserInfo } from '@/utils/format';
 
-import { AnonymousRouter } from '../types';
+import type { AnonymousRouter } from '../types';
 import { getRoutePrefix } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'social');

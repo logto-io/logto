@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { CommandModule } from 'yargs';
+import type { CommandModule } from 'yargs';
 
 import { getConnectorPackagesFrom, isOfficialConnector } from './utils';
 

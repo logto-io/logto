@@ -1,7 +1,8 @@
-import { idTokenClaims, UserClaim, userinfoClaims, UserScope } from '@logto/core-kit';
-import { User } from '@logto/schemas';
-import { Nullable } from '@silverhand/essentials';
-import { ClaimsParameterMember } from 'oidc-provider';
+import type { UserClaim } from '@logto/core-kit';
+import { idTokenClaims, userinfoClaims, UserScope } from '@logto/core-kit';
+import type { User } from '@logto/schemas';
+import type { Nullable } from '@silverhand/essentials';
+import type { ClaimsParameterMember } from 'oidc-provider';
 
 export const claimToUserKey: Readonly<Record<UserClaim, keyof User>> = Object.freeze({
   name: 'name',

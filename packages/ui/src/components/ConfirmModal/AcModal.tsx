@@ -8,7 +8,7 @@ import IconButton from '@/components/Button/IconButton';
 
 import * as modalStyles from '../../scss/modal.module.scss';
 import * as styles from './Acmodal.module.scss';
-import { ModalProps } from './type';
+import type { ModalProps } from './type';
 
 const AcModal = ({
   className,

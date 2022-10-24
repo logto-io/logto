@@ -1,6 +1,7 @@
-import { LogtoErrorCode, LogtoErrorI18nKey } from '@logto/phrases';
-import { RequestErrorBody, RequestErrorMetadata } from '@logto/schemas';
-import { conditional, Optional } from '@silverhand/essentials';
+import type { LogtoErrorCode, LogtoErrorI18nKey } from '@logto/phrases';
+import type { RequestErrorBody, RequestErrorMetadata } from '@logto/schemas';
+import type { Optional } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import pick from 'lodash.pick';
 import { ZodError } from 'zod';

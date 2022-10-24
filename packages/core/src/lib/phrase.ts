@@ -1,5 +1,6 @@
-import resource, { isBuiltInLanguageTag, LocalePhrase } from '@logto/phrases-ui';
-import { CustomPhrase } from '@logto/schemas';
+import type { LocalePhrase } from '@logto/phrases-ui';
+import resource, { isBuiltInLanguageTag } from '@logto/phrases-ui';
+import type { CustomPhrase } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import deepmerge from 'deepmerge';
 

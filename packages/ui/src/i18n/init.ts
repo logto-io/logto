@@ -1,5 +1,6 @@
-import { LanguageInfo } from '@logto/schemas';
-import i18next, { InitOptions } from 'i18next';
+import type { LanguageInfo } from '@logto/schemas';
+import type { InitOptions } from 'i18next';
+import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import { getI18nResource, detectLanguage } from '@/i18n/utils';

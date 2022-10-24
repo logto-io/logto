@@ -1,4 +1,4 @@
-import { ApplicationType } from '@logto/schemas';
+import type { ApplicationType } from '@logto/schemas';
 
 import ApplicationIcon from '@/components/ApplicationIcon';
 

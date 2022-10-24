@@ -1,4 +1,4 @@
-import { Resource, CreateResource } from '@logto/schemas';
+import type { Resource, CreateResource } from '@logto/schemas';
 
 import { mockResource } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';

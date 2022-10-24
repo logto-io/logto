@@ -1,4 +1,5 @@
-import { RefObject, useCallback, useEffect, useState } from 'react';
+import type { RefObject } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export type VerticalAlignment = 'top' | 'center' | 'bottom';
 

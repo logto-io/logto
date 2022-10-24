@@ -1,5 +1,5 @@
-import { MiddlewareType } from 'koa';
-import { IRouterParamContext } from 'koa-router';
+import type { MiddlewareType } from 'koa';
+import type { IRouterParamContext } from 'koa-router';
 
 import envSet from '@/env-set';
 import { appendPath } from '@/utils/url';

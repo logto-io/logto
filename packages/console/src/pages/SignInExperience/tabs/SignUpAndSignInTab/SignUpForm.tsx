@@ -8,7 +8,7 @@ import Checkbox from '@/components/Checkbox';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 
-import { SignInExperienceForm } from '../../types';
+import type { SignInExperienceForm } from '../../types';
 import ConnectorSetupWarning from './ConnectorSetupWarning';
 import * as styles from './index.module.scss';
 

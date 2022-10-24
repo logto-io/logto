@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
-import { PasscodeType, SignInIdentifier, SignUpIdentifier, User } from '@logto/schemas';
+import type { User } from '@logto/schemas';
+import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
 

@@ -1,10 +1,11 @@
-import { EmailConnector, MessageTypes, SmsConnector } from '@logto/connector-kit';
+import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
+import { MessageTypes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
 import { mockMetadata, mockConnector, mockLogtoConnectorList } from '@/__mocks__';
 import { defaultConnectorMethods } from '@/connectors/consts';
-import { LogtoConnector } from '@/connectors/types';
+import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 import { createRequester } from '@/utils/test-utils';

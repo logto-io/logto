@@ -1,5 +1,5 @@
 import type { Identities, ConnectorResponse } from '@logto/schemas';
-import { Optional } from '@silverhand/essentials';
+import type { Optional } from '@silverhand/essentials';
 import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -59,7 +59,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
             'zh-CN': '未知连接器',
             en: 'Unknown Connector',
             'tr-TR': 'Bilinmeyen connector.',
-            'ko-KR': '알수없는 연동',
+            ko: '알수없는 연동',
           },
           target: key,
           userId: connectors[key]?.userId,

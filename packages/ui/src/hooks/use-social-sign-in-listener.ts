@@ -6,7 +6,8 @@ import { signInWithSocial } from '@/apis/social';
 import { parseQueryParameters } from '@/utils';
 import { stateValidation } from '@/utils/social-connectors';
 
-import useApi, { ErrorHandlers } from './use-api';
+import type { ErrorHandlers } from './use-api';
+import useApi from './use-api';
 import { PageContext } from './use-page-context';
 
 const useSocialSignInListener = () => {

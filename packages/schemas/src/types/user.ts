@@ -1,4 +1,4 @@
-import { CreateUser } from '../db-entries';
+import type { CreateUser } from '../db-entries';
 
 export const userInfoSelectFields = Object.freeze([
   'id',

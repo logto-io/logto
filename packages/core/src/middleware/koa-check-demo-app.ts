@@ -1,5 +1,5 @@
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
-import { MiddlewareType } from 'koa';
+import type { MiddlewareType } from 'koa';
 
 import { findApplicationById } from '@/queries/application';
 
