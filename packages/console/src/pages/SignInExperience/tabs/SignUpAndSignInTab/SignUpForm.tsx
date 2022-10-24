@@ -10,7 +10,7 @@ import Select from '@/components/Select';
 
 import type { SignInExperienceForm } from '../../types';
 import ConnectorSetupWarning from './ConnectorSetupWarning';
-import { requireVerifySignUpIdentifiers, signUpIdentifiers } from './constants';
+import { requiredVerifySignUpIdentifiers, signUpIdentifiers } from './constants';
 import * as styles from './index.module.scss';
 
 const SignUpForm = () => {
@@ -33,7 +33,7 @@ const SignUpForm = () => {
       return;
     }
 
-    if (requireVerifySignUpIdentifiers.includes(signUpIdentifier)) {
+    if (requiredVerifySignUpIdentifiers.includes(signUpIdentifier)) {
       resetField('signUp.password');
       setValue('signUp.verify', true);
     }
@@ -101,7 +101,7 @@ const SignUpForm = () => {
                 <Checkbox
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
                   value={value}
-                  disabled={requireVerifySignUpIdentifiers.includes(signUpIdentifier)}
+                  disabled={requiredVerifySignUpIdentifiers.includes(signUpIdentifier)}
                   onChange={onChange}
                 />
               )}

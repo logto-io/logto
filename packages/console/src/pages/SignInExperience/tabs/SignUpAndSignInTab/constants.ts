@@ -4,7 +4,7 @@ export const signUpIdentifiers = Object.values(SignUpIdentifier);
 
 export const signInIdentifiers = Object.values(SignInIdentifier);
 
-export const requireVerifySignUpIdentifiers = [
+export const requiredVerifySignUpIdentifiers = [
   SignUpIdentifier.Email,
   SignUpIdentifier.Phone,
   SignUpIdentifier.EmailOrPhone,
