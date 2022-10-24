@@ -2,13 +2,13 @@ import type { SignInIdentifier } from '@logto/schemas';
 
 import type { SignInMethod } from './types';
 
-export const mutateVerificationState = (
-  value: SignInMethod[],
+export const computeOnVerificationStateChanged = (
+  oldValue: SignInMethod[],
   identifier: SignInIdentifier,
   verification: 'password' | 'verificationCode',
   checked: boolean
 ) =>
-  value.map((method) =>
+  oldValue.map((method) =>
     method.identifier === identifier
       ? {
           ...method,
@@ -17,18 +17,18 @@ export const mutateVerificationState = (
       : method
   );
 
-export const appendSignInMethod = (
-  appendTo: SignInMethod[],
+export const computeOnSignInMethodAppended = (
+  oldValue: SignInMethod[],
   signInIdentifier: SignInIdentifier,
   requirePassword: boolean,
   requireVerificationCode: boolean
 ) => {
-  if (appendTo.some((method) => method.identifier === signInIdentifier)) {
-    return appendTo;
+  if (oldValue.some((method) => method.identifier === signInIdentifier)) {
+    return oldValue;
   }
 
   return [
-    ...appendTo,
+    ...oldValue,
     {
       identifier: signInIdentifier,
       password: requirePassword,
@@ -38,8 +38,11 @@ export const appendSignInMethod = (
   ];
 };
 
-export const togglePasswordPrimaryFlag = (value: SignInMethod[], identifier: SignInIdentifier) =>
-  value.map((method) =>
+export const computeOnPasswordPrimaryFlagToggled = (
+  oldValue: SignInMethod[],
+  identifier: SignInIdentifier
+) =>
+  oldValue.map((method) =>
     method.identifier === identifier
       ? {
           ...method,

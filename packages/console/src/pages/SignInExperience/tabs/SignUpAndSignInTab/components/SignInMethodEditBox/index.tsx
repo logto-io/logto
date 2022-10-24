@@ -10,9 +10,9 @@ import AddSignInMethodButton from './AddSignInMethodButton';
 import SignInMethodItem from './SignInMethodItem';
 import type { SignInMethod } from './types';
 import {
-  appendSignInMethod as appendSignInMethodIfNotExist,
-  mutateVerificationState,
-  togglePasswordPrimaryFlag,
+  computeOnSignInMethodAppended as appendSignInMethodIfNotExist,
+  computeOnVerificationStateChanged,
+  computeOnPasswordPrimaryFlagToggled,
 } from './utilities';
 
 type Props = {
@@ -110,10 +110,12 @@ const SignInMethodEditBox = ({
               isVerificationRequired={isVerificationRequired}
               isDeletable={requiredSignInIdentifiers.includes(signInMethod.identifier)}
               onVerificationStateChange={(identifier, verification, checked) => {
-                handleChange(mutateVerificationState(value, identifier, verification, checked));
+                handleChange(
+                  computeOnVerificationStateChanged(value, identifier, verification, checked)
+                );
               }}
               onToggleVerificationPrimary={(identifier) => {
-                handleChange(togglePasswordPrimaryFlag(value, identifier));
+                handleChange(computeOnPasswordPrimaryFlagToggled(value, identifier));
               }}
               onDelete={(identifier) => {
                 handleChange(value.filter((method) => method.identifier !== identifier));
