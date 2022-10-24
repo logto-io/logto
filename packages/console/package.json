@@ -19,7 +19,7 @@
   "devDependencies": {
     "@fontsource/roboto-mono": "^4.5.7",
     "@logto/core-kit": "1.0.0-beta.19",
-    "@logto/language-kit": "1.0.0-beta.19",
+    "@logto/language-kit": "1.0.0-beta.20",
     "@logto/phrases": "workspace:^",
     "@logto/phrases-ui": "workspace:^",
     "@logto/react": "1.0.0-beta.10",
@@ -82,7 +82,7 @@
     "stylelint": "^14.9.1",
     "swr": "^1.3.0",
     "typescript": "^4.7.4",
-    "zod": "^3.18.0"
+    "zod": "^3.19.1"
   },
   "alias": {
     "@/*": "./src/$1",

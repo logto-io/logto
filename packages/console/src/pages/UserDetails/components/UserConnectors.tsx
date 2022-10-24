@@ -59,7 +59,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
             'zh-CN': '未知连接器',
             en: 'Unknown Connector',
             'tr-TR': 'Bilinmeyen connector.',
-            'ko-KR': '알수없는 연동',
+            ko: '알수없는 연동',
           },
           target: key,
           userId: connectors[key]?.userId,
