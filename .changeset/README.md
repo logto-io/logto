@@ -9,7 +9,7 @@ We have a quick list of common questions to get you started engaging with this p
 
 ## Logto publish flow
 
-For now, changesets only supports tagging packages separately, instead of tagging a "release group". There is an [open issue](https://github.com/changesets/changesets/issues/683) which is still hanging in the air.
+For now, Changesets only supports tagging packages separately, instead of tagging a "release group". There is an [open issue](https://github.com/changesets/changesets/issues/683) that is still hanging in the air.
 
 So, we are using our own "grouping" release strategy in this monorepo:
 
