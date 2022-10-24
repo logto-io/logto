@@ -9,16 +9,13 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 
 import type { SignInExperienceForm } from '../../types';
-import ConnectorSetupWarning from './ConnectorSetupWarning';
+import ConnectorSetupWarning from './components/ConnectorSetupWarning';
+import {
+  requiredVerifySignUpIdentifiers,
+  signUpIdentifiers,
+  signUpIdentifierToRequiredConnectorMapping,
+} from './constants';
 import * as styles from './index.module.scss';
-
-const signUpIdentifiers = Object.values(SignUpIdentifier);
-
-const requireVerifyIdentifiers = new Set([
-  SignUpIdentifier.Email,
-  SignUpIdentifier.Phone,
-  SignUpIdentifier.EmailOrPhone,
-]);
 
 const SignUpForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -40,7 +37,7 @@ const SignUpForm = () => {
       return;
     }
 
-    if (requireVerifyIdentifiers.has(signUpIdentifier)) {
+    if (requiredVerifySignUpIdentifiers.includes(signUpIdentifier)) {
       resetField('signUp.password');
       setValue('signUp.verify', true);
     }
@@ -80,7 +77,9 @@ const SignUpForm = () => {
           )}
         />
         {signUpIdentifier !== SignUpIdentifier.None && (
-          <ConnectorSetupWarning signUpIdentifier={signUpIdentifier} />
+          <ConnectorSetupWarning
+            requiredConnectors={signUpIdentifierToRequiredConnectorMapping[signUpIdentifier]}
+          />
         )}
       </FormField>
       {signUpIdentifier !== SignUpIdentifier.None && (
@@ -108,7 +107,7 @@ const SignUpForm = () => {
                 <Checkbox
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
                   value={value}
-                  disabled={requireVerifyIdentifiers.has(signUpIdentifier)}
+                  disabled={requiredVerifySignUpIdentifiers.includes(signUpIdentifier)}
                   onChange={onChange}
                 />
               )}

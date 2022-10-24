@@ -50,6 +50,15 @@ const sign_in_exp = {
       verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
       social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
     },
+    sign_in: {
+      title: 'SIGN IN', // UNTRANSLATED
+      sign_in_identifier_and_auth: 'Sign in identifier and authentication', // UNTRANSLATED
+      description:
+        'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.', // UNTRANSLATED
+      password_auth: 'Password', // UNTRANSLATED
+      verification_code_auth: 'Verification code', // UNTRANSLATED
+      auth_swap_tip: 'Swap to change the priority', // UNTRANSLATED
+    },
   },
   sign_in_methods: {
     title: '로그인 방법',
@@ -123,13 +132,11 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector: '',
-    no_connector_phone:
+    no_connector_sms:
       'SMS 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
     no_connector_email:
       '이메일 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
-    no_connector_email_or_phone:
-      'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ', // UNTRANSLATED
-    no_connector_none:
+    no_connector_social:
       '소셜 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
     no_added_social_connector:
       '보다 많은 소셜 연동들을 설정하여, 고객에게 보다 나은 경험을 제공해보세요.',

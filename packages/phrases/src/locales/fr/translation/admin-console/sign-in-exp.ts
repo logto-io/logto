@@ -55,6 +55,15 @@ const sign_in_exp = {
       verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
       social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
     },
+    sign_in: {
+      title: 'SIGN IN', // UNTRANSLATED
+      sign_in_identifier_and_auth: 'Sign in identifier and authentication', // UNTRANSLATED
+      description:
+        'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.', // UNTRANSLATED
+      password_auth: 'Password', // UNTRANSLATED
+      verification_code_auth: 'Verification code', // UNTRANSLATED
+      auth_swap_tip: 'Swap to change the priority', // UNTRANSLATED
+    },
   },
   sign_in_methods: {
     title: 'METHODES DE CONNEXION',
@@ -128,13 +137,11 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector: '',
-    no_connector_phone:
+    no_connector_sms:
       "Vous n'avez pas encore configuré de connecteur SMS. Votre expérience de connexion ne sera pas disponible tant que vous n'aurez pas terminé les paramètres. ",
     no_connector_email:
       "Vous n'avez pas encore configuré de connecteur Email. Votre expérience de connexion ne sera pas disponible tant que vous n'aurez pas terminé les paramètres. ",
-    no_connector_email_or_phone:
-      'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ', // UNTRANSLATED
-    no_connector_none:
+    no_connector_social:
       "Vous n'avez pas encore configuré de connecteurs sociaux. Votre expérience de connexion ne sera pas disponible tant que vous n'aurez pas terminé les paramètres. ",
     no_added_social_connector:
       "Vous avez maintenant configuré quelques connecteurs sociaux. Assurez-vous d'en ajouter quelques-uns à votre expérience de connexion.",
