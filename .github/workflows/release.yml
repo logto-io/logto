@@ -104,9 +104,13 @@ jobs:
       - name: Create release pull request
         uses: changesets/action@v1
         with:
-          publish: changeset tag && git push --tags
+          # Disable temporarily since https://github.com/changesets/changesets/issues/833.
+          # Wait for our customized publish flow.
+          # publish: pnpm changeset tag
           commit: 'release: version packages'
           title: 'release: version packages'
+          # Create by our rules defined in `/.changeset/README.md`.
+          createGithubReleases: false
           setupGitUser: false
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
