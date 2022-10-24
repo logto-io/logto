@@ -9,16 +9,13 @@
   margin-top: _.unit(2);
 }
 
-.title {
-  @include _.title;
-}
-
 :global(body.mobile) {
   .container {
     margin-top: _.unit(2);
   }
 
   .title {
+    @include _.title;
     margin-bottom: _.unit(6);
   }
 }
@@ -29,7 +26,7 @@
   }
 
   .title {
-    font: var(--font-title-medium);
+    @include _.title-desktop;
     margin-bottom: _.unit(4);
   }
 }

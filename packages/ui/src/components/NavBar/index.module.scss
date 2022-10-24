@@ -7,13 +7,14 @@
   justify-content: center;
   padding: _.unit(3) _.unit(10);
   position: relative;
+  color: var(--color-type-primary);
 
   > svg {
     fill: current-color;
   }
 
   .title {
-    font: var(--font-body-bold);
+    font: var(--font-title-3);
   }
 }
 
@@ -22,8 +23,7 @@
   left: _.unit(-2);
   top: 50%;
   transform: translateY(-50%);
-  color: --color-text;
-  font: var(--font-body-bold);
+  font: var(--font-label-2);
   @include _.flex-row;
   cursor: pointer;
 }
@@ -36,8 +36,6 @@
 
 :global(body.desktop) {
   .backButton {
-    color: var(--color-primary);
-
     &:hover {
       text-decoration: underline;
     }

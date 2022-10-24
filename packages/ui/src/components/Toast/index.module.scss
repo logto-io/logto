@@ -15,11 +15,10 @@
   margin: 0 auto;
   padding: _.unit(2) _.unit(4);
   max-width: 295px;
-  font: var(--font-body);
-  color: var(--color-primary-button-text);
+  font: var(--font-body-1);
+  color: var(--color-static-white);
   border-radius: var(--radius);
-  background: var(--color-toast);
-  box-shadow: var(--shadow-2);
+  background: var(--color-bg-toast);
   text-align: center;
   word-break: break-word;
   pointer-events: auto;
@@ -44,7 +43,7 @@
 
 :global(body.desktop) {
   .toast {
-    border: _.border(var(--color-toast-border));
     padding: _.unit(3) _.unit(4);
+    box-shadow: var(--color-shadow);
   }
 }

@@ -24,7 +24,7 @@ const AppContent = ({ children }: Props) => {
   }, [setToast]);
 
   // Set Primary Color
-  useColorTheme(experienceSettings?.color.primaryColor, experienceSettings?.color.darkPrimaryColor);
+  useColorTheme();
 
   // Set Theme Mode
   useEffect(() => {
@@ -42,7 +42,7 @@ const AppContent = ({ children }: Props) => {
     <ConfirmModalProvider>
       <div className={styles.container}>
         {platform === 'web' && <div className={styles.placeHolder} />}
-        <main className={styles.content}>{children}</main>
+        <main className={styles.main}>{children}</main>
         {platform === 'web' && <div className={styles.placeHolder} />}
         <Toast message={toast} callback={hideToast} />
       </div>

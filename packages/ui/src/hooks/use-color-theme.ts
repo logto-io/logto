@@ -1,54 +1,59 @@
 import { absoluteDarken, absoluteLighten } from '@logto/core-kit';
 import color from 'color';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
+
+import { PageContext } from '@/hooks/use-page-context';
 
 const generateLightColorLibrary = (primaryColor: color) => ({
-  [`--color-light-brand`]: primaryColor.hex(),
-  [`--color-light-brand-hover`]: absoluteLighten(primaryColor, 10).string(),
-  [`--color-light-brand-pressed`]: absoluteDarken(primaryColor, 10).string(),
-  [`--color-light-overlay-brand-focused`]: primaryColor.alpha(0.16).string(),
-  [`--color-light-overlay-brand-hover`]: primaryColor.alpha(0.08).string(),
-  [`--color-light-overlay-brand-pressed`]: primaryColor.alpha(0.12).string(),
+  [`--color-brand-default`]: primaryColor.hex(),
+  [`--color-brand-hover`]: absoluteLighten(primaryColor, 10).string(),
+  [`--color-brand-pressed`]: absoluteDarken(primaryColor, 10).string(),
+  [`--color-overlay-brand-focused`]: primaryColor.alpha(0.16).string(),
+  [`--color-overlay-brand-hover`]: primaryColor.alpha(0.08).string(),
+  [`--color-overlay-brand-pressed`]: primaryColor.alpha(0.12).string(),
 });
 
 const generateDarkColorLibrary = (primaryColor: color) => ({
-  [`--color-dark-brand`]: primaryColor.hex(),
-  [`--color-dark-brand-hover`]: absoluteLighten(primaryColor, 10).string(),
-  [`--color-dark-brand-pressed`]: absoluteDarken(primaryColor, 10).string(),
-  [`--color-dark-overlay-brand-focused`]: absoluteLighten(primaryColor, 17)
-    .rgb()
-    .alpha(0.16)
-    .string(),
-  [`--color-dark-overlay-brand-hover`]: absoluteLighten(primaryColor, 17)
-    .rgb()
-    .alpha(0.08)
-    .string(),
-  [`--color-dark-overlay-brand-pressed`]: absoluteLighten(primaryColor, 17)
-    .rgb()
-    .alpha(0.12)
-    .string(),
+  [`--color-brand-default`]: primaryColor.hex(),
+  [`--color-brand-hover`]: absoluteLighten(primaryColor, 10).string(),
+  [`--color-brand-pressed`]: absoluteDarken(primaryColor, 10).string(),
+  [`--color-overlay-brand-focused`]: absoluteLighten(primaryColor, 30).rgb().alpha(0.16).string(),
+  [`--color-overlay-brand-hover`]: absoluteLighten(primaryColor, 30).rgb().alpha(0.08).string(),
+  [`--color-overlay-brand-pressed`]: absoluteLighten(primaryColor, 30).rgb().alpha(0.12).string(),
 });
 
-const useColorTheme = (primaryColor?: string, darkPrimaryColor?: string) => {
+const useColorTheme = () => {
+  const { theme, experienceSettings } = useContext(PageContext);
+  const primaryColor = experienceSettings?.color.primaryColor;
+  const darkPrimaryColor = experienceSettings?.color.darkPrimaryColor;
+
   useEffect(() => {
     if (!primaryColor) {
       return;
     }
 
     const lightPrimary = color(primaryColor);
-    const darkPrimary = color(darkPrimaryColor);
 
-    const lightColorLibrary = generateLightColorLibrary(lightPrimary);
+    if (theme === 'light') {
+      const lightColorLibrary = generateLightColorLibrary(lightPrimary);
+
+      for (const [key, value] of Object.entries(lightColorLibrary)) {
+        document.body.style.setProperty(key, value);
+      }
+
+      return;
+    }
+
+    const darkPrimary = darkPrimaryColor
+      ? color(darkPrimaryColor)
+      : absoluteLighten(lightPrimary, 10);
+
     const darkColorLibrary = generateDarkColorLibrary(darkPrimary);
 
-    for (const [key, value] of Object.entries(lightColorLibrary)) {
-      document.documentElement.style.setProperty(key, value);
-    }
-
     for (const [key, value] of Object.entries(darkColorLibrary)) {
-      document.documentElement.style.setProperty(key, value);
+      document.body.style.setProperty(key, value);
     }
-  }, [darkPrimaryColor, primaryColor]);
+  }, [darkPrimaryColor, primaryColor, theme]);
 };
 
 export default useColorTheme;

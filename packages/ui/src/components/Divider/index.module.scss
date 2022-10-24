@@ -3,13 +3,13 @@
 
 .divider {
   @include _.flex-row;
-  font: var(--font-body);
-  color: var(--color-caption);
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
 
   .line {
     flex: 1;
     height: 1px;
-    background: var(--color-divider);
+    background: var(--color-line-divider);
 
     &:first-child {
       margin-right: _.unit(4);

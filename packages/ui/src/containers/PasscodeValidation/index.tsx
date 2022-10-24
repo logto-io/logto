@@ -117,11 +117,7 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
           </Trans>
         </div>
       ) : (
-        <TextLink
-          className={styles.link}
-          text="description.resend_passcode"
-          onClick={resendPasscodeHandler}
-        />
+        <TextLink text="description.resend_passcode" onClick={resendPasscodeHandler} />
       )}
     </form>
   );
