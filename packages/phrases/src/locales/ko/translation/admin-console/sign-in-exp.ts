@@ -136,8 +136,6 @@ const sign_in_exp = {
       'SMS 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
     no_connector_email:
       '이메일 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
-    no_connector_email_or_sms:
-      'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ', // UNTRANSLATED
     no_connector_social:
       '소셜 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
     no_added_social_connector:

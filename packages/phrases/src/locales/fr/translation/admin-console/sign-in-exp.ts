@@ -141,8 +141,6 @@ const sign_in_exp = {
       "Vous n'avez pas encore configuré de connecteur SMS. Votre expérience de connexion ne sera pas disponible tant que vous n'aurez pas terminé les paramètres. ",
     no_connector_email:
       "Vous n'avez pas encore configuré de connecteur Email. Votre expérience de connexion ne sera pas disponible tant que vous n'aurez pas terminé les paramètres. ",
-    no_connector_email_or_sms:
-      'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ', // UNTRANSLATED
     no_connector_social:
       "Vous n'avez pas encore configuré de connecteurs sociaux. Votre expérience de connexion ne sera pas disponible tant que vous n'aurez pas terminé les paramètres. ",
     no_added_social_connector:

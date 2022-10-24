@@ -139,8 +139,6 @@ const sign_in_exp = {
       'Ainda não configurou um conector de SMS. A experiência de login não será ativada até que conclua as configurações primeiro. ',
     no_connector_email:
       'Ainda não configurou um conector de email. A experiência de login não será ativada até que conclua as configurações primeiro. ',
-    no_connector_email_or_sms:
-      'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ', // UNTRANSLATED
     no_connector_social:
       'Ainda não configurou um conector social. A experiência de login não será ativada até que conclua as configurações primeiro. ',
     no_added_social_connector:

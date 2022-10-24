@@ -132,7 +132,6 @@ const sign_in_exp = {
     no_connector: '',
     no_connector_sms: '你还没有设置 SMS 连接器。你需完成设置后登录体验才会生效。',
     no_connector_email: '你还没有设置 email 连接器。你需完成设置后登录体验才会生效。',
-    no_connector_email_or_sms: '你还没有设置 email 和 SMS 连接器。你需完成设置后登录体验才会生效。',
     no_connector_social: '你还没有设置社交连接器。你需完成设置后登录体验才会生效。',
     no_added_social_connector: '你已经成功设置了一些社交连接器。点按「+」添加一些到你的登录体验。',
   },

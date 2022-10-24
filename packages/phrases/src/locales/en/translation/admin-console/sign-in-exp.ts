@@ -139,8 +139,6 @@ const sign_in_exp = {
       'You haven’t set up a SMS connector yet. Your sign in experience won’t go live until you finish the settings first. ',
     no_connector_email:
       'You haven’t set up an Email connector yet. Your sign in experience won’t go live until you finish the settings first. ',
-    no_connector_email_or_sms:
-      'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
     no_connector_social:
       'You haven’t set up any social connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
     no_added_social_connector:

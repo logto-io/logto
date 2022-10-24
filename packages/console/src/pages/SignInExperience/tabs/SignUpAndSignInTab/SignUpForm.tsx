@@ -9,7 +9,7 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 
 import type { SignInExperienceForm } from '../../types';
-import ConnectorSetupWarning from './ConnectorSetupWarning';
+import ConnectorSetupWarning from './components/ConnectorSetupWarning';
 import { requiredVerifySignUpIdentifiers, signUpIdentifiers } from './constants';
 import * as styles from './index.module.scss';
 

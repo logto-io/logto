@@ -140,8 +140,6 @@ const sign_in_exp = {
       'Henüz bir SMS bağlayıcısı kurmadınız. Öncelikle ayarları tamamlayana kadar oturum açma deneyiminiz yayınlanmayacaktır. ',
     no_connector_email:
       'Henüz bir e-posta adresi bağlayıcısı kurmadınız. Öncelikle ayarları tamamlayana kadar oturum açma deneyiminiz yayınlanmayacaktır. ',
-    no_connector_email_or_sms:
-      'You haven’t set up both Email and SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ', // UNTRANSLATED
     no_connector_social:
       'Henüz herhangi bir social connector kurmadınız. Öncelikle ayarları tamamlayana kadar oturum açma deneyiminiz yayınlanmayacaktır. ',
     no_added_social_connector:

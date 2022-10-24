@@ -2,7 +2,6 @@ import type { ConnectorResponse, SignUpIdentifier } from '@logto/schemas';
 import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { snakeCase } from 'snake-case';
 import useSWR from 'swr';
 
 import Alert from '@/components/Alert';
@@ -17,24 +16,6 @@ type Props = {
 
 // TODO: @yijun add this util to essentials
 const unreachableCaseGuardError = (guardedCase: never) => new Error(`Expect unreachable`);
-
-const getNoConnectorI18nContext = (connectorTypes: ConnectorType[]) => {
-  const { length } = connectorTypes;
-
-  if (length === 1) {
-    return connectorTypes[0]?.toLocaleLowerCase() ?? '';
-  }
-
-  if (
-    length === 2 &&
-    connectorTypes.includes(ConnectorType.Email) &&
-    connectorTypes.includes(ConnectorType.Sms)
-  ) {
-    return [ConnectorType.Email, ConnectorType.Sms].join('_or_').toLocaleLowerCase();
-  }
-
-  return '';
-};
 
 const ConnectorSetupWarning = ({ signUpIdentifier, signInIdentifiers }: Props) => {
   const { data: connectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
@@ -89,14 +70,19 @@ const ConnectorSetupWarning = ({ signUpIdentifier, signInIdentifiers }: Props) =
   }
 
   return (
-    <Alert
-      action="general.set_up"
-      href={connectorTypes.includes(ConnectorType.Social) ? '/connectors/social' : '/connectors'}
-    >
-      {t('sign_in_exp.setup_warning.no_connector', {
-        context: snakeCase(getNoConnectorI18nContext(connectorTypes)),
-      })}
-    </Alert>
+    <>
+      {connectorTypes.map((connectorType) => (
+        <Alert
+          key={connectorType}
+          action="general.set_up"
+          href={connectorType === ConnectorType.Social ? '/connectors/social' : '/connectors'}
+        >
+          {t('sign_in_exp.setup_warning.no_connector', {
+            context: connectorType.toLowerCase(),
+          })}
+        </Alert>
+      ))}
+    </>
   );
 };
 
