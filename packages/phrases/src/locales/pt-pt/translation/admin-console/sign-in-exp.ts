@@ -128,9 +128,9 @@ const sign_in_exp = {
     },
     authentication: {
       title: 'AUTENTICAÇÃO',
-      enable_create_account: 'Permitir criar conta?',
-      enable_create_account_description:
-        'Ativa ou desativa a criação de contas. Depois de desativado, os seus clientes não poderão criar contas por meio da pagina de login, mas você poderá adicionar utiizadores na Consola de Administrador.',
+      enable_user_registration: 'Enable user registration', // UNTRANSLATED
+      enable_user_registration_description:
+        'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.', // UNTRANSLATED
     },
   },
   setup_warning: {
