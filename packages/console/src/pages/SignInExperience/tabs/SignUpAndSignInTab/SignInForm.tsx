@@ -20,7 +20,7 @@ const SignInForm = () => {
     <>
       <div className={styles.title}>{t('sign_in_exp.sign_up_and_sign_in.sign_in.title')}</div>
       <FormField title="sign_in_exp.sign_up_and_sign_in.sign_in.sign_in_identifier_and_auth">
-        <div className={styles.signInDescription}>
+        <div className={styles.formFieldDescription}>
           {t('sign_in_exp.sign_up_and_sign_in.sign_in.description')}
         </div>
         <Controller

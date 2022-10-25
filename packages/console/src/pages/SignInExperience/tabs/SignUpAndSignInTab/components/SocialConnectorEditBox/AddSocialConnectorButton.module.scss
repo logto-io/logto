@@ -1,0 +1,37 @@
+@use '@/scss/underscore' as _;
+
+.dropdown {
+  min-width: 208px;
+}
+
+.plusIcon {
+  color: var(--color-text-secondary);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+
+  .logo {
+    margin-right: _.unit(3);
+    width: 20px;
+    height: 20px;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .name {
+    font: var(--font-body-medium);
+  }
+
+  .icon {
+    width: 16px;
+    height: 16px;
+    object-fit: cover;
+    margin-left: _.unit(1);
+    color: var(--color-text-secondary);
+  }
+}

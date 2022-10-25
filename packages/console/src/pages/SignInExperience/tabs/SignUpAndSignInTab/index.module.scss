@@ -10,6 +10,12 @@
   }
 }
 
+.formFieldDescription {
+  font: var(--font-body-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: _.unit(2);
+}
+
 .socialOnlyDescription {
   margin-left: _.unit(1);
   color: var(--color-text-secondary);
@@ -19,9 +25,4 @@
   > :not(:first-child) {
     margin-top: _.unit(3);
   }
-}
-
-.signInDescription {
-  font: var(--font-body-medium);
-  color: var(--color-text-secondary);
 }

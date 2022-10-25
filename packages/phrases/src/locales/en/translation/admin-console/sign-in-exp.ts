@@ -62,6 +62,18 @@ const sign_in_exp = {
       verification_code_auth: 'Verification code',
       auth_swap_tip: 'Swap to change the priority',
     },
+    social_sign_in: {
+      title: 'SOCIAL SIGN IN',
+      social_sign_in: 'Social sign in',
+      description:
+        'Users may need to enter required identifier when register through social accounts. This was defined by your sign up identifier.',
+      add_social_connector: 'Add Social Connector',
+      set_up_hint: {
+        not_in_list: 'Not in the list?',
+        set_up_more: 'Set up more',
+        go_to: 'social connectors or go to “Connectors” section.',
+      },
+    },
   },
   sign_in_methods: {
     title: 'SIGN-IN METHODS',
