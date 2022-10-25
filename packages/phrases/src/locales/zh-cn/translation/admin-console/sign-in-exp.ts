@@ -126,6 +126,11 @@ const sign_in_exp = {
       enable_user_registration: 'Enable user registration', // UNTRANSLATED
       enable_user_registration_description:
         'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.', // UNTRANSLATED
+      enable_forgot_password: 'Enable forgot password', // UNTRANSLATED
+      enable_forgot_password_description:
+        'This is the way for users to reset the password when their email or phone number get verified.', // UNTRANSLATED
+      disallow_forgot_password_description:
+        'Your identifiers can’t be verified due to the current settings. Enable email or phone in sign up or select verification code in sign in to enable forget password.', // UNTRANSLATED
     },
   },
   setup_warning: {
