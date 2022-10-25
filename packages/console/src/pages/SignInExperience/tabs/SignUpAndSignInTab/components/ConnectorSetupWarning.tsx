@@ -18,9 +18,7 @@ const ConnectorSetupWarning = ({ requiredConnectors }: Props) => {
     return null;
   }
 
-  const missingConnectors = (
-    requiredConnectors.length === 0 ? [ConnectorType.Social] : requiredConnectors
-  ).filter(
+  const missingConnectors = requiredConnectors.filter(
     (connectorType) => !connectors.some(({ type, enabled }) => type === connectorType && enabled)
   );
 

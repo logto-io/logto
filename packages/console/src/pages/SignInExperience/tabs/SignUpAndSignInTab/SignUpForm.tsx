@@ -76,11 +76,9 @@ const SignUpForm = () => {
             />
           )}
         />
-        {signUpIdentifier !== SignUpIdentifier.None && (
-          <ConnectorSetupWarning
-            requiredConnectors={signUpIdentifierToRequiredConnectorMapping[signUpIdentifier]}
-          />
-        )}
+        <ConnectorSetupWarning
+          requiredConnectors={signUpIdentifierToRequiredConnectorMapping[signUpIdentifier]}
+        />
       </FormField>
       {signUpIdentifier !== SignUpIdentifier.None && (
         <FormField

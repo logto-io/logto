@@ -124,19 +124,14 @@ const SignInMethodEditBox = ({
           </DraggableItem>
         ))}
       </DragDropProvider>
-      {requiredSignInIdentifiers.length > 0 && (
-        <ConnectorSetupWarning
-          requiredConnectors={requiredSignInIdentifiers.reduce<ConnectorType[]>(
-            (connectors, signInIdentifier) => {
-              return [
-                ...connectors,
-                ...signInIdentifierToRequiredConnectorMapping[signInIdentifier],
-              ];
-            },
-            []
-          )}
-        />
-      )}
+      <ConnectorSetupWarning
+        requiredConnectors={value.reduce<ConnectorType[]>(
+          (connectors, { identifier: signInIdentifier }) => {
+            return [...connectors, ...signInIdentifierToRequiredConnectorMapping[signInIdentifier]];
+          },
+          []
+        )}
+      />
       <AddSignInMethodButton options={signInIdentifierOptions} onSelected={addSignInMethod} />
     </div>
   );
