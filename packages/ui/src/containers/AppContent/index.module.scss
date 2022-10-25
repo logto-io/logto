@@ -1,90 +1,88 @@
 @use '@/scss/underscore' as _;
-@use '@/scss/mobile' as mobile;
-@use '@/scss/desktop' as desktop;
+@use '@/scss/colors' as colors;
+@use '@/scss/fonts' as fonts;
 
-:root {
-  --color-light-brand: #5d34f2;
-  --color-light-overlay-brand-focused: rgba(93, 52, 242, 16%);
-  --color-light-overlay-brand-hover: rgba(93, 52, 242, 8%);
-  --color-light-overlay-brand-pressed: rgba(93, 52, 242, 12%);
-  --color-light-brand-hover: #7350f4;
-  --color-light-brand-pressed: #4718f0;
+/* Preview Settings */
+.preview {
+  pointer-events: none;
+  user-select: none;
 
-  --color-dark-brand: #7958ff;
-  --color-dark-overlay-brand-focused: rgba(121, 88, 255, 16%);
-  --color-dark-overlay-brand-hover: rgba(121, 88, 255, 8%);
-  --color-dark-overlay-brand-pressed: rgba(121, 88, 255, 12%);
-  --color-dark-brand-hover: #957aff;
-  --color-dark-brand-pressed: #5d36ff;
+  main {
+    pointer-events: none;
+    user-select: none;
+  }
 }
 
+/* Foundation */
 body {
-  background-color: var(--color-base);
+  --radius: 8px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: auto;
   word-break: break-word;
+  @include colors.static;
+
+  &.light {
+    @include colors.light;
+  }
+
+  &.dark {
+    @include colors.dark;
+  }
+
+  @include fonts.fonts;
 }
 
+/* Main Layout */
 .container {
   position: absolute;
   inset: 0;
-  background: var(--color-base);
-  color: var(--color-text);
-  font: var(--font-body);
+  color: var(--color-type-primary);
   overflow: auto;
   @include _.flex_column(center, normal);
 }
 
-.content {
+.main {
   @include _.flex_column;
-  background-color: var(--color-surface);
 }
 
 .placeHolder {
   flex: 1;
 }
 
-/* Foundation */
 :global(body.mobile) {
-  &.light {
-    @include mobile.colors-light-theme;
+  --max-width: 360px;
+  background: var(--color-bg-body);
+
+  .container {
+    background: var(--color-bg-body);
+    font: var(--font-body-1);
   }
 
-  &.dark {
-    @include mobile.colors-dark-theme;
-  }
-
-  @include mobile.colors-universal;
-  @include mobile.fonts;
-  @include mobile.layout;
-
-  .content {
+  .main {
     flex: 1;
     align-self: stretch;
     padding: _.unit(4) _.unit(5);
     position: relative;
+    background: var(--color-bg-body);
   }
 }
 
 :global(body.desktop) {
-  &.light {
-    @include desktop.colors-light-theme;
+  --max-width: 400px;
+  background: var(--color-bg-float-base);
+
+  .container {
+    background: var(--color-bg-float-base);
+    font: var(--font-body-2);
   }
 
-  &.dark {
-    @include desktop.colors-dark-theme;
-  }
-
-  @include desktop.colors-universal;
-  @include desktop.fonts;
-  @include desktop.layout;
-
-  .content {
+  .main {
     width: 640px;
     min-height: 640px;
     position: relative;
     padding: _.unit(6);
     border-radius: 16px;
-    box-shadow: var(--shadow-1);
+    background: var(--color-bg-float);
+    box-shadow: var(--color-shadow);
   }
 }

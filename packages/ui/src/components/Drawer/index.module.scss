@@ -13,7 +13,7 @@
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   padding: _.unit(5) _.unit(5) 0;
-  background: var(--color-dialogue);
+  background: var(--color-bg-body-overlay);
   max-height: 411px;
   @include _.flex-column(stretch, normal);
 }
@@ -25,7 +25,7 @@
   margin-bottom: _.unit(4);
 
   svg {
-    color: var(--color-icon);
+    color: var(--color-type-secondary);
     width: 20px;
     height: 20px;
   }

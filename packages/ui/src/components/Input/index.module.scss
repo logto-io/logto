@@ -3,9 +3,8 @@
 .wrapper {
   position: relative;
   @include _.flex-row;
-  border: _.border();
+  border: _.border(var(--color-line-border));
   border-radius: var(--radius);
-  background: var(--color-layer);
   // fix in safari input field line-height issue
   height: 44px;
   overflow: hidden;
@@ -19,7 +18,7 @@
     top: 50%;
     transform: translateY(-50%);
     display: none;
-    color: var(--color-icon);
+    color: var(--color-type-secondary);
     width: 24px;
     height: 24px;
   }
@@ -28,25 +27,25 @@
     padding: 0 _.unit(4);
     flex: 1;
     background: none;
-    caret-color: var(--color-primary);
-    font: var(--font-body-bold);
-    color: var(--color-text);
+    caret-color: var(--color-brand-default);
+    font: var(--font-body-1);
+    color: var(--color-type-primary);
     align-self: stretch;
 
     &::placeholder {
-      color: var(--color-caption);
+      color: var(--color-type-secondary);
     }
 
     // Overwrite webkit auto-fill style
     &:-webkit-autofill {
-      box-shadow: 0 0 0 30px var(--color-layer) inset;
-      -webkit-text-fill-color: var(--color-text);
+      box-shadow: 0 0 0 30px var(--color-bg-body) inset;
+      -webkit-text-fill-color: var(--color-type-primary);
       transition: none;
     }
   }
 
   &:focus-within {
-    border: _.border(var(--color-primary));
+    border: _.border(var(--color-brand-default));
 
     .actionButton {
       display: block;
@@ -59,7 +58,7 @@
   }
 
   &.error {
-    border: _.border(var(--color-error));
+    border: _.border(var(--color-danger-default));
   }
 }
 
@@ -69,19 +68,11 @@
 
 :global(body.desktop) {
   .wrapper {
-    border: _.border(var(--color-border));
     border-radius: 6px;
     outline: 3px solid transparent;
-    background: var(--color-surface);
 
     input {
-      font: var(--font-body);
-
-      // Overwrite webkit auto-fill style
-      &:-webkit-autofill {
-        box-shadow: 0 0 0 30px var(--color-surface) inset;
-        -webkit-text-fill-color: var(--color-text);
-      }
+      font: var(--font-body-2);
     }
 
     .actionButton {
@@ -90,12 +81,12 @@
     }
 
     &.error {
-      border: _.border(var(--color-error));
+      border: _.border(var(--color-danger-default));
     }
 
     &:focus-within {
-      border-color: var(--color-primary);
-      outline-color: var(--color-focused-variant);
+      border: _.border(var(--color-brand-default));
+      outline-color: var(--color-overlay-brand-focused);
     }
   }
 }

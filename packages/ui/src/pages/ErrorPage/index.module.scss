@@ -35,8 +35,7 @@
 
 :global(body.desktop) {
   .title {
-    @include _.title;
-    font: var(--font-title-medium);
+    @include _.title-desktop;
     margin-bottom: _.unit(2);
   }
 
