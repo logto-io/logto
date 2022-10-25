@@ -21,7 +21,7 @@ export const validateSignIn = (
     );
   }
 
-  if (signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Phone)) {
+  if (signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Sms)) {
     assertThat(
       enabledConnectors.some((item) => item.type === ConnectorType.Sms),
       new RequestError({
@@ -54,9 +54,9 @@ export const validateSignIn = (
       break;
     }
 
-    case SignUpIdentifier.Phone: {
+    case SignUpIdentifier.Sms: {
       assertThat(
-        signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Phone),
+        signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Sms),
         new RequestError({
           code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
         })
@@ -65,10 +65,10 @@ export const validateSignIn = (
       break;
     }
 
-    case SignUpIdentifier.EmailOrPhone: {
+    case SignUpIdentifier.EmailOrSms: {
       assertThat(
         signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Email) &&
-          signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Phone),
+          signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Sms),
         new RequestError({
           code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
         })

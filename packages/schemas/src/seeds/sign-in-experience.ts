@@ -50,7 +50,7 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
         isPasswordPrimary: false,
       },
       {
-        identifier: SignInIdentifier.Phone,
+        identifier: SignInIdentifier.Sms,
         password: true,
         verificationCode: true,
         isPasswordPrimary: false,

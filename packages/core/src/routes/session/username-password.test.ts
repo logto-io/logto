@@ -153,7 +153,7 @@ describe('sessionRoutes', () => {
           methods: [
             {
               ...mockSignInMethod,
-              identifier: SignInIdentifier.Phone,
+              identifier: SignInIdentifier.Sms,
               password: false,
             },
           ],

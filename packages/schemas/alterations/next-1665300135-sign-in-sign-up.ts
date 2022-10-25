@@ -1,6 +1,6 @@
 import { sql } from 'slonik';
 
-import { AlterationScript } from '../lib/types/alteration';
+import type { AlterationScript } from '../lib/types/alteration';
 
 enum SignInMethodState {
   Primary = 'primary',
@@ -26,15 +26,15 @@ type SignInExperience = {
 
 enum SignUpIdentifier {
   Email = 'email',
-  Phone = 'phone',
+  Sms = 'sms',
   Username = 'username',
-  EmailOrPhone = 'emailOrPhone',
+  EmailOrSms = 'emailOrSms',
   None = 'none',
 }
 
 enum SignInIdentifier {
   Email = 'email',
-  Phone = 'phone',
+  Sms = 'Sms',
   Username = 'username',
 }
 
@@ -65,7 +65,7 @@ const parseSignInMethodToSignInIdentifier = (
   }
 
   if (method === SignInMethodKey.Sms) {
-    return SignInIdentifier.Phone;
+    return SignInIdentifier.Sms;
   }
 };
 
@@ -79,7 +79,7 @@ const parseSignInMethodToSignUpIdentifier = (method?: SignInMethodKey): SignUpId
   }
 
   if (method === SignInMethodKey.Sms) {
-    return SignUpIdentifier.Phone;
+    return SignUpIdentifier.Sms;
   }
 
   return SignUpIdentifier.None;

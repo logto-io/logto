@@ -22,7 +22,7 @@ describe('validate sign-up', () => {
 
     test('should throw when there is no enabled email connector and identifier is email or phone', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.EmailOrPhone }, []);
+        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms }, []);
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -33,7 +33,7 @@ describe('validate sign-up', () => {
 
     test('should throw when there is no enabled sms connector and identifier is phone', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.Phone }, []);
+        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.Sms }, []);
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -44,7 +44,7 @@ describe('validate sign-up', () => {
 
     test('should throw when there is no enabled email connector and identifier is email or phone', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.EmailOrPhone }, [
+        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms }, [
           mockAliyunDmConnector,
         ]);
       }).toMatchError(
@@ -99,7 +99,7 @@ describe('validate sign-up', () => {
     test('should throw when identifier is email or phone', async () => {
       expect(() => {
         validateSignUp(
-          { ...mockSignUp, identifier: SignUpIdentifier.EmailOrPhone, verify: false },
+          { ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms, verify: false },
           enabledConnectors
         );
       }).toMatchError(

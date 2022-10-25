@@ -31,7 +31,7 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContext, Respons
     assertThat(
       signInExperience.signIn.methods.some(
         ({ identifier, verificationCode }) =>
-          identifier === SignInIdentifier.Phone && verificationCode
+          identifier === SignInIdentifier.Sms && verificationCode
       ),
       new RequestError({
         code: 'user.sign_in_method_not_enabled',
@@ -117,8 +117,8 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContext, Respo
   return async (ctx, next) => {
     const signInExperience = await findDefaultSignInExperience();
     assertThat(
-      signInExperience.signUp.identifier === SignUpIdentifier.Phone ||
-        signInExperience.signUp.identifier === SignUpIdentifier.EmailOrPhone,
+      signInExperience.signUp.identifier === SignUpIdentifier.Sms ||
+        signInExperience.signUp.identifier === SignUpIdentifier.EmailOrSms,
       new RequestError({
         code: 'user.sign_up_method_not_enabled',
         status: 422,
@@ -159,7 +159,7 @@ export const emailRegisterAction = <StateT, ContextT extends WithLogContext, Res
     const signInExperience = await findDefaultSignInExperience();
     assertThat(
       signInExperience.signUp.identifier === SignUpIdentifier.Email ||
-        signInExperience.signUp.identifier === SignUpIdentifier.EmailOrPhone,
+        signInExperience.signUp.identifier === SignUpIdentifier.EmailOrSms,
       new RequestError({
         code: 'user.sign_up_method_not_enabled',
         status: 422,

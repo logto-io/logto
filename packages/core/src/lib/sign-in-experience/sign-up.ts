@@ -8,7 +8,7 @@ import assertThat from '@/utils/assert-that';
 export const validateSignUp = (signUp: SignUp, enabledConnectors: LogtoConnector[]) => {
   if (
     signUp.identifier === SignUpIdentifier.Email ||
-    signUp.identifier === SignUpIdentifier.EmailOrPhone
+    signUp.identifier === SignUpIdentifier.EmailOrSms
   ) {
     assertThat(
       enabledConnectors.some((item) => item.type === ConnectorType.Email),
@@ -20,8 +20,8 @@ export const validateSignUp = (signUp: SignUp, enabledConnectors: LogtoConnector
   }
 
   if (
-    signUp.identifier === SignUpIdentifier.Phone ||
-    signUp.identifier === SignUpIdentifier.EmailOrPhone
+    signUp.identifier === SignUpIdentifier.Sms ||
+    signUp.identifier === SignUpIdentifier.EmailOrSms
   ) {
     assertThat(
       enabledConnectors.some((item) => item.type === ConnectorType.Sms),
@@ -42,7 +42,7 @@ export const validateSignUp = (signUp: SignUp, enabledConnectors: LogtoConnector
   }
 
   if (
-    [SignUpIdentifier.Phone, SignUpIdentifier.Email, SignUpIdentifier.EmailOrPhone].includes(
+    [SignUpIdentifier.Sms, SignUpIdentifier.Email, SignUpIdentifier.EmailOrSms].includes(
       signUp.identifier
     )
   ) {
