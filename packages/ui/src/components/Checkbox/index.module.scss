@@ -12,11 +12,11 @@
       display: none;
 
       &:nth-child(1) {
-        color: var(--color-icon);
+        color: var(--color-type-secondary);
       }
 
       &:nth-child(2) {
-        color: var(--color-primary);
+        color: var(--color-brand-default);
       }
     }
   }

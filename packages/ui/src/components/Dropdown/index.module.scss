@@ -1,10 +1,10 @@
 @use '@/scss/underscore' as _;
 
 .content {
-  background: var(--color-dialogue);
-  box-shadow: var(--shadow-2);
+  background: var(--color-bg-float-overlay);
+  box-shadow: var(--color-shadow);
   border-radius: var(--radius);
-  border: _.border(var(--color-divider));
+  border: _.border(var(--color-line-divider));
 
   &:focus {
     outline: none;

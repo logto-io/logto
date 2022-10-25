@@ -18,6 +18,5 @@
 
 .message {
   text-align: center;
-  font: var(--font-caption);
-  color: var(--color-caption);
+  @include _.text-hint;
 }

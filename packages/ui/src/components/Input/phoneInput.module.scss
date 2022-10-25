@@ -1,8 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .countryCodeSelector {
-  color: var(--color-text);
-  font: var(--font-body);
+  color: var(--color-type-primary);
   border: none;
   background: none;
   width: auto;
@@ -20,10 +19,6 @@
     width: 100%;
     height: 100%;
     font-size: 0;
-
-    option {
-      font: var(--font-body);
-    }
   }
 
   + input {
@@ -33,8 +28,14 @@
 
 :global(body.mobile) {
   .countryCodeSelector {
+    font: var(--font-label-1);
+
+    > select option {
+      font: var(--font-label-1);
+    }
+
     > svg {
-      color: var(--color-primary);
+      color: var(--color-brand-default);
       margin-left: _.unit(1);
       width: 16px;
       height: 16px;
@@ -44,8 +45,14 @@
 
 :global(body.desktop) {
   .countryCodeSelector {
+    font: var(--font-body-2);
+
+    > select option {
+      font: var(--font-body-2);
+    }
+
     > svg {
-      color: var(--color-icon);
+      color: var(--color-type-secondary);
       margin-left: _.unit(2);
       width: 20px;
       height: 20px;

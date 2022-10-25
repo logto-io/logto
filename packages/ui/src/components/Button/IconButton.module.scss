@@ -11,19 +11,19 @@
   cursor: pointer;
 
   > svg {
-    color: var(--color-icon);
+    color: var(--color-type-secondary);
+  }
+
+  &:active {
+    background: var(--color-overlay-neutral-pressed);
   }
 }
 
 
 :global(body.desktop) {
   .iconButton {
-    &:active {
-      background: var(--color-pressed);
-    }
-
     &:hover:not(:active) {
-      background: var(--color-hover);
+      background: var(--color-overlay-neutral-hover);
     }
   }
 }

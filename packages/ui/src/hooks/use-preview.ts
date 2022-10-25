@@ -2,7 +2,7 @@ import { ConnectorPlatform } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 
-import * as styles from '@/App.module.scss';
+import * as styles from '@/containers/AppContent/index.module.scss';
 import type { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';

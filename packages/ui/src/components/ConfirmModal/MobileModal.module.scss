@@ -15,14 +15,14 @@
 
 .container {
   padding: _.unit(5);
-  background: var(--color-dialogue);
+  background: var(--color-bg-body-overlay);
   border-radius: var(--radius);
 }
 
 .content {
   text-align: center;
-  font: var(--font-body);
-  color: var(--color-text);
+  font: var(--font-body-1);
+  color: var(--color-type-primary);
 }
 
 .footer {
@@ -59,7 +59,7 @@
 
   .footer {
     margin-top: 0;
-    border-top: 1px solid var(--color-divider);
+    border-top: 1px solid var(--color-line-divider);
     padding: _.unit(5);
   }
 }
