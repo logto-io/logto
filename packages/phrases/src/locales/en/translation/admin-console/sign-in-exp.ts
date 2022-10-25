@@ -128,9 +128,9 @@ const sign_in_exp = {
     },
     authentication: {
       title: 'AUTHENTICATION',
-      enable_create_account: 'Enable create account',
-      enable_create_account_description:
-        'Enable or disable create account (sign-up). Once disabled, your customers can’t create accounts through the sign-in UI, but you can still add users in Admin Console.',
+      enable_user_registration: 'Enable user registration',
+      enable_user_registration_description:
+        'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
     },
   },
   setup_warning: {
