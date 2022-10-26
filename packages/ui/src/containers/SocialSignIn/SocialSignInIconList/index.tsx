@@ -36,7 +36,7 @@ const SocialSignInIconList = ({
           <SocialIconButton
             key={id}
             className={styles.socialButton}
-            logo={getLogoUrl({ theme, logoUrl, darkLogoUrl, isApple: isAppleConnector() })}
+            logo={getLogoUrl({ theme, logoUrl, darkLogoUrl, isApple: isAppleConnector(target) })}
             target={target}
             onClick={() => {
               void invokeSocialSignIn(connector);
