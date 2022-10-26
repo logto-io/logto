@@ -128,6 +128,7 @@ export const languageInfoGuard = z.object({
 
 export type LanguageInfo = z.infer<typeof languageInfoGuard>;
 
+/* ---------------- Following Types Will Be Deprecated ------------- */
 export enum SignInMethodKey {
   Username = 'username',
   Email = 'email',
@@ -149,22 +150,7 @@ export const signInMethodsGuard = z.object({
 });
 
 export type SignInMethods = z.infer<typeof signInMethodsGuard>;
-
-export enum SignUpIdentifier {
-  Email = 'email',
-  Sms = 'sms',
-  Username = 'username',
-  EmailOrSms = 'emailOrSms',
-  None = 'none',
-}
-
-export const signUpGuard = z.object({
-  identifier: z.nativeEnum(SignUpIdentifier),
-  password: z.boolean(),
-  verify: z.boolean(),
-});
-
-export type SignUp = z.infer<typeof signUpGuard>;
+/* ---------------------------------------------------------------- */
 
 export enum SignInIdentifier {
   Email = 'email',
@@ -172,18 +158,32 @@ export enum SignInIdentifier {
   Username = 'username',
 }
 
+export const signUpMethodGuard = z.object({
+  identifier: z.nativeEnum(SignInIdentifier),
+  password: z.boolean(),
+  verify: z.boolean(),
+});
+
+export const signUpGuard = z.object({
+  methods: signUpMethodGuard.array(),
+});
+
+export type SignUpMethod = z.infer<typeof signUpMethodGuard>;
+export type SignUp = z.infer<typeof signUpGuard>;
+
+export const signInMethodGuard = z.object({
+  identifier: z.nativeEnum(SignInIdentifier),
+  password: z.boolean(),
+  verificationCode: z.boolean(),
+  isPasswordPrimary: z.boolean(),
+});
+
 export const signInGuard = z.object({
-  methods: z
-    .object({
-      identifier: z.nativeEnum(SignInIdentifier),
-      password: z.boolean(),
-      verificationCode: z.boolean(),
-      isPasswordPrimary: z.boolean(),
-    })
-    .array(),
+  methods: signInMethodGuard.array(),
 });
 
 export type SignIn = z.infer<typeof signInGuard>;
+export type SignInMethod = z.infer<typeof signInMethodGuard>;
 
 export const connectorTargetsGuard = z.string().array();
 

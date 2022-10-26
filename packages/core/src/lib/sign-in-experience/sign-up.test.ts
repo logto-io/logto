@@ -1,6 +1,6 @@
-import { ConnectorType, SignUpIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
-import { mockAliyunDmConnector, mockAliyunSmsConnector, mockSignUp } from '@/__mocks__';
+import { mockAliyunDmConnector, mockAliyunSmsConnector } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 
 import { validateSignUp } from './sign-up';
@@ -11,7 +11,18 @@ describe('validate sign-up', () => {
   describe('There must be at least one enabled connector for the specific identifier.', () => {
     test('should throw when there is no enabled email connector and identifier is email', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.Email }, []);
+        validateSignUp(
+          {
+            methods: [
+              {
+                identifier: SignInIdentifier.Email,
+                password: true,
+                verify: true,
+              },
+            ],
+          },
+          []
+        );
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -22,7 +33,18 @@ describe('validate sign-up', () => {
 
     test('should throw when there is no enabled email connector and identifier is email or phone', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms }, []);
+        validateSignUp(
+          {
+            methods: [
+              {
+                identifier: SignInIdentifier.Email,
+                password: true,
+                verify: true,
+              },
+            ],
+          },
+          []
+        );
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -33,7 +55,23 @@ describe('validate sign-up', () => {
 
     test('should throw when there is no enabled sms connector and identifier is phone', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.Sms }, []);
+        validateSignUp(
+          {
+            methods: [
+              {
+                identifier: SignInIdentifier.Email,
+                password: false,
+                verify: true,
+              },
+              {
+                identifier: SignInIdentifier.Sms,
+                password: false,
+                verify: true,
+              },
+            ],
+          },
+          []
+        );
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -44,9 +82,23 @@ describe('validate sign-up', () => {
 
     test('should throw when there is no enabled email connector and identifier is email or phone', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms }, [
-          mockAliyunDmConnector,
-        ]);
+        validateSignUp(
+          {
+            methods: [
+              {
+                identifier: SignInIdentifier.Email,
+                password: false,
+                verify: true,
+              },
+              {
+                identifier: SignInIdentifier.Sms,
+                password: false,
+                verify: true,
+              },
+            ],
+          },
+          [mockAliyunDmConnector]
+        );
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -59,7 +111,15 @@ describe('validate sign-up', () => {
   test('should throw when identifier is username and password is false', async () => {
     expect(() => {
       validateSignUp(
-        { ...mockSignUp, identifier: SignUpIdentifier.Username, password: false },
+        {
+          methods: [
+            {
+              identifier: SignInIdentifier.Username,
+              password: false,
+              verify: false,
+            },
+          ],
+        },
         enabledConnectors
       );
     }).toMatchError(
@@ -73,7 +133,15 @@ describe('validate sign-up', () => {
     test('should throw when identifier is email', async () => {
       expect(() => {
         validateSignUp(
-          { ...mockSignUp, identifier: SignUpIdentifier.Email, verify: false },
+          {
+            methods: [
+              {
+                identifier: SignInIdentifier.Email,
+                password: true,
+                verify: false,
+              },
+            ],
+          },
           enabledConnectors
         );
       }).toMatchError(
@@ -86,7 +154,15 @@ describe('validate sign-up', () => {
     test('should throw when identifier is phone', async () => {
       expect(() => {
         validateSignUp(
-          { ...mockSignUp, identifier: SignUpIdentifier.Email, verify: false },
+          {
+            methods: [
+              {
+                identifier: SignInIdentifier.Sms,
+                password: true,
+                verify: false,
+              },
+            ],
+          },
           enabledConnectors
         );
       }).toMatchError(
@@ -99,7 +175,20 @@ describe('validate sign-up', () => {
     test('should throw when identifier is email or phone', async () => {
       expect(() => {
         validateSignUp(
-          { ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms, verify: false },
+          {
+            methods: [
+              {
+                identifier: SignInIdentifier.Email,
+                password: false,
+                verify: false,
+              },
+              {
+                identifier: SignInIdentifier.Sms,
+                password: false,
+                verify: false,
+              },
+            ],
+          },
           enabledConnectors
         );
       }).toMatchError(

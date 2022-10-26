@@ -105,6 +105,8 @@ const errors = {
     enabled_connector_not_found: '활성된 {{type}} 연동을 찾을 수 없어요.',
     not_one_and_only_one_primary_sign_in_method:
       '반드시 하나의 메인 로그인 방법이 설정되어야 해요. 입력된 값을 확인해주세요.',
+    sign_up_methods_not_supported:
+      'Username is not allowed to combine with other passwordless identifiers', // UNTRANSLATED
     username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
     passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
     miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.', // UNTRANSLATED

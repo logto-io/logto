@@ -1,5 +1,5 @@
 import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
-import { SignInIdentifier, SignUpIdentifier, UserRole } from '@logto/schemas';
+import { SignInIdentifier, UserRole } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
@@ -77,7 +77,9 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
 
       const signInExperience = await findDefaultSignInExperience();
       assertThat(
-        signInExperience.signUp.identifier === SignUpIdentifier.Username,
+        signInExperience.signUp.methods.some(
+          ({ identifier }) => identifier === SignInIdentifier.Username
+        ),
         new RequestError({
           code: 'user.sign_up_method_not_enabled',
           status: 422,

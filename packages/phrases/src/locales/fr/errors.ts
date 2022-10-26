@@ -116,6 +116,8 @@ const errors = {
     enabled_connector_not_found: 'Le connecteur {{type}} activé est introuvable.',
     not_one_and_only_one_primary_sign_in_method:
       'Il doit y avoir une et une seule méthode de connexion primaire. Veuillez vérifier votre saisie.',
+    sign_up_methods_not_supported:
+      'Username is not allowed to combine with other passwordless identifiers', // UNTRANSLATED
     username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
     passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
     miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.', // UNTRANSLATED

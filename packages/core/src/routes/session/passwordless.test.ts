@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import type { User } from '@logto/schemas';
-import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { PasscodeType, SignInIdentifier } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
 
@@ -18,8 +18,13 @@ const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
   signUp: {
-    ...mockSignInExperience.signUp,
-    identifier: SignUpIdentifier.Username,
+    methods: [
+      {
+        identifier: SignInIdentifier.Username,
+        password: true,
+        verify: false,
+      },
+    ],
   },
 }));
 
@@ -521,8 +526,13 @@ describe('session -> passwordlessRoutes', () => {
       findDefaultSignInExperience.mockResolvedValue({
         ...mockSignInExperience,
         signUp: {
-          ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          methods: [
+            {
+              identifier: SignInIdentifier.Email,
+              password: true,
+              verify: true,
+            },
+          ],
         },
       });
     });
@@ -655,8 +665,13 @@ describe('session -> passwordlessRoutes', () => {
       findDefaultSignInExperience.mockResolvedValue({
         ...mockSignInExperience,
         signUp: {
-          ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Sms,
+          methods: [
+            {
+              identifier: SignInIdentifier.Sms,
+              password: true,
+              verify: true,
+            },
+          ],
         },
       });
     });
@@ -767,8 +782,13 @@ describe('session -> passwordlessRoutes', () => {
       findDefaultSignInExperience.mockResolvedValueOnce({
         ...mockSignInExperience,
         signUp: {
-          ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          methods: [
+            {
+              identifier: SignInIdentifier.Email,
+              password: true,
+              verify: true,
+            },
+          ],
         },
       });
 
@@ -782,8 +802,13 @@ describe('session -> passwordlessRoutes', () => {
       findDefaultSignInExperience.mockResolvedValue({
         ...mockSignInExperience,
         signUp: {
-          ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          methods: [
+            {
+              identifier: SignInIdentifier.Email,
+              password: true,
+              verify: true,
+            },
+          ],
         },
       });
     });
@@ -894,8 +919,13 @@ describe('session -> passwordlessRoutes', () => {
       findDefaultSignInExperience.mockResolvedValueOnce({
         ...mockSignInExperience,
         signUp: {
-          ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Sms,
+          methods: [
+            {
+              identifier: SignInIdentifier.Sms,
+              password: true,
+              verify: true,
+            },
+          ],
         },
       });
 

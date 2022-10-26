@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { UserRole, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { UserRole, SignInIdentifier } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
@@ -16,8 +16,13 @@ const hasActiveUsers = jest.fn(async () => true);
 const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
   signUp: {
-    ...mockSignInExperience.signUp,
-    identifier: SignUpIdentifier.Username,
+    methods: [
+      {
+        identifier: SignInIdentifier.Username,
+        password: true,
+        verify: true,
+      },
+    ],
   },
 }));
 
@@ -248,8 +253,13 @@ describe('sessionRoutes', () => {
       findDefaultSignInExperience.mockResolvedValueOnce({
         ...mockSignInExperience,
         signUp: {
-          ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          methods: [
+            {
+              identifier: SignInIdentifier.Email,
+              password: true,
+              verify: true,
+            },
+          ],
         },
       });
 

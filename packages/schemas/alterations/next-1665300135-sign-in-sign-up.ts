@@ -24,14 +24,6 @@ type SignInExperience = {
   };
 };
 
-enum SignUpIdentifier {
-  Email = 'email',
-  Sms = 'sms',
-  Username = 'username',
-  EmailOrSms = 'emailOrSms',
-  None = 'none',
-}
-
 enum SignInIdentifier {
   Email = 'email',
   Sms = 'Sms',
@@ -48,13 +40,15 @@ type SignIn = {
 };
 
 type SignUp = {
-  identifier: SignUpIdentifier;
-  password: boolean;
-  verify: boolean;
+  methods: Array<{
+    identifier: SignInIdentifier;
+    password: boolean;
+    verify: boolean;
+  }>;
 };
 
 const parseSignInMethodToSignInIdentifier = (
-  method: SignInMethodKey
+  method?: SignInMethodKey
 ): SignInIdentifier | undefined => {
   if (method === SignInMethodKey.Username) {
     return SignInIdentifier.Username;
@@ -67,22 +61,6 @@ const parseSignInMethodToSignInIdentifier = (
   if (method === SignInMethodKey.Sms) {
     return SignInIdentifier.Sms;
   }
-};
-
-const parseSignInMethodToSignUpIdentifier = (method?: SignInMethodKey): SignUpIdentifier => {
-  if (method === SignInMethodKey.Username) {
-    return SignUpIdentifier.Username;
-  }
-
-  if (method === SignInMethodKey.Email) {
-    return SignUpIdentifier.Email;
-  }
-
-  if (method === SignInMethodKey.Sms) {
-    return SignUpIdentifier.Sms;
-  }
-
-  return SignUpIdentifier.None;
 };
 
 const alteration: AlterationScript = {
@@ -135,11 +113,18 @@ const alteration: AlterationScript = {
         }
       }
 
-      const signUpIdentifier = parseSignInMethodToSignUpIdentifier(primaryMethod);
+      const signUpIdentifier = parseSignInMethodToSignInIdentifier(primaryMethod);
+
       const signUp: SignUp = {
-        identifier: signUpIdentifier,
-        verify: true,
-        password: signUpIdentifier === SignUpIdentifier.Username,
+        methods: signUpIdentifier
+          ? [
+              {
+                identifier: signUpIdentifier,
+                verify: true,
+                password: signUpIdentifier === SignInIdentifier.Username,
+              },
+            ]
+          : [],
       };
 
       await pool.query(sql`

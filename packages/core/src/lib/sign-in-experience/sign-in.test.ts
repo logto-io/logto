@@ -1,4 +1,4 @@
-import { ConnectorType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import {
   mockAliyunDmConnector,
@@ -32,10 +32,18 @@ describe('validate sign-in', () => {
             ],
           },
           {
-            ...mockSignUp,
-            identifier: SignUpIdentifier.EmailOrSms,
-            password: false,
-            verify: true,
+            methods: [
+              {
+                identifier: SignInIdentifier.Email,
+                password: false,
+                verify: true,
+              },
+              {
+                identifier: SignInIdentifier.Sms,
+                password: false,
+                verify: true,
+              },
+            ],
           },
           enabledConnectors
         );
@@ -55,9 +63,13 @@ describe('validate sign-in', () => {
             ],
           },
           {
-            ...mockSignUp,
-            identifier: SignUpIdentifier.Username,
-            password: true,
+            methods: [
+              {
+                identifier: SignInIdentifier.Username,
+                password: true,
+                verify: false,
+              },
+            ],
           },
           []
         );
@@ -124,8 +136,13 @@ describe('validate sign-in', () => {
             ],
           },
           {
-            ...mockSignUp,
-            identifier: SignUpIdentifier.Username,
+            methods: [
+              {
+                identifier: SignInIdentifier.Username,
+                password: true,
+                verify: false,
+              },
+            ],
           },
           enabledConnectors
         );
@@ -148,8 +165,13 @@ describe('validate sign-in', () => {
             ],
           },
           {
-            ...mockSignUp,
-            identifier: SignUpIdentifier.Email,
+            methods: [
+              {
+                identifier: SignInIdentifier.Email,
+                password: true,
+                verify: true,
+              },
+            ],
           },
           enabledConnectors
         );
@@ -172,8 +194,13 @@ describe('validate sign-in', () => {
             ],
           },
           {
-            ...mockSignUp,
-            identifier: SignUpIdentifier.Sms,
+            methods: [
+              {
+                identifier: SignInIdentifier.Sms,
+                password: true,
+                verify: true,
+              },
+            ],
           },
           enabledConnectors
         );
@@ -196,8 +223,18 @@ describe('validate sign-in', () => {
             ],
           },
           {
-            ...mockSignUp,
-            identifier: SignUpIdentifier.EmailOrSms,
+            methods: [
+              {
+                identifier: SignInIdentifier.Email,
+                password: false,
+                verify: true,
+              },
+              {
+                identifier: SignInIdentifier.Sms,
+                password: false,
+                verify: true,
+              },
+            ],
           },
           enabledConnectors
         );
@@ -222,9 +259,13 @@ describe('validate sign-in', () => {
           ],
         },
         {
-          ...mockSignUp,
-          identifier: SignUpIdentifier.Email,
-          password: true,
+          methods: [
+            {
+              identifier: SignInIdentifier.Email,
+              password: true,
+              verify: true,
+            },
+          ],
         },
         enabledConnectors
       );
@@ -248,10 +289,13 @@ describe('validate sign-in', () => {
           ],
         },
         {
-          ...mockSignUp,
-          identifier: SignUpIdentifier.Email,
-          password: false,
-          verify: true,
+          methods: [
+            {
+              identifier: SignInIdentifier.Email,
+              password: false,
+              verify: true,
+            },
+          ],
         },
         enabledConnectors
       );
