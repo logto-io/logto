@@ -10,7 +10,7 @@ export const requiredVerifySignUpIdentifiers = [
   SignUpIdentifier.EmailOrSms,
 ];
 
-export const requiredVerifySignInIdentifiers = [SignInIdentifier.Email, SignInIdentifier.Phone];
+export const requiredVerifySignInIdentifiers = [SignInIdentifier.Email, SignInIdentifier.Sms];
 
 export const signUpToSignInIdentifierMapping: { [key in SignUpIdentifier]: SignInIdentifier[] } = {
   [SignUpIdentifier.Username]: [SignInIdentifier.Username],
