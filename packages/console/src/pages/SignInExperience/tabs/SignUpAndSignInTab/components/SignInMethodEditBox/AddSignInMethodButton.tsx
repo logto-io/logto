@@ -1,21 +1,19 @@
 import type { SignInIdentifier } from '@logto/schemas';
-import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
 
-import Button from '@/components/Button';
-import Dropdown, { DropdownItem } from '@/components/Dropdown';
+import ActionMenu from '@/components/ActionMenu';
+import { DropdownItem } from '@/components/Dropdown';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   options: SignInIdentifier[];
   onSelected: (signInIdentifier: SignInIdentifier) => void;
 };
 
-// TODO: @yijun extract this component to share with the future add social button
 const AddSignInMethodButton = ({ options, onSelected }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const anchorRef = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useState(false);
 
   if (options.length === 0) {
     return null;
@@ -27,37 +25,26 @@ const AddSignInMethodButton = ({ options, onSelected }: Props) => {
   }));
 
   return (
-    <>
-      <div ref={anchorRef}>
-        <Button
-          type="text"
-          size="small"
-          title="general.add_another"
+    <ActionMenu
+      buttonProps={{
+        type: 'text',
+        size: 'small',
+        title: 'general.add_another',
+      }}
+      dropdownHorizontalAlign="start"
+      dropDownClassName={styles.addSignInMethodDropdown}
+    >
+      {candidates.map(({ value, title }) => (
+        <DropdownItem
+          key={value}
           onClick={() => {
-            setIsOpen(true);
+            onSelected(value);
           }}
-        />
-      </div>
-      <Dropdown
-        anchorRef={anchorRef}
-        isOpen={isOpen}
-        horizontalAlign="start"
-        onClose={() => {
-          setIsOpen(false);
-        }}
-      >
-        {candidates.map(({ value, title }) => (
-          <DropdownItem
-            key={value}
-            onClick={() => {
-              onSelected(value);
-            }}
-          >
-            {title}
-          </DropdownItem>
-        ))}
-      </Dropdown>
-    </>
+        >
+          {title}
+        </DropdownItem>
+      ))}
+    </ActionMenu>
   );
 };
 
