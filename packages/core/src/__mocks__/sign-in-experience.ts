@@ -70,7 +70,7 @@ export const mockSignInExperience: SignInExperience = {
   },
   socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
   signInMode: SignInMode.SignInAndRegister,
-  forgotPassword: true,
+  forgotPassword: false,
 };
 
 export const mockColor: Color = {

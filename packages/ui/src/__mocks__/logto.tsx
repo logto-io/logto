@@ -216,7 +216,7 @@ export const mockSignInExperience: SignInExperience = {
   },
   socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
   signInMode: SignInMode.SignInAndRegister,
-  forgotPassword: true,
+  forgotPassword: false,
 };
 
 export const mockSignInExperienceSettings: SignInExperienceSettings = {
@@ -228,5 +228,5 @@ export const mockSignInExperienceSettings: SignInExperienceSettings = {
   secondarySignInMethods: ['email', 'sms', 'social'],
   socialConnectors,
   signInMode: SignInMode.SignInAndRegister,
-  forgotPassword: true,
+  forgotPassword: false,
 };

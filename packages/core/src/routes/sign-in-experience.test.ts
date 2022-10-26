@@ -1,5 +1,5 @@
 import type { SignInExperience, CreateSignInExperience, TermsOfUse } from '@logto/schemas';
-import { SignInMethodState } from '@logto/schemas';
+import { ConnectorType, SignInMethodState } from '@logto/schemas';
 
 import {
   mockFacebookConnector,
@@ -13,6 +13,7 @@ import {
   mockSignUp,
   mockSignIn,
   mockLanguageInfo,
+  mockAliyunSmsConnector,
 } from '@/__mocks__';
 import * as signInExpLib from '@/lib/sign-in-experience';
 import * as signInLib from '@/lib/sign-in-experience/sign-in';
@@ -27,6 +28,7 @@ const logtoConnectors = [
   mockGithubConnector,
   mockGoogleConnector,
   mockWechatConnector,
+  mockAliyunSmsConnector,
 ];
 
 const getLogtoConnectors = jest.fn(async () => logtoConnectors);
@@ -106,6 +108,18 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
+  it('should not allow forgot password without enabled passwordless connector', async () => {
+    getLogtoConnectors.mockResolvedValueOnce(
+      logtoConnectors.filter(
+        ({ type }) => type !== ConnectorType.Sms && type !== ConnectorType.Email
+      )
+    );
+    const response = await signInExperienceRequester
+      .patch('/sign-in-exp')
+      .send({ forgotPassword: true });
+    expect(response.status).toEqual(400);
+  });
+
   it('should succeed to update when the input is valid', async () => {
     const termsOfUse: TermsOfUse = { enabled: false };
     const socialSignInConnectorTargets = ['github', 'facebook', 'wechat'];
@@ -128,7 +142,12 @@ describe('PATCH /sign-in-exp', () => {
       signIn: mockSignIn,
       forgotPassword: true,
     });
-    const connectors = [mockFacebookConnector, mockGithubConnector, mockWechatConnector];
+    const connectors = [
+      mockFacebookConnector,
+      mockGithubConnector,
+      mockWechatConnector,
+      mockAliyunSmsConnector,
+    ];
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateLanguageInfo).toHaveBeenCalledWith(mockLanguageInfo);
@@ -151,6 +170,7 @@ describe('PATCH /sign-in-exp', () => {
         signInMethods: mockSignInMethods,
         socialSignInConnectorTargets,
         signIn: mockSignIn,
+        forgotPassword: true,
       },
     });
   });

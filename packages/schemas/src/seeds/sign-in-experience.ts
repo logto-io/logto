@@ -65,6 +65,7 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   },
   socialSignInConnectorTargets: [],
   signInMode: SignInMode.SignInAndRegister,
+  forgotPassword: false,
 };
 
 export const adminConsoleSignInExperience: CreateSignInExperience = {
