@@ -152,9 +152,9 @@ export type SignInMethods = z.infer<typeof signInMethodsGuard>;
 
 export enum SignUpIdentifier {
   Email = 'email',
-  Phone = 'phone',
+  Sms = 'sms',
   Username = 'username',
-  EmailOrPhone = 'emailOrPhone',
+  EmailOrSms = 'emailOrSms',
   None = 'none',
 }
 
@@ -168,7 +168,7 @@ export type SignUp = z.infer<typeof signUpGuard>;
 
 export enum SignInIdentifier {
   Email = 'email',
-  Phone = 'phone',
+  Sms = 'sms',
   Username = 'username',
 }
 

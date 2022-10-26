@@ -121,7 +121,7 @@ describe('email passwordless flow', () => {
 describe('sms passwordless flow', () => {
   beforeAll(async () => {
     await setUpConnector(mockSmsConnectorId, mockSmsConnectorConfig);
-    await setSignUpIdentifier(SignUpIdentifier.Phone);
+    await setSignUpIdentifier(SignUpIdentifier.Sms);
   });
 
   // Since we can not create a sms register user throw admin. Have to run the register then sign-in concurrently.

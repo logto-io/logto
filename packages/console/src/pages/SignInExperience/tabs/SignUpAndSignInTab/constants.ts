@@ -6,15 +6,15 @@ export const signInIdentifiers = Object.values(SignInIdentifier);
 
 export const requiredVerifySignUpIdentifiers = [
   SignUpIdentifier.Email,
-  SignUpIdentifier.Phone,
-  SignUpIdentifier.EmailOrPhone,
+  SignUpIdentifier.Sms,
+  SignUpIdentifier.EmailOrSms,
 ];
 
 export const signUpToSignInIdentifierMapping: { [key in SignUpIdentifier]: SignInIdentifier[] } = {
   [SignUpIdentifier.Username]: [SignInIdentifier.Username],
   [SignUpIdentifier.Email]: [SignInIdentifier.Email],
-  [SignUpIdentifier.Phone]: [SignInIdentifier.Phone],
-  [SignUpIdentifier.EmailOrPhone]: [SignInIdentifier.Email, SignInIdentifier.Phone],
+  [SignUpIdentifier.Sms]: [SignInIdentifier.Sms],
+  [SignUpIdentifier.EmailOrSms]: [SignInIdentifier.Email, SignInIdentifier.Sms],
   [SignUpIdentifier.None]: [],
 };
 
@@ -23,8 +23,8 @@ export const signUpIdentifierToRequiredConnectorMapping: {
 } = {
   [SignUpIdentifier.Username]: [],
   [SignUpIdentifier.Email]: [ConnectorType.Email],
-  [SignUpIdentifier.Phone]: [ConnectorType.Sms],
-  [SignUpIdentifier.EmailOrPhone]: [ConnectorType.Email, ConnectorType.Sms],
+  [SignUpIdentifier.Sms]: [ConnectorType.Sms],
+  [SignUpIdentifier.EmailOrSms]: [ConnectorType.Email, ConnectorType.Sms],
   [SignUpIdentifier.None]: [],
 };
 
@@ -33,5 +33,5 @@ export const signInIdentifierToRequiredConnectorMapping: {
 } = {
   [SignInIdentifier.Username]: [],
   [SignInIdentifier.Email]: [ConnectorType.Email],
-  [SignInIdentifier.Phone]: [ConnectorType.Sms],
+  [SignInIdentifier.Sms]: [ConnectorType.Sms],
 };

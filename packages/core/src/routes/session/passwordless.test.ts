@@ -656,7 +656,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Phone,
+          identifier: SignUpIdentifier.Sms,
         },
       });
     });
@@ -895,7 +895,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Phone,
+          identifier: SignUpIdentifier.Sms,
         },
       });
 

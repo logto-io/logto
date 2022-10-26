@@ -26,14 +26,14 @@ describe('validate sign-in', () => {
               },
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Phone,
+                identifier: SignInIdentifier.Sms,
                 verificationCode: true,
               },
             ],
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.EmailOrPhone,
+            identifier: SignUpIdentifier.EmailOrSms,
             password: false,
             verify: true,
           },
@@ -95,7 +95,7 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Phone,
+                identifier: SignInIdentifier.Sms,
               },
             ],
           },
@@ -119,7 +119,7 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Phone,
+                identifier: SignInIdentifier.Sms,
               },
             ],
           },
@@ -173,7 +173,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Phone,
+            identifier: SignUpIdentifier.Sms,
           },
           enabledConnectors
         );
@@ -197,7 +197,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.EmailOrPhone,
+            identifier: SignUpIdentifier.EmailOrSms,
           },
           enabledConnectors
         );
