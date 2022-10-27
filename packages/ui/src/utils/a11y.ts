@@ -19,6 +19,9 @@ export const onKeyDownHandler =
 
     if (typeof callback === 'object') {
       callback[key]?.(event);
-      event.preventDefault();
+
+      if (callback[key]) {
+        event.preventDefault();
+      }
     }
   };
