@@ -1,4 +1,4 @@
-import { BrandingStyle, SignInMode } from '@logto/schemas';
+import { BrandingStyle } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
@@ -7,8 +7,8 @@ import AppNotification from '@/containers/AppNotification';
 import { PageContext } from '@/hooks/use-page-context';
 import { getLogoUrl } from '@/utils/logo';
 
+import MainForm from './MainForm';
 import * as styles from './index.module.scss';
-import { PrimarySection, SecondarySection, CreateAccountLink } from './registry';
 
 const SignIn = () => {
   const { experienceSettings, theme, platform } = useContext(PageContext);
@@ -28,24 +28,7 @@ const SignIn = () => {
           headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
           logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
         />
-        <PrimarySection
-          signInMethod={experienceSettings.primarySignInMethod}
-          socialConnectors={experienceSettings.socialConnectors}
-          signInMode={experienceSettings.signInMode}
-        />
-
-        {experienceSettings.signInMode !== SignInMode.Register && (
-          <SecondarySection
-            primarySignInMethod={experienceSettings.primarySignInMethod}
-            secondarySignInMethods={experienceSettings.secondarySignInMethods}
-            socialConnectors={experienceSettings.socialConnectors}
-          />
-        )}
-
-        {experienceSettings.signInMode === SignInMode.SignInAndRegister && (
-          <CreateAccountLink primarySignInMethod={experienceSettings.primarySignInMethod} />
-        )}
-
+        <MainForm />
         <AppNotification />
       </div>
       {platform === 'web' && <div className={styles.placeholderBottom} />}

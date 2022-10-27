@@ -1,5 +1,4 @@
 /* istanbul ignore file */
-// FIXME: @simeng-li
 
 import type { KeyboardEventHandler, KeyboardEvent } from 'react';
 

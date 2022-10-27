@@ -2,7 +2,11 @@ import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { mockSignInExperienceSettings } from '@/__mocks__/logto';
+import {
+  mockSignInExperienceSettings,
+  emailSignInMethod,
+  smsSignInMethod,
+} from '@/__mocks__/logto';
 import { defaultSize } from '@/containers/SocialSignIn/SocialSignInList';
 import SignIn from '@/pages/SignIn';
 
@@ -26,7 +30,10 @@ describe('<SignIn />', () => {
   test('renders with email as primary', async () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider
-        settings={{ ...mockSignInExperienceSettings, primarySignInMethod: 'email' }}
+        settings={{
+          ...mockSignInExperienceSettings,
+          signIn: { methods: [emailSignInMethod] },
+        }}
       >
         <MemoryRouter>
           <SignIn />
@@ -39,7 +46,9 @@ describe('<SignIn />', () => {
 
   test('renders with sms as primary', async () => {
     const { queryByText, container } = renderWithPageContext(
-      <SettingsProvider settings={{ ...mockSignInExperienceSettings, primarySignInMethod: 'sms' }}>
+      <SettingsProvider
+        settings={{ ...mockSignInExperienceSettings, signIn: { methods: [smsSignInMethod] } }}
+      >
         <MemoryRouter>
           <SignIn />
         </MemoryRouter>
@@ -51,9 +60,7 @@ describe('<SignIn />', () => {
 
   test('renders with social as primary', async () => {
     const { container } = renderWithPageContext(
-      <SettingsProvider
-        settings={{ ...mockSignInExperienceSettings, primarySignInMethod: 'social' }}
-      >
+      <SettingsProvider settings={{ ...mockSignInExperienceSettings, signIn: { methods: [] } }}>
         <MemoryRouter>
           <SignIn />
         </MemoryRouter>

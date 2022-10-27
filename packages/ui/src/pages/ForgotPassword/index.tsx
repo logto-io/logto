@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -16,21 +15,12 @@ const ForgotPassword = () => {
   const { t } = useTranslation();
   const { method = '' } = useParams<Props>();
 
-  const forgotPasswordForm = useMemo(() => {
-    if (method === 'sms') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <PhonePasswordless autoFocus hasSwitch type="forgot-password" hasTerms={false} />;
-    }
-
-    if (method === 'email') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <EmailPasswordless autoFocus hasSwitch type="forgot-password" hasTerms={false} />;
-    }
-  }, [method]);
-
+  // TODO: @simeng LOG-4486 apply supported method guard validation. Including the form hasSwitch validation bellow
   if (!['email', 'sms'].includes(method)) {
     return <ErrorPage />;
   }
+
+  const PasswordlessForm = method === 'email' ? EmailPasswordless : PhonePasswordless;
 
   return (
     <div className={styles.wrapper}>
@@ -40,7 +30,8 @@ const ForgotPassword = () => {
         <div className={styles.description}>
           {t(`description.reset_password_description_${method === 'email' ? 'email' : 'sms'}`)}
         </div>
-        {forgotPasswordForm}
+        {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
+        <PasswordlessForm autoFocus hasSwitch type="forgot-password" hasTerms={false} />
       </div>
     </div>
   );

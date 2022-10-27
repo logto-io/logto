@@ -2,8 +2,6 @@ import { fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 
 import PasswordlessSwitch from './PasswordlessSwitch';
 
@@ -22,9 +20,7 @@ describe('<PasswordlessSwitch />', () => {
   test('render sms passwordless switch', () => {
     const { queryByText, getByText } = renderWithPageContext(
       <MemoryRouter initialEntries={['/forgot-password/sms']}>
-        <SettingsProvider>
-          <PasswordlessSwitch target="email" />
-        </SettingsProvider>
+        <PasswordlessSwitch target="email" />
       </MemoryRouter>
     );
 
@@ -42,9 +38,7 @@ describe('<PasswordlessSwitch />', () => {
   test('render email passwordless switch', () => {
     const { queryByText, getByText } = renderWithPageContext(
       <MemoryRouter initialEntries={['/forgot-password/email']}>
-        <SettingsProvider>
-          <PasswordlessSwitch target="sms" />
-        </SettingsProvider>
+        <PasswordlessSwitch target="sms" />
       </MemoryRouter>
     );
 
@@ -54,23 +48,5 @@ describe('<PasswordlessSwitch />', () => {
     fireEvent.click(link);
 
     expect(mockedNavigate).toBeCalledWith({ pathname: '/forgot-password/sms' }, { replace: true });
-  });
-
-  test('should not render the switch if SIE setting does not has the supported sign in method', () => {
-    const { queryByText, getByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/forgot-password/email']}>
-        <SettingsProvider
-          settings={{
-            ...mockSignInExperienceSettings,
-            primarySignInMethod: 'username',
-            secondarySignInMethods: ['email', 'social'],
-          }}
-        >
-          <PasswordlessSwitch target="sms" />
-        </SettingsProvider>
-      </MemoryRouter>
-    );
-
-    expect(queryByText('action.switch_to')).toBeNull();
   });
 });
