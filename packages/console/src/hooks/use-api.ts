@@ -2,7 +2,7 @@ import { useLogto } from '@logto/react';
 import type { RequestErrorBody } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
 import ky from 'ky';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -19,31 +19,27 @@ export class RequestError extends Error {
   }
 }
 
-const useToastError = () => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
-  const toastError = async (response: Response) => {
-    const fallbackErrorMessage = t('errors.unknown_server_error');
-
-    try {
-      const data = await response.json<RequestErrorBody>();
-      toast.error([data.message, data.details].join('\n') || fallbackErrorMessage);
-    } catch {
-      toast.error(fallbackErrorMessage);
-    }
-  };
-
-  return toastError;
-};
-
 type Props = {
   hideErrorToast?: boolean;
 };
 
 const useApi = ({ hideErrorToast }: Props = {}) => {
   const { isAuthenticated, getAccessToken } = useLogto();
-  const { i18n } = useTranslation();
-  const toastError = useToastError();
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  const toastError = useCallback(
+    async (response: Response) => {
+      const fallbackErrorMessage = t('errors.unknown_server_error');
+
+      try {
+        const data = await response.json<RequestErrorBody>();
+        toast.error([data.message, data.details].join('\n') || fallbackErrorMessage);
+      } catch {
+        toast.error(fallbackErrorMessage);
+      }
+    },
+    [t]
+  );
 
   const api = useMemo(
     () =>
