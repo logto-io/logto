@@ -33,6 +33,11 @@ jest.mock('@/queries/user', () => ({
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
   hasActiveUsers: async () => hasActiveUsers(),
+  async findUserByUsername(username: string) {
+    const roleNames = username === 'admin' ? [UserRole.Admin] : [];
+
+    return { id: 'user1', username, roleNames };
+  },
 }));
 
 jest.mock('@/queries/sign-in-experience', () => ({
@@ -40,7 +45,9 @@ jest.mock('@/queries/sign-in-experience', () => ({
 }));
 
 jest.mock('@/lib/user', () => ({
-  async findUserByUsernameAndPassword(username: string, password: string) {
+  async verifyUserPassword(user: User, password: string) {
+    const { username } = user;
+
     if (username !== 'username' && username !== 'admin') {
       throw new RequestError('session.invalid_credentials');
     }
@@ -49,9 +56,7 @@ jest.mock('@/lib/user', () => ({
       throw new RequestError('session.invalid_credentials');
     }
 
-    const roleNames = username === 'admin' ? [UserRole.Admin] : [];
-
-    return { id: 'user1', roleNames };
+    return user;
   },
   generateUserId: () => 'user1',
   encryptUserPassword: (password: string) => ({

@@ -6,15 +6,10 @@ import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { assignInteractionResults } from '@/lib/session';
-import {
-  encryptUserPassword,
-  generateUserId,
-  findUserByUsernameAndPassword,
-  insertUser,
-} from '@/lib/user';
+import { encryptUserPassword, generateUserId, insertUser, verifyUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
-import { hasUser, hasActiveUsers, updateUserById } from '@/queries/user';
+import { hasUser, hasActiveUsers, updateUserById, findUserByUsername } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import type { AnonymousRouter } from '../types';
@@ -52,7 +47,8 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
       const type = 'SignInUsernamePassword';
       ctx.log(type, { username });
 
-      const { id } = await findUserByUsernameAndPassword(username, password);
+      const user = await findUserByUsername(username);
+      const { id } = await verifyUserPassword(user, password);
 
       ctx.log(type, { userId: id });
       await updateUserById(id, { lastSignInAt: Date.now() });
