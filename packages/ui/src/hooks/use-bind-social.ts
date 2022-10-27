@@ -6,7 +6,6 @@ import { is } from 'superstruct';
 import { registerWithSocial, bindSocialRelatedUser } from '@/apis/social';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
-import type { LocalSignInMethod } from '@/types';
 import { bindSocialStateGuard } from '@/types/guard';
 
 const useBindSocial = () => {
@@ -29,13 +28,11 @@ const useBindSocial = () => {
     [asyncBindSocialRelatedUser]
   );
 
+  // TODO: @simeng LOG-4487
   const localSignInMethods = useMemo(() => {
-    const primaryMethod = experienceSettings?.primarySignInMethod;
-    const secondaryMethods = experienceSettings?.secondarySignInMethods ?? [];
+    const signInMethods = experienceSettings?.signIn.methods ?? [];
 
-    return [primaryMethod, ...secondaryMethods].filter(
-      (method): method is LocalSignInMethod => Boolean(method) && method !== 'social'
-    );
+    return signInMethods.map(({ identifier }) => identifier);
   }, [experienceSettings]);
 
   useEffect(() => {

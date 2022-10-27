@@ -161,6 +161,27 @@ export const mockSocialConnectorData = {
   configTemplate: '',
 };
 
+export const emailSignInMethod = {
+  identifier: SignInIdentifier.Email,
+  password: true,
+  verificationCode: true,
+  isPasswordPrimary: true,
+};
+
+export const smsSignInMethod = {
+  identifier: SignInIdentifier.Sms,
+  password: true,
+  verificationCode: true,
+  isPasswordPrimary: true,
+};
+
+export const usernameSignInMethod = {
+  identifier: SignInIdentifier.Username,
+  password: true,
+  verificationCode: false,
+  isPasswordPrimary: true,
+};
+
 export const mockSignInExperience: SignInExperience = {
   id: 'foo',
   color: {
@@ -184,29 +205,10 @@ export const mockSignInExperience: SignInExperience = {
   signUp: {
     identifier: SignUpIdentifier.Username,
     password: true,
-    verify: false,
+    verify: true,
   },
   signIn: {
-    methods: [
-      {
-        identifier: SignInIdentifier.Username,
-        password: true,
-        verificationCode: false,
-        isPasswordPrimary: true,
-      },
-      {
-        identifier: SignInIdentifier.Email,
-        password: true,
-        verificationCode: false,
-        isPasswordPrimary: true,
-      },
-      {
-        identifier: SignInIdentifier.Sms,
-        password: true,
-        verificationCode: false,
-        isPasswordPrimary: true,
-      },
-    ],
+    methods: [usernameSignInMethod, emailSignInMethod, smsSignInMethod],
   },
   signInMethods: {
     username: SignInMethodState.Primary,
@@ -220,12 +222,17 @@ export const mockSignInExperience: SignInExperience = {
 };
 
 export const mockSignInExperienceSettings: SignInExperienceSettings = {
+  id: mockSignInExperience.id,
   color: mockSignInExperience.color,
   branding: mockSignInExperience.branding,
   termsOfUse: mockSignInExperience.termsOfUse,
   languageInfo: mockSignInExperience.languageInfo,
-  primarySignInMethod: 'username',
-  secondarySignInMethods: ['email', 'sms', 'social'],
+  signIn: mockSignInExperience.signIn,
+  signUp: {
+    methods: [SignInIdentifier.Username],
+    password: true,
+    verify: true,
+  },
   socialConnectors,
   signInMode: SignInMode.SignInAndRegister,
   forgotPassword: true,

@@ -1,3 +1,4 @@
+import { SignInIdentifier } from '@logto/schemas';
 import * as s from 'superstruct';
 
 export const bindSocialStateGuard = s.object({
@@ -9,7 +10,10 @@ export const passcodeStateGuard = s.object({
   sms: s.optional(s.string()),
 });
 
-export const passcodeMethodGuard = s.union([s.literal('email'), s.literal('sms')]);
+export const passcodeMethodGuard = s.union([
+  s.literal(SignInIdentifier.Email),
+  s.literal(SignInIdentifier.Sms),
+]);
 
 export const userFlowGuard = s.union([
   s.literal('sign-in'),
