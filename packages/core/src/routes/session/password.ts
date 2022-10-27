@@ -6,29 +6,21 @@ import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { assignInteractionResults } from '@/lib/session';
-import {
-  encryptUserPassword,
-  generateUserId,
-  findUserByUsernameAndPassword,
-  insertUser,
-} from '@/lib/user';
+import { verifyUserPassword, encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
-import { hasUser, hasActiveUsers, updateUserById } from '@/queries/user';
+import { findUserByUsername, hasActiveUsers, hasUser, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import type { AnonymousRouter } from '../types';
 import { getRoutePrefix } from './utils';
 
-export const registerRoute = getRoutePrefix('register', 'username-password');
-export const signInRoute = getRoutePrefix('sign-in', 'username-password');
+export const registerRoute = getRoutePrefix('register', 'password');
+export const signInRoute = getRoutePrefix('sign-in', 'password');
 
-export default function usernamePasswordRoutes<T extends AnonymousRouter>(
-  router: T,
-  provider: Provider
-) {
+export default function passwordRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post(
-    signInRoute,
+    `${signInRoute}/username`,
     koaGuard({
       body: object({
         username: string().min(1),
@@ -52,7 +44,8 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
       const type = 'SignInUsernamePassword';
       ctx.log(type, { username });
 
-      const { id } = await findUserByUsernameAndPassword(username, password);
+      const user = await findUserByUsername(username);
+      const { id } = await verifyUserPassword(user, password);
 
       ctx.log(type, { userId: id });
       await updateUserById(id, { lastSignInAt: Date.now() });
@@ -63,7 +56,7 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    registerRoute,
+    `${registerRoute}/username`,
     koaGuard({
       body: object({
         username: string().regex(usernameRegEx),
