@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
-import { PrimarySocialSignIn } from '@/containers/SocialSignIn';
+import SocialSignIn from '@/containers/SocialSignIn';
 import UsernameSignIn from '@/containers/UsernameSignIn';
 import { PageContext } from '@/hooks/use-page-context';
 
@@ -27,7 +27,7 @@ const MainForm = () => {
 
     default: {
       if (socialConnectors.length > 0) {
-        return <PrimarySocialSignIn className={styles.primarySocial} />;
+        return <SocialSignIn className={styles.primarySocial} />;
       }
 
       return null;

@@ -2,7 +2,7 @@ import TermsOfUse from '@/containers/TermsOfUse';
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import useSocial from '@/hooks/use-social';
 
-import SocialSignInList from '../SocialSignInList';
+import SocialSignInList from './SocialSignInList';
 import * as styles from './index.module.scss';
 
 export const defaultSize = 3;
@@ -11,7 +11,7 @@ type Props = {
   className?: string;
 };
 
-const PrimarySocialSignIn = ({ className }: Props) => {
+const SocialSignIn = ({ className }: Props) => {
   const { socialConnectors } = useSocial();
   useNativeMessageListener();
 
@@ -23,4 +23,4 @@ const PrimarySocialSignIn = ({ className }: Props) => {
   );
 };
 
-export default PrimarySocialSignIn;
+export default SocialSignIn;
