@@ -198,4 +198,4 @@ export const filterPreviewSocialConnectors = (
   return Array.from(connectorMap.values());
 };
 
-export const isAppleConnector = (target: string | undefined) => target === 'apple';
+export const isAppleConnector = (target?: string) => target === 'apple';
