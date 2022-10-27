@@ -38,21 +38,3 @@ export const getSignInExperienceSettings = async (): Promise<SignInExperienceSet
 
   return parseSignInExperienceResponse(response);
 };
-
-export const getSupportedPasswordlessMethods = (settings: SignInExperienceSettings) => {
-  const signUpPasswordlessMethods = settings.signUp.verify
-    ? settings.signUp.methods.filter(
-        (identifier) => identifier === SignInIdentifier.Email || identifier === SignInIdentifier.Sms
-      )
-    : [];
-
-  const signInPasswordlessMethods = settings.signIn.methods
-    .filter(
-      ({ identifier, verificationCode }) =>
-        verificationCode &&
-        (identifier === SignInIdentifier.Email || identifier === SignInIdentifier.Sms)
-    )
-    .map(({ identifier }) => identifier);
-
-  return new Set([...signUpPasswordlessMethods, ...signInPasswordlessMethods]);
-};
