@@ -15,7 +15,7 @@ import type { Method, Operation, VerificationResult, VerificationStorage } from 
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
-  method?: 'passwordless' | 'username-password' | 'social'
+  method?: 'passwordless' | 'password' | 'social'
 ) => {
   return ['session', type, method]
     .filter((value): value is Truthy<typeof value> => value !== undefined)

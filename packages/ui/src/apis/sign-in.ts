@@ -11,7 +11,7 @@ type Response = {
 
 export const signInBasic = async (username: string, password: string, socialToBind?: string) => {
   const result = await api
-    .post(`${apiPrefix}/sign-in/username-password`, {
+    .post(`${apiPrefix}/sign-in/password/username`, {
       json: {
         username,
         password,

@@ -62,7 +62,7 @@ describe('api', () => {
       }),
     });
     await signInBasic(username, password);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/username-password', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/password/username', {
       json: {
         username,
         password,
@@ -97,7 +97,7 @@ describe('api', () => {
       }),
     });
     await signInBasic(username, password, 'github');
-    expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/username-password', {
+    expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/password/username', {
       json: {
         username,
         password,
@@ -173,7 +173,7 @@ describe('api', () => {
 
   it('register', async () => {
     await register(username, password);
-    expect(ky.post).toBeCalledWith('/api/session/register/username-password', {
+    expect(ky.post).toBeCalledWith('/api/session/register/password/username', {
       json: {
         username,
         password,
