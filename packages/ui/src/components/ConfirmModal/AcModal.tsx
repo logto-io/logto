@@ -37,7 +37,7 @@ const AcModal = ({
         </div>
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>
-          <Button title={cancelText} type="outline" size="small" onClick={onClose} />
+          <Button title={cancelText} type="secondary" size="small" onClick={onClose} />
           {onConfirm && <Button title={confirmText} size="small" onClick={onConfirm} />}
         </div>
       </div>
