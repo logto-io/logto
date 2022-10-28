@@ -9,8 +9,8 @@
     color: var(--color-brand-default);
     text-decoration: none;
     font: var(--font-label-2);
-    border-radius: 4px;
-    padding: 4px 2px;
+    border-radius: _.unit(1);
+    padding: _.unit(1) _.unit(0.5);
 
     &:active {
       background: var(--color-overlay-brand-pressed);
@@ -31,7 +31,7 @@
     }
 
     &.primary:focus-visible {
-      border: _.border(var(--color-overlay-brand-focused));
+      outline: _.border(var(--color-overlay-brand-focused));
     }
 
     &.secondary:hover,
