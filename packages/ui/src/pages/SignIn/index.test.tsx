@@ -16,7 +16,7 @@ jest.mock('i18next', () => ({
 
 describe('<SignIn />', () => {
   test('renders with username as primary', async () => {
-    const { queryByText, queryAllByText, container, debug } = renderWithPageContext(
+    const { queryByText, queryAllByText, container } = renderWithPageContext(
       <SettingsProvider>
         <MemoryRouter>
           <SignIn />
@@ -24,14 +24,11 @@ describe('<SignIn />', () => {
       </SettingsProvider>
     );
 
-    debug();
-
     expect(container.querySelector('input[name="username"]')).not.toBeNull();
     expect(queryByText('action.sign_in')).not.toBeNull();
 
     // Other sign-in methods
-    expect(queryByText('input.email')).not.toBeNull();
-    expect(queryByText('input.phone_number')).not.toBeNull();
+    expect(queryByText('secondary.sign_in_with')).not.toBeNull();
 
     // Social
     expect(queryAllByText('action.sign_in_with')).toHaveLength(defaultSize);
