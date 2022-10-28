@@ -5,7 +5,6 @@ import type { ReactNode } from 'react';
 import { useMemo } from 'react';
 import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
 
 import TextLink from '@/components/TextLink';
@@ -29,12 +28,12 @@ const SignInMethodsKeyMap: {
 };
 
 const SignInMethodsLink = ({ signInMethods, template, search, className }: Props) => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
+  const identifiers = signInMethods.map(({ identifier }) => identifier);
 
   const signInMethodsLink = useMemo(
     () =>
-      signInMethods.map(({ identifier }) => (
+      identifiers.map((identifier) => (
         <TextLink
           key={identifier}
           className={styles.signInMethodLink}
@@ -42,7 +41,7 @@ const SignInMethodsLink = ({ signInMethods, template, search, className }: Props
           to={{ pathname: `/sign-in/${identifier}`, search }}
         />
       )),
-    [search, signInMethods]
+    [identifiers, search]
   );
 
   if (signInMethodsLink.length === 0) {
@@ -55,9 +54,9 @@ const SignInMethodsLink = ({ signInMethods, template, search, className }: Props
   }
 
   // With text template
-  const rawText = t(`secondary.${template}`, { methods: signInMethods });
-  const textWithLink: ReactNode = signInMethods.reduce<ReactNode>(
-    (content, { identifier }, index) =>
+  const rawText = t(`secondary.${template}`, { methods: identifiers });
+  const textWithLink: ReactNode = identifiers.reduce<ReactNode>(
+    (content, identifier, index) =>
       // @ts-expect-error: reactStringReplace type bug, using deprecated ReactNodeArray as its input type
       reactStringReplace(content, identifier, () => signInMethodsLink[index]),
     rawText

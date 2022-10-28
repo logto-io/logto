@@ -17,7 +17,9 @@ const SignIn = () => {
       <Main signInMethod={signInMethods[0]} socialConnectors={socialConnectors} />
       {
         // Other sign-in methods
-        otherMethods.length > 0 && <SignInMethodsLink signInMethods={otherMethods} />
+        otherMethods.length > 0 && (
+          <SignInMethodsLink signInMethods={otherMethods} template="sign_in_with" />
+        )
       }
       {
         // Social sign-in methods
