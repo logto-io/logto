@@ -6,14 +6,20 @@ import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { assignInteractionResults } from '@/lib/session';
-import { verifyUserPassword, encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
+import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
-import { findUserByUsername, hasActiveUsers, hasUser, updateUserById } from '@/queries/user';
+import {
+  findUserByEmail,
+  findUserByPhone,
+  findUserByUsername,
+  hasActiveUsers,
+  hasUser,
+} from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import type { AnonymousRouter } from '../types';
-import { getRoutePrefix } from './utils';
+import { getRoutePrefix, signInWithPassword } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'password');
 export const signInRoute = getRoutePrefix('sign-in', 'password');
@@ -28,28 +34,61 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
       }),
     }),
     async (ctx, next) => {
-      const signInExperience = await findDefaultSignInExperience();
-      assertThat(
-        signInExperience.signIn.methods.some(
-          ({ identifier, password }) => identifier === SignInIdentifier.Username && password
-        ),
-        new RequestError({
-          code: 'user.sign_in_method_not_enabled',
-          status: 422,
-        })
-      );
-
-      await provider.interactionDetails(ctx.req, ctx.res);
       const { username, password } = ctx.guard.body;
       const type = 'SignInUsernamePassword';
-      ctx.log(type, { username });
+      await signInWithPassword(ctx, provider, {
+        identifier: SignInIdentifier.Username,
+        password,
+        logType: type,
+        logPayload: { username },
+        findUser: async () => findUserByUsername(username),
+      });
 
-      const user = await findUserByUsername(username);
-      const { id } = await verifyUserPassword(user, password);
+      return next();
+    }
+  );
 
-      ctx.log(type, { userId: id });
-      await updateUserById(id, { lastSignInAt: Date.now() });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
+  router.post(
+    `${signInRoute}/email`,
+    koaGuard({
+      body: object({
+        email: string().min(1),
+        password: string().min(1),
+      }),
+    }),
+    async (ctx, next) => {
+      const { email, password } = ctx.guard.body;
+      const type = 'SignInEmailPassword';
+      await signInWithPassword(ctx, provider, {
+        identifier: SignInIdentifier.Email,
+        password,
+        logType: type,
+        logPayload: { email },
+        findUser: async () => findUserByEmail(email),
+      });
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${signInRoute}/sms`,
+    koaGuard({
+      body: object({
+        phone: string().min(1),
+        password: string().min(1),
+      }),
+    }),
+    async (ctx, next) => {
+      const { phone, password } = ctx.guard.body;
+      const type = 'SignInSmsPassword';
+      await signInWithPassword(ctx, provider, {
+        identifier: SignInIdentifier.Sms,
+        password,
+        logType: type,
+        logPayload: { phone },
+        findUser: async () => findUserByPhone(phone),
+      });
 
       return next();
     }

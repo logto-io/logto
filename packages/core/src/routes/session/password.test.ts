@@ -1,10 +1,9 @@
 import type { User } from '@logto/schemas';
-import { UserRole, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { UserRole, SignUpIdentifier } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience, mockSignInMethod, mockUser } from '@/__mocks__';
-import RequestError from '@/errors/RequestError';
+import { mockSignInExperience, mockUser } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';
 
 import passwordRoutes, { registerRoute, signInRoute } from './password';
@@ -13,13 +12,7 @@ const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const hasActiveUsers = jest.fn(async () => true);
-const findDefaultSignInExperience = jest.fn(async () => ({
-  ...mockSignInExperience,
-  signUp: {
-    ...mockSignInExperience.signUp,
-    identifier: SignUpIdentifier.Username,
-  },
-}));
+const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
 
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
@@ -36,7 +29,7 @@ jest.mock('@/queries/user', () => ({
   async findUserByUsername(username: string) {
     const roleNames = username === 'admin' ? [UserRole.Admin] : [];
 
-    return { id: 'user1', username, roleNames };
+    return { id: 'id', username, roleNames };
   },
 }));
 
@@ -45,17 +38,7 @@ jest.mock('@/queries/sign-in-experience', () => ({
 }));
 
 jest.mock('@/lib/user', () => ({
-  async verifyUserPassword(user: User, password: string) {
-    const { username } = user;
-
-    if (username !== 'username' && username !== 'admin') {
-      throw new RequestError('session.invalid_credentials');
-    }
-
-    if (password !== 'password') {
-      throw new RequestError('session.invalid_credentials');
-    }
-
+  async verifyUserPassword(user: User) {
     return user;
   },
   generateUserId: () => 'user1',
@@ -116,60 +99,52 @@ describe('session -> password routes', () => {
     ],
   });
 
-  describe('POST /session/sign-in/password/username', () => {
-    it('assign result and redirect', async () => {
-      interactionDetails.mockResolvedValueOnce({ params: {} });
-      const response = await sessionRequest.post(`${signInRoute}/username`).send({
-        username: 'username',
-        password: 'password',
-      });
-      expect(response.statusCode).toEqual(200);
-      expect(response.body).toHaveProperty('redirectTo');
-      expect(interactionResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
-        expect.anything()
-      );
+  it('POST /session/sign-in/password/username', async () => {
+    interactionDetails.mockResolvedValueOnce({ params: {} });
+    const response = await sessionRequest.post(`${signInRoute}/username`).send({
+      username: 'username',
+      password: 'password',
     });
+    expect(response.statusCode).toEqual(200);
+    expect(response.body).toHaveProperty('redirectTo');
+    expect(interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ login: { accountId: 'id' } }),
+      expect.anything()
+    );
+  });
 
-    it('throw if user not found', async () => {
-      interactionDetails.mockResolvedValueOnce({ params: {} });
-      const response = await sessionRequest.post(`${signInRoute}/username`).send({
-        username: 'notexistuser',
-        password: 'password',
-      });
-      expect(response.statusCode).toEqual(400);
+  it('POST /session/sign-in/password/email', async () => {
+    interactionDetails.mockResolvedValueOnce({ params: {} });
+    const response = await sessionRequest.post(`${signInRoute}/email`).send({
+      email: 'email',
+      password: 'password',
     });
+    expect(response.statusCode).toEqual(200);
+    expect(response.body).toHaveProperty('redirectTo');
+    expect(interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ login: { accountId: 'id' } }),
+      expect.anything()
+    );
+  });
 
-    it('throw if user found but wrong password', async () => {
-      interactionDetails.mockResolvedValueOnce({ params: {} });
-      const response = await sessionRequest.post(`${signInRoute}/username`).send({
-        username: 'username',
-        password: '_password',
-      });
-      expect(response.statusCode).toEqual(400);
+  it('POST /session/sign-in/password/sms', async () => {
+    interactionDetails.mockResolvedValueOnce({ params: {} });
+    const response = await sessionRequest.post(`${signInRoute}/sms`).send({
+      phone: 'phone',
+      password: 'password',
     });
-
-    it('throw if sign in method is not enabled', async () => {
-      findDefaultSignInExperience.mockResolvedValueOnce({
-        ...mockSignInExperience,
-        signIn: {
-          methods: [
-            {
-              ...mockSignInMethod,
-              identifier: SignInIdentifier.Sms,
-              password: false,
-            },
-          ],
-        },
-      });
-      const response = await sessionRequest.post(`${signInRoute}/username`).send({
-        username: 'username',
-        password: 'password',
-      });
-      expect(response.statusCode).toEqual(422);
-    });
+    expect(response.statusCode).toEqual(200);
+    expect(response.body).toHaveProperty('redirectTo');
+    expect(interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ login: { accountId: 'id' } }),
+      expect.anything()
+    );
   });
 
   describe('POST /session/register/password/username', () => {

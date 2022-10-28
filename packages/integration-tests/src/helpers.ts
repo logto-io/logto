@@ -72,8 +72,12 @@ export const setUpConnector = async (connectorId: string, config: Record<string,
   assert(connector.enabled, new Error('Connector Setup Failed'));
 };
 
-export const setSignUpIdentifier = async (identifier: SignUpIdentifier) => {
-  await updateSignInExperience({ signUp: { identifier, password: true, verify: true } });
+export const setSignUpIdentifier = async (
+  identifier: SignUpIdentifier,
+  password = true,
+  verify = true
+) => {
+  await updateSignInExperience({ signUp: { identifier, password, verify } });
 };
 
 type PasscodeRecord = {

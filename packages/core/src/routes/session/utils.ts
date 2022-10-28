@@ -1,6 +1,6 @@
-import type { LogType, PasscodeType } from '@logto/schemas';
+import type { LogPayload, LogType, PasscodeType, SignInIdentifier, User } from '@logto/schemas';
 import { logTypeGuard } from '@logto/schemas';
-import type { Truthy } from '@silverhand/essentials';
+import type { Nullable, Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
@@ -8,6 +8,11 @@ import type { ZodType } from 'zod';
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
+import { assignInteractionResults } from '@/lib/session';
+import { verifyUserPassword } from '@/lib/user';
+import type { LogContext } from '@/middleware/koa-log';
+import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
+import { updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { verificationTimeout } from './consts';
@@ -93,4 +98,39 @@ export const clearVerificationResult = async (ctx: Context, provider: Provider) 
     const { verification, ...rest } = result;
     await provider.interactionResult(ctx.req, ctx.res, rest);
   }
+};
+
+type SignInWithPasswordParameter = {
+  identifier: SignInIdentifier;
+  password: string;
+  logType: LogType;
+  logPayload: LogPayload;
+  findUser: () => Promise<Nullable<User>>;
+};
+
+export const signInWithPassword = async (
+  ctx: Context & LogContext,
+  provider: Provider,
+  { identifier, findUser, password, logType, logPayload }: SignInWithPasswordParameter
+) => {
+  const signInExperience = await findDefaultSignInExperience();
+  assertThat(
+    signInExperience.signIn.methods.some(
+      (method) => method.password && method.identifier === identifier
+    ),
+    new RequestError({
+      code: 'user.sign_in_method_not_enabled',
+      status: 422,
+    })
+  );
+
+  await provider.interactionDetails(ctx.req, ctx.res);
+  ctx.log(logType, logPayload);
+
+  const user = await findUser();
+  const { id } = await verifyUserPassword(user, password);
+
+  ctx.log(logType, { userId: id });
+  await updateUserById(id, { lastSignInAt: Date.now() });
+  await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
 };

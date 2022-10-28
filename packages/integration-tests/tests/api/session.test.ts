@@ -47,7 +47,7 @@ describe('username and password flow', () => {
 describe('email passwordless flow', () => {
   beforeAll(async () => {
     await setUpConnector(mockEmailConnectorId, mockEmailConnectorConfig);
-    await setSignUpIdentifier(SignUpIdentifier.Email);
+    await setSignUpIdentifier(SignUpIdentifier.Email, false);
   });
 
   // Since we can not create a email register user throw admin. Have to run the register then sign-in concurrently.
@@ -121,7 +121,7 @@ describe('email passwordless flow', () => {
 describe('sms passwordless flow', () => {
   beforeAll(async () => {
     await setUpConnector(mockSmsConnectorId, mockSmsConnectorConfig);
-    await setSignUpIdentifier(SignUpIdentifier.Sms);
+    await setSignUpIdentifier(SignUpIdentifier.Sms, false);
   });
 
   // Since we can not create a sms register user throw admin. Have to run the register then sign-in concurrently.
