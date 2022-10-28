@@ -64,6 +64,18 @@ const sign_in_exp = {
       verification_code_auth: 'Verification code', // UNTRANSLATED
       auth_swap_tip: 'Swap to change the priority', // UNTRANSLATED
     },
+    social_sign_in: {
+      title: 'SOCIAL SIGN IN', // UNTRANSLATED
+      social_sign_in: 'Social sign in', // UNTRANSLATED
+      description:
+        'Users may need to enter required identifier when register through social accounts. This was defined by your sign up identifier.', // UNTRANSLATED
+      add_social_connector: 'Add Social Connector', // UNTRANSLATED
+      set_up_hint: {
+        not_in_list: 'Not in the list?', // UNTRANSLATED
+        set_up_more: 'Set up more', // UNTRANSLATED
+        go_to: 'social connectors or go to “Connectors” section.', // UNTRANSLATED
+      },
+    },
   },
   sign_in_methods: {
     title: 'METHODES DE CONNEXION',

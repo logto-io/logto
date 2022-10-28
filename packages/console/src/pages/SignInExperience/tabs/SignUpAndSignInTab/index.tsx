@@ -6,6 +6,7 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { SignInExperienceForm } from '../../types';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
+import SocialSignInForm from './SocialSignInForm';
 
 type Props = {
   defaultData: SignInExperienceForm;
@@ -25,6 +26,7 @@ const SignUpAndSignInTab = ({ defaultData, isDataDirty }: Props) => {
     <>
       <SignUpForm />
       <SignInForm />
+      <SocialSignInForm />
       <UnsavedChangesAlertModal hasUnsavedChanges={isDataDirty} />
     </>
   );
