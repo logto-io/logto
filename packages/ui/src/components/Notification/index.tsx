@@ -9,10 +9,10 @@ type Props = {
   className?: string;
   message: string;
   onClose: () => void;
-  type?: 'default' | 'alert';
+  type?: 'info' | 'alert';
 };
 
-const Notification = ({ className, message, onClose, type = 'default' }: Props) => {
+const Notification = ({ className, message, onClose, type = 'info' }: Props) => {
   return (
     <div className={classNames(styles.notification, styles[type], className)}>
       <InfoIcon className={styles.icon} />
