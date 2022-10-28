@@ -17,9 +17,7 @@ const SelectedConnectorItem = ({ data: { logo, target, name, connectors }, onDel
     <div className={styles.item}>
       <div className={styles.info}>
         <Draggable className={styles.draggableIcon} />
-        <div className={styles.logo}>
-          <img src={logo} alt={target} />
-        </div>
+        <img src={logo} alt={target} className={styles.logo} />
         <UnnamedTrans resource={name} className={styles.name} />
         {connectors.length > 1 &&
           connectors

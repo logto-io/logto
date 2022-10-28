@@ -19,11 +19,6 @@ const AddSignInMethodButton = ({ options, onSelected }: Props) => {
     return null;
   }
 
-  const candidates = options.map((identifier) => ({
-    value: identifier,
-    title: t('sign_in_exp.sign_up_and_sign_in.identifiers', { context: snakeCase(identifier) }),
-  }));
-
   return (
     <ActionMenu
       buttonProps={{
@@ -34,14 +29,14 @@ const AddSignInMethodButton = ({ options, onSelected }: Props) => {
       dropdownHorizontalAlign="start"
       dropDownClassName={styles.addSignInMethodDropdown}
     >
-      {candidates.map(({ value, title }) => (
+      {options.map((identifier) => (
         <DropdownItem
-          key={value}
+          key={identifier}
           onClick={() => {
-            onSelected(value);
+            onSelected(identifier);
           }}
         >
-          {title}
+          {t('sign_in_exp.sign_up_and_sign_in.identifiers', { context: snakeCase(identifier) })}
         </DropdownItem>
       ))}
     </ActionMenu>
