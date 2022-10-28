@@ -21,6 +21,7 @@ import {
   getVerificationStorageFromInteraction,
   getPasswordlessRelatedLogType,
   checkValidateExpiration,
+  checkRequiredProfile,
 } from '../utils';
 
 export const smsSignInAction = <StateT, ContextT extends WithLogContext, ResponseBodyT>(
@@ -57,9 +58,11 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContext, Respons
       new RequestError({ code: 'user.phone_not_exists', status: 404 })
     );
 
-    const { id } = await findUserByPhone(phone);
+    const user = await findUserByPhone(phone);
+    const { id } = user;
     ctx.log(type, { userId: id });
 
+    await checkRequiredProfile(ctx, provider, user, signInExperience);
     await updateUserById(id, { lastSignInAt: Date.now() });
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -101,9 +104,11 @@ export const emailSignInAction = <StateT, ContextT extends WithLogContext, Respo
       new RequestError({ code: 'user.email_not_exists', status: 404 })
     );
 
-    const { id } = await findUserByEmail(email);
+    const user = await findUserByEmail(email);
+    const { id } = user;
     ctx.log(type, { userId: id });
 
+    await checkRequiredProfile(ctx, provider, user, signInExperience);
     await updateUserById(id, { lastSignInAt: Date.now() });
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -145,7 +150,8 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContext, Respo
     const id = await generateUserId();
     ctx.log(type, { userId: id });
 
-    await insertUser({ id, primaryPhone: phone, lastSignInAt: Date.now() });
+    const user = await insertUser({ id, primaryPhone: phone, lastSignInAt: Date.now() });
+    await checkRequiredProfile(ctx, provider, user, signInExperience);
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
     return next();
@@ -186,7 +192,8 @@ export const emailRegisterAction = <StateT, ContextT extends WithLogContext, Res
     const id = await generateUserId();
     ctx.log(type, { userId: id });
 
-    await insertUser({ id, primaryEmail: email, lastSignInAt: Date.now() });
+    const user = await insertUser({ id, primaryEmail: email, lastSignInAt: Date.now() });
+    await checkRequiredProfile(ctx, provider, user, signInExperience);
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
     return next();

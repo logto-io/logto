@@ -12,14 +12,17 @@ import { verificationTimeout } from './consts';
 import * as passwordlessActions from './middleware/passwordless-action';
 import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 
-const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'foo' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
-const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const findUserByEmail = jest.fn(async (): Promise<User> => mockUser);
+const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'foo' }));
 const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
   signUp: {
     ...mockSignInExperience.signUp,
     identifier: SignUpIdentifier.Username,
+    password: false,
+    verify: true,
   },
 }));
 
@@ -30,8 +33,8 @@ jest.mock('@/lib/user', () => ({
 
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
-  findUserByPhone: async () => ({ id: 'id' }),
-  findUserByEmail: async () => ({ id: 'id' }),
+  findUserByPhone: async () => ({ id: 'foo' }),
+  findUserByEmail: async () => findUserByEmail(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   hasUser: async (username: string) => username === 'username1',
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
@@ -247,7 +250,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.objectContaining({
           verification: {
-            userId: 'id',
+            userId: 'foo',
             expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
@@ -343,7 +346,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.objectContaining({
           verification: {
-            userId: 'id',
+            userId: 'foo',
             expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
@@ -388,7 +391,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'id' },
+          login: { accountId: 'foo' },
         }),
         expect.anything()
       );
@@ -410,7 +413,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'id' },
+          login: { accountId: 'foo' },
         }),
         expect.anything()
       );
@@ -523,6 +526,8 @@ describe('session -> passwordlessRoutes', () => {
         signUp: {
           ...mockSignInExperience.signUp,
           identifier: SignUpIdentifier.Email,
+          password: false,
+          verify: true,
         },
       });
     });
@@ -549,7 +554,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'id' },
+          login: { accountId: 'foo' },
         }),
         expect.anything()
       );
@@ -573,7 +578,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'id' },
+          login: { accountId: 'foo' },
         }),
         expect.anything()
       );
@@ -657,6 +662,7 @@ describe('session -> passwordlessRoutes', () => {
         signUp: {
           ...mockSignInExperience.signUp,
           identifier: SignUpIdentifier.Sms,
+          password: false,
         },
       });
     });
@@ -784,6 +790,7 @@ describe('session -> passwordlessRoutes', () => {
         signUp: {
           ...mockSignInExperience.signUp,
           identifier: SignUpIdentifier.Email,
+          password: false,
         },
       });
     });

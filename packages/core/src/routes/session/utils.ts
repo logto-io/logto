@@ -1,4 +1,11 @@
-import type { LogPayload, LogType, PasscodeType, SignInIdentifier, User } from '@logto/schemas';
+import type {
+  LogPayload,
+  LogType,
+  PasscodeType,
+  SignInExperience,
+  SignInIdentifier,
+  User,
+} from '@logto/schemas';
 import { logTypeGuard } from '@logto/schemas';
 import type { Nullable, Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
@@ -15,12 +22,13 @@ import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import { updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
-import { verificationTimeout } from './consts';
+import { continueSignInTimeout, verificationTimeout } from './consts';
 import type { Method, Operation, VerificationResult, VerificationStorage } from './types';
+import { continueSignInStorageGuard } from './types';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
-  method?: 'passwordless' | 'password' | 'social'
+  method?: 'passwordless' | 'password' | 'social' | 'continue'
 ) => {
   return ['session', type, method]
     .filter((value): value is Truthy<typeof value> => value !== undefined)
@@ -97,6 +105,62 @@ export const clearVerificationResult = async (ctx: Context, provider: Provider) 
   if (result && verificationGuardResult.success) {
     const { verification, ...rest } = result;
     await provider.interactionResult(ctx.req, ctx.res, rest);
+  }
+};
+
+export const assignContinueSignInResult = async (
+  ctx: Context,
+  provider: Provider,
+  payload: { userId: string }
+) => {
+  await provider.interactionResult(ctx.req, ctx.res, {
+    continueSignIn: {
+      ...payload,
+      expiresAt: dayjs().add(continueSignInTimeout, 'second').toISOString(),
+    },
+  });
+};
+
+export const getContinueSignInResult = async (ctx: Context, provider: Provider) => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  const signInResult = z
+    .object({
+      continueSignIn: continueSignInStorageGuard,
+    })
+    .safeParse(result);
+
+  if (!signInResult.success) {
+    throw new RequestError({
+      code: 'session.unauthorized',
+      status: 401,
+    });
+  }
+
+  const { expiresAt, ...rest } = signInResult.data.continueSignIn;
+
+  assertThat(
+    dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
+    new RequestError({ code: 'session.unauthorized', status: 401 })
+  );
+
+  return rest;
+};
+
+export const checkRequiredProfile = async (
+  ctx: Context,
+  provider: Provider,
+  user: User,
+  signInExperience: SignInExperience
+) => {
+  const { signUp } = signInExperience;
+  const { passwordEncrypted, id } = user;
+
+  // If check failed, save the sign in result, the user can continue after requirements are meet
+
+  if (signUp.password && !passwordEncrypted) {
+    await assignContinueSignInResult(ctx, provider, { userId: id });
+    throw new RequestError({ code: 'user.require_password', status: 422 });
   }
 };
 

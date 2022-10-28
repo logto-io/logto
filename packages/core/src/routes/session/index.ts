@@ -13,6 +13,7 @@ import { findUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import type { AnonymousRouter } from '../types';
+import continueRoutes from './continue';
 import forgotPasswordRoutes from './forgot-password';
 import koaGuardSessionAction from './middleware/koa-guard-session-action';
 import passwordRoutes from './password';
@@ -103,6 +104,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   passwordRoutes(router, provider);
   passwordlessRoutes(router, provider);
   socialRoutes(router, provider);
+  continueRoutes(router, provider);
 
   forgotPasswordRoutes(router, provider);
 }

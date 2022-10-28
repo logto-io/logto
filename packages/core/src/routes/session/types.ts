@@ -51,3 +51,10 @@ export type VerificationStorage =
   | ForgotPasswordSessionStorage;
 
 export type VerificationResult<T = VerificationStorage> = { verification: T };
+
+export const continueSignInStorageGuard = z.object({
+  userId: z.string(),
+  expiresAt: z.string(),
+});
+
+export type ContinueSignInStorage = z.infer<typeof continueSignInStorageGuard>;

@@ -45,6 +45,8 @@ const errors = {
     sign_up_method_not_enabled: 'This sign up method is not enabled.',
     sign_in_method_not_enabled: 'This sign in method is not enabled.',
     same_password: 'Your new password can’t be the same as your current password.',
+    require_password: 'You need to set a password before sign in.',
+    password_exists: 'Your password has been set.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',
