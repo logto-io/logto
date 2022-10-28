@@ -6,7 +6,7 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
 
-import * as styles from './AddSocialConnectorButton.module.scss';
+import * as styles from './AddButton.module.scss';
 
 type Props = {
   options: ConnectorGroup[];
@@ -14,7 +14,7 @@ type Props = {
   hasSelectedConnectors: boolean;
 };
 
-const AddSocialConnectorButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
+const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
   if (options.length === 0) {
     return null;
   }
@@ -72,4 +72,4 @@ const AddSocialConnectorButton = ({ options, onSelected, hasSelectedConnectors }
   );
 };
 
-export default AddSocialConnectorButton;
+export default AddButton;

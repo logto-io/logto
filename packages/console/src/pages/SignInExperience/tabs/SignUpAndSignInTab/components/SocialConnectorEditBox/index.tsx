@@ -8,7 +8,7 @@ import useConnectorGroups from '@/hooks/use-connector-groups';
 import type { ConnectorGroup } from '@/types/connector';
 
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
-import AddSocialConnectorButton from './AddSocialConnectorButton';
+import AddButton from './AddButton';
 import SelectedConnectorItem from './SelectedConnectorItem';
 import * as styles from './index.module.scss';
 
@@ -72,7 +72,7 @@ const SocialConnectorEditBox = ({ value, onChange }: Props) => {
           </DraggableItem>
         ))}
       </DragDropProvider>
-      <AddSocialConnectorButton
+      <AddButton
         options={connectorOptions}
         hasSelectedConnectors={selectedConnectorItems.length > 0}
         onSelected={(target) => {
