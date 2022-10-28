@@ -45,6 +45,8 @@ const sign_in_exp = {
     identifiers_username: 'Username',
     identifiers_email_or_sms: 'Email address or phone number',
     identifiers_none: 'None',
+    and: 'and',
+    or: 'or',
     sign_up: {
       title: 'SIGN UP',
       sign_up_identifier: 'Sign up identifier',

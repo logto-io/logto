@@ -47,6 +47,8 @@ const sign_in_exp = {
     identifiers_username: 'Username', // UNTRANSLATED
     identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
     identifiers_none: 'None', // UNTRANSLATED
+    and: 'and', // UNTRANSLATED
+    or: 'or', // UNTRANSLATED
     sign_up: {
       title: 'SIGN UP', // UNTRANSLATED
       sign_up_identifier: 'Sign up identifier', // UNTRANSLATED

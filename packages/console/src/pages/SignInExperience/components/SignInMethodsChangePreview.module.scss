@@ -5,24 +5,26 @@
 }
 
 .content {
+  display: flex;
+  flex-direction: row;
   margin-top: _.unit(6);
   border-radius: 8px;
-  padding: _.unit(5);
-  background: var(--color-layer-2);
   font: var(--font-body-medium);
+  justify-content: space-between;
+  align-items: stretch;
+  width: 552px;
 
   .section {
-    &:not(:first-child) {
-      margin-top: _.unit(3);
-    }
+    width: 270px;
+    background: var(--color-layer-2);
+    border-radius: 8px;
+    padding: _.unit(5);
+    color: var(--color-text);
+
 
     .title {
-      font: var(--font-subhead-2);
+      font: var(--font-title-medium);
       margin: _.unit(1) 0;
-    }
-
-    .connector {
-      margin-left: _.unit(1);
     }
   }
 }
