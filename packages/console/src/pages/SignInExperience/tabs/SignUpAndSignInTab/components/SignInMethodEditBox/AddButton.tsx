@@ -2,7 +2,9 @@ import type { SignInIdentifier } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
 
+import Plus from '@/assets/images/plus.svg';
 import ActionMenu from '@/components/ActionMenu';
+import type { Props as ButtonProps } from '@/components/Button';
 import { DropdownItem } from '@/components/Dropdown';
 
 import * as styles from './index.module.scss';
@@ -10,22 +12,31 @@ import * as styles from './index.module.scss';
 type Props = {
   options: SignInIdentifier[];
   onSelected: (signInIdentifier: SignInIdentifier) => void;
+  hasSelectedIdentifiers: boolean;
 };
 
-const AddSignInMethodButton = ({ options, onSelected }: Props) => {
+const AddButton = ({ options, onSelected, hasSelectedIdentifiers }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   if (options.length === 0) {
     return null;
   }
+  const addSocialConnectorButtonProps: ButtonProps = {
+    type: 'default',
+    size: 'medium',
+    title: 'sign_in_exp.sign_up_and_sign_in.sign_in.add_sign_in_method',
+    icon: <Plus className={styles.plusIcon} />,
+  };
+
+  const addAnotherButtonProps: ButtonProps = {
+    type: 'text',
+    size: 'small',
+    title: 'general.add_another',
+  };
 
   return (
     <ActionMenu
-      buttonProps={{
-        type: 'text',
-        size: 'small',
-        title: 'general.add_another',
-      }}
+      buttonProps={hasSelectedIdentifiers ? addAnotherButtonProps : addSocialConnectorButtonProps}
       dropdownHorizontalAlign="start"
       dropDownClassName={styles.addSignInMethodDropdown}
     >
@@ -43,4 +54,4 @@ const AddSignInMethodButton = ({ options, onSelected }: Props) => {
   );
 };
 
-export default AddSignInMethodButton;
+export default AddButton;

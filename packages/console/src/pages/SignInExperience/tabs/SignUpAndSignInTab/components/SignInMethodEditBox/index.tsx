@@ -7,7 +7,7 @@ import DraggableItem from '@/components/Transfer/DraggableItem';
 
 import { signInIdentifiers, signInIdentifierToRequiredConnectorMapping } from '../../constants';
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
-import AddSignInMethodButton from './AddSignInMethodButton';
+import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
 import type { SignInMethod } from './types';
 import {
@@ -166,7 +166,11 @@ const SignInMethodEditBox = ({
           []
         )}
       />
-      <AddSignInMethodButton options={signInIdentifierOptions} onSelected={addSignInMethod} />
+      <AddButton
+        options={signInIdentifierOptions}
+        hasSelectedIdentifiers={value.length > 0}
+        onSelected={addSignInMethod}
+      />
     </div>
   );
 };

@@ -58,6 +58,7 @@ const sign_in_exp = {
       sign_in_identifier_and_auth: 'Sign in identifier and authentication',
       description:
         'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.',
+      add_sign_in_method: 'Add Sign In Method',
       password_auth: 'Password',
       verification_code_auth: 'Verification code',
       auth_swap_tip: 'Swap to change the priority',
