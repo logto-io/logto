@@ -5,7 +5,9 @@ import type {
   SignInIdentifier,
 } from '@logto/schemas';
 
-export type UserFlow = 'sign-in' | 'register' | 'forgot-password';
+export type MainFlow = 'sign-in' | 'register';
+
+export type UserFlow = MainFlow | 'forgot-password';
 export type SignInMethod = 'username' | 'email' | 'sms' | 'social';
 export type LocalSignInMethod = Exclude<SignInMethod, 'social'>;
 
@@ -47,3 +49,9 @@ export type PreviewConfig = {
   platform: Platform;
   isNative: boolean;
 };
+
+export type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends ReadonlyArray<
+  infer ElementType
+>
+  ? ElementType
+  : never;

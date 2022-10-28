@@ -13,6 +13,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import Passcode from './pages/Passcode';
 import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
+import SecondaryRegister from './pages/SecondaryRegister';
 import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
 import SocialLanding from './pages/SocialLanding';
@@ -67,7 +68,7 @@ const App = () => {
 
               {/* register */}
               <Route path="/register" element={<Register />} />
-              <Route path="/register/:method" element={<Register />} />
+              <Route path="/register/:method" element={<SecondaryRegister />} />
 
               {/* forgot password */}
               <Route path="/forgot-password/reset" element={<ResetPassword />} />

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import useBindSocial from '@/hooks/use-bind-social';
+import { useSieMethods } from '@/hooks/use-sie';
 import { SearchParameters } from '@/types';
 import { queryStringify } from '@/utils';
 
@@ -16,8 +17,8 @@ type Props = {
 
 const SocialCreateAccount = ({ connectorId, className }: Props) => {
   const { t } = useTranslation();
-  const { relatedUser, localSignInMethods, registerWithSocial, bindSocialRelatedUser } =
-    useBindSocial();
+  const { relatedUser, registerWithSocial, bindSocialRelatedUser } = useBindSocial();
+  const { signInMethods } = useSieMethods();
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -42,7 +43,7 @@ const SocialCreateAccount = ({ connectorId, className }: Props) => {
         }}
       />
       <SignInMethodsLink
-        signInMethods={localSignInMethods}
+        signInMethods={signInMethods}
         template="social_bind_with"
         className={styles.desc}
         search={queryStringify({ [SearchParameters.bindWithSocial]: connectorId })}

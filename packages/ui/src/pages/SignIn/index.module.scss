@@ -1,46 +1,24 @@
 @use '@/scss/underscore' as _;
 
-.wrapper {
-  @include _.full-page;
-  @include _.flex-column(normal, normal);
-  @include _.full-width;
-
-  .primarySignIn {
-    margin-bottom: _.unit(5);
-  }
-
-  .otherMethodsLink {
-    margin-bottom: _.unit(6);
-  }
-
-  .createAccount {
-    margin-top: _.unit(6);
-    text-align: center;
-  }
-
-  .placeHolder {
-    flex: 1;
-  }
+.main {
+  margin-bottom: _.unit(4);
 }
 
-.placeholderTop {
-  flex: 3;
+.otherMethodsLink {
+  margin-bottom: _.unit(6);
 }
 
-.placeholderBottom {
-  flex: 5;
+.createAccount {
+  margin-top: _.unit(6);
+  text-align: center;
 }
+
+.placeHolder {
+  flex: 1;
+}
+
 
 :global(body.mobile) {
-  .header {
-    margin-top: _.unit(3);
-    margin-bottom: _.unit(12);
-  }
-
-  .primarySocial {
-    margin-bottom: _.unit(8);
-  }
-
   .divider {
     margin-bottom: _.unit(5);
   }
@@ -51,12 +29,8 @@
 }
 
 :global(body.desktop) {
-  .header {
+  .main {
     margin-bottom: _.unit(6);
-  }
-
-  .primarySocial {
-    margin-bottom: _.unit(12);
   }
 
   .placeHolder {

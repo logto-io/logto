@@ -1,18 +1,18 @@
 import { render } from '@testing-library/react';
 import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
-import Register from '@/pages/Register';
+import SecondaryRegister from '@/pages/SecondaryRegister';
 
 jest.mock('@/apis/register', () => ({ register: jest.fn(async () => 0) }));
 jest.mock('i18next', () => ({
   language: 'en',
 }));
 
-describe('<Register />', () => {
+describe('<SecondaryRegister />', () => {
   test('renders without exploding', async () => {
     const { queryByText } = render(
       <MemoryRouter initialEntries={['/register']}>
-        <Register />
+        <SecondaryRegister />
       </MemoryRouter>
     );
     expect(queryByText('action.create_account')).not.toBeNull();
@@ -23,7 +23,7 @@ describe('<Register />', () => {
     const { queryByText, container } = render(
       <MemoryRouter initialEntries={['/register/sms']}>
         <Routes>
-          <Route path="/register/:method" element={<Register />} />
+          <Route path="/register/:method" element={<SecondaryRegister />} />
         </Routes>
       </MemoryRouter>
     );
@@ -35,7 +35,7 @@ describe('<Register />', () => {
     const { queryByText, container } = render(
       <MemoryRouter initialEntries={['/register/email']}>
         <Routes>
-          <Route path="/register/:method" element={<Register />} />
+          <Route path="/register/:method" element={<SecondaryRegister />} />
         </Routes>
       </MemoryRouter>
     );
@@ -47,7 +47,7 @@ describe('<Register />', () => {
     const { queryByText } = render(
       <MemoryRouter initialEntries={['/register/test']}>
         <Routes>
-          <Route path="/register/:method" element={<Register />} />
+          <Route path="/register/:method" element={<SecondaryRegister />} />
         </Routes>
       </MemoryRouter>
     );
