@@ -47,6 +47,13 @@ const errors = {
     same_password: 'Your new password can’t be the same as your current password.',
     require_password: 'You need to set a password before sign in.',
     password_exists: 'Your password has been set.',
+    require_username: 'You need to set a username before sign in.',
+    username_exists: 'Your username has been set.',
+    require_email: 'You need to set an email before sign in.',
+    email_exists: 'Your email has been set.',
+    require_sms: 'You need to set a phone before sign in.',
+    sms_exists: 'Your phone has been set.',
+    require_email_or_sms: 'You need to set a phone or email before sign in.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',

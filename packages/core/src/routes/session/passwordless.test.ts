@@ -12,10 +12,10 @@ import { verificationTimeout } from './consts';
 import * as passwordlessActions from './middleware/passwordless-action';
 import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 
-const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'foo' }));
+const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const findUserByEmail = jest.fn(async (): Promise<User> => mockUser);
-const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'foo' }));
+const updateUserById = jest.fn(async (..._args: unknown[]) => mockUser);
 const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
   signUp: {
@@ -33,7 +33,7 @@ jest.mock('@/lib/user', () => ({
 
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
-  findUserByPhone: async () => ({ id: 'foo' }),
+  findUserByPhone: async () => mockUser,
   findUserByEmail: async () => findUserByEmail(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   hasUser: async (username: string) => username === 'username1',
@@ -250,7 +250,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.objectContaining({
           verification: {
-            userId: 'foo',
+            userId: mockUser.id,
             expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
@@ -346,7 +346,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.objectContaining({
           verification: {
-            userId: 'foo',
+            userId: mockUser.id,
             expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
@@ -391,7 +391,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'foo' },
+          login: { accountId: mockUser.id },
         }),
         expect.anything()
       );
@@ -413,7 +413,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'foo' },
+          login: { accountId: mockUser.id },
         }),
         expect.anything()
       );
@@ -554,7 +554,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'foo' },
+          login: { accountId: mockUser.id },
         }),
         expect.anything()
       );
@@ -578,7 +578,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'foo' },
+          login: { accountId: mockUser.id },
         }),
         expect.anything()
       );

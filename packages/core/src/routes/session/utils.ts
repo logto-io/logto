@@ -6,7 +6,7 @@ import type {
   SignInIdentifier,
   User,
 } from '@logto/schemas';
-import { logTypeGuard } from '@logto/schemas';
+import { SignUpIdentifier, logTypeGuard } from '@logto/schemas';
 import type { Nullable, Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import type { Context } from 'koa';
@@ -121,7 +121,10 @@ export const assignContinueSignInResult = async (
   });
 };
 
-export const getContinueSignInResult = async (ctx: Context, provider: Provider) => {
+export const getContinueSignInResult = async (
+  ctx: Context,
+  provider: Provider
+): Promise<{ userId: string }> => {
   const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
   const signInResult = z
@@ -147,6 +150,7 @@ export const getContinueSignInResult = async (ctx: Context, provider: Provider) 
   return rest;
 };
 
+/* eslint-disable complexity */
 export const checkRequiredProfile = async (
   ctx: Context,
   provider: Provider,
@@ -154,7 +158,7 @@ export const checkRequiredProfile = async (
   signInExperience: SignInExperience
 ) => {
   const { signUp } = signInExperience;
-  const { passwordEncrypted, id } = user;
+  const { passwordEncrypted, id, username, primaryEmail, primaryPhone } = user;
 
   // If check failed, save the sign in result, the user can continue after requirements are meet
 
@@ -162,7 +166,28 @@ export const checkRequiredProfile = async (
     await assignContinueSignInResult(ctx, provider, { userId: id });
     throw new RequestError({ code: 'user.require_password', status: 422 });
   }
+
+  if (signUp.identifier === SignUpIdentifier.Username && !username) {
+    await assignContinueSignInResult(ctx, provider, { userId: id });
+    throw new RequestError({ code: 'user.require_username', status: 422 });
+  }
+
+  if (signUp.identifier === SignUpIdentifier.Email && !primaryEmail) {
+    await assignContinueSignInResult(ctx, provider, { userId: id });
+    throw new RequestError({ code: 'user.require_email', status: 422 });
+  }
+
+  if (signUp.identifier === SignUpIdentifier.Sms && !primaryPhone) {
+    await assignContinueSignInResult(ctx, provider, { userId: id });
+    throw new RequestError({ code: 'user.require_sms', status: 422 });
+  }
+
+  if (signUp.identifier === SignUpIdentifier.EmailOrSms && !primaryEmail && !primaryPhone) {
+    await assignContinueSignInResult(ctx, provider, { userId: id });
+    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
+  }
 };
+/* eslint-enable complexity */
 
 type SignInWithPasswordParameter = {
   identifier: SignInIdentifier;
