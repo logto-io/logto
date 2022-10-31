@@ -61,6 +61,8 @@ const translation = {
       'Enter the phone number associated with your account, and we’ll message you the verification code to reset your password.',
     new_password: 'New password',
     password_changed: 'Password Changed',
+    no_account: "Don't have an account?",
+    have_account: 'Already have an account?',
   },
   error: {
     username_password_mismatch: 'Username and password do not match',

@@ -62,6 +62,8 @@ const translation = {
       'Hesabınızla ilişkili telefon numarasını girin, şifrenizi sıfırlamak için size doğrulama kodunu kısa mesajla gönderelim.',
     new_password: 'Yeni Şifre',
     password_changed: 'Password Changed', // UNTRANSLATED
+    no_account: "Don't have an account?", // UNTRANSLATED
+    have_account: 'Already have an account?', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'Kullanıcı adı ve şifre eşleşmiyor.',
