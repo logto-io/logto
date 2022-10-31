@@ -1,5 +1,5 @@
 import { SignUpIdentifier } from '@logto/schemas';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
 
@@ -18,12 +18,9 @@ import * as styles from './index.module.scss';
 
 const SignUpForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { control, setValue } = useFormContext<SignInExperienceForm>();
+  const { control, setValue, getValues } = useFormContext<SignInExperienceForm>();
 
-  const signUpIdentifier = useWatch({
-    control,
-    name: 'signUp.identifier',
-  });
+  const signUpIdentifier = getValues('signUp.identifier');
 
   const postSignUpIdentifierChange = (signUpIdentifier: SignUpIdentifier) => {
     if (signUpIdentifier === SignUpIdentifier.Username) {
