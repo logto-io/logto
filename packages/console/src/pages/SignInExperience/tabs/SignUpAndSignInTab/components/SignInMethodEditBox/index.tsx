@@ -67,7 +67,7 @@ const SignInMethodEditBox = ({
   );
 
   useEffect(() => {
-    const requiredSignInMethods = requiredSignInIdentifiers.reduce(
+    const allSignInMethods = requiredSignInIdentifiers.reduce(
       (previous, current) =>
         computeOnSignInMethodAppended(previous, {
           identifier: current,
@@ -82,7 +82,7 @@ const SignInMethodEditBox = ({
     );
 
     handleChange(
-      requiredSignInMethods.map((method) => ({
+      allSignInMethods.map((method) => ({
         ...method,
         password: getSignInMethodPasswordCheckState(
           method.identifier,
