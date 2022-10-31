@@ -13,7 +13,7 @@ jest.mock('i18next', () => ({
 
 describe('<Register />', () => {
   test('renders with username as primary', async () => {
-    const { queryByText, queryAllByText } = renderWithPageContext(
+    const { queryByText, queryAllByText, container } = renderWithPageContext(
       <SettingsProvider>
         <MemoryRouter>
           <Register />
@@ -21,7 +21,7 @@ describe('<Register />', () => {
       </SettingsProvider>
     );
 
-    expect(queryByText('username register')).not.toBeNull();
+    expect(container.querySelector('input[name="new-username"]')).not.toBeNull();
 
     // Social
     expect(queryAllByText('action.sign_in_with')).toHaveLength(defaultSize);
@@ -62,7 +62,7 @@ describe('<Register />', () => {
   });
 
   test('renders with social as primary', async () => {
-    const { container } = renderWithPageContext(
+    const { queryAllByText } = renderWithPageContext(
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
@@ -75,7 +75,7 @@ describe('<Register />', () => {
       </SettingsProvider>
     );
 
-    expect(container.querySelectorAll('button')).toHaveLength(
+    expect(queryAllByText('action.sign_in_with')).toHaveLength(
       mockSignInExperienceSettings.socialConnectors.length
     );
   });

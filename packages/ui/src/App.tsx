@@ -68,6 +68,8 @@ const App = () => {
 
               {/* register */}
               <Route path="/register" element={<Register />} />
+              {/* TODO: @simeng LOG-4456 */}
+              <Route path="/register/password" element={null} />
               <Route path="/register/:method" element={<SecondaryRegister />} />
 
               {/* forgot password */}
