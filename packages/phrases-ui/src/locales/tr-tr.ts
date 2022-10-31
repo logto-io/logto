@@ -28,7 +28,7 @@ const translation = {
     nav_back: 'Geri',
     agree: 'Kabul Et',
     got_it: 'Anladım',
-    sign_in_with: '{{name}} ile giriş yap',
+    sign_in_with: '{{name}} ile ilerle',
     forgot_password: 'Şifremi Unuttum?',
     switch_to: 'Switch to {{method}}', // UNTRANSLATED
   },

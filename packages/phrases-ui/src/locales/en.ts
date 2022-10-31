@@ -26,7 +26,7 @@ const translation = {
     nav_back: 'Back',
     agree: 'Agree',
     got_it: 'Got it',
-    sign_in_with: 'Sign in with {{name}}',
+    sign_in_with: 'Continue with {{name}}',
     forgot_password: 'Forgot your password?',
     switch_to: 'Switch to {{method}}',
   },

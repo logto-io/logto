@@ -28,7 +28,7 @@ const translation = {
     nav_back: 'Anterior',
     agree: 'Aceito',
     got_it: 'Entendi',
-    sign_in_with: 'Entrar com {{name}}',
+    sign_in_with: 'Continuar com {{name}}',
     forgot_password: 'Esqueceu a password?',
     switch_to: 'Mudar para {{method}}',
   },

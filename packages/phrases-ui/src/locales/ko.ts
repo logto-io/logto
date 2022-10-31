@@ -28,7 +28,7 @@ const translation = {
     nav_back: '뒤로',
     agree: '동의',
     got_it: '알겠습니다',
-    sign_in_with: '{{name}} 로그인',
+    sign_in_with: '{{name}} 계속',
     forgot_password: '비밀번호를 잊어버리셨나요?',
     switch_to: 'Switch to {{method}}', // UNTRANSLATED
   },
