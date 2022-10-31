@@ -45,6 +45,8 @@ const errors = {
     sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
     sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
     same_password: 'Your new password can’t be the same as your current password.', // UNTRANSLATED
+    require_password: 'You need to set a password before sign in.', // UNTRANSLATED
+    password_exists: 'Your password has been set.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '{{name}} şifreleme metodu desteklenmiyor.',
