@@ -2,6 +2,7 @@ import type { IncomingHttpHeaders } from 'http';
 
 import { UserRole } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
+import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { jwtVerify } from 'jose';
 import type { MiddlewareType, Request } from 'koa';
@@ -49,7 +50,7 @@ type TokenInfo = {
 // eslint-disable-next-line complexity
 export const verifyBearerTokenFromRequest = async (
   request: Request,
-  resourceIndicator = managementResource.indicator
+  resourceIndicator: Optional<string>
 ): Promise<TokenInfo> => {
   const { isProduction, isIntegrationTest, developmentUserId } = envSet.values;
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
@@ -83,7 +84,10 @@ export default function koaAuth<StateT, ContextT extends IRouterParamContext, Re
   forRole?: UserRole
 ): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
-    const { sub, clientId, roleNames } = await verifyBearerTokenFromRequest(ctx.request);
+    const { sub, clientId, roleNames } = await verifyBearerTokenFromRequest(
+      ctx.request,
+      managementResource.indicator
+    );
 
     if (forRole) {
       assertThat(

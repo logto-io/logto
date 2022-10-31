@@ -16,15 +16,39 @@ export default function authnRoutes<T extends AnonymousRouter>(router: T) {
   router.get(
     '/authn/hasura',
     koaGuard({
-      query: z.object({ resource: z.string().min(1) }),
+      query: z.object({ resource: z.string().min(1), unauthorizedRole: z.string().optional() }),
       status: [200, 401],
     }),
     async (ctx, next) => {
+      const { resource, unauthorizedRole } = ctx.guard.query;
       const expectedRole = ctx.headers['expected-role']?.toString();
-      const { sub, roleNames } = await verifyBearerTokenFromRequest(
-        ctx.request,
-        ctx.guard.query.resource
-      );
+
+      const verifyToken = async (expectedResource?: string) => {
+        try {
+          return await verifyBearerTokenFromRequest(ctx.request, expectedResource);
+        } catch {
+          return {
+            sub: undefined,
+            roleNames: undefined,
+          };
+        }
+      };
+
+      const { sub, roleNames } = await verifyToken(resource);
+
+      if (unauthorizedRole && (!expectedRole || !roleNames?.includes(expectedRole))) {
+        ctx.body = {
+          'X-Hasura-User-Id':
+            sub ??
+            // When the previous token verification throws, the reason could be resource mismatch.
+            // So we verify the token again with no resource provided.
+            (await verifyToken().then(({ sub }) => sub)),
+          'X-Hasura-Role': unauthorizedRole,
+        };
+        ctx.status = 200;
+
+        return next();
+      }
 
       if (expectedRole) {
         assertThat(
