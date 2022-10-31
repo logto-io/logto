@@ -19,26 +19,6 @@ const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
     return null;
   }
 
-  const candidates = options.map(({ target, logo, name, connectors }) => ({
-    value: target,
-    title: (
-      <div className={styles.title}>
-        <div className={styles.logo}>
-          <img src={logo} alt={target} />
-        </div>
-        <UnnamedTrans resource={name} className={styles.name} />
-        {connectors.length > 1 &&
-          connectors
-            .filter(({ enabled }) => enabled)
-            .map(({ platform }) => (
-              <div key={platform} className={styles.icon}>
-                {platform && <ConnectorPlatformIcon platform={platform} />}
-              </div>
-            ))}
-      </div>
-    ),
-  }));
-
   const addSocialConnectorButtonProps: ButtonProps = {
     type: 'default',
     size: 'medium',
@@ -58,14 +38,25 @@ const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
       dropdownHorizontalAlign="start"
       dropDownClassName={styles.dropdown}
     >
-      {candidates.map(({ value, title }) => (
+      {options.map(({ target, logo, name, connectors }) => (
         <DropdownItem
-          key={value}
+          key={target}
           onClick={() => {
-            onSelected(value);
+            onSelected(target);
           }}
         >
-          {title}
+          <div className={styles.title}>
+            <img src={logo} alt={target} className={styles.logo} />
+            <UnnamedTrans resource={name} className={styles.name} />
+            {connectors.length > 1 &&
+              connectors
+                .filter(({ enabled }) => enabled)
+                .map(({ platform }) => (
+                  <div key={platform} className={styles.icon}>
+                    {platform && <ConnectorPlatformIcon platform={platform} />}
+                  </div>
+                ))}
+          </div>
         </DropdownItem>
       ))}
     </ActionMenu>
