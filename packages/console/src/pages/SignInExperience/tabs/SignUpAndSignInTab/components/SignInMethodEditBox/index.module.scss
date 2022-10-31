@@ -42,6 +42,14 @@
   }
 }
 
-.addSignInMethodDropdown {
+.plusIcon {
+  color: var(--color-text-secondary);
+}
+
+.addAnotherSignInMethodDropdown {
   min-width: 208px;
+}
+
+.addSignInMethodDropDown {
+  min-width: unset;
 }

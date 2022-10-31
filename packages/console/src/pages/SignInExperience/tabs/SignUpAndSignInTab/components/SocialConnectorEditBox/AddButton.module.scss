@@ -1,6 +1,10 @@
 @use '@/scss/underscore' as _;
 
 .dropdown {
+  min-width: unset;
+}
+
+.addAnotherDropdown {
   min-width: 208px;
 }
 

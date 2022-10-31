@@ -16,7 +16,8 @@ type Props = {
   buttonProps: ButtonProps;
   title?: ReactNode;
   dropdownHorizontalAlign?: HorizontalAlignment;
-  dropDownClassName?: string;
+  dropdownClassName?: string;
+  isDropdownFullWidth?: boolean;
 };
 
 const ActionMenu = ({
@@ -24,7 +25,8 @@ const ActionMenu = ({
   buttonProps,
   title,
   dropdownHorizontalAlign,
-  dropDownClassName,
+  dropdownClassName,
+  isDropdownFullWidth = false,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const anchorReference = useRef<HTMLDivElement>(null);
@@ -42,8 +44,9 @@ const ActionMenu = ({
         title={title}
         anchorRef={anchorReference}
         isOpen={isOpen}
-        className={classNames(styles.content, dropDownClassName)}
+        className={classNames(styles.content, dropdownClassName)}
         horizontalAlign={dropdownHorizontalAlign}
+        isFullWidth={isDropdownFullWidth}
         onClose={() => {
           setIsOpen(false);
         }}
