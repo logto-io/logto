@@ -5,8 +5,6 @@ import useSocial from '@/hooks/use-social';
 import SocialSignInList from './SocialSignInList';
 import * as styles from './index.module.scss';
 
-export const defaultSize = 3;
-
 type Props = {
   className?: string;
 };
@@ -24,3 +22,5 @@ const SocialSignIn = ({ className }: Props) => {
 };
 
 export default SocialSignIn;
+
+export { default as SocialSignInList } from './SocialSignInList';

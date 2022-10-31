@@ -1,51 +1,47 @@
+import type { SignIn } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useMemo } from 'react';
 import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
 
 import TextLink from '@/components/TextLink';
-import type { LocalSignInMethod } from '@/types';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  signInMethods: LocalSignInMethod[];
+  signInMethods: SignIn['methods'];
+  // Allows social page to pass additional query params to the sign-in pages
   search?: string;
   className?: string;
   template?: TFuncKey<'translation', 'secondary'>;
 };
 
 const SignInMethodsKeyMap: {
-  [key in LocalSignInMethod]: TFuncKey<'translation', 'input'>;
+  [key in SignInIdentifier]: TFuncKey<'translation', 'input'>;
 } = {
-  username: 'username',
-  email: 'email',
-  sms: 'phone_number',
+  [SignInIdentifier.Username]: 'username',
+  [SignInIdentifier.Email]: 'email',
+  [SignInIdentifier.Sms]: 'phone_number',
 };
 
 const SignInMethodsLink = ({ signInMethods, template, search, className }: Props) => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
+  const identifiers = signInMethods.map(({ identifier }) => identifier);
 
   const signInMethodsLink = useMemo(
     () =>
-      signInMethods.map((method) => (
+      identifiers.map((identifier) => (
         <TextLink
-          key={method}
+          key={identifier}
           className={styles.signInMethodLink}
-          text={`input.${SignInMethodsKeyMap[method]}`}
-          onClick={() => {
-            navigate({
-              pathname: `/sign-in/${method}`,
-              search,
-            });
-          }}
+          text={`input.${SignInMethodsKeyMap[identifier]}`}
+          to={{ pathname: `/sign-in/${identifier}`, search }}
         />
       )),
-    [navigate, search, signInMethods]
+    [identifiers, search]
   );
 
   if (signInMethodsLink.length === 0) {
@@ -58,11 +54,11 @@ const SignInMethodsLink = ({ signInMethods, template, search, className }: Props
   }
 
   // With text template
-  const rawText = t(`secondary.${template}`, { methods: signInMethods });
-  const textWithLink: ReactNode = signInMethods.reduce<ReactNode>(
-    (content, method, index) =>
+  const rawText = t(`secondary.${template}`, { methods: identifiers });
+  const textWithLink: ReactNode = identifiers.reduce<ReactNode>(
+    (content, identifier, index) =>
       // @ts-expect-error: reactStringReplace type bug, using deprecated ReactNodeArray as its input type
-      reactStringReplace(content, method, () => signInMethodsLink[index]),
+      reactStringReplace(content, identifier, () => signInMethodsLink[index]),
     rawText
   );
 

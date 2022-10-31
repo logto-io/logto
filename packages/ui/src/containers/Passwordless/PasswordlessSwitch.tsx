@@ -16,17 +16,7 @@ const PasswordlessSwitch = ({ target, className }: Props) => {
   const targetPathname = pathname.replace(target === 'email' ? 'sms' : 'email', target);
 
   return (
-    <TextLink
-      className={className}
-      onClick={() => {
-        navigate(
-          {
-            pathname: targetPathname,
-          },
-          { replace: true }
-        );
-      }}
-    >
+    <TextLink replace className={className} to={targetPathname}>
       {t('action.switch_to', {
         method: t(`description.${target === 'email' ? 'email' : 'phone_number'}`),
       })}

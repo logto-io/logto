@@ -1,38 +1,50 @@
-import { BrandingStyle } from '@logto/schemas';
-import classNames from 'classnames';
-import { useContext } from 'react';
+import Divider from '@/components/Divider';
+import TextLink from '@/components/TextLink';
+import LandingPageContainer from '@/containers/LandingPageContainer';
+import SignInMethodsLink from '@/containers/SignInMethodsLink';
+import { SocialSignInList } from '@/containers/SocialSignIn';
+import { useSieMethods } from '@/hooks/use-sie';
 
-import BrandingHeader from '@/components/BrandingHeader';
-import AppNotification from '@/containers/AppNotification';
-import { PageContext } from '@/hooks/use-page-context';
-import { getLogoUrl } from '@/utils/logo';
-
-import MainForm from './MainForm';
+import Main from './Main';
 import * as styles from './index.module.scss';
 
 const SignIn = () => {
-  const { experienceSettings, theme, platform } = useContext(PageContext);
-
-  if (!experienceSettings) {
-    return null;
-  }
-
-  const { slogan, logoUrl, darkLogoUrl, style } = experienceSettings.branding;
+  const { signInMethods, signUpMethods, socialConnectors } = useSieMethods();
+  const otherMethods = signInMethods.slice(1);
 
   return (
-    <>
-      {platform === 'web' && <div className={styles.placeholderTop} />}
-      <div className={classNames(styles.wrapper)}>
-        <BrandingHeader
-          className={styles.header}
-          headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
-          logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
-        />
-        <MainForm />
-        <AppNotification />
-      </div>
-      {platform === 'web' && <div className={styles.placeholderBottom} />}
-    </>
+    <LandingPageContainer>
+      <Main signInMethod={signInMethods[0]} socialConnectors={socialConnectors} />
+      {
+        // Other sign-in methods
+        otherMethods.length > 0 && (
+          <SignInMethodsLink signInMethods={otherMethods} template="sign_in_with" />
+        )
+      }
+      {
+        // Social sign-in methods
+        signInMethods.length > 0 && socialConnectors.length > 0 && (
+          <>
+            <Divider label="description.or" className={styles.divider} />
+            <SocialSignInList isCollapseEnabled socialConnectors={socialConnectors} />
+          </>
+        )
+      }
+      {
+        // Create Account footer
+        signUpMethods.length > 0 && (
+          <>
+            <div className={styles.placeHolder} />
+            <TextLink
+              replace
+              className={styles.createAccount}
+              to="/register"
+              text="action.create_account"
+            />
+          </>
+        )
+      }
+    </LandingPageContainer>
   );
 };
 

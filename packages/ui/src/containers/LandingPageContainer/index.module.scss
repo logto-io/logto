@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  @include _.full-page;
+  @include _.flex-column(normal, normal);
+  @include _.full-width;
+}
+
+:global(body.mobile) {
+  .header {
+    margin-top: _.unit(3);
+    margin-bottom: _.unit(7);
+  }
+}
+
+:global(body.desktop) {
+  .header {
+    margin-bottom: _.unit(6);
+  }
+
+  .placeholderTop {
+    flex: 3;
+  }
+
+  .placeholderBottom {
+    flex: 5;
+  }
+}

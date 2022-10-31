@@ -16,14 +16,16 @@ describe('SocialSignInList', () => {
         </MemoryRouter>
       </SettingsProvider>
     );
-    expect(container.querySelectorAll('button')).toHaveLength(defaultSize);
+    expect(container.querySelectorAll('button')).toHaveLength(
+      socialConnectors.slice(0, defaultSize).length
+    );
   });
 
   it('more than three connectors', () => {
     const { container } = renderWithPageContext(
       <SettingsProvider>
         <MemoryRouter>
-          <SocialSignInList socialConnectors={socialConnectors} />
+          <SocialSignInList isCollapseEnabled socialConnectors={socialConnectors} />
         </MemoryRouter>
       </SettingsProvider>
     );

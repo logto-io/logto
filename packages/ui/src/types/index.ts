@@ -47,3 +47,9 @@ export type PreviewConfig = {
   platform: Platform;
   isNative: boolean;
 };
+
+export type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends ReadonlyArray<
+  infer ElementType
+>
+  ? ElementType
+  : never;
