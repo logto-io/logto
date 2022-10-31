@@ -22,8 +22,12 @@ const SignInForm = () => {
     name: 'signUp.identifier',
     defaultValue: SignUpIdentifier.Username,
   });
-  const requirePassword = useWatch({ control, name: 'signUp.password', defaultValue: false });
-  const requireVerificationCode = useWatch({ control, name: 'signUp.verify', defaultValue: false });
+  const setupPasswordAtSignUp = useWatch({ control, name: 'signUp.password', defaultValue: false });
+  const setupVerificationAtSignUp = useWatch({
+    control,
+    name: 'signUp.verify',
+    defaultValue: false,
+  });
 
   return (
     <>
@@ -41,8 +45,8 @@ const SignInForm = () => {
               <SignInMethodEditBox
                 value={value}
                 requiredSignInIdentifiers={signUpToSignInIdentifierMapping[signUpIdentifier]}
-                isPasswordRequired={requirePassword}
-                isVerificationRequired={requireVerificationCode}
+                isSignUpPasswordRequired={setupPasswordAtSignUp}
+                isSignUpVerificationRequired={setupVerificationAtSignUp}
                 onChange={onChange}
               />
             );
