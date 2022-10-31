@@ -4,20 +4,30 @@
   padding: _.unit(3) _.unit(4);
   font: var(--font-body-2);
   color: var(--color-type-primary);
-  background: var(--color-alert-99);
   margin: 0 auto _.unit(2);
   @include _.flex_row;
 
-  &:focus-visible {
-    outline: none;
+  .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: _.unit(3);
   }
-}
 
-.icon {
-  color: var(--color-alert-70);
-  width: 20px;
-  height: 20px;
-  margin-right: _.unit(3);
+  &.alert {
+    background: var(--color-alert-99);
+
+    .icon {
+      color: var(--color-alert-70);
+    }
+  }
+
+  &.info {
+    background: var(--color-neutral-variant-80);
+
+    .icon {
+      color: var(--color-neutral-variant-60);
+    }
+  }
 }
 
 .message {
@@ -26,19 +36,11 @@
 }
 
 .link {
-  text-decoration: underline;
-  cursor: pointer;
   max-width: 20%;
 }
 
 :global(body.desktop) {
   .notification {
     border-radius: var(--radius);
-  }
-
-  .link {
-    &:hover {
-      color: var(--color-brand-default);
-    }
   }
 }
