@@ -21,7 +21,7 @@ const AddButton = ({ options, onSelected, hasSelectedIdentifiers }: Props) => {
   if (options.length === 0) {
     return null;
   }
-  const addSocialConnectorButtonProps: ButtonProps = {
+  const addSignInMethodButtonProps: ButtonProps = {
     type: 'default',
     size: 'medium',
     title: 'sign_in_exp.sign_up_and_sign_in.sign_in.add_sign_in_method',
@@ -36,7 +36,7 @@ const AddButton = ({ options, onSelected, hasSelectedIdentifiers }: Props) => {
 
   return (
     <ActionMenu
-      buttonProps={hasSelectedIdentifiers ? addAnotherButtonProps : addSocialConnectorButtonProps}
+      buttonProps={hasSelectedIdentifiers ? addAnotherButtonProps : addSignInMethodButtonProps}
       dropdownHorizontalAlign="start"
       dropDownClassName={styles.addSignInMethodDropdown}
     >
