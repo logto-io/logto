@@ -1,4 +1,5 @@
 import type { SignInIdentifier } from '@logto/schemas';
+import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
 
@@ -38,7 +39,12 @@ const AddButton = ({ options, onSelected, hasSelectedIdentifiers }: Props) => {
     <ActionMenu
       buttonProps={hasSelectedIdentifiers ? addAnotherButtonProps : addSignInMethodButtonProps}
       dropdownHorizontalAlign="start"
-      dropDownClassName={styles.addSignInMethodDropdown}
+      dropdownClassName={classNames(
+        hasSelectedIdentifiers
+          ? styles.addAnotherSignInMethodDropdown
+          : styles.addSignInMethodDropDown
+      )}
+      isDropdownFullWidth={!hasSelectedIdentifiers}
     >
       {options.map((identifier) => (
         <DropdownItem

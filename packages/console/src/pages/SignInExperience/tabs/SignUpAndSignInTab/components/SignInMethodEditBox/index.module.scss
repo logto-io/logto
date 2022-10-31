@@ -46,6 +46,10 @@
   color: var(--color-text-secondary);
 }
 
-.addSignInMethodDropdown {
+.addAnotherSignInMethodDropdown {
   min-width: 208px;
+}
+
+.addSignInMethodDropDown {
+  min-width: unset;
 }

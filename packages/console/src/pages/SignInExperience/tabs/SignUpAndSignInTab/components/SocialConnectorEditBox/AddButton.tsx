@@ -36,7 +36,7 @@ const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
     <ActionMenu
       buttonProps={hasSelectedConnectors ? addAnotherButtonProps : addSocialConnectorButtonProps}
       dropdownHorizontalAlign="start"
-      dropDownClassName={styles.dropdown}
+      dropdownClassName={styles.dropdown}
     >
       {options.map(({ target, logo, name, connectors }) => (
         <DropdownItem
