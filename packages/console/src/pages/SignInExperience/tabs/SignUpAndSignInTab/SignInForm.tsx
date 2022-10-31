@@ -22,7 +22,6 @@ const SignInForm = () => {
     name: 'signUp.identifier',
     defaultValue: SignUpIdentifier.Username,
   });
-
   const requirePassword = useWatch({ control, name: 'signUp.password', defaultValue: false });
   const requireVerificationCode = useWatch({ control, name: 'signUp.verify', defaultValue: false });
 
