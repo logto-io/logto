@@ -1,4 +1,5 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { SignUpIdentifier } from '@logto/schemas';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import FormField from '@/components/FormField';
@@ -11,10 +12,19 @@ import * as styles from './index.module.scss';
 const SignInForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { control, watch } = useFormContext<SignInExperienceForm>();
-  const signUpIdentifier = watch('signUp.identifier');
-  const requirePassword = watch('signUp.password');
-  const requireVerificationCode = watch('signUp.verify');
+  const { control } = useFormContext<SignInExperienceForm>();
+  /**
+   * Note: `watch` may not return the default value, use `useWatch` instead.
+   * Reference: https://github.com/react-hook-form/react-hook-form/issues/1332
+   */
+  const signUpIdentifier = useWatch({
+    control,
+    name: 'signUp.identifier',
+    defaultValue: SignUpIdentifier.Username,
+  });
+
+  const requirePassword = useWatch({ control, name: 'signUp.password', defaultValue: false });
+  const requireVerificationCode = useWatch({ control, name: 'signUp.verify', defaultValue: false });
 
   return (
     <>
@@ -26,6 +36,7 @@ const SignInForm = () => {
         <Controller
           control={control}
           name="signIn.methods"
+          defaultValue={[]}
           render={({ field: { value, onChange } }) => {
             return (
               <SignInMethodEditBox

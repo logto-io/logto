@@ -23,6 +23,7 @@ const SocialSignInForm = () => {
         </div>
         <Controller
           control={control}
+          defaultValue={[]}
           name="socialSignInConnectorTargets"
           render={({ field: { value, onChange } }) => {
             return <SocialConnectorEditBox value={value} onChange={onChange} />;
