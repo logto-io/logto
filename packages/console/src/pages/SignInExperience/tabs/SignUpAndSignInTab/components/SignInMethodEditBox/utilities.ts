@@ -43,14 +43,26 @@ export const computeOnPasswordPrimaryFlagToggled = (
       : method
   );
 
-export const getSignInMethodAuthValue = (
+export const getSignInMethodPasswordCheckState = (
   signInIdentifier: SignInIdentifier,
-  isSignUpAuthRequired: boolean,
-  originValue?: boolean
+  isSignUpPasswordRequired: boolean,
+  originCheckState?: boolean
 ) => {
   if (signInIdentifier === SignInIdentifier.Username) {
     return true;
   }
 
-  return isSignUpAuthRequired || (originValue ?? isSignUpAuthRequired);
+  return isSignUpPasswordRequired || (originCheckState ?? isSignUpPasswordRequired);
+};
+
+export const getSignInMethodVerificationCodeCheckState = (
+  signInIdentifier: SignInIdentifier,
+  isSignUpVerificationRequired: boolean,
+  originCheckState?: boolean
+) => {
+  if (signInIdentifier === SignInIdentifier.Username) {
+    return false;
+  }
+
+  return isSignUpVerificationRequired || (originCheckState ?? isSignUpVerificationRequired);
 };

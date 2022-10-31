@@ -14,7 +14,8 @@ import {
   computeOnSignInMethodAppended,
   computeOnVerificationStateChanged,
   computeOnPasswordPrimaryFlagToggled,
-  getSignInMethodAuthValue,
+  getSignInMethodPasswordCheckState,
+  getSignInMethodVerificationCodeCheckState,
 } from './utilities';
 
 type Props = {
@@ -53,8 +54,11 @@ const SignInMethodEditBox = ({
       handleChange(
         computeOnSignInMethodAppended(value, {
           identifier,
-          password: getSignInMethodAuthValue(identifier, isSignUpPasswordRequired),
-          verificationCode: getSignInMethodAuthValue(identifier, isSignUpVerificationRequired),
+          password: getSignInMethodPasswordCheckState(identifier, isSignUpPasswordRequired),
+          verificationCode: getSignInMethodVerificationCodeCheckState(
+            identifier,
+            isSignUpVerificationRequired
+          ),
           isPasswordPrimary: true,
         })
       );
@@ -67,8 +71,11 @@ const SignInMethodEditBox = ({
       (previous, current) =>
         computeOnSignInMethodAppended(previous, {
           identifier: current,
-          password: getSignInMethodAuthValue(current, isSignUpPasswordRequired),
-          verificationCode: getSignInMethodAuthValue(current, isSignUpVerificationRequired),
+          password: getSignInMethodPasswordCheckState(current, isSignUpPasswordRequired),
+          verificationCode: getSignInMethodVerificationCodeCheckState(
+            current,
+            isSignUpVerificationRequired
+          ),
           isPasswordPrimary: true,
         }),
       signInMethods.current
@@ -77,12 +84,12 @@ const SignInMethodEditBox = ({
     handleChange(
       requiredSignInMethods.map((method) => ({
         ...method,
-        password: getSignInMethodAuthValue(
+        password: getSignInMethodPasswordCheckState(
           method.identifier,
           isSignUpPasswordRequired,
           method.password
         ),
-        verificationCode: getSignInMethodAuthValue(
+        verificationCode: getSignInMethodVerificationCodeCheckState(
           method.identifier,
           isSignUpVerificationRequired,
           method.verificationCode
