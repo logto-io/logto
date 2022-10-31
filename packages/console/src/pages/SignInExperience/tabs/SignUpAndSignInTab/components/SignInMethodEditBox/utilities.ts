@@ -1,4 +1,4 @@
-import type { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 
 import type { SignInMethod } from './types';
 
@@ -18,24 +18,16 @@ export const computeOnVerificationStateChanged = (
   );
 
 export const computeOnSignInMethodAppended = (
-  oldValue: SignInMethod[],
-  signInIdentifier: SignInIdentifier,
-  requirePassword: boolean,
-  requireVerificationCode: boolean
-) => {
-  if (oldValue.some((method) => method.identifier === signInIdentifier)) {
-    return oldValue;
+  appendTo: SignInMethod[],
+  appended: SignInMethod
+): SignInMethod[] => {
+  const { identifier: signInIdentifier } = appended;
+
+  if (appendTo.some((method) => method.identifier === signInIdentifier)) {
+    return appendTo;
   }
 
-  return [
-    ...oldValue,
-    {
-      identifier: signInIdentifier,
-      password: requirePassword,
-      verificationCode: requireVerificationCode,
-      isPasswordPrimary: true,
-    },
-  ];
+  return [...appendTo, appended];
 };
 
 export const computeOnPasswordPrimaryFlagToggled = (
@@ -50,3 +42,27 @@ export const computeOnPasswordPrimaryFlagToggled = (
         }
       : method
   );
+
+export const getSignInMethodPasswordCheckState = (
+  signInIdentifier: SignInIdentifier,
+  isSignUpPasswordRequired: boolean,
+  originCheckState = false
+) => {
+  if (signInIdentifier === SignInIdentifier.Username) {
+    return true;
+  }
+
+  return isSignUpPasswordRequired || originCheckState;
+};
+
+export const getSignInMethodVerificationCodeCheckState = (
+  signInIdentifier: SignInIdentifier,
+  isSignUpVerificationRequired: boolean,
+  originCheckState = false
+) => {
+  if (signInIdentifier === SignInIdentifier.Username) {
+    return false;
+  }
+
+  return isSignUpVerificationRequired || originCheckState;
+};

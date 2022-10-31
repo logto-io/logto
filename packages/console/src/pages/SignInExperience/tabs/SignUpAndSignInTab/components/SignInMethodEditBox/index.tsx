@@ -1,4 +1,5 @@
-import type { ConnectorType, SignInIdentifier } from '@logto/schemas';
+import type { ConnectorType } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useEffect, useRef } from 'react';
 
 import DragDropProvider from '@/components/Transfer/DragDropProvider';
@@ -10,25 +11,27 @@ import AddSignInMethodButton from './AddSignInMethodButton';
 import SignInMethodItem from './SignInMethodItem';
 import type { SignInMethod } from './types';
 import {
-  computeOnSignInMethodAppended as appendSignInMethodIfNotExist,
+  computeOnSignInMethodAppended,
   computeOnVerificationStateChanged,
   computeOnPasswordPrimaryFlagToggled,
+  getSignInMethodPasswordCheckState,
+  getSignInMethodVerificationCodeCheckState,
 } from './utilities';
 
 type Props = {
   value: SignInMethod[];
   onChange: (value: SignInMethod[]) => void;
   requiredSignInIdentifiers: SignInIdentifier[];
-  isPasswordRequired: boolean;
-  isVerificationRequired: boolean;
+  isSignUpPasswordRequired: boolean;
+  isSignUpVerificationRequired: boolean;
 };
 
 const SignInMethodEditBox = ({
   value,
   onChange,
   requiredSignInIdentifiers,
-  isPasswordRequired,
-  isVerificationRequired,
+  isSignUpPasswordRequired,
+  isSignUpVerificationRequired,
 }: Props) => {
   const signInIdentifierOptions = signInIdentifiers.filter((candidateIdentifier) =>
     value.every(({ identifier }) => identifier !== candidateIdentifier)
@@ -49,27 +52,56 @@ const SignInMethodEditBox = ({
   const addSignInMethod = useCallback(
     (identifier: SignInIdentifier) => {
       handleChange(
-        appendSignInMethodIfNotExist(value, identifier, isPasswordRequired, isVerificationRequired)
+        computeOnSignInMethodAppended(value, {
+          identifier,
+          password: getSignInMethodPasswordCheckState(identifier, isSignUpPasswordRequired),
+          verificationCode: getSignInMethodVerificationCodeCheckState(
+            identifier,
+            isSignUpVerificationRequired
+          ),
+          isPasswordPrimary: true,
+        })
       );
     },
-    [handleChange, value, isPasswordRequired, isVerificationRequired]
+    [handleChange, value, isSignUpPasswordRequired, isSignUpVerificationRequired]
   );
 
   useEffect(() => {
-    const requiredSignInMethods = requiredSignInIdentifiers.reduce(
+    const allSignInMethods = requiredSignInIdentifiers.reduce(
       (previous, current) =>
-        appendSignInMethodIfNotExist(previous, current, isPasswordRequired, isVerificationRequired),
+        computeOnSignInMethodAppended(previous, {
+          identifier: current,
+          password: getSignInMethodPasswordCheckState(current, isSignUpPasswordRequired),
+          verificationCode: getSignInMethodVerificationCodeCheckState(
+            current,
+            isSignUpVerificationRequired
+          ),
+          isPasswordPrimary: true,
+        }),
       signInMethods.current
     );
 
     handleChange(
-      requiredSignInMethods.map((method) => ({
+      allSignInMethods.map((method) => ({
         ...method,
-        password: isPasswordRequired,
-        verificationCode: isVerificationRequired,
+        password: getSignInMethodPasswordCheckState(
+          method.identifier,
+          isSignUpPasswordRequired,
+          method.password
+        ),
+        verificationCode: getSignInMethodVerificationCodeCheckState(
+          method.identifier,
+          isSignUpVerificationRequired,
+          method.verificationCode
+        ),
       }))
     );
-  }, [handleChange, isPasswordRequired, isVerificationRequired, requiredSignInIdentifiers]);
+  }, [
+    handleChange,
+    isSignUpPasswordRequired,
+    isSignUpVerificationRequired,
+    requiredSignInIdentifiers,
+  ]);
 
   const onMoveItem = (dragIndex: number, hoverIndex: number) => {
     const dragItem = value[dragIndex];
@@ -106,8 +138,10 @@ const SignInMethodEditBox = ({
           >
             <SignInMethodItem
               signInMethod={signInMethod}
-              isPasswordRequired={isPasswordRequired}
-              isVerificationRequired={isVerificationRequired}
+              isPasswordDisabled={
+                signInMethod.identifier === SignInIdentifier.Username || isSignUpPasswordRequired
+              }
+              isVerificationDisabled={isSignUpVerificationRequired && !isSignUpPasswordRequired}
               isDeletable={requiredSignInIdentifiers.includes(signInMethod.identifier)}
               onVerificationStateChange={(identifier, verification, checked) => {
                 handleChange(

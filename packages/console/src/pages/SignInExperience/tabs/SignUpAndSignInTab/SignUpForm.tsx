@@ -1,5 +1,4 @@
 import { SignUpIdentifier } from '@logto/schemas';
-import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
@@ -19,10 +18,11 @@ import * as styles from './index.module.scss';
 
 const SignUpForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { control, setValue, resetField, watch } = useFormContext<SignInExperienceForm>();
-  const signUpIdentifier = watch('signUp.identifier');
+  const { control, setValue, getValues } = useFormContext<SignInExperienceForm>();
 
-  useEffect(() => {
+  const signUpIdentifier = getValues('signUp.identifier');
+
+  const postSignUpIdentifierChange = (signUpIdentifier: SignUpIdentifier) => {
     if (signUpIdentifier === SignUpIdentifier.Username) {
       setValue('signUp.password', true);
       setValue('signUp.verify', false);
@@ -38,10 +38,9 @@ const SignUpForm = () => {
     }
 
     if (requiredVerifySignUpIdentifiers.includes(signUpIdentifier)) {
-      resetField('signUp.password');
       setValue('signUp.verify', true);
     }
-  }, [resetField, setValue, signUpIdentifier]);
+  };
 
   return (
     <>
@@ -71,7 +70,11 @@ const SignUpForm = () => {
                 ),
               }))}
               onChange={(value) => {
+                if (!value) {
+                  return;
+                }
                 onChange(value);
+                postSignUpIdentifierChange(value);
               }}
             />
           )}
