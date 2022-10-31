@@ -46,23 +46,23 @@ export const computeOnPasswordPrimaryFlagToggled = (
 export const getSignInMethodPasswordCheckState = (
   signInIdentifier: SignInIdentifier,
   isSignUpPasswordRequired: boolean,
-  originCheckState?: boolean
+  originCheckState = false
 ) => {
   if (signInIdentifier === SignInIdentifier.Username) {
     return true;
   }
 
-  return isSignUpPasswordRequired || (originCheckState ?? isSignUpPasswordRequired);
+  return isSignUpPasswordRequired || originCheckState;
 };
 
 export const getSignInMethodVerificationCodeCheckState = (
   signInIdentifier: SignInIdentifier,
   isSignUpVerificationRequired: boolean,
-  originCheckState?: boolean
+  originCheckState = false
 ) => {
   if (signInIdentifier === SignInIdentifier.Username) {
     return false;
   }
 
-  return isSignUpVerificationRequired || (originCheckState ?? isSignUpVerificationRequired);
+  return isSignUpVerificationRequired || originCheckState;
 };
