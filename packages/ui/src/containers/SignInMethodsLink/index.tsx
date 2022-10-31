@@ -1,4 +1,3 @@
-import type { SignIn } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
@@ -12,11 +11,11 @@ import TextLink from '@/components/TextLink';
 import * as styles from './index.module.scss';
 
 type Props = {
-  signInMethods: SignIn['methods'];
+  methods: SignInIdentifier[];
   // Allows social page to pass additional query params to the sign-in pages
   search?: string;
   className?: string;
-  template?: TFuncKey<'translation', 'secondary'>;
+  template: TFuncKey<'translation', 'secondary'>;
 };
 
 const SignInMethodsKeyMap: {
@@ -27,13 +26,12 @@ const SignInMethodsKeyMap: {
   [SignInIdentifier.Sms]: 'phone_number',
 };
 
-const SignInMethodsLink = ({ signInMethods, template, search, className }: Props) => {
+const SignInMethodsLink = ({ methods, template, search, className }: Props) => {
   const { t } = useTranslation();
-  const identifiers = signInMethods.map(({ identifier }) => identifier);
 
-  const signInMethodsLink = useMemo(
+  const methodsLink = useMemo(
     () =>
-      identifiers.map((identifier) => (
+      methods.map((identifier) => (
         <TextLink
           key={identifier}
           className={styles.signInMethodLink}
@@ -41,24 +39,21 @@ const SignInMethodsLink = ({ signInMethods, template, search, className }: Props
           to={{ pathname: `/sign-in/${identifier}`, search }}
         />
       )),
-    [identifiers, search]
+    [methods, search]
   );
 
-  if (signInMethodsLink.length === 0) {
+  if (methodsLink.length === 0) {
     return null;
   }
 
-  // Without text template
-  if (!template) {
-    return <div className={classNames(styles.methodsLinkList, className)}>{signInMethodsLink}</div>;
-  }
+  // Raw i18n text
+  const rawText = t(`secondary.${template}`, { methods });
 
-  // With text template
-  const rawText = t(`secondary.${template}`, { methods: identifiers });
-  const textWithLink: ReactNode = identifiers.reduce<ReactNode>(
+  // Replace with link element
+  const textWithLink: ReactNode = methods.reduce<ReactNode>(
     (content, identifier, index) =>
       // @ts-expect-error: reactStringReplace type bug, using deprecated ReactNodeArray as its input type
-      reactStringReplace(content, identifier, () => signInMethodsLink[index]),
+      reactStringReplace(content, identifier, () => methodsLink[index]),
     rawText
   );
 

@@ -10,6 +10,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: '{{methods, list(type: disjunction;)}} ile giriş yapınız',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       'Hesabınız zaten var mı? {{methods, list(type: disjunction;)}} bağlantısına tıklayarak giriş yapabilirsiniz',
   },
@@ -27,7 +28,7 @@ const translation = {
     nav_back: 'Geri',
     agree: 'Kabul Et',
     got_it: 'Anladım',
-    sign_in_with: '{{name}} ile giriş yap',
+    sign_in_with: '{{name}} ile ilerle',
     forgot_password: 'Şifremi Unuttum?',
     switch_to: 'Switch to {{method}}', // UNTRANSLATED
   },
@@ -61,6 +62,8 @@ const translation = {
       'Hesabınızla ilişkili telefon numarasını girin, şifrenizi sıfırlamak için size doğrulama kodunu kısa mesajla gönderelim.',
     new_password: 'Yeni Şifre',
     password_changed: 'Password Changed', // UNTRANSLATED
+    no_account: "Don't have an account?", // UNTRANSLATED
+    have_account: 'Already have an account?', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'Kullanıcı adı ve şifre eşleşmiyor.',

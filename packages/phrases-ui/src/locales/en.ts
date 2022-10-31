@@ -8,6 +8,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: 'Sign in with {{methods, list(type: disjunction;)}}',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}',
     social_bind_with:
       'Already have an account? Sign in to link {{methods, list(type: disjunction;)}} with your social identity.',
   },
@@ -25,7 +26,7 @@ const translation = {
     nav_back: 'Back',
     agree: 'Agree',
     got_it: 'Got it',
-    sign_in_with: 'Sign in with {{name}}',
+    sign_in_with: 'Continue with {{name}}',
     forgot_password: 'Forgot your password?',
     switch_to: 'Switch to {{method}}',
   },
@@ -60,6 +61,8 @@ const translation = {
       'Enter the phone number associated with your account, and we’ll message you the verification code to reset your password.',
     new_password: 'New password',
     password_changed: 'Password Changed',
+    no_account: "Don't have an account?",
+    have_account: 'Already have an account?',
   },
   error: {
     username_password_mismatch: 'Username and password do not match',

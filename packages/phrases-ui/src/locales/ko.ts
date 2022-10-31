@@ -10,6 +10,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: '{{methods, list(type: disjunction;)}} 로그인',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       '이미 계정이 있으신가요? {{methods, list(type: disjunction;)}}로 로그인 해보세요!',
   },
@@ -27,7 +28,7 @@ const translation = {
     nav_back: '뒤로',
     agree: '동의',
     got_it: '알겠습니다',
-    sign_in_with: '{{name}} 로그인',
+    sign_in_with: '{{name}} 계속',
     forgot_password: '비밀번호를 잊어버리셨나요?',
     switch_to: 'Switch to {{method}}', // UNTRANSLATED
   },
@@ -60,6 +61,8 @@ const translation = {
       '계정과 연결된 전화번호를 입력하면 비밀번호 재설정을 위한 인증 코드를 문자로 보내드립니다.',
     new_password: '새 비밀번호',
     password_changed: 'Password Changed', // UNTRANSLATED
+    no_account: "Don't have an account?", // UNTRANSLATED
+    have_account: 'Already have an account?', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '사용자 이름 또는 비밀번호가 일치하지 않아요.',

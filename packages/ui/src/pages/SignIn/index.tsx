@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
 import LandingPageContainer from '@/containers/LandingPageContainer';
@@ -10,7 +12,8 @@ import * as styles from './index.module.scss';
 
 const SignIn = () => {
   const { signInMethods, signUpMethods, socialConnectors } = useSieMethods();
-  const otherMethods = signInMethods.slice(1);
+  const otherMethods = signInMethods.slice(1).map(({ identifier }) => identifier);
+  const { t } = useTranslation();
 
   return (
     <LandingPageContainer>
@@ -18,7 +21,7 @@ const SignIn = () => {
       {
         // Other sign-in methods
         otherMethods.length > 0 && (
-          <SignInMethodsLink signInMethods={otherMethods} template="sign_in_with" />
+          <SignInMethodsLink methods={otherMethods} template="sign_in_with" />
         )
       }
       {
@@ -35,12 +38,10 @@ const SignIn = () => {
         signUpMethods.length > 0 && (
           <>
             <div className={styles.placeHolder} />
-            <TextLink
-              replace
-              className={styles.createAccount}
-              to="/register"
-              text="action.create_account"
-            />
+            <div className={styles.createAccount}>
+              {t('description.no_account')}{' '}
+              <TextLink replace to="/register" text="action.create_account" />
+            </div>
           </>
         )
       }

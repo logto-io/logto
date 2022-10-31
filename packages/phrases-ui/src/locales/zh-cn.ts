@@ -10,6 +10,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: '通过 {{methods, list(type: disjunction;), zhOrSpaces}} 登录',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       '绑定到已有账户? 使用 {{methods, list(type: disjunction;), zhOrSpaces}} 登录并绑定。',
   },
@@ -58,6 +59,8 @@ const translation = {
     reset_password_description_sms: '输入手机号，领取验证码以重设密码。',
     new_password: '新密码',
     password_changed: '已重置密码！',
+    no_account: "Don't have an account?", // UNTRANSLATED
+    have_account: 'Already have an account?', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',
