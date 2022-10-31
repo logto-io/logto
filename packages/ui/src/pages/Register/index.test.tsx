@@ -63,7 +63,12 @@ describe('<Register />', () => {
 
   test('renders with social as primary', async () => {
     const { container } = renderWithPageContext(
-      <SettingsProvider settings={{ ...mockSignInExperienceSettings, signIn: { methods: [] } }}>
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          signUp: { ...mockSignInExperienceSettings.signUp, methods: [] },
+        }}
+      >
         <MemoryRouter>
           <Register />
         </MemoryRouter>
