@@ -43,7 +43,7 @@ const SocialCreateAccount = ({ connectorId, className }: Props) => {
         }}
       />
       <SignInMethodsLink
-        signInMethods={signInMethods}
+        methods={signInMethods.map(({ identifier }) => identifier)}
         template="social_bind_with"
         className={styles.desc}
         search={queryStringify({ [SearchParameters.bindWithSocial]: connectorId })}

@@ -15,11 +15,7 @@ type Props = {
 };
 
 const Main = ({ signInMethod, socialConnectors }: Props) => {
-  if (!signInMethod) {
-    return socialConnectors.length > 0 ? <SocialSignIn /> : null;
-  }
-
-  switch (signInMethod.identifier) {
+  switch (signInMethod?.identifier) {
     case 'email': {
       if (signInMethod.password && !signInMethod.verificationCode) {
         return <EmailPassword className={styles.main} />;

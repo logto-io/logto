@@ -10,6 +10,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: 'Entrar com {{methods, list(type: disjunction;)}}',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       'Já tem uma conta? Faça login para agregar {{methods, list(type: disjunction;)}} com a sua identidade social.',
   },

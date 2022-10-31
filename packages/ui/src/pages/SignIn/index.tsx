@@ -10,7 +10,7 @@ import * as styles from './index.module.scss';
 
 const SignIn = () => {
   const { signInMethods, signUpMethods, socialConnectors } = useSieMethods();
-  const otherMethods = signInMethods.slice(1);
+  const otherMethods = signInMethods.slice(1).map(({ identifier }) => identifier);
 
   return (
     <LandingPageContainer>
@@ -18,7 +18,7 @@ const SignIn = () => {
       {
         // Other sign-in methods
         otherMethods.length > 0 && (
-          <SignInMethodsLink signInMethods={otherMethods} template="sign_in_with" />
+          <SignInMethodsLink methods={otherMethods} template="sign_in_with" />
         )
       }
       {

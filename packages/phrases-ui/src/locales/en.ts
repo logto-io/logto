@@ -8,6 +8,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: 'Sign in with {{methods, list(type: disjunction;)}}',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}',
     social_bind_with:
       'Already have an account? Sign in to link {{methods, list(type: disjunction;)}} with your social identity.',
   },

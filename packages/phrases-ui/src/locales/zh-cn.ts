@@ -10,6 +10,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: '通过 {{methods, list(type: disjunction;), zhOrSpaces}} 登录',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       '绑定到已有账户? 使用 {{methods, list(type: disjunction;), zhOrSpaces}} 登录并绑定。',
   },
