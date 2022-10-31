@@ -1,20 +1,16 @@
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import NavBar from '@/components/NavBar';
+import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
 import UsernameSignIn from '@/containers/UsernameSignIn';
 import ErrorPage from '@/pages/ErrorPage';
-
-import * as styles from './index.module.scss';
 
 type Props = {
   method?: string;
 };
 
 const SecondarySignIn = () => {
-  const { t } = useTranslation();
   const { method = 'username' } = useParams<Props>();
 
   const signInForm = useMemo(() => {
@@ -36,15 +32,7 @@ const SecondarySignIn = () => {
     return <ErrorPage />;
   }
 
-  return (
-    <div className={styles.wrapper}>
-      <NavBar />
-      <div className={styles.container}>
-        <div className={styles.title}>{t('action.sign_in')}</div>
-        {signInForm}
-      </div>
-    </div>
-  );
+  return <SecondaryPageWrapper title="action.sign_in">{signInForm}</SecondaryPageWrapper>;
 };
 
 export default SecondarySignIn;

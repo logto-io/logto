@@ -1,20 +1,16 @@
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import NavBar from '@/components/NavBar';
+import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import CreateAccount from '@/containers/CreateAccount';
 import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
 import ErrorPage from '@/pages/ErrorPage';
-
-import * as styles from './index.module.scss';
 
 type Parameters = {
   method?: string;
 };
 
 const SecondaryRegister = () => {
-  const { t } = useTranslation();
   const { method = 'username' } = useParams<Parameters>();
 
   const registerForm = useMemo(() => {
@@ -36,15 +32,7 @@ const SecondaryRegister = () => {
     return <ErrorPage />;
   }
 
-  return (
-    <div className={styles.wrapper}>
-      <NavBar />
-      <div className={styles.container}>
-        <div className={styles.title}>{t('action.create_account')}</div>
-        {registerForm}
-      </div>
-    </div>
-  );
+  return <SecondaryPageWrapper title="action.create_account">{registerForm}</SecondaryPageWrapper>;
 };
 
 export default SecondaryRegister;
