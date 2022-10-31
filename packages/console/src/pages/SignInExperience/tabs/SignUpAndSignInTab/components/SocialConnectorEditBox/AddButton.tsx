@@ -1,3 +1,5 @@
+import classNames from 'classnames';
+
 import Plus from '@/assets/images/plus.svg';
 import ActionMenu from '@/components/ActionMenu';
 import type { Props as ButtonProps } from '@/components/Button';
@@ -36,7 +38,10 @@ const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
     <ActionMenu
       buttonProps={hasSelectedConnectors ? addAnotherButtonProps : addSocialConnectorButtonProps}
       dropdownHorizontalAlign="start"
-      dropdownClassName={styles.dropdown}
+      dropdownClassName={classNames(
+        hasSelectedConnectors ? styles.addAnotherDropdown : styles.dropdown
+      )}
+      isDropdownFullWidth={!hasSelectedConnectors}
     >
       {options.map(({ target, logo, name, connectors }) => (
         <DropdownItem
