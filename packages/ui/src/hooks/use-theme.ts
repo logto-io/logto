@@ -10,13 +10,18 @@ const getThemeBySystemConfiguration = (): Theme => (darkThemeWatchMedia.matches 
 export default function useTheme(): Theme {
   const { experienceSettings, theme, setTheme } = useContext(PageContext);
 
+  const consoleThemeFromLocalStorage = window.localStorage.getItem('logto:admin_console:theme');
   useEffect(() => {
-    if (!experienceSettings?.color.isDarkModeEnabled) {
-      return;
-    }
-
+    /**
+     * If Theme set in console dashboard, then based on localStorage we need update use-theme
+     * elseif no key found then will consider theme from system configuration
+     */
     const changeTheme = () => {
-      setTheme(getThemeBySystemConfiguration());
+      if (consoleThemeFromLocalStorage === 'light' || consoleThemeFromLocalStorage === 'dark') {
+        setTheme(consoleThemeFromLocalStorage);
+      } else {
+        setTheme(getThemeBySystemConfiguration);
+      }
     };
 
     changeTheme();
@@ -26,7 +31,7 @@ export default function useTheme(): Theme {
     return () => {
       darkThemeWatchMedia.removeEventListener('change', changeTheme);
     };
-  }, [experienceSettings, setTheme]);
+  }, [experienceSettings, setTheme, consoleThemeFromLocalStorage]);
 
   return theme;
 }
