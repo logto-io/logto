@@ -1,4 +1,4 @@
-import type { UserFlow } from '@/types';
+import { UserFlow } from '@/types';
 
 import {
   sendForgotPasswordEmailPasscode,
@@ -25,23 +25,23 @@ export const getSendPasscodeApi = (
   type: UserFlow,
   method: PasscodeChannel
 ): ((_address: string) => Promise<{ success: boolean }>) => {
-  if (type === 'forgot-password' && method === 'email') {
+  if (type === UserFlow.forgotPassword && method === 'email') {
     return sendForgotPasswordEmailPasscode;
   }
 
-  if (type === 'forgot-password' && method === 'sms') {
+  if (type === UserFlow.forgotPassword && method === 'sms') {
     return sendForgotPasswordSmsPasscode;
   }
 
-  if (type === 'sign-in' && method === 'email') {
+  if (type === UserFlow.signIn && method === 'email') {
     return sendSignInEmailPasscode;
   }
 
-  if (type === 'sign-in' && method === 'sms') {
+  if (type === UserFlow.signIn && method === 'sms') {
     return sendSignInSmsPasscode;
   }
 
-  if (type === 'register' && method === 'email') {
+  if (type === UserFlow.register && method === 'email') {
     return sendRegisterEmailPasscode;
   }
 
@@ -56,23 +56,23 @@ export const getVerifyPasscodeApi = (
   code: string,
   socialToBind?: string
 ) => Promise<{ redirectTo?: string; success?: boolean }>) => {
-  if (type === 'forgot-password' && method === 'email') {
+  if (type === UserFlow.forgotPassword && method === 'email') {
     return verifyForgotPasswordEmailPasscode;
   }
 
-  if (type === 'forgot-password' && method === 'sms') {
+  if (type === UserFlow.forgotPassword && method === 'sms') {
     return verifyForgotPasswordSmsPasscode;
   }
 
-  if (type === 'sign-in' && method === 'email') {
+  if (type === UserFlow.signIn && method === 'email') {
     return verifySignInEmailPasscode;
   }
 
-  if (type === 'sign-in' && method === 'sms') {
+  if (type === UserFlow.signIn && method === 'sms') {
     return verifySignInSmsPasscode;
   }
 
-  if (type === 'register' && method === 'email') {
+  if (type === UserFlow.register && method === 'email') {
     return verifyRegisterEmailPasscode;
   }
 

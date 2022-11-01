@@ -5,6 +5,7 @@ import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
 import UsernameSignIn from '@/containers/UsernameSignIn';
 import ErrorPage from '@/pages/ErrorPage';
+import { UserFlow } from '@/types';
 
 type Props = {
   method?: string;
@@ -16,12 +17,12 @@ const SecondarySignIn = () => {
   const signInForm = useMemo(() => {
     if (method === 'sms') {
       // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <PhonePasswordless autoFocus type="sign-in" />;
+      return <PhonePasswordless autoFocus type={UserFlow.signIn} />;
     }
 
     if (method === 'email') {
       // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <EmailPasswordless autoFocus type="sign-in" />;
+      return <EmailPasswordless autoFocus type={UserFlow.signIn} />;
     }
 
     // eslint-disable-next-line jsx-a11y/no-autofocus

@@ -7,11 +7,13 @@ import { useTranslation } from 'react-i18next';
 import reactStringReplace from 'react-string-replace';
 
 import TextLink from '@/components/TextLink';
+import type { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
 
 type Props = {
   methods: SignInIdentifier[];
+  flow: Exclude<UserFlow, 'forgot-password'>;
   // Allows social page to pass additional query params to the sign-in pages
   search?: string;
   className?: string;
@@ -26,7 +28,7 @@ const SignInMethodsKeyMap: {
   [SignInIdentifier.Sms]: 'phone_number',
 };
 
-const SignInMethodsLink = ({ methods, template, search, className }: Props) => {
+const OtherMethodsLink = ({ methods, template, search, flow, className }: Props) => {
   const { t } = useTranslation();
 
   const methodsLink = useMemo(
@@ -36,10 +38,10 @@ const SignInMethodsLink = ({ methods, template, search, className }: Props) => {
           key={identifier}
           className={styles.signInMethodLink}
           text={`input.${SignInMethodsKeyMap[identifier]}`}
-          to={{ pathname: `/sign-in/${identifier}`, search }}
+          to={{ pathname: `/${flow}/${identifier}`, search }}
         />
       )),
-    [methods, search]
+    [flow, methods, search]
   );
 
   if (methodsLink.length === 0) {
@@ -60,4 +62,4 @@ const SignInMethodsLink = ({ methods, template, search, className }: Props) => {
   return <div className={classNames(styles.textLink, className)}>{textWithLink}</div>;
 };
 
-export default SignInMethodsLink;
+export default OtherMethodsLink;

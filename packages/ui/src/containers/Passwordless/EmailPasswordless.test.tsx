@@ -5,6 +5,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { sendRegisterEmailPasscode } from '@/apis/register';
 import { sendSignInEmailPasscode } from '@/apis/sign-in';
+import { UserFlow } from '@/types';
 
 import EmailPasswordless from './EmailPasswordless';
 
@@ -19,7 +20,7 @@ describe('<EmailPasswordless/>', () => {
   test('render', () => {
     const { queryByText, container } = renderWithPageContext(
       <MemoryRouter>
-        <EmailPasswordless type="sign-in" />
+        <EmailPasswordless type={UserFlow.signIn} />
       </MemoryRouter>
     );
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
@@ -30,7 +31,7 @@ describe('<EmailPasswordless/>', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailPasswordless type="sign-in" />
+          <EmailPasswordless type={UserFlow.signIn} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -41,7 +42,7 @@ describe('<EmailPasswordless/>', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailPasswordless type="sign-in" hasTerms={false} />
+          <EmailPasswordless type={UserFlow.signIn} hasTerms={false} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -51,7 +52,7 @@ describe('<EmailPasswordless/>', () => {
   test('required email with error message', () => {
     const { queryByText, container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <EmailPasswordless type="sign-in" />
+        <EmailPasswordless type={UserFlow.signIn} />
       </MemoryRouter>
     );
     const submitButton = getByText('action.continue');
@@ -75,7 +76,7 @@ describe('<EmailPasswordless/>', () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailPasswordless type="sign-in" />
+          <EmailPasswordless type={UserFlow.signIn} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -101,7 +102,7 @@ describe('<EmailPasswordless/>', () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailPasswordless type="sign-in" hasTerms={false} />
+          <EmailPasswordless type={UserFlow.signIn} hasTerms={false} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -127,7 +128,7 @@ describe('<EmailPasswordless/>', () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailPasswordless type="sign-in" />
+          <EmailPasswordless type={UserFlow.signIn} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -155,7 +156,7 @@ describe('<EmailPasswordless/>', () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailPasswordless type="register" />
+          <EmailPasswordless type={UserFlow.register} />
         </SettingsProvider>
       </MemoryRouter>
     );

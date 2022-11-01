@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/Button';
 import useBindSocial from '@/hooks/use-bind-social';
 import { useSieMethods } from '@/hooks/use-sie';
-import { SearchParameters } from '@/types';
+import { SearchParameters, UserFlow } from '@/types';
 import { queryStringify } from '@/utils';
 
-import SignInMethodsLink from '../SignInMethodsLink';
+import OtherMethodsLink from '../OtherMethodsLink';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -42,9 +42,10 @@ const SocialCreateAccount = ({ connectorId, className }: Props) => {
           registerWithSocial(connectorId);
         }}
       />
-      <SignInMethodsLink
+      <OtherMethodsLink
         methods={signInMethods.map(({ identifier }) => identifier)}
         template="social_bind_with"
+        flow={UserFlow.signIn}
         className={styles.desc}
         search={queryStringify({ [SearchParameters.bindWithSocial]: connectorId })}
       />

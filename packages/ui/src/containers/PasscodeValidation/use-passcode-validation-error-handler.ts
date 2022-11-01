@@ -1,4 +1,4 @@
-import type { UserFlow } from '@/types';
+import { UserFlow } from '@/types';
 
 import useForgotPasswordWithEmailErrorHandler from './use-forgot-password-with-email-error-handler';
 import useForgotPasswordWithSmsErrorHandler from './use-forgot-password-with-sms-error-handler';
@@ -10,23 +10,23 @@ import useRegisterWithEmailErrorHandler from './user-register-with-email-error-h
 type Method = 'email' | 'sms';
 
 const getPasscodeValidationErrorHandlersByFlowAndMethod = (flow: UserFlow, method: Method) => {
-  if (flow === 'sign-in' && method === 'email') {
+  if (flow === UserFlow.signIn && method === 'email') {
     return useSignInWithEmailErrorHandler;
   }
 
-  if (flow === 'sign-in' && method === 'sms') {
+  if (flow === UserFlow.signIn && method === 'sms') {
     return useSignInWithSmsErrorHandler;
   }
 
-  if (flow === 'register' && method === 'email') {
+  if (flow === UserFlow.register && method === 'email') {
     return useRegisterWithEmailErrorHandler;
   }
 
-  if (flow === 'register' && method === 'sms') {
+  if (flow === UserFlow.register && method === 'sms') {
     return useRegisterWithSmsErrorHandler;
   }
 
-  if (flow === 'forgot-password' && method === 'email') {
+  if (flow === UserFlow.forgotPassword && method === 'email') {
     return useForgotPasswordWithEmailErrorHandler;
   }
 

@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
 import LandingPageContainer from '@/containers/LandingPageContainer';
-import SignInMethodsLink from '@/containers/SignInMethodsLink';
+import OtherMethodsLink from '@/containers/OtherMethodsLink';
 import { SocialSignInList } from '@/containers/SocialSignIn';
 import { useSieMethods } from '@/hooks/use-sie';
+import { UserFlow } from '@/types';
 
 import Main from './Main';
 import * as styles from './index.module.scss';
@@ -21,7 +22,11 @@ const Register = () => {
       {
         // Other create account methods
         otherMethods.length > 0 && (
-          <SignInMethodsLink methods={otherMethods} template="register_with" />
+          <OtherMethodsLink
+            methods={otherMethods}
+            template="register_with"
+            flow={UserFlow.register}
+          />
         )
       }
       {

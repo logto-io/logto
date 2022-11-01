@@ -5,6 +5,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { sendRegisterSmsPasscode } from '@/apis/register';
 import { sendSignInSmsPasscode } from '@/apis/sign-in';
+import { UserFlow } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import PhonePasswordless from './PhonePasswordless';
@@ -26,7 +27,7 @@ describe('<PhonePasswordless/>', () => {
   test('render', () => {
     const { queryByText, container } = renderWithPageContext(
       <MemoryRouter>
-        <PhonePasswordless type="sign-in" />
+        <PhonePasswordless type={UserFlow.signIn} />
       </MemoryRouter>
     );
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
@@ -37,7 +38,7 @@ describe('<PhonePasswordless/>', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <PhonePasswordless type="sign-in" />
+          <PhonePasswordless type={UserFlow.signIn} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -48,7 +49,7 @@ describe('<PhonePasswordless/>', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <PhonePasswordless type="sign-in" hasTerms={false} />
+          <PhonePasswordless type={UserFlow.signIn} hasTerms={false} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -58,7 +59,7 @@ describe('<PhonePasswordless/>', () => {
   test('required phone with error message', () => {
     const { queryByText, container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <PhonePasswordless type="sign-in" />
+        <PhonePasswordless type={UserFlow.signIn} />
       </MemoryRouter>
     );
     const submitButton = getByText('action.continue');
@@ -82,7 +83,7 @@ describe('<PhonePasswordless/>', () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <PhonePasswordless type="sign-in" />
+          <PhonePasswordless type={UserFlow.signIn} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -107,7 +108,7 @@ describe('<PhonePasswordless/>', () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <PhonePasswordless type="sign-in" hasTerms={false} />
+          <PhonePasswordless type={UserFlow.signIn} hasTerms={false} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -132,7 +133,7 @@ describe('<PhonePasswordless/>', () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <PhonePasswordless type="sign-in" />
+          <PhonePasswordless type={UserFlow.signIn} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -160,7 +161,7 @@ describe('<PhonePasswordless/>', () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <PhonePasswordless type="register" />
+          <PhonePasswordless type={UserFlow.register} />
         </SettingsProvider>
       </MemoryRouter>
     );

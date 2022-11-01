@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
 import ErrorPage from '@/pages/ErrorPage';
+import { UserFlow } from '@/types';
 
 type Props = {
   method?: string;
@@ -24,7 +25,7 @@ const ForgotPassword = () => {
       description={`description.reset_password_description_${method === 'email' ? 'email' : 'sms'}`}
     >
       {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
-      <PasswordlessForm autoFocus hasSwitch type="forgot-password" hasTerms={false} />
+      <PasswordlessForm autoFocus hasSwitch type={UserFlow.forgotPassword} hasTerms={false} />
     </SecondaryPageWrapper>
   );
 };

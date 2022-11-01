@@ -6,6 +6,7 @@ import PhonePassword from '@/containers/PhonePassword';
 import SocialSignIn from '@/containers/SocialSignIn';
 import UsernameSignIn from '@/containers/UsernameSignIn';
 import type { ArrayElement } from '@/types';
+import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
 
@@ -21,7 +22,7 @@ const Main = ({ signInMethod, socialConnectors }: Props) => {
         return <EmailPassword className={styles.main} />;
       }
 
-      return <EmailPasswordless type="sign-in" className={styles.main} />;
+      return <EmailPasswordless type={UserFlow.signIn} className={styles.main} />;
     }
 
     case 'sms': {
@@ -29,7 +30,7 @@ const Main = ({ signInMethod, socialConnectors }: Props) => {
         return <PhonePassword className={styles.main} />;
       }
 
-      return <PhonePasswordless type="sign-in" className={styles.main} />;
+      return <PhonePasswordless type={UserFlow.signIn} className={styles.main} />;
     }
 
     case 'username': {
