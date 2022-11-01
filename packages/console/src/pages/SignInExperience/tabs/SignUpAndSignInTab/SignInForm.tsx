@@ -1,5 +1,4 @@
-import { SignUpIdentifier } from '@logto/schemas';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import FormField from '@/components/FormField';
@@ -12,22 +11,23 @@ import * as styles from './index.module.scss';
 const SignInForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { control } = useFormContext<SignInExperienceForm>();
-  /**
-   * Note: `watch` may not return the default value, use `useWatch` instead.
-   * Reference: https://github.com/react-hook-form/react-hook-form/issues/1332
-   */
-  const signUpIdentifier = useWatch({
-    control,
-    name: 'signUp.identifier',
-    defaultValue: SignUpIdentifier.Username,
-  });
-  const setupPasswordAtSignUp = useWatch({ control, name: 'signUp.password', defaultValue: false });
-  const setupVerificationAtSignUp = useWatch({
-    control,
-    name: 'signUp.verify',
-    defaultValue: false,
-  });
+  const { control, watch } = useFormContext<
+    Omit<SignInExperienceForm, 'signUp'> & {
+      signUp: Partial<SignInExperienceForm['signUp']>;
+    }
+  >();
+
+  const signUpIdentifier = watch('signUp.identifier');
+  const setupPasswordAtSignUp = watch('signUp.password');
+  const setupVerificationAtSignUp = watch('signUp.verify');
+
+  if (
+    !signUpIdentifier ||
+    setupPasswordAtSignUp === undefined ||
+    setupVerificationAtSignUp === undefined
+  ) {
+    return null;
+  }
 
   return (
     <>
