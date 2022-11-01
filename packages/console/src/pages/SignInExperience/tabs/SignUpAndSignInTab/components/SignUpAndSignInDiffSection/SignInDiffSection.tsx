@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import type { SignInMethod } from '../SignInMethodEditBox/types';
 import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
+import type { SignInMethodsObject } from './types';
 import { convertToSignInMethodsObject } from './utilities';
 
 type Props = {
@@ -41,11 +42,15 @@ const SignInDiffSection = ({ before, after, isAfter = false }: Props) => {
 
   const displaySignInMethodsObject = isAfter ? afterSignInMethodsObject : beforeSignInMethodsObject;
 
-  const hasIdentifierChanged = (identifierKey: string) =>
-    get(signInDiff, `added.${identifierKey}`) !== undefined;
+  const hasIdentifierChanged = (identifierKey: SignInIdentifier) =>
+    get(signInDiff, `added.${identifierKey.toLocaleLowerCase()}`) !== undefined;
 
-  const hasAuthenticationChanged = (identifierKey: string, authenticationKey: string) =>
-    get(signInDiff, `updated.${identifierKey}.${authenticationKey}`) !== undefined;
+  const hasAuthenticationChanged = (
+    identifierKey: SignInIdentifier,
+    authenticationKey: keyof SignInMethodsObject[SignInIdentifier]
+  ) =>
+    get(signInDiff, `updated.${identifierKey.toLocaleLowerCase()}.${authenticationKey}`) !==
+    undefined;
 
   return (
     <div>
