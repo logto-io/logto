@@ -2,12 +2,7 @@ import { generateDarkColor } from '@logto/core-kit';
 
 import type { CreateSignInExperience } from '../db-entries';
 import { SignInMode } from '../db-entries';
-import {
-  BrandingStyle,
-  SignInIdentifier,
-  SignInMethodState,
-  SignUpIdentifier,
-} from '../foundations';
+import { BrandingStyle, SignInIdentifier, SignUpIdentifier } from '../foundations';
 
 const defaultPrimaryColor = '#6139F6';
 
@@ -43,25 +38,7 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
         verificationCode: false,
         isPasswordPrimary: true,
       },
-      {
-        identifier: SignInIdentifier.Email,
-        password: true,
-        verificationCode: true,
-        isPasswordPrimary: false,
-      },
-      {
-        identifier: SignInIdentifier.Sms,
-        password: true,
-        verificationCode: true,
-        isPasswordPrimary: false,
-      },
     ],
-  },
-  signInMethods: {
-    username: SignInMethodState.Primary,
-    email: SignInMethodState.Disabled,
-    sms: SignInMethodState.Disabled,
-    social: SignInMethodState.Disabled,
   },
   socialSignInConnectorTargets: [],
   signInMode: SignInMode.SignInAndRegister,

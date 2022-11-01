@@ -6,7 +6,6 @@ import RequestError from '@/errors/RequestError';
 import { findAllCustomLanguageTags } from '@/queries/custom-phrase';
 import assertThat from '@/utils/assert-that';
 
-export * from './sign-in-methods';
 export * from './sign-up';
 export * from './sign-in';
 

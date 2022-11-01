@@ -5,8 +5,6 @@ import {
   validateBranding,
   validateLanguageInfo,
   validateTermsOfUse,
-  validateSignInMethods,
-  isEnabled,
   validateSignUp,
   validateSignIn,
 } from '@/lib/sign-in-experience';
@@ -37,7 +35,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
     /* eslint-disable complexity */
     async (ctx, next) => {
       const { socialSignInConnectorTargets, ...rest } = ctx.guard.body;
-      const { branding, languageInfo, termsOfUse, signInMethods, signUp, signIn } = rest;
+      const { branding, languageInfo, termsOfUse, signUp, signIn } = rest;
 
       if (branding) {
         validateBranding(branding);
@@ -62,14 +60,6 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
         )
       );
 
-      if (signInMethods) {
-        validateSignInMethods(
-          signInMethods,
-          filteredSocialSignInConnectorTargets,
-          enabledConnectors
-        );
-      }
-
       if (signUp) {
         validateSignUp(signUp, enabledConnectors);
       }
@@ -80,17 +70,14 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
         const signInExperience = await findDefaultSignInExperience();
         validateSignIn(signIn, signInExperience.signUp, enabledConnectors);
       }
-
-      // Update socialSignInConnectorTargets only when social sign-in is enabled.
-      const signInExperience =
-        signInMethods && isEnabled(signInMethods.social)
+      ctx.body = await updateDefaultSignInExperience(
+        filteredSocialSignInConnectorTargets
           ? {
-              ...ctx.guard.body,
+              ...rest,
               socialSignInConnectorTargets: filteredSocialSignInConnectorTargets,
             }
-          : rest;
-
-      ctx.body = await updateDefaultSignInExperience(signInExperience);
+          : rest
+      );
 
       return next();
     }

@@ -28,14 +28,13 @@ describe('sign-in-experience query', () => {
     languageInfo: JSON.stringify(mockSignInExperience.languageInfo),
     signIn: JSON.stringify(mockSignInExperience.signIn),
     signUp: JSON.stringify(mockSignInExperience.signUp),
-    signInMethods: JSON.stringify(mockSignInExperience.socialSignInConnectorTargets),
     socialSignInConnectorTargets: JSON.stringify(mockSignInExperience.socialSignInConnectorTargets),
   };
 
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
-      select "id", "color", "branding", "language_info", "terms_of_use", "sign_in_methods", "sign_in", "sign_up", "social_sign_in_connector_targets", "sign_in_mode"
+      select "id", "color", "branding", "language_info", "terms_of_use", "sign_in", "sign_up", "social_sign_in_connector_targets", "sign_in_mode"
       from "sign_in_experiences"
       where "id"=$1
     `;

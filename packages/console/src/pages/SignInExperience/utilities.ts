@@ -1,6 +1,6 @@
 import en from '@logto/phrases-ui/lib/locales/en';
-import type { SignInExperience, SignInMethods, Translation } from '@logto/schemas';
-import { SignUpIdentifier, SignInMethodKey, SignInMethodState, SignInMode } from '@logto/schemas';
+import type { SignInExperience, Translation } from '@logto/schemas';
+import { SignUpIdentifier, SignInMode } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import {
@@ -10,49 +10,12 @@ import {
 } from './tabs/SignUpAndSignInTab/components/SignUpAndSignInDiffSection/utilities';
 import type { SignInExperienceForm } from './types';
 
-const findMethodState = (
-  setup: SignInExperienceForm,
-  method: keyof SignInMethods
-): SignInMethodState => {
-  const { signInMethods } = setup;
-
-  if (signInMethods.primary === method) {
-    return SignInMethodState.Primary;
-  }
-
-  if (!signInMethods.enableSecondary) {
-    return SignInMethodState.Disabled;
-  }
-
-  if (signInMethods[method]) {
-    return SignInMethodState.Secondary;
-  }
-
-  return SignInMethodState.Disabled;
-};
-
 export const signInExperienceParser = {
   toLocalForm: (signInExperience: SignInExperience): SignInExperienceForm => {
-    const methodKeys = Object.values(SignInMethodKey);
-    const primaryMethod = methodKeys.find(
-      (key) => signInExperience.signInMethods[key] === SignInMethodState.Primary
-    );
-    const secondaryMethods = methodKeys.filter(
-      (key) => signInExperience.signInMethods[key] === SignInMethodState.Secondary
-    );
-
     const { signInMode } = signInExperience;
 
     return {
       ...signInExperience,
-      signInMethods: {
-        primary: primaryMethod,
-        enableSecondary: secondaryMethods.length > 0,
-        username: secondaryMethods.includes(SignInMethodKey.Username),
-        sms: secondaryMethods.includes(SignInMethodKey.Sms),
-        email: secondaryMethods.includes(SignInMethodKey.Email),
-        social: secondaryMethods.includes(SignInMethodKey.Social),
-      },
       createAccountEnabled: signInMode !== SignInMode.SignIn,
     };
   },
@@ -66,12 +29,6 @@ export const signInExperienceParser = {
         // Transform empty string to undefined
         darkLogoUrl: conditional(branding.darkLogoUrl?.length && branding.darkLogoUrl),
         slogan: conditional(branding.slogan?.length && branding.slogan),
-      },
-      signInMethods: {
-        username: findMethodState(setup, 'username'),
-        sms: findMethodState(setup, 'sms'),
-        email: findMethodState(setup, 'email'),
-        social: findMethodState(setup, 'social'),
       },
       signUp: {
         identifier: signUp.identifier ?? SignUpIdentifier.Username,

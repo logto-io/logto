@@ -4,7 +4,6 @@ import {
   ConnectorPlatform,
   ConnectorType,
   SignInIdentifier,
-  SignInMethodState,
   SignInMode,
   SignUpIdentifier,
 } from '@logto/schemas';
@@ -209,12 +208,6 @@ export const mockSignInExperience: SignInExperience = {
   },
   signIn: {
     methods: [usernameSignInMethod, emailSignInMethod, smsSignInMethod],
-  },
-  signInMethods: {
-    username: SignInMethodState.Primary,
-    email: SignInMethodState.Secondary,
-    sms: SignInMethodState.Secondary,
-    social: SignInMethodState.Secondary,
   },
   socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
   signInMode: SignInMode.SignInAndRegister,
