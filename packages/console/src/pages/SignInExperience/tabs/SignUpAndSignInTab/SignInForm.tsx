@@ -11,11 +11,7 @@ import * as styles from './index.module.scss';
 const SignInForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { control, watch } = useFormContext<
-    Omit<SignInExperienceForm, 'signUp'> & {
-      signUp: Partial<SignInExperienceForm['signUp']>;
-    }
-  >();
+  const { control, watch } = useFormContext<SignInExperienceForm>();
 
   const signUpIdentifier = watch('signUp.identifier');
   const setupPasswordAtSignUp = watch('signUp.password');

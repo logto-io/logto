@@ -18,9 +18,13 @@ import * as styles from './index.module.scss';
 
 const SignUpForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { control, setValue, getValues } = useFormContext<SignInExperienceForm>();
+  const { control, setValue, watch } = useFormContext<SignInExperienceForm>();
 
-  const signUpIdentifier = getValues('signUp.identifier');
+  const signUpIdentifier = watch('signUp.identifier');
+
+  if (!signUpIdentifier) {
+    return null;
+  }
 
   const postSignUpIdentifierChange = (signUpIdentifier: SignUpIdentifier) => {
     if (signUpIdentifier === SignUpIdentifier.Username) {
@@ -95,7 +99,7 @@ const SignUpForm = () => {
               <Checkbox
                 label={t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
                 disabled={signUpIdentifier === SignUpIdentifier.Username}
-                value={value}
+                value={value ?? false}
                 onChange={onChange}
               />
             )}
@@ -107,7 +111,7 @@ const SignUpForm = () => {
               render={({ field: { value, onChange } }) => (
                 <Checkbox
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
-                  value={value}
+                  value={value ?? false}
                   disabled={requiredVerifySignUpIdentifiers.includes(signUpIdentifier)}
                   onChange={onChange}
                 />

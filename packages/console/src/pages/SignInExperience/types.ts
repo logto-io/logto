@@ -1,6 +1,6 @@
-import type { SignInExperience, SignInMethodKey } from '@logto/schemas';
+import type { SignInExperience, SignInMethodKey, SignUp } from '@logto/schemas';
 
-export type SignInExperienceForm = Omit<SignInExperience, 'signInMethods'> & {
+export type SignInExperienceForm = Omit<SignInExperience, 'signInMethods' | 'signUp'> & {
   signInMethods: {
     primary?: SignInMethodKey;
     enableSecondary: boolean;
@@ -9,5 +9,6 @@ export type SignInExperienceForm = Omit<SignInExperience, 'signInMethods'> & {
     email: boolean;
     social: boolean;
   };
+  signUp: Partial<SignUp>;
   createAccountEnabled: boolean;
 };
