@@ -54,7 +54,7 @@ const UsernameRegister = ({ className }: Props) => {
     [setFieldErrors]
   );
 
-  const { result, run: asyncCheckUsername } = useApi(checkUsername, errorHandlers);
+  const { run: asyncCheckUsername } = useApi(checkUsername, errorHandlers);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
