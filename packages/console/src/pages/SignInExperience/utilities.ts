@@ -4,9 +4,6 @@ import { SignUpIdentifier, SignInMethodKey, SignInMethodState, SignInMode } from
 import { conditional } from '@silverhand/essentials';
 
 import {
-  diffSignInMethods,
-  diffSignUp,
-  diffSocialTargets,
   isSignInMethodsDifferent,
   isSignUpDifferent,
   isSocialTargetsDifferent,
@@ -91,10 +88,11 @@ export const compareSignUpAndSignInConfigs = (
   after: SignInExperience
 ): boolean => {
   return (
-    !isSignUpDifferent(diffSignUp(before.signUp, after.signUp)) &&
-    !isSignInMethodsDifferent(diffSignInMethods(before.signIn.methods, after.signIn.methods)) &&
+    !isSignUpDifferent(before.signUp, after.signUp) &&
+    !isSignInMethodsDifferent(before.signIn.methods, after.signIn.methods) &&
     !isSocialTargetsDifferent(
-      diffSocialTargets(before.socialSignInConnectorTargets, after.socialSignInConnectorTargets)
+      before.socialSignInConnectorTargets,
+      after.socialSignInConnectorTargets
     )
   );
 };

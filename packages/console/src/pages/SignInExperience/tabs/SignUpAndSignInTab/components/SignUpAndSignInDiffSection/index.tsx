@@ -1,34 +1,42 @@
+import type { SignInExperience } from '@logto/schemas';
+
 import SignInDiffSection from './SignInDiffSection';
 import SignUpDiffSection from './SignUpDiffSection';
 import SocialTargetsDiffSection from './SocialTargetsDiffSection';
-import type { SignUpDiff, SignInMethodsDiff, SocialTargetsDiff } from './types';
 import { isSignInMethodsDifferent, isSignUpDifferent, isSocialTargetsDifferent } from './utilities';
 
 type Props = {
-  signUpDiff: SignUpDiff;
-  signInMethodsDiff: SignInMethodsDiff;
-  socialTargetsDiff: SocialTargetsDiff;
+  before: SignInExperience;
+  after: SignInExperience;
   isAfter?: boolean;
 };
 
-const SignUpAndSignInDiffSection = ({
-  signUpDiff,
-  signInMethodsDiff,
-  socialTargetsDiff,
-  isAfter = false,
-}: Props) => {
-  const showSignUpDiff = isSignUpDifferent(signUpDiff);
-  const showSignInDiff = isSignInMethodsDifferent(signInMethodsDiff);
-  const showSocialDiff = isSocialTargetsDifferent(socialTargetsDiff);
+const SignUpAndSignInDiffSection = ({ before, after, isAfter = false }: Props) => {
+  const showSignUpDiff = isSignUpDifferent(before.signUp, after.signUp);
+  const showSignInDiff = isSignInMethodsDifferent(before.signIn.methods, after.signIn.methods);
+  const showSocialDiff = isSocialTargetsDifferent(
+    before.socialSignInConnectorTargets,
+    after.socialSignInConnectorTargets
+  );
 
   return (
     <>
-      {showSignUpDiff && <SignUpDiffSection signUpDiff={signUpDiff} isAfter={isAfter} />}
+      {showSignUpDiff && (
+        <SignUpDiffSection before={before.signUp} after={after.signUp} isAfter={isAfter} />
+      )}
       {showSignInDiff && (
-        <SignInDiffSection signInMethodsDiff={signInMethodsDiff} isAfter={isAfter} />
+        <SignInDiffSection
+          before={before.signIn.methods}
+          after={after.signIn.methods}
+          isAfter={isAfter}
+        />
       )}
       {showSocialDiff && (
-        <SocialTargetsDiffSection socialTargetsDiff={socialTargetsDiff} isAfter={isAfter} />
+        <SocialTargetsDiffSection
+          before={before.socialSignInConnectorTargets}
+          after={after.socialSignInConnectorTargets}
+          isAfter={isAfter}
+        />
       )}
     </>
   );

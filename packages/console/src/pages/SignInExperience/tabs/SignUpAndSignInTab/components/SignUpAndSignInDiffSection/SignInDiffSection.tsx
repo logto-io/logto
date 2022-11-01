@@ -1,68 +1,94 @@
-import { conditional } from '@silverhand/essentials';
+import type { SignInIdentifier } from '@logto/schemas';
+import { detailedDiff } from 'deep-object-diff';
+import get from 'lodash.get';
 import { useTranslation } from 'react-i18next';
 
+import type { SignInMethod } from '../SignInMethodEditBox/types';
 import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
-import type { SignInMethodsDiff } from './types';
-import { createDiffFilter } from './utilities';
+import { convertToSignInMethodsObject } from './utilities';
 
 type Props = {
-  signInMethodsDiff: SignInMethodsDiff;
+  before: SignInMethod[];
+  after: SignInMethod[];
   isAfter?: boolean;
 };
 
-const SignInDiffSection = ({ signInMethodsDiff, isAfter = false }: Props) => {
+const stringCompareFunction = (leftValue: string, rightValue: string) =>
+  leftValue === rightValue ? 0 : leftValue > rightValue ? 1 : -1;
+
+const SignInDiffSection = ({ before, after, isAfter = false }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const diffFilter = createDiffFilter(isAfter);
+  const beforeSignInMethodsObject = convertToSignInMethodsObject(
+    before
+      .slice()
+      .sort(({ identifier: leftIdentifier }, { identifier: rightIdentifier }) =>
+        stringCompareFunction(leftIdentifier, rightIdentifier)
+      )
+  );
 
-  const displayMethods = signInMethodsDiff.filter(({ mutation }) => diffFilter(mutation));
+  const afterSignInMethodsObject = convertToSignInMethodsObject(
+    after
+      .slice()
+      .sort(({ identifier: leftIdentifier }, { identifier: rightIdentifier }) =>
+        stringCompareFunction(leftIdentifier, rightIdentifier)
+      )
+  );
 
-  const renderSignInMethod = (method: SignInMethodsDiff[number]) => {
-    const { mutation, identifier, password, verificationCode } = method;
+  const signInDiff = isAfter
+    ? detailedDiff(beforeSignInMethodsObject, afterSignInMethodsObject)
+    : detailedDiff(afterSignInMethodsObject, beforeSignInMethodsObject);
 
-    const passwordDiffs = password.filter(({ mutation }) => diffFilter(mutation));
-    const verificationCodeDiffs = verificationCode.filter(({ mutation }) => diffFilter(mutation));
+  const displaySignInMethodsObject = isAfter ? afterSignInMethodsObject : beforeSignInMethodsObject;
 
-    const passwordElements = passwordDiffs
-      .filter(({ value }) => value)
-      .map(({ mutation }, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <DiffSegment key={index} mutation={mutation}>
-          {t('sign_in_exp.sign_up_and_sign_in.sign_in.password_auth')}
-        </DiffSegment>
-      ));
+  const hasIdentifierChanged = (identifierKey: string) =>
+    get(signInDiff, `added.${identifierKey}`) !== undefined;
 
-    const verificationCodeElements = verificationCodeDiffs
-      .filter(({ value }) => value)
-      .map(({ mutation }, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <DiffSegment key={index} mutation={mutation}>
-          {t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
-        </DiffSegment>
-      ));
+  const hasAuthenticationChanged = (identifierKey: string, authenticationKey: string) =>
+    get(signInDiff, `updated.${identifierKey}.${authenticationKey}`) !== undefined;
 
-    const hasAuthentication = passwordElements.length > 0 || verificationCodeElements.length > 0;
-    const needDisjunction = passwordElements.length > 0 && verificationCodeElements.length > 0;
-    const diffElements = [
-      t('sign_in_exp.sign_up_and_sign_in.identifiers', { context: identifier }),
-      conditional(hasAuthentication && ' ('),
-      ...passwordElements,
-      ...(conditional(needDisjunction && [' ', t('sign_in_exp.sign_up_and_sign_in.or'), ' ']) ??
-        []),
-      ...verificationCodeElements,
-      conditional(hasAuthentication && ')'),
-    ].filter(Boolean);
-
-    return <DiffSegment mutation={mutation}>{diffElements}</DiffSegment>;
-  };
-
+  // TODO: make this title i18n
   return (
     <div>
       <div className={styles.title}>SignIn</div>
       <ul className={styles.list}>
-        {displayMethods.map((method) => (
-          <li key={method.identifier}>{renderSignInMethod(method)}</li>
-        ))}
+        {
+          // eslint-disable-next-line no-restricted-syntax
+          (Object.keys(displaySignInMethodsObject) as SignInIdentifier[]).map((identifierKey) => {
+            const { password, verificationCode } = displaySignInMethodsObject[identifierKey];
+            const hasAuthentication = password || verificationCode;
+            const needDisjunction = password && verificationCode;
+
+            return (
+              <li key={identifierKey}>
+                <DiffSegment hasChanged={hasIdentifierChanged(identifierKey)} isAfter={isAfter}>
+                  {t('sign_in_exp.sign_up_and_sign_in.identifiers', {
+                    context: identifierKey.toLocaleLowerCase(),
+                  })}
+                  {hasAuthentication && ' ('}
+                  {password && (
+                    <DiffSegment
+                      hasChanged={hasAuthenticationChanged(identifierKey, 'password')}
+                      isAfter={isAfter}
+                    >
+                      {t('sign_in_exp.sign_up_and_sign_in.sign_in.password_auth')}
+                    </DiffSegment>
+                  )}
+                  {needDisjunction && ` ${String(t('sign_in_exp.sign_up_and_sign_in.or'))} `}
+                  {verificationCode && (
+                    <DiffSegment
+                      hasChanged={hasAuthenticationChanged(identifierKey, 'verificationCode')}
+                      isAfter={isAfter}
+                    >
+                      {t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
+                    </DiffSegment>
+                  )}
+                  {hasAuthentication && ')'}
+                </DiffSegment>
+              </li>
+            );
+          })
+        }
       </ul>
     </div>
   );

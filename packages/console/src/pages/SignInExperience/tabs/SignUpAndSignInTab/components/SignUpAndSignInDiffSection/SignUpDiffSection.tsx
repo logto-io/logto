@@ -1,67 +1,51 @@
-import { conditional } from '@silverhand/essentials';
+import type { SignUp } from '@logto/schemas';
+import { diff } from 'deep-object-diff';
+import get from 'lodash.get';
 import { useTranslation } from 'react-i18next';
 
 import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
-import type { SignUpDiff } from './types';
-import { createDiffFilter } from './utilities';
 
 type Props = {
-  signUpDiff: SignUpDiff;
+  before: SignUp;
+  after: SignUp;
   isAfter?: boolean;
 };
 
-const SignUpDiffSection = ({ signUpDiff, isAfter = false }: Props) => {
+const SignUpDiffSection = ({ before, after, isAfter = false }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { identifier, password, verify } = signUpDiff;
+  const signUpDiff = isAfter ? diff(before, after) : diff(after, before);
+  const signUp = isAfter ? after : before;
+  const hasChanged = (path: keyof SignUp) => get(signUpDiff, path) !== undefined;
 
-  const diffFilter = createDiffFilter(isAfter);
-
-  const identifierDiffs = identifier.filter(({ mutation }) => diffFilter(mutation));
-  const passwordDiffs = password.filter(({ mutation }) => diffFilter(mutation));
-  const verifyDiffs = verify.filter(({ mutation }) => diffFilter(mutation));
-
-  const identifierElements = identifierDiffs.map(({ mutation, value }, index) => (
-    // eslint-disable-next-line react/no-array-index-key
-    <DiffSegment key={index} mutation={mutation}>
-      {t('sign_in_exp.sign_up_and_sign_in.identifiers', { context: value.toLowerCase() })}
-    </DiffSegment>
-  ));
-
-  const passwordElements = passwordDiffs
-    .filter(({ value }) => value)
-    .map(({ mutation }, index) => (
-      // eslint-disable-next-line react/no-array-index-key
-      <DiffSegment key={index} mutation={mutation}>
-        {t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
-      </DiffSegment>
-    ));
-
-  const verifyElements = verifyDiffs
-    .filter(({ value }) => value)
-    .map(({ mutation }, index) => (
-      // eslint-disable-next-line react/no-array-index-key
-      <DiffSegment key={index} mutation={mutation}>
-        {t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
-      </DiffSegment>
-    ));
-
-  const hasAuthentication = passwordElements.length > 0 || verifyElements.length > 0;
-  const needConjunction = passwordElements.length > 0 && verifyElements.length > 0;
-  const diffElements = [
-    ...identifierElements,
-    conditional(hasAuthentication && ' ('),
-    ...passwordElements,
-    ...(conditional(needConjunction && [' ', t('sign_in_exp.sign_up_and_sign_in.and'), ' ']) ?? []),
-    ...verifyElements,
-    conditional(hasAuthentication && ')'),
-  ].filter(Boolean);
+  const { identifier, password, verify } = signUp;
+  const hasAuthentication = password || verify;
+  const needConjunction = password && verify;
 
   return (
     <div>
       <div className={styles.title}>SignUp</div>
       <ul className={styles.list}>
-        <li>{diffElements}</li>
+        <li>
+          <DiffSegment hasChanged={hasChanged('identifier')} isAfter={isAfter}>
+            {t('sign_in_exp.sign_up_and_sign_in.identifiers', {
+              context: identifier.toLowerCase(),
+            })}
+          </DiffSegment>
+          {hasAuthentication && ' ('}
+          {password && (
+            <DiffSegment hasChanged={hasChanged('password')} isAfter={isAfter}>
+              {t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
+            </DiffSegment>
+          )}
+          {needConjunction && ` ${String(t('sign_in_exp.sign_up_and_sign_in.and'))} `}
+          {verify && (
+            <DiffSegment hasChanged={hasChanged('verify')} isAfter={isAfter}>
+              {t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
+            </DiffSegment>
+          )}
+          {hasAuthentication && ')'}
+        </li>
       </ul>
     </div>
   );

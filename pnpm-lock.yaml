@@ -123,6 +123,7 @@ importers:
       '@silverhand/ts-config-react': 1.2.1
       '@tsconfig/docusaurus': ^1.0.5
       '@types/color': ^3.0.3
+      '@types/lodash.get': ^4.4.7
       '@types/lodash.kebabcase': ^4.1.6
       '@types/mdx': ^2.0.1
       '@types/mdx-js__react': ^1.5.5
@@ -135,6 +136,7 @@ importers:
       cross-env: ^7.0.3
       csstype: ^3.0.11
       dayjs: ^1.10.5
+      deep-object-diff: ^1.1.7
       deepmerge: ^4.2.2
       dnd-core: ^16.0.0
       eslint: ^8.21.0
@@ -143,6 +145,7 @@ importers:
       i18next-browser-languagedetector: ^6.1.4
       ky: ^0.31.0
       lint-staged: ^13.0.0
+      lodash.get: ^4.4.2
       lodash.kebabcase: ^4.1.1
       nanoid: ^3.1.23
       parcel: 2.7.0
@@ -191,6 +194,7 @@ importers:
       '@silverhand/ts-config-react': 1.2.1_typescript@4.7.4
       '@tsconfig/docusaurus': 1.0.5
       '@types/color': 3.0.3
+      '@types/lodash.get': 4.4.7
       '@types/lodash.kebabcase': 4.1.6
       '@types/mdx': 2.0.1
       '@types/mdx-js__react': 1.5.5
@@ -203,6 +207,7 @@ importers:
       cross-env: 7.0.3
       csstype: 3.0.11
       dayjs: 1.10.7
+      deep-object-diff: 1.1.7
       deepmerge: 4.2.2
       dnd-core: 16.0.0
       eslint: 8.21.0
@@ -211,6 +216,7 @@ importers:
       i18next-browser-languagedetector: 6.1.4
       ky: 0.31.0
       lint-staged: 13.0.0
+      lodash.get: 4.4.2
       lodash.kebabcase: 4.1.1
       nanoid: 3.3.1
       parcel: 2.7.0_postcss@8.4.6
@@ -4055,6 +4061,12 @@ packages:
       '@types/node': 17.0.23
     dev: true
 
+  /@types/lodash.get/4.4.7:
+    resolution: {integrity: sha512-af34Mj+KdDeuzsJBxc/XeTtOx0SZHZNLd+hdrn+PcKGQs0EG2TJTzQAOTCZTgDJCArahlCzLWSy8c2w59JRz7Q==}
+    dependencies:
+      '@types/lodash': 4.14.178
+    dev: true
+
   /@types/lodash.kebabcase/4.1.6:
     resolution: {integrity: sha512-+RAD9pCAa8kuVyCYTeDNiwBXwD/0u0p+hos3NSqD+tXTjJextbfF3farfYB+ssAKgEssoewXEtBsfwBpsI7gsA==}
     dependencies:
@@ -5841,6 +5853,10 @@ packages:
 
   /deep-is/0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
+    dev: true
+
+  /deep-object-diff/1.1.7:
+    resolution: {integrity: sha512-QkgBca0mL08P6HiOjoqvmm6xOAl2W6CT2+34Ljhg0OeFan8cwlcdq8jrLKsBBuUFAZLsN5b6y491KdKEoSo9lg==}
     dev: true
 
   /deepmerge/4.2.2:

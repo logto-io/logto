@@ -6,20 +6,22 @@ import useConnectorGroups from '@/hooks/use-connector-groups';
 
 import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
-import type { SocialTargetsDiff } from './types';
-import { createDiffFilter } from './utilities';
 
 type Props = {
-  socialTargetsDiff: SocialTargetsDiff;
+  before: string[];
+  after: string[];
   isAfter?: boolean;
 };
 
-const SocialTargetsDiffSection = ({ socialTargetsDiff, isAfter = false }: Props) => {
+const SocialTargetsDiffSection = ({ before, after, isAfter = false }: Props) => {
   const { data: groups, error } = useConnectorGroups();
   const { language } = i18next;
+  const sortedBeforeTargets = before.slice().sort();
+  const sortedAfterTargets = after.slice().sort();
 
-  const diffFilter = createDiffFilter(isAfter);
-  const displayTargets = socialTargetsDiff.filter(({ mutation }) => diffFilter(mutation));
+  const displayTargets = isAfter ? sortedAfterTargets : sortedBeforeTargets;
+
+  const hasChanged = (target: string) => !(before.includes(target) && after.includes(target));
 
   if (!groups) {
     return null;
@@ -33,7 +35,7 @@ const SocialTargetsDiffSection = ({ socialTargetsDiff, isAfter = false }: Props)
     <div>
       <div className={styles.title}>Social</div>
       <ul className={styles.list}>
-        {displayTargets.map(({ mutation, value: target }) => {
+        {displayTargets.map((target) => {
           const connectorDetail = groups.find(
             ({ target: connectorTarget }) => connectorTarget === target
           );
@@ -44,7 +46,7 @@ const SocialTargetsDiffSection = ({ socialTargetsDiff, isAfter = false }: Props)
 
           return (
             <li key={target}>
-              <DiffSegment mutation={mutation}>
+              <DiffSegment hasChanged={hasChanged(target)} isAfter={isAfter}>
                 {conditional(isLanguageTag(language) && connectorDetail.name[language]) ??
                   connectorDetail.name.en}
               </DiffSegment>
