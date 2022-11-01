@@ -2,7 +2,7 @@ import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
-import { literal, object, string } from 'zod';
+import { literal, object, string, z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
@@ -27,18 +27,19 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users',
     koaPagination(),
     koaGuard({
-      query: object({ search: string().optional(), hideAdminUser: literal('true').optional() }),
+      query: object({ search: string().optional(), hideAdminUser: literal('true').optional(), isSensitive: z.enum(['true', 'false']).default('true') }),
     }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
       const {
-        query: { search, hideAdminUser: _hideAdminUser },
+        query: { search, hideAdminUser: _hideAdminUser, isSensitive: _isSensitive },
       } = ctx.guard;
 
       const hideAdminUser = _hideAdminUser === 'true';
+      const isSensitive = _isSensitive === 'true';
       const [{ count }, users] = await Promise.all([
-        countUsers(search, hideAdminUser),
-        findUsers(limit, offset, search, hideAdminUser),
+        countUsers(search, hideAdminUser, isSensitive),
+        findUsers(limit, offset, search, hideAdminUser, isSensitive),
       ]);
 
       ctx.pagination.totalCount = count;

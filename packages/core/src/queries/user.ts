@@ -84,44 +84,50 @@ export const hasUserWithIdentity = async (target: string, userId: string) =>
     `
   );
 
-const buildUserSearchConditionSql = (search: string) => {
+const buildUserSearchConditionSql = (search: string, isSensitive?: boolean) => {
+  let conditions;
   const searchFields = [fields.primaryEmail, fields.primaryPhone, fields.username, fields.name];
-  const conditions = searchFields.map((filedName) => sql`${filedName} like ${'%' + search + '%'}`);
+  if (isSensitive) {
+    conditions = searchFields.map((filedName) => sql`${filedName} like ${'%' + search + '%'}`);
+  }else {
+    conditions = searchFields.map((filedName) => sql`${filedName} ilike ${'%' + search + '%'}`);
+  }
 
   return sql`${sql.join(conditions, sql` or `)}`;
 };
 
-const buildUserConditions = (search?: string, hideAdminUser?: boolean) => {
+const buildUserConditions = (search?: string, hideAdminUser?: boolean, isSensitive?: boolean) => {
   if (hideAdminUser) {
     return sql`
       where not (${fields.roleNames}::jsonb?${UserRole.Admin})
-      ${conditionalSql(search, (search) => sql`and (${buildUserSearchConditionSql(search)})`)}
+      ${conditionalSql(search, (search) => sql`and (${buildUserSearchConditionSql(search, isSensitive)})`)}
     `;
   }
 
   return sql`
-    ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search)}`)}
+    ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search, isSensitive)}`)}
   `;
 };
 
-export const countUsers = async (search?: string, hideAdminUser?: boolean) =>
+export const countUsers = async (search?: string, hideAdminUser?: boolean, isSensitive?: boolean) =>
   envSet.pool.one<{ count: number }>(sql`
     select count(*)
     from ${table}
-    ${buildUserConditions(search, hideAdminUser)}
+    ${buildUserConditions(search, hideAdminUser, isSensitive)}
   `);
 
 export const findUsers = async (
   limit: number,
   offset: number,
   search?: string,
-  hideAdminUser?: boolean
+  hideAdminUser?: boolean,
+  isSensitive?: boolean
 ) =>
   envSet.pool.any<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      ${buildUserConditions(search, hideAdminUser)}
+      ${buildUserConditions(search, hideAdminUser, isSensitive)}
       limit ${limit}
       offset ${offset}
     `
