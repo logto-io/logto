@@ -13,7 +13,7 @@ jest.mock('i18next', () => ({
 
 describe('<Register />', () => {
   test('renders with username as primary', async () => {
-    const { queryByText, queryAllByText, container } = renderWithPageContext(
+    const { queryAllByText, container } = renderWithPageContext(
       <SettingsProvider>
         <MemoryRouter>
           <Register />
@@ -59,6 +59,26 @@ describe('<Register />', () => {
     );
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
     expect(queryByText('action.continue')).not.toBeNull();
+  });
+
+  test('render with email and sms passwordless', async () => {
+    const { queryByText, container } = renderWithPageContext(
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          signUp: {
+            ...mockSignInExperienceSettings.signUp,
+            methods: [SignInIdentifier.Email, SignInIdentifier.Sms],
+          },
+        }}
+      >
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      </SettingsProvider>
+    );
+    expect(queryByText('secondary.register_with')).not.toBeNull();
+    expect(container.querySelector('input[name="email"]')).not.toBeNull();
   });
 
   test('renders with social as primary', async () => {

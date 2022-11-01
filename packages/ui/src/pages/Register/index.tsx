@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
 import LandingPageContainer from '@/containers/LandingPageContainer';
-import SignInMethodsLink from '@/containers/SignInMethodsLink';
+import OtherMethodsLink from '@/containers/OtherMethodsLink';
 import { SocialSignInList } from '@/containers/SocialSignIn';
 import { useSieMethods } from '@/hooks/use-sie';
 
@@ -21,7 +21,7 @@ const Register = () => {
       {
         // Other create account methods
         otherMethods.length > 0 && (
-          <SignInMethodsLink methods={otherMethods} template="register_with" />
+          <OtherMethodsLink methods={otherMethods} template="register_with" flow="register" />
         )
       }
       {
