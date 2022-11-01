@@ -86,8 +86,11 @@ const EmailForm = ({
           setFieldValue((state) => ({ ...state, email: '' }));
         }}
       />
+
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
+
       {hasSwitch && <PasswordlessSwitch target="sms" className={styles.switch} />}
+
       {hasTerms && <TermsOfUse className={styles.terms} />}
       <Button title={submitButtonText} onClick={async () => onSubmitHandler()} />
 
