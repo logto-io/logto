@@ -55,15 +55,12 @@ const SignInMethodEditBox = ({
         computeOnSignInMethodAppended(value, {
           identifier,
           password: getSignInMethodPasswordCheckState(identifier, isSignUpPasswordRequired),
-          verificationCode: getSignInMethodVerificationCodeCheckState(
-            identifier,
-            isSignUpVerificationRequired
-          ),
+          verificationCode: getSignInMethodVerificationCodeCheckState(identifier),
           isPasswordPrimary: true,
         })
       );
     },
-    [handleChange, value, isSignUpPasswordRequired, isSignUpVerificationRequired]
+    [handleChange, value, isSignUpPasswordRequired]
   );
 
   useEffect(() => {
@@ -72,10 +69,7 @@ const SignInMethodEditBox = ({
         computeOnSignInMethodAppended(previous, {
           identifier: current,
           password: getSignInMethodPasswordCheckState(current, isSignUpPasswordRequired),
-          verificationCode: getSignInMethodVerificationCodeCheckState(
-            current,
-            isSignUpVerificationRequired
-          ),
+          verificationCode: getSignInMethodVerificationCodeCheckState(current),
           isPasswordPrimary: true,
         }),
       signInMethods.current
@@ -89,11 +83,7 @@ const SignInMethodEditBox = ({
           isSignUpPasswordRequired,
           method.password
         ),
-        verificationCode: getSignInMethodVerificationCodeCheckState(
-          method.identifier,
-          isSignUpVerificationRequired,
-          method.verificationCode
-        ),
+        verificationCode: getSignInMethodVerificationCodeCheckState(method.identifier),
       }))
     );
   }, [
@@ -138,11 +128,15 @@ const SignInMethodEditBox = ({
           >
             <SignInMethodItem
               signInMethod={signInMethod}
-              isPasswordDisabled={
-                signInMethod.identifier === SignInIdentifier.Username || isSignUpPasswordRequired
+              isPasswordCheckboxEnabled={
+                signInMethod.identifier !== SignInIdentifier.Username && !isSignUpPasswordRequired
               }
-              isVerificationDisabled={isSignUpVerificationRequired && !isSignUpPasswordRequired}
-              isDeletable={requiredSignInIdentifiers.includes(signInMethod.identifier)}
+              isVerificationCheckboxEnabled={
+                (isSignUpPasswordRequired && isSignUpVerificationRequired) ||
+                // Note: the next line is used to handle the case when the sign-up identifier is `Username`
+                (isSignUpPasswordRequired && signInMethod.identifier !== SignInIdentifier.Username)
+              }
+              isDeletable={!requiredSignInIdentifiers.includes(signInMethod.identifier)}
               onVerificationStateChange={(identifier, verification, checked) => {
                 handleChange(
                   computeOnVerificationStateChanged(value, identifier, verification, checked)
