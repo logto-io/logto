@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.container {
+  min-width: 552px;
+}
+
 .description {
   font: var(--font-body-medium);
 }
@@ -7,20 +11,19 @@
 .content {
   display: flex;
   flex-direction: row;
-  margin-top: _.unit(6);
+  margin-top: _.unit(3);
   border-radius: 8px;
   font: var(--font-body-medium);
   justify-content: space-between;
   align-items: stretch;
-  width: 552px;
+  column-gap: _.unit(3);
 
   .section {
-    width: 270px;
+    flex: 1;
     background: var(--color-layer-2);
     border-radius: 8px;
     padding: _.unit(5);
     color: var(--color-text);
-
 
     .title {
       font: var(--font-title-medium);

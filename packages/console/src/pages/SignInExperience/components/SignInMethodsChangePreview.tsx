@@ -13,7 +13,7 @@ const SignInMethodsChangePreview = ({ before, after }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.description}>{t('sign_in_exp.save_alert.description')}</div>
       <div className={styles.content}>
         <div className={styles.section}>
