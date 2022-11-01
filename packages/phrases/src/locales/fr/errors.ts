@@ -48,6 +48,13 @@ const errors = {
     same_password: 'Your new password can’t be the same as your current password.', // UNTRANSLATED
     require_password: 'You need to set a password before sign in.', // UNTRANSLATED
     password_exists: 'Your password has been set.', // UNTRANSLATED
+    require_username: 'You need to set a username before sign in.', // UNTRANSLATED
+    username_exists: 'Your username has been set.', // UNTRANSLATED
+    require_email: 'You need to set an email before sign in.', // UNTRANSLATED
+    email_exists: 'Your email has been set.', // UNTRANSLATED
+    require_sms: 'You need to set a phone before sign in.', // UNTRANSLATED
+    sms_exists: 'Your phone has been set.', // UNTRANSLATED
+    require_email_or_sms: 'You need to set a phone or email before sign in.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: "La méthode de cryptage {{name}} n'est pas prise en charge.",

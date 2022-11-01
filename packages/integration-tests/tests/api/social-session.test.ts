@@ -1,3 +1,4 @@
+import { SignUpIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
@@ -15,7 +16,7 @@ import {
   getUser,
 } from '@/api';
 import MockClient from '@/client';
-import { setUpConnector, createUserByAdmin } from '@/helpers';
+import { setUpConnector, createUserByAdmin, setSignUpIdentifier } from '@/helpers';
 import { generateUsername, generatePassword } from '@/utils';
 
 const state = 'foo_state';
@@ -27,6 +28,7 @@ describe('social sign-in and register', () => {
 
   beforeAll(async () => {
     await setUpConnector(mockSocialConnectorId, mockSocialConnectorConfig);
+    await setSignUpIdentifier(SignUpIdentifier.None, false);
   });
 
   it('register with social', async () => {
