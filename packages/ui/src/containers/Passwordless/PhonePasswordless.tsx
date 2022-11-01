@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import { PhoneInput } from '@/components/Input';
+import PasswordlessSwitch from '@/containers/PasswordlessSwitch';
 import TermsOfUse from '@/containers/TermsOfUse';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
@@ -14,7 +15,6 @@ import usePhoneNumber from '@/hooks/use-phone-number';
 import useTerms from '@/hooks/use-terms';
 import type { UserFlow } from '@/types';
 
-import PasswordlessSwitch from './PasswordlessSwitch';
 import * as styles from './index.module.scss';
 
 type Props = {
