@@ -11,6 +11,7 @@ import Consent from './pages/Consent';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import Passcode from './pages/Passcode';
+import PasswordRegisterWithUsername from './pages/PasswordRegisterWithUsername';
 import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 import SecondaryRegister from './pages/SecondaryRegister';
@@ -68,8 +69,10 @@ const App = () => {
 
               {/* register */}
               <Route path="/register" element={<Register />} />
-              {/* TODO: @simeng LOG-4456 */}
-              <Route path="/register/password" element={null} />
+              <Route
+                path="/register/username/password"
+                element={<PasswordRegisterWithUsername />}
+              />
               <Route path="/register/:method" element={<SecondaryRegister />} />
 
               {/* forgot password */}

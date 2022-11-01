@@ -16,7 +16,6 @@ const useForm = <T extends Record<string, unknown>>(initialState: T) => {
 
   const [fieldValue, setFieldValue] = useState<T>(initialState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
-  const [formErrorMessage, setFormErrorMessage] = useState<string>();
 
   const fieldValidationsRef = useRef<FieldValidations>({});
 
@@ -63,11 +62,9 @@ const useForm = <T extends Record<string, unknown>>(initialState: T) => {
   return {
     fieldValue,
     fieldErrors,
-    formErrorMessage,
     validateForm,
     setFieldValue,
     setFieldErrors,
-    setFormErrorMessage,
     register,
   };
 };

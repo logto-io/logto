@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { signInBasic } from '@/apis/sign-in';
@@ -36,22 +36,17 @@ const defaultState: FieldState = {
 const UsernameSignIn = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
-  const {
-    fieldValue,
-    formErrorMessage,
-    setFieldValue,
-    register,
-    validateForm,
-    setFormErrorMessage,
-  } = useForm(defaultState);
+  const [errorMessage, setErrorMessage] = useState<string>();
+
+  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.invalid_credentials': (error) => {
-        setFormErrorMessage(error.message);
+        setErrorMessage(error.message);
       },
     }),
-    [setFormErrorMessage]
+    [setErrorMessage]
   );
 
   const { result, run: asyncSignInBasic } = useApi(signInBasic, errorHandlers);
@@ -60,7 +55,7 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
     async (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
 
-      setFormErrorMessage(undefined);
+      setErrorMessage(undefined);
 
       if (!validateForm()) {
         return;
@@ -74,14 +69,7 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
 
       void asyncSignInBasic(fieldValue.username, fieldValue.password, socialToBind);
     },
-    [
-      setFormErrorMessage,
-      validateForm,
-      termsValidation,
-      asyncSignInBasic,
-      fieldValue.username,
-      fieldValue.password,
-    ]
+    [validateForm, termsValidation, asyncSignInBasic, fieldValue.username, fieldValue.password]
   );
 
   useEffect(() => {
@@ -112,9 +100,7 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
           placeholder={t('input.password')}
           {...register('password', (value) => requiredValidation('password', value))}
         />
-        {formErrorMessage && (
-          <ErrorMessage className={styles.formErrors}>{formErrorMessage}</ErrorMessage>
-        )}
+        {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
       </div>
 
       <TermsOfUse className={styles.terms} />
