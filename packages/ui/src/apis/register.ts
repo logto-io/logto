@@ -73,10 +73,9 @@ export const verifyRegisterEmailPasscode = async (email: string, code: string) =
     })
     .json<Response>();
 
-// TODO: @simeng LOG-4503
-export const verifyUsernameExistence = async (username: string) => {
+export const checkUsername = async (username: string) => {
   await api
-    .post(`${apiPrefix}/check/username`, {
+    .post(`${apiPrefix}/register/password/check-username`, {
       json: {
         username,
       },

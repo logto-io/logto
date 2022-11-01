@@ -2,7 +2,7 @@ import { fireEvent, act, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { verifyUsernameExistence } from '@/apis/register';
+import { checkUsername } from '@/apis/register';
 
 import UsernameRegister from '.';
 
@@ -14,7 +14,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/register', () => ({
-  verifyUsernameExistence: jest.fn(async () => ({})),
+  checkUsername: jest.fn(async () => ({})),
 }));
 
 describe('<UsernameRegister />', () => {
@@ -40,7 +40,7 @@ describe('<UsernameRegister />', () => {
 
     expect(queryByText('username_required')).not.toBeNull();
 
-    expect(verifyUsernameExistence).not.toBeCalled();
+    expect(checkUsername).not.toBeCalled();
   });
 
   test('username with initial numeric char should throw', () => {
@@ -57,7 +57,7 @@ describe('<UsernameRegister />', () => {
 
     expect(queryByText('username_should_not_start_with_number')).not.toBeNull();
 
-    expect(verifyUsernameExistence).not.toBeCalled();
+    expect(checkUsername).not.toBeCalled();
 
     // Clear error
     if (usernameInput) {
@@ -80,7 +80,7 @@ describe('<UsernameRegister />', () => {
 
     expect(queryByText('username_valid_charset')).not.toBeNull();
 
-    expect(verifyUsernameExistence).not.toBeCalled();
+    expect(checkUsername).not.toBeCalled();
 
     // Clear error
     if (usernameInput) {
@@ -111,7 +111,7 @@ describe('<UsernameRegister />', () => {
     });
 
     await waitFor(() => {
-      expect(verifyUsernameExistence).toBeCalledWith('username');
+      expect(checkUsername).toBeCalledWith('username');
     });
   });
 });

@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { verifyUsernameExistence } from '@/apis/register';
+import { checkUsername } from '@/apis/register';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
@@ -54,7 +54,7 @@ const UsernameRegister = ({ className }: Props) => {
     [setFieldErrors]
   );
 
-  const { run: asyncVerifyUsername } = useApi(verifyUsernameExistence, errorHandlers);
+  const { result, run: asyncCheckUsername } = useApi(checkUsername, errorHandlers);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
@@ -71,7 +71,7 @@ const UsernameRegister = ({ className }: Props) => {
       const { username } = fieldValue;
 
       // Use sync call for this api to make sure the username value being passed to the password set page stays the same
-      const result = await asyncVerifyUsername(username);
+      const result = await asyncCheckUsername(username);
 
       if (result) {
         navigate(`/${UserFlow.register}/${SignInIdentifier.Username}/password`, {
@@ -79,7 +79,7 @@ const UsernameRegister = ({ className }: Props) => {
         });
       }
     },
-    [validateForm, termsValidation, fieldValue, asyncVerifyUsername, navigate]
+    [validateForm, termsValidation, fieldValue, asyncCheckUsername, navigate]
   );
 
   return (
