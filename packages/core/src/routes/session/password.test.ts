@@ -9,6 +9,7 @@ import { createRequester } from '@/utils/test-utils';
 import passwordRoutes, { registerRoute, signInRoute } from './password';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const hasUser = jest.fn(async (username: string) => username === 'username1');
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const hasActiveUsers = jest.fn(async () => true);
@@ -20,7 +21,7 @@ jest.mock('@/queries/user', () => ({
   findUserByPhone: async () => ({ id: 'id' }),
   findUserByEmail: async () => ({ id: 'id' }),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
-  hasUser: async (username: string) => username === 'username1',
+  hasUser: async (username: string) => hasUser(username),
   hasUserWithIdentity: async (connectorId: string, userId: string) =>
     connectorId === 'connectorId' && userId === 'id',
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
@@ -240,6 +241,50 @@ describe('session -> password routes', () => {
       const response = await sessionRequest
         .post(`${registerRoute}/username`)
         .send({ username: 'username', password: 'password' });
+      expect(response.statusCode).toEqual(422);
+    });
+  });
+
+  describe('POST /session/register/password/check-username', () => {
+    it('check and return empty', async () => {
+      interactionDetails.mockResolvedValueOnce({ params: {} });
+
+      const response = await sessionRequest
+        .post(`${registerRoute}/check-username`)
+        .send({ username: 'username' });
+      expect(response.status).toEqual(204);
+      expect(hasUser).toHaveBeenCalled();
+    });
+
+    it('throw error if username not valid', async () => {
+      const usernameStartedWithNumber = '1username';
+      const response = await sessionRequest
+        .post(`${registerRoute}/check-username`)
+        .send({ username: usernameStartedWithNumber, password: 'password' });
+      expect(response.statusCode).toEqual(400);
+    });
+
+    it('throw error if username exists', async () => {
+      const response = await sessionRequest
+        .post(`${registerRoute}/check-username`)
+        .send({ username: 'username1' });
+      expect(response.statusCode).toEqual(422);
+    });
+
+    it('throws if sign up identifier is not username', async () => {
+      interactionDetails.mockResolvedValueOnce({ params: {} });
+
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signUp: {
+          ...mockSignInExperience.signUp,
+          identifier: SignUpIdentifier.Email,
+        },
+      });
+
+      const response = await sessionRequest
+        .post(`${registerRoute}/check-username`)
+        .send({ username: 'username' });
       expect(response.statusCode).toEqual(422);
     });
   });

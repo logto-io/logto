@@ -95,6 +95,39 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
   );
 
   router.post(
+    `${registerRoute}/check-username`,
+    koaGuard({
+      body: object({
+        username: string().regex(usernameRegEx),
+      }),
+    }),
+    async (ctx, next) => {
+      const { username } = ctx.guard.body;
+
+      const signInExperience = await findDefaultSignInExperience();
+      assertThat(
+        signInExperience.signUp.identifier === SignUpIdentifier.Username,
+        new RequestError({
+          code: 'user.sign_up_method_not_enabled',
+          status: 422,
+        })
+      );
+
+      assertThat(
+        !(await hasUser(username)),
+        new RequestError({
+          code: 'user.username_exists_register',
+          status: 422,
+        })
+      );
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
     `${registerRoute}/username`,
     koaGuard({
       body: object({
