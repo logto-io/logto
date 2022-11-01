@@ -6,6 +6,7 @@ import LandingPageContainer from '@/containers/LandingPageContainer';
 import OtherMethodsLink from '@/containers/OtherMethodsLink';
 import { SocialSignInList } from '@/containers/SocialSignIn';
 import { useSieMethods } from '@/hooks/use-sie';
+import { UserFlow } from '@/types';
 
 import Main from './Main';
 import * as styles from './index.module.scss';
@@ -21,7 +22,7 @@ const SignIn = () => {
       {
         // Other sign-in methods
         otherMethods.length > 0 && (
-          <OtherMethodsLink methods={otherMethods} template="sign_in_with" flow="sign-in" />
+          <OtherMethodsLink methods={otherMethods} template="sign_in_with" flow={UserFlow.signIn} />
         )
       }
       {

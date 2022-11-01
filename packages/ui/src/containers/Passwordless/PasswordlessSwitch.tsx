@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import TextLink from '@/components/TextLink';
 
@@ -11,7 +11,6 @@ type Props = {
 const PasswordlessSwitch = ({ target, className }: Props) => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
-  const navigate = useNavigate();
 
   const targetPathname = pathname.replace(target === 'email' ? 'sms' : 'email', target);
 

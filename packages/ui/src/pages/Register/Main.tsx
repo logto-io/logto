@@ -3,6 +3,7 @@ import type { SignInIdentifier, ConnectorMetadata } from '@logto/schemas';
 import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
 import SocialSignIn from '@/containers/SocialSignIn';
 import UsernameRegister from '@/containers/UsernameRegister';
+import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
 
@@ -14,10 +15,10 @@ type Props = {
 const Main = ({ signUpMethod, socialConnectors }: Props) => {
   switch (signUpMethod) {
     case 'email':
-      return <EmailPasswordless type="register" className={styles.main} />;
+      return <EmailPasswordless type={UserFlow.register} className={styles.main} />;
 
     case 'sms':
-      return <PhonePasswordless type="register" className={styles.main} />;
+      return <PhonePasswordless type={UserFlow.register} className={styles.main} />;
 
     case 'username':
       return <UsernameRegister className={styles.main} />;

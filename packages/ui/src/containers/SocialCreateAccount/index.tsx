@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/Button';
 import useBindSocial from '@/hooks/use-bind-social';
 import { useSieMethods } from '@/hooks/use-sie';
-import { SearchParameters } from '@/types';
+import { SearchParameters, UserFlow } from '@/types';
 import { queryStringify } from '@/utils';
 
 import OtherMethodsLink from '../OtherMethodsLink';
@@ -45,7 +45,7 @@ const SocialCreateAccount = ({ connectorId, className }: Props) => {
       <OtherMethodsLink
         methods={signInMethods.map(({ identifier }) => identifier)}
         template="social_bind_with"
-        flow="sign-in"
+        flow={UserFlow.signIn}
         className={styles.desc}
         search={queryStringify({ [SearchParameters.bindWithSocial]: connectorId })}
       />
