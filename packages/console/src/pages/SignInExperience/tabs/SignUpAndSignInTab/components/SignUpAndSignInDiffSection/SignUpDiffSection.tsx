@@ -24,7 +24,7 @@ const SignUpDiffSection = ({ before, after, isAfter = false }: Props) => {
 
   return (
     <div>
-      <div className={styles.title}>SignUp</div>
+      <div className={styles.title}>{t('sign_in_exp.save_alert.sign_up')}</div>
       <ul className={styles.list}>
         <li>
           <DiffSegment hasChanged={hasChanged('identifier')} isAfter={isAfter}>

@@ -164,6 +164,9 @@ const sign_in_exp = {
       'Está alterando os métodos de login. Isso afetará alguns dos seus utilizadoress. Tem a certeza que deseja fazer isso?',
     before: 'Antes',
     after: 'Depois',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: 'Pre-visualização do login',

@@ -47,10 +47,9 @@ const SignInDiffSection = ({ before, after, isAfter = false }: Props) => {
   const hasAuthenticationChanged = (identifierKey: string, authenticationKey: string) =>
     get(signInDiff, `updated.${identifierKey}.${authenticationKey}`) !== undefined;
 
-  // TODO: make this title i18n
   return (
     <div>
-      <div className={styles.title}>SignIn</div>
+      <div className={styles.title}>{t('sign_in_exp.save_alert.sign_in')}</div>
       <ul className={styles.list}>
         {
           // eslint-disable-next-line no-restricted-syntax

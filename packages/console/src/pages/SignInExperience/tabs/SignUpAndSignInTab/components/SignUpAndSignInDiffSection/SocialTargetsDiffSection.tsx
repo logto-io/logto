@@ -1,6 +1,7 @@
 import { isLanguageTag } from '@logto/language-kit';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 import useConnectorGroups from '@/hooks/use-connector-groups';
 
@@ -14,6 +15,7 @@ type Props = {
 };
 
 const SocialTargetsDiffSection = ({ before, after, isAfter = false }: Props) => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: groups, error } = useConnectorGroups();
   const { language } = i18next;
   const sortedBeforeTargets = before.slice().sort();
@@ -33,7 +35,7 @@ const SocialTargetsDiffSection = ({ before, after, isAfter = false }: Props) => 
 
   return (
     <div>
-      <div className={styles.title}>Social</div>
+      <div className={styles.title}>{t('sign_in_exp.save_alert.social')}</div>
       <ul className={styles.list}>
         {displayTargets.map((target) => {
           const connectorDetail = groups.find(

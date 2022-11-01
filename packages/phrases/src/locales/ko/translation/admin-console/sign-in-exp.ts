@@ -161,6 +161,9 @@ const sign_in_exp = {
       '로그인 방법이 수정되었어요. 일부 사용자에게 영향을 미칠 수 있어요. 정말로 진행할까요?',
     before: '이전',
     after: '이후',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: '로그인 화면 미리보기',

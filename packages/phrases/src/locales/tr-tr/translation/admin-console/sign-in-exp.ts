@@ -165,6 +165,9 @@ const sign_in_exp = {
       'Oturum açma yöntemlerini değiştiriyorsunuz. Bu, bazı kullanıcılarınızı etkileyecektir. Bunu yapmak istediğine emin misin?',
     before: 'Önce',
     after: 'Sonra',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: 'Oturum Açma Önizlemesi',

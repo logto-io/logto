@@ -164,6 +164,9 @@ const sign_in_exp = {
       'You are changing sign-in methods. This will impact some of your users. Are you sure you want to do that?',
     before: 'Before',
     after: 'After',
+    sign_up: 'Sign up',
+    sign_in: 'Sign in',
+    social: 'Social',
   },
   preview: {
     title: 'Sign-in preview',

@@ -166,6 +166,9 @@ const sign_in_exp = {
       'Vous changez de méthode de connexion. Cela aura un impact sur certains de vos utilisateurs. Êtes-vous sûr de vouloir faire cela ?',
     before: 'Avant',
     after: 'Après',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: "Aperçu de l'expérience de connexion",

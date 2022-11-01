@@ -154,6 +154,9 @@ const sign_in_exp = {
     description: '你正在修改登录方式，这可能会影响部分用户。是否继续保存修改？',
     before: '修改前',
     after: '修改后',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: '登录预览',
