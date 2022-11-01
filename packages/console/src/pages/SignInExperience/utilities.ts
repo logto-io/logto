@@ -1,6 +1,6 @@
 import en from '@logto/phrases-ui/lib/locales/en';
 import type { SignInExperience, SignInMethods, Translation } from '@logto/schemas';
-import { SignInMethodKey, SignInMethodState, SignInMode } from '@logto/schemas';
+import { SignUpIdentifier, SignInMethodKey, SignInMethodState, SignInMode } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import type { SignInExperienceForm } from './types';
@@ -52,7 +52,7 @@ export const signInExperienceParser = {
     };
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
-    const { branding, createAccountEnabled } = setup;
+    const { branding, createAccountEnabled, signUp } = setup;
 
     return {
       ...setup,
@@ -67,6 +67,11 @@ export const signInExperienceParser = {
         sms: findMethodState(setup, 'sms'),
         email: findMethodState(setup, 'email'),
         social: findMethodState(setup, 'social'),
+      },
+      signUp: {
+        identifier: signUp.identifier ?? SignUpIdentifier.Username,
+        password: Boolean(signUp.password),
+        verify: Boolean(signUp.verify),
       },
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
     };
