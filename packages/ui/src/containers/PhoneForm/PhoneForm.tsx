@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
-import Input from '@/components/Input';
+import { PhoneInput } from '@/components/Input';
 import PasswordlessSwitch from '@/containers/PasswordlessSwitch';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useForm from '@/hooks/use-form';
+import usePhoneNumber from '@/hooks/use-phone-number';
 import useTerms from '@/hooks/use-terms';
-import { emailValidation } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
 
@@ -21,28 +21,30 @@ type Props = {
   hasSwitch?: boolean;
   errorMessage?: string;
   clearErrorMessage?: () => void;
-  onSubmit: (email: string) => Promise<void>;
+  onSubmit: (phone: string) => Promise<void>;
 };
 
 type FieldState = {
-  email: string;
+  phone: string;
 };
 
-const defaultState: FieldState = { email: '' };
+const defaultState: FieldState = { phone: '' };
 
-const EmailForm = ({
+const PhoneForm = ({
   autoFocus,
   hasTerms = true,
   hasSwitch = false,
+  className,
   errorMessage,
   clearErrorMessage,
-  className,
   onSubmit,
 }: Props) => {
   const { t } = useTranslation();
 
   const { termsValidation } = useTerms();
-  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
+  const { countryList, phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
+
+  const { fieldValue, setFieldValue, validateForm, register } = useForm(defaultState);
 
   /*  Clear the form error when input field is updated */
   const errorMessageRef = useRef(errorMessage);
@@ -56,7 +58,25 @@ const EmailForm = ({
     if (errorMessageRef.current) {
       clearErrorMessage?.();
     }
-  }, [clearErrorMessage, errorMessageRef, fieldValue.email]);
+  }, [clearErrorMessage, errorMessageRef, fieldValue.phone]);
+
+  // Validate phoneNumber with given country code
+  const phoneNumberValidation = useCallback(
+    (phoneNumber: string) => {
+      if (!isValidPhoneNumber(phoneNumber)) {
+        return 'invalid_phone';
+      }
+    },
+    [isValidPhoneNumber]
+  );
+
+  // Sync phoneNumber
+  useEffect(() => {
+    setFieldValue((previous) => ({
+      ...previous,
+      phone: `${phoneNumber.countryCallingCode}${phoneNumber.nationalNumber}`,
+    }));
+  }, [phoneNumber, setFieldValue]);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
@@ -70,33 +90,34 @@ const EmailForm = ({
         return;
       }
 
-      await onSubmit(fieldValue.email);
+      await onSubmit(fieldValue.phone);
     },
-    [validateForm, hasTerms, termsValidation, onSubmit, fieldValue.email]
+    [validateForm, hasTerms, termsValidation, onSubmit, fieldValue.phone]
   );
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <Input
-        type="email"
-        name="email"
-        autoComplete="email"
-        inputMode="email"
-        placeholder={t('input.email')}
+      <PhoneInput
+        name="phone"
+        placeholder={t('input.phone_number')}
+        className={styles.inputField}
+        countryCallingCode={phoneNumber.countryCallingCode}
+        nationalNumber={phoneNumber.nationalNumber}
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus={autoFocus}
-        className={styles.inputField}
-        {...register('email', emailValidation)}
-        onClear={() => {
-          setFieldValue((state) => ({ ...state, email: '' }));
+        countryList={countryList}
+        {...register('phone', phoneNumberValidation)}
+        onChange={(data) => {
+          setPhoneNumber((previous) => ({ ...previous, ...data }));
         }}
       />
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      {hasSwitch && <PasswordlessSwitch target="sms" className={styles.switch} />}
+      {hasSwitch && <PasswordlessSwitch target="email" className={styles.switch} />}
 
       {hasTerms && <TermsOfUse className={styles.terms} />}
+
       <Button title="action.continue" onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
@@ -104,4 +125,4 @@ const EmailForm = ({
   );
 };
 
-export default EmailForm;
+export default PhoneForm;

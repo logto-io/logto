@@ -15,6 +15,12 @@ export const passcodeMethodGuard = s.union([
   s.literal(SignInIdentifier.Sms),
 ]);
 
+export const SignInMethodGuard = s.union([
+  s.literal(SignInIdentifier.Email),
+  s.literal(SignInIdentifier.Sms),
+  s.literal(SignInIdentifier.Username),
+]);
+
 export const userFlowGuard = s.union([
   s.literal('sign-in'),
   s.literal('register'),

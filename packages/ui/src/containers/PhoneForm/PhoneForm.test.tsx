@@ -3,24 +3,32 @@ import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
-import EmailForm from './EmailForm';
+import PhoneForm from './PhoneForm';
 
 const onSubmit = jest.fn();
 const clearErrorMessage = jest.fn();
 
-describe('<EmailForm/>', () => {
+jest.mock('i18next', () => ({
+  language: 'en',
+}));
+
+describe('<PhonePasswordless/>', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
+  const phoneNumber = '8573333333';
+  const defaultCountryCallingCode = getDefaultCountryCallingCode();
+
   test('render', () => {
     const { queryByText, container } = renderWithPageContext(
       <MemoryRouter>
-        <EmailForm onSubmit={onSubmit} />
+        <PhoneForm onSubmit={onSubmit} />
       </MemoryRouter>
     );
-    expect(container.querySelector('input[name="email"]')).not.toBeNull();
+    expect(container.querySelector('input[name="phone"]')).not.toBeNull();
     expect(queryByText('action.continue')).not.toBeNull();
   });
 
@@ -28,7 +36,7 @@ describe('<EmailForm/>', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailForm onSubmit={onSubmit} />
+          <PhoneForm onSubmit={onSubmit} />
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -39,40 +47,40 @@ describe('<EmailForm/>', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailForm hasTerms={false} onSubmit={onSubmit} />
+          <PhoneForm hasTerms={false} onSubmit={onSubmit} />
         </SettingsProvider>
       </MemoryRouter>
     );
     expect(queryByText('description.terms_of_use')).toBeNull();
   });
 
-  test('required email with error message', () => {
+  test('required phone with error message', () => {
     const { queryByText, container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <EmailForm onSubmit={onSubmit} />
+        <PhoneForm onSubmit={onSubmit} />
       </MemoryRouter>
     );
     const submitButton = getByText('action.continue');
 
     fireEvent.click(submitButton);
-    expect(queryByText('invalid_email')).not.toBeNull();
+    expect(queryByText('invalid_phone')).not.toBeNull();
     expect(onSubmit).not.toBeCalled();
 
-    const emailInput = container.querySelector('input[name="email"]');
+    const phoneInput = container.querySelector('input[name="phone"]');
 
-    if (emailInput) {
-      fireEvent.change(emailInput, { target: { value: 'foo' } });
-      expect(queryByText('invalid_email')).not.toBeNull();
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: '1113' } });
+      expect(queryByText('invalid_phone')).not.toBeNull();
 
-      fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
-      expect(queryByText('invalid_email')).toBeNull();
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
+      expect(queryByText('invalid_phone')).toBeNull();
     }
   });
 
   test('should display and clear the form error message as expected', () => {
     const { queryByText, container } = renderWithPageContext(
       <MemoryRouter>
-        <EmailForm
+        <PhoneForm
           errorMessage="form error"
           clearErrorMessage={clearErrorMessage}
           onSubmit={onSubmit}
@@ -82,10 +90,10 @@ describe('<EmailForm/>', () => {
 
     expect(queryByText('form error')).not.toBeNull();
 
-    const emailInput = container.querySelector('input[name="email"]');
+    const phoneInput = container.querySelector('input[name="phone"]');
 
-    if (emailInput) {
-      fireEvent.change(emailInput, { target: { value: 'foo' } });
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
       expect(clearErrorMessage).toBeCalled();
     }
   });
@@ -94,15 +102,14 @@ describe('<EmailForm/>', () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailForm onSubmit={onSubmit} />
+          <PhoneForm onSubmit={onSubmit} />
         </SettingsProvider>
       </MemoryRouter>
     );
+    const phoneInput = container.querySelector('input[name="phone"]');
 
-    const emailInput = container.querySelector('input[name="email"]');
-
-    if (emailInput) {
-      fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
 
     const submitButton = getByText('action.continue');
@@ -116,19 +123,18 @@ describe('<EmailForm/>', () => {
     });
   });
 
-  test('should call onSubmit properly with terms settings enabled but hasTerms param set to false', async () => {
+  test('should call submit method properly with terms settings enabled but hasTerms param set to false', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailForm hasTerms={false} onSubmit={onSubmit} />
+          <PhoneForm hasTerms={false} onSubmit={onSubmit} />
         </SettingsProvider>
       </MemoryRouter>
     );
+    const phoneInput = container.querySelector('input[name="phone"]');
 
-    const emailInput = container.querySelector('input[name="email"]');
-
-    if (emailInput) {
-      fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
 
     const submitButton = getByText('action.continue');
@@ -138,22 +144,22 @@ describe('<EmailForm/>', () => {
     });
 
     await waitFor(() => {
-      expect(onSubmit).toBeCalledWith('foo@logto.io');
+      expect(onSubmit).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
     });
   });
 
-  test('should call onSubmit method properly with terms settings enabled and checked', async () => {
+  test('should call submit method properly with terms settings enabled and checked', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailForm onSubmit={onSubmit} />
+          <PhoneForm onSubmit={onSubmit} />
         </SettingsProvider>
       </MemoryRouter>
     );
-    const emailInput = container.querySelector('input[name="email"]');
+    const phoneInput = container.querySelector('input[name="phone"]');
 
-    if (emailInput) {
-      fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
 
     const termsButton = getByText('description.agree_with_terms');
@@ -166,7 +172,7 @@ describe('<EmailForm/>', () => {
     });
 
     await waitFor(() => {
-      expect(onSubmit).toBeCalledWith('foo@logto.io');
+      expect(onSubmit).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
     });
   });
 });

@@ -4,9 +4,11 @@ import { PageContext } from './use-page-context';
 
 export const useSieMethods = () => {
   const { experienceSettings } = useContext(PageContext);
+  const { methods, password, verify } = experienceSettings?.signUp ?? {};
 
   return {
-    signUpMethods: experienceSettings?.signUp.methods ?? [],
+    signUpMethods: methods ?? [],
+    signUpSettings: { password, verify },
     signInMethods: experienceSettings?.signIn.methods ?? [],
     socialConnectors: experienceSettings?.socialConnectors ?? [],
   };
