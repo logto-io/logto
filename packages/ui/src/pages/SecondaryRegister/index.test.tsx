@@ -1,6 +1,9 @@
-import { render } from '@testing-library/react';
+import { SignInIdentifier } from '@logto/schemas';
 import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import SecondaryRegister from '@/pages/SecondaryRegister';
 
 jest.mock('@/apis/register', () => ({ register: jest.fn(async () => 0) }));
@@ -9,21 +12,26 @@ jest.mock('i18next', () => ({
 }));
 
 describe('<SecondaryRegister />', () => {
-  test('renders without exploding', async () => {
-    const { queryByText } = render(
-      <MemoryRouter initialEntries={['/register']}>
-        <SecondaryRegister />
-      </MemoryRouter>
-    );
-    expect(queryByText('action.create_account')).not.toBeNull();
-    expect(queryByText('action.create')).not.toBeNull();
-  });
-
   test('renders phone', async () => {
-    const { queryByText, container } = render(
+    const { queryByText, container } = renderWithPageContext(
       <MemoryRouter initialEntries={['/register/sms']}>
         <Routes>
-          <Route path="/register/:method" element={<SecondaryRegister />} />
+          <Route
+            path="/register/:method"
+            element={
+              <SettingsProvider
+                settings={{
+                  ...mockSignInExperienceSettings,
+                  signUp: {
+                    ...mockSignInExperienceSettings.signUp,
+                    methods: [SignInIdentifier.Sms],
+                  },
+                }}
+              >
+                <SecondaryRegister />
+              </SettingsProvider>
+            }
+          />
         </Routes>
       </MemoryRouter>
     );
@@ -32,10 +40,25 @@ describe('<SecondaryRegister />', () => {
   });
 
   test('renders email', async () => {
-    const { queryByText, container } = render(
+    const { queryByText, container } = renderWithPageContext(
       <MemoryRouter initialEntries={['/register/email']}>
         <Routes>
-          <Route path="/register/:method" element={<SecondaryRegister />} />
+          <Route
+            path="/register/:method"
+            element={
+              <SettingsProvider
+                settings={{
+                  ...mockSignInExperienceSettings,
+                  signUp: {
+                    ...mockSignInExperienceSettings.signUp,
+                    methods: [SignInIdentifier.Email],
+                  },
+                }}
+              >
+                <SecondaryRegister />
+              </SettingsProvider>
+            }
+          />
         </Routes>
       </MemoryRouter>
     );
@@ -43,11 +66,65 @@ describe('<SecondaryRegister />', () => {
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
   });
 
-  test('renders non-recognized method', async () => {
-    const { queryByText } = render(
+  test('renders non-recognized method should return error page', async () => {
+    const { queryByText } = renderWithPageContext(
       <MemoryRouter initialEntries={['/register/test']}>
         <Routes>
-          <Route path="/register/:method" element={<SecondaryRegister />} />
+          <Route
+            path="/register/:method"
+            element={
+              <SettingsProvider>
+                <SecondaryRegister />
+              </SettingsProvider>
+            }
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+    expect(queryByText('action.create_account')).toBeNull();
+    expect(queryByText('description.not_found')).not.toBeNull();
+  });
+
+  test('renders non-supported signUp methods should return error page', () => {
+    const { queryByText, container } = renderWithPageContext(
+      <MemoryRouter initialEntries={['/register/email']}>
+        <Routes>
+          <Route
+            path="/register/:method"
+            element={
+              <SettingsProvider>
+                <SecondaryRegister />
+              </SettingsProvider>
+            }
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+    expect(queryByText('action.create_account')).toBeNull();
+    expect(queryByText('description.not_found')).not.toBeNull();
+  });
+
+  test('render non-verified passwordless methods should return error page', () => {
+    const { queryByText, container } = renderWithPageContext(
+      <MemoryRouter initialEntries={['/register/email']}>
+        <Routes>
+          <Route
+            path="/register/:method"
+            element={
+              <SettingsProvider
+                settings={{
+                  ...mockSignInExperienceSettings,
+                  signUp: {
+                    methods: [SignInIdentifier.Email],
+                    password: true,
+                    verify: false,
+                  },
+                }}
+              >
+                <SecondaryRegister />
+              </SettingsProvider>
+            }
+          />
         </Routes>
       </MemoryRouter>
     );
