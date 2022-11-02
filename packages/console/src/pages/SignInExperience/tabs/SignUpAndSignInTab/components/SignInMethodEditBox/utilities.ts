@@ -55,14 +55,6 @@ export const getSignInMethodPasswordCheckState = (
   return isSignUpPasswordRequired || originCheckState;
 };
 
-export const getSignInMethodVerificationCodeCheckState = (
-  signInIdentifier: SignInIdentifier,
-  isSignUpVerificationRequired: boolean,
-  originCheckState = false
-) => {
-  if (signInIdentifier === SignInIdentifier.Username) {
-    return false;
-  }
-
-  return isSignUpVerificationRequired || originCheckState;
+export const getSignInMethodVerificationCodeCheckState = (signInIdentifier: SignInIdentifier) => {
+  return signInIdentifier !== SignInIdentifier.Username;
 };
