@@ -27,11 +27,6 @@ const SignInExperienceSetupNotice = () => {
   }
 
   return (
-    /**
-     * Note: the `style.notice` css class will not take effect for some unknown reasons.
-     * Warp the `notice` with a parent `container` css class to make it works.
-     * TODO: LOG-4521
-     */
     <div className={styles.container}>
       <Alert
         action="general.got_it"
