@@ -52,7 +52,7 @@ describe('<SignIn />', () => {
   });
 
   test('render with email password as primary', async () => {
-    const { queryByText } = renderWithPageContext(
+    const { queryByText, container } = renderWithPageContext(
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
@@ -72,7 +72,8 @@ describe('<SignIn />', () => {
         </MemoryRouter>
       </SettingsProvider>
     );
-    expect(queryByText('email password form')).not.toBeNull();
+    expect(container.querySelector('input[name="email"]')).not.toBeNull();
+    expect(queryByText('action.sign_in')).not.toBeNull();
   });
 
   test('renders with sms passwordless as primary', async () => {
