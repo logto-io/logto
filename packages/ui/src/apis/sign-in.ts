@@ -51,6 +51,27 @@ export const signInWithEmailPassword = async (
   return result;
 };
 
+export const signInWithPhonePassword = async (
+  phone: string,
+  password: string,
+  socialToBind?: string
+) => {
+  const result = await api
+    .post(`${apiPrefix}/sign-in/password/phone`, {
+      json: {
+        phone,
+        password,
+      },
+    })
+    .json<Response>();
+
+  if (result.redirectTo && socialToBind) {
+    await bindSocialAccount(socialToBind);
+  }
+
+  return result;
+};
+
 export const signInWithSms = async (socialToBind?: string) => {
   const result = await api.post(`${apiPrefix}/sign-in/passwordless/sms`).json<Response>();
 

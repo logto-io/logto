@@ -28,6 +28,7 @@ import {
   verifySignInEmailPasscode,
   verifySignInSmsPasscode,
   signInWithEmailPassword,
+  signInWithPhonePassword,
 } from './sign-in';
 import {
   invokeSocialSignIn,
@@ -97,6 +98,41 @@ describe('api', () => {
     expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/password/email', {
       json: {
         email,
+        password,
+      },
+    });
+    expect(ky.post).toHaveBeenNthCalledWith(2, '/api/session/bind-social', {
+      json: {
+        connectorId: 'github',
+      },
+    });
+  });
+
+  it('signInWithPhonePassword', async () => {
+    mockKyPost.mockReturnValueOnce({
+      json: () => ({
+        redirectTo: '/',
+      }),
+    });
+    await signInWithPhonePassword(phone, password);
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/password/phone', {
+      json: {
+        phone,
+        password,
+      },
+    });
+  });
+
+  it('signInWithPhonePassword with bind social account', async () => {
+    mockKyPost.mockReturnValueOnce({
+      json: () => ({
+        redirectTo: '/',
+      }),
+    });
+    await signInWithPhonePassword(phone, password, 'github');
+    expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/password/phone', {
+      json: {
+        phone,
         password,
       },
     });
