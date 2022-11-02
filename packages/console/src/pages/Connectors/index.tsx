@@ -20,6 +20,7 @@ import * as tableStyles from '@/scss/table.module.scss';
 
 import ConnectorRow from './components/ConnectorRow';
 import CreateForm from './components/CreateForm';
+import SignInExperienceSetupNotice from './components/SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
 
 const Connectors = () => {
@@ -73,6 +74,7 @@ const Connectors = () => {
             />
           )}
         </div>
+        <SignInExperienceSetupNotice />
         <TabNav className={styles.tabs}>
           <TabNavItem href="/connectors">{t('connectors.tab_email_sms')}</TabNavItem>
           <TabNavItem href="/connectors/social">{t('connectors.tab_social')}</TabNavItem>

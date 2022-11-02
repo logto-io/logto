@@ -3,6 +3,8 @@ const connectors = {
   subtitle:
     'Şifresiz ve sosyal oturum açma deneyimini etkinleştirmek için connectorları ayarlayınız.',
   create: 'Social Connector ekle',
+  config_sie_notice: 'You’ve set up connectors. Make sure to configure it in <a>{{link}}</a>.', // UNTRANSLATED
+  config_sie_link_text: 'sign in experience', // UNTRANSLATED
   tab_email_sms: 'E-posta ve SMS connectorları',
   tab_social: 'Social connectorlar',
   connector_name: 'Connector adı',

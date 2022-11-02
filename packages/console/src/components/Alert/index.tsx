@@ -15,6 +15,7 @@ type Props = {
   href?: string;
   onClick?: () => void;
   variant?: 'plain' | 'shadow';
+  className?: string;
 };
 
 const Alert = ({
@@ -24,9 +25,10 @@ const Alert = ({
   onClick,
   severity = 'info',
   variant = 'plain',
+  className,
 }: Props) => {
   return (
-    <div className={classNames(styles.alert, styles[severity], styles[variant])}>
+    <div className={classNames(styles.alert, styles[severity], styles[variant], className)}>
       <div className={styles.icon}>
         <Info />
       </div>
