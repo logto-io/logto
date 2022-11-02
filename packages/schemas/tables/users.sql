@@ -13,7 +13,7 @@ create table users (
   role_names jsonb /* @use RoleNames */ not null default '[]'::jsonb,
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
   custom_data jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,
-  is_suspended boolean not null default FALSE,
+  is_suspended boolean not null default false,
   last_sign_in_at timestamptz,
   created_at timestamptz not null default (now()),
   primary key (id)
