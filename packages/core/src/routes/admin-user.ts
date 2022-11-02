@@ -26,9 +26,13 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.get(
     '/users',
     koaPagination(),
-    koaGuard({
-      query: object({ search: string().optional(), hideAdminUser: literal('true').optional(), isSensitive: z.enum(['true', 'false']).default('true') }),
-    }),
+      koaGuard({
+        query: object({
+          search: string().optional(),
+          hideAdminUser: literal('true').optional(),
+          isSensitive: z.enum(['true', 'false']).default('true'),
+        }),
+      }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
       const {

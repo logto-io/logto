@@ -85,27 +85,37 @@ export const hasUserWithIdentity = async (target: string, userId: string) =>
   );
 
 const buildUserSearchConditionSql = (search: string, isSensitive?: boolean) => {
-  let conditions;
   const searchFields = [fields.primaryEmail, fields.primaryPhone, fields.username, fields.name];
+
   if (isSensitive) {
-    conditions = searchFields.map((filedName) => sql`${filedName} like ${'%' + search + '%'}`);
-  }else {
-    conditions = searchFields.map((filedName) => sql`${filedName} ilike ${'%' + search + '%'}`);
+    return sql`${sql.join(
+        searchFields.map((filedName) => sql`${filedName} like ${'%' + search + '%'}`),
+        sql` or `
+    )}`;
   }
 
-  return sql`${sql.join(conditions, sql` or `)}`;
+  return sql`${sql.join(
+      searchFields.map((filedName) => sql`${filedName} ilike ${'%' + search + '%'}`),
+      sql` or `
+  )}`;
 };
 
 const buildUserConditions = (search?: string, hideAdminUser?: boolean, isSensitive?: boolean) => {
   if (hideAdminUser) {
     return sql`
       where not (${fields.roleNames}::jsonb?${UserRole.Admin})
-      ${conditionalSql(search, (search) => sql`and (${buildUserSearchConditionSql(search, isSensitive)})`)}
+      ${conditionalSql(
+          search,
+          (search) => sql`and (${buildUserSearchConditionSql(search, isSensitive)})`
+      )}
     `;
   }
 
   return sql`
-    ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search, isSensitive)}`)}
+    ${conditionalSql(
+        search,
+        (search) => sql`where ${buildUserSearchConditionSql(search, isSensitive)}`
+    )}
   `;
 };
 
