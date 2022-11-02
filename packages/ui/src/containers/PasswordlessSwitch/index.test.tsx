@@ -2,7 +2,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 
-import PasswordlessSwitch from './PasswordlessSwitch';
+import PasswordlessSwitch from '.';
 
 describe('<PasswordlessSwitch />', () => {
   test('render sms passwordless switch', () => {
