@@ -15,26 +15,11 @@ type Props = {
   isAfter?: boolean;
 };
 
-const stringCompareFunction = (leftValue: string, rightValue: string) =>
-  leftValue === rightValue ? 0 : leftValue > rightValue ? 1 : -1;
-
 const SignInDiffSection = ({ before, after, isAfter = false }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const beforeSignInMethodsObject = convertToSignInMethodsObject(
-    before
-      .slice()
-      .sort(({ identifier: leftIdentifier }, { identifier: rightIdentifier }) =>
-        stringCompareFunction(leftIdentifier, rightIdentifier)
-      )
-  );
 
-  const afterSignInMethodsObject = convertToSignInMethodsObject(
-    after
-      .slice()
-      .sort(({ identifier: leftIdentifier }, { identifier: rightIdentifier }) =>
-        stringCompareFunction(leftIdentifier, rightIdentifier)
-      )
-  );
+  const beforeSignInMethodsObject = convertToSignInMethodsObject(before);
+  const afterSignInMethodsObject = convertToSignInMethodsObject(after);
 
   const signInDiff = isAfter
     ? detailedDiff(beforeSignInMethodsObject, afterSignInMethodsObject)
@@ -58,40 +43,42 @@ const SignInDiffSection = ({ before, after, isAfter = false }: Props) => {
       <ul className={styles.list}>
         {
           // eslint-disable-next-line no-restricted-syntax
-          (Object.keys(displaySignInMethodsObject) as SignInIdentifier[]).map((identifierKey) => {
-            const { password, verificationCode } = displaySignInMethodsObject[identifierKey];
-            const hasAuthentication = password || verificationCode;
-            const needDisjunction = password && verificationCode;
+          (Object.keys(displaySignInMethodsObject).slice().sort() as SignInIdentifier[]).map(
+            (identifierKey) => {
+              const { password, verificationCode } = displaySignInMethodsObject[identifierKey];
+              const hasAuthentication = password || verificationCode;
+              const needDisjunction = password && verificationCode;
 
-            return (
-              <li key={identifierKey}>
-                <DiffSegment hasChanged={hasIdentifierChanged(identifierKey)} isAfter={isAfter}>
-                  {t('sign_in_exp.sign_up_and_sign_in.identifiers', {
-                    context: identifierKey.toLocaleLowerCase(),
-                  })}
-                  {hasAuthentication && ' ('}
-                  {password && (
-                    <DiffSegment
-                      hasChanged={hasAuthenticationChanged(identifierKey, 'password')}
-                      isAfter={isAfter}
-                    >
-                      {t('sign_in_exp.sign_up_and_sign_in.sign_in.password_auth')}
-                    </DiffSegment>
-                  )}
-                  {needDisjunction && ` ${String(t('sign_in_exp.sign_up_and_sign_in.or'))} `}
-                  {verificationCode && (
-                    <DiffSegment
-                      hasChanged={hasAuthenticationChanged(identifierKey, 'verificationCode')}
-                      isAfter={isAfter}
-                    >
-                      {t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
-                    </DiffSegment>
-                  )}
-                  {hasAuthentication && ')'}
-                </DiffSegment>
-              </li>
-            );
-          })
+              return (
+                <li key={identifierKey}>
+                  <DiffSegment hasChanged={hasIdentifierChanged(identifierKey)} isAfter={isAfter}>
+                    {t('sign_in_exp.sign_up_and_sign_in.identifiers', {
+                      context: identifierKey.toLocaleLowerCase(),
+                    })}
+                    {hasAuthentication && ' ('}
+                    {password && (
+                      <DiffSegment
+                        hasChanged={hasAuthenticationChanged(identifierKey, 'password')}
+                        isAfter={isAfter}
+                      >
+                        {t('sign_in_exp.sign_up_and_sign_in.sign_in.password_auth')}
+                      </DiffSegment>
+                    )}
+                    {needDisjunction && ` ${String(t('sign_in_exp.sign_up_and_sign_in.or'))} `}
+                    {verificationCode && (
+                      <DiffSegment
+                        hasChanged={hasAuthenticationChanged(identifierKey, 'verificationCode')}
+                        isAfter={isAfter}
+                      >
+                        {t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
+                      </DiffSegment>
+                    )}
+                    {hasAuthentication && ')'}
+                  </DiffSegment>
+                </li>
+              );
+            }
+          )
         }
       </ul>
     </div>
