@@ -47,6 +47,8 @@ const sign_in_exp = {
     identifiers_username: 'Username', // UNTRANSLATED
     identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
     identifiers_none: 'None', // UNTRANSLATED
+    and: 'and', // UNTRANSLATED
+    or: 'or', // UNTRANSLATED
     sign_up: {
       title: 'SIGN UP', // UNTRANSLATED
       sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
@@ -164,6 +166,9 @@ const sign_in_exp = {
       'Vous changez de méthode de connexion. Cela aura un impact sur certains de vos utilisateurs. Êtes-vous sûr de vouloir faire cela ?',
     before: 'Avant',
     after: 'Après',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: "Aperçu de l'expérience de connexion",

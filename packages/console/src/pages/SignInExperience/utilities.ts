@@ -3,6 +3,11 @@ import type { SignInExperience, SignInMethods, Translation } from '@logto/schema
 import { SignUpIdentifier, SignInMethodKey, SignInMethodState, SignInMode } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
+import {
+  isSignInMethodsDifferent,
+  isSignUpDifferent,
+  isSocialTargetsDifferent,
+} from './tabs/SignUpAndSignInTab/components/SignUpAndSignInDiffSection/utilities';
 import type { SignInExperienceForm } from './types';
 
 const findMethodState = (
@@ -78,26 +83,18 @@ export const signInExperienceParser = {
   },
 };
 
-export const compareSignInMethods = (
+export const compareSignUpAndSignInConfigs = (
   before: SignInExperience,
   after: SignInExperience
 ): boolean => {
-  if (before.socialSignInConnectorTargets.length !== after.socialSignInConnectorTargets.length) {
-    return false;
-  }
-
-  if (
-    before.socialSignInConnectorTargets.some(
-      (target) => !after.socialSignInConnectorTargets.includes(target)
+  return (
+    !isSignUpDifferent(before.signUp, after.signUp) &&
+    !isSignInMethodsDifferent(before.signIn.methods, after.signIn.methods) &&
+    !isSocialTargetsDifferent(
+      before.socialSignInConnectorTargets,
+      after.socialSignInConnectorTargets
     )
-  ) {
-    return false;
-  }
-
-  const { signInMethods: beforeMethods } = before;
-  const { signInMethods: afterMethods } = after;
-
-  return Object.values(SignInMethodKey).every((key) => beforeMethods[key] === afterMethods[key]);
+  );
 };
 
 export const flattenTranslation = (

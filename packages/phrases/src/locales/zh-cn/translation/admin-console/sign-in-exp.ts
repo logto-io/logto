@@ -43,6 +43,8 @@ const sign_in_exp = {
     identifiers_username: 'Username', // UNTRANSLATED
     identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
     identifiers_none: 'None', // UNTRANSLATED
+    and: 'and', // UNTRANSLATED
+    or: 'or', // UNTRANSLATED
     sign_up: {
       title: 'SIGN UP', // UNTRANSLATED
       sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
@@ -152,6 +154,9 @@ const sign_in_exp = {
     description: '你正在修改登录方式，这可能会影响部分用户。是否继续保存修改？',
     before: '修改前',
     after: '修改后',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: '登录预览',

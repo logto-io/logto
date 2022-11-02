@@ -46,6 +46,8 @@ const sign_in_exp = {
     identifiers_username: 'Username', // UNTRANSLATED
     identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
     identifiers_none: 'None', // UNTRANSLATED
+    and: 'and', // UNTRANSLATED
+    or: 'or', // UNTRANSLATED
     sign_up: {
       title: 'SIGN UP', // UNTRANSLATED
       sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
@@ -163,6 +165,9 @@ const sign_in_exp = {
       'Oturum açma yöntemlerini değiştiriyorsunuz. Bu, bazı kullanıcılarınızı etkileyecektir. Bunu yapmak istediğine emin misin?',
     before: 'Önce',
     after: 'Sonra',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: 'Oturum Açma Önizlemesi',

@@ -45,6 +45,8 @@ const sign_in_exp = {
     identifiers_username: 'Username', // UNTRANSLATED
     identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
     identifiers_none: 'None', // UNTRANSLATED
+    and: 'and', // UNTRANSLATED
+    or: 'or', // UNTRANSLATED
     sign_up: {
       title: 'SIGN UP', // UNTRANSLATED
       sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
@@ -162,6 +164,9 @@ const sign_in_exp = {
       'Está alterando os métodos de login. Isso afetará alguns dos seus utilizadoress. Tem a certeza que deseja fazer isso?',
     before: 'Antes',
     after: 'Depois',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: 'Pre-visualização do login',
