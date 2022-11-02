@@ -1,11 +1,20 @@
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
-import ResetPasswordForm from '@/containers/ResetPassword';
+import SetPassword from '@/containers/SetPassword';
+
+import useResetPassword from './use-reset-password';
 
 const ResetPassword = () => {
+  const { resetPassword, errorMessage, clearErrorMessage } = useResetPassword();
+
   return (
     <SecondaryPageWrapper title="description.new_password">
-      {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
-      <ResetPasswordForm autoFocus />
+      <SetPassword
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus
+        errorMessage={errorMessage}
+        clearErrorMessage={clearErrorMessage}
+        onSubmit={resetPassword}
+      />
     </SecondaryPageWrapper>
   );
 };

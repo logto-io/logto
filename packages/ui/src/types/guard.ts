@@ -20,3 +20,7 @@ export const userFlowGuard = s.union([
   s.literal('register'),
   s.literal('forgot-password'),
 ]);
+
+export const usernameGuard = s.object({
+  username: s.string(),
+});

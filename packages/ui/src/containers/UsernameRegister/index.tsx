@@ -1,5 +1,6 @@
+import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +12,7 @@ import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import useTerms from '@/hooks/use-terms';
+import { UserFlow } from '@/types';
 import { usernameValidation } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
@@ -52,7 +54,7 @@ const UsernameRegister = ({ className }: Props) => {
     [setFieldErrors]
   );
 
-  const { result, run: asyncVerifyUsername } = useApi(verifyUsernameExistence, errorHandlers);
+  const { run: asyncVerifyUsername } = useApi(verifyUsernameExistence, errorHandlers);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
@@ -66,16 +68,19 @@ const UsernameRegister = ({ className }: Props) => {
         return;
       }
 
-      void asyncVerifyUsername(fieldValue.username);
-    },
-    [validateForm, termsValidation, asyncVerifyUsername, fieldValue]
-  );
+      const { username } = fieldValue;
 
-  useEffect(() => {
-    if (result) {
-      navigate('/register/password');
-    }
-  }, [navigate, result]);
+      // Use sync call for this api to make sure the username value being passed to the password set page stays the same
+      const result = await asyncVerifyUsername(username);
+
+      if (result) {
+        navigate(`/${UserFlow.register}/${SignInIdentifier.Username}/password`, {
+          state: { username },
+        });
+      }
+    },
+    [validateForm, termsValidation, fieldValue, asyncVerifyUsername, navigate]
+  );
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
