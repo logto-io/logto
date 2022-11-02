@@ -14,8 +14,8 @@ import type { SignInMethod } from './types';
 
 type Props = {
   signInMethod: SignInMethod;
-  isPasswordEnabled: boolean;
-  isVerificationEnabled: boolean;
+  isPasswordCheckable: boolean;
+  isVerificationCodeCheckable: boolean;
   isDeletable: boolean;
   onVerificationStateChange: (
     identifier: SignInIdentifier,
@@ -28,8 +28,8 @@ type Props = {
 
 const SignInMethodItem = ({
   signInMethod: { identifier, password, verificationCode, isPasswordPrimary },
-  isPasswordEnabled,
-  isVerificationEnabled,
+  isPasswordCheckable,
+  isVerificationCodeCheckable,
   isDeletable,
   onVerificationStateChange,
   onToggleVerificationPrimary,
@@ -55,7 +55,7 @@ const SignInMethodItem = ({
           <Checkbox
             label={t('sign_in_exp.sign_up_and_sign_in.sign_in.password_auth')}
             value={password}
-            disabled={!isPasswordEnabled}
+            disabled={!isPasswordCheckable}
             onChange={(checked) => {
               onVerificationStateChange(identifier, 'password', checked);
             }}
@@ -73,7 +73,7 @@ const SignInMethodItem = ({
               <Checkbox
                 label={t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
                 value={verificationCode}
-                disabled={!isVerificationEnabled}
+                disabled={!isVerificationCodeCheckable}
                 onChange={(checked) => {
                   onVerificationStateChange(identifier, 'verificationCode', checked);
                 }}

@@ -128,10 +128,10 @@ const SignInMethodEditBox = ({
           >
             <SignInMethodItem
               signInMethod={signInMethod}
-              isPasswordEnabled={
+              isPasswordCheckable={
                 signInMethod.identifier !== SignInIdentifier.Username && !isSignUpPasswordRequired
               }
-              isVerificationEnabled={
+              isVerificationCodeCheckable={
                 (isSignUpPasswordRequired && isSignUpVerificationRequired) ||
                 // Note: the next line is used to handle the case when the sign-up identifier is `Username`
                 (isSignUpPasswordRequired && signInMethod.identifier !== SignInIdentifier.Username)
