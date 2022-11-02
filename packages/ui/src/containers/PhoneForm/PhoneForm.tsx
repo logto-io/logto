@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
@@ -45,20 +45,6 @@ const PhoneForm = ({
   const { countryList, phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
 
   const { fieldValue, setFieldValue, validateForm, register } = useForm(defaultState);
-
-  /*  Clear the form error when input field is updated */
-  const errorMessageRef = useRef(errorMessage);
-
-  useEffect(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    errorMessageRef.current = errorMessage;
-  }, [errorMessage]);
-
-  useEffect(() => {
-    if (errorMessageRef.current) {
-      clearErrorMessage?.();
-    }
-  }, [clearErrorMessage, errorMessageRef, fieldValue.phone]);
 
   // Validate phoneNumber with given country code
   const phoneNumberValidation = useCallback(
@@ -109,6 +95,7 @@ const PhoneForm = ({
         {...register('phone', phoneNumberValidation)}
         onChange={(data) => {
           setPhoneNumber((previous) => ({ ...previous, ...data }));
+          clearErrorMessage?.();
         }}
       />
 

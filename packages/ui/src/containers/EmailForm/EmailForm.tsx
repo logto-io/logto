@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
@@ -44,20 +44,6 @@ const EmailForm = ({
   const { termsValidation } = useTerms();
   const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
 
-  /*  Clear the form error when input field is updated */
-  const errorMessageRef = useRef(errorMessage);
-
-  useEffect(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    errorMessageRef.current = errorMessage;
-  }, [errorMessage]);
-
-  useEffect(() => {
-    if (errorMessageRef.current) {
-      clearErrorMessage?.();
-    }
-  }, [clearErrorMessage, errorMessageRef, fieldValue.email]);
-
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
@@ -75,6 +61,8 @@ const EmailForm = ({
     [validateForm, hasTerms, termsValidation, onSubmit, fieldValue.email]
   );
 
+  const { onChange, ...rest } = register('email', emailValidation);
+
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <Input
@@ -86,16 +74,17 @@ const EmailForm = ({
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus={autoFocus}
         className={styles.inputField}
-        {...register('email', emailValidation)}
+        onChange={(event) => {
+          onChange(event);
+          clearErrorMessage?.();
+        }}
+        {...rest}
         onClear={() => {
           setFieldValue((state) => ({ ...state, email: '' }));
         }}
       />
-
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
-
       {hasSwitch && <PasswordlessSwitch target="sms" className={styles.switch} />}
-
       {hasTerms && <TermsOfUse className={styles.terms} />}
       <Button title="action.continue" onClick={async () => onSubmitHandler()} />
 
