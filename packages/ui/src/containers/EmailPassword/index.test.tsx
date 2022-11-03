@@ -9,7 +9,6 @@ import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
 import EmailPassword from '.';
 
 jest.mock('@/apis/sign-in', () => ({ signInWithEmailPassword: jest.fn(async () => 0) }));
-// Terms Iframe Modal only shown on mobile device
 jest.mock('react-device-detect', () => ({
   isMobile: true,
 }));

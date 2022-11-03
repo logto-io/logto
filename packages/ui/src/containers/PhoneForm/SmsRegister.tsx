@@ -14,6 +14,7 @@ const SmsRegister = (props: Props) => {
     <PhoneForm
       onSubmit={onSubmit}
       {...props}
+      submitButtonText="action.create_account"
       errorMessage={errorMessage}
       clearErrorMessage={clearErrorMessage}
     />

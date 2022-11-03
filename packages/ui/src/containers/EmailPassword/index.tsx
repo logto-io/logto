@@ -55,8 +55,6 @@ const EmailPassword = ({ className, autoFocus }: Props) => {
     async (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
 
-      setErrorMessage(undefined);
-
       if (!validateForm()) {
         return;
       }

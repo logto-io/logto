@@ -17,6 +17,7 @@ import ResetPassword from './pages/ResetPassword';
 import SecondaryRegister from './pages/SecondaryRegister';
 import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
+import SignInPassword from './pages/SignInPassword';
 import SocialLanding from './pages/SocialLanding';
 import SocialRegister from './pages/SocialRegister';
 import SocialSignIn from './pages/SocialSignInCallback';
@@ -66,6 +67,7 @@ const App = () => {
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/sign-in/social/:connector" element={<SocialSignIn />} />
               <Route path="/sign-in/:method" element={<SecondarySignIn />} />
+              <Route path="/sign-in/:method/password" element={<SignInPassword />} />
 
               {/* register */}
               <Route path="/register" element={<Register />} />

@@ -14,6 +14,7 @@ const EmailRegister = (props: Props) => {
     <EmailForm
       onSubmit={onSubmit}
       {...props}
+      submitButtonText="action.create_account"
       errorMessage={errorMessage}
       clearErrorMessage={clearErrorMessage}
     />
