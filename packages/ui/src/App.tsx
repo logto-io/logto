@@ -1,3 +1,4 @@
+import { SignInMode } from '@logto/schemas';
 import { useEffect } from 'react';
 import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 
@@ -50,6 +51,9 @@ const App = () => {
     return null;
   }
 
+  const isRegisterOnly = experienceSettings.signInMode === SignInMode.Register;
+  const isSignInOnly = experienceSettings.signInMode === SignInMode.SignIn;
+
   return (
     <Provider value={context}>
       <AppContent>
@@ -64,13 +68,19 @@ const App = () => {
 
             <Route element={<LoadingLayerProvider />}>
               {/* sign-in */}
-              <Route path="/sign-in" element={<SignIn />} />
+              <Route
+                path="/sign-in"
+                element={isRegisterOnly ? <Navigate replace to="/register" /> : <SignIn />}
+              />
               <Route path="/sign-in/social/:connector" element={<SocialSignIn />} />
               <Route path="/sign-in/:method" element={<SecondarySignIn />} />
               <Route path="/sign-in/:method/password" element={<SignInPassword />} />
 
               {/* register */}
-              <Route path="/register" element={<Register />} />
+              <Route
+                path="/register"
+                element={isSignInOnly ? <Navigate replace to="/sign-in" /> : <Register />}
+              />
               <Route
                 path="/register/username/password"
                 element={<PasswordRegisterWithUsername />}

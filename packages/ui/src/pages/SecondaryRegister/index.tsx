@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInMode, SignInIdentifier } from '@logto/schemas';
 import { useParams } from 'react-router-dom';
 import { is } from 'superstruct';
 
@@ -16,7 +16,11 @@ type Parameters = {
 
 const SecondaryRegister = () => {
   const { method = '' } = useParams<Parameters>();
-  const { signUpMethods, signUpSettings } = useSieMethods();
+  const { signUpMethods, signUpSettings, signInMode } = useSieMethods();
+
+  if (!signInMode || signInMode === SignInMode.SignIn) {
+    return <ErrorPage />;
+  }
 
   // Validate the signUp method
   if (!is(method, SignInMethodGuard) || !signUpMethods.includes(method)) {

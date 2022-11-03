@@ -1,3 +1,4 @@
+import { SignInMode } from '@logto/schemas';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -129,5 +130,19 @@ describe('<SignIn />', () => {
     expect(container.querySelectorAll('button')).toHaveLength(
       mockSignInExperienceSettings.socialConnectors.length
     );
+  });
+
+  test('render with register only mode should return ErrorPage', () => {
+    const { queryByText } = renderWithPageContext(
+      <SettingsProvider
+        settings={{ ...mockSignInExperienceSettings, signInMode: SignInMode.Register }}
+      >
+        <MemoryRouter>
+          <SignIn />
+        </MemoryRouter>
+      </SettingsProvider>
+    );
+
+    expect(queryByText('description.not_found')).not.toBeNull();
   });
 });
