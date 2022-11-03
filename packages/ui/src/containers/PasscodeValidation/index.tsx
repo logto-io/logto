@@ -1,3 +1,4 @@
+import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState, useEffect, useContext, useCallback, useMemo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
@@ -19,7 +20,7 @@ import usePasscodeValidationErrorHandler from './use-passcode-validation-error-h
 
 type Props = {
   type: UserFlow;
-  method: 'email' | 'sms';
+  method: SignInIdentifier.Email | SignInIdentifier.Sms;
   target: string;
   className?: string;
 };

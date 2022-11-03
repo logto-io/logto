@@ -1,3 +1,4 @@
+import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -55,7 +56,7 @@ const EmailPasswordless = ({
     [setFieldErrors]
   );
 
-  const sendPasscode = getSendPasscodeApi(type, 'email');
+  const sendPasscode = getSendPasscodeApi(type, SignInIdentifier.Email);
   const { result, run: asyncSendPasscode } = useApi(sendPasscode, errorHandlers);
 
   const onSubmitHandler = useCallback(

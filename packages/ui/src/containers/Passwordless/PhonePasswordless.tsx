@@ -1,3 +1,4 @@
+import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -56,7 +57,7 @@ const PhonePasswordless = ({
     [setFieldErrors]
   );
 
-  const sendPasscode = getSendPasscodeApi(type, 'sms');
+  const sendPasscode = getSendPasscodeApi(type, SignInIdentifier.Sms);
   const { result, run: asyncSendPasscode } = useApi(sendPasscode, errorHandlers);
 
   const phoneNumberValidation = useCallback(

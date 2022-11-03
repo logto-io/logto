@@ -1,5 +1,9 @@
+import { SignInIdentifier } from '@logto/schemas';
+
+import usePasswordlessSendCode from '@/hooks/use-passwordless-send-code';
+import { UserFlow } from '@/types';
+
 import EmailForm from './EmailForm';
-import useEmailRegister from './use-email-register';
 
 type Props = {
   className?: string;
@@ -8,7 +12,10 @@ type Props = {
 };
 
 const EmailRegister = (props: Props) => {
-  const { onSubmit, errorMessage, clearErrorMessage } = useEmailRegister();
+  const { onSubmit, errorMessage, clearErrorMessage } = usePasswordlessSendCode(
+    UserFlow.register,
+    SignInIdentifier.Email
+  );
 
   return (
     <EmailForm
