@@ -1,3 +1,4 @@
+import { SignInIdentifier } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -46,7 +47,7 @@ describe('<PasscodeValidation />', () => {
 
   it('render counter', () => {
     const { queryByText } = renderWithPageContext(
-      <PasscodeValidation type={UserFlow.signIn} method="email" target={email} />
+      <PasscodeValidation type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
     );
 
     expect(queryByText('description.resend_after_seconds')).not.toBeNull();
@@ -60,7 +61,7 @@ describe('<PasscodeValidation />', () => {
 
   it('fire resend event', async () => {
     const { getByText } = renderWithPageContext(
-      <PasscodeValidation type={UserFlow.signIn} method="email" target={email} />
+      <PasscodeValidation type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
     );
     act(() => {
       jest.advanceTimersByTime(1e3 * 60);
@@ -76,7 +77,7 @@ describe('<PasscodeValidation />', () => {
 
   it('fire validate passcode event', async () => {
     const { container } = renderWithPageContext(
-      <PasscodeValidation type={UserFlow.signIn} method="email" target={email} />
+      <PasscodeValidation type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
     );
     const inputs = container.querySelectorAll('input');
 
@@ -95,7 +96,7 @@ describe('<PasscodeValidation />', () => {
     verifyPasscodeApi.mockImplementationOnce(() => ({ redirectTo: 'foo.com' }));
 
     const { container } = renderWithPageContext(
-      <PasscodeValidation type={UserFlow.signIn} method="email" target={email} />
+      <PasscodeValidation type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
     );
 
     const inputs = container.querySelectorAll('input');
@@ -119,7 +120,11 @@ describe('<PasscodeValidation />', () => {
     verifyPasscodeApi.mockImplementationOnce(() => ({ success: true }));
 
     const { container } = renderWithPageContext(
-      <PasscodeValidation type={UserFlow.forgotPassword} method="email" target={email} />
+      <PasscodeValidation
+        type={UserFlow.forgotPassword}
+        method={SignInIdentifier.Email}
+        target={email}
+      />
     );
 
     const inputs = container.querySelectorAll('input');

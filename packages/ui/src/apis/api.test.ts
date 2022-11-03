@@ -1,3 +1,5 @@
+import { SignInIdentifier } from '@logto/schemas';
+
 import { UserFlow } from '@/types';
 
 import {
@@ -10,14 +12,22 @@ import { getVerifyPasscodeApi } from './utils';
 
 describe('api', () => {
   it('getVerifyPasscodeApi', () => {
-    expect(getVerifyPasscodeApi(UserFlow.register, 'sms')).toBe(verifyRegisterSmsPasscode);
-    expect(getVerifyPasscodeApi(UserFlow.register, 'email')).toBe(verifyRegisterEmailPasscode);
-    expect(getVerifyPasscodeApi(UserFlow.signIn, 'sms')).toBe(verifySignInSmsPasscode);
-    expect(getVerifyPasscodeApi(UserFlow.signIn, 'email')).toBe(verifySignInEmailPasscode);
-    expect(getVerifyPasscodeApi(UserFlow.forgotPassword, 'email')).toBe(
+    expect(getVerifyPasscodeApi(UserFlow.register, SignInIdentifier.Sms)).toBe(
+      verifyRegisterSmsPasscode
+    );
+    expect(getVerifyPasscodeApi(UserFlow.register, SignInIdentifier.Email)).toBe(
+      verifyRegisterEmailPasscode
+    );
+    expect(getVerifyPasscodeApi(UserFlow.signIn, SignInIdentifier.Sms)).toBe(
+      verifySignInSmsPasscode
+    );
+    expect(getVerifyPasscodeApi(UserFlow.signIn, SignInIdentifier.Email)).toBe(
+      verifySignInEmailPasscode
+    );
+    expect(getVerifyPasscodeApi(UserFlow.forgotPassword, SignInIdentifier.Email)).toBe(
       verifyForgotPasswordEmailPasscode
     );
-    expect(getVerifyPasscodeApi(UserFlow.forgotPassword, 'sms')).toBe(
+    expect(getVerifyPasscodeApi(UserFlow.forgotPassword, SignInIdentifier.Sms)).toBe(
       verifyForgotPasswordSmsPasscode
     );
   });

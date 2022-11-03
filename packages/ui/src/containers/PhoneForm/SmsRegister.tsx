@@ -1,5 +1,9 @@
+import { SignInIdentifier } from '@logto/schemas';
+
+import usePasswordlessSendCode from '@/hooks/use-passwordless-send-code';
+import { UserFlow } from '@/types';
+
 import PhoneForm from './PhoneForm';
-import useSmsRegister from './use-sms-register';
 
 type Props = {
   className?: string;
@@ -8,7 +12,10 @@ type Props = {
 };
 
 const SmsRegister = (props: Props) => {
-  const { onSubmit, errorMessage, clearErrorMessage } = useSmsRegister();
+  const { onSubmit, errorMessage, clearErrorMessage } = usePasswordlessSendCode(
+    UserFlow.register,
+    SignInIdentifier.Sms
+  );
 
   return (
     <PhoneForm

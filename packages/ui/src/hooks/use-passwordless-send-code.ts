@@ -2,33 +2,38 @@ import { SignInIdentifier } from '@logto/schemas';
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { sendRegisterEmailPasscode } from '@/apis/register';
+import { getSendPasscodeApi } from '@/apis/utils';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import { UserFlow } from '@/types';
+import type { UserFlow } from '@/types';
 
-const useEmailRegister = () => {
+const usePasswordlessSendCode = (
+  flow: UserFlow,
+  method: SignInIdentifier.Email | SignInIdentifier.Sms
+) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigate();
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'guard.invalid_input': () => {
-        setErrorMessage('invalid_email');
+        setErrorMessage(method === SignInIdentifier.Email ? 'invalid_email' : 'invalid_phone');
       },
     }),
-    []
+    [method]
   );
 
   const clearErrorMessage = useCallback(() => {
     setErrorMessage('');
   }, []);
 
-  const { run: asyncSendRegisterEmailPasscode } = useApi(sendRegisterEmailPasscode, errorHandlers);
+  const api = getSendPasscodeApi(flow, method);
+
+  const { run: asyncSendPasscode } = useApi(api, errorHandlers);
 
   const onSubmit = useCallback(
-    async (email: string) => {
-      const result = await asyncSendRegisterEmailPasscode(email);
+    async (value: string) => {
+      const result = await asyncSendPasscode(value);
 
       if (!result) {
         return;
@@ -36,13 +41,13 @@ const useEmailRegister = () => {
 
       navigate(
         {
-          pathname: `/${UserFlow.register}/${SignInIdentifier.Email}/passcode-validation`,
+          pathname: `/${flow}/${method}/passcode-validation`,
           search: location.search,
         },
-        { state: { email } }
+        { state: method === SignInIdentifier.Email ? { email: value } : { phone: value } }
       );
     },
-    [asyncSendRegisterEmailPasscode, navigate]
+    [asyncSendPasscode, flow, method, navigate]
   );
 
   return {
@@ -52,4 +57,4 @@ const useEmailRegister = () => {
   };
 };
 
-export default useEmailRegister;
+export default usePasswordlessSendCode;

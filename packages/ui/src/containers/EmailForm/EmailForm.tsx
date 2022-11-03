@@ -23,7 +23,7 @@ type Props = {
   errorMessage?: string;
   submitButtonText?: TFuncKey;
   clearErrorMessage?: () => void;
-  onSubmit: (email: string) => Promise<void>;
+  onSubmit: (email: string) => Promise<void> | void;
 };
 
 type FieldState = {
