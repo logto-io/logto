@@ -48,7 +48,7 @@ describe('<SignIn />', () => {
       </SettingsProvider>
     );
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
-    expect(queryByText('action.continue')).not.toBeNull();
+    expect(queryByText('action.sign_in')).not.toBeNull();
   });
 
   test('render with email password as primary', async () => {

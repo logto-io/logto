@@ -22,7 +22,12 @@ const SignIn = () => {
       {
         // Other sign-in methods
         otherMethods.length > 0 && (
-          <OtherMethodsLink methods={otherMethods} template="sign_in_with" flow={UserFlow.signIn} />
+          <OtherMethodsLink
+            methods={otherMethods}
+            template="sign_in_with"
+            flow={UserFlow.signIn}
+            search={location.search}
+          />
         )
       }
       {
