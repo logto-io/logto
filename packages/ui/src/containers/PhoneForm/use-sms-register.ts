@@ -17,7 +17,7 @@ const useSmsRegister = () => {
         setErrorMessage('invalid_phone');
       },
     }),
-    [setErrorMessage]
+    []
   );
 
   const clearErrorMessage = useCallback(() => {

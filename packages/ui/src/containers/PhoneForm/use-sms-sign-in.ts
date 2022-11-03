@@ -3,7 +3,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { sendSignInEmailPasscode } from '@/apis/sign-in';
+import { sendSignInSmsPasscode } from '@/apis/sign-in';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import type { ArrayElement } from '@/types';
@@ -18,7 +18,7 @@ const useEmailSignIn = ({ password, isPasswordPrimary, verificationCode }: Metho
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'guard.invalid_input': () => {
-        setErrorMessage('invalid_email');
+        setErrorMessage('invalid_phone');
       },
     }),
     []
@@ -28,24 +28,24 @@ const useEmailSignIn = ({ password, isPasswordPrimary, verificationCode }: Metho
     setErrorMessage('');
   }, []);
 
-  const { run: asyncSendSignInEmailPasscode } = useApi(sendSignInEmailPasscode, errorHandlers);
+  const { run: asyncSendSignInEmailPasscode } = useApi(sendSignInSmsPasscode, errorHandlers);
 
   const navigateToPasswordPage = useCallback(
-    (email: string) => {
+    (phone: string) => {
       navigate(
         {
-          pathname: `/${UserFlow.signIn}/${SignInIdentifier.Email}/password`,
+          pathname: `/${UserFlow.signIn}/${SignInIdentifier.Sms}/password`,
           search: location.search,
         },
-        { state: { email } }
+        { state: { phone } }
       );
     },
     [navigate]
   );
 
   const sendPasscode = useCallback(
-    async (email: string) => {
-      const result = await asyncSendSignInEmailPasscode(email);
+    async (phone: string) => {
+      const result = await asyncSendSignInEmailPasscode(phone);
 
       if (!result) {
         return;
@@ -53,27 +53,27 @@ const useEmailSignIn = ({ password, isPasswordPrimary, verificationCode }: Metho
 
       navigate(
         {
-          pathname: `/${UserFlow.signIn}/${SignInIdentifier.Email}/passcode-validation`,
+          pathname: `/${UserFlow.signIn}/${SignInIdentifier.Sms}/passcode-validation`,
           search: location.search,
         },
-        { state: { email } }
+        { state: { phone } }
       );
     },
     [asyncSendSignInEmailPasscode, navigate]
   );
 
   const onSubmit = useCallback(
-    async (email: string) => {
-      // Email Password SignIn Flow
+    async (phone: string) => {
+      // Sms Password SignIn Flow
       if (password && (isPasswordPrimary || !verificationCode)) {
-        navigateToPasswordPage(email);
+        navigateToPasswordPage(phone);
 
         return;
       }
 
-      // Email Passwordless SignIn Flow
+      // Sms Passwordless SignIn Flow
       if (verificationCode) {
-        await sendPasscode(email);
+        await sendPasscode(phone);
       }
     },
     [isPasswordPrimary, navigateToPasswordPage, password, sendPasscode, verificationCode]

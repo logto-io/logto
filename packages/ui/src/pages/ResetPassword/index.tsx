@@ -9,7 +9,6 @@ const ResetPassword = () => {
   return (
     <SecondaryPageWrapper title="description.new_password">
       <SetPassword
-        // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
         errorMessage={errorMessage}
         clearErrorMessage={clearErrorMessage}

@@ -1,5 +1,4 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { is } from 'superstruct';
 
@@ -19,23 +18,6 @@ const SecondaryRegister = () => {
   const { method = '' } = useParams<Parameters>();
   const { signUpMethods, signUpSettings } = useSieMethods();
 
-  const registerForm = useMemo(() => {
-    if (method === SignInIdentifier.Sms) {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <SmsRegister autoFocus />;
-    }
-
-    if (method === SignInIdentifier.Email) {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <EmailRegister autoFocus />;
-    }
-
-    if (method === SignInIdentifier.Username) {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <CreateAccount autoFocus />;
-    }
-  }, [method]);
-
   // Validate the signUp method
   if (!is(method, SignInMethodGuard) || !signUpMethods.includes(method)) {
     return <ErrorPage />;
@@ -46,7 +28,17 @@ const SecondaryRegister = () => {
     return <ErrorPage />;
   }
 
-  return <SecondaryPageWrapper title="action.create_account">{registerForm}</SecondaryPageWrapper>;
+  return (
+    <SecondaryPageWrapper title="action.create_account">
+      {method === SignInIdentifier.Sms ? (
+        <SmsRegister autoFocus />
+      ) : method === SignInIdentifier.Email ? (
+        <EmailRegister autoFocus />
+      ) : (
+        <CreateAccount autoFocus />
+      )}
+    </SecondaryPageWrapper>
+  );
 };
 
 export default SecondaryRegister;
