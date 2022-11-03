@@ -55,21 +55,6 @@
   }
 }
 
-.outline {
-  border: _.border(var(--color-brand-default));
-  background: transparent;
-  color: var(--color-type-link);
-
-  &.disabled,
-  &:disabled {
-    border-color: var(--color-type-disable);
-    color: var(--color-type-disable);
-  }
-
-  &:active {
-    background: var(--color-overlay-brand-pressed);
-  }
-}
 
 :global(body.desktop) {
   .primary {
@@ -89,16 +74,6 @@
 
     &:not(:disabled):not(:active):hover {
       background: var(--color-overlay-neutral-hover);
-    }
-  }
-
-  .outline {
-    &:focus-visible {
-      outline: 3px solid var(--color-overlay-brand-focused);
-    }
-
-    &:not(:disabled):not(:active):hover {
-      background: var(--color-overlay-brand-hover);
     }
   }
 }

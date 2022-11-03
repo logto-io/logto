@@ -35,13 +35,6 @@
     &::placeholder {
       color: var(--color-type-secondary);
     }
-
-    // Overwrite webkit auto-fill style
-    &:-webkit-autofill {
-      box-shadow: 0 0 0 30px var(--color-bg-body) inset;
-      -webkit-text-fill-color: var(--color-type-primary);
-      transition: none;
-    }
   }
 
   &:focus-within {

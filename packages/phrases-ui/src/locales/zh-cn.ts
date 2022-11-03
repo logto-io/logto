@@ -30,7 +30,7 @@ const translation = {
     got_it: '知道了',
     sign_in_with: '通过 {{name}} 登录',
     forgot_password: '重置密码',
-    switch_to: '用{{method}}登录',
+    switch_to: '切换到{{method}}',
   },
   description: {
     email: '邮箱',

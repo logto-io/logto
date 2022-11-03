@@ -1,38 +1,23 @@
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 
 import InfoIcon from '@/assets/icons/info-icon.svg';
-import { onKeyDownHandler } from '@/utils/a11y';
 
+import TextLink from '../TextLink';
 import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
   message: string;
   onClose: () => void;
+  type?: 'info' | 'alert';
 };
 
-const Notification = ({ className, message, onClose }: Props) => {
-  const { t } = useTranslation();
-
+const Notification = ({ className, message, onClose, type = 'info' }: Props) => {
   return (
-    <div className={classNames(styles.notification, className)}>
+    <div className={classNames(styles.notification, styles[type], className)}>
       <InfoIcon className={styles.icon} />
       <div className={styles.message}>{message}</div>
-      {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-      <a
-        role="button"
-        tabIndex={0}
-        className={styles.link}
-        onClick={onClose}
-        onKeyDown={onKeyDownHandler({
-          Esc: onClose,
-          Enter: onClose,
-          ' ': onClose,
-        })}
-      >
-        {t('action.got_it')}
-      </a>
+      <TextLink text="action.got_it" className={styles.link} onClick={onClose} />
     </div>
   );
 };
