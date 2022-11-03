@@ -30,6 +30,10 @@ export type SignInExperienceResponse = Omit<
 > & {
   socialConnectors: ConnectorMetadata[];
   notification?: string;
+  forgotPassword: {
+    sms: boolean;
+    email: boolean;
+  };
 };
 
 export type SignInExperienceSettings = Omit<SignInExperienceResponse, 'signUp'> & {

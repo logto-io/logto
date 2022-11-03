@@ -1,9 +1,13 @@
+import { SignInIdentifier } from '@logto/schemas';
 import { useParams } from 'react-router-dom';
+import { is } from 'superstruct';
 
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
-import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
+import { EmailResetPassword } from '@/containers/EmailForm';
+import { SmsResetPassword } from '@/containers/PhoneForm';
+import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
-import { UserFlow } from '@/types';
+import { passcodeMethodGuard } from '@/types/guard';
 
 type Props = {
   method?: string;
@@ -11,20 +15,35 @@ type Props = {
 
 const ForgotPassword = () => {
   const { method = '' } = useParams<Props>();
+  const { forgotPassword } = useSieMethods();
 
-  // TODO: @simeng LOG-4486 apply supported method guard validation. Including the form hasSwitch validation bellow
-  if (!['email', 'sms'].includes(method)) {
+  if (!is(method, passcodeMethodGuard)) {
     return <ErrorPage />;
   }
 
-  const PasswordlessForm = method === 'email' ? EmailPasswordless : PhonePasswordless;
+  // Forgot password with target identifier method is not supported
+  if (!forgotPassword?.[method]) {
+    return <ErrorPage />;
+  }
+
+  const PasswordlessForm =
+    method === SignInIdentifier.Email ? EmailResetPassword : SmsResetPassword;
 
   return (
     <SecondaryPageWrapper
       title="description.reset_password"
-      description={`description.reset_password_description_${method === 'email' ? 'email' : 'sms'}`}
+      description={`description.reset_password_description_${
+        method === SignInIdentifier.Email ? 'email' : 'sms'
+      }`}
     >
-      <PasswordlessForm autoFocus hasSwitch type={UserFlow.forgotPassword} hasTerms={false} />
+      <PasswordlessForm
+        autoFocus
+        hasSwitch={
+          forgotPassword[
+            method === SignInIdentifier.Email ? SignInIdentifier.Sms : SignInIdentifier.Email
+          ]
+        }
+      />
     </SecondaryPageWrapper>
   );
 };

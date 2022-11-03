@@ -12,5 +12,6 @@ export const useSieMethods = () => {
     signInMethods: experienceSettings?.signIn.methods ?? [],
     socialConnectors: experienceSettings?.socialConnectors ?? [],
     signInMode: experienceSettings?.signInMode,
+    forgotPassword: experienceSettings?.forgotPassword,
   };
 };
