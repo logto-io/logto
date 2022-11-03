@@ -1,4 +1,4 @@
-import { SignUpIdentifier } from '@logto/schemas';
+import { SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 
@@ -28,6 +28,7 @@ import {
   readPasscode,
   createUserByAdmin,
   setSignUpIdentifier,
+  setSignInMethod,
 } from '@/helpers';
 import { generateUsername, generatePassword, generateEmail, generatePhone } from '@/utils';
 
@@ -48,6 +49,20 @@ describe('email passwordless flow', () => {
   beforeAll(async () => {
     await setUpConnector(mockEmailConnectorId, mockEmailConnectorConfig);
     await setSignUpIdentifier(SignUpIdentifier.Email, false);
+    await setSignInMethod([
+      {
+        identifier: SignInIdentifier.Username,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: true,
+      },
+      {
+        identifier: SignInIdentifier.Email,
+        password: false,
+        verificationCode: true,
+        isPasswordPrimary: false,
+      },
+    ]);
   });
 
   // Since we can not create a email register user throw admin. Have to run the register then sign-in concurrently.
@@ -122,6 +137,20 @@ describe('sms passwordless flow', () => {
   beforeAll(async () => {
     await setUpConnector(mockSmsConnectorId, mockSmsConnectorConfig);
     await setSignUpIdentifier(SignUpIdentifier.Sms, false);
+    await setSignInMethod([
+      {
+        identifier: SignInIdentifier.Username,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: true,
+      },
+      {
+        identifier: SignInIdentifier.Sms,
+        password: false,
+        verificationCode: true,
+        isPasswordPrimary: false,
+      },
+    ]);
   });
 
   // Since we can not create a sms register user throw admin. Have to run the register then sign-in concurrently.

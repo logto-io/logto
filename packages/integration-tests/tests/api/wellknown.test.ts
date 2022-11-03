@@ -15,11 +15,20 @@ describe('wellknown api', () => {
     const response = await getWellKnownSignInExperience(client.interactionCookie);
 
     expect(response).toMatchObject({
-      signInMethods: {
-        username: 'primary',
-        email: 'disabled',
-        sms: 'disabled',
-        social: 'disabled',
+      signUp: {
+        identifier: 'username',
+        password: true,
+        verify: false,
+      },
+      signIn: {
+        methods: [
+          {
+            identifier: 'username',
+            password: true,
+            verificationCode: false,
+            isPasswordPrimary: true,
+          },
+        ],
       },
       signInMode: 'SignIn',
     });

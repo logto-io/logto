@@ -128,28 +128,6 @@ export const languageInfoGuard = z.object({
 
 export type LanguageInfo = z.infer<typeof languageInfoGuard>;
 
-export enum SignInMethodKey {
-  Username = 'username',
-  Email = 'email',
-  Sms = 'sms',
-  Social = 'social',
-}
-
-export enum SignInMethodState {
-  Primary = 'primary',
-  Secondary = 'secondary',
-  Disabled = 'disabled',
-}
-
-export const signInMethodsGuard = z.object({
-  [SignInMethodKey.Username]: z.nativeEnum(SignInMethodState),
-  [SignInMethodKey.Email]: z.nativeEnum(SignInMethodState),
-  [SignInMethodKey.Sms]: z.nativeEnum(SignInMethodState),
-  [SignInMethodKey.Social]: z.nativeEnum(SignInMethodState),
-});
-
-export type SignInMethods = z.infer<typeof signInMethodsGuard>;
-
 export enum SignUpIdentifier {
   Email = 'email',
   Sms = 'sms',

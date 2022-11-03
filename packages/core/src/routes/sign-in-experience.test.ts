@@ -1,5 +1,4 @@
 import type { SignInExperience, CreateSignInExperience, TermsOfUse } from '@logto/schemas';
-import { SignInMethodState } from '@logto/schemas';
 
 import {
   mockFacebookConnector,
@@ -7,7 +6,6 @@ import {
   mockGoogleConnector,
   mockBranding,
   mockSignInExperience,
-  mockSignInMethods,
   mockWechatConnector,
   mockColor,
   mockSignUp,
@@ -17,7 +15,6 @@ import {
 } from '@/__mocks__';
 import * as signInExpLib from '@/lib/sign-in-experience';
 import * as signInLib from '@/lib/sign-in-experience/sign-in';
-import * as signInMethodsLib from '@/lib/sign-in-experience/sign-in-methods';
 import * as signUpLib from '@/lib/sign-in-experience/sign-up';
 import { createRequester } from '@/utils/test-utils';
 
@@ -73,10 +70,8 @@ describe('GET /sign-in-exp', () => {
 
 describe('PATCH /sign-in-exp', () => {
   it('should update social connector targets in correct sorting order', async () => {
-    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
     const socialSignInConnectorTargets = ['github', 'facebook'];
     const signInExperience = {
-      signInMethods,
       socialSignInConnectorTargets,
     };
     const response = await signInExperienceRequester.patch('/sign-in-exp').send(signInExperience);
@@ -84,17 +79,14 @@ describe('PATCH /sign-in-exp', () => {
       status: 200,
       body: {
         ...mockSignInExperience,
-        signInMethods,
         socialSignInConnectorTargets,
       },
     });
   });
 
   it('should filter out unavailable social connector targets', async () => {
-    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
     const socialSignInConnectorTargets = ['github', 'facebook', 'google'];
     const signInExperience = {
-      signInMethods,
       socialSignInConnectorTargets,
     };
     const response = await signInExperienceRequester.patch('/sign-in-exp').send(signInExperience);
@@ -102,7 +94,6 @@ describe('PATCH /sign-in-exp', () => {
       status: 200,
       body: {
         ...mockSignInExperience,
-        signInMethods,
         socialSignInConnectorTargets: ['github', 'facebook'],
       },
     });
@@ -115,7 +106,6 @@ describe('PATCH /sign-in-exp', () => {
     const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
     const validateLanguageInfo = jest.spyOn(signInExpLib, 'validateLanguageInfo');
     const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');
-    const validateSignInMethods = jest.spyOn(signInMethodsLib, 'validateSignInMethods');
     const validateSignIn = jest.spyOn(signInLib, 'validateSignIn');
     const validateSignUp = jest.spyOn(signUpLib, 'validateSignUp');
 
@@ -124,7 +114,6 @@ describe('PATCH /sign-in-exp', () => {
       branding: mockBranding,
       languageInfo: mockLanguageInfo,
       termsOfUse,
-      signInMethods: mockSignInMethods,
       socialSignInConnectorTargets,
       signUp: mockSignUp,
       signIn: mockSignIn,
@@ -139,11 +128,6 @@ describe('PATCH /sign-in-exp', () => {
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateLanguageInfo).toHaveBeenCalledWith(mockLanguageInfo);
     expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
-    expect(validateSignInMethods).toHaveBeenCalledWith(
-      mockSignInMethods,
-      socialSignInConnectorTargets,
-      connectors
-    );
     expect(validateSignUp).toHaveBeenCalledWith(mockSignUp, connectors);
     expect(validateSignIn).toHaveBeenCalledWith(mockSignIn, mockSignUp, connectors);
 
@@ -154,7 +138,6 @@ describe('PATCH /sign-in-exp', () => {
         color: mockColor,
         branding: mockBranding,
         termsOfUse,
-        signInMethods: mockSignInMethods,
         socialSignInConnectorTargets,
         signIn: mockSignIn,
       },

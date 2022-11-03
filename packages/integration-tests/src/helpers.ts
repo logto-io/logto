@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import type { User, SignUpIdentifier } from '@logto/schemas';
+import type { User, SignUpIdentifier, SignIn } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
@@ -78,6 +78,14 @@ export const setSignUpIdentifier = async (
   verify = true
 ) => {
   await updateSignInExperience({ signUp: { identifier, password, verify } });
+};
+
+export const setSignInMethod = async (methods: SignIn['methods']) => {
+  await updateSignInExperience({
+    signIn: {
+      methods,
+    },
+  });
 };
 
 type PasscodeRecord = {

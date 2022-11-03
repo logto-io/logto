@@ -1,16 +1,6 @@
-import { BrandingStyle, SignInMethodState } from '@logto/schemas';
+import { BrandingStyle } from '@logto/schemas';
 
-import {
-  mockEmailConnectorConfig,
-  mockEmailConnectorId,
-  mockSmsConnectorConfig,
-  mockSmsConnectorId,
-  mockSocialConnectorConfig,
-  mockSocialConnectorId,
-  mockSocialConnectorTarget,
-} from '@/__mocks__/connectors-mock';
 import { getSignInExperience, updateSignInExperience } from '@/api';
-import { updateConnectorConfig, enableConnector, disableConnector } from '@/api/connector';
 
 describe('admin console sign-in experience', () => {
   it('should get sign-in experience successfully', async () => {
@@ -40,42 +30,5 @@ describe('admin console sign-in experience', () => {
 
     const updatedSignInExperience = await updateSignInExperience(newSignInExperience);
     expect(updatedSignInExperience).toMatchObject(newSignInExperience);
-  });
-
-  it('should be able to setup sign in methods after connectors are enabled', async () => {
-    // Setup connectors for tests
-    await Promise.all([
-      updateConnectorConfig(mockSocialConnectorId, mockSocialConnectorConfig).then(async () =>
-        enableConnector(mockSocialConnectorId)
-      ),
-      updateConnectorConfig(mockSmsConnectorId, mockSmsConnectorConfig).then(async () =>
-        enableConnector(mockSmsConnectorId)
-      ),
-      updateConnectorConfig(mockEmailConnectorId, mockEmailConnectorConfig).then(async () =>
-        enableConnector(mockEmailConnectorId)
-      ),
-    ]);
-
-    // Set up sign-in methods
-    const newSignInMethods = {
-      username: SignInMethodState.Primary,
-      sms: SignInMethodState.Secondary,
-      email: SignInMethodState.Secondary,
-      social: SignInMethodState.Secondary,
-    };
-
-    const updatedSignInExperience = await updateSignInExperience({
-      socialSignInConnectorTargets: [mockSocialConnectorTarget],
-      signInMethods: newSignInMethods,
-    });
-
-    expect(updatedSignInExperience.signInMethods).toMatchObject(newSignInMethods);
-
-    // Reset connectors
-    await Promise.all([
-      disableConnector(mockSocialConnectorId),
-      disableConnector(mockSmsConnectorId),
-      disableConnector(mockEmailConnectorId),
-    ]);
   });
 });

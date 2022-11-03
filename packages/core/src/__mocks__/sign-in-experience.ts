@@ -2,19 +2,12 @@ import type {
   Branding,
   LanguageInfo,
   SignInExperience,
-  SignInMethods,
   TermsOfUse,
   Color,
   SignUp,
   SignIn,
 } from '@logto/schemas';
-import {
-  BrandingStyle,
-  SignInMethodState,
-  SignInMode,
-  SignUpIdentifier,
-  SignInIdentifier,
-} from '@logto/schemas';
+import { BrandingStyle, SignInMode, SignUpIdentifier, SignInIdentifier } from '@logto/schemas';
 
 export const mockSignInExperience: SignInExperience = {
   id: 'foo',
@@ -62,12 +55,6 @@ export const mockSignInExperience: SignInExperience = {
       },
     ],
   },
-  signInMethods: {
-    username: SignInMethodState.Primary,
-    email: SignInMethodState.Disabled,
-    sms: SignInMethodState.Disabled,
-    social: SignInMethodState.Secondary,
-  },
   socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
   signInMode: SignInMode.SignInAndRegister,
 };
@@ -92,13 +79,6 @@ export const mockTermsOfUse: TermsOfUse = {
 export const mockLanguageInfo: LanguageInfo = {
   autoDetect: true,
   fallbackLanguage: 'en',
-};
-
-export const mockSignInMethods: SignInMethods = {
-  username: SignInMethodState.Primary,
-  email: SignInMethodState.Disabled,
-  sms: SignInMethodState.Disabled,
-  social: SignInMethodState.Disabled,
 };
 
 export const mockSignUp: SignUp = {
