@@ -29,6 +29,7 @@ const translation = {
     sign_in_with: 'Continue with {{name}}',
     forgot_password: 'Forgot your password?',
     switch_to: 'Switch to {{method}}',
+    sign_in_via_passcode: 'Sign in via verification code',
   },
   description: {
     email: 'email',
@@ -63,6 +64,8 @@ const translation = {
     password_changed: 'Password Changed',
     no_account: "Don't have an account?",
     have_account: 'Already have an account?',
+    enter_password: 'Enter Password',
+    enter_password_for: 'Enter the password of {{method}} {{value}}',
   },
   error: {
     username_password_mismatch: 'Username and password do not match',

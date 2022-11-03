@@ -31,6 +31,7 @@ const translation = {
     sign_in_with: '{{name}} 계속',
     forgot_password: '비밀번호를 잊어버리셨나요?',
     switch_to: 'Switch to {{method}}', // UNTRANSLATED
+    sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
   },
   description: {
     email: '이메일',
@@ -63,6 +64,8 @@ const translation = {
     password_changed: 'Password Changed', // UNTRANSLATED
     no_account: "Don't have an account?", // UNTRANSLATED
     have_account: 'Already have an account?', // UNTRANSLATED
+    enter_password: 'Enter Password', // UNTRANSLATED
+    enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '사용자 이름 또는 비밀번호가 일치하지 않아요.',
