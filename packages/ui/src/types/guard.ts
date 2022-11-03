@@ -7,7 +7,7 @@ export const bindSocialStateGuard = s.object({
 
 export const passcodeStateGuard = s.object({
   email: s.optional(s.string()),
-  sms: s.optional(s.string()),
+  phone: s.optional(s.string()),
 });
 
 export const passcodeMethodGuard = s.union([
