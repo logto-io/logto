@@ -31,7 +31,7 @@ describe('<SecondarySignIn />', () => {
   });
 
   test('renders phone', async () => {
-    const { queryByText, container } = renderWithPageContext(
+    const { queryAllByText, container } = renderWithPageContext(
       <MemoryRouter initialEntries={['/sign-in/sms']}>
         <Routes>
           <Route
@@ -45,7 +45,7 @@ describe('<SecondarySignIn />', () => {
         </Routes>
       </MemoryRouter>
     );
-    expect(queryByText('action.sign_in')).not.toBeNull();
+    expect(queryAllByText('action.sign_in')).toHaveLength(2);
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
   });
 

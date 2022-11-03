@@ -87,7 +87,6 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <Input
-        // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus={autoFocus}
         className={styles.inputField}
         name="new-username"

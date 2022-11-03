@@ -96,7 +96,6 @@ const EmailPasswordless = ({
           autoComplete="email"
           inputMode="email"
           placeholder={t('input.email')}
-          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={autoFocus}
           className={styles.inputField}
           {...register('email', emailValidation)}

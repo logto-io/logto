@@ -88,7 +88,7 @@ describe('<SignIn />', () => {
       </SettingsProvider>
     );
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
-    expect(queryByText('action.continue')).not.toBeNull();
+    expect(queryByText('action.sign_in')).not.toBeNull();
   });
 
   test('renders with phone password as primary', async () => {

@@ -75,7 +75,8 @@
   "eslintConfig": {
     "extends": "@silverhand/react",
     "rules": {
-      "complexity": "off"
+      "complexity": "off",
+      "jsx-a11y/no-autofocus": "off"
     }
   },
   "stylelint": {

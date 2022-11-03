@@ -1,14 +1,13 @@
 import { SignInIdentifier } from '@logto/schemas';
 import type { SignIn as SignInType, ConnectorMetadata } from '@logto/schemas';
 
-import EmailSignIn from '@/containers/EmailForm/EmailSignIn';
+import { EmailSignIn } from '@/containers/EmailForm';
 import EmailPassword from '@/containers/EmailPassword';
-import { PhonePasswordless } from '@/containers/Passwordless';
+import { SmsSignIn } from '@/containers/PhoneForm';
 import PhonePassword from '@/containers/PhonePassword';
 import SocialSignIn from '@/containers/SocialSignIn';
 import UsernameSignIn from '@/containers/UsernameSignIn';
 import type { ArrayElement } from '@/types';
-import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
 
@@ -32,7 +31,7 @@ const Main = ({ signInMethod, socialConnectors }: Props) => {
         return <PhonePassword className={styles.main} />;
       }
 
-      return <PhonePasswordless type={UserFlow.signIn} className={styles.main} />;
+      return <SmsSignIn signInMethod={signInMethod} className={styles.main} />;
     }
 
     case SignInIdentifier.Username: {
