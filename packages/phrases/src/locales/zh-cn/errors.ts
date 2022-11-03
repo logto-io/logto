@@ -67,7 +67,7 @@ const errors = {
     connector_id_mismatch: '传入的连接器 ID 与 session 中保存的记录不一致',
     connector_session_not_found: '无法找到连接器登录信息，请尝试重新登录。',
     verification_session_not_found: '验证失败，请重新验证。',
-    verification_expired: '无密码验证已过期。请返回重新验证。',
+    verification_expired: '当前页面已超时。为确保你的账号安全，请重新验证。',
     unauthorized: '请先登录',
     unsupported_prompt_name: '不支持的 prompt name',
     forgot_password_not_enabled: '忘记密码功能没有开启。',

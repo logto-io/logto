@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
-export type ButtonType = 'primary' | 'secondary' | 'outline';
+export type ButtonType = 'primary' | 'secondary';
 
 type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
   htmlType?: 'button' | 'submit' | 'reset';
