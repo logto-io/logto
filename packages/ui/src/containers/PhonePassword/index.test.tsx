@@ -3,26 +3,32 @@ import { act } from 'react-dom/test-utils';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { signInWithEmailPassword } from '@/apis/sign-in';
+import { signInWithPhonePassword } from '@/apis/sign-in';
 import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
 
-import EmailPassword from '.';
+import PhonePassword from '.';
 
-jest.mock('@/apis/sign-in', () => ({ signInWithEmailPassword: jest.fn(async () => 0) }));
+jest.mock('@/apis/sign-in', () => ({ signInWithPhonePassword: jest.fn(async () => 0) }));
 // Terms Iframe Modal only shown on mobile device
 jest.mock('react-device-detect', () => ({
   isMobile: true,
 }));
+// PhoneNum CountryCode detection
+jest.mock('i18next', () => ({
+  language: 'en',
+}));
 
-describe('<EmailPassword>', () => {
+describe('<PhonePassword>', () => {
   afterEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
   });
 
+  const phoneNumber = '8573333333';
+
   test('render', () => {
-    const { queryByText, container } = renderWithPageContext(<EmailPassword />);
-    expect(container.querySelector('input[name="email"]')).not.toBeNull();
+    const { queryByText, container } = renderWithPageContext(<PhonePassword />);
+    expect(container.querySelector('input[name="phone"]')).not.toBeNull();
     expect(container.querySelector('input[name="password"]')).not.toBeNull();
     expect(queryByText('action.sign_in')).not.toBeNull();
   });
@@ -30,36 +36,36 @@ describe('<EmailPassword>', () => {
   test('render with terms settings enabled', () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider>
-        <EmailPassword />
+        <PhonePassword />
       </SettingsProvider>
     );
     expect(queryByText('description.agree_with_terms')).not.toBeNull();
   });
 
   test('required inputs with error message', () => {
-    const { queryByText, getByText, container } = renderWithPageContext(<EmailPassword />);
+    const { queryByText, getByText, container } = renderWithPageContext(<PhonePassword />);
     const submitButton = getByText('action.sign_in');
 
     fireEvent.click(submitButton);
 
-    expect(queryByText('invalid_email')).not.toBeNull();
+    expect(queryByText('invalid_phone')).not.toBeNull();
     expect(queryByText('password_required')).not.toBeNull();
 
-    const emailInput = container.querySelector('input[name="email"]');
+    const phoneInput = container.querySelector('input[name="phone"]');
     const passwordInput = container.querySelector('input[name="password"]');
 
-    expect(emailInput).not.toBeNull();
+    expect(phoneInput).not.toBeNull();
     expect(passwordInput).not.toBeNull();
 
-    if (emailInput) {
-      fireEvent.change(emailInput, { target: { value: 'email@logto.io' } });
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
 
     if (passwordInput) {
       fireEvent.change(passwordInput, { target: { value: 'password' } });
     }
 
-    expect(queryByText('invalid_email')).toBeNull();
+    expect(queryByText('invalid_phone')).toBeNull();
     expect(queryByText('password_required')).toBeNull();
   });
 
@@ -67,17 +73,17 @@ describe('<EmailPassword>', () => {
     const { queryByText, getByText, container } = renderWithPageContext(
       <SettingsProvider>
         <ConfirmModalProvider>
-          <EmailPassword />
+          <PhonePassword />
         </ConfirmModalProvider>
       </SettingsProvider>
     );
     const submitButton = getByText('action.sign_in');
 
-    const emailInput = container.querySelector('input[name="email"]');
+    const phoneInput = container.querySelector('input[name="phone"]');
     const passwordInput = container.querySelector('input[name="password"]');
 
-    if (emailInput) {
-      fireEvent.change(emailInput, { target: { value: 'email@logto.io' } });
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
 
     if (passwordInput) {
@@ -97,17 +103,17 @@ describe('<EmailPassword>', () => {
     const { getByText, queryByText, container, queryByRole } = renderWithPageContext(
       <SettingsProvider>
         <ConfirmModalProvider>
-          <EmailPassword />
+          <PhonePassword />
         </ConfirmModalProvider>
       </SettingsProvider>
     );
     const submitButton = getByText('action.sign_in');
 
-    const emailInput = container.querySelector('input[name="email"]');
+    const phoneInput = container.querySelector('input[name="phone"]');
     const passwordInput = container.querySelector('input[name="password"]');
 
-    if (emailInput) {
-      fireEvent.change(emailInput, { target: { value: 'email@logto.io' } });
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
 
     if (passwordInput) {
@@ -137,16 +143,16 @@ describe('<EmailPassword>', () => {
   test('submit form', async () => {
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <EmailPassword />
+        <PhonePassword />
       </SettingsProvider>
     );
     const submitButton = getByText('action.sign_in');
 
-    const emailInput = container.querySelector('input[name="email"]');
+    const phoneInput = container.querySelector('input[name="phone"]');
     const passwordInput = container.querySelector('input[name="password"]');
 
-    if (emailInput) {
-      fireEvent.change(emailInput, { target: { value: 'email' } });
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: 'phone' } });
     }
 
     if (passwordInput) {
@@ -165,7 +171,7 @@ describe('<EmailPassword>', () => {
 
     act(() => {
       void waitFor(() => {
-        expect(signInWithEmailPassword).toBeCalledWith('email', 'password', undefined);
+        expect(signInWithPhonePassword).toBeCalledWith('phone', 'password', undefined);
       });
     });
   });

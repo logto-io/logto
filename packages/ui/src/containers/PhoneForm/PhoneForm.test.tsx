@@ -10,6 +10,7 @@ import PhoneForm from './PhoneForm';
 const onSubmit = jest.fn();
 const clearErrorMessage = jest.fn();
 
+// PhoneNum CountryCode detection
 jest.mock('i18next', () => ({
   language: 'en',
 }));

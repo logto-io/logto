@@ -73,6 +73,7 @@ describe('<SignIn />', () => {
       </SettingsProvider>
     );
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
+    expect(container.querySelector('input[name="password"]')).not.toBeNull();
     expect(queryByText('action.sign_in')).not.toBeNull();
   });
 
@@ -111,7 +112,9 @@ describe('<SignIn />', () => {
         </MemoryRouter>
       </SettingsProvider>
     );
-    expect(queryByText('Phone password form')).not.toBeNull();
+    expect(container.querySelector('input[name="phone"]')).not.toBeNull();
+    expect(container.querySelector('input[name="password"]')).not.toBeNull();
+    expect(queryByText('action.sign_in')).not.toBeNull();
   });
 
   test('renders with social as primary', async () => {
