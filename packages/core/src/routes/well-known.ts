@@ -1,4 +1,5 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
+import { ConnectorType } from '@logto/connector-kit';
 import { SignInMode } from '@logto/schemas';
 import {
   adminConsoleApplicationId,
@@ -85,7 +86,18 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
         return next();
       }
 
-      ctx.body = { ...signInExperience, socialConnectors };
+      ctx.body = {
+        ...signInExperience,
+        socialConnectors,
+        forgotPassword: {
+          sms: logtoConnectors.some(
+            ({ type, dbEntry: { enabled } }) => type === ConnectorType.Sms && enabled
+          ),
+          email: logtoConnectors.some(
+            ({ type, dbEntry: { enabled } }) => type === ConnectorType.Email && enabled
+          ),
+        },
+      };
 
       return next();
     },

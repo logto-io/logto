@@ -6,7 +6,6 @@ import { z } from 'zod';
 import RequestError from '@/errors/RequestError';
 import { encryptUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import { findUserById, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
@@ -29,12 +28,6 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
     `${forgotPasswordRoute}/reset`,
     koaGuard({ body: z.object({ password: z.string().regex(passwordRegEx) }) }),
     async (ctx, next) => {
-      const signInExperience = await findDefaultSignInExperience();
-      assertThat(
-        signInExperience.forgotPassword,
-        new RequestError({ code: 'session.forgot_password_not_enabled', status: 422 })
-      );
-
       const { password } = ctx.guard.body;
 
       const verificationStorage = await getVerificationStorageFromInteraction(

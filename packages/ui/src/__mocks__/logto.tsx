@@ -218,7 +218,6 @@ export const mockSignInExperience: SignInExperience = {
   },
   socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
   signInMode: SignInMode.SignInAndRegister,
-  forgotPassword: false,
 };
 
 export const mockSignInExperienceSettings: SignInExperienceSettings = {
@@ -235,5 +234,4 @@ export const mockSignInExperienceSettings: SignInExperienceSettings = {
   },
   socialConnectors,
   signInMode: SignInMode.SignInAndRegister,
-  forgotPassword: false,
 };

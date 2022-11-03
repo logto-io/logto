@@ -15,10 +15,7 @@ const encryptUserPassword = jest.fn(async (password: string) => ({
 }));
 const findUserById = jest.fn(async (): Promise<User> => mockUserWithPassword);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ userId: 'id' }));
-const findDefaultSignInExperience = jest.fn(async () => ({
-  ...mockSignInExperience,
-  forgotPassword: true,
-}));
+const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
 
 jest.mock('@/lib/user', () => ({
   ...jest.requireActual('@/lib/user'),
@@ -227,22 +224,6 @@ describe('session -> forgotPasswordRoutes', () => {
         })
       );
       expect(response.statusCode).toEqual(204);
-    });
-    it('should throw when forgot password is not enabeld in SIE', async () => {
-      findDefaultSignInExperience.mockResolvedValueOnce({
-        ...mockSignInExperience,
-        forgotPassword: false,
-      });
-      interactionDetails.mockResolvedValueOnce({
-        result: {
-          forgotPassword: { userId: 'id', expiresAt: dayjs().add(1, 'day').toISOString() },
-        },
-      });
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/reset`)
-        .send({ password: mockPasswordEncrypted });
-      expect(response).toHaveProperty('status', 422);
-      expect(updateUserById).toBeCalledTimes(0);
     });
   });
 });
