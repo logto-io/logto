@@ -84,16 +84,15 @@ const UsernameRegister = ({ className }: Props) => {
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <div className={styles.formFields}>
-        <Input
-          name="new-username"
-          placeholder={t('input.username')}
-          {...fieldRegister('username', usernameValidation)}
-          onClear={() => {
-            setFieldValue((state) => ({ ...state, username: '' }));
-          }}
-        />
-      </div>
+      <Input
+        name="new-username"
+        className={styles.inputField}
+        placeholder={t('input.username')}
+        {...fieldRegister('username', usernameValidation)}
+        onClear={() => {
+          setFieldValue((state) => ({ ...state, username: '' }));
+        }}
+      />
 
       <TermsOfUse className={styles.terms} />
 

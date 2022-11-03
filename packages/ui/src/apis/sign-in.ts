@@ -9,11 +9,36 @@ type Response = {
   redirectTo: string;
 };
 
-export const signInBasic = async (username: string, password: string, socialToBind?: string) => {
+export const signInWithUsername = async (
+  username: string,
+  password: string,
+  socialToBind?: string
+) => {
   const result = await api
     .post(`${apiPrefix}/sign-in/password/username`, {
       json: {
         username,
+        password,
+      },
+    })
+    .json<Response>();
+
+  if (result.redirectTo && socialToBind) {
+    await bindSocialAccount(socialToBind);
+  }
+
+  return result;
+};
+
+export const signInWithEmailPassword = async (
+  email: string,
+  password: string,
+  socialToBind?: string
+) => {
+  const result = await api
+    .post(`${apiPrefix}/sign-in/password/email`, {
+      json: {
+        email,
         password,
       },
     })

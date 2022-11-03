@@ -86,44 +86,42 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <div className={styles.formFields}>
-        <Input
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus={autoFocus}
-          className={styles.inputField}
-          name="new-username"
-          placeholder={t('input.username')}
-          {...fieldRegister('username', usernameValidation)}
-          onClear={() => {
-            setFieldValue((state) => ({ ...state, username: '' }));
-          }}
-        />
-        <Input
-          className={styles.inputField}
-          name="new-password"
-          type="password"
-          autoComplete="new-password"
-          placeholder={t('input.password')}
-          {...fieldRegister('password', passwordValidation)}
-          onClear={() => {
-            setFieldValue((state) => ({ ...state, password: '' }));
-          }}
-        />
-        <Input
-          className={styles.inputField}
-          name="confirm-new-password"
-          type="password"
-          autoComplete="new-password"
-          placeholder={t('input.confirm_password')}
-          {...fieldRegister('confirmPassword', (confirmPassword) =>
-            confirmPasswordValidation(fieldValue.password, confirmPassword)
-          )}
-          isErrorStyling={false}
-          onClear={() => {
-            setFieldValue((state) => ({ ...state, confirmPassword: '' }));
-          }}
-        />
-      </div>
+      <Input
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus={autoFocus}
+        className={styles.inputField}
+        name="new-username"
+        placeholder={t('input.username')}
+        {...fieldRegister('username', usernameValidation)}
+        onClear={() => {
+          setFieldValue((state) => ({ ...state, username: '' }));
+        }}
+      />
+      <Input
+        className={styles.inputField}
+        name="new-password"
+        type="password"
+        autoComplete="new-password"
+        placeholder={t('input.password')}
+        {...fieldRegister('password', passwordValidation)}
+        onClear={() => {
+          setFieldValue((state) => ({ ...state, password: '' }));
+        }}
+      />
+      <Input
+        className={styles.inputField}
+        name="confirm-new-password"
+        type="password"
+        autoComplete="new-password"
+        placeholder={t('input.confirm_password')}
+        {...fieldRegister('confirmPassword', (confirmPassword) =>
+          confirmPasswordValidation(fieldValue.password, confirmPassword)
+        )}
+        isErrorStyling={false}
+        onClear={() => {
+          setFieldValue((state) => ({ ...state, confirmPassword: '' }));
+        }}
+      />
 
       <TermsOfUse className={styles.terms} />
 

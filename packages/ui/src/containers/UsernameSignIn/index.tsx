@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { signInBasic } from '@/apis/sign-in';
+import { signInWithUsername } from '@/apis/sign-in';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import Input, { PasswordInput } from '@/components/Input';
@@ -49,7 +49,7 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
     [setErrorMessage]
   );
 
-  const { result, run: asyncSignInBasic } = useApi(signInBasic, errorHandlers);
+  const { result, run: asyncSignInWithUsername } = useApi(signInWithUsername, errorHandlers);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
@@ -67,9 +67,15 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
 
       const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
 
-      void asyncSignInBasic(fieldValue.username, fieldValue.password, socialToBind);
+      void asyncSignInWithUsername(fieldValue.username, fieldValue.password, socialToBind);
     },
-    [validateForm, termsValidation, asyncSignInBasic, fieldValue.username, fieldValue.password]
+    [
+      validateForm,
+      termsValidation,
+      asyncSignInWithUsername,
+      fieldValue.username,
+      fieldValue.password,
+    ]
   );
 
   useEffect(() => {
@@ -80,28 +86,26 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <div className={styles.formFields}>
-        <Input
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus={autoFocus}
-          className={styles.inputField}
-          name="username"
-          autoComplete="username"
-          placeholder={t('input.username')}
-          {...register('username', (value) => requiredValidation('username', value))}
-          onClear={() => {
-            setFieldValue((state) => ({ ...state, username: '' }));
-          }}
-        />
-        <PasswordInput
-          className={styles.inputField}
-          name="password"
-          autoComplete="current-password"
-          placeholder={t('input.password')}
-          {...register('password', (value) => requiredValidation('password', value))}
-        />
-        {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
-      </div>
+      <Input
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus={autoFocus}
+        className={styles.inputField}
+        name="username"
+        autoComplete="username"
+        placeholder={t('input.username')}
+        {...register('username', (value) => requiredValidation('username', value))}
+        onClear={() => {
+          setFieldValue((state) => ({ ...state, username: '' }));
+        }}
+      />
+      <PasswordInput
+        className={styles.inputField}
+        name="password"
+        autoComplete="current-password"
+        placeholder={t('input.password')}
+        {...register('password', (value) => requiredValidation('password', value))}
+      />
+      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
       <TermsOfUse className={styles.terms} />
 
