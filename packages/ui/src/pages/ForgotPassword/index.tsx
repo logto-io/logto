@@ -24,7 +24,6 @@ const ForgotPassword = () => {
       title="description.reset_password"
       description={`description.reset_password_description_${method === 'email' ? 'email' : 'sms'}`}
     >
-      {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
       <PasswordlessForm autoFocus hasSwitch type={UserFlow.forgotPassword} hasTerms={false} />
     </SecondaryPageWrapper>
   );

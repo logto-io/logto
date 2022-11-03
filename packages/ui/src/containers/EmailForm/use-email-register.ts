@@ -17,7 +17,7 @@ const useEmailRegister = () => {
         setErrorMessage('invalid_email');
       },
     }),
-    [setErrorMessage]
+    []
   );
 
   const clearErrorMessage = useCallback(() => {

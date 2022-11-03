@@ -111,7 +111,6 @@ const PhonePasswordless = ({
           className={styles.inputField}
           countryCallingCode={phoneNumber.countryCallingCode}
           nationalNumber={phoneNumber.nationalNumber}
-          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={autoFocus}
           countryList={countryList}
           {...register('phone', phoneNumberValidation)}
