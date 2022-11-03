@@ -9,7 +9,8 @@ import type { UserFlow } from '@/types';
 
 const usePasswordlessSendCode = (
   flow: UserFlow,
-  method: SignInIdentifier.Email | SignInIdentifier.Sms
+  method: SignInIdentifier.Email | SignInIdentifier.Sms,
+  replaceCurrentPage?: boolean
 ) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigate();
@@ -44,10 +45,13 @@ const usePasswordlessSendCode = (
           pathname: `/${flow}/${method}/passcode-validation`,
           search: location.search,
         },
-        { state: method === SignInIdentifier.Email ? { email: value } : { phone: value } }
+        {
+          state: method === SignInIdentifier.Email ? { email: value } : { phone: value },
+          replace: replaceCurrentPage,
+        }
       );
     },
-    [asyncSendPasscode, flow, method, navigate]
+    [asyncSendPasscode, flow, method, navigate, replaceCurrentPage]
   );
 
   return {

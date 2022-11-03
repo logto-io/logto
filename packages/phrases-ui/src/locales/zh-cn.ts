@@ -30,7 +30,8 @@ const translation = {
     got_it: '知道了',
     sign_in_with: '通过 {{name}} 登录',
     forgot_password: '重置密码',
-    switch_to: '切换到{{method}}',
+    switch_to: '用{{method}}登录',
+    sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
   },
   description: {
     email: '邮箱',
@@ -61,6 +62,8 @@ const translation = {
     password_changed: '已重置密码！',
     no_account: "Don't have an account?", // UNTRANSLATED
     have_account: 'Already have an account?', // UNTRANSLATED
+    enter_password: 'Enter Password', // UNTRANSLATED
+    enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',

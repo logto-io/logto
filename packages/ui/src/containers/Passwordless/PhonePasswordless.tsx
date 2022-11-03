@@ -98,7 +98,7 @@ const PhonePasswordless = ({
     if (result) {
       navigate(
         { pathname: `/${type}/sms/passcode-validation`, search: location.search },
-        { state: { sms: fieldValue.phone } }
+        { state: { phone: fieldValue.phone } }
       );
     }
   }, [fieldValue.phone, navigate, result, type]);

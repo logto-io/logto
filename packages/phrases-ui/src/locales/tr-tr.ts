@@ -31,6 +31,7 @@ const translation = {
     sign_in_with: '{{name}} ile ilerle',
     forgot_password: 'Şifremi Unuttum?',
     switch_to: 'Switch to {{method}}', // UNTRANSLATED
+    sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
   },
   description: {
     email: 'e-posta adresi',
@@ -64,6 +65,8 @@ const translation = {
     password_changed: 'Password Changed', // UNTRANSLATED
     no_account: "Don't have an account?", // UNTRANSLATED
     have_account: 'Already have an account?', // UNTRANSLATED
+    enter_password: 'Enter Password', // UNTRANSLATED
+    enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'Kullanıcı adı ve şifre eşleşmiyor.',
