@@ -1,7 +1,9 @@
+import { SignInIdentifier } from '@logto/schemas';
 import type { SignIn as SignInType, ConnectorMetadata } from '@logto/schemas';
 
+import EmailSignIn from '@/containers/EmailForm/EmailSignIn';
 import EmailPassword from '@/containers/EmailPassword';
-import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
+import { PhonePasswordless } from '@/containers/Passwordless';
 import PhonePassword from '@/containers/PhonePassword';
 import SocialSignIn from '@/containers/SocialSignIn';
 import UsernameSignIn from '@/containers/UsernameSignIn';
@@ -17,15 +19,15 @@ type Props = {
 
 const Main = ({ signInMethod, socialConnectors }: Props) => {
   switch (signInMethod?.identifier) {
-    case 'email': {
+    case SignInIdentifier.Email: {
       if (signInMethod.password && !signInMethod.verificationCode) {
         return <EmailPassword className={styles.main} />;
       }
 
-      return <EmailPasswordless type={UserFlow.signIn} className={styles.main} />;
+      return <EmailSignIn signInMethod={signInMethod} className={styles.main} />;
     }
 
-    case 'sms': {
+    case SignInIdentifier.Sms: {
       if (signInMethod.password && !signInMethod.verificationCode) {
         return <PhonePassword className={styles.main} />;
       }
@@ -33,7 +35,7 @@ const Main = ({ signInMethod, socialConnectors }: Props) => {
       return <PhonePasswordless type={UserFlow.signIn} className={styles.main} />;
     }
 
-    case 'username': {
+    case SignInIdentifier.Username: {
       return <UsernameSignIn className={styles.main} />;
     }
 

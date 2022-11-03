@@ -41,7 +41,7 @@ describe('<Register />', () => {
       </SettingsProvider>
     );
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
-    expect(queryByText('action.continue')).not.toBeNull();
+    expect(queryByText('action.create_account')).not.toBeNull();
   });
 
   test('renders with sms passwordless as primary', async () => {
@@ -58,7 +58,7 @@ describe('<Register />', () => {
       </SettingsProvider>
     );
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
-    expect(queryByText('action.continue')).not.toBeNull();
+    expect(queryByText('action.create_account')).not.toBeNull();
   });
 
   test('render with email and sms passwordless', async () => {

@@ -13,7 +13,7 @@ jest.mock('i18next', () => ({
 
 describe('<SecondaryRegister />', () => {
   test('renders phone', async () => {
-    const { queryByText, container } = renderWithPageContext(
+    const { queryAllByText, container } = renderWithPageContext(
       <MemoryRouter initialEntries={['/register/sms']}>
         <Routes>
           <Route
@@ -35,12 +35,12 @@ describe('<SecondaryRegister />', () => {
         </Routes>
       </MemoryRouter>
     );
-    expect(queryByText('action.create_account')).not.toBeNull();
+    expect(queryAllByText('action.create_account')).toHaveLength(2);
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
   });
 
   test('renders email', async () => {
-    const { queryByText, container } = renderWithPageContext(
+    const { queryAllByText, container } = renderWithPageContext(
       <MemoryRouter initialEntries={['/register/email']}>
         <Routes>
           <Route
@@ -62,7 +62,7 @@ describe('<SecondaryRegister />', () => {
         </Routes>
       </MemoryRouter>
     );
-    expect(queryByText('action.create_account')).not.toBeNull();
+    expect(queryAllByText('action.create_account')).toHaveLength(2);
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
   });
 

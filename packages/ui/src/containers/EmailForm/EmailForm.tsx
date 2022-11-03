@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { useCallback } from 'react';
+import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
@@ -20,6 +21,7 @@ type Props = {
   hasTerms?: boolean;
   hasSwitch?: boolean;
   errorMessage?: string;
+  submitButtonText?: TFuncKey;
   clearErrorMessage?: () => void;
   onSubmit: (email: string) => Promise<void>;
 };
@@ -35,8 +37,9 @@ const EmailForm = ({
   hasTerms = true,
   hasSwitch = false,
   errorMessage,
-  clearErrorMessage,
   className,
+  submitButtonText = 'action.continue',
+  clearErrorMessage,
   onSubmit,
 }: Props) => {
   const { t } = useTranslation();
@@ -86,7 +89,7 @@ const EmailForm = ({
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
       {hasSwitch && <PasswordlessSwitch target="sms" className={styles.switch} />}
       {hasTerms && <TermsOfUse className={styles.terms} />}
-      <Button title="action.continue" onClick={async () => onSubmitHandler()} />
+      <Button title={submitButtonText} onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
     </form>

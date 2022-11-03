@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { useCallback, useEffect } from 'react';
+import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
@@ -20,6 +21,7 @@ type Props = {
   hasTerms?: boolean;
   hasSwitch?: boolean;
   errorMessage?: string;
+  submitButtonText?: TFuncKey;
   clearErrorMessage?: () => void;
   onSubmit: (phone: string) => Promise<void>;
 };
@@ -36,6 +38,7 @@ const PhoneForm = ({
   hasSwitch = false,
   className,
   errorMessage,
+  submitButtonText = 'action.continue',
   clearErrorMessage,
   onSubmit,
 }: Props) => {
@@ -105,7 +108,7 @@ const PhoneForm = ({
 
       {hasTerms && <TermsOfUse className={styles.terms} />}
 
-      <Button title="action.continue" onClick={async () => onSubmitHandler()} />
+      <Button title={submitButtonText} onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
     </form>
