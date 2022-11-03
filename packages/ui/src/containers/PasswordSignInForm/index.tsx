@@ -1,17 +1,13 @@
-import { SignInIdentifier } from '@logto/schemas';
+import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { signInWithEmailPassword, signInWithPhonePassword } from '@/apis/sign-in';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { PasswordInput } from '@/components/Input';
-import type { ErrorHandlers } from '@/hooks/use-api';
-import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
-import { SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
+import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { requiredValidation } from '@/utils/field-validations';
 
 import PasswordlessSignInLink from './PasswordlessSignInLink';
@@ -42,44 +38,24 @@ const PasswordSignInForm = ({
   value,
 }: Props) => {
   const { t } = useTranslation();
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(method);
+
   const { fieldValue, register, validateForm } = useForm(defaultState);
-
-  const api = method === SignInIdentifier.Email ? signInWithEmailPassword : signInWithPhonePassword;
-
-  const errorHandlers: ErrorHandlers = useMemo(
-    () => ({
-      'session.invalid_credentials': (error) => {
-        setErrorMessage(error.message);
-      },
-    }),
-    [setErrorMessage]
-  );
-
-  const { result, run: asyncSignIn } = useApi(api, errorHandlers);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
 
-      setErrorMessage(undefined);
+      clearErrorMessage();
 
       if (!validateForm()) {
         return;
       }
 
-      const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-
-      void asyncSignIn(value, fieldValue.password, socialToBind);
+      void onSubmit(value, fieldValue.password);
     },
-    [validateForm, asyncSignIn, value, fieldValue.password]
+    [clearErrorMessage, validateForm, onSubmit, value, fieldValue.password]
   );
-
-  useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
-    }
-  }, [result]);
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
