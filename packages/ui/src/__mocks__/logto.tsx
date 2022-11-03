@@ -227,4 +227,8 @@ export const mockSignInExperienceSettings: SignInExperienceSettings = {
   },
   socialConnectors,
   signInMode: SignInMode.SignInAndRegister,
+  forgotPassword: {
+    email: true,
+    sms: true,
+  },
 };
