@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.tooltip {
+.tipBubble {
   position: absolute;
   border-radius: 8px;
   background: var(--color-tooltip-background);
@@ -16,36 +16,39 @@
     position: absolute;
     width: 10px;
     height: 10px;
-    top: 100%;
-    left: 50%;
     background-color: inherit;
     border-radius: _.unit(0.5) 0 _.unit(0.5);
     transform: translate(-50%, -50%) rotate(45deg);
   }
 
-  &.arrowUp::after {
+  &.top::after {
+    top: 100%;
+  }
+
+  &.right::after {
+    top: 50%;
+    left: 0%;
+  }
+
+  &.bottom::after {
     top: 0%;
   }
 
-  &.arrowRight::after {
+  &.left::after {
     top: 50%;
     left: 100%;
-  }
-
-  &.arrowLeft::after {
-    top: 50%;
-    left: 0%;
   }
 
   &.start::after {
     left: _.unit(10);
   }
 
-  &.end::after {
-    right: _.unit(10);
-  }
-}
 
-.content {
-  @include _.multi-line-ellipsis(6);
+  &.center::after {
+    left: 50%;
+  }
+
+  &.end::after {
+    right: _.unit(7.5);
+  }
 }
