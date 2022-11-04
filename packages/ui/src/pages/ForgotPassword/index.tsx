@@ -5,7 +5,7 @@ import { is } from 'superstruct';
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import { EmailResetPassword } from '@/containers/EmailForm';
 import { SmsResetPassword } from '@/containers/PhoneForm';
-import { useSieMethods } from '@/hooks/use-sie';
+import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
 import { passcodeMethodGuard } from '@/types/guard';
 
@@ -15,14 +15,14 @@ type Props = {
 
 const ForgotPassword = () => {
   const { method = '' } = useParams<Props>();
-  const { forgotPassword } = useSieMethods();
+  const forgotPassword = useForgotPasswordSettings();
 
   if (!is(method, passcodeMethodGuard)) {
     return <ErrorPage />;
   }
 
   // Forgot password with target identifier method is not supported
-  if (!forgotPassword?.[method]) {
+  if (!forgotPassword[method]) {
     return <ErrorPage />;
   }
 

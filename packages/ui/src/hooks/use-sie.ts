@@ -15,3 +15,13 @@ export const useSieMethods = () => {
     forgotPassword: experienceSettings?.forgotPassword,
   };
 };
+
+export const useForgotPasswordSettings = () => {
+  const { experienceSettings } = useContext(PageContext);
+  const { forgotPassword } = experienceSettings ?? {};
+
+  return {
+    isForgotPasswordEnabled: Boolean(forgotPassword?.email ?? forgotPassword?.sms),
+    ...forgotPassword,
+  };
+};

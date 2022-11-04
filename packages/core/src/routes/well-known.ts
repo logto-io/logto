@@ -37,6 +37,15 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
         getLogtoConnectors(),
       ]);
 
+      const forgotPassword = {
+        sms: logtoConnectors.some(
+          ({ type, dbEntry: { enabled } }) => type === ConnectorType.Sms && enabled
+        ),
+        email: logtoConnectors.some(
+          ({ type, dbEntry: { enabled } }) => type === ConnectorType.Email && enabled
+        ),
+      };
+
       // Hard code AdminConsole sign-in methods settings.
       if (interaction?.params.client_id === adminConsoleApplicationId) {
         ctx.body = {
@@ -48,6 +57,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
           languageInfo: signInExperience.languageInfo,
           signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
           socialConnectors: [],
+          forgotPassword,
         };
 
         return next();
@@ -81,6 +91,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
             'demo_app.notification',
             autoDetect ? undefined : { lng: fallbackLanguage }
           ),
+          forgotPassword,
         };
 
         return next();
@@ -89,14 +100,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
       ctx.body = {
         ...signInExperience,
         socialConnectors,
-        forgotPassword: {
-          sms: logtoConnectors.some(
-            ({ type, dbEntry: { enabled } }) => type === ConnectorType.Sms && enabled
-          ),
-          email: logtoConnectors.some(
-            ({ type, dbEntry: { enabled } }) => type === ConnectorType.Email && enabled
-          ),
-        },
+        forgotPassword,
       };
 
       return next();

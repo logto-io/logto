@@ -1,8 +1,10 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import { signInWithUsername } from '@/apis/sign-in';
 import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
 
@@ -26,13 +28,28 @@ describe('<UsernameSignIn>', () => {
     expect(queryByText('action.sign_in')).not.toBeNull();
   });
 
-  test('render with terms settings enabled', () => {
+  test('render with terms settings enabled and forgot password enabled', () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider>
-        <UsernameSignIn />
+        <MemoryRouter>
+          <UsernameSignIn />
+        </MemoryRouter>
       </SettingsProvider>
     );
     expect(queryByText('description.agree_with_terms')).not.toBeNull();
+    expect(queryByText('action.forgot_password')).not.toBeNull();
+  });
+
+  test('render with  forgot password disabled', () => {
+    const { queryByText } = renderWithPageContext(
+      <SettingsProvider
+        settings={{ ...mockSignInExperienceSettings, forgotPassword: { sms: false, email: false } }}
+      >
+        <UsernameSignIn />
+      </SettingsProvider>
+    );
+
+    expect(queryByText('action.forgot_password')).toBeNull();
   });
 
   test('required inputs with error message', () => {
@@ -63,11 +80,13 @@ describe('<UsernameSignIn>', () => {
 
   test('should show terms confirm modal', async () => {
     const { queryByText, getByText, container } = renderWithPageContext(
-      <SettingsProvider>
-        <ConfirmModalProvider>
-          <UsernameSignIn />
-        </ConfirmModalProvider>
-      </SettingsProvider>
+      <MemoryRouter>
+        <SettingsProvider>
+          <ConfirmModalProvider>
+            <UsernameSignIn />
+          </ConfirmModalProvider>
+        </SettingsProvider>
+      </MemoryRouter>
     );
     const submitButton = getByText('action.sign_in');
 
@@ -93,11 +112,13 @@ describe('<UsernameSignIn>', () => {
 
   test('should show terms detail modal', async () => {
     const { getByText, queryByText, container, queryByRole } = renderWithPageContext(
-      <SettingsProvider>
-        <ConfirmModalProvider>
-          <UsernameSignIn />
-        </ConfirmModalProvider>
-      </SettingsProvider>
+      <MemoryRouter>
+        <SettingsProvider>
+          <ConfirmModalProvider>
+            <UsernameSignIn />
+          </ConfirmModalProvider>
+        </SettingsProvider>
+      </MemoryRouter>
     );
     const submitButton = getByText('action.sign_in');
 
@@ -134,9 +155,11 @@ describe('<UsernameSignIn>', () => {
 
   test('submit form', async () => {
     const { getByText, container } = renderWithPageContext(
-      <SettingsProvider>
-        <UsernameSignIn />
-      </SettingsProvider>
+      <MemoryRouter>
+        <SettingsProvider>
+          <UsernameSignIn />
+        </SettingsProvider>
+      </MemoryRouter>
     );
     const submitButton = getByText('action.sign_in');
 

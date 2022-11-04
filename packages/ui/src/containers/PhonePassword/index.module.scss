@@ -8,8 +8,14 @@
   }
 
   .inputField,
+  .link,
   .terms {
     margin-bottom: _.unit(4);
+  }
+
+  .link {
+    align-self: start;
+    width: auto;
   }
 
   .formErrors {

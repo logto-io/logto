@@ -5,11 +5,13 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
+import ForgotPasswordLink from '@/components/ForgotPasswordLink';
 import { PhoneInput, PasswordInput } from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useForm from '@/hooks/use-form';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import usePhoneNumber from '@/hooks/use-phone-number';
+import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 import { requiredValidation } from '@/utils/field-validations';
 
@@ -35,6 +37,7 @@ const PhonePassword = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(SignInIdentifier.Sms);
+  const { isForgotPasswordEnabled, sms } = useForgotPasswordSettings();
 
   const { countryList, phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
   const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
@@ -107,6 +110,13 @@ const PhonePassword = ({ className, autoFocus }: Props) => {
       />
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
+
+      {isForgotPasswordEnabled && (
+        <ForgotPasswordLink
+          className={styles.link}
+          method={sms ? SignInIdentifier.Sms : SignInIdentifier.Email}
+        />
+      )}
 
       <TermsOfUse className={styles.terms} />
 

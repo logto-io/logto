@@ -1,5 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -35,11 +36,14 @@ describe('<PhonePassword>', () => {
 
   test('render with terms settings enabled', () => {
     const { queryByText } = renderWithPageContext(
-      <SettingsProvider>
-        <PhonePassword />
-      </SettingsProvider>
+      <MemoryRouter>
+        <SettingsProvider>
+          <PhonePassword />
+        </SettingsProvider>
+      </MemoryRouter>
     );
     expect(queryByText('description.agree_with_terms')).not.toBeNull();
+    expect(queryByText('action.forgot_password')).not.toBeNull();
   });
 
   test('required inputs with error message', () => {
@@ -71,11 +75,13 @@ describe('<PhonePassword>', () => {
 
   test('should show terms confirm modal', async () => {
     const { queryByText, getByText, container } = renderWithPageContext(
-      <SettingsProvider>
-        <ConfirmModalProvider>
-          <PhonePassword />
-        </ConfirmModalProvider>
-      </SettingsProvider>
+      <MemoryRouter>
+        <SettingsProvider>
+          <ConfirmModalProvider>
+            <PhonePassword />
+          </ConfirmModalProvider>
+        </SettingsProvider>
+      </MemoryRouter>
     );
     const submitButton = getByText('action.sign_in');
 
@@ -101,11 +107,13 @@ describe('<PhonePassword>', () => {
 
   test('should show terms detail modal', async () => {
     const { getByText, queryByText, container, queryByRole } = renderWithPageContext(
-      <SettingsProvider>
-        <ConfirmModalProvider>
-          <PhonePassword />
-        </ConfirmModalProvider>
-      </SettingsProvider>
+      <MemoryRouter>
+        <SettingsProvider>
+          <ConfirmModalProvider>
+            <PhonePassword />
+          </ConfirmModalProvider>
+        </SettingsProvider>
+      </MemoryRouter>
     );
     const submitButton = getByText('action.sign_in');
 
@@ -142,9 +150,11 @@ describe('<PhonePassword>', () => {
 
   test('submit form', async () => {
     const { getByText, container } = renderWithPageContext(
-      <SettingsProvider>
-        <PhonePassword />
-      </SettingsProvider>
+      <MemoryRouter>
+        <SettingsProvider>
+          <PhonePassword />
+        </SettingsProvider>
+      </MemoryRouter>
     );
     const submitButton = getByText('action.sign_in');
 
