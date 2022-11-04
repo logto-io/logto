@@ -1,20 +1,49 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-ui';
+import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 import { BrandingStyle } from '@logto/schemas';
 
-import { mockBranding } from '@/__mocks__';
+import {
+  mockBranding,
+  mockSignInExperience,
+  mockSocialConnectors,
+  mockSocialConnectorTargets,
+} from '@/__mocks__';
+import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   validateBranding,
   validateTermsOfUse,
   validateLanguageInfo,
+  removeUnavailableSocialConnectorTargets,
 } from '@/lib/sign-in-experience';
+import { updateDefaultSignInExperience } from '@/queries/sign-in-experience';
 
 const allCustomLanguageTags: LanguageTag[] = [];
 const findAllCustomLanguageTags = jest.fn(async () => allCustomLanguageTags);
+const getLogtoConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
+  () => Promise<LogtoConnector[]>
+>;
+const findDefaultSignInExperience = jest.fn() as jest.MockedFunction<
+  () => Promise<SignInExperience>
+>;
 
 jest.mock('@/queries/custom-phrase', () => ({
   findAllCustomLanguageTags: async () => findAllCustomLanguageTags(),
+}));
+
+jest.mock('@/connectors', () => ({
+  getLogtoConnectors: async () => getLogtoConnectorsPlaceHolder(),
+}));
+
+jest.mock('@/queries/sign-in-experience', () => ({
+  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
+  updateDefaultSignInExperience: jest.fn(
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+      ...mockSignInExperience,
+      ...data,
+    })
+  ),
 }));
 
 beforeEach(() => {
@@ -121,5 +150,24 @@ describe('validate terms of use', () => {
         enabled: true,
       });
     }).toMatchError(new RequestError('sign_in_experiences.empty_content_url_of_terms_of_use'));
+  });
+});
+
+describe('remove unavailable social connector targets', () => {
+  test('should remove unavailable social connector targets in sign-in experience', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      socialSignInConnectorTargets: mockSocialConnectorTargets,
+    });
+    getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(mockSocialConnectors);
+    expect(mockSocialConnectorTargets).toEqual([
+      'disableSocialTarget-id0',
+      'socialTarget-id1',
+      'disableSocialTarget-id2',
+    ]);
+    await removeUnavailableSocialConnectorTargets();
+    expect(updateDefaultSignInExperience).toBeCalledWith({
+      socialSignInConnectorTargets: ['socialTarget-id1'],
+    });
   });
 });

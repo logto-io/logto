@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ConnectorPlatform } from '@logto/connector-kit';
 import type { Connector, ConnectorMetadata } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
@@ -312,3 +313,55 @@ export const mockLogtoConnectors = [
   mockWechatConnector,
   mockWechatNativeConnector,
 ];
+
+export const mockSocialConnectors: LogtoConnector[] = [
+  {
+    dbEntry: {
+      id: 'id0',
+      enabled: false,
+      config: {},
+      createdAt: 1_234_567_890_123,
+    },
+    metadata: {
+      ...mockMetadata,
+      target: 'disableSocialTarget-id0',
+    },
+    type: ConnectorType.Social,
+    ...mockLogtoConnector,
+  },
+  {
+    dbEntry: {
+      id: 'id1',
+      enabled: true,
+      config: {},
+      createdAt: 1_234_567_890_123,
+    },
+    metadata: {
+      ...mockMetadata,
+      target: 'socialTarget-id1',
+    },
+    type: ConnectorType.Social,
+    ...mockLogtoConnector,
+  },
+  {
+    dbEntry: {
+      id: 'id2',
+      enabled: false,
+      config: {},
+      createdAt: 1_234_567_890_123,
+    },
+    metadata: {
+      ...mockMetadata,
+      target: 'disableSocialTarget-id2',
+    },
+    type: ConnectorType.Social,
+    ...mockLogtoConnector,
+  },
+];
+
+export const mockSocialConnectorTargets = [
+  'disableSocialTarget-id0',
+  'socialTarget-id1',
+  'disableSocialTarget-id2',
+];
+/* eslint-enable max-lines */
