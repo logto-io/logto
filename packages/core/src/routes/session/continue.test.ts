@@ -89,7 +89,8 @@ describe('session -> continueRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: mockUser.id } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
         expect.anything()
       );
     });
@@ -121,7 +122,8 @@ describe('session -> continueRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: mockUser.id } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
         expect.anything()
       );
     });
@@ -156,7 +158,8 @@ describe('session -> continueRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: mockUser.id } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
         expect.anything()
       );
     });
@@ -188,7 +191,8 @@ describe('session -> continueRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: mockUser.id } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
         expect.anything()
       );
     });

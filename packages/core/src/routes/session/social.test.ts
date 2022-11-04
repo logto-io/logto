@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ConnectorType } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
 import { SignUpIdentifier } from '@logto/schemas';
@@ -233,7 +234,8 @@ describe('session -> socialRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: mockUser.id } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
         expect.anything()
       );
     });
@@ -316,7 +318,8 @@ describe('session -> socialRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: { accountId: 'user1', ts: expect.any(Number) } }),
         expect.anything()
       );
     });
@@ -350,7 +353,8 @@ describe('session -> socialRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: { accountId: 'user1', ts: expect.any(Number) } }),
         expect.anything()
       );
     });
@@ -364,7 +368,10 @@ describe('session -> socialRoutes', () => {
     });
 
     it('throw error if result parsing fails', async () => {
-      interactionDetails.mockResolvedValueOnce({ result: { login: { accountId: mockUser.id } } });
+      interactionDetails.mockResolvedValueOnce({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        result: { login: { accountId: mockUser.id, ts: expect.any(Number) } },
+      });
       const response = await sessionRequest
         .post(`${registerRoute}`)
         .send({ connectorId: 'connectorId' });
@@ -436,3 +443,4 @@ describe('session -> socialRoutes', () => {
     });
   });
 });
+/* eslint-enable max-lines */
