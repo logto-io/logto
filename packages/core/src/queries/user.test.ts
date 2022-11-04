@@ -278,7 +278,7 @@ describe('user query', () => {
     await expect(countUsers(search, true)).resolves.toEqual(dbvalue);
   });
 
-  it('countUsers with isSensitive', async () => {
+  it('countUsers with isCaseSensitive', async () => {
     const search = 'foo';
     const expectSql = sql`
       select count(*)
