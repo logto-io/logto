@@ -1,0 +1,18 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@logto/cli": "1.0.0-beta.12",
+    "@logto/console": "1.0.0-beta.12",
+    "@logto/core": "1.0.0-beta.12",
+    "@logto/create": "1.0.0-beta.12",
+    "@logto/demo-app": "1.0.0-beta.12",
+    "@logto/integration-tests": "1.0.0-beta.12",
+    "@logto/phrases": "1.0.0-beta.12",
+    "@logto/phrases-ui": "1.0.0-beta.12",
+    "@logto/schemas": "1.0.0-beta.12",
+    "@logto/shared": "1.0.0-beta.12",
+    "@logto/ui": "1.0.0-beta.12"
+  },
+  "changesets": []
+}
