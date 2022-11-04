@@ -4,6 +4,7 @@ import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { literal, object, string } from 'zod';
 
+import { isTrue } from '@/env-set/parameters';
 import RequestError from '@/errors/RequestError';
 import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
@@ -29,8 +30,9 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     koaGuard({
       query: object({
         search: string().optional(),
-        hideAdminUser: literal('true').optional(),
-        isCaseSensitive: literal('true').optional(),
+        // Use `.transform()` once the type issue fixed
+        hideAdminUser: string().optional(),
+        isCaseSensitive: string().optional(),
       }),
     }),
     async (ctx, next) => {
@@ -39,8 +41,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         query: { search, hideAdminUser: _hideAdminUser, isCaseSensitive: _isCaseSensitive },
       } = ctx.guard;
 
-      const hideAdminUser = _hideAdminUser === 'true';
-      const isCaseSensitive = _isCaseSensitive === 'true';
+      const hideAdminUser = isTrue(_hideAdminUser);
+      const isCaseSensitive = isTrue(_isCaseSensitive);
       const [{ count }, users] = await Promise.all([
         countUsers(search, hideAdminUser, isCaseSensitive),
         findUsers(limit, offset, search, hideAdminUser, isCaseSensitive),
