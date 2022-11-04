@@ -7,6 +7,7 @@ const errors = {
     expected_role_not_found:
       'Erwartete Rolle nicht gefunden. Bitte überprüfe deine Rollen und Berechtigungen.',
     jwt_sub_missing: '`sub` fehlt in JWT.',
+    require_re_authentication: 'Re-authentication is required to perform a protected action.', // UNTRANSLATED
   },
   guard: {
     invalid_input: 'Die Anfrage {{type}} ist ungültig.',
