@@ -360,7 +360,7 @@ describe('user query', () => {
     await expect(findUsers(limit, offset, search, true)).resolves.toEqual([dbvalue]);
   });
 
-  it('findUsers with isSensitive', async () => {
+  it('findUsers with isCaseSensitive', async () => {
     const search = 'foo';
     const limit = 100;
     const offset = 1;
