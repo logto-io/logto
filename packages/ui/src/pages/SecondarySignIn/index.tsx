@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInMode, SignInIdentifier } from '@logto/schemas';
 import { useParams } from 'react-router-dom';
 
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
@@ -14,8 +14,12 @@ type Props = {
 
 const SecondarySignIn = () => {
   const { method = '' } = useParams<Props>();
-  const { signInMethods } = useSieMethods();
+  const { signInMethods, signInMode } = useSieMethods();
   const signInMethod = signInMethods.find(({ identifier }) => identifier === method);
+
+  if (!signInMode || signInMode === SignInMode.Register) {
+    return <ErrorPage />;
+  }
 
   if (!signInMethod) {
     return <ErrorPage />;

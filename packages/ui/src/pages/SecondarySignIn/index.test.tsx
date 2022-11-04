@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, SignInMode } from '@logto/schemas';
 import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -102,6 +102,30 @@ describe('<SecondarySignIn />', () => {
                       ({ identifier }) => identifier !== SignInIdentifier.Email
                     ),
                   },
+                }}
+              >
+                <SecondarySignIn />
+              </SettingsProvider>
+            }
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+    expect(queryByText('action.sign_in')).toBeNull();
+    expect(queryByText('description.not_found')).not.toBeNull();
+  });
+
+  test('render with register only mode', async () => {
+    const { queryByText } = renderWithPageContext(
+      <MemoryRouter initialEntries={['/sign-in/email']}>
+        <Routes>
+          <Route
+            path="/sign-in/:method"
+            element={
+              <SettingsProvider
+                settings={{
+                  ...mockSignInExperienceSettings,
+                  signInMode: SignInMode.Register,
                 }}
               >
                 <SecondarySignIn />

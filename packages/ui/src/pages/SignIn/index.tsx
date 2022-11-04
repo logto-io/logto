@@ -1,3 +1,4 @@
+import { SignInMode } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import Divider from '@/components/Divider';
@@ -8,13 +9,18 @@ import { SocialSignInList } from '@/containers/SocialSignIn';
 import { useSieMethods } from '@/hooks/use-sie';
 import { UserFlow } from '@/types';
 
+import ErrorPage from '../ErrorPage';
 import Main from './Main';
 import * as styles from './index.module.scss';
 
 const SignIn = () => {
-  const { signInMethods, signUpMethods, socialConnectors } = useSieMethods();
+  const { signInMethods, signUpMethods, socialConnectors, signInMode } = useSieMethods();
   const otherMethods = signInMethods.slice(1).map(({ identifier }) => identifier);
   const { t } = useTranslation();
+
+  if (!signInMode || signInMode === SignInMode.Register) {
+    return <ErrorPage />;
+  }
 
   return (
     <LandingPageContainer>
@@ -41,7 +47,7 @@ const SignIn = () => {
       }
       {
         // Create Account footer
-        signUpMethods.length > 0 && (
+        signInMode === SignInMode.SignInAndRegister && signUpMethods.length > 0 && (
           <>
             <div className={styles.placeHolder} />
             <div className={styles.createAccount}>

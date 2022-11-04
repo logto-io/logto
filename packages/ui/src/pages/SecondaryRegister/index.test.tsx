@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, SignInMode } from '@logto/schemas';
 import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -86,7 +86,7 @@ describe('<SecondaryRegister />', () => {
   });
 
   test('renders non-supported signUp methods should return error page', () => {
-    const { queryByText, container } = renderWithPageContext(
+    const { queryByText } = renderWithPageContext(
       <MemoryRouter initialEntries={['/register/email']}>
         <Routes>
           <Route
@@ -105,7 +105,7 @@ describe('<SecondaryRegister />', () => {
   });
 
   test('render non-verified passwordless methods should return error page', () => {
-    const { queryByText, container } = renderWithPageContext(
+    const { queryByText } = renderWithPageContext(
       <MemoryRouter initialEntries={['/register/email']}>
         <Routes>
           <Route
@@ -119,6 +119,30 @@ describe('<SecondaryRegister />', () => {
                     password: true,
                     verify: false,
                   },
+                }}
+              >
+                <SecondaryRegister />
+              </SettingsProvider>
+            }
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+    expect(queryByText('action.create_account')).toBeNull();
+    expect(queryByText('description.not_found')).not.toBeNull();
+  });
+
+  test('render with sign-in only mode', () => {
+    const { queryByText } = renderWithPageContext(
+      <MemoryRouter initialEntries={['/register/email']}>
+        <Routes>
+          <Route
+            path="/register/:method"
+            element={
+              <SettingsProvider
+                settings={{
+                  ...mockSignInExperienceSettings,
+                  signInMode: SignInMode.SignIn,
                 }}
               >
                 <SecondaryRegister />
