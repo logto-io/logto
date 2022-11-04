@@ -19,6 +19,7 @@ export const mockUser: User = {
   applicationId: 'bar',
   lastSignInAt: 1_650_969_465_789,
   createdAt: 1_650_969_000_000,
+  isSuspended: false,
 };
 
 export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);
@@ -41,6 +42,7 @@ export const mockUserWithPassword: User = {
   applicationId: 'bar',
   lastSignInAt: 1_650_969_465_789,
   createdAt: 1_650_969_000_000,
+  isSuspended: false,
 };
 
 export const mockUserList: User[] = [
@@ -59,6 +61,7 @@ export const mockUserList: User[] = [
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
     createdAt: 1_650_969_000_000,
+    isSuspended: false,
   },
   {
     id: '2',
@@ -75,6 +78,7 @@ export const mockUserList: User[] = [
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
     createdAt: 1_650_969_000_000,
+    isSuspended: false,
   },
   {
     id: '3',
@@ -91,6 +95,7 @@ export const mockUserList: User[] = [
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
     createdAt: 1_650_969_000_000,
+    isSuspended: false,
   },
   {
     id: '4',
@@ -107,6 +112,7 @@ export const mockUserList: User[] = [
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
     createdAt: 1_650_969_000_000,
+    isSuspended: false,
   },
   {
     id: '5',
@@ -123,6 +129,7 @@ export const mockUserList: User[] = [
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
     createdAt: 1_650_969_000_000,
+    isSuspended: false,
   },
 ];
 
