@@ -27,18 +27,23 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users',
     koaPagination(),
     koaGuard({
-      query: object({ search: string().optional(), hideAdminUser: literal('true').optional() }),
+      query: object({
+        search: string().optional(),
+        hideAdminUser: literal('true').optional(),
+        isCaseSensitive: literal('true').optional(),
+      }),
     }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
       const {
-        query: { search, hideAdminUser: _hideAdminUser },
+        query: { search, hideAdminUser: _hideAdminUser, isCaseSensitive: _isCaseSensitive },
       } = ctx.guard;
 
       const hideAdminUser = _hideAdminUser === 'true';
+      const isCaseSensitive = _isCaseSensitive === 'true';
       const [{ count }, users] = await Promise.all([
-        countUsers(search, hideAdminUser),
-        findUsers(limit, offset, search, hideAdminUser),
+        countUsers(search, hideAdminUser, isCaseSensitive),
+        findUsers(limit, offset, search, hideAdminUser, isCaseSensitive),
       ]);
 
       ctx.pagination.totalCount = count;
