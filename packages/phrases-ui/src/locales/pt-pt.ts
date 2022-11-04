@@ -31,6 +31,7 @@ const translation = {
     sign_in_with: 'Continuar com {{name}}',
     forgot_password: 'Esqueceu a password?',
     switch_to: 'Mudar para {{method}}',
+    sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
   },
   description: {
     email: 'email',
@@ -63,6 +64,8 @@ const translation = {
     password_changed: 'Password Changed', // UNTRANSLATED
     no_account: "Don't have an account?", // UNTRANSLATED
     have_account: 'Already have an account?', // UNTRANSLATED
+    enter_password: 'Enter Password', // UNTRANSLATED
+    enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'O Utilizador e a password não correspondem',

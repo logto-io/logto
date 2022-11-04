@@ -1,43 +1,46 @@
-import { SignInIdentifier } from '@logto/schemas';
+import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
-import Input, { PasswordInput } from '@/components/Input';
-import TermsOfUse from '@/containers/TermsOfUse';
+import { PasswordInput } from '@/components/Input';
 import useForm from '@/hooks/use-form';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
-import useTerms from '@/hooks/use-terms';
 import { requiredValidation } from '@/utils/field-validations';
 
+import PasswordlessSignInLink from './PasswordlessSignInLink';
 import * as styles from './index.module.scss';
 
 type Props = {
+  method: SignInIdentifier.Email | SignInIdentifier.Sms;
+  value: string;
+  hasPasswordlessButton?: boolean;
   className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   autoFocus?: boolean;
 };
 
 type FieldState = {
-  username: string;
   password: string;
 };
 
 const defaultState: FieldState = {
-  username: '',
   password: '',
 };
 
-const UsernameSignIn = ({ className, autoFocus }: Props) => {
+const PasswordSignInForm = ({
+  className,
+  autoFocus,
+  hasPasswordlessButton = false,
+  method,
+  value,
+}: Props) => {
   const { t } = useTranslation();
-  const { termsValidation } = useTerms();
-  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(
-    SignInIdentifier.Username
-  );
+  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(method);
 
-  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
+  const { fieldValue, register, validateForm } = useForm(defaultState);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
@@ -49,36 +52,15 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
         return;
       }
 
-      if (!(await termsValidation())) {
-        return;
-      }
-
-      void onSubmit(fieldValue.username, fieldValue.password);
+      void onSubmit(value, fieldValue.password);
     },
-    [
-      clearErrorMessage,
-      validateForm,
-      termsValidation,
-      onSubmit,
-      fieldValue.username,
-      fieldValue.password,
-    ]
+    [clearErrorMessage, validateForm, onSubmit, value, fieldValue.password]
   );
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <Input
-        autoFocus={autoFocus}
-        className={styles.inputField}
-        name="username"
-        autoComplete="username"
-        placeholder={t('input.username')}
-        {...register('username', (value) => requiredValidation('username', value))}
-        onClear={() => {
-          setFieldValue((state) => ({ ...state, username: '' }));
-        }}
-      />
       <PasswordInput
+        autoFocus={autoFocus}
         className={styles.inputField}
         name="password"
         autoComplete="current-password"
@@ -87,13 +69,15 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
       />
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <TermsOfUse className={styles.terms} />
+      {hasPasswordlessButton && (
+        <PasswordlessSignInLink className={styles.switch} method={method} value={value} />
+      )}
 
-      <Button title="action.sign_in" onClick={async () => onSubmitHandler()} />
+      <Button title="action.continue" onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
     </form>
   );
 };
 
-export default UsernameSignIn;
+export default PasswordSignInForm;

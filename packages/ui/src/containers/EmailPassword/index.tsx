@@ -1,18 +1,15 @@
+import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useMemo, useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { signInWithEmailPassword } from '@/apis/sign-in';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import Input, { PasswordInput } from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
-import type { ErrorHandlers } from '@/hooks/use-api';
-import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
+import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import useTerms from '@/hooks/use-terms';
-import { SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
 import { emailValidation, requiredValidation } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
@@ -36,24 +33,15 @@ const defaultState: FieldState = {
 const EmailPassword = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
+  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(SignInIdentifier.Email);
 
-  const [errorMessage, setErrorMessage] = useState<string>();
   const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
-
-  const errorHandlers: ErrorHandlers = useMemo(
-    () => ({
-      'session.invalid_credentials': (error) => {
-        setErrorMessage(error.message);
-      },
-    }),
-    [setErrorMessage]
-  );
-
-  const { run: asyncSignInWithEmailPassword } = useApi(signInWithEmailPassword, errorHandlers);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
+
+      clearErrorMessage();
 
       if (!validateForm()) {
         return;
@@ -63,14 +51,13 @@ const EmailPassword = ({ className, autoFocus }: Props) => {
         return;
       }
 
-      const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-
-      void asyncSignInWithEmailPassword(fieldValue.email, fieldValue.password, socialToBind);
+      void onSubmit(fieldValue.email, fieldValue.password);
     },
     [
+      clearErrorMessage,
       validateForm,
       termsValidation,
-      asyncSignInWithEmailPassword,
+      onSubmit,
       fieldValue.email,
       fieldValue.password,
     ]

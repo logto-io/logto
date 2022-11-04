@@ -38,3 +38,8 @@ export const getSignInExperienceSettings = async (): Promise<SignInExperienceSet
 
   return parseSignInExperienceResponse(response);
 };
+
+export const isEmailOrSmsMethod = (
+  method: SignInIdentifier
+): method is SignInIdentifier.Email | SignInIdentifier.Sms =>
+  [SignInIdentifier.Email, SignInIdentifier.Sms].includes(method);
