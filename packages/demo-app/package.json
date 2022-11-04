@@ -32,7 +32,7 @@
     "@types/react-dom": "^18.0.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.21.0",
-    "i18next": "^21.8.16",
+    "i18next": "^22.0.0",
     "i18next-browser-languagedetector": "^6.1.4",
     "lint-staged": "^13.0.0",
     "parcel": "2.7.0",

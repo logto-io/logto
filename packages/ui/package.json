@@ -45,7 +45,7 @@
     "color": "^4.2.3",
     "cross-env": "^7.0.3",
     "eslint": "^8.21.0",
-    "i18next": "^21.8.16",
+    "i18next": "^22.0.0",
     "i18next-browser-languagedetector": "^6.1.4",
     "jest": "^29.1.2",
     "jest-environment-jsdom": "^29.0.0",
