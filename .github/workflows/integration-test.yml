@@ -18,6 +18,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Cache Puppeteer
+        uses: actions/cache@v3
+        with:
+          # https://pptr.dev/guides/configuration/#changing-the-default-cache-directory
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-pptr-${{ hashFiles('packages/integration-tests/package.json') }}
+
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
@@ -46,6 +53,13 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: tests
+
+      - name: Cache Puppeteer
+        uses: actions/cache@v3
+        with:
+          # https://pptr.dev/guides/configuration/#changing-the-default-cache-directory
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-pptr-${{ hashFiles('tests/packages/integration-tests/package.json') }}
 
       - name: Copy lockfile
         run: |
