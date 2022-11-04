@@ -12,6 +12,11 @@ const connectors = {
   connector_status: 'Oturum açma deneyimi',
   connector_status_in_use: 'Kullanımda',
   connector_status_not_in_use: 'Kullanımda değil',
+  not_in_use_tip: {
+    content:
+      'Not in use means your sign in experience hasn’t used this sign in method. <a>{{link}}</a> to add this sign in method. ', // UNTRANSLATED
+    go_to_sie: 'Go to sign in experience', // UNTRANSLATED
+  },
   social_connector_eg: 'Örneğin, Google, Facebook, Github',
   save_and_done: 'Kaydet ve bitir',
   type: {
