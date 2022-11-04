@@ -126,15 +126,17 @@ const Tooltip = ({
   }
 
   return createPortal(
-    <TipBubble
-      ref={tooltipRef}
-      className={className}
-      style={{ ...layoutPosition }}
-      position={position}
-      horizontalAlignment={positionState.horizontalAlign}
-    >
-      <div className={styles.content}>{content}</div>
-    </TipBubble>,
+    <div className={styles.tooltip}>
+      <TipBubble
+        ref={tooltipRef}
+        className={className}
+        style={{ ...layoutPosition }}
+        position={position}
+        horizontalAlignment={positionState.horizontalAlign}
+      >
+        <div className={styles.content}>{content}</div>
+      </TipBubble>
+    </div>,
     tooltipDom
   );
 };

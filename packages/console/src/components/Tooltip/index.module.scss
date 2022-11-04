@@ -2,50 +2,8 @@
 
 .tooltip {
   position: absolute;
-  border-radius: 8px;
-  background: var(--color-tooltip-background);
-  color: var(--color-tooltip-text);
-  box-shadow: var(--shadow-1);
-  padding: _.unit(2) _.unit(3);
-  font: var(--font-body-medium);
-  max-width: 300px;
 
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    top: 100%;
-    left: 50%;
-    background-color: inherit;
-    border-radius: _.unit(0.5) 0 _.unit(0.5);
-    transform: translate(-50%, -50%) rotate(45deg);
+  .content {
+    @include _.multi-line-ellipsis(6);
   }
-
-  &.arrowUp::after {
-    top: 0%;
-  }
-
-  &.arrowRight::after {
-    top: 50%;
-    left: 100%;
-  }
-
-  &.arrowLeft::after {
-    top: 50%;
-    left: 0%;
-  }
-
-  &.start::after {
-    left: _.unit(10);
-  }
-
-  &.end::after {
-    right: _.unit(10);
-  }
-}
-
-.content {
-  @include _.multi-line-ellipsis(6);
 }

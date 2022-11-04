@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .tipBubble {
-  position: absolute;
+  position: relative;
   border-radius: 8px;
   background: var(--color-tooltip-background);
   color: var(--color-tooltip-text);
