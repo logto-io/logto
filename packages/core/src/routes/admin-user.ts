@@ -2,7 +2,7 @@ import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
-import { literal, object, string, z } from 'zod';
+import { literal, object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
@@ -30,7 +30,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       query: object({
         search: string().optional(),
         hideAdminUser: literal('true').optional(),
-        isCaseSensitive: z.enum(['true', 'false']).default('true'),
+        isCaseSensitive: literal('true').optional(),
       }),
     }),
     async (ctx, next) => {
