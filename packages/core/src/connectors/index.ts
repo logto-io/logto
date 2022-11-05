@@ -1,8 +1,8 @@
 import { existsSync } from 'fs';
-import { readdir } from 'fs/promises';
 import path from 'path';
 
 import { connectorDirectory } from '@logto/cli/lib/constants';
+import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utilities';
 import type { AllConnector, CreateConnector } from '@logto/connector-kit';
 import { validateConfig } from '@logto/connector-kit';
 import { findPackage } from '@logto/shared';
@@ -32,12 +32,11 @@ const loadConnectors = async () => {
     return [];
   }
 
-  const connectorFolders = await readdir(directory);
+  const connectorPackages = await getConnectorPackagesFromDirectory(directory);
 
   const connectors = await Promise.all(
-    connectorFolders.map(async (folder) => {
+    connectorPackages.map(async ({ path: packagePath, name }) => {
       try {
-        const packagePath = path.join(directory, folder);
         // eslint-disable-next-line no-restricted-syntax
         const { default: createConnector } = (await import(packagePath)) as {
           default: CreateConnector<AllConnector>;
@@ -71,7 +70,7 @@ const loadConnectors = async () => {
         if (error instanceof Error) {
           console.log(
             `${chalk.red(
-              `[load-connector] skip ${chalk.bold(folder)} due to error: ${error.message}`
+              `[load-connector] skip ${chalk.bold(name)} due to error: ${error.message}`
             )}`
           );
 
