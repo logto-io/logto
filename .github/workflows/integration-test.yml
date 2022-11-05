@@ -46,6 +46,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
+        node_version: [16, 18]
 
     runs-on: ${{ matrix.os }}
 
@@ -69,6 +70,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
         with:
+          node-version: ${{ matrix.node_version }}
           run-install: false
 
       # Setup integration test

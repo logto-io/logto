@@ -71,6 +71,9 @@
     "typescript": "^4.7.4",
     "use-debounced-loader": "^0.1.1"
   },
+  "engines": {
+    "node": "^16.13.0 || ^18.12.0"
+  },
   "alias": {
     "@/*": "./src/$1"
   },
