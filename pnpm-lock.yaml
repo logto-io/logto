@@ -41,7 +41,7 @@ importers:
       dotenv: ^16.0.0
       eslint: ^8.21.0
       fs-extra: ^10.1.0
-      got: ^11.8.2
+      got: ^11.8.5
       hpagent: ^1.0.0
       inquirer: ^8.2.2
       jest: ^29.1.2
@@ -69,7 +69,7 @@ importers:
       decamelize: 5.0.1
       dotenv: 16.0.0
       fs-extra: 10.1.0
-      got: 11.8.3
+      got: 11.8.5
       hpagent: 1.0.0
       inquirer: 8.2.2
       nanoid: 3.3.4
@@ -280,7 +280,7 @@ importers:
       etag: ^1.8.1
       find-up: ^5.0.0
       fs-extra: ^10.1.0
-      got: ^11.8.2
+      got: ^11.8.5
       hash-wasm: ^4.9.0
       http-errors: ^1.6.3
       i18next: ^21.8.16
@@ -337,7 +337,7 @@ importers:
       etag: 1.8.1
       find-up: 5.0.0
       fs-extra: 10.1.0
-      got: 11.8.3
+      got: 11.8.5
       hash-wasm: 4.9.0
       i18next: 21.8.16
       iconv-lite: 0.6.3
@@ -474,7 +474,7 @@ importers:
       '@types/node': ^16.0.0
       dotenv: ^16.0.0
       eslint: ^8.21.0
-      got: ^11.8.2
+      got: ^11.8.5
       jest: ^29.1.2
       jest-puppeteer: ^6.1.1
       node-fetch: ^2.6.7
@@ -499,7 +499,7 @@ importers:
       '@types/node': 16.11.12
       dotenv: 16.0.0
       eslint: 8.21.0
-      got: 11.8.3
+      got: 11.8.5
       jest: 29.1.2_k5ytkvaprncdyzidqqws5bqksq
       jest-puppeteer: 6.1.1_puppeteer@19.2.2
       node-fetch: 2.6.7
@@ -7268,22 +7268,6 @@ packages:
       csstype: 3.0.11
     dev: true
 
-  /got/11.8.3:
-    resolution: {integrity: sha512-7gtQ5KiPh1RtGS9/Jbv1ofDpBFuq42gyfEib+ejaRBJuj/3tQFeR5+gw57e4ipaU8c/rCjvX6fkQz2lyDlGAOg==}
-    engines: {node: '>=10.19.0'}
-    dependencies:
-      '@sindresorhus/is': 4.2.0
-      '@szmarczak/http-timer': 4.0.6
-      '@types/cacheable-request': 6.0.2
-      '@types/responselike': 1.0.0
-      cacheable-lookup: 5.0.4
-      cacheable-request: 7.0.2
-      decompress-response: 6.0.0
-      http2-wrapper: 1.0.3
-      lowercase-keys: 2.0.0
-      p-cancelable: 2.1.1
-      responselike: 2.0.0
-
   /got/11.8.5:
     resolution: {integrity: sha512-o0Je4NvQObAuZPHLFoRSkdG2lTgtcynqymzg2Vupdx6PorhaT5MCbIyXG6d4D94kk8ZG57QeosgdiqfJWhEhlQ==}
     engines: {node: '>=10.19.0'}
@@ -7299,7 +7283,6 @@ packages:
       lowercase-keys: 2.0.0
       p-cancelable: 2.1.1
       responselike: 2.0.0
-    dev: false
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
