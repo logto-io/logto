@@ -1,6 +1,6 @@
 import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
 import Passcode, { defaultLength } from '@/components/Passcode';
@@ -23,9 +23,14 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
   const { t } = useTranslation();
   const usePasscodeValidation = getPasscodeValidationHook(type, method);
 
-  const { errorMessage, clearErrorMessage, onSubmit } = usePasscodeValidation(target, () => {
+  const errorCallback = useCallback(() => {
     setCode([]);
-  });
+  }, []);
+
+  const { errorMessage, clearErrorMessage, onSubmit } = usePasscodeValidation(
+    target,
+    errorCallback
+  );
 
   const { seconds, isRunning, onResendPasscode } = useResendPasscode(type, method, target);
 

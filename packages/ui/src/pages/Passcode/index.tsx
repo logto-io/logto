@@ -1,4 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { t } from 'i18next';
 import { useParams, useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
 
@@ -35,7 +36,10 @@ const Passcode = () => {
     <SecondaryPageWrapper
       title="action.enter_passcode"
       description="description.enter_passcode"
-      descriptionProps={{ address: `description.${method === 'email' ? 'email' : 'phone_number'}` }}
+      descriptionProps={{
+        address: t(`description.${method === 'email' ? 'email' : 'phone_number'}`),
+        target,
+      }}
     >
       <PasscodeValidation type={type} method={method} target={target} />
     </SecondaryPageWrapper>

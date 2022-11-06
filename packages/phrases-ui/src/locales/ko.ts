@@ -43,7 +43,7 @@ const translation = {
     terms_of_use: '이용약관',
     create_account: '계정 생성',
     or: '또는',
-    enter_passcode: '{{address}} 으로 비밀번호가 전송되었어요.',
+    enter_passcode: '{{address}} {{target}} 으로 비밀번호가 전송되었어요.',
     passcode_sent: '비밀번호가 재전송 되었습니다.',
     resend_after_seconds: '<span>{{seconds}}</span> 초 후에 재전송',
     resend_passcode: '비밀번호 재전송',

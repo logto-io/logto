@@ -1,4 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +15,8 @@ const useIdentifierErrorAlert = (
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  return async () => {
+  // Have to wrap up in a useCallback hook otherwise the handler updates on every cycle
+  return useCallback(async () => {
     await show({
       type: 'alert',
       ModalContent: t(
@@ -29,7 +31,7 @@ const useIdentifierErrorAlert = (
       cancelText: 'action.got_it',
     });
     navigate(-1);
-  };
+  }, [flow, method, navigate, show, t, value]);
 };
 
 export default useIdentifierErrorAlert;

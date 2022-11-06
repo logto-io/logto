@@ -43,7 +43,7 @@ const translation = {
     terms_of_use: 'Termos de uso',
     create_account: 'Criar uma conta',
     or: 'ou',
-    enter_passcode: 'A senha foi enviada para o seu {{address}}',
+    enter_passcode: 'A senha foi enviada para o seu {{address}} {{target}}',
     passcode_sent: 'A senha foi reenviada',
     resend_after_seconds: 'Reenviar após <span>{{seconds}}</span> segundos',
     resend_passcode: 'Reenviar senha',

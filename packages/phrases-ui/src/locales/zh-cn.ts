@@ -43,7 +43,7 @@ const translation = {
     terms_of_use: '使用条款',
     create_account: '创建帐号',
     or: '或',
-    enter_passcode: '验证码已经发送至你的{{ address }}',
+    enter_passcode: '验证码已经发送至你的{{ address }} {{target}}',
     passcode_sent: '验证码已经发送',
     resend_after_seconds: '在 <span>{{ seconds }}</span> 秒后重发',
     resend_passcode: '重发验证码',

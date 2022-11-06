@@ -41,7 +41,7 @@ const translation = {
     terms_of_use: 'Terms of Use',
     create_account: 'Create Account',
     or: 'or',
-    enter_passcode: 'The verification code has been sent to your {{address}}',
+    enter_passcode: 'The verification code has been sent to your {{address}} {{target}}',
     passcode_sent: 'The verification code has been resent',
     resend_after_seconds: 'Resend after <span>{{seconds}}</span> seconds',
     resend_passcode: 'Resend verification code',

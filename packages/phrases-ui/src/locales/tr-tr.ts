@@ -43,7 +43,7 @@ const translation = {
     terms_of_use: 'Kullanım Koşulları',
     create_account: 'Hesap Oluştur',
     or: 'veya',
-    enter_passcode: 'Kod {{address}}inize gönderildi.',
+    enter_passcode: 'Kod {{address}} {{target}} inize gönderildi.',
     passcode_sent: 'Kodunuz yeniden gönderildi.',
     resend_after_seconds: '<span>{{seconds}}</span> saniye sonra tekrar gönder',
     resend_passcode: 'Kodu Yeniden Gönder',
