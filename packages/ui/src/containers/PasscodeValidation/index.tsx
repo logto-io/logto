@@ -5,8 +5,9 @@ import { useTranslation, Trans } from 'react-i18next';
 
 import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
-import type { UserFlow } from '@/types';
+import { UserFlow } from '@/types';
 
+import PasswordSignInLink from './PasswordSignInLink';
 import * as styles from './index.module.scss';
 import useResendPasscode from './use-resend-passcode';
 import { getPasscodeValidationHook } from './utils';
@@ -15,10 +16,11 @@ type Props = {
   type: UserFlow;
   method: SignInIdentifier.Email | SignInIdentifier.Sms;
   target: string;
+  hasPasswordButton?: boolean;
   className?: string;
 };
 
-const PasscodeValidation = ({ type, method, className, target }: Props) => {
+const PasscodeValidation = ({ type, method, className, hasPasswordButton, target }: Props) => {
   const [code, setCode] = useState<string[]>([]);
   const { t } = useTranslation();
   const usePasscodeValidation = getPasscodeValidationHook(type, method);
@@ -63,6 +65,9 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
             void onResendPasscode();
           }}
         />
+      )}
+      {type === UserFlow.signIn && hasPasswordButton && (
+        <PasswordSignInLink method={method} target={target} className={styles.link} />
       )}
     </form>
   );

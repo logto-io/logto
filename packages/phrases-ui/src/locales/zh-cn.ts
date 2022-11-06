@@ -32,6 +32,7 @@ const translation = {
     forgot_password: '重置密码',
     switch_to: '切换到{{method}}',
     sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
   },
   description: {
     email: '邮箱',

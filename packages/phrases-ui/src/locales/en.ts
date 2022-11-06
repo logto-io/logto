@@ -30,6 +30,7 @@ const translation = {
     forgot_password: 'Forgot your password?',
     switch_to: 'Switch to {{method}}',
     sign_in_via_passcode: 'Sign in via verification code',
+    sign_in_via_password: 'Sign in via password',
   },
   description: {
     email: 'email',
