@@ -10,7 +10,7 @@ import { extractCookie } from '@/utils';
 
 import { MemoryStorage } from './storage';
 
-const defaultConfig = {
+export const defaultConfig = {
   endpoint: logtoUrl,
   appId: demoAppApplicationId,
   persistAccessToken: false,
@@ -18,8 +18,8 @@ const defaultConfig = {
 
 export default class MockClient {
   public interactionCookie?: string;
-  private navigateUrl?: string;
 
+  private navigateUrl?: string;
   private readonly storage: MemoryStorage;
   private readonly logto: LogtoClient;
 
@@ -86,6 +86,10 @@ export default class MockClient {
 
   public async getAccessToken(resource?: string) {
     return this.logto.getAccessToken(resource);
+  }
+
+  public async getRefreshToken() {
+    return this.logto.getRefreshToken();
   }
 
   public async signOut(postSignOutRedirectUri?: string) {

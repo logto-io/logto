@@ -35,10 +35,9 @@ jest.mock('@logto/shared', () => ({
 const now = Date.now();
 
 jest.mock(
-  'dayjs',
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  jest.fn(() => () => ({
-    add: jest.fn((delta: number) => new Date(now + delta * 1000)),
+  'date-fns',
+  jest.fn(() => ({
+    add: jest.fn((_: Date, { seconds }: { seconds: number }) => new Date(now + seconds * 1000)),
   }))
 );
 

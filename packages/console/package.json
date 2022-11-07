@@ -47,7 +47,6 @@
     "clean-deep": "^3.4.0",
     "cross-env": "^7.0.3",
     "csstype": "^3.0.11",
-    "dayjs": "^1.10.5",
     "deepmerge": "^4.2.2",
     "dnd-core": "^16.0.0",
     "eslint": "^8.21.0",
@@ -97,5 +96,8 @@
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "dependencies": {
+    "date-fns": "^2.29.3"
+  }
 }

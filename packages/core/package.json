@@ -30,7 +30,7 @@
     "@silverhand/essentials": "^1.3.0",
     "chalk": "^4",
     "clean-deep": "^3.4.0",
-    "dayjs": "^1.10.5",
+    "date-fns": "^2.29.3",
     "debug": "^4.3.4",
     "decamelize": "^5.0.0",
     "deepmerge": "^4.2.2",

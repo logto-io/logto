@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import type { User } from '@logto/schemas';
 import { PasscodeType } from '@logto/schemas';
-import dayjs from 'dayjs';
+import { addDays, addSeconds, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
 import { mockUser } from '@/__mocks__';
@@ -15,6 +15,7 @@ import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const getTomorrowIsoString = () => addDays(Date.now(), 1).toISOString();
 
 jest.mock('@/lib/user', () => ({
   generateUserId: () => 'user1',
@@ -200,7 +201,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             flow: PasscodeType.SignIn,
             phone: '13000000000',
-            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+            expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
           },
         })
       );
@@ -224,7 +225,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             flow: PasscodeType.Register,
             phone: '13000000000',
-            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+            expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
           },
         })
       );
@@ -248,7 +249,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.objectContaining({
           verification: {
             userId: 'id',
-            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+            expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
         })
@@ -299,7 +300,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             flow: PasscodeType.SignIn,
             email: 'a@a.com',
-            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+            expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
           },
         })
       );
@@ -322,7 +323,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             flow: PasscodeType.Register,
             email: 'a@a.com',
-            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+            expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
           },
         })
       );
@@ -346,7 +347,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.objectContaining({
           verification: {
             userId: 'id',
-            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+            expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
         })
@@ -382,7 +383,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             phone: '13000000000',
             flow: PasscodeType.SignIn,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -406,7 +407,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             phone: '13000000000',
             flow: PasscodeType.Register,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -427,7 +428,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000000',
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -441,7 +442,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             phone: '13000000000',
             flow: PasscodeType.ForgotPassword,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -469,7 +470,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             phone: '13000000000',
             flow: PasscodeType.SignIn,
-            expiresAt: dayjs().subtract(1, 'day').toISOString(),
+            expiresAt: subDays(Date.now(), 1).toISOString(),
           },
         },
       });
@@ -483,7 +484,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             email: 'XX@foo',
             flow: PasscodeType.SignIn,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -497,7 +498,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             phone: '13000000001',
             flow: PasscodeType.SignIn,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -517,7 +518,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             email: 'a@a.com',
             flow: PasscodeType.SignIn,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -541,7 +542,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             email: 'a@a.com',
             flow: PasscodeType.Register,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -564,7 +565,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'a@a.com',
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -578,7 +579,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             email: 'a@a.com',
             flow: PasscodeType.ForgotPassword,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -591,7 +592,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             flow: PasscodeType.SignIn,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -605,7 +606,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             email: 'b@a.com',
             flow: PasscodeType.SignIn,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -625,7 +626,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             phone: '13000000001',
             flow: PasscodeType.Register,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -647,7 +648,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             phone: '13000000001',
             flow: PasscodeType.SignIn,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -668,7 +669,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000001',
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -682,7 +683,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             phone: '13000000001',
             flow: PasscodeType.ForgotPassword,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -695,7 +696,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             flow: PasscodeType.Register,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -709,7 +710,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             phone: '13000000000',
             flow: PasscodeType.Register,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -729,7 +730,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             email: 'b@a.com',
             flow: PasscodeType.Register,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -751,7 +752,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             email: 'b@a.com',
             flow: PasscodeType.SignIn,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -772,7 +773,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'b@a.com',
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -786,7 +787,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             email: 'b@a.com',
             flow: PasscodeType.ForgotPassword,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -799,7 +800,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             flow: PasscodeType.Register,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -813,7 +814,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             email: 'a@a.com',
             flow: PasscodeType.Register,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });

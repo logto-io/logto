@@ -1,4 +1,8 @@
-import dayjs from 'dayjs';
+// The FP version works better for `format()`
+/* eslint-disable import/no-duplicates */
+import { endOfDay, subDays } from 'date-fns';
+import { format } from 'date-fns/fp';
+/* eslint-enable import/no-duplicates */
 
 import dashboardRoutes from '@/routes/dashboard';
 import { createRequester } from '@/utils/test-utils';
@@ -8,6 +12,7 @@ const countUsers = jest.fn(async () => ({ count: totalUserCount }));
 const getDailyNewUserCountsByTimeInterval = jest.fn(
   async (startTimeExclusive: number, endTimeInclusive: number) => mockDailyNewUserCounts
 );
+const formatToQueryDate = format('yyyy-MM-dd');
 
 jest.mock('@/queries/user', () => ({
   countUsers: async () => countUsers(),
@@ -83,8 +88,8 @@ describe('dashboardRoutes', () => {
     it('should call getDailyNewUserCountsByTimeInterval with the time interval (14 days ago 23:59:59.999, today 23:59:59.999]', async () => {
       await logRequest.get('/dashboard/users/new');
       expect(getDailyNewUserCountsByTimeInterval).toHaveBeenCalledWith(
-        dayjs().endOf('day').subtract(14, 'day').valueOf(),
-        dayjs().endOf('day').valueOf()
+        subDays(endOfDay(Date.now()), 14).valueOf(),
+        endOfDay(Date.now()).valueOf()
       );
     });
 
@@ -105,10 +110,10 @@ describe('dashboardRoutes', () => {
   });
 
   describe('GET /dashboard/users/active', () => {
-    const mockToday = '2022-05-30';
+    const mockToday = new Date(2022, 4, 30);
 
     beforeEach(() => {
-      jest.useFakeTimers().setSystemTime(new Date(mockToday));
+      jest.useFakeTimers().setSystemTime(mockToday);
     });
 
     it('should fail when the parameter `date` does not match the date regex', async () => {
@@ -117,44 +122,44 @@ describe('dashboardRoutes', () => {
     });
 
     it('should call getDailyActiveUserCountsByTimeInterval with the time interval (2022-05-31, 2022-06-30] when the parameter `date` is 2022-06-30', async () => {
-      const targetDate = '2022-06-30';
-      await logRequest.get(`/dashboard/users/active?date=${targetDate}`);
+      const targetDate = new Date(2022, 5, 30);
+      await logRequest.get(`/dashboard/users/active?date=${formatToQueryDate(targetDate)}`);
       expect(getDailyActiveUserCountsByTimeInterval).toHaveBeenCalledWith(
-        dayjs('2022-05-31').endOf('day').valueOf(),
-        dayjs(targetDate).endOf('day').valueOf()
+        endOfDay(new Date(2022, 4, 31)).valueOf(),
+        endOfDay(targetDate).valueOf()
       );
     });
 
     it('should call getDailyActiveUserCountsByTimeInterval with the time interval (30 days ago, tomorrow] when there is no parameter `date`', async () => {
       await logRequest.get('/dashboard/users/active');
       expect(getDailyActiveUserCountsByTimeInterval).toHaveBeenCalledWith(
-        dayjs('2022-04-30').endOf('day').valueOf(),
-        dayjs(mockToday).endOf('day').valueOf()
+        endOfDay(new Date(2022, 3, 30)).valueOf(),
+        endOfDay(mockToday).valueOf()
       );
     });
 
     it('should call countActiveUsersByTimeInterval with correct parameters when the parameter `date` is 2022-06-30', async () => {
-      const targetDate = '2022-06-30';
-      await logRequest.get(`/dashboard/users/active?date=${targetDate}`);
+      const targetDate = new Date(2022, 5, 30);
+      await logRequest.get(`/dashboard/users/active?date=${formatToQueryDate(targetDate)}`);
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         1,
-        dayjs('2022-06-16').endOf('day').valueOf(),
-        dayjs('2022-06-23').endOf('day').valueOf()
+        endOfDay(new Date(2022, 5, 16)).valueOf(),
+        endOfDay(new Date(2022, 5, 23)).valueOf()
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         2,
-        dayjs('2022-06-23').endOf('day').valueOf(),
-        dayjs(targetDate).endOf('day').valueOf()
+        endOfDay(new Date(2022, 5, 23)).valueOf(),
+        endOfDay(targetDate).valueOf()
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         3,
-        dayjs('2022-05-01').endOf('day').valueOf(),
-        dayjs('2022-05-31').endOf('day').valueOf()
+        endOfDay(new Date(2022, 4, 1)).valueOf(),
+        endOfDay(new Date(2022, 4, 31)).valueOf()
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         4,
-        dayjs('2022-05-31').endOf('day').valueOf(),
-        dayjs(targetDate).endOf('day').valueOf()
+        endOfDay(new Date(2022, 4, 31)).valueOf(),
+        endOfDay(targetDate).valueOf()
       );
     });
 
@@ -162,23 +167,23 @@ describe('dashboardRoutes', () => {
       await logRequest.get('/dashboard/users/active');
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         1,
-        dayjs('2022-05-16').endOf('day').valueOf(),
-        dayjs('2022-05-23').endOf('day').valueOf()
+        endOfDay(new Date(2022, 4, 16)).valueOf(),
+        endOfDay(new Date(2022, 4, 23)).valueOf()
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         2,
-        dayjs('2022-05-23').endOf('day').valueOf(),
-        dayjs(mockToday).endOf('day').valueOf()
+        endOfDay(new Date(2022, 4, 23)).valueOf(),
+        endOfDay(mockToday).valueOf()
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         3,
-        dayjs('2022-03-31').endOf('day').valueOf(),
-        dayjs('2022-04-30').endOf('day').valueOf()
+        endOfDay(new Date(2022, 2, 31)).valueOf(),
+        endOfDay(new Date(2022, 3, 30)).valueOf()
       );
       expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
         4,
-        dayjs('2022-04-30').endOf('day').valueOf(),
-        dayjs(mockToday).endOf('day').valueOf()
+        endOfDay(new Date(2022, 3, 30)).valueOf(),
+        endOfDay(mockToday).valueOf()
       );
     });
 
