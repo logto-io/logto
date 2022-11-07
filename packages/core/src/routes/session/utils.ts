@@ -1,7 +1,7 @@
 import type { LogType, PasscodeType } from '@logto/schemas';
 import { logTypeGuard } from '@logto/schemas';
 import type { Truthy } from '@silverhand/essentials';
-import { addSeconds, isAfter, isValid, parseISO } from 'date-fns';
+import { addSeconds, isAfter, isValid } from 'date-fns';
 import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 import type { ZodType } from 'zod';
@@ -60,7 +60,7 @@ export const getVerificationStorageFromInteraction = async <T = VerificationStor
 };
 
 export const checkValidateExpiration = (expiresAt: string) => {
-  const parsed = parseISO(expiresAt);
+  const parsed = new Date(expiresAt);
   assertThat(
     isValid(parsed) && isAfter(parsed, Date.now()),
     new RequestError({ code: 'session.verification_expired', status: 401 })

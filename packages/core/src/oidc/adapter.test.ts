@@ -37,7 +37,7 @@ const now = Date.now();
 jest.mock(
   'date-fns',
   jest.fn(() => ({
-    add: jest.fn((_: Date, { seconds }: { seconds: number }) => new Date(now + seconds * 1000)),
+    addSeconds: jest.fn((_: Date, seconds: number) => new Date(now + seconds * 1000)),
   }))
 );
 

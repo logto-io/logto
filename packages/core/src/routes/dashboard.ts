@@ -1,5 +1,5 @@
 import { dateRegex } from '@logto/core-kit';
-import { endOfDay, format, parse, startOfDay, subDays } from 'date-fns';
+import { endOfDay, format, subDays } from 'date-fns';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -74,7 +74,7 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
         query: { date },
       } = ctx.guard;
 
-      const targetDay = date ? parse(date, 'yyyy-MM-dd', startOfDay(Date.now())) : Date.now(); // Defaults to today
+      const targetDay = date ? new Date(date) : new Date(); // Defaults to today
       const [
         // DAU: Daily Active User
         last30DauCounts,

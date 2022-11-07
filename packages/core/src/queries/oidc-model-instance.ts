@@ -7,7 +7,7 @@ import { OidcModelInstances } from '@logto/schemas';
 import { convertToIdentifiers, convertToTimestamp } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
-import { add, isBefore } from 'date-fns';
+import { addSeconds, isBefore } from 'date-fns';
 import type { ValueExpression } from 'slonik';
 import { sql } from 'slonik';
 
@@ -30,7 +30,7 @@ const isConsumed = (modelName: string, consumedAt: Nullable<number>): boolean =>
     return Boolean(consumedAt);
   }
 
-  return isBefore(add(consumedAt, { seconds: refreshTokenReuseInterval }), Date.now());
+  return isBefore(addSeconds(consumedAt, refreshTokenReuseInterval), Date.now());
 };
 
 const withConsumed = <T>(
