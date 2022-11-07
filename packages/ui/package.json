@@ -74,6 +74,14 @@
   "engines": {
     "node": "^16.13.0 || ^18.12.0"
   },
+  "//": "https://github.com/parcel-bundler/parcel/issues/7636",
+  "targets": {
+    "default": {
+      "engines": {
+        "browsers": "defaults"
+      }
+    }
+  },
   "alias": {
     "@/*": "./src/$1"
   },
