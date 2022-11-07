@@ -1,5 +1,5 @@
 import type { LogtoConfigKey } from '@logto/schemas';
-import { logtoConfigGuards, logtoConfigKeys } from '@logto/schemas';
+import { LogtoOidcConfigKey, logtoConfigGuards, logtoConfigKeys } from '@logto/schemas';
 import { deduplicate, noop } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
@@ -7,6 +7,7 @@ import type { CommandModule } from 'yargs';
 import { createPoolFromConfig } from '../../database';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config';
 import { log } from '../../utilities';
+import { generateOidcCookieKey, generateOidcPrivateKey } from './utilities';
 
 const validKeysDisplay = chalk.green(logtoConfigKeys.join(', '));
 
@@ -26,6 +27,21 @@ const validateKeys: ValidateKeysFunction = (keys) => {
     log.error(
       `Invalid config key ${chalk.red(invalidKey)} found, expected one of ${validKeysDisplay}`
     );
+  }
+};
+
+const validRotateKeys = Object.freeze([
+  LogtoOidcConfigKey.PrivateKeys,
+  LogtoOidcConfigKey.CookieKeys,
+] as const);
+
+type ValidateRotateKeyFunction = (key: string) => asserts key is typeof validRotateKeys[number];
+
+const validateRotateKey: ValidateRotateKeyFunction = (key) => {
+  // Using `.includes()` will result a type error
+  // eslint-disable-next-line unicorn/prefer-includes
+  if (!validRotateKeys.some((element) => element === key)) {
+    log.error(`Invalid config key ${chalk.red(key)} found, expected one of ${validKeysDisplay}`);
   }
 };
 
@@ -97,10 +113,54 @@ const setConfig: CommandModule<unknown, { key: string; value: string }> = {
   },
 };
 
+const rotateConfig: CommandModule<unknown, { key: string }> = {
+  command: 'rotate <key>',
+  describe:
+    'Generate a new private or secret key for the given config key and prepend to the key array',
+  builder: (yargs) =>
+    yargs.positional('key', {
+      describe: `The key to rotate, one of ${chalk.green(validRotateKeys.join(', '))}`,
+      type: 'string',
+      demandOption: true,
+    }),
+  handler: async ({ key }) => {
+    validateRotateKey(key);
+
+    const pool = await createPoolFromConfig();
+    const { rows } = await getRowsByKeys(pool, [key]);
+
+    if (!rows[0]) {
+      log.warn('No key found, create a new one');
+    }
+
+    const getValue = async () => {
+      const parsed = logtoConfigGuards[key].safeParse(rows[0]?.value);
+      const original = parsed.success ? parsed.data : [];
+
+      switch (key) {
+        case LogtoOidcConfigKey.PrivateKeys:
+          return [await generateOidcPrivateKey(), ...original];
+        case LogtoOidcConfigKey.CookieKeys:
+          return [generateOidcCookieKey(), ...original];
+        default:
+          log.warn('No proper handler found, use empty array');
+
+          return [];
+      }
+    };
+    const rotated = await getValue();
+    await updateValueByKey(pool, key, rotated);
+    await pool.end();
+
+    log.info(`Rotate ${chalk.green(key)} succeeded, now it has ${rotated.length} keys`);
+  },
+};
+
 const config: CommandModule = {
   command: ['config', 'configs'],
   describe: 'Commands for Logto database config',
-  builder: (yargs) => yargs.command(getConfig).command(setConfig).demandCommand(1),
+  builder: (yargs) =>
+    yargs.command(getConfig).command(setConfig).command(rotateConfig).demandCommand(1),
   handler: noop,
 };
 
