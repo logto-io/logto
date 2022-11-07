@@ -170,8 +170,6 @@ importers:
       swr: ^1.3.0
       typescript: ^4.7.4
       zod: ^3.19.1
-    dependencies:
-      date-fns: 2.29.3
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
       '@logto/core-kit': 1.0.0-beta.20
@@ -203,6 +201,7 @@ importers:
       clean-deep: 3.4.0
       cross-env: 7.0.3
       csstype: 3.0.11
+      date-fns: 2.29.3
       deepmerge: 4.2.2
       dnd-core: 16.0.0
       eslint: 8.21.0
@@ -5652,7 +5651,6 @@ packages:
   /date-fns/2.29.3:
     resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
     engines: {node: '>=0.11'}
-    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
