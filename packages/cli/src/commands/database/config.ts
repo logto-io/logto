@@ -137,15 +137,13 @@ const rotateConfig: CommandModule<unknown, { key: string }> = {
       const parsed = logtoConfigGuards[key].safeParse(rows[0]?.value);
       const original = parsed.success ? parsed.data : [];
 
+      // No need for default. It's already exhaustive
+      // eslint-disable-next-line default-case
       switch (key) {
         case LogtoOidcConfigKey.PrivateKeys:
           return [await generateOidcPrivateKey(), ...original];
         case LogtoOidcConfigKey.CookieKeys:
           return [generateOidcCookieKey(), ...original];
-        default:
-          log.warn('No proper handler found, use empty array');
-
-          return [];
       }
     };
     const rotated = await getValue();
