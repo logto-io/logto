@@ -1,114 +1,54 @@
 import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState, useEffect, useContext, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useTimer } from 'react-timer-hook';
 
-import { getSendPasscodeApi, getVerifyPasscodeApi } from '@/apis/utils';
 import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
-import type { ErrorHandlers } from '@/hooks/use-api';
-import useApi from '@/hooks/use-api';
-import { PageContext } from '@/hooks/use-page-context';
-import type { UserFlow } from '@/types';
-import { SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
+import { UserFlow } from '@/types';
 
+import PasswordSignInLink from './PasswordSignInLink';
 import * as styles from './index.module.scss';
-import usePasscodeValidationErrorHandler from './use-passcode-validation-error-handler';
+import useResendPasscode from './use-resend-passcode';
+import { getPasscodeValidationHook } from './utils';
 
 type Props = {
   type: UserFlow;
   method: SignInIdentifier.Email | SignInIdentifier.Sms;
   target: string;
+  hasPasswordButton?: boolean;
   className?: string;
 };
 
-export const timeRange = 59;
-
-const getTimeout = () => {
-  const now = new Date();
-  now.setSeconds(now.getSeconds() + timeRange);
-
-  return now;
-};
-
-const PasscodeValidation = ({ type, method, className, target }: Props) => {
+const PasscodeValidation = ({ type, method, className, hasPasswordButton, target }: Props) => {
   const [code, setCode] = useState<string[]>([]);
-  const [error, setError] = useState<string>();
-  const { setToast } = useContext(PageContext);
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const usePasscodeValidation = getPasscodeValidationHook(type, method);
 
-  const { seconds, isRunning, restart } = useTimer({
-    autoStart: true,
-    expiryTimestamp: getTimeout(),
-  });
+  const errorCallback = useCallback(() => {
+    setCode([]);
+  }, []);
 
-  // Get the flow specific error handler hook
-  const { errorHandler } = usePasscodeValidationErrorHandler(type, method, target);
-
-  const verifyPasscodeErrorHandlers: ErrorHandlers = useMemo(
-    () => ({
-      ...errorHandler,
-      'passcode.expired': (error) => {
-        setError(error.message);
-      },
-      'passcode.code_mismatch': (error) => {
-        setError(error.message);
-      },
-      callback: () => {
-        setCode([]);
-      },
-    }),
-    [errorHandler]
+  const { errorMessage, clearErrorMessage, onSubmit } = usePasscodeValidation(
+    target,
+    errorCallback
   );
 
-  const { result: verifyPasscodeResult, run: verifyPassCode } = useApi(
-    getVerifyPasscodeApi(type, method),
-    verifyPasscodeErrorHandlers
-  );
-
-  const { run: sendPassCode } = useApi(getSendPasscodeApi(type, method));
-
-  const resendPasscodeHandler = useCallback(async () => {
-    setError(undefined);
-
-    const result = await sendPassCode(target);
-
-    if (result) {
-      setToast(t('description.passcode_sent'));
-      restart(getTimeout(), true);
-    }
-  }, [restart, sendPassCode, setToast, t, target]);
+  const { seconds, isRunning, onResendPasscode } = useResendPasscode(type, method, target);
 
   useEffect(() => {
     if (code.length === defaultLength && code.every(Boolean)) {
-      const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-      void verifyPassCode(target, code.join(''), socialToBind);
+      void onSubmit(code.join(''));
     }
-  }, [code, target, verifyPassCode]);
-
-  useEffect(() => {
-    if (verifyPasscodeResult?.redirectTo) {
-      window.location.replace(verifyPasscodeResult.redirectTo);
-
-      return;
-    }
-
-    if (verifyPasscodeResult && type === 'forgot-password') {
-      navigate('/forgot-password/reset', { replace: true });
-    }
-  }, [navigate, type, verifyPasscodeResult]);
+  }, [code, onSubmit, target]);
 
   return (
     <form className={classNames(styles.form, className)}>
       <Passcode
         name="passcode"
-        className={classNames(styles.inputField, error && styles.withError)}
+        className={classNames(styles.inputField, errorMessage && styles.withError)}
         value={code}
-        error={error}
+        error={errorMessage}
         onChange={setCode}
       />
       {isRunning ? (
@@ -118,7 +58,16 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
           </Trans>
         </div>
       ) : (
-        <TextLink text="description.resend_passcode" onClick={resendPasscodeHandler} />
+        <TextLink
+          text="description.resend_passcode"
+          onClick={() => {
+            clearErrorMessage();
+            void onResendPasscode();
+          }}
+        />
+      )}
+      {type === UserFlow.signIn && hasPasswordButton && (
+        <PasswordSignInLink method={method} target={target} className={styles.link} />
       )}
     </form>
   );

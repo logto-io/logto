@@ -32,6 +32,7 @@ const translation = {
     forgot_password: 'Mot de passe oublié ?',
     switch_to: 'Passer au {{method}}',
     sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
   },
   description: {
     email: 'email',
@@ -43,7 +44,7 @@ const translation = {
     terms_of_use: "Conditions d'utilisation",
     create_account: 'Créer un compte',
     or: 'ou',
-    enter_passcode: 'Le code a été envoyé à {{address}}',
+    enter_passcode: 'Le code a été envoyé à {{address}} {{target}}',
     passcode_sent: 'Le code a été renvoyé',
     resend_after_seconds: 'Renvoyer après <span>{{seconds}}</span> secondes',
     resend_passcode: 'Renvoyer le code',
@@ -52,7 +53,8 @@ const translation = {
       'Le compte avec {{type}} {{value}} existe déjà, voulez-vous vous connecter ?',
     sign_in_id_does_not_exists:
       "Le compte avec {{type}} {{value}} n'existe pas, voulez-vous créer un nouveau compte ?",
-    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
     bind_account_title: 'Lier le compte',
     social_create_account: 'Pas de compte ? Vous pouvez créer un nouveau compte et un lien.',
     social_bind_account:

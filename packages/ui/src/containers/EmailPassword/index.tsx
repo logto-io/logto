@@ -5,10 +5,12 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
+import ForgotPasswordLink from '@/components/ForgotPasswordLink';
 import Input, { PasswordInput } from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useForm from '@/hooks/use-form';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
+import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 import { emailValidation, requiredValidation } from '@/utils/field-validations';
 
@@ -34,6 +36,7 @@ const EmailPassword = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(SignInIdentifier.Email);
+  const { isForgotPasswordEnabled, email } = useForgotPasswordSettings();
 
   const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
 
@@ -85,6 +88,13 @@ const EmailPassword = ({ className, autoFocus }: Props) => {
         placeholder={t('input.password')}
         {...register('password', (value) => requiredValidation('password', value))}
       />
+
+      {isForgotPasswordEnabled && (
+        <ForgotPasswordLink
+          className={styles.link}
+          method={email ? SignInIdentifier.Email : SignInIdentifier.Sms}
+        />
+      )}
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 

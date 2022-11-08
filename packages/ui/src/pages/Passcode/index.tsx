@@ -1,11 +1,13 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { t } from 'i18next';
 import { useParams, useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
 
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import PasscodeValidation from '@/containers/PasscodeValidation';
+import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
-import type { UserFlow } from '@/types';
+import { UserFlow } from '@/types';
 import { passcodeStateGuard, passcodeMethodGuard, userFlowGuard } from '@/types/guard';
 
 type Parameters = {
@@ -15,6 +17,7 @@ type Parameters = {
 
 const Passcode = () => {
   const { method, type = '' } = useParams<Parameters>();
+  const { signInMethods } = useSieMethods();
   const { state } = useLocation();
 
   const invalidType = !is(type, userFlowGuard);
@@ -22,6 +25,13 @@ const Passcode = () => {
   const invalidState = !is(state, passcodeStateGuard);
 
   if (invalidType || invalidMethod) {
+    return <ErrorPage />;
+  }
+
+  // SignIn Method not enabled
+  const methodSettings = signInMethods.find(({ identifier }) => identifier === method);
+
+  if (!methodSettings) {
     return <ErrorPage />;
   }
 
@@ -35,9 +45,17 @@ const Passcode = () => {
     <SecondaryPageWrapper
       title="action.enter_passcode"
       description="description.enter_passcode"
-      descriptionProps={{ address: `description.${method === 'email' ? 'email' : 'phone_number'}` }}
+      descriptionProps={{
+        address: t(`description.${method === 'email' ? 'email' : 'phone_number'}`),
+        target,
+      }}
     >
-      <PasscodeValidation type={type} method={method} target={target} />
+      <PasscodeValidation
+        type={type}
+        method={method}
+        target={target}
+        hasPasswordButton={type === UserFlow.signIn && methodSettings.password}
+      />
     </SecondaryPageWrapper>
   );
 };

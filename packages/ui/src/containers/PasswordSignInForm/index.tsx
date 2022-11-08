@@ -1,13 +1,15 @@
-import type { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
+import ForgotPasswordLink from '@/components/ForgotPasswordLink';
 import { PasswordInput } from '@/components/Input';
 import useForm from '@/hooks/use-form';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
+import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import { requiredValidation } from '@/utils/field-validations';
 
 import PasswordlessSignInLink from './PasswordlessSignInLink';
@@ -42,6 +44,8 @@ const PasswordSignInForm = ({
 
   const { fieldValue, register, validateForm } = useForm(defaultState);
 
+  const { isForgotPasswordEnabled, sms, email } = useForgotPasswordSettings();
+
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
@@ -68,6 +72,21 @@ const PasswordSignInForm = ({
         {...register('password', (value) => requiredValidation('password', value))}
       />
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
+
+      {isForgotPasswordEnabled && (
+        <ForgotPasswordLink
+          className={styles.link}
+          method={
+            method === SignInIdentifier.Email
+              ? email
+                ? SignInIdentifier.Email
+                : SignInIdentifier.Sms
+              : sms
+              ? SignInIdentifier.Sms
+              : SignInIdentifier.Email
+          }
+        />
+      )}
 
       {hasPasswordlessButton && (
         <PasswordlessSignInLink className={styles.switch} method={method} value={value} />

@@ -8,12 +8,15 @@
   }
 
   .inputField,
+  .link,
   .switch {
     margin-bottom: _.unit(4);
   }
 
+  .link,
   .switch {
-    display: block;
+    align-self: start;
+    width: auto;
   }
 
   .formErrors {

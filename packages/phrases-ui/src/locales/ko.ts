@@ -32,6 +32,7 @@ const translation = {
     forgot_password: '비밀번호를 잊어버리셨나요?',
     switch_to: 'Switch to {{method}}', // UNTRANSLATED
     sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
   },
   description: {
     email: '이메일',
@@ -43,14 +44,15 @@ const translation = {
     terms_of_use: '이용약관',
     create_account: '계정 생성',
     or: '또는',
-    enter_passcode: '{{address}} 으로 비밀번호가 전송되었어요.',
+    enter_passcode: '{{address}} {{target}} 으로 비밀번호가 전송되었어요.',
     passcode_sent: '비밀번호가 재전송 되었습니다.',
     resend_after_seconds: '<span>{{seconds}}</span> 초 후에 재전송',
     resend_passcode: '비밀번호 재전송',
     continue_with: '계속하기',
     create_account_id_exists: '{{type}} {{value}} 계정이 이미 존재해요. 로그인하시겠어요?',
     sign_in_id_does_not_exists: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
-    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
     bind_account_title: '계정 연동',
     social_create_account: '계정이 없으신가요? 새로운 계정을 만들고 연동해보세요.',
     social_bind_account: '계정이 이미 있으신가요? 로그인하여 다른 계정과 연동해보세요.',
