@@ -1,4 +1,4 @@
-import type { SignInExperience, CreateSignInExperience, TermsOfUse } from '@logto/schemas';
+import type { SignInExperience, CreateSignInExperience } from '@logto/schemas';
 
 import {
   mockFacebookConnector,
@@ -12,6 +12,7 @@ import {
   mockSignIn,
   mockLanguageInfo,
   mockAliyunSmsConnector,
+  mockTermsOfUseUrl,
 } from '@/__mocks__';
 import * as signInExpLib from '@/lib/sign-in-experience';
 import * as signInLib from '@/lib/sign-in-experience/sign-in';
@@ -100,12 +101,11 @@ describe('PATCH /sign-in-exp', () => {
   });
 
   it('should succeed to update when the input is valid', async () => {
-    const termsOfUse: TermsOfUse = { enabled: false };
+    const termsOfUseUrl = mockTermsOfUseUrl;
     const socialSignInConnectorTargets = ['github', 'facebook', 'wechat'];
 
     const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
     const validateLanguageInfo = jest.spyOn(signInExpLib, 'validateLanguageInfo');
-    const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');
     const validateSignIn = jest.spyOn(signInLib, 'validateSignIn');
     const validateSignUp = jest.spyOn(signUpLib, 'validateSignUp');
 
@@ -113,7 +113,7 @@ describe('PATCH /sign-in-exp', () => {
       color: mockColor,
       branding: mockBranding,
       languageInfo: mockLanguageInfo,
-      termsOfUse,
+      termsOfUseUrl,
       socialSignInConnectorTargets,
       signUp: mockSignUp,
       signIn: mockSignIn,
@@ -127,7 +127,6 @@ describe('PATCH /sign-in-exp', () => {
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateLanguageInfo).toHaveBeenCalledWith(mockLanguageInfo);
-    expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
     expect(validateSignUp).toHaveBeenCalledWith(mockSignUp, connectors);
     expect(validateSignIn).toHaveBeenCalledWith(mockSignIn, mockSignUp, connectors);
 
@@ -137,7 +136,7 @@ describe('PATCH /sign-in-exp', () => {
         ...mockSignInExperience,
         color: mockColor,
         branding: mockBranding,
-        termsOfUse,
+        termsOfUseUrl,
         socialSignInConnectorTargets,
         signIn: mockSignIn,
       },

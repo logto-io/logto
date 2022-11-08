@@ -9,7 +9,7 @@ import { ConfirmModalMessage } from '@/types';
 
 const TermsOfUseConfirmModalContent = ({ cancel }: ModalContentRenderProps) => {
   const { experienceSettings } = useContext(PageContext);
-  const { termsOfUse } = experienceSettings ?? {};
+  const { termsOfUseUrl } = experienceSettings ?? {};
 
   const { t } = useTranslation();
   const { isMobile } = usePlatform();
@@ -21,7 +21,7 @@ const TermsOfUseConfirmModalContent = ({ cancel }: ModalContentRenderProps) => {
         },
       }
     : {
-        href: termsOfUse?.contentUrl,
+        href: termsOfUseUrl ?? '',
         target: '_blank',
       };
 

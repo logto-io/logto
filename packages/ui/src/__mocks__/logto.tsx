@@ -193,10 +193,7 @@ export const mockSignInExperience: SignInExperience = {
     logoUrl: 'http://logto.png',
     slogan: 'logto',
   },
-  termsOfUse: {
-    enabled: true,
-    contentUrl: 'http://terms.of.use/',
-  },
+  termsOfUseUrl: 'http://terms.of.use/',
   languageInfo: {
     autoDetect: true,
     fallbackLanguage: 'en',
@@ -217,7 +214,7 @@ export const mockSignInExperienceSettings: SignInExperienceSettings = {
   id: mockSignInExperience.id,
   color: mockSignInExperience.color,
   branding: mockSignInExperience.branding,
-  termsOfUse: mockSignInExperience.termsOfUse,
+  termsOfUseUrl: mockSignInExperience.termsOfUseUrl,
   languageInfo: mockSignInExperience.languageInfo,
   signIn: mockSignInExperience.signIn,
   signUp: {

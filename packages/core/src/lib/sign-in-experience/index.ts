@@ -1,5 +1,5 @@
 import { builtInLanguages } from '@logto/phrases-ui';
-import type { Branding, LanguageInfo, TermsOfUse } from '@logto/schemas';
+import type { Branding, LanguageInfo } from '@logto/schemas';
 import { ConnectorType, BrandingStyle } from '@logto/schemas';
 
 import { getLogtoConnectors } from '@/connectors';
@@ -31,13 +31,6 @@ export const validateLanguageInfo = async (languageInfo: LanguageInfo) => {
       code: 'sign_in_experiences.unsupported_default_language',
       language: languageInfo.fallbackLanguage,
     })
-  );
-};
-
-export const validateTermsOfUse = (termsOfUse: TermsOfUse) => {
-  assertThat(
-    !termsOfUse.enabled || termsOfUse.contentUrl,
-    'sign_in_experiences.empty_content_url_of_terms_of_use'
   );
 };
 

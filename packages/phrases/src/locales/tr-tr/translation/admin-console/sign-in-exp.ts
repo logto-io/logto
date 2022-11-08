@@ -104,11 +104,8 @@ const sign_in_exp = {
   others: {
     terms_of_use: {
       title: 'KULLANIM KOŞULLARI',
-      enable: 'Kullanım koşullarını etkinleştir',
-      description: 'Ürününüzün kullanımına ilişkin yasal anlaşmaları ekleyin',
-      terms_of_use: 'Kullanım koşulları',
+      terms_of_use_url: 'Kullanım koşulları URLi',
       terms_of_use_placeholder: 'https://your.terms.of.use/',
-      terms_of_use_tip: 'Kullanım koşulları URLi',
     },
     languages: {
       title: 'DİLLER',

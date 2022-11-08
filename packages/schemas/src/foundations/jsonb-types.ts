@@ -114,13 +114,6 @@ export const brandingGuard = z.object({
 
 export type Branding = z.infer<typeof brandingGuard>;
 
-export const termsOfUseGuard = z.object({
-  enabled: z.boolean(),
-  contentUrl: z.string().url().optional().or(z.literal('')),
-});
-
-export type TermsOfUse = z.infer<typeof termsOfUseGuard>;
-
 export const languageInfoGuard = z.object({
   autoDetect: z.boolean(),
   fallbackLanguage: languageTagGuard,

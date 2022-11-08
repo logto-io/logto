@@ -5,7 +5,7 @@ import TermsOfUse from '.';
 
 describe('Terms of Use', () => {
   const onChange = jest.fn();
-  const contentUrl = 'http://logto.dev/';
+  const termsOfUseUrl = 'http://logto.dev/';
   const { t } = useTranslation();
   const prefix = t('description.agree_with_terms');
 
@@ -15,7 +15,7 @@ describe('Terms of Use', () => {
 
   it('render Terms of User checkbox', () => {
     const { getByText, container } = render(
-      <TermsOfUse name="terms" termsUrl={contentUrl} onChange={onChange} />
+      <TermsOfUse name="terms" termsUrl={termsOfUseUrl} onChange={onChange} />
     );
 
     const element = getByText(prefix);
@@ -28,7 +28,7 @@ describe('Terms of Use', () => {
     expect(linkElement).not.toBeNull();
 
     if (linkElement) {
-      expect(linkElement.href).toEqual(contentUrl);
+      expect(linkElement.href).toEqual(termsOfUseUrl);
     }
   });
 });

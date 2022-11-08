@@ -24,7 +24,7 @@ describe('sign-in-experience query', () => {
     ...mockSignInExperience,
     color: JSON.stringify(mockSignInExperience.color),
     branding: JSON.stringify(mockSignInExperience.branding),
-    termsOfUse: JSON.stringify(mockSignInExperience.termsOfUse),
+    termsOfUseUrl: mockSignInExperience.termsOfUseUrl,
     languageInfo: JSON.stringify(mockSignInExperience.languageInfo),
     signIn: JSON.stringify(mockSignInExperience.signIn),
     signUp: JSON.stringify(mockSignInExperience.signUp),
@@ -34,7 +34,7 @@ describe('sign-in-experience query', () => {
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
-      select "id", "color", "branding", "language_info", "terms_of_use", "sign_in", "sign_up", "social_sign_in_connector_targets", "sign_in_mode"
+      select "id", "color", "branding", "language_info", "terms_of_use_url", "sign_in", "sign_up", "social_sign_in_connector_targets", "sign_in_mode"
       from "sign_in_experiences"
       where "id"=$1
     `;
@@ -51,14 +51,12 @@ describe('sign-in-experience query', () => {
   });
 
   it('updateDefaultSignInExperience', async () => {
-    const termsOfUse = {
-      enabled: false,
-    };
+    const termsOfUseUrl = '';
 
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
       update "sign_in_experiences"
-      set "terms_of_use"=$1
+      set "terms_of_use_url"=$1
       where "id"=$2
       returning *
     `;
@@ -66,11 +64,11 @@ describe('sign-in-experience query', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql);
-      expect(values).toEqual([JSON.stringify(termsOfUse), id]);
+      expect(values).toEqual([null, id]);
 
       return createMockQueryResult([dbvalue]);
     });
 
-    await expect(updateDefaultSignInExperience({ termsOfUse })).resolves.toEqual(dbvalue);
+    await expect(updateDefaultSignInExperience({ termsOfUseUrl })).resolves.toEqual(dbvalue);
   });
 });

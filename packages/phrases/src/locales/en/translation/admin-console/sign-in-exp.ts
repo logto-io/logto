@@ -103,11 +103,8 @@ const sign_in_exp = {
   others: {
     terms_of_use: {
       title: 'TERMS OF USE',
-      enable: 'Enable terms of use',
-      description: 'Add the legal agreements for the use of your product',
-      terms_of_use: 'Terms of use',
+      terms_of_use_url: 'Terms of use URL',
       terms_of_use_placeholder: 'https://your.terms.of.use/',
-      terms_of_use_tip: 'Terms of use URL',
     },
     languages: {
       title: 'LANGUAGES',

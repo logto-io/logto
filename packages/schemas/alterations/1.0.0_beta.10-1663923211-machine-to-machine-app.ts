@@ -1,6 +1,6 @@
 import { sql } from 'slonik';
 
-import { AlterationScript } from '../lib/types/alteration';
+import type { AlterationScript } from '../lib/types/alteration';
 
 const alteration: AlterationScript = {
   up: async (pool) => {

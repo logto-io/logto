@@ -1,10 +1,10 @@
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
+import { literal, object, string } from 'zod';
 
 import { getLogtoConnectors } from '@/connectors';
 import {
   validateBranding,
   validateLanguageInfo,
-  validateTermsOfUse,
   validateSignUp,
   validateSignIn,
 } from '@/lib/sign-in-experience';
@@ -30,12 +30,19 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
   router.patch(
     '/sign-in-exp',
     koaGuard({
-      body: SignInExperiences.createGuard.omit({ id: true }).partial(),
+      body: SignInExperiences.createGuard
+        .omit({ id: true, termsOfUseUrl: true })
+        .merge(
+          object({
+            termsOfUseUrl: string().url().optional().or(literal('')),
+          })
+        )
+        .partial(),
     }),
     /* eslint-disable complexity */
     async (ctx, next) => {
       const { socialSignInConnectorTargets, ...rest } = ctx.guard.body;
-      const { branding, languageInfo, termsOfUse, signUp, signIn } = rest;
+      const { branding, languageInfo, signUp, signIn } = rest;
 
       if (branding) {
         validateBranding(branding);
@@ -43,10 +50,6 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
-      }
-
-      if (termsOfUse) {
-        validateTermsOfUse(termsOfUse);
       }
 
       const connectors = await getLogtoConnectors();

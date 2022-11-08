@@ -16,7 +16,7 @@ describe('getSignInExperienceSettings', () => {
 
     expect(settings.branding).toEqual(mockSignInExperience.branding);
     expect(settings.languageInfo).toEqual(mockSignInExperience.languageInfo);
-    expect(settings.termsOfUse).toEqual(mockSignInExperience.termsOfUse);
+    expect(settings.termsOfUseUrl).toEqual(mockSignInExperience.termsOfUseUrl);
     expect(settings.signUp.methods).toContain('username');
     expect(settings.signIn.methods).toHaveLength(3);
   });

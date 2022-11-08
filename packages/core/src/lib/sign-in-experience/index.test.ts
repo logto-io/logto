@@ -15,7 +15,6 @@ import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   validateBranding,
-  validateTermsOfUse,
   validateLanguageInfo,
   removeUnavailableSocialConnectorTargets,
 } from '@/lib/sign-in-experience';
@@ -142,16 +141,6 @@ describe('validate language info', () => {
         language: unsupportedLanguage,
       })
     );
-  });
-});
-
-describe('validate terms of use', () => {
-  test('should throw when terms of use is enabled and content URL is empty', () => {
-    expect(() => {
-      validateTermsOfUse({
-        enabled: true,
-      });
-    }).toMatchError(new RequestError('sign_in_experiences.empty_content_url_of_terms_of_use'));
   });
 });
 

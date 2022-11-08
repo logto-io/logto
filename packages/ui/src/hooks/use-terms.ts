@@ -12,12 +12,12 @@ const useTerms = () => {
   const { termsAgreement, setTermsAgreement, experienceSettings } = useContext(PageContext);
   const { show } = useConfirmModal();
 
-  const { termsOfUse } = experienceSettings ?? {};
+  const { termsOfUseUrl } = experienceSettings ?? {};
 
   const termsOfUseIframeModalHandler = useCallback(async () => {
     const [result] = await show({
       className: styles.iframeModal,
-      ModalContent: () => createIframeConfirmModalContent(termsOfUse?.contentUrl),
+      ModalContent: () => createIframeConfirmModalContent(termsOfUseUrl ?? ''),
       confirmText: 'action.agree',
     });
 
@@ -27,7 +27,7 @@ const useTerms = () => {
     }
 
     return result;
-  }, [setTermsAgreement, show, termsOfUse?.contentUrl]);
+  }, [setTermsAgreement, show, termsOfUseUrl]);
 
   const termsOfUseConfirmModalHandler = useCallback(async () => {
     const [result, data] = await show({
@@ -51,15 +51,15 @@ const useTerms = () => {
   }, [setTermsAgreement, show, termsOfUseIframeModalHandler]);
 
   const termsValidation = useCallback(async () => {
-    if (termsAgreement || !termsOfUse?.enabled || !termsOfUse.contentUrl) {
+    if (termsAgreement || !termsOfUseUrl) {
       return true;
     }
 
     return termsOfUseConfirmModalHandler();
-  }, [termsAgreement, termsOfUse, termsOfUseConfirmModalHandler]);
+  }, [termsAgreement, termsOfUseUrl, termsOfUseConfirmModalHandler]);
 
   return {
-    termsSettings: termsOfUse,
+    termsOfUseUrl,
     termsAgreement,
     termsValidation,
     setTermsAgreement,

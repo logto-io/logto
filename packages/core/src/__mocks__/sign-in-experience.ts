@@ -2,7 +2,6 @@ import type {
   Branding,
   LanguageInfo,
   SignInExperience,
-  TermsOfUse,
   Color,
   SignUp,
   SignIn,
@@ -21,9 +20,7 @@ export const mockSignInExperience: SignInExperience = {
     logoUrl: 'http://logto.png',
     slogan: 'logto',
   },
-  termsOfUse: {
-    enabled: false,
-  },
+  termsOfUseUrl: 'http://logto.io/terms',
   languageInfo: {
     autoDetect: true,
     fallbackLanguage: 'en',
@@ -71,10 +68,7 @@ export const mockBranding: Branding = {
   slogan: 'Silverhand.',
 };
 
-export const mockTermsOfUse: TermsOfUse = {
-  enabled: true,
-  contentUrl: 'http://silverhand.com/terms',
-};
+export const mockTermsOfUseUrl = 'http://silverhand.com/terms';
 
 export const mockLanguageInfo: LanguageInfo = {
   autoDetect: true,
