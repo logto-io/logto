@@ -194,7 +194,7 @@ const ConnectorDetails = () => {
           />
         </Card>
       )}
-      {data && isSocial && inUse && (
+      {data && (
         <ConfirmModal
           isOpen={isDeleteAlertOpen}
           confirmButtonText="general.delete"
