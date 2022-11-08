@@ -25,7 +25,7 @@
     "@silverhand/jest-config": "1.2.2",
     "@silverhand/ts-config": "1.2.1",
     "@types/jest": "^29.1.2",
-    "@types/node": "^16.0.0",
+    "@types/node": "^18.0.0",
     "eslint": "^8.21.0",
     "jest": "^29.1.2",
     "lint-staged": "^13.0.0",

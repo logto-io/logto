@@ -36,7 +36,7 @@
     "@silverhand/ts-config": "1.2.1",
     "@types/jest": "^29.1.2",
     "@types/lodash.uniq": "^4.5.6",
-    "@types/node": "^16.0.0",
+    "@types/node": "^18.0.0",
     "@types/pluralize": "^0.0.29",
     "camelcase": "^6.2.0",
     "eslint": "^8.21.0",
