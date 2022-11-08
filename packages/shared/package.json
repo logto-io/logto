@@ -45,7 +45,6 @@
   "dependencies": {
     "@logto/schemas": "workspace:^",
     "@silverhand/essentials": "^1.3.0",
-    "dayjs": "^1.10.5",
     "find-up": "^5.0.0",
     "nanoid": "^3.3.4",
     "slonik": "^30.0.0"

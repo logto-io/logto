@@ -1,18 +1,18 @@
 import type { Nullable } from '@silverhand/essentials';
-import dayjs from 'dayjs';
+import { isValid } from 'date-fns';
 
 type Props = {
   children: Nullable<string | number>;
 };
 
 const DateTime = ({ children }: Props) => {
-  const date = dayjs(children);
+  const date = children && new Date(children);
 
-  if (!children || !date.isValid()) {
+  if (!date || !isValid(date)) {
     return <span>-</span>;
   }
 
-  return <span>{date.toDate().toLocaleDateString()}</span>;
+  return <span>{date.toLocaleDateString()}</span>;
 };
 
 export default DateTime;

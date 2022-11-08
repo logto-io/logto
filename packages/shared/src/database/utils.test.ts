@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { sql } from 'slonik';
 import { SqlToken } from 'slonik/dist/src/tokens.js';
 
@@ -124,7 +123,7 @@ describe('convertToTimestamp()', () => {
   });
 
   it('converts to sql per time parameter', () => {
-    const time = dayjs(123_123_123);
+    const time = new Date(123_123_123);
 
     expect(convertToTimestamp(time)).toEqual({
       sql: 'to_timestamp($1)',
