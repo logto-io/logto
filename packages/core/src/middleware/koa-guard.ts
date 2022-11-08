@@ -3,7 +3,7 @@ import { has } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import koaBody from 'koa-body';
 import type { IMiddleware, IRouterParamContext } from 'koa-router';
-import type { ZodType } from 'zod';
+import type { ZodType, ZodTypeDef } from 'zod';
 
 import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
@@ -48,7 +48,7 @@ export const isGuardMiddleware = <Type extends IMiddleware>(
 ): function_ is WithGuardConfig<Type> =>
   function_.name === 'guardMiddleware' && has(function_, 'config');
 
-const tryParse = <Output, Definition, Input>(
+const tryParse = <Output, Definition extends ZodTypeDef, Input>(
   type: 'query' | 'body' | 'params',
   guard: Optional<ZodType<Output, Definition, Input>>,
   data: unknown

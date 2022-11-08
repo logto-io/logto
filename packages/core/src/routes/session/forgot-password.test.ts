@@ -1,6 +1,6 @@
 import type { User } from '@logto/schemas';
 import { PasscodeType } from '@logto/schemas';
-import dayjs from 'dayjs';
+import { addDays, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
 import { mockPasswordEncrypted, mockSignInExperience, mockUserWithPassword } from '@/__mocks__';
@@ -16,6 +16,8 @@ const encryptUserPassword = jest.fn(async (password: string) => ({
 const findUserById = jest.fn(async (): Promise<User> => mockUserWithPassword);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ userId: 'id' }));
 const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
+const getYesterdayDate = () => subDays(Date.now(), 1);
+const getTomorrowDate = () => addDays(Date.now(), 1);
 
 jest.mock('@/lib/user', () => ({
   ...jest.requireActual('@/lib/user'),
@@ -89,7 +91,7 @@ describe('session -> forgotPasswordRoutes', () => {
         result: {
           verification: {
             userId: 'id',
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowDate().toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
         },
@@ -110,7 +112,7 @@ describe('session -> forgotPasswordRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowDate().toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
         },
@@ -126,7 +128,7 @@ describe('session -> forgotPasswordRoutes', () => {
         result: {
           verification: {
             userId: 'id',
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowDate().toISOString(),
             flow: PasscodeType.SignIn,
           },
         },
@@ -170,7 +172,7 @@ describe('session -> forgotPasswordRoutes', () => {
         result: {
           verification: {
             userId: 'id',
-            expiresAt: dayjs().subtract(1, 'day').toISOString(),
+            expiresAt: getYesterdayDate().toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
         },
@@ -186,7 +188,7 @@ describe('session -> forgotPasswordRoutes', () => {
         result: {
           verification: {
             userId: 'id',
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowDate().toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
         },
@@ -203,7 +205,7 @@ describe('session -> forgotPasswordRoutes', () => {
         result: {
           verification: {
             userId: 'id',
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowDate().toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
         },

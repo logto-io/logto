@@ -15,7 +15,7 @@ import {
 } from '@/queries/custom-phrase';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import assertThat from '@/utils/assert-that';
-import { isValidStructure } from '@/utils/translation';
+import { isStrictlyPartial } from '@/utils/translation';
 
 import type { AuthedRouter } from './types';
 
@@ -70,7 +70,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(router: T) {
       const translation = cleanDeepTranslation(body);
 
       assertThat(
-        isValidStructure(resource.en.translation, translation),
+        isStrictlyPartial(resource.en.translation, translation),
         new RequestError('localization.invalid_translation_structure')
       );
 

@@ -38,9 +38,9 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        node_version: [16, 18]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -55,6 +55,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
         with:
+          node-version: ${{ matrix.node_version }}
           run-install: false
 
       # Setup integration test
@@ -63,6 +64,9 @@ jobs:
           cd tests
           pnpm i
           pnpm prepack
+          # Install Chromium
+          cd packages/integration-tests/node_modules/puppeteer
+          pnpm postinstall
 
       # Setup environment
       - name: Setup Postgres

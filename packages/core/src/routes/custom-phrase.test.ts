@@ -40,13 +40,13 @@ jest.mock('@/queries/custom-phrase', () => ({
   upsertCustomPhrase: async (customPhrase: CustomPhrase) => upsertCustomPhrase(customPhrase),
 }));
 
-const isValidStructure = jest.fn(
+const isStrictlyPartial = jest.fn(
   (fullTranslation: Translation, partialTranslation: Partial<Translation>) => true
 );
 
 jest.mock('@/utils/translation', () => ({
-  isValidStructure: (fullTranslation: Translation, partialTranslation: Translation) =>
-    isValidStructure(fullTranslation, partialTranslation),
+  isStrictlyPartial: (fullTranslation: Translation, partialTranslation: Translation) =>
+    isStrictlyPartial(fullTranslation, partialTranslation),
 }));
 
 const mockFallbackLanguage = trTrTag;
@@ -130,13 +130,13 @@ describe('customPhraseRoutes', () => {
       });
     });
 
-    it('should call isValidStructure', async () => {
+    it('should call isStrictlyPartial', async () => {
       await customPhraseRequest.put(`/custom-phrases/${mockLanguageTag}`).send(translation);
-      expect(isValidStructure).toBeCalledWith(en.translation, translation);
+      expect(isStrictlyPartial).toBeCalledWith(en.translation, translation);
     });
 
     it('should fail when the input translation structure is invalid', async () => {
-      isValidStructure.mockReturnValueOnce(false);
+      isStrictlyPartial.mockReturnValueOnce(false);
       const response = await customPhraseRequest
         .put(`/custom-phrases/${mockLanguageTag}`)
         .send(translation);

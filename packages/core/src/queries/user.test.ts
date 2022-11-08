@@ -240,7 +240,7 @@ describe('user query', () => {
     const expectSql = sql`
       select count(*)
       from ${table}
-      where ${fields.primaryEmail} like $1 or ${fields.primaryPhone} like $2 or ${fields.username} like $3 or ${fields.name} like $4
+      where ${fields.primaryEmail} ilike $1 or ${fields.primaryPhone} ilike $2 or ${fields.username} ilike $3 or ${fields.name} ilike $4
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -259,7 +259,7 @@ describe('user query', () => {
       select count(*)
       from ${table}
       where not (${fields.roleNames}::jsonb?$1)
-      and (${fields.primaryEmail} like $2 or ${fields.primaryPhone} like $3 or ${fields.username} like $4 or ${fields.name} like $5)
+      and (${fields.primaryEmail} ilike $2 or ${fields.primaryPhone} ilike $3 or ${fields.username} ilike $4 or ${fields.name} ilike $5)
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -278,6 +278,24 @@ describe('user query', () => {
     await expect(countUsers(search, true)).resolves.toEqual(dbvalue);
   });
 
+  it('countUsers with isCaseSensitive', async () => {
+    const search = 'foo';
+    const expectSql = sql`
+      select count(*)
+      from ${table}
+      where ${fields.primaryEmail} like $1 or ${fields.primaryPhone} like $2 or ${fields.username} like $3 or ${fields.name} like $4
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`]);
+
+      return createMockQueryResult([dbvalue]);
+    });
+
+    await expect(countUsers(search, undefined, true)).resolves.toEqual(dbvalue);
+  });
+
   it('findUsers', async () => {
     const search = 'foo';
     const limit = 100;
@@ -285,9 +303,9 @@ describe('user query', () => {
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where ${fields.primaryEmail} like $1 or ${fields.primaryPhone} like $2 or ${
+      where ${fields.primaryEmail} ilike $1 or ${fields.primaryPhone} ilike $2 or ${
       fields.username
-    } like $3 or ${fields.name} like $4
+    } ilike $3 or ${fields.name} ilike $4
       limit $5
       offset $6
     `;
@@ -317,9 +335,9 @@ describe('user query', () => {
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
       where not (${fields.roleNames}::jsonb?$1)
-      and (${fields.primaryEmail} like $2 or ${fields.primaryPhone} like $3 or ${
+      and (${fields.primaryEmail} ilike $2 or ${fields.primaryPhone} ilike $3 or ${
       fields.username
-    } like $4 or ${fields.name} like $5)
+    } ilike $4 or ${fields.name} ilike $5)
       limit $6
       offset $7
     `;
@@ -340,6 +358,37 @@ describe('user query', () => {
     });
 
     await expect(findUsers(limit, offset, search, true)).resolves.toEqual([dbvalue]);
+  });
+
+  it('findUsers with isCaseSensitive', async () => {
+    const search = 'foo';
+    const limit = 100;
+    const offset = 1;
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`,`)}
+      from ${table}
+      where ${fields.primaryEmail} like $1 or ${fields.primaryPhone} like $2 or ${
+      fields.username
+    } like $3 or ${fields.name} like $4
+      limit $5
+      offset $6
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([
+        `%${search}%`,
+        `%${search}%`,
+        `%${search}%`,
+        `%${search}%`,
+        limit,
+        offset,
+      ]);
+
+      return createMockQueryResult([dbvalue]);
+    });
+
+    await expect(findUsers(limit, offset, search, undefined, true)).resolves.toEqual([dbvalue]);
   });
 
   it('updateUserById', async () => {

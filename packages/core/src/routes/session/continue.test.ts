@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import { addDays, subSeconds } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
 import { mockUser } from '@/__mocks__';
@@ -6,6 +6,7 @@ import { createRequester } from '@/utils/test-utils';
 
 import continueRoutes, { continueRoute } from './continue';
 
+const getTomorrowIsoString = () => addDays(Date.now(), 1).toISOString();
 const getVerificationStorageFromInteraction = jest.fn();
 
 const checkRequiredProfile = jest.fn();
@@ -68,7 +69,7 @@ describe('session -> continueRoutes', () => {
         result: {
           continueSignIn: {
             userId: mockUser.id,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -100,7 +101,7 @@ describe('session -> continueRoutes', () => {
         result: {
           continueSignIn: {
             userId: mockUser.id,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -136,7 +137,7 @@ describe('session -> continueRoutes', () => {
         result: {
           continueSignIn: {
             userId: mockUser.id,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -167,7 +168,7 @@ describe('session -> continueRoutes', () => {
         result: {
           continueSignIn: {
             userId: mockUser.id,
-            expiresAt: dayjs().add(1, 'day').toISOString(),
+            expiresAt: getTomorrowIsoString(),
           },
         },
       });
@@ -214,7 +215,7 @@ describe('session -> continueRoutes', () => {
           result: {
             continueSignIn: {
               userId: mockUser.id,
-              expiresAt: dayjs().subtract(1, 'second').toISOString(),
+              expiresAt: subSeconds(Date.now(), 1).toISOString(),
             },
           },
         });
