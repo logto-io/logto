@@ -7,7 +7,6 @@ import avatar006 from '@/assets/avatars/avatar-006.png';
 import avatar007 from '@/assets/avatars/avatar-007.png';
 import avatar008 from '@/assets/avatars/avatar-008.png';
 import avatar009 from '@/assets/avatars/avatar-009.png';
-import avatar010 from '@/assets/avatars/avatar-010.png';
 
 export const Avatars = [
   avatar001,
@@ -19,7 +18,6 @@ export const Avatars = [
   avatar007,
   avatar008,
   avatar009,
-  avatar010,
 ];
 
 export const generateAvatarPlaceHolderById = (id: string) =>
