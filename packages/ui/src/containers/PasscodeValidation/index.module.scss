@@ -22,6 +22,12 @@
       color: var(--color-brand-default);
     }
   }
+
+  .link {
+    margin-top: _.unit(3);
+    width: auto;
+    align-self: start;
+  }
 }
 
 :global(body.mobile) {

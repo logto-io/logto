@@ -32,6 +32,7 @@ const translation = {
     forgot_password: 'Şifremi Unuttum?',
     switch_to: 'Switch to {{method}}', // UNTRANSLATED
     sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
   },
   description: {
     email: 'e-posta adresi',
@@ -43,7 +44,7 @@ const translation = {
     terms_of_use: 'Kullanım Koşulları',
     create_account: 'Hesap Oluştur',
     or: 'veya',
-    enter_passcode: 'Kod {{address}}inize gönderildi.',
+    enter_passcode: 'Kod {{address}} {{target}} inize gönderildi.',
     passcode_sent: 'Kodunuz yeniden gönderildi.',
     resend_after_seconds: '<span>{{seconds}}</span> saniye sonra tekrar gönder',
     resend_passcode: 'Kodu Yeniden Gönder',
@@ -51,7 +52,8 @@ const translation = {
     create_account_id_exists: '{{type}} {{value}} ile hesap mevcut, giriş yapmak ister misiniz?',
     sign_in_id_does_not_exists:
       '{{type}} {{value}} ile hesap mevcut değil, yeni bir hesap oluşturmak ister misiniz?',
-    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
     bind_account_title: 'Hesap bağla',
     social_create_account: 'Hesabınız yok mu? Yeni bir hesap ve bağlantı oluşturabilirsiniz.',
     social_bind_account: 'Hesabınız zaten var mı? Hesabınıza bağlanmak için giriş yapınız.',

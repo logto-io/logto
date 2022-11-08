@@ -9,6 +9,7 @@ export enum UserFlow {
   signIn = 'sign-in',
   register = 'register',
   forgotPassword = 'forgot-password',
+  continue = 'continue',
 }
 
 export enum SearchParameters {

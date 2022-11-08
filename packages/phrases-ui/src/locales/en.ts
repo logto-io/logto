@@ -30,6 +30,7 @@ const translation = {
     forgot_password: 'Forgot your password?',
     switch_to: 'Switch to {{method}}',
     sign_in_via_passcode: 'Sign in via verification code',
+    sign_in_via_password: 'Sign in via password',
   },
   description: {
     email: 'email',
@@ -41,7 +42,7 @@ const translation = {
     terms_of_use: 'Terms of Use',
     create_account: 'Create Account',
     or: 'or',
-    enter_passcode: 'The verification code has been sent to your {{address}}',
+    enter_passcode: 'The verification code has been sent to your {{address}} {{target}}',
     passcode_sent: 'The verification code has been resent',
     resend_after_seconds: 'Resend after <span>{{seconds}}</span> seconds',
     resend_passcode: 'Resend verification code',
@@ -50,7 +51,8 @@ const translation = {
       'The account with {{type}} {{value}} already exists, would you like to sign in?',
     sign_in_id_does_not_exists:
       'The account with {{type}} {{value}} does not exist, would you like to create a new account?',
-    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.',
+    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.',
+    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists',
     bind_account_title: 'Link account',
     social_create_account: 'No account? You can create a new account and link.',
     social_bind_account: 'Already have an account? Sign in to link it with your social identity.',

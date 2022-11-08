@@ -32,6 +32,7 @@ const translation = {
     forgot_password: 'Esqueceu a password?',
     switch_to: 'Mudar para {{method}}',
     sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
   },
   description: {
     email: 'email',
@@ -43,14 +44,15 @@ const translation = {
     terms_of_use: 'Termos de uso',
     create_account: 'Criar uma conta',
     or: 'ou',
-    enter_passcode: 'A senha foi enviada para o seu {{address}}',
+    enter_passcode: 'A senha foi enviada para o seu {{address}} {{target}}',
     passcode_sent: 'A senha foi reenviada',
     resend_after_seconds: 'Reenviar após <span>{{seconds}}</span> segundos',
     resend_passcode: 'Reenviar senha',
     continue_with: 'Continuar com',
     create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de fazer login?',
     sign_in_id_does_not_exists: 'A conta com {{type}} {{value}} não existe, gostaria de criar uma?',
-    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
     bind_account_title: 'Agregar conta',
     social_create_account: 'Sem conta? Pode criar uma nova e agregar.',
     social_bind_account: 'Já tem uma conta? Faça login para agregar a sua identidade social.',
