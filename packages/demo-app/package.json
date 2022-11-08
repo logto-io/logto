@@ -20,7 +20,7 @@
     "@logto/core-kit": "1.0.0-beta.20",
     "@logto/language-kit": "1.0.0-beta.20",
     "@logto/phrases": "workspace:^",
-    "@logto/react": "1.0.0-beta.12",
+    "@logto/react": "1.0.0-beta.13",
     "@logto/schemas": "workspace:^",
     "@parcel/core": "2.7.0",
     "@parcel/transformer-sass": "2.7.0",
