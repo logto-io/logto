@@ -8,6 +8,7 @@ import { signInWithEmail } from '@/apis/sign-in';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import { UserFlow } from '@/types';
 
@@ -29,6 +30,8 @@ const useRegisterWithEmailPasscodeValidation = (email: string, errorCallback?: (
     SignInIdentifier.Email,
     email
   );
+
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
   const emailExistSignInErrorHandler = useCallback(async () => {
     const [confirm] = await show({
@@ -59,12 +62,14 @@ const useRegisterWithEmailPasscodeValidation = (email: string, errorCallback?: (
           ? identifierExistErrorHandler
           : emailExistSignInErrorHandler,
       ...sharedErrorHandlers,
+      ...requiredProfileErrorHandlers,
       callback: errorCallback,
     }),
     [
       emailExistSignInErrorHandler,
       errorCallback,
       identifierExistErrorHandler,
+      requiredProfileErrorHandlers,
       sharedErrorHandlers,
       signInMode,
     ]
