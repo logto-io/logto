@@ -1,33 +1,29 @@
 import { ConnectorPlatform } from '@logto/connector-kit';
-import type { Connector, ConnectorMetadata } from '@logto/schemas';
+import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
 import type { LogtoConnector } from '@/connectors/types';
 
-export const mockMetadata: ConnectorMetadata = {
-  id: 'id',
-  target: 'connector',
-  platform: null,
-  name: {
-    en: 'Connector',
-    'pt-PT': 'Conector',
-    'zh-CN': '连接器',
-    'tr-TR': 'Connector',
-    ko: 'Connector',
-  },
-  logo: './logo.png',
-  logoDark: './logo-dark.png',
-  description: {
-    en: 'Connector',
-    'pt-PT': 'Conector',
-    'zh-CN': '连接器',
-    'tr-TR': 'Connector',
-    ko: 'Connector',
-  },
-  readme: 'README.md',
-  configTemplate: 'config-template.json',
-};
+import {
+  mockConnector0,
+  mockConnector1,
+  mockConnector2,
+  mockConnector3,
+  mockConnector4,
+  mockConnector5,
+  mockConnector6,
+  mockMetadata,
+  mockMetadata0,
+  mockMetadata1,
+  mockMetadata2,
+  mockMetadata3,
+  mockMetadata4,
+  mockMetadata5,
+  mockMetadata6,
+} from './connector-base-data';
+
+export { mockMetadata } from './connector-base-data';
 
 export const mockConnector: Connector = {
   id: 'id',
@@ -42,104 +38,6 @@ export const mockLogtoConnector = {
   sendMessage: jest.fn(),
   validateConfig: jest.fn(),
   configGuard: any(),
-};
-
-const mockMetadata0: ConnectorMetadata = {
-  ...mockMetadata,
-  id: 'id0',
-  target: 'connector_0',
-  platform: ConnectorPlatform.Universal,
-};
-
-const mockMetadata1: ConnectorMetadata = {
-  ...mockMetadata,
-  id: 'id1',
-  target: 'connector_1',
-  platform: ConnectorPlatform.Universal,
-};
-
-const mockMetadata2: ConnectorMetadata = {
-  ...mockMetadata,
-  id: 'id2',
-  target: 'connector_2',
-  platform: ConnectorPlatform.Universal,
-};
-
-const mockMetadata3: ConnectorMetadata = {
-  ...mockMetadata,
-  id: 'id3',
-  target: 'connector_3',
-  platform: ConnectorPlatform.Universal,
-};
-
-const mockMetadata4: ConnectorMetadata = {
-  ...mockMetadata,
-  id: 'id4',
-  target: 'connector_4',
-  platform: ConnectorPlatform.Universal,
-};
-
-const mockMetadata5: ConnectorMetadata = {
-  ...mockMetadata,
-  id: 'id5',
-  target: 'connector_5',
-  platform: ConnectorPlatform.Universal,
-};
-
-const mockMetadata6: ConnectorMetadata = {
-  ...mockMetadata,
-  id: 'id6',
-  target: 'connector_6',
-  platform: ConnectorPlatform.Universal,
-};
-
-const mockConnector0: Connector = {
-  id: 'id0',
-  enabled: true,
-  config: {},
-  createdAt: 1_234_567_890_123,
-};
-
-const mockConnector1: Connector = {
-  id: 'id1',
-  enabled: true,
-  config: {},
-  createdAt: 1_234_567_890_234,
-};
-
-const mockConnector2: Connector = {
-  id: 'id2',
-  enabled: true,
-  config: {},
-  createdAt: 1_234_567_890_345,
-};
-
-const mockConnector3: Connector = {
-  id: 'id3',
-  enabled: true,
-  config: {},
-  createdAt: 1_234_567_890_456,
-};
-
-const mockConnector4: Connector = {
-  id: 'id4',
-  enabled: true,
-  config: {},
-  createdAt: 1_234_567_890_567,
-};
-
-const mockConnector5: Connector = {
-  id: 'id5',
-  enabled: true,
-  config: {},
-  createdAt: 1_234_567_890_567,
-};
-
-const mockConnector6: Connector = {
-  id: 'id6',
-  enabled: true,
-  config: {},
-  createdAt: 1_234_567_890_567,
 };
 
 export const mockConnectorList: Connector[] = [
@@ -311,4 +209,53 @@ export const mockLogtoConnectors = [
   mockGoogleConnector,
   mockWechatConnector,
   mockWechatNativeConnector,
+];
+
+export const disabledSocialTarget01 = 'disableSocialTarget-id01';
+export const disabledSocialTarget02 = 'disableSocialTarget-id02';
+export const enabledSocialTarget01 = 'enabledSocialTarget-id01';
+
+export const mockSocialConnectors: LogtoConnector[] = [
+  {
+    dbEntry: {
+      id: 'id0',
+      enabled: false,
+      config: {},
+      createdAt: 1_234_567_890_123,
+    },
+    metadata: {
+      ...mockMetadata,
+      target: disabledSocialTarget01,
+    },
+    type: ConnectorType.Social,
+    ...mockLogtoConnector,
+  },
+  {
+    dbEntry: {
+      id: 'id1',
+      enabled: true,
+      config: {},
+      createdAt: 1_234_567_890_123,
+    },
+    metadata: {
+      ...mockMetadata,
+      target: enabledSocialTarget01,
+    },
+    type: ConnectorType.Social,
+    ...mockLogtoConnector,
+  },
+  {
+    dbEntry: {
+      id: 'id2',
+      enabled: false,
+      config: {},
+      createdAt: 1_234_567_890_123,
+    },
+    metadata: {
+      ...mockMetadata,
+      target: disabledSocialTarget02,
+    },
+    type: ConnectorType.Social,
+    ...mockLogtoConnector,
+  },
 ];
