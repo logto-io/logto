@@ -117,13 +117,21 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
         return next();
       }
 
-      await assignVerificationResult(ctx, provider, { flow, phone });
-
       if (flow === PasscodeType.SignIn) {
+        await assignVerificationResult(ctx, provider, { flow, phone });
+
         return smsSignInAction(provider)(ctx, next);
       }
 
-      return smsRegisterAction(provider)(ctx, next);
+      if (flow === PasscodeType.Register) {
+        await assignVerificationResult(ctx, provider, { flow, phone });
+
+        return smsRegisterAction(provider)(ctx, next);
+      }
+
+      await assignVerificationResult(ctx, provider, { flow, phone });
+
+      return next();
     }
   );
 
@@ -161,13 +169,21 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
         return next();
       }
 
-      await assignVerificationResult(ctx, provider, { flow, email });
-
       if (flow === PasscodeType.SignIn) {
+        await assignVerificationResult(ctx, provider, { flow, email });
+
         return emailSignInAction(provider)(ctx, next);
       }
 
-      return emailRegisterAction(provider)(ctx, next);
+      if (flow === PasscodeType.Register) {
+        await assignVerificationResult(ctx, provider, { flow, email });
+
+        return emailRegisterAction(provider)(ctx, next);
+      }
+
+      await assignVerificationResult(ctx, provider, { flow, email });
+
+      return next();
     }
   );
 
