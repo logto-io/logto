@@ -4,10 +4,12 @@ import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 import { BrandingStyle } from '@logto/schemas';
 
 import {
+  disabledSocialTarget01,
+  disabledSocialTarget02,
+  enabledSocialTarget01,
   mockBranding,
   mockSignInExperience,
   mockSocialConnectors,
-  mockSocialConnectorTargets,
 } from '@/__mocks__';
 import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
@@ -155,19 +157,22 @@ describe('validate terms of use', () => {
 
 describe('remove unavailable social connector targets', () => {
   test('should remove unavailable social connector targets in sign-in experience', async () => {
+    const mockSocialConnectorTargets = mockSocialConnectors.map(
+      ({ metadata: { target } }) => target
+    );
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       socialSignInConnectorTargets: mockSocialConnectorTargets,
     });
     getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(mockSocialConnectors);
     expect(mockSocialConnectorTargets).toEqual([
-      'disableSocialTarget-id0',
-      'socialTarget-id1',
-      'disableSocialTarget-id2',
+      disabledSocialTarget01,
+      enabledSocialTarget01,
+      disabledSocialTarget02,
     ]);
     await removeUnavailableSocialConnectorTargets();
     expect(updateDefaultSignInExperience).toBeCalledWith({
-      socialSignInConnectorTargets: ['socialTarget-id1'],
+      socialSignInConnectorTargets: [enabledSocialTarget01],
     });
   });
 });
