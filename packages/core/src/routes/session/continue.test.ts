@@ -1,3 +1,4 @@
+import { PasscodeType } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
 
@@ -137,6 +138,7 @@ describe('session -> continueRoutes', () => {
           continueSignIn: {
             userId: mockUser.id,
             expiresAt: dayjs().add(1, 'day').toISOString(),
+            type: PasscodeType.Continue,
           },
         },
       });
@@ -168,6 +170,7 @@ describe('session -> continueRoutes', () => {
           continueSignIn: {
             userId: mockUser.id,
             expiresAt: dayjs().add(1, 'day').toISOString(),
+            type: PasscodeType.Continue,
           },
         },
       });

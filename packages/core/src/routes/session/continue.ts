@@ -17,7 +17,7 @@ import {
 import assertThat from '@/utils/assert-that';
 
 import type { AnonymousRouter } from '../types';
-import { emailSessionResultGuard, smsSessionResultGuard } from './types';
+import { continueEmailSessionResultGuard, continueSmsSessionResultGuard } from './types';
 import {
   checkRequiredProfile,
   getContinueSignInResult,
@@ -104,7 +104,7 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
     const { email } = await getVerificationStorageFromInteraction(
       ctx,
       provider,
-      emailSessionResultGuard
+      continueEmailSessionResultGuard
     );
     const user = await findUserById(userId);
 
@@ -138,7 +138,7 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
     const { phone } = await getVerificationStorageFromInteraction(
       ctx,
       provider,
-      smsSessionResultGuard
+      continueSmsSessionResultGuard
     );
     const user = await findUserById(userId);
 
