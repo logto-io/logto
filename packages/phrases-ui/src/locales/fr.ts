@@ -32,6 +32,7 @@ const translation = {
     forgot_password: 'Mot de passe oublié ?',
     switch_to: 'Passer au {{method}}',
     sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
   },
   description: {
     email: 'email',
