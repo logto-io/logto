@@ -1,9 +1,14 @@
 import { builtInLanguages } from '@logto/phrases-ui';
 import type { Branding, LanguageInfo, TermsOfUse } from '@logto/schemas';
-import { BrandingStyle } from '@logto/schemas';
+import { ConnectorType, BrandingStyle } from '@logto/schemas';
 
+import { getLogtoConnectors } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { findAllCustomLanguageTags } from '@/queries/custom-phrase';
+import {
+  findDefaultSignInExperience,
+  updateDefaultSignInExperience,
+} from '@/queries/sign-in-experience';
 import assertThat from '@/utils/assert-that';
 
 export * from './sign-up';
@@ -34,4 +39,20 @@ export const validateTermsOfUse = (termsOfUse: TermsOfUse) => {
     !termsOfUse.enabled || termsOfUse.contentUrl,
     'sign_in_experiences.empty_content_url_of_terms_of_use'
   );
+};
+
+export const removeUnavailableSocialConnectorTargets = async () => {
+  const connectors = await getLogtoConnectors();
+  const availableSocialConnectorTargets = new Set(
+    connectors
+      .filter(({ type, dbEntry: { enabled } }) => enabled && type === ConnectorType.Social)
+      .map(({ metadata: { target } }) => target)
+  );
+
+  const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
+  await updateDefaultSignInExperience({
+    socialSignInConnectorTargets: socialSignInConnectorTargets.filter((target) =>
+      availableSocialConnectorTargets.has(target)
+    ),
+  });
 };
