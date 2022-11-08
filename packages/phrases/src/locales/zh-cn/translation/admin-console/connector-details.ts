@@ -17,6 +17,8 @@ const connector_details = {
   type_email: '邮件连接器',
   type_sms: '短信连接器',
   type_social: '社交连接器',
+  in_use_deletion_description:
+    'This connector is in use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.', // UNTRANSLATED
 };
 
 export default connector_details;

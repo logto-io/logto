@@ -17,6 +17,8 @@ const connector_details = {
   type_email: 'Connecteur Email',
   type_sms: 'Connecteur SMS',
   type_social: 'Connecteur Social',
+  in_use_deletion_description:
+    'This connector is in use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.', // UNTRANSLATED
 };
 
 export default connector_details;
