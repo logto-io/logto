@@ -5,7 +5,7 @@ type Response = {
   redirectTo: string;
 };
 
-const continueApiPrefix = '/api/session/continue';
+const continueApiPrefix = '/api/session/sign-in/continue';
 
 // Only bind with social after the sign-in bind password flow
 export const continueWithPassword = async (password: string, socialToBind?: string) => {

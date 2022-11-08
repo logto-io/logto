@@ -61,6 +61,7 @@ const translation = {
     reset_password_description_email: '输入邮件地址，领取验证码以重设密码。',
     reset_password_description_sms: '输入手机号，领取验证码以重设密码。',
     new_password: '新密码',
+    set_password: 'Set password', // UNTRANSLATED
     password_changed: '已重置密码！',
     no_account: "Don't have an account?", // UNTRANSLATED
     have_account: 'Already have an account?', // UNTRANSLATED

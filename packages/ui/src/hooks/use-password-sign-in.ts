@@ -11,6 +11,8 @@ import useApi from '@/hooks/use-api';
 import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 
+import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
+
 const apiMap = {
   [SignInIdentifier.Username]: signInWithUsername,
   [SignInIdentifier.Email]: signInWithEmailPassword,
@@ -24,13 +26,16 @@ const usePasswordSignIn = (method: SignInIdentifier) => {
     setErrorMessage('');
   }, []);
 
+  const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
+
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.invalid_credentials': (error) => {
         setErrorMessage(error.message);
       },
+      ...requiredProfileErrorHandler,
     }),
-    [setErrorMessage]
+    [requiredProfileErrorHandler]
   );
 
   const { result, run: asyncSignIn } = useApi(apiMap[method], errorHandlers);

@@ -18,6 +18,10 @@ jest.mock('react-device-detect', () => ({
 jest.mock('i18next', () => ({
   language: 'en',
 }));
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+}));
 
 describe('<PhonePassword>', () => {
   afterEach(() => {

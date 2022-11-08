@@ -63,6 +63,7 @@ const translation = {
     reset_password_description_sms:
       'Enter the phone number associated with your account, and we’ll message you the verification code to reset your password.',
     new_password: 'New password',
+    set_password: 'Set password',
     password_changed: 'Password Changed',
     no_account: "Don't have an account?",
     have_account: 'Already have an account?',

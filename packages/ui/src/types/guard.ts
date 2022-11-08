@@ -27,6 +27,13 @@ export const userFlowGuard = s.union([
   s.literal('forgot-password'),
 ]);
 
+export const continueMethodGuard = s.union([
+  s.literal('password'),
+  s.literal('username'),
+  s.literal(SignInIdentifier.Email),
+  s.literal(SignInIdentifier.Sms),
+]);
+
 export const usernameGuard = s.object({
   username: s.string(),
 });

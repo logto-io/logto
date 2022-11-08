@@ -9,6 +9,7 @@ import usePreview from './hooks/use-preview';
 import initI18n from './i18n/init';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
+import Continue from './pages/Continue';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import Passcode from './pages/Passcode';
@@ -91,8 +92,10 @@ const App = () => {
               <Route path="/forgot-password/reset" element={<ResetPassword />} />
               <Route path="/forgot-password/:method" element={<ForgotPassword />} />
 
-              {/* social sign-in pages */}
+              {/* continue */}
+              <Route path="/continue/:method" element={<Continue />} />
 
+              {/* social sign-in pages */}
               <Route path="/callback/:connector" element={<Callback />} />
               <Route path="/social/register/:connector" element={<SocialRegister />} />
               <Route path="/social/landing/:connector" element={<SocialLanding />} />

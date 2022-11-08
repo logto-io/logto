@@ -63,6 +63,7 @@ const translation = {
     reset_password_description_sms:
       'Digite o número de telefone associado à sua conta e enviaremos uma mensagem de texto com o código de verificação para redefinir sua senha.',
     new_password: 'Nova Senha',
+    set_password: 'Set password', // UNTRANSLATED
     password_changed: 'Password Changed', // UNTRANSLATED
     no_account: "Don't have an account?", // UNTRANSLATED
     have_account: 'Already have an account?', // UNTRANSLATED

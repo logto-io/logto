@@ -10,9 +10,11 @@ import { stateValidation } from '@/utils/social-connectors';
 import type { ErrorHandlers } from './use-api';
 import useApi from './use-api';
 import { PageContext } from './use-page-context';
+import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 
 const useSocialSignInListener = () => {
   const { setToast, experienceSettings } = useContext(PageContext);
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler();
 
   const { t } = useTranslation();
   const parameters = useParams();
@@ -35,8 +37,15 @@ const useSocialSignInListener = () => {
           });
         }
       },
+      ...requiredProfileErrorHandlers,
     }),
-    [experienceSettings?.signInMode, navigate, parameters.connector, setToast]
+    [
+      experienceSettings?.signInMode,
+      navigate,
+      parameters.connector,
+      requiredProfileErrorHandlers,
+      setToast,
+    ]
   );
 
   const { result, run: asyncSignInWithSocial } = useApi(

@@ -31,7 +31,7 @@ describe('continue API', () => {
 
   it('continue with password', async () => {
     await continueWithPassword('password');
-    expect(ky.post).toBeCalledWith('/api/session/continue/password', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/password', {
       json: {
         password: 'password',
       },
@@ -40,7 +40,7 @@ describe('continue API', () => {
 
   it('continue with username', async () => {
     await continueWithUsername('username');
-    expect(ky.post).toBeCalledWith('/api/session/continue/username', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/username', {
       json: {
         username: 'username',
       },
@@ -50,7 +50,7 @@ describe('continue API', () => {
   it('continue with email', async () => {
     await continueWithEmail('email');
 
-    expect(ky.post).toBeCalledWith('/api/session/continue/email', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/email', {
       json: {
         email: 'email',
       },
@@ -60,7 +60,7 @@ describe('continue API', () => {
   it('continue with phone', async () => {
     await continueWithPhone('phone');
 
-    expect(ky.post).toBeCalledWith('/api/session/continue/sms', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/sms', {
       json: {
         phone: 'phone',
       },
