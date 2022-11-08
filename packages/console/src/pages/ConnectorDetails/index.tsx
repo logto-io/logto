@@ -3,7 +3,7 @@ import { AppearanceMode, ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
@@ -14,6 +14,7 @@ import Reset from '@/assets/images/reset.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
+import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
@@ -49,6 +50,18 @@ const ConnectorDetails = () => {
   const api = useApi();
   const navigate = useNavigate();
   const theme = useTheme();
+  const isSocial = data?.type === ConnectorType.Social;
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+
+  const onDeleteClick = async () => {
+    if (!isSocial || !inUse) {
+      await handleDelete();
+
+      return;
+    }
+
+    setIsDeleteAlertOpen(true);
+  };
 
   const handleDelete = async () => {
     if (!connectorId) {
@@ -65,7 +78,7 @@ const ConnectorDetails = () => {
     await mutateGlobal('/api/connectors');
     setIsDeleted(true);
 
-    if (data?.type === ConnectorType.Social) {
+    if (isSocial) {
       navigate(`/connectors/social`, { replace: true });
     } else {
       navigate(`/connectors`, { replace: true });
@@ -75,16 +88,14 @@ const ConnectorDetails = () => {
   return (
     <div className={detailsStyles.container}>
       <LinkButton
-        to={data?.type === ConnectorType.Social ? '/connectors/social' : '/connectors'}
+        to={isSocial ? '/connectors/social' : '/connectors'}
         icon={<Back />}
         title="connector_details.back_to_connectors"
         className={styles.backLink}
       />
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-      {data?.type === ConnectorType.Social && (
-        <ConnectorTabs target={data.target} connectorId={data.id} />
-      )}
+      {isSocial && <ConnectorTabs target={data.target} connectorId={data.id} />}
       {data && (
         <Card className={styles.header}>
           <div className={styles.logoContainer}>
@@ -137,7 +148,7 @@ const ConnectorDetails = () => {
               buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
               title={t('general.more_options')}
             >
-              {data.type !== ConnectorType.Social && (
+              {!isSocial && (
                 <ActionMenuItem
                   icon={<Reset />}
                   iconClassName={styles.resetIcon}
@@ -152,7 +163,7 @@ const ConnectorDetails = () => {
                   )}
                 </ActionMenuItem>
               )}
-              <ActionMenuItem icon={<Delete />} type="danger" onClick={handleDelete}>
+              <ActionMenuItem icon={<Delete />} type="danger" onClick={onDeleteClick}>
                 {t('general.delete')}
               </ActionMenuItem>
             </ActionMenu>
@@ -182,6 +193,22 @@ const ConnectorDetails = () => {
             }}
           />
         </Card>
+      )}
+      {data && isSocial && inUse && (
+        <ConfirmModal
+          isOpen={isDeleteAlertOpen}
+          confirmButtonText="general.delete"
+          onCancel={() => {
+            setIsDeleteAlertOpen(false);
+          }}
+          onConfirm={handleDelete}
+        >
+          <Trans
+            t={t}
+            i18nKey="connector_details.in_use_deletion_description"
+            components={{ name: <UnnamedTrans resource={data.name} /> }}
+          />
+        </ConfirmModal>
       )}
     </div>
   );
