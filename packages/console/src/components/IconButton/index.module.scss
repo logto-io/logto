@@ -14,13 +14,19 @@
   justify-content: center;
   align-items: center;
 
-  > svg {
-    color: var(--color-text-secondary);
+  .icon {
+    > svg {
+      display: block;
+      color: var(--color-text-secondary);
+    }
   }
 
+
   &:disabled {
-    > svg {
-      color: var(--color-neutral-80);
+    .icon {
+      > svg {
+        color: var(--color-neutral-80);
+      }
     }
   }
 
@@ -40,9 +46,11 @@
     height: 24px;
     width: 24px;
 
-    > svg {
-      height: 16px;
-      width: 16px;
+    .icon {
+      > svg {
+        height: 16px;
+        width: 16px;
+      }
     }
   }
 
@@ -50,9 +58,11 @@
     height: 28px;
     width: 28px;
 
-    > svg {
-      height: 20px;
-      width: 20px;
+    .icon {
+      > svg {
+        height: 20px;
+        width: 20px;
+      }
     }
   }
 
@@ -60,9 +70,11 @@
     height: 32px;
     width: 32px;
 
-    > svg {
-      height: 24px;
-      width: 24px;
+    .icon {
+      > svg {
+        height: 24px;
+        width: 24px;
+      }
     }
   }
 }
