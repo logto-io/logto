@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { nanoid } from 'nanoid';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
@@ -12,13 +13,14 @@ type Props = {
   label?: ReactNode;
   // eslint-disable-next-line react/boolean-prop-naming
   disabled: boolean;
+  className?: string;
 };
 
-const Checkbox = ({ value, onChange, label, disabled }: Props) => {
+const Checkbox = ({ value, onChange, label, disabled, className }: Props) => {
   const [id, setId] = useState(nanoid());
 
   return (
-    <div className={styles.checkbox}>
+    <div className={classNames(styles.checkbox, className)}>
       <input
         id={id}
         type="checkbox"

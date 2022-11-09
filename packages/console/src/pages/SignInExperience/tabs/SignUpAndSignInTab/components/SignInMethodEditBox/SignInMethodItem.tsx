@@ -53,6 +53,7 @@ const SignInMethodItem = ({
           )}
         >
           <Checkbox
+            className={styles.checkBox}
             label={t('sign_in_exp.sign_up_and_sign_in.sign_in.password_auth')}
             value={password}
             disabled={!isPasswordCheckable}
@@ -63,6 +64,7 @@ const SignInMethodItem = ({
           {identifier !== SignInIdentifier.Username && (
             <>
               <IconButton
+                className={styles.swapButton}
                 tooltip="sign_in_exp.sign_up_and_sign_in.sign_in.auth_swap_tip"
                 onClick={() => {
                   onToggleVerificationPrimary(identifier);
@@ -71,6 +73,7 @@ const SignInMethodItem = ({
                 <SwitchArrowIcon />
               </IconButton>
               <Checkbox
+                className={styles.checkBox}
                 label={t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
                 value={verificationCode}
                 disabled={!isVerificationCodeCheckable}
