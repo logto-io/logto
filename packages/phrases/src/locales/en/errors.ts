@@ -54,6 +54,7 @@ const errors = {
     require_sms: 'You need to set a phone before sign in.',
     sms_exists: 'Your phone has been set.',
     require_email_or_sms: 'You need to set a phone or email before sign in.',
+    suspended: 'This account is suspended.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',

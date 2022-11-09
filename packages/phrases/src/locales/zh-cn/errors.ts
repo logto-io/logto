@@ -53,6 +53,7 @@ const errors = {
     require_sms: '请绑定手机号码',
     sms_exists: '已绑定手机号码',
     require_email_or_sms: '请绑定邮箱地址或手机号码',
+    suspended: '账号已被禁用',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',
