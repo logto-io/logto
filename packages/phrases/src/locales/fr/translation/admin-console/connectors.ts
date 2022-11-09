@@ -12,6 +12,11 @@ const connectors = {
   connector_status: 'Experience de connexion',
   connector_status_in_use: "En cours d'utilisation",
   connector_status_not_in_use: 'Non utilisé',
+  not_in_use_tip: {
+    content:
+      'Not in use means your sign in experience hasn’t used this sign in method. <a>{{link}}</a> to add this sign in method. ', // UNTRANSLATED
+    go_to_sie: 'Go to sign in experience', // UNTRANSLATED
+  },
   social_connector_eg: 'Exemple : Google, Facebook, Github',
   save_and_done: 'Sauvegarder et Finis',
   type: {

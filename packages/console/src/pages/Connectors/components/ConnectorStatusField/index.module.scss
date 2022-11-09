@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.field {
+  display: flex;
+  align-items: center;
+}
+
+.tipIcon {
+  margin-left: _.unit(1);
+
+  > svg {
+    display: block;
+    cursor: pointer;
+  }
+}
+
+.title {
+  font: var(--font-label-large);
+}
+
+.content {
+  font: var(--font-body-medium);
+
+  a {
+    color: #cabeff;
+    text-decoration: none;
+  }
+}

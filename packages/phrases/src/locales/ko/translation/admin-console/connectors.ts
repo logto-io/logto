@@ -11,6 +11,11 @@ const connectors = {
   connector_status: '로그인 경험',
   connector_status_in_use: '사용 중',
   connector_status_not_in_use: '사용 중이 아님',
+  not_in_use_tip: {
+    content:
+      'Not in use means your sign in experience hasn’t used this sign in method. <a>{{link}}</a> to add this sign in method. ', // UNTRANSLATED
+    go_to_sie: 'Go to sign in experience', // UNTRANSLATED
+  },
   social_connector_eg: '예) Google, Facebook, Github',
   save_and_done: '저장 및 완료',
   type: {
