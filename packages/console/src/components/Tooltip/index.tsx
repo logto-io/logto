@@ -130,7 +130,7 @@ const Tooltip = ({
       <TipBubble
         ref={tooltipRef}
         className={className}
-        style={{ ...layoutPosition }}
+        style={{ ...(!layoutPosition && { opacity: 0 }), ...layoutPosition }}
         position={position}
         horizontalAlignment={positionState.horizontalAlign}
       >
