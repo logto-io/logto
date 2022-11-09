@@ -3,6 +3,7 @@ import { getUnixTime } from 'date-fns';
 import type { Context } from 'koa';
 import type { InteractionResults, Provider } from 'oidc-provider';
 
+import RequestError from '@/errors/RequestError';
 import { findUserById, updateUserById } from '@/queries/user';
 
 export const assignInteractionResults = async (
@@ -42,6 +43,30 @@ export const assignInteractionResults = async (
     }
   );
   ctx.body = { redirectTo, ts };
+};
+
+export const checkSessionHealth = async (
+  ctx: Context,
+  provider: Provider,
+  tolerance = 10 * 60 // 10 mins
+) => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  if (!result?.login?.accountId) {
+    throw new RequestError('auth.unauthorized');
+  }
+
+  if (!result.login.ts || result.login.ts < getUnixTime(new Date()) - tolerance) {
+    const { passwordEncrypted, primaryPhone, primaryEmail } = await findUserById(
+      result.login.accountId
+    );
+
+    // No authenticated method configured for this user. Pass!
+    if (!passwordEncrypted && !primaryPhone && !primaryEmail) {
+      return;
+    }
+    throw new RequestError('auth.require_re_authentication');
+  }
 };
 
 export const saveUserFirstConsentedAppId = async (userId: string, applicationId: string) => {

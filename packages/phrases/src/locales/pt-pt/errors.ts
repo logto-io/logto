@@ -6,6 +6,7 @@ const errors = {
     forbidden: 'Proibido. Verifique os seus cargos e permissões.',
     expected_role_not_found: 'Role esperado não encontrado. Verifique os seus cargos e permissões.',
     jwt_sub_missing: 'Campo `sub` está ausente no JWT.',
+    require_re_authentication: 'Re-authentication is required to perform a protected action.', // UNTRANSLATED
   },
   guard: {
     invalid_input: 'O pedido {{type}} é inválido.',
