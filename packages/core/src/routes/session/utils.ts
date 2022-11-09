@@ -219,9 +219,11 @@ export const signInWithPassword = async (
   ctx.log(logType, logPayload);
 
   const user = await findUser();
-  const { id } = await verifyUserPassword(user, password);
+  const verifiedUser = await verifyUserPassword(user, password);
+  const { id } = verifiedUser;
 
   ctx.log(logType, { userId: id });
   await updateUserById(id, { lastSignInAt: Date.now() });
+  await checkRequiredProfile(ctx, provider, verifiedUser, signInExperience);
   await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
 };
