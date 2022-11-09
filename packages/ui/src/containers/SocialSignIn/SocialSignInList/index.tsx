@@ -16,15 +16,9 @@ type Props = {
   className?: string;
   socialConnectors?: ConnectorMetadata[];
   isCollapseEnabled?: boolean;
-  onSocialSignInCallback?: () => void;
 };
 
-const SocialSignInList = ({
-  className,
-  socialConnectors = [],
-  isCollapseEnabled = true,
-  onSocialSignInCallback,
-}: Props) => {
+const SocialSignInList = ({ className, socialConnectors = [], isCollapseEnabled }: Props) => {
   const [expand, setExpand] = useState(false);
   const { invokeSocialSignIn, theme } = useSocial();
   const isOverSize = socialConnectors.length > defaultSize;
@@ -52,7 +46,6 @@ const SocialSignInList = ({
             target={target}
             onClick={() => {
               void invokeSocialSignIn(connector);
-              onSocialSignInCallback?.();
             }}
           />
         );

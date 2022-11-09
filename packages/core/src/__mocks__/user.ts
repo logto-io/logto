@@ -8,8 +8,8 @@ export const mockUser: User = {
   primaryEmail: 'foo@logto.io',
   primaryPhone: '111111',
   roleNames: ['admin'],
-  passwordEncrypted: null,
-  passwordEncryptionMethod: null,
+  passwordEncrypted: 'password',
+  passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
   name: null,
   avatar: null,
   identities: {

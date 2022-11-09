@@ -2,6 +2,8 @@ const connectors = {
   title: '연동',
   subtitle: '비밀번호 없이 또는 소셜 로그인을 제공하여 보다 나은 경험을 위해 연동해주세요.',
   create: '소셜 연동 추가',
+  config_sie_notice: 'You’ve set up connectors. Make sure to configure it in <a>{{link}}</a>.', // UNTRANSLATED
+  config_sie_link_text: 'sign in experience', // UNTRANSLATED
   tab_email_sms: '이메일/SMS 연동',
   tab_social: '소셜 연동',
   connector_name: '연동 이름',

@@ -1,48 +1,50 @@
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { SignInIdentifier } from '@logto/schemas';
 import { useParams } from 'react-router-dom';
+import { is } from 'superstruct';
 
-import NavBar from '@/components/NavBar';
-import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
+import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import { EmailResetPassword } from '@/containers/EmailForm';
+import { SmsResetPassword } from '@/containers/PhoneForm';
+import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
-
-import * as styles from './index.module.scss';
+import { passcodeMethodGuard } from '@/types/guard';
 
 type Props = {
   method?: string;
 };
 
 const ForgotPassword = () => {
-  const { t } = useTranslation();
   const { method = '' } = useParams<Props>();
+  const forgotPassword = useForgotPasswordSettings();
 
-  const forgotPasswordForm = useMemo(() => {
-    if (method === 'sms') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <PhonePasswordless autoFocus hasSwitch type="forgot-password" hasTerms={false} />;
-    }
-
-    if (method === 'email') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <EmailPasswordless autoFocus hasSwitch type="forgot-password" hasTerms={false} />;
-    }
-  }, [method]);
-
-  if (!['email', 'sms'].includes(method)) {
+  if (!is(method, passcodeMethodGuard)) {
     return <ErrorPage />;
   }
 
+  // Forgot password with target identifier method is not supported
+  if (!forgotPassword[method]) {
+    return <ErrorPage />;
+  }
+
+  const PasswordlessForm =
+    method === SignInIdentifier.Email ? EmailResetPassword : SmsResetPassword;
+
   return (
-    <div className={styles.wrapper}>
-      <NavBar />
-      <div className={styles.container}>
-        <div className={styles.title}>{t('description.reset_password')}</div>
-        <div className={styles.description}>
-          {t(`description.reset_password_description_${method === 'email' ? 'email' : 'sms'}`)}
-        </div>
-        {forgotPasswordForm}
-      </div>
-    </div>
+    <SecondaryPageWrapper
+      title="description.reset_password"
+      description={`description.reset_password_description_${
+        method === SignInIdentifier.Email ? 'email' : 'sms'
+      }`}
+    >
+      <PasswordlessForm
+        autoFocus
+        hasSwitch={
+          forgotPassword[
+            method === SignInIdentifier.Email ? SignInIdentifier.Sms : SignInIdentifier.Email
+          ]
+        }
+      />
+    </SecondaryPageWrapper>
   );
 };
 

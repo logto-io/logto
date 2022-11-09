@@ -1,18 +1,17 @@
+import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { signInBasic } from '@/apis/sign-in';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
+import ForgotPasswordLink from '@/components/ForgotPasswordLink';
 import Input, { PasswordInput } from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
-import type { ErrorHandlers } from '@/hooks/use-api';
-import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
+import usePasswordSignIn from '@/hooks/use-password-sign-in';
+import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
-import { SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
 import { requiredValidation } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
@@ -36,31 +35,18 @@ const defaultState: FieldState = {
 const UsernameSignIn = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
-  const {
-    fieldValue,
-    formErrorMessage,
-    setFieldValue,
-    register,
-    validateForm,
-    setFormErrorMessage,
-  } = useForm(defaultState);
-
-  const errorHandlers: ErrorHandlers = useMemo(
-    () => ({
-      'session.invalid_credentials': (error) => {
-        setFormErrorMessage(error.message);
-      },
-    }),
-    [setFormErrorMessage]
+  const { isForgotPasswordEnabled, email } = useForgotPasswordSettings();
+  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(
+    SignInIdentifier.Username
   );
 
-  const { result, run: asyncSignInBasic } = useApi(signInBasic, errorHandlers);
+  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
 
-      setFormErrorMessage(undefined);
+      clearErrorMessage();
 
       if (!validateForm()) {
         return;
@@ -70,52 +56,46 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
         return;
       }
 
-      const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-
-      void asyncSignInBasic(fieldValue.username, fieldValue.password, socialToBind);
+      void onSubmit(fieldValue.username, fieldValue.password);
     },
     [
-      setFormErrorMessage,
+      clearErrorMessage,
       validateForm,
       termsValidation,
-      asyncSignInBasic,
+      onSubmit,
       fieldValue.username,
       fieldValue.password,
     ]
   );
 
-  useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
-    }
-  }, [result]);
-
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <div className={styles.formFields}>
-        <Input
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus={autoFocus}
-          className={styles.inputField}
-          name="username"
-          autoComplete="username"
-          placeholder={t('input.username')}
-          {...register('username', (value) => requiredValidation('username', value))}
-          onClear={() => {
-            setFieldValue((state) => ({ ...state, username: '' }));
-          }}
+      <Input
+        autoFocus={autoFocus}
+        className={styles.inputField}
+        name="username"
+        autoComplete="username"
+        placeholder={t('input.username')}
+        {...register('username', (value) => requiredValidation('username', value))}
+        onClear={() => {
+          setFieldValue((state) => ({ ...state, username: '' }));
+        }}
+      />
+      <PasswordInput
+        className={styles.inputField}
+        name="password"
+        autoComplete="current-password"
+        placeholder={t('input.password')}
+        {...register('password', (value) => requiredValidation('password', value))}
+      />
+      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
+
+      {isForgotPasswordEnabled && (
+        <ForgotPasswordLink
+          className={styles.link}
+          method={email ? SignInIdentifier.Email : SignInIdentifier.Sms}
         />
-        <PasswordInput
-          className={styles.inputField}
-          name="password"
-          autoComplete="current-password"
-          placeholder={t('input.password')}
-          {...register('password', (value) => requiredValidation('password', value))}
-        />
-        {formErrorMessage && (
-          <ErrorMessage className={styles.formErrors}>{formErrorMessage}</ErrorMessage>
-        )}
-      </div>
+      )}
 
       <TermsOfUse className={styles.terms} />
 

@@ -2,6 +2,8 @@ const connectors = {
   title: '连接器',
   subtitle: '设置连接器，开启无密码和社交登录',
   create: '添加社交连接器',
+  config_sie_notice: 'You’ve set up connectors. Make sure to configure it in <a>{{link}}</a>.', // UNTRANSLATED
+  config_sie_link_text: 'sign in experience', // UNTRANSLATED
   tab_email_sms: '短信和邮件连接器',
   tab_social: '社交连接器',
   connector_name: '连接器名称',

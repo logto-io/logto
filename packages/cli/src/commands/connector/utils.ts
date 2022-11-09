@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { existsSync } from 'fs';
-import { readFile, mkdir, unlink, readdir } from 'fs/promises';
+import { readFile, mkdir, unlink } from 'fs/promises';
 import path from 'path';
 import { promisify } from 'util';
 
@@ -13,7 +13,7 @@ import tar from 'tar';
 import { z } from 'zod';
 
 import { connectorDirectory } from '../../constants';
-import { isTty, log, oraPromise } from '../../utilities';
+import { getConnectorPackagesFromDirectory, isTty, log, oraPromise } from '../../utilities';
 import { defaultPath } from '../install/utils';
 
 const coreDirectory = 'packages/core';
@@ -102,40 +102,10 @@ const getConnectorDirectory = (instancePath: string) =>
 export const isOfficialConnector = (packageName: string) =>
   packageName.startsWith('@logto/connector-');
 
-const getConnectorPackageName = async (directory: string) => {
-  const filePath = path.join(directory, 'package.json');
-
-  if (!existsSync(filePath)) {
-    return;
-  }
-
-  const json = await readFile(filePath, 'utf8');
-  const { name } = z.object({ name: z.string() }).parse(JSON.parse(json));
-
-  if (name.startsWith('connector-') || Boolean(name.split('/')[1]?.startsWith('connector-'))) {
-    return name;
-  }
-};
-
-export type ConnectorPackage = {
-  name: string;
-  path: string;
-};
-
 export const getConnectorPackagesFrom = async (instancePath?: string) => {
   const directory = getConnectorDirectory(await inquireInstancePath(instancePath));
-  const content = await readdir(directory, 'utf8');
-  const rawPackages = await Promise.all(
-    content.map(async (value) => {
-      const currentDirectory = path.join(directory, value);
 
-      return { name: await getConnectorPackageName(currentDirectory), path: currentDirectory };
-    })
-  );
-
-  return rawPackages.filter(
-    (packageInfo): packageInfo is ConnectorPackage => typeof packageInfo.name === 'string'
-  );
+  return getConnectorPackagesFromDirectory(directory);
 };
 
 export const addConnectors = async (instancePath: string, packageNames: string[]) => {

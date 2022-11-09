@@ -10,7 +10,7 @@ type Response = {
 
 export const register = async (username: string, password: string) => {
   return api
-    .post(`${apiPrefix}/register/username-password`, {
+    .post(`${apiPrefix}/register/password/username`, {
       json: {
         username,
         password,
@@ -72,3 +72,15 @@ export const verifyRegisterEmailPasscode = async (email: string, code: string) =
       },
     })
     .json<Response>();
+
+export const checkUsername = async (username: string) => {
+  await api
+    .post(`${apiPrefix}/register/password/check-username`, {
+      json: {
+        username,
+      },
+    })
+    .json();
+
+  return { success: true };
+};

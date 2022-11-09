@@ -3,8 +3,9 @@ import {
   BrandingStyle,
   ConnectorPlatform,
   ConnectorType,
-  SignInMethodState,
+  SignInIdentifier,
   SignInMode,
+  SignUpIdentifier,
 } from '@logto/schemas';
 
 import type { SignInExperienceSettings } from '@/types';
@@ -159,6 +160,27 @@ export const mockSocialConnectorData = {
   configTemplate: '',
 };
 
+export const emailSignInMethod = {
+  identifier: SignInIdentifier.Email,
+  password: true,
+  verificationCode: true,
+  isPasswordPrimary: true,
+};
+
+export const smsSignInMethod = {
+  identifier: SignInIdentifier.Sms,
+  password: true,
+  verificationCode: true,
+  isPasswordPrimary: true,
+};
+
+export const usernameSignInMethod = {
+  identifier: SignInIdentifier.Username,
+  password: true,
+  verificationCode: false,
+  isPasswordPrimary: true,
+};
+
 export const mockSignInExperience: SignInExperience = {
   id: 'foo',
   color: {
@@ -179,23 +201,34 @@ export const mockSignInExperience: SignInExperience = {
     autoDetect: true,
     fallbackLanguage: 'en',
   },
-  signInMethods: {
-    username: SignInMethodState.Primary,
-    email: SignInMethodState.Secondary,
-    sms: SignInMethodState.Secondary,
-    social: SignInMethodState.Secondary,
+  signUp: {
+    identifier: SignUpIdentifier.Username,
+    password: true,
+    verify: true,
+  },
+  signIn: {
+    methods: [usernameSignInMethod, emailSignInMethod, smsSignInMethod],
   },
   socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
   signInMode: SignInMode.SignInAndRegister,
 };
 
 export const mockSignInExperienceSettings: SignInExperienceSettings = {
+  id: mockSignInExperience.id,
   color: mockSignInExperience.color,
   branding: mockSignInExperience.branding,
   termsOfUse: mockSignInExperience.termsOfUse,
   languageInfo: mockSignInExperience.languageInfo,
-  primarySignInMethod: 'username',
-  secondarySignInMethods: ['email', 'sms', 'social'],
+  signIn: mockSignInExperience.signIn,
+  signUp: {
+    methods: [SignInIdentifier.Username],
+    password: true,
+    verify: true,
+  },
   socialConnectors,
   signInMode: SignInMode.SignInAndRegister,
+  forgotPassword: {
+    email: true,
+    sms: true,
+  },
 };

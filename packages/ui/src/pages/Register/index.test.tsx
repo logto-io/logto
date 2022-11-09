@@ -1,57 +1,116 @@
-import { render } from '@testing-library/react';
-import { Routes, Route, MemoryRouter } from 'react-router-dom';
+import { SignInMode, SignInIdentifier } from '@logto/schemas';
+import { MemoryRouter } from 'react-router-dom';
 
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { mockSignInExperienceSettings } from '@/__mocks__/logto';
+import { defaultSize } from '@/containers/SocialSignIn/SocialSignInList';
 import Register from '@/pages/Register';
 
-jest.mock('@/apis/register', () => ({ register: jest.fn(async () => 0) }));
 jest.mock('i18next', () => ({
   language: 'en',
 }));
 
 describe('<Register />', () => {
-  test('renders without exploding', async () => {
-    const { queryByText } = render(
-      <MemoryRouter initialEntries={['/register']}>
-        <Register />
-      </MemoryRouter>
+  test('renders with username as primary', async () => {
+    const { queryAllByText, container } = renderWithPageContext(
+      <SettingsProvider>
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      </SettingsProvider>
     );
-    expect(queryByText('action.create_account')).not.toBeNull();
-    expect(queryByText('action.create')).not.toBeNull();
+
+    expect(container.querySelector('input[name="new-username"]')).not.toBeNull();
+
+    // Social
+    expect(queryAllByText('action.sign_in_with')).toHaveLength(defaultSize);
   });
 
-  test('renders phone', async () => {
-    const { queryByText, container } = render(
-      <MemoryRouter initialEntries={['/register/sms']}>
-        <Routes>
-          <Route path="/register/:method" element={<Register />} />
-        </Routes>
-      </MemoryRouter>
+  test('renders with email passwordless as primary', async () => {
+    const { queryByText, container } = renderWithPageContext(
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          signUp: { ...mockSignInExperienceSettings.signUp, methods: [SignInIdentifier.Email] },
+        }}
+      >
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      </SettingsProvider>
     );
+    expect(container.querySelector('input[name="email"]')).not.toBeNull();
     expect(queryByText('action.create_account')).not.toBeNull();
+  });
+
+  test('renders with sms passwordless as primary', async () => {
+    const { queryByText, container } = renderWithPageContext(
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          signUp: { ...mockSignInExperienceSettings.signUp, methods: [SignInIdentifier.Sms] },
+        }}
+      >
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      </SettingsProvider>
+    );
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
+    expect(queryByText('action.create_account')).not.toBeNull();
   });
 
-  test('renders email', async () => {
-    const { queryByText, container } = render(
-      <MemoryRouter initialEntries={['/register/email']}>
-        <Routes>
-          <Route path="/register/:method" element={<Register />} />
-        </Routes>
-      </MemoryRouter>
+  test('render with email and sms passwordless', async () => {
+    const { queryByText, container } = renderWithPageContext(
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          signUp: {
+            ...mockSignInExperienceSettings.signUp,
+            methods: [SignInIdentifier.Email, SignInIdentifier.Sms],
+          },
+        }}
+      >
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      </SettingsProvider>
     );
-    expect(queryByText('action.create_account')).not.toBeNull();
+    expect(queryByText('secondary.register_with')).not.toBeNull();
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
   });
 
-  test('renders non-recognized method', async () => {
-    const { queryByText } = render(
-      <MemoryRouter initialEntries={['/register/test']}>
-        <Routes>
-          <Route path="/register/:method" element={<Register />} />
-        </Routes>
-      </MemoryRouter>
+  test('renders with social as primary', async () => {
+    const { queryAllByText } = renderWithPageContext(
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          signUp: { ...mockSignInExperienceSettings.signUp, methods: [] },
+        }}
+      >
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      </SettingsProvider>
     );
-    expect(queryByText('action.create_account')).toBeNull();
+
+    expect(queryAllByText('action.sign_in_with')).toHaveLength(
+      mockSignInExperienceSettings.socialConnectors.length
+    );
+  });
+
+  test('render with sign-in only mode should return ErrorPage', () => {
+    const { queryByText } = renderWithPageContext(
+      <SettingsProvider
+        settings={{ ...mockSignInExperienceSettings, signInMode: SignInMode.SignIn }}
+      >
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      </SettingsProvider>
+    );
+
     expect(queryByText('description.not_found')).not.toBeNull();
   });
 });

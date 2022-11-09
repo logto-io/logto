@@ -1,13 +1,14 @@
 import type { User, CreateUser } from '@logto/schemas';
 import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
+import type { Nullable } from '@silverhand/essentials';
 import { argon2Verify } from 'hash-wasm';
 import pRetry from 'p-retry';
 
 import { buildInsertInto } from '@/database/insert-into';
 import envSet from '@/env-set';
 import { findRolesByRoleNames, insertRoles } from '@/queries/roles';
-import { findUserByUsername, hasUserWithId } from '@/queries/user';
+import { hasUserWithId } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { encryptPassword } from '@/utils/password';
 
@@ -43,11 +44,7 @@ export const encryptUserPassword = async (
   return { passwordEncrypted, passwordEncryptionMethod };
 };
 
-export const findUserByUsernameAndPassword = async (
-  username: string,
-  password: string
-): Promise<User> => {
-  const user = await findUserByUsername(username);
+export const verifyUserPassword = async (user: Nullable<User>, password: string): Promise<User> => {
   assertThat(user, 'session.invalid_credentials');
   const { passwordEncrypted, passwordEncryptionMethod } = user;
 

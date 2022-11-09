@@ -1,3 +1,4 @@
+import { SignInMode } from '@logto/schemas';
 import { useEffect, useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -11,7 +12,8 @@ import useApi from './use-api';
 import { PageContext } from './use-page-context';
 
 const useSocialSignInListener = () => {
-  const { setToast } = useContext(PageContext);
+  const { setToast, experienceSettings } = useContext(PageContext);
+
   const { t } = useTranslation();
   const parameters = useParams();
   const navigate = useNavigate();
@@ -19,6 +21,13 @@ const useSocialSignInListener = () => {
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.identity_not_exists': (error) => {
+        // Should not let user register under sign-in only mode
+        if (experienceSettings?.signInMode === SignInMode.SignIn) {
+          setToast(error.message);
+
+          return;
+        }
+
         if (parameters.connector) {
           navigate(`/social/register/${parameters.connector}`, {
             replace: true,
@@ -27,7 +36,7 @@ const useSocialSignInListener = () => {
         }
       },
     }),
-    [navigate, parameters.connector]
+    [experienceSettings?.signInMode, navigate, parameters.connector, setToast]
   );
 
   const { result, run: asyncSignInWithSocial } = useApi(

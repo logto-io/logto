@@ -1,5 +1,4 @@
 import type { CreateSignInExperience, LanguageInfo, SignInExperience } from '@logto/schemas';
-import { SignInMethodState } from '@logto/schemas';
 
 import {
   mockAliyunDmConnector,
@@ -9,7 +8,6 @@ import {
   mockGoogleConnector,
   mockLanguageInfo,
   mockSignInExperience,
-  mockSignInMethods,
   mockTermsOfUse,
 } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';
@@ -138,150 +136,12 @@ describe('languageInfo', () => {
   });
 });
 
-describe('signInMethods', () => {
-  const validSignInMethodStates = Object.values(SignInMethodState);
-  const invalidSignInMethodStates = [undefined, null, '', ' \t\n\r', 'invalid'];
-
-  describe('username', () => {
-    test.each(validSignInMethodStates)('%p should success', async (state) => {
-      if (state === SignInMethodState.Primary) {
-        return;
-      }
-      const signInExperience = {
-        signInMethods: {
-          username: state,
-          email: SignInMethodState.Primary,
-          sms: SignInMethodState.Disabled,
-          social: SignInMethodState.Disabled,
-        },
-      };
-      await expectPatchResponseStatus(signInExperience, 200);
-    });
-
-    test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
-      if (state === SignInMethodState.Primary) {
-        return;
-      }
-      const signInExperience = {
-        signInMethods: {
-          username: state,
-          email: SignInMethodState.Primary,
-          sms: SignInMethodState.Disabled,
-          social: SignInMethodState.Disabled,
-        },
-      };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-
-  describe('email', () => {
-    test.each(validSignInMethodStates)('%p should success', async (state) => {
-      if (state === SignInMethodState.Primary) {
-        return;
-      }
-      const signInExperience = {
-        signInMethods: {
-          username: SignInMethodState.Disabled,
-          email: state,
-          sms: SignInMethodState.Primary,
-          social: SignInMethodState.Disabled,
-        },
-      };
-      await expectPatchResponseStatus(signInExperience, 200);
-    });
-
-    test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
-      if (state === SignInMethodState.Primary) {
-        return;
-      }
-      const signInExperience = {
-        signInMethods: {
-          username: SignInMethodState.Disabled,
-          email: state,
-          sms: SignInMethodState.Primary,
-          social: SignInMethodState.Disabled,
-        },
-      };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-
-  describe('sms', () => {
-    test.each(validSignInMethodStates)('%p should success', async (state) => {
-      if (state === SignInMethodState.Primary) {
-        return;
-      }
-      const signInExperience = {
-        signInMethods: {
-          username: SignInMethodState.Disabled,
-          email: SignInMethodState.Disabled,
-          sms: state,
-          social: SignInMethodState.Primary,
-        },
-        socialSignInConnectorTargets: ['github'],
-      };
-      await expectPatchResponseStatus(signInExperience, 200);
-    });
-
-    test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
-      if (state === SignInMethodState.Primary) {
-        return;
-      }
-      const signInExperience = {
-        signInMethods: {
-          username: SignInMethodState.Disabled,
-          email: SignInMethodState.Disabled,
-          sms: state,
-          social: SignInMethodState.Primary,
-        },
-        socialSignInConnectorTargets: ['github'],
-      };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-
-  describe('social', () => {
-    test.each(validSignInMethodStates)('%p should success', async (state) => {
-      if (state === SignInMethodState.Primary) {
-        return;
-      }
-      const signInExperience = {
-        signInMethods: {
-          username: SignInMethodState.Primary,
-          email: SignInMethodState.Disabled,
-          sms: SignInMethodState.Disabled,
-          social: state,
-        },
-        socialSignInConnectorTargets: ['github'],
-      };
-      await expectPatchResponseStatus(signInExperience, 200);
-    });
-
-    test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
-      if (state === SignInMethodState.Primary) {
-        return;
-      }
-      const signInExperience = {
-        signInMethods: {
-          username: SignInMethodState.Primary,
-          email: SignInMethodState.Disabled,
-          sms: SignInMethodState.Disabled,
-          social: state,
-        },
-        socialSignInConnectorTargets: ['github'],
-      };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-});
-
 describe('socialSignInConnectorTargets', () => {
   test.each([[['facebook']], [['facebook', 'github']]])(
     '%p should success',
     async (socialSignInConnectorTargets) => {
       await expectPatchResponseStatus(
         {
-          signInMethods: { ...mockSignInMethods, social: SignInMethodState.Secondary },
           socialSignInConnectorTargets,
         },
         200

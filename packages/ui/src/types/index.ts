@@ -1,8 +1,16 @@
-import type { SignInExperience, ConnectorMetadata, AppearanceMode } from '@logto/schemas';
+import type {
+  SignInExperience,
+  ConnectorMetadata,
+  AppearanceMode,
+  SignInIdentifier,
+} from '@logto/schemas';
 
-export type UserFlow = 'sign-in' | 'register' | 'forgot-password';
-export type SignInMethod = 'username' | 'email' | 'sms' | 'social';
-export type LocalSignInMethod = Exclude<SignInMethod, 'social'>;
+export enum UserFlow {
+  signIn = 'sign-in',
+  register = 'register',
+  forgotPassword = 'forgot-password',
+  continue = 'continue',
+}
 
 export enum SearchParameters {
   bindWithSocial = 'bind_with',
@@ -15,17 +23,24 @@ export type Platform = 'web' | 'mobile';
 // TODO: @simeng, @sijie, @charles should we combine this with admin console?
 export type Theme = 'dark' | 'light';
 
-export type SignInExperienceSettingsResponse = SignInExperience & {
+// Omit signInMethods property since it is deprecated,
+// Omit socialSignInConnectorTargets since it is being translated into socialConnectors
+export type SignInExperienceResponse = Omit<
+  SignInExperience,
+  'signInMethods' | 'socialSignInConnectorTargets'
+> & {
   socialConnectors: ConnectorMetadata[];
   notification?: string;
+  forgotPassword: {
+    sms: boolean;
+    email: boolean;
+  };
 };
 
-export type SignInExperienceSettings = Omit<
-  SignInExperienceSettingsResponse,
-  'id' | 'signInMethods' | 'socialSignInConnectorTargets'
-> & {
-  primarySignInMethod: SignInMethod;
-  secondarySignInMethods: SignInMethod[];
+export type SignInExperienceSettings = Omit<SignInExperienceResponse, 'signUp'> & {
+  signUp: Omit<SignInExperienceResponse['signUp'], 'identifier'> & {
+    methods: SignInIdentifier[];
+  };
 };
 
 export enum ConfirmModalMessage {
@@ -33,9 +48,15 @@ export enum ConfirmModalMessage {
 }
 
 export type PreviewConfig = {
-  signInExperience: SignInExperienceSettingsResponse;
+  signInExperience: SignInExperienceResponse;
   language: string;
   mode: AppearanceMode.LightMode | AppearanceMode.DarkMode;
   platform: Platform;
   isNative: boolean;
 };
+
+export type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends ReadonlyArray<
+  infer ElementType
+>
+  ? ElementType
+  : never;

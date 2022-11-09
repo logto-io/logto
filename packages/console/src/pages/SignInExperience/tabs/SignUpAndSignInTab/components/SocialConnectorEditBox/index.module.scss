@@ -1,0 +1,12 @@
+@use '@/scss/underscore' as _;
+
+.setUpHint {
+  font: var(--font-body-medium);
+  color: var(--color-text-secondary);
+  margin-top: _.unit(2);
+
+  a {
+    color: var(--color-text-link);
+    text-decoration: none;
+  }
+}

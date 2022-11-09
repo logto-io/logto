@@ -1,14 +1,14 @@
-import { useTranslation } from 'react-i18next';
+import { SignInIdentifier } from '@logto/schemas';
+import { t } from 'i18next';
 import { useParams, useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
 
-import NavBar from '@/components/NavBar';
+import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import PasscodeValidation from '@/containers/PasscodeValidation';
+import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
-import type { UserFlow } from '@/types';
+import { UserFlow } from '@/types';
 import { passcodeStateGuard, passcodeMethodGuard, userFlowGuard } from '@/types/guard';
-
-import * as styles from './index.module.scss';
 
 type Parameters = {
   type: UserFlow;
@@ -16,9 +16,10 @@ type Parameters = {
 };
 
 const Passcode = () => {
-  const { t } = useTranslation();
   const { method, type = '' } = useParams<Parameters>();
+  const { signInMethods } = useSieMethods();
   const { state } = useLocation();
+
   const invalidType = !is(type, userFlowGuard);
   const invalidMethod = !is(method, passcodeMethodGuard);
   const invalidState = !is(state, passcodeStateGuard);
@@ -27,25 +28,35 @@ const Passcode = () => {
     return <ErrorPage />;
   }
 
-  const target = !invalidState && state[method];
+  // SignIn Method not enabled
+  const methodSettings = signInMethods.find(({ identifier }) => identifier === method);
+
+  if (!methodSettings) {
+    return <ErrorPage />;
+  }
+
+  const target = !invalidState && state[method === SignInIdentifier.Email ? 'email' : 'phone'];
 
   if (!target) {
     return <ErrorPage title={method === 'email' ? 'error.invalid_email' : 'error.invalid_phone'} />;
   }
 
   return (
-    <div className={styles.wrapper}>
-      <NavBar />
-      <div className={styles.container}>
-        <div className={styles.title}>{t('action.enter_passcode')}</div>
-        <div className={styles.detail}>
-          {t('description.enter_passcode', {
-            address: t(`description.${method === 'email' ? 'email' : 'phone_number'}`),
-          })}
-        </div>
-        <PasscodeValidation type={type} method={method} target={target} />
-      </div>
-    </div>
+    <SecondaryPageWrapper
+      title="action.enter_passcode"
+      description="description.enter_passcode"
+      descriptionProps={{
+        address: t(`description.${method === 'email' ? 'email' : 'phone_number'}`),
+        target,
+      }}
+    >
+      <PasscodeValidation
+        type={type}
+        method={method}
+        target={target}
+        hasPasswordButton={type === UserFlow.signIn && methodSettings.password}
+      />
+    </SecondaryPageWrapper>
   );
 };
 

@@ -1,6 +1,5 @@
 import type { LogDto, User } from '@logto/schemas';
 import classNames from 'classnames';
-import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -85,7 +84,7 @@ const AuditLogDetails = () => {
                 </div>
                 <div className={styles.infoItem}>
                   <div className={styles.label}>{t('log_details.time')}</div>
-                  <div>{dayjs(data.createdAt).toDate().toLocaleString()}</div>
+                  <div>{new Date(data.createdAt).toLocaleString()}</div>
                 </div>
               </div>
               <div>

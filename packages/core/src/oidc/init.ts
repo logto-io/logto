@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 
 import { userClaims } from '@logto/core-kit';
 import { CustomClientMetadataKey } from '@logto/schemas';
+import { tryThat } from '@logto/shared';
 import type Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
@@ -162,7 +163,10 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     extraTokenClaims: async (_ctx, token) => {
       if (token.kind === 'AccessToken') {
         const { accountId } = token;
-        const { roleNames } = await findUserById(accountId);
+        const { roleNames } = await tryThat(
+          findUserById(accountId),
+          new errors.InvalidClient(`invalid user ${accountId}`)
+        );
 
         return snakecaseKeys({
           roleNames,
@@ -172,7 +176,11 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       // `token.kind === 'ClientCredentials'`
       const { clientId } = token;
       assertThat(clientId, 'oidc.invalid_grant');
-      const { roleNames } = await findApplicationById(clientId);
+
+      const { roleNames } = await tryThat(
+        findApplicationById(clientId),
+        new errors.InvalidClient(`invalid client ${clientId}`)
+      );
 
       return snakecaseKeys({ roleNames });
     },

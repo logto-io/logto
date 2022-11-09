@@ -128,27 +128,40 @@ export const languageInfoGuard = z.object({
 
 export type LanguageInfo = z.infer<typeof languageInfoGuard>;
 
-export enum SignInMethodKey {
-  Username = 'username',
+export enum SignUpIdentifier {
   Email = 'email',
   Sms = 'sms',
-  Social = 'social',
+  Username = 'username',
+  EmailOrSms = 'emailOrSms',
+  None = 'none',
 }
 
-export enum SignInMethodState {
-  Primary = 'primary',
-  Secondary = 'secondary',
-  Disabled = 'disabled',
-}
-
-export const signInMethodsGuard = z.object({
-  [SignInMethodKey.Username]: z.nativeEnum(SignInMethodState),
-  [SignInMethodKey.Email]: z.nativeEnum(SignInMethodState),
-  [SignInMethodKey.Sms]: z.nativeEnum(SignInMethodState),
-  [SignInMethodKey.Social]: z.nativeEnum(SignInMethodState),
+export const signUpGuard = z.object({
+  identifier: z.nativeEnum(SignUpIdentifier),
+  password: z.boolean(),
+  verify: z.boolean(),
 });
 
-export type SignInMethods = z.infer<typeof signInMethodsGuard>;
+export type SignUp = z.infer<typeof signUpGuard>;
+
+export enum SignInIdentifier {
+  Email = 'email',
+  Sms = 'sms',
+  Username = 'username',
+}
+
+export const signInGuard = z.object({
+  methods: z
+    .object({
+      identifier: z.nativeEnum(SignInIdentifier),
+      password: z.boolean(),
+      verificationCode: z.boolean(),
+      isPasswordPrimary: z.boolean(),
+    })
+    .array(),
+});
+
+export type SignIn = z.infer<typeof signInGuard>;
 
 export const connectorTargetsGuard = z.string().array();
 

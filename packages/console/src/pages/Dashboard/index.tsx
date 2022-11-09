@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import { format } from 'date-fns';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,7 +36,7 @@ const tickFormatter = new Intl.NumberFormat('en-US', {
 });
 
 const Dashboard = () => {
-  const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
+  const [date, setDate] = useState<string>(format(Date.now(), 'yyyy-MM-dd'));
   const { data: totalData, error: totalError } = useSWR<TotalUsersResponse, RequestError>(
     '/api/dashboard/users/total'
   );

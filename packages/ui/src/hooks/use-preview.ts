@@ -8,7 +8,7 @@ import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';
 import type { SignInExperienceSettings, PreviewConfig } from '@/types';
 import { parseQueryParameters } from '@/utils';
-import { getPrimarySignInMethod, getSecondarySignInMethods } from '@/utils/sign-in-experience';
+import { signUpIdentifierMap } from '@/utils/sign-in-experience';
 import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
 
 const usePreview = (context: Context): [boolean, PreviewConfig?] => {
@@ -54,12 +54,14 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     }
 
     const {
-      signInExperience: { signInMethods, socialConnectors, color, ...rest },
+      signInExperience: { signUp, socialConnectors, color, ...rest },
       language,
       mode,
       platform,
       isNative,
     } = previewConfig;
+
+    const { identifier, ...signUpSettings } = signUp;
 
     const experienceSettings: SignInExperienceSettings = {
       ...rest,
@@ -67,8 +69,10 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
         ...color,
         isDarkModeEnabled: false, // Disable theme mode auto detection on preview
       },
-      primarySignInMethod: getPrimarySignInMethod(signInMethods),
-      secondarySignInMethods: getSecondarySignInMethods(signInMethods),
+      signUp: {
+        methods: signUpIdentifierMap[identifier],
+        ...signUpSettings,
+      },
       socialConnectors: filterPreviewSocialConnectors(
         isNative ? ConnectorPlatform.Native : ConnectorPlatform.Web,
         socialConnectors

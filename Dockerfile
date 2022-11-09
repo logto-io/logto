@@ -2,12 +2,13 @@
 FROM node:16-alpine as builder
 WORKDIR /etc/logto
 ENV CI=true
-COPY . .
 
 # Install toolchain
-RUN npm add --location=global pnpm@^7.2.1
+RUN npm add --location=global pnpm@^7.14.0
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#node-gyp-alpine
 RUN apk add --no-cache python3 make g++
+
+COPY . .
 
 # Install dependencies and build
 RUN pnpm i

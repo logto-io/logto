@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import type { User } from '@logto/schemas';
+import type { User, SignUpIdentifier, SignIn } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
@@ -14,6 +14,7 @@ import {
   bindWithSocial,
   getAuthWithSocial,
   signInWithSocial,
+  updateSignInExperience,
 } from '@/api';
 import MockClient from '@/client';
 import { generateUsername, generatePassword } from '@/utils';
@@ -69,6 +70,22 @@ export const setUpConnector = async (connectorId: string, config: Record<string,
   await updateConnectorConfig(connectorId, config);
   const connector = await enableConnector(connectorId);
   assert(connector.enabled, new Error('Connector Setup Failed'));
+};
+
+export const setSignUpIdentifier = async (
+  identifier: SignUpIdentifier,
+  password = true,
+  verify = true
+) => {
+  await updateSignInExperience({ signUp: { identifier, password, verify } });
+};
+
+export const setSignInMethod = async (methods: SignIn['methods']) => {
+  await updateSignInExperience({
+    signIn: {
+      methods,
+    },
+  });
 };
 
 type PasscodeRecord = {

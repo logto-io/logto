@@ -1,8 +1,10 @@
 import type { CreateApplication, OidcClientMetadata } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas/lib/seeds';
-import dayjs from 'dayjs';
+import { tryThat } from '@logto/shared';
+import { addSeconds } from 'date-fns';
 import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
+import { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
 import envSet, { MountedApps } from '@/env-set';
@@ -83,7 +85,9 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
           return buildAdminConsoleClientMetadata();
         }
 
-        return transpileClient(await findApplicationById(id));
+        return transpileClient(
+          await tryThat(findApplicationById(id), new errors.InvalidClient(`invalid client ${id}`))
+        );
       },
       findByUserCode: reject,
       findByUid: reject,
@@ -99,7 +103,7 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
         modelName,
         id,
         payload,
-        expiresAt: dayjs().add(expiresIn, 'second').valueOf(),
+        expiresAt: addSeconds(Date.now(), expiresIn).valueOf(),
       }),
     find: async (id) => findPayloadById(modelName, id),
     findByUserCode: async (userCode) => findPayloadByPayloadField(modelName, 'userCode', userCode),

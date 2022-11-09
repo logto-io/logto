@@ -46,6 +46,10 @@ jest.mock('@/connectors', () => ({
   getLogtoConnectorById: async (connectorId: string) =>
     getLogtoConnectorByIdPlaceholder(connectorId),
 }));
+jest.mock('@/lib/sign-in-experience', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  removeUnavailableSocialConnectorTargets: async () => {},
+}));
 
 describe('connector PATCH routes', () => {
   const connectorRequest = createRequester({ authedRoutes: connectorRoutes });
