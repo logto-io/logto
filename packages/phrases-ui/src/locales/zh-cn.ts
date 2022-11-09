@@ -67,6 +67,9 @@ const translation = {
     have_account: 'Already have an account?', // UNTRANSLATED
     enter_password: 'Enter Password', // UNTRANSLATED
     enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
+    enter_username: 'Enter username', // UNTRANSLATED
+    enter_username_description:
+      'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',

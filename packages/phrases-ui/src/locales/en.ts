@@ -69,6 +69,9 @@ const translation = {
     have_account: 'Already have an account?',
     enter_password: 'Enter Password',
     enter_password_for: 'Enter the password of {{method}} {{value}}',
+    enter_username: 'Enter username',
+    enter_username_description:
+      'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.',
   },
   error: {
     username_password_mismatch: 'Username and password do not match',

@@ -1,24 +1,25 @@
-import { SignInIdentifier } from '@logto/schemas';
+import type { I18nKey } from '@logto/phrases-ui';
 import classNames from 'classnames';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
-import { checkUsername } from '@/apis/register';
 import Button from '@/components/Button';
+import ErrorMessage from '@/components/ErrorMessage';
 import Input from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
-import type { ErrorHandlers } from '@/hooks/use-api';
-import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import useTerms from '@/hooks/use-terms';
-import { UserFlow } from '@/types';
 import { usernameValidation } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
+  hasTerms?: boolean;
+  onSubmit: (username: string) => Promise<void>;
+  errorMessage?: string;
+  clearErrorMessage?: () => void;
+  submitText?: I18nKey;
 };
 
 type FieldState = {
@@ -29,57 +30,41 @@ const defaultState: FieldState = {
   username: '',
 };
 
-const UsernameRegister = ({ className }: Props) => {
+const UsernameForm = ({
+  className,
+  hasTerms = true,
+  onSubmit,
+  errorMessage,
+  submitText = 'action.create',
+  clearErrorMessage,
+}: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
-  const navigate = useNavigate();
 
   const {
     fieldValue,
     setFieldValue,
-    setFieldErrors,
     register: fieldRegister,
     validateForm,
   } = useForm(defaultState);
-
-  const errorHandlers: ErrorHandlers = useMemo(
-    () => ({
-      'user.username_exists_register': () => {
-        setFieldErrors((state) => ({
-          ...state,
-          username: 'username_exists',
-        }));
-      },
-    }),
-    [setFieldErrors]
-  );
-
-  const { run: asyncCheckUsername } = useApi(checkUsername, errorHandlers);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
 
+      clearErrorMessage?.();
+
       if (!validateForm()) {
         return;
       }
 
-      if (!(await termsValidation())) {
+      if (hasTerms && !(await termsValidation())) {
         return;
       }
 
-      const { username } = fieldValue;
-
-      // Use sync call for this api to make sure the username value being passed to the password set page stays the same
-      const result = await asyncCheckUsername(username);
-
-      if (result) {
-        navigate(`/${UserFlow.register}/${SignInIdentifier.Username}/password`, {
-          state: { username },
-        });
-      }
+      void onSubmit(fieldValue.username);
     },
-    [validateForm, termsValidation, fieldValue, asyncCheckUsername, navigate]
+    [clearErrorMessage, validateForm, hasTerms, termsValidation, onSubmit, fieldValue.username]
   );
 
   return (
@@ -93,14 +78,15 @@ const UsernameRegister = ({ className }: Props) => {
           setFieldValue((state) => ({ ...state, username: '' }));
         }}
       />
+      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <TermsOfUse className={styles.terms} />
+      {hasTerms && <TermsOfUse className={styles.terms} />}
 
-      <Button title="action.create" onClick={async () => onSubmitHandler()} />
+      <Button title={submitText} onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
     </form>
   );
 };
 
-export default UsernameRegister;
+export default UsernameForm;
