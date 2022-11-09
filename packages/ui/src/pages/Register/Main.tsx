@@ -3,7 +3,7 @@ import type { SignInIdentifier, ConnectorMetadata } from '@logto/schemas';
 import { EmailRegister } from '@/containers/EmailForm';
 import { SmsRegister } from '@/containers/PhoneForm';
 import SocialSignIn from '@/containers/SocialSignIn';
-import UsernameRegister from '@/containers/UsernameRegister';
+import { UsernameRegister } from '@/containers/UsernameForm';
 
 import * as styles from './index.module.scss';
 
