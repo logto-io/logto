@@ -132,11 +132,7 @@ const SignInMethodEditBox = ({
                 signInMethod.identifier !== SignInIdentifier.Username && !isSignUpPasswordRequired
               }
               isVerificationCodeCheckable={
-                (isSignUpPasswordRequired && isSignUpVerificationRequired) ||
-                // Note: the next line is used to handle the case when the sign-up identifier is `Username`
-                (isSignUpPasswordRequired && !isSignUpVerificationRequired) ||
-                // Note: the next line is used to handle the case when the sign-up identifier is `None`
-                (!isSignUpPasswordRequired && !isSignUpVerificationRequired)
+                !(isSignUpVerificationRequired && !isSignUpPasswordRequired)
               }
               isDeletable={!requiredSignInIdentifiers.includes(signInMethod.identifier)}
               onVerificationStateChange={(identifier, verification, checked) => {
