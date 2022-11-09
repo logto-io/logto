@@ -1,10 +1,10 @@
 /* eslint-disable max-lines */
 import type { User } from '@logto/schemas';
-import { PasscodeType } from '@logto/schemas';
+import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
 import { addDays, addSeconds, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
-import { mockUser } from '@/__mocks__';
+import { mockSignInExperience, mockSignInMethod, mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
@@ -12,9 +12,19 @@ import { verificationTimeout } from './consts';
 import * as passwordlessActions from './middleware/passwordless-action';
 import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 
-const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
-const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const findUserByEmail = jest.fn(async (): Promise<User> => mockUser);
+const updateUserById = jest.fn(async (..._args: unknown[]) => mockUser);
+const findDefaultSignInExperience = jest.fn(async () => ({
+  ...mockSignInExperience,
+  signUp: {
+    ...mockSignInExperience.signUp,
+    identifier: SignUpIdentifier.Username,
+    password: false,
+    verify: true,
+  },
+}));
 const getTomorrowIsoString = () => addDays(Date.now(), 1).toISOString();
 
 jest.mock('@/lib/user', () => ({
@@ -24,14 +34,17 @@ jest.mock('@/lib/user', () => ({
 
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
-  findUserByPhone: async () => ({ id: 'id' }),
-  findUserByEmail: async () => ({ id: 'id' }),
+  findUserByPhone: async () => mockUser,
+  findUserByEmail: async () => findUserByEmail(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   hasUser: async (username: string) => username === 'username1',
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
 }));
 
+jest.mock('@/queries/sign-in-experience', () => ({
+  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
+}));
 const smsSignInActionSpy = jest.spyOn(passwordlessActions, 'smsSignInAction');
 const emailSignInActionSpy = jest.spyOn(passwordlessActions, 'emailSignInAction');
 const smsRegisterActionSpy = jest.spyOn(passwordlessActions, 'smsRegisterAction');
@@ -83,10 +96,6 @@ describe('session -> passwordlessRoutes', () => {
         jti: 'jti',
       });
     });
-    afterEach(() => {
-      jest.clearAllMocks();
-      jest.resetModules();
-    });
     it('should call sendPasscode (with flow `sign-in`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/send')
@@ -130,10 +139,6 @@ describe('session -> passwordlessRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         jti: 'jti',
       });
-    });
-    afterEach(() => {
-      jest.clearAllMocks();
-      jest.resetModules();
     });
     it('should call sendPasscode (with flow `sign-in`)', async () => {
       const response = await sessionRequest
@@ -182,8 +187,6 @@ describe('session -> passwordlessRoutes', () => {
 
     afterEach(() => {
       jest.useRealTimers();
-      jest.clearAllMocks();
-      jest.resetModules();
     });
 
     it('should call interactionResult (with flow `sign-in`)', async () => {
@@ -248,7 +251,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.objectContaining({
           verification: {
-            userId: 'id',
+            userId: mockUser.id,
             expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
@@ -281,8 +284,6 @@ describe('session -> passwordlessRoutes', () => {
 
     afterEach(() => {
       jest.useRealTimers();
-      jest.clearAllMocks();
-      jest.resetModules();
     });
 
     it('should call interactionResult (with flow `sign-in`)', async () => {
@@ -346,7 +347,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.objectContaining({
           verification: {
-            userId: 'id',
+            userId: mockUser.id,
             expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
@@ -373,10 +374,6 @@ describe('session -> passwordlessRoutes', () => {
   });
 
   describe('POST /session/sign-in/passwordless/sms', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
     it('should call interactionResult (with flow `sign-in`)', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -395,7 +392,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'id' },
+          login: { accountId: mockUser.id },
         }),
         expect.anything()
       );
@@ -417,7 +414,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'id' },
+          login: { accountId: mockUser.id },
         }),
         expect.anything()
       );
@@ -505,11 +502,39 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${signInRoute}/sms`);
       expect(response.statusCode).toEqual(404);
     });
+
+    it('throw error if sign in method is not enabled', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signIn: {
+          methods: [
+            {
+              ...mockSignInMethod,
+              identifier: SignInIdentifier.Username,
+            },
+          ],
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/sms`);
+      expect(response.statusCode).toEqual(422);
+    });
   });
 
   describe('POST /session/sign-in/passwordless/email', () => {
     beforeEach(() => {
-      jest.resetAllMocks();
+      findDefaultSignInExperience.mockResolvedValue({
+        ...mockSignInExperience,
+        signUp: {
+          ...mockSignInExperience.signUp,
+          identifier: SignUpIdentifier.Email,
+          password: false,
+          verify: true,
+        },
+      });
+    });
+
+    afterEach(() => {
+      findDefaultSignInExperience.mockClear();
     });
 
     it('should call interactionResult (with flow `sign-in`)', async () => {
@@ -530,7 +555,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'id' },
+          login: { accountId: mockUser.id },
         }),
         expect.anything()
       );
@@ -554,7 +579,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'id' },
+          login: { accountId: mockUser.id },
         }),
         expect.anything()
       );
@@ -613,11 +638,38 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${signInRoute}/email`);
       expect(response.statusCode).toEqual(404);
     });
+
+    it('throw error if sign in method is not enabled', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signIn: {
+          methods: [
+            {
+              ...mockSignInMethod,
+              identifier: SignInIdentifier.Username,
+            },
+          ],
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/email`);
+      expect(response.statusCode).toEqual(422);
+    });
   });
 
   describe('POST /session/register/passwordless/sms', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
+    beforeAll(() => {
+      findDefaultSignInExperience.mockResolvedValue({
+        ...mockSignInExperience,
+        signUp: {
+          ...mockSignInExperience.signUp,
+          identifier: SignUpIdentifier.Sms,
+          password: false,
+        },
+      });
+    });
+
+    afterAll(() => {
+      findDefaultSignInExperience.mockClear();
     });
 
     it('should call interactionResult (with flow `register`)', async () => {
@@ -717,11 +769,35 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${registerRoute}/sms`);
       expect(response.statusCode).toEqual(422);
     });
+
+    it('throws if sign up identifier does not contain phone', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signUp: {
+          ...mockSignInExperience.signUp,
+          identifier: SignUpIdentifier.Email,
+        },
+      });
+
+      const response = await sessionRequest.post(`${registerRoute}/sms`);
+      expect(response.statusCode).toEqual(422);
+    });
   });
 
   describe('POST /session/register/passwordless/email', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
+    beforeAll(() => {
+      findDefaultSignInExperience.mockResolvedValue({
+        ...mockSignInExperience,
+        signUp: {
+          ...mockSignInExperience.signUp,
+          identifier: SignUpIdentifier.Email,
+          password: false,
+        },
+      });
+    });
+
+    afterAll(() => {
+      findDefaultSignInExperience.mockClear();
     });
 
     it('should call interactionResult (with flow `register`)', async () => {
@@ -818,6 +894,19 @@ describe('session -> passwordlessRoutes', () => {
           },
         },
       });
+      const response = await sessionRequest.post(`${registerRoute}/email`);
+      expect(response.statusCode).toEqual(422);
+    });
+
+    it('throws if sign up identifier does not contain email', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        signUp: {
+          ...mockSignInExperience.signUp,
+          identifier: SignUpIdentifier.Sms,
+        },
+      });
+
       const response = await sessionRequest.post(`${registerRoute}/email`);
       expect(response.statusCode).toEqual(422);
     });

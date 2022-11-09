@@ -42,7 +42,18 @@ const errors = {
     identity_exists: 'Die Identität wurde registriert.',
     invalid_role_names: 'Rollennamen ({{roleNames}}) sind ungültig',
     cannot_delete_self: 'Du kannst dich nicht selbst löschen.',
+    sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
+    sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
     same_password: 'Das neue Passwort muss sich vom alten unterscheiden.',
+    require_password: 'You need to set a password before sign in.', // UNTRANSLATED
+    password_exists: 'Your password has been set.', // UNTRANSLATED
+    require_username: 'You need to set a username before sign in.', // UNTRANSLATED
+    username_exists: 'Your username has been set.', // UNTRANSLATED
+    require_email: 'You need to set an email before sign in.', // UNTRANSLATED
+    email_exists: 'Your email has been set.', // UNTRANSLATED
+    require_sms: 'You need to set a phone before sign in.', // UNTRANSLATED
+    sms_exists: 'Your phone has been set.', // UNTRANSLATED
+    require_email_or_sms: 'You need to set a phone or email before sign in.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: 'Die Verschlüsselungsmethode {{name}} wird nicht unterstützt.',
@@ -62,6 +73,7 @@ const errors = {
       'Die Verbindung wurde unterbrochen. Verifiziere erneut, um die Sicherheit deines Kontos zu gewährleisten.',
     unauthorized: 'Bitte melde dich erst an.',
     unsupported_prompt_name: 'Nicht unterstützter prompt Name.',
+    forgot_password_not_enabled: 'Forgot password is not enabled.',
   },
   connector: {
     // UNTRANSLATED
@@ -107,6 +119,13 @@ const errors = {
     enabled_connector_not_found: 'Aktivierter {{type}} Connector nicht gefunden.',
     not_one_and_only_one_primary_sign_in_method:
       'Es darf nur eine primäre Anmeldemethode geben. Bitte überprüfe deine Eingabe.',
+    username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
+    passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
+    miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.', // UNTRANSLATED
+    password_sign_in_must_be_enabled:
+      'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
+    code_sign_in_must_be_enabled:
+      'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
     unsupported_default_language: 'Die Sprache - {{language}} wird momentan nicht unterstützt.',
   },
   localization: {

@@ -1,6 +1,7 @@
 import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 
 import Passcode from '.';
 
@@ -15,9 +16,11 @@ describe('Passcode Page', () => {
   it('render properly', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter initialEntries={['/sign-in/email/passcode-validation']}>
-        <Routes>
-          <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
-        </Routes>
+        <SettingsProvider>
+          <Routes>
+            <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
+          </Routes>
+        </SettingsProvider>
       </MemoryRouter>
     );
 

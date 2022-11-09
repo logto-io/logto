@@ -1,0 +1,16 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  box-shadow: var(--shadow-2);
+  position: absolute;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.overlay {
+  background: transparent;
+  position: fixed;
+  inset: 0;
+}

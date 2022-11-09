@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import useBindSocial from '@/hooks/use-bind-social';
-import { SearchParameters } from '@/types';
+import { useSieMethods } from '@/hooks/use-sie';
+import { SearchParameters, UserFlow } from '@/types';
 import { queryStringify } from '@/utils';
 
-import SignInMethodsLink from '../SignInMethodsLink';
+import OtherMethodsLink from '../OtherMethodsLink';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -16,8 +17,8 @@ type Props = {
 
 const SocialCreateAccount = ({ connectorId, className }: Props) => {
   const { t } = useTranslation();
-  const { relatedUser, localSignInMethods, registerWithSocial, bindSocialRelatedUser } =
-    useBindSocial();
+  const { relatedUser, registerWithSocial, bindSocialRelatedUser } = useBindSocial();
+  const { signInMethods } = useSieMethods();
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -41,9 +42,10 @@ const SocialCreateAccount = ({ connectorId, className }: Props) => {
           registerWithSocial(connectorId);
         }}
       />
-      <SignInMethodsLink
-        signInMethods={localSignInMethods}
+      <OtherMethodsLink
+        methods={signInMethods.map(({ identifier }) => identifier)}
         template="social_bind_with"
+        flow={UserFlow.signIn}
         className={styles.desc}
         search={queryStringify({ [SearchParameters.bindWithSocial]: connectorId })}
       />

@@ -37,6 +37,7 @@ const general = {
   leave_page: 'Seite verlassen',
   stay_on_page: 'Auf Seite bleiben',
   type_to_search: 'Tippe um zu suchen',
+  got_it: 'Got it', // UNTRANSLATED
 };
 
 export default general;

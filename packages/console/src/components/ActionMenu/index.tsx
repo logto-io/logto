@@ -1,5 +1,8 @@
+import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useRef, useState } from 'react';
+
+import type { HorizontalAlignment } from '@/hooks/use-position';
 
 import type { Props as ButtonProps } from '../Button';
 import Dropdown from '../Dropdown';
@@ -12,9 +15,19 @@ type Props = {
   children: ReactNode;
   buttonProps: ButtonProps;
   title?: ReactNode;
+  dropdownHorizontalAlign?: HorizontalAlignment;
+  dropdownClassName?: string;
+  isDropdownFullWidth?: boolean;
 };
 
-const ActionMenu = ({ children, buttonProps, title }: Props) => {
+const ActionMenu = ({
+  children,
+  buttonProps,
+  title,
+  dropdownHorizontalAlign,
+  dropdownClassName,
+  isDropdownFullWidth = false,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const anchorReference = useRef<HTMLDivElement>(null);
 
@@ -31,7 +44,9 @@ const ActionMenu = ({ children, buttonProps, title }: Props) => {
         title={title}
         anchorRef={anchorReference}
         isOpen={isOpen}
-        className={styles.content}
+        className={classNames(styles.content, dropdownClassName)}
+        horizontalAlign={dropdownHorizontalAlign}
+        isFullWidth={isDropdownFullWidth}
         onClose={() => {
           setIsOpen(false);
         }}

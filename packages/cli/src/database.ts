@@ -50,7 +50,9 @@ export const createPoolAndDatabaseIfNeeded = async () => {
     // - Database name is required to connect in the previous pool
     // - It will throw error when creating database using '?'
     const databaseName = dsn.databaseName ?? '?';
-    const maintenancePool = await createPool(stringifyDsn({ ...dsn, databaseName: 'postgres' }));
+    const maintenancePool = await createPool(stringifyDsn({ ...dsn, databaseName: 'postgres' }), {
+      interceptors: createInterceptors(),
+    });
     await maintenancePool.query(sql`
       create database ${sql.identifier([databaseName])}
         with

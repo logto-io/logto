@@ -1,8 +1,9 @@
 import { ConnectorType } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
+import { SignUpIdentifier } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
-import { mockLogtoConnectorList, mockUser } from '@/__mocks__';
+import { mockLogtoConnectorList, mockSignInExperience, mockUser } from '@/__mocks__';
 import { getLogtoConnectorById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
@@ -24,7 +25,7 @@ jest.mock('@/lib/social', () => ({
     }
 
     if (data.code === '123456') {
-      return { id: 'id' };
+      return { id: mockUser.id };
     }
 
     // This mocks the case that can not get userInfo with access token and auth code
@@ -32,21 +33,31 @@ jest.mock('@/lib/social', () => ({
     throw new Error(' ');
   },
 }));
-const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
-const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const updateUserById = jest.fn(async (..._args: unknown[]) => mockUser);
 
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
-  findUserByIdentity: async () => ({ id: 'id', identities: {} }),
+  findUserByIdentity: async () => mockUser,
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   hasUserWithIdentity: async (target: string, userId: string) =>
-    target === 'connectorTarget' && userId === 'id',
+    target === 'connectorTarget' && userId === mockUser.id,
 }));
 
 jest.mock('@/lib/user', () => ({
   generateUserId: () => 'user1',
   insertUser: async (...args: unknown[]) => insertUser(...args),
+}));
+
+jest.mock('@/queries/sign-in-experience', () => ({
+  findDefaultSignInExperience: async () => ({
+    ...mockSignInExperience,
+    signUp: {
+      ...mockSignInExperience.signUp,
+      identifier: SignUpIdentifier.None,
+    },
+  }),
 }));
 
 const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
@@ -170,9 +181,6 @@ describe('session -> socialRoutes', () => {
 
   describe('POST /session/sign-in/social/auth', () => {
     const connectorTarget = 'connectorTarget';
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
 
     it('throw error when auth code is wrong', async () => {
       (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
@@ -213,16 +221,19 @@ describe('session -> socialRoutes', () => {
         },
       });
       expect(updateUserById).toHaveBeenCalledWith(
-        'id',
+        mockUser.id,
         expect.objectContaining({
-          identities: { connectorTarget: { userId: 'id', details: { id: 'id' } } },
+          identities: {
+            ...mockUser.identities,
+            connectorTarget: { userId: mockUser.id, details: { id: mockUser.id } },
+          },
         })
       );
       expect(response.body).toHaveProperty('redirectTo');
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'id' } }),
+        expect.objectContaining({ login: { accountId: mockUser.id } }),
         expect.anything()
       );
     });
@@ -244,7 +255,7 @@ describe('session -> socialRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          socialUserInfo: { connectorId: '_connectorId_', userInfo: { id: 'id' } },
+          socialUserInfo: { connectorId: '_connectorId_', userInfo: { id: mockUser.id } },
         }),
         expect.anything()
       );
@@ -258,9 +269,6 @@ describe('session -> socialRoutes', () => {
       mockGetLogtoConnectorById.mockResolvedValueOnce({
         metadata: { target: 'connectorTarget' },
       });
-    });
-    afterEach(() => {
-      jest.clearAllMocks();
     });
     it('throw if session is not authorized', async () => {
       await expect(
@@ -321,9 +329,6 @@ describe('session -> socialRoutes', () => {
         metadata: { target: 'connectorTarget' },
       });
     });
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
 
     it('register with social, assign result and redirect', async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -359,7 +364,7 @@ describe('session -> socialRoutes', () => {
     });
 
     it('throw error if result parsing fails', async () => {
-      interactionDetails.mockResolvedValueOnce({ result: { login: { accountId: 'id' } } });
+      interactionDetails.mockResolvedValueOnce({ result: { login: { accountId: mockUser.id } } });
       const response = await sessionRequest
         .post(`${registerRoute}`)
         .send({ connectorId: 'connectorId' });
@@ -370,7 +375,7 @@ describe('session -> socialRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           login: { accountId: 'user1' },
-          socialUserInfo: { connectorId: 'connectorId', userInfo: { id: 'id' } },
+          socialUserInfo: { connectorId: 'connectorId', userInfo: { id: mockUser.id } },
         },
       });
       const response = await sessionRequest
@@ -386,9 +391,6 @@ describe('session -> socialRoutes', () => {
       mockGetLogtoConnectorById.mockResolvedValueOnce({
         metadata: { target: 'connectorTarget' },
       });
-    });
-    afterEach(() => {
-      jest.clearAllMocks();
     });
     it('throw if session is not authorized', async () => {
       interactionDetails.mockResolvedValueOnce({});

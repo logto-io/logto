@@ -10,6 +10,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: '通过 {{methods, list(type: disjunction;), zhOrSpaces}} 登录',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       '绑定到已有账户? 使用 {{methods, list(type: disjunction;), zhOrSpaces}} 登录并绑定。',
   },
@@ -30,6 +31,8 @@ const translation = {
     sign_in_with: '通过 {{name}} 登录',
     forgot_password: '重置密码',
     switch_to: '切换到{{method}}',
+    sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
   },
   description: {
     email: '邮箱',
@@ -41,14 +44,15 @@ const translation = {
     terms_of_use: '使用条款',
     create_account: '创建帐号',
     or: '或',
-    enter_passcode: '验证码已经发送至你的{{ address }}',
+    enter_passcode: '验证码已经发送至你的{{ address }} {{target}}',
     passcode_sent: '验证码已经发送',
     resend_after_seconds: '在 <span>{{ seconds }}</span> 秒后重发',
     resend_passcode: '重发验证码',
     continue_with: '通过以下方式继续',
     create_account_id_exists: '{{ type }}为 {{ value }} 的帐号已存在，你要登录吗？',
     sign_in_id_does_not_exists: '{{ type }}为 {{ value }} 的帐号不存在，你要创建一个新帐号吗？',
-    forgot_password_id_does_not_exits: '{{ type }}为 {{ value }} 的帐号不存在。',
+    sign_in_id_does_not_exists_alert: '{{ type }}为 {{ value }} 的帐号不存在。',
+    create_account_id_exists_alert: '{{ type }}为 {{ value }} 的帐号已存在',
     bind_account_title: '绑定帐号',
     social_create_account: '没有帐号？你可以创建一个帐号并绑定。',
     social_bind_account: '已有帐号？登录以绑定社交身份。',
@@ -58,6 +62,10 @@ const translation = {
     reset_password_description_sms: '输入手机号，领取验证码以重设密码。',
     new_password: '新密码',
     password_changed: '已重置密码！',
+    no_account: "Don't have an account?", // UNTRANSLATED
+    have_account: 'Already have an account?', // UNTRANSLATED
+    enter_password: 'Enter Password', // UNTRANSLATED
+    enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',

@@ -20,7 +20,7 @@ jest.mock('@/apis/social', () => ({
 }));
 
 describe('SocialCreateAccount', () => {
-  it('should render secondary sigin-in methods', () => {
+  it('should render secondary sign-in methods', () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider>
         <SocialCreateAccount connectorId="github" />

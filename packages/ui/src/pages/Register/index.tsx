@@ -1,49 +1,62 @@
-import { useMemo } from 'react';
+import { SignInMode } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 
-import NavBar from '@/components/NavBar';
-import CreateAccount from '@/containers/CreateAccount';
-import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
-import ErrorPage from '@/pages/ErrorPage';
+import Divider from '@/components/Divider';
+import TextLink from '@/components/TextLink';
+import LandingPageContainer from '@/containers/LandingPageContainer';
+import OtherMethodsLink from '@/containers/OtherMethodsLink';
+import { SocialSignInList } from '@/containers/SocialSignIn';
+import { useSieMethods } from '@/hooks/use-sie';
+import { UserFlow } from '@/types';
 
+import ErrorPage from '../ErrorPage';
+import Main from './Main';
 import * as styles from './index.module.scss';
 
-type Parameters = {
-  method?: string;
-};
-
 const Register = () => {
+  const { signUpMethods, socialConnectors, signInMode } = useSieMethods();
+  const otherMethods = signUpMethods.slice(1);
   const { t } = useTranslation();
-  const { method = 'username' } = useParams<Parameters>();
 
-  const registerForm = useMemo(() => {
-    if (method === 'sms') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <PhonePasswordless autoFocus type="register" />;
-    }
-
-    if (method === 'email') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <EmailPasswordless autoFocus type="register" />;
-    }
-
-    // eslint-disable-next-line jsx-a11y/no-autofocus
-    return <CreateAccount autoFocus />;
-  }, [method]);
-
-  if (!['email', 'sms', 'username'].includes(method)) {
+  if (!signInMode || signInMode === SignInMode.SignIn) {
     return <ErrorPage />;
   }
 
   return (
-    <div className={styles.wrapper}>
-      <NavBar />
-      <div className={styles.container}>
-        <div className={styles.title}>{t('action.create_account')}</div>
-        {registerForm}
-      </div>
-    </div>
+    <LandingPageContainer>
+      <Main signUpMethod={signUpMethods[0]} socialConnectors={socialConnectors} />
+      {
+        // Other create account methods
+        otherMethods.length > 0 && (
+          <OtherMethodsLink
+            methods={otherMethods}
+            template="register_with"
+            flow={UserFlow.register}
+          />
+        )
+      }
+      {
+        // Social sign-in methods
+        signUpMethods.length > 0 && socialConnectors.length > 0 && (
+          <>
+            <Divider label="description.or" className={styles.divider} />
+            <SocialSignInList isCollapseEnabled socialConnectors={socialConnectors} />
+          </>
+        )
+      }
+      {
+        // SignIn footer
+        signInMode === SignInMode.SignInAndRegister && signUpMethods.length > 0 && (
+          <>
+            <div className={styles.placeHolder} />
+            <div className={styles.createAccount}>
+              {t('description.have_account')}{' '}
+              <TextLink replace to="/sign-in" text="action.sign_in" />
+            </div>
+          </>
+        )
+      }
+    </LandingPageContainer>
   );
 };
 

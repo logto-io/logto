@@ -2,11 +2,12 @@ import type {
   Branding,
   LanguageInfo,
   SignInExperience,
-  SignInMethods,
   TermsOfUse,
   Color,
+  SignUp,
+  SignIn,
 } from '@logto/schemas';
-import { BrandingStyle, SignInMethodState, SignInMode } from '@logto/schemas';
+import { BrandingStyle, SignInMode, SignUpIdentifier, SignInIdentifier } from '@logto/schemas';
 
 export const mockSignInExperience: SignInExperience = {
   id: 'foo',
@@ -27,11 +28,32 @@ export const mockSignInExperience: SignInExperience = {
     autoDetect: true,
     fallbackLanguage: 'en',
   },
-  signInMethods: {
-    username: SignInMethodState.Primary,
-    email: SignInMethodState.Disabled,
-    sms: SignInMethodState.Disabled,
-    social: SignInMethodState.Secondary,
+  signUp: {
+    identifier: SignUpIdentifier.Username,
+    password: true,
+    verify: false,
+  },
+  signIn: {
+    methods: [
+      {
+        identifier: SignInIdentifier.Username,
+        password: true,
+        isPasswordPrimary: true,
+        verificationCode: true,
+      },
+      {
+        identifier: SignInIdentifier.Email,
+        password: true,
+        verificationCode: true,
+        isPasswordPrimary: true,
+      },
+      {
+        identifier: SignInIdentifier.Sms,
+        password: true,
+        verificationCode: true,
+        isPasswordPrimary: true,
+      },
+    ],
   },
   socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
   signInMode: SignInMode.SignInAndRegister,
@@ -59,9 +81,19 @@ export const mockLanguageInfo: LanguageInfo = {
   fallbackLanguage: 'en',
 };
 
-export const mockSignInMethods: SignInMethods = {
-  username: SignInMethodState.Primary,
-  email: SignInMethodState.Disabled,
-  sms: SignInMethodState.Disabled,
-  social: SignInMethodState.Disabled,
+export const mockSignUp: SignUp = {
+  identifier: SignUpIdentifier.Username,
+  password: true,
+  verify: false,
+};
+
+export const mockSignInMethod: SignIn['methods'][0] = {
+  identifier: SignInIdentifier.Username,
+  password: true,
+  verificationCode: false,
+  isPasswordPrimary: true,
+};
+
+export const mockSignIn = {
+  methods: [mockSignInMethod],
 };

@@ -45,9 +45,42 @@ export const forgotPasswordSessionResultGuard = z.object({
   verification: forgotPasswordSessionStorageGuard,
 });
 
+const continueEmailSessionStorageGuard = z.object({
+  flow: z.literal(PasscodeType.Continue),
+  expiresAt: z.string(),
+  email: z.string(),
+});
+
+export type ContinueEmailSessionStorage = z.infer<typeof continueEmailSessionStorageGuard>;
+
+export const continueEmailSessionResultGuard = z.object({
+  verification: continueEmailSessionStorageGuard,
+});
+
+const continueSmsSessionStorageGuard = z.object({
+  flow: z.literal(PasscodeType.Continue),
+  expiresAt: z.string(),
+  phone: z.string(),
+});
+
+export type ContinueSmsSessionStorage = z.infer<typeof continueSmsSessionStorageGuard>;
+
+export const continueSmsSessionResultGuard = z.object({
+  verification: continueSmsSessionStorageGuard,
+});
+
 export type VerificationStorage =
   | SmsSessionStorage
   | EmailSessionStorage
-  | ForgotPasswordSessionStorage;
+  | ForgotPasswordSessionStorage
+  | ContinueEmailSessionStorage
+  | ContinueSmsSessionStorage;
 
 export type VerificationResult<T = VerificationStorage> = { verification: T };
+
+export const continueSignInStorageGuard = z.object({
+  userId: z.string(),
+  expiresAt: z.string(),
+});
+
+export type ContinueSignInStorage = z.infer<typeof continueSignInStorageGuard>;

@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.title {
+  @include _.subhead-cap;
+  color: var(--color-neutral-variant-60);
+  margin-top: _.unit(12);
+
+  &:first-child {
+    margin-top: _.unit(6);
+  }
+}
+
+.formFieldDescription {
+  font: var(--font-body-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: _.unit(2);
+}
+
+.socialOnlyDescription {
+  margin-left: _.unit(1);
+  color: var(--color-text-secondary);
+}
+
+.signUpAuthentication {
+  > :not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}

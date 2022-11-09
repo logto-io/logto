@@ -79,6 +79,20 @@ const signInUsernamePasswordLogPayloadGuard = arbitraryLogPayloadGuard.and(
   })
 );
 
+const signInEmailPasswordLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    userId: z.string().optional(),
+    email: z.string().optional(),
+  })
+);
+
+const signInSmsPasswordLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    userId: z.string().optional(),
+    sms: z.string().optional(),
+  })
+);
+
 const signInEmailSendPasscodeLogPayloadGuard = arbitraryLogPayloadGuard.and(
   z.object({
     email: z.string().optional(),
@@ -197,6 +211,8 @@ const logPayloadsGuard = z.object({
   RegisterSocialBind: registerSocialBindLogPayloadGuard,
   RegisterSocial: registerSocialLogPayloadGuard,
   SignInUsernamePassword: signInUsernamePasswordLogPayloadGuard,
+  SignInEmailPassword: signInEmailPasswordLogPayloadGuard,
+  SignInSmsPassword: signInSmsPasswordLogPayloadGuard,
   SignInEmailSendPasscode: signInEmailSendPasscodeLogPayloadGuard,
   SignInEmail: signInEmailLogPayloadGuard,
   SignInSmsSendPasscode: signInSmsSendPasscodeLogPayloadGuard,

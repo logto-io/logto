@@ -14,6 +14,7 @@ import {
 } from '@/lib/social';
 import { generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
+import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
   hasUserWithIdentity,
   findUserById,
@@ -24,7 +25,7 @@ import assertThat from '@/utils/assert-that';
 import { maskUserInfo } from '@/utils/format';
 
 import type { AnonymousRouter } from '../types';
-import { getRoutePrefix } from './utils';
+import { checkRequiredProfile, getRoutePrefix } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'social');
 export const signInRoute = getRoutePrefix('sign-in', 'social');
@@ -92,7 +93,8 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
         );
       }
 
-      const { id, identities } = await findUserByIdentity(target, userInfo.id);
+      const user = await findUserByIdentity(target, userInfo.id);
+      const { id, identities } = user;
       ctx.log(type, { userId: id });
 
       // Update social connector's user info
@@ -100,6 +102,9 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
         identities: { ...identities, [target]: { userId: userInfo.id, details: userInfo } },
         lastSignInAt: Date.now(),
       });
+
+      const signInExperience = await findDefaultSignInExperience();
+      await checkRequiredProfile(ctx, provider, user, signInExperience);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -131,10 +136,13 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       const { id, identities } = relatedInfo[1];
       ctx.log(type, { userId: id });
 
-      await updateUserById(id, {
+      const user = await updateUserById(id, {
         identities: { ...identities, [target]: { userId: userInfo.id, details: userInfo } },
         lastSignInAt: Date.now(),
       });
+
+      const signInExperience = await findDefaultSignInExperience();
+      await checkRequiredProfile(ctx, provider, user, signInExperience);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -167,7 +175,7 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       assertThat(!(await hasUserWithIdentity(target, userInfo.id)), 'user.identity_exists');
 
       const id = await generateUserId();
-      await insertUser({
+      const user = await insertUser({
         id,
         name: userInfo.name ?? null,
         avatar: userInfo.avatar ?? null,
@@ -181,6 +189,8 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       });
       ctx.log(type, { userId: id });
 
+      const signInExperience = await findDefaultSignInExperience();
+      await checkRequiredProfile(ctx, provider, user, signInExperience);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();

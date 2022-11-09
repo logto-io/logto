@@ -10,6 +10,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: 'Anmelden mit {{methods, list(type: disjunction;)}}',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       'Besitzt du schon ein Konto? Melde dich an, um {{methods, list(type: disjunction;)}} mit deiner Identität zu verbinden.',
   },
@@ -30,6 +31,8 @@ const translation = {
     sign_in_with: 'Mit {{name}} anmelden',
     forgot_password: 'Passwort vergessen?',
     switch_to: 'Zu {{method}} wechseln',
+    sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
   },
   description: {
     email: 'Email',
@@ -50,6 +53,8 @@ const translation = {
       'Das Konto mit {{type}} {{value}} existiert bereits, möchtest du dich anmelden?',
     sign_in_id_does_not_exists:
       'Das Konto mit {{type}} {{value}} existiert nicht, möchtest du ein neues Konto erstellen?',
+    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
     forgot_password_id_does_not_exits: 'Das Konto mit {{type}} {{value}} existiert nicht.',
     bind_account_title: 'Konto verknüpfen',
     social_create_account: 'Kein Konto? Du kannst ein neues Konto erstellen und es verknüpfen.',
@@ -63,6 +68,10 @@ const translation = {
       'Gib die Telefonnummer deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
     new_password: 'Neues Passwort',
     password_changed: 'Passwort geändert',
+    no_account: "Don't have an account?", // UNTRANSLATED
+    have_account: 'Already have an account?', // UNTRANSLATED
+    enter_password: 'Enter Password', // UNTRANSLATED
+    enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'Benutzername oder Passwort ist falsch',

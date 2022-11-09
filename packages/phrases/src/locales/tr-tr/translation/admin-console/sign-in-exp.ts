@@ -4,7 +4,7 @@ const sign_in_exp = {
     'Oturum açma kullanıcı arayüzünü markanıza uyacak şekilde özelleştirin ve gerçek zamanlı olarak görüntüleyin',
   tabs: {
     branding: 'Markalaşma',
-    methods: 'Oturum açma yöntemleri',
+    sign_up_and_sign_in: 'Sign up and Sign in', // UNTRANSLATED
     others: 'Diğerleri',
   },
   welcome: {
@@ -38,6 +38,46 @@ const sign_in_exp = {
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
     slogan: 'Slogan',
     slogan_placeholder: 'Yaratıcılığınızı açığa çıkarın',
+  },
+  sign_up_and_sign_in: {
+    identifiers: 'Sign up identifiers', // UNTRANSLATED
+    identifiers_email: 'Email address', // UNTRANSLATED
+    identifiers_sms: 'Phone number', // UNTRANSLATED
+    identifiers_username: 'Username', // UNTRANSLATED
+    identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
+    identifiers_none: 'None', // UNTRANSLATED
+    and: 'and', // UNTRANSLATED
+    or: 'or', // UNTRANSLATED
+    sign_up: {
+      title: 'SIGN UP', // UNTRANSLATED
+      sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
+      sign_up_authentication: 'Sign up authentication', // UNTRANSLATED
+      set_a_password_option: 'Set a password', // UNTRANSLATED
+      verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
+      social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
+    },
+    sign_in: {
+      title: 'SIGN IN', // UNTRANSLATED
+      sign_in_identifier_and_auth: 'Sign in identifier and authentication', // UNTRANSLATED
+      description:
+        'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.', // UNTRANSLATED
+      add_sign_in_method: 'Add Sign-in Method', // UNTRANSLATED
+      password_auth: 'Password', // UNTRANSLATED
+      verification_code_auth: 'Verification code', // UNTRANSLATED
+      auth_swap_tip: 'Swap to change the priority', // UNTRANSLATED
+    },
+    social_sign_in: {
+      title: 'SOCIAL SIGN IN', // UNTRANSLATED
+      social_sign_in: 'Social sign in', // UNTRANSLATED
+      description:
+        'Users may need to enter required identifier when register through social accounts. This was defined by your sign up identifier.', // UNTRANSLATED
+      add_social_connector: 'Add Social Connector', // UNTRANSLATED
+      set_up_hint: {
+        not_in_list: 'Not in the list?', // UNTRANSLATED
+        set_up_more: 'Set up more', // UNTRANSLATED
+        go_to: 'social connectors or go to “Connectors” section.', // UNTRANSLATED
+      },
+    },
   },
   sign_in_methods: {
     title: 'OTURUM AÇMA YÖNTEMLERİ',
@@ -104,9 +144,9 @@ const sign_in_exp = {
     },
     authentication: {
       title: 'AUTHENTICATION',
-      enable_create_account: 'Enable create account',
-      enable_create_account_description:
-        'Enable or disable create account (sign-up). Once disabled, your customers can’t create accounts through the sign-in UI, but you can still add users in Admin Console.',
+      enable_user_registration: 'Enable user registration', // UNTRANSLATED
+      enable_user_registration_description:
+        'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.', // UNTRANSLATED
     },
   },
   setup_warning: {
@@ -125,6 +165,9 @@ const sign_in_exp = {
       'Oturum açma yöntemlerini değiştiriyorsunuz. Bu, bazı kullanıcılarınızı etkileyecektir. Bunu yapmak istediğine emin misin?',
     before: 'Önce',
     after: 'Sonra',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: 'Oturum Açma Önizlemesi',

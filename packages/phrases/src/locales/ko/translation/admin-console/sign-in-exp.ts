@@ -3,7 +3,7 @@ const sign_in_exp = {
   description: '로그인 화면을 브랜드에 맞게 커스터마이징 그리고 실시간으로 확인해보세요.',
   tabs: {
     branding: '브랜딩',
-    methods: '로그인 방법',
+    sign_up_and_sign_in: 'Sign up and Sign in', // UNTRANSLATED
     others: '기타',
   },
   welcome: {
@@ -34,6 +34,46 @@ const sign_in_exp = {
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
     slogan: '슬로건',
     slogan_placeholder: 'Unleash your creativity',
+  },
+  sign_up_and_sign_in: {
+    identifiers: 'Sign up identifiers', // UNTRANSLATED
+    identifiers_email: 'Email address', // UNTRANSLATED
+    identifiers_sms: 'Phone number', // UNTRANSLATED
+    identifiers_username: 'Username', // UNTRANSLATED
+    identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
+    identifiers_none: 'None', // UNTRANSLATED
+    and: 'and', // UNTRANSLATED
+    or: 'or', // UNTRANSLATED
+    sign_up: {
+      title: 'SIGN UP', // UNTRANSLATED
+      sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
+      sign_up_authentication: 'Sign up authentication', // UNTRANSLATED
+      set_a_password_option: 'Set a password', // UNTRANSLATED
+      verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
+      social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
+    },
+    sign_in: {
+      title: 'SIGN IN', // UNTRANSLATED
+      sign_in_identifier_and_auth: 'Sign in identifier and authentication', // UNTRANSLATED
+      description:
+        'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.', // UNTRANSLATED
+      add_sign_in_method: 'Add Sign-in Method', // UNTRANSLATED
+      password_auth: 'Password', // UNTRANSLATED
+      verification_code_auth: 'Verification code', // UNTRANSLATED
+      auth_swap_tip: 'Swap to change the priority', // UNTRANSLATED
+    },
+    social_sign_in: {
+      title: 'SOCIAL SIGN IN', // UNTRANSLATED
+      social_sign_in: 'Social sign in', // UNTRANSLATED
+      description:
+        'Users may need to enter required identifier when register through social accounts. This was defined by your sign up identifier.', // UNTRANSLATED
+      add_social_connector: 'Add Social Connector', // UNTRANSLATED
+      set_up_hint: {
+        not_in_list: 'Not in the list?', // UNTRANSLATED
+        set_up_more: 'Set up more', // UNTRANSLATED
+        go_to: 'social connectors or go to “Connectors” section.', // UNTRANSLATED
+      },
+    },
   },
   sign_in_methods: {
     title: '로그인 방법',
@@ -100,9 +140,9 @@ const sign_in_exp = {
     },
     authentication: {
       title: 'AUTHENTICATION',
-      enable_create_account: 'Enable create account',
-      enable_create_account_description:
-        'Enable or disable create account (sign-up). Once disabled, your customers can’t create accounts through the sign-in UI, but you can still add users in Admin Console.',
+      enable_user_registration: 'Enable user registration', // UNTRANSLATED
+      enable_user_registration_description:
+        'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.', // UNTRANSLATED
     },
   },
   setup_warning: {
@@ -121,6 +161,9 @@ const sign_in_exp = {
       '로그인 방법이 수정되었어요. 일부 사용자에게 영향을 미칠 수 있어요. 정말로 진행할까요?',
     before: '이전',
     after: '이후',
+    sign_up: 'Sign up', // UNTRANSLATED
+    sign_in: 'Sign in', // UNTRANSLATED
+    social: 'Social', // UNTRANSLATED
   },
   preview: {
     title: '로그인 화면 미리보기',

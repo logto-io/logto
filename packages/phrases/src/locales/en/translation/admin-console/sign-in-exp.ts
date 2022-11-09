@@ -3,7 +3,7 @@ const sign_in_exp = {
   description: 'Customize the sign in UI to match your brand and view in real time',
   tabs: {
     branding: 'Branding',
-    methods: 'Sign-in methods',
+    sign_up_and_sign_in: 'Sign up and Sign in',
     others: 'Others',
   },
   welcome: {
@@ -37,6 +37,46 @@ const sign_in_exp = {
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
     slogan: 'Slogan',
     slogan_placeholder: 'Unleash your creativity',
+  },
+  sign_up_and_sign_in: {
+    identifiers: 'Sign up identifiers',
+    identifiers_email: 'Email address',
+    identifiers_sms: 'Phone number',
+    identifiers_username: 'Username',
+    identifiers_email_or_sms: 'Email address or phone number',
+    identifiers_none: 'None',
+    and: 'and',
+    or: 'or',
+    sign_up: {
+      title: 'SIGN UP',
+      sign_up_identifier: 'Sign up identifier',
+      sign_up_authentication: 'Sign up authentication',
+      set_a_password_option: 'Set a password',
+      verify_at_sign_up_option: 'Verify at sign up',
+      social_only_creation_description: '(This apply to social only account creation)',
+    },
+    sign_in: {
+      title: 'SIGN IN',
+      sign_in_identifier_and_auth: 'Sign in identifier and authentication',
+      description:
+        'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.',
+      add_sign_in_method: 'Add Sign-in Method',
+      password_auth: 'Password',
+      verification_code_auth: 'Verification code',
+      auth_swap_tip: 'Swap to change the priority',
+    },
+    social_sign_in: {
+      title: 'SOCIAL SIGN IN',
+      social_sign_in: 'Social sign in',
+      description:
+        'Users may need to enter required identifier when register through social accounts. This was defined by your sign up identifier.',
+      add_social_connector: 'Add Social Connector',
+      set_up_hint: {
+        not_in_list: 'Not in the list?',
+        set_up_more: 'Set up more',
+        go_to: 'social connectors or go to “Connectors” section.',
+      },
+    },
   },
   sign_in_methods: {
     title: 'SIGN-IN METHODS',
@@ -103,9 +143,9 @@ const sign_in_exp = {
     },
     authentication: {
       title: 'AUTHENTICATION',
-      enable_create_account: 'Enable create account',
-      enable_create_account_description:
-        'Enable or disable create account (sign-up). Once disabled, your customers can’t create accounts through the sign-in UI, but you can still add users in Admin Console.',
+      enable_user_registration: 'Enable user registration',
+      enable_user_registration_description:
+        'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
     },
   },
   setup_warning: {
@@ -124,6 +164,9 @@ const sign_in_exp = {
       'You are changing sign-in methods. This will impact some of your users. Are you sure you want to do that?',
     before: 'Before',
     after: 'After',
+    sign_up: 'Sign up',
+    sign_in: 'Sign in',
+    social: 'Social',
   },
   preview: {
     title: 'Sign-in preview',

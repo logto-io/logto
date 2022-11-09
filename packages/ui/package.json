@@ -15,10 +15,8 @@
     "test:ci": "jest --coverage --silent",
     "test": "jest"
   },
-  "dependencies": {
-    "@logto/core-kit": "1.0.0-beta.20"
-  },
   "devDependencies": {
+    "@logto/core-kit": "1.0.0-beta.20",
     "@logto/language-kit": "1.0.0-beta.20",
     "@logto/phrases": "workspace:^",
     "@logto/phrases-ui": "workspace:^",
@@ -88,7 +86,8 @@
   "eslintConfig": {
     "extends": "@silverhand/react",
     "rules": {
-      "complexity": "off"
+      "complexity": "off",
+      "jsx-a11y/no-autofocus": "off"
     }
   },
   "stylelint": {

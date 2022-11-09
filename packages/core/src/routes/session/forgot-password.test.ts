@@ -3,7 +3,7 @@ import { PasscodeType } from '@logto/schemas';
 import { addDays, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
-import { mockPasswordEncrypted, mockUserWithPassword } from '@/__mocks__';
+import { mockPasswordEncrypted, mockSignInExperience, mockUserWithPassword } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
@@ -15,6 +15,7 @@ const encryptUserPassword = jest.fn(async (password: string) => ({
 }));
 const findUserById = jest.fn(async (): Promise<User> => mockUserWithPassword);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ userId: 'id' }));
+const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
 const getYesterdayDate = () => subDays(Date.now(), 1);
 const getTomorrowDate = () => addDays(Date.now(), 1);
 
@@ -31,6 +32,10 @@ jest.mock('@/queries/user', () => ({
   findUserByEmail: async () => ({ userId: 'id' }),
   findUserById: async () => findUserById(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
+}));
+
+jest.mock('@/queries/sign-in-experience', () => ({
+  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));

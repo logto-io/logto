@@ -36,6 +36,7 @@ const general = {
   leave_page: '페이지 나가기',
   stay_on_page: '페이지 유지하기',
   type_to_search: 'Type to search', // UNTRANSLATED
+  got_it: 'Got it', // UNTRANSLATED
 };
 
 export default general;

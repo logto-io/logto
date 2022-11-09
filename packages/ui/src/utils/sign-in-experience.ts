@@ -3,45 +3,43 @@
  * Remove this once we have a better way to get the sign in experience through SSR
  */
 
-import type { SignInMethods } from '@logto/schemas';
+import { SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
 
 import { getSignInExperience } from '@/apis/settings';
-import type {
-  SignInMethod,
-  SignInExperienceSettingsResponse,
-  SignInExperienceSettings,
-} from '@/types';
+import type { SignInExperienceSettings, SignInExperienceResponse } from '@/types';
 import { filterSocialConnectors } from '@/utils/social-connectors';
 
-import { entries } from '.';
-
-export const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
-  for (const [key, value] of entries(signInMethods)) {
-    if (value === 'primary') {
-      return key;
-    }
-  }
-
-  return 'username';
+export const signUpIdentifierMap: Record<SignUpIdentifier, SignInIdentifier[]> = {
+  [SignUpIdentifier.Username]: [SignInIdentifier.Username],
+  [SignUpIdentifier.Email]: [SignInIdentifier.Email],
+  [SignUpIdentifier.Sms]: [SignInIdentifier.Sms],
+  [SignUpIdentifier.EmailOrSms]: [SignInIdentifier.Email, SignInIdentifier.Sms],
+  [SignUpIdentifier.None]: [],
 };
 
-export const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
-  entries(signInMethods).reduce<SignInMethod[]>((methods, [key, value]) => {
-    if (value === 'secondary') {
-      return [...methods, key];
-    }
-
-    return methods;
-  }, []);
-
-export const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {
-  const { signInMethods, socialConnectors, ...rest } =
-    await getSignInExperience<SignInExperienceSettingsResponse>();
+const parseSignInExperienceResponse = (
+  response: SignInExperienceResponse
+): SignInExperienceSettings => {
+  const { socialConnectors, signUp, ...rest } = response;
+  const { identifier, ...signUpSettings } = signUp;
 
   return {
     ...rest,
-    primarySignInMethod: getPrimarySignInMethod(signInMethods),
-    secondarySignInMethods: getSecondarySignInMethods(signInMethods),
     socialConnectors: filterSocialConnectors(socialConnectors),
+    signUp: {
+      methods: signUpIdentifierMap[identifier],
+      ...signUpSettings,
+    },
   };
 };
+
+export const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {
+  const response = await getSignInExperience<SignInExperienceResponse>();
+
+  return parseSignInExperienceResponse(response);
+};
+
+export const isEmailOrSmsMethod = (
+  method: SignInIdentifier
+): method is SignInIdentifier.Email | SignInIdentifier.Sms =>
+  [SignInIdentifier.Email, SignInIdentifier.Sms].includes(method);
