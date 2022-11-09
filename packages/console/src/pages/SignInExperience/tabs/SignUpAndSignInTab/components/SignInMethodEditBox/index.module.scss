@@ -36,6 +36,15 @@
     padding: 0 _.unit(2);
     flex-grow: 1;
 
+    .checkBox {
+      flex-grow: 1;
+      width: 100%;
+    }
+
+    .swapButton {
+      margin-right: _.unit(4);
+    }
+
     &.verifyCodePrimary {
       flex-direction: row-reverse;
     }
