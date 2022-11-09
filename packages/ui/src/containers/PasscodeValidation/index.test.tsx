@@ -3,6 +3,12 @@ import { act, fireEvent, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import {
+  verifyContinueSetEmailPasscode,
+  continueWithEmail,
+  verifyContinueSetSmsPasscode,
+  continueWithPhone,
+} from '@/apis/continue';
+import {
   verifyForgotPasswordEmailPasscode,
   verifyForgotPasswordSmsPasscode,
 } from '@/apis/forgot-password';
@@ -40,6 +46,13 @@ jest.mock('@/apis/register', () => ({
 jest.mock('@/apis/forgot-password', () => ({
   verifyForgotPasswordEmailPasscode: jest.fn(),
   verifyForgotPasswordSmsPasscode: jest.fn(),
+}));
+
+jest.mock('@/apis/continue', () => ({
+  verifyContinueSetEmailPasscode: jest.fn(),
+  verifyContinueSetSmsPasscode: jest.fn(),
+  continueWithEmail: jest.fn(),
+  continueWithPhone: jest.fn(),
 }));
 
 describe('<PasscodeValidation />', () => {
@@ -234,36 +247,98 @@ describe('<PasscodeValidation />', () => {
         expect(mockedNavigate).toBeCalledWith('/forgot-password/reset', { replace: true });
       });
     });
+
+    it('fire Sms forgot-password validate passcode event', async () => {
+      (verifyForgotPasswordSmsPasscode as jest.Mock).mockImplementationOnce(() => ({
+        success: true,
+      }));
+
+      const { container } = renderWithPageContext(
+        <PasscodeValidation
+          type={UserFlow.forgotPassword}
+          method={SignInIdentifier.Sms}
+          target={phone}
+        />
+      );
+
+      const inputs = container.querySelectorAll('input');
+
+      for (const input of inputs) {
+        act(() => {
+          fireEvent.input(input, { target: { value: '1' } });
+        });
+      }
+
+      await waitFor(() => {
+        expect(verifyForgotPasswordSmsPasscode).toBeCalledWith(phone, '111111');
+      });
+
+      await waitFor(() => {
+        expect(window.location.replace).not.toBeCalled();
+        expect(mockedNavigate).toBeCalledWith('/forgot-password/reset', { replace: true });
+      });
+    });
   });
 
-  it('fire Sms forgot-password validate passcode event', async () => {
-    (verifyForgotPasswordSmsPasscode as jest.Mock).mockImplementationOnce(() => ({
-      success: true,
-    }));
+  describe('continue flow', () => {
+    it('set email', async () => {
+      (verifyContinueSetEmailPasscode as jest.Mock).mockImplementationOnce(() => ({
+        success: true,
+      }));
+      (continueWithEmail as jest.Mock).mockImplementationOnce(() => ({ redirectTo: '/redirect' }));
 
-    const { container } = renderWithPageContext(
-      <PasscodeValidation
-        type={UserFlow.forgotPassword}
-        method={SignInIdentifier.Sms}
-        target={phone}
-      />
-    );
+      const { container } = renderWithPageContext(
+        <PasscodeValidation
+          type={UserFlow.continue}
+          method={SignInIdentifier.Email}
+          target={email}
+        />
+      );
 
-    const inputs = container.querySelectorAll('input');
+      const inputs = container.querySelectorAll('input');
 
-    for (const input of inputs) {
-      act(() => {
-        fireEvent.input(input, { target: { value: '1' } });
+      for (const input of inputs) {
+        act(() => {
+          fireEvent.input(input, { target: { value: '1' } });
+        });
+      }
+
+      await waitFor(() => {
+        expect(verifyContinueSetEmailPasscode).toBeCalledWith(email, '111111');
       });
-    }
 
-    await waitFor(() => {
-      expect(verifyForgotPasswordSmsPasscode).toBeCalledWith(phone, '111111');
+      await waitFor(() => {
+        expect(continueWithEmail).toBeCalledWith(email, undefined);
+        expect(window.location.replace).toBeCalledWith('/redirect');
+      });
     });
 
-    await waitFor(() => {
-      expect(window.location.replace).not.toBeCalled();
-      expect(mockedNavigate).toBeCalledWith('/forgot-password/reset', { replace: true });
+    it('set Phone', async () => {
+      (verifyContinueSetSmsPasscode as jest.Mock).mockImplementationOnce(() => ({
+        success: true,
+      }));
+      (continueWithPhone as jest.Mock).mockImplementationOnce(() => ({ redirectTo: '/redirect' }));
+
+      const { container } = renderWithPageContext(
+        <PasscodeValidation type={UserFlow.continue} method={SignInIdentifier.Sms} target={phone} />
+      );
+
+      const inputs = container.querySelectorAll('input');
+
+      for (const input of inputs) {
+        act(() => {
+          fireEvent.input(input, { target: { value: '1' } });
+        });
+      }
+
+      await waitFor(() => {
+        expect(verifyContinueSetSmsPasscode).toBeCalledWith(phone, '111111');
+      });
+
+      await waitFor(() => {
+        expect(continueWithPhone).toBeCalledWith(phone, undefined);
+        expect(window.location.replace).toBeCalledWith('/redirect');
+      });
     });
   });
 });

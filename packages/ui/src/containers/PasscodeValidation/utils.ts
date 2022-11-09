@@ -2,6 +2,8 @@ import { SignInIdentifier } from '@logto/schemas';
 
 import { UserFlow } from '@/types';
 
+import useContinueSetEmailPasscodeValidation from './use-continue-set-email-passcode-validation';
+import useContinueSetSmsPasscodeValidation from './use-continue-set-sms-passcode-validation';
 import useForgotPasswordEmailPasscodeValidation from './use-forgot-password-email-passcode-validation';
 import useForgotPasswordSmsPasscodeValidation from './use-forgot-password-sms-passcode-validation';
 import useRegisterWithEmailPasscodeValidation from './use-register-with-email-passcode-validation';
@@ -27,9 +29,8 @@ export const getPasscodeValidationHook = (
         ? useForgotPasswordEmailPasscodeValidation
         : useForgotPasswordSmsPasscodeValidation;
     default:
-      // TODO: continue flow hook
       return method === SignInIdentifier.Email
-        ? useRegisterWithEmailPasscodeValidation
-        : useRegisterWithSmsPasscodeValidation;
+        ? useContinueSetEmailPasscodeValidation
+        : useContinueSetSmsPasscodeValidation;
   }
 };
