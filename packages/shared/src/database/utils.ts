@@ -1,7 +1,6 @@
 import type { SchemaValuePrimitive, SchemaValue } from '@logto/schemas';
 import type { Falsy } from '@silverhand/essentials';
 import { notFalsy } from '@silverhand/essentials';
-import dayjs from 'dayjs';
 import type { SqlSqlToken, SqlToken, QueryResult, IdentifierSqlToken } from 'slonik';
 import { sql } from 'slonik';
 
@@ -76,7 +75,8 @@ export const convertToIdentifiers = <T extends Table>({ table, fields }: T, with
   };
 };
 
-export const convertToTimestamp = (time = dayjs()) => sql`to_timestamp(${time.valueOf() / 1000})`;
+export const convertToTimestamp = (time = new Date()) =>
+  sql`to_timestamp(${time.valueOf() / 1000})`;
 
 export const manyRows = async <T>(query: Promise<QueryResult<T>>): Promise<readonly T[]> => {
   const { rows } = await query;

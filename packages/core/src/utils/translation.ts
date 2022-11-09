@@ -1,38 +1,25 @@
 import type { Translation } from '@logto/schemas';
 
-// LOG-4385: Refactor me
-// eslint-disable-next-line complexity
-export const isValidStructure = (fullTranslation: Translation, partialTranslation: Translation) => {
-  const fullKeys = new Set(Object.keys(fullTranslation));
-  const partialKeys = Object.keys(partialTranslation);
+/**
+ * @param fullTranslation The translation with full keys
+ * @param partialTranslation The translation to check
+ * @returns If the flatten keys of `partialTranslation` is a subset of `fullTranslation`
+ */
+export const isStrictlyPartial = (
+  fullTranslation: Translation,
+  partialTranslation: Translation
+): boolean => {
+  return Object.entries(partialTranslation).every(([key, value]) => {
+    const fullValue = fullTranslation[key];
 
-  if (fullKeys.size === 0 || partialKeys.length === 0) {
-    return true;
-  }
-
-  if (partialKeys.some((key) => !fullKeys.has(key))) {
-    return false;
-  }
-
-  for (const [key, value] of Object.entries(fullTranslation)) {
-    const targetValue = partialTranslation[key];
-
-    if (targetValue === undefined) {
-      continue;
-    }
-
-    if (typeof value === 'string') {
-      if (typeof targetValue === 'string') {
-        continue;
-      }
-
+    if (!fullValue) {
       return false;
     }
 
-    if (typeof targetValue === 'string' || !isValidStructure(value, targetValue)) {
-      return false;
+    if (typeof fullValue === 'object' && typeof value === 'object') {
+      return isStrictlyPartial(fullValue, value);
     }
-  }
 
-  return true;
+    return typeof fullValue === typeof value;
+  });
 };

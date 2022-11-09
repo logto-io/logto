@@ -8,7 +8,7 @@ import type {
 } from '@logto/schemas';
 import { SignUpIdentifier, logTypeGuard } from '@logto/schemas';
 import type { Nullable, Truthy } from '@silverhand/essentials';
-import dayjs from 'dayjs';
+import { addSeconds, isAfter, isValid } from 'date-fns';
 import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 import type { ZodType } from 'zod';
@@ -73,8 +73,9 @@ export const getVerificationStorageFromInteraction = async <T = VerificationStor
 };
 
 export const checkValidateExpiration = (expiresAt: string) => {
+  const parsed = new Date(expiresAt);
   assertThat(
-    dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
+    isValid(parsed) && isAfter(parsed, Date.now()),
     new RequestError({ code: 'session.verification_expired', status: 401 })
   );
 };
@@ -88,7 +89,7 @@ export const assignVerificationResult = async (
 ) => {
   const verification: VerificationStorage = {
     ...verificationData,
-    expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
+    expiresAt: addSeconds(Date.now(), verificationTimeout).toISOString(),
   };
 
   await provider.interactionResult(ctx.req, ctx.res, {
@@ -116,7 +117,7 @@ export const assignContinueSignInResult = async (
   await provider.interactionResult(ctx.req, ctx.res, {
     continueSignIn: {
       ...payload,
-      expiresAt: dayjs().add(continueSignInTimeout, 'second').toISOString(),
+      expiresAt: addSeconds(Date.now(), continueSignInTimeout).toISOString(),
     },
   });
 };
@@ -142,8 +143,9 @@ export const getContinueSignInResult = async (
 
   const { expiresAt, ...rest } = signInResult.data.continueSignIn;
 
+  const parsed = new Date(expiresAt);
   assertThat(
-    dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
+    isValid(parsed) && isAfter(parsed, Date.now()),
     new RequestError({ code: 'session.unauthorized', status: 401 })
   );
 

@@ -12,13 +12,6 @@
     "@logto/integration-tests",
     "@logto/ui"
   ]],
-  "//": "Ignore other release group members, only keep the major one.",
-  "ignore": [
-    "@logto/create",
-    "@logto/console",
-    "@logto/integration-tests",
-    "@logto/ui"
-  ],
   "linked": [[
     "@logto/phrases",
     "@logto/phrases-ui",
