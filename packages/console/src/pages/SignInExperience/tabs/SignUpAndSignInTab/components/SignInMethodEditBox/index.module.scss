@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.draggleItemContainer {
+  transform: translate(0, 0);
+}
+
 .signInMethodItem {
   display: flex;
   align-items: center;
