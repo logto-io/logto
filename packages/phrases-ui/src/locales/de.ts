@@ -67,6 +67,7 @@ const translation = {
     reset_password_description_sms:
       'Gib die Telefonnummer deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
     new_password: 'Neues Passwort',
+    set_password: 'Set password', // UNTRANSLATED
     password_changed: 'Passwort geändert',
     no_account: "Don't have an account?", // UNTRANSLATED
     have_account: 'Already have an account?', // UNTRANSLATED
