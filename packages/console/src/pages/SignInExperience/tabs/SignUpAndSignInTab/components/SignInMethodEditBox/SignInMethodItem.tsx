@@ -1,4 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
@@ -57,6 +58,7 @@ const SignInMethodItem = ({
             label={t('sign_in_exp.sign_up_and_sign_in.sign_in.password_auth')}
             value={password}
             disabled={!isPasswordCheckable}
+            disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.password_auth')}
             onChange={(checked) => {
               onVerificationStateChange(identifier, 'password', checked);
             }}
@@ -65,7 +67,7 @@ const SignInMethodItem = ({
             <>
               <IconButton
                 className={styles.swapButton}
-                tooltip="sign_in_exp.sign_up_and_sign_in.sign_in.auth_swap_tip"
+                tooltip={t('sign_in_exp.sign_up_and_sign_in.sign_in.auth_swap_tip')}
                 onClick={() => {
                   onToggleVerificationPrimary(identifier);
                 }}
@@ -77,6 +79,7 @@ const SignInMethodItem = ({
                 label={t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
                 value={verificationCode}
                 disabled={!isVerificationCodeCheckable}
+                disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.verification_code_auth')}
                 onChange={(checked) => {
                   onVerificationStateChange(identifier, 'verificationCode', checked);
                 }}
@@ -87,6 +90,14 @@ const SignInMethodItem = ({
       </div>
       <IconButton
         disabled={!isDeletable}
+        tooltip={conditional(
+          !isDeletable &&
+            t('sign_in_exp.sign_up_and_sign_in.tip.delete_sign_in_method', {
+              identifier: t('sign_in_exp.sign_up_and_sign_in.identifiers', {
+                context: snakeCase(identifier),
+              }).toLocaleLowerCase(),
+            })
+        )}
         onClick={() => {
           onDelete(identifier);
         }}

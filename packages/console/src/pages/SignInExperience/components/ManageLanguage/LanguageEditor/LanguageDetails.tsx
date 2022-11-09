@@ -160,7 +160,7 @@ const LanguageDetails = () => {
         </div>
         {!isBuiltIn && (
           <IconButton
-            tooltip="sign_in_exp.others.manage_language.deletion_tip"
+            tooltip={t('sign_in_exp.others.manage_language.deletion_tip')}
             onClick={() => {
               setIsDeletionAlertOpen(true);
             }}
@@ -189,7 +189,7 @@ const LanguageDetails = () => {
                     <IconButton
                       size="small"
                       className={style.clearButton}
-                      tooltip="sign_in_exp.others.manage_language.clear_all_tip"
+                      tooltip={t('sign_in_exp.others.manage_language.clear_all_tip')}
                       onClick={() => {
                         for (const [key, value] of Object.entries(
                           flattenTranslation(emptyUiTranslation)
