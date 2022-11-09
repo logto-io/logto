@@ -154,11 +154,64 @@ const rotateConfig: CommandModule<unknown, { key: string }> = {
   },
 };
 
+const trimConfig: CommandModule<unknown, { key: string; length: number }> = {
+  command: 'trim <key> [length]',
+  describe: 'Remove the last [length] number of private or secret keys for the given config key',
+  builder: (yargs) =>
+    yargs
+      .positional('key', {
+        describe: `The config key to trim, one of ${chalk.green(validRotateKeys.join(', '))}`,
+        type: 'string',
+        demandOption: true,
+      })
+      .positional('length', {
+        describe: 'Number of private or secret keys to trim',
+        type: 'number',
+        default: 1,
+        demandOption: true,
+      }),
+  handler: async ({ key, length }) => {
+    validateRotateKey(key);
+
+    if (length < 1) {
+      log.error('Invalid length provided');
+    }
+
+    const pool = await createPoolFromConfig();
+    const { rows } = await getRowsByKeys(pool, [key]);
+
+    if (!rows[0]) {
+      log.warn('No key found, create a new one');
+    }
+
+    const getValue = async () => {
+      const value = logtoConfigGuards[key].parse(rows[0]?.value);
+
+      if (value.length - length < 1) {
+        await pool.end();
+        log.error(`You should keep at least one key in the array, current length=${value.length}`);
+      }
+
+      return value.slice(0, -length);
+    };
+    const trimmed = await getValue();
+    await updateValueByKey(pool, key, trimmed);
+    await pool.end();
+
+    log.info(`Trim ${chalk.green(key)} succeeded, now it has ${trimmed.length} keys`);
+  },
+};
+
 const config: CommandModule = {
   command: ['config', 'configs'],
   describe: 'Commands for Logto database config',
   builder: (yargs) =>
-    yargs.command(getConfig).command(setConfig).command(rotateConfig).demandCommand(1),
+    yargs
+      .command(getConfig)
+      .command(setConfig)
+      .command(rotateConfig)
+      .command(trimConfig)
+      .demandCommand(1),
   handler: noop,
 };
 
