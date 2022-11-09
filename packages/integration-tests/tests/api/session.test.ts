@@ -1,6 +1,6 @@
-import { SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import assert from 'assert';
+
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
-import { assert } from '@silverhand/essentials';
 
 import {
   mockEmailConnectorId,
@@ -9,26 +9,27 @@ import {
   mockSmsConnectorConfig,
 } from '@/__mocks__/connectors-mock';
 import {
-  sendRegisterUserWithEmailPasscode,
-  verifyRegisterUserWithEmailPasscode,
-  sendSignInUserWithEmailPasscode,
-  verifySignInUserWithEmailPasscode,
-  sendRegisterUserWithSmsPasscode,
-  verifyRegisterUserWithSmsPasscode,
-  sendSignInUserWithSmsPasscode,
-  verifySignInUserWithSmsPasscode,
+  createUser,
   disableConnector,
-  signInWithUsernameAndPassword,
+  sendRegisterUserWithEmailPasscode,
+  sendRegisterUserWithSmsPasscode,
+  sendSignInUserWithEmailPasscode,
+  sendSignInUserWithSmsPasscode,
+  signInWithPassword,
+  verifyRegisterUserWithEmailPasscode,
+  verifyRegisterUserWithSmsPasscode,
+  verifySignInUserWithEmailPasscode,
+  verifySignInUserWithSmsPasscode,
 } from '@/api';
 import MockClient from '@/client';
 import {
-  registerNewUser,
-  signIn,
-  setUpConnector,
-  readPasscode,
   createUserByAdmin,
-  setSignUpIdentifier,
+  readPasscode,
+  registerNewUser,
   setSignInMethod,
+  setSignUpIdentifier,
+  setUpConnector,
+  signIn,
 } from '@/helpers';
 import { generateUsername, generatePassword, generateEmail, generatePhone } from '@/utils';
 
@@ -36,12 +37,43 @@ describe('username and password flow', () => {
   const username = generateUsername();
   const password = generatePassword();
 
-  it('register with username & password', async () => {
+  it('register and sign in with username & password', async () => {
     await expect(registerNewUser(username, password)).resolves.not.toThrow();
+    await expect(signIn({ username, password })).resolves.not.toThrow();
+  });
+});
+
+describe('email and password flow', () => {
+  const email = generateEmail();
+  const [localPart, domain] = email.split('@');
+  const password = generatePassword();
+
+  assert(localPart && domain);
+
+  beforeAll(async () => {
+    await setSignInMethod([
+      {
+        identifier: SignInIdentifier.Email,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: false,
+      },
+    ]);
   });
 
-  it('sign-in with username & password', async () => {
-    await expect(signIn(username, password)).resolves.not.toThrow();
+  it('can sign in with email & password', async () => {
+    await createUser({ password, primaryEmail: email, username: generateUsername(), name: 'John' });
+    await expect(
+      Promise.all([
+        signIn({ email, password }),
+        signIn({ email: localPart.toUpperCase() + '@' + domain, password }),
+        signIn({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          email: localPart[0]! + localPart.toUpperCase().slice(1) + '@' + domain,
+          password,
+        }),
+      ])
+    ).resolves.not.toThrow();
   });
 });
 
@@ -236,11 +268,11 @@ describe('sign-in and sign-out', () => {
 
     assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await signInWithUsernameAndPassword(
+    const { redirectTo } = await signInWithPassword({
       username,
       password,
-      client.interactionCookie
-    );
+      interactionCookie: client.interactionCookie,
+    });
 
     await client.processSession(redirectTo);
 
@@ -266,11 +298,11 @@ describe('sign-in to demo app and revisit Admin Console', () => {
 
     assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await signInWithUsernameAndPassword(
+    const { redirectTo } = await signInWithPassword({
       username,
       password,
-      client.interactionCookie
-    );
+      interactionCookie: client.interactionCookie,
+    });
 
     await client.processSession(redirectTo);
 

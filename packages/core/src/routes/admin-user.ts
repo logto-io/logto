@@ -18,6 +18,7 @@ import {
   findUserById,
   hasUser,
   updateUserById,
+  hasUserWithEmail,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
@@ -121,15 +122,24 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users',
     koaGuard({
       body: object({
-        username: string().regex(usernameRegEx),
+        primaryEmail: string().regex(emailRegEx).optional(),
+        username: string().regex(usernameRegEx).optional(),
         password: string().regex(passwordRegEx),
         name: string(),
       }),
     }),
     async (ctx, next) => {
-      const { username, password, name } = ctx.guard.body;
+      const { primaryEmail, username, password, name } = ctx.guard.body;
+
       assertThat(
-        !(await hasUser(username)),
+        !username || !(await hasUser(username)),
+        new RequestError({
+          code: 'user.username_exists_register',
+          status: 422,
+        })
+      );
+      assertThat(
+        !primaryEmail || !(await hasUserWithEmail(primaryEmail)),
         new RequestError({
           code: 'user.username_exists_register',
           status: 422,
@@ -142,6 +152,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       const user = await insertUser({
         id,
+        primaryEmail,
         username,
         passwordEncrypted,
         passwordEncryptionMethod,
