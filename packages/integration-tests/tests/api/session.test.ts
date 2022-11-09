@@ -1,6 +1,6 @@
-import assert from 'assert';
-
+import { SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { assert } from '@silverhand/essentials';
 
 import {
   mockEmailConnectorId,
@@ -9,27 +9,27 @@ import {
   mockSmsConnectorConfig,
 } from '@/__mocks__/connectors-mock';
 import {
-  createUser,
-  disableConnector,
   sendRegisterUserWithEmailPasscode,
-  sendRegisterUserWithSmsPasscode,
-  sendSignInUserWithEmailPasscode,
-  sendSignInUserWithSmsPasscode,
-  signInWithPassword,
   verifyRegisterUserWithEmailPasscode,
-  verifyRegisterUserWithSmsPasscode,
+  sendSignInUserWithEmailPasscode,
   verifySignInUserWithEmailPasscode,
+  sendRegisterUserWithSmsPasscode,
+  verifyRegisterUserWithSmsPasscode,
+  sendSignInUserWithSmsPasscode,
   verifySignInUserWithSmsPasscode,
+  disableConnector,
+  signInWithPassword,
+  createUser,
 } from '@/api';
 import MockClient from '@/client';
 import {
-  createUserByAdmin,
-  readPasscode,
   registerNewUser,
-  setSignInMethod,
-  setSignUpIdentifier,
-  setUpConnector,
   signIn,
+  setUpConnector,
+  readPasscode,
+  createUserByAdmin,
+  setSignUpIdentifier,
+  setSignInMethod,
 } from '@/helpers';
 import { generateUsername, generatePassword, generateEmail, generatePhone } from '@/utils';
 
@@ -48,7 +48,7 @@ describe('email and password flow', () => {
   const [localPart, domain] = email.split('@');
   const password = generatePassword();
 
-  assert(localPart && domain);
+  assert(localPart && domain, new Error('Email address local part or domain is empty'));
 
   beforeAll(async () => {
     await setSignInMethod([

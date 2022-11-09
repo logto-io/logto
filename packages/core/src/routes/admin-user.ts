@@ -141,7 +141,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       assertThat(
         !primaryEmail || !(await hasUserWithEmail(primaryEmail)),
         new RequestError({
-          code: 'user.username_exists_register',
+          code: 'user.email_exists_register',
           status: 422,
         })
       );
