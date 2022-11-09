@@ -72,6 +72,13 @@ const translation = {
     enter_username: 'Enter username',
     enter_username_description:
       'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.',
+    link_email: 'Link email',
+    link_phone: 'Link phone',
+    link_email_or_phone: 'Link email or phone',
+    link_email_description: 'Link your email to sign in or help with account recovery.',
+    link_phone_description: 'Link your phone number to sign in or help with account recovery.',
+    link_email_or_phone_description:
+      'Link your email or phone number to sign in or help with account recovery.',
   },
   error: {
     username_password_mismatch: 'Username and password do not match',

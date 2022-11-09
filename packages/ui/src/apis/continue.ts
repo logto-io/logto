@@ -1,3 +1,5 @@
+import { PasscodeType } from '@logto/schemas';
+
 import api from './api';
 import { bindSocialAccount } from './social';
 
@@ -5,6 +7,7 @@ type Response = {
   redirectTo: string;
 };
 
+const passwordlessApiPrefix = '/api/session/passwordless';
 const continueApiPrefix = '/api/session/sign-in/continue';
 
 type ContinueKey = 'password' | 'username' | 'email' | 'phone';
@@ -21,4 +24,30 @@ export const continueApi = async (key: ContinueKey, value: string, socialToBind?
   }
 
   return result;
+};
+
+export const sendContinueSetEmailPasscode = async (email: string) => {
+  await api
+    .post(`${passwordlessApiPrefix}/email/send`, {
+      json: {
+        email,
+        flow: PasscodeType.Continue,
+      },
+    })
+    .json();
+
+  return { success: true };
+};
+
+export const sendContinueSetPhonePasscode = async (phone: string) => {
+  await api
+    .post(`${passwordlessApiPrefix}/sms/send`, {
+      json: {
+        phone,
+        flow: PasscodeType.Continue,
+      },
+    })
+    .json();
+
+  return { success: true };
 };
