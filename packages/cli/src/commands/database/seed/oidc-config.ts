@@ -1,11 +1,10 @@
-import { generateKeyPair } from 'crypto';
 import { readFile } from 'fs/promises';
-import { promisify } from 'util';
 
 import type { LogtoOidcConfigType } from '@logto/schemas';
 import { LogtoOidcConfigKey } from '@logto/schemas';
 import { getEnv, getEnvAsStringArray } from '@silverhand/essentials';
-import { nanoid } from 'nanoid';
+
+import { generateOidcCookieKey, generateOidcPrivateKey } from '../utilities';
 
 const isBase64FormatPrivateKey = (key: string) => !key.includes('-');
 
@@ -57,21 +56,8 @@ export const oidcConfigReaders: {
       };
     }
 
-    // Generate a new key
-    const { privateKey } = await promisify(generateKeyPair)('rsa', {
-      modulusLength: 4096,
-      publicKeyEncoding: {
-        type: 'spki',
-        format: 'pem',
-      },
-      privateKeyEncoding: {
-        type: 'pkcs8',
-        format: 'pem',
-      },
-    });
-
     return {
-      value: [privateKey],
+      value: [await generateOidcPrivateKey()],
       fromEnv: false,
     };
   },
@@ -79,7 +65,7 @@ export const oidcConfigReaders: {
     const envKey = 'OIDC_COOKIE_KEYS';
     const keys = getEnvAsStringArray(envKey);
 
-    return { value: keys.length > 0 ? keys : [nanoid()], fromEnv: keys.length > 0 };
+    return { value: keys.length > 0 ? keys : [generateOidcCookieKey()], fromEnv: keys.length > 0 };
   },
   [LogtoOidcConfigKey.RefreshTokenReuseInterval]: async () => {
     const envKey = 'OIDC_REFRESH_TOKEN_REUSE_INTERVAL';
