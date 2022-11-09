@@ -3,7 +3,9 @@ import { useParams } from 'react-router-dom';
 
 import ErrorPage from '@/pages/ErrorPage';
 
+import SetEmail from './SetEmail';
 import SetPassword from './SetPassword';
+import SetPhone from './SetPhone';
 import SetUsername from './SetUsername';
 
 type Parameters = {
@@ -21,7 +23,13 @@ const Continue = () => {
     return <SetUsername />;
   }
 
-  // TODO: username, email, sms
+  if (method === SignInIdentifier.Email) {
+    return <SetEmail />;
+  }
+
+  if (method === SignInIdentifier.Sms) {
+    return <SetPhone />;
+  }
 
   return <ErrorPage />;
 };
