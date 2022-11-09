@@ -39,8 +39,8 @@ const IconButton = (
         <Tooltip
           anchorRef={innerReference}
           content={t(tooltip)}
+          position="top"
           horizontalAlign="center"
-          verticalAlign="top"
         />
       )}
     </>

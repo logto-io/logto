@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.title {
+  font: var(--font-title-small);
+}
+
+.list {
+  padding-left: _.unit(6);
+}
+
+.red {
+  background-color: rgba(221, 55, 48, 30%);
+}
+
+.green {
+  background-color: rgb(104, 190, 108, 40%);
+}

@@ -5,8 +5,8 @@ import {
   validateBranding,
   validateLanguageInfo,
   validateTermsOfUse,
-  validateSignInMethods,
-  isEnabled,
+  validateSignUp,
+  validateSignIn,
 } from '@/lib/sign-in-experience';
 import koaGuard from '@/middleware/koa-guard';
 import {
@@ -32,9 +32,10 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
     koaGuard({
       body: SignInExperiences.createGuard.omit({ id: true }).partial(),
     }),
+    /* eslint-disable complexity */
     async (ctx, next) => {
       const { socialSignInConnectorTargets, ...rest } = ctx.guard.body;
-      const { branding, languageInfo, termsOfUse, signInMethods } = rest;
+      const { branding, languageInfo, termsOfUse, signUp, signIn } = rest;
 
       if (branding) {
         validateBranding(branding);
@@ -59,26 +60,27 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
         )
       );
 
-      if (signInMethods) {
-        validateSignInMethods(
-          signInMethods,
-          filteredSocialSignInConnectorTargets,
-          enabledConnectors
-        );
+      if (signUp) {
+        validateSignUp(signUp, enabledConnectors);
       }
 
-      // Update socialSignInConnectorTargets only when social sign-in is enabled.
-      const signInExperience =
-        signInMethods && isEnabled(signInMethods.social)
+      if (signIn && signUp) {
+        validateSignIn(signIn, signUp, enabledConnectors);
+      } else if (signIn) {
+        const signInExperience = await findDefaultSignInExperience();
+        validateSignIn(signIn, signInExperience.signUp, enabledConnectors);
+      }
+      ctx.body = await updateDefaultSignInExperience(
+        filteredSocialSignInConnectorTargets
           ? {
-              ...ctx.guard.body,
+              ...rest,
               socialSignInConnectorTargets: filteredSocialSignInConnectorTargets,
             }
-          : rest;
-
-      ctx.body = await updateDefaultSignInExperience(signInExperience);
+          : rest
+      );
 
       return next();
     }
   );
+  /* eslint-enable complexity */
 }

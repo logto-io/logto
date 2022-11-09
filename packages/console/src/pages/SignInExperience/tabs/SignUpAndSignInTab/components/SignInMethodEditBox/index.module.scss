@@ -1,0 +1,55 @@
+@use '@/scss/underscore' as _;
+
+.signInMethodItem {
+  display: flex;
+  align-items: center;
+  margin: _.unit(2) 0;
+}
+
+.signInMethod {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  width: 100%;
+  margin-right: _.unit(2);
+  padding: _.unit(3) _.unit(2);
+  background-color: var(--color-layer-2);
+  border-radius: 8px;
+  cursor: move;
+  color: var(--color-text);
+
+  .identifier {
+    width: 130px;
+    display: flex;
+    font: var(--font-label-large);
+    align-items: center;
+  }
+
+  .authentication {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 _.unit(2);
+    flex-grow: 1;
+
+    &.verifyCodePrimary {
+      flex-direction: row-reverse;
+    }
+  }
+
+  .draggableIcon {
+    color: var(--color-text-secondary);
+  }
+}
+
+.plusIcon {
+  color: var(--color-text-secondary);
+}
+
+.addAnotherSignInMethodDropdown {
+  min-width: 208px;
+}
+
+.addSignInMethodDropDown {
+  min-width: unset;
+}

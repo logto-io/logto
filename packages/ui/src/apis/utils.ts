@@ -1,4 +1,6 @@
-import type { UserFlow } from '@/types';
+import { SignInIdentifier } from '@logto/schemas';
+
+import { UserFlow } from '@/types';
 
 import {
   sendForgotPasswordEmailPasscode,
@@ -19,29 +21,29 @@ import {
   sendSignInSmsPasscode,
 } from './sign-in';
 
-export type PasscodeChannel = 'sms' | 'email';
+export type PasscodeChannel = SignInIdentifier.Email | SignInIdentifier.Sms;
 
 export const getSendPasscodeApi = (
   type: UserFlow,
   method: PasscodeChannel
 ): ((_address: string) => Promise<{ success: boolean }>) => {
-  if (type === 'forgot-password' && method === 'email') {
+  if (type === UserFlow.forgotPassword && method === SignInIdentifier.Email) {
     return sendForgotPasswordEmailPasscode;
   }
 
-  if (type === 'forgot-password' && method === 'sms') {
+  if (type === UserFlow.forgotPassword && method === SignInIdentifier.Sms) {
     return sendForgotPasswordSmsPasscode;
   }
 
-  if (type === 'sign-in' && method === 'email') {
+  if (type === UserFlow.signIn && method === SignInIdentifier.Email) {
     return sendSignInEmailPasscode;
   }
 
-  if (type === 'sign-in' && method === 'sms') {
+  if (type === UserFlow.signIn && method === SignInIdentifier.Sms) {
     return sendSignInSmsPasscode;
   }
 
-  if (type === 'register' && method === 'email') {
+  if (type === UserFlow.register && method === SignInIdentifier.Email) {
     return sendRegisterEmailPasscode;
   }
 
@@ -56,23 +58,23 @@ export const getVerifyPasscodeApi = (
   code: string,
   socialToBind?: string
 ) => Promise<{ redirectTo?: string; success?: boolean }>) => {
-  if (type === 'forgot-password' && method === 'email') {
+  if (type === UserFlow.forgotPassword && method === SignInIdentifier.Email) {
     return verifyForgotPasswordEmailPasscode;
   }
 
-  if (type === 'forgot-password' && method === 'sms') {
+  if (type === UserFlow.forgotPassword && method === SignInIdentifier.Sms) {
     return verifyForgotPasswordSmsPasscode;
   }
 
-  if (type === 'sign-in' && method === 'email') {
+  if (type === UserFlow.signIn && method === SignInIdentifier.Email) {
     return verifySignInEmailPasscode;
   }
 
-  if (type === 'sign-in' && method === 'sms') {
+  if (type === UserFlow.signIn && method === SignInIdentifier.Sms) {
     return verifySignInSmsPasscode;
   }
 
-  if (type === 'register' && method === 'email') {
+  if (type === UserFlow.register && method === SignInIdentifier.Email) {
     return verifyRegisterEmailPasscode;
   }
 

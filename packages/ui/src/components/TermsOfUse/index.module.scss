@@ -22,3 +22,10 @@
 .errorMessage {
   margin-top: _.unit(2);
 }
+
+
+:global(body.mobile) {
+  .terms {
+    padding: _.unit(1) 0;
+  }
+}

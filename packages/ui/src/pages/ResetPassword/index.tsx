@@ -1,22 +1,20 @@
-import { useTranslation } from 'react-i18next';
+import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import SetPassword from '@/containers/SetPassword';
 
-import NavBar from '@/components/NavBar';
-import ResetPasswordForm from '@/containers/ResetPassword';
-
-import * as styles from './index.module.scss';
+import useResetPassword from './use-reset-password';
 
 const ResetPassword = () => {
-  const { t } = useTranslation();
+  const { resetPassword, errorMessage, clearErrorMessage } = useResetPassword();
 
   return (
-    <div className={styles.wrapper}>
-      <NavBar />
-      <div className={styles.container}>
-        <div className={styles.title}>{t('description.new_password')}</div>
-        {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
-        <ResetPasswordForm autoFocus />
-      </div>
-    </div>
+    <SecondaryPageWrapper title="description.new_password">
+      <SetPassword
+        autoFocus
+        errorMessage={errorMessage}
+        clearErrorMessage={clearErrorMessage}
+        onSubmit={resetPassword}
+      />
+    </SecondaryPageWrapper>
   );
 };
 

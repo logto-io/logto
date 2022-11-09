@@ -4,7 +4,7 @@ import type { ConnectorResponse, ConnectorMetadata, SignInExperience } from '@lo
 import { AppearanceMode } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
-import dayjs from 'dayjs';
+import { format } from 'date-fns';
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -195,7 +195,7 @@ const Preview = ({ signInExperience, className }: Props) => {
           <div className={classNames(styles.device, styles[mode])}>
             {platform !== 'desktopWeb' && (
               <div className={styles.topBar}>
-                <div className={styles.time}>{dayjs().format('HH:mm')}</div>
+                <div className={styles.time}>{format(Date.now(), 'HH:mm')}</div>
                 <PhoneInfo />
               </div>
             )}

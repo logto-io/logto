@@ -1,32 +1,43 @@
 @use '@/scss/underscore' as _;
 
-.wrapper {
-  @include _.full-page;
+.main {
+  margin-bottom: _.unit(4);
 }
 
-.container {
-  @include _.full-width;
-  margin-top: _.unit(2);
+.otherMethodsLink {
+  margin-bottom: _.unit(6);
 }
+
+.createAccount {
+  margin-top: _.unit(6);
+  text-align: center;
+}
+
+.placeHolder {
+  flex: 1;
+}
+
 
 :global(body.mobile) {
-  .container {
-    margin-top: _.unit(2);
+  .divider {
+    margin-bottom: _.unit(5);
   }
 
-  .title {
-    @include _.title;
-    margin-bottom: _.unit(6);
+  .createAccount {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
 :global(body.desktop) {
-  .container {
-    margin-top: _.unit(12);
+  .main {
+    margin-bottom: _.unit(6);
   }
 
-  .title {
-    @include _.title-desktop;
+  .placeHolder {
+    flex: 0;
+  }
+
+  .divider {
     margin-bottom: _.unit(4);
   }
 }

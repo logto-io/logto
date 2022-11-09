@@ -2,6 +2,8 @@ const connectors = {
   title: 'Conectores',
   subtitle: 'Configure conectores para habilitar a experiência de login social e sem senha',
   create: 'Adicionar conector social',
+  config_sie_notice: 'You’ve set up connectors. Make sure to configure it in <a>{{link}}</a>.', // UNTRANSLATED
+  config_sie_link_text: 'sign in experience', // UNTRANSLATED
   tab_email_sms: 'Conectores de Email e SMS',
   tab_social: 'Conectores sociais',
   connector_name: 'Nome do conector',

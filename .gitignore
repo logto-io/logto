@@ -29,6 +29,7 @@ cache
 .idea/
 *.pem
 .history
+fly.toml
 
 # connectors
 /packages/core/connectors

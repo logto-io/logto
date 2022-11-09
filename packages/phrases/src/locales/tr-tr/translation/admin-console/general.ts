@@ -37,6 +37,7 @@ const general = {
   leave_page: 'Sayfayı terk et',
   stay_on_page: 'Bu sayfada kal',
   type_to_search: 'Type to search', // UNTRANSLATED
+  got_it: 'Got it', // UNTRANSLATED
 };
 
 export default general;

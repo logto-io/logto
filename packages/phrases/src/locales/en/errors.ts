@@ -42,7 +42,18 @@ const errors = {
     identity_exists: 'The social account has been registered.',
     invalid_role_names: 'role names ({{roleNames}}) are not valid',
     cannot_delete_self: 'You cannot delete yourself.',
+    sign_up_method_not_enabled: 'This sign up method is not enabled.',
+    sign_in_method_not_enabled: 'This sign in method is not enabled.',
     same_password: 'Your new password can’t be the same as your current password.',
+    require_password: 'You need to set a password before sign in.',
+    password_exists: 'Your password has been set.',
+    require_username: 'You need to set a username before sign in.',
+    username_exists: 'Your username has been set.',
+    require_email: 'You need to set an email before sign in.',
+    email_exists: 'Your email has been set.',
+    require_sms: 'You need to set a phone before sign in.',
+    sms_exists: 'Your phone has been set.',
+    require_email_or_sms: 'You need to set a phone or email before sign in.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',
@@ -62,6 +73,7 @@ const errors = {
       'The connection has timed out. Verify again to ensure your account safety.',
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name.',
+    forgot_password_not_enabled: 'Forgot password is not enabled.',
   },
   connector: {
     general: 'An unexpected error occurred in connector.{{errorDescription}}',
@@ -105,6 +117,13 @@ const errors = {
     enabled_connector_not_found: 'Enabled {{type}} connector not found.',
     not_one_and_only_one_primary_sign_in_method:
       'There must be one and only one primary sign-in method. Please check your input.',
+    username_requires_password: 'Must enable set a password for username sign up identifier.',
+    passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.',
+    miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.',
+    password_sign_in_must_be_enabled:
+      'Password sign in must be enabled when set a password is required in sign up.',
+    code_sign_in_must_be_enabled:
+      'Verification code sign in must be enabled when set a password is not required in sign up.',
     unsupported_default_language: 'This language - {{language}} is not supported at the moment.',
   },
   localization: {

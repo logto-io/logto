@@ -20,7 +20,7 @@
     "@logto/core-kit": "1.0.0-beta.20",
     "@logto/language-kit": "1.0.0-beta.20",
     "@logto/phrases": "workspace:^",
-    "@logto/react": "1.0.0-beta.11",
+    "@logto/react": "1.0.0-beta.13",
     "@logto/schemas": "workspace:^",
     "@parcel/core": "2.7.0",
     "@parcel/transformer-sass": "2.7.0",
@@ -43,6 +43,17 @@
     "react-i18next": "^11.18.3",
     "stylelint": "^14.9.1",
     "typescript": "^4.7.4"
+  },
+  "engines": {
+    "node": "^16.13.0 || ^18.12.0"
+  },
+  "//": "https://github.com/parcel-bundler/parcel/issues/7636",
+  "targets": {
+    "default": {
+      "engines": {
+        "browsers": "defaults"
+      }
+    }
   },
   "alias": {
     "@/*": "./src/$1"

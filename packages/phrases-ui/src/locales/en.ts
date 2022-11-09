@@ -8,6 +8,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: 'Sign in with {{methods, list(type: disjunction;)}}',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}',
     social_bind_with:
       'Already have an account? Sign in to link {{methods, list(type: disjunction;)}} with your social identity.',
   },
@@ -25,9 +26,11 @@ const translation = {
     nav_back: 'Back',
     agree: 'Agree',
     got_it: 'Got it',
-    sign_in_with: 'Sign in with {{name}}',
+    sign_in_with: 'Continue with {{name}}',
     forgot_password: 'Forgot your password?',
     switch_to: 'Switch to {{method}}',
+    sign_in_via_passcode: 'Sign in via verification code',
+    sign_in_via_password: 'Sign in via password',
   },
   description: {
     email: 'email',
@@ -39,7 +42,7 @@ const translation = {
     terms_of_use: 'Terms of Use',
     create_account: 'Create Account',
     or: 'or',
-    enter_passcode: 'The verification code has been sent to your {{address}}',
+    enter_passcode: 'The verification code has been sent to your {{address}} {{target}}',
     passcode_sent: 'The verification code has been resent',
     resend_after_seconds: 'Resend after <span>{{seconds}}</span> seconds',
     resend_passcode: 'Resend verification code',
@@ -48,7 +51,8 @@ const translation = {
       'The account with {{type}} {{value}} already exists, would you like to sign in?',
     sign_in_id_does_not_exists:
       'The account with {{type}} {{value}} does not exist, would you like to create a new account?',
-    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.',
+    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.',
+    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists',
     bind_account_title: 'Link account',
     social_create_account: 'No account? You can create a new account and link.',
     social_bind_account: 'Already have an account? Sign in to link it with your social identity.',
@@ -60,6 +64,10 @@ const translation = {
       'Enter the phone number associated with your account, and we’ll message you the verification code to reset your password.',
     new_password: 'New password',
     password_changed: 'Password Changed',
+    no_account: "Don't have an account?",
+    have_account: 'Already have an account?',
+    enter_password: 'Enter Password',
+    enter_password_for: 'Enter the password of {{method}} {{value}}',
   },
   error: {
     username_password_mismatch: 'Username and password do not match',

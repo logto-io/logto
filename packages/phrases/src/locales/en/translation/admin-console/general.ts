@@ -36,6 +36,7 @@ const general = {
   leave_page: 'Leave Page',
   stay_on_page: 'Stay on Page',
   type_to_search: 'Type to search',
+  got_it: 'Got it',
 };
 
 export default general;

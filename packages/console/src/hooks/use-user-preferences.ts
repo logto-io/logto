@@ -19,6 +19,7 @@ const userPreferencesGuard = z.object({
   appearanceMode: z.nativeEnum(AppearanceMode),
   experienceNoticeConfirmed: z.boolean().optional(),
   getStartedHidden: z.boolean().optional(),
+  connectorSieNoticeConfirmed: z.boolean().optional(),
 });
 
 export type UserPreferences = z.infer<typeof userPreferencesGuard>;

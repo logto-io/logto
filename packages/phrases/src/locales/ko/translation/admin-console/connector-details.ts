@@ -17,6 +17,8 @@ const connector_details = {
   type_email: '이메일 연동',
   type_sms: 'SMS 연동',
   type_social: '소셜 연동',
+  in_use_deletion_description:
+    'This connector is in use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.', // UNTRANSLATED
 };
 
 export default connector_details;

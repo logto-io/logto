@@ -27,16 +27,17 @@ export const defaultPath = path.join(os.homedir(), 'logto');
 const pgRequired = new semver.SemVer('14.0.0');
 
 export const validateNodeVersion = () => {
-  const required = new semver.SemVer('16.0.0');
+  const required = [new semver.SemVer('16.13.0'), new semver.SemVer('18.12.0')];
+  const requiredVersionString = required.map((version) => '^' + version.version).join(' || ');
   const current = new semver.SemVer(execSync('node -v', { encoding: 'utf8', stdio: 'pipe' }));
 
-  if (required.compare(current) > 0) {
-    log.error(`Logto requires NodeJS >=${required.version}, but ${current.version} found.`);
+  if (required.every((version) => version.major !== current.major)) {
+    log.error(`Logto requires NodeJS ${requiredVersionString}, but ${current.version} found.`);
   }
 
-  if (current.major > required.major) {
+  if (required.some((version) => version.major === current.major && version.compare(current) > 0)) {
     log.warn(
-      `Logto is tested under NodeJS ^${required.version}, but version ${current.version} found.`
+      `Logto is tested under NodeJS ${requiredVersionString}, but version ${current.version} found.`
     );
   }
 };

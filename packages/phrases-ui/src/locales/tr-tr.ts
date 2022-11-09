@@ -10,6 +10,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: '{{methods, list(type: disjunction;)}} ile giriş yapınız',
+    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       'Hesabınız zaten var mı? {{methods, list(type: disjunction;)}} bağlantısına tıklayarak giriş yapabilirsiniz',
   },
@@ -27,9 +28,11 @@ const translation = {
     nav_back: 'Geri',
     agree: 'Kabul Et',
     got_it: 'Anladım',
-    sign_in_with: '{{name}} ile giriş yap',
+    sign_in_with: '{{name}} ile ilerle',
     forgot_password: 'Şifremi Unuttum?',
     switch_to: 'Switch to {{method}}', // UNTRANSLATED
+    sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
   },
   description: {
     email: 'e-posta adresi',
@@ -41,7 +44,7 @@ const translation = {
     terms_of_use: 'Kullanım Koşulları',
     create_account: 'Hesap Oluştur',
     or: 'veya',
-    enter_passcode: 'Kod {{address}}inize gönderildi.',
+    enter_passcode: 'Kod {{address}} {{target}} inize gönderildi.',
     passcode_sent: 'Kodunuz yeniden gönderildi.',
     resend_after_seconds: '<span>{{seconds}}</span> saniye sonra tekrar gönder',
     resend_passcode: 'Kodu Yeniden Gönder',
@@ -49,7 +52,8 @@ const translation = {
     create_account_id_exists: '{{type}} {{value}} ile hesap mevcut, giriş yapmak ister misiniz?',
     sign_in_id_does_not_exists:
       '{{type}} {{value}} ile hesap mevcut değil, yeni bir hesap oluşturmak ister misiniz?',
-    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
     bind_account_title: 'Hesap bağla',
     social_create_account: 'Hesabınız yok mu? Yeni bir hesap ve bağlantı oluşturabilirsiniz.',
     social_bind_account: 'Hesabınız zaten var mı? Hesabınıza bağlanmak için giriş yapınız.',
@@ -61,6 +65,10 @@ const translation = {
       'Hesabınızla ilişkili telefon numarasını girin, şifrenizi sıfırlamak için size doğrulama kodunu kısa mesajla gönderelim.',
     new_password: 'Yeni Şifre',
     password_changed: 'Password Changed', // UNTRANSLATED
+    no_account: "Don't have an account?", // UNTRANSLATED
+    have_account: 'Already have an account?', // UNTRANSLATED
+    enter_password: 'Enter Password', // UNTRANSLATED
+    enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'Kullanıcı adı ve şifre eşleşmiyor.',

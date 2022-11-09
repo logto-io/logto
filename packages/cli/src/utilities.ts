@@ -1,5 +1,6 @@
 import { execSync } from 'child_process';
-import { createWriteStream } from 'fs';
+import { createWriteStream, existsSync } from 'fs';
+import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
 import type { Optional } from '@silverhand/essentials';
@@ -10,6 +11,7 @@ import got from 'got';
 import { HttpsProxyAgent } from 'hpagent';
 import inquirer from 'inquirer';
 import ora from 'ora';
+import { z } from 'zod';
 
 export const safeExecSync = (command: string) => {
   try {
@@ -173,3 +175,38 @@ export function findLastIndex<T>(
 
   return -1;
 }
+
+const getConnectorPackageName = async (directory: string) => {
+  const filePath = path.join(directory, 'package.json');
+
+  if (!existsSync(filePath)) {
+    return;
+  }
+
+  const json = await readFile(filePath, 'utf8');
+  const { name } = z.object({ name: z.string() }).parse(JSON.parse(json));
+
+  if (name.startsWith('connector-') || Boolean(name.split('/')[1]?.startsWith('connector-'))) {
+    return name;
+  }
+};
+
+export type ConnectorPackage = {
+  name: string;
+  path: string;
+};
+
+export const getConnectorPackagesFromDirectory = async (directory: string) => {
+  const content = await readdir(directory, 'utf8');
+  const rawPackages = await Promise.all(
+    content.map(async (value) => {
+      const currentDirectory = path.join(directory, value);
+
+      return { name: await getConnectorPackageName(currentDirectory), path: currentDirectory };
+    })
+  );
+
+  return rawPackages.filter(
+    (packageInfo): packageInfo is ConnectorPackage => typeof packageInfo.name === 'string'
+  );
+};

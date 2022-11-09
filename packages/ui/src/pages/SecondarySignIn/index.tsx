@@ -1,49 +1,40 @@
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { SignInMode, SignInIdentifier } from '@logto/schemas';
 import { useParams } from 'react-router-dom';
 
-import NavBar from '@/components/NavBar';
-import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
+import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import { EmailSignIn } from '@/containers/EmailForm';
+import { SmsSignIn } from '@/containers/PhoneForm';
 import UsernameSignIn from '@/containers/UsernameSignIn';
+import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
-
-import * as styles from './index.module.scss';
 
 type Props = {
   method?: string;
 };
 
 const SecondarySignIn = () => {
-  const { t } = useTranslation();
-  const { method = 'username' } = useParams<Props>();
+  const { method = '' } = useParams<Props>();
+  const { signInMethods, signInMode } = useSieMethods();
+  const signInMethod = signInMethods.find(({ identifier }) => identifier === method);
 
-  const signInForm = useMemo(() => {
-    if (method === 'sms') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <PhonePasswordless autoFocus type="sign-in" />;
-    }
+  if (!signInMode || signInMode === SignInMode.Register) {
+    return <ErrorPage />;
+  }
 
-    if (method === 'email') {
-      // eslint-disable-next-line jsx-a11y/no-autofocus
-      return <EmailPasswordless autoFocus type="sign-in" />;
-    }
-
-    // eslint-disable-next-line jsx-a11y/no-autofocus
-    return <UsernameSignIn autoFocus />;
-  }, [method]);
-
-  if (!['email', 'sms', 'username'].includes(method)) {
+  if (!signInMethod) {
     return <ErrorPage />;
   }
 
   return (
-    <div className={styles.wrapper}>
-      <NavBar />
-      <div className={styles.container}>
-        <div className={styles.title}>{t('action.sign_in')}</div>
-        {signInForm}
-      </div>
-    </div>
+    <SecondaryPageWrapper title="action.sign_in">
+      {signInMethod.identifier === SignInIdentifier.Sms ? (
+        <SmsSignIn autoFocus signInMethod={signInMethod} />
+      ) : signInMethod.identifier === SignInIdentifier.Email ? (
+        <EmailSignIn autoFocus signInMethod={signInMethod} />
+      ) : (
+        <UsernameSignIn autoFocus />
+      )}
+    </SecondaryPageWrapper>
   );
 };
 

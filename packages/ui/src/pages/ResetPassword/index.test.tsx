@@ -1,11 +1,25 @@
-import { render } from '@testing-library/react';
+import { act, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
+
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import { resetPassword } from '@/apis/forgot-password';
 
 import ResetPassword from '.';
 
+const mockedNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedNavigate,
+}));
+
+jest.mock('@/apis/forgot-password', () => ({
+  resetPassword: jest.fn(async () => ({ redirectTo: '/' })),
+}));
+
 describe('ForgotPassword', () => {
   it('render forgot-password page properly', () => {
-    const { queryByText } = render(
+    const { queryByText, container } = renderWithPageContext(
       <MemoryRouter initialEntries={['/forgot-password']}>
         <Routes>
           <Route path="/forgot-password" element={<ResetPassword />} />
@@ -13,6 +27,31 @@ describe('ForgotPassword', () => {
       </MemoryRouter>
     );
 
-    expect(queryByText('description.new_password')).not.toBeNull();
+    expect(container.querySelector('input[name="new-password"]')).not.toBeNull();
+    expect(container.querySelector('input[name="confirm-new-password"]')).not.toBeNull();
+    expect(queryByText('action.save_password')).not.toBeNull();
+  });
+
+  test('should submit properly', async () => {
+    const { getByText, container } = renderWithPageContext(<ResetPassword />);
+    const submitButton = getByText('action.save_password');
+    const passwordInput = container.querySelector('input[name="new-password"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
+
+    act(() => {
+      if (passwordInput) {
+        fireEvent.change(passwordInput, { target: { value: '123456' } });
+      }
+
+      if (confirmPasswordInput) {
+        fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
+      }
+
+      fireEvent.click(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(resetPassword).toBeCalledWith('123456');
+    });
   });
 });

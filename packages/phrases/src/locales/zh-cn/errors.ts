@@ -41,7 +41,18 @@ const errors = {
     identity_exists: '该社交帐号已被注册',
     invalid_role_names: '角色名称（{{roleNames}}）无效',
     cannot_delete_self: '你无法删除自己',
+    sign_up_method_not_enabled: '注册方式尚未启用',
+    sign_in_method_not_enabled: '登录方式尚未启用',
     same_password: '为确保你的账户安全，新密码不能与旧密码一致',
+    require_password: '请设置密码',
+    password_exists: '密码已设置过',
+    require_username: '请设置用户名',
+    username_exists: '用户名已设置过',
+    require_email: '请绑定邮箱地址',
+    email_exists: '已绑定邮箱地址',
+    require_sms: '请绑定手机号码',
+    sms_exists: '已绑定手机号码',
+    require_email_or_sms: '请绑定邮箱地址或手机号码',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',
@@ -59,6 +70,7 @@ const errors = {
     verification_expired: '当前页面已超时。为确保你的账号安全，请重新验证。',
     unauthorized: '请先登录',
     unsupported_prompt_name: '不支持的 prompt name',
+    forgot_password_not_enabled: '忘记密码功能没有开启。',
   },
   connector: {
     general: '连接器发生未知错误{{errorDescription}}',
@@ -98,6 +110,13 @@ const errors = {
     empty_social_connectors: '你启用了社交登录的方式。请至少选择一个社交连接器。',
     enabled_connector_not_found: '未找到已启用的 {{type}} 连接器',
     not_one_and_only_one_primary_sign_in_method: '主要的登录方式必须有且仅有一个，请检查你的输入。',
+    username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
+    passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
+    miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.', // UNTRANSLATED
+    password_sign_in_must_be_enabled:
+      'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
+    code_sign_in_must_be_enabled:
+      'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
     unsupported_default_language: '{{language}}无法选择为默认语言。',
   },
   localization: {

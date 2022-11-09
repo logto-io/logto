@@ -1,55 +1,63 @@
-import { BrandingStyle, SignInMode } from '@logto/schemas';
-import classNames from 'classnames';
-import { useContext } from 'react';
+import { SignInMode } from '@logto/schemas';
+import { useTranslation } from 'react-i18next';
 
-import BrandingHeader from '@/components/BrandingHeader';
-import AppNotification from '@/containers/AppNotification';
-import { PageContext } from '@/hooks/use-page-context';
-import { getLogoUrl } from '@/utils/logo';
+import Divider from '@/components/Divider';
+import TextLink from '@/components/TextLink';
+import LandingPageContainer from '@/containers/LandingPageContainer';
+import OtherMethodsLink from '@/containers/OtherMethodsLink';
+import { SocialSignInList } from '@/containers/SocialSignIn';
+import { useSieMethods } from '@/hooks/use-sie';
+import { UserFlow } from '@/types';
 
+import ErrorPage from '../ErrorPage';
+import Main from './Main';
 import * as styles from './index.module.scss';
-import { PrimarySection, SecondarySection, CreateAccountLink } from './registry';
 
 const SignIn = () => {
-  const { experienceSettings, theme, platform } = useContext(PageContext);
+  const { signInMethods, signUpMethods, socialConnectors, signInMode } = useSieMethods();
+  const otherMethods = signInMethods.slice(1).map(({ identifier }) => identifier);
+  const { t } = useTranslation();
 
-  if (!experienceSettings) {
-    return null;
+  if (!signInMode || signInMode === SignInMode.Register) {
+    return <ErrorPage />;
   }
 
-  const { slogan, logoUrl, darkLogoUrl, style } = experienceSettings.branding;
-
   return (
-    <>
-      {platform === 'web' && <div className={styles.placeholderTop} />}
-      <div className={classNames(styles.wrapper)}>
-        <BrandingHeader
-          className={styles.header}
-          headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
-          logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
-        />
-        <PrimarySection
-          signInMethod={experienceSettings.primarySignInMethod}
-          socialConnectors={experienceSettings.socialConnectors}
-          signInMode={experienceSettings.signInMode}
-        />
-
-        {experienceSettings.signInMode !== SignInMode.Register && (
-          <SecondarySection
-            primarySignInMethod={experienceSettings.primarySignInMethod}
-            secondarySignInMethods={experienceSettings.secondarySignInMethods}
-            socialConnectors={experienceSettings.socialConnectors}
+    <LandingPageContainer>
+      <Main signInMethod={signInMethods[0]} socialConnectors={socialConnectors} />
+      {
+        // Other sign-in methods
+        otherMethods.length > 0 && (
+          <OtherMethodsLink
+            methods={otherMethods}
+            template="sign_in_with"
+            flow={UserFlow.signIn}
+            search={location.search}
           />
-        )}
-
-        {experienceSettings.signInMode === SignInMode.SignInAndRegister && (
-          <CreateAccountLink primarySignInMethod={experienceSettings.primarySignInMethod} />
-        )}
-
-        <AppNotification />
-      </div>
-      {platform === 'web' && <div className={styles.placeholderBottom} />}
-    </>
+        )
+      }
+      {
+        // Social sign-in methods
+        signInMethods.length > 0 && socialConnectors.length > 0 && (
+          <>
+            <Divider label="description.or" className={styles.divider} />
+            <SocialSignInList isCollapseEnabled socialConnectors={socialConnectors} />
+          </>
+        )
+      }
+      {
+        // Create Account footer
+        signInMode === SignInMode.SignInAndRegister && signUpMethods.length > 0 && (
+          <>
+            <div className={styles.placeHolder} />
+            <div className={styles.createAccount}>
+              {t('description.no_account')}{' '}
+              <TextLink replace to="/register" text="action.create_account" />
+            </div>
+          </>
+        )
+      }
+    </LandingPageContainer>
   );
 };
 

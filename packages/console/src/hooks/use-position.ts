@@ -1,7 +1,7 @@
 import type { RefObject } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
-export type VerticalAlignment = 'top' | 'center' | 'bottom';
+export type VerticalAlignment = 'top' | 'middle' | 'bottom';
 
 export type HorizontalAlignment = 'start' | 'center' | 'end';
 
@@ -29,22 +29,22 @@ const windowSafePadding = 12;
 const selectVerticalAlignment = ({
   verticalAlign,
   verticalTop,
-  verticalCenter,
+  verticalMiddle,
   verticalBottom,
   overlayHeight,
 }: {
   verticalAlign: VerticalAlignment;
   verticalTop: number;
-  verticalCenter: number;
+  verticalMiddle: number;
   verticalBottom: number;
   overlayHeight: number;
-}) => {
+}): VerticalAlignment => {
   const minY = windowSafePadding;
   const maxY = window.innerHeight - windowSafePadding;
 
   const isTopAllowed = verticalTop >= minY;
   const isCenterAllowed =
-    verticalCenter - overlayHeight / 2 >= minY && verticalCenter + overlayHeight / 2 <= maxY;
+    verticalMiddle - overlayHeight / 2 >= minY && verticalMiddle + overlayHeight / 2 <= maxY;
   const isBottomAllowed = verticalBottom + overlayHeight <= maxY;
 
   switch (verticalAlign) {
@@ -58,15 +58,15 @@ const selectVerticalAlignment = ({
       }
 
       if (isCenterAllowed) {
-        return 'center';
+        return 'middle';
       }
 
       return verticalAlign;
     }
 
-    case 'center': {
+    case 'middle': {
       if (isCenterAllowed) {
-        return 'center';
+        return 'middle';
       }
 
       if (isTopAllowed) {
@@ -90,7 +90,7 @@ const selectVerticalAlignment = ({
       }
 
       if (isCenterAllowed) {
-        return 'center';
+        return 'middle';
       }
 
       return verticalAlign;
@@ -197,14 +197,14 @@ export default function usePosition({
     const anchorRect = anchorRef.current.getBoundingClientRect();
     const overlayRect = overlayRef.current.getBoundingClientRect();
 
-    const verticalTop = anchorRect.y - overlayRect.height - offset.vertical;
-    const verticalCenter =
-      anchorRect.y - anchorRect.height / 2 - overlayRect.height / 2 + offset.vertical;
+    const verticalTop = anchorRect.y - overlayRect.height + offset.vertical;
+    const verticalMiddle =
+      anchorRect.y + anchorRect.height / 2 - overlayRect.height / 2 + offset.vertical;
     const verticalBottom = anchorRect.y + anchorRect.height + offset.vertical;
 
     const verticalPositionMap = {
       top: verticalTop,
-      center: verticalCenter,
+      middle: verticalMiddle,
       bottom: verticalBottom,
     };
 
@@ -222,7 +222,7 @@ export default function usePosition({
     const selectedVerticalAlign = selectVerticalAlignment({
       verticalAlign,
       verticalTop,
-      verticalCenter,
+      verticalMiddle,
       verticalBottom,
       overlayHeight: overlayRect.height,
     });

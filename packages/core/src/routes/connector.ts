@@ -7,6 +7,7 @@ import { object, string } from 'zod';
 import { getLogtoConnectorById, getLogtoConnectors } from '@/connectors';
 import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
+import { removeUnavailableSocialConnectorTargets } from '@/lib/sign-in-experience';
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
@@ -115,6 +116,12 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         where: { id },
         jsonbMode: 'merge',
       });
+
+      // Delete the social connector in the sign-in experience if it is disabled.
+      if (!enabled && type === ConnectorType.Social) {
+        await removeUnavailableSocialConnectorTargets();
+      }
+
       ctx.body = { ...connector, metadata, type };
 
       return next();

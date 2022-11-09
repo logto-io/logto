@@ -11,6 +11,7 @@ import {
 } from './forgot-password';
 import {
   register,
+  checkUsername,
   registerWithSms,
   registerWithEmail,
   sendRegisterEmailPasscode,
@@ -19,13 +20,15 @@ import {
   verifyRegisterSmsPasscode,
 } from './register';
 import {
-  signInBasic,
+  signInWithUsername,
   signInWithSms,
   signInWithEmail,
   sendSignInSmsPasscode,
   sendSignInEmailPasscode,
   verifySignInEmailPasscode,
   verifySignInSmsPasscode,
+  signInWithEmailPassword,
+  signInWithPhonePassword,
 } from './sign-in';
 import {
   invokeSocialSignIn,
@@ -55,17 +58,87 @@ describe('api', () => {
     mockKyPost.mockClear();
   });
 
-  it('signInBasic', async () => {
+  it('signInWithUsername', async () => {
     mockKyPost.mockReturnValueOnce({
       json: () => ({
         redirectTo: '/',
       }),
     });
-    await signInBasic(username, password);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/username-password', {
+    await signInWithUsername(username, password);
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/password/username', {
       json: {
         username,
         password,
+      },
+    });
+  });
+
+  it('signInWithEmailPassword', async () => {
+    mockKyPost.mockReturnValueOnce({
+      json: () => ({
+        redirectTo: '/',
+      }),
+    });
+    await signInWithEmailPassword(email, password);
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/password/email', {
+      json: {
+        email,
+        password,
+      },
+    });
+  });
+
+  it('signInWithEmailPassword with bind social account', async () => {
+    mockKyPost.mockReturnValueOnce({
+      json: () => ({
+        redirectTo: '/',
+      }),
+    });
+    await signInWithEmailPassword(email, password, 'github');
+    expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/password/email', {
+      json: {
+        email,
+        password,
+      },
+    });
+    expect(ky.post).toHaveBeenNthCalledWith(2, '/api/session/bind-social', {
+      json: {
+        connectorId: 'github',
+      },
+    });
+  });
+
+  it('signInWithPhonePassword', async () => {
+    mockKyPost.mockReturnValueOnce({
+      json: () => ({
+        redirectTo: '/',
+      }),
+    });
+    await signInWithPhonePassword(phone, password);
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/password/phone', {
+      json: {
+        phone,
+        password,
+      },
+    });
+  });
+
+  it('signInWithPhonePassword with bind social account', async () => {
+    mockKyPost.mockReturnValueOnce({
+      json: () => ({
+        redirectTo: '/',
+      }),
+    });
+    await signInWithPhonePassword(phone, password, 'github');
+    expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/password/phone', {
+      json: {
+        phone,
+        password,
+      },
+    });
+    expect(ky.post).toHaveBeenNthCalledWith(2, '/api/session/bind-social', {
+      json: {
+        connectorId: 'github',
       },
     });
   });
@@ -90,14 +163,14 @@ describe('api', () => {
     expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email');
   });
 
-  it('signInBasic with bind social account', async () => {
+  it('signInWithUsername with bind social account', async () => {
     mockKyPost.mockReturnValueOnce({
       json: () => ({
         redirectTo: '/',
       }),
     });
-    await signInBasic(username, password, 'github');
-    expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/username-password', {
+    await signInWithUsername(username, password, 'github');
+    expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/password/username', {
       json: {
         username,
         password,
@@ -173,10 +246,19 @@ describe('api', () => {
 
   it('register', async () => {
     await register(username, password);
-    expect(ky.post).toBeCalledWith('/api/session/register/username-password', {
+    expect(ky.post).toBeCalledWith('/api/session/register/password/username', {
       json: {
         username,
         password,
+      },
+    });
+  });
+
+  it('checkUsername', async () => {
+    await checkUsername(username);
+    expect(ky.post).toBeCalledWith('/api/session/register/password/check-username', {
+      json: {
+        username,
       },
     });
   });

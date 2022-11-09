@@ -1,11 +1,18 @@
-import classNames from 'classnames';
 import type { ReactNode, RefObject } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import type { VerticalAlignment, HorizontalAlignment } from '@/hooks/use-position';
+import type { HorizontalAlignment } from '@/hooks/use-position';
 import usePosition from '@/hooks/use-position';
 
+import TipBubble from '../TipBubble';
+import type { TipBubblePosition } from '../TipBubble';
+import {
+  getVerticalAlignment,
+  getHorizontalAlignment,
+  getVerticalOffset,
+  getHorizontalOffset,
+} from '../TipBubble/utils';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -13,20 +20,8 @@ type Props = {
   anchorRef: RefObject<Element>;
   className?: string;
   isKeepOpen?: boolean;
-  verticalAlign?: VerticalAlignment;
+  position?: TipBubblePosition;
   horizontalAlign?: HorizontalAlignment;
-  flip?: 'right' | 'left';
-};
-
-const getHorizontalOffset = (alignment: HorizontalAlignment, flipped: string): number => {
-  switch (alignment) {
-    case 'start':
-      return flipped === 'right' ? 32 : -32;
-    case 'end':
-      return flipped === 'left' ? -32 : 32;
-    default:
-      return 0;
-  }
 };
 
 const Tooltip = ({
@@ -34,17 +29,23 @@ const Tooltip = ({
   anchorRef,
   className,
   isKeepOpen = false,
-  verticalAlign = 'top',
+  position = 'top',
   horizontalAlign = 'start',
-  flip,
 }: Props) => {
   const [tooltipDom, setTooltipDom] = useState<HTMLDivElement>();
   const tooltipRef = useRef<HTMLDivElement>(null);
 
-  const { position, positionState, mutate } = usePosition({
-    verticalAlign,
-    horizontalAlign,
-    offset: { vertical: 16, horizontal: getHorizontalOffset(horizontalAlign, flip ?? '') },
+  const {
+    position: layoutPosition,
+    positionState,
+    mutate,
+  } = usePosition({
+    verticalAlign: getVerticalAlignment(position),
+    horizontalAlign: getHorizontalAlignment(position, horizontalAlign),
+    offset: {
+      vertical: getVerticalOffset(position),
+      horizontal: getHorizontalOffset(position, horizontalAlign),
+    },
     anchorRef,
     overlayRef: tooltipRef,
   });
@@ -124,24 +125,17 @@ const Tooltip = ({
     return null;
   }
 
-  const isArrowUp = positionState.verticalAlign === 'bottom';
-  const isArrowRight = flip === 'left' && positionState.horizontalAlign === 'end';
-  const isArrowLeft = flip === 'right' && positionState.horizontalAlign === 'start';
-
   return createPortal(
-    <div
-      ref={tooltipRef}
-      className={classNames(
-        styles.tooltip,
-        isArrowUp && styles.arrowUp,
-        isArrowRight && styles.arrowRight,
-        isArrowLeft && styles.arrowLeft,
-        !flip && styles[horizontalAlign],
-        className
-      )}
-      style={{ ...position }}
-    >
-      <div className={styles.content}>{content}</div>
+    <div className={styles.tooltip}>
+      <TipBubble
+        ref={tooltipRef}
+        className={className}
+        style={{ ...layoutPosition }}
+        position={position}
+        horizontalAlignment={positionState.horizontalAlign}
+      >
+        <div className={styles.content}>{content}</div>
+      </TipBubble>
     </div>,
     tooltipDom
   );

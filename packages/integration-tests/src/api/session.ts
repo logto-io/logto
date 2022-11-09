@@ -12,7 +12,7 @@ export const registerUserWithUsernameAndPassword = async (
   interactionCookie: string
 ) =>
   api
-    .post('session/register/username-password', {
+    .post('session/register/password/username', {
       headers: {
         cookie: interactionCookie,
       },
@@ -30,7 +30,7 @@ export const signInWithUsernameAndPassword = async (
   interactionCookie: string
 ) =>
   api
-    .post('session/sign-in/username-password', {
+    .post('session/sign-in/password/username', {
       headers: {
         cookie: interactionCookie,
       },
