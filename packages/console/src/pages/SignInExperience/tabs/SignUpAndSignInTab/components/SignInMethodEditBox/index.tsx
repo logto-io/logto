@@ -9,6 +9,7 @@ import { signInIdentifiers, signInIdentifierToRequiredConnectorMapping } from '.
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
 import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
+import * as styles from './index.module.scss';
 import type { SignInMethod } from './types';
 import {
   computeOnSignInMethodAppended,
@@ -125,6 +126,7 @@ const SignInMethodEditBox = ({
             id={signInMethod.identifier}
             sortIndex={index}
             moveItem={onMoveItem}
+            className={styles.draggleItemContainer}
           >
             <SignInMethodItem
               signInMethod={signInMethod}

@@ -62,7 +62,13 @@ const SocialConnectorEditBox = ({ value, onChange }: Props) => {
     <div>
       <DragDropProvider>
         {selectedConnectorItems.map((item, index) => (
-          <DraggableItem key={item.id} id={item.id} sortIndex={index} moveItem={onMoveItem}>
+          <DraggableItem
+            key={item.id}
+            id={item.id}
+            sortIndex={index}
+            moveItem={onMoveItem}
+            className={styles.draggleItemContainer}
+          >
             <SelectedConnectorItem
               data={item}
               onDelete={(target) => {
