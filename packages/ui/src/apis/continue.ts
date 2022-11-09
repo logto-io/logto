@@ -97,3 +97,23 @@ export const sendContinueSetPhonePasscode = async (phone: string) => {
 
   return { success: true };
 };
+
+export const verifyContinueSetEmailPasscode = async (email: string, code: string) => {
+  await api
+    .post(`${passwordlessApiPrefix}/email/verify`, {
+      json: { email, code, flow: PasscodeType.Continue },
+    })
+    .json();
+
+  return { success: true };
+};
+
+export const verifyContinueSetSmsPasscode = async (phone: string, code: string) => {
+  await api
+    .post(`${passwordlessApiPrefix}/sms/verify`, {
+      json: { phone, code, flow: PasscodeType.Continue },
+    })
+    .json();
+
+  return { success: true };
+};
