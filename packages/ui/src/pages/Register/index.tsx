@@ -29,6 +29,7 @@ const Register = () => {
         // Other create account methods
         otherMethods.length > 0 && (
           <OtherMethodsLink
+            className={styles.otherMethods}
             methods={otherMethods}
             template="register_with"
             flow={UserFlow.register}
@@ -40,7 +41,11 @@ const Register = () => {
         signUpMethods.length > 0 && socialConnectors.length > 0 && (
           <>
             <Divider label="description.or" className={styles.divider} />
-            <SocialSignInList isCollapseEnabled socialConnectors={socialConnectors} />
+            <SocialSignInList
+              isCollapseEnabled
+              socialConnectors={socialConnectors}
+              className={styles.main}
+            />
           </>
         )
       }

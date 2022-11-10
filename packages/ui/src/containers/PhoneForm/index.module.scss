@@ -9,7 +9,8 @@
 
   .inputField,
   .terms,
-  .switch {
+  .switch,
+  .formErrors {
     margin-bottom: _.unit(4);
   }
 
@@ -19,7 +20,7 @@
   }
 
   .formErrors {
-    margin-top: _.unit(-2);
-    margin-bottom: _.unit(4);
+    margin-left: _.unit(0.5);
+    margin-top: _.unit(-3);
   }
 }
