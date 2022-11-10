@@ -21,7 +21,7 @@ import {
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
-import { checkExistingSignUpIdentifiers, checkRequiredSignUpIdentifiers } from './session/utils';
+import { checkExistingSignUpIdentifiers } from './session/utils';
 import type { AuthedRouter } from './types';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
@@ -175,7 +175,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       await findUserById(userId);
-      await checkRequiredSignUpIdentifiers(body);
       await checkExistingSignUpIdentifiers(body);
 
       // Temp solution to validate the existence of input roleNames
