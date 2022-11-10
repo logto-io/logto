@@ -1,6 +1,13 @@
+import { PasscodeType } from '@logto/schemas';
 import ky from 'ky';
 
-import { continueApi } from './continue';
+import {
+  continueApi,
+  sendContinueSetEmailPasscode,
+  sendContinueSetPhonePasscode,
+  verifyContinueSetEmailPasscode,
+  verifyContinueSetSmsPasscode,
+} from './continue';
 
 jest.mock('ky', () => ({
   extend: () => ky,
@@ -58,6 +65,52 @@ describe('continue API', () => {
     expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/sms', {
       json: {
         phone: 'phone',
+      },
+    });
+  });
+
+  it('sendContinueSetEmailPasscode', async () => {
+    await sendContinueSetEmailPasscode('email');
+
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
+      json: {
+        email: 'email',
+        flow: PasscodeType.Continue,
+      },
+    });
+  });
+
+  it('sendContinueSetSmsPasscode', async () => {
+    await sendContinueSetPhonePasscode('111111');
+
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
+      json: {
+        phone: '111111',
+        flow: PasscodeType.Continue,
+      },
+    });
+  });
+
+  it('verifyContinueSetEmailPasscode', async () => {
+    await verifyContinueSetEmailPasscode('email', 'passcode');
+
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/verify', {
+      json: {
+        email: 'email',
+        code: 'passcode',
+        flow: PasscodeType.Continue,
+      },
+    });
+  });
+
+  it('verifyContinueSetSmsPasscode', async () => {
+    await verifyContinueSetSmsPasscode('phone', 'passcode');
+
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/verify', {
+      json: {
+        phone: 'phone',
+        code: 'passcode',
+        flow: PasscodeType.Continue,
       },
     });
   });

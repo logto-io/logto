@@ -7,10 +7,20 @@ import { registerWithSocial, bindSocialRelatedUser } from '@/apis/social';
 import useApi from '@/hooks/use-api';
 import { bindSocialStateGuard } from '@/types/guard';
 
+import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
+
 const useBindSocial = () => {
   const { state } = useLocation();
-  const { result: registerResult, run: asyncRegisterWithSocial } = useApi(registerWithSocial);
-  const { result: bindUserResult, run: asyncBindSocialRelatedUser } = useApi(bindSocialRelatedUser);
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler();
+
+  const { result: registerResult, run: asyncRegisterWithSocial } = useApi(
+    registerWithSocial,
+    requiredProfileErrorHandlers
+  );
+  const { result: bindUserResult, run: asyncBindSocialRelatedUser } = useApi(
+    bindSocialRelatedUser,
+    requiredProfileErrorHandlers
+  );
 
   const createAccountHandler = useCallback(
     (connectorId: string) => {
