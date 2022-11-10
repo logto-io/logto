@@ -66,7 +66,7 @@ describe('validate sign-in', () => {
   });
 
   describe('There must be at least one enabled connector for the specific identifier.', () => {
-    it('throws when there is no enabled email connector and identifiers includes email', () => {
+    it('throws when there is no enabled email connector and identifiers includes email with verification code checked', () => {
       expect(() => {
         validateSignIn(
           {
@@ -74,6 +74,7 @@ describe('validate sign-in', () => {
               {
                 ...mockSignInMethod,
                 identifier: SignInIdentifier.Email,
+                verificationCode: true,
               },
             ],
           },
@@ -88,7 +89,7 @@ describe('validate sign-in', () => {
       );
     });
 
-    it('throws when there is no enabled sms connector and identifiers includes phone', () => {
+    it('throws when there is no enabled sms connector and identifiers includes phone with verification code checked', () => {
       expect(() => {
         validateSignIn(
           {
@@ -96,6 +97,7 @@ describe('validate sign-in', () => {
               {
                 ...mockSignInMethod,
                 identifier: SignInIdentifier.Sms,
+                verificationCode: true,
               },
             ],
           },
