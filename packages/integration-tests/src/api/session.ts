@@ -24,17 +24,27 @@ export const registerUserWithUsernameAndPassword = async (
     })
     .json<RedirectResponse>();
 
-export const signInWithUsernameAndPassword = async (
-  username: string,
-  password: string,
-  interactionCookie: string
-) =>
+export type SignInWithPassword = {
+  username?: string;
+  email?: string;
+  password: string;
+  interactionCookie: string;
+};
+
+export const signInWithPassword = async ({
+  email,
+  username,
+  password,
+  interactionCookie,
+}: SignInWithPassword) =>
   api
-    .post('session/sign-in/password/username', {
+    // This route in core needs to be refactored
+    .post('session/sign-in/password/' + (username ? 'username' : 'email'), {
       headers: {
         cookie: interactionCookie,
       },
       json: {
+        email,
         username,
         password,
       },

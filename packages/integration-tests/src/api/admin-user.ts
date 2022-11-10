@@ -3,6 +3,7 @@ import type { User } from '@logto/schemas';
 import { authedAdminApi } from './api';
 
 type CreateUserPayload = {
+  primaryEmail?: string;
   username: string;
   password: string;
   name: string;

@@ -117,8 +117,11 @@ describe('adminUserRoutes', () => {
     const username = 'MJAtLogto';
     const password = 'PASSWORD';
     const name = 'Michael';
+    const primaryEmail = 'foo@logto.io';
 
-    const response = await userRequest.post('/users').send({ username, password, name });
+    const response = await userRequest
+      .post('/users')
+      .send({ primaryEmail, username, password, name });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockUserResponse,
@@ -132,21 +135,6 @@ describe('adminUserRoutes', () => {
     const username = 'MJAtLogto';
     const password = 'PASSWORD';
     const name = 'Michael';
-
-    // Missing input
-    await expect(userRequest.post('/users').send({})).resolves.toHaveProperty('status', 400);
-    await expect(userRequest.post('/users').send({ username, password })).resolves.toHaveProperty(
-      'status',
-      400
-    );
-    await expect(userRequest.post('/users').send({ username, name })).resolves.toHaveProperty(
-      'status',
-      400
-    );
-    await expect(userRequest.post('/users').send({ password, name })).resolves.toHaveProperty(
-      'status',
-      400
-    );
 
     // Invalid input format
     await expect(

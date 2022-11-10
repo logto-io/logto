@@ -12,7 +12,7 @@ import {
   getAuthWithSocial,
   registerWithSocial,
   bindWithSocial,
-  signInWithUsernameAndPassword,
+  signInWithPassword,
   getUser,
 } from '@/api';
 import MockClient from '@/client';
@@ -126,11 +126,11 @@ describe('social bind account', () => {
     // User with social does not exist
     expect(response instanceof HTTPError && response.response.statusCode === 422).toBe(true);
 
-    const { redirectTo } = await signInWithUsernameAndPassword(
+    const { redirectTo } = await signInWithPassword({
       username,
       password,
-      client.interactionCookie
-    );
+      interactionCookie: client.interactionCookie,
+    });
 
     await expect(
       bindWithSocial(mockSocialConnectorId, client.interactionCookie)
