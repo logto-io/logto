@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { useMemo, useCallback } from 'react';
 
-import { verifyContinueSetEmailPasscode, continueWithEmail } from '@/apis/continue';
+import { verifyContinueSetEmailPasscode, continueApi } from '@/apis/continue';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
@@ -44,7 +44,7 @@ const useContinueSetEmailPasscodeValidation = (email: string, errorCallback?: ()
     [errorCallback, identifierNotExistErrorHandler, requiredProfileErrorHandler]
   );
 
-  const { run: setEmail } = useApi(continueWithEmail, setEmailErrorHandlers);
+  const { run: setEmail } = useApi(continueApi, setEmailErrorHandlers);
 
   const onSubmit = useCallback(
     async (code: string) => {
@@ -56,7 +56,7 @@ const useContinueSetEmailPasscodeValidation = (email: string, errorCallback?: ()
 
       const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
 
-      const result = await setEmail(email, socialToBind);
+      const result = await setEmail('email', email, socialToBind);
 
       if (result?.redirectTo) {
         window.location.replace(result.redirectTo);
