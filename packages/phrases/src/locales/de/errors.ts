@@ -128,6 +128,7 @@ const errors = {
     code_sign_in_must_be_enabled:
       'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
     unsupported_default_language: 'Die Sprache - {{language}} wird momentan nicht unterstützt.',
+    at_least_one_authentication_factor: 'You have to select at least one authentication factor.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:

@@ -119,6 +119,7 @@ const errors = {
     code_sign_in_must_be_enabled:
       'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
     unsupported_default_language: '{{language}}无法选择为默认语言。',
+    at_least_one_authentication_factor: '至少要选择一个登录要素',
   },
   localization: {
     cannot_delete_default_language: '你已设置{{languageTag}}为你的默认语言，你无法删除默认语言。',
