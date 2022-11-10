@@ -96,7 +96,7 @@ const UsernameRegister = ({ className }: Props) => {
 
       <TermsOfUse className={styles.terms} />
 
-      <Button title="action.create" onClick={async () => onSubmitHandler()} />
+      <Button title="action.create_account" onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
     </form>

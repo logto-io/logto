@@ -21,7 +21,7 @@ describe('<UsernameRegister />', () => {
   test('default render', () => {
     const { queryByText, container } = renderWithPageContext(<UsernameRegister />);
     expect(container.querySelector('input[name="new-username"]')).not.toBeNull();
-    expect(queryByText('action.create')).not.toBeNull();
+    expect(queryByText('action.create_account')).not.toBeNull();
   });
 
   test('render with terms settings enabled', () => {
@@ -35,7 +35,7 @@ describe('<UsernameRegister />', () => {
 
   test('username are required', () => {
     const { queryByText, getByText } = renderWithPageContext(<UsernameRegister />);
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
     fireEvent.click(submitButton);
 
     expect(queryByText('username_required')).not.toBeNull();
@@ -45,7 +45,7 @@ describe('<UsernameRegister />', () => {
 
   test('username with initial numeric char should throw', () => {
     const { queryByText, getByText, container } = renderWithPageContext(<UsernameRegister />);
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
 
     const usernameInput = container.querySelector('input[name="new-username"]');
 
@@ -69,7 +69,7 @@ describe('<UsernameRegister />', () => {
 
   test('username with special character should throw', () => {
     const { queryByText, getByText, container } = renderWithPageContext(<UsernameRegister />);
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
     const usernameInput = container.querySelector('input[name="new-username"]');
 
     if (usernameInput) {
@@ -96,7 +96,7 @@ describe('<UsernameRegister />', () => {
         <UsernameRegister />
       </SettingsProvider>
     );
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
     const usernameInput = container.querySelector('input[name="new-username"]');
 
     if (usernameInput) {
