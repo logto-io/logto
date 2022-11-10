@@ -31,6 +31,13 @@ export const validateSignIn = (
     );
   }
 
+  assertThat(
+    signIn.methods.every(({ password, verificationCode }) => password || verificationCode),
+    new RequestError({
+      code: 'sign_in_experiences.at_least_one_authentication_factor',
+    })
+  );
+
   switch (signUp.identifier) {
     case SignUpIdentifier.Username: {
       assertThat(
