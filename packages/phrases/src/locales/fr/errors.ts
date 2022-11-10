@@ -55,6 +55,7 @@ const errors = {
     require_sms: 'You need to set a phone before sign in.', // UNTRANSLATED
     sms_exists: 'Your phone has been set.', // UNTRANSLATED
     require_email_or_sms: 'You need to set a phone or email before sign in.', // UNTRANSLATED
+    suspended: 'This account is suspended.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: "La méthode de cryptage {{name}} n'est pas prise en charge.",

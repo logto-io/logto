@@ -94,7 +94,8 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       }
 
       const user = await findUserByIdentity(target, userInfo.id);
-      const { id, identities } = user;
+      const { id, identities, isSuspended } = user;
+      assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
       ctx.log(type, { userId: id });
 
       // Update social connector's user info
@@ -133,7 +134,8 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       const relatedInfo = await findSocialRelatedUser(userInfo);
       assertThat(relatedInfo, 'session.connector_session_not_found');
 
-      const { id, identities } = relatedInfo[1];
+      const { id, identities, isSuspended } = relatedInfo[1];
+      assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
       ctx.log(type, { userId: id });
 
       const user = await updateUserById(id, {

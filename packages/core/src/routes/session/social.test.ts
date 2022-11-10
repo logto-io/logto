@@ -10,11 +10,13 @@ import { createRequester } from '@/utils/test-utils';
 
 import socialRoutes, { registerRoute, signInRoute } from './social';
 
+const findSocialRelatedUser = jest.fn(async () => [
+  'phone',
+  { id: 'user1', identities: {}, isSuspended: false },
+]);
 jest.mock('@/lib/social', () => ({
   ...jest.requireActual('@/lib/social'),
-  async findSocialRelatedUser() {
-    return ['phone', { id: 'user1', identities: {} }];
-  },
+  findSocialRelatedUser: async () => findSocialRelatedUser(),
   async getUserInfoByAuthCode(connectorId: string, data: { code: string }) {
     if (connectorId === '_connectorId') {
       throw new RequestError({
@@ -36,10 +38,11 @@ jest.mock('@/lib/social', () => ({
 const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => mockUser);
+const findUserByIdentity = jest.fn(async () => mockUser);
 
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
-  findUserByIdentity: async () => mockUser,
+  findUserByIdentity: async () => findUserByIdentity(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   hasUserWithIdentity: async (target: string, userId: string) =>
     target === 'connectorTarget' && userId === mockUser.id,
@@ -238,6 +241,25 @@ describe('session -> socialRoutes', () => {
       );
     });
 
+    it('throw error when user is suspended', async () => {
+      (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
+        metadata: { target: connectorTarget },
+      });
+      findUserByIdentity.mockResolvedValueOnce({
+        ...mockUser,
+        isSuspended: true,
+      });
+      const response = await sessionRequest.post(`${signInRoute}/auth`).send({
+        connectorId: 'connectorId',
+        data: {
+          state: 'state',
+          redirectUri: 'https://logto.dev',
+          code: '123456',
+        },
+      });
+      expect(response.statusCode).toEqual(401);
+    });
+
     it('throw error when identity exists', async () => {
       const wrongConnectorTarget = 'wrongConnectorTarget';
       (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
@@ -286,6 +308,28 @@ describe('session -> socialRoutes', () => {
           .post('/session/sign-in/bind-social-related-user')
           .send({ connectorId: 'connectorId' })
       ).resolves.toHaveProperty('statusCode', 400);
+    });
+    it('throw error when user is suspended', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          login: { accountId: 'user1' },
+          socialUserInfo: {
+            connectorId: 'connectorId',
+            userInfo: { id: 'connectorUser', phone: 'phone' },
+          },
+        },
+      });
+      findSocialRelatedUser.mockResolvedValueOnce([
+        'phone',
+        {
+          ...mockUser,
+          isSuspended: true,
+        },
+      ]);
+      const response = await sessionRequest.post('/session/sign-in/bind-social-related-user').send({
+        connectorId: 'connectorId',
+      });
+      expect(response.statusCode).toEqual(401);
     });
     it('updates user identities and sign in', async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -382,57 +426,6 @@ describe('session -> socialRoutes', () => {
         .post(`${registerRoute}`)
         .send({ connectorId: 'connectorId' });
       expect(response.statusCode).toEqual(400);
-    });
-  });
-
-  describe('POST /session/bind-social', () => {
-    beforeEach(() => {
-      const mockGetLogtoConnectorById = getLogtoConnectorById as jest.Mock;
-      mockGetLogtoConnectorById.mockResolvedValueOnce({
-        metadata: { target: 'connectorTarget' },
-      });
-    });
-    it('throw if session is not authorized', async () => {
-      interactionDetails.mockResolvedValueOnce({});
-      await expect(
-        sessionRequest.post('/session/bind-social').send({ connectorId: 'connectorId' })
-      ).resolves.toHaveProperty('statusCode', 400);
-    });
-    it('throw if no social info in session', async () => {
-      interactionDetails.mockResolvedValueOnce({
-        result: { login: { accountId: 'user1' } },
-      });
-      await expect(
-        sessionRequest.post('/session/bind-social').send({ connectorId: 'connectorId' })
-      ).resolves.toHaveProperty('statusCode', 400);
-    });
-    it('updates user identities', async () => {
-      interactionDetails.mockResolvedValueOnce({
-        jti: 'jti',
-        result: {
-          login: { accountId: 'user1' },
-          socialUserInfo: {
-            connectorId: 'connectorId',
-            userInfo: { id: 'connectorUser', phone: 'phone' },
-          },
-        },
-      });
-      const response = await sessionRequest.post('/session/bind-social').send({
-        connectorId: 'connectorId',
-      });
-      expect(response.statusCode).toEqual(200);
-      expect(updateUserById).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          identities: {
-            connectorTarget: {
-              details: { id: 'connectorUser', phone: 'phone' },
-              userId: 'connectorUser',
-            },
-            connector1: { userId: 'connector1', details: {} },
-          },
-        })
-      );
     });
   });
 });

@@ -15,6 +15,7 @@ import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const findUserByEmail = jest.fn(async (): Promise<User> => mockUser);
+const findUserByPhone = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => mockUser);
 const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
@@ -34,7 +35,7 @@ jest.mock('@/lib/user', () => ({
 
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
-  findUserByPhone: async () => mockUser,
+  findUserByPhone: async () => findUserByPhone(),
   findUserByEmail: async () => findUserByEmail(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   hasUser: async (username: string) => username === 'username1',
@@ -503,6 +504,24 @@ describe('session -> passwordlessRoutes', () => {
       expect(response.statusCode).toEqual(404);
     });
 
+    it('throw when user is suspended', async () => {
+      findUserByPhone.mockResolvedValueOnce({
+        ...mockUser,
+        isSuspended: true,
+      });
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            phone: '13000000000',
+            flow: PasscodeType.SignIn,
+            expiresAt: getTomorrowIsoString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/sms`);
+      expect(response.statusCode).toEqual(401);
+    });
+
     it('throw error if sign in method is not enabled', async () => {
       findDefaultSignInExperience.mockResolvedValueOnce({
         ...mockSignInExperience,
@@ -637,6 +656,24 @@ describe('session -> passwordlessRoutes', () => {
       });
       const response = await sessionRequest.post(`${signInRoute}/email`);
       expect(response.statusCode).toEqual(404);
+    });
+
+    it('throw when user is suspended', async () => {
+      findUserByEmail.mockResolvedValueOnce({
+        ...mockUser,
+        isSuspended: true,
+      });
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            email: 'a@a.com',
+            flow: PasscodeType.SignIn,
+            expiresAt: getTomorrowIsoString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/email`);
+      expect(response.statusCode).toEqual(401);
     });
 
     it('throw error if sign in method is not enabled', async () => {

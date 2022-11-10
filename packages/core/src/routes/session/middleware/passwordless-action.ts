@@ -59,7 +59,8 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContext, Respons
     );
 
     const user = await findUserByPhone(phone);
-    const { id } = user;
+    const { id, isSuspended } = user;
+    assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
     ctx.log(type, { userId: id });
 
     await checkRequiredProfile(ctx, provider, user, signInExperience);
@@ -105,7 +106,8 @@ export const emailSignInAction = <StateT, ContextT extends WithLogContext, Respo
     );
 
     const user = await findUserByEmail(email);
-    const { id } = user;
+    const { id, isSuspended } = user;
+    assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
     ctx.log(type, { userId: id });
 
     await checkRequiredProfile(ctx, provider, user, signInExperience);
