@@ -246,7 +246,7 @@ describe('<PasscodeValidation />', () => {
       });
     });
 
-    it('fire Sms forgot-password validate passcode event', async () => {
+    it('fire sms forgot-password validate passcode event', async () => {
       (verifyForgotPasswordSmsPasscode as jest.Mock).mockImplementationOnce(() => ({
         success: true,
       }));
