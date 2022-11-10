@@ -52,32 +52,6 @@ export const sendContinueSetPhonePasscode = async (phone: string) => {
   return { success: true };
 };
 
-export const sendContinueSetEmailPasscode = async (email: string) => {
-  await api
-    .post(`${passwordlessApiPrefix}/email/send`, {
-      json: {
-        email,
-        flow: PasscodeType.Continue,
-      },
-    })
-    .json();
-
-  return { success: true };
-};
-
-export const sendContinueSetPhonePasscode = async (phone: string) => {
-  await api
-    .post(`${passwordlessApiPrefix}/sms/send`, {
-      json: {
-        phone,
-        flow: PasscodeType.Continue,
-      },
-    })
-    .json();
-
-  return { success: true };
-};
-
 export const verifyContinueSetEmailPasscode = async (email: string, code: string) => {
   await api
     .post(`${passwordlessApiPrefix}/email/verify`, {

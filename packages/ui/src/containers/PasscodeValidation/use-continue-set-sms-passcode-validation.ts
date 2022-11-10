@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { useMemo, useCallback } from 'react';
 
-import { verifyContinueSetSmsPasscode, continueWithPhone } from '@/apis/continue';
+import { verifyContinueSetSmsPasscode, continueApi } from '@/apis/continue';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
@@ -41,7 +41,7 @@ const useContinueSetSmsPasscodeValidation = (phone: string, errorCallback?: () =
     [errorCallback, identifierNotExistErrorHandler, requiredProfileErrorHandler]
   );
 
-  const { run: setPhone } = useApi(continueWithPhone, setPhoneErrorHandlers);
+  const { run: setPhone } = useApi(continueApi, setPhoneErrorHandlers);
 
   const onSubmit = useCallback(
     async (code: string) => {
@@ -53,7 +53,7 @@ const useContinueSetSmsPasscodeValidation = (phone: string, errorCallback?: () =
 
       const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
 
-      const result = await setPhone(phone, socialToBind);
+      const result = await setPhone('phone', phone, socialToBind);
 
       if (result?.redirectTo) {
         window.location.replace(result.redirectTo);

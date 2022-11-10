@@ -4,9 +4,8 @@ import { act, fireEvent, waitFor } from '@testing-library/react';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import {
   verifyContinueSetEmailPasscode,
-  continueWithEmail,
+  continueApi,
   verifyContinueSetSmsPasscode,
-  continueWithPhone,
 } from '@/apis/continue';
 import {
   verifyForgotPasswordEmailPasscode,
@@ -51,8 +50,7 @@ jest.mock('@/apis/forgot-password', () => ({
 jest.mock('@/apis/continue', () => ({
   verifyContinueSetEmailPasscode: jest.fn(),
   verifyContinueSetSmsPasscode: jest.fn(),
-  continueWithEmail: jest.fn(),
-  continueWithPhone: jest.fn(),
+  continueApi: jest.fn(),
 }));
 
 describe('<PasscodeValidation />', () => {
@@ -285,7 +283,7 @@ describe('<PasscodeValidation />', () => {
       (verifyContinueSetEmailPasscode as jest.Mock).mockImplementationOnce(() => ({
         success: true,
       }));
-      (continueWithEmail as jest.Mock).mockImplementationOnce(() => ({ redirectTo: '/redirect' }));
+      (continueApi as jest.Mock).mockImplementationOnce(() => ({ redirectTo: '/redirect' }));
 
       const { container } = renderWithPageContext(
         <PasscodeValidation
@@ -308,7 +306,7 @@ describe('<PasscodeValidation />', () => {
       });
 
       await waitFor(() => {
-        expect(continueWithEmail).toBeCalledWith(email, undefined);
+        expect(continueApi).toBeCalledWith('email', email, undefined);
         expect(window.location.replace).toBeCalledWith('/redirect');
       });
     });
@@ -317,7 +315,7 @@ describe('<PasscodeValidation />', () => {
       (verifyContinueSetSmsPasscode as jest.Mock).mockImplementationOnce(() => ({
         success: true,
       }));
-      (continueWithPhone as jest.Mock).mockImplementationOnce(() => ({ redirectTo: '/redirect' }));
+      (continueApi as jest.Mock).mockImplementationOnce(() => ({ redirectTo: '/redirect' }));
 
       const { container } = renderWithPageContext(
         <PasscodeValidation type={UserFlow.continue} method={SignInIdentifier.Sms} target={phone} />
@@ -336,7 +334,7 @@ describe('<PasscodeValidation />', () => {
       });
 
       await waitFor(() => {
-        expect(continueWithPhone).toBeCalledWith(phone, undefined);
+        expect(continueApi).toBeCalledWith('phone', phone, undefined);
         expect(window.location.replace).toBeCalledWith('/redirect');
       });
     });
