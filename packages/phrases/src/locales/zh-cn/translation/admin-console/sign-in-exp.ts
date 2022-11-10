@@ -87,27 +87,6 @@ const sign_in_exp = {
         'This is essential as you have selected {{identifier}} as a required identifier.', // UNTRANSLATED
     },
   },
-  sign_in_methods: {
-    title: '登录方式',
-    primary: '主要登录方式',
-    enable_secondary: '启用其它登录方式',
-    enable_secondary_description: '开启后，除了主要登录方式，你的 app 将会支持更多其它的登录方式 ',
-    methods: '登录方式',
-    methods_sms: '手机号登录',
-    methods_email: '邮箱登录',
-    methods_social: '社交帐号登录',
-    methods_username: '用户名密码登录',
-    methods_primary_tag: '（主要）',
-    define_social_methods: '定义社交登录方式',
-    transfer: {
-      title: '社交连接器',
-      footer: {
-        not_in_list: '不在列表里？',
-        set_up_more: '设置更多',
-        go_to: '社交连接器，或前往连接器模块进行设置。',
-      },
-    },
-  },
   others: {
     terms_of_use: {
       title: '使用条款',

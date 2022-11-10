@@ -91,28 +91,6 @@ const sign_in_exp = {
         'This is essential as you have selected {{identifier}} as a required identifier.', // UNTRANSLATED
     },
   },
-  sign_in_methods: {
-    title: 'METHODES DE CONNEXION',
-    primary: 'Méthode de connexion principale',
-    enable_secondary: 'Activer une seconde méthode de connexion',
-    enable_secondary_description:
-      "Une fois qu'elle est activée, votre application prend en charge d'autres méthodes de connexion que la méthode principale. ",
-    methods: 'Méthode de connexion',
-    methods_sms: 'Connexion avec numéro de téléphone',
-    methods_email: 'Connexion avec email',
-    methods_social: 'Connexion avec social',
-    methods_username: "Connexion avec nom d'utilisateur et mot de passe",
-    methods_primary_tag: '(Principale)',
-    define_social_methods: "Définir les méthodes d'authentification sociale",
-    transfer: {
-      title: 'Connecteurs sociaux',
-      footer: {
-        not_in_list: 'Pas dans la liste ?',
-        set_up_more: 'Configurer plus',
-        go_to: 'connecteurs sociaux ou allez à la section "Connecteurs".',
-      },
-    },
-  },
   others: {
     terms_of_use: {
       title: "CONDITIONS D'UTILISATION",

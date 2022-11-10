@@ -91,28 +91,6 @@ const sign_in_exp = {
     slogan: 'Slogan',
     slogan_placeholder: 'Entfessle deine Kreativität',
   },
-  sign_in_methods: {
-    title: 'ANMELDEMETHODEN',
-    primary: 'Primäre Anmeldemethode',
-    enable_secondary: 'Aktiviere sekundäre Anmeldemethoden',
-    enable_secondary_description:
-      'Sobald sie aktiviert ist, unterstützt deine App neben der primären Anmeldemethode noch weitere Anmeldemethoden. ',
-    methods: 'Anmeldemethode',
-    methods_sms: 'SMS Anmeldung',
-    methods_email: 'E-Mail Anmeldung',
-    methods_social: 'Social Anmeldung',
-    methods_username: 'Benutzername-und-Passwort Anmeldung',
-    methods_primary_tag: '(Primär)',
-    define_social_methods: 'Definiere die unterstützten Social Anmeldemethoden',
-    transfer: {
-      title: 'Social Connectoren',
-      footer: {
-        not_in_list: 'Nicht in der Liste?',
-        set_up_more: 'Mehr Social Connectoren einrichten',
-        go_to: 'oder "Connectoren" aufrufen.',
-      },
-    },
-  },
   others: {
     terms_of_use: {
       title: 'NUTZUNGSBEDINGUNGEN',

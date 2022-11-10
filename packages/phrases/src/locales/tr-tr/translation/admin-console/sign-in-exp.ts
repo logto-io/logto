@@ -90,28 +90,6 @@ const sign_in_exp = {
         'This is essential as you have selected {{identifier}} as a required identifier.', // UNTRANSLATED
     },
   },
-  sign_in_methods: {
-    title: 'OTURUM AÇMA YÖNTEMLERİ',
-    primary: 'Birincil oturum açma yöntemi',
-    enable_secondary: 'İkincil oturum açmayı etkinleştir',
-    enable_secondary_description:
-      'Açıldığında, uygulamanız birincil yöntemin yanı sıra daha fazla oturum açma yöntemini destekleyecektir. ',
-    methods: 'Oturum açma yöntemi',
-    methods_sms: 'Telefon numarası girişi',
-    methods_email: 'E-posta adresi girişi',
-    methods_social: 'Sosyal platform girişi',
-    methods_username: 'Kullanıcı adı ve şifre ile oturum açma',
-    methods_primary_tag: '(Primary)',
-    define_social_methods: 'Sosyal platform oturum açma yöntemlerini tanımlama',
-    transfer: {
-      title: 'Social connectorlar',
-      footer: {
-        not_in_list: 'Listede yok?',
-        set_up_more: 'Daha fazlasını ayarla',
-        go_to: 'Social connectorlara veya “Connectors” bölümüne git.',
-      },
-    },
-  },
   others: {
     terms_of_use: {
       title: 'KULLANIM KOŞULLARI',
