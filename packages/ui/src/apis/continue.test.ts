@@ -1,11 +1,6 @@
 import ky from 'ky';
 
-import {
-  continueWithPassword,
-  continueWithUsername,
-  continueWithEmail,
-  continueWithPhone,
-} from './continue';
+import { continueApi } from './continue';
 
 jest.mock('ky', () => ({
   extend: () => ky,
@@ -30,7 +25,7 @@ describe('continue API', () => {
   });
 
   it('continue with password', async () => {
-    await continueWithPassword('password');
+    await continueApi('password', 'password');
     expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/password', {
       json: {
         password: 'password',
@@ -39,7 +34,7 @@ describe('continue API', () => {
   });
 
   it('continue with username', async () => {
-    await continueWithUsername('username');
+    await continueApi('username', 'username');
     expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/username', {
       json: {
         username: 'username',
@@ -48,7 +43,7 @@ describe('continue API', () => {
   });
 
   it('continue with email', async () => {
-    await continueWithEmail('email');
+    await continueApi('email', 'email');
 
     expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/email', {
       json: {
@@ -58,7 +53,7 @@ describe('continue API', () => {
   });
 
   it('continue with phone', async () => {
-    await continueWithPhone('phone');
+    await continueApi('phone', 'phone');
 
     expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/sms', {
       json: {
