@@ -125,7 +125,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         primaryEmail: string().regex(emailRegEx).optional(),
         username: string().regex(usernameRegEx).optional(),
         password: string().regex(passwordRegEx),
-        name: string(),
+        name: string().optional(),
       }),
     }),
     async (ctx, next) => {

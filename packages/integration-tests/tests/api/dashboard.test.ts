@@ -44,7 +44,7 @@ describe('admin console dashboard', () => {
     const username = generateUsername();
     await createUserByAdmin(username, password);
 
-    await signIn(username, password);
+    await signIn({ username, password });
 
     const newActiveUserStatistics = await getActiveUsersData();
 

@@ -37,6 +37,18 @@ describe('username and password flow', () => {
   const username = generateUsername();
   const password = generatePassword();
 
+  beforeAll(async () => {
+    await setSignUpIdentifier(SignUpIdentifier.Username, true);
+    await setSignInMethod([
+      {
+        identifier: SignInIdentifier.Username,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: false,
+      },
+    ]);
+  });
+
   it('register and sign in with username & password', async () => {
     await expect(registerNewUser(username, password)).resolves.not.toThrow();
     await expect(signIn({ username, password })).resolves.not.toThrow();
@@ -51,6 +63,8 @@ describe('email and password flow', () => {
   assert(localPart && domain, new Error('Email address local part or domain is empty'));
 
   beforeAll(async () => {
+    await setUpConnector(mockEmailConnectorId, mockEmailConnectorConfig);
+    await setSignUpIdentifier(SignUpIdentifier.Email, true);
     await setSignInMethod([
       {
         identifier: SignInIdentifier.Email,
