@@ -1,4 +1,4 @@
-import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
+import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
@@ -21,6 +21,7 @@ import {
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
+import { checkExistingSignUpIdentifiers, checkRequiredSignUpIdentifiers } from './session/utils';
 import type { AuthedRouter } from './types';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
@@ -158,6 +159,9 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     koaGuard({
       params: object({ userId: string() }),
       body: object({
+        username: string().regex(usernameRegEx).optional(),
+        primaryEmail: string().regex(emailRegEx).optional(),
+        primaryPhone: string().regex(phoneRegEx).optional(),
         name: string().nullable().optional(),
         avatar: string().url().or(literal('')).nullable().optional(),
         customData: arbitraryObjectGuard.optional(),
@@ -171,6 +175,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       await findUserById(userId);
+      await checkRequiredSignUpIdentifiers(body);
+      await checkExistingSignUpIdentifiers(body);
 
       // Temp solution to validate the existence of input roleNames
       if (body.roleNames?.length) {
@@ -191,13 +197,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         }
       }
 
-      const user = await updateUserById(
-        userId,
-        {
-          ...body,
-        },
-        'replace'
-      );
+      const user = await updateUserById(userId, body, 'replace');
 
       ctx.body = pick(user, ...userInfoSelectFields);
 

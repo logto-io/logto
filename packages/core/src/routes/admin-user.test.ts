@@ -1,5 +1,5 @@
 import type { CreateUser, Role, User } from '@logto/schemas';
-import { userInfoSelectFields } from '@logto/schemas';
+import { SignUpIdentifier, userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
 
 import { mockUser, mockUserList, mockUserListResponse, mockUserResponse } from '@/__mocks__';
@@ -23,6 +23,21 @@ const filterUsersWithSearch = (users: User[], search: string) =>
     )
   );
 
+const mockFindDefaultSignInExperience = jest.fn(async () => ({
+  signUp: {
+    identifier: SignUpIdentifier.None,
+    password: false,
+    verify: false,
+  },
+}));
+
+jest.mock('@/queries/sign-in-experience', () => ({
+  findDefaultSignInExperience: jest.fn(async () => mockFindDefaultSignInExperience()),
+}));
+
+const mockHasUser = jest.fn(async () => false);
+const mockHasUserWithEmail = jest.fn(async () => false);
+const mockHasUserWithPhone = jest.fn(async () => false);
 jest.mock('@/queries/user', () => ({
   countUsers: jest.fn(async (search) => ({
     count: search ? filterUsersWithSearch(mockUserList, search).length : mockUserList.length,
@@ -32,7 +47,9 @@ jest.mock('@/queries/user', () => ({
       search ? filterUsersWithSearch(mockUserList, search) : mockUserList
   ),
   findUserById: jest.fn(async (): Promise<User> => mockUser),
-  hasUser: jest.fn(async () => false),
+  hasUser: jest.fn(async () => mockHasUser()),
+  hasUserWithEmail: jest.fn(async () => mockHasUserWithEmail()),
+  hasUserWithPhone: jest.fn(async () => mockHasUserWithPhone()),
   updateUserById: jest.fn(
     async (_, data: Partial<CreateUser>): Promise<User> => ({
       ...mockUser,
@@ -99,7 +116,7 @@ describe('adminUserRoutes', () => {
   it('POST /users', async () => {
     const username = 'MJAtLogto';
     const password = 'PASSWORD';
-    const name = 'Micheal';
+    const name = 'Michael';
 
     const response = await userRequest.post('/users').send({ username, password, name });
     expect(response.status).toEqual(200);
@@ -114,7 +131,7 @@ describe('adminUserRoutes', () => {
   it('POST /users should throw with invalid input params', async () => {
     const username = 'MJAtLogto';
     const password = 'PASSWORD';
-    const name = 'Micheal';
+    const name = 'Michael';
 
     // Missing input
     await expect(userRequest.post('/users').send({})).resolves.toHaveProperty('status', 400);
@@ -137,13 +154,13 @@ describe('adminUserRoutes', () => {
     ).resolves.toHaveProperty('status', 400);
   });
 
-  it('POST /users should throw if username exist', async () => {
+  it('POST /users should throw if username exists', async () => {
     const mockHasUser = hasUser as jest.Mock;
     mockHasUser.mockImplementationOnce(async () => true);
 
     const username = 'MJAtLogto';
     const password = 'PASSWORD';
-    const name = 'Micheal';
+    const name = 'Michael';
 
     await expect(
       userRequest.post('/users').send({ username, password, name })
@@ -151,20 +168,29 @@ describe('adminUserRoutes', () => {
   });
 
   it('PATCH /users/:userId', async () => {
-    const name = 'Micheal';
-    const avatar = 'http://www.micheal.png';
+    const name = 'Michael';
+    const avatar = 'http://www.michael.png';
+    const primaryEmail = 'bar@logto.io';
+    const primaryPhone = '222222';
+    const username = 'bar';
 
-    const response = await userRequest.patch('/users/foo').send({ name, avatar });
+    const response = await userRequest
+      .patch('/users/foo')
+      .send({ username, name, avatar, primaryEmail, primaryPhone });
+
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockUserResponse,
+      primaryEmail,
+      primaryPhone,
+      username,
       name,
       avatar,
     });
   });
 
-  it('PATCH /users/:userId should allow updated with empty avatar', async () => {
-    const name = 'Micheal';
+  it('PATCH /users/:userId should allow empty avatar URL', async () => {
+    const name = 'Michael';
     const avatar = '';
 
     const response = await userRequest.patch('/users/foo').send({ name, avatar });
@@ -176,8 +202,8 @@ describe('adminUserRoutes', () => {
     });
   });
 
-  it('PATCH /users/:userId should updated with one field if the other is undefined', async () => {
-    const name = 'Micheal';
+  it('PATCH /users/:userId should allow partial update', async () => {
+    const name = 'Michael';
 
     const updateNameResponse = await userRequest.patch('/users/foo').send({ name });
     expect(updateNameResponse.status).toEqual(200);
@@ -186,7 +212,7 @@ describe('adminUserRoutes', () => {
       name,
     });
 
-    const avatar = 'https://www.miceal.png';
+    const avatar = 'https://www.michael.png';
     const updateAvatarResponse = await userRequest.patch('/users/foo').send({ avatar });
     expect(updateAvatarResponse.status).toEqual(200);
     expect(updateAvatarResponse.body).toEqual({
@@ -195,9 +221,9 @@ describe('adminUserRoutes', () => {
     });
   });
 
-  it('PATCH /users/:userId throw with invalid input params', async () => {
-    const name = 'Micheal';
-    const avatar = 'http://www.micheal.png';
+  it('PATCH /users/:userId should throw when avatar URL is invalid', async () => {
+    const name = 'Michael';
+    const avatar = 'http://www.michael.png';
 
     await expect(userRequest.patch('/users/foo').send({ avatar })).resolves.toHaveProperty(
       'status',
@@ -209,9 +235,9 @@ describe('adminUserRoutes', () => {
     ).resolves.toHaveProperty('status', 400);
   });
 
-  it('PATCH /users/:userId throw if user not found', async () => {
-    const name = 'Micheal';
-    const avatar = 'http://www.micheal.png';
+  it('PATCH /users/:userId should throw if user cannot be found', async () => {
+    const name = 'Michael';
+    const avatar = 'http://www.michael.png';
 
     const mockFindUserById = findUserById as jest.Mock;
     mockFindUserById.mockImplementationOnce(() => {
@@ -223,6 +249,88 @@ describe('adminUserRoutes', () => {
       500
     );
     expect(updateUserById).not.toBeCalled();
+  });
+
+  it('PATCH /users/:userId should throw if required sign-up identifier username is missing', async () => {
+    mockFindDefaultSignInExperience.mockImplementationOnce(async () => ({
+      signUp: {
+        identifier: SignUpIdentifier.Username,
+        password: false,
+        verify: false,
+      },
+    }));
+
+    await expect(
+      userRequest
+        .patch('/users/foo')
+        .send({ primaryEmail: 'test@abc.com', primaryPhone: '18688886666' })
+    ).resolves.toHaveProperty('status', 422);
+  });
+
+  it('PATCH /users/:userId should throw if required sign-up identifier email is missing', async () => {
+    mockFindDefaultSignInExperience.mockImplementationOnce(async () => ({
+      signUp: {
+        identifier: SignUpIdentifier.Email,
+        password: false,
+        verify: false,
+      },
+    }));
+
+    await expect(
+      userRequest.patch('/users/foo').send({ username: 'test', primaryPhone: '18688886666' })
+    ).resolves.toHaveProperty('status', 422);
+  });
+
+  it('PATCH /users/:userId should throw if required sign-up identifier phone is missing', async () => {
+    mockFindDefaultSignInExperience.mockImplementationOnce(async () => ({
+      signUp: {
+        identifier: SignUpIdentifier.Sms,
+        password: false,
+        verify: false,
+      },
+    }));
+
+    await expect(
+      userRequest.patch('/users/foo').send({ username: 'test', primaryEmail: 'test@abc.com' })
+    ).resolves.toHaveProperty('status', 422);
+  });
+
+  it('PATCH /users/:userId should throw if required sign-up identifiers email and phone are both missing', async () => {
+    mockFindDefaultSignInExperience.mockImplementationOnce(async () => ({
+      signUp: {
+        identifier: SignUpIdentifier.EmailOrSms,
+        password: false,
+        verify: false,
+      },
+    }));
+
+    await expect(
+      userRequest.patch('/users/foo').send({ username: 'test' })
+    ).resolves.toHaveProperty('status', 422);
+  });
+
+  it('PATCH /users/:userId should throw if new username is already in use', async () => {
+    mockHasUser.mockImplementationOnce(async () => true);
+
+    await expect(
+      userRequest.patch('/users/foo').send({ username: 'test' })
+    ).resolves.toHaveProperty('status', 422);
+  });
+
+  it('PATCH /users/:userId should throw if new email has already linked to other accounts', async () => {
+    mockHasUserWithEmail.mockImplementationOnce(async () => true);
+
+    await expect(
+      userRequest.patch('/users/foo').send({ primaryEmail: 'test@email.com' })
+    ).resolves.toHaveProperty('status', 422);
+  });
+
+  it('PATCH /users/:userId should throw if new phone number has already linked to other accounts', async () => {
+    mockHasUserWithPhone.mockImplementationOnce(async () => true);
+
+    await expect(
+      userRequest.patch('/users/foo').send({ primaryPhone: '18688886666' })
+    ).resolves.toHaveProperty('status', 422);
   });
 
   it('PATCH /users/:userId should throw if role names are invalid', async () => {
@@ -263,7 +371,7 @@ describe('adminUserRoutes', () => {
     });
   });
 
-  it('PATCH /users/:userId/password throw if user not found', async () => {
+  it('PATCH /users/:userId/password should throw if user cannot be found', async () => {
     const notExistedUserId = 'notExistedUserId';
     const dummyPassword = '123456';
     const mockedFindUserById = findUserById as jest.Mock;
@@ -293,8 +401,8 @@ describe('adminUserRoutes', () => {
     expect(deleteUserIdentity).not.toHaveBeenCalled();
   });
 
-  it('DELETE /users/:userId should throw if user not found', async () => {
-    const notExistedUserId = 'notExisitedUserId';
+  it('DELETE /users/:userId should throw if user cannot be found', async () => {
+    const notExistedUserId = 'notExistedUserId';
     const mockedFindUserById = findUserById as jest.Mock;
     mockedFindUserById.mockImplementationOnce((userId) => {
       if (userId === notExistedUserId) {
@@ -308,8 +416,8 @@ describe('adminUserRoutes', () => {
     expect(deleteUserById).not.toHaveBeenCalled();
   });
 
-  it('DELETE /users/:userId/identities/:target should throw if user not found', async () => {
-    const notExistedUserId = 'notExisitedUserId';
+  it('DELETE /users/:userId/identities/:target should throw if user cannot be found', async () => {
+    const notExistedUserId = 'notExistedUserId';
     const arbitraryTarget = 'arbitraryTarget';
     const mockedFindUserById = findUserById as jest.Mock;
     mockedFindUserById.mockImplementationOnce((userId) => {
@@ -323,9 +431,9 @@ describe('adminUserRoutes', () => {
     expect(deleteUserIdentity).not.toHaveBeenCalled();
   });
 
-  it('DELETE /users/:userId/identities/:target should throw if user found and connector is not found', async () => {
+  it('DELETE /users/:userId/identities/:target should throw if user is found but connector cannot be found', async () => {
     const arbitraryUserId = 'arbitraryUserId';
-    const nonexistentTarget = 'nonexistentTarget';
+    const nonExistedTarget = 'nonExistedTarget';
     const mockedFindUserById = findUserById as jest.Mock;
     mockedFindUserById.mockImplementationOnce((userId) => {
       if (userId === arbitraryUserId) {
@@ -333,7 +441,7 @@ describe('adminUserRoutes', () => {
       }
     });
     await expect(
-      userRequest.delete(`/users/${arbitraryUserId}/identities/${nonexistentTarget}`)
+      userRequest.delete(`/users/${arbitraryUserId}/identities/${nonExistedTarget}`)
     ).resolves.toHaveProperty('status', 404);
     expect(deleteUserIdentity).not.toHaveBeenCalled();
   });

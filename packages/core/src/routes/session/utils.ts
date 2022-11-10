@@ -19,7 +19,7 @@ import { assignInteractionResults } from '@/lib/session';
 import { verifyUserPassword } from '@/lib/user';
 import type { LogContext } from '@/middleware/koa-log';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
-import { updateUserById } from '@/queries/user';
+import { hasUser, hasUserWithEmail, hasUserWithPhone, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { continueSignInTimeout, verificationTimeout } from './consts';
@@ -189,7 +189,53 @@ export const checkRequiredProfile = async (
     throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
   }
 };
+
+export const checkRequiredSignUpIdentifiers = async (identifiers: {
+  username?: string;
+  primaryEmail?: string;
+  primaryPhone?: string;
+}) => {
+  const { username, primaryEmail, primaryPhone } = identifiers;
+
+  const { signUp } = await findDefaultSignInExperience();
+
+  if (signUp.identifier === SignUpIdentifier.Username && !username) {
+    throw new RequestError({ code: 'user.require_username', status: 422 });
+  }
+
+  if (signUp.identifier === SignUpIdentifier.Email && !primaryEmail) {
+    throw new RequestError({ code: 'user.require_email', status: 422 });
+  }
+
+  if (signUp.identifier === SignUpIdentifier.Sms && !primaryPhone) {
+    throw new RequestError({ code: 'user.require_sms', status: 422 });
+  }
+
+  if (signUp.identifier === SignUpIdentifier.EmailOrSms && !primaryEmail && !primaryPhone) {
+    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
+  }
+};
 /* eslint-enable complexity */
+
+export const checkExistingSignUpIdentifiers = async (identifiers: {
+  username?: string;
+  primaryEmail?: string;
+  primaryPhone?: string;
+}) => {
+  const { username, primaryEmail, primaryPhone } = identifiers;
+
+  if (username && (await hasUser(username))) {
+    throw new RequestError({ code: 'user.username_exists', status: 422 });
+  }
+
+  if (primaryEmail && (await hasUserWithEmail(primaryEmail))) {
+    throw new RequestError({ code: 'user.email_exists', status: 422 });
+  }
+
+  if (primaryPhone && (await hasUserWithPhone(primaryPhone))) {
+    throw new RequestError({ code: 'user.sms_exists', status: 422 });
+  }
+};
 
 type SignInWithPasswordParameter = {
   identifier: SignInIdentifier;

@@ -45,16 +45,16 @@ const errors = {
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
     sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
     sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
-    same_password: 'Your new password can’t be the same as your current password.', // UNTRANSLATED
-    require_password: 'You need to set a password before sign in.', // UNTRANSLATED
+    same_password: 'New password cannot be the same as your old password.', // UNTRANSLATED
+    require_password: 'You need to set a password before signing-in.', // UNTRANSLATED
     password_exists: 'Your password has been set.', // UNTRANSLATED
-    require_username: 'You need to set a username before sign in.', // UNTRANSLATED
-    username_exists: 'Your username has been set.', // UNTRANSLATED
-    require_email: 'You need to set an email before sign in.', // UNTRANSLATED
-    email_exists: 'Your email has been set.', // UNTRANSLATED
-    require_sms: 'You need to set a phone before sign in.', // UNTRANSLATED
-    sms_exists: 'Your phone has been set.', // UNTRANSLATED
-    require_email_or_sms: 'You need to set a phone or email before sign in.', // UNTRANSLATED
+    require_username: 'You need to set a username before signing-in.', // UNTRANSLATED
+    username_exists: 'This username is already in use.', // UNTRANSLATED
+    require_email: 'You need to add an email address before signing-in.', // UNTRANSLATED
+    email_exists: 'This email is associated with an existing account.', // UNTRANSLATED
+    require_sms: 'You need to add a phone number before signing-in.', // UNTRANSLATED
+    sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
+    require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '{{name}} şifreleme metodu desteklenmiyor.',
