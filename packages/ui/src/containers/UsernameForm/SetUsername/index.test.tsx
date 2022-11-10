@@ -1,7 +1,7 @@
 import { fireEvent, act, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { continueWithUsername } from '@/apis/continue';
+import { continueApi } from '@/apis/continue';
 
 import SetUsername from '.';
 
@@ -13,7 +13,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/continue', () => ({
-  continueWithUsername: jest.fn(async () => ({})),
+  continueApi: jest.fn(async () => ({})),
 }));
 
 describe('<UsernameRegister />', () => {
@@ -37,7 +37,7 @@ describe('<UsernameRegister />', () => {
     });
 
     await waitFor(() => {
-      expect(continueWithUsername).toBeCalledWith('username', undefined);
+      expect(continueApi).toBeCalledWith('username', 'username', undefined);
     });
   });
 });

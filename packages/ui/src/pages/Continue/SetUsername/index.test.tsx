@@ -2,7 +2,7 @@ import { act, waitFor, fireEvent } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { continueWithUsername } from '@/apis/continue';
+import { continueApi } from '@/apis/continue';
 
 import SetUsername from '.';
 
@@ -14,7 +14,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/continue', () => ({
-  continueWithUsername: jest.fn(async () => ({ redirectTo: '/' })),
+  continueApi: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('SetPassword', () => {
@@ -46,7 +46,7 @@ describe('SetPassword', () => {
     });
 
     await waitFor(() => {
-      expect(continueWithUsername).toBeCalledWith('username', undefined);
+      expect(continueApi).toBeCalledWith('username', 'username', undefined);
     });
   });
 });
