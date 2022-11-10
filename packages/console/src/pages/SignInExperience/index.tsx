@@ -72,6 +72,7 @@ const SignInExperience = () => {
       })
       .json<SignInExperienceType>();
     void mutate(updatedData);
+    setDataToCompare(undefined);
     await updateSettings({ signInExperienceCustomized: true });
     toast.success(t('general.saved'));
   };
@@ -172,7 +173,6 @@ const SignInExperience = () => {
           }}
           onConfirm={async () => {
             await saveData();
-            setDataToCompare(undefined);
           }}
         >
           {dataToCompare && <SignInMethodsChangePreview before={data} after={dataToCompare} />}
