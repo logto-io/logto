@@ -13,6 +13,10 @@ jest.mock('@/apis/sign-in', () => ({ signInWithEmailPassword: jest.fn(async () =
 jest.mock('react-device-detect', () => ({
   isMobile: true,
 }));
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+}));
 
 describe('<EmailPassword>', () => {
   afterEach(() => {

@@ -8,6 +8,7 @@ import { verifySignInEmailPasscode } from '@/apis/sign-in';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import { UserFlow, SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
@@ -32,6 +33,8 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
     SignInIdentifier.Email,
     email
   );
+
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
   const emailNotExistRegisterErrorHandler = useCallback(async () => {
     const [confirm] = await show({
@@ -63,12 +66,14 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
           ? identifierNotExistErrorHandler
           : emailNotExistRegisterErrorHandler,
       ...sharedErrorHandlers,
+      ...requiredProfileErrorHandlers,
       callback: errorCallback,
     }),
     [
       emailNotExistRegisterErrorHandler,
       errorCallback,
       identifierNotExistErrorHandler,
+      requiredProfileErrorHandlers,
       sharedErrorHandlers,
       signInMode,
       socialToBind,

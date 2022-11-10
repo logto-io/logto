@@ -61,11 +61,22 @@ const translation = {
     reset_password_description_email: '输入邮件地址，领取验证码以重设密码。',
     reset_password_description_sms: '输入手机号，领取验证码以重设密码。',
     new_password: '新密码',
+    set_password: 'Set password', // UNTRANSLATED
     password_changed: '已重置密码！',
     no_account: "Don't have an account?", // UNTRANSLATED
     have_account: 'Already have an account?', // UNTRANSLATED
     enter_password: 'Enter Password', // UNTRANSLATED
     enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
+    enter_username: 'Enter username', // UNTRANSLATED
+    enter_username_description:
+      'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.', // UNTRANSLATED
+    link_email: 'Link email', // UNTRANSLATED
+    link_phone: 'Link phone', // UNTRANSLATED
+    link_email_or_phone: 'Link email or phone', // UNTRANSLATED
+    link_email_description: 'Link your email to sign in or help with account recovery.', // UNTRANSLATED
+    link_phone_description: 'Link your phone number to sign in or help with account recovery.', // UNTRANSLATED
+    link_email_or_phone_description:
+      'Link your email or phone number to sign in or help with account recovery.', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',

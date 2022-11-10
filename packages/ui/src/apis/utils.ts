@@ -2,26 +2,14 @@ import { SignInIdentifier } from '@logto/schemas';
 
 import { UserFlow } from '@/types';
 
-import {
-  sendForgotPasswordEmailPasscode,
-  sendForgotPasswordSmsPasscode,
-  verifyForgotPasswordEmailPasscode,
-  verifyForgotPasswordSmsPasscode,
-} from './forgot-password';
-import {
-  verifyRegisterEmailPasscode,
-  verifyRegisterSmsPasscode,
-  sendRegisterEmailPasscode,
-  sendRegisterSmsPasscode,
-} from './register';
-import {
-  verifySignInEmailPasscode,
-  verifySignInSmsPasscode,
-  sendSignInEmailPasscode,
-  sendSignInSmsPasscode,
-} from './sign-in';
+import { sendContinueSetEmailPasscode, sendContinueSetPhonePasscode } from './continue';
+import { sendForgotPasswordEmailPasscode, sendForgotPasswordSmsPasscode } from './forgot-password';
+import { sendRegisterEmailPasscode, sendRegisterSmsPasscode } from './register';
+import { sendSignInEmailPasscode, sendSignInSmsPasscode } from './sign-in';
 
 export type PasscodeChannel = SignInIdentifier.Email | SignInIdentifier.Sms;
+
+// TODO: @simeng-li merge in to one single api
 
 export const getSendPasscodeApi = (
   type: UserFlow,
@@ -47,36 +35,13 @@ export const getSendPasscodeApi = (
     return sendRegisterEmailPasscode;
   }
 
-  return sendRegisterSmsPasscode;
-};
-
-export const getVerifyPasscodeApi = (
-  type: UserFlow,
-  method: PasscodeChannel
-): ((
-  _address: string,
-  code: string,
-  socialToBind?: string
-) => Promise<{ redirectTo?: string; success?: boolean }>) => {
-  if (type === UserFlow.forgotPassword && method === SignInIdentifier.Email) {
-    return verifyForgotPasswordEmailPasscode;
+  if (type === UserFlow.register && method === SignInIdentifier.Sms) {
+    return sendRegisterSmsPasscode;
   }
 
-  if (type === UserFlow.forgotPassword && method === SignInIdentifier.Sms) {
-    return verifyForgotPasswordSmsPasscode;
+  if (type === UserFlow.continue && method === SignInIdentifier.Email) {
+    return sendContinueSetEmailPasscode;
   }
 
-  if (type === UserFlow.signIn && method === SignInIdentifier.Email) {
-    return verifySignInEmailPasscode;
-  }
-
-  if (type === UserFlow.signIn && method === SignInIdentifier.Sms) {
-    return verifySignInSmsPasscode;
-  }
-
-  if (type === UserFlow.register && method === SignInIdentifier.Email) {
-    return verifyRegisterEmailPasscode;
-  }
-
-  return verifyRegisterSmsPasscode;
+  return sendContinueSetPhonePasscode;
 };
