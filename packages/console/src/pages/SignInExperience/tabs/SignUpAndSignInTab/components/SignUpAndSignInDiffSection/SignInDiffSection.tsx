@@ -70,7 +70,11 @@ const SignInDiffSection = ({ before, after, isAfter = false }: Props) => {
                         hasChanged={hasAuthenticationChanged(identifierKey, 'verificationCode')}
                         isAfter={isAfter}
                       >
-                        {t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
+                        {needDisjunction
+                          ? t(
+                              'sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth'
+                            ).toLocaleLowerCase()
+                          : t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
                       </DiffSegment>
                     )}
                     {hasAuthentication && ')'}
