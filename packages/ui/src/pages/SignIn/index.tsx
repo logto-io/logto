@@ -29,6 +29,7 @@ const SignIn = () => {
         // Other sign-in methods
         otherMethods.length > 0 && (
           <OtherMethodsLink
+            className={styles.otherMethods}
             methods={otherMethods}
             template="sign_in_with"
             flow={UserFlow.signIn}
@@ -41,7 +42,11 @@ const SignIn = () => {
         signInMethods.length > 0 && socialConnectors.length > 0 && (
           <>
             <Divider label="description.or" className={styles.divider} />
-            <SocialSignInList isCollapseEnabled socialConnectors={socialConnectors} />
+            <SocialSignInList
+              isCollapseEnabled
+              socialConnectors={socialConnectors}
+              className={styles.main}
+            />
           </>
         )
       }

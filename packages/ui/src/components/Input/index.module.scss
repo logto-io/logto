@@ -56,7 +56,8 @@
 }
 
 .errorMessage {
-  margin-top: _.unit(2);
+  margin-left: _.unit(0.5);
+  margin-top: _.unit(1);
 }
 
 :global(body.desktop) {

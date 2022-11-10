@@ -89,14 +89,14 @@ const EmailPassword = ({ className, autoFocus }: Props) => {
         {...register('password', (value) => requiredValidation('password', value))}
       />
 
+      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
+
       {isForgotPasswordEnabled && (
         <ForgotPasswordLink
           className={styles.link}
           method={email ? SignInIdentifier.Email : SignInIdentifier.Sms}
         />
       )}
-
-      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
       <TermsOfUse className={styles.terms} />
 

@@ -9,17 +9,27 @@
 
   .inputField,
   .link,
-  .terms {
+  .terms,
+  .formErrors {
     margin-bottom: _.unit(4);
   }
 
   .link {
+    margin-top: _.unit(-1);
     align-self: start;
     width: auto;
   }
 
   .formErrors {
-    margin-top: _.unit(-2);
-    margin-bottom: _.unit(4);
+    margin-top: _.unit(-3);
+    margin-left: _.unit(0.5);
+  }
+}
+
+:global(.desktop) {
+  .form {
+    .link {
+      margin-top: _.unit(-2);
+    }
   }
 }

@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-$logo-height: 60px;
+$logo-height: 50px;
 
 .container {
   width: 100%;
@@ -36,12 +36,8 @@ $logo-height: 60px;
 }
 
 :global(body.desktop) {
-  .container {
-    min-height: 96px;
-  }
-
   .logo:not(:last-child) {
-    margin-bottom: _.unit(4);
+    margin-bottom: _.unit(3);
   }
 
   .headline {
