@@ -4,11 +4,13 @@
   @include _.flex-row;
   width: 100%;
   user-select: none;
+  cursor: pointer;
 }
 
 .checkBox {
   margin-right: _.unit(2);
   fill: var(--color-type-secondary);
+  cursor: pointer;
 }
 
 .content {
