@@ -25,6 +25,7 @@ export const userFlowGuard = s.union([
   s.literal('sign-in'),
   s.literal('register'),
   s.literal('forgot-password'),
+  s.literal('continue'),
 ]);
 
 export const continueMethodGuard = s.union([
