@@ -22,7 +22,7 @@
   }
 
   &.info {
-    background: var(--color-neutral-variant-80);
+    background: var(--color-neutral-variant-90);
 
     .icon {
       color: var(--color-neutral-variant-60);
@@ -42,5 +42,14 @@
 :global(body.desktop) {
   .notification {
     border-radius: var(--radius);
+    box-shadow: var(--color-shadow-1);
+
+    &.alert {
+      border: _.border(var(--color-alert-70));
+    }
+
+    &.info {
+      border: _.border(var(--color-neutral-variant-80));
+    }
   }
 }
