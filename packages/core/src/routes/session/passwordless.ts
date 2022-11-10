@@ -6,12 +6,7 @@ import { object, string } from 'zod';
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import koaGuard from '@/middleware/koa-guard';
-import {
-  findUserByEmail,
-  findUserByPhone,
-  hasUserWithEmail,
-  hasUserWithPhone,
-} from '@/queries/user';
+import { findUserByEmail, findUserByPhone } from '@/queries/user';
 import { passcodeTypeGuard } from '@/routes/session/types';
 import assertThat from '@/utils/assert-that';
 
@@ -105,13 +100,10 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       await verifyPasscode(jti, flow, code, { phone });
 
       if (flow === PasscodeType.ForgotPassword) {
-        assertThat(
-          await hasUserWithPhone(phone),
-          new RequestError({ code: 'user.phone_not_exists', status: 404 })
-        );
+        const user = await findUserByPhone(phone);
+        assertThat(user, new RequestError({ code: 'user.phone_not_exists', status: 404 }));
 
-        const { id } = await findUserByPhone(phone);
-        await assignVerificationResult(ctx, provider, { flow, userId: id });
+        await assignVerificationResult(ctx, provider, { flow, userId: user.id });
         ctx.status = 204;
 
         return next();
@@ -156,14 +148,11 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       await verifyPasscode(jti, flow, code, { email });
 
       if (flow === PasscodeType.ForgotPassword) {
-        assertThat(
-          await hasUserWithEmail(email),
-          new RequestError({ code: 'user.email_not_exists', status: 404 })
-        );
+        const user = await findUserByEmail(email);
 
-        const { id } = await findUserByEmail(email);
+        assertThat(user, new RequestError({ code: 'user.email_not_exists', status: 404 }));
 
-        await assignVerificationResult(ctx, provider, { flow, userId: id });
+        await assignVerificationResult(ctx, provider, { flow, userId: user.id });
         ctx.status = 204;
 
         return next();

@@ -18,14 +18,14 @@ export const findUserByUsername = async (username: string) =>
   `);
 
 export const findUserByEmail = async (email: string) =>
-  envSet.pool.one<User>(sql`
+  envSet.pool.maybeOne<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.primaryEmail}=${email}
   `);
 
 export const findUserByPhone = async (phone: string) =>
-  envSet.pool.one<User>(sql`
+  envSet.pool.maybeOne<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.primaryPhone}=${phone}
