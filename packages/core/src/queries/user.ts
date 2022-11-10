@@ -47,11 +47,12 @@ export const findUserByIdentity = async (target: string, userId: string) =>
     `
   );
 
-export const hasUser = async (username: string) =>
+export const hasUser = async (username: string, excludeUserId?: string) =>
   envSet.pool.exists(sql`
     select ${fields.id}
     from ${table}
     where ${fields.username}=${username}
+    ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
   `);
 
 export const hasUserWithId = async (id: string) =>
@@ -61,18 +62,20 @@ export const hasUserWithId = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
-export const hasUserWithEmail = async (email: string) =>
+export const hasUserWithEmail = async (email: string, excludeUserId?: string) =>
   envSet.pool.exists(sql`
     select ${fields.primaryEmail}
     from ${table}
     where lower(${fields.primaryEmail})=lower(${email})
+    ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
   `);
 
-export const hasUserWithPhone = async (phone: string) =>
+export const hasUserWithPhone = async (phone: string, excludeUserId?: string) =>
   envSet.pool.exists(sql`
     select ${fields.primaryPhone}
     from ${table}
     where ${fields.primaryPhone}=${phone}
+    ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
   `);
 
 export const hasUserWithIdentity = async (target: string, userId: string) =>
