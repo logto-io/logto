@@ -9,11 +9,9 @@
     color: var(--color-brand-default);
     text-decoration: none;
     font: var(--font-label-2);
-    border-radius: _.unit(1);
-    padding: _.unit(1) _.unit(0.5);
 
     &:active {
-      background: var(--color-overlay-brand-pressed);
+      color: var(--color-brand-hover);
     }
   }
 
@@ -27,7 +25,7 @@
 :global(body.desktop) {
   .link {
     &.primary:hover {
-      background: var(--color-overlay-brand-hover);
+      color: var(--color-brand-hover);
     }
 
     &.primary:focus-visible {
