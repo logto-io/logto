@@ -59,6 +59,7 @@ const PasscodeValidation = ({ type, method, className, hasPasswordButton, target
         </div>
       ) : (
         <TextLink
+          className={styles.link}
           text="description.resend_passcode"
           onClick={() => {
             clearErrorMessage();
@@ -67,7 +68,7 @@ const PasscodeValidation = ({ type, method, className, hasPasswordButton, target
         />
       )}
       {type === UserFlow.signIn && hasPasswordButton && (
-        <PasswordSignInLink method={method} target={target} className={styles.link} />
+        <PasswordSignInLink method={method} target={target} className={styles.switch} />
       )}
     </form>
   );

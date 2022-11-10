@@ -23,10 +23,15 @@
     }
   }
 
-  .link {
-    margin-top: _.unit(3);
+  .message,
+  .link,
+  .switch {
     width: auto;
     align-self: start;
+  }
+
+  .switch {
+    margin-top: _.unit(3);
   }
 }
 
