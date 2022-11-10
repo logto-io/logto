@@ -5,7 +5,10 @@ import FormField from '@/components/FormField';
 
 import type { SignInExperienceForm } from '../../types';
 import SignInMethodEditBox from './components/SignInMethodEditBox';
-import { signUpToSignInIdentifierMapping } from './constants';
+import {
+  signUpIdentifierToRequiredConnectorMapping,
+  signUpToSignInIdentifierMapping,
+} from './constants';
 import * as styles from './index.module.scss';
 
 const SignInForm = () => {
@@ -41,6 +44,9 @@ const SignInForm = () => {
               <SignInMethodEditBox
                 value={value}
                 requiredSignInIdentifiers={signUpToSignInIdentifierMapping[signUpIdentifier]}
+                ignoredWarningConnectors={
+                  signUpIdentifierToRequiredConnectorMapping[signUpIdentifier]
+                }
                 isSignUpPasswordRequired={setupPasswordAtSignUp}
                 isSignUpVerificationRequired={setupVerificationAtSignUp}
                 onChange={onChange}
