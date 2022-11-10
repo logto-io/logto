@@ -23,6 +23,7 @@ type Props = {
   value: SignInMethod[];
   onChange: (value: SignInMethod[]) => void;
   requiredSignInIdentifiers: SignInIdentifier[];
+  ignoredWarningConnectors: ConnectorType[];
   isSignUpPasswordRequired: boolean;
   isSignUpVerificationRequired: boolean;
 };
@@ -31,6 +32,7 @@ const SignInMethodEditBox = ({
   value,
   onChange,
   requiredSignInIdentifiers,
+  ignoredWarningConnectors,
   isSignUpPasswordRequired,
   isSignUpVerificationRequired,
 }: Props) => {
@@ -153,12 +155,11 @@ const SignInMethodEditBox = ({
         ))}
       </DragDropProvider>
       <ConnectorSetupWarning
-        requiredConnectors={value.reduce<ConnectorType[]>(
-          (connectors, { identifier: signInIdentifier }) => {
+        requiredConnectors={value
+          .reduce<ConnectorType[]>((connectors, { identifier: signInIdentifier }) => {
             return [...connectors, ...signInIdentifierToRequiredConnectorMapping[signInIdentifier]];
-          },
-          []
-        )}
+          }, [])
+          .filter((connector) => !ignoredWarningConnectors.includes(connector))}
       />
       <AddButton
         options={signInIdentifierOptions}
