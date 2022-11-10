@@ -1,15 +1,13 @@
 @use '@/scss/underscore' as _;
 
-.main {
+.main,
+.divider,
+.otherMethods {
   margin-bottom: _.unit(4);
 }
 
-.otherMethodsLink {
-  margin-bottom: _.unit(6);
-}
-
 .createAccount {
-  margin-top: _.unit(6);
+  margin-top: _.unit(2);
   text-align: center;
 }
 
@@ -19,25 +17,13 @@
 
 
 :global(body.mobile) {
-  .divider {
-    margin-bottom: _.unit(5);
-  }
-
   .createAccount {
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
 :global(body.desktop) {
-  .main {
-    margin-bottom: _.unit(6);
-  }
-
   .placeHolder {
     flex: 0;
-  }
-
-  .divider {
-    margin-bottom: _.unit(4);
   }
 }

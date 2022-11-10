@@ -44,6 +44,6 @@
 :global(body.desktop) {
   .toast {
     padding: _.unit(3) _.unit(4);
-    box-shadow: var(--color-shadow);
+    box-shadow: var(--color-shadow-2);
   }
 }

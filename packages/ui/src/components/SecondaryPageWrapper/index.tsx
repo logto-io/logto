@@ -26,10 +26,13 @@ const SecondaryPageWrapper = ({
     <div className={styles.wrapper}>
       <NavBar />
       <div className={styles.container}>
-        {title && <div className={styles.title}>{t(title, titleProps)}</div>}
-        {description && (
-          <div className={styles.description}>{t(description, descriptionProps)}</div>
-        )}
+        <div className={styles.header}>
+          {title && <div className={styles.title}>{t(title, titleProps)}</div>}
+          {description && (
+            <div className={styles.description}>{t(description, descriptionProps)}</div>
+          )}
+        </div>
+
         {children}
       </div>
     </div>

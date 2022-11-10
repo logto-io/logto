@@ -19,7 +19,7 @@ import {
 import assertThat from '@/utils/assert-that';
 
 import type { AnonymousRouter } from '../types';
-import { getRoutePrefix, signInWithPassword } from './utils';
+import { checkRequiredProfile, getRoutePrefix, signInWithPassword } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'password');
 export const signInRoute = getRoutePrefix('sign-in', 'password');
@@ -171,7 +171,7 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
 
-      await insertUser({
+      const user = await insertUser({
         id,
         username,
         passwordEncrypted,
@@ -179,6 +179,7 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
         roleNames,
         lastSignInAt: Date.now(),
       });
+      await checkRequiredProfile(ctx, provider, user, signInExperience);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();

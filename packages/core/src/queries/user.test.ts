@@ -67,7 +67,7 @@ describe('user query', () => {
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where ${fields.primaryEmail}=$1
+      where lower(${fields.primaryEmail})=lower($1)
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -179,7 +179,7 @@ describe('user query', () => {
       SELECT EXISTS(
         select ${fields.primaryEmail}
         from ${table}
-        where ${fields.primaryEmail}=$1
+        where lower(${fields.primaryEmail})=lower($1)
       )
     `;
 

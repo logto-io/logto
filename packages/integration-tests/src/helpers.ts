@@ -8,7 +8,7 @@ import { HTTPError } from 'got';
 import {
   createUser,
   registerUserWithUsernameAndPassword,
-  signInWithUsernameAndPassword,
+  signInWithPassword,
   updateConnectorConfig,
   enableConnector,
   bindWithSocial,
@@ -21,14 +21,12 @@ import { generateUsername, generatePassword } from '@/utils';
 
 import { mockSocialConnectorId } from './__mocks__/connectors-mock';
 
-export const createUserByAdmin = (_username?: string, _password?: string) => {
-  const username = _username ?? generateUsername();
-  const password = _password ?? generatePassword();
-
+export const createUserByAdmin = (username?: string, password?: string, primaryEmail?: string) => {
   return createUser({
-    username,
-    password,
-    name: username,
+    username: username ?? generateUsername(),
+    password: password ?? generatePassword(),
+    name: username ?? 'John',
+    primaryEmail,
   }).json<User>();
 };
 
@@ -49,17 +47,24 @@ export const registerNewUser = async (username: string, password: string) => {
   assert(client.isAuthenticated, new Error('Sign in failed'));
 };
 
-export const signIn = async (username: string, password: string) => {
+export type SignInHelper = {
+  username?: string;
+  email?: string;
+  password: string;
+};
+
+export const signIn = async ({ username, email, password }: SignInHelper) => {
   const client = new MockClient();
   await client.initSession();
 
   assert(client.interactionCookie, new Error('Session not found'));
 
-  const { redirectTo } = await signInWithUsernameAndPassword(
+  const { redirectTo } = await signInWithPassword({
     username,
+    email,
     password,
-    client.interactionCookie
-  );
+    interactionCookie: client.interactionCookie,
+  });
 
   await client.processSession(redirectTo);
 
@@ -135,11 +140,11 @@ export const bindSocialToNewCreatedUser = async () => {
     new Error('Auth with social failed')
   );
 
-  const { redirectTo } = await signInWithUsernameAndPassword(
+  const { redirectTo } = await signInWithPassword({
     username,
     password,
-    client.interactionCookie
-  );
+    interactionCookie: client.interactionCookie,
+  });
 
   await bindWithSocial(mockSocialConnectorId, client.interactionCookie);
 

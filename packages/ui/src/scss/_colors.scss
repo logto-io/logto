@@ -6,7 +6,8 @@
   --color-static-white: #fff;
   --color-static-black: #000;
   --color-static-dark-type-primary: #f7f8f8; // For loading icon use
-  --color-shadow: 0 4px 8px rgba(0, 0, 0, 2%);
+  --color-shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
+  --color-shadow-2: 0 4px 8px rgba(0, 0, 0, 2%);
 }
 
 @mixin light {
@@ -21,7 +22,8 @@
   --color-neutral-100: #fff;
 
   --color-neutral-variant-60: #928f9a;
-  --color-neutral-variant-80: #e5e1ec;
+  --color-neutral-variant-80: #c9c5d0;
+  --color-neutral-variant-90: #e5e1ec;
 
   --color-danger-30: #930006;
   --color-danger-40: #ba1b1b;

@@ -20,11 +20,13 @@
     }
   }
 
-  input {
+  input,
+  .disabledMask {
     position: absolute;
     width: 20px;
     height: 20px;
-    left: 0;
+    // Note: add a left value to make the input element align with the icon
+    left: _.unit(0.5);
     top: 0;
     margin: 0;
     opacity: 0%;

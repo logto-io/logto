@@ -5,7 +5,7 @@ import { managementResource } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 import fetch from 'node-fetch';
 
-import { signInWithUsernameAndPassword } from '@/api';
+import { signInWithPassword } from '@/api';
 import MockClient, { defaultConfig } from '@/client';
 import { logtoUrl } from '@/constants';
 import { createUserByAdmin } from '@/helpers';
@@ -24,11 +24,11 @@ describe('get access token', () => {
     await client.initSession();
     assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await signInWithUsernameAndPassword(
+    const { redirectTo } = await signInWithPassword({
       username,
       password,
-      client.interactionCookie
-    );
+      interactionCookie: client.interactionCookie,
+    });
 
     await client.processSession(redirectTo);
 
@@ -47,11 +47,11 @@ describe('get access token', () => {
     await client.initSession();
     assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await signInWithUsernameAndPassword(
+    const { redirectTo } = await signInWithPassword({
       username,
       password,
-      client.interactionCookie
-    );
+      interactionCookie: client.interactionCookie,
+    });
 
     await client.processSession(redirectTo);
     assert(client.isAuthenticated, new Error('Sign in get get access token failed'));

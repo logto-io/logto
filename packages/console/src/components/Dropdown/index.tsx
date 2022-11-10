@@ -54,6 +54,7 @@ const Dropdown = ({
             isFullWidth && anchorRef.current
               ? anchorRef.current.getBoundingClientRect().width
               : undefined,
+          ...(!position && { opacity: 0 }),
           ...position,
         },
       }}

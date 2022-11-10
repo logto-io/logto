@@ -18,7 +18,8 @@ import {
   sendSignInUserWithSmsPasscode,
   verifySignInUserWithSmsPasscode,
   disableConnector,
-  signInWithUsernameAndPassword,
+  signInWithPassword,
+  createUser,
 } from '@/api';
 import MockClient from '@/client';
 import {
@@ -36,12 +37,57 @@ describe('username and password flow', () => {
   const username = generateUsername();
   const password = generatePassword();
 
-  it('register with username & password', async () => {
-    await expect(registerNewUser(username, password)).resolves.not.toThrow();
+  beforeAll(async () => {
+    await setSignUpIdentifier(SignUpIdentifier.Username, true);
+    await setSignInMethod([
+      {
+        identifier: SignInIdentifier.Username,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: false,
+      },
+    ]);
   });
 
-  it('sign-in with username & password', async () => {
-    await expect(signIn(username, password)).resolves.not.toThrow();
+  it('register and sign in with username & password', async () => {
+    await expect(registerNewUser(username, password)).resolves.not.toThrow();
+    await expect(signIn({ username, password })).resolves.not.toThrow();
+  });
+});
+
+describe('email and password flow', () => {
+  const email = generateEmail();
+  const [localPart, domain] = email.split('@');
+  const password = generatePassword();
+
+  assert(localPart && domain, new Error('Email address local part or domain is empty'));
+
+  beforeAll(async () => {
+    await setUpConnector(mockEmailConnectorId, mockEmailConnectorConfig);
+    await setSignUpIdentifier(SignUpIdentifier.Email, true);
+    await setSignInMethod([
+      {
+        identifier: SignInIdentifier.Email,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: false,
+      },
+    ]);
+  });
+
+  it('can sign in with email & password', async () => {
+    await createUser({ password, primaryEmail: email, username: generateUsername(), name: 'John' });
+    await expect(
+      Promise.all([
+        signIn({ email, password }),
+        signIn({ email: localPart.toUpperCase() + '@' + domain, password }),
+        signIn({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          email: localPart[0]! + localPart.toUpperCase().slice(1) + '@' + domain,
+          password,
+        }),
+      ])
+    ).resolves.not.toThrow();
   });
 });
 
@@ -236,11 +282,11 @@ describe('sign-in and sign-out', () => {
 
     assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await signInWithUsernameAndPassword(
+    const { redirectTo } = await signInWithPassword({
       username,
       password,
-      client.interactionCookie
-    );
+      interactionCookie: client.interactionCookie,
+    });
 
     await client.processSession(redirectTo);
 
@@ -266,11 +312,11 @@ describe('sign-in to demo app and revisit Admin Console', () => {
 
     assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await signInWithUsernameAndPassword(
+    const { redirectTo } = await signInWithPassword({
       username,
       password,
-      client.interactionCookie
-    );
+      interactionCookie: client.interactionCookie,
+    });
 
     await client.processSession(redirectTo);
 

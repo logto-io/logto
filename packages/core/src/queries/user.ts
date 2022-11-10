@@ -21,7 +21,7 @@ export const findUserByEmail = async (email: string) =>
   envSet.pool.one<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
-    where ${fields.primaryEmail}=${email}
+    where lower(${fields.primaryEmail})=lower(${email})
   `);
 
 export const findUserByPhone = async (phone: string) =>
@@ -65,7 +65,7 @@ export const hasUserWithEmail = async (email: string) =>
   envSet.pool.exists(sql`
     select ${fields.primaryEmail}
     from ${table}
-    where ${fields.primaryEmail}=${email}
+    where lower(${fields.primaryEmail})=lower(${email})
   `);
 
 export const hasUserWithPhone = async (phone: string) =>

@@ -9,8 +9,12 @@
   margin-top: _.unit(2);
 }
 
-.description {
+.header {
   margin-bottom: _.unit(6);
+}
+
+.description {
+  margin-top: _.unit(2);
   @include _.text-hint;
 }
 
@@ -21,7 +25,6 @@
 
   .title {
     @include _.title;
-    margin-bottom: _.unit(6);
   }
 }
 
@@ -30,8 +33,11 @@
     margin-top: _.unit(12);
   }
 
+  .header {
+    margin-bottom: _.unit(4);
+  }
+
   .title {
     @include _.title_desktop;
-    margin-bottom: _.unit(4);
   }
 }

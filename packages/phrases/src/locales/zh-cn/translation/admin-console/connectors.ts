@@ -11,6 +11,11 @@ const connectors = {
   connector_status: '登录体验',
   connector_status_in_use: '使用中',
   connector_status_not_in_use: '未使用',
+  not_in_use_tip: {
+    content:
+      'Not in use means your sign in experience hasn’t used this sign in method. <a>{{link}}</a> to add this sign in method. ', // UNTRANSLATED
+    go_to_sie: 'Go to sign in experience', // UNTRANSLATED
+  },
   social_connector_eg: '如: 微信登录，支付宝登录',
   save_and_done: '保存并完成',
   type: {

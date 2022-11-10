@@ -16,7 +16,7 @@ describe('<CreateAccount/>', () => {
     expect(container.querySelector('input[name="new-username"]')).not.toBeNull();
     expect(container.querySelector('input[name="new-password"]')).not.toBeNull();
     expect(container.querySelector('input[name="confirm-new-password"]')).not.toBeNull();
-    expect(queryByText('action.create')).not.toBeNull();
+    expect(queryByText('action.create_account')).not.toBeNull();
   });
 
   test('render with terms settings enabled', () => {
@@ -30,7 +30,7 @@ describe('<CreateAccount/>', () => {
 
   test('username and password are required', () => {
     const { queryByText, getByText } = renderWithPageContext(<CreateAccount />);
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
     fireEvent.click(submitButton);
 
     expect(queryByText('username_required')).not.toBeNull();
@@ -41,7 +41,7 @@ describe('<CreateAccount/>', () => {
 
   test('username with initial numeric char should throw', () => {
     const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
 
     const usernameInput = container.querySelector('input[name="new-username"]');
 
@@ -65,7 +65,7 @@ describe('<CreateAccount/>', () => {
 
   test('username with special character should throw', () => {
     const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
     const usernameInput = container.querySelector('input[name="new-username"]');
 
     if (usernameInput) {
@@ -88,7 +88,7 @@ describe('<CreateAccount/>', () => {
 
   test('password less than 6 chars should throw', () => {
     const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
     const passwordInput = container.querySelector('input[name="new-password"]');
 
     if (passwordInput) {
@@ -111,7 +111,7 @@ describe('<CreateAccount/>', () => {
 
   test('password mismatch with confirmPassword should throw', () => {
     const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
     const passwordInput = container.querySelector('input[name="new-password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
     const usernameInput = container.querySelector('input[name="username"]');
@@ -148,7 +148,7 @@ describe('<CreateAccount/>', () => {
     const passwordInput = container.querySelector('input[name="new-password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
     const usernameInput = container.querySelector('input[name="new-username"]');
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
 
     if (usernameInput) {
       fireEvent.change(usernameInput, { target: { value: 'username' } });
@@ -198,7 +198,7 @@ describe('<CreateAccount/>', () => {
         <CreateAccount />
       </SettingsProvider>
     );
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
     const passwordInput = container.querySelector('input[name="new-password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
     const usernameInput = container.querySelector('input[name="new-username"]');

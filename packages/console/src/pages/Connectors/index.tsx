@@ -19,6 +19,7 @@ import { useTheme } from '@/hooks/use-theme';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import ConnectorRow from './components/ConnectorRow';
+import ConnectorStatusField from './components/ConnectorStatusField';
 import CreateForm from './components/CreateForm';
 import SignInExperienceSetupNotice from './components/SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
@@ -90,7 +91,9 @@ const Connectors = () => {
               <tr>
                 <th>{t('connectors.connector_name')}</th>
                 <th>{t('connectors.connector_type')}</th>
-                <th>{t('connectors.connector_status')}</th>
+                <th>
+                  <ConnectorStatusField />
+                </th>
               </tr>
             </thead>
             <tbody>

@@ -100,6 +100,7 @@ const SignUpForm = () => {
                 label={t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
                 disabled={signUpIdentifier === SignUpIdentifier.Username}
                 value={value ?? false}
+                disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.set_a_password')}
                 onChange={onChange}
               />
             )}
@@ -113,6 +114,7 @@ const SignUpForm = () => {
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
                   value={value ?? false}
                   disabled={requiredVerifySignUpIdentifiers.includes(signUpIdentifier)}
+                  disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.verify_at_sign_up')}
                   onChange={onChange}
                 />
               )}

@@ -8,29 +8,29 @@ import { createRequester } from '@/utils/test-utils';
 
 import passwordRoutes, { registerRoute, signInRoute } from './password';
 
-const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const hasUser = jest.fn(async (username: string) => username === 'username1');
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
-const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const updateUserById = jest.fn(async (..._args: unknown[]) => mockUser);
 const hasActiveUsers = jest.fn(async () => true);
 const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
 
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
-  findUserByIdentity: async () => ({ id: 'id', identities: {} }),
-  findUserByPhone: async () => ({ id: 'id' }),
-  findUserByEmail: async () => ({ id: 'id' }),
+  findUserByIdentity: async () => ({ id: mockUser.id, identities: {} }),
+  findUserByPhone: async () => mockUser,
+  findUserByEmail: async () => mockUser,
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   hasUser: async (username: string) => hasUser(username),
   hasUserWithIdentity: async (connectorId: string, userId: string) =>
-    connectorId === 'connectorId' && userId === 'id',
+    connectorId === 'connectorId' && userId === mockUser.id,
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
   hasActiveUsers: async () => hasActiveUsers(),
   async findUserByUsername(username: string) {
     const roleNames = username === 'admin' ? [UserRole.Admin] : [];
 
-    return { id: 'id', username, roleNames };
+    return { ...mockUser, username, roleNames };
   },
 }));
 
@@ -111,7 +111,8 @@ describe('session -> password routes', () => {
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      expect.objectContaining({ login: { accountId: 'id' } }),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
       expect.anything()
     );
   });
@@ -127,7 +128,8 @@ describe('session -> password routes', () => {
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      expect.objectContaining({ login: { accountId: 'id' } }),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
       expect.anything()
     );
   });
@@ -143,7 +145,8 @@ describe('session -> password routes', () => {
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      expect.objectContaining({ login: { accountId: 'id' } }),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
       expect.anything()
     );
   });
@@ -172,7 +175,8 @@ describe('session -> password routes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: { accountId: 'user1', ts: expect.any(Number) } }),
         expect.anything()
       );
       jest.useRealTimers();
