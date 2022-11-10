@@ -21,7 +21,7 @@ describe('<UsernameRegister />', () => {
   test('default render', () => {
     const { queryByText, container } = renderWithPageContext(<UsernameRegister />);
     expect(container.querySelector('input[name="new-username"]')).not.toBeNull();
-    expect(queryByText('action.create')).not.toBeNull();
+    expect(queryByText('action.create_account')).not.toBeNull();
   });
 
   test('submit form properly', async () => {
@@ -30,7 +30,7 @@ describe('<UsernameRegister />', () => {
         <UsernameRegister />
       </SettingsProvider>
     );
-    const submitButton = getByText('action.create');
+    const submitButton = getByText('action.create_account');
     const usernameInput = container.querySelector('input[name="new-username"]');
 
     if (usernameInput) {

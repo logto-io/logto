@@ -35,7 +35,7 @@ const UsernameForm = ({
   hasTerms = true,
   onSubmit,
   errorMessage,
-  submitText = 'action.create',
+  submitText = 'action.create_account',
   clearErrorMessage,
 }: Props) => {
   const { t } = useTranslation();
