@@ -156,9 +156,17 @@ const SignInMethodEditBox = ({
       </DragDropProvider>
       <ConnectorSetupWarning
         requiredConnectors={value
-          .reduce<ConnectorType[]>((connectors, { identifier: signInIdentifier }) => {
-            return [...connectors, ...signInIdentifierToRequiredConnectorMapping[signInIdentifier]];
-          }, [])
+          .reduce<ConnectorType[]>(
+            (connectors, { identifier: signInIdentifier, verificationCode }) => {
+              return [
+                ...connectors,
+                ...(verificationCode
+                  ? signInIdentifierToRequiredConnectorMapping[signInIdentifier]
+                  : []),
+              ];
+            },
+            []
+          )
           .filter((connector) => !ignoredWarningConnectors.includes(connector))}
       />
       <AddButton
