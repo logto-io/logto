@@ -251,64 +251,6 @@ describe('adminUserRoutes', () => {
     expect(updateUserById).not.toBeCalled();
   });
 
-  it('PATCH /users/:userId should throw if required sign-up identifier username is missing', async () => {
-    mockFindDefaultSignInExperience.mockImplementationOnce(async () => ({
-      signUp: {
-        identifier: SignUpIdentifier.Username,
-        password: false,
-        verify: false,
-      },
-    }));
-
-    await expect(
-      userRequest
-        .patch('/users/foo')
-        .send({ primaryEmail: 'test@abc.com', primaryPhone: '18688886666' })
-    ).resolves.toHaveProperty('status', 422);
-  });
-
-  it('PATCH /users/:userId should throw if required sign-up identifier email is missing', async () => {
-    mockFindDefaultSignInExperience.mockImplementationOnce(async () => ({
-      signUp: {
-        identifier: SignUpIdentifier.Email,
-        password: false,
-        verify: false,
-      },
-    }));
-
-    await expect(
-      userRequest.patch('/users/foo').send({ username: 'test', primaryPhone: '18688886666' })
-    ).resolves.toHaveProperty('status', 422);
-  });
-
-  it('PATCH /users/:userId should throw if required sign-up identifier phone is missing', async () => {
-    mockFindDefaultSignInExperience.mockImplementationOnce(async () => ({
-      signUp: {
-        identifier: SignUpIdentifier.Sms,
-        password: false,
-        verify: false,
-      },
-    }));
-
-    await expect(
-      userRequest.patch('/users/foo').send({ username: 'test', primaryEmail: 'test@abc.com' })
-    ).resolves.toHaveProperty('status', 422);
-  });
-
-  it('PATCH /users/:userId should throw if required sign-up identifiers email and phone are both missing', async () => {
-    mockFindDefaultSignInExperience.mockImplementationOnce(async () => ({
-      signUp: {
-        identifier: SignUpIdentifier.EmailOrSms,
-        password: false,
-        verify: false,
-      },
-    }));
-
-    await expect(
-      userRequest.patch('/users/foo').send({ username: 'test' })
-    ).resolves.toHaveProperty('status', 422);
-  });
-
   it('PATCH /users/:userId should throw if new username is already in use', async () => {
     mockHasUser.mockImplementationOnce(async () => true);
 
