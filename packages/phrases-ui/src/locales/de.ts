@@ -31,8 +31,8 @@ const translation = {
     sign_in_with: 'Mit {{name}} anmelden',
     forgot_password: 'Passwort vergessen?',
     switch_to: 'Zu {{method}} wechseln',
-    sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
-    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
+    sign_in_via_passcode: 'Sign in with verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in with password', // UNTRANSLATED
   },
   description: {
     email: 'Email',
@@ -69,10 +69,10 @@ const translation = {
     new_password: 'Neues Passwort',
     set_password: 'Set password', // UNTRANSLATED
     password_changed: 'Passwort geändert',
-    no_account: "Don't have an account?", // UNTRANSLATED
-    have_account: 'Already have an account?', // UNTRANSLATED
+    no_account: 'No account yet? ', // UNTRANSLATED
+    have_account: 'Already had an account?', // UNTRANSLATED
     enter_password: 'Enter Password', // UNTRANSLATED
-    enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
+    enter_password_for: 'Sign in with the password to {{method}} {{value}}', // UNTRANSLATED
     enter_username: 'Enter username', // UNTRANSLATED
     enter_username_description:
       'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.', // UNTRANSLATED
