@@ -197,7 +197,7 @@ describe('session -> forgotPasswordRoutes', () => {
       const response = await sessionRequest
         .post(`${forgotPasswordRoute}/reset`)
         .send({ password: mockPasswordEncrypted });
-      expect(response).toHaveProperty('status', 400);
+      expect(response).toHaveProperty('status', 422);
       expect(updateUserById).toBeCalledTimes(0);
     });
     it('should redirect when there was no old password', async () => {
