@@ -8,12 +8,7 @@ import { getLogtoConnectorById } from '@/connectors';
 import type { SocialUserInfo } from '@/connectors/types';
 import { socialUserInfoGuard } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
-import {
-  findUserByEmail,
-  findUserByPhone,
-  hasUserWithEmail,
-  hasUserWithPhone,
-} from '@/queries/user';
+import { findUserByEmail, findUserByPhone } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 export type SocialUserInfoSession = {
@@ -88,16 +83,20 @@ export const getUserInfoFromInteractionResult = async (
 export const findSocialRelatedUser = async (
   info: SocialUserInfo
 ): Promise<Nullable<[{ type: 'email' | 'phone'; value: string }, User]>> => {
-  if (info.phone && (await hasUserWithPhone(info.phone))) {
+  if (info.phone) {
     const user = await findUserByPhone(info.phone);
 
-    return [{ type: 'phone', value: info.phone }, user];
+    if (user) {
+      return [{ type: 'phone', value: info.phone }, user];
+    }
   }
 
-  if (info.email && (await hasUserWithEmail(info.email))) {
+  if (info.email) {
     const user = await findUserByEmail(info.email);
 
-    return [{ type: 'email', value: info.email }, user];
+    if (user) {
+      return [{ type: 'email', value: info.email }, user];
+    }
   }
 
   return null;
