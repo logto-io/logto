@@ -60,10 +60,10 @@ const SignInExperience = () => {
   }, [data]);
 
   useEffect(() => {
-    if (defaultFormData && !isDirty) {
+    if (defaultFormData) {
       reset(defaultFormData);
     }
-  }, [reset, isDirty, defaultFormData]);
+  }, [reset, defaultFormData, tab]);
 
   const saveData = async () => {
     const updatedData = await api
@@ -138,15 +138,9 @@ const SignInExperience = () => {
             <FormProvider {...methods}>
               <form className={styles.formWrapper} onSubmit={onSubmit}>
                 <div className={classNames(detailsStyles.body, styles.form)}>
-                  {tab === 'branding' && (
-                    <BrandingTab defaultData={defaultFormData} isDataDirty={isDirty} />
-                  )}
-                  {tab === 'sign-up-and-sign-in' && (
-                    <SignUpAndSignInTab defaultData={defaultFormData} isDataDirty={isDirty} />
-                  )}
-                  {tab === 'others' && (
-                    <OthersTab defaultData={defaultFormData} isDataDirty={isDirty} />
-                  )}
+                  {tab === 'branding' && <BrandingTab />}
+                  {tab === 'sign-up-and-sign-in' && <SignUpAndSignInTab />}
+                  {tab === 'others' && <OthersTab />}
                 </div>
                 <div className={detailsStyles.footer}>
                   <div className={detailsStyles.footerMain}>
