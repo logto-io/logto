@@ -72,7 +72,7 @@ const sign_in_exp = {
     },
     social_sign_in: {
       title: 'SOCIAL SIGN-IN', // UNTRANSLATED
-      social_sign_in: 'Social sign in', // UNTRANSLATED
+      social_sign_in: 'Social sign-in', // UNTRANSLATED
       description:
         'Depending on the mandatory identifier you set up, your user may be asked to provide an identifier when signing up via social connector.', // UNTRANSLATED
       add_social_connector: 'Link Social Connector', // UNTRANSLATED

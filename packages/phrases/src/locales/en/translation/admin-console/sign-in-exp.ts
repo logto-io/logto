@@ -71,7 +71,7 @@ const sign_in_exp = {
     },
     social_sign_in: {
       title: 'SOCIAL SIGN-IN',
-      social_sign_in: 'Social sign in',
+      social_sign_in: 'Social sign-in',
       description:
         'Depending on the mandatory identifier you set up, your user may be asked to provide an identifier when signing up via social connector.',
       add_social_connector: 'Link Social Connector',
