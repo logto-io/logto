@@ -13,7 +13,7 @@
 .formFieldDescription {
   font: var(--font-body-medium);
   color: var(--color-text-secondary);
-  margin-bottom: _.unit(2);
+  margin: _.unit(1) 0 _.unit(2);
 }
 
 .socialOnlyDescription {
@@ -21,7 +21,7 @@
   color: var(--color-text-secondary);
 }
 
-.signUpAuthentication {
+.selections {
   > :not(:first-child) {
     margin-top: _.unit(3);
   }

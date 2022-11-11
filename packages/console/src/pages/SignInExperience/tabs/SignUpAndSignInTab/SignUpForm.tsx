@@ -91,41 +91,40 @@ const SignUpForm = () => {
         />
       </FormField>
       {signUpIdentifier !== SignUpIdentifier.None && (
-        <FormField
-          title="sign_in_exp.sign_up_and_sign_in.sign_up.sign_up_authentication"
-          className={styles.signUpAuthentication}
-        >
+        <FormField title="sign_in_exp.sign_up_and_sign_in.sign_up.sign_up_authentication">
           <div className={styles.formFieldDescription}>
             {t('sign_in_exp.sign_up_and_sign_in.sign_up.authentication_description')}
           </div>
-          <Controller
-            name="signUp.password"
-            control={control}
-            render={({ field: { value, onChange } }) => (
-              <Checkbox
-                label={t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
-                disabled={signUpIdentifier === SignUpIdentifier.Username}
-                value={value ?? false}
-                disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.set_a_password')}
-                onChange={onChange}
-              />
-            )}
-          />
-          {signUpIdentifier !== SignUpIdentifier.Username && (
+          <div className={styles.selections}>
             <Controller
-              name="signUp.verify"
+              name="signUp.password"
               control={control}
               render={({ field: { value, onChange } }) => (
                 <Checkbox
-                  label={t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
+                  label={t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
+                  disabled={signUpIdentifier === SignUpIdentifier.Username}
                   value={value ?? false}
-                  disabled={requiredVerifySignUpIdentifiers.includes(signUpIdentifier)}
-                  disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.verify_at_sign_up')}
+                  disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.set_a_password')}
                   onChange={onChange}
                 />
               )}
             />
-          )}
+            {signUpIdentifier !== SignUpIdentifier.Username && (
+              <Controller
+                name="signUp.verify"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Checkbox
+                    label={t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
+                    value={value ?? false}
+                    disabled={requiredVerifySignUpIdentifiers.includes(signUpIdentifier)}
+                    disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.verify_at_sign_up')}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            )}
+          </div>
         </FormField>
       )}
     </>
