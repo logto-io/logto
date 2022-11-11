@@ -12,6 +12,10 @@
   transform: translate(-50%, -50%);
   outline: none;
   border-radius: 16px;
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .container {
