@@ -200,3 +200,24 @@ export type Translation = {
 export const translationGuard: z.ZodType<Translation> = z.lazy(() =>
   z.record(z.string().or(translationGuard))
 );
+
+/**
+ * Hooks
+ */
+
+export type HookConfig = {
+  /** We don't need `type` since v1 only has web hook */
+  // type: 'web';
+  /** Method fixed to `POST` */
+  url: string;
+  /** Additional headers that attach to the request */
+  headers: Record<string, string>;
+  /** Only retry when status code >= 500 */
+  retries: number; //
+};
+
+export const hookConfigGuard: z.ZodType<HookConfig> = z.object({
+  url: z.string(),
+  headers: z.record(z.string()),
+  retries: z.number(),
+});
