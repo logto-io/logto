@@ -31,8 +31,8 @@ const translation = {
     sign_in_with: 'Continuer avec {{name}}',
     forgot_password: 'Mot de passe oublié ?',
     switch_to: 'Passer au {{method}}',
-    sign_in_via_passcode: 'Sign in via verification code', // UNTRANSLATED
-    sign_in_via_password: 'Sign in via password', // UNTRANSLATED
+    sign_in_via_passcode: 'Sign in with verification code', // UNTRANSLATED
+    sign_in_via_password: 'Sign in with password', // UNTRANSLATED
   },
   description: {
     email: 'email',
@@ -69,20 +69,20 @@ const translation = {
     new_password: 'Nouveau mot de passe',
     set_password: 'Set password', // UNTRANSLATED
     password_changed: 'Password Changed', // UNTRANSLATED
-    no_account: "Don't have an account?", // UNTRANSLATED
-    have_account: 'Already have an account?', // UNTRANSLATED
+    no_account: 'No account yet? ', // UNTRANSLATED
+    have_account: 'Already had an account?', // UNTRANSLATED
     enter_password: 'Enter Password', // UNTRANSLATED
-    enter_password_for: 'Enter the password of {{method}} {{value}}', // UNTRANSLATED
+    enter_password_for: 'Sign in with the password to {{method}} {{value}}', // UNTRANSLATED
     enter_username: 'Enter username', // UNTRANSLATED
     enter_username_description:
       'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.', // UNTRANSLATED
     link_email: 'Link email', // UNTRANSLATED
     link_phone: 'Link phone', // UNTRANSLATED
     link_email_or_phone: 'Link email or phone', // UNTRANSLATED
-    link_email_description: 'Link your email to sign in or help with account recovery.', // UNTRANSLATED
-    link_phone_description: 'Link your phone number to sign in or help with account recovery.', // UNTRANSLATED
+    link_email_description: 'For added security, please link your email with the account.', // UNTRANSLATED
+    link_phone_description: 'For added security, please link your phone with the account.', // UNTRANSLATED
     link_email_or_phone_description:
-      'Link your email or phone number to sign in or help with account recovery.', // UNTRANSLATED
+      'For added security, please link your email or phone with the account.', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: "Le nom d'utilisateur et le mot de passe ne correspondent pas",
