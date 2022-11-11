@@ -115,7 +115,7 @@ describe('api', () => {
       }),
     });
     await signInWithPhonePassword(phone, password);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/password/phone', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/password/sms', {
       json: {
         phone,
         password,
@@ -130,7 +130,7 @@ describe('api', () => {
       }),
     });
     await signInWithPhonePassword(phone, password, 'github');
-    expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/password/phone', {
+    expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/password/sms', {
       json: {
         phone,
         password,
