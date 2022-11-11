@@ -22,6 +22,10 @@
   padding: _.unit(5);
   background: var(--color-bg-body-overlay);
   border-radius: var(--radius);
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .content {

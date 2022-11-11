@@ -1,4 +1,4 @@
-import type { ReactNode, MouseEventHandler } from 'react';
+import type { ReactNode } from 'react';
 import type { TFuncKey } from 'react-i18next';
 
 export type ModalProps = {
@@ -7,6 +7,6 @@ export type ModalProps = {
   children: ReactNode;
   cancelText?: TFuncKey;
   confirmText?: TFuncKey;
-  onConfirm?: MouseEventHandler<HTMLButtonElement> & MouseEventHandler;
-  onClose: MouseEventHandler<HTMLButtonElement> & MouseEventHandler;
+  onConfirm?: () => void;
+  onClose: () => void;
 };
