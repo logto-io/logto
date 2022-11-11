@@ -131,7 +131,7 @@ jobs:
         run: pnpm -r build
 
       - name: Package
-        run: ./scripts/package.sh
+        run: ./.scripts/package.sh
 
       - name: Release
         uses: softprops/action-gh-release@v1
