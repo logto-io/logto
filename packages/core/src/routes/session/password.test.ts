@@ -111,8 +111,7 @@ describe('session -> password routes', () => {
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
+      expect.objectContaining({ login: { accountId: mockUser.id } }),
       expect.anything()
     );
   });
@@ -128,8 +127,7 @@ describe('session -> password routes', () => {
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
+      expect.objectContaining({ login: { accountId: mockUser.id } }),
       expect.anything()
     );
   });
@@ -145,8 +143,7 @@ describe('session -> password routes', () => {
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      expect.objectContaining({ login: { accountId: mockUser.id, ts: expect.any(Number) } }),
+      expect.objectContaining({ login: { accountId: mockUser.id } }),
       expect.anything()
     );
   });
@@ -175,8 +172,7 @@ describe('session -> password routes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        expect.objectContaining({ login: { accountId: 'user1', ts: expect.any(Number) } }),
+        expect.objectContaining({ login: { accountId: 'user1' } }),
         expect.anything()
       );
       jest.useRealTimers();
