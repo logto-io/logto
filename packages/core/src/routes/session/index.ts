@@ -18,6 +18,7 @@ import forgotPasswordRoutes from './forgot-password';
 import koaGuardSessionAction from './middleware/koa-guard-session-action';
 import passwordRoutes from './password';
 import passwordlessRoutes from './passwordless';
+import profileRoutes from './profile';
 import socialRoutes from './social';
 import { getRoutePrefix } from './utils';
 
@@ -51,8 +52,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
     const { accountId } = session;
 
-    // Temp solution before migrating to RBAC.  Block non-admin user from consent to admin console
-
+    // Temp solution before migrating to RBAC. Block non-admin user from consenting to admin console
     if (String(client_id) === adminConsoleApplicationId) {
       const { roleNames } = await findUserById(accountId);
 
@@ -105,6 +105,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   passwordlessRoutes(router, provider);
   socialRoutes(router, provider);
   continueRoutes(router, provider);
-
   forgotPasswordRoutes(router, provider);
+  profileRoutes(router, provider);
 }
