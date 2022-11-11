@@ -9,6 +9,7 @@ import usePreview from './hooks/use-preview';
 import initI18n from './i18n/init';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
+import Continue from './pages/Continue';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import Passcode from './pages/Passcode';
@@ -67,7 +68,7 @@ const App = () => {
             />
 
             <Route element={<LoadingLayerProvider />}>
-              {/* sign-in */}
+              {/* Sign-in */}
               <Route
                 path="/sign-in"
                 element={isRegisterOnly ? <Navigate replace to="/register" /> : <SignIn />}
@@ -76,7 +77,7 @@ const App = () => {
               <Route path="/sign-in/:method" element={<SecondarySignIn />} />
               <Route path="/sign-in/:method/password" element={<SignInPassword />} />
 
-              {/* register */}
+              {/* Register */}
               <Route
                 path="/register"
                 element={isSignInOnly ? <Navigate replace to="/sign-in" /> : <Register />}
@@ -87,17 +88,19 @@ const App = () => {
               />
               <Route path="/register/:method" element={<SecondaryRegister />} />
 
-              {/* forgot password */}
+              {/* Forgot password */}
               <Route path="/forgot-password/reset" element={<ResetPassword />} />
               <Route path="/forgot-password/:method" element={<ForgotPassword />} />
 
-              {/* social sign-in pages */}
+              {/* Continue set up missing profile */}
+              <Route path="/continue/:method" element={<Continue />} />
 
+              {/* Social sign-in pages */}
               <Route path="/callback/:connector" element={<Callback />} />
               <Route path="/social/register/:connector" element={<SocialRegister />} />
               <Route path="/social/landing/:connector" element={<SocialLanding />} />
 
-              {/* always keep route path with param as the last one */}
+              {/* Always keep route path with param as the last one */}
               <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
             </Route>
 

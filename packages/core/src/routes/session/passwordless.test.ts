@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import type { User } from '@logto/schemas';
 import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import type { Nullable } from '@silverhand/essentials';
 import { addDays, addSeconds, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
@@ -14,8 +15,8 @@ import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
-const findUserByEmail = jest.fn(async (): Promise<User> => mockUser);
-const findUserByPhone = jest.fn(async (): Promise<User> => mockUser);
+const findUserByEmail = jest.fn(async (): Promise<Nullable<User>> => mockUser);
+const findUserByPhone = jest.fn(async (): Promise<Nullable<User>> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => mockUser);
 const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
@@ -261,6 +262,7 @@ describe('session -> passwordlessRoutes', () => {
     });
 
     it('throw 404 (with flow `forgot-password`)', async () => {
+      findUserByPhone.mockResolvedValueOnce(null);
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
         .send({ phone: '13000000001', code: '1234', flow: PasscodeType.ForgotPassword });
@@ -359,6 +361,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw 404 (with flow `forgot-password`)', async () => {
       const fakeTime = new Date();
       jest.useFakeTimers().setSystemTime(fakeTime);
+      findUserByEmail.mockResolvedValueOnce(null);
       const response = await sessionRequest
         .post('/session/passwordless/email/verify')
         .send({ email: 'b@a.com', code: '1234', flow: PasscodeType.ForgotPassword });
@@ -502,6 +505,7 @@ describe('session -> passwordlessRoutes', () => {
           },
         },
       });
+      findUserByPhone.mockResolvedValueOnce(null);
       const response = await sessionRequest.post(`${signInRoute}/sms`);
       expect(response.statusCode).toEqual(404);
     });
@@ -658,6 +662,7 @@ describe('session -> passwordlessRoutes', () => {
           },
         },
       });
+      findUserByEmail.mockResolvedValueOnce(null);
       const response = await sessionRequest.post(`${signInRoute}/email`);
       expect(response.statusCode).toEqual(404);
     });

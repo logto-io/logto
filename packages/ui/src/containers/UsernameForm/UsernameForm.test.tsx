@@ -2,49 +2,66 @@ import { fireEvent, act, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { checkUsername } from '@/apis/register';
 
-import UsernameRegister from '.';
+import UsernameForm from './UsernameForm';
 
-const mockedNavigate = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockedNavigate,
-}));
-
-jest.mock('@/apis/register', () => ({
-  checkUsername: jest.fn(async () => ({})),
-}));
+const onSubmit = jest.fn();
+const onClearErrorMessage = jest.fn();
 
 describe('<UsernameRegister />', () => {
-  test('default render', () => {
-    const { queryByText, container } = renderWithPageContext(<UsernameRegister />);
+  test('default render without terms', () => {
+    const { queryByText, container } = renderWithPageContext(
+      <SettingsProvider>
+        <UsernameForm hasTerms={false} onSubmit={onSubmit} />
+      </SettingsProvider>
+    );
+
     expect(container.querySelector('input[name="new-username"]')).not.toBeNull();
+    expect(queryByText('description.terms_of_use')).toBeNull();
     expect(queryByText('action.create_account')).not.toBeNull();
   });
 
   test('render with terms settings enabled', () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider>
-        <UsernameRegister />
+        <UsernameForm onSubmit={onSubmit} />
       </SettingsProvider>
     );
     expect(queryByText('description.terms_of_use')).not.toBeNull();
   });
 
+  test('render with error message', () => {
+    const { queryByText, getByText } = renderWithPageContext(
+      <SettingsProvider>
+        <UsernameForm
+          errorMessage="error_message"
+          clearErrorMessage={onClearErrorMessage}
+          onSubmit={onSubmit}
+        />
+      </SettingsProvider>
+    );
+    expect(queryByText('error_message')).not.toBeNull();
+
+    const submitButton = getByText('action.create_account');
+    fireEvent.click(submitButton);
+
+    expect(onClearErrorMessage).toBeCalled();
+  });
+
   test('username are required', () => {
-    const { queryByText, getByText } = renderWithPageContext(<UsernameRegister />);
+    const { queryByText, getByText } = renderWithPageContext(<UsernameForm onSubmit={onSubmit} />);
     const submitButton = getByText('action.create_account');
     fireEvent.click(submitButton);
 
     expect(queryByText('username_required')).not.toBeNull();
 
-    expect(checkUsername).not.toBeCalled();
+    expect(onSubmit).not.toBeCalled();
   });
 
   test('username with initial numeric char should throw', () => {
-    const { queryByText, getByText, container } = renderWithPageContext(<UsernameRegister />);
+    const { queryByText, getByText, container } = renderWithPageContext(
+      <UsernameForm onSubmit={onSubmit} />
+    );
     const submitButton = getByText('action.create_account');
 
     const usernameInput = container.querySelector('input[name="new-username"]');
@@ -57,7 +74,7 @@ describe('<UsernameRegister />', () => {
 
     expect(queryByText('username_should_not_start_with_number')).not.toBeNull();
 
-    expect(checkUsername).not.toBeCalled();
+    expect(onSubmit).not.toBeCalled();
 
     // Clear error
     if (usernameInput) {
@@ -68,7 +85,9 @@ describe('<UsernameRegister />', () => {
   });
 
   test('username with special character should throw', () => {
-    const { queryByText, getByText, container } = renderWithPageContext(<UsernameRegister />);
+    const { queryByText, getByText, container } = renderWithPageContext(
+      <UsernameForm onSubmit={onSubmit} />
+    );
     const submitButton = getByText('action.create_account');
     const usernameInput = container.querySelector('input[name="new-username"]');
 
@@ -80,7 +99,7 @@ describe('<UsernameRegister />', () => {
 
     expect(queryByText('username_valid_charset')).not.toBeNull();
 
-    expect(checkUsername).not.toBeCalled();
+    expect(onSubmit).not.toBeCalled();
 
     // Clear error
     if (usernameInput) {
@@ -93,7 +112,7 @@ describe('<UsernameRegister />', () => {
   test('submit form properly with terms settings enabled', async () => {
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <UsernameRegister />
+        <UsernameForm onSubmit={onSubmit} />
       </SettingsProvider>
     );
     const submitButton = getByText('action.create_account');
@@ -111,7 +130,7 @@ describe('<UsernameRegister />', () => {
     });
 
     await waitFor(() => {
-      expect(checkUsername).toBeCalledWith('username');
+      expect(onSubmit).toBeCalledWith('username');
     });
   });
 });

@@ -14,6 +14,10 @@ jest.mock('@/apis/sign-in', () => ({ signInWithUsername: jest.fn(async () => 0) 
 jest.mock('react-device-detect', () => ({
   isMobile: true,
 }));
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+}));
 
 describe('<UsernameSignIn>', () => {
   afterEach(() => {

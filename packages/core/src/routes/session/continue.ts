@@ -23,6 +23,7 @@ import {
   getContinueSignInResult,
   getRoutePrefix,
   getVerificationStorageFromInteraction,
+  isUserPasswordSet,
 } from './utils';
 
 export const continueRoute = getRoutePrefix('sign-in', 'continue');
@@ -42,7 +43,7 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
 
       // Social identities can take place the role of password
       assertThat(
-        !user.passwordEncrypted && Object.keys(user.identities).length === 0,
+        !isUserPasswordSet(user),
         new RequestError({
           code: 'user.password_exists',
         })

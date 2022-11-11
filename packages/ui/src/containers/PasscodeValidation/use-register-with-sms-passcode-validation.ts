@@ -8,6 +8,7 @@ import { signInWithSms } from '@/apis/sign-in';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import { UserFlow } from '@/types';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
@@ -29,6 +30,8 @@ const useRegisterWithSmsPasscodeValidation = (phone: string, errorCallback?: () 
     SignInIdentifier.Sms,
     formatPhoneNumberWithCountryCallingCode(phone)
   );
+
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
   const phoneExistSignInErrorHandler = useCallback(async () => {
     const [confirm] = await show({
@@ -59,14 +62,16 @@ const useRegisterWithSmsPasscodeValidation = (phone: string, errorCallback?: () 
           ? identifierExistErrorHandler
           : phoneExistSignInErrorHandler,
       ...sharedErrorHandlers,
+      ...requiredProfileErrorHandlers,
       callback: errorCallback,
     }),
     [
-      phoneExistSignInErrorHandler,
-      errorCallback,
-      identifierExistErrorHandler,
-      sharedErrorHandlers,
       signInMode,
+      identifierExistErrorHandler,
+      phoneExistSignInErrorHandler,
+      sharedErrorHandlers,
+      requiredProfileErrorHandlers,
+      errorCallback,
     ]
   );
 

@@ -171,10 +171,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     koaGuard({
       params: object({ userId: string() }),
       body: object({
-        username: string().regex(usernameRegEx).optional(),
-        primaryEmail: string().regex(emailRegEx).optional(),
-        primaryPhone: string().regex(phoneRegEx).optional(),
-        name: string().nullable().optional(),
+        username: string().regex(usernameRegEx).or(literal('')).nullable().optional(),
+        primaryEmail: string().regex(emailRegEx).or(literal('')).nullable().optional(),
+        primaryPhone: string().regex(phoneRegEx).or(literal('')).nullable().optional(),
+        name: string().or(literal('')).nullable().optional(),
         avatar: string().url().or(literal('')).nullable().optional(),
         customData: arbitraryObjectGuard.optional(),
         roleNames: string().array().optional(),
@@ -187,7 +187,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       await findUserById(userId);
-      await checkExistingSignUpIdentifiers(body);
+      await checkExistingSignUpIdentifiers(body, userId);
 
       // Temp solution to validate the existence of input roleNames
       if (body.roleNames?.length) {

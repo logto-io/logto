@@ -1,10 +1,12 @@
+import { PasscodeType } from '@logto/schemas';
 import ky from 'ky';
 
 import {
-  continueWithPassword,
-  continueWithUsername,
-  continueWithEmail,
-  continueWithPhone,
+  continueApi,
+  sendContinueSetEmailPasscode,
+  sendContinueSetPhonePasscode,
+  verifyContinueSetEmailPasscode,
+  verifyContinueSetSmsPasscode,
 } from './continue';
 
 jest.mock('ky', () => ({
@@ -30,8 +32,8 @@ describe('continue API', () => {
   });
 
   it('continue with password', async () => {
-    await continueWithPassword('password');
-    expect(ky.post).toBeCalledWith('/api/session/continue/password', {
+    await continueApi('password', 'password');
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/password', {
       json: {
         password: 'password',
       },
@@ -39,8 +41,8 @@ describe('continue API', () => {
   });
 
   it('continue with username', async () => {
-    await continueWithUsername('username');
-    expect(ky.post).toBeCalledWith('/api/session/continue/username', {
+    await continueApi('username', 'username');
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/username', {
       json: {
         username: 'username',
       },
@@ -48,9 +50,9 @@ describe('continue API', () => {
   });
 
   it('continue with email', async () => {
-    await continueWithEmail('email');
+    await continueApi('email', 'email');
 
-    expect(ky.post).toBeCalledWith('/api/session/continue/email', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/email', {
       json: {
         email: 'email',
       },
@@ -58,11 +60,57 @@ describe('continue API', () => {
   });
 
   it('continue with phone', async () => {
-    await continueWithPhone('phone');
+    await continueApi('phone', 'phone');
 
-    expect(ky.post).toBeCalledWith('/api/session/continue/sms', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/continue/sms', {
       json: {
         phone: 'phone',
+      },
+    });
+  });
+
+  it('sendContinueSetEmailPasscode', async () => {
+    await sendContinueSetEmailPasscode('email');
+
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
+      json: {
+        email: 'email',
+        flow: PasscodeType.Continue,
+      },
+    });
+  });
+
+  it('sendContinueSetSmsPasscode', async () => {
+    await sendContinueSetPhonePasscode('111111');
+
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
+      json: {
+        phone: '111111',
+        flow: PasscodeType.Continue,
+      },
+    });
+  });
+
+  it('verifyContinueSetEmailPasscode', async () => {
+    await verifyContinueSetEmailPasscode('email', 'passcode');
+
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/verify', {
+      json: {
+        email: 'email',
+        code: 'passcode',
+        flow: PasscodeType.Continue,
+      },
+    });
+  });
+
+  it('verifyContinueSetSmsPasscode', async () => {
+    await verifyContinueSetSmsPasscode('phone', 'passcode');
+
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/verify', {
+      json: {
+        phone: 'phone',
+        code: 'passcode',
+        flow: PasscodeType.Continue,
       },
     });
   });

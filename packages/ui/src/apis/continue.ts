@@ -1,3 +1,5 @@
+import { PasscodeType } from '@logto/schemas';
+
 import api from './api';
 import { bindSocialAccount } from './social';
 
@@ -5,13 +7,15 @@ type Response = {
   redirectTo: string;
 };
 
-const continueApiPrefix = '/api/session/continue';
+const passwordlessApiPrefix = '/api/session/passwordless';
+const continueApiPrefix = '/api/session/sign-in/continue';
 
-// Only bind with social after the sign-in bind password flow
-export const continueWithPassword = async (password: string, socialToBind?: string) => {
+type ContinueKey = 'password' | 'username' | 'email' | 'phone';
+
+export const continueApi = async (key: ContinueKey, value: string, socialToBind?: string) => {
   const result = await api
-    .post(`${continueApiPrefix}/password`, {
-      json: { password },
+    .post(`${continueApiPrefix}/${key === 'phone' ? 'sms' : key}`, {
+      json: { [key]: value },
     })
     .json<Response>();
 
@@ -22,11 +26,48 @@ export const continueWithPassword = async (password: string, socialToBind?: stri
   return result;
 };
 
-export const continueWithUsername = async (username: string) =>
-  api.post(`${continueApiPrefix}/username`, { json: { username } }).json<Response>();
+export const sendContinueSetEmailPasscode = async (email: string) => {
+  await api
+    .post(`${passwordlessApiPrefix}/email/send`, {
+      json: {
+        email,
+        flow: PasscodeType.Continue,
+      },
+    })
+    .json();
 
-export const continueWithEmail = async (email: string) =>
-  api.post(`${continueApiPrefix}/email`, { json: { email } }).json<Response>();
+  return { success: true };
+};
 
-export const continueWithPhone = async (phone: string) =>
-  api.post(`${continueApiPrefix}/sms`, { json: { phone } }).json<Response>();
+export const sendContinueSetPhonePasscode = async (phone: string) => {
+  await api
+    .post(`${passwordlessApiPrefix}/sms/send`, {
+      json: {
+        phone,
+        flow: PasscodeType.Continue,
+      },
+    })
+    .json();
+
+  return { success: true };
+};
+
+export const verifyContinueSetEmailPasscode = async (email: string, code: string) => {
+  await api
+    .post(`${passwordlessApiPrefix}/email/verify`, {
+      json: { email, code, flow: PasscodeType.Continue },
+    })
+    .json();
+
+  return { success: true };
+};
+
+export const verifyContinueSetSmsPasscode = async (phone: string, code: string) => {
+  await api
+    .post(`${passwordlessApiPrefix}/sms/verify`, {
+      json: { phone, code, flow: PasscodeType.Continue },
+    })
+    .json();
+
+  return { success: true };
+};
