@@ -12,6 +12,7 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import ConfirmModal from '@/components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
@@ -172,6 +173,7 @@ const SignInExperience = () => {
           {dataToCompare && <SignInMethodsChangePreview before={data} after={dataToCompare} />}
         </ConfirmModal>
       )}
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
     </div>
   );
 };
