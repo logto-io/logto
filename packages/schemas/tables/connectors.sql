@@ -1,4 +1,4 @@
-create table connector_instances (
+create table connectors (
   id varchar(128) not null,
   enabled boolean not null default FALSE,
   sync_profile boolean not null default FALSE,
