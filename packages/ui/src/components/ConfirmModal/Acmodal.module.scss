@@ -22,6 +22,10 @@
   background: var(--color-bg-float-overlay);
   border-radius: 16px;
   padding: _.unit(6);
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .header {

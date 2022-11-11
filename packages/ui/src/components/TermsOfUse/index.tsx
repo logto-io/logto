@@ -33,7 +33,7 @@ const TermsOfUse = ({ name, className, termsUrl, isChecked, onChange, onTermsCli
       className={classNames(styles.terms, className)}
       onClick={toggle}
       onKeyDown={onKeyDownHandler({
-        Esc: () => {
+        Escape: () => {
           onChange(false);
         },
         Enter: toggle,

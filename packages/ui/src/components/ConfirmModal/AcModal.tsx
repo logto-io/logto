@@ -1,10 +1,12 @@
 import classNames from 'classnames';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import CloseIcon from '@/assets/icons/close-icon.svg';
 import Button from '@/components/Button';
 import IconButton from '@/components/Button/IconButton';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as modalStyles from '../../scss/modal.module.scss';
 import * as styles from './Acmodal.module.scss';
@@ -21,14 +23,32 @@ const AcModal = ({
 }: ModalProps) => {
   const { t } = useTranslation();
 
+  const contentRef = useRef<HTMLDivElement>(null);
+
   return (
     <ReactModal
       role="dialog"
       isOpen={isOpen}
       className={classNames(styles.modal, className)}
       overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
+      onAfterOpen={() => {
+        contentRef.current?.focus();
+      }}
     >
-      <div className={styles.container}>
+      <div
+        ref={contentRef}
+        className={styles.container}
+        role="button"
+        tabIndex={0}
+        onKeyDown={onKeyDownHandler({
+          Enter: () => {
+            (onConfirm ?? onClose)();
+          },
+          Escape: () => {
+            onClose();
+          },
+        })}
+      >
         <div className={styles.header}>
           {t('description.reminder')}
           <IconButton onClick={onClose}>
