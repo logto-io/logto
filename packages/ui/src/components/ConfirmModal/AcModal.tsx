@@ -41,12 +41,9 @@ const AcModal = ({
         role="button"
         tabIndex={0}
         onKeyDown={onKeyDownHandler({
-          Enter: () => {
-            (onConfirm ?? onClose)();
-          },
-          Escape: () => {
-            onClose();
-          },
+          Enter: onConfirm ?? onClose,
+          ' ': onConfirm ?? onClose,
+          Escape: onClose,
         })}
       >
         <div className={styles.header}>
