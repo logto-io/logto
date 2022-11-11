@@ -80,6 +80,12 @@ jest.mock('@/queries/roles', () => ({
   ),
 }));
 
+const revokeInstanceByUserId = jest.fn();
+jest.mock('@/queries/oidc-model-instance', () => ({
+  revokeInstanceByUserId: async (modelName: string, userId: string) =>
+    revokeInstanceByUserId(modelName, userId),
+}));
+
 describe('adminUserRoutes', () => {
   const userRequest = createRequester({ authedRoutes: adminUserRoutes });
 
@@ -324,6 +330,7 @@ describe('adminUserRoutes', () => {
       .patch(`/users/${mockedUserId}/is-suspended`)
       .send({ isSuspended: true });
     expect(updateUserById).toHaveBeenCalledWith(mockedUserId, { isSuspended: true });
+    expect(revokeInstanceByUserId).toHaveBeenCalledWith('refreshToken', mockedUserId);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockUserResponse,
