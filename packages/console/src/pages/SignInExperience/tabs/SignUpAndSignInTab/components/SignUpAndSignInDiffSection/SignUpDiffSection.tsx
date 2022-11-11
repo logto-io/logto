@@ -2,6 +2,7 @@ import type { SignUp } from '@logto/schemas';
 import { diff } from 'deep-object-diff';
 import get from 'lodash.get';
 import { useTranslation } from 'react-i18next';
+import { snakeCase } from 'snake-case';
 
 import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
@@ -29,7 +30,7 @@ const SignUpDiffSection = ({ before, after, isAfter = false }: Props) => {
         <li>
           <DiffSegment hasChanged={hasChanged('identifier')} isAfter={isAfter}>
             {t('sign_in_exp.sign_up_and_sign_in.identifiers', {
-              context: identifier.toLowerCase(),
+              context: snakeCase(identifier),
             })}
           </DiffSegment>
           {hasAuthentication && ' ('}
