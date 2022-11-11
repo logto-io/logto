@@ -16,7 +16,7 @@ export type Props = {
 
 const AppContent = ({ children }: Props) => {
   const theme = useTheme();
-  const { toast, platform, setToast, experienceSettings } = useContext(PageContext);
+  const { toast, platform, setToast } = useContext(PageContext);
 
   // Prevent internal eventListener rebind
   const hideToast = useCallback(() => {

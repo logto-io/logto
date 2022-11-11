@@ -47,6 +47,7 @@ body {
 
 .placeHolder {
   flex: 1;
+  min-height: _.unit(5);
 }
 
 :global(body.mobile) {
@@ -84,5 +85,6 @@ body {
     border-radius: 16px;
     background: var(--color-bg-float);
     box-shadow: var(--color-shadow-2);
+    overflow: auto;
   }
 }
