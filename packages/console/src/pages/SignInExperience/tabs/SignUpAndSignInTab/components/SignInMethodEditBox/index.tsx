@@ -9,6 +9,7 @@ import { signInIdentifiers, signInIdentifierToRequiredConnectorMapping } from '.
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
 import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
+import * as styles from './index.module.scss';
 import type { SignInMethod } from './types';
 import {
   computeOnSignInMethodAppended,
@@ -22,6 +23,7 @@ type Props = {
   value: SignInMethod[];
   onChange: (value: SignInMethod[]) => void;
   requiredSignInIdentifiers: SignInIdentifier[];
+  ignoredWarningConnectors: ConnectorType[];
   isSignUpPasswordRequired: boolean;
   isSignUpVerificationRequired: boolean;
 };
@@ -30,6 +32,7 @@ const SignInMethodEditBox = ({
   value,
   onChange,
   requiredSignInIdentifiers,
+  ignoredWarningConnectors,
   isSignUpPasswordRequired,
   isSignUpVerificationRequired,
 }: Props) => {
@@ -125,6 +128,7 @@ const SignInMethodEditBox = ({
             id={signInMethod.identifier}
             sortIndex={index}
             moveItem={onMoveItem}
+            className={styles.draggleItemContainer}
           >
             <SignInMethodItem
               signInMethod={signInMethod}
@@ -132,9 +136,7 @@ const SignInMethodEditBox = ({
                 signInMethod.identifier !== SignInIdentifier.Username && !isSignUpPasswordRequired
               }
               isVerificationCodeCheckable={
-                (isSignUpPasswordRequired && isSignUpVerificationRequired) ||
-                // Note: the next line is used to handle the case when the sign-up identifier is `Username`
-                (isSignUpPasswordRequired && signInMethod.identifier !== SignInIdentifier.Username)
+                !(isSignUpVerificationRequired && !isSignUpPasswordRequired)
               }
               isDeletable={!requiredSignInIdentifiers.includes(signInMethod.identifier)}
               onVerificationStateChange={(identifier, verification, checked) => {
@@ -153,12 +155,11 @@ const SignInMethodEditBox = ({
         ))}
       </DragDropProvider>
       <ConnectorSetupWarning
-        requiredConnectors={value.reduce<ConnectorType[]>(
-          (connectors, { identifier: signInIdentifier }) => {
+        requiredConnectors={value
+          .reduce<ConnectorType[]>((connectors, { identifier: signInIdentifier }) => {
             return [...connectors, ...signInIdentifierToRequiredConnectorMapping[signInIdentifier]];
-          },
-          []
-        )}
+          }, [])
+          .filter((connector) => !ignoredWarningConnectors.includes(connector))}
       />
       <AddButton
         options={signInIdentifierOptions}

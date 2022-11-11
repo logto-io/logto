@@ -11,6 +11,7 @@ type Props = {
   sortIndex: number;
   moveItem: (dragIndex: number, hoverIndex: number) => void;
   children: ReactNode;
+  className?: string;
 };
 
 type DragItemProps = {
@@ -21,7 +22,7 @@ type DragItemProps = {
 
 const dragType = 'TransferItem';
 
-const DraggableItem = ({ id, children, sortIndex, moveItem }: Props) => {
+const DraggableItem = ({ id, children, sortIndex, moveItem, className }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const { setIsDragging } = useContext(DragDropContext);
   const [{ handlerId }, drop] = useDrop<DragItemProps, void, { handlerId: Nullable<Identifier> }>({
@@ -99,7 +100,7 @@ const DraggableItem = ({ id, children, sortIndex, moveItem }: Props) => {
   }, [setIsDragging, isDragging]);
 
   return (
-    <div ref={ref} style={{ opacity }} data-handler-id={handlerId}>
+    <div ref={ref} style={{ opacity }} data-handler-id={handlerId} className={className}>
       {children}
     </div>
   );

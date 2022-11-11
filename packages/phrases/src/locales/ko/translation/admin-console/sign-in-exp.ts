@@ -74,6 +74,17 @@ const sign_in_exp = {
         go_to: 'social connectors or go to “Connectors” section.', // UNTRANSLATED
       },
     },
+    tip: {
+      set_a_password: 'A unique set of a password to your username is a must.', // UNTRANSLATED
+      verify_at_sign_up:
+        'Right now we only support email verified at sign up but soon to open this capability！', // UNTRANSLATED
+      password_auth:
+        'This is essential as you have enabled the option to set a password during the sign-up process.', // UNTRANSLATED
+      verification_code_auth:
+        'This is essential as you have only enabled the option to provide verification code when signing up. You’re free to uncheck the box when password set-up is allowed at the sign-up process.', // UNTRANSLATED
+      delete_sign_in_method:
+        'This is essential as you have selected {{identifier}} as a required identifier.', // UNTRANSLATED
+    },
   },
   sign_in_methods: {
     title: '로그인 방법',

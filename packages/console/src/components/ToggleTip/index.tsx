@@ -56,6 +56,7 @@ const ToggleTip = ({
       isOpen={isOpen}
       style={{
         content: {
+          ...(!layoutPosition && { opacity: 0 }),
           ...layoutPosition,
         },
       }}

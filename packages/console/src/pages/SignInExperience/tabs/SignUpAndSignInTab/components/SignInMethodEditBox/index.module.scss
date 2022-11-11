@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.draggleItemContainer {
+  transform: translate(0, 0);
+}
+
 .signInMethodItem {
   display: flex;
   align-items: center;
@@ -32,6 +36,15 @@
     padding: 0 _.unit(2);
     flex-grow: 1;
 
+    .checkBox {
+      flex-grow: 1;
+      width: 100%;
+    }
+
+    .swapButton {
+      margin-right: _.unit(4);
+    }
+
     &.verifyCodePrimary {
       flex-direction: row-reverse;
     }
@@ -39,6 +52,7 @@
 
   .draggableIcon {
     color: var(--color-text-secondary);
+    margin-right: _.unit(1);
   }
 }
 

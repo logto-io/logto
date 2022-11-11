@@ -6,6 +6,7 @@ const errors = {
     forbidden: '禁止访问。请检查用户 role 与权限。',
     expected_role_not_found: '未找到期望的 role。请检查用户 role 与权限。',
     jwt_sub_missing: 'JWT 缺失 `sub`',
+    require_re_authentication: '需要重新认证以进行受保护操作。',
   },
   guard: {
     invalid_input: '请求中 {{type}} 无效',
@@ -47,11 +48,11 @@ const errors = {
     require_password: '请设置密码',
     password_exists: '密码已设置过',
     require_username: '请设置用户名',
-    username_exists: '用户名已设置过',
+    username_exists: '该用户名已存在',
     require_email: '请绑定邮箱地址',
-    email_exists: '已绑定邮箱地址',
+    email_exists: '该邮箱地址已被其它账户绑定',
     require_sms: '请绑定手机号码',
-    sms_exists: '已绑定手机号码',
+    sms_exists: '该手机号码已被其它账户绑定',
     require_email_or_sms: '请绑定邮箱地址或手机号码',
     suspended: '账号已被禁用',
   },
@@ -119,6 +120,7 @@ const errors = {
     code_sign_in_must_be_enabled:
       'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
     unsupported_default_language: '{{language}}无法选择为默认语言。',
+    at_least_one_authentication_factor: '至少要选择一个登录要素',
   },
   localization: {
     cannot_delete_default_language: '你已设置{{languageTag}}为你的默认语言，你无法删除默认语言。',

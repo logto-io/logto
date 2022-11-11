@@ -1,7 +1,7 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
 import type { ConnectorResponse, ConnectorMetadata, SignInExperience } from '@logto/schemas';
-import { AppearanceMode } from '@logto/schemas';
+import { ConnectorType, AppearanceMode } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { format } from 'date-fns';
@@ -94,6 +94,14 @@ const Preview = ({ signInExperience, className }: Props) => {
       []
     );
 
+    const hasEmailConnector = allConnectors.some(
+      ({ type, enabled }) => enabled && type === ConnectorType.Email
+    );
+
+    const hasSmsConnector = allConnectors.some(
+      ({ type, enabled }) => enabled && type === ConnectorType.Sms
+    );
+
     return {
       signInExperience: {
         ...signInExperience,
@@ -103,6 +111,10 @@ const Preview = ({ signInExperience, className }: Props) => {
       mode,
       platform: platform === 'desktopWeb' ? 'web' : 'mobile',
       isNative: platform === 'mobile',
+      forgotPassword: {
+        email: hasEmailConnector,
+        sms: hasSmsConnector,
+      },
     };
   }, [allConnectors, language, mode, platform, signInExperience]);
 

@@ -9,7 +9,8 @@
 
   .inputField,
   .link,
-  .switch {
+  .switch,
+  .formErrors {
     margin-bottom: _.unit(4);
   }
 
@@ -19,8 +20,20 @@
     width: auto;
   }
 
+  .link {
+    margin-top: _.unit(-1);
+  }
+
   .formErrors {
-    margin-top: _.unit(-2);
-    margin-bottom: _.unit(4);
+    margin-left: _.unit(0.5);
+    margin-top: _.unit(-3);
+  }
+}
+
+:global(.desktop) {
+  .form {
+    .link {
+      margin-top: _.unit(-2);
+    }
   }
 }

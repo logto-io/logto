@@ -7,6 +7,7 @@ const errors = {
     expected_role_not_found:
       'Expected role not found. Please check your user roles and permissions.',
     jwt_sub_missing: 'Missing `sub` in JWT.',
+    require_re_authentication: 'Re-authentication is required to perform a protected action.',
   },
   guard: {
     invalid_input: 'The request {{type}} is invalid.',
@@ -44,16 +45,16 @@ const errors = {
     cannot_delete_self: 'You cannot delete yourself.',
     sign_up_method_not_enabled: 'This sign up method is not enabled.',
     sign_in_method_not_enabled: 'This sign in method is not enabled.',
-    same_password: 'Your new password can’t be the same as your current password.',
-    require_password: 'You need to set a password before sign in.',
+    same_password: 'New password cannot be the same as your old password.',
+    require_password: 'You need to set a password before signing-in.',
     password_exists: 'Your password has been set.',
-    require_username: 'You need to set a username before sign in.',
-    username_exists: 'Your username has been set.',
-    require_email: 'You need to set an email before sign in.',
-    email_exists: 'Your email has been set.',
-    require_sms: 'You need to set a phone before sign in.',
-    sms_exists: 'Your phone has been set.',
-    require_email_or_sms: 'You need to set a phone or email before sign in.',
+    require_username: 'You need to set a username before signing-in.',
+    username_exists: 'This username is already in use.',
+    require_email: 'You need to add an email address before signing-in.',
+    email_exists: 'This email is associated with an existing account.',
+    require_sms: 'You need to add a phone number before signing-in.',
+    sms_exists: 'This phone number is associated with an existing account.',
+    require_email_or_sms: 'You need to add an email address or phone number before signing-in.',
     suspended: 'This account is suspended.',
   },
   password: {
@@ -126,6 +127,7 @@ const errors = {
     code_sign_in_must_be_enabled:
       'Verification code sign in must be enabled when set a password is not required in sign up.',
     unsupported_default_language: 'This language - {{language}} is not supported at the moment.',
+    at_least_one_authentication_factor: 'You have to select at least one authentication factor.',
   },
   localization: {
     cannot_delete_default_language:

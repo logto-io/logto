@@ -64,7 +64,7 @@ const ColorForm = () => {
       </FormField>
       {isDarkModeEnabled && (
         <>
-          <FormField isRequired title="sign_in_exp.color.dark_primary_color">
+          <FormField title="sign_in_exp.color.dark_primary_color">
             <Controller
               name="color.darkPrimaryColor"
               control={control}

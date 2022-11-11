@@ -41,7 +41,11 @@ const SignUpDiffSection = ({ before, after, isAfter = false }: Props) => {
           {needConjunction && ` ${String(t('sign_in_exp.sign_up_and_sign_in.and'))} `}
           {verify && (
             <DiffSegment hasChanged={hasChanged('verify')} isAfter={isAfter}>
-              {t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
+              {needConjunction
+                ? t(
+                    'sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option'
+                  ).toLowerCase()
+                : t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
             </DiffSegment>
           )}
           {hasAuthentication && ')'}

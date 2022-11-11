@@ -218,6 +218,7 @@ describe('validate sign-in', () => {
               ...mockSignInMethod,
               identifier: SignInIdentifier.Email,
               password: false,
+              verificationCode: true,
             },
           ],
         },
@@ -258,6 +259,40 @@ describe('validate sign-in', () => {
     }).toMatchError(
       new RequestError({
         code: 'sign_in_experiences.code_sign_in_must_be_enabled',
+      })
+    );
+  });
+
+  it('throws when verification code and password are both disabled', () => {
+    expect(() => {
+      validateSignIn(
+        {
+          methods: [
+            {
+              ...mockSignInMethod,
+              identifier: SignInIdentifier.Email,
+              verificationCode: false,
+              password: false,
+            },
+            {
+              ...mockSignInMethod,
+              identifier: SignInIdentifier.Sms,
+              verificationCode: true,
+              password: false,
+            },
+          ],
+        },
+        {
+          ...mockSignUp,
+          identifier: SignUpIdentifier.Sms,
+          password: false,
+          verify: true,
+        },
+        enabledConnectors
+      );
+    }).toMatchError(
+      new RequestError({
+        code: 'sign_in_experiences.at_least_one_authentication_factor',
       })
     );
   });
