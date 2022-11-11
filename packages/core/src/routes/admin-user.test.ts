@@ -318,6 +318,18 @@ describe('adminUserRoutes', () => {
     expect(updateUserById).not.toHaveBeenCalled();
   });
 
+  it('PATCH /users/:userId/is-suspended', async () => {
+    const mockedUserId = 'foo';
+    const response = await userRequest
+      .patch(`/users/${mockedUserId}/is-suspended`)
+      .send({ isSuspended: true });
+    expect(updateUserById).toHaveBeenCalledWith(mockedUserId, { isSuspended: true });
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...mockUserResponse,
+    });
+  });
+
   it('DELETE /users/:userId', async () => {
     const userId = 'fooUser';
     const response = await userRequest.delete(`/users/${userId}`);
