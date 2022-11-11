@@ -2,8 +2,8 @@ const connectors = {
   title: '连接器',
   subtitle: '设置连接器，开启无密码和社交登录',
   create: '添加社交连接器',
-  config_sie_notice: 'You’ve set up connectors. Make sure to configure it in <a>{{link}}</a>.', // UNTRANSLATED
-  config_sie_link_text: 'sign in experience', // UNTRANSLATED
+  config_sie_notice: '你已经配置了社交连接器，记得在<a>{{link}}</a>上添加使之生效。',
+  config_sie_link_text: '登录体验',
   tab_email_sms: '短信和邮件连接器',
   tab_social: '社交连接器',
   connector_name: '连接器名称',
@@ -12,9 +12,8 @@ const connectors = {
   connector_status_in_use: '使用中',
   connector_status_not_in_use: '未使用',
   not_in_use_tip: {
-    content:
-      'Not in use means your sign in experience hasn’t used this sign in method. <a>{{link}}</a> to add this sign in method. ', // UNTRANSLATED
-    go_to_sie: 'Go to sign in experience', // UNTRANSLATED
+    content: '未使用意味着你的登录体验并没有使用这个登录方式。<a>{{link}}</a>去添加。',
+    go_to_sie: '前往登录体验',
   },
   social_connector_eg: '如: 微信登录，支付宝登录',
   save_and_done: '保存并完成',
