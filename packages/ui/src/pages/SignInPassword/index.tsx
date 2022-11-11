@@ -1,4 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { useTranslation } from 'react-i18next';
 import { useParams, useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
 
@@ -15,6 +16,7 @@ type Parameters = {
 };
 
 const SignInPassword = () => {
+  const { t } = useTranslation();
   const { method } = useParams<Parameters>();
   const { state } = useLocation();
   const { signInMethods } = useSieMethods();
@@ -42,7 +44,7 @@ const SignInPassword = () => {
       title="description.enter_password"
       description="description.enter_password_for"
       descriptionProps={{
-        method: `description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`,
+        method: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
         value:
           method === SignInIdentifier.Email
             ? value
