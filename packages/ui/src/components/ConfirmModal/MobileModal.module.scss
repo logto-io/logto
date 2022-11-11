@@ -11,6 +11,11 @@
   top: 50%;
   transform: translate(0, -50%);
   outline: none;
+  border-radius: var(--radius);
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .container {
