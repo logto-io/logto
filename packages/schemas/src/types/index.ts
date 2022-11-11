@@ -1,4 +1,4 @@
-export * from './connector';
+export * from './connector-instance';
 export * from './log';
 export * from './oidc-config';
 export * from './user';
