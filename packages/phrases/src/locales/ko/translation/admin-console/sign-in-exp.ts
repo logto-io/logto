@@ -86,28 +86,6 @@ const sign_in_exp = {
         'This is essential as you have selected {{identifier}} as a required identifier.', // UNTRANSLATED
     },
   },
-  sign_in_methods: {
-    title: '로그인 방법',
-    primary: '메인 로그인 방법',
-    enable_secondary: '백업 로그인 방법 활성화',
-    enable_secondary_description:
-      '백업 로그인 활성화를 통하여 메인 로그인 방법이외의 로그인 방법을 사용자에게 제공해보세요.',
-    methods: '로그인 방법',
-    methods_sms: 'SMS 로그인',
-    methods_email: '이메일 로그인',
-    methods_social: '소셜 로그인',
-    methods_username: '사용자 이름&비밀번호 로그인',
-    methods_primary_tag: '(메인)',
-    define_social_methods: '소셜 로그인 방법 설정',
-    transfer: {
-      title: '소셜 연동',
-      footer: {
-        not_in_list: '리스트에 없나요?',
-        set_up_more: '더 설정하기',
-        go_to: '를 눌러 설정하러 가기',
-      },
-    },
-  },
   others: {
     terms_of_use: {
       title: '이용 약관',

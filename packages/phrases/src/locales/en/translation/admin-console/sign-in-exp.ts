@@ -89,28 +89,6 @@ const sign_in_exp = {
         'This is essential as you have selected {{identifier}} as a required identifier.',
     },
   },
-  sign_in_methods: {
-    title: 'SIGN-IN METHODS',
-    primary: 'Primary sign-in method',
-    enable_secondary: 'Enable secondary sign in',
-    enable_secondary_description:
-      "Once it's turned on, you app will support more sign-in method(s) besides the primary one. ",
-    methods: 'Sign-in method',
-    methods_sms: 'Phone number sign in',
-    methods_email: 'Email sign in',
-    methods_social: 'Social sign in',
-    methods_username: 'Username-with-password sign in',
-    methods_primary_tag: '(Primary)',
-    define_social_methods: 'Define social sign-in methods',
-    transfer: {
-      title: 'Social connectors',
-      footer: {
-        not_in_list: 'Not in the list?',
-        set_up_more: 'Set up more',
-        go_to: 'social connectors or go to “Connectors” section.',
-      },
-    },
-  },
   others: {
     terms_of_use: {
       title: 'TERMS OF USE',

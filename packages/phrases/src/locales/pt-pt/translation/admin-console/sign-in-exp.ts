@@ -89,28 +89,6 @@ const sign_in_exp = {
         'This is essential as you have selected {{identifier}} as a required identifier.', // UNTRANSLATED
     },
   },
-  sign_in_methods: {
-    title: 'MÉTODOS DE LOGIN',
-    primary: 'Método de login principal',
-    enable_secondary: 'Ativar login secundário',
-    enable_secondary_description:
-      'Depois de ativado, a sua app oferecerá suporte a mais métodos de login além do principal. ',
-    methods: 'Método de login',
-    methods_sms: 'SMS',
-    methods_email: 'Email',
-    methods_social: 'Rede social',
-    methods_username: 'Utilizador e password',
-    methods_primary_tag: '(Primário)',
-    define_social_methods: 'Definir métodos de login social',
-    transfer: {
-      title: 'Conectores sociais',
-      footer: {
-        not_in_list: 'Não está na lista?',
-        set_up_more: 'Configurar mais',
-        go_to: 'conectores sociais ou vá para a seção "Conectores".',
-      },
-    },
-  },
   others: {
     terms_of_use: {
       title: 'TERMOS DE USO',
