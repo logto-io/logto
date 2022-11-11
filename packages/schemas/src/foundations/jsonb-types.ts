@@ -2,6 +2,11 @@ import { hexColorRegEx } from '@logto/core-kit';
 import { languageTagGuard } from '@logto/language-kit';
 import { z } from 'zod';
 
+export {
+  configurableConnectorMetadataGuard,
+  type ConfigurableConnectorMetadata,
+} from '@logto/connector-kit';
+
 /**
  * Commonly Used
  */
