@@ -9,6 +9,7 @@ import RequestError from '@/errors/RequestError';
 import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
+import { revokeInstanceByUserId } from '@/queries/oidc-model-instance';
 import { findRolesByRoleNames } from '@/queries/roles';
 import {
   deleteUserById,
@@ -259,6 +260,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       const user = await updateUserById(userId, {
         isSuspended,
       });
+
+      if (isSuspended) {
+        await revokeInstanceByUserId('refreshToken', user.id);
+      }
 
       ctx.body = pick(user, ...userInfoSelectFields);
 
