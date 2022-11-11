@@ -47,7 +47,7 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
       'user.require_email_or_sms': () => {
         navigate(
           {
-            pathname: `/${UserFlow.continue}/email`,
+            pathname: `/${UserFlow.continue}/email-or-sms/email`,
             search: location.search,
           },
           { replace }
