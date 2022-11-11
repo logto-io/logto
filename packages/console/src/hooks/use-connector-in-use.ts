@@ -25,9 +25,9 @@ const useConnectorInUse = (type?: ConnectorType, target?: string): boolean | und
     return (
       data.signIn.methods.some(
         ({ identifier, verificationCode }) =>
-          verificationCode && identifier === SignInIdentifier.Email
+          verificationCode && identifier === SignInIdentifier.Sms
       ) ||
-      (data.signUp.identifier === SignUpIdentifier.Email && data.signUp.verify)
+      (data.signUp.identifier === SignUpIdentifier.Sms && data.signUp.verify)
     );
   }
 
