@@ -3,7 +3,7 @@ const sign_in_exp = {
   description: '自定义登录界面，并实时预览真实效果',
   tabs: {
     branding: '品牌',
-    sign_up_and_sign_in: '注册与登陆',
+    sign_up_and_sign_in: '注册与登录',
     others: '其它',
   },
   welcome: {
