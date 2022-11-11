@@ -3,7 +3,7 @@ const sign_in_exp = {
   description: '自定义登录界面，并实时预览真实效果',
   tabs: {
     branding: '品牌',
-    sign_up_and_sign_in: 'Sign up and Sign in', // UNTRANSLATED
+    sign_up_and_sign_in: '注册与登陆',
     others: '其它',
   },
   welcome: {
@@ -37,54 +37,53 @@ const sign_in_exp = {
     slogan_placeholder: '释放你的创意',
   },
   sign_up_and_sign_in: {
-    identifiers: 'Sign up identifiers', // UNTRANSLATED
-    identifiers_email: 'Email address', // UNTRANSLATED
-    identifiers_sms: 'Phone number', // UNTRANSLATED
-    identifiers_username: 'Username', // UNTRANSLATED
-    identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
-    identifiers_none: 'None', // UNTRANSLATED
-    and: 'and', // UNTRANSLATED
-    or: 'or', // UNTRANSLATED
+    identifiers: '注册标识',
+    identifiers_email: '邮件地址',
+    identifiers_sms: '手机号码',
+    identifiers_username: '用户名',
+    identifiers_email_or_sms: '邮件地址或手机号码',
+    identifiers_none: '无',
+    and: '与',
+    or: '或',
     sign_up: {
-      title: 'SIGN UP', // UNTRANSLATED
-      sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
-      sign_up_authentication: 'Sign up authentication', // UNTRANSLATED
-      set_a_password_option: 'Set a password', // UNTRANSLATED
-      verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
-      social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
+      title: '注册',
+      sign_up_identifier: '注册标识',
+      identifier_description: '创建账户时你需要设定注册标识。这些信息在用户登录时，属于必选项。',
+      sign_up_authentication: '注册身份认证设置',
+      authentication_description: '注册时，你的用户将要完成以下所有勾选的任务。',
+      set_a_password_option: '创建密码',
+      verify_at_sign_up_option: '注册时验证身份',
+      social_only_creation_description: '（仅对社交注册用户适用）',
     },
     sign_in: {
-      title: 'SIGN IN', // UNTRANSLATED
-      sign_in_identifier_and_auth: 'Sign in identifier and authentication', // UNTRANSLATED
-      description:
-        'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.', // UNTRANSLATED
-      add_sign_in_method: 'Add Sign-in Method', // UNTRANSLATED
-      password_auth: 'Password', // UNTRANSLATED
-      verification_code_auth: 'Verification code', // UNTRANSLATED
-      auth_swap_tip: 'Swap to change the priority', // UNTRANSLATED
+      title: '登录',
+      sign_in_identifier_and_auth: '登录标识和身份认证设置',
+      description: '用户可以使用任何可用的选项进行登录。拖拽选项即可调整页面布局。',
+      add_sign_in_method: '添加登录方式',
+      password_auth: '密码',
+      verification_code_auth: '验证码',
+      auth_swap_tip: '交换以下选项的位置即可设定它们在用户登录流程中出现的先后。',
     },
     social_sign_in: {
-      title: 'SOCIAL SIGN IN', // UNTRANSLATED
-      social_sign_in: 'Social sign in', // UNTRANSLATED
-      description:
-        'Users may need to enter required identifier when register through social accounts. This was defined by your sign up identifier.', // UNTRANSLATED
-      add_social_connector: 'Add Social Connector', // UNTRANSLATED
+      title: '社交登录',
+      social_sign_in: '社交登录',
+      description: '你已设定特定的标识。用户在通过社交连接器注册时可能会被要求提供一个对应的标识。',
+      add_social_connector: '添加社交连接器',
       set_up_hint: {
-        not_in_list: 'Not in the list?', // UNTRANSLATED
-        set_up_more: 'Set up more', // UNTRANSLATED
-        go_to: 'social connectors or go to “Connectors” section.', // UNTRANSLATED
+        not_in_list: '没有你想要的连接器？',
+        set_up_more: '立即设置',
+        go_to: '其他社交连接器。',
       },
     },
     tip: {
-      set_a_password: 'A unique set of a password to your username is a must.', // UNTRANSLATED
+      set_a_password: '启用户名注册，必须设置密码。',
       verify_at_sign_up:
-        'Right now we only support email verified at sign up but soon to open this capability！', // UNTRANSLATED
-      password_auth:
-        'This is essential as you have enabled the option to set a password during the sign-up process.', // UNTRANSLATED
+        '我们目前仅支持经过验证的邮件地址登录。如果没有验证，你的用户信息中可能出现大量无效电子邮件地址。',
+      password_auth: '因注册设置里你启用了用户名密码标识。这个信息在用户登录时，属于必选项。',
       verification_code_auth:
-        'This is essential as you have only enabled the option to provide verification code when signing up. You’re free to uncheck the box when password set-up is allowed at the sign-up process.', // UNTRANSLATED
+        '因注册设置里你启用了验证码标识，验证码属于用户必选项。开启密码注册后，你可以选择关闭验证码登录。',
       delete_sign_in_method:
-        'This is essential as you have selected {{identifier}} as a required identifier.', // UNTRANSLATED
+        '因注册设置里你启用了{{identifier}}标识。这些信息在用户登录时，属于必选项。',
     },
   },
   others: {
@@ -135,18 +134,19 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector: '',
-    no_connector_sms: '你还没有设置 SMS 连接器。你需完成设置后登录体验才会生效。',
-    no_connector_email: '你还没有设置 email 连接器。你需完成设置后登录体验才会生效。',
-    no_connector_social: '你还没有设置社交连接器。你需完成设置后登录体验才会生效。',
+    no_connector_sms: '你尚未设置 SMS 短信连接器。在完成该配置前，你将无法登录。',
+    no_connector_email: '你尚未设置电子邮件连接器。在完成该配置前，你将无法登录。',
+    no_connector_social: '你尚未设置社交连接器。在完成该配置前，你将无法登录。',
     no_added_social_connector: '你已经成功设置了一些社交连接器。点按「+」添加一些到你的登录体验。',
   },
   save_alert: {
-    description: '你正在修改登录方式，这可能会影响部分用户。是否继续保存修改？',
-    before: '修改前',
-    after: '修改后',
-    sign_up: 'Sign up', // UNTRANSLATED
-    sign_in: 'Sign in', // UNTRANSLATED
-    social: 'Social', // UNTRANSLATED
+    description:
+      '你正在进行登录注册设置的变更。当前你的所有用户会受到新设置的影响。确认保存该设置吗？',
+    before: '设置前',
+    after: '设置后',
+    sign_up: '注册',
+    sign_in: '登录',
+    social: '社交',
   },
   preview: {
     title: '登录预览',
