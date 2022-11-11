@@ -176,6 +176,18 @@ const forgotPasswordResetLogPayloadGuard = arbitraryLogPayloadGuard.and(
   })
 );
 
+const continueEmailSendPasscodeLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    email: z.string().optional(),
+  })
+);
+
+const continueSmsSendPasscodeLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    phone: z.string().optional(),
+  })
+);
+
 export enum TokenType {
   AccessToken = 'AccessToken',
   RefreshToken = 'RefreshToken',
@@ -224,6 +236,8 @@ const logPayloadsGuard = z.object({
   ForgotPasswordEmailSendPasscode: forgotPasswordEmailSendPasscodeLogPayloadGuard,
   ForgotPasswordEmail: forgotPasswordEmailLogPayloadGuard,
   ForgotPasswordReset: forgotPasswordResetLogPayloadGuard,
+  ContinueEmailSendPasscode: continueEmailSendPasscodeLogPayloadGuard,
+  ContinueSmsSendPasscode: continueSmsSendPasscodeLogPayloadGuard,
   CodeExchangeToken: exchangeTokenLogPayloadGuard,
   RefreshTokenExchangeToken: exchangeTokenLogPayloadGuard,
   RevokeToken: revokeTokenLogPayloadGuard,
