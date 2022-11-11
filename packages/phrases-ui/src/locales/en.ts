@@ -75,8 +75,8 @@ const translation = {
     link_email: 'Link email',
     link_phone: 'Link phone',
     link_email_or_phone: 'Link email or phone',
-    link_email_description: 'Link your email to sign in or help with account recovery.',
-    link_phone_description: 'Link your phone number to sign in or help with account recovery.',
+    link_email_description: 'For added security, please link your email with the account.',
+    link_phone_description: 'For added security, please link your phone with the account.',
     link_email_or_phone_description:
       'Link your email or phone number to sign in or help with account recovery.',
   },
