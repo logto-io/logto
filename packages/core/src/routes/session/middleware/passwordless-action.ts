@@ -53,12 +53,8 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContext, Respons
 
     checkValidateExpiration(expiresAt);
 
-    assertThat(
-      await hasUserWithPhone(phone),
-      new RequestError({ code: 'user.phone_not_exists', status: 404 })
-    );
-
     const user = await findUserByPhone(phone);
+    assertThat(user, new RequestError({ code: 'user.phone_not_exists', status: 404 }));
     const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
     ctx.log(type, { userId: id });
@@ -100,12 +96,8 @@ export const emailSignInAction = <StateT, ContextT extends WithLogContext, Respo
 
     checkValidateExpiration(expiresAt);
 
-    assertThat(
-      await hasUserWithEmail(email),
-      new RequestError({ code: 'user.email_not_exists', status: 404 })
-    );
-
     const user = await findUserByEmail(email);
+    assertThat(user, new RequestError({ code: 'user.email_not_exists', status: 404 }));
     const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
     ctx.log(type, { userId: id });

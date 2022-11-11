@@ -183,16 +183,29 @@ describe('adminUserRoutes', () => {
     });
   });
 
-  it('PATCH /users/:userId should allow empty avatar URL', async () => {
-    const name = 'Michael';
-    const avatar = '';
-
-    const response = await userRequest.patch('/users/foo').send({ name, avatar });
+  it('PATCH /users/:userId should allow empty string for clearable fields', async () => {
+    const response = await userRequest
+      .patch('/users/foo')
+      .send({ name: '', avatar: '', primaryEmail: '' });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockUserResponse,
-      name,
-      avatar,
+      name: '',
+      avatar: '',
+      primaryEmail: '',
+    });
+  });
+
+  it('PATCH /users/:userId should allow null values for clearable fields', async () => {
+    const response = await userRequest
+      .patch('/users/foo')
+      .send({ name: null, username: null, primaryPhone: null });
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...mockUserResponse,
+      name: null,
+      username: null,
+      primaryPhone: null,
     });
   });
 

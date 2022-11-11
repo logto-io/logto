@@ -36,76 +36,58 @@ const sign_in_exp = {
     slogan_placeholder: 'Unleash your creativity',
   },
   sign_up_and_sign_in: {
-    identifiers: 'Sign up identifiers', // UNTRANSLATED
+    identifiers: 'Sign-up identifiers', // UNTRANSLATED
     identifiers_email: 'Email address', // UNTRANSLATED
     identifiers_sms: 'Phone number', // UNTRANSLATED
     identifiers_username: 'Username', // UNTRANSLATED
     identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
-    identifiers_none: 'None', // UNTRANSLATED
+    identifiers_none: 'Not applicable', // UNTRANSLATED
     and: 'and', // UNTRANSLATED
     or: 'or', // UNTRANSLATED
     sign_up: {
       title: 'SIGN UP', // UNTRANSLATED
-      sign_up_identifier: 'Sign up identifier', // UNTRANSLATED
-      sign_up_authentication: 'Sign up authentication', // UNTRANSLATED
-      set_a_password_option: 'Set a password', // UNTRANSLATED
-      verify_at_sign_up_option: 'Verify at sign up', // UNTRANSLATED
+      sign_up_identifier: 'Sign-up identifier', // UNTRANSLATED
+      identifier_description:
+        'The sign-up identifier is required for account creation and must be included in your sign-in screen.', // UNTRANSLATED
+      sign_up_authentication: 'Authentication setting for sign-up', // UNTRANSLATED
+      authentication_description:
+        'All selected actions will be obligatory for users to complete the flow.', // UNTRANSLATED
+      set_a_password_option: 'Create your password', // UNTRANSLATED
+      verify_at_sign_up_option: 'Verify at sign-up', // UNTRANSLATED
       social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
     },
     sign_in: {
       title: 'SIGN IN', // UNTRANSLATED
-      sign_in_identifier_and_auth: 'Sign in identifier and authentication', // UNTRANSLATED
+      sign_in_identifier_and_auth: 'Identifier and authentication settings for sign-in', // UNTRANSLATED
       description:
-        'Users can use any one of the selected ways to sign in. Drag and drop to define identifier priority regarding the sign in flow. You can also define the password or verification code priority.', // UNTRANSLATED
+        'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.', // UNTRANSLATED
       add_sign_in_method: 'Add Sign-in Method', // UNTRANSLATED
       password_auth: 'Password', // UNTRANSLATED
       verification_code_auth: 'Verification code', // UNTRANSLATED
-      auth_swap_tip: 'Swap to change the priority', // UNTRANSLATED
+      auth_swap_tip: 'Swap the options below to determine which appears first in the flow.', // UNTRANSLATED
     },
     social_sign_in: {
-      title: 'SOCIAL SIGN IN', // UNTRANSLATED
-      social_sign_in: 'Social sign in', // UNTRANSLATED
+      title: 'SOCIAL SIGN-IN', // UNTRANSLATED
+      social_sign_in: 'Social sign-in', // UNTRANSLATED
       description:
-        'Users may need to enter required identifier when register through social accounts. This was defined by your sign up identifier.', // UNTRANSLATED
-      add_social_connector: 'Add Social Connector', // UNTRANSLATED
+        'Depending on the mandatory identifier you set up, your user may be asked to provide an identifier when signing up via social connector.', // UNTRANSLATED
+      add_social_connector: 'Link Social Connector', // UNTRANSLATED
       set_up_hint: {
         not_in_list: 'Not in the list?', // UNTRANSLATED
-        set_up_more: 'Set up more', // UNTRANSLATED
-        go_to: 'social connectors or go to “Connectors” section.', // UNTRANSLATED
+        set_up_more: 'Set up', // UNTRANSLATED
+        go_to: 'other social connectors now.', // UNTRANSLATED
       },
     },
     tip: {
       set_a_password: 'A unique set of a password to your username is a must.', // UNTRANSLATED
       verify_at_sign_up:
-        'Right now we only support email verified at sign up but soon to open this capability！', // UNTRANSLATED
+        'We currently only support verified email. Your user base may contain a large number of poor-quality email addresses if no validation.', // UNTRANSLATED
       password_auth:
         'This is essential as you have enabled the option to set a password during the sign-up process.', // UNTRANSLATED
       verification_code_auth:
         'This is essential as you have only enabled the option to provide verification code when signing up. You’re free to uncheck the box when password set-up is allowed at the sign-up process.', // UNTRANSLATED
       delete_sign_in_method:
         'This is essential as you have selected {{identifier}} as a required identifier.', // UNTRANSLATED
-    },
-  },
-  sign_in_methods: {
-    title: '로그인 방법',
-    primary: '메인 로그인 방법',
-    enable_secondary: '백업 로그인 방법 활성화',
-    enable_secondary_description:
-      '백업 로그인 활성화를 통하여 메인 로그인 방법이외의 로그인 방법을 사용자에게 제공해보세요.',
-    methods: '로그인 방법',
-    methods_sms: 'SMS 로그인',
-    methods_email: '이메일 로그인',
-    methods_social: '소셜 로그인',
-    methods_username: '사용자 이름&비밀번호 로그인',
-    methods_primary_tag: '(메인)',
-    define_social_methods: '소셜 로그인 방법 설정',
-    transfer: {
-      title: '소셜 연동',
-      footer: {
-        not_in_list: '리스트에 없나요?',
-        set_up_more: '더 설정하기',
-        go_to: '를 눌러 설정하러 가기',
-      },
     },
   },
   others: {
@@ -159,21 +141,21 @@ const sign_in_exp = {
   setup_warning: {
     no_connector: '',
     no_connector_sms:
-      'SMS 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
+      'No SMS connector set-up yet. Until you finish configuring your social connector, you won’t be able to sign in.', // UNTRANSLATED
     no_connector_email:
-      '이메일 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
+      'No email connector set-up yet. Until you finish configuring your social connector, you won’t be able to sign in.', // UNTRANSLATED
     no_connector_social:
-      '소셜 연동이 아직 설정되지 않았어요. 설정이 완료될 때 까지, 사용자는 이 로그인 방법을 사용할 수 없어요.',
+      'No social connector set-up yet. Until you finish configuring your social connector, you won’t be able to sign in.', // UNTRANSLATED
     no_added_social_connector:
       '보다 많은 소셜 연동들을 설정하여, 고객에게 보다 나은 경험을 제공해보세요.',
   },
   save_alert: {
     description:
-      '로그인 방법이 수정되었어요. 일부 사용자에게 영향을 미칠 수 있어요. 정말로 진행할까요?',
+      'You are implementing new sign-in and sign-up procedures. All of your users may be affected by the new set-up. Are you sure to commit to the change?', // UNTRANSLATED
     before: '이전',
     after: '이후',
-    sign_up: 'Sign up', // UNTRANSLATED
-    sign_in: 'Sign in', // UNTRANSLATED
+    sign_up: 'Sign-up', // UNTRANSLATED
+    sign_in: 'Sign-in', // UNTRANSLATED
     social: 'Social', // UNTRANSLATED
   },
   preview: {

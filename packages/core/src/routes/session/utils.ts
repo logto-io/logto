@@ -152,6 +152,13 @@ export const getContinueSignInResult = async (
   return rest;
 };
 
+export const isUserPasswordSet = ({
+  passwordEncrypted,
+  identities,
+}: Pick<User, 'passwordEncrypted' | 'identities'>): boolean => {
+  return Boolean(passwordEncrypted) || Object.keys(identities).length > 0;
+};
+
 /* eslint-disable complexity */
 export const checkRequiredProfile = async (
   ctx: Context,
@@ -160,11 +167,11 @@ export const checkRequiredProfile = async (
   signInExperience: SignInExperience
 ) => {
   const { signUp } = signInExperience;
-  const { passwordEncrypted, id, username, primaryEmail, primaryPhone } = user;
+  const { id, username, primaryEmail, primaryPhone } = user;
 
   // If check failed, save the sign in result, the user can continue after requirements are meet
 
-  if (signUp.password && !passwordEncrypted) {
+  if (signUp.password && !isUserPasswordSet(user)) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
     throw new RequestError({ code: 'user.require_password', status: 422 });
   }
@@ -191,9 +198,9 @@ export const checkRequiredProfile = async (
 };
 
 export const checkRequiredSignUpIdentifiers = async (identifiers: {
-  username?: string;
-  primaryEmail?: string;
-  primaryPhone?: string;
+  username?: Nullable<string>;
+  primaryEmail?: Nullable<string>;
+  primaryPhone?: Nullable<string>;
 }) => {
   const { username, primaryEmail, primaryPhone } = identifiers;
 
@@ -217,22 +224,25 @@ export const checkRequiredSignUpIdentifiers = async (identifiers: {
 };
 /* eslint-enable complexity */
 
-export const checkExistingSignUpIdentifiers = async (identifiers: {
-  username?: string;
-  primaryEmail?: string;
-  primaryPhone?: string;
-}) => {
+export const checkExistingSignUpIdentifiers = async (
+  identifiers: {
+    username?: Nullable<string>;
+    primaryEmail?: Nullable<string>;
+    primaryPhone?: Nullable<string>;
+  },
+  excludeUserId: string
+) => {
   const { username, primaryEmail, primaryPhone } = identifiers;
 
-  if (username && (await hasUser(username))) {
+  if (username && (await hasUser(username, excludeUserId))) {
     throw new RequestError({ code: 'user.username_exists', status: 422 });
   }
 
-  if (primaryEmail && (await hasUserWithEmail(primaryEmail))) {
+  if (primaryEmail && (await hasUserWithEmail(primaryEmail, excludeUserId))) {
     throw new RequestError({ code: 'user.email_exists', status: 422 });
   }
 
-  if (primaryPhone && (await hasUserWithPhone(primaryPhone))) {
+  if (primaryPhone && (await hasUserWithPhone(primaryPhone, excludeUserId))) {
     throw new RequestError({ code: 'user.sms_exists', status: 422 });
   }
 };

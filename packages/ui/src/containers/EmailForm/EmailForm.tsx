@@ -83,6 +83,7 @@ const EmailForm = ({
         {...rest}
         onClear={() => {
           setFieldValue((state) => ({ ...state, email: '' }));
+          clearErrorMessage?.();
         }}
       />
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}

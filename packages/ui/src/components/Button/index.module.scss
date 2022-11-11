@@ -57,6 +57,10 @@
 
 
 :global(body.desktop) {
+  .button {
+    font: var(--font-label-2);
+  }
+
   .primary {
     &:focus-visible {
       outline: 3px solid var(--color-overlay-brand-focused);

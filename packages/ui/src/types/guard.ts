@@ -25,6 +25,14 @@ export const userFlowGuard = s.union([
   s.literal('sign-in'),
   s.literal('register'),
   s.literal('forgot-password'),
+  s.literal('continue'),
+]);
+
+export const continueMethodGuard = s.union([
+  s.literal('password'),
+  s.literal('username'),
+  s.literal(SignInIdentifier.Email),
+  s.literal(SignInIdentifier.Sms),
 ]);
 
 export const usernameGuard = s.object({

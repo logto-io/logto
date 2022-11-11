@@ -50,6 +50,9 @@ const SignUpForm = () => {
     <>
       <div className={styles.title}>{t('sign_in_exp.sign_up_and_sign_in.sign_up.title')}</div>
       <FormField title="sign_in_exp.sign_up_and_sign_in.sign_up.sign_up_identifier">
+        <div className={styles.formFieldDescription}>
+          {t('sign_in_exp.sign_up_and_sign_in.sign_up.identifier_description')}
+        </div>
         <Controller
           name="signUp.identifier"
           control={control}
@@ -92,6 +95,9 @@ const SignUpForm = () => {
           title="sign_in_exp.sign_up_and_sign_in.sign_up.sign_up_authentication"
           className={styles.signUpAuthentication}
         >
+          <div className={styles.formFieldDescription}>
+            {t('sign_in_exp.sign_up_and_sign_in.sign_up.authentication_description')}
+          </div>
           <Controller
             name="signUp.password"
             control={control}

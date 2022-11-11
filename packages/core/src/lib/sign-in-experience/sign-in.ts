@@ -11,7 +11,12 @@ export const validateSignIn = (
   signUp: SignUp,
   enabledConnectors: LogtoConnector[]
 ) => {
-  if (signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Email)) {
+  if (
+    signIn.methods.some(
+      ({ identifier, verificationCode }) =>
+        verificationCode && identifier === SignInIdentifier.Email
+    )
+  ) {
     assertThat(
       enabledConnectors.some((item) => item.type === ConnectorType.Email),
       new RequestError({
@@ -21,7 +26,11 @@ export const validateSignIn = (
     );
   }
 
-  if (signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Sms)) {
+  if (
+    signIn.methods.some(
+      ({ identifier, verificationCode }) => verificationCode && identifier === SignInIdentifier.Sms
+    )
+  ) {
     assertThat(
       enabledConnectors.some((item) => item.type === ConnectorType.Sms),
       new RequestError({

@@ -9,7 +9,11 @@ export const useSieMethods = () => {
   return {
     signUpMethods: methods ?? [],
     signUpSettings: { password, verify },
-    signInMethods: experienceSettings?.signIn.methods ?? [],
+    signInMethods:
+      experienceSettings?.signIn.methods.filter(
+        // Filter out empty settings
+        ({ password, verificationCode }) => password || verificationCode
+      ) ?? [],
     socialConnectors: experienceSettings?.socialConnectors ?? [],
     signInMode: experienceSettings?.signInMode,
     forgotPassword: experienceSettings?.forgotPassword,
