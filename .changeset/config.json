@@ -7,15 +7,15 @@
     "@logto/cli",
     "@logto/create"
   ], [
-    "@logto/console",
     "@logto/core",
+    "@logto/console",
     "@logto/integration-tests",
     "@logto/ui"
   ]],
   "linked": [[
+    "@logto/schemas",
     "@logto/phrases",
-    "@logto/phrases-ui",
-    "@logto/schemas"
+    "@logto/phrases-ui"
   ]],
   "//": "END OF CAUTION",
   "access": "restricted",
