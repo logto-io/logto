@@ -198,9 +198,9 @@ export const checkRequiredProfile = async (
 };
 
 export const checkRequiredSignUpIdentifiers = async (identifiers: {
-  username?: string;
-  primaryEmail?: string;
-  primaryPhone?: string;
+  username?: Nullable<string>;
+  primaryEmail?: Nullable<string>;
+  primaryPhone?: Nullable<string>;
 }) => {
   const { username, primaryEmail, primaryPhone } = identifiers;
 
@@ -224,22 +224,25 @@ export const checkRequiredSignUpIdentifiers = async (identifiers: {
 };
 /* eslint-enable complexity */
 
-export const checkExistingSignUpIdentifiers = async (identifiers: {
-  username?: string;
-  primaryEmail?: string;
-  primaryPhone?: string;
-}) => {
+export const checkExistingSignUpIdentifiers = async (
+  identifiers: {
+    username?: Nullable<string>;
+    primaryEmail?: Nullable<string>;
+    primaryPhone?: Nullable<string>;
+  },
+  excludeUserId: string
+) => {
   const { username, primaryEmail, primaryPhone } = identifiers;
 
-  if (username && (await hasUser(username))) {
+  if (username && (await hasUser(username, excludeUserId))) {
     throw new RequestError({ code: 'user.username_exists', status: 422 });
   }
 
-  if (primaryEmail && (await hasUserWithEmail(primaryEmail))) {
+  if (primaryEmail && (await hasUserWithEmail(primaryEmail, excludeUserId))) {
     throw new RequestError({ code: 'user.email_exists', status: 422 });
   }
 
-  if (primaryPhone && (await hasUserWithPhone(primaryPhone))) {
+  if (primaryPhone && (await hasUserWithPhone(primaryPhone, excludeUserId))) {
     throw new RequestError({ code: 'user.sms_exists', status: 422 });
   }
 };
