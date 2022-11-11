@@ -78,7 +78,7 @@ const translation = {
     link_email_description: 'For added security, please link your email with the account.', // UNTRANSLATED
     link_phone_description: 'For added security, please link your phone with the account.', // UNTRANSLATED
     link_email_or_phone_description:
-      'Link your email or phone number to sign in or help with account recovery.', // UNTRANSLATED
+      'For added security, please link your email or phone with the account.', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '사용자 이름 또는 비밀번호가 일치하지 않아요.',
