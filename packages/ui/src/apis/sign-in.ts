@@ -57,7 +57,7 @@ export const signInWithPhonePassword = async (
   socialToBind?: string
 ) => {
   const result = await api
-    .post(`${apiPrefix}/sign-in/password/phone`, {
+    .post(`${apiPrefix}/sign-in/password/sms`, {
       json: {
         phone,
         password,
