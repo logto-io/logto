@@ -1,5 +1,5 @@
 import type { Hook, CreateHook, HookConfig } from '@logto/schemas';
-import { HookEvent } from '@logto/schemas';
+import { HookEventType } from '@logto/schemas';
 
 import { mockHook } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';
@@ -41,7 +41,7 @@ describe('hook routes', () => {
   });
 
   it('POST /hooks', async () => {
-    const event = HookEvent.PostChangePassword;
+    const event = HookEventType.PostChangePassword;
 
     const response = await hookRequest.post('/hooks').send({ event, config: mockHook.config });
 
@@ -56,7 +56,7 @@ describe('hook routes', () => {
 
   it('POST /hooks should throw with invalid input body', async () => {
     const id = 'a_good_hook';
-    const event = HookEvent.PostChangePassword;
+    const event = HookEventType.PostChangePassword;
 
     await expect(hookRequest.post('/hooks')).resolves.toHaveProperty('status', 400);
     await expect(hookRequest.post('/hooks').send({ id })).resolves.toHaveProperty('status', 400);
@@ -71,7 +71,7 @@ describe('hook routes', () => {
   });
 
   it('PATCH /hooks/:id', async () => {
-    const event = HookEvent.PostChangePassword;
+    const event = HookEventType.PostChangePassword;
     const config: Partial<HookConfig> = { url: 'https://bar.baz' };
 
     const response = await hookRequest.patch('/hooks/foo').send({ event, config });

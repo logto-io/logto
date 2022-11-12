@@ -1,5 +1,5 @@
 import type { Application, Hook, Passcode, Resource, Role, Setting } from '@logto/schemas';
-import { HookEvent, ApplicationType, PasscodeType } from '@logto/schemas';
+import { HookEventType, ApplicationType, PasscodeType } from '@logto/schemas';
 
 export * from './connector';
 export * from './sign-in-experience';
@@ -38,7 +38,7 @@ export const mockRole: Role = {
 
 export const mockHook: Readonly<Hook> = Object.freeze({
   id: 'logto_hook',
-  event: HookEvent.PostSignIn,
+  event: HookEventType.PostSignIn,
   config: {
     url: 'https://foo.bar',
     headers: {
