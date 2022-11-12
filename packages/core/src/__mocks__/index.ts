@@ -1,5 +1,5 @@
-import type { Application, Passcode, Resource, Role, Setting } from '@logto/schemas';
-import { ApplicationType, PasscodeType } from '@logto/schemas';
+import type { Application, Hook, Passcode, Resource, Role, Setting } from '@logto/schemas';
+import { HookEvent, ApplicationType, PasscodeType } from '@logto/schemas';
 
 export * from './connector';
 export * from './sign-in-experience';
@@ -35,6 +35,19 @@ export const mockRole: Role = {
   name: 'admin',
   description: 'admin',
 };
+
+export const mockHook: Readonly<Hook> = Object.freeze({
+  id: 'logto_hook',
+  event: HookEvent.PostSignIn,
+  config: {
+    url: 'https://foo.bar',
+    headers: {
+      'User-Agent': 'Logto Core',
+    },
+    retries: 3,
+  },
+  createdAt: 1_645_334_775_356,
+});
 
 export const mockSetting: Setting = {
   id: 'foo setting',

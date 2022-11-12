@@ -64,7 +64,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('when the application is admin-console', () => {
+describe('when application is admin-console', () => {
   beforeEach(() => {
     interactionDetails.mockResolvedValueOnce({
       params: { client_id: adminConsoleApplicationId },
@@ -100,7 +100,7 @@ describe('when the application is admin-console', () => {
   });
 });
 
-describe('when the application is not admin-console', () => {
+describe('when application is not admin-console', () => {
   it('should call interactionDetails', async () => {
     await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
     expect(interactionDetails).toBeCalledTimes(1);
