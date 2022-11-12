@@ -1,5 +1,5 @@
 import { Resources } from '@logto/schemas';
-import { buildIdGenerator } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -14,8 +14,6 @@ import {
 } from '@/queries/resource';
 
 import type { AuthedRouter } from './types';
-
-const resourceId = buildIdGenerator(21);
 
 export default function resourceRoutes<T extends AuthedRouter>(router: T) {
   router.get('/resources', koaPagination(), async (ctx, next) => {
@@ -39,7 +37,7 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
     }),
     async (ctx, next) => {
       const resource = await insertResource({
-        id: resourceId(),
+        id: generateStandardId(),
         ...ctx.guard.body,
       });
 

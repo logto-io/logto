@@ -33,7 +33,7 @@ jest.mock('@/queries/application', () => ({
 jest.mock('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: jest.fn(() => () => 'randomId'),
-  buildApplicationSecret: jest.fn(() => 'randomId'),
+  generateStandardId: jest.fn(() => 'randomId'),
 }));
 
 const customClientMetadata = {

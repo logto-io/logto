@@ -23,6 +23,7 @@ import statusRoutes from '@/routes/status';
 import swaggerRoutes from '@/routes/swagger';
 import wellKnownRoutes from '@/routes/well-known';
 
+import hookRoutes from './hook';
 import type { AnonymousRouter, AuthedRouter } from './types';
 
 const createRouters = (provider: Provider) => {
@@ -42,6 +43,7 @@ const createRouters = (provider: Provider) => {
   roleRoutes(managementRouter);
   dashboardRoutes(managementRouter);
   customPhraseRoutes(managementRouter);
+  hookRoutes(managementRouter);
 
   const anonymousRouter: AnonymousRouter = new Router();
   phraseRoutes(anonymousRouter, provider);

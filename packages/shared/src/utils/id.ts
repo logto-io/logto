@@ -4,4 +4,4 @@ export const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 
 export const buildIdGenerator = (size: number) => customAlphabet(alphabet, size);
 
-export const buildApplicationSecret = buildIdGenerator(21);
+export const generateStandardId = buildIdGenerator(21);

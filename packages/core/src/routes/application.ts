@@ -1,5 +1,5 @@
 import { Applications } from '@logto/schemas';
-import { buildApplicationSecret, buildIdGenerator } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -15,8 +15,6 @@ import {
 } from '@/queries/application';
 
 import type { AuthedRouter } from './types';
-
-const applicationId = buildIdGenerator(21);
 
 export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   router.get('/applications', koaPagination(), async (ctx, next) => {
@@ -46,8 +44,8 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
       const { oidcClientMetadata, ...rest } = ctx.guard.body;
 
       ctx.body = await insertApplication({
-        id: applicationId(),
-        secret: buildApplicationSecret(),
+        id: generateStandardId(),
+        secret: generateStandardId(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
         ...rest,
       });

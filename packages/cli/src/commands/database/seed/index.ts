@@ -2,7 +2,7 @@ import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
 import { logtoConfigGuards, LogtoOidcConfigKey, seeds } from '@logto/schemas';
-import { buildApplicationSecret } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import chalk from 'chalk';
 import type { DatabasePool, DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
@@ -52,9 +52,7 @@ const seedTables = async (connection: DatabaseTransactionConnection) => {
     connection.query(insertInto(managementResource, 'resources')),
     connection.query(insertInto(createDefaultSetting(), 'settings')),
     connection.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
-    connection.query(
-      insertInto(createDemoAppApplication(buildApplicationSecret()), 'applications')
-    ),
+    connection.query(insertInto(createDemoAppApplication(generateStandardId()), 'applications')),
     connection.query(insertInto(defaultRole, 'roles')),
     updateDatabaseTimestamp(connection, await getLatestAlterationTimestamp()),
   ]);
