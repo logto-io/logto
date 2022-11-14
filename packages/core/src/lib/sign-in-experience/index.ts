@@ -1,6 +1,12 @@
 import { builtInLanguages } from '@logto/phrases-ui';
-import type { Branding, LanguageInfo, TermsOfUse } from '@logto/schemas';
-import { ConnectorType, BrandingStyle } from '@logto/schemas';
+import type { Branding, LanguageInfo, SignInExperience, TermsOfUse } from '@logto/schemas';
+import { SignInMode, ConnectorType, BrandingStyle } from '@logto/schemas';
+import {
+  adminConsoleApplicationId,
+  adminConsoleSignInExperience,
+  demoAppApplicationId,
+} from '@logto/schemas/lib/seeds';
+import i18next from 'i18next';
 
 import { getLogtoConnectors } from '@/connectors';
 import RequestError from '@/errors/RequestError';
@@ -9,6 +15,7 @@ import {
   findDefaultSignInExperience,
   updateDefaultSignInExperience,
 } from '@/queries/sign-in-experience';
+import { hasActiveUsers } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 export * from './sign-up';
@@ -55,4 +62,45 @@ export const removeUnavailableSocialConnectorTargets = async () => {
       availableSocialConnectorTargets.has(target)
     ),
   });
+};
+
+export const getSignInExperienceForApplication = async (
+  applicationId?: string
+): Promise<SignInExperience & { notification?: string }> => {
+  const signInExperience = await findDefaultSignInExperience();
+
+  // Hard code AdminConsole sign-in methods settings.
+  if (applicationId === adminConsoleApplicationId) {
+    return {
+      ...adminConsoleSignInExperience,
+      branding: {
+        ...adminConsoleSignInExperience.branding,
+        slogan: i18next.t('admin_console.welcome.title'),
+      },
+      languageInfo: signInExperience.languageInfo,
+      signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
+      socialSignInConnectorTargets: [],
+    };
+  }
+
+  // Insert Demo App Notification
+  if (applicationId === demoAppApplicationId) {
+    const {
+      socialSignInConnectorTargets,
+      languageInfo: { autoDetect, fallbackLanguage },
+    } = signInExperience;
+
+    const notification = i18next.t(
+      'demo_app.notification',
+      autoDetect ? undefined : { lng: fallbackLanguage }
+    );
+
+    return {
+      ...signInExperience,
+      socialSignInConnectorTargets,
+      notification,
+    };
+  }
+
+  return signInExperience;
 };

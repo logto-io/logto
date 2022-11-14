@@ -34,6 +34,11 @@ jest.mock('@/lib/user', () => ({
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));
 
+jest.mock('@/lib/session', () => ({
+  ...jest.requireActual('@/lib/session'),
+  getApplicationIdFromInteraction: jest.fn(),
+}));
+
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
   findUserByPhone: async () => findUserByPhone(),

@@ -3,10 +3,10 @@ import type { MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';
-import { assignInteractionResults } from '@/lib/session';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
+import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
 import { generateUserId, insertUser } from '@/lib/user';
 import type { WithLogContext } from '@/middleware/koa-log';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
   hasUserWithPhone,
   hasUserWithEmail,
@@ -28,7 +28,9 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContext, Respons
   provider: Provider
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> => {
   return async (ctx, next) => {
-    const signInExperience = await findDefaultSignInExperience();
+    const signInExperience = await getSignInExperienceForApplication(
+      await getApplicationIdFromInteraction(ctx, provider)
+    );
     assertThat(
       signInExperience.signIn.methods.some(
         ({ identifier, verificationCode }) =>
@@ -71,7 +73,9 @@ export const emailSignInAction = <StateT, ContextT extends WithLogContext, Respo
   provider: Provider
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> => {
   return async (ctx, next) => {
-    const signInExperience = await findDefaultSignInExperience();
+    const signInExperience = await getSignInExperienceForApplication(
+      await getApplicationIdFromInteraction(ctx, provider)
+    );
     assertThat(
       signInExperience.signIn.methods.some(
         ({ identifier, verificationCode }) =>
@@ -114,7 +118,9 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContext, Respo
   provider: Provider
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> => {
   return async (ctx, next) => {
-    const signInExperience = await findDefaultSignInExperience();
+    const signInExperience = await getSignInExperienceForApplication(
+      await getApplicationIdFromInteraction(ctx, provider)
+    );
     assertThat(
       signInExperience.signUp.identifier === SignUpIdentifier.Sms ||
         signInExperience.signUp.identifier === SignUpIdentifier.EmailOrSms,
@@ -156,7 +162,9 @@ export const emailRegisterAction = <StateT, ContextT extends WithLogContext, Res
   provider: Provider
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> => {
   return async (ctx, next) => {
-    const signInExperience = await findDefaultSignInExperience();
+    const signInExperience = await getSignInExperienceForApplication(
+      await getApplicationIdFromInteraction(ctx, provider)
+    );
     assertThat(
       signInExperience.signUp.identifier === SignUpIdentifier.Email ||
         signInExperience.signUp.identifier === SignUpIdentifier.EmailOrSms,

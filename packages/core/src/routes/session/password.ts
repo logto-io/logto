@@ -5,10 +5,10 @@ import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { assignInteractionResults } from '@/lib/session';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
+import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
 import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
   findUserByEmail,
   findUserByPhone,
@@ -104,7 +104,9 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
     async (ctx, next) => {
       const { username } = ctx.guard.body;
 
-      const signInExperience = await findDefaultSignInExperience();
+      const signInExperience = await getSignInExperienceForApplication(
+        await getApplicationIdFromInteraction(ctx, provider)
+      );
       assertThat(
         signInExperience.signUp.identifier === SignUpIdentifier.Username,
         new RequestError({
@@ -140,7 +142,9 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
       const type = 'RegisterUsernamePassword';
       ctx.log(type, { username });
 
-      const signInExperience = await findDefaultSignInExperience();
+      const signInExperience = await getSignInExperienceForApplication(
+        await getApplicationIdFromInteraction(ctx, provider)
+      );
       assertThat(
         signInExperience.signUp.identifier === SignUpIdentifier.Username,
         new RequestError({

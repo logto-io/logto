@@ -5,7 +5,8 @@ import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
+import { getApplicationIdFromInteraction } from '@/lib/session';
+import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
 import assertThat from '@/utils/assert-that';
 
 export default function koaGuardSessionAction<StateT, ContextT, ResponseBodyT>(
@@ -34,7 +35,9 @@ export default function koaGuardSessionAction<StateT, ContextT, ResponseBodyT>(
       return next();
     }
 
-    const { signInMode } = await findDefaultSignInExperience();
+    const { signInMode } = await getSignInExperienceForApplication(
+      await getApplicationIdFromInteraction(ctx, provider)
+    );
 
     if (forType === 'sign-in') {
       assertThat(signInMode !== SignInMode.Register, forbiddenError);
