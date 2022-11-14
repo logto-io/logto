@@ -39,6 +39,14 @@
       color: var(--color-text);
     }
 
+    .suspended {
+      background: var(--color-error-container);
+      color: var(--color-text);
+      font: var(--font-label-medium);
+      padding: _.unit(0.5) _.unit(1.5);
+      border-radius: 10px;
+    }
+
     .username {
       color: var(--color-text-secondary);
       font: var(--font-subhead-2);

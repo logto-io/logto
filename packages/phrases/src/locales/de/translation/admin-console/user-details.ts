@@ -36,6 +36,7 @@ const user_details = {
     deletion_confirmation:
       'Du entfernst die bestehende <name/> Identität. Bist du sicher, dass du das tun willst?',
   },
+  suspended: 'Suspended', // UNTRANSLATED
 };
 
 export default user_details;

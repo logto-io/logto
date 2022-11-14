@@ -34,6 +34,7 @@ const user_details = {
     deletion_confirmation:
       'You are removing the existing <name/> identity. Are you sure you want to do that?',
   },
+  suspended: 'Suspended',
 };
 
 export default user_details;

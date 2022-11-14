@@ -105,6 +105,9 @@ const UserDetails = () => {
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
               <div>
+                {data.isSuspended && (
+                  <div className={styles.suspended}>{t('user_details.suspended')}</div>
+                )}
                 {data.username && (
                   <>
                     <div className={styles.username}>{data.username}</div>
