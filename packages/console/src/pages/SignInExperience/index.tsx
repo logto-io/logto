@@ -12,6 +12,7 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import ConfirmModal from '@/components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
@@ -60,10 +61,10 @@ const SignInExperience = () => {
   }, [data]);
 
   useEffect(() => {
-    if (defaultFormData && !isDirty) {
+    if (defaultFormData) {
       reset(defaultFormData);
     }
-  }, [reset, isDirty, defaultFormData]);
+  }, [reset, defaultFormData, tab]);
 
   const saveData = async () => {
     const updatedData = await api
@@ -138,15 +139,9 @@ const SignInExperience = () => {
             <FormProvider {...methods}>
               <form className={styles.formWrapper} onSubmit={onSubmit}>
                 <div className={classNames(detailsStyles.body, styles.form)}>
-                  {tab === 'branding' && (
-                    <BrandingTab defaultData={defaultFormData} isDataDirty={isDirty} />
-                  )}
-                  {tab === 'sign-up-and-sign-in' && (
-                    <SignUpAndSignInTab defaultData={defaultFormData} isDataDirty={isDirty} />
-                  )}
-                  {tab === 'others' && (
-                    <OthersTab defaultData={defaultFormData} isDataDirty={isDirty} />
-                  )}
+                  {tab === 'branding' && <BrandingTab />}
+                  {tab === 'sign-up-and-sign-in' && <SignUpAndSignInTab />}
+                  {tab === 'others' && <OthersTab />}
                 </div>
                 <div className={detailsStyles.footer}>
                   <div className={detailsStyles.footerMain}>
@@ -178,6 +173,7 @@ const SignInExperience = () => {
           {dataToCompare && <SignInMethodsChangePreview before={data} after={dataToCompare} />}
         </ConfirmModal>
       )}
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
     </div>
   );
 };
