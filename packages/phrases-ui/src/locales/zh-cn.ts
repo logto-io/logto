@@ -18,7 +18,7 @@ const translation = {
     sign_in: '登录',
     continue: '继续',
     create_account: '注册',
-    create: '创建',
+    create: '注册',
     enter_passcode: '输入验证码',
     cancel: '取消',
     confirm: '确认',
@@ -63,8 +63,8 @@ const translation = {
     new_password: '新密码',
     set_password: '设置密码',
     password_changed: '已重置密码！',
-    no_account: 'No account yet? ', // UNTRANSLATED
-    have_account: 'Already had an account?', // UNTRANSLATED
+    no_account: '还没有账号？',
+    have_account: ' 已有账号？',
     enter_password: '输入密码',
     enter_password_for: '输入 {{method}} {{value}} 对应的密码进行登录',
     enter_username: '输入用户名',
