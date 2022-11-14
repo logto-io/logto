@@ -156,8 +156,7 @@ describe('session -> socialRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        expect.objectContaining({ login: { accountId: 'user1', ts: expect.anything() } }),
+        expect.objectContaining({ login: { accountId: 'user1' } }),
         expect.anything()
       );
     });
