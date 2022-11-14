@@ -25,7 +25,7 @@ jobs:
         run: pnpm -r build
 
       - name: Package
-        run: ./package.sh
+        run: ./.scripts/package.sh
 
       - uses: actions/upload-artifact@v3
         with:

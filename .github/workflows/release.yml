@@ -104,9 +104,8 @@ jobs:
       - name: Create release pull request
         uses: changesets/action@v1
         with:
-          # Disable temporarily since https://github.com/changesets/changesets/issues/833.
-          # Wait for our customized publish flow.
-          # publish: pnpm changeset tag
+          # Use our customized publish flow. See https://github.com/changesets/changesets/issues/833 for the limit of changesets.
+          publish: node .scripts/publish.js
           commit: 'release: version packages'
           title: 'release: version packages'
           # Create by our rules defined in `/.changeset/README.md`.
@@ -128,24 +127,15 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
-      - name: Extract changelog
-        run: |
-          git diff HEAD~1 HEAD --exit-code -- CHANGELOG.md | \
-          tail -n +5 | \
-          grep -E "^\+" | \
-          sed -E 's/^\+//' | \
-          cat -s \
-          > /tmp/changelog.txt
-
       - name: Build
         run: pnpm -r build
 
       - name: Package
-        run: ./package.sh
+        run: ./.scripts/package.sh
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.BOT_PAT }}
-          body_path: /tmp/changelog.txt
+          body: <Release notes WIP>
           files: /tmp/logto.tar.gz
