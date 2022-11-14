@@ -35,6 +35,8 @@ Logto[^info] helps you build the sign-in, auth, and user identity within minutes
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
 
+[Subscribe to us](https://logto.io/subscribe) right away to receive up-to-date information about the Logto Cloud (SaaS) as well as in-time feature updates.
+
 ## Get started
 
 - Visit our 🎨 [website](https://logto.io) for a brief introduction if you are new to Logto.
