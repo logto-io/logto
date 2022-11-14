@@ -108,3 +108,11 @@ export const revokeInstanceByGrantId = async (modelName: string, grantId: string
     and ${fields.payload}->>'grantId'=${grantId}
   `);
 };
+
+export const revokeInstanceByUserId = async (modelName: string, userId: string) => {
+  await envSet.pool.query(sql`
+    delete from ${table}
+    where ${fields.modelName}=${modelName}
+    and ${fields.payload}->>'accountId'=${userId}
+  `);
+};

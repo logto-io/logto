@@ -2,13 +2,14 @@ import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/cor
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
-import { literal, object, string } from 'zod';
+import { boolean, literal, object, string } from 'zod';
 
 import { isTrue } from '@/env-set/parameters';
 import RequestError from '@/errors/RequestError';
 import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
+import { revokeInstanceByUserId } from '@/queries/oidc-model-instance';
 import { findRolesByRoleNames } from '@/queries/roles';
 import {
   deleteUserById,
@@ -235,6 +236,34 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         passwordEncrypted,
         passwordEncryptionMethod,
       });
+
+      ctx.body = pick(user, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/users/:userId/is-suspended',
+    koaGuard({
+      params: object({ userId: string() }),
+      body: object({ isSuspended: boolean() }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { isSuspended },
+      } = ctx.guard;
+
+      await findUserById(userId);
+
+      const user = await updateUserById(userId, {
+        isSuspended,
+      });
+
+      if (isSuspended) {
+        await revokeInstanceByUserId('refreshToken', user.id);
+      }
 
       ctx.body = pick(user, ...userInfoSelectFields);
 

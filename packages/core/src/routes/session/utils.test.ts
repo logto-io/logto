@@ -152,6 +152,22 @@ describe('signInWithPassword()', () => {
     ).rejects.toThrowError(new RequestError('session.invalid_credentials'));
   });
 
+  it('throw if user is suspended', async () => {
+    interactionDetails.mockResolvedValueOnce({ params: {} });
+    await expect(
+      signInWithPassword(createContext(), createProvider(), {
+        identifier: SignInIdentifier.Username,
+        password: 'password',
+        findUser: jest.fn(async () => ({
+          ...mockUser,
+          isSuspended: true,
+        })),
+        logType: 'SignInUsernamePassword',
+        logPayload: { username: 'username' },
+      })
+    ).rejects.toThrowError(new RequestError('user.suspended'));
+  });
+
   it('throw if sign in method is not enabled', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,

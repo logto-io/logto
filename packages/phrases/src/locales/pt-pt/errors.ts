@@ -54,6 +54,7 @@ const errors = {
     require_sms: 'You need to add a phone number before signing-in.', // UNTRANSLATED
     sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
     require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
+    suspended: 'This account is suspended.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: 'O método de enncriptação {{name}} não é suportado.',

@@ -276,7 +276,8 @@ export const signInWithPassword = async (
 
   const user = await findUser();
   const verifiedUser = await verifyUserPassword(user, password);
-  const { id } = verifiedUser;
+  const { id, isSuspended } = verifiedUser;
+  assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
   ctx.log(logType, { userId: id });
   await updateUserById(id, { lastSignInAt: Date.now() });
