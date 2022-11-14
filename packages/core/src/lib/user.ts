@@ -48,7 +48,7 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
   assertThat(user, 'session.invalid_credentials');
   const { passwordEncrypted, passwordEncryptionMethod } = user;
 
-  assertThat(passwordEncrypted && passwordEncryptionMethod, 'session.invalid_sign_in_method');
+  assertThat(passwordEncrypted && passwordEncryptionMethod, 'session.invalid_credentials');
 
   const result = await argon2Verify({ password, hash: passwordEncrypted });
 
