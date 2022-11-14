@@ -10,14 +10,14 @@ const translation = {
   },
   secondary: {
     sign_in_with: '通过 {{methods, list(type: disjunction;), zhOrSpaces}} 登录',
-    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
+    register_with: '通过 {{methods, list(type: disjunction;)}} 注册',
     social_bind_with:
       '绑定到已有账户? 使用 {{methods, list(type: disjunction;), zhOrSpaces}} 登录并绑定。',
   },
   action: {
     sign_in: '登录',
     continue: '继续',
-    create_account: '创建帐号',
+    create_account: '注册',
     create: '创建',
     enter_passcode: '输入验证码',
     cancel: '取消',
@@ -31,8 +31,8 @@ const translation = {
     sign_in_with: '通过 {{name}} 登录',
     forgot_password: '重置密码',
     switch_to: '切换到{{method}}',
-    sign_in_via_passcode: 'Sign in with verification code', // UNTRANSLATED
-    sign_in_via_password: 'Sign in with password', // UNTRANSLATED
+    sign_in_via_passcode: '用验证码登录',
+    sign_in_via_password: '密码登录',
   },
   description: {
     email: '邮箱',
@@ -61,22 +61,20 @@ const translation = {
     reset_password_description_email: '输入邮件地址，领取验证码以重设密码。',
     reset_password_description_sms: '输入手机号，领取验证码以重设密码。',
     new_password: '新密码',
-    set_password: 'Set password', // UNTRANSLATED
+    set_password: '设置密码',
     password_changed: '已重置密码！',
     no_account: 'No account yet? ', // UNTRANSLATED
     have_account: 'Already had an account?', // UNTRANSLATED
-    enter_password: 'Enter Password', // UNTRANSLATED
-    enter_password_for: 'Sign in with the password to {{method}} {{value}}', // UNTRANSLATED
-    enter_username: 'Enter username', // UNTRANSLATED
-    enter_username_description:
-      'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.', // UNTRANSLATED
-    link_email: 'Link email', // UNTRANSLATED
-    link_phone: 'Link phone', // UNTRANSLATED
-    link_email_or_phone: 'Link email or phone', // UNTRANSLATED
-    link_email_description: 'For added security, please link your email with the account.', // UNTRANSLATED
-    link_phone_description: 'For added security, please link your phone with the account.', // UNTRANSLATED
-    link_email_or_phone_description:
-      'For added security, please link your email or phone with the account.', // UNTRANSLATED
+    enter_password: '输入密码',
+    enter_password_for: '输入 {{method}} {{value}} 对应的密码进行登录',
+    enter_username: '输入用户名',
+    enter_username_description: '用户名可以用来进行登录。用户名仅可以包含字母、数字和下划线。',
+    link_email: '绑定邮箱',
+    link_phone: '绑定手机',
+    link_email_or_phone: '绑定邮箱或手机号',
+    link_email_description: '绑定邮箱以保障您的账号安全',
+    link_phone_description: '绑定手机号以保障您的账号安全',
+    link_email_or_phone_description: '绑定邮箱或手机号以保障您的账号安全',
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',
