@@ -26,6 +26,10 @@
   .title {
     @include _.title;
   }
+
+  .notification {
+    margin: 0 _.unit(-5) _.unit(6);
+  }
 }
 
 :global(body.desktop) {
@@ -39,5 +43,12 @@
 
   .title {
     @include _.title_desktop;
+  }
+
+  .notification {
+    @include _.full-width;
+    margin-top: _.unit(6);
+    box-shadow: var(--color-shadow-1);
+    border-radius: var(--radius);
   }
 }

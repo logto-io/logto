@@ -15,18 +15,8 @@
 
 :global(body.desktop) {
   .appNotification {
-    top: _.unit(-6);
     left: 50%;
-    transform: translate(-50%, -100%);
+    transform: translate(-50%);
     width: max-content;
-  }
-}
-
-@media screen and (max-height: 820px) {
-  :global(body.desktop) {
-    .appNotification {
-      top: _.unit(6);
-      transform: translate(-50%);
-    }
   }
 }

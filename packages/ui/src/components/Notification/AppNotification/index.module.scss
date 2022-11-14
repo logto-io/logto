@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.notification {
+  padding: _.unit(3) _.unit(4);
+  font: var(--font-body-2);
+  color: var(--color-type-primary);
+  background: var(--color-neutral-variant-90);
+  border: _.border(var(--color-neutral-variant-80));
+  box-shadow: var(--color-shadow-1);
+  border-radius: var(--radius);
+  @include _.flex_row;
+
+  .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: _.unit(3);
+    color: var(--color-neutral-variant-60);
+  }
+
+  .message {
+    flex: 1;
+    margin-right: _.unit(4);
+  }
+
+  .link {
+    max-width: 20%;
+  }
+}

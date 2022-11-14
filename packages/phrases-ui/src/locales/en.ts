@@ -79,6 +79,7 @@ const translation = {
     link_phone_description: 'For added security, please link your phone with the account.',
     link_email_or_phone_description:
       'For added security, please link your email or phone with the account.',
+    continue_with_more_information: 'For added security, please compete below account details.',
   },
   error: {
     username_password_mismatch: 'Username and password do not match',
