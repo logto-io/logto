@@ -10,12 +10,12 @@ type Props = {
 
 const PasswordlessSwitch = ({ target, className }: Props) => {
   const { t } = useTranslation();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
-  const targetPathname = pathname.replace(target === 'email' ? 'sms' : 'email', target);
+  const targetPathname = pathname.split('/').slice(0, -1).join('/') + `/${target}`;
 
   return (
-    <TextLink replace className={className} to={targetPathname}>
+    <TextLink replace className={className} to={{ pathname: targetPathname, search }}>
       {t('action.switch_to', {
         method: t(`description.${target === 'email' ? 'email' : 'phone_number'}`),
       })}

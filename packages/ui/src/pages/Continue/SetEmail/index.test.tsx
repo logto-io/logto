@@ -32,26 +32,4 @@ describe('SetEmail', () => {
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
     expect(queryByText('action.continue')).not.toBeNull();
   });
-
-  it('render set email with phone alterations', () => {
-    const { queryByText, container } = renderWithPageContext(
-      <SettingsProvider
-        settings={{
-          ...mockSignInExperienceSettings,
-          signUp: {
-            ...mockSignInExperienceSettings.signUp,
-            methods: [SignInIdentifier.Email, SignInIdentifier.Sms],
-          },
-        }}
-      >
-        <SetEmail />
-      </SettingsProvider>
-    );
-
-    expect(queryByText('description.link_email_or_phone')).not.toBeNull();
-    expect(queryByText('description.link_email_or_phone_description')).not.toBeNull();
-    expect(container.querySelector('input[name="email"]')).not.toBeNull();
-    expect(queryByText('action.continue')).not.toBeNull();
-    expect(queryByText('action.switch_to')).not.toBeNull();
-  });
 });

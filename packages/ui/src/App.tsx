@@ -10,6 +10,7 @@ import initI18n from './i18n/init';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
+import ContinueWithEmailOrPhone from './pages/Continue/EmailOrPhone';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import Passcode from './pages/Passcode';
@@ -93,6 +94,7 @@ const App = () => {
               <Route path="/forgot-password/:method" element={<ForgotPassword />} />
 
               {/* Continue set up missing profile */}
+              <Route path="/continue/email-or-sms/:method" element={<ContinueWithEmailOrPhone />} />
               <Route path="/continue/:method" element={<Continue />} />
 
               {/* Social sign-in pages */}
