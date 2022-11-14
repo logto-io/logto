@@ -3,10 +3,10 @@ import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { assignInteractionResults } from '@/lib/session';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
+import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
 import { encryptUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
   findUserById,
   hasUser,
@@ -54,7 +54,9 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
         passwordEncrypted,
         passwordEncryptionMethod,
       });
-      const signInExperience = await findDefaultSignInExperience();
+      const signInExperience = await getSignInExperienceForApplication(
+        await getApplicationIdFromInteraction(ctx, provider)
+      );
       await checkRequiredProfile(ctx, provider, updatedUser, signInExperience);
       await assignInteractionResults(ctx, provider, { login: { accountId: updatedUser.id } });
 
@@ -92,7 +94,9 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
       const updatedUser = await updateUserById(userId, {
         username,
       });
-      const signInExperience = await findDefaultSignInExperience();
+      const signInExperience = await getSignInExperienceForApplication(
+        await getApplicationIdFromInteraction(ctx, provider)
+      );
       await checkRequiredProfile(ctx, provider, updatedUser, signInExperience);
       await assignInteractionResults(ctx, provider, { login: { accountId: updatedUser.id } });
 
@@ -127,7 +131,9 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
     const updatedUser = await updateUserById(userId, {
       primaryEmail: email,
     });
-    const signInExperience = await findDefaultSignInExperience();
+    const signInExperience = await getSignInExperienceForApplication(
+      await getApplicationIdFromInteraction(ctx, provider)
+    );
     await checkRequiredProfile(ctx, provider, updatedUser, signInExperience);
     await assignInteractionResults(ctx, provider, { login: { accountId: updatedUser.id } });
 
@@ -161,7 +167,9 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
     const updatedUser = await updateUserById(userId, {
       primaryPhone: phone,
     });
-    const signInExperience = await findDefaultSignInExperience();
+    const signInExperience = await getSignInExperienceForApplication(
+      await getApplicationIdFromInteraction(ctx, provider)
+    );
     await checkRequiredProfile(ctx, provider, updatedUser, signInExperience);
     await assignInteractionResults(ctx, provider, { login: { accountId: updatedUser.id } });
 

@@ -6,7 +6,8 @@ import { object, string, unknown } from 'zod';
 
 import { getLogtoConnectorById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
-import { assignInteractionResults } from '@/lib/session';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
+import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
 import {
   findSocialRelatedUser,
   getUserInfoByAuthCode,
@@ -14,7 +15,6 @@ import {
 } from '@/lib/social';
 import { generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
   hasUserWithIdentity,
   findUserById,
@@ -104,7 +104,9 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
         lastSignInAt: Date.now(),
       });
 
-      const signInExperience = await findDefaultSignInExperience();
+      const signInExperience = await getSignInExperienceForApplication(
+        await getApplicationIdFromInteraction(ctx, provider)
+      );
       await checkRequiredProfile(ctx, provider, user, signInExperience);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -143,7 +145,9 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
         lastSignInAt: Date.now(),
       });
 
-      const signInExperience = await findDefaultSignInExperience();
+      const signInExperience = await getSignInExperienceForApplication(
+        await getApplicationIdFromInteraction(ctx, provider)
+      );
       await checkRequiredProfile(ctx, provider, user, signInExperience);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -191,7 +195,9 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       });
       ctx.log(type, { userId: id });
 
-      const signInExperience = await findDefaultSignInExperience();
+      const signInExperience = await getSignInExperienceForApplication(
+        await getApplicationIdFromInteraction(ctx, provider)
+      );
       await checkRequiredProfile(ctx, provider, user, signInExperience);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 

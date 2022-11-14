@@ -15,10 +15,10 @@ import type { ZodType } from 'zod';
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { assignInteractionResults } from '@/lib/session';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
+import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
 import { verifyUserPassword } from '@/lib/user';
 import type { LogContext } from '@/middleware/koa-log';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import { hasUser, hasUserWithEmail, hasUserWithPhone, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
@@ -196,32 +196,6 @@ export const checkRequiredProfile = async (
     throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
   }
 };
-
-export const checkRequiredSignUpIdentifiers = async (identifiers: {
-  username?: Nullable<string>;
-  primaryEmail?: Nullable<string>;
-  primaryPhone?: Nullable<string>;
-}) => {
-  const { username, primaryEmail, primaryPhone } = identifiers;
-
-  const { signUp } = await findDefaultSignInExperience();
-
-  if (signUp.identifier === SignUpIdentifier.Username && !username) {
-    throw new RequestError({ code: 'user.require_username', status: 422 });
-  }
-
-  if (signUp.identifier === SignUpIdentifier.Email && !primaryEmail) {
-    throw new RequestError({ code: 'user.require_email', status: 422 });
-  }
-
-  if (signUp.identifier === SignUpIdentifier.Sms && !primaryPhone) {
-    throw new RequestError({ code: 'user.require_sms', status: 422 });
-  }
-
-  if (signUp.identifier === SignUpIdentifier.EmailOrSms && !primaryEmail && !primaryPhone) {
-    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
-  }
-};
 /* eslint-enable complexity */
 
 export const checkExistingSignUpIdentifiers = async (
@@ -260,7 +234,9 @@ export const signInWithPassword = async (
   provider: Provider,
   { identifier, findUser, password, logType, logPayload }: SignInWithPasswordParameter
 ) => {
-  const signInExperience = await findDefaultSignInExperience();
+  const signInExperience = await getSignInExperienceForApplication(
+    await getApplicationIdFromInteraction(ctx, provider)
+  );
   assertThat(
     signInExperience.signIn.methods.some(
       (method) => method.password && method.identifier === identifier

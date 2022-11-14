@@ -7,6 +7,11 @@ import { validateSignUp } from './sign-up';
 
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 
+jest.mock('@/lib/session', () => ({
+  ...jest.requireActual('@/lib/session'),
+  getApplicationIdFromInteraction: jest.fn(),
+}));
+
 describe('validate sign-up', () => {
   describe('There must be at least one enabled connector for the specific identifier.', () => {
     test('should throw when there is no enabled email connector and identifier is email', async () => {

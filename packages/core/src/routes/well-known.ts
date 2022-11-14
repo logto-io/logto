@@ -1,19 +1,12 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInMode } from '@logto/schemas';
-import {
-  adminConsoleApplicationId,
-  adminConsoleSignInExperience,
-  demoAppApplicationId,
-} from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import etag from 'etag';
-import i18next from 'i18next';
 import type { Provider } from 'oidc-provider';
-import { errors } from 'oidc-provider';
 
 import { getLogtoConnectors } from '@/connectors';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
-import { hasActiveUsers } from '@/queries/user';
+import { getApplicationIdFromInteraction } from '@/lib/session';
+import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
 
 import type { AnonymousRouter } from './types';
 
@@ -21,19 +14,10 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
   router.get(
     '/.well-known/sign-in-exp',
     async (ctx, next) => {
-      const interaction = await provider
-        .interactionDetails(ctx.req, ctx.res)
-        .catch((error: unknown) => {
-          // Should not block if interaction is not found
-          if (error instanceof errors.SessionNotFound) {
-            return null;
-          }
-
-          throw error;
-        });
+      const applicationId = await getApplicationIdFromInteraction(ctx, provider);
 
       const [signInExperience, logtoConnectors] = await Promise.all([
-        findDefaultSignInExperience(),
+        getSignInExperienceForApplication(applicationId),
         getLogtoConnectors(),
       ]);
 
@@ -46,56 +30,22 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
         ),
       };
 
-      // Hard code AdminConsole sign-in methods settings.
-      if (interaction?.params.client_id === adminConsoleApplicationId) {
-        ctx.body = {
-          ...adminConsoleSignInExperience,
-          branding: {
-            ...adminConsoleSignInExperience.branding,
-            slogan: i18next.t('admin_console.welcome.title'),
-          },
-          languageInfo: signInExperience.languageInfo,
-          signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
-          socialConnectors: [],
-          forgotPassword,
-        };
+      const socialConnectors =
+        applicationId === adminConsoleApplicationId
+          ? []
+          : signInExperience.socialSignInConnectorTargets.reduce<
+              Array<ConnectorMetadata & { id: string }>
+            >((previous, connectorTarget) => {
+              const connectors = logtoConnectors.filter(
+                ({ metadata: { target }, dbEntry: { enabled } }) =>
+                  target === connectorTarget && enabled
+              );
 
-        return next();
-      }
-
-      // Custom Applications
-
-      const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
-        Array<ConnectorMetadata & { id: string }>
-      >((previous, connectorTarget) => {
-        const connectors = logtoConnectors.filter(
-          ({ metadata: { target }, dbEntry: { enabled } }) => target === connectorTarget && enabled
-        );
-
-        return [
-          ...previous,
-          ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
-        ];
-      }, []);
-
-      // Insert Demo App Notification
-      if (interaction?.params.client_id === demoAppApplicationId) {
-        const {
-          languageInfo: { autoDetect, fallbackLanguage },
-        } = signInExperience;
-
-        ctx.body = {
-          ...signInExperience,
-          socialConnectors,
-          notification: i18next.t(
-            'demo_app.notification',
-            autoDetect ? undefined : { lng: fallbackLanguage }
-          ),
-          forgotPassword,
-        };
-
-        return next();
-      }
+              return [
+                ...previous,
+                ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
+              ];
+            }, []);
 
       ctx.body = {
         ...signInExperience,

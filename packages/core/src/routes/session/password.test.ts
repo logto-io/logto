@@ -51,6 +51,11 @@ jest.mock('@/lib/user', () => ({
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));
 
+jest.mock('@/lib/session', () => ({
+  ...jest.requireActual('@/lib/session'),
+  getApplicationIdFromInteraction: jest.fn(),
+}));
+
 const grantSave = jest.fn(async () => 'finalGrantId');
 const grantAddOIDCScope = jest.fn();
 const grantAddResourceScope = jest.fn();
