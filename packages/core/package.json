@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "@logto/cli": "workspace:^",
-    "@logto/connector-kit": "1.0.0-beta.20",
+    "@logto/connector-kit": "1.0.0-beta.21",
     "@logto/core-kit": "^1.0.0-beta.18",
-    "@logto/language-kit": "1.0.0-beta.20",
+    "@logto/language-kit": "1.0.0-beta.21",
     "@logto/phrases": "workspace:^",
     "@logto/phrases-ui": "workspace:^",
     "@logto/schemas": "workspace:^",

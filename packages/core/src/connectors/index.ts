@@ -3,20 +3,20 @@ import path from 'path';
 
 import { connectorDirectory } from '@logto/cli/lib/constants';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utilities';
-import type { AllConnector, CreateConnector } from '@logto/connector-kit';
+import type { AllConnector, ConnectorMetadata, CreateConnector } from '@logto/connector-kit';
 import { validateConfig } from '@logto/connector-kit';
 import { findPackage } from '@logto/shared';
 import chalk from 'chalk';
 
 import RequestError from '@/errors/RequestError';
-import { findAllConnectors, insertConnector } from '@/queries/connector';
+import { findAllConnectors } from '@/queries/connector';
 
 import { defaultConnectorMethods } from './consts';
 import type { LoadConnector, LogtoConnector } from './types';
 import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: LoadConnector[] | undefined;
+let cachedConnectors: Array<{ connector: LoadConnector; path: string }> | undefined;
 
 const loadConnectors = async () => {
   if (cachedConnectors) {
@@ -34,7 +34,7 @@ const loadConnectors = async () => {
 
   const connectorPackages = await getConnectorPackagesFromDirectory(directory);
 
-  const connectors = await Promise.all(
+  const connectorObjects = await Promise.all(
     connectorPackages.map(async ({ path: packagePath, name }) => {
       try {
         // eslint-disable-next-line no-restricted-syntax
@@ -65,7 +65,7 @@ const loadConnectors = async () => {
           },
         };
 
-        return connector;
+        return { connector, path: packagePath };
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log(
@@ -83,8 +83,9 @@ const loadConnectors = async () => {
   );
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  cachedConnectors = connectors.filter(
-    (connector): connector is LoadConnector => connector !== undefined
+  cachedConnectors = connectorObjects.filter(
+    (connectorObject): connectorObject is { connector: LoadConnector; path: string } =>
+      connectorObject?.connector !== undefined
   );
 
   return cachedConnectors;
@@ -92,23 +93,36 @@ const loadConnectors = async () => {
 
 export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
   const connectors = await findAllConnectors();
-  const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
+  const connectorMap = new Map(connectors.map((connector) => [connector.connectorId, connector]));
 
   const logtoConnectors = await loadConnectors();
 
-  return logtoConnectors.map((element) => {
-    const { id } = element.metadata;
-    const connector = connectorMap.get(id);
+  return Promise.all(
+    logtoConnectors.map(async ({ connector: element, path }) => {
+      const { id } = element.metadata;
+      const connector = connectorMap.get(id);
 
-    if (!connector) {
-      throw new RequestError({ code: 'entity.not_found', id, status: 404 });
-    }
+      if (!connector) {
+        throw new RequestError({ code: 'entity.not_found', id, status: 404 });
+      }
 
-    return {
-      ...element,
-      dbEntry: connector,
-    };
-  });
+      const configuredMetadata: ConnectorMetadata = { ...element.metadata, ...connector.metadata };
+
+      return {
+        ...element,
+        metadata: {
+          ...configuredMetadata,
+          logo: await readUrl(configuredMetadata.logo, path, 'svg'),
+          logoDark:
+            configuredMetadata.logoDark &&
+            (await readUrl(configuredMetadata.logoDark, path, 'svg')),
+          readme: await readUrl(configuredMetadata.readme, path, 'text'),
+          configTemplate: await readUrl(configuredMetadata.configTemplate, path, 'text'),
+        },
+        dbEntry: connector,
+      };
+    })
+  );
 };
 
 export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector> => {
@@ -124,27 +138,4 @@ export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector>
   }
 
   return pickedConnector;
-};
-
-export const initConnectors = async () => {
-  const connectors = await findAllConnectors();
-  const existingConnectors = new Map(connectors.map((connector) => [connector.id, connector]));
-  const allConnectors = await loadConnectors();
-  const newConnectors = allConnectors.filter(({ metadata: { id } }) => {
-    const connector = existingConnectors.get(id);
-
-    if (!connector) {
-      return true;
-    }
-
-    return connector.config === JSON.stringify({});
-  });
-
-  await Promise.all(
-    newConnectors.map(async ({ metadata: { id } }) => {
-      await insertConnector({
-        id,
-      });
-    })
-  );
 };
