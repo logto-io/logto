@@ -3,6 +3,6 @@
 "@logto/integration-tests": minor
 ---
 
-## 💥 Breaking change 💥
+**💥 Breaking change 💥**
 
 Use case-insensitive strategy for searching emails
