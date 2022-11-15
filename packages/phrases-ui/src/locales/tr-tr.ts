@@ -80,7 +80,7 @@ const translation = {
     link_phone_description: 'For added security, please link your phone with the account.', // UNTRANSLATED
     link_email_or_phone_description:
       'For added security, please link your email or phone with the account.', // UNTRANSLATED
-    continue_with_more_information: 'For added security, please compete below account details.', // UNTRANSLATED
+    continue_with_more_information: 'For added security, please complete below account details.', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'Kullanıcı adı ve şifre eşleşmiyor.',
