@@ -48,7 +48,6 @@
   .notification {
     @include _.full-width;
     margin-top: _.unit(6);
-    box-shadow: var(--color-shadow-1);
     border-radius: var(--radius);
   }
 }

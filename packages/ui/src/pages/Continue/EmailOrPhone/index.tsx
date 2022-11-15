@@ -18,6 +18,7 @@ const EmailOrPhone = () => {
       <SecondaryPageWrapper
         title="description.link_email_or_phone"
         description="description.link_email_or_phone_description"
+        notification="description.continue_with_more_information"
       >
         <EmailContinue autoFocus hasSwitch />
       </SecondaryPageWrapper>
@@ -29,6 +30,7 @@ const EmailOrPhone = () => {
       <SecondaryPageWrapper
         title="description.link_email_or_phone"
         description="description.link_email_or_phone_description"
+        notification="description.continue_with_more_information"
       >
         <SmsContinue autoFocus hasSwitch />
       </SecondaryPageWrapper>
