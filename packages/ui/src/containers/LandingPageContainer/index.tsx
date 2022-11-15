@@ -4,10 +4,10 @@ import type { ReactNode } from 'react';
 import { useContext } from 'react';
 
 import BrandingHeader from '@/components/BrandingHeader';
-import AppNotification from '@/containers/AppNotification';
 import { PageContext } from '@/hooks/use-page-context';
 import { getLogoUrl } from '@/utils/logo';
 
+import AppNotification from '../AppNotification';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -34,9 +34,9 @@ const LandingPageContainer = ({ children, className }: Props) => {
           logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
         />
         {children}
-        <AppNotification />
       </div>
       {platform === 'web' && <div className={styles.placeholderBottom} />}
+      <AppNotification />
     </>
   );
 };

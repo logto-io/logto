@@ -75,6 +75,7 @@ const translation = {
     link_email_description: '绑定邮箱以保障您的账号安全',
     link_phone_description: '绑定手机号以保障您的账号安全',
     link_email_or_phone_description: '绑定邮箱或手机号以保障您的账号安全',
+    continue_with_more_information: '为保障您的账号安全，需要您补充以下信息。',
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',
