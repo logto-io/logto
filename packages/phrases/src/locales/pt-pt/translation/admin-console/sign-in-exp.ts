@@ -68,6 +68,7 @@ const sign_in_exp = {
       password_auth: 'Password', // UNTRANSLATED
       verification_code_auth: 'Verification code', // UNTRANSLATED
       auth_swap_tip: 'Swap the options below to determine which appears first in the flow.', // UNTRANSLATED
+      require_auth_factor: 'You have to select at least one authentication factor.', // UNTRANSLATED
     },
     social_sign_in: {
       title: 'SOCIAL SIGN-IN', // UNTRANSLATED

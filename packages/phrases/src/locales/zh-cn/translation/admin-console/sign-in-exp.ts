@@ -63,6 +63,7 @@ const sign_in_exp = {
       password_auth: '密码',
       verification_code_auth: '验证码',
       auth_swap_tip: '交换以下选项的位置即可设定它们在用户登录流程中出现的先后。',
+      require_auth_factor: 'You have to select at least one authentication factor.', // UNTRANSLATED
     },
     social_sign_in: {
       title: '社交登录',
