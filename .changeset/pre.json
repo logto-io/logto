@@ -14,5 +14,11 @@
     "@logto/shared": "1.0.0-beta.12",
     "@logto/ui": "1.0.0-beta.12"
   },
-  "changesets": []
+  "changesets": [
+    "fifty-balloons-taste",
+    "grumpy-clocks-refuse",
+    "quick-turtles-joke",
+    "thin-oranges-act",
+    "unlucky-lizards-agree"
+  ]
 }
