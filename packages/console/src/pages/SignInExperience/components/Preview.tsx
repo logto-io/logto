@@ -106,15 +106,15 @@ const Preview = ({ signInExperience, className }: Props) => {
       signInExperience: {
         ...signInExperience,
         socialConnectors,
+        forgotPassword: {
+          email: hasEmailConnector,
+          sms: hasSmsConnector,
+        },
       },
       language,
       mode,
       platform: platform === 'desktopWeb' ? 'web' : 'mobile',
       isNative: platform === 'mobile',
-      forgotPassword: {
-        email: hasEmailConnector,
-        sms: hasSmsConnector,
-      },
     };
   }, [allConnectors, language, mode, platform, signInExperience]);
 
