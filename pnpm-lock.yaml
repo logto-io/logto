@@ -2361,6 +2361,7 @@ packages:
       color: 4.2.3
       nanoid: 3.3.4
       zod: 3.19.1
+    dev: true
 
   /@logto/core-kit/1.0.0-beta.21:
     resolution: {integrity: sha512-kCFjRMTNgTYyEN3KRqC2K3A9zoaPncgOZQ3/SjWiStHPDnMj1zqgaphULlyphWJYLIQASoC319vLJIgQdM/EnA==}
