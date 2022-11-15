@@ -7,18 +7,18 @@ import type { RequestError } from './use-api';
 const useEnabledConnectorTypes = () => {
   const { data: connectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
 
-  const enabledConnectors = useMemo(
+  const enabledConnectorTypes = useMemo(
     () => connectors?.filter(({ enabled }) => enabled).map(({ type }) => type) ?? [],
     [connectors]
   );
 
   const isConnectorTypeEnabled = useCallback(
-    (connectorType: ConnectorType) => enabledConnectors.includes(connectorType),
-    [enabledConnectors]
+    (connectorType: ConnectorType) => enabledConnectorTypes.includes(connectorType),
+    [enabledConnectorTypes]
   );
 
   return {
-    data: enabledConnectors,
+    data: enabledConnectorTypes,
     isConnectorTypeEnabled,
   };
 };
