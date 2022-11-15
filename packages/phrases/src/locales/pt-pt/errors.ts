@@ -96,6 +96,8 @@ const errors = {
     authorization_failed: 'O processo de autorização do usuário não foi bem-sucedido.',
     social_auth_code_invalid:
       'Não foi possível obter o token de acesso, verifique o código de autorização.',
+    more_than_one_instance:
+      "The number of non-standard connectors' instances can not be larger than 1.", // UNTRANSLATED
     more_than_one_sms: 'O número de conectores SMS é maior que 1.',
     more_than_one_email: 'O número de conectores de e-mail é maior que 1.',
     db_connector_type_mismatch: 'Há um conector no banco de dados que não corresponde ao tipo.',

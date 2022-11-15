@@ -93,6 +93,8 @@ const errors = {
     social_invalid_id_token: '연동 서비스의 ID 토큰이 유효하지 않아요.',
     authorization_failed: '사용자의 인증 과정이 성공적으로 마무리되지 않았어요.',
     social_auth_code_invalid: 'Access 토큰을 가져올 수 없어요. Authorization 코드를 확인해주세요.',
+    more_than_one_instance:
+      "The number of non-standard connectors' instances can not be larger than 1.", // UNTRANSLATED
     more_than_one_sms: '연동된 SMS 서비스가 1개 이상이여야 해요.',
     more_than_one_email: '연동된 이메일 서비스가 1개 이상이여야 해요.',
     db_connector_type_mismatch: '종류가 일치하지 않은 연동 서비스가 DB에 존재해요.',

@@ -3,7 +3,13 @@ import { MessageTypes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import { mockMetadata, mockConnector, mockLogtoConnectorList } from '@/__mocks__';
+import {
+  mockMetadata,
+  mockConnector,
+  mockLogtoConnectorList,
+  mockLogtoConnectorListInvalidDuplicateInstances,
+  mockLogtoConnectorListValidDuplicateInstances,
+} from '@/__mocks__';
 import { defaultConnectorMethods } from '@/connectors/consts';
 import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
@@ -56,10 +62,28 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 400);
     });
 
+    it('throws with invalid duplicated instances added to DB', async () => {
+      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
+        ...mockLogtoConnectorList.filter((connector) => connector.type !== ConnectorType.Email),
+        ...mockLogtoConnectorListInvalidDuplicateInstances,
+      ]);
+      const response = await connectorRequest.get('/connectors').send({});
+      expect(response).toHaveProperty('statusCode', 400);
+    });
+
     it('shows all connectors', async () => {
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(
         mockLogtoConnectorList.filter((connector) => connector.type === ConnectorType.Social)
       );
+      const response = await connectorRequest.get('/connectors').send({});
+      expect(response).toHaveProperty('statusCode', 200);
+    });
+
+    it('shows all connectors with valid duplicated instances added to DB', async () => {
+      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
+        ...mockLogtoConnectorList.slice(0, -2),
+        ...mockLogtoConnectorListValidDuplicateInstances,
+      ]);
       const response = await connectorRequest.get('/connectors').send({});
       expect(response).toHaveProperty('statusCode', 200);
     });

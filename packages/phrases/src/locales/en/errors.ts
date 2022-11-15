@@ -94,8 +94,10 @@ const errors = {
     social_invalid_id_token: "The connector's id token is invalid.",
     authorization_failed: "The user's authorization process is unsuccessful.",
     social_auth_code_invalid: 'Unable to get access token, please check authorization code.',
-    more_than_one_sms: 'The number of SMS connectors is larger then 1.',
-    more_than_one_email: 'The number of Email connectors is larger then 1.',
+    more_than_one_instance:
+      "The number of non-standard connectors' instances can not be larger than 1.",
+    more_than_one_sms: 'The number of SMS connectors is larger than 1.',
+    more_than_one_email: 'The number of Email connectors is larger than 1.',
     db_connector_type_mismatch: 'There is a connector in the DB that does not match the type.',
   },
   passcode: {

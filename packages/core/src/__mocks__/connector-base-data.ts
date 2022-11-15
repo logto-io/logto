@@ -75,6 +75,21 @@ export const mockMetadata6: ConnectorMetadata = {
   platform: ConnectorPlatform.Universal,
 };
 
+export const mockMetadata7: ConnectorMetadata = {
+  ...mockMetadata,
+  id: 'id7',
+  target: 'connector_7',
+  platform: ConnectorPlatform.Universal,
+};
+
+export const mockMetadata8: ConnectorMetadata = {
+  ...mockMetadata,
+  id: 'id8',
+  target: 'connector_8',
+  platform: ConnectorPlatform.Universal,
+  isStandard: true,
+};
+
 export const mockConnector0: Connector = {
   id: 'id0',
   enabled: true,
@@ -143,4 +158,44 @@ export const mockConnector6: Connector = {
   syncProfile: false,
   metadata: {},
   connectorId: 'id6',
+};
+
+export const mockConnector7: Connector = {
+  id: 'id7',
+  enabled: true,
+  config: {},
+  createdAt: 1_234_567_890_567,
+  syncProfile: false,
+  metadata: { target: 'connector_7' },
+  connectorId: 'id7',
+};
+
+export const mockConnector8: Connector = {
+  id: 'id8',
+  enabled: true,
+  config: {},
+  createdAt: 1_234_567_890_567,
+  syncProfile: false,
+  metadata: { target: 'connector_8' },
+  connectorId: 'id7',
+};
+
+export const mockConnector9: Connector = {
+  id: 'id9',
+  enabled: true,
+  config: {},
+  createdAt: 1_234_567_890_567,
+  syncProfile: false,
+  metadata: { target: 'connector_9' },
+  connectorId: 'id8',
+};
+
+export const mockConnector10: Connector = {
+  id: 'id10',
+  enabled: true,
+  config: {},
+  createdAt: 1_234_567_890_567,
+  syncProfile: false,
+  metadata: { target: 'connector_10' },
+  connectorId: 'id8',
 };

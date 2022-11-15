@@ -36,6 +36,20 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const { target: filterTarget } = ctx.query;
       const connectors = await getLogtoConnectors();
 
+      const nonStandardConnectorIds = new Set(
+        connectors
+          .filter((connector) => connector.metadata.isStandard !== true)
+          .map(({ dbEntry: { connectorId: id } }) => id)
+      );
+
+      for (const connectorId of nonStandardConnectorIds) {
+        assertThat(
+          connectors.filter((connector) => connector.dbEntry.connectorId === connectorId).length <=
+            1,
+          'connector.more_than_one_instance'
+        );
+      }
+
       assertThat(
         connectors.filter(
           (connector) => connector.dbEntry.enabled && connector.type === ConnectorType.Email

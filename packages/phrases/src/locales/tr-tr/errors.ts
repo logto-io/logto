@@ -95,6 +95,8 @@ const errors = {
     social_invalid_id_token: 'Bağlayıcının idsi geçersiz.',
     authorization_failed: 'Kullanıcının yetkilendirme işlemi başarısız oldu.',
     social_auth_code_invalid: 'Erişim tokenı alınamıyor, lütfen yetkilendirme kodunu kontrol edin.',
+    more_than_one_instance:
+      "The number of non-standard connectors' instances can not be larger than 1.", // UNTRANSLATED
     more_than_one_sms: 'SMS bağlayıcılarının sayısı 1den fazla.',
     more_than_one_email: 'E-posta adresi bağlayıcılarının sayısı 1den fazla.',
     db_connector_type_mismatch: 'Dbde türle eşleşmeyen bir bağlayıcı var.',

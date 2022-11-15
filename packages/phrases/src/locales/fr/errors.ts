@@ -100,6 +100,8 @@ const errors = {
     authorization_failed: "Le processus d'autorisation de l'utilisateur n'a pas abouti.",
     social_auth_code_invalid:
       "Impossible d'obtenir le jeton d'accès, veuillez vérifier le code d'autorisation.",
+    more_than_one_instance:
+      "The number of non-standard connectors' instances can not be larger than 1.", // UNTRANSLATED
     more_than_one_sms: 'Le nombre de connecteurs SMS est supérieur à 1.',
     more_than_one_email: 'Le nombre de connecteurs Email est supérieur à 1.',
     db_connector_type_mismatch:
