@@ -4,7 +4,7 @@
 "@logto/ui": minor
 ---
 
-## Sign-in Experience v2
+**Sign-in Experience v2**
 
 We are thrilled to announce the release of the newest version of the Sign-in Experience, which includes more ways to sign-in and sign-up, as well as a framework that is easier to understand and more flexible to configure in the Admin Console.
 
