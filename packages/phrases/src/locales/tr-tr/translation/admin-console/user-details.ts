@@ -34,6 +34,7 @@ const user_details = {
     deletion_confirmation:
       'Mevcut <name/> kimliğini kaldırıyorsunuz. Bunu yapmak istediğinizden emin misiniz?',
   },
+  suspended: 'Suspended', // UNTRANSLATED
 };
 
 export default user_details;

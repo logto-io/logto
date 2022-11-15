@@ -347,6 +347,7 @@ describe('adminUserRoutes', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockUserResponse,
+      isSuspended: true,
     });
   });
 

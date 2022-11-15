@@ -32,6 +32,7 @@ const user_details = {
     not_connected: '该用户还没有绑定社交帐号',
     deletion_confirmation: '你在正要删除现有的 <name /> 身份，是否确认？',
   },
+  suspended: '已禁用',
 };
 
 export default user_details;

@@ -33,6 +33,7 @@ const user_details = {
     not_connected: '이 사용자는 아직 소셜에 연동되지 않았아요.',
     deletion_confirmation: '<name/> 신원을 삭제하려고 해요. 정말로 진행할까요?',
   },
+  suspended: 'Suspended', // UNTRANSLATED
 };
 
 export default user_details;
