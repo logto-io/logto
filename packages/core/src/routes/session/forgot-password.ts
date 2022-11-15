@@ -46,9 +46,8 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(userId);
 
       assertThat(
-        !oldPasswordEncrypted ||
-          (oldPasswordEncrypted && !(await argon2Verify({ password, hash: oldPasswordEncrypted }))),
-        new RequestError({ code: 'user.same_password', status: 400 })
+        !oldPasswordEncrypted || !(await argon2Verify({ password, hash: oldPasswordEncrypted })),
+        new RequestError({ code: 'user.same_password', status: 422 })
       );
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);

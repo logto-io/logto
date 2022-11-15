@@ -3,7 +3,7 @@ import { SignUpIdentifier } from '@logto/schemas';
 import { getUnixTime } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
-import { mockUser, mockUserResponse } from '@/__mocks__';
+import { mockPasswordEncrypted, mockUser, mockUserResponse } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';
 
 import profileRoutes, { profileRoute } from './profile';
@@ -18,6 +18,15 @@ const mockUpdateUserById = jest.fn(
     ...data,
   })
 );
+const encryptUserPassword = jest.fn(async (password: string) => ({
+  passwordEncrypted: password + '_user1',
+  passwordEncryptionMethod: 'Argon2i',
+}));
+const mockArgon2Verify = jest.fn(async (password: string) => password === mockPasswordEncrypted);
+
+const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({
+  result: { login: { accountId: 'id', ts: getUnixTime(new Date()) - 60 } },
+}));
 
 jest.mock('oidc-provider', () => ({
   Provider: jest.fn(() => ({
@@ -25,6 +34,11 @@ jest.mock('oidc-provider', () => ({
       get: jest.fn(async () => ({ accountId: 'id', loginTs: getUnixTime(new Date()) - 60 })),
     },
   })),
+}));
+
+jest.mock('@/lib/user', () => ({
+  ...jest.requireActual('@/lib/user'),
+  encryptUserPassword: async (password: string) => encryptUserPassword(password),
 }));
 
 jest.mock('@/queries/user', () => ({
@@ -46,6 +60,10 @@ const mockFindDefaultSignInExperience = jest.fn(async () => ({
 
 jest.mock('@/queries/sign-in-experience', () => ({
   findDefaultSignInExperience: jest.fn(async () => mockFindDefaultSignInExperience()),
+}));
+
+jest.mock('hash-wasm', () => ({
+  argon2Verify: async (password: string) => mockArgon2Verify(password),
 }));
 
 describe('session -> profileRoutes', () => {
@@ -88,6 +106,39 @@ describe('session -> profileRoutes', () => {
         .send({ username: 'test' });
 
       expect(response.statusCode).toEqual(422);
+    });
+  });
+
+  describe('POST /session/profile/password', () => {
+    it('should update password with the new value', async () => {
+      const response = await sessionRequest
+        .post(`${profileRoute}/password`)
+        .send({ password: mockPasswordEncrypted });
+
+      expect(mockUpdateUserById).toBeCalledWith(
+        'id',
+        expect.objectContaining({
+          passwordEncrypted: 'a1b2c3_user1',
+          passwordEncryptionMethod: 'Argon2i',
+        })
+      );
+      expect(response.statusCode).toEqual(204);
+    });
+
+    it('should throw if new password is identical to old password', async () => {
+      jest.clearAllMocks();
+      encryptUserPassword.mockImplementationOnce(async (password: string) => ({
+        passwordEncrypted: password,
+        passwordEncryptionMethod: 'Argon2i',
+      }));
+      mockArgon2Verify.mockResolvedValueOnce(true);
+
+      const response = await sessionRequest
+        .post(`${profileRoute}/password`)
+        .send({ password: 'password' });
+
+      expect(response.statusCode).toEqual(422);
+      expect(mockUpdateUserById).not.toBeCalled();
     });
   });
 });
