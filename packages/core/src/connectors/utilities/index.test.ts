@@ -10,6 +10,9 @@ const connectors: Connector[] = [
     enabled: true,
     config: { foo: 'bar' },
     createdAt: 0,
+    syncProfile: false,
+    connectorId: 'id',
+    metadata: {},
   },
 ];
 
