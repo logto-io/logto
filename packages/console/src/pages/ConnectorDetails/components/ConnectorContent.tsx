@@ -55,11 +55,11 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       return;
     }
 
-    const { metadata, ...rest } = await api
+    const connectorResponse = await api
       .patch(`/api/connectors/${connectorData.id}`, { json: { config: result.data } })
       .json<Connector & { metadata: ConnectorMetadata; type: ConnectorType }>();
 
-    onConnectorUpdated({ ...rest, ...metadata });
+    onConnectorUpdated(connectorResponse);
     reset({ configJson: JSON.stringify(result.data, null, 2) });
     toast.success(t('general.saved'));
   });
