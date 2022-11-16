@@ -2,7 +2,7 @@ import type { BaseConnector, ConnectorMetadata, ConnectorType } from '@logto/con
 
 import type { Connector } from '../db-entries';
 
-export type { ConnectorMetadata, ConfigurableConnectorMetadata } from '@logto/connector-kit';
+export type { ConnectorMetadata } from '@logto/connector-kit';
 export { ConnectorType, ConnectorPlatform } from '@logto/connector-kit';
 
 export type ConnectorResponse = Connector &

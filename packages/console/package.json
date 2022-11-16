@@ -18,8 +18,8 @@
   },
   "devDependencies": {
     "@fontsource/roboto-mono": "^4.5.7",
-    "@logto/core-kit": "1.0.0-beta.20",
-    "@logto/language-kit": "1.0.0-beta.20",
+    "@logto/core-kit": "1.0.0-beta.21",
+    "@logto/language-kit": "1.0.0-beta.21",
     "@logto/phrases": "workspace:^",
     "@logto/phrases-ui": "workspace:^",
     "@logto/react": "1.0.0-beta.13",

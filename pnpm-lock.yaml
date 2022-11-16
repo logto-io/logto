@@ -105,8 +105,8 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': workspace:^
       '@logto/phrases-ui': workspace:^
       '@logto/react': 1.0.0-beta.13
@@ -177,8 +177,8 @@ importers:
       zod: ^3.19.1
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/react': 1.0.0-beta.13_react@18.2.0
@@ -251,9 +251,9 @@ importers:
   packages/core:
     specifiers:
       '@logto/cli': workspace:^
-      '@logto/connector-kit': 1.0.0-beta.20
+      '@logto/connector-kit': 1.0.0-beta.21
       '@logto/core-kit': ^1.0.0-beta.18
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': workspace:^
       '@logto/phrases-ui': workspace:^
       '@logto/schemas': workspace:^
@@ -329,9 +329,9 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@logto/cli': link:../cli
-      '@logto/connector-kit': 1.0.0-beta.20
+      '@logto/connector-kit': 1.0.0-beta.21
       '@logto/core-kit': 1.0.0-beta.18
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
@@ -415,8 +415,8 @@ importers:
 
   packages/demo-app:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': workspace:^
       '@logto/react': 1.0.0-beta.13
       '@logto/schemas': workspace:^
@@ -442,8 +442,8 @@ importers:
       stylelint: ^14.9.1
       typescript: ^4.7.4
     devDependencies:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': link:../phrases
       '@logto/react': 1.0.0-beta.13_react@18.2.0
       '@logto/schemas': link:../schemas
@@ -525,8 +525,8 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/essentials': ^1.3.0
       '@silverhand/ts-config': 1.2.1
@@ -536,8 +536,8 @@ importers:
       typescript: ^4.7.4
       zod: ^3.19.1
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
       '@silverhand/essentials': 1.3.0
       zod: 3.19.1
     devDependencies:
@@ -550,8 +550,8 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/essentials': ^1.3.0
       '@silverhand/ts-config': 1.2.1
@@ -561,8 +561,8 @@ importers:
       typescript: ^4.7.4
       zod: ^3.19.1
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
       '@silverhand/essentials': 1.3.0
       zod: 3.19.1
     devDependencies:
@@ -663,8 +663,8 @@ importers:
 
   packages/ui:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': workspace:^
       '@logto/phrases-ui': workspace:^
       '@logto/schemas': workspace:^
@@ -716,8 +716,8 @@ importers:
       typescript: ^4.7.4
       use-debounced-loader: ^0.1.1
     devDependencies:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
@@ -2293,16 +2293,6 @@ packages:
       lodash.once: 4.1.1
     dev: true
 
-  /@logto/connector-kit/1.0.0-beta.20:
-    resolution: {integrity: sha512-Z9rrrjpUJFKdxfs7CKrabiTmrHFyTFnUuPFfl6HG38I6EUOaURITJ3c6FJjCdu60nIRuwaM29+i/h4AChzLwew==}
-    engines: {node: ^16.0.0}
-    dependencies:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
-      '@silverhand/essentials': 1.3.0
-      zod: 3.19.1
-    dev: false
-
   /@logto/connector-kit/1.0.0-beta.21:
     resolution: {integrity: sha512-AdJn9oPsAMVsc+Q6qN3W5iGswx+BxluFe6BEofZAY3Sv9QQ/jaw2LdiizMJRdPyyATSxR7Tj9OE5RTFhRjIK9A==}
     engines: {node: ^16.0.0}
@@ -2317,7 +2307,7 @@ packages:
     resolution: {integrity: sha512-VgSBWbPeFHgSOiOoYiE+TQF8byImxfd2xGTjA37RtFHMeUfT8CNTQWESUYuP7JWrKNm1N2ua7DTZZAJAKH9qMg==}
     engines: {node: ^16.0.0}
     dependencies:
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/language-kit': 1.0.0-beta.21
       color: 4.2.3
       nanoid: 3.3.4
       zod: 3.19.1
@@ -2327,10 +2317,11 @@ packages:
     resolution: {integrity: sha512-seYvL/aGYRfO4d0FYfKIW/Cu9PnFMRpRM5/oRXwXbcbv+LY1a3TcAX0itrVXeBygIrxiAmWd9DL7CGIWzb48Qg==}
     engines: {node: ^16.0.0}
     dependencies:
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/language-kit': 1.0.0-beta.21
       color: 4.2.3
       nanoid: 3.3.4
       zod: 3.19.1
+    dev: true
 
   /@logto/core-kit/1.0.0-beta.21:
     resolution: {integrity: sha512-kCFjRMTNgTYyEN3KRqC2K3A9zoaPncgOZQ3/SjWiStHPDnMj1zqgaphULlyphWJYLIQASoC319vLJIgQdM/EnA==}
@@ -2340,7 +2331,6 @@ packages:
       color: 4.2.3
       nanoid: 3.3.4
       zod: 3.19.1
-    dev: false
 
   /@logto/js/1.0.0-beta.13:
     resolution: {integrity: sha512-a3dhoJre/VOXgGxFNon/xY5E4fVs0CiFW5Ci0gt2W7v2zD/1VmzIvcJnECTLocxyz9W2UTkfYzm7q/iXF48WXw==}
@@ -2352,18 +2342,11 @@ packages:
       lodash.get: 4.4.2
     dev: true
 
-  /@logto/language-kit/1.0.0-beta.20:
-    resolution: {integrity: sha512-nBqWQo2xGAlVcD9O/txpCzRyy7eKXNXBAHm8J1y/u5Fp3BMObMmJv+v4Zk+UhckdFpsnFJF0wYIX45ta2+IipA==}
-    engines: {node: ^16.0.0}
-    dependencies:
-      zod: 3.19.1
-
   /@logto/language-kit/1.0.0-beta.21:
     resolution: {integrity: sha512-ZjjRfY5MzzKSJii1+ox31KIxckv3sakM0kGRnShCUDRa7oyLUiJo7O1BxAWAEzpRKLGrtXrUFM7s8XYw/a897w==}
     engines: {node: ^16.0.0}
     dependencies:
       zod: 3.19.1
-    dev: false
 
   /@logto/node/1.0.0-beta.13:
     resolution: {integrity: sha512-e+Vspi17izZdt6PU2+uFXrD2XydZ8ohthtOMJqhrzpC1DiOSlmb47UXo3K+IS93eULiuPNo5mA04hRn3kt6rcQ==}

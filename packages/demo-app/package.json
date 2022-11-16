@@ -17,8 +17,8 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "devDependencies": {
-    "@logto/core-kit": "1.0.0-beta.20",
-    "@logto/language-kit": "1.0.0-beta.20",
+    "@logto/core-kit": "1.0.0-beta.21",
+    "@logto/language-kit": "1.0.0-beta.21",
     "@logto/phrases": "workspace:^",
     "@logto/react": "1.0.0-beta.13",
     "@logto/schemas": "workspace:^",
