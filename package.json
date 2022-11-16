@@ -11,6 +11,8 @@
     "start": "cd packages/core && NODE_ENV=production node .",
     "cli": "logto",
     "alteration": "logto db alt",
+    "//": "# `changeset version` won't run version lifecycle scripts, see https://github.com/changesets/changesets/issues/860",
+    "ci:version": "changeset version && pnpm -r version",
     "ci:build": "pnpm -r build",
     "ci:lint": "pnpm -r --parallel lint",
     "ci:stylelint": "pnpm -r --parallel stylelint",
