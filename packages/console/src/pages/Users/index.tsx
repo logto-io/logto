@@ -156,8 +156,9 @@ const Users = () => {
       <div className={styles.pagination}>
         {!!totalCount && (
           <Pagination
-            pageCount={Math.ceil(totalCount / pageSize)}
             pageIndex={pageIndex}
+            totalCount={totalCount}
+            pageSize={pageSize}
             onChange={(page) => {
               setQuery({ page: String(page), ...conditional(keyword && { search: keyword }) });
             }}

@@ -37,6 +37,7 @@ const general = {
   stay_on_page: 'Stay on Page',
   type_to_search: 'Type to search',
   got_it: 'Got it',
+  page_info: '{{min, number}}-{{max, number}} of {{total, number}}',
 };
 
 export default general;
