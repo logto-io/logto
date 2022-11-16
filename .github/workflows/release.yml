@@ -1,6 +1,7 @@
 name: Release
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -113,6 +114,8 @@ jobs:
         with:
           # Use our customized publish flow. See https://github.com/changesets/changesets/issues/833 for the limit of changesets.
           publish: node .scripts/publish.js
+          # `changeset version` won't run version lifecycle scripts, see https://github.com/changesets/changesets/issues/860
+          version: pnpm ci:version
           commit: 'release: version packages'
           title: 'release: version packages'
           # Create by our rules defined in `/.changeset/README.md`.
