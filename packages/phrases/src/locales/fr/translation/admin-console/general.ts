@@ -10,6 +10,7 @@ const general = {
   save: 'Sauvegarder',
   save_changes: 'Sauvegarder les modifications',
   saved: 'Sauvegardé !',
+  discard: 'Discard', // UNTRANSLATED
   loading: 'Chargement...',
   redirecting: 'Redirection...',
   add: 'Ajouter',
