@@ -18,7 +18,7 @@ import { getConnectorConfig, readUrl, validateConnectorModule } from './utilitie
 // eslint-disable-next-line @silverhand/fp/no-let
 let cachedConnectors: LoadConnector[] | undefined;
 
-const loadConnectors = async () => {
+export const loadConnectors = async () => {
   if (cachedConnectors) {
     return cachedConnectors;
   }
@@ -100,6 +100,9 @@ export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
       loadConnectorPackage,
     ])
   );
+
+  // Console.log('connectors:', connectors);
+  console.log('loadConnectorPackages:', loadConnectorPackages);
 
   return Promise.all(
     connectors.map(async (connector) => {
