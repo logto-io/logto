@@ -7,7 +7,12 @@ import envSet from '@/env-set';
 import type { QueryType } from '@/utils/test-utils';
 import { expectSqlAssert } from '@/utils/test-utils';
 
-import { findAllConnectors, insertConnector, updateConnector } from './connector';
+import {
+  findAllConnectors,
+  hasConnectorWithConnectorId,
+  insertConnector,
+  updateConnector,
+} from './connector';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
@@ -38,6 +43,25 @@ describe('connector queries', () => {
     });
 
     await expect(findAllConnectors()).resolves.toEqual([rowData]);
+  });
+
+  it('hasConnectorWithConnectorId', async () => {
+    const expectSql = sql`
+      SELECT EXISTS(
+        select ${fields.connectorId}
+        from ${table}
+        where ${fields.connectorId}=$1
+      )
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([mockConnector.connectorId]);
+
+      return createMockQueryResult([{ exists: true }]);
+    });
+
+    await expect(hasConnectorWithConnectorId(mockConnector.connectorId)).resolves.toEqual(true);
   });
 
   it('insertConnector', async () => {

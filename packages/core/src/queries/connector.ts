@@ -18,6 +18,13 @@ export const findAllConnectors = async () =>
     `)
   );
 
+export const hasConnectorWithConnectorId = async (connectorId: string) =>
+  envSet.pool.exists(sql`
+    select ${fields.connectorId}
+    from ${table}
+    where ${fields.connectorId}=${connectorId}
+  `);
+
 export const insertConnector = buildInsertInto<CreateConnector, Connector>(Connectors, {
   returning: true,
 });

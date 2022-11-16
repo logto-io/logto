@@ -2,14 +2,15 @@ import { MessageTypes } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import type { ConnectorResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
+import { buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
 
-import { getLogtoConnectorById, getLogtoConnectors } from '@/connectors';
+import { loadConnectors, getLogtoConnectorById, getLogtoConnectors } from '@/connectors';
 import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { removeUnavailableSocialConnectorTargets } from '@/lib/sign-in-experience';
 import koaGuard from '@/middleware/koa-guard';
-import { updateConnector } from '@/queries/connector';
+import { hasConnectorWithConnectorId, insertConnector, updateConnector } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
 
 import type { AuthedRouter } from './types';
@@ -23,6 +24,8 @@ const transpileLogtoConnector = ({
   ...metadata,
   ...dbEntry,
 });
+
+const generateConnectorId = buildIdGenerator(12);
 
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   router.get(
@@ -54,6 +57,56 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         : connectors;
 
       ctx.body = filteredConnectors.map((connector) => transpileLogtoConnector(connector));
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/connectors/:connectorId',
+    koaGuard({
+      params: object({ connectorId: string() }),
+      body: Connectors.createGuard.omit({
+        id: true,
+        enabled: true,
+        connectorId: true,
+        createdAt: true,
+      }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { connectorId },
+        body: { syncProfile, config, metadata },
+      } = ctx.guard;
+
+      assertThat(!config || !metadata, 'connector.');
+
+      if (config) {
+        const logtoConnectors = await loadConnectors();
+        const connector = logtoConnectors.find(
+          ({
+            connector: {
+              metadata: { id },
+            },
+          }) => id === connectorId
+        );
+
+        if (!connector) {
+          throw new RequestError({
+            code: 'entity.not_found',
+            status: 404,
+          });
+        }
+        connector.connector.validateConfig(config);
+      }
+
+      ctx.body = await insertConnector({
+        id: (await hasConnectorWithConnectorId(connectorId)) ? generateConnectorId() : connectorId,
+        connectorId,
+        syncProfile,
+        config,
+        metadata,
+      });
 
       return next();
     }
