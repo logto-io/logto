@@ -1,4 +1,4 @@
-import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
+import { emailRegEx, passwordRegEx, usernameRegEx } from '@logto/core-kit';
 import { userInfoSelectFields } from '@logto/schemas';
 import { argon2Verify } from 'hash-wasm';
 import pick from 'lodash.pick';
@@ -55,7 +55,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
     }
   );
 
-  router.post(
+  router.patch(
     `${profileRoute}/password`,
     koaGuard({
       body: object({ password: string().regex(passwordRegEx) }),
@@ -82,4 +82,41 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
       return next();
     }
   );
+
+  router.patch(
+    `${profileRoute}/email`,
+    koaGuard({
+      body: object({ primaryEmail: string().regex(emailRegEx) }),
+    }),
+    async (ctx, next) => {
+      const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+
+      assertThat(userId, new RequestError('auth.unauthorized'));
+
+      const { primaryEmail } = ctx.guard.body;
+
+      await checkSignUpIdentifierCollision({ primaryEmail });
+      await updateUserById(userId, { primaryEmail });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.delete(`${profileRoute}/email`, async (ctx, next) => {
+    const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+
+    assertThat(userId, new RequestError('auth.unauthorized'));
+
+    const { primaryEmail } = await findUserById(userId);
+
+    assertThat(primaryEmail, new RequestError({ code: 'user.email_not_exists', status: 422 }));
+
+    await updateUserById(userId, { primaryEmail: null });
+
+    ctx.status = 204;
+
+    return next();
+  });
 }
