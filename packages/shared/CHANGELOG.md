@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.0.0-beta.14
+
+### Patch Changes
+
+- Updated dependencies [3050760a]
+  - @logto/schemas@1.0.0-beta.14
+
 ## 1.0.0-beta.13
 
 ### Patch Changes
