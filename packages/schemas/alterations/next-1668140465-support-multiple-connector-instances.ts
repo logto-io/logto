@@ -5,7 +5,7 @@ import type { AlterationScript } from '../lib/types/alteration';
 const alteration: AlterationScript = {
   up: async (pool) => {
     await pool.query(sql`
-      DELETE FROM connectors WHERE config <@ '{}'::jsonb;
+      DELETE FROM connectors WHERE enabled = false;
       ALTER TABLE connectors ADD COLUMN sync_profile boolean NOT NULL DEFAULT false;
       ALTER TABLE connectors ADD COLUMN connector_id varchar(128);
       UPDATE connectors SET connector_id = id;

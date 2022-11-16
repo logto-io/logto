@@ -3,7 +3,7 @@ import path from 'path';
 
 import { connectorDirectory } from '@logto/cli/lib/constants';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utilities';
-import type { AllConnector, ConnectorMetadata, CreateConnector } from '@logto/connector-kit';
+import type { AllConnector, CreateConnector } from '@logto/connector-kit';
 import { validateConfig } from '@logto/connector-kit';
 import { findPackage } from '@logto/shared';
 import chalk from 'chalk';
@@ -16,7 +16,7 @@ import type { LoadConnector, LogtoConnector } from './types';
 import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: Array<{ connector: LoadConnector; path: string }> | undefined;
+let cachedConnectors: LoadConnector[] | undefined;
 
 const loadConnectors = async () => {
   if (cachedConnectors) {
@@ -34,7 +34,7 @@ const loadConnectors = async () => {
 
   const connectorPackages = await getConnectorPackagesFromDirectory(directory);
 
-  const connectorObjects = await Promise.all(
+  const connectors = await Promise.all(
     connectorPackages.map(async ({ path: packagePath, name }) => {
       try {
         // eslint-disable-next-line no-restricted-syntax
@@ -65,7 +65,7 @@ const loadConnectors = async () => {
           },
         };
 
-        return { connector, path: packagePath };
+        return connector;
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log(
@@ -83,9 +83,8 @@ const loadConnectors = async () => {
   );
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  cachedConnectors = connectorObjects.filter(
-    (connectorObject): connectorObject is { connector: LoadConnector; path: string } =>
-      connectorObject?.connector !== undefined
+  cachedConnectors = connectors.filter(
+    (connector): connector is LoadConnector => connector !== undefined
   );
 
   return cachedConnectors;
@@ -93,31 +92,34 @@ const loadConnectors = async () => {
 
 export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
   const connectors = await findAllConnectors();
-  const connectorMap = new Map(connectors.map((connector) => [connector.connectorId, connector]));
 
-  const logtoConnectors = await loadConnectors();
+  const loadConnectorPackages = await loadConnectors();
+  const loadConnectorPackageMap = new Map(
+    loadConnectorPackages.map((loadConnectorPackage) => [
+      loadConnectorPackage.metadata.id,
+      loadConnectorPackage,
+    ])
+  );
 
   return Promise.all(
-    logtoConnectors.map(async ({ connector: element, path }) => {
-      const { id } = element.metadata;
-      const connector = connectorMap.get(id);
+    connectors.map(async (connector) => {
+      const {
+        connectorId,
+        metadata: { target, logo, logoDark },
+      } = connector;
+      const loadConnectorPackage = loadConnectorPackageMap.get(connectorId);
 
-      if (!connector) {
-        throw new RequestError({ code: 'entity.not_found', id, status: 404 });
+      if (!loadConnectorPackage) {
+        throw new RequestError({ code: 'entity.not_found', connectorId, status: 404 });
       }
 
-      const configuredMetadata: ConnectorMetadata = { ...element.metadata, ...connector.metadata };
-
       return {
-        ...element,
+        ...loadConnectorPackage,
         metadata: {
-          ...configuredMetadata,
-          logo: await readUrl(configuredMetadata.logo, path, 'svg'),
-          logoDark:
-            configuredMetadata.logoDark &&
-            (await readUrl(configuredMetadata.logoDark, path, 'svg')),
-          readme: await readUrl(configuredMetadata.readme, path, 'text'),
-          configTemplate: await readUrl(configuredMetadata.configTemplate, path, 'text'),
+          ...loadConnectorPackage.metadata,
+          target: target ?? loadConnectorPackage.metadata.target,
+          logo: logo ?? loadConnectorPackage.metadata.logo,
+          logoDark: logoDark ?? loadConnectorPackage.metadata.logoDark,
         },
         dbEntry: connector,
       };
