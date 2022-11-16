@@ -18,18 +18,19 @@
   }
 }
 
-.body {
-  > :first-child {
-    margin-top: 0;
+.formContent {
+  >:not(:first-child) {
+    margin-top: _.unit(4);
   }
 
-  .form {
-    margin-top: _.unit(8);
-  }
+  .fieldsContent {
+    > :not(:first-child) {
+      margin-top: _.unit(4);
+    }
 
-  .fields {
-    padding-bottom: _.unit(10);
-    flex: 1;
+    &:last-child {
+      margin-bottom: _.unit(6);
+    }
   }
 
   .textField {

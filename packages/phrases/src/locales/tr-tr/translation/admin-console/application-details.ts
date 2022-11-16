@@ -1,7 +1,12 @@
 const application_details = {
   back_to_applications: 'Uygulamalara geri dön',
   check_guide: 'Kılavuza Göz At',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'With Applications you can. Setup a mobile, web or IoT application to use Auth0 for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
   advanced_settings: 'Gelişmiş Ayarlar',
+  advanced_settings_description:
+    'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   application_name: 'Uygulama Adı',
   application_name_placeholder: 'Uygulamam',
   description: 'Açıklama',

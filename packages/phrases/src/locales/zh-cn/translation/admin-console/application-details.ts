@@ -1,7 +1,12 @@
 const application_details = {
   back_to_applications: '返回全部应用',
   check_guide: '查看指南',
+  settings: '设置',
+  settings_description:
+    'With Applications you can. Setup a mobile, web or IoT application to use Auth0 for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
   advanced_settings: '高级设置',
+  advanced_settings_description:
+    'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   application_name: '应用名称',
   application_name_placeholder: '我的应用',
   description: '描述',

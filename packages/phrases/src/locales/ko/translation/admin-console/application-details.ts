@@ -1,7 +1,12 @@
 const application_details = {
   back_to_applications: '어플리케이션으로 돌아가기',
   check_guide: '가이드 확인',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'With Applications you can. Setup a mobile, web or IoT application to use Auth0 for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
   advanced_settings: '고급 설정',
+  advanced_settings_description:
+    'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   application_name: '어플리케이션 이름',
   application_name_placeholder: '나의 앱',
   description: '설명',

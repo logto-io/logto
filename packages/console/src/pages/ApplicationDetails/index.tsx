@@ -1,6 +1,5 @@
 import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -20,7 +19,9 @@ import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import LinkButton from '@/components/LinkButton';
+import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -62,7 +63,7 @@ const ApplicationDetails = () => {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = formMethods;
 
   useEffect(() => {
@@ -122,8 +123,6 @@ const ApplicationDetails = () => {
   const onCloseDrawer = () => {
     setIsReadmeOpen(false);
   };
-
-  const isAdvancedSettings = pathname.includes('advanced-settings');
 
   return (
     <div className={detailsStyles.container}>
@@ -200,51 +199,29 @@ const ApplicationDetails = () => {
               </DeleteConfirmModal>
             </div>
           </Card>
-          <Card className={classNames(styles.body, detailsStyles.body)}>
-            <TabNav>
-              <TabNavItem href={`/applications/${data.id}/settings`}>
-                {t('general.settings_nav')}
-              </TabNavItem>
-              <TabNavItem href={`/applications/${data.id}/advanced-settings`}>
-                {t('application_details.advanced_settings')}
-              </TabNavItem>
-            </TabNav>
-            <FormProvider {...formMethods}>
-              <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
-                <div className={styles.fields}>
-                  {isAdvancedSettings && (
-                    <AdvancedSettings
-                      applicationType={data.type}
-                      oidcConfig={oidcConfig}
-                      defaultData={data}
-                      isDeleted={isDeleted}
-                    />
-                  )}
-                  {!isAdvancedSettings && (
-                    <Settings
-                      applicationType={data.type}
-                      oidcConfig={oidcConfig}
-                      defaultData={data}
-                      isDeleted={isDeleted}
-                    />
-                  )}
-                </div>
-                <div className={detailsStyles.footer}>
-                  <div className={detailsStyles.footerMain}>
-                    <Button
-                      isLoading={isSubmitting}
-                      htmlType="submit"
-                      type="primary"
-                      size="large"
-                      title="general.save_changes"
-                    />
-                  </div>
-                </div>
-              </form>
-            </FormProvider>
-          </Card>
+          <TabNav>
+            <TabNavItem href={`/applications/${data.id}/settings`}>
+              {t('general.settings_nav')}
+            </TabNavItem>
+          </TabNav>
+          <FormProvider {...formMethods}>
+            <form className={styles.formContent} onSubmit={onSubmit}>
+              <div className={styles.fieldsContent}>
+                <Settings data={data} />
+                <AdvancedSettings applicationType={data.type} oidcConfig={oidcConfig} />
+              </div>
+              <SubmitFormChangesActionBar
+                isOpen={isDirty}
+                isSubmitting={isSubmitting}
+                onDiscard={() => {
+                  reset();
+                }}
+              />
+            </form>
+          </FormProvider>
         </>
       )}
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </div>
   );
 };

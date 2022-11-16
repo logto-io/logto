@@ -1,7 +1,12 @@
 const application_details = {
   back_to_applications: 'Back to Applications',
   check_guide: 'Check Guide',
+  settings: 'Settings',
+  settings_description:
+    'With Applications you can. Setup a mobile, web or IoT application to use Auth0 for Authentication. Configure the allowed Callback URLs and Secrets for your Application.',
   advanced_settings: 'Advanced settings',
+  advanced_settings_description:
+    'It real sent your at. Amounted all shy set why followed declared.',
   application_name: 'Application name',
   application_name_placeholder: 'My App',
   description: 'Description',
