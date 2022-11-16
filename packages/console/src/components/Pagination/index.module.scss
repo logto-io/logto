@@ -1,9 +1,21 @@
 @use '@/scss/underscore' as _;
 
+.container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.positionInfo {
+  align-self: flex-end;
+  font: var(--font-body-medium);
+  color: var(--color-text-secondary);
+}
+
 .pagination {
   display: flex;
   justify-content: right;
   margin: 0;
+  padding-inline-start: _.unit(4);
 
   li {
     list-style: none;

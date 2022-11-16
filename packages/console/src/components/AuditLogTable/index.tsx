@@ -142,8 +142,9 @@ const AuditLogTable = ({ userId }: Props) => {
       <div className={styles.pagination}>
         {!!totalCount && (
           <Pagination
-            pageCount={Math.ceil(totalCount / pageSize)}
             pageIndex={pageIndex}
+            totalCount={totalCount}
+            pageSize={pageSize}
             onChange={(page) => {
               updateQuery('page', String(page));
             }}
