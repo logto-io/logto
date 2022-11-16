@@ -11,9 +11,14 @@ import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import type { SignInExperienceForm } from '../../types';
 import ConnectorSetupWarning from './components/ConnectorSetupWarning';
 import {
+  getSignInMethodPasswordCheckState,
+  getSignInMethodVerificationCodeCheckState,
+} from './components/SignInMethodEditBox/utilities';
+import {
   requiredVerifySignUpIdentifiers,
   signUpIdentifiers,
   signUpIdentifierToRequiredConnectorMapping,
+  signUpToSignInIdentifierMapping,
 } from './constants';
 import * as styles from './index.module.scss';
 
@@ -22,12 +27,14 @@ const SignUpForm = () => {
   const {
     control,
     setValue,
+    getValues,
     watch,
-    formState: { errors },
+    trigger,
+    formState: { errors, submitCount },
   } = useFormContext<SignInExperienceForm>();
   const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
-  const signUpIdentifier = watch('signUp.identifier');
+  const { identifier: signUpIdentifier } = watch('signUp') ?? {};
 
   if (!signUpIdentifier) {
     return null;
@@ -53,6 +60,53 @@ const SignUpForm = () => {
     }
   };
 
+  const refreshSignInMethods = () => {
+    const signUpIdentifier = getValues('signUp.identifier');
+    const signInMethods = getValues('signIn.methods');
+    const isSignUpPasswordRequired = getValues('signUp.password');
+
+    // Note: append required sign-in methods according to the sign-up identifier config
+    const requiredSignInIdentifiers = signUpToSignInIdentifierMapping[signUpIdentifier];
+    const allSignInMethods = requiredSignInIdentifiers.reduce((methods, requiredIdentifier) => {
+      if (signInMethods.some(({ identifier }) => identifier === requiredIdentifier)) {
+        return methods;
+      }
+
+      return [
+        ...methods,
+        {
+          identifier: requiredIdentifier,
+          password: getSignInMethodPasswordCheckState(requiredIdentifier, isSignUpPasswordRequired),
+          verificationCode: getSignInMethodVerificationCodeCheckState(requiredIdentifier),
+          isPasswordPrimary: true,
+        },
+      ];
+    }, signInMethods);
+
+    setValue(
+      'signIn.methods',
+      // Note: refresh sign-in authentications according to the sign-up authentications config
+      allSignInMethods.map((method) => {
+        const { identifier, password } = method;
+
+        return {
+          ...method,
+          password: getSignInMethodPasswordCheckState(
+            identifier,
+            isSignUpPasswordRequired,
+            password
+          ),
+          verificationCode: getSignInMethodVerificationCodeCheckState(identifier),
+        };
+      })
+    );
+
+    // Note: we need to revalidate the sign-in methods after we have submitted
+    if (submitCount) {
+      void trigger('signIn.methods');
+    }
+  };
+
   return (
     <>
       <div className={styles.title}>{t('sign_in_exp.sign_up_and_sign_in.sign_up.title')}</div>
@@ -65,10 +119,6 @@ const SignUpForm = () => {
           control={control}
           rules={{
             validate: (value) => {
-              if (!value) {
-                return false;
-              }
-
               return signUpIdentifierToRequiredConnectorMapping[value].every((connectorType) =>
                 isConnectorTypeEnabled(connectorType)
               );
@@ -101,6 +151,7 @@ const SignUpForm = () => {
                 }
                 onChange(value);
                 postSignUpIdentifierChange(value);
+                refreshSignInMethods();
               }}
             />
           )}
@@ -122,9 +173,12 @@ const SignUpForm = () => {
                 <Checkbox
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
                   disabled={signUpIdentifier === SignUpIdentifier.Username}
-                  value={value ?? false}
+                  value={value}
                   disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.set_a_password')}
-                  onChange={onChange}
+                  onChange={(value) => {
+                    onChange(value);
+                    refreshSignInMethods();
+                  }}
                 />
               )}
             />
@@ -135,10 +189,13 @@ const SignUpForm = () => {
                 render={({ field: { value, onChange } }) => (
                   <Checkbox
                     label={t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
-                    value={value ?? false}
+                    value={value}
                     disabled={requiredVerifySignUpIdentifiers.includes(signUpIdentifier)}
                     disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.verify_at_sign_up')}
-                    onChange={onChange}
+                    onChange={(value) => {
+                      onChange(value);
+                      refreshSignInMethods();
+                    }}
                   />
                 )}
               />

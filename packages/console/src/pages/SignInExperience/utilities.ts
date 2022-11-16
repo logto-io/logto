@@ -30,10 +30,10 @@ export const signInExperienceParser = {
         darkLogoUrl: conditional(branding.darkLogoUrl?.length && branding.darkLogoUrl),
         slogan: conditional(branding.slogan?.length && branding.slogan),
       },
-      signUp: {
-        identifier: signUp.identifier ?? SignUpIdentifier.Username,
-        password: Boolean(signUp.password),
-        verify: Boolean(signUp.verify),
+      signUp: signUp ?? {
+        identifier: SignUpIdentifier.Username,
+        password: true,
+        verify: false,
       },
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
     };
