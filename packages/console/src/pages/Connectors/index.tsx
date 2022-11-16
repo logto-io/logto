@@ -8,7 +8,6 @@ import Plus from '@/assets/images/plus.svg';
 import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
 import SocialConnectorEmpty from '@/assets/images/social-connector-empty.svg';
 import Button from '@/components/Button';
-import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TableEmpty from '@/components/Table/TableEmpty';
@@ -16,6 +15,7 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import { useTheme } from '@/hooks/use-theme';
+import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import ConnectorRow from './components/ConnectorRow';
@@ -60,8 +60,8 @@ const Connectors = () => {
 
   return (
     <>
-      <Card className={styles.card}>
-        <div className={styles.headline}>
+      <div className={resourcesStyles.container}>
+        <div className={resourcesStyles.headline}>
           <CardTitle title="connectors.title" subtitle="connectors.subtitle" />
           {isSocial && (
             <Button
@@ -80,7 +80,7 @@ const Connectors = () => {
           <TabNavItem href="/connectors">{t('connectors.tab_email_sms')}</TabNavItem>
           <TabNavItem href="/connectors/social">{t('connectors.tab_social')}</TabNavItem>
         </TabNav>
-        <div className={classNames(styles.table, tableStyles.scrollable)}>
+        <div className={classNames(resourcesStyles.table, tableStyles.scrollable)}>
           <table className={classNames(!data && tableStyles.empty)}>
             <colgroup>
               <col className={styles.connectorName} />
@@ -145,7 +145,7 @@ const Connectors = () => {
             </tbody>
           </table>
         </div>
-      </Card>
+      </div>
       <CreateForm
         isOpen={Boolean(createType)}
         type={createType}

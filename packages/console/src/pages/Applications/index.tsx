@@ -9,7 +9,6 @@ import useSWR from 'swr';
 import Plus from '@/assets/images/plus.svg';
 import ApplicationIcon from '@/components/ApplicationIcon';
 import Button from '@/components/Button';
-import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
@@ -19,6 +18,7 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
@@ -41,8 +41,8 @@ const Applications = () => {
   const [applications, totalCount] = data ?? [];
 
   return (
-    <Card className={styles.card}>
-      <div className={styles.headline}>
+    <div className={resourcesStyles.container}>
+      <div className={resourcesStyles.headline}>
         <CardTitle title="applications.title" subtitle="applications.subtitle" />
         <Button
           icon={<Plus />}
@@ -69,19 +69,21 @@ const Applications = () => {
             }}
           />
         </Modal>
-      </div>
-      <div className={classNames(styles.table, tableStyles.scrollable)}>
+      </div>{' '}
+      <div className={classNames(resourcesStyles.table, tableStyles.scrollable)}>
         <table className={classNames(!data && tableStyles.empty)}>
           <colgroup>
             <col className={styles.applicationName} />
             <col />
           </colgroup>
+
           <thead>
             <tr>
               <th>{t('applications.application_name')}</th>
               <th>{t('applications.app_id')}</th>
             </tr>
           </thead>
+
           <tbody>
             {!data && error && (
               <TableError
@@ -137,7 +139,7 @@ const Applications = () => {
           />
         )}
       </div>
-    </Card>
+    </div>
   );
 };
 
