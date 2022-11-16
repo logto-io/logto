@@ -12,7 +12,7 @@ importers:
       husky: ^8.0.0
       typescript: ^4.7.4
     dependencies:
-      '@logto/cli': link:packages/cli
+      '@logto/cli': 1.0.0-beta.13
     devDependencies:
       '@changesets/cli': 2.25.0
       '@commitlint/cli': 17.0.0
@@ -251,7 +251,7 @@ importers:
   packages/core:
     specifiers:
       '@logto/cli': workspace:^
-      '@logto/connector-kit': 1.0.0-beta.21
+      '@logto/connector-kit': 1.0.0-beta.22
       '@logto/core-kit': ^1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': workspace:^
@@ -329,7 +329,7 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@logto/cli': link:../cli
-      '@logto/connector-kit': 1.0.0-beta.21
+      '@logto/connector-kit': 1.0.0-beta.22
       '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': link:../phrases
@@ -575,7 +575,7 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-kit': 1.0.0-beta.21
+      '@logto/connector-kit': 1.0.0-beta.22
       '@logto/core-kit': 1.0.0-beta.21
       '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': workspace:^
@@ -600,7 +600,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.19.1
     dependencies:
-      '@logto/connector-kit': 1.0.0-beta.21
+      '@logto/connector-kit': 1.0.0-beta.22
       '@logto/core-kit': 1.0.0-beta.21
       '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': link:../phrases
@@ -2281,6 +2281,36 @@ packages:
       js-base64: 3.7.2
     dev: true
 
+  /@logto/cli/1.0.0-beta.13:
+    resolution: {integrity: sha512-ukxfi72p/45n3tLIJ7Puhly+hKsx5iIV1oenN3UjfLyeJh6mjzLInB5DUUEEZr23zXtnHe4oaQgNSZ+qlpUrxw==}
+    engines: {node: ^16.13.0 || ^18.12.0}
+    hasBin: true
+    dependencies:
+      '@logto/schemas': 1.0.0-beta.13
+      '@logto/shared': 1.0.0-beta.13
+      '@silverhand/essentials': 1.3.0
+      chalk: 4.1.2
+      decamelize: 5.0.1
+      dotenv: 16.0.0
+      fs-extra: 10.1.0
+      got: 11.8.5
+      hpagent: 1.0.0
+      inquirer: 8.2.2
+      nanoid: 3.3.4
+      ora: 5.4.1
+      p-retry: 4.6.1
+      roarr: 7.11.0
+      semver: 7.3.8
+      slonik: 30.1.2
+      slonik-interceptor-preset: 1.2.10
+      slonik-sql-tag-raw: 1.1.4_roarr@7.11.0+slonik@30.1.2
+      tar: 6.1.11
+      yargs: 17.6.0
+      zod: 3.19.1
+    transitivePeerDependencies:
+      - pg-native
+    dev: false
+
   /@logto/client/1.0.0-beta.13:
     resolution: {integrity: sha512-ddHILkcBW92p4x/TfUGqT3WXZzX14xgLd6lZZsoCgNZ9QWS7Jw+NsT/knJs96cd2A/jv9RZIGzh1g6+zlox7bw==}
     dependencies:
@@ -2293,8 +2323,18 @@ packages:
       lodash.once: 4.1.1
     dev: true
 
-  /@logto/connector-kit/1.0.0-beta.21:
-    resolution: {integrity: sha512-AdJn9oPsAMVsc+Q6qN3W5iGswx+BxluFe6BEofZAY3Sv9QQ/jaw2LdiizMJRdPyyATSxR7Tj9OE5RTFhRjIK9A==}
+  /@logto/connector-kit/1.0.0-beta.20:
+    resolution: {integrity: sha512-Z9rrrjpUJFKdxfs7CKrabiTmrHFyTFnUuPFfl6HG38I6EUOaURITJ3c6FJjCdu60nIRuwaM29+i/h4AChzLwew==}
+    engines: {node: ^16.0.0}
+    dependencies:
+      '@logto/core-kit': 1.0.0-beta.21
+      '@logto/language-kit': 1.0.0-beta.21
+      '@silverhand/essentials': 1.3.0
+      zod: 3.19.1
+    dev: false
+
+  /@logto/connector-kit/1.0.0-beta.22:
+    resolution: {integrity: sha512-ZlZup6yPaaWerpH53din/FcTfEK6M1M0TMh0W9CIYQtazGNilPWiJh1wo1iVZlFzC9KS+m/x2HDj41NVwKlHwQ==}
     engines: {node: ^16.0.0}
     dependencies:
       '@logto/core-kit': 1.0.0-beta.21
@@ -2321,7 +2361,6 @@ packages:
       color: 4.2.3
       nanoid: 3.3.4
       zod: 3.19.1
-    dev: true
 
   /@logto/core-kit/1.0.0-beta.21:
     resolution: {integrity: sha512-kCFjRMTNgTYyEN3KRqC2K3A9zoaPncgOZQ3/SjWiStHPDnMj1zqgaphULlyphWJYLIQASoC319vLJIgQdM/EnA==}
@@ -2342,6 +2381,13 @@ packages:
       lodash.get: 4.4.2
     dev: true
 
+  /@logto/language-kit/1.0.0-beta.20:
+    resolution: {integrity: sha512-nBqWQo2xGAlVcD9O/txpCzRyy7eKXNXBAHm8J1y/u5Fp3BMObMmJv+v4Zk+UhckdFpsnFJF0wYIX45ta2+IipA==}
+    engines: {node: ^16.0.0}
+    dependencies:
+      zod: 3.19.1
+    dev: false
+
   /@logto/language-kit/1.0.0-beta.21:
     resolution: {integrity: sha512-ZjjRfY5MzzKSJii1+ox31KIxckv3sakM0kGRnShCUDRa7oyLUiJo7O1BxAWAEzpRKLGrtXrUFM7s8XYw/a897w==}
     engines: {node: ^16.0.0}
@@ -2359,6 +2405,26 @@ packages:
       - encoding
     dev: true
 
+  /@logto/phrases-ui/1.0.0-beta.13:
+    resolution: {integrity: sha512-Mlvkp4Qgs1Aail+YzEFjeeo5pq/DDIUrTtaiUwFXXuzRTM8y80fPW3DBc9ivFAYl2eeXwsBr7Djh8jCw2/H63w==}
+    engines: {node: ^16.13.0 || ^18.12.0}
+    dependencies:
+      '@logto/core-kit': 1.0.0-beta.20
+      '@logto/language-kit': 1.0.0-beta.20
+      '@silverhand/essentials': 1.3.0
+      zod: 3.19.1
+    dev: false
+
+  /@logto/phrases/1.0.0-beta.13:
+    resolution: {integrity: sha512-1VnRH9kbOgAYFkpG1gmCFaK6rkhnXxI7AywHfBT4qTi7AkPlkLS574ZgAiZu5/pXR4suJN8Y5v+7S874lX6XgQ==}
+    engines: {node: ^16.13.0 || ^18.12.0}
+    dependencies:
+      '@logto/core-kit': 1.0.0-beta.20
+      '@logto/language-kit': 1.0.0-beta.20
+      '@silverhand/essentials': 1.3.0
+      zod: 3.19.1
+    dev: false
+
   /@logto/react/1.0.0-beta.13_react@18.2.0:
     resolution: {integrity: sha512-jG7rXm5aW/aJ+RN9Rw8tEo4c/12LzO99qt8eZ39xFWfMB+g06/rmxPZGMMkkqaNexhE2KLr4cASYeOafTR8wwQ==}
     peerDependencies:
@@ -2368,6 +2434,31 @@ packages:
       '@silverhand/essentials': 1.3.0
       react: 18.2.0
     dev: true
+
+  /@logto/schemas/1.0.0-beta.13:
+    resolution: {integrity: sha512-C2hsNobXzg9/QZT8ND/wDUG38mjx8jWNYaGzRIoDsnOGYEkS3AIQrzPOz6TXmXdFPHwGrJajq5VM9+ABe/3f7w==}
+    engines: {node: ^16.13.0 || ^18.12.0}
+    dependencies:
+      '@logto/connector-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.20
+      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/phrases': 1.0.0-beta.13
+      '@logto/phrases-ui': 1.0.0-beta.13
+      zod: 3.19.1
+    dev: false
+
+  /@logto/shared/1.0.0-beta.13:
+    resolution: {integrity: sha512-6t7EZIbWYP8aHHOLWMoZ0eSgzRWEUIaXDhzgyyZBhNayp3P6JWPDl3rR8JsXjrHZBxRQecuxEt0a7k5HaGtTBA==}
+    engines: {node: ^16.13.0 || ^18.12.0}
+    dependencies:
+      '@logto/schemas': 1.0.0-beta.13
+      '@silverhand/essentials': 1.3.0
+      find-up: 5.0.0
+      nanoid: 3.3.4
+      slonik: 30.1.2
+    transitivePeerDependencies:
+      - pg-native
+    dev: false
 
   /@manypkg/find-root/1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -12439,7 +12530,6 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
-    dev: true
 
   /serialize-error/7.0.1:
     resolution: {integrity: sha512-8I8TjW5KMOKsZQTvoxjuSIa7foAwPWGOts+6o7sgjz41/qMD9VQHEDxi6PBvK2l0MXUmqZyNpUK+T2tQaaElvw==}
