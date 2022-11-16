@@ -2,6 +2,7 @@ import type { Application, Passcode, Resource, Role, Setting } from '@logto/sche
 import { ApplicationType, PasscodeType } from '@logto/schemas';
 
 export * from './connector';
+export * from './connector-base-data';
 export * from './sign-in-experience';
 export * from './user';
 
