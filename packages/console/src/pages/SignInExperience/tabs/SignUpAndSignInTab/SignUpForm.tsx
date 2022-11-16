@@ -6,6 +6,7 @@ import { snakeCase } from 'snake-case';
 import Checkbox from '@/components/Checkbox';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
+import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
 import type { SignInExperienceForm } from '../../types';
 import ConnectorSetupWarning from './components/ConnectorSetupWarning';
@@ -18,7 +19,13 @@ import * as styles from './index.module.scss';
 
 const SignUpForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { control, setValue, watch } = useFormContext<SignInExperienceForm>();
+  const {
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useFormContext<SignInExperienceForm>();
+  const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
   const signUpIdentifier = watch('signUp.identifier');
 
@@ -56,9 +63,21 @@ const SignUpForm = () => {
         <Controller
           name="signUp.identifier"
           control={control}
+          rules={{
+            validate: (value) => {
+              if (!value) {
+                return false;
+              }
+
+              return signUpIdentifierToRequiredConnectorMapping[value].every((connectorType) =>
+                isConnectorTypeEnabled(connectorType)
+              );
+            },
+          }}
           render={({ field: { value, onChange } }) => (
             <Select
               value={value}
+              hasError={Boolean(errors.signUp?.identifier)}
               options={signUpIdentifiers.map((identifier) => ({
                 value: identifier,
                 title: (
