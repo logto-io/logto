@@ -93,36 +93,24 @@ export const loadConnectors = async () => {
 export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
   const connectors = await findAllConnectors();
 
-  const loadConnectorPackages = await loadConnectors();
-  const loadConnectorPackageMap = new Map(
-    loadConnectorPackages.map((loadConnectorPackage) => [
-      loadConnectorPackage.metadata.id,
-      loadConnectorPackage,
-    ])
-  );
-
-  // Console.log('connectors:', connectors);
-  console.log('loadConnectorPackages:', loadConnectorPackages);
+  const standardConnectors = await loadConnectors();
 
   return Promise.all(
     connectors.map(async (connector) => {
-      const {
-        connectorId,
-        metadata: { target, logo, logoDark },
-      } = connector;
-      const loadConnectorPackage = loadConnectorPackageMap.get(connectorId);
+      const { connectorId, metadata } = connector;
+      const pickedStandardConnector = standardConnectors.find(
+        (standardConnector) => standardConnector.metadata.id === connectorId
+      );
 
-      if (!loadConnectorPackage) {
+      if (!pickedStandardConnector) {
         throw new RequestError({ code: 'entity.not_found', connectorId, status: 404 });
       }
 
       return {
-        ...loadConnectorPackage,
+        ...pickedStandardConnector,
         metadata: {
-          ...loadConnectorPackage.metadata,
-          target: target ?? loadConnectorPackage.metadata.target,
-          logo: logo ?? loadConnectorPackage.metadata.logo,
-          logoDark: logoDark ?? loadConnectorPackage.metadata.logoDark,
+          ...pickedStandardConnector.metadata,
+          ...metadata,
         },
         dbEntry: connector,
       };
