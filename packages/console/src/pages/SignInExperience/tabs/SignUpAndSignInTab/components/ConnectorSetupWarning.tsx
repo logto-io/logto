@@ -9,11 +9,11 @@ type Props = {
 };
 
 const ConnectorSetupWarning = ({ requiredConnectors }: Props) => {
-  const { data: enabledConnectors } = useEnabledConnectorTypes();
+  const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const missingConnectors = requiredConnectors.filter(
-    (connectorType) => !enabledConnectors.includes(connectorType)
+    (connectorType) => !isConnectorTypeEnabled(connectorType)
   );
 
   if (missingConnectors.length === 0) {

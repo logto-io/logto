@@ -18,7 +18,6 @@ const useEnabledConnectorTypes = () => {
   );
 
   return {
-    data: enabledConnectorTypes,
     isConnectorTypeEnabled,
   };
 };
