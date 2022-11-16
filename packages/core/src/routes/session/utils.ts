@@ -226,7 +226,7 @@ export const checkSignUpIdentifierCollision = async (
     primaryEmail?: Nullable<string>;
     primaryPhone?: Nullable<string>;
   },
-  excludeUserId: string
+  excludeUserId?: string
 ) => {
   const { username, primaryEmail, primaryPhone } = identifiers;
 
