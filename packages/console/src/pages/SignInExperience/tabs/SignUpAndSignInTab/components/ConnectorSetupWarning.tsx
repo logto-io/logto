@@ -1,25 +1,19 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import Alert from '@/components/Alert';
-import type { RequestError } from '@/hooks/use-api';
+import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
 type Props = {
   requiredConnectors: ConnectorType[];
 };
 
 const ConnectorSetupWarning = ({ requiredConnectors }: Props) => {
-  const { data: connectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
+  const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  if (!connectors) {
-    return null;
-  }
-
   const missingConnectors = requiredConnectors.filter(
-    (connectorType) => !connectors.some(({ type, enabled }) => type === connectorType && enabled)
+    (connectorType) => !isConnectorTypeEnabled(connectorType)
   );
 
   if (missingConnectors.length === 0) {
