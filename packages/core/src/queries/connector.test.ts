@@ -9,7 +9,8 @@ import { expectSqlAssert } from '@/utils/test-utils';
 
 import {
   findAllConnectors,
-  hasConnectorWithConnectorId,
+  countConnectorByConnectorId,
+  hasConnectorWithId,
   insertConnector,
   updateConnector,
 } from './connector';
@@ -45,23 +46,42 @@ describe('connector queries', () => {
     await expect(findAllConnectors()).resolves.toEqual([rowData]);
   });
 
-  it('hasConnectorWithConnectorId', async () => {
+  it('countConnectorsByConnectorId', async () => {
+    const rowData = { id: 'foo', connectorId: 'bar' };
+
+    const expectSql = sql`
+      select count(*)
+      from ${table}
+      where ${fields.connectorId}=$1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual(['bar']);
+
+      return createMockQueryResult([rowData]);
+    });
+
+    await expect(countConnectorByConnectorId(rowData.connectorId)).resolves.toEqual(rowData);
+  });
+
+  it('hasConnectorWithId', async () => {
     const expectSql = sql`
       SELECT EXISTS(
-        select ${fields.connectorId}
+        select ${fields.id}
         from ${table}
-        where ${fields.connectorId}=$1
+        where ${fields.id}=$1
       )
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([mockConnector.connectorId]);
+      expect(values).toEqual([mockConnector.id]);
 
       return createMockQueryResult([{ exists: true }]);
     });
 
-    await expect(hasConnectorWithConnectorId(mockConnector.connectorId)).resolves.toEqual(true);
+    await expect(hasConnectorWithId(mockConnector.id)).resolves.toEqual(true);
   });
 
   it('insertConnector', async () => {

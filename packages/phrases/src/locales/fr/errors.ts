@@ -105,6 +105,9 @@ const errors = {
     more_than_one_email: 'Le nombre de connecteurs Email est supérieur à 1.',
     db_connector_type_mismatch:
       'Il y a un connecteur dans la base de donnée qui ne correspond pas au type.',
+    config_and_metadata_empty: 'You can not add a connector with both config and metadata empty.', // UNTRANSLATED
+    multiple_instances_not_supported:
+      'The connector you chose does not support multiple instances.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: "Le téléphone et l'email sont vides.",

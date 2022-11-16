@@ -16,7 +16,7 @@ import type { LoadConnector, LogtoConnector } from './types';
 import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: Array<{ connector: LoadConnector; path: string }> | undefined;
+let cachedConnectors: LoadConnector[] | undefined;
 
 export const loadConnectors = async () => {
   if (cachedConnectors) {
@@ -34,7 +34,7 @@ export const loadConnectors = async () => {
 
   const connectorPackages = await getConnectorPackagesFromDirectory(directory);
 
-  const connectorObjects = await Promise.all(
+  const connectors = await Promise.all(
     connectorPackages.map(async ({ path: packagePath, name }) => {
       try {
         // eslint-disable-next-line no-restricted-syntax
@@ -65,7 +65,7 @@ export const loadConnectors = async () => {
           },
         };
 
-        return { connector, path: packagePath };
+        return connector;
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log(
@@ -83,9 +83,8 @@ export const loadConnectors = async () => {
   );
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  cachedConnectors = connectorObjects.filter(
-    (connectorObject): connectorObject is { connector: LoadConnector; path: string } =>
-      connectorObject?.connector !== undefined
+  cachedConnectors = connectors.filter(
+    (connector): connector is LoadConnector => connector !== undefined
   );
 
   return cachedConnectors;

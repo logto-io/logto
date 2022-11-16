@@ -100,6 +100,9 @@ const errors = {
     more_than_one_sms: 'O número de conectores SMS é maior que 1.',
     more_than_one_email: 'O número de conectores de e-mail é maior que 1.',
     db_connector_type_mismatch: 'Há um conector no banco de dados que não corresponde ao tipo.',
+    config_and_metadata_empty: 'You can not add a connector with both config and metadata empty.', // UNTRANSLATED
+    multiple_instances_not_supported:
+      'The connector you chose does not support multiple instances.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: 'O campos telefone e email estão vazios.',

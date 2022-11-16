@@ -99,6 +99,9 @@ const errors = {
     more_than_one_sms: 'The number of SMS connectors is larger then 1.',
     more_than_one_email: 'The number of Email connectors is larger then 1.',
     db_connector_type_mismatch: 'There is a connector in the DB that does not match the type.',
+    config_and_metadata_empty: 'You can not add a connector with both config and metadata empty.',
+    multiple_instances_not_supported:
+      'The connector you chose does not support multiple instances.',
   },
   passcode: {
     phone_email_empty: 'Telefonnummer oder E-Mail darf nicht leer sein.',

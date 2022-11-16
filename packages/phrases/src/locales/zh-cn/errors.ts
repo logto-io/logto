@@ -95,6 +95,8 @@ const errors = {
     more_than_one_sms: '同时存在超过 1 个短信连接器',
     more_than_one_email: '同时存在超过 1 个邮件连接器',
     db_connector_type_mismatch: '数据库中存在一个类型不匹配的连接。',
+    config_and_metadata_empty: '添加连接器不能 config 和 metadata 同时为空',
+    multiple_instances_not_supported: '你选择的连接器不支持多实例',
   },
   passcode: {
     phone_email_empty: '手机号与邮箱地址均为空',

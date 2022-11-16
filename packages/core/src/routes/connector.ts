@@ -10,7 +10,12 @@ import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { removeUnavailableSocialConnectorTargets } from '@/lib/sign-in-experience';
 import koaGuard from '@/middleware/koa-guard';
-import { hasConnectorWithConnectorId, insertConnector, updateConnector } from '@/queries/connector';
+import {
+  insertConnector,
+  updateConnector,
+  countConnectorByConnectorId,
+  hasConnectorWithId,
+} from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
 
 import type { AuthedRouter } from './types';
@@ -79,29 +84,30 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body: { syncProfile, config, metadata },
       } = ctx.guard;
 
-      assertThat(!config || !metadata, 'connector.');
+      const logtoConnectors = await loadConnectors();
+      const standardConnector = logtoConnectors.find(({ metadata: { id } }) => id === connectorId);
+
+      if (!standardConnector) {
+        throw new RequestError({
+          code: 'entity.not_found',
+          status: 404,
+        });
+      }
+
+      const { count } = await countConnectorByConnectorId(connectorId);
+      assertThat(
+        count === 0 || standardConnector.metadata.isStandard === true,
+        'connector.multiple_instances_not_supported'
+      );
+
+      assertThat(!config || !metadata, 'connector.config_and_metadata_empty');
 
       if (config) {
-        const logtoConnectors = await loadConnectors();
-        const connector = logtoConnectors.find(
-          ({
-            connector: {
-              metadata: { id },
-            },
-          }) => id === connectorId
-        );
-
-        if (!connector) {
-          throw new RequestError({
-            code: 'entity.not_found',
-            status: 404,
-          });
-        }
-        connector.connector.validateConfig(config);
+        standardConnector.validateConfig(config);
       }
 
       ctx.body = await insertConnector({
-        id: (await hasConnectorWithConnectorId(connectorId)) ? generateConnectorId() : connectorId,
+        id: (await hasConnectorWithId(connectorId)) ? generateConnectorId() : connectorId,
         connectorId,
         syncProfile,
         config,

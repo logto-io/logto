@@ -99,6 +99,9 @@ const errors = {
     more_than_one_sms: 'SMS bağlayıcılarının sayısı 1den fazla.',
     more_than_one_email: 'E-posta adresi bağlayıcılarının sayısı 1den fazla.',
     db_connector_type_mismatch: 'Dbde türle eşleşmeyen bir bağlayıcı var.',
+    config_and_metadata_empty: 'You can not add a connector with both config and metadata empty.', // UNTRANSLATED
+    multiple_instances_not_supported:
+      'The connector you chose does not support multiple instances.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: 'Hem telefon hem de e-posta adresi yok.',
