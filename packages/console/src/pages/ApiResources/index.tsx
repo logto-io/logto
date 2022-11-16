@@ -12,7 +12,6 @@ import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
 import ApiResource from '@/assets/images/api-resource.svg';
 import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
-import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
@@ -23,6 +22,7 @@ import TableLoading from '@/components/Table/TableLoading';
 import type { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
+import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import CreateForm from './components/CreateForm';
@@ -46,8 +46,8 @@ const ApiResources = () => {
   const [apiResources, totalCount] = data ?? [];
 
   return (
-    <Card className={styles.card}>
-      <div className={styles.headline}>
+    <div className={resourcesStyles.container}>
+      <div className={resourcesStyles.headline}>
         <CardTitle title="api_resources.title" subtitle="api_resources.subtitle" />
         <Button
           title="api_resources.create"
@@ -77,7 +77,7 @@ const ApiResources = () => {
           />
         </Modal>
       </div>
-      <div className={classNames(styles.table, tableStyles.scrollable)}>
+      <div className={classNames(resourcesStyles.table, tableStyles.scrollable)}>
         <table className={classNames(!data && tableStyles.empty)}>
           <colgroup>
             <col className={styles.apiResourceName} />
@@ -148,7 +148,7 @@ const ApiResources = () => {
           />
         )}
       </div>
-    </Card>
+    </div>
   );
 };
 

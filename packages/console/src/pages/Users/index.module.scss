@@ -1,25 +1,17 @@
 @use '@/scss/underscore' as _;
 
-.card {
-  @include _.flex-column;
-}
-
-.headline {
-  display: flex;
-  justify-content: space-between;
-}
-
 .filter {
   margin: _.unit(4) 0;
 }
 
 .tableContainer {
   flex: 1;
+  background-color: var(--color-layer-1);
 
-  >table {
-    >tbody {
-      >tr {
-        >td {
+  > table {
+    > tbody {
+      > tr {
+        > td {
           padding-top: 10px;
           padding-bottom: 10px;
         }

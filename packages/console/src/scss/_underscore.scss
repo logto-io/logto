@@ -5,9 +5,7 @@
 }
 
 @mixin main-content-width {
-  max-width: 1168px;
   min-width: 604px;
-  margin: 0 auto;
 }
 
 @mixin flex-column {

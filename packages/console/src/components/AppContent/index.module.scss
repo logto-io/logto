@@ -21,7 +21,7 @@
 
 .main {
   flex-grow: 1;
-  padding-right: _.unit(6);
+  padding: 0 _.unit(3) 0 _.unit(2);
   overflow-y: scroll;
 
   > * {
