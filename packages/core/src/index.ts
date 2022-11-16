@@ -3,7 +3,6 @@ import 'module-alias/register';
 import Koa from 'koa';
 
 import initApp from './app/init';
-import { initConnectors } from './connectors';
 import envSet from './env-set';
 import { configDotEnv } from './env-set/dot-env';
 import initI18n from './i18n/init';
@@ -17,7 +16,6 @@ import initI18n from './i18n/init';
     const app = new Koa({
       proxy: envSet.values.trustProxyHeader,
     });
-    await initConnectors();
     await initI18n();
     await initApp(app);
   } catch (error: unknown) {
