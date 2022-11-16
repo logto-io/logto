@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-beta.14
+
+### Patch Changes
+
+- 2d45cc3e: Update alteration script names after versioning
+
 ## 1.0.0-beta.13
 
 ### Patch Changes
