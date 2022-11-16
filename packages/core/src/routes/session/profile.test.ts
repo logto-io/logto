@@ -23,10 +23,7 @@ const encryptUserPassword = jest.fn(async (password: string) => ({
   passwordEncryptionMethod: 'Argon2i',
 }));
 const mockArgon2Verify = jest.fn(async (password: string) => password === mockPasswordEncrypted);
-const mockGetSession = jest.fn(async () => ({
-  accountId: 'id',
-  loginTs: getUnixTime(new Date()) - 60,
-}));
+const mockGetSession = jest.fn();
 
 jest.mock('oidc-provider', () => ({
   Provider: jest.fn(() => ({
@@ -69,6 +66,10 @@ jest.mock('hash-wasm', () => ({
 describe('session -> profileRoutes', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockGetSession.mockImplementation(async () => ({
+      accountId: 'id',
+      loginTs: getUnixTime(new Date()) - 60,
+    }));
   });
 
   const sessionRequest = createRequester({
@@ -84,10 +85,51 @@ describe('session -> profileRoutes', () => {
     ],
   });
 
-  test('GET /session/profile should return current user data', async () => {
-    const response = await sessionRequest.get(profileRoute);
-    expect(response.statusCode).toEqual(200);
-    expect(response.body).toEqual(mockUserResponse);
+  describe('GET /session/profile', () => {
+    it('should return current user data', async () => {
+      const response = await sessionRequest.get(profileRoute);
+      expect(response.statusCode).toEqual(200);
+      expect(response.body).toEqual(mockUserResponse);
+    });
+
+    it('should throw when the user is not authenticated', async () => {
+      mockGetSession.mockImplementationOnce(
+        jest.fn(async () => ({
+          accountId: undefined,
+          loginTs: undefined,
+        }))
+      );
+
+      const response = await sessionRequest.get(profileRoute);
+      expect(response.statusCode).toEqual(401);
+    });
+  });
+
+  describe('PATCH /session/profile', () => {
+    it('should update current user with display name, avatar and custom data', async () => {
+      const updatedUserInfo = {
+        name: 'John Doe',
+        avatar: 'https://new-avatar.cdn.com',
+        customData: { gender: 'male', age: '30' },
+      };
+
+      const response = await sessionRequest.patch(profileRoute).send(updatedUserInfo);
+
+      expect(mockUpdateUserById).toBeCalledWith('id', expect.objectContaining(updatedUserInfo));
+      expect(response.statusCode).toEqual(204);
+    });
+
+    it('should throw when the user is not authenticated', async () => {
+      mockGetSession.mockImplementationOnce(
+        jest.fn(async () => ({
+          accountId: undefined,
+          loginTs: undefined,
+        }))
+      );
+
+      const response = await sessionRequest.patch(profileRoute).send({ name: 'John Doe' });
+      expect(response.statusCode).toEqual(401);
+    });
   });
 
   describe('PATCH /session/profile/username', () => {
