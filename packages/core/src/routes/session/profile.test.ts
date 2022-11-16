@@ -180,11 +180,11 @@ describe('session -> profileRoutes', () => {
         loginTs: getUnixTime(new Date()) - 601,
       }));
 
-      const updateResponse = await sessionRequest
+      const response = await sessionRequest
         .patch(`${profileRoute}/email`)
         .send({ primaryEmail: 'test@logto.io' });
 
-      expect(updateResponse.statusCode).toEqual(422);
+      expect(response.statusCode).toEqual(422);
       expect(mockUpdateUserById).not.toBeCalled();
     });
 
@@ -231,9 +231,9 @@ describe('session -> profileRoutes', () => {
         loginTs: getUnixTime(new Date()) - 601,
       }));
 
-      const deleteResponse = await sessionRequest.delete(`${profileRoute}/email`);
+      const response = await sessionRequest.delete(`${profileRoute}/email`);
 
-      expect(deleteResponse.statusCode).toEqual(422);
+      expect(response.statusCode).toEqual(422);
       expect(mockUpdateUserById).not.toBeCalled();
     });
 
@@ -248,9 +248,93 @@ describe('session -> profileRoutes', () => {
       );
     });
 
-    it('should throw when no email address found in user', async () => {
+    it('should throw when no email address found in user on unlinking email', async () => {
       mockFindUserById.mockImplementationOnce(async () => ({ ...mockUser, primaryEmail: null }));
       const response = await sessionRequest.delete(`${profileRoute}/email`);
+
+      expect(response.statusCode).toEqual(422);
+      expect(mockUpdateUserById).not.toBeCalled();
+    });
+  });
+
+  describe('phone related APIs', () => {
+    it('should throw if last authentication time is over 10 mins ago on linking phone number', async () => {
+      mockGetSession.mockImplementationOnce(async () => ({
+        accountId: 'id',
+        loginTs: getUnixTime(new Date()) - 601,
+      }));
+
+      const updateResponse = await sessionRequest
+        .patch(`${profileRoute}/phone`)
+        .send({ primaryPhone: '6533333333' });
+
+      expect(updateResponse.statusCode).toEqual(422);
+      expect(mockUpdateUserById).not.toBeCalled();
+    });
+
+    it('should link phone number to the user profile', async () => {
+      const mockPhoneNumber = '6533333333';
+      const response = await sessionRequest
+        .patch(`${profileRoute}/phone`)
+        .send({ primaryPhone: mockPhoneNumber });
+
+      expect(mockUpdateUserById).toBeCalledWith(
+        'id',
+        expect.objectContaining({
+          primaryPhone: mockPhoneNumber,
+        })
+      );
+      expect(response.statusCode).toEqual(204);
+    });
+
+    it('should throw when phone number already exists on linking phone number', async () => {
+      mockHasUserWithPhone.mockImplementationOnce(async () => true);
+
+      const response = await sessionRequest
+        .patch(`${profileRoute}/phone`)
+        .send({ primaryPhone: mockUser.primaryPhone });
+
+      expect(response.statusCode).toEqual(422);
+      expect(mockUpdateUserById).not.toBeCalled();
+    });
+
+    it('should throw when phone number is invalid', async () => {
+      mockHasUserWithPhone.mockImplementationOnce(async () => true);
+
+      const response = await sessionRequest
+        .patch(`${profileRoute}/phone`)
+        .send({ primaryPhone: 'invalid' });
+
+      expect(response.statusCode).toEqual(400);
+      expect(mockUpdateUserById).not.toBeCalled();
+    });
+
+    it('should throw if last authentication time is over 10 mins ago on unlinking phone number', async () => {
+      mockGetSession.mockImplementationOnce(async () => ({
+        accountId: 'id',
+        loginTs: getUnixTime(new Date()) - 601,
+      }));
+
+      const response = await sessionRequest.delete(`${profileRoute}/phone`);
+
+      expect(response.statusCode).toEqual(422);
+      expect(mockUpdateUserById).not.toBeCalled();
+    });
+
+    it('should unlink phone number from user', async () => {
+      const response = await sessionRequest.delete(`${profileRoute}/phone`);
+      expect(response.statusCode).toEqual(204);
+      expect(mockUpdateUserById).toBeCalledWith(
+        'id',
+        expect.objectContaining({
+          primaryPhone: null,
+        })
+      );
+    });
+
+    it('should throw when no phone number found in user on unlinking phone number', async () => {
+      mockFindUserById.mockImplementationOnce(async () => ({ ...mockUser, primaryPhone: null }));
+      const response = await sessionRequest.delete(`${profileRoute}/phone`);
 
       expect(response.statusCode).toEqual(422);
       expect(mockUpdateUserById).not.toBeCalled();

@@ -1,4 +1,4 @@
-import { emailRegEx, passwordRegEx, usernameRegEx } from '@logto/core-kit';
+import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { userInfoSelectFields } from '@logto/schemas';
 import { argon2Verify } from 'hash-wasm';
 import pick from 'lodash.pick';
@@ -114,6 +114,43 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
     assertThat(primaryEmail, new RequestError({ code: 'user.email_not_exists', status: 422 }));
 
     await updateUserById(userId, { primaryEmail: null });
+
+    ctx.status = 204;
+
+    return next();
+  });
+
+  router.patch(
+    `${profileRoute}/phone`,
+    koaGuard({
+      body: object({ primaryPhone: string().regex(phoneRegEx) }),
+    }),
+    async (ctx, next) => {
+      const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+
+      assertThat(userId, new RequestError('auth.unauthorized'));
+
+      const { primaryPhone } = ctx.guard.body;
+
+      await checkSignUpIdentifierCollision({ primaryPhone });
+      await updateUserById(userId, { primaryPhone });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.delete(`${profileRoute}/phone`, async (ctx, next) => {
+    const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+
+    assertThat(userId, new RequestError('auth.unauthorized'));
+
+    const { primaryPhone } = await findUserById(userId);
+
+    assertThat(primaryPhone, new RequestError({ code: 'user.phone_not_exists', status: 422 }));
+
+    await updateUserById(userId, { primaryPhone: null });
 
     ctx.status = 204;
 
