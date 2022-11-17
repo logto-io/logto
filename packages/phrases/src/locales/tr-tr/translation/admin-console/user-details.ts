@@ -15,6 +15,8 @@ const user_details = {
     new_password: 'Yeni şifre:',
   },
   tab_logs: 'Kullanıcı kayıtları',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   field_email: 'Öncelikli e-posta adresi',
   field_phone: 'Öncelikli telefon',
   field_username: 'Kullanıcı Adı',

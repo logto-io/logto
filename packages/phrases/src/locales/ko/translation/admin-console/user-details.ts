@@ -15,6 +15,8 @@ const user_details = {
     new_password: '새로운 비밀번호:',
   },
   tab_logs: '사용자 기록',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   field_email: '메인 이메일',
   field_phone: '메인 휴대전화번호',
   field_username: '사용자 이름',

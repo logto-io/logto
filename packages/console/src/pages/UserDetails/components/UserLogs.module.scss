@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.logs {
+  margin-bottom: _.unit(6);
+
+  >:not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}
