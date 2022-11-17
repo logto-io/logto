@@ -105,6 +105,7 @@ const errors = {
     more_than_one_email: 'Le nombre de connecteurs Email est supérieur à 1.',
     db_connector_type_mismatch:
       'Il y a un connecteur dans la base de donnée qui ne correspond pas au type.',
+    invalid_configurable_metadata: 'The configurable connector metadata is invalid.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: "Le téléphone et l'email sont vides.",

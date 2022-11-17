@@ -100,6 +100,7 @@ const errors = {
     more_than_one_sms: 'O número de conectores SMS é maior que 1.',
     more_than_one_email: 'O número de conectores de e-mail é maior que 1.',
     db_connector_type_mismatch: 'Há um conector no banco de dados que não corresponde ao tipo.',
+    invalid_configurable_metadata: 'The configurable connector metadata is invalid.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: 'O campos telefone e email estão vazios.',

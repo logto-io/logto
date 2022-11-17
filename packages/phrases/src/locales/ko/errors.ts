@@ -97,6 +97,7 @@ const errors = {
     more_than_one_sms: '연동된 SMS 서비스가 1개 이상이여야 해요.',
     more_than_one_email: '연동된 이메일 서비스가 1개 이상이여야 해요.',
     db_connector_type_mismatch: '종류가 일치하지 않은 연동 서비스가 DB에 존재해요.',
+    invalid_configurable_metadata: 'The configurable connector metadata is invalid.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: '휴대전화번호 그리고 이메일이 비어있어요.',

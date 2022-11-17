@@ -99,6 +99,7 @@ const errors = {
     more_than_one_sms: 'SMS bağlayıcılarının sayısı 1den fazla.',
     more_than_one_email: 'E-posta adresi bağlayıcılarının sayısı 1den fazla.',
     db_connector_type_mismatch: 'Dbde türle eşleşmeyen bir bağlayıcı var.',
+    invalid_configurable_metadata: 'The configurable connector metadata is invalid.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: 'Hem telefon hem de e-posta adresi yok.',
