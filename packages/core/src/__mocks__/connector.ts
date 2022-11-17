@@ -29,8 +29,6 @@ import {
   mockMetadata8,
 } from './connector-base-data';
 
-export { mockMetadata } from './connector-base-data';
-
 export const mockConnector: Connector = {
   id: 'id',
   enabled: true,
