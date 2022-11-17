@@ -1,5 +1,5 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
-import { userInfoSelectFields } from '@logto/schemas';
+import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
 import { argon2Verify } from 'hash-wasm';
 import pick from 'lodash.pick';
 import type { Provider } from 'oidc-provider';
@@ -20,18 +20,40 @@ export const profileRoute = '/session/profile';
 
 export default function profileRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.get(profileRoute, async (ctx, next) => {
-    const { accountId } = await provider.Session.get(ctx);
+    const { accountId: userId } = await provider.Session.get(ctx);
 
-    if (!accountId) {
-      throw new RequestError('auth.unauthorized');
-    }
+    assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
-    const user = await findUserById(accountId);
+    const user = await findUserById(userId);
 
     ctx.body = pick(user, ...userInfoSelectFields);
 
     return next();
   });
+
+  router.patch(
+    profileRoute,
+    koaGuard({
+      body: object({
+        name: string().nullable().optional(),
+        avatar: string().nullable().optional(),
+        customData: arbitraryObjectGuard.optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { accountId: userId } = await provider.Session.get(ctx);
+
+      assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
+
+      const { name, avatar, customData } = ctx.guard.body;
+
+      await updateUserById(userId, { name, avatar, customData });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
 
   router.patch(
     `${profileRoute}/username`,
@@ -41,7 +63,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
 
-      assertThat(userId, new RequestError('auth.unauthorized'));
+      assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
       const { username } = ctx.guard.body;
 
@@ -63,7 +85,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
 
-      assertThat(userId, new RequestError('auth.unauthorized'));
+      assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
       const { password } = ctx.guard.body;
       const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(userId);
@@ -91,7 +113,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
 
-      assertThat(userId, new RequestError('auth.unauthorized'));
+      assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
       const { primaryEmail } = ctx.guard.body;
 
@@ -107,7 +129,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
   router.delete(`${profileRoute}/email`, async (ctx, next) => {
     const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
 
-    assertThat(userId, new RequestError('auth.unauthorized'));
+    assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
     const { primaryEmail } = await findUserById(userId);
 
@@ -128,7 +150,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
 
-      assertThat(userId, new RequestError('auth.unauthorized'));
+      assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
       const { primaryPhone } = ctx.guard.body;
 
@@ -144,7 +166,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
   router.delete(`${profileRoute}/phone`, async (ctx, next) => {
     const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
 
-    assertThat(userId, new RequestError('auth.unauthorized'));
+    assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
     const { primaryPhone } = await findUserById(userId);
 
