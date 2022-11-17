@@ -10,7 +10,10 @@ export const getConnector = async (connectorId: string) =>
 
 export const postConnector = async (connectorId: string) =>
   authedAdminApi
-    .post({ url: `connectors/${connectorId}`, json: { metadata: { logo: 'new_logo' } } })
+    .post({
+      url: `connectors/`,
+      json: { connectorId, metadata: { logo: 'new_logo' } },
+    })
     .json();
 
 export const updateConnectorConfig = async (connectorId: string, config: Record<string, unknown>) =>
