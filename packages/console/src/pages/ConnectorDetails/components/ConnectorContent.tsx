@@ -1,4 +1,4 @@
-import type { ConnectorResponse } from '@logto/schemas';
+import type { Connector, ConnectorResponse, ConnectorMetadata } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -55,11 +55,11 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       return;
     }
 
-    const connectorResponse = await api
+    const { metadata, ...rest } = await api
       .patch(`/api/connectors/${connectorData.id}`, { json: { config: result.data } })
-      .json<ConnectorResponse>();
+      .json<Connector & { metadata: ConnectorMetadata; type: ConnectorType }>();
 
-    onConnectorUpdated(connectorResponse);
+    onConnectorUpdated({ ...rest, ...metadata });
     reset({ configJson: JSON.stringify(result.data, null, 2) });
     toast.success(t('general.saved'));
   });

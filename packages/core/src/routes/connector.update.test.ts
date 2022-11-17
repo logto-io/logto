@@ -31,14 +31,16 @@ const getLogtoConnectorByIdPlaceholder = jest.fn(async (connectorId: string) => 
     })
   );
 
-  return connector;
+  return {
+    ...connector,
+    sendMessage: sendMessagePlaceHolder,
+  };
 }) as jest.MockedFunction<(connectorId: string) => Promise<LogtoConnector>>;
-const mockedUpdateConnector = updateConnector as jest.Mock;
+const sendMessagePlaceHolder = jest.fn();
 
 jest.mock('@/queries/connector', () => ({
   updateConnector: jest.fn(),
 }));
-
 jest.mock('@/connectors', () => ({
   getLogtoConnectors: async () => getLogtoConnectorsPlaceholder(),
   getLogtoConnectorById: async (connectorId: string) =>
@@ -82,12 +84,6 @@ describe('connector PATCH routes', () => {
           ...mockLogtoConnector,
         },
       ]);
-      mockedUpdateConnector.mockImplementationOnce(async () => {
-        return {
-          ...mockConnector,
-          enabled: true,
-        };
-      });
       const response = await connectorRequest
         .patch('/connectors/id/enabled')
         .send({ enabled: true });
@@ -99,10 +95,8 @@ describe('connector PATCH routes', () => {
         })
       );
       expect(response.body).toMatchObject({
+        metadata: mockMetadata,
         type: ConnectorType.Social,
-        ...mockMetadata,
-        ...mockConnector,
-        enabled: true,
       });
       expect(response).toHaveProperty('statusCode', 200);
     });
@@ -134,12 +128,6 @@ describe('connector PATCH routes', () => {
           ...mockLogtoConnector,
         },
       ]);
-      mockedUpdateConnector.mockImplementationOnce(async () => {
-        return {
-          ...mockConnector,
-          enabled: false,
-        };
-      });
       const response = await connectorRequest
         .patch('/connectors/id/enabled')
         .send({ enabled: false });
@@ -151,10 +139,7 @@ describe('connector PATCH routes', () => {
         })
       );
       expect(response.body).toMatchObject({
-        type: ConnectorType.Social,
-        ...mockMetadata,
-        ...mockConnector,
-        enabled: false,
+        metadata: mockMetadata,
       });
       expect(response).toHaveProperty('statusCode', 200);
     });
@@ -174,12 +159,6 @@ describe('connector PATCH routes', () => {
         metadata: mockedMetadata,
         type: ConnectorType.Sms,
         ...mockLogtoConnector,
-      });
-      mockedUpdateConnector.mockImplementation(async () => {
-        return {
-          ...mockedConnector,
-          enabled: true,
-        };
       });
       const response = await connectorRequest
         .patch('/connectors/id1/enabled')
@@ -210,10 +189,7 @@ describe('connector PATCH routes', () => {
         })
       );
       expect(response.body).toMatchObject({
-        type: ConnectorType.Sms,
-        ...mockedMetadata,
-        ...mockedConnector,
-        enabled: true,
+        metadata: mockedMetadata,
       });
     });
 
@@ -244,12 +220,6 @@ describe('connector PATCH routes', () => {
           ...mockLogtoConnector,
         },
       ]);
-      mockedUpdateConnector.mockImplementationOnce(async () => {
-        return {
-          ...mockConnector,
-          enabled: false,
-        };
-      });
       const response = await connectorRequest
         .patch('/connectors/id/enabled')
         .send({ enabled: false });
@@ -261,10 +231,7 @@ describe('connector PATCH routes', () => {
         })
       );
       expect(response.body).toMatchObject({
-        type: ConnectorType.Sms,
-        ...mockMetadata,
-        ...mockConnector,
-        enabled: false,
+        metadata: mockMetadata,
       });
       expect(response).toHaveProperty('statusCode', 200);
     });
@@ -288,15 +255,17 @@ describe('connector PATCH routes', () => {
     });
 
     it('config validation fails', async () => {
-      getLogtoConnectorByIdPlaceholder.mockResolvedValueOnce({
-        dbEntry: mockConnector,
-        metadata: mockMetadata,
-        type: ConnectorType.Sms,
-        ...mockLogtoConnector,
-        validateConfig: () => {
-          throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
+      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+        {
+          dbEntry: mockConnector,
+          metadata: mockMetadata,
+          type: ConnectorType.Sms,
+          ...mockLogtoConnector,
+          validateConfig: () => {
+            throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
+          },
         },
-      });
+      ]);
       const response = await connectorRequest
         .patch('/connectors/id')
         .send({ config: { cliend_id: 'client_id', client_secret: 'client_secret' } });
@@ -304,18 +273,14 @@ describe('connector PATCH routes', () => {
     });
 
     it('successfully updates connector configs', async () => {
-      getLogtoConnectorByIdPlaceholder.mockResolvedValueOnce({
-        dbEntry: mockConnector,
-        metadata: mockMetadata,
-        type: ConnectorType.Sms,
-        ...mockLogtoConnector,
-      });
-      mockedUpdateConnector.mockImplementationOnce(async () => {
-        return {
-          ...mockConnector,
-          config: JSON.stringify({ cliend_id: 'client_id', client_secret: 'client_secret' }),
-        };
-      });
+      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+        {
+          dbEntry: mockConnector,
+          metadata: mockMetadata,
+          type: ConnectorType.Sms,
+          ...mockLogtoConnector,
+        },
+      ]);
       const response = await connectorRequest
         .patch('/connectors/id')
         .send({ config: { cliend_id: 'client_id', client_secret: 'client_secret' } });
@@ -327,10 +292,7 @@ describe('connector PATCH routes', () => {
         })
       );
       expect(response.body).toMatchObject({
-        type: ConnectorType.Sms,
-        ...mockMetadata,
-        ...mockConnector,
-        config: JSON.stringify({ cliend_id: 'client_id', client_secret: 'client_secret' }),
+        metadata: mockMetadata,
       });
       expect(response).toHaveProperty('statusCode', 200);
     });

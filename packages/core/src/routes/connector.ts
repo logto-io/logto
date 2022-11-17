@@ -18,7 +18,7 @@ const transpileLogtoConnector = ({
   dbEntry,
   metadata,
   type,
-}: Pick<LogtoConnector, 'dbEntry' | 'metadata' | 'type'>): ConnectorResponse => ({
+}: LogtoConnector): ConnectorResponse => ({
   type,
   ...metadata,
   ...dbEntry,
@@ -122,7 +122,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         await removeUnavailableSocialConnectorTargets();
       }
 
-      ctx.body = transpileLogtoConnector({ dbEntry: connector, metadata, type });
+      ctx.body = { ...connector, metadata, type };
 
       return next();
     }
@@ -147,7 +147,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       }
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
-      ctx.body = transpileLogtoConnector({ dbEntry: connector, metadata, type });
+      ctx.body = { ...connector, metadata, type };
 
       return next();
     }

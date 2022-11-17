@@ -23,14 +23,13 @@ import {
   mockMetadata6,
 } from './connector-base-data';
 
+export { mockMetadata } from './connector-base-data';
+
 export const mockConnector: Connector = {
   id: 'id',
   enabled: true,
   config: {},
   createdAt: 1_234_567_890_123,
-  syncProfile: false,
-  metadata: {},
-  connectorId: 'id',
 };
 
 export const mockLogtoConnector = {
@@ -223,9 +222,6 @@ export const mockSocialConnectors: LogtoConnector[] = [
       enabled: false,
       config: {},
       createdAt: 1_234_567_890_123,
-      syncProfile: false,
-      metadata: {},
-      connectorId: 'id0',
     },
     metadata: {
       ...mockMetadata,
@@ -240,9 +236,6 @@ export const mockSocialConnectors: LogtoConnector[] = [
       enabled: true,
       config: {},
       createdAt: 1_234_567_890_123,
-      syncProfile: false,
-      metadata: {},
-      connectorId: 'id1',
     },
     metadata: {
       ...mockMetadata,
@@ -257,9 +250,6 @@ export const mockSocialConnectors: LogtoConnector[] = [
       enabled: false,
       config: {},
       createdAt: 1_234_567_890_123,
-      syncProfile: false,
-      metadata: {},
-      connectorId: 'id2',
     },
     metadata: {
       ...mockMetadata,
