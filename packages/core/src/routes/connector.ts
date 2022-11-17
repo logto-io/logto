@@ -139,19 +139,18 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const {
         params: { id },
-        body: { metadata: databaseMetadata, config },
         body,
       } = ctx.guard;
 
       const { metadata, type, validateConfig } = await getLogtoConnectorById(id);
 
-      if (config) {
-        validateConfig(config);
+      if (body.config) {
+        validateConfig(body.config);
       }
 
       if (metadata.isStandard === true) {
         const databaseMetadataGuard = configurableConnectorMetadataGuard.required();
-        const result = databaseMetadataGuard.safeParse(databaseMetadata);
+        const result = databaseMetadataGuard.safeParse(body.metadata);
 
         if (!result.success) {
           throw new RequestError({ code: 'connector.invalid_configurable_metadata', status: 422 });
@@ -159,7 +158,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       }
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
-      ctx.body = { ...connector, metadata, type };
+      const { metadata: databaseMetadata, ...rest } = connector;
+      ctx.body = { ...rest, metadata: { ...metadata, ...databaseMetadata }, type };
 
       return next();
     }
