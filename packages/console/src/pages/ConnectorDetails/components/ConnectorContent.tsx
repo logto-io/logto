@@ -1,16 +1,17 @@
 import type { Connector, ConnectorResponse, ConnectorMetadata } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 
-import Button from '@/components/Button';
 import CodeEditor from '@/components/CodeEditor';
+import DetailsForm from '@/components/DetailsForm';
+import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
-import * as detailsStyles from '@/scss/details.module.scss';
 import { safeParseJson } from '@/utilities/json';
 
 import * as styles from '../index.module.scss';
@@ -24,21 +25,25 @@ type Props = {
 
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { connectorId } = useParams();
   const api = useApi();
-  const methods = useForm<{ configJson: string }>({ reValidateMode: 'onBlur' });
   const {
     control,
     formState: { isSubmitting, isDirty },
     handleSubmit,
     watch,
     reset,
-  } = methods;
+  } = useForm<{ configJson: string }>({ reValidateMode: 'onBlur' });
 
   const defaultConfig = useMemo(() => {
     const hasData = Object.keys(connectorData.config).length > 0;
 
     return hasData ? JSON.stringify(connectorData.config, null, 2) : connectorData.configTemplate;
   }, [connectorData]);
+
+  useEffect(() => {
+    reset();
+  }, [connectorId, reset]);
 
   const onSubmit = handleSubmit(async ({ configJson }) => {
     if (!configJson) {
@@ -66,8 +71,16 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
 
   return (
     <>
-      <div className={styles.main}>
-        <form {...methods}>
+      <DetailsForm
+        isDirty={isDirty}
+        isSubmitting={isSubmitting}
+        onDiscard={reset}
+        onSubmit={onSubmit}
+      >
+        <FormCard
+          title="connector_details.settings"
+          description="connector_details.settings_description"
+        >
           <Controller
             name="configJson"
             control={control}
@@ -83,26 +96,16 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
               </FormField>
             )}
           />
-        </form>
-        {connectorData.type !== ConnectorType.Social && (
-          <SenderTester
-            connectorId={connectorData.id}
-            connectorType={connectorData.type}
-            config={watch('configJson')}
-          />
-        )}
-      </div>
-      <div className={detailsStyles.footer}>
-        <div className={detailsStyles.footerMain}>
-          <Button
-            type="primary"
-            size="large"
-            title="general.save_changes"
-            isLoading={isSubmitting}
-            onClick={onSubmit}
-          />
-        </div>
-      </div>
+          {connectorData.type !== ConnectorType.Social && (
+            <SenderTester
+              className={styles.senderTest}
+              connectorId={connectorData.id}
+              connectorType={connectorData.type}
+              config={watch('configJson')}
+            />
+          )}
+        </FormCard>
+      </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </>
   );

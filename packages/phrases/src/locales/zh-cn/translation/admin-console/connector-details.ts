@@ -1,6 +1,9 @@
 const connector_details = {
   back_to_connectors: '返回连接器',
   check_readme: '查看 README',
+  settings: '设置',
+  settings_description:
+    'It real sent your at. Amounted all shy set why followed declared. Repeated of endeavor mr position kindness offering ignorant so up. Simplicity are melancholy preference considered saw companions.', // UNTRANSLATED
   save_error_empty_config: '请输入配置内容',
   send: '发送',
   send_error_invalid_format: '无效输入',
