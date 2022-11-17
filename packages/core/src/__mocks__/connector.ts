@@ -3,7 +3,7 @@ import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import type { LogtoConnector } from '@/connectors/types';
+import type { LoadConnector, LogtoConnector } from '@/connectors/types';
 
 import {
   mockConnector0,
@@ -13,6 +13,10 @@ import {
   mockConnector4,
   mockConnector5,
   mockConnector6,
+  mockConnector7,
+  mockConnector8,
+  mockConnector9,
+  mockConnector10,
   mockMetadata,
   mockMetadata0,
   mockMetadata1,
@@ -21,7 +25,11 @@ import {
   mockMetadata4,
   mockMetadata5,
   mockMetadata6,
+  mockMetadata7,
+  mockMetadata8,
 } from './connector-base-data';
+
+export { mockMetadata } from './connector-base-data';
 
 export const mockConnector: Connector = {
   id: 'id',
@@ -39,6 +47,12 @@ export const mockLogtoConnector = {
   sendMessage: jest.fn(),
   validateConfig: jest.fn(),
   configGuard: any(),
+};
+
+export const mockLoadConnector: LoadConnector = {
+  metadata: mockMetadata,
+  type: ConnectorType.Social,
+  ...mockLogtoConnector,
 };
 
 export const mockConnectorList: Connector[] = [
@@ -92,6 +106,36 @@ export const mockLogtoConnectorList: LogtoConnector[] = [
     dbEntry: mockConnector6,
     metadata: { ...mockMetadata6, platform: null },
     type: ConnectorType.Email,
+    ...mockLogtoConnector,
+  },
+];
+
+export const mockLogtoConnectorListInvalidDuplicateInstances: LogtoConnector[] = [
+  {
+    dbEntry: mockConnector7,
+    metadata: { ...mockMetadata7, platform: null },
+    type: ConnectorType.Social,
+    ...mockLogtoConnector,
+  },
+  {
+    dbEntry: mockConnector8,
+    metadata: { ...mockMetadata7, platform: null },
+    type: ConnectorType.Social,
+    ...mockLogtoConnector,
+  },
+];
+
+export const mockLogtoConnectorListValidDuplicateInstances: LogtoConnector[] = [
+  {
+    dbEntry: mockConnector9,
+    metadata: { ...mockMetadata8, platform: null },
+    type: ConnectorType.Social,
+    ...mockLogtoConnector,
+  },
+  {
+    dbEntry: mockConnector10,
+    metadata: { ...mockMetadata8, platform: null },
+    type: ConnectorType.Social,
     ...mockLogtoConnector,
   },
 ];

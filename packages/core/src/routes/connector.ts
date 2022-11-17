@@ -81,7 +81,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const {
         params: { connectorId },
-        body: { syncProfile, config, metadata },
+        body: { config, metadata },
+        body,
       } = ctx.guard;
 
       const logtoConnectors = await loadConnectors();
@@ -95,6 +96,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       }
 
       const { count } = await countConnectorByConnectorId(connectorId);
+      console.log(count, standardConnector.metadata.isStandard);
       assertThat(
         count === 0 || standardConnector.metadata.isStandard === true,
         'connector.multiple_instances_not_supported'
@@ -109,9 +111,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       ctx.body = await insertConnector({
         id: (await hasConnectorWithId(connectorId)) ? generateConnectorId() : connectorId,
         connectorId,
-        syncProfile,
-        config,
-        metadata,
+        ...body,
       });
 
       return next();
