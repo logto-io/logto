@@ -92,23 +92,27 @@ const loadConnectors = async () => {
 
 export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
   const connectors = await findAllConnectors();
-  const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
-  const logtoConnectors = await loadConnectors();
+  const virtualConnectors = await loadConnectors();
 
-  return logtoConnectors.map((element) => {
-    const { id } = element.metadata;
-    const connector = connectorMap.get(id);
+  return Promise.all(
+    connectors.map(async (connector) => {
+      const { metadata, connectorId } = connector;
+      const pickedVirtualConnector = virtualConnectors.find(
+        ({ metadata: { id } }) => id === connectorId
+      );
 
-    if (!connector) {
-      throw new RequestError({ code: 'entity.not_found', id, status: 404 });
-    }
+      if (!pickedVirtualConnector) {
+        throw new RequestError({ code: 'entity.not_found', connectorId, status: 404 });
+      }
 
-    return {
-      ...element,
-      dbEntry: connector,
-    };
-  });
+      return {
+        ...pickedVirtualConnector,
+        metadata: { ...pickedVirtualConnector.metadata, ...metadata },
+        dbEntry: connector,
+      };
+    })
+  );
 };
 
 export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector> => {
@@ -144,6 +148,7 @@ export const initConnectors = async () => {
     newConnectors.map(async ({ metadata: { id } }) => {
       await insertConnector({
         id,
+        connectorId: id,
       });
     })
   );
