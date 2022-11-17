@@ -68,38 +68,39 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.post(
-    '/connectors/:connectorId',
+    '/connectors',
     koaGuard({
-      params: object({ connectorId: string() }),
       body: Connectors.createGuard.omit({
         id: true,
         enabled: true,
-        connectorId: true,
         createdAt: true,
       }),
     }),
     async (ctx, next) => {
       const {
-        params: { connectorId },
-        body: { config, metadata },
+        body: { connectorId, config, metadata },
         body,
       } = ctx.guard;
 
-      const logtoConnectors = await loadConnectors();
-      const standardConnector = logtoConnectors.find(({ metadata: { id } }) => id === connectorId);
+      const standardConnectors = await loadConnectors();
+      const standardConnector = standardConnectors.find(
+        ({ metadata: { id } }) => id === connectorId
+      );
 
       if (!standardConnector) {
         throw new RequestError({
-          code: 'entity.not_found',
-          status: 404,
+          code: 'connector.invalid_connector_id',
+          status: 422,
         });
       }
 
       const { count } = await countConnectorByConnectorId(connectorId);
-      console.log(count, standardConnector.metadata.isStandard);
       assertThat(
         count === 0 || standardConnector.metadata.isStandard === true,
-        'connector.multiple_instances_not_supported'
+        new RequestError({
+          code: 'connector.multiple_instances_not_supported',
+          status: 422,
+        })
       );
 
       assertThat(!config || !metadata, 'connector.config_and_metadata_empty');
@@ -110,7 +111,6 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       ctx.body = await insertConnector({
         id: (await hasConnectorWithId(connectorId)) ? generateConnectorId() : connectorId,
-        connectorId,
         ...body,
       });
 

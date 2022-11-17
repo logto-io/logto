@@ -13,10 +13,6 @@ import {
   mockConnector4,
   mockConnector5,
   mockConnector6,
-  mockConnector7,
-  mockConnector8,
-  mockConnector9,
-  mockConnector10,
   mockMetadata,
   mockMetadata0,
   mockMetadata1,
@@ -25,8 +21,6 @@ import {
   mockMetadata4,
   mockMetadata5,
   mockMetadata6,
-  mockMetadata7,
-  mockMetadata8,
 } from './connector-base-data';
 
 export const mockConnector: Connector = {
@@ -104,36 +98,6 @@ export const mockLogtoConnectorList: LogtoConnector[] = [
     dbEntry: mockConnector6,
     metadata: { ...mockMetadata6, platform: null },
     type: ConnectorType.Email,
-    ...mockLogtoConnector,
-  },
-];
-
-export const mockLogtoConnectorListInvalidDuplicateInstances: LogtoConnector[] = [
-  {
-    dbEntry: mockConnector7,
-    metadata: { ...mockMetadata7, platform: null },
-    type: ConnectorType.Social,
-    ...mockLogtoConnector,
-  },
-  {
-    dbEntry: mockConnector8,
-    metadata: { ...mockMetadata7, platform: null },
-    type: ConnectorType.Social,
-    ...mockLogtoConnector,
-  },
-];
-
-export const mockLogtoConnectorListValidDuplicateInstances: LogtoConnector[] = [
-  {
-    dbEntry: mockConnector9,
-    metadata: { ...mockMetadata8, platform: null },
-    type: ConnectorType.Social,
-    ...mockLogtoConnector,
-  },
-  {
-    dbEntry: mockConnector10,
-    metadata: { ...mockMetadata8, platform: null },
-    type: ConnectorType.Social,
     ...mockLogtoConnector,
   },
 ];

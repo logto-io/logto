@@ -108,6 +108,7 @@ const errors = {
     config_and_metadata_empty: 'You can not add a connector with both config and metadata empty.', // UNTRANSLATED
     multiple_instances_not_supported:
       'The connector you chose does not support multiple instances.', // UNTRANSLATED
+    invalid_connector_id: 'Can not add connector instance via provided connector_id.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: "Le téléphone et l'email sont vides.",

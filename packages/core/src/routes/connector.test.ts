@@ -79,7 +79,7 @@ describe('connector route', () => {
     });
   });
 
-  describe('POST /connectors/:connectorId', () => {
+  describe('POST /connectors', () => {
     const mockedCountConnectorByConnectorId = countConnectorByConnectorId as jest.Mock;
     const mockedHasConnectorWithId = hasConnectorWithId as jest.Mock;
     afterEach(() => {
@@ -95,9 +95,10 @@ describe('connector route', () => {
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
       mockedHasConnectorWithId.mockResolvedValueOnce(false);
-      const response = await connectorRequest
-        .post('/connectors/connectorId')
-        .send({ config: { cliend_id: 'client_id', client_secret: 'client_secret' } });
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'connectorId',
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
       expect(response.body).toMatchObject(
         expect.objectContaining({
           id: 'connectorId',
@@ -120,10 +121,11 @@ describe('connector route', () => {
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
       mockedHasConnectorWithId.mockResolvedValueOnce(false);
-      const response = await connectorRequest
-        .post('/connectors/id0')
-        .send({ config: { cliend_id: 'client_id', client_secret: 'client_secret' } });
-      expect(response).toHaveProperty('statusCode', 404);
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'id0',
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
+      expect(response).toHaveProperty('statusCode', 422);
     });
 
     it('should post a new record when add more than 1 instance with standard connector', async () => {
@@ -135,9 +137,10 @@ describe('connector route', () => {
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
       mockedHasConnectorWithId.mockResolvedValueOnce(false);
-      const response = await connectorRequest
-        .post('/connectors/id0')
-        .send({ config: { cliend_id: 'client_id', client_secret: 'client_secret' } });
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'id0',
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
       expect(response.body).toMatchObject(
         expect.objectContaining({
           connectorId: 'id0',
@@ -159,10 +162,11 @@ describe('connector route', () => {
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
       mockedHasConnectorWithId.mockResolvedValueOnce(false);
-      const response = await connectorRequest
-        .post('/connectors/id0')
-        .send({ config: { cliend_id: 'client_id', client_secret: 'client_secret' } });
-      expect(response).toHaveProperty('statusCode', 400);
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'id0',
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
+      expect(response).toHaveProperty('statusCode', 422);
     });
 
     it('throws when add record with empty config and metadata', async () => {
@@ -174,8 +178,8 @@ describe('connector route', () => {
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
       mockedHasConnectorWithId.mockResolvedValueOnce(false);
-      const response = await connectorRequest.post('/connectors/id0').send({});
-      expect(response).toHaveProperty('statusCode', 400);
+      const response = await connectorRequest.post('/connectors').send({ connectorId: 'id0' });
+      expect(response).toHaveProperty('statusCode', 422);
     });
   });
 
