@@ -1,9 +1,8 @@
 const settings = {
   title: 'Definições',
   description: 'Gerenciar as configurações globais',
-  tabs: {
-    general: 'Geral',
-  },
+  settings: 'Definições',
+  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   custom_domain: 'Domínio personalizado',
   language: 'Linguagem',
   appearance: 'Aparência',
