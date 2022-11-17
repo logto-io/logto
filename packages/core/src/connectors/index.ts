@@ -97,17 +97,15 @@ export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
 
   return connectors.map((connector) => {
     const { metadata, connectorId } = connector;
-    const pickedVirtualConnector = virtualConnectors.find(
-      ({ metadata: { id } }) => id === connectorId
-    );
+    const virtualConnector = virtualConnectors.find(({ metadata: { id } }) => id === connectorId);
 
-    if (!pickedVirtualConnector) {
+    if (!virtualConnector) {
       throw new RequestError({ code: 'entity.not_found', connectorId, status: 404 });
     }
 
     return {
-      ...pickedVirtualConnector,
-      metadata: { ...pickedVirtualConnector.metadata, ...metadata },
+      ...virtualConnector,
+      metadata: { ...virtualConnector.metadata, ...metadata },
       dbEntry: connector,
     };
   });
