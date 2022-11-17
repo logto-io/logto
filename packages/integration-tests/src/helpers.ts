@@ -15,6 +15,7 @@ import {
   getAuthWithSocial,
   signInWithSocial,
   updateSignInExperience,
+  postConnector,
 } from '@/api';
 import MockClient from '@/client';
 import { generateUsername, generatePassword } from '@/utils';
@@ -72,7 +73,12 @@ export const signIn = async ({ username, email, password }: SignInHelper) => {
 };
 
 export const setUpConnector = async (connectorId: string, config: Record<string, unknown>) => {
-  await updateConnectorConfig(connectorId, config);
+  try {
+    await updateConnectorConfig(connectorId, config);
+  } catch {
+    await postConnector(connectorId);
+    await updateConnectorConfig(connectorId, config);
+  }
   const connector = await enableConnector(connectorId);
   assert(connector.enabled, new Error('Connector Setup Failed'));
 };

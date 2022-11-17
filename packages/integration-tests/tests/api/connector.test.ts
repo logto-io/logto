@@ -14,6 +14,7 @@ import {
   enableConnector,
   getConnector,
   listConnectors,
+  postConnector,
   sendEmailTestMessage,
   sendSmsTestMessage,
   updateConnectorConfig,
@@ -34,6 +35,11 @@ test('connector set-up flow', async () => {
       { id: mockEmailConnectorId, config: mockEmailConnectorConfig },
       { id: mockSocialConnectorId, config: mockSocialConnectorConfig },
     ].map(async ({ id, config }) => {
+      try {
+        await getConnector(id);
+      } catch {
+        await postConnector(id);
+      }
       const updatedConnector = await updateConnectorConfig(id, config);
       expect(updatedConnector.config).toEqual(config);
       const enabledConnector = await enableConnector(id);
