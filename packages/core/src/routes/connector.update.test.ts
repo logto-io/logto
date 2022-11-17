@@ -341,9 +341,6 @@ describe('connector PATCH routes', () => {
           jsonbMode: 'replace',
         })
       );
-      expect(response.body).toMatchObject({
-        metadata: mockMetadata,
-      });
       expect(response).toHaveProperty('statusCode', 200);
     });
   });

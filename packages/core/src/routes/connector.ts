@@ -159,7 +159,11 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
       const { metadata: databaseMetadata, ...rest } = connector;
-      ctx.body = { ...rest, metadata: { ...metadata, ...databaseMetadata }, type };
+      ctx.body = {
+        ...rest,
+        metadata: metadata.isStandard === true ? { ...metadata, ...databaseMetadata } : metadata,
+        type,
+      };
 
       return next();
     }
