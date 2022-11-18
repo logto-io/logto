@@ -3,6 +3,7 @@
 .container {
   width: 100%;
   @include _.flex-column;
+  padding-bottom: _.unit(6);
 
   .headline {
     display: flex;
