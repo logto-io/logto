@@ -40,6 +40,7 @@ const general = {
   type_to_search: 'Tippe um zu suchen',
   got_it: 'Got it', // UNTRANSLATED
   page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
+  learn_more: 'Learn more', // UNTRANSLATED
 };
 
 export default general;

@@ -1,43 +1,32 @@
-import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
+import type { Application } from '@logto/schemas';
 import { ApplicationType, validateRedirectUrl } from '@logto/schemas';
-import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/components/CopyToClipboard';
+import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
 import MultiTextInput from '@/components/MultiTextInput';
 import type { MultiTextInputRule } from '@/components/MultiTextInput/types';
 import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
 import TextInput from '@/components/TextInput';
-import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { uriOriginValidator } from '@/utilities/validator';
 
 import * as styles from '../index.module.scss';
 
 type Props = {
-  applicationType: ApplicationType;
-  oidcConfig: SnakeCaseOidcConfig;
-  defaultData: Application;
-  isDeleted: boolean;
+  data: Application;
 };
 
-const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props) => {
+const Settings = ({ data }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
     register,
-    reset,
-    formState: { errors, isDirty },
+    formState: { errors },
   } = useFormContext<Application>();
 
-  useEffect(() => {
-    reset(defaultData);
-
-    return () => {
-      reset(defaultData);
-    };
-  }, [reset, defaultData]);
+  const { id, secret, type: applicationType } = data;
 
   const isNativeApp = applicationType === ApplicationType.Native;
   const uriPatternRules: MultiTextInputRule = {
@@ -48,36 +37,35 @@ const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props
   };
 
   return (
-    <>
-      <FormField
-        isRequired
-        title="application_details.application_name"
-        className={styles.textField}
-      >
+    <FormCard
+      title="application_details.settings"
+      description="application_details.settings_description"
+    >
+      <FormField isRequired title="application_details.application_name">
         <TextInput
           {...register('name', { required: true })}
           hasError={Boolean(errors.name)}
           placeholder={t('application_details.application_name_placeholder')}
         />
       </FormField>
-      <FormField title="application_details.description" className={styles.textField}>
+      <FormField title="application_details.description">
         <TextInput
           {...register('description')}
           placeholder={t('application_details.description_placeholder')}
         />
       </FormField>
-      <FormField title="application_details.application_id" className={styles.textField}>
-        <CopyToClipboard className={styles.textField} value={defaultData.id} variant="border" />
+      <FormField title="application_details.application_id">
+        <CopyToClipboard value={id} variant="border" className={styles.textField} />
       </FormField>
       {[ApplicationType.Traditional, ApplicationType.MachineToMachine].includes(
         applicationType
       ) && (
-        <FormField title="application_details.application_secret" className={styles.textField}>
+        <FormField title="application_details.application_secret">
           <CopyToClipboard
             hasVisibilityToggle
-            className={styles.textField}
-            value={defaultData.secret}
+            value={secret}
             variant="border"
+            className={styles.textField}
           />
         </FormField>
       )}
@@ -85,7 +73,6 @@ const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props
         <FormField
           isRequired
           title="application_details.redirect_uris"
-          className={styles.textField}
           tooltip="application_details.redirect_uri_tip"
         >
           <Controller
@@ -117,7 +104,6 @@ const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props
       {applicationType !== ApplicationType.MachineToMachine && (
         <FormField
           title="application_details.post_sign_out_redirect_uris"
-          className={styles.textField}
           tooltip="application_details.post_sign_out_redirect_uri_tip"
         >
           <Controller
@@ -142,7 +128,6 @@ const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props
       {applicationType !== ApplicationType.MachineToMachine && (
         <FormField
           title="application_details.cors_allowed_origins"
-          className={styles.textField}
           tooltip="application_details.cors_allowed_origins_tip"
         >
           <Controller
@@ -169,8 +154,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props
           />
         </FormField>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
-    </>
+    </FormCard>
   );
 };
 

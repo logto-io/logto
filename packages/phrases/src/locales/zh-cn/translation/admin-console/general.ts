@@ -39,6 +39,7 @@ const general = {
   type_to_search: '输入搜索',
   got_it: 'Got it', // UNTRANSLATED
   page_info: '{{min, number}}-{{max, number}} 共 {{total, number}} 条', // UNTRANSLATED
+  learn_more: 'Learn more', // UNTRANSLATED
 };
 
 export default general;
