@@ -10,6 +10,7 @@ const general = {
   save: 'Kaydet',
   save_changes: 'Değişiklikleri Kaydet',
   saved: 'Kaydedildi!',
+  discard: 'Discard', // UNTRANSLATED
   loading: 'Yükleniyor...',
   redirecting: 'Yönlendiriliyor...',
   add: 'Ekle',
