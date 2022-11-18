@@ -1,23 +1,24 @@
+/* eslint-disable max-lines */
 import { ConnectorType } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
 import { SignUpIdentifier } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
-import { mockLogtoConnectorList, mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 import socialRoutes, { registerRoute, signInRoute } from './social.js';
 
+import { mockLogtoConnectorList, mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
+
 const findSocialRelatedUser = jest.fn(async () => [
   'phone',
   { id: 'user1', identities: {}, isSuspended: false },
 ]);
-jest.mock('#src/lib/social.js', () => ({
-  ...jest.requireActual('#src/lib/social.js'),
-  findSocialRelatedUser: async () => findSocialRelatedUser(),
-  async getUserInfoByAuthCode(connectorId: string, data: { code: string }) {
+
+const getUserInfoByAuthCode = jest.fn(
+  async (connectorId: string, data: { code: string }): Promise<SocialUserInfo> => {
     if (connectorId === '_connectorId') {
       throw new RequestError({
         code: 'session.invalid_connector_id',
@@ -33,7 +34,14 @@ jest.mock('#src/lib/social.js', () => ({
     // This mocks the case that can not get userInfo with access token and auth code
     // (most likely third-party social connectors' problem).
     throw new Error(' ');
-  },
+  }
+);
+
+jest.mock('#src/lib/social.js', () => ({
+  ...jest.requireActual('#src/lib/social.js'),
+  findSocialRelatedUser: async () => findSocialRelatedUser(),
+  getUserInfoByAuthCode: async (connectorId: string, data: { code: string }) =>
+    getUserInfoByAuthCode(connectorId, data),
 }));
 const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
@@ -184,10 +192,14 @@ describe('session -> socialRoutes', () => {
 
   describe('POST /session/sign-in/social/auth', () => {
     const connectorTarget = 'connectorTarget';
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
 
     it('throw error when auth code is wrong', async () => {
       (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
         metadata: { target: connectorTarget },
+        dbEntry: { syncProfile: false },
       });
       const response = await sessionRequest.post(`${signInRoute}/auth`).send({
         connectorId: 'connectorId',
@@ -201,6 +213,7 @@ describe('session -> socialRoutes', () => {
     it('throw error when code is provided but connector can not be found', async () => {
       (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
         metadata: { target: connectorTarget },
+        dbEntry: { syncProfile: false },
       });
       const response = await sessionRequest.post(`${signInRoute}/auth`).send({
         connectorId: '_connectorId',
@@ -214,6 +227,7 @@ describe('session -> socialRoutes', () => {
     it('get and add user info with auth code, as well as assign result and redirect', async () => {
       (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
         metadata: { target: connectorTarget },
+        dbEntry: { syncProfile: false },
       });
       const response = await sessionRequest.post(`${signInRoute}/auth`).send({
         connectorId: 'connectorId',
@@ -244,6 +258,7 @@ describe('session -> socialRoutes', () => {
     it('throw error when user is suspended', async () => {
       (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
         metadata: { target: connectorTarget },
+        dbEntry: { syncProfile: false },
       });
       findUserByIdentity.mockResolvedValueOnce({
         ...mockUser,
@@ -264,6 +279,7 @@ describe('session -> socialRoutes', () => {
       const wrongConnectorTarget = 'wrongConnectorTarget';
       (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
         metadata: { target: wrongConnectorTarget },
+        dbEntry: { syncProfile: false },
       });
       const response = await sessionRequest.post(`${signInRoute}/auth`).send({
         connectorId: '_connectorId_',
@@ -282,6 +298,58 @@ describe('session -> socialRoutes', () => {
         expect.anything()
       );
       expect(response.statusCode).toEqual(422);
+    });
+
+    it('should update `name` and `avatar` if exists when `syncProfile` is set to be true', async () => {
+      (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
+        metadata: { target: connectorTarget },
+        dbEntry: { syncProfile: true },
+      });
+      findUserByIdentity.mockResolvedValueOnce(mockUser);
+      getUserInfoByAuthCode.mockResolvedValueOnce({
+        ...mockUser,
+        name: 'new_name',
+        avatar: 'new_avatar',
+      });
+      await sessionRequest.post(`${signInRoute}/auth`).send({
+        connectorId: 'connectorId',
+        data: {
+          state: 'state',
+          redirectUri: 'https://logto.dev',
+          code: '123456',
+        },
+      });
+      expect(updateUserById).toHaveBeenCalledWith(
+        mockUser.id,
+        expect.objectContaining({ name: 'new_name', avatar: 'new_avatar' })
+      );
+    });
+
+    it('should not update `name` and `avatar` if exists when `syncProfile` is set to be false', async () => {
+      (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
+        metadata: { target: connectorTarget },
+        dbEntry: { syncProfile: true },
+      });
+      findUserByIdentity.mockResolvedValueOnce(mockUser);
+      getUserInfoByAuthCode.mockResolvedValueOnce({
+        ...mockUser,
+        name: 'new_name',
+        avatar: 'new_avatar',
+      });
+      await sessionRequest.post(`${signInRoute}/auth`).send({
+        connectorId: 'connectorId',
+        data: {
+          state: 'state',
+          redirectUri: 'https://logto.dev',
+          code: '123456',
+        },
+      });
+      expect(updateUserById).not.toHaveBeenCalledWith(mockUser.id, {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        identities: expect.anything(),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        lastSignInAt: expect.anything(),
+      });
     });
   });
 
@@ -429,3 +497,4 @@ describe('session -> socialRoutes', () => {
     });
   });
 });
+/* eslint-enable max-lines */

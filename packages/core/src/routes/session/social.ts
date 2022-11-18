@@ -70,6 +70,7 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       ctx.log(type, { connectorId, data });
       const {
         metadata: { target },
+        dbEntry: { syncProfile },
       } = await getLogtoConnectorById(connectorId);
 
       const userInfo = await getUserInfoByAuthCode(connectorId, data);
@@ -98,10 +99,17 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
       ctx.log(type, { userId: id });
 
+      const { name, avatar } = userInfo;
+      const profileUpdate = {
+        name: syncProfile && name ? name : undefined,
+        avatar: syncProfile && avatar ? avatar : undefined,
+      };
+
       // Update social connector's user info
       await updateUserById(id, {
         identities: { ...identities, [target]: { userId: userInfo.id, details: userInfo } },
         lastSignInAt: Date.now(),
+        ...profileUpdate,
       });
 
       const signInExperience = await getSignInExperienceForApplication(
