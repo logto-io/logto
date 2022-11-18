@@ -1,5 +1,8 @@
 const api_resource_details = {
   back_to_api_resources: 'API 리소스로 돌아가기',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'With Applications you can. Setup a mobile, web or IoT application to use Auth0 for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
   token_expiration_time_in_seconds: '토큰 만료 시간 (초)',
   token_expiration_time_in_seconds_placeholder: '토큰 만료 시간을 입력해주세요',
   delete_description:

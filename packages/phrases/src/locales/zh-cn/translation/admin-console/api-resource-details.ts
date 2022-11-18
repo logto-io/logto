@@ -1,5 +1,8 @@
 const api_resource_details = {
   back_to_api_resources: '返回 API 资源',
+  settings: '设置',
+  settings_description:
+    'With Applications you can. Setup a mobile, web or IoT application to use Auth0 for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
   token_expiration_time_in_seconds: 'Token 过期时间（秒）',
   token_expiration_time_in_seconds_placeholder: '请输入你的 token 过期时间',
   delete_description:
