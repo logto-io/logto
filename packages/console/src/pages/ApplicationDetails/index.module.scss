@@ -18,24 +18,8 @@
   }
 }
 
-.formContent {
-  >:not(:first-child) {
-    margin-top: _.unit(4);
-  }
-
-  .fieldsContent {
-    > :not(:first-child) {
-      margin-top: _.unit(4);
-    }
-
-    &:last-child {
-      margin-bottom: _.unit(6);
-    }
-  }
-
-  .textField {
-    @include _.form-text-field;
-  }
+.textField {
+  @include _.form-text-field;
 }
 
 .header {

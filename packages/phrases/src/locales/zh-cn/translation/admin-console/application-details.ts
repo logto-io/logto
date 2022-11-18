@@ -3,7 +3,7 @@ const application_details = {
   check_guide: '查看指南',
   settings: '设置',
   settings_description:
-    'With Applications you can. Setup a mobile, web or IoT application to use Auth0 for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
+    'With Applications you can. Setup a mobile, web or IoT application to use Logto for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
   advanced_settings: '高级设置',
   advanced_settings_description:
     'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED

@@ -1,7 +1,6 @@
 import type { Resource } from '@logto/schemas';
 import { AppearanceMode } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -15,11 +14,12 @@ import Back from '@/assets/images/back.svg';
 import Delete from '@/assets/images/delete.svg';
 import More from '@/assets/images/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
-import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
+import DetailsForm from '@/components/DetailsForm';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
+import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
@@ -159,47 +159,38 @@ const ApiResourceDetails = () => {
               </div>
             )}
           </Card>
-          <Card className={classNames(styles.body, detailsStyles.body)}>
-            <TabNav>
-              <TabNavItem href={location.pathname}>{t('general.settings_nav')}</TabNavItem>
-            </TabNav>
-            <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
-              <div className={styles.fields}>
-                <FormField isRequired title="api_resources.api_name" className={styles.textField}>
-                  <TextInput
-                    {...register('name', { required: true })}
-                    hasError={Boolean(errors.name)}
-                    readOnly={isLogtoManagementApiResource}
-                    placeholder={t('api_resources.api_name_placeholder')}
-                  />
-                </FormField>
-                <FormField
-                  isRequired
-                  title="api_resource_details.token_expiration_time_in_seconds"
-                  className={styles.textField}
-                >
-                  <TextInput
-                    {...register('accessTokenTtl', { required: true, valueAsNumber: true })}
-                    hasError={Boolean(errors.accessTokenTtl)}
-                    placeholder={t(
-                      'api_resource_details.token_expiration_time_in_seconds_placeholder'
-                    )}
-                  />
-                </FormField>
-              </div>
-              <div className={detailsStyles.footer}>
-                <div className={detailsStyles.footerMain}>
-                  <Button
-                    isLoading={isSubmitting}
-                    htmlType="submit"
-                    type="primary"
-                    title="general.save_changes"
-                    size="large"
-                  />
-                </div>
-              </div>
-            </form>
-          </Card>
+          <TabNav>
+            <TabNavItem href={location.pathname}>{t('general.settings_nav')}</TabNavItem>
+          </TabNav>
+          <DetailsForm
+            isDirty={isDirty}
+            isSubmitting={isSubmitting}
+            onDiscard={reset}
+            onSubmit={onSubmit}
+          >
+            <FormCard
+              title="api_resource_details.settings"
+              description="api_resource_details.settings_description"
+            >
+              <FormField isRequired title="api_resources.api_name">
+                <TextInput
+                  {...register('name', { required: true })}
+                  hasError={Boolean(errors.name)}
+                  readOnly={isLogtoManagementApiResource}
+                  placeholder={t('api_resources.api_name_placeholder')}
+                />
+              </FormField>
+              <FormField isRequired title="api_resource_details.token_expiration_time_in_seconds">
+                <TextInput
+                  {...register('accessTokenTtl', { required: true, valueAsNumber: true })}
+                  hasError={Boolean(errors.accessTokenTtl)}
+                  placeholder={t(
+                    'api_resource_details.token_expiration_time_in_seconds_placeholder'
+                  )}
+                />
+              </FormField>
+            </FormCard>
+          </DetailsForm>
         </>
       )}
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />

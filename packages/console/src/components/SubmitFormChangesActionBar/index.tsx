@@ -14,7 +14,14 @@ const SubmitFormChangesActionBar = ({ isOpen, isSubmitting, onDiscard }: Props) 
 
   return (
     <div className={styles.container}>
-      <Button size="medium" title="general.discard" disabled={isSubmitting} onClick={onDiscard} />
+      <Button
+        size="medium"
+        title="general.discard"
+        disabled={isSubmitting}
+        onClick={() => {
+          onDiscard();
+        }}
+      />
       <Button
         isLoading={isSubmitting}
         htmlType="submit"

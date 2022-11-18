@@ -16,10 +16,10 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
+import DetailsForm from '@/components/DetailsForm';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import LinkButton from '@/components/LinkButton';
-import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
@@ -205,19 +205,15 @@ const ApplicationDetails = () => {
             </TabNavItem>
           </TabNav>
           <FormProvider {...formMethods}>
-            <form className={styles.formContent} onSubmit={onSubmit}>
-              <div className={styles.fieldsContent}>
-                <Settings data={data} />
-                <AdvancedSettings applicationType={data.type} oidcConfig={oidcConfig} />
-              </div>
-              <SubmitFormChangesActionBar
-                isOpen={isDirty}
-                isSubmitting={isSubmitting}
-                onDiscard={() => {
-                  reset();
-                }}
-              />
-            </form>
+            <DetailsForm
+              isDirty={isDirty}
+              isSubmitting={isSubmitting}
+              onDiscard={reset}
+              onSubmit={onSubmit}
+            >
+              <Settings data={data} />
+              <AdvancedSettings applicationType={data.type} oidcConfig={oidcConfig} />
+            </DetailsForm>
           </FormProvider>
         </>
       )}
