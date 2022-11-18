@@ -1,4 +1,4 @@
-import { configurableConnectorMetadataGuard, MessageTypes } from '@logto/connector-kit';
+import { MessageTypes } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import type { ConnectorResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
@@ -132,38 +132,39 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     '/connectors/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Connectors.createGuard
-        .omit({ id: true, connectorId: true, enabled: true, syncProfile: true, createdAt: true })
-        .partial(),
+      body: Connectors.createGuard.pick({ config: true, metadata: true }).partial(),
     }),
+
     async (ctx, next) => {
       const {
         params: { id },
+        body: { config, metadata: databaseMetadata },
         body,
       } = ctx.guard;
 
-      const { metadata, type, validateConfig } = await getLogtoConnectorById(id);
+      const {
+        metadata: { isStandard },
+        metadata,
+        type,
+        validateConfig,
+      } = await getLogtoConnectorById(id);
 
-      if (body.config) {
-        validateConfig(body.config);
+      if (config) {
+        validateConfig(config);
       }
 
-      if (metadata.isStandard === true) {
-        const databaseMetadataGuard = configurableConnectorMetadataGuard.required();
-        const result = databaseMetadataGuard.safeParse(body.metadata);
-
-        if (!result.success) {
-          throw new RequestError({ code: 'connector.invalid_configurable_metadata', status: 422 });
-        }
+      if (isStandard === true) {
+        assertThat(
+          databaseMetadata?.target &&
+            databaseMetadata.name &&
+            databaseMetadata.logo &&
+            databaseMetadata.logoDark !== undefined,
+          new RequestError({ code: 'connector.invalid_configurable_metadata', status: 422 })
+        );
       }
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
-      const { metadata: databaseMetadata, ...rest } = connector;
-      ctx.body = {
-        ...rest,
-        metadata: metadata.isStandard === true ? { ...metadata, ...databaseMetadata } : metadata,
-        type,
-      };
+      ctx.body = { ...connector, metadata, type };
 
       return next();
     }
