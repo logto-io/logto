@@ -138,30 +138,17 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const {
         params: { id },
-        body: { config, metadata: databaseMetadata },
+        body: { config },
         body,
       } = ctx.guard;
 
-      const {
-        metadata: { isStandard },
-        metadata,
-        type,
-        validateConfig,
-      } = await getLogtoConnectorById(id);
+      const { metadata, type, validateConfig } = await getLogtoConnectorById(id);
 
       if (config) {
         validateConfig(config);
       }
 
-      if (isStandard === true) {
-        assertThat(
-          databaseMetadata?.target &&
-            databaseMetadata.name &&
-            databaseMetadata.logo &&
-            databaseMetadata.logoDark !== undefined,
-          new RequestError({ code: 'connector.invalid_configurable_metadata', status: 422 })
-        );
-      }
+      // TODO: revisit databaseMetadata check when implementing AC
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
       ctx.body = { ...connector, metadata, type };
