@@ -1,9 +1,16 @@
+/* eslint-disable max-lines */
 import type { CreateUser, User } from '@logto/schemas';
-import { SignUpIdentifier } from '@logto/schemas';
+import { ConnectorType, SignUpIdentifier } from '@logto/schemas';
 import { getUnixTime } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
-import { mockPasswordEncrypted, mockUser, mockUserResponse } from '@/__mocks__';
+import {
+  mockLogtoConnectorList,
+  mockPasswordEncrypted,
+  mockUser,
+  mockUserResponse,
+} from '@/__mocks__';
+import type { SocialUserInfo } from '@/connectors/types';
 import { createRequester } from '@/utils/test-utils';
 
 import profileRoutes, { profileRoute } from './profile';
@@ -18,6 +25,7 @@ const mockUpdateUserById = jest.fn(
     ...data,
   })
 );
+const mockDeleteUserIdentity = jest.fn();
 const encryptUserPassword = jest.fn(async (password: string) => ({
   passwordEncrypted: password + '_user1',
   passwordEncryptionMethod: 'Argon2i',
@@ -38,6 +46,28 @@ jest.mock('@/lib/user', () => ({
   encryptUserPassword: async (password: string) => encryptUserPassword(password),
 }));
 
+const mockGetLogtoConnectorById = jest.fn(async () => ({
+  dbEntry: { enabled: true },
+  metadata: { id: 'connectorId', target: 'mock_social' },
+  type: ConnectorType.Social,
+  getAuthorizationUri: jest.fn(async () => ''),
+}));
+
+jest.mock('@/connectors', () => ({
+  getLogtoConnectors: jest.fn(async () => mockLogtoConnectorList),
+  getLogtoConnectorById: jest.fn(async () => mockGetLogtoConnectorById()),
+}));
+
+const mockFindSocialRelatedUser = jest.fn(async () => [
+  { id: 'user1', identities: {}, isSuspended: false },
+]);
+const mockGetUserInfoByAuthCode = jest.fn();
+jest.mock('@/lib/social', () => ({
+  ...jest.requireActual('@/lib/social'),
+  findSocialRelatedUser: async () => mockFindSocialRelatedUser(),
+  getUserInfoByAuthCode: async () => mockGetUserInfoByAuthCode(),
+}));
+
 jest.mock('@/queries/user', () => ({
   ...jest.requireActual('@/queries/user'),
   findUserById: async () => mockFindUserById(),
@@ -45,6 +75,7 @@ jest.mock('@/queries/user', () => ({
   hasUserWithEmail: async () => mockHasUserWithEmail(),
   hasUserWithPhone: async () => mockHasUserWithPhone(),
   updateUserById: async (id: string, data: Partial<CreateUser>) => mockUpdateUserById(id, data),
+  deleteUserIdentity: async (...args: unknown[]) => mockDeleteUserIdentity(...args),
 }));
 
 const mockFindDefaultSignInExperience = jest.fn(async () => ({
@@ -382,4 +413,85 @@ describe('session -> profileRoutes', () => {
       expect(mockUpdateUserById).not.toBeCalled();
     });
   });
+
+  describe('social identities related APIs', () => {
+    it('should update social identities for current user', async () => {
+      const mockSocialUserInfo: SocialUserInfo = {
+        id: 'social_user_id',
+        name: 'John Doe',
+        avatar: 'https://avatar.social.com/johndoe',
+        email: 'johndoe@social.com',
+        phone: '123456789',
+      };
+      mockGetUserInfoByAuthCode.mockReturnValueOnce(mockSocialUserInfo);
+
+      const response = await sessionRequest.patch(`${profileRoute}/identities`).send({
+        connectorId: 'connectorId',
+        data: { code: '123456' },
+      });
+
+      expect(response.statusCode).toEqual(204);
+      expect(mockUpdateUserById).toBeCalledWith(
+        'id',
+        expect.objectContaining({
+          identities: {
+            ...mockUser.identities,
+            mock_social: { userId: mockSocialUserInfo.id, details: mockSocialUserInfo },
+          },
+        })
+      );
+    });
+
+    it('should throw when the user is not authenticated', async () => {
+      mockGetSession.mockImplementationOnce(
+        jest.fn(async () => ({
+          accountId: undefined,
+          loginTs: undefined,
+        }))
+      );
+
+      const response = await sessionRequest.patch(`${profileRoute}/identities`).send({
+        connectorId: 'connectorId',
+        data: { code: '123456' },
+      });
+
+      expect(response.statusCode).toEqual(401);
+      expect(mockUpdateUserById).not.toBeCalled();
+    });
+
+    it('should throw if last authentication time is over 10 mins ago on linking email', async () => {
+      mockGetSession.mockImplementationOnce(async () => ({
+        accountId: 'id',
+        loginTs: getUnixTime(new Date()) - 601,
+      }));
+
+      const response = await sessionRequest
+        .patch(`${profileRoute}/identities`)
+        .send({ connectorId: 'connectorId', data: { code: '123456' } });
+
+      expect(response.statusCode).toEqual(422);
+      expect(mockUpdateUserById).not.toBeCalled();
+    });
+
+    it('should unlink social identities from user', async () => {
+      mockFindUserById.mockImplementationOnce(async () => ({
+        ...mockUser,
+        identities: {
+          mock_social: {
+            userId: 'social_user_id',
+            details: {
+              id: 'social_user_id',
+              name: 'John Doe',
+            },
+          },
+        },
+      }));
+
+      const response = await sessionRequest.delete(`${profileRoute}/identities/mock_social`);
+
+      expect(response.statusCode).toEqual(204);
+      expect(mockDeleteUserIdentity).toBeCalledWith('id', 'mock_social');
+    });
+  });
 });
+/* eslint-enable max-lines */

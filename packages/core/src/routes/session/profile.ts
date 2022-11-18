@@ -1,15 +1,18 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
+import { has } from '@silverhand/essentials';
 import { argon2Verify } from 'hash-wasm';
 import pick from 'lodash.pick';
 import type { Provider } from 'oidc-provider';
-import { object, string } from 'zod';
+import { object, string, unknown } from 'zod';
 
+import { getLogtoConnectorById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { checkSessionHealth } from '@/lib/session';
+import { getUserInfoByAuthCode } from '@/lib/social';
 import { encryptUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findUserById, updateUserById } from '@/queries/user';
+import { deleteUserIdentity, findUserById, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import type { AnonymousRouter } from '../types';
@@ -178,4 +181,66 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
 
     return next();
   });
+
+  router.patch(
+    `${profileRoute}/identities`,
+    koaGuard({
+      body: object({
+        connectorId: string(),
+        data: unknown(),
+      }),
+    }),
+    async (ctx, next) => {
+      const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+
+      assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
+
+      const { connectorId, data } = ctx.guard.body;
+
+      const {
+        metadata: { target },
+      } = await getLogtoConnectorById(connectorId);
+
+      const socialUserInfo = await getUserInfoByAuthCode(connectorId, data);
+      const { identities } = await findUserById(userId);
+
+      await updateUserById(userId, {
+        identities: {
+          ...identities,
+          [target]: { userId: socialUserInfo.id, details: socialUserInfo },
+        },
+      });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.delete(
+    `${profileRoute}/identities/:target`,
+    koaGuard({
+      params: object({ target: string() }),
+    }),
+    async (ctx, next) => {
+      const { accountId: userId } = await provider.Session.get(ctx);
+
+      assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
+
+      const { target } = ctx.guard.params;
+      const { identities } = await findUserById(userId);
+
+      assertThat(
+        has(identities, target),
+        new RequestError({ code: 'user.identity_not_exists', status: 404 })
+      );
+
+      console.log('##############shit:', userId, target);
+      await deleteUserIdentity(userId, target);
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
 }
