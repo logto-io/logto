@@ -1,19 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.card {
-  @include _.flex-column;
-}
-
-.headline {
-  display: flex;
-  justify-content: space-between;
-}
-
-.table {
-  margin-top: _.unit(4);
-  flex: 1;
-}
-
 .icon {
   flex-shrink: 0;
 }

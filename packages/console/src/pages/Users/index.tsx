@@ -10,7 +10,6 @@ import useSWR from 'swr';
 import Plus from '@/assets/images/plus.svg';
 import ApplicationName from '@/components/ApplicationName';
 import Button from '@/components/Button';
-import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import DateTime from '@/components/DateTime';
 import ItemPreview from '@/components/ItemPreview';
@@ -23,6 +22,7 @@ import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import CreateForm from './components/CreateForm';
@@ -46,8 +46,8 @@ const Users = () => {
   const [users, totalCount] = data ?? [];
 
   return (
-    <Card className={styles.card}>
-      <div className={styles.headline}>
+    <div className={resourcesStyles.container}>
+      <div className={resourcesStyles.headline}>
         <CardTitle title="users.title" subtitle="users.subtitle" />
         <Button
           title="users.create"
@@ -156,15 +156,16 @@ const Users = () => {
       <div className={styles.pagination}>
         {!!totalCount && (
           <Pagination
-            pageCount={Math.ceil(totalCount / pageSize)}
             pageIndex={pageIndex}
+            totalCount={totalCount}
+            pageSize={pageSize}
             onChange={(page) => {
               setQuery({ page: String(page), ...conditional(keyword && { search: keyword }) });
             }}
           />
         )}
       </div>
-    </Card>
+    </div>
   );
 };
 

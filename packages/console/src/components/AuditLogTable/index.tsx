@@ -13,6 +13,7 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import UserName from '@/components/UserName';
 import type { RequestError } from '@/hooks/use-api';
+import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import ApplicationSelector from './components/ApplicationSelector';
@@ -85,7 +86,7 @@ const AuditLogTable = ({ userId }: Props) => {
           />
         </div>
       </div>
-      <div className={classNames(styles.table, tableStyles.scrollable)}>
+      <div className={classNames(resourcesStyles.table, tableStyles.scrollable)}>
         <table className={classNames(logs?.length === 0 && tableStyles.empty)}>
           <colgroup>
             <col className={styles.eventName} />
@@ -141,8 +142,9 @@ const AuditLogTable = ({ userId }: Props) => {
       <div className={styles.pagination}>
         {!!totalCount && (
           <Pagination
-            pageCount={Math.ceil(totalCount / pageSize)}
             pageIndex={pageIndex}
+            totalCount={totalCount}
+            pageSize={pageSize}
             onChange={(page) => {
               updateQuery('page', String(page));
             }}

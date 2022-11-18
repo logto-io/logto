@@ -38,6 +38,7 @@ const general = {
   stay_on_page: 'Bu sayfada kal',
   type_to_search: 'Type to search', // UNTRANSLATED
   got_it: 'Got it', // UNTRANSLATED
+  page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
 };
 
 export default general;

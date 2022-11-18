@@ -1,22 +1,7 @@
 @use '@/scss/underscore' as _;
 
-.card {
-  @include _.flex-column;
-}
-
-.headline {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .tabs {
   margin-top: _.unit(4);
-}
-
-.table {
-  margin-top: _.unit(4);
-  flex: 1;
 }
 
 .connectorName {
