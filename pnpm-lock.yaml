@@ -712,7 +712,7 @@ importers:
       react-string-replace: ^1.0.0
       react-timer-hook: ^3.0.5
       stylelint: ^14.9.1
-      superstruct: ^0.16.0
+      superstruct: ^1.0.0
       typescript: ^4.7.4
       use-debounced-loader: ^0.1.1
     devDependencies:
@@ -765,7 +765,7 @@ importers:
       react-string-replace: 1.0.0
       react-timer-hook: 3.0.5_biqbaboplfbrettd7655fr4n2y
       stylelint: 14.9.1
-      superstruct: 0.16.0
+      superstruct: 1.0.3
       typescript: 4.7.4
       use-debounced-loader: 0.1.1_react@18.2.0
 
@@ -13157,8 +13157,9 @@ packages:
       - supports-color
     dev: true
 
-  /superstruct/0.16.0:
-    resolution: {integrity: sha512-IDQtwnnlaan1NhuHqyD/U11lROYvCQ79JyfwlFU9xEVHzqV/Ys/RrwmHPCG0CVH/1g0BuodEjH1msxK2UHxehA==}
+  /superstruct/1.0.3:
+    resolution: {integrity: sha512-8iTn3oSS8nRGn+C2pgXSKPI3jmpm6FExNazNpjvqS6ZUJQCej3PUXEKM8NjHBOs54ExM+LPW/FBRhymrdcCiSg==}
+    engines: {node: '>=14.0.0'}
     dev: true
 
   /supertest/6.2.2:
