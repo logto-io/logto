@@ -148,7 +148,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         validateConfig(config);
       }
 
-      // TODO[LOG-4696]: revisit databaseMetadata check when implementing AC
+      // FIXME @Darcy [LOG-4696]: revisit databaseMetadata check when implementing AC
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
       ctx.body = { ...connector, metadata, type };
