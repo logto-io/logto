@@ -2,7 +2,7 @@ const api_resource_details = {
   back_to_api_resources: 'Voltar aos recursos API',
   settings: 'Settings', // UNTRANSLATED
   settings_description:
-    'With Applications you can. Setup a mobile, web or IoT application to use Auth0 for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
+    'With Applications you can. Setup a mobile, web or IoT application to use Logto for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
   token_expiration_time_in_seconds: 'Tempo de expiração do token (em segundos)',
   token_expiration_time_in_seconds_placeholder: 'Insira o tempo de expiração do token',
   delete_description:
