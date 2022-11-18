@@ -36,6 +36,7 @@ const getLogtoConnectorByIdPlaceholder = jest.fn(async (connectorId: string) => 
     sendMessage: sendMessagePlaceHolder,
   };
 }) as jest.MockedFunction<(connectorId: string) => Promise<LogtoConnector>>;
+const mockedUpdateConnector = updateConnector as jest.Mock;
 const sendMessagePlaceHolder = jest.fn();
 
 jest.mock('@/queries/connector', () => ({
@@ -276,24 +277,44 @@ describe('connector PATCH routes', () => {
       getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
         {
           dbEntry: mockConnector,
-          metadata: mockMetadata,
-          type: ConnectorType.Sms,
+          metadata: { ...mockMetadata, isStandard: true },
+          type: ConnectorType.Social,
           ...mockLogtoConnector,
         },
       ]);
-      const response = await connectorRequest
-        .patch('/connectors/id')
-        .send({ config: { cliend_id: 'client_id', client_secret: 'client_secret' } });
+      mockedUpdateConnector.mockResolvedValueOnce({
+        ...mockConnector,
+        metadata: {
+          target: 'target',
+          name: { en: 'connector_name', fr: 'connector_name' },
+          logo: 'new_logo.png',
+          logoDark: null,
+        },
+      });
+      const response = await connectorRequest.patch('/connectors/id').send({
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+        metadata: {
+          target: 'target',
+          name: { en: 'connector_name', fr: 'connector_name' },
+          logo: 'new_logo.png',
+          logoDark: null,
+        },
+      });
       expect(updateConnector).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: 'id' },
-          set: { config: { cliend_id: 'client_id', client_secret: 'client_secret' } },
+          set: {
+            config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+            metadata: {
+              target: 'target',
+              name: { en: 'connector_name', fr: 'connector_name' },
+              logo: 'new_logo.png',
+              logoDark: null,
+            },
+          },
           jsonbMode: 'replace',
         })
       );
-      expect(response.body).toMatchObject({
-        metadata: mockMetadata,
-      });
       expect(response).toHaveProperty('statusCode', 200);
     });
   });

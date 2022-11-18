@@ -251,7 +251,7 @@ importers:
   packages/core:
     specifiers:
       '@logto/cli': workspace:^
-      '@logto/connector-kit': 1.0.0-beta.22
+      '@logto/connector-kit': 1.0.0-beta.23
       '@logto/core-kit': ^1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': workspace:^
@@ -329,7 +329,7 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@logto/cli': link:../cli
-      '@logto/connector-kit': 1.0.0-beta.22
+      '@logto/connector-kit': 1.0.0-beta.23
       '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': link:../phrases
@@ -575,7 +575,7 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-kit': 1.0.0-beta.22
+      '@logto/connector-kit': 1.0.0-beta.23
       '@logto/core-kit': 1.0.0-beta.21
       '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': workspace:^
@@ -600,7 +600,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.19.1
     dependencies:
-      '@logto/connector-kit': 1.0.0-beta.22
+      '@logto/connector-kit': 1.0.0-beta.23
       '@logto/core-kit': 1.0.0-beta.21
       '@logto/language-kit': 1.0.0-beta.21
       '@logto/phrases': link:../phrases
@@ -2293,8 +2293,8 @@ packages:
       lodash.once: 4.1.1
     dev: true
 
-  /@logto/connector-kit/1.0.0-beta.22:
-    resolution: {integrity: sha512-ZlZup6yPaaWerpH53din/FcTfEK6M1M0TMh0W9CIYQtazGNilPWiJh1wo1iVZlFzC9KS+m/x2HDj41NVwKlHwQ==}
+  /@logto/connector-kit/1.0.0-beta.23:
+    resolution: {integrity: sha512-j5y/jH9mA+i2vk2xcfXPswHH8AfE5nC47C4SLQTWDwI+s4V6OL6A/d45qSqPcnj8orF4fn8GtA5F7YOsc/ty3w==}
     engines: {node: ^16.0.0}
     dependencies:
       '@logto/core-kit': 1.0.0-beta.21

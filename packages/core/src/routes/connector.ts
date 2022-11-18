@@ -132,19 +132,23 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     '/connectors/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Connectors.createGuard.omit({ id: true, enabled: true, createdAt: true }).partial(),
+      body: Connectors.createGuard.pick({ config: true, metadata: true }).partial(),
     }),
+
     async (ctx, next) => {
       const {
         params: { id },
+        body: { config },
         body,
       } = ctx.guard;
 
       const { metadata, type, validateConfig } = await getLogtoConnectorById(id);
 
-      if (body.config) {
-        validateConfig(body.config);
+      if (config) {
+        validateConfig(config);
       }
+
+      // FIXME @Darcy [LOG-4696]: revisit databaseMetadata check when implementing AC
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
       ctx.body = { ...connector, metadata, type };
