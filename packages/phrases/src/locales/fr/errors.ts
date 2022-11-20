@@ -105,6 +105,9 @@ const errors = {
     more_than_one_email: 'Le nombre de connecteurs Email est supérieur à 1.',
     db_connector_type_mismatch:
       'Il y a un connecteur dans la base de donnée qui ne correspond pas au type.',
+    not_found_with_connector_id: 'Can not find connector with given standard connector id.', // UNTRANSLATED
+    multiple_instances_not_supported:
+      'Can not create multiple instance with picked standard connector.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: "Le téléphone et l'email sont vides.",

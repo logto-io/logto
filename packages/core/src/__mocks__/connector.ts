@@ -3,7 +3,7 @@ import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import type { LogtoConnector } from '@/connectors/types';
+import type { LoadConnector, LogtoConnector } from '@/connectors/types';
 
 import {
   mockConnector0,
@@ -41,6 +41,12 @@ export const mockLogtoConnector = {
   sendMessage: jest.fn(),
   validateConfig: jest.fn(),
   configGuard: any(),
+};
+
+export const mockLoadConnector: LoadConnector = {
+  metadata: mockMetadata,
+  type: ConnectorType.Social,
+  ...mockLogtoConnector,
 };
 
 export const mockConnectorList: Connector[] = [

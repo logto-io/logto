@@ -3,20 +3,34 @@ import { MessageTypes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import { mockMetadata, mockConnector, mockLogtoConnectorList } from '@/__mocks__';
+import {
+  mockMetadata,
+  mockConnector,
+  mockLoadConnector,
+  mockLogtoConnectorList,
+} from '@/__mocks__';
 import { defaultConnectorMethods } from '@/connectors/consts';
-import type { LogtoConnector } from '@/connectors/types';
+import type { LoadConnector, LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
+import { countConnectorByConnectorId, hasConnectorWithId } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
 import { createRequester } from '@/utils/test-utils';
 
 import connectorRoutes from './connector';
 
+const loadConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<() => Promise<LoadConnector[]>>;
 const getLogtoConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<LogtoConnector[]>
 >;
 
+jest.mock('@/queries/connector', () => ({
+  countConnectorByConnectorId: jest.fn(),
+  hasConnectorWithId: jest.fn(),
+  insertConnector: jest.fn(async (body: unknown) => body),
+}));
+
 jest.mock('@/connectors', () => ({
+  loadConnectors: async () => loadConnectorsPlaceHolder(),
   getLogtoConnectors: async () => getLogtoConnectorsPlaceHolder(),
   getLogtoConnectorById: async (connectorId: string) => {
     const connectors = await getLogtoConnectorsPlaceHolder();
@@ -86,6 +100,97 @@ describe('connector route', () => {
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(mockLogtoConnectorList);
       const response = await connectorRequest.get('/connectors/id0').send({});
       expect(response).toHaveProperty('statusCode', 200);
+    });
+  });
+
+  describe('POST /connectors', () => {
+    const mockedCountConnectorByConnectorId = countConnectorByConnectorId as jest.Mock;
+    const mockedHasConnectorWithId = hasConnectorWithId as jest.Mock;
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should post a new connector record', async () => {
+      loadConnectorsPlaceHolder.mockResolvedValueOnce([
+        {
+          ...mockLoadConnector,
+          metadata: { ...mockLoadConnector.metadata, id: 'connectorId' },
+        },
+      ]);
+      mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
+      mockedHasConnectorWithId.mockResolvedValueOnce(false);
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'connectorId',
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
+      expect(response.body).toMatchObject(
+        expect.objectContaining({
+          id: 'connectorId',
+          connectorId: 'connectorId',
+          config: {
+            cliend_id: 'client_id',
+            client_secret: 'client_secret',
+          },
+        })
+      );
+      expect(response).toHaveProperty('statusCode', 200);
+    });
+
+    it('throws when standard connector not found', async () => {
+      loadConnectorsPlaceHolder.mockResolvedValueOnce([
+        {
+          ...mockLoadConnector,
+          metadata: { ...mockLoadConnector.metadata, id: 'connectorId' },
+        },
+      ]);
+      mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
+      mockedHasConnectorWithId.mockResolvedValueOnce(false);
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'id0',
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
+      expect(response).toHaveProperty('statusCode', 422);
+    });
+
+    it('should post a new record when add more than 1 instance with standard connector', async () => {
+      loadConnectorsPlaceHolder.mockResolvedValueOnce([
+        {
+          ...mockLoadConnector,
+          metadata: { ...mockLoadConnector.metadata, id: 'id0', isStandard: true },
+        },
+      ]);
+      mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
+      mockedHasConnectorWithId.mockResolvedValueOnce(false);
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'id0',
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
+      expect(response.body).toMatchObject(
+        expect.objectContaining({
+          connectorId: 'id0',
+          config: {
+            cliend_id: 'client_id',
+            client_secret: 'client_secret',
+          },
+        })
+      );
+      expect(response).toHaveProperty('statusCode', 200);
+    });
+
+    it('throws when add more than 1 instance with non-standard connector', async () => {
+      loadConnectorsPlaceHolder.mockResolvedValueOnce([
+        {
+          ...mockLoadConnector,
+          metadata: { ...mockLoadConnector.metadata, id: 'id0' },
+        },
+      ]);
+      mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
+      mockedHasConnectorWithId.mockResolvedValueOnce(false);
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'id0',
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
+      expect(response).toHaveProperty('statusCode', 422);
     });
   });
 

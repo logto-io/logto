@@ -97,6 +97,9 @@ const errors = {
     more_than_one_sms: '연동된 SMS 서비스가 1개 이상이여야 해요.',
     more_than_one_email: '연동된 이메일 서비스가 1개 이상이여야 해요.',
     db_connector_type_mismatch: '종류가 일치하지 않은 연동 서비스가 DB에 존재해요.',
+    not_found_with_connector_id: 'Can not find connector with given standard connector id.', // UNTRANSLATED
+    multiple_instances_not_supported:
+      'Can not create multiple instance with picked standard connector.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: '휴대전화번호 그리고 이메일이 비어있어요.',
