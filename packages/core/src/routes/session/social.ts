@@ -100,10 +100,12 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       ctx.log(type, { userId: id });
 
       const { name, avatar } = userInfo;
-      const profileUpdate = {
-        name: syncProfile && name ? name : undefined,
-        avatar: syncProfile && avatar ? avatar : undefined,
-      };
+      const profileUpdate = Object.fromEntries(
+        Object.entries({
+          name: syncProfile && name ? name : undefined,
+          avatar: syncProfile && avatar ? avatar : undefined,
+        }).filter(([_key, value]) => value !== undefined)
+      );
 
       // Update social connector's user info
       await updateUserById(id, {
