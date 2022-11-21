@@ -10,7 +10,6 @@ import { expectSqlAssert } from '@/utils/test-utils';
 import {
   findAllConnectors,
   countConnectorByConnectorId,
-  hasConnectorWithId,
   insertConnector,
   updateConnector,
 } from './connector';
@@ -63,25 +62,6 @@ describe('connector queries', () => {
     });
 
     await expect(countConnectorByConnectorId(rowData.connectorId)).resolves.toEqual(rowData);
-  });
-
-  it('hasConnectorWithId', async () => {
-    const expectSql = sql`
-      SELECT EXISTS(
-        select ${fields.id}
-        from ${table}
-        where ${fields.id}=$1
-      )
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([mockConnector.id]);
-
-      return createMockQueryResult([{ exists: true }]);
-    });
-
-    await expect(hasConnectorWithId(mockConnector.id)).resolves.toEqual(true);
   });
 
   it('insertConnector', async () => {

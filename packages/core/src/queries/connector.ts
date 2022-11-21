@@ -25,13 +25,6 @@ export const countConnectorByConnectorId = async (connectorId: string) =>
     where ${fields.connectorId}=${connectorId}
   `);
 
-export const hasConnectorWithId = async (id: string) =>
-  envSet.pool.exists(sql`
-    select ${fields.id}
-    from ${table}
-    where ${fields.id}=${id}
-  `);
-
 export const insertConnector = buildInsertInto<CreateConnector, Connector>(Connectors, {
   returning: true,
 });
