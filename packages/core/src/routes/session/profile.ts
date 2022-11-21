@@ -9,9 +9,10 @@ import { object, string, unknown } from 'zod';
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { checkSessionHealth } from '#src/lib/session.js';
+import { getUserInfoByAuthCode } from '#src/lib/social.js';
 import { encryptUserPassword } from '#src/lib/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { findUserById, updateUserById } from '#src/queries/user.js';
+import { deleteUserIdentity, findUserById, updateUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouter } from '../types.js';

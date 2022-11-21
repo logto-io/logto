@@ -62,8 +62,8 @@ const mockFindSocialRelatedUser = jest.fn(async () => [
   { id: 'user1', identities: {}, isSuspended: false },
 ]);
 const mockGetUserInfoByAuthCode = jest.fn();
-jest.mock('#src/lib/social', () => ({
-  ...jest.requireActual('@/lib/social'),
+jest.mock('#src/lib/social.js', () => ({
+  ...jest.requireActual('#src/lib/social.js'),
   findSocialRelatedUser: async () => mockFindSocialRelatedUser(),
   getUserInfoByAuthCode: async () => mockGetUserInfoByAuthCode(),
 }));

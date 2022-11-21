@@ -11,7 +11,7 @@
   },
   "main": "lib/index.js",
   "bin": {
-    "logto": "bin/logto"
+    "logto": "bin/logto.js"
   },
   "files": [
     "bin",
