@@ -4,7 +4,6 @@
   width: 100%;
   padding-bottom: _.unit(6);
   @include _.flex-column;
-  padding-bottom: _.unit(6);
 
   .headline {
     display: flex;
