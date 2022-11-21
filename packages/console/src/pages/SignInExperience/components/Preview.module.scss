@@ -31,8 +31,9 @@
   }
 
   .nav {
-    padding: 0 _.unit(6);
-    margin: _.unit(6) 0 0 0;
+    padding: 0 _.unit(6) 1px;
+    margin-top: _.unit(6);
+    border-bottom: unset;
   }
 
   .body {

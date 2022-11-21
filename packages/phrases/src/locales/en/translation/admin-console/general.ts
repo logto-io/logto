@@ -40,6 +40,7 @@ const general = {
   got_it: 'Got it',
   page_info: '{{min, number}}-{{max, number}} of {{total, number}}',
   learn_more: 'Learn more',
+  tab_errors: '{{count, number}} errors',
 };
 
 export default general;
