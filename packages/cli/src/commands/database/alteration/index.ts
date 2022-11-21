@@ -1,10 +1,11 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-import type { AlterationScript } from '@logto/schemas/lib/types/alteration';
+import type { AlterationScript } from '@logto/schemas/lib/types/alteration.js';
 import { findPackage } from '@logto/shared';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
-import { copy, existsSync, remove, readdir } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import type { DatabasePool } from 'slonik';
 import type { CommandModule } from 'yargs';
 
@@ -17,6 +18,8 @@ import { getPathInModule, log } from '../../../utilities.js';
 import type { AlterationFile } from './type.js';
 import { chooseAlterationsByVersion } from './version.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const { copy, existsSync, remove, readdir } = fsExtra;
 const alterationFilenameRegex = /-(\d+)-?.*\.js$/;
 
 const getTimestampFromFilename = (filename: string) => {
@@ -45,15 +48,9 @@ export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
    * since they need a proper context that includes required dependencies (such as slonik) in `node_modules/`.
    * While the original `@logto/schemas` may remove them in production.
    */
-  const packageDirectory = await findPackage(
-    // Until we migrate to ESM
-    // eslint-disable-next-line unicorn/prefer-module
-    __dirname
-  );
+  const packageDirectory = await findPackage(__dirname);
 
   const localAlterationDirectory = path.resolve(
-    // Until we migrate to ESM
-    // eslint-disable-next-line unicorn/prefer-module
     packageDirectory ?? __dirname,
     'alteration-scripts'
   );

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "lib",
     "declaration": true,
-    "module": "node16",
+    "moduleResolution": "nodenext",
+    "module": "es2022",
     "target": "es2022",
     "types": ["node", "jest"]
   },

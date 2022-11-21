@@ -1,6 +1,9 @@
 import zhCN from '@logto/phrases-ui/lib/locales/zh-cn.js';
 import type { SignInExperience } from '@logto/schemas';
-import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
+import {
+  adminConsoleApplicationId,
+  adminConsoleSignInExperience,
+} from '@logto/schemas/lib/seeds/index.js';
 import { Provider } from 'oidc-provider';
 
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';

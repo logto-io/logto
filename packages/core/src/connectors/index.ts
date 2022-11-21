@@ -1,4 +1,5 @@
 import { existsSync } from 'fs';
+import { fileURLToPath } from 'node:url';
 import path from 'path';
 
 import { connectorDirectory } from '@logto/cli/lib/constants.js';
@@ -15,6 +16,7 @@ import { defaultConnectorMethods } from './consts.js';
 import type { VirtualConnector, LogtoConnector } from './types.js';
 import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities/index.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // eslint-disable-next-line @silverhand/fp/no-let
 let cachedVirtualConnectors: VirtualConnector[] | undefined;
 
@@ -23,8 +25,6 @@ export const loadVirtualConnectors = async () => {
     return cachedVirtualConnectors;
   }
 
-  // Until we migrate to ESM
-  // eslint-disable-next-line unicorn/prefer-module
   const coreDirectory = await findPackage(__dirname);
   const directory = coreDirectory && path.join(coreDirectory, connectorDirectory);
 
@@ -37,9 +37,14 @@ export const loadVirtualConnectors = async () => {
   const connectors = await Promise.all(
     connectorPackages.map(async ({ path: packagePath, name }) => {
       try {
-        // eslint-disable-next-line no-restricted-syntax
-        const { default: createConnector } = (await import(packagePath)) as {
-          default: CreateConnector<AllConnector>;
+        // TODO: fix type and remove `/lib/index.js` suffix once we upgrade all connectors to ESM
+        const {
+          default: { default: createConnector },
+          // eslint-disable-next-line no-restricted-syntax
+        } = (await import(packagePath + '/lib/index.js')) as {
+          default: {
+            default: CreateConnector<AllConnector>;
+          };
         };
         const rawConnector = await createConnector({ getConfig: getConnectorConfig });
         validateConnectorModule(rawConnector);

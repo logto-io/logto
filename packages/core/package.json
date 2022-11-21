@@ -7,6 +7,9 @@
   "license": "MPL-2.0",
   "type": "module",
   "private": true,
+  "imports": {
+    "#src/*": "./build/*"
+  },
   "scripts": {
     "precommit": "lint-staged",
     "copyfiles": "copyfiles -u 1 src/**/*.md build",
@@ -54,7 +57,6 @@
     "koa-router": "^12.0.0",
     "koa-send": "^5.0.1",
     "lodash.pick": "^4.4.0",
-    "module-alias": "^2.2.2",
     "nanoid": "^3.1.23",
     "oidc-provider": "^7.13.0",
     "p-retry": "^4.6.1",
@@ -102,9 +104,6 @@
   },
   "engines": {
     "node": "^16.13.0 || ^18.12.0"
-  },
-  "_moduleAliases": {
-    "@": "./build"
   },
   "eslintConfig": {
     "extends": "@silverhand"

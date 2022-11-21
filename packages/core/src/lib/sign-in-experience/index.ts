@@ -5,7 +5,7 @@ import {
   adminConsoleApplicationId,
   adminConsoleSignInExperience,
   demoAppApplicationId,
-} from '@logto/schemas/lib/seeds';
+} from '@logto/schemas/lib/seeds/index.js';
 import i18next from 'i18next';
 
 import { getLogtoConnectors } from '#src/connectors/index.js';

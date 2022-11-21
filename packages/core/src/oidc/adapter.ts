@@ -1,6 +1,6 @@
 import type { CreateApplication, OidcClientMetadata } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import { tryThat } from '@logto/shared';
 import { addSeconds } from 'date-fns';
 import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';

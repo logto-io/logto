@@ -1,5 +1,8 @@
 import { SignInMode } from '@logto/schemas';
-import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
+import {
+  adminConsoleApplicationId,
+  adminConsoleSignInExperience,
+} from '@logto/schemas/lib/seeds/index.js';
 import { Provider } from 'oidc-provider';
 
 import {

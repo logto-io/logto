@@ -1,5 +1,5 @@
 import { SignInMode } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import type { MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';

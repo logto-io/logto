@@ -1,6 +1,6 @@
 import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
 import { SignInIdentifier, SignUpIdentifier, UserRole } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 

@@ -6,7 +6,7 @@ import { promisify } from 'util';
 
 import { assert, conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
-import { ensureDir, remove } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import inquirer from 'inquirer';
 import pRetry from 'p-retry';
 import tar from 'tar';
@@ -136,8 +136,8 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
           const tarPath = path.join(cwd, escapedFilename);
           const packageDirectory = path.join(cwd, name.replace(/\//g, '-'));
 
-          await remove(packageDirectory);
-          await ensureDir(packageDirectory);
+          await fsExtra.remove(packageDirectory);
+          await fsExtra.ensureDir(packageDirectory);
           await tar.extract({ cwd: packageDirectory, file: tarPath, strip: 1 });
           await unlink(tarPath);
 

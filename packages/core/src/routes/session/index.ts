@@ -2,7 +2,7 @@ import path from 'path';
 
 import type { LogtoErrorCode } from '@logto/phrases';
 import { UserRole } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import { conditional } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';

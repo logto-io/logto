@@ -1,6 +1,6 @@
 import type { User } from '@logto/schemas';
 import { UserRole, SignUpIdentifier } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import { Provider } from 'oidc-provider';
 
 import { mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
