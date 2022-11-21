@@ -1,9 +1,8 @@
 const settings = {
   title: 'Ayarlar',
   description: 'Genel ayarları yönet',
-  tabs: {
-    general: 'Genel',
-  },
+  settings: 'Ayarlar',
+  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   custom_domain: 'Özel alan',
   language: 'Dil',
   appearance: 'Görünüm',
