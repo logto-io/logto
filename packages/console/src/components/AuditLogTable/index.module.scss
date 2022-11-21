@@ -1,26 +1,31 @@
 @use '@/scss/underscore' as _;
 
-.filter {
-  display: flex;
-  justify-content: right;
-  align-items: center;
-
-  .title {
-    color: var(--color-text-secondary);
-    font: var(--font-body-medium);
+.table {
+  .filterTableHead {
+    padding: _.unit(3);
   }
 
-  .eventSelector {
-    width: 300px;
-    margin-left: _.unit(2);
-  }
+  .filter {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 
-  .applicationSelector {
-    width: 250px;
-    margin-left: _.unit(2);
+    .title {
+      color: var(--color-text-secondary);
+      font: var(--font-body-medium);
+    }
+
+    .eventSelector {
+      width: 300px;
+      margin-left: _.unit(2);
+    }
+
+    .applicationSelector {
+      width: 250px;
+      margin-left: _.unit(2);
+    }
   }
 }
-
 
 .pagination {
   margin-top: _.unit(4);

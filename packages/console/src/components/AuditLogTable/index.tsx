@@ -27,6 +27,8 @@ type Props = {
   userId?: string;
 };
 
+const defaultTableColumn = 4;
+
 const AuditLogTable = ({ userId }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
@@ -50,6 +52,7 @@ const AuditLogTable = ({ userId }: Props) => {
   const navigate = useNavigate();
   const [logs, totalCount] = data ?? [];
   const showUserColumn = !userId;
+  const tableColumnCount = showUserColumn ? defaultTableColumn : defaultTableColumn - 1;
 
   const updateQuery = (key: string, value: string) => {
     const queries: Record<string, string> = {};
@@ -67,28 +70,9 @@ const AuditLogTable = ({ userId }: Props) => {
 
   return (
     <>
-      <div className={styles.filter}>
-        <div className={styles.title}>{t('logs.filter_by')}</div>
-        <div className={styles.eventSelector}>
-          <EventSelector
-            value={event ?? undefined}
-            onChange={(value) => {
-              updateQuery('event', value ?? '');
-            }}
-          />
-        </div>
-        <div className={styles.applicationSelector}>
-          <ApplicationSelector
-            value={applicationId ?? undefined}
-            onChange={(value) => {
-              updateQuery('applicationId', value ?? '');
-            }}
-          />
-        </div>
-      </div>
       <div className={resourcesStyles.table}>
         <div className={tableStyles.scrollable}>
-          <table className={classNames(logs?.length === 0 && tableStyles.empty)}>
+          <table className={classNames(styles.table, logs?.length === 0 && tableStyles.empty)}>
             <colgroup>
               <col className={styles.eventName} />
               {showUserColumn && <col />}
@@ -96,6 +80,29 @@ const AuditLogTable = ({ userId }: Props) => {
               <col />
             </colgroup>
             <thead>
+              <tr>
+                <th colSpan={tableColumnCount} className={styles.filterTableHead}>
+                  <div className={styles.filter}>
+                    <div className={styles.title}>{t('logs.filter_by')}</div>
+                    <div className={styles.eventSelector}>
+                      <EventSelector
+                        value={event ?? undefined}
+                        onChange={(value) => {
+                          updateQuery('event', value ?? '');
+                        }}
+                      />
+                    </div>
+                    <div className={styles.applicationSelector}>
+                      <ApplicationSelector
+                        value={applicationId ?? undefined}
+                        onChange={(value) => {
+                          updateQuery('applicationId', value ?? '');
+                        }}
+                      />
+                    </div>
+                  </div>
+                </th>
+              </tr>
               <tr>
                 <th>{t('logs.event')}</th>
                 {showUserColumn && <th>{t('logs.user')}</th>}
