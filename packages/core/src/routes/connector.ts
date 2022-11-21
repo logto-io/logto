@@ -71,6 +71,13 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     }
   );
 
+  router.get('/connector-packages', async (ctx, next) => {
+    const connectorPackages = await loadConnectors();
+    ctx.body = connectorPackages.map(({ metadata, type }) => ({ type, ...metadata }));
+
+    return next();
+  });
+
   router.get(
     '/connectors/:id',
     koaGuard({ params: object({ id: string().min(1) }) }),

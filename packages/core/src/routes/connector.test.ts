@@ -81,6 +81,25 @@ describe('connector route', () => {
     });
   });
 
+  describe('GET /connector-packages', () => {
+    it('show all connector packages', async () => {
+      (loadConnectors as jest.Mock).mockResolvedValueOnce([
+        { ...mockLoadConnector, metadata: mockMetadata0, type: ConnectorType.Sms },
+        { ...mockLoadConnector, metadata: mockMetadata1, type: ConnectorType.Social },
+        { ...mockLoadConnector, metadata: mockMetadata2, type: ConnectorType.Email },
+        { ...mockLoadConnector, metadata: mockMetadata3, type: ConnectorType.Social },
+      ]);
+      const response = await connectorRequest.get('/connector-packages').send({});
+      expect(response.body).toMatchObject([
+        { ...mockMetadata0, type: ConnectorType.Sms },
+        { ...mockMetadata1, type: ConnectorType.Social },
+        { ...mockMetadata2, type: ConnectorType.Email },
+        { ...mockMetadata3, type: ConnectorType.Social },
+      ]);
+      expect(response).toHaveProperty('statusCode', 200);
+    });
+  });
+
   describe('GET /connectors/:id', () => {
     afterEach(() => {
       jest.clearAllMocks();
