@@ -3,7 +3,6 @@ import {
   getDefaultLanguageTag,
 } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
-import classNames from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +15,6 @@ import Select from '@/components/Select';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { UserPreferences } from '@/hooks/use-user-preferences';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import * as resourcesStyles from '@/scss/resources.module.scss';
 
 import ChangePassword from './components/ChangePassword';
 import * as styles from './index.module.scss';
@@ -48,7 +46,7 @@ const Settings = () => {
   });
 
   return (
-    <div className={classNames(resourcesStyles.container, styles.container)}>
+    <div className={styles.container}>
       <CardTitle title="settings.title" subtitle="settings.description" />
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
