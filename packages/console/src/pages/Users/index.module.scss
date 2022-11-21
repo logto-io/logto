@@ -1,11 +1,10 @@
 @use '@/scss/underscore' as _;
 
-.filter {
-  margin: _.unit(4) 0;
-}
 
-.tableContainer {
-  margin-top: 0;
+.table {
+  .filter {
+    padding: _.unit(3);
+  }
 }
 
 .pagination {

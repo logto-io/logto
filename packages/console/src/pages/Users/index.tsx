@@ -30,6 +30,8 @@ import * as styles from './index.module.scss';
 
 const pageSize = 20;
 
+const userTableColumn = 3;
+
 const Users = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -75,27 +77,30 @@ const Users = () => {
           />
         </Modal>
       </div>
-      <div className={styles.filter}>
-        <Search
-          defaultValue={keyword}
-          isClearable={Boolean(keyword)}
-          onSearch={(value) => {
-            setQuery(value ? { search: value } : {});
-          }}
-          onClearSearch={() => {
-            setQuery({});
-          }}
-        />
-      </div>
-      <div className={classNames(resourcesStyles.table, styles.tableContainer)}>
+
+      <div className={classNames(resourcesStyles.table)}>
         <div className={tableStyles.scrollable}>
-          <table className={classNames(!data && tableStyles.empty)}>
+          <table className={classNames(styles.table, !data && tableStyles.empty)}>
             <colgroup>
               <col className={styles.userName} />
               <col />
               <col />
             </colgroup>
             <thead>
+              <tr>
+                <th colSpan={userTableColumn} className={styles.filter}>
+                  <Search
+                    defaultValue={keyword}
+                    isClearable={Boolean(keyword)}
+                    onSearch={(value) => {
+                      setQuery(value ? { search: value } : {});
+                    }}
+                    onClearSearch={() => {
+                      setQuery({});
+                    }}
+                  />
+                </th>
+              </tr>
               <tr>
                 <th>{t('users.user_name')}</th>
                 <th>{t('users.application_name')}</th>
