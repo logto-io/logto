@@ -12,18 +12,23 @@ type Props = {
   pageIndex: number;
   totalCount: number;
   pageSize: number;
+  className?: string;
   onChange?: (pageIndex: number) => void;
 };
 
-const Pagination = ({ pageIndex, totalCount, pageSize, onChange }: Props) => {
+const Pagination = ({ pageIndex, totalCount, pageSize, className, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const pageCount = Math.ceil(totalCount / pageSize);
 
+  if (pageCount <= 1) {
+    return null;
+  }
+
   const min = (pageIndex - 1) * pageSize + 1;
-  const max = pageIndex * pageSize;
+  const max = Math.min(pageIndex * pageSize, totalCount);
 
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, className)}>
       <div className={styles.positionInfo}>
         {t('general.page_info', { min, max, total: totalCount })}
       </div>

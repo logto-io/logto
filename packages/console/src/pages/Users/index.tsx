@@ -153,18 +153,15 @@ const Users = () => {
           </tbody>
         </table>
       </div>
-      <div className={styles.pagination}>
-        {!!totalCount && (
-          <Pagination
-            pageIndex={pageIndex}
-            totalCount={totalCount}
-            pageSize={pageSize}
-            onChange={(page) => {
-              setQuery({ page: String(page), ...conditional(keyword && { search: keyword }) });
-            }}
-          />
-        )}
-      </div>
+      <Pagination
+        pageIndex={pageIndex}
+        totalCount={totalCount ?? 0}
+        pageSize={pageSize}
+        className={styles.pagination}
+        onChange={(page) => {
+          setQuery({ page: String(page), ...conditional(keyword && { search: keyword }) });
+        }}
+      />
     </div>
   );
 };
