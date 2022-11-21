@@ -4,7 +4,7 @@ import { notFalsy } from '@silverhand/essentials';
 import type { SqlSqlToken, SqlToken, QueryResult, IdentifierSqlToken } from 'slonik';
 import { sql } from 'slonik';
 
-import type { FieldIdentifiers, Table } from './types';
+import type { FieldIdentifiers, Table } from './types.js';
 
 export const conditionalSql = <T>(value: T, buildSql: (value: Exclude<T, Falsy>) => SqlSqlToken) =>
   notFalsy(value) ? buildSql(value) : sql``;

@@ -1,4 +1,4 @@
-import { buildIdGenerator, alphabet } from './id';
+import { buildIdGenerator, alphabet } from './id.js';
 
 describe('id generator', () => {
   it('should match the input length', () => {

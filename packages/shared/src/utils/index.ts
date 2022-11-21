@@ -1,3 +1,3 @@
-export * from './id';
-export * from './function';
-export { default as findPackage } from './find-package';
+export * from './id.js';
+export * from './function.js';
+export { default as findPackage } from './find-package.js';

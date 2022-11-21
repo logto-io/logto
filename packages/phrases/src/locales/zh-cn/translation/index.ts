@@ -1,5 +1,5 @@
-import admin_console from './admin-console';
-import demo_app from './demo-app';
+import admin_console from './admin-console/index.js';
+import demo_app from './demo-app.js';
 
 const translation = {
   admin_console,
