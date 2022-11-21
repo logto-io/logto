@@ -70,63 +70,65 @@ const Applications = () => {
           />
         </Modal>
       </div>{' '}
-      <div className={classNames(resourcesStyles.table, tableStyles.scrollable)}>
-        <table className={classNames(!data && tableStyles.empty)}>
-          <colgroup>
-            <col className={styles.applicationName} />
-            <col />
-          </colgroup>
+      <div className={resourcesStyles.table}>
+        <div className={tableStyles.scrollable}>
+          <table className={classNames(!data && tableStyles.empty)}>
+            <colgroup>
+              <col className={styles.applicationName} />
+              <col />
+            </colgroup>
 
-          <thead>
-            <tr>
-              <th>{t('applications.application_name')}</th>
-              <th>{t('applications.app_id')}</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {!data && error && (
-              <TableError
-                columns={2}
-                content={error.body?.message ?? error.message}
-                onRetry={async () => mutate(undefined, true)}
-              />
-            )}
-            {isLoading && <TableLoading columns={2} />}
-            {applications?.length === 0 && (
-              <TableEmpty columns={2}>
-                <Button
-                  title="applications.create"
-                  type="outline"
-                  onClick={() => {
-                    navigate('/applications/create');
-                  }}
-                />
-              </TableEmpty>
-            )}
-            {applications?.map(({ id, name, type }) => (
-              <tr
-                key={id}
-                className={tableStyles.clickable}
-                onClick={() => {
-                  navigate(`/applications/${id}`);
-                }}
-              >
-                <td>
-                  <ItemPreview
-                    title={name}
-                    subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
-                    icon={<ApplicationIcon className={styles.icon} type={type} />}
-                    to={`/applications/${id}`}
-                  />
-                </td>
-                <td>
-                  <CopyToClipboard value={id} variant="text" />
-                </td>
+            <thead>
+              <tr>
+                <th>{t('applications.application_name')}</th>
+                <th>{t('applications.app_id')}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {!data && error && (
+                <TableError
+                  columns={2}
+                  content={error.body?.message ?? error.message}
+                  onRetry={async () => mutate(undefined, true)}
+                />
+              )}
+              {isLoading && <TableLoading columns={2} />}
+              {applications?.length === 0 && (
+                <TableEmpty columns={2}>
+                  <Button
+                    title="applications.create"
+                    type="outline"
+                    onClick={() => {
+                      navigate('/applications/create');
+                    }}
+                  />
+                </TableEmpty>
+              )}
+              {applications?.map(({ id, name, type }) => (
+                <tr
+                  key={id}
+                  className={tableStyles.clickable}
+                  onClick={() => {
+                    navigate(`/applications/${id}`);
+                  }}
+                >
+                  <td>
+                    <ItemPreview
+                      title={name}
+                      subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
+                      icon={<ApplicationIcon className={styles.icon} type={type} />}
+                      to={`/applications/${id}`}
+                    />
+                  </td>
+                  <td>
+                    <CopyToClipboard value={id} variant="text" />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       <Pagination
         pageIndex={pageIndex}

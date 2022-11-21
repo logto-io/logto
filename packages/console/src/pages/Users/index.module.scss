@@ -5,19 +5,7 @@
 }
 
 .tableContainer {
-  flex: 1;
-  background-color: var(--color-layer-1);
-
-  > table {
-    > tbody {
-      > tr {
-        > td {
-          padding-top: 10px;
-          padding-bottom: 10px;
-        }
-      }
-    }
-  }
+  margin-top: 0;
 }
 
 .pagination {

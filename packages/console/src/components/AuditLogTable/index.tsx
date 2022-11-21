@@ -86,58 +86,60 @@ const AuditLogTable = ({ userId }: Props) => {
           />
         </div>
       </div>
-      <div className={classNames(resourcesStyles.table, tableStyles.scrollable)}>
-        <table className={classNames(logs?.length === 0 && tableStyles.empty)}>
-          <colgroup>
-            <col className={styles.eventName} />
-            {showUserColumn && <col />}
-            <col />
-            <col />
-          </colgroup>
-          <thead>
-            <tr>
-              <th>{t('logs.event')}</th>
-              {showUserColumn && <th>{t('logs.user')}</th>}
-              <th>{t('logs.application')}</th>
-              <th>{t('logs.time')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!data && error && (
-              <TableError
-                columns={4}
-                content={error.body?.message ?? error.message}
-                onRetry={async () => mutate(undefined, true)}
-              />
-            )}
-            {isLoading && <TableLoading columns={4} />}
-            {logs?.length === 0 && <TableEmpty columns={4} />}
-            {logs?.map(({ type, payload, createdAt, id }) => (
-              <tr
-                key={id}
-                className={tableStyles.clickable}
-                onClick={() => {
-                  navigate(`${pathname}/${id}`);
-                }}
-              >
-                <td>
-                  <EventName type={type} isSuccess={payload.result === LogResult.Success} />
-                </td>
-                {showUserColumn && (
-                  <td>{payload.userId ? <UserName userId={payload.userId} /> : '-'}</td>
-                )}
-                <td>
-                  {payload.applicationId ? (
-                    <ApplicationName applicationId={payload.applicationId} />
-                  ) : (
-                    '-'
-                  )}
-                </td>
-                <td>{new Date(createdAt).toLocaleString()}</td>
+      <div className={resourcesStyles.table}>
+        <div className={tableStyles.scrollable}>
+          <table className={classNames(logs?.length === 0 && tableStyles.empty)}>
+            <colgroup>
+              <col className={styles.eventName} />
+              {showUserColumn && <col />}
+              <col />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>{t('logs.event')}</th>
+                {showUserColumn && <th>{t('logs.user')}</th>}
+                <th>{t('logs.application')}</th>
+                <th>{t('logs.time')}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {!data && error && (
+                <TableError
+                  columns={4}
+                  content={error.body?.message ?? error.message}
+                  onRetry={async () => mutate(undefined, true)}
+                />
+              )}
+              {isLoading && <TableLoading columns={4} />}
+              {logs?.length === 0 && <TableEmpty columns={4} />}
+              {logs?.map(({ type, payload, createdAt, id }) => (
+                <tr
+                  key={id}
+                  className={tableStyles.clickable}
+                  onClick={() => {
+                    navigate(`${pathname}/${id}`);
+                  }}
+                >
+                  <td>
+                    <EventName type={type} isSuccess={payload.result === LogResult.Success} />
+                  </td>
+                  {showUserColumn && (
+                    <td>{payload.userId ? <UserName userId={payload.userId} /> : '-'}</td>
+                  )}
+                  <td>
+                    {payload.applicationId ? (
+                      <ApplicationName applicationId={payload.applicationId} />
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                  <td>{new Date(createdAt).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       <Pagination
         pageIndex={pageIndex}
