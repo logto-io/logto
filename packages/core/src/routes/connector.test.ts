@@ -12,7 +12,7 @@ import {
 import { defaultConnectorMethods } from '@/connectors/consts';
 import type { VirtualConnector, LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
-import { countConnectorByConnectorId, hasConnectorWithId } from '@/queries/connector';
+import { countConnectorByConnectorId } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
 import { createRequester } from '@/utils/test-utils';
 
@@ -27,7 +27,6 @@ const getLogtoConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
 
 jest.mock('@/queries/connector', () => ({
   countConnectorByConnectorId: jest.fn(),
-  hasConnectorWithId: jest.fn(),
   insertConnector: jest.fn(async (body: unknown) => body),
 }));
 
@@ -107,7 +106,6 @@ describe('connector route', () => {
 
   describe('POST /connectors', () => {
     const mockedCountConnectorByConnectorId = countConnectorByConnectorId as jest.Mock;
-    const mockedHasConnectorWithId = hasConnectorWithId as jest.Mock;
     afterEach(() => {
       jest.clearAllMocks();
     });
@@ -120,14 +118,12 @@ describe('connector route', () => {
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
-      mockedHasConnectorWithId.mockResolvedValueOnce(false);
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'connectorId',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
       });
       expect(response.body).toMatchObject(
         expect.objectContaining({
-          id: 'connectorId',
           connectorId: 'connectorId',
           config: {
             cliend_id: 'client_id',
@@ -138,7 +134,7 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 200);
     });
 
-    it('throws when standard connector not found', async () => {
+    it('throws when virtual connector not found', async () => {
       loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
         {
           ...mockVirtualConnector,
@@ -146,7 +142,6 @@ describe('connector route', () => {
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
-      mockedHasConnectorWithId.mockResolvedValueOnce(false);
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
@@ -154,7 +149,7 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 422);
     });
 
-    it('should post a new record when add more than 1 instance with standard connector', async () => {
+    it('should post a new record when add more than 1 instance with virtual connector', async () => {
       loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
         {
           ...mockVirtualConnector,
@@ -162,7 +157,6 @@ describe('connector route', () => {
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
-      mockedHasConnectorWithId.mockResolvedValueOnce(false);
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
@@ -179,7 +173,7 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 200);
     });
 
-    it('throws when add more than 1 instance with non-standard connector', async () => {
+    it('throws when add more than 1 instance with non-virtual connector', async () => {
       loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
         {
           ...mockVirtualConnector,
@@ -187,7 +181,6 @@ describe('connector route', () => {
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
-      mockedHasConnectorWithId.mockResolvedValueOnce(false);
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
