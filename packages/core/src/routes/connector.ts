@@ -280,14 +280,6 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         });
       }
 
-      const virtualConnectors = await loadConnectors();
-      const virtualConnector = virtualConnectors.find(
-        ({ metadata: { id } }) => id === databaseEntry.connectorId
-      );
-
-      if (virtualConnector) {
-        assertThat(!databaseEntry.enabled, 'connector.delete_enabled_connector_failed');
-      }
       await deleteConnectorById(id);
 
       ctx.status = 204;

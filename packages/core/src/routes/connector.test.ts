@@ -6,55 +6,34 @@ import { any } from 'zod';
 import {
   mockMetadata,
   mockConnector,
-<<<<<<< HEAD
   mockVirtualConnector,
   mockLogtoConnectorList,
 } from '@/__mocks__';
 import { defaultConnectorMethods } from '@/connectors/consts';
 import type { VirtualConnector, LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
-import { countConnectorByConnectorId } from '@/queries/connector';
-=======
-  mockLogtoConnectorList,
-  mockLoadConnector,
-} from '@/__mocks__';
-import { defaultConnectorMethods } from '@/connectors/consts';
-import type { LoadConnector, LogtoConnector } from '@/connectors/types';
-import RequestError from '@/errors/RequestError';
-import { findAllConnectors } from '@/queries/connector';
->>>>>>> 36c903ea (feat: add DELETE /connectors/:id)
+import { countConnectorByConnectorId, findAllConnectors } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
 import { createRequester } from '@/utils/test-utils';
 
 import connectorRoutes from './connector';
 
-<<<<<<< HEAD
 const loadVirtualConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<VirtualConnector[]>
 >;
-=======
-const loadConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<() => Promise<LoadConnector[]>>;
->>>>>>> 36c903ea (feat: add DELETE /connectors/:id)
 const getLogtoConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<LogtoConnector[]>
 >;
 
 jest.mock('@/queries/connector', () => ({
-<<<<<<< HEAD
   countConnectorByConnectorId: jest.fn(),
   insertConnector: jest.fn(async (body: unknown) => body),
-}));
-
-jest.mock('@/connectors', () => ({
-  loadVirtualConnectors: async () => loadVirtualConnectorsPlaceHolder(),
-=======
   findAllConnectors: jest.fn(),
   deleteConnectorById: jest.fn(),
 }));
 
 jest.mock('@/connectors', () => ({
-  loadConnectors: async () => loadConnectorsPlaceHolder(),
->>>>>>> 36c903ea (feat: add DELETE /connectors/:id)
+  loadVirtualConnectors: async () => loadVirtualConnectorsPlaceHolder(),
   getLogtoConnectors: async () => getLogtoConnectorsPlaceHolder(),
   getLogtoConnectorById: async (connectorId: string) => {
     const connectors = await getLogtoConnectorsPlaceHolder();
@@ -309,25 +288,8 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 422);
     });
 
-    it('throws when connector in use (code exists and enabled)', async () => {
+    it('delete connector instance', async () => {
       (findAllConnectors as jest.Mock).mockResolvedValueOnce([mockConnector]);
-      loadConnectorsPlaceHolder.mockResolvedValueOnce([mockLoadConnector]);
-      const response = await connectorRequest.delete('/connectors/id').send({});
-      expect(response).toHaveProperty('statusCode', 400);
-    });
-
-    it('delete when code not exists', async () => {
-      (findAllConnectors as jest.Mock).mockResolvedValueOnce([mockConnector]);
-      loadConnectorsPlaceHolder.mockResolvedValueOnce([]);
-      const response = await connectorRequest.delete('/connectors/id').send({});
-      expect(response).toHaveProperty('statusCode', 204);
-    });
-
-    it('delete when code exists and not enabled', async () => {
-      (findAllConnectors as jest.Mock).mockResolvedValueOnce([
-        { ...mockConnector, enabled: false },
-      ]);
-      loadConnectorsPlaceHolder.mockResolvedValueOnce([mockLoadConnector]);
       const response = await connectorRequest.delete('/connectors/id').send({});
       expect(response).toHaveProperty('statusCode', 204);
     });
