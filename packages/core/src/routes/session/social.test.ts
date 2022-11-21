@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { ConnectorType } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
 import { SignUpIdentifier } from '@logto/schemas';
@@ -8,7 +7,7 @@ import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import socialRoutes, { registerRoute, signInRoute } from './social.js';
+import socialRoutes, { signInRoute } from './social.js';
 
 import { mockLogtoConnectorList, mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
 
@@ -433,68 +432,4 @@ describe('session -> socialRoutes', () => {
       );
     });
   });
-
-  describe('POST /session/register/social', () => {
-    beforeEach(() => {
-      const mockGetLogtoConnectorById = getLogtoConnectorById as jest.Mock;
-      mockGetLogtoConnectorById.mockResolvedValueOnce({
-        metadata: { target: 'connectorTarget' },
-      });
-    });
-
-    it('register with social, assign result and redirect', async () => {
-      interactionDetails.mockResolvedValueOnce({
-        jti: 'jti',
-        result: {
-          socialUserInfo: { connectorId: 'connectorId', userInfo: { id: 'user1' } },
-        },
-      });
-      const response = await sessionRequest
-        .post(`${registerRoute}`)
-        .send({ connectorId: 'connectorId' });
-      expect(insertUser).toHaveBeenCalledWith(
-        expect.objectContaining({
-          id: 'user1',
-          identities: { connectorTarget: { userId: 'user1', details: { id: 'user1' } } },
-        })
-      );
-      expect(response.body).toHaveProperty('redirectTo');
-      expect(interactionResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
-        expect.anything()
-      );
-    });
-
-    it('throw error if no result can be found in interactionResults', async () => {
-      interactionDetails.mockResolvedValueOnce({});
-      const response = await sessionRequest
-        .post(`${registerRoute}`)
-        .send({ connectorId: 'connectorId' });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error if result parsing fails', async () => {
-      interactionDetails.mockResolvedValueOnce({ result: { login: { accountId: mockUser.id } } });
-      const response = await sessionRequest
-        .post(`${registerRoute}`)
-        .send({ connectorId: 'connectorId' });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error when user with identity exists', async () => {
-      interactionDetails.mockResolvedValueOnce({
-        result: {
-          login: { accountId: 'user1' },
-          socialUserInfo: { connectorId: 'connectorId', userInfo: { id: mockUser.id } },
-        },
-      });
-      const response = await sessionRequest
-        .post(`${registerRoute}`)
-        .send({ connectorId: 'connectorId' });
-      expect(response.statusCode).toEqual(400);
-    });
-  });
 });
-/* eslint-enable max-lines */
