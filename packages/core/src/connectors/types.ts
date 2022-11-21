@@ -19,13 +19,13 @@ export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
 /**
  * Dynamic loaded connector type.
  */
-export type LoadConnector<T extends AllConnector = AllConnector> = T & {
+export type VirtualConnector<T extends AllConnector = AllConnector> = T & {
   validateConfig: (config: unknown) => void;
 };
 
 /**
  * The connector type with full context.
  */
-export type LogtoConnector<T extends AllConnector = AllConnector> = LoadConnector<T> & {
+export type LogtoConnector<T extends AllConnector = AllConnector> = VirtualConnector<T> & {
   dbEntry: Connector;
 };

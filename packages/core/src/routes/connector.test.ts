@@ -6,11 +6,11 @@ import { any } from 'zod';
 import {
   mockMetadata,
   mockConnector,
-  mockLoadConnector,
+  mockVirtualConnector,
   mockLogtoConnectorList,
 } from '@/__mocks__';
 import { defaultConnectorMethods } from '@/connectors/consts';
-import type { LoadConnector, LogtoConnector } from '@/connectors/types';
+import type { VirtualConnector, LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { countConnectorByConnectorId, hasConnectorWithId } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
@@ -18,7 +18,9 @@ import { createRequester } from '@/utils/test-utils';
 
 import connectorRoutes from './connector';
 
-const loadConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<() => Promise<LoadConnector[]>>;
+const loadVirtualConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
+  () => Promise<VirtualConnector[]>
+>;
 const getLogtoConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<LogtoConnector[]>
 >;
@@ -30,7 +32,7 @@ jest.mock('@/queries/connector', () => ({
 }));
 
 jest.mock('@/connectors', () => ({
-  loadConnectors: async () => loadConnectorsPlaceHolder(),
+  loadVirtualConnectors: async () => loadVirtualConnectorsPlaceHolder(),
   getLogtoConnectors: async () => getLogtoConnectorsPlaceHolder(),
   getLogtoConnectorById: async (connectorId: string) => {
     const connectors = await getLogtoConnectorsPlaceHolder();
@@ -113,8 +115,8 @@ describe('connector route', () => {
     it('should post a new connector record', async () => {
       loadConnectorsPlaceHolder.mockResolvedValueOnce([
         {
-          ...mockLoadConnector,
-          metadata: { ...mockLoadConnector.metadata, id: 'connectorId' },
+          ...mockVirtualConnector,
+          metadata: { ...mockVirtualConnector.metadata, id: 'connectorId' },
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
@@ -139,8 +141,8 @@ describe('connector route', () => {
     it('throws when standard connector not found', async () => {
       loadConnectorsPlaceHolder.mockResolvedValueOnce([
         {
-          ...mockLoadConnector,
-          metadata: { ...mockLoadConnector.metadata, id: 'connectorId' },
+          ...mockVirtualConnector,
+          metadata: { ...mockVirtualConnector.metadata, id: 'connectorId' },
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
@@ -155,8 +157,8 @@ describe('connector route', () => {
     it('should post a new record when add more than 1 instance with standard connector', async () => {
       loadConnectorsPlaceHolder.mockResolvedValueOnce([
         {
-          ...mockLoadConnector,
-          metadata: { ...mockLoadConnector.metadata, id: 'id0', isStandard: true },
+          ...mockVirtualConnector,
+          metadata: { ...mockVirtualConnector.metadata, id: 'id0', isStandard: true },
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
@@ -180,8 +182,8 @@ describe('connector route', () => {
     it('throws when add more than 1 instance with non-standard connector', async () => {
       loadConnectorsPlaceHolder.mockResolvedValueOnce([
         {
-          ...mockLoadConnector,
-          metadata: { ...mockLoadConnector.metadata, id: 'id0' },
+          ...mockVirtualConnector,
+          metadata: { ...mockVirtualConnector.metadata, id: 'id0' },
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });

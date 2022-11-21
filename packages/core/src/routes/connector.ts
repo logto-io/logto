@@ -5,7 +5,7 @@ import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas'
 import { buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
 
-import { getLogtoConnectorById, getLogtoConnectors, loadConnectors } from '@/connectors';
+import { getLogtoConnectorById, getLogtoConnectors, loadVirtualConnectors } from '@/connectors';
 import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { removeUnavailableSocialConnectorTargets } from '@/lib/sign-in-experience';
@@ -97,7 +97,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const virtualConnectors = await loadConnectors();
+      const virtualConnectors = await loadVirtualConnectors();
       const virtualConnector = virtualConnectors.find(({ metadata: { id } }) => id === connectorId);
 
       if (!virtualConnector) {

@@ -12,15 +12,15 @@ import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
 import { defaultConnectorMethods } from './consts';
-import type { LoadConnector, LogtoConnector } from './types';
+import type { VirtualConnector, LogtoConnector } from './types';
 import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: LoadConnector[] | undefined;
+let cachedVirtualConnectors: VirtualConnector[] | undefined;
 
-export const loadConnectors = async () => {
-  if (cachedConnectors) {
-    return cachedConnectors;
+export const loadVirtualConnectors = async () => {
+  if (cachedVirtualConnectors) {
+    return cachedVirtualConnectors;
   }
 
   // Until we migrate to ESM
@@ -44,7 +44,7 @@ export const loadConnectors = async () => {
         const rawConnector = await createConnector({ getConfig: getConnectorConfig });
         validateConnectorModule(rawConnector);
 
-        const connector: LoadConnector = {
+        const connector: VirtualConnector = {
           ...defaultConnectorMethods,
           ...rawConnector,
           metadata: {
@@ -83,17 +83,17 @@ export const loadConnectors = async () => {
   );
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  cachedConnectors = connectors.filter(
-    (connector): connector is LoadConnector => connector !== undefined
+  cachedVirtualConnectors = connectors.filter(
+    (connector): connector is VirtualConnector => connector !== undefined
   );
 
-  return cachedConnectors;
+  return cachedVirtualConnectors;
 };
 
 export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
   const connectors = await findAllConnectors();
 
-  const virtualConnectors = await loadConnectors();
+  const virtualConnectors = await loadVirtualConnectors();
 
   return connectors
     .map((connector) => {
@@ -131,7 +131,7 @@ export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector>
 export const initConnectors = async () => {
   const connectors = await findAllConnectors();
   const existingConnectors = new Map(connectors.map((connector) => [connector.id, connector]));
-  const allConnectors = await loadConnectors();
+  const allConnectors = await loadVirtualConnectors();
   const newConnectors = allConnectors.filter(({ metadata: { id } }) => {
     const connector = existingConnectors.get(id);
 
