@@ -1,5 +1,5 @@
+import { fileURLToPath } from 'node:url';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 import type { AlterationScript } from '@logto/schemas/lib/types/alteration.js';
 import { findPackage } from '@logto/shared';
@@ -15,10 +15,11 @@ import {
   updateDatabaseTimestamp,
 } from '../../../queries/logto-config.js';
 import { getPathInModule, log } from '../../../utilities.js';
+import { metaUrl } from './meta-url.js';
 import type { AlterationFile } from './type.js';
 import { chooseAlterationsByVersion } from './version.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const currentDirname = path.dirname(fileURLToPath(metaUrl));
 const { copy, existsSync, remove, readdir } = fsExtra;
 const alterationFilenameRegex = /-(\d+)-?.*\.js$/;
 
@@ -48,10 +49,10 @@ export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
    * since they need a proper context that includes required dependencies (such as slonik) in `node_modules/`.
    * While the original `@logto/schemas` may remove them in production.
    */
-  const packageDirectory = await findPackage(__dirname);
+  const packageDirectory = await findPackage(currentDirname);
 
   const localAlterationDirectory = path.resolve(
-    packageDirectory ?? __dirname,
+    packageDirectory ?? currentDirname,
     'alteration-scripts'
   );
 

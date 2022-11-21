@@ -2,6 +2,7 @@
   "name": "@logto/ui",
   "version": "1.0.0-beta.14",
   "license": "MPL-2.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "precommit": "lint-staged",

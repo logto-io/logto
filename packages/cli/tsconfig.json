@@ -10,7 +10,7 @@
   },
   "include": [
     "src",
-    "jest.config.ts"
+    "jest.*.ts"
   ],
   "exclude": ["**/alteration-scripts"]
 }

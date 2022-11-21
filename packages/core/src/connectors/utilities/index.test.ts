@@ -19,7 +19,7 @@ const connectors: Connector[] = [
 const findAllConnectors = jest.fn(async () => connectors);
 
 jest.mock('#src/queries/connector.js', () => ({
-  ...jest.requireActual('@/queries/connector'),
+  ...jest.requireActual('#src/queries/connector.js'),
   findAllConnectors: async () => findAllConnectors(),
 }));
 

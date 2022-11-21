@@ -32,7 +32,7 @@ const getLogtoConnectors = jest.fn(async () => logtoConnectors);
 
 jest.mock('#src/connectors.js', () => {
   return {
-    ...jest.requireActual('@/connectors'),
+    ...jest.requireActual('#src/connectors.js'),
     getLogtoConnectors: jest.fn(async () => getLogtoConnectors()),
   };
 });

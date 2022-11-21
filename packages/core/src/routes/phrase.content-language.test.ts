@@ -39,7 +39,7 @@ jest.mock('#src/queries/custom-phrase.js', () => ({
 }));
 
 jest.mock('#src/lib/phrase.js', () => ({
-  ...jest.requireActual('@/lib/phrase'),
+  ...jest.requireActual('#src/lib/phrase.js'),
   getPhrase: jest.fn().mockResolvedValue(en),
 }));
 

@@ -13,10 +13,11 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { findAllConnectors, insertConnector } from '#src/queries/connector.js';
 
 import { defaultConnectorMethods } from './consts.js';
+import { metaUrl } from './meta-url.js';
 import type { VirtualConnector, LogtoConnector } from './types.js';
 import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities/index.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const currentDirname = path.dirname(fileURLToPath(metaUrl));
 // eslint-disable-next-line @silverhand/fp/no-let
 let cachedVirtualConnectors: VirtualConnector[] | undefined;
 
@@ -25,7 +26,7 @@ export const loadVirtualConnectors = async () => {
     return cachedVirtualConnectors;
   }
 
-  const coreDirectory = await findPackage(__dirname);
+  const coreDirectory = await findPackage(currentDirname);
   const directory = coreDirectory && path.join(coreDirectory, connectorDirectory);
 
   if (!directory || !existsSync(directory)) {

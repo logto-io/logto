@@ -15,7 +15,7 @@ const findSocialRelatedUser = jest.fn(async () => [
   { id: 'user1', identities: {}, isSuspended: false },
 ]);
 jest.mock('#src/lib/social.js', () => ({
-  ...jest.requireActual('@/lib/social'),
+  ...jest.requireActual('#src/lib/social.js'),
   findSocialRelatedUser: async () => findSocialRelatedUser(),
   async getUserInfoByAuthCode(connectorId: string, data: { code: string }) {
     if (connectorId === '_connectorId') {

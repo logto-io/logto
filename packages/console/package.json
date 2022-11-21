@@ -5,6 +5,7 @@
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
   "license": "MPL-2.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "precommit": "lint-staged",

@@ -24,12 +24,12 @@ const getYesterdayDate = () => subDays(Date.now(), 1);
 const getTomorrowDate = () => addDays(Date.now(), 1);
 
 jest.mock('#src/lib/user.js', () => ({
-  ...jest.requireActual('@/lib/user'),
+  ...jest.requireActual('#src/lib/user.js'),
   encryptUserPassword: async (password: string) => encryptUserPassword(password),
 }));
 
 jest.mock('#src/queries/user.js', () => ({
-  ...jest.requireActual('@/queries/user'),
+  ...jest.requireActual('#src/queries/user.js'),
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   findUserByPhone: async () => ({ userId: 'id' }),
   hasUserWithEmail: async (email: string) => email === 'a@a.com',

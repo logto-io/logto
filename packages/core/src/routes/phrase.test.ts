@@ -53,7 +53,7 @@ jest.mock('#src/queries/custom-phrase.js', () => ({
 const getPhrase = jest.fn(async (language: string, customLanguages: string[]) => zhCN);
 
 jest.mock('#src/lib/phrase.js', () => ({
-  ...jest.requireActual('@/lib/phrase'),
+  ...jest.requireActual('#src/lib/phrase.js'),
   getPhrase: async (language: string, customLanguages: string[]) =>
     getPhrase(language, customLanguages),
 }));

@@ -8,7 +8,7 @@ import { validateSignUp } from './sign-up.js';
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 
 jest.mock('#src/lib/session.js', () => ({
-  ...jest.requireActual('@/lib/session'),
+  ...jest.requireActual('#src/lib/session.js'),
   getApplicationIdFromInteraction: jest.fn(),
 }));
 

@@ -42,7 +42,7 @@ jest.mock('oidc-provider', () => ({
 }));
 
 jest.mock('#src/lib/user.js', () => ({
-  ...jest.requireActual('@/lib/user'),
+  ...jest.requireActual('#src/lib/user.js'),
   encryptUserPassword: async (password: string) => encryptUserPassword(password),
 }));
 
@@ -69,7 +69,7 @@ jest.mock('#src/lib/social', () => ({
 }));
 
 jest.mock('#src/queries/user.js', () => ({
-  ...jest.requireActual('@/queries/user'),
+  ...jest.requireActual('#src/queries/user.js'),
   findUserById: async () => mockFindUserById(),
   hasUser: async () => mockHasUser(),
   hasUserWithEmail: async () => mockHasUserWithEmail(),

@@ -28,7 +28,7 @@ jest.mock('#src/connectors.js', () => ({
 const validateLanguageInfo = jest.fn(async (languageInfo: LanguageInfo): Promise<void> => {});
 
 jest.mock('#src/lib/sign-in-experience.js', () => ({
-  ...jest.requireActual('@/lib/sign-in-experience'),
+  ...jest.requireActual('#src/lib/sign-in-experience.js'),
   validateLanguageInfo: async (languageInfo: LanguageInfo) => validateLanguageInfo(languageInfo),
 }));
 

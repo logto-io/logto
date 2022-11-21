@@ -52,7 +52,7 @@ jest.mock('#src/lib/user.js', () => ({
 }));
 
 jest.mock('#src/lib/session.js', () => ({
-  ...jest.requireActual('@/lib/session'),
+  ...jest.requireActual('#src/lib/session.js'),
   getApplicationIdFromInteraction: jest.fn(),
 }));
 
