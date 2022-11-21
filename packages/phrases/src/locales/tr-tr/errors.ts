@@ -102,6 +102,7 @@ const errors = {
     not_found_with_connector_id: 'Can not find connector with given standard connector id.', // UNTRANSLATED
     multiple_instances_not_supported:
       'Can not create multiple instance with picked standard connector.', // UNTRANSLATED
+    invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: 'Hem telefon hem de e-posta adresi yok.',

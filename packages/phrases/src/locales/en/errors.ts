@@ -101,6 +101,7 @@ const errors = {
     not_found_with_connector_id: 'Can not find connector with given standard connector id.',
     multiple_instances_not_supported:
       'Can not create multiple instance with picked standard connector.',
+    invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.',
   },
   passcode: {
     phone_email_empty: 'Both phone and email are empty.',

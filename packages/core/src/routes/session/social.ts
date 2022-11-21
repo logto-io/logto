@@ -1,5 +1,6 @@
 import { validateRedirectUrl } from '@logto/core-kit';
 import { ConnectorType, userInfoSelectFields } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import type { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';
@@ -102,8 +103,8 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       const { name, avatar } = userInfo;
       const profileUpdate = Object.fromEntries(
         Object.entries({
-          name: syncProfile && name ? name : undefined,
-          avatar: syncProfile && avatar ? avatar : undefined,
+          name: conditional(syncProfile && name),
+          avatar: conditional(syncProfile && avatar),
         }).filter(([_key, value]) => value !== undefined)
       );
 

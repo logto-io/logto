@@ -207,7 +207,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       if (body.syncProfile) {
         assertThat(
           type === ConnectorType.Social,
-          new RequestError({ code: 'connector.unexpected_type', status: 422 })
+          new RequestError({ code: 'connector.invalid_type_for_syncing_profile', status: 422 })
         );
       }
 
