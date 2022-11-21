@@ -187,38 +187,12 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.patch(
-    '/connectors/:id/sync-profile',
-    koaGuard({
-      params: object({ id: string().min(1) }),
-      body: Connectors.createGuard.pick({ syncProfile: true }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { id },
-        body,
-      } = ctx.guard;
-
-      const { type, metadata } = await getLogtoConnectorById(id);
-
-      if (body.syncProfile) {
-        assertThat(
-          type === ConnectorType.Social,
-          new RequestError({ code: 'connector.unexpected_type', status: 422 })
-        );
-      }
-
-      const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
-      ctx.body = { ...connector, metadata, type };
-
-      return next();
-    }
-  );
-
-  router.patch(
     '/connectors/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Connectors.createGuard.pick({ config: true, metadata: true }).partial(),
+      body: Connectors.createGuard
+        .pick({ config: true, metadata: true, syncProfile: true })
+        .partial(),
     }),
 
     async (ctx, next) => {
@@ -229,6 +203,13 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       const { metadata, type, validateConfig } = await getLogtoConnectorById(id);
+
+      if (body.syncProfile) {
+        assertThat(
+          type === ConnectorType.Social,
+          new RequestError({ code: 'connector.unexpected_type', status: 422 })
+        );
+      }
 
       if (config) {
         validateConfig(config);
