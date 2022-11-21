@@ -10,7 +10,12 @@ import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { removeUnavailableSocialConnectorTargets } from '@/lib/sign-in-experience';
 import koaGuard from '@/middleware/koa-guard';
-import { countConnectorByConnectorId, insertConnector, updateConnector } from '@/queries/connector';
+import {
+  countConnectorByConnectorId,
+  deleteConnectorById,
+  insertConnector,
+  updateConnector,
+} from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
 
 import type { AuthedRouter } from './types';
@@ -249,6 +254,41 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         },
         config
       );
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/connectors/:id',
+    koaGuard({ params: object({ id: string().min(1) }) }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+
+      const databaseEntries = await findAllConnectors();
+      const databaseEntry = databaseEntries.find((entry) => entry.id === id);
+
+      if (!databaseEntry) {
+        throw new RequestError({
+          code: 'entity.not_found',
+          id,
+          status: 422,
+        });
+      }
+
+      const virtualConnectors = await loadConnectors();
+      const virtualConnector = virtualConnectors.find(
+        ({ metadata: { id } }) => id === databaseEntry.connectorId
+      );
+
+      if (virtualConnector) {
+        assertThat(!databaseEntry.enabled, 'connector.delete_enabled_connector_failed');
+      }
+      await deleteConnectorById(id);
 
       ctx.status = 204;
 
