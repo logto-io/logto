@@ -47,7 +47,7 @@ const ConfirmModal = ({
         title={title}
         footer={
           <>
-            <Button type="outline" title={cancelButtonText} onClick={onCancel} />
+            <Button title={cancelButtonText} onClick={onCancel} />
             <Button
               type={confirmButtonType}
               title={confirmButtonText}
