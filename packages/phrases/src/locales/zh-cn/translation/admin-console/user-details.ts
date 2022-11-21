@@ -15,6 +15,8 @@ const user_details = {
     new_password: '新密码：',
   },
   tab_logs: '用户日志',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   field_email: '主要邮箱',
   field_phone: '主要手机号码',
   field_username: '用户名',

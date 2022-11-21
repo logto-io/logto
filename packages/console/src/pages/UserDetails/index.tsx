@@ -1,5 +1,4 @@
 import type { User } from '@logto/schemas';
-import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -170,23 +169,21 @@ const UserDetails = () => {
               </DeleteConfirmModal>
             </div>
           </Card>
-          <Card className={classNames(styles.body, detailsStyles.body)}>
-            <TabNav>
-              <TabNavItem href={`/users/${userId}`}>{t('general.settings_nav')}</TabNavItem>
-              <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
-            </TabNav>
-            {isLogs && <UserLogs userId={data.id} />}
-            {!isLogs && userFormData && (
-              <UserSettings
-                userData={data}
-                userFormData={userFormData}
-                isDeleted={isDeleted}
-                onUserUpdated={(user) => {
-                  void mutate(user);
-                }}
-              />
-            )}
-          </Card>
+          <TabNav>
+            <TabNavItem href={`/users/${userId}`}>{t('general.settings_nav')}</TabNavItem>
+            <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
+          </TabNav>
+          {isLogs && <UserLogs userId={data.id} />}
+          {!isLogs && userFormData && (
+            <UserSettings
+              userData={data}
+              userFormData={userFormData}
+              isDeleted={isDeleted}
+              onUserUpdated={(user) => {
+                void mutate(user);
+              }}
+            />
+          )}
         </>
       )}
       {data && password && (

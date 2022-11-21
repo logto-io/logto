@@ -1,6 +1,7 @@
 import AuditLogTable from '@/components/AuditLogTable';
+import Card from '@/components/Card';
 
-import * as styles from '../index.module.scss';
+import * as styles from './UserLogs.module.scss';
 
 type Props = {
   userId: string;
@@ -8,9 +9,9 @@ type Props = {
 
 const UserLogs = ({ userId }: Props) => {
   return (
-    <div className={styles.logs}>
+    <Card className={styles.logs}>
       <AuditLogTable userId={userId} />
-    </div>
+    </Card>
   );
 };
 

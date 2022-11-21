@@ -17,6 +17,8 @@ const user_details = {
     new_password: 'Nouveau mot de passe :',
   },
   tab_logs: "Journaux de l'utilisateur",
+  settings: 'Settings', // UNTRANSLATED
+  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   field_email: 'Email principale',
   field_phone: 'Téléphone principal',
   field_username: "Nom d'utilisateur",
