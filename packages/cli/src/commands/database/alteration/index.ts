@@ -8,14 +8,14 @@ import { copy, existsSync, remove, readdir } from 'fs-extra';
 import type { DatabasePool } from 'slonik';
 import type { CommandModule } from 'yargs';
 
-import { createPoolFromConfig } from '../../../database';
+import { createPoolFromConfig } from '../../../database.js';
 import {
   getCurrentDatabaseAlterationTimestamp,
   updateDatabaseTimestamp,
-} from '../../../queries/logto-config';
-import { getPathInModule, log } from '../../../utilities';
-import type { AlterationFile } from './type';
-import { chooseAlterationsByVersion } from './version';
+} from '../../../queries/logto-config.js';
+import { getPathInModule, log } from '../../../utilities.js';
+import type { AlterationFile } from './type.js';
+import { chooseAlterationsByVersion } from './version.js';
 
 const alterationFilenameRegex = /-(\d+)-?.*\.js$/;
 

@@ -12,9 +12,9 @@ import pRetry from 'p-retry';
 import tar from 'tar';
 import { z } from 'zod';
 
-import { connectorDirectory } from '../../constants';
-import { getConnectorPackagesFromDirectory, isTty, log, oraPromise } from '../../utilities';
-import { defaultPath } from '../install/utils';
+import { connectorDirectory } from '../../constants.js';
+import { getConnectorPackagesFromDirectory, isTty, log, oraPromise } from '../../utilities.js';
+import { defaultPath } from '../install/utils.js';
 
 const coreDirectory = 'packages/core';
 const execPromise = promisify(exec);

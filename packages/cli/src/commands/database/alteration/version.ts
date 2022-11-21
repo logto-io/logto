@@ -3,8 +3,8 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { SemVer, compare, eq, gt } from 'semver';
 
-import { findLastIndex, isTty, log } from '../../../utilities';
-import type { AlterationFile } from './type';
+import { findLastIndex, isTty, log } from '../../../utilities.js';
+import type { AlterationFile } from './type.js';
 
 const getVersionFromFilename = (filename: string) => {
   try {

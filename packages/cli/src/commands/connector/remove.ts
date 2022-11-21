@@ -2,8 +2,8 @@ import chalk from 'chalk';
 import fsExtra from 'fs-extra';
 import type { CommandModule } from 'yargs';
 
-import { log } from '../../utilities';
-import { getConnectorPackagesFrom } from './utils';
+import { log } from '../../utilities.js';
+import { getConnectorPackagesFrom } from './utils.js';
 
 const remove: CommandModule<{ path?: string }, { path?: string; packages?: string[] }> = {
   command: ['remove [packages...]', 'rm', 'delete'],

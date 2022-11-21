@@ -11,7 +11,7 @@ import inquirer from 'inquirer';
 import * as semver from 'semver';
 import tar from 'tar';
 
-import { createPoolAndDatabaseIfNeeded } from '../../database';
+import { createPoolAndDatabaseIfNeeded } from '../../database.js';
 import {
   cliConfig,
   ConfigKey,
@@ -20,8 +20,8 @@ import {
   log,
   oraPromise,
   safeExecSync,
-} from '../../utilities';
-import { seedByPool } from '../database/seed';
+} from '../../utilities.js';
+import { seedByPool } from '../database/seed/index.js';
 
 export const defaultPath = path.join(os.homedir(), 'logto');
 const pgRequired = new semver.SemVer('14.0.0');
