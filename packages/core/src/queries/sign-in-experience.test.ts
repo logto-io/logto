@@ -1,11 +1,14 @@
 import { createMockPool, createMockQueryResult } from 'slonik';
 
-import { mockSignInExperience } from '@/__mocks__';
-import envSet from '@/env-set';
-import type { QueryType } from '@/utils/test-utils';
-import { expectSqlAssert } from '@/utils/test-utils';
+import { mockSignInExperience } from '#src/__mocks__/index.js';
+import envSet from '#src/env-set/index.js';
+import type { QueryType } from '#src/utils/test-utils.js';
+import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import { findDefaultSignInExperience, updateDefaultSignInExperience } from './sign-in-experience';
+import {
+  findDefaultSignInExperience,
+  updateDefaultSignInExperience,
+} from './sign-in-experience.js';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 

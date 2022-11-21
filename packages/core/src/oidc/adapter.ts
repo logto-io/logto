@@ -7,8 +7,8 @@ import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import envSet, { MountedApps } from '@/env-set';
-import { findApplicationById } from '@/queries/application';
+import envSet, { MountedApps } from '#src/env-set/index.js';
+import { findApplicationById } from '#src/queries/application.js';
 import {
   consumeInstanceById,
   destroyInstanceById,
@@ -16,10 +16,10 @@ import {
   findPayloadByPayloadField,
   revokeInstanceByGrantId,
   upsertInstance,
-} from '@/queries/oidc-model-instance';
-import { appendPath } from '@/utils/url';
+} from '#src/queries/oidc-model-instance.js';
+import { appendPath } from '#src/utils/url.js';
 
-import { getConstantClientMetadata } from './utils';
+import { getConstantClientMetadata } from './utils.js';
 
 const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
   const { localhostUrl, adminConsoleUrl } = envSet.values;

@@ -1,11 +1,11 @@
-import en from '@logto/phrases-ui/lib/locales/en';
+import en from '@logto/phrases-ui/lib/locales/en.js';
 import type { CustomPhrase, SignInExperience, Translation } from '@logto/schemas';
 
-import { mockSignInExperience } from '@/__mocks__';
-import { mockZhCnCustomPhrase, trTrTag, zhCnTag } from '@/__mocks__/custom-phrase';
-import RequestError from '@/errors/RequestError';
-import customPhraseRoutes from '@/routes/custom-phrase';
-import { createRequester } from '@/utils/test-utils';
+import { mockZhCnCustomPhrase, trTrTag, zhCnTag } from '#src/__mocks__/custom-phrase.js';
+import { mockSignInExperience } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import customPhraseRoutes from '#src/routes/custom-phrase.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const mockLanguageTag = zhCnTag;
 const mockPhrase = mockZhCnCustomPhrase;
@@ -33,7 +33,7 @@ const findAllCustomPhrases = jest.fn(async (): Promise<CustomPhrase[]> => []);
 
 const upsertCustomPhrase = jest.fn(async (customPhrase: CustomPhrase) => mockPhrase);
 
-jest.mock('@/queries/custom-phrase', () => ({
+jest.mock('#src/queries/custom-phrase.js', () => ({
   deleteCustomPhraseByLanguageTag: async (tag: string) => deleteCustomPhraseByLanguageTag(tag),
   findAllCustomPhrases: async () => findAllCustomPhrases(),
   findCustomPhraseByLanguageTag: async (tag: string) => findCustomPhraseByLanguageTag(tag),
@@ -44,7 +44,7 @@ const isStrictlyPartial = jest.fn(
   (fullTranslation: Translation, partialTranslation: Partial<Translation>) => true
 );
 
-jest.mock('@/utils/translation', () => ({
+jest.mock('#src/utils/translation.js', () => ({
   isStrictlyPartial: (fullTranslation: Translation, partialTranslation: Translation) =>
     isStrictlyPartial(fullTranslation, partialTranslation),
 }));
@@ -61,7 +61,7 @@ const findDefaultSignInExperience = jest.fn(
   })
 );
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 

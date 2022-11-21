@@ -6,18 +6,17 @@ import pick from 'lodash.pick';
 import type { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';
 
-import { getLogtoConnectorById } from '@/connectors';
-import RequestError from '@/errors/RequestError';
-import { checkSessionHealth } from '@/lib/session';
-import { getUserInfoByAuthCode } from '@/lib/social';
-import { encryptUserPassword } from '@/lib/user';
-import koaGuard from '@/middleware/koa-guard';
-import { deleteUserIdentity, findUserById, updateUserById } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+import { getLogtoConnectorById } from '#src/connectors/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { checkSessionHealth } from '#src/lib/session.js';
+import { encryptUserPassword } from '#src/lib/user.js';
+import koaGuard from '#src/middleware/koa-guard.js';
+import { findUserById, updateUserById } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types';
-import { verificationTimeout } from './consts';
-import { checkSignUpIdentifierCollision } from './utils';
+import type { AnonymousRouter } from '../types.js';
+import { verificationTimeout } from './consts.js';
+import { checkSignUpIdentifierCollision } from './utils.js';
 
 export const profileRoute = '/session/profile';
 

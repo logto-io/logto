@@ -7,13 +7,13 @@ import type Router from 'koa-router';
 import type { OpenAPIV3 } from 'openapi-types';
 import { ZodObject, ZodOptional } from 'zod';
 
-import type { WithGuardConfig } from '@/middleware/koa-guard';
-import { isGuardMiddleware } from '@/middleware/koa-guard';
-import { fallbackDefaultPageSize, isPaginationMiddleware } from '@/middleware/koa-pagination';
-import assertThat from '@/utils/assert-that';
-import { translationSchemas, zodTypeToSwagger } from '@/utils/zod';
+import type { WithGuardConfig } from '#src/middleware/koa-guard.js';
+import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
+import { fallbackDefaultPageSize, isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
+import assertThat from '#src/utils/assert-that.js';
+import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
-import type { AnonymousRouter } from './types';
+import type { AnonymousRouter } from './types.js';
 
 type RouteObject = {
   path: string;

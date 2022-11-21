@@ -1,10 +1,10 @@
-import envSet, { MountedApps } from '@/env-set';
-import { hasActiveUsers } from '@/queries/user';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import envSet, { MountedApps } from '#src/env-set/index.js';
+import { hasActiveUsers } from '#src/queries/user.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaWelcomeProxy from './koa-welcome-proxy';
+import koaWelcomeProxy from './koa-welcome-proxy.js';
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   hasActiveUsers: jest.fn(),
 }));
 

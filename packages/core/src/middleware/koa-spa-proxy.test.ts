@@ -1,7 +1,7 @@
-import envSet, { MountedApps } from '@/env-set';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import envSet, { MountedApps } from '#src/env-set/index.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaSpaProxy from './koa-spa-proxy';
+import koaSpaProxy from './koa-spa-proxy.js';
 
 const mockProxyMiddleware = jest.fn();
 const mockStaticMiddleware = jest.fn();
@@ -12,7 +12,7 @@ jest.mock('fs/promises', () => ({
 }));
 
 jest.mock('koa-proxies', () => jest.fn(() => mockProxyMiddleware));
-jest.mock('@/middleware/koa-serve-static', () => jest.fn(() => mockStaticMiddleware));
+jest.mock('#src/middleware/koa-serve-static.js', () => jest.fn(() => mockStaticMiddleware));
 
 describe('koaSpaProxy middleware', () => {
   const envBackup = process.env;

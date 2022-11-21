@@ -2,19 +2,19 @@ import type { LogPayload } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
 import i18next from 'i18next';
 
-import RequestError from '@/errors/RequestError';
-import { insertLog } from '@/queries/log';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import RequestError from '#src/errors/RequestError/index.js';
+import { insertLog } from '#src/queries/log.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import type { WithLogContext } from './koa-log';
-import koaLog from './koa-log';
+import type { WithLogContext } from './koa-log.js';
+import koaLog from './koa-log.js';
 
 const nanoIdMock = 'mockId';
 
 const addLogContext = jest.fn();
 const log = jest.fn();
 
-jest.mock('@/queries/log', () => ({
+jest.mock('#src/queries/log.js', () => ({
   insertLog: jest.fn(async () => 0),
 }));
 

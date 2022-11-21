@@ -4,9 +4,9 @@ import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 
-import { buildUpdateWhere } from '@/database/update-where';
-import envSet from '@/env-set';
-import { DeletionError } from '@/errors/SlonikError';
+import { buildUpdateWhere } from '#src/database/update-where.js';
+import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Users);
 

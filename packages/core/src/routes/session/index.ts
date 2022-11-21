@@ -7,20 +7,20 @@ import { conditional } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import { assignInteractionResults, saveUserFirstConsentedAppId } from '@/lib/session';
-import { findUserById } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults, saveUserFirstConsentedAppId } from '#src/lib/session.js';
+import { findUserById } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types';
-import continueRoutes from './continue';
-import forgotPasswordRoutes from './forgot-password';
-import koaGuardSessionAction from './middleware/koa-guard-session-action';
-import passwordRoutes from './password';
-import passwordlessRoutes from './passwordless';
-import profileRoutes from './profile';
-import socialRoutes from './social';
-import { getRoutePrefix } from './utils';
+import type { AnonymousRouter } from '../types.js';
+import continueRoutes from './continue.js';
+import forgotPasswordRoutes from './forgot-password.js';
+import koaGuardSessionAction from './middleware/koa-guard-session-action.js';
+import passwordRoutes from './password.js';
+import passwordlessRoutes from './passwordless.js';
+import profileRoutes from './profile.js';
+import socialRoutes from './social.js';
+import { getRoutePrefix } from './utils.js';
 
 export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.use(getRoutePrefix('sign-in'), koaGuardSessionAction(provider, 'sign-in'));

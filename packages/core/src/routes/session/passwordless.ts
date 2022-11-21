@@ -3,21 +3,25 @@ import { PasscodeType } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
-import koaGuard from '@/middleware/koa-guard';
-import { findUserByEmail, findUserByPhone } from '@/queries/user';
-import { passcodeTypeGuard } from '@/routes/session/types';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import { createPasscode, sendPasscode, verifyPasscode } from '#src/lib/passcode.js';
+import koaGuard from '#src/middleware/koa-guard.js';
+import { findUserByEmail, findUserByPhone } from '#src/queries/user.js';
+import { passcodeTypeGuard } from '#src/routes/session/types.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types';
+import type { AnonymousRouter } from '../types.js';
 import {
   smsSignInAction,
   emailSignInAction,
   smsRegisterAction,
   emailRegisterAction,
-} from './middleware/passwordless-action';
-import { assignVerificationResult, getPasswordlessRelatedLogType, getRoutePrefix } from './utils';
+} from './middleware/passwordless-action.js';
+import {
+  assignVerificationResult,
+  getPasswordlessRelatedLogType,
+  getRoutePrefix,
+} from './utils.js';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
 export const signInRoute = getRoutePrefix('sign-in', 'passwordless');

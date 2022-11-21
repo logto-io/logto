@@ -5,9 +5,9 @@ import path from 'path';
 import type { BaseConnector } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
 
-import RequestError from '@/errors/RequestError';
-import { findAllConnectors } from '@/queries/connector';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import { findAllConnectors } from '#src/queries/connector.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export const getConnectorConfig = async (id: string): Promise<unknown> => {
   const connectors = await findAllConnectors();

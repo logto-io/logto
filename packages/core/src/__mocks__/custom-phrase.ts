@@ -1,4 +1,4 @@
-import en from '@logto/phrases-ui/lib/locales/en';
+import en from '@logto/phrases-ui/lib/locales/en.js';
 
 export const enTag = 'en';
 export const trTrTag = 'tr-TR';

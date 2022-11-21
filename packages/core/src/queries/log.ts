@@ -3,9 +3,9 @@ import { Logs } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 
-import { buildFindEntityById } from '@/database/find-entity-by-id';
-import { buildInsertInto } from '@/database/insert-into';
-import envSet from '@/env-set';
+import { buildFindEntityById } from '#src/database/find-entity-by-id.js';
+import { buildInsertInto } from '#src/database/insert-into.js';
+import envSet from '#src/env-set/index.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
 

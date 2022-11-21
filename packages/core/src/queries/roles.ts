@@ -3,7 +3,7 @@ import { Roles } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 
-import envSet from '@/env-set';
+import envSet from '#src/env-set/index.js';
 
 const { table, fields } = convertToIdentifiers(Roles);
 

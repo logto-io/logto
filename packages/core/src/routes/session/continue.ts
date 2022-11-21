@@ -2,29 +2,29 @@ import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
-import { encryptUserPassword } from '@/lib/user';
-import koaGuard from '@/middleware/koa-guard';
+import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import { encryptUserPassword } from '#src/lib/user.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 import {
   findUserById,
   hasUser,
   hasUserWithEmail,
   hasUserWithPhone,
   updateUserById,
-} from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+} from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types';
-import { continueEmailSessionResultGuard, continueSmsSessionResultGuard } from './types';
+import type { AnonymousRouter } from '../types.js';
+import { continueEmailSessionResultGuard, continueSmsSessionResultGuard } from './types.js';
 import {
   checkRequiredProfile,
   getContinueSignInResult,
   getRoutePrefix,
   getVerificationStorageFromInteraction,
   isUserPasswordSet,
-} from './utils';
+} from './utils.js';
 
 export const continueRoute = getRoutePrefix('sign-in', 'continue');
 

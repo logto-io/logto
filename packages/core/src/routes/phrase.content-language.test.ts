@@ -1,10 +1,10 @@
-import en from '@logto/phrases-ui/lib/locales/en';
+import en from '@logto/phrases-ui/lib/locales/en.js';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience } from '@/__mocks__';
-import { trTrTag, zhCnTag, zhHkTag } from '@/__mocks__/custom-phrase';
-import phraseRoutes from '@/routes/phrase';
-import { createRequester } from '@/utils/test-utils';
+import { trTrTag, zhCnTag, zhHkTag } from '#src/__mocks__/custom-phrase.js';
+import { mockSignInExperience } from '#src/__mocks__/index.js';
+import phraseRoutes from '#src/routes/phrase.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const mockApplicationId = 'mockApplicationIdValue';
 
@@ -30,15 +30,15 @@ const findDefaultSignInExperience = jest.fn(async () => ({
   },
 }));
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
-jest.mock('@/queries/custom-phrase', () => ({
+jest.mock('#src/queries/custom-phrase.js', () => ({
   findAllCustomLanguageTags: async () => [trTrTag, zhCnTag],
 }));
 
-jest.mock('@/lib/phrase', () => ({
+jest.mock('#src/lib/phrase.js', () => ({
   ...jest.requireActual('@/lib/phrase'),
   getPhrase: jest.fn().mockResolvedValue(en),
 }));

@@ -9,11 +9,11 @@ import {
   mockPasswordEncrypted,
   mockUser,
   mockUserResponse,
-} from '@/__mocks__';
-import type { SocialUserInfo } from '@/connectors/types';
-import { createRequester } from '@/utils/test-utils';
+} from '#src/__mocks__/index.js';
+import type { SocialUserInfo } from '#src/connectors/types.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import profileRoutes, { profileRoute } from './profile';
+import profileRoutes, { profileRoute } from './profile.js';
 
 const mockFindUserById = jest.fn(async (): Promise<User> => mockUser);
 const mockHasUser = jest.fn(async () => false);
@@ -41,7 +41,7 @@ jest.mock('oidc-provider', () => ({
   })),
 }));
 
-jest.mock('@/lib/user', () => ({
+jest.mock('#src/lib/user.js', () => ({
   ...jest.requireActual('@/lib/user'),
   encryptUserPassword: async (password: string) => encryptUserPassword(password),
 }));
@@ -53,7 +53,7 @@ const mockGetLogtoConnectorById = jest.fn(async () => ({
   getAuthorizationUri: jest.fn(async () => ''),
 }));
 
-jest.mock('@/connectors', () => ({
+jest.mock('#src/connectors/index.js', () => ({
   getLogtoConnectors: jest.fn(async () => mockLogtoConnectorList),
   getLogtoConnectorById: jest.fn(async () => mockGetLogtoConnectorById()),
 }));
@@ -62,13 +62,13 @@ const mockFindSocialRelatedUser = jest.fn(async () => [
   { id: 'user1', identities: {}, isSuspended: false },
 ]);
 const mockGetUserInfoByAuthCode = jest.fn();
-jest.mock('@/lib/social', () => ({
+jest.mock('#src/lib/social', () => ({
   ...jest.requireActual('@/lib/social'),
   findSocialRelatedUser: async () => mockFindSocialRelatedUser(),
   getUserInfoByAuthCode: async () => mockGetUserInfoByAuthCode(),
 }));
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   ...jest.requireActual('@/queries/user'),
   findUserById: async () => mockFindUserById(),
   hasUser: async () => mockHasUser(),
@@ -86,7 +86,7 @@ const mockFindDefaultSignInExperience = jest.fn(async () => ({
   },
 }));
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: jest.fn(async () => mockFindDefaultSignInExperience()),
 }));
 

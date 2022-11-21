@@ -2,7 +2,7 @@ import { GrantType, TokenType, LogResult } from '@logto/schemas';
 import { notFalsy } from '@silverhand/essentials';
 import type { errors, KoaContextWithOIDC, Provider } from 'oidc-provider';
 
-import type { WithLogContext } from '@/middleware/koa-log';
+import type { WithLogContext } from '#src/middleware/koa-log.js';
 
 export const addOidcEventListeners = (provider: Provider) => {
   /**

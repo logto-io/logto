@@ -20,7 +20,7 @@ import {
   ZodUnknown,
 } from 'zod';
 
-import RequestError from '@/errors/RequestError';
+import RequestError from '#src/errors/RequestError/index.js';
 
 export const translationSchemas: Record<string, OpenAPIV3.SchemaObject> = {
   TranslationObject: {

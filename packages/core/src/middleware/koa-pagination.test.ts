@@ -1,8 +1,8 @@
 import { createMockContext } from '@shopify/jest-koa-mocks';
 import type { Context } from 'koa';
 
-import type { WithPaginationContext } from './koa-pagination';
-import koaPagination from './koa-pagination';
+import type { WithPaginationContext } from './koa-pagination.js';
+import koaPagination from './koa-pagination.js';
 
 const next = jest.fn();
 const setHeader = jest.fn();

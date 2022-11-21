@@ -2,10 +2,10 @@ import { languages, languageTagGuard } from '@logto/language-kit';
 import { ApplicationType, arbitraryObjectGuard, translationGuard } from '@logto/schemas';
 import { string, boolean, number, object, nativeEnum, unknown, literal, union } from 'zod';
 
-import RequestError from '@/errors/RequestError';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import type { ZodStringCheck } from './zod';
-import { zodTypeToSwagger } from './zod';
+import type { ZodStringCheck } from './zod.js';
+import { zodTypeToSwagger } from './zod.js';
 
 describe('zodTypeToSwagger', () => {
   it('arbitrary object guard', () => {

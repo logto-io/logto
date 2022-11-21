@@ -3,10 +3,10 @@ import { Connectors } from '@logto/schemas';
 import { convertToIdentifiers, manyRows } from '@logto/shared';
 import { sql } from 'slonik';
 
-import { buildInsertInto } from '@/database/insert-into';
-import { buildUpdateWhere } from '@/database/update-where';
-import envSet from '@/env-set';
-import { DeletionError } from '@/errors/SlonikError';
+import { buildInsertInto } from '#src/database/insert-into.js';
+import { buildUpdateWhere } from '#src/database/update-where.js';
+import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Connectors);
 

@@ -3,10 +3,10 @@ import { UserRole, SignUpIdentifier } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience, mockUser } from '@/__mocks__';
-import { createRequester } from '@/utils/test-utils';
+import { mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import passwordRoutes, { registerRoute, signInRoute } from './password';
+import passwordRoutes, { registerRoute, signInRoute } from './password.js';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const hasUser = jest.fn(async (username: string) => username === 'username1');
@@ -15,7 +15,7 @@ const updateUserById = jest.fn(async (..._args: unknown[]) => mockUser);
 const hasActiveUsers = jest.fn(async () => true);
 const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   findUserById: async () => findUserById(),
   findUserByIdentity: async () => ({ id: mockUser.id, identities: {} }),
   findUserByPhone: async () => mockUser,
@@ -34,11 +34,11 @@ jest.mock('@/queries/user', () => ({
   },
 }));
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
-jest.mock('@/lib/user', () => ({
+jest.mock('#src/lib/user.js', () => ({
   async verifyUserPassword(user: User) {
     return user;
   },
@@ -51,7 +51,7 @@ jest.mock('@/lib/user', () => ({
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));
 
-jest.mock('@/lib/session', () => ({
+jest.mock('#src/lib/session.js', () => ({
   ...jest.requireActual('@/lib/session'),
   getApplicationIdFromInteraction: jest.fn(),
 }));

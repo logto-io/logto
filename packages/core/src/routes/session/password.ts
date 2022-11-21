@@ -4,22 +4,22 @@ import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
-import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
-import koaGuard from '@/middleware/koa-guard';
+import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import { encryptUserPassword, generateUserId, insertUser } from '#src/lib/user.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 import {
   findUserByEmail,
   findUserByPhone,
   findUserByUsername,
   hasActiveUsers,
   hasUser,
-} from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+} from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types';
-import { checkRequiredProfile, getRoutePrefix, signInWithPassword } from './utils';
+import type { AnonymousRouter } from '../types.js';
+import { checkRequiredProfile, getRoutePrefix, signInWithPassword } from './utils.js';
 
 export const registerRoute = getRoutePrefix('register', 'password');
 export const signInRoute = getRoutePrefix('sign-in', 'password');

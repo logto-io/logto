@@ -6,14 +6,14 @@ import {
   mockConnector,
   mockLogtoConnectorList,
   mockLogtoConnector,
-} from '@/__mocks__';
-import type { LogtoConnector } from '@/connectors/types';
-import RequestError from '@/errors/RequestError';
-import { updateConnector } from '@/queries/connector';
-import assertThat from '@/utils/assert-that';
-import { createRequester } from '@/utils/test-utils';
+} from '#src/__mocks__/index.js';
+import type { LogtoConnector } from '#src/connectors/types.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { updateConnector } from '#src/queries/connector.js';
+import assertThat from '#src/utils/assert-that.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import connectorRoutes from './connector';
+import connectorRoutes from './connector.js';
 
 const getLogtoConnectorsPlaceholder = jest.fn() as jest.MockedFunction<
   () => Promise<LogtoConnector[]>
@@ -39,15 +39,15 @@ const getLogtoConnectorByIdPlaceholder = jest.fn(async (connectorId: string) => 
 const mockedUpdateConnector = updateConnector as jest.Mock;
 const sendMessagePlaceHolder = jest.fn();
 
-jest.mock('@/queries/connector', () => ({
+jest.mock('#src/queries/connector.js', () => ({
   updateConnector: jest.fn(),
 }));
-jest.mock('@/connectors', () => ({
+jest.mock('#src/connectors.js', () => ({
   getLogtoConnectors: async () => getLogtoConnectorsPlaceholder(),
   getLogtoConnectorById: async (connectorId: string) =>
     getLogtoConnectorByIdPlaceholder(connectorId),
 }));
-jest.mock('@/lib/sign-in-experience', () => ({
+jest.mock('#src/lib/sign-in-experience.js', () => ({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   removeUnavailableSocialConnectorTargets: async () => {},
 }));

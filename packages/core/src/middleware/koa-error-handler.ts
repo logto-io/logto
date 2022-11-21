@@ -2,8 +2,8 @@ import type { RequestErrorBody } from '@logto/schemas';
 import type { Middleware } from 'koa';
 import { HttpError } from 'koa';
 
-import envSet from '@/env-set';
-import RequestError from '@/errors/RequestError';
+import envSet from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
 export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
   StateT,

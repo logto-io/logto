@@ -5,13 +5,13 @@ import type { Nullable } from '@silverhand/essentials';
 import { addDays, addSeconds, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience, mockSignInMethod, mockUser } from '@/__mocks__';
-import RequestError from '@/errors/RequestError';
-import { createRequester } from '@/utils/test-utils';
+import { mockSignInExperience, mockSignInMethod, mockUser } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import { verificationTimeout } from './consts';
-import * as passwordlessActions from './middleware/passwordless-action';
-import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
+import { verificationTimeout } from './consts.js';
+import * as passwordlessActions from './middleware/passwordless-action.js';
+import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless.js';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
@@ -29,17 +29,17 @@ const findDefaultSignInExperience = jest.fn(async () => ({
 }));
 const getTomorrowIsoString = () => addDays(Date.now(), 1).toISOString();
 
-jest.mock('@/lib/user', () => ({
+jest.mock('#src/lib/user.js', () => ({
   generateUserId: () => 'user1',
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));
 
-jest.mock('@/lib/session', () => ({
+jest.mock('#src/lib/session.js', () => ({
   ...jest.requireActual('@/lib/session'),
   getApplicationIdFromInteraction: jest.fn(),
 }));
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   findUserById: async () => findUserById(),
   findUserByPhone: async () => findUserByPhone(),
   findUserByEmail: async () => findUserByEmail(),
@@ -49,7 +49,7 @@ jest.mock('@/queries/user', () => ({
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
 }));
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 const smsSignInActionSpy = jest.spyOn(passwordlessActions, 'smsSignInAction');
@@ -59,7 +59,7 @@ const emailRegisterActionSpy = jest.spyOn(passwordlessActions, 'emailRegisterAct
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
 const createPasscode = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
-jest.mock('@/lib/passcode', () => ({
+jest.mock('#src/lib/passcode.js', () => ({
   createPasscode: async (..._args: unknown[]) => createPasscode(..._args),
   sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {

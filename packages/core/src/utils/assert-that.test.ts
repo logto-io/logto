@@ -1,6 +1,6 @@
-import RequestError from '@/errors/RequestError';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import assertThat from './assert-that';
+import assertThat from './assert-that.js';
 
 describe('assertThat util', () => {
   it('assert to be truthy', () => {

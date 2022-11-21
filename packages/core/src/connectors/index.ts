@@ -1,19 +1,19 @@
 import { existsSync } from 'fs';
 import path from 'path';
 
-import { connectorDirectory } from '@logto/cli/lib/constants';
-import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utilities';
+import { connectorDirectory } from '@logto/cli/lib/constants.js';
+import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utilities.js';
 import type { AllConnector, CreateConnector } from '@logto/connector-kit';
 import { validateConfig } from '@logto/connector-kit';
 import { findPackage } from '@logto/shared';
 import chalk from 'chalk';
 
-import RequestError from '@/errors/RequestError';
-import { findAllConnectors, insertConnector } from '@/queries/connector';
+import RequestError from '#src/errors/RequestError/index.js';
+import { findAllConnectors, insertConnector } from '#src/queries/connector.js';
 
-import { defaultConnectorMethods } from './consts';
-import type { VirtualConnector, LogtoConnector } from './types';
-import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities';
+import { defaultConnectorMethods } from './consts.js';
+import type { VirtualConnector, LogtoConnector } from './types.js';
+import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities/index.js';
 
 // eslint-disable-next-line @silverhand/fp/no-let
 let cachedVirtualConnectors: VirtualConnector[] | undefined;

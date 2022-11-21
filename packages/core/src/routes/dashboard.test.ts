@@ -4,8 +4,8 @@ import { endOfDay, subDays } from 'date-fns';
 import { format } from 'date-fns/fp';
 /* eslint-enable import/no-duplicates */
 
-import dashboardRoutes from '@/routes/dashboard';
-import { createRequester } from '@/utils/test-utils';
+import dashboardRoutes from '#src/routes/dashboard.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const totalUserCount = 1000;
 const countUsers = jest.fn(async () => ({ count: totalUserCount }));
@@ -14,7 +14,7 @@ const getDailyNewUserCountsByTimeInterval = jest.fn(
 );
 const formatToQueryDate = format('yyyy-MM-dd');
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   countUsers: async () => countUsers(),
   getDailyNewUserCountsByTimeInterval: async (
     startTimeExclusive: number,
@@ -51,7 +51,7 @@ const countActiveUsersByTimeInterval = jest.fn(
   async (startTimeExclusive: number, endTimeInclusive: number) => ({ count: mockActiveUserCount })
 );
 
-jest.mock('@/queries/log', () => ({
+jest.mock('#src/queries/log.js', () => ({
   getDailyActiveUserCountsByTimeInterval: async (
     startTimeExclusive: number,
     endTimeInclusive: number

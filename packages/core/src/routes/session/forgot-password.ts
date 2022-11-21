@@ -3,20 +3,20 @@ import { argon2Verify } from 'hash-wasm';
 import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import { encryptUserPassword } from '@/lib/user';
-import koaGuard from '@/middleware/koa-guard';
-import { findUserById, updateUserById } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import { encryptUserPassword } from '#src/lib/user.js';
+import koaGuard from '#src/middleware/koa-guard.js';
+import { findUserById, updateUserById } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types';
-import { forgotPasswordSessionResultGuard } from './types';
+import type { AnonymousRouter } from '../types.js';
+import { forgotPasswordSessionResultGuard } from './types.js';
 import {
   clearVerificationResult,
   getRoutePrefix,
   getVerificationStorageFromInteraction,
   checkValidateExpiration,
-} from './utils';
+} from './utils.js';
 
 export const forgotPasswordRoute = getRoutePrefix('forgot-password');
 

@@ -2,12 +2,12 @@ import { Roles } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import { mockRole } from '@/__mocks__';
-import envSet from '@/env-set';
-import type { QueryType } from '@/utils/test-utils';
-import { expectSqlAssert } from '@/utils/test-utils';
+import { mockRole } from '#src/__mocks__/index.js';
+import envSet from '#src/env-set/index.js';
+import type { QueryType } from '#src/utils/test-utils.js';
+import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import { findAllRoles, findRolesByRoleNames } from './roles';
+import { findAllRoles, findRolesByRoleNames } from './roles.js';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 

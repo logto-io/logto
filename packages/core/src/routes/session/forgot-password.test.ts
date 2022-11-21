@@ -3,11 +3,15 @@ import { PasscodeType } from '@logto/schemas';
 import { addDays, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
-import { mockPasswordEncrypted, mockSignInExperience, mockUserWithPassword } from '@/__mocks__';
-import RequestError from '@/errors/RequestError';
-import { createRequester } from '@/utils/test-utils';
+import {
+  mockPasswordEncrypted,
+  mockSignInExperience,
+  mockUserWithPassword,
+} from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import forgotPasswordRoutes, { forgotPasswordRoute } from './forgot-password';
+import forgotPasswordRoutes, { forgotPasswordRoute } from './forgot-password.js';
 
 const encryptUserPassword = jest.fn(async (password: string) => ({
   passwordEncrypted: password + '_user1',
@@ -19,12 +23,12 @@ const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
 const getYesterdayDate = () => subDays(Date.now(), 1);
 const getTomorrowDate = () => addDays(Date.now(), 1);
 
-jest.mock('@/lib/user', () => ({
+jest.mock('#src/lib/user.js', () => ({
   ...jest.requireActual('@/lib/user'),
   encryptUserPassword: async (password: string) => encryptUserPassword(password),
 }));
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   ...jest.requireActual('@/queries/user'),
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   findUserByPhone: async () => ({ userId: 'id' }),
@@ -34,12 +38,12 @@ jest.mock('@/queries/user', () => ({
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
 }));
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
-jest.mock('@/lib/passcode', () => ({
+jest.mock('#src/lib/passcode.js', () => ({
   createPasscode: async () => ({ userId: 'id' }),
   sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {

@@ -1,13 +1,13 @@
 import { ConnectorType, SignUpIdentifier } from '@logto/schemas';
 
-import { mockAliyunDmConnector, mockAliyunSmsConnector, mockSignUp } from '@/__mocks__';
-import RequestError from '@/errors/RequestError';
+import { mockAliyunDmConnector, mockAliyunSmsConnector, mockSignUp } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import { validateSignUp } from './sign-up';
+import { validateSignUp } from './sign-up.js';
 
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 
-jest.mock('@/lib/session', () => ({
+jest.mock('#src/lib/session.js', () => ({
   ...jest.requireActual('@/lib/session'),
   getApplicationIdFromInteraction: jest.fn(),
 }));

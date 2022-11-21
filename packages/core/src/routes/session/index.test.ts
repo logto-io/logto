@@ -2,10 +2,10 @@ import type { User } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
-import { mockUser } from '@/__mocks__';
-import { createRequester } from '@/utils/test-utils';
+import { mockUser } from '#src/__mocks__/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import sessionRoutes from '.';
+import sessionRoutes from './index.js';
 
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
@@ -16,7 +16,7 @@ const grantAddResourceScope = jest.fn();
 const interactionResult = jest.fn(async () => 'redirectTo');
 const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({}));
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   findUserById: async () => findUserById(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
 }));

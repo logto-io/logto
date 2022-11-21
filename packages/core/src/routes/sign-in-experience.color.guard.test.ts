@@ -1,11 +1,11 @@
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 
-import { mockColor, mockSignInExperience } from '@/__mocks__';
-import { createRequester } from '@/utils/test-utils';
+import { mockColor, mockSignInExperience } from '#src/__mocks__/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import signInExperiencesRoutes from './sign-in-experience';
+import signInExperiencesRoutes from './sign-in-experience.js';
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   updateDefaultSignInExperience: jest.fn(
     async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
       ...mockSignInExperience,
@@ -14,7 +14,7 @@ jest.mock('@/queries/sign-in-experience', () => ({
   ),
 }));
 
-jest.mock('@/connectors', () => ({
+jest.mock('#src/connectors.js', () => ({
   getLogtoConnectors: jest.fn(async () => []),
 }));
 

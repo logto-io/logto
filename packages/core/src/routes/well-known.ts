@@ -4,11 +4,11 @@ import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import etag from 'etag';
 import type { Provider } from 'oidc-provider';
 
-import { getLogtoConnectors } from '@/connectors';
-import { getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
+import { getLogtoConnectors } from '#src/connectors/index.js';
+import { getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
 
-import type { AnonymousRouter } from './types';
+import type { AnonymousRouter } from './types.js';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.get(

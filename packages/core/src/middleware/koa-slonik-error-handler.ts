@@ -23,8 +23,8 @@ import type { SchemaLike } from '@logto/schemas';
 import type { Middleware } from 'koa';
 import { SlonikError, NotFoundError } from 'slonik';
 
-import RequestError from '@/errors/RequestError';
-import { DeletionError, InsertionError, UpdateError } from '@/errors/SlonikError';
+import RequestError from '#src/errors/RequestError/index.js';
+import { DeletionError, InsertionError, UpdateError } from '#src/errors/SlonikError/index.js';
 
 export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
   return async (ctx, next) => {

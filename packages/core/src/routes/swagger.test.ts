@@ -4,11 +4,11 @@ import Router from 'koa-router';
 import request from 'supertest';
 import { number, object, string } from 'zod';
 
-import koaGuard from '@/middleware/koa-guard';
-import koaPagination from '@/middleware/koa-pagination';
-import type { AnonymousRouter } from '@/routes/types';
+import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
+import type { AnonymousRouter } from '#src/routes/types.js';
 
-import swaggerRoutes, { defaultResponses, paginationParameters } from './swagger';
+import swaggerRoutes, { defaultResponses, paginationParameters } from './swagger.js';
 
 jest.mock('js-yaml', () => ({
   load: jest.fn().mockReturnValue({ paths: {} }),

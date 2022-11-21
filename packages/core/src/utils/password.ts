@@ -3,8 +3,8 @@ import crypto from 'crypto';
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { argon2i } from 'hash-wasm';
 
-import RequestError from '@/errors/RequestError';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export const encryptPassword = async (
   password: string,

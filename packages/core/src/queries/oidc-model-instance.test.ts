@@ -3,9 +3,9 @@ import { OidcModelInstances } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import envSet from '@/env-set';
-import type { QueryType } from '@/utils/test-utils';
-import { expectSqlAssert } from '@/utils/test-utils';
+import envSet from '#src/env-set/index.js';
+import type { QueryType } from '#src/utils/test-utils.js';
+import { expectSqlAssert } from '#src/utils/test-utils.js';
 
 import {
   upsertInstance,
@@ -14,7 +14,7 @@ import {
   consumeInstanceById,
   destroyInstanceById,
   revokeInstanceByGrantId,
-} from './oidc-model-instance';
+} from './oidc-model-instance.js';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 

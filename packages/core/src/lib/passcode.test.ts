@@ -3,10 +3,10 @@ import type { Passcode } from '@logto/schemas';
 import { PasscodeType } from '@logto/schemas';
 import { any } from 'zod';
 
-import { mockConnector, mockMetadata } from '@/__mocks__';
-import { getLogtoConnectors } from '@/connectors';
-import { defaultConnectorMethods } from '@/connectors/consts';
-import RequestError from '@/errors/RequestError';
+import { mockConnector, mockMetadata } from '#src/__mocks__/index.js';
+import { defaultConnectorMethods } from '#src/connectors/consts.js';
+import { getLogtoConnectors } from '#src/connectors/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import {
   consumePasscode,
   deletePasscodesByIds,
@@ -14,7 +14,7 @@ import {
   findUnconsumedPasscodesByJtiAndType,
   increasePasscodeTryCount,
   insertPasscode,
-} from '@/queries/passcode';
+} from '#src/queries/passcode.js';
 
 import {
   createPasscode,
@@ -23,10 +23,10 @@ import {
   passcodeLength,
   sendPasscode,
   verifyPasscode,
-} from './passcode';
+} from './passcode.js';
 
-jest.mock('@/queries/passcode');
-jest.mock('@/connectors');
+jest.mock('#src/queries/passcode.js');
+jest.mock('#src/connectors.js');
 
 const mockedFindUnconsumedPasscodesByJtiAndType =
   findUnconsumedPasscodesByJtiAndType as jest.MockedFunction<

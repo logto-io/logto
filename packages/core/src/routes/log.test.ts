@@ -1,6 +1,6 @@
-import type { LogCondition } from '@/queries/log';
-import logRoutes from '@/routes/log';
-import { createRequester } from '@/utils/test-utils';
+import type { LogCondition } from '#src/queries/log.js';
+import logRoutes from '#src/routes/log.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const mockBody = { type: 'a', payload: {}, createdAt: 123 };
 const mockLog = { id: '1', ...mockBody };
@@ -14,7 +14,7 @@ const findLogs = jest.fn(
 );
 const findLogById = jest.fn(async (id: string) => mockLog);
 
-jest.mock('@/queries/log', () => ({
+jest.mock('#src/queries/log.js', () => ({
   countLogs: async (condition: LogCondition) => countLogs(condition),
   findLogs: async (limit: number, offset: number, condition: LogCondition) =>
     findLogs(limit, offset, condition),

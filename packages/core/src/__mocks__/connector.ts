@@ -3,7 +3,7 @@ import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import type { VirtualConnector, LogtoConnector } from '@/connectors/types';
+import type { VirtualConnector, LogtoConnector } from '#src/connectors/types.js';
 
 import {
   mockConnector0,
@@ -21,9 +21,9 @@ import {
   mockMetadata4,
   mockMetadata5,
   mockMetadata6,
-} from './connector-base-data';
+} from './connector-base-data.js';
 
-export { mockMetadata } from './connector-base-data';
+export { mockMetadata } from './connector-base-data.js';
 
 export const mockConnector: Connector = {
   id: 'id',
