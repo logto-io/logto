@@ -1,6 +1,9 @@
 const connector_details = {
   back_to_connectors: 'Zurück zu Connectoren',
   check_readme: 'Zur README',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'It real sent your at. Amounted all shy set why followed declared. Repeated of endeavor mr position kindness offering ignorant so up. Simplicity are melancholy preference considered saw companions.', // UNTRANSLATED
   save_error_empty_config: 'Bitte fülle die Konfiguration aus',
   send: 'Senden',
   send_error_invalid_format: 'Ungültige Eingabe',

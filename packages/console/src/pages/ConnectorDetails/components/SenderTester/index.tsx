@@ -57,6 +57,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
 
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
+
     const result = safeParseJson(config);
 
     if (!result.success) {
@@ -73,7 +74,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
   });
 
   return (
-    <form className={className}>
+    <div className={className}>
       <div className={styles.fields}>
         <FormField
           isRequired
@@ -120,7 +121,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
       <div className={classNames(inputError?.message ? styles.error : styles.description)}>
         {inputError?.message ?? t('connector_details.test_sender_description')}
       </div>
-    </form>
+    </div>
   );
 };
 

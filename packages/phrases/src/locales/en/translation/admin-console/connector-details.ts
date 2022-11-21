@@ -1,6 +1,9 @@
 const connector_details = {
   back_to_connectors: 'Back to Connectors',
   check_readme: 'Check README',
+  settings: 'Settings',
+  settings_description:
+    'It real sent your at. Amounted all shy set why followed declared. Repeated of endeavor mr position kindness offering ignorant so up. Simplicity are melancholy preference considered saw companions.', // UNTRANSLATED
   save_error_empty_config: 'Please enter config',
   send: 'Send',
   send_error_invalid_format: 'Invalid input',
