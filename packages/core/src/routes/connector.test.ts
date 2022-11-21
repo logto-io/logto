@@ -113,7 +113,7 @@ describe('connector route', () => {
     });
 
     it('should post a new connector record', async () => {
-      loadConnectorsPlaceHolder.mockResolvedValueOnce([
+      loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
         {
           ...mockVirtualConnector,
           metadata: { ...mockVirtualConnector.metadata, id: 'connectorId' },
@@ -139,7 +139,7 @@ describe('connector route', () => {
     });
 
     it('throws when standard connector not found', async () => {
-      loadConnectorsPlaceHolder.mockResolvedValueOnce([
+      loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
         {
           ...mockVirtualConnector,
           metadata: { ...mockVirtualConnector.metadata, id: 'connectorId' },
@@ -155,7 +155,7 @@ describe('connector route', () => {
     });
 
     it('should post a new record when add more than 1 instance with standard connector', async () => {
-      loadConnectorsPlaceHolder.mockResolvedValueOnce([
+      loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
         {
           ...mockVirtualConnector,
           metadata: { ...mockVirtualConnector.metadata, id: 'id0', isStandard: true },
@@ -180,7 +180,7 @@ describe('connector route', () => {
     });
 
     it('throws when add more than 1 instance with non-standard connector', async () => {
-      loadConnectorsPlaceHolder.mockResolvedValueOnce([
+      loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
         {
           ...mockVirtualConnector,
           metadata: { ...mockVirtualConnector.metadata, id: 'id0' },
