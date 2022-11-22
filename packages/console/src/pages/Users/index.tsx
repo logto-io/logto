@@ -87,71 +87,73 @@ const Users = () => {
           }}
         />
       </div>
-      <div className={classNames(styles.tableContainer, tableStyles.scrollable)}>
-        <table className={classNames(!data && tableStyles.empty)}>
-          <colgroup>
-            <col className={styles.userName} />
-            <col />
-            <col />
-          </colgroup>
-          <thead>
-            <tr>
-              <th>{t('users.user_name')}</th>
-              <th>{t('users.application_name')}</th>
-              <th>{t('users.latest_sign_in')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!data && error && (
-              <TableError
-                columns={3}
-                content={error.body?.message ?? error.message}
-                onRetry={async () => mutate(undefined, true)}
-              />
-            )}
-            {isLoading && <TableLoading columns={3} />}
-            {users?.length === 0 && (
-              <TableEmpty columns={3}>
-                <Button
-                  title="users.create"
-                  type="outline"
-                  onClick={() => {
-                    setIsCreateFormOpen(true);
-                  }}
-                />
-              </TableEmpty>
-            )}
-            {users?.map(({ id, name, avatar, lastSignInAt, applicationId }) => (
-              <tr
-                key={id}
-                className={tableStyles.clickable}
-                onClick={() => {
-                  navigate(`/users/${id}`);
-                }}
-              >
-                <td>
-                  <ItemPreview
-                    title={name ?? t('users.unnamed')}
-                    subtitle={id}
-                    icon={
-                      <img
-                        alt="avatar"
-                        className={styles.avatar}
-                        src={avatar ?? generateAvatarPlaceHolderById(id)}
-                      />
-                    }
-                    to={`/users/${id}`}
-                    size="compact"
-                  />
-                </td>
-                <td>{applicationId ? <ApplicationName applicationId={applicationId} /> : '-'}</td>
-                <td>
-                  <DateTime>{lastSignInAt}</DateTime>
-                </td>
+      <div className={classNames(resourcesStyles.table, styles.tableContainer)}>
+        <div className={tableStyles.scrollable}>
+          <table className={classNames(!data && tableStyles.empty)}>
+            <colgroup>
+              <col className={styles.userName} />
+              <col />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>{t('users.user_name')}</th>
+                <th>{t('users.application_name')}</th>
+                <th>{t('users.latest_sign_in')}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {!data && error && (
+                <TableError
+                  columns={3}
+                  content={error.body?.message ?? error.message}
+                  onRetry={async () => mutate(undefined, true)}
+                />
+              )}
+              {isLoading && <TableLoading columns={3} />}
+              {users?.length === 0 && (
+                <TableEmpty columns={3}>
+                  <Button
+                    title="users.create"
+                    type="outline"
+                    onClick={() => {
+                      setIsCreateFormOpen(true);
+                    }}
+                  />
+                </TableEmpty>
+              )}
+              {users?.map(({ id, name, avatar, lastSignInAt, applicationId }) => (
+                <tr
+                  key={id}
+                  className={tableStyles.clickable}
+                  onClick={() => {
+                    navigate(`/users/${id}`);
+                  }}
+                >
+                  <td>
+                    <ItemPreview
+                      title={name ?? t('users.unnamed')}
+                      subtitle={id}
+                      icon={
+                        <img
+                          alt="avatar"
+                          className={styles.avatar}
+                          src={avatar ?? generateAvatarPlaceHolderById(id)}
+                        />
+                      }
+                      to={`/users/${id}`}
+                      size="compact"
+                    />
+                  </td>
+                  <td>{applicationId ? <ApplicationName applicationId={applicationId} /> : '-'}</td>
+                  <td>
+                    <DateTime>{lastSignInAt}</DateTime>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       <Pagination
         pageIndex={pageIndex}

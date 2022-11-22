@@ -2,17 +2,19 @@
 
 .container {
   width: 100%;
+  display: flex;
+  flex-direction: column;
   padding-bottom: _.unit(6);
-  @include _.flex-column;
+  height: 100%;
+}
 
-  .headline {
-    display: flex;
-    justify-content: space-between;
-  }
+.headline {
+  display: flex;
+  justify-content: space-between;
+}
 
-  .table {
-    flex: 1;
-    margin-top: _.unit(4);
-    background-color: var(--color-layer-1);
-  }
+.table {
+  flex: 1;
+  margin-top: _.unit(4);
+  overflow: hidden;
 }

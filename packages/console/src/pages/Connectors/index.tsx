@@ -80,70 +80,72 @@ const Connectors = () => {
           <TabNavItem href="/connectors">{t('connectors.tab_email_sms')}</TabNavItem>
           <TabNavItem href="/connectors/social">{t('connectors.tab_social')}</TabNavItem>
         </TabNav>
-        <div className={classNames(resourcesStyles.table, tableStyles.scrollable)}>
-          <table className={classNames(!data && tableStyles.empty)}>
-            <colgroup>
-              <col className={styles.connectorName} />
-              <col />
-              <col />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>{t('connectors.connector_name')}</th>
-                <th>{t('connectors.connector_type')}</th>
-                <th>
-                  <ConnectorStatusField />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {!data && error && (
-                <TableError
-                  columns={3}
-                  content={error.body?.message ?? error.message}
-                  onRetry={async () => mutate(undefined, true)}
-                />
-              )}
-              {isLoading && <TableLoading columns={3} />}
-              {socialConnectorGroups?.length === 0 && (
-                <TableEmpty
-                  columns={3}
-                  title={t('connectors.type.social')}
-                  content={t('connectors.social_connector_eg')}
-                  image={isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />}
-                >
-                  <Button
-                    title="connectors.create"
-                    type="outline"
-                    onClick={() => {
-                      setCreateType(ConnectorType.Social);
+        <div className={resourcesStyles.table}>
+          <div className={tableStyles.scrollable}>
+            <table className={classNames(!data && tableStyles.empty)}>
+              <colgroup>
+                <col className={styles.connectorName} />
+                <col />
+                <col />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>{t('connectors.connector_name')}</th>
+                  <th>{t('connectors.connector_type')}</th>
+                  <th>
+                    <ConnectorStatusField />
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {!data && error && (
+                  <TableError
+                    columns={3}
+                    content={error.body?.message ?? error.message}
+                    onRetry={async () => mutate(undefined, true)}
+                  />
+                )}
+                {isLoading && <TableLoading columns={3} />}
+                {socialConnectorGroups?.length === 0 && (
+                  <TableEmpty
+                    columns={3}
+                    title={t('connectors.type.social')}
+                    content={t('connectors.social_connector_eg')}
+                    image={isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />}
+                  >
+                    <Button
+                      title="connectors.create"
+                      type="outline"
+                      onClick={() => {
+                        setCreateType(ConnectorType.Social);
+                      }}
+                    />
+                  </TableEmpty>
+                )}
+                {!isLoading && !isSocial && (
+                  <ConnectorRow
+                    connectors={smsConnector ? [smsConnector] : []}
+                    type={ConnectorType.Sms}
+                    onClickSetup={() => {
+                      setCreateType(ConnectorType.Sms);
                     }}
                   />
-                </TableEmpty>
-              )}
-              {!isLoading && !isSocial && (
-                <ConnectorRow
-                  connectors={smsConnector ? [smsConnector] : []}
-                  type={ConnectorType.Sms}
-                  onClickSetup={() => {
-                    setCreateType(ConnectorType.Sms);
-                  }}
-                />
-              )}
-              {!isLoading && !isSocial && (
-                <ConnectorRow
-                  connectors={emailConnector ? [emailConnector] : []}
-                  type={ConnectorType.Email}
-                  onClickSetup={() => {
-                    setCreateType(ConnectorType.Email);
-                  }}
-                />
-              )}
-              {socialConnectorGroups?.map(({ connectors, id }) => (
-                <ConnectorRow key={id} connectors={connectors} type={ConnectorType.Social} />
-              ))}
-            </tbody>
-          </table>
+                )}
+                {!isLoading && !isSocial && (
+                  <ConnectorRow
+                    connectors={emailConnector ? [emailConnector] : []}
+                    type={ConnectorType.Email}
+                    onClickSetup={() => {
+                      setCreateType(ConnectorType.Email);
+                    }}
+                  />
+                )}
+                {socialConnectorGroups?.map(({ connectors, id }) => (
+                  <ConnectorRow key={id} connectors={connectors} type={ConnectorType.Social} />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <CreateForm

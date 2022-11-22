@@ -77,65 +77,67 @@ const ApiResources = () => {
           />
         </Modal>
       </div>
-      <div className={classNames(resourcesStyles.table, tableStyles.scrollable)}>
-        <table className={classNames(!data && tableStyles.empty)}>
-          <colgroup>
-            <col className={styles.apiResourceName} />
-            <col />
-          </colgroup>
-          <thead>
-            <tr>
-              <th>{t('api_resources.api_name')}</th>
-              <th>{t('api_resources.api_identifier')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!data && error && (
-              <TableError
-                columns={2}
-                content={error.body?.message ?? error.message}
-                onRetry={async () => mutate(undefined, true)}
-              />
-            )}
-            {isLoading && <TableLoading columns={2} />}
-            {apiResources?.length === 0 && (
-              <TableEmpty columns={2}>
-                <Button
-                  title="api_resources.create"
-                  type="outline"
-                  onClick={() => {
-                    setIsCreateFormOpen(true);
-                  }}
+      <div className={resourcesStyles.table}>
+        <div className={tableStyles.scrollable}>
+          <table className={classNames(!data && tableStyles.empty)}>
+            <colgroup>
+              <col className={styles.apiResourceName} />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>{t('api_resources.api_name')}</th>
+                <th>{t('api_resources.api_identifier')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {!data && error && (
+                <TableError
+                  columns={2}
+                  content={error.body?.message ?? error.message}
+                  onRetry={async () => mutate(undefined, true)}
                 />
-              </TableEmpty>
-            )}
-            {apiResources?.map(({ id, name, indicator }) => {
-              const ResourceIcon =
-                theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
+              )}
+              {isLoading && <TableLoading columns={2} />}
+              {apiResources?.length === 0 && (
+                <TableEmpty columns={2}>
+                  <Button
+                    title="api_resources.create"
+                    type="outline"
+                    onClick={() => {
+                      setIsCreateFormOpen(true);
+                    }}
+                  />
+                </TableEmpty>
+              )}
+              {apiResources?.map(({ id, name, indicator }) => {
+                const ResourceIcon =
+                  theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
 
-              return (
-                <tr
-                  key={id}
-                  className={tableStyles.clickable}
-                  onClick={() => {
-                    navigate(buildDetailsLink(id));
-                  }}
-                >
-                  <td>
-                    <ItemPreview
-                      title={name}
-                      icon={<ResourceIcon className={styles.icon} />}
-                      to={buildDetailsLink(id)}
-                    />
-                  </td>
-                  <td>
-                    <CopyToClipboard value={indicator} variant="text" />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                return (
+                  <tr
+                    key={id}
+                    className={tableStyles.clickable}
+                    onClick={() => {
+                      navigate(buildDetailsLink(id));
+                    }}
+                  >
+                    <td>
+                      <ItemPreview
+                        title={name}
+                        icon={<ResourceIcon className={styles.icon} />}
+                        to={buildDetailsLink(id)}
+                      />
+                    </td>
+                    <td>
+                      <CopyToClipboard value={indicator} variant="text" />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
       <Pagination
         pageIndex={pageIndex}
