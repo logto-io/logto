@@ -81,7 +81,7 @@ jest.mock('#src/lib/user.js', () => ({
 
 jest.mock('#src/queries/roles.js', () => ({
   findRolesByRoleNames: jest.fn(
-    async (): Promise<Role[]> => [{ name: 'admin', description: 'none' }]
+    async (): Promise<Role[]> => [{ id: 'role_id', name: 'admin', description: 'none' }]
   ),
 }));
 
@@ -291,8 +291,8 @@ describe('adminUserRoutes', () => {
     const mockedFindRolesByRoleNames = findRolesByRoleNames as jest.Mock;
     mockedFindRolesByRoleNames.mockImplementationOnce(
       async (): Promise<Role[]> => [
-        { name: 'worker', description: 'none' },
-        { name: 'cleaner', description: 'none' },
+        { id: 'role_id1', name: 'worker', description: 'none' },
+        { id: 'role_id2', name: 'cleaner', description: 'none' },
       ]
     );
     await expect(
