@@ -210,11 +210,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
       const { phone, email, config } = body;
 
-      const logtoConnectors = await getLogtoConnectors();
       const subject = phone ?? email;
       assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
 
-      const connector = logtoConnectors.find(({ metadata: { id: currentId } }) => currentId === id);
+      const connector = await getLogtoConnectorById(id);
       const expectType = phone ? ConnectorType.Sms : ConnectorType.Email;
 
       assertThat(

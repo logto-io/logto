@@ -65,8 +65,10 @@ export const sendPasscode = async (passcode: Passcode) => {
   );
 
   const { dbEntry, metadata, sendMessage } = connector;
+  console.log('dbEntry:', dbEntry, dbEntry.config);
 
   const messageTypeResult = messageTypesGuard.safeParse(passcode.type);
+  console.log('messageTypeResult:', messageTypeResult);
 
   if (!messageTypeResult.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);

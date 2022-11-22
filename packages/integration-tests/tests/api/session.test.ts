@@ -17,21 +17,25 @@ import {
   verifyRegisterUserWithSmsPasscode,
   sendSignInUserWithSmsPasscode,
   verifySignInUserWithSmsPasscode,
-  disableConnector,
   signInWithPassword,
   createUser,
+  listConnectors,
+  deleteConnectorById,
+  postConnector,
+  updateConnectorConfig,
 } from '@/api';
 import MockClient from '@/client';
 import {
   registerNewUser,
   signIn,
-  setUpConnector,
   readPasscode,
   createUserByAdmin,
   setSignUpIdentifier,
   setSignInMethod,
 } from '@/helpers';
 import { generateUsername, generatePassword, generateEmail, generatePhone } from '@/utils';
+
+const connectorIdMap = new Map();
 
 describe('username and password flow', () => {
   const username = generateUsername();
@@ -63,7 +67,18 @@ describe('email and password flow', () => {
   assert(localPart && domain, new Error('Email address local part or domain is empty'));
 
   beforeAll(async () => {
-    await setUpConnector(mockEmailConnectorId, mockEmailConnectorConfig);
+    const connectors = await listConnectors();
+    await Promise.all(
+      connectors.map(async ({ id }) => {
+        await deleteConnectorById(id);
+      })
+    );
+    connectorIdMap.clear();
+
+    const { id } = await postConnector(mockEmailConnectorId);
+    await updateConnectorConfig(id, mockEmailConnectorConfig);
+    connectorIdMap.set(mockEmailConnectorId, id);
+
     await setSignUpIdentifier(SignUpIdentifier.Email, true);
     await setSignInMethod([
       {
@@ -93,7 +108,18 @@ describe('email and password flow', () => {
 
 describe('email passwordless flow', () => {
   beforeAll(async () => {
-    await setUpConnector(mockEmailConnectorId, mockEmailConnectorConfig);
+    const connectors = await listConnectors();
+    await Promise.all(
+      connectors.map(async ({ id }) => {
+        await deleteConnectorById(id);
+      })
+    );
+    connectorIdMap.clear();
+
+    const { id } = await postConnector(mockEmailConnectorId);
+    await updateConnectorConfig(id, mockEmailConnectorConfig);
+    connectorIdMap.set(mockEmailConnectorId, id);
+
     await setSignUpIdentifier(SignUpIdentifier.Email, false);
     await setSignInMethod([
       {
@@ -175,13 +201,24 @@ describe('email passwordless flow', () => {
   });
 
   afterAll(async () => {
-    void disableConnector(mockEmailConnectorId);
+    await deleteConnectorById(connectorIdMap.get(mockEmailConnectorId));
   });
 });
 
 describe('sms passwordless flow', () => {
   beforeAll(async () => {
-    await setUpConnector(mockSmsConnectorId, mockSmsConnectorConfig);
+    const connectors = await listConnectors();
+    await Promise.all(
+      connectors.map(async ({ id }) => {
+        await deleteConnectorById(id);
+      })
+    );
+    connectorIdMap.clear();
+
+    const { id } = await postConnector(mockSmsConnectorId);
+    await updateConnectorConfig(id, mockSmsConnectorConfig);
+    connectorIdMap.set(mockSmsConnectorId, id);
+
     await setSignUpIdentifier(SignUpIdentifier.Sms, false);
     await setSignInMethod([
       {
@@ -263,7 +300,7 @@ describe('sms passwordless flow', () => {
   });
 
   afterAll(async () => {
-    void disableConnector(mockSmsConnectorId);
+    await deleteConnectorById(connectorIdMap.get(mockSmsConnectorId));
   });
 });
 
