@@ -10,8 +10,6 @@ import {
   mockSocialConnectorId,
 } from '@/__mocks__/connectors-mock';
 import {
-  disableConnector,
-  enableConnector,
   getConnector,
   listConnectors,
   postConnector,

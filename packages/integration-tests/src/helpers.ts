@@ -10,7 +10,6 @@ import {
   registerUserWithUsernameAndPassword,
   signInWithPassword,
   updateConnectorConfig,
-  enableConnector,
   bindWithSocial,
   getAuthWithSocial,
   postConnector,
@@ -79,8 +78,6 @@ export const setUpConnector = async (connectorId: string, config: Record<string,
     await postConnector(connectorId);
     await updateConnectorConfig(connectorId, config);
   }
-  const connector = await enableConnector(connectorId);
-  assert(connector.enabled, new Error('Connector Setup Failed'));
 };
 
 export const setSignUpIdentifier = async (
