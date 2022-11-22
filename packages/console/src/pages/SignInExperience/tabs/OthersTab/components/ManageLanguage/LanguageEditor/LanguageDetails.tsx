@@ -20,7 +20,7 @@ import useApi, { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import type { CustomPhraseResponse } from '@/types/custom-phrase';
 
-import { createEmptyUiTranslation, flattenTranslation } from '../../../utilities';
+import { createEmptyUiTranslation, flattenTranslation } from '../../../../../utilities';
 import EditSection from './EditSection';
 import * as style from './LanguageDetails.module.scss';
 import { LanguageEditorContext } from './use-language-editor-context';

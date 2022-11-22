@@ -10,10 +10,10 @@ import Minus from '@/assets/images/minus.svg';
 import SwitchArrowIcon from '@/assets/images/switch-arrow.svg';
 import Checkbox from '@/components/Checkbox';
 import IconButton from '@/components/IconButton';
+import type { SignInMethod } from '@/pages/SignInExperience/types';
 
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
 import * as styles from './index.module.scss';
-import type { SignInMethod } from './types';
 
 type Props = {
   signInMethod: SignInMethod;

@@ -1,5 +1,5 @@
-import BrandingForm from '../components/BrandingForm';
-import ColorForm from '../components/ColorForm';
+import BrandingForm from './BrandingForm';
+import ColorForm from './ColorForm';
 
 const BrandingTab = () => (
   <>

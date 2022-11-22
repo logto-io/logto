@@ -20,10 +20,10 @@ import useUiLanguages from '@/hooks/use-ui-languages';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import Preview from './components/Preview';
-import SignInMethodsChangePreview from './components/SignInMethodsChangePreview';
+import SignUpAndSignInChangePreview from './components/SignUpAndSignInChangePreview';
 import Skeleton from './components/Skeleton';
 import Welcome from './components/Welcome';
-import usePreviewConfigs from './hooks';
+import usePreviewConfigs from './hooks/use-preview-configs';
 import * as styles from './index.module.scss';
 import BrandingTab from './tabs/BrandingTab';
 import OthersTab from './tabs/OthersTab';
@@ -170,7 +170,7 @@ const SignInExperience = () => {
             await saveData();
           }}
         >
-          {dataToCompare && <SignInMethodsChangePreview before={data} after={dataToCompare} />}
+          {dataToCompare && <SignUpAndSignInChangePreview before={data} after={dataToCompare} />}
         </ConfirmModal>
       )}
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />

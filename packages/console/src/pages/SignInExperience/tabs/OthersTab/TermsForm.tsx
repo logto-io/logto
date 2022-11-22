@@ -6,8 +6,8 @@ import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
 import { uriValidator } from '@/utilities/validator';
 
-import type { SignInExperienceForm } from '../types';
-import * as styles from './index.module.scss';
+import type { SignInExperienceForm } from '../../types';
+import * as styles from '../index.module.scss';
 
 const TermsForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

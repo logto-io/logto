@@ -8,8 +8,8 @@ import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
 
-import type { SignInExperienceForm } from '../types';
-import * as styles from './index.module.scss';
+import type { SignInExperienceForm } from '../../types';
+import * as styles from '../index.module.scss';
 
 const ColorForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
