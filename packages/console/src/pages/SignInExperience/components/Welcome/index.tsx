@@ -10,7 +10,7 @@ import CardTitle from '@/components/CardTitle';
 import { useTheme } from '@/hooks/use-theme';
 
 import GuideModal from './GuideModal';
-import * as styles from './Welcome.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   mutate: () => void;

@@ -16,15 +16,15 @@ import useSettings from '@/hooks/use-settings';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import usePreviewConfigs from '../hooks/use-preview-configs';
-import BrandingForm from '../tabs/Branding/BrandingForm';
-import ColorForm from '../tabs/Branding/ColorForm';
-import LanguagesForm from '../tabs/Others/LanguagesForm';
-import TermsForm from '../tabs/Others/TermsForm';
-import type { SignInExperienceForm } from '../types';
-import { signInExperienceParser } from '../utilities';
+import usePreviewConfigs from '../../hooks/use-preview-configs';
+import BrandingForm from '../../tabs/Branding/BrandingForm';
+import ColorForm from '../../tabs/Branding/ColorForm';
+import LanguagesForm from '../../tabs/Others/LanguagesForm';
+import TermsForm from '../../tabs/Others/TermsForm';
+import type { SignInExperienceForm } from '../../types';
+import { signInExperienceParser } from '../../utilities';
+import Preview from '../Preview';
 import * as styles from './GuideModal.module.scss';
-import Preview from './Preview';
 
 type Props = {
   isOpen: boolean;
