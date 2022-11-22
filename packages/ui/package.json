@@ -55,7 +55,7 @@
     "lint-staged": "^13.0.0",
     "parcel": "2.8.0",
     "postcss": "^8.4.6",
-    "postcss-modules": "^4.3.0",
+    "postcss-modules": "^6.0.0",
     "prettier": "^2.7.1",
     "react": "^18.0.0",
     "react-device-detect": "^2.2.2",
