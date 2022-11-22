@@ -144,7 +144,7 @@ importers:
       history: ^5.3.0
       i18next: ^21.8.16
       i18next-browser-languagedetector: ^6.1.4
-      ky: ^0.31.0
+      ky: ^0.32.0
       lint-staged: ^13.0.0
       lodash.get: ^4.4.2
       lodash.kebabcase: ^4.1.1
@@ -216,7 +216,7 @@ importers:
       history: 5.3.0
       i18next: 21.8.16
       i18next-browser-languagedetector: 6.1.4
-      ky: 0.31.0
+      ky: 0.32.2
       lint-staged: 13.0.0
       lodash.get: 4.4.2
       lodash.kebabcase: 4.1.1
@@ -694,7 +694,7 @@ importers:
       jest-environment-jsdom: ^29.0.0
       jest-transformer-svg: ^2.0.0
       js-base64: ^3.7.2
-      ky: ^0.31.0
+      ky: ^0.32.0
       libphonenumber-js: ^1.9.49
       lint-staged: ^13.0.0
       parcel: 2.8.0
@@ -748,7 +748,7 @@ importers:
       jest-environment-jsdom: 29.2.2
       jest-transformer-svg: 2.0.0_jest@29.1.2+react@18.2.0
       js-base64: 3.7.2
-      ky: 0.31.0
+      ky: 0.32.2
       libphonenumber-js: 1.9.49
       lint-staged: 13.0.0
       parcel: 2.8.0_postcss@8.4.6
@@ -7574,7 +7574,6 @@ packages:
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
-    dev: true
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
@@ -9930,7 +9929,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
 
   /jsonparse/1.3.1:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
@@ -10096,8 +10095,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /ky/0.31.0:
-    resolution: {integrity: sha512-C27vqDb3vuxy4mi/x1wt9P1ES0QxEJg3CbPz2t3lTaQ4AvR/hkwES06yPdqol+q3hH+DrZKb/PKD+pAQkharNg==}
+  /ky/0.32.2:
+    resolution: {integrity: sha512-eBJeF6IXNwX5rksdwBrE2rIJrU2d84GoTvdM7OmmTIwUVXEMd72wIwvT+nyhrqtv7AzbSNsWz7yRsHgVhj1uog==}
     engines: {node: '>=14.16'}
     dev: true
 
