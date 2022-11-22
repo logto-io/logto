@@ -56,7 +56,7 @@
     "p-retry": "^4.6.1",
     "roarr": "^7.11.0",
     "semver": "^7.3.8",
-    "slonik": "^30.0.0",
+    "slonik": "^33.0.0",
     "slonik-interceptor-preset": "^1.2.10",
     "slonik-sql-tag-raw": "^1.1.4",
     "tar": "^6.1.11",
