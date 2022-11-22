@@ -4,12 +4,14 @@ import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockConnector } from '@/__mocks__';
 import envSet from '@/env-set';
+import { DeletionError } from '@/errors/SlonikError';
 import type { QueryType } from '@/utils/test-utils';
 import { expectSqlAssert } from '@/utils/test-utils';
 
 import {
   findAllConnectors,
   countConnectorByConnectorId,
+  deleteConnectorById,
   insertConnector,
   updateConnector,
 } from './connector';
@@ -62,6 +64,43 @@ describe('connector queries', () => {
     });
 
     await expect(countConnectorByConnectorId(rowData.connectorId)).resolves.toEqual(rowData);
+  });
+
+  it('deleteConnectorById', async () => {
+    const rowData = { id: 'foo' };
+    const id = 'foo';
+    const expectSql = sql`
+      delete from ${table}
+      where ${fields.id}=$1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([id]);
+
+      return createMockQueryResult([rowData]);
+    });
+
+    await deleteConnectorById(id);
+  });
+
+  it('deleteConnectorById should throw with zero response', async () => {
+    const id = 'foo';
+    const expectSql = sql`
+      delete from ${table}
+      where ${fields.id}=$1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([id]);
+
+      return createMockQueryResult([]);
+    });
+
+    await expect(deleteConnectorById(id)).rejects.toMatchError(
+      new DeletionError(Connectors.table, id)
+    );
   });
 
   it('insertConnector', async () => {

@@ -6,6 +6,7 @@ import { sql } from 'slonik';
 import { buildInsertInto } from '@/database/insert-into';
 import { buildUpdateWhere } from '@/database/update-where';
 import envSet from '@/env-set';
+import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Connectors);
 
@@ -24,6 +25,17 @@ export const countConnectorByConnectorId = async (connectorId: string) =>
     from ${table}
     where ${fields.connectorId}=${connectorId}
   `);
+
+export const deleteConnectorById = async (id: string) => {
+  const { rowCount } = await envSet.pool.query(sql`
+    delete from ${table}
+    where ${fields.id}=${id}
+  `);
+
+  if (rowCount < 1) {
+    throw new DeletionError(Connectors.table, id);
+  }
+};
 
 export const insertConnector = buildInsertInto<CreateConnector, Connector>(Connectors, {
   returning: true,

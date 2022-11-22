@@ -12,7 +12,7 @@ import {
 import { defaultConnectorMethods } from '@/connectors/consts';
 import type { VirtualConnector, LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
-import { countConnectorByConnectorId } from '@/queries/connector';
+import { countConnectorByConnectorId, deleteConnectorById } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
 import { createRequester } from '@/utils/test-utils';
 
@@ -27,6 +27,7 @@ const getLogtoConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
 
 jest.mock('@/queries/connector', () => ({
   countConnectorByConnectorId: jest.fn(),
+  deleteConnectorById: jest.fn(),
   insertConnector: jest.fn(async (body: unknown) => body),
 }));
 
@@ -272,6 +273,17 @@ describe('connector route', () => {
         .post('/connectors/id/test')
         .send({ email: 'test@email.com' });
       expect(response).toHaveProperty('statusCode', 400);
+    });
+  });
+
+  describe('DELETE /connectors/:id', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('delete connector instance', async () => {
+      await connectorRequest.delete('/connectors/id').send({});
+      expect(deleteConnectorById).toHaveBeenCalledTimes(1);
     });
   });
 });
