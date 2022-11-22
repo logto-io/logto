@@ -7,6 +7,7 @@
 
 .introduction {
   width: 296px;
+  padding-bottom: _.unit(6);
   margin-right: _.unit(14);
   flex-shrink: 0;
 
@@ -30,13 +31,16 @@
   }
 }
 
-
 @media screen and (max-width: 1080px) {
-  .introduction {
-    display: none;
+  .container {
+    flex-direction: column;
+
+    .introduction {
+      width: 100%;
+      margin-right: unset;
+    }
   }
 }
-
 
 .form {
   flex-grow: 1;
