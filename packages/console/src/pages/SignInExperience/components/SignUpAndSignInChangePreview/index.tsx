@@ -1,15 +1,15 @@
 import type { SignInExperience } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
-import SignUpAndSignInDiffSection from '../tabs/SignUpAndSignInTab/components/SignUpAndSignInDiffSection';
-import * as styles from './SignInMethodsChangePreview.module.scss';
+import SignUpAndSignInDiffSection from './SignUpAndSignInDiffSection';
+import * as styles from './index.module.scss';
 
 type Props = {
   before: SignInExperience;
   after: SignInExperience;
 };
 
-const SignInMethodsChangePreview = ({ before, after }: Props) => {
+const SignUpAndSignInChangePreview = ({ before, after }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -29,4 +29,4 @@ const SignInMethodsChangePreview = ({ before, after }: Props) => {
   );
 };
 
-export default SignInMethodsChangePreview;
+export default SignUpAndSignInChangePreview;

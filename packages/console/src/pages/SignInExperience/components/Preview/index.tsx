@@ -16,7 +16,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
-import * as styles from './Preview.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   signInExperience?: SignInExperience;

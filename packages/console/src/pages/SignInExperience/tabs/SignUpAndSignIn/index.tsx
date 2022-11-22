@@ -2,7 +2,7 @@ import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
 import SocialSignInForm from './SocialSignInForm';
 
-const SignUpAndSignInTab = () => (
+const SignUpAndSignIn = () => (
   <>
     <SignUpForm />
     <SignInForm />
@@ -10,4 +10,4 @@ const SignUpAndSignInTab = () => (
   </>
 );
 
-export default SignUpAndSignInTab;
+export default SignUpAndSignIn;

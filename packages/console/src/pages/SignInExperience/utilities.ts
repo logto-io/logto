@@ -7,7 +7,7 @@ import {
   isSignInMethodsDifferent,
   isSignUpDifferent,
   isSocialTargetsDifferent,
-} from './tabs/SignUpAndSignInTab/components/SignUpAndSignInDiffSection/utilities';
+} from './components/SignUpAndSignInChangePreview/SignUpAndSignInDiffSection/utilities';
 import type { SignInExperienceForm } from './types';
 
 export const signInExperienceParser = {

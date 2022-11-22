@@ -20,14 +20,14 @@ import useUiLanguages from '@/hooks/use-ui-languages';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import Preview from './components/Preview';
-import SignInMethodsChangePreview from './components/SignInMethodsChangePreview';
+import SignUpAndSignInChangePreview from './components/SignUpAndSignInChangePreview';
 import Skeleton from './components/Skeleton';
 import Welcome from './components/Welcome';
-import usePreviewConfigs from './hooks';
+import usePreviewConfigs from './hooks/use-preview-configs';
 import * as styles from './index.module.scss';
-import BrandingTab from './tabs/BrandingTab';
-import OthersTab from './tabs/OthersTab';
-import SignUpAndSignInTab from './tabs/SignUpAndSignInTab';
+import Branding from './tabs/Branding';
+import Others from './tabs/Others';
+import SignUpAndSignIn from './tabs/SignUpAndSignIn';
 import type { SignInExperienceForm } from './types';
 import { compareSignUpAndSignInConfigs, signInExperienceParser } from './utilities';
 
@@ -139,9 +139,9 @@ const SignInExperience = () => {
             <FormProvider {...methods}>
               <form className={styles.formWrapper} onSubmit={onSubmit}>
                 <div className={classNames(detailsStyles.body, styles.form)}>
-                  {tab === 'branding' && <BrandingTab />}
-                  {tab === 'sign-up-and-sign-in' && <SignUpAndSignInTab />}
-                  {tab === 'others' && <OthersTab />}
+                  {tab === 'branding' && <Branding />}
+                  {tab === 'sign-up-and-sign-in' && <SignUpAndSignIn />}
+                  {tab === 'others' && <Others />}
                 </div>
                 <div className={detailsStyles.footer}>
                   <div className={detailsStyles.footerMain}>
@@ -170,7 +170,7 @@ const SignInExperience = () => {
             await saveData();
           }}
         >
-          {dataToCompare && <SignInMethodsChangePreview before={data} after={dataToCompare} />}
+          {dataToCompare && <SignUpAndSignInChangePreview before={data} after={dataToCompare} />}
         </ConfirmModal>
       )}
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />

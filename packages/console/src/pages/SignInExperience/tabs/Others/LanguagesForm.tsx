@@ -11,9 +11,9 @@ import Switch from '@/components/Switch';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
-import type { SignInExperienceForm } from '../types';
-import ManageLanguageButton from './ManageLanguage/ManageLanguageButton';
-import * as styles from './index.module.scss';
+import type { SignInExperienceForm } from '../../types';
+import * as styles from '../index.module.scss';
+import ManageLanguageButton from './components/ManageLanguage/ManageLanguageButton';
 
 type Props = {
   isManageLanguageVisible?: boolean;

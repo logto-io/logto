@@ -1,8 +1,8 @@
 import type { SignInExperience } from '@logto/schemas';
 import { useMemo } from 'react';
 
-import type { SignInExperienceForm } from './types';
-import { signInExperienceParser } from './utilities';
+import type { SignInExperienceForm } from '../types';
+import { signInExperienceParser } from '../utilities';
 
 const usePreviewConfigs = (
   formData: SignInExperienceForm,

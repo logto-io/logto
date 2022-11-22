@@ -3,10 +3,10 @@ import { detailedDiff } from 'deep-object-diff';
 import get from 'lodash.get';
 import { useTranslation } from 'react-i18next';
 
-import type { SignInMethod } from '../SignInMethodEditBox/types';
+import type { SignInMethod, SignInMethodsObject } from '@/pages/SignInExperience/types';
+
 import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
-import type { SignInMethodsObject } from './types';
 import { convertToSignInMethodsObject } from './utilities';
 
 type Props = {
