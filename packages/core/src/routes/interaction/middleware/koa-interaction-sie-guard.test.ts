@@ -77,16 +77,11 @@ describe('getSignInExperienceForApplication', () => {
         ...baseCtx,
         identifierPayload: Object.freeze({
           event: 'register',
-          identifier: {
-            identity: Object.freeze({
-              type: 'username',
-              value: 'username',
-            }),
-            verification: Object.freeze({
-              type: 'password',
-              value: 'password',
-            }),
-          },
+          identifier: Object.freeze({
+            type: 'username_password',
+            username: 'username',
+            password: 'password',
+          }),
         }),
       };
 

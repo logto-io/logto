@@ -5,9 +5,9 @@ import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
-import type { IdentifierPayload } from '#src/routes/interaction/types/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import type { InteractionPayload } from '../types/guard.js';
 import type { WithGuardedIdentifierPayloadContext } from './koa-interaction-body-guard.js';
 
 const forbiddenEventError = new RequestError({ code: 'auth.forbidden', status: 403 });
@@ -19,45 +19,62 @@ const forbiddenIdentifierError = new RequestError({
 
 /* eslint-disable complexity */
 const identifierMethodValidation = (
-  { identity, verification }: IdentifierPayload,
+  identifier: Exclude<InteractionPayload['identifier'], undefined>,
   { signIn }: SignInExperience
 ) => {
-  switch (identity.type) {
-    case 'username':
-      assertThat(
-        signIn.methods.some(
-          ({ identifier: method, password }) => method === SignInIdentifier.Username && password
-        ),
-        forbiddenIdentifierError
-      );
-      break;
-    case 'email':
-    case 'phone':
-      assertThat(
-        signIn.methods.some(({ identifier: method, password, verificationCode }) => {
-          if (identity.type === 'email' && method !== SignInIdentifier.Email) {
-            return false;
-          }
+  if (identifier.type === 'username_password') {
+    assertThat(
+      signIn.methods.some(
+        ({ identifier: method, password }) => method === SignInIdentifier.Username && password
+      ),
+      forbiddenIdentifierError
+    );
 
-          if (identity.type === 'phone' && method !== SignInIdentifier.Sms) {
-            return false;
-          }
+    return;
+  }
 
-          if (verification.type === 'password' && !password) {
-            return false;
-          }
+  if (identifier.type === 'email_password') {
+    assertThat(
+      signIn.methods.some(
+        ({ identifier: method, password }) => method === SignInIdentifier.Email && password
+      ),
+      forbiddenIdentifierError
+    );
 
-          if (verification.type === 'passcode' && !verificationCode) {
-            return false;
-          }
+    return;
+  }
 
-          return true;
-        }),
-        forbiddenIdentifierError
-      );
-      break;
-    default:
-      break;
+  if (identifier.type === 'phone_password') {
+    assertThat(
+      signIn.methods.some(
+        ({ identifier: method, password }) => method === SignInIdentifier.Sms && password
+      ),
+      forbiddenIdentifierError
+    );
+
+    return;
+  }
+
+  if (identifier.type === 'phone_passcode') {
+    assertThat(
+      signIn.methods.some(
+        ({ identifier: method, verificationCode }) =>
+          method === SignInIdentifier.Sms && verificationCode
+      ),
+      forbiddenIdentifierError
+    );
+
+    return;
+  }
+
+  if (identifier.type === 'email_passcode') {
+    assertThat(
+      signIn.methods.some(
+        ({ identifier: method, verificationCode }) =>
+          method === SignInIdentifier.Email && verificationCode
+      ),
+      forbiddenIdentifierError
+    );
   }
 };
 
