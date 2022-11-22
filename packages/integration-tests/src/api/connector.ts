@@ -8,6 +8,15 @@ export const listConnectors = async () =>
 export const getConnector = async (connectorId: string) =>
   authedAdminApi.get(`connectors/${connectorId}`).json<ConnectorResponse>();
 
+// FIXME @Darcy: correct use of `id` and `connectorId`.
+export const postConnector = async (connectorId: string) =>
+  authedAdminApi
+    .post({
+      url: `connectors`,
+      json: { connectorId },
+    })
+    .json();
+
 export const updateConnectorConfig = async (connectorId: string, config: Record<string, unknown>) =>
   authedAdminApi
     .patch({

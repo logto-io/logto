@@ -18,6 +18,13 @@ export const findAllConnectors = async () =>
     `)
   );
 
+export const countConnectorByConnectorId = async (connectorId: string) =>
+  envSet.pool.one<{ count: number }>(sql`
+    select count(*)
+    from ${table}
+    where ${fields.connectorId}=${connectorId}
+  `);
+
 export const insertConnector = buildInsertInto<CreateConnector, Connector>(Connectors, {
   returning: true,
 });

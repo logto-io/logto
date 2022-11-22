@@ -2,14 +2,15 @@ import { MessageTypes } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import type { ConnectorResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
+import { buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
 
-import { getLogtoConnectorById, getLogtoConnectors } from '@/connectors';
+import { getLogtoConnectorById, getLogtoConnectors, loadVirtualConnectors } from '@/connectors';
 import type { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { removeUnavailableSocialConnectorTargets } from '@/lib/sign-in-experience';
 import koaGuard from '@/middleware/koa-guard';
-import { updateConnector } from '@/queries/connector';
+import { countConnectorByConnectorId, insertConnector, updateConnector } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
 
 import type { AuthedRouter } from './types';
@@ -23,6 +24,8 @@ const transpileLogtoConnector = ({
   ...metadata,
   ...dbEntry,
 });
+
+const generateConnectorId = buildIdGenerator(12);
 
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   router.get(
@@ -68,6 +71,50 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
       const connector = await getLogtoConnectorById(id);
       ctx.body = transpileLogtoConnector(connector);
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/connectors',
+    koaGuard({
+      body: Connectors.createGuard.pick({
+        config: true,
+        connectorId: true,
+        metadata: true,
+        syncProfile: true,
+      }),
+    }),
+    async (ctx, next) => {
+      const {
+        body: { connectorId },
+        body,
+      } = ctx.guard;
+
+      const virtualConnectors = await loadVirtualConnectors();
+      const virtualConnector = virtualConnectors.find(({ metadata: { id } }) => id === connectorId);
+
+      if (!virtualConnector) {
+        throw new RequestError({
+          code: 'connector.not_found_with_connector_id',
+          status: 422,
+        });
+      }
+
+      const { count } = await countConnectorByConnectorId(connectorId);
+      assertThat(
+        count === 0 || virtualConnector.metadata.isStandard === true,
+        new RequestError({
+          code: 'connector.multiple_instances_not_supported',
+          status: 422,
+        })
+      );
+
+      ctx.body = await insertConnector({
+        id: generateConnectorId(),
+        ...body,
+      });
 
       return next();
     }
