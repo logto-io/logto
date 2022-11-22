@@ -269,17 +269,6 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
       } = ctx.guard;
 
-      const databaseEntries = await findAllConnectors();
-      const databaseEntry = databaseEntries.find((entry) => entry.id === id);
-
-      if (!databaseEntry) {
-        throw new RequestError({
-          code: 'entity.not_found',
-          id,
-          status: 422,
-        });
-      }
-
       await deleteConnectorById(id);
 
       ctx.status = 204;

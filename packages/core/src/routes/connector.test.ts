@@ -282,12 +282,6 @@ describe('connector route', () => {
       jest.clearAllMocks();
     });
 
-    it('throws when connector can not be found in database', async () => {
-      (findAllConnectors as jest.Mock).mockResolvedValueOnce([mockConnector]);
-      const response = await connectorRequest.delete('/connectors/id0').send({});
-      expect(response).toHaveProperty('statusCode', 422);
-    });
-
     it('delete connector instance', async () => {
       (findAllConnectors as jest.Mock).mockResolvedValueOnce([mockConnector]);
       const response = await connectorRequest.delete('/connectors/id').send({});
