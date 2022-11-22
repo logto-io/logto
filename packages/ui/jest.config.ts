@@ -1,11 +1,16 @@
-import { merge, Config } from '@silverhand/jest-config';
+import type { Config } from '@silverhand/jest-config';
+import { merge } from '@silverhand/jest-config';
 
-const config: Config.InitialOptions = merge({
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/src/jest.setup.ts'],
-  transform: {
-    '\\.(svg)$': 'jest-transformer-svg',
-  },
-});
+const config: Config.InitialOptions = {
+  ...merge({
+    testEnvironment: 'jsdom',
+    setupFilesAfterEnv: ['<rootDir>/src/jest.setup.ts'],
+    transform: {
+      '\\.(svg)$': 'jest-transformer-svg',
+    },
+  }),
+  // Will update common config soon
+  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto))/)'],
+};
 
 export default config;
