@@ -1,11 +1,11 @@
 import BrandingForm from './BrandingForm';
 import ColorForm from './ColorForm';
 
-const BrandingTab = () => (
+const Branding = () => (
   <>
     <ColorForm />
     <BrandingForm />
   </>
 );
 
-export default BrandingTab;
+export default Branding;

@@ -2,7 +2,7 @@ import AuthenticationForm from './AuthenticationForm';
 import LanguagesForm from './LanguagesForm';
 import TermsForm from './TermsForm';
 
-const OthersTab = () => (
+const Others = () => (
   <>
     <TermsForm />
     <LanguagesForm isManageLanguageVisible />
@@ -10,4 +10,4 @@ const OthersTab = () => (
   </>
 );
 
-export default OthersTab;
+export default Others;

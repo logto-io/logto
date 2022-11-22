@@ -17,10 +17,10 @@ import useUserPreferences from '@/hooks/use-user-preferences';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import usePreviewConfigs from '../hooks/use-preview-configs';
-import BrandingForm from '../tabs/BrandingTab/BrandingForm';
-import ColorForm from '../tabs/BrandingTab/ColorForm';
-import LanguagesForm from '../tabs/OthersTab/LanguagesForm';
-import TermsForm from '../tabs/OthersTab/TermsForm';
+import BrandingForm from '../tabs/Branding/BrandingForm';
+import ColorForm from '../tabs/Branding/ColorForm';
+import LanguagesForm from '../tabs/Others/LanguagesForm';
+import TermsForm from '../tabs/Others/TermsForm';
 import type { SignInExperienceForm } from '../types';
 import { signInExperienceParser } from '../utilities';
 import * as styles from './GuideModal.module.scss';
