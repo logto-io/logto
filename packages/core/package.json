@@ -63,7 +63,7 @@
     "roarr": "^7.11.0",
     "slonik": "^30.0.0",
     "slonik-interceptor-preset": "^1.2.10",
-    "slonik-sql-tag-raw": "^1.1.4",
+    "slonik-sql-tag-raw": "^2.0.0",
     "snake-case": "^3.0.4",
     "snakecase-keys": "^5.4.4",
     "zod": "^3.19.1"

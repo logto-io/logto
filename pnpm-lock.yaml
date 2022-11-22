@@ -55,7 +55,7 @@ importers:
       semver: ^7.3.8
       slonik: ^30.0.0
       slonik-interceptor-preset: ^1.2.10
-      slonik-sql-tag-raw: ^1.1.4
+      slonik-sql-tag-raw: ^2.0.0
       tar: ^6.1.11
       ts-node: ^10.9.1
       typescript: ^4.7.4
@@ -79,7 +79,7 @@ importers:
       semver: 7.3.8
       slonik: 30.1.2
       slonik-interceptor-preset: 1.2.10
-      slonik-sql-tag-raw: 1.1.4_roarr@7.11.0+slonik@30.1.2
+      slonik-sql-tag-raw: 2.0.0_roarr@7.11.0+slonik@30.1.2
       tar: 6.1.11
       yargs: 17.6.0
       zod: 3.19.1
@@ -319,7 +319,7 @@ importers:
       roarr: ^7.11.0
       slonik: ^30.0.0
       slonik-interceptor-preset: ^1.2.10
-      slonik-sql-tag-raw: ^1.1.4
+      slonik-sql-tag-raw: ^2.0.0
       snake-case: ^3.0.4
       snakecase-keys: ^5.4.4
       supertest: ^6.2.2
@@ -366,7 +366,7 @@ importers:
       roarr: 7.11.0
       slonik: 30.1.2
       slonik-interceptor-preset: 1.2.10
-      slonik-sql-tag-raw: 1.1.4_roarr@7.11.0+slonik@30.1.2
+      slonik-sql-tag-raw: 2.0.0_roarr@7.11.0+slonik@30.1.2
       snake-case: 3.0.4
       snakecase-keys: 5.4.4
       zod: 3.19.1
@@ -7574,7 +7574,6 @@ packages:
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
-    dev: true
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
@@ -9930,7 +9929,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
 
   /jsonparse/1.3.1:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
@@ -13421,12 +13420,12 @@ packages:
       - pg-native
     dev: false
 
-  /slonik-sql-tag-raw/1.1.4_roarr@7.11.0+slonik@30.1.2:
-    resolution: {integrity: sha512-os6iRAkQgKNoVzudRtLBlxjqmyQHJdPHw/eMIBJDnUfD5dle5uIyEKtblayW7eBr5x7blkzUg4BgvRkeDZeZPA==}
+  /slonik-sql-tag-raw/2.0.0_roarr@7.11.0+slonik@30.1.2:
+    resolution: {integrity: sha512-wL43ADUUpL05NI2UpBsgjnWaLpoA5/VM7isoXphAe43DT4CyV62Qlthm6dIv/yChV/CaTYv8Gc2LjN18MPATtA==}
     engines: {node: '>=10.0'}
     peerDependencies:
       roarr: '>=7.0.3'
-      slonik: '>=27.0.0'
+      slonik: '>=33.0.0'
     dependencies:
       lodash: 4.17.21
       roarr: 7.11.0
