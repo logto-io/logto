@@ -7,7 +7,6 @@ import { getConnectorConfig } from './index.js';
 const connectors: Connector[] = [
   {
     id: 'id',
-    enabled: true,
     config: { foo: 'bar' },
     createdAt: 0,
     syncProfile: false,

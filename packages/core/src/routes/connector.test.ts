@@ -75,13 +75,13 @@ describe('connector route', () => {
       jest.clearAllMocks();
     });
 
-    it('throws if more than one email connector is enabled', async () => {
+    it('throws if more than one email connector is added', async () => {
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(mockLogtoConnectorList);
       const response = await connectorRequest.get('/connectors').send({});
       expect(response).toHaveProperty('statusCode', 400);
     });
 
-    it('throws if more than one SMS connector is enabled', async () => {
+    it('throws if more than one SMS connector is added', async () => {
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(
         mockLogtoConnectorList.filter((connector) => connector.type !== ConnectorType.Email)
       );

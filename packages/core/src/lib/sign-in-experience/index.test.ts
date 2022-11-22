@@ -4,9 +4,9 @@ import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 import { BrandingStyle } from '@logto/schemas';
 
 import {
-  disabledSocialTarget01,
-  disabledSocialTarget02,
-  enabledSocialTarget01,
+  socialTarget01,
+  socialTarget03,
+  socialTarget02,
   mockBranding,
   mockSignInExperience,
   mockSocialConnectors,
@@ -165,14 +165,10 @@ describe('remove unavailable social connector targets', () => {
       socialSignInConnectorTargets: mockSocialConnectorTargets,
     });
     getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(mockSocialConnectors);
-    expect(mockSocialConnectorTargets).toEqual([
-      disabledSocialTarget01,
-      enabledSocialTarget01,
-      disabledSocialTarget02,
-    ]);
+    expect(mockSocialConnectorTargets).toEqual([socialTarget01, socialTarget02, socialTarget03]);
     await removeUnavailableSocialConnectorTargets();
     expect(updateDefaultSignInExperience).toBeCalledWith({
-      socialSignInConnectorTargets: [enabledSocialTarget01],
+      socialSignInConnectorTargets: [socialTarget01, socialTarget02, socialTarget03],
     });
   });
 });
