@@ -32,7 +32,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.21.0",
     "i18next": "^21.8.16",
-    "i18next-browser-languagedetector": "^6.1.4",
+    "i18next-browser-languagedetector": "^7.0.0",
     "lint-staged": "^13.0.0",
     "parcel": "2.8.0",
     "postcss": "^8.4.6",
