@@ -2,8 +2,8 @@ import type { MiddlewareType } from 'koa';
 import type { IMiddleware } from 'koa-router';
 import { number } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import { buildLink } from '@/utils/pagination';
+import RequestError from '#src/errors/RequestError/index.js';
+import { buildLink } from '#src/utils/pagination.js';
 
 export type Pagination = {
   offset: number;

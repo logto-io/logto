@@ -3,10 +3,10 @@ import { messageTypesGuard, ConnectorError, ConnectorErrorCodes } from '@logto/c
 import type { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
-import { getLogtoConnectors } from '@/connectors';
-import type { LogtoConnector } from '@/connectors/types';
-import { ConnectorType } from '@/connectors/types';
-import RequestError from '@/errors/RequestError';
+import { getLogtoConnectors } from '#src/connectors/index.js';
+import type { LogtoConnector } from '#src/connectors/types.js';
+import { ConnectorType } from '#src/connectors/types.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import {
   consumePasscode,
   deletePasscodesByIds,
@@ -14,8 +14,8 @@ import {
   findUnconsumedPasscodesByJtiAndType,
   increasePasscodeTryCount,
   insertPasscode,
-} from '@/queries/passcode';
-import assertThat from '@/utils/assert-that';
+} from '#src/queries/passcode.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export const passcodeLength = 6;
 const randomCode = customAlphabet('1234567890', passcodeLength);

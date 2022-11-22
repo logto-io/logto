@@ -3,9 +3,9 @@ import type { Context } from 'koa';
 import type { InteractionResults, Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
-import RequestError from '@/errors/RequestError';
-import { findUserById, updateUserById } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import { findUserById, updateUserById } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export const assignInteractionResults = async (
   ctx: Context,

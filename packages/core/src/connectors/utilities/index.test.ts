@@ -1,8 +1,8 @@
 import type { Connector } from '@logto/schemas';
 
-import RequestError from '@/errors/RequestError';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import { getConnectorConfig } from '.';
+import { getConnectorConfig } from './index.js';
 
 const connectors: Connector[] = [
   {
@@ -18,8 +18,8 @@ const connectors: Connector[] = [
 
 const findAllConnectors = jest.fn(async () => connectors);
 
-jest.mock('@/queries/connector', () => ({
-  ...jest.requireActual('@/queries/connector'),
+jest.mock('#src/queries/connector.js', () => ({
+  ...jest.requireActual('#src/queries/connector.js'),
   findAllConnectors: async () => findAllConnectors(),
 }));
 

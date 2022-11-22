@@ -6,8 +6,8 @@ import {
   grantErrorListener,
   grantRevokedListener,
   grantSuccessListener,
-} from '@/utils/oidc-provider-event-listener';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+} from '#src/utils/oidc-provider-event-listener.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const userId = 'userIdValue';
 const sessionId = 'sessionIdValue';

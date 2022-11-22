@@ -2,9 +2,9 @@ import { Applications } from '@logto/schemas';
 import { buildApplicationSecret, buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
 
-import koaGuard from '@/middleware/koa-guard';
-import koaPagination from '@/middleware/koa-pagination';
-import { buildOidcClientMetadata } from '@/oidc/utils';
+import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
+import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import {
   deleteApplicationById,
   findApplicationById,
@@ -12,9 +12,9 @@ import {
   insertApplication,
   updateApplicationById,
   findTotalNumberOfApplications,
-} from '@/queries/application';
+} from '#src/queries/application.js';
 
-import type { AuthedRouter } from './types';
+import type { AuthedRouter } from './types.js';
 
 const applicationId = buildIdGenerator(21);
 

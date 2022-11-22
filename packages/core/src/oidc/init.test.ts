@@ -1,6 +1,6 @@
 import Koa from 'koa';
 
-import initOidc from './init';
+import initOidc from './init.js';
 
 describe('oidc provider init', () => {
   it('init should not throw', async () => {

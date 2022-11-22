@@ -4,7 +4,7 @@ import type { LogtoOidcConfigType } from '@logto/schemas';
 import { LogtoOidcConfigKey } from '@logto/schemas';
 import { getEnv, getEnvAsStringArray } from '@silverhand/essentials';
 
-import { generateOidcCookieKey, generateOidcPrivateKey } from '../utilities';
+import { generateOidcCookieKey, generateOidcPrivateKey } from '../utilities.js';
 
 const isBase64FormatPrivateKey = (key: string) => !key.includes('-');
 

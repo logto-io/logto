@@ -4,10 +4,10 @@ import { deduplicate, noop } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
-import { createPoolFromConfig } from '../../database';
-import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config';
-import { log } from '../../utilities';
-import { generateOidcCookieKey, generateOidcPrivateKey } from './utilities';
+import { createPoolFromConfig } from '../../database.js';
+import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config.js';
+import { log } from '../../utilities.js';
+import { generateOidcCookieKey, generateOidcPrivateKey } from './utilities.js';
 
 const validKeysDisplay = chalk.green(logtoConfigKeys.join(', '));
 

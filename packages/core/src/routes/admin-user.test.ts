@@ -2,19 +2,24 @@ import type { CreateUser, Role, User } from '@logto/schemas';
 import { SignUpIdentifier, userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
 
-import { mockUser, mockUserList, mockUserListResponse, mockUserResponse } from '@/__mocks__';
-import { encryptUserPassword } from '@/lib/user';
-import { findRolesByRoleNames } from '@/queries/roles';
+import {
+  mockUser,
+  mockUserList,
+  mockUserListResponse,
+  mockUserResponse,
+} from '#src/__mocks__/index.js';
+import { encryptUserPassword } from '#src/lib/user.js';
+import { findRolesByRoleNames } from '#src/queries/roles.js';
 import {
   hasUser,
   findUserById,
   updateUserById,
   deleteUserIdentity,
   deleteUserById,
-} from '@/queries/user';
-import { createRequester } from '@/utils/test-utils';
+} from '#src/queries/user.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import adminUserRoutes from './admin-user';
+import adminUserRoutes from './admin-user.js';
 
 const filterUsersWithSearch = (users: User[], search: string) =>
   users.filter((user) =>
@@ -31,14 +36,14 @@ const mockFindDefaultSignInExperience = jest.fn(async () => ({
   },
 }));
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: jest.fn(async () => mockFindDefaultSignInExperience()),
 }));
 
 const mockHasUser = jest.fn(async () => false);
 const mockHasUserWithEmail = jest.fn(async () => false);
 const mockHasUserWithPhone = jest.fn(async () => false);
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   countUsers: jest.fn(async (search) => ({
     count: search ? filterUsersWithSearch(mockUserList, search).length : mockUserList.length,
   })),
@@ -60,7 +65,7 @@ jest.mock('@/queries/user', () => ({
   deleteUserIdentity: jest.fn(),
 }));
 
-jest.mock('@/lib/user', () => ({
+jest.mock('#src/lib/user.js', () => ({
   generateUserId: jest.fn(() => 'fooId'),
   encryptUserPassword: jest.fn(() => ({
     passwordEncrypted: 'password',
@@ -74,14 +79,14 @@ jest.mock('@/lib/user', () => ({
   ),
 }));
 
-jest.mock('@/queries/roles', () => ({
+jest.mock('#src/queries/roles.js', () => ({
   findRolesByRoleNames: jest.fn(
     async (): Promise<Role[]> => [{ name: 'admin', description: 'none' }]
   ),
 }));
 
 const revokeInstanceByUserId = jest.fn();
-jest.mock('@/queries/oidc-model-instance', () => ({
+jest.mock('#src/queries/oidc-model-instance.js', () => ({
   revokeInstanceByUserId: async (modelName: string, userId: string) =>
     revokeInstanceByUserId(modelName, userId),
 }));

@@ -1,12 +1,10 @@
-import 'module-alias/register';
-
 import Koa from 'koa';
 
-import initApp from './app/init';
-import { initConnectors } from './connectors';
-import envSet from './env-set';
-import { configDotEnv } from './env-set/dot-env';
-import initI18n from './i18n/init';
+import initApp from './app/init.js';
+import { initConnectors } from './connectors/index.js';
+import { configDotEnv } from './env-set/dot-env.js';
+import envSet from './env-set/index.js';
+import initI18n from './i18n/init.js';
 
 // Update after we migrate to ESM
 // eslint-disable-next-line unicorn/prefer-top-level-await

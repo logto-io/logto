@@ -4,12 +4,12 @@ import type { Nullable } from '@silverhand/essentials';
 import type { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
-import { getLogtoConnectorById } from '@/connectors';
-import type { SocialUserInfo } from '@/connectors/types';
-import { socialUserInfoGuard } from '@/connectors/types';
-import RequestError from '@/errors/RequestError';
-import { findUserByEmail, findUserByPhone } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+import { getLogtoConnectorById } from '#src/connectors/index.js';
+import type { SocialUserInfo } from '#src/connectors/types.js';
+import { socialUserInfoGuard } from '#src/connectors/types.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { findUserByEmail, findUserByPhone } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export type SocialUserInfoSession = {
   connectorId: string;

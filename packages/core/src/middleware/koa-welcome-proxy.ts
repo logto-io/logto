@@ -1,9 +1,9 @@
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
-import envSet from '@/env-set';
-import { hasActiveUsers } from '@/queries/user';
-import { appendPath } from '@/utils/url';
+import envSet from '#src/env-set/index.js';
+import { hasActiveUsers } from '#src/queries/user.js';
+import { appendPath } from '#src/utils/url.js';
 
 export default function koaWelcomeProxy<
   StateT,

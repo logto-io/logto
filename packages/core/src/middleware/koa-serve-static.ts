@@ -6,7 +6,7 @@ import buildDebug from 'debug';
 import type { MiddlewareType } from 'koa';
 import send from 'koa-send';
 
-import assertThat from '@/utils/assert-that';
+import assertThat from '#src/utils/assert-that.js';
 
 const debug = buildDebug('koa-static');
 

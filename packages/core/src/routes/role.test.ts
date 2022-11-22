@@ -1,11 +1,11 @@
 import type { Role } from '@logto/schemas';
 
-import { mockRole } from '@/__mocks__';
-import { createRequester } from '@/utils/test-utils';
+import { mockRole } from '#src/__mocks__/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import roleRoutes from './role';
+import roleRoutes from './role.js';
 
-jest.mock('@/queries/roles', () => ({
+jest.mock('#src/queries/roles.js', () => ({
   findAllRoles: jest.fn(async (): Promise<Role[]> => [mockRole]),
 }));
 

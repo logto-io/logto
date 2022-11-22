@@ -5,20 +5,24 @@ import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas'
 import { buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
 
-import { getLogtoConnectorById, getLogtoConnectors, loadVirtualConnectors } from '@/connectors';
-import type { LogtoConnector } from '@/connectors/types';
-import RequestError from '@/errors/RequestError';
-import { removeUnavailableSocialConnectorTargets } from '@/lib/sign-in-experience';
-import koaGuard from '@/middleware/koa-guard';
+import {
+  getLogtoConnectorById,
+  getLogtoConnectors,
+  loadVirtualConnectors,
+} from '#src/connectors/index.js';
+import type { LogtoConnector } from '#src/connectors/types.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { removeUnavailableSocialConnectorTargets } from '#src/lib/sign-in-experience/index.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 import {
   countConnectorByConnectorId,
   deleteConnectorById,
   insertConnector,
   updateConnector,
-} from '@/queries/connector';
-import assertThat from '@/utils/assert-that';
+} from '#src/queries/connector.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import type { AuthedRouter } from './types';
+import type { AuthedRouter } from './types.js';
 
 const transpileLogtoConnector = ({
   dbEntry,

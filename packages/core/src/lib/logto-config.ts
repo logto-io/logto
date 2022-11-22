@@ -1,4 +1,4 @@
-import { getRowsByKeys } from '@logto/cli/lib/queries/logto-config';
+import { getRowsByKeys } from '@logto/cli/lib/queries/logto-config.js';
 import type { LogtoOidcConfigType } from '@logto/schemas';
 import { logtoOidcConfigGuard, LogtoOidcConfigKey } from '@logto/schemas';
 import chalk from 'chalk';

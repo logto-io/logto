@@ -3,11 +3,11 @@ import { convertToIdentifiers, convertToPrimitiveOrSql, excludeAutoSetFields } f
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 import { snakeCase } from 'snake-case';
 
-import { mockApplication } from '@/__mocks__';
-import envSet from '@/env-set';
-import { DeletionError } from '@/errors/SlonikError';
-import type { QueryType } from '@/utils/test-utils';
-import { expectSqlAssert } from '@/utils/test-utils';
+import { mockApplication } from '#src/__mocks__/index.js';
+import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
+import type { QueryType } from '#src/utils/test-utils.js';
+import { expectSqlAssert } from '#src/utils/test-utils.js';
 
 import {
   findTotalNumberOfApplications,
@@ -16,7 +16,7 @@ import {
   insertApplication,
   updateApplicationById,
   deleteApplicationById,
-} from './application';
+} from './application.js';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 

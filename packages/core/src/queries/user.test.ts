@@ -2,11 +2,11 @@ import { UserRole, Users } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import { mockUser } from '@/__mocks__';
-import envSet from '@/env-set';
-import { DeletionError } from '@/errors/SlonikError';
-import type { QueryType } from '@/utils/test-utils';
-import { expectSqlAssert } from '@/utils/test-utils';
+import { mockUser } from '#src/__mocks__/index.js';
+import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
+import type { QueryType } from '#src/utils/test-utils.js';
+import { expectSqlAssert } from '#src/utils/test-utils.js';
 
 import {
   findUserByUsername,
@@ -24,7 +24,7 @@ import {
   updateUserById,
   deleteUserById,
   deleteUserIdentity,
-} from './user';
+} from './user.js';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 

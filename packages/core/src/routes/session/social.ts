@@ -4,28 +4,28 @@ import pick from 'lodash.pick';
 import type { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';
 
-import { getLogtoConnectorById } from '@/connectors';
-import RequestError from '@/errors/RequestError';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
+import { getLogtoConnectorById } from '#src/connectors/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
 import {
   findSocialRelatedUser,
   getUserInfoByAuthCode,
   getUserInfoFromInteractionResult,
-} from '@/lib/social';
-import { generateUserId, insertUser } from '@/lib/user';
-import koaGuard from '@/middleware/koa-guard';
+} from '#src/lib/social.js';
+import { generateUserId, insertUser } from '#src/lib/user.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 import {
   hasUserWithIdentity,
   findUserById,
   updateUserById,
   findUserByIdentity,
-} from '@/queries/user';
-import assertThat from '@/utils/assert-that';
-import { maskUserInfo } from '@/utils/format';
+} from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
+import { maskUserInfo } from '#src/utils/format.js';
 
-import type { AnonymousRouter } from '../types';
-import { checkRequiredProfile, getRoutePrefix } from './utils';
+import type { AnonymousRouter } from '../types.js';
+import { checkRequiredProfile, getRoutePrefix } from './utils.js';
 
 export const registerRoute = getRoutePrefix('register', 'social');
 export const signInRoute = getRoutePrefix('sign-in', 'social');

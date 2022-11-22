@@ -5,10 +5,10 @@ import {
   mockAliyunSmsConnector,
   mockSignInMethod,
   mockSignUp,
-} from '@/__mocks__';
-import RequestError from '@/errors/RequestError';
+} from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import { validateSignIn } from './sign-in';
+import { validateSignIn } from './sign-in.js';
 
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 

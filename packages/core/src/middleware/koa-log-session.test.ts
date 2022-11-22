@@ -1,8 +1,8 @@
 import { Provider } from 'oidc-provider';
 
-import type { WithLogContext } from '@/middleware/koa-log';
-import koaLogSession from '@/middleware/koa-log-session';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import koaLogSession from '#src/middleware/koa-log-session.js';
+import type { WithLogContext } from '#src/middleware/koa-log.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({}));
 

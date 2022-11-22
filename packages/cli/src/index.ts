@@ -3,11 +3,11 @@ import dotenv from 'dotenv';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import connector from './commands/connector';
-import database from './commands/database';
-import install from './commands/install';
-import { packageJson } from './package-json';
-import { cliConfig, ConfigKey } from './utilities';
+import connector from './commands/connector/index.js';
+import database from './commands/database/index.js';
+import install from './commands/install/index.js';
+import { packageJson } from './package-json.js';
+import { cliConfig, ConfigKey } from './utilities.js';
 
 void yargs(hideBin(process.argv))
   .version(false)

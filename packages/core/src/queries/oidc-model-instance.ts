@@ -11,8 +11,8 @@ import { addSeconds, isBefore } from 'date-fns';
 import type { ValueExpression } from 'slonik';
 import { sql } from 'slonik';
 
-import { buildInsertInto } from '@/database/insert-into';
-import envSet from '@/env-set';
+import { buildInsertInto } from '#src/database/insert-into.js';
+import envSet from '#src/env-set/index.js';
 
 export type WithConsumed<T> = T & { consumed?: boolean };
 export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;

@@ -2,10 +2,10 @@ import type { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { sql, NotFoundError } from 'slonik';
 
-import envSet from '@/env-set';
-import RequestError from '@/errors/RequestError';
-import assertThat from '@/utils/assert-that';
-import { isKeyOf } from '@/utils/schema';
+import envSet from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import assertThat from '#src/utils/assert-that.js';
+import { isKeyOf } from '#src/utils/schema.js';
 
 export const buildFindEntityById = <Schema extends SchemaLike, ReturnType extends SchemaLike>(
   schema: GeneratedSchema<Schema & { id: string }>

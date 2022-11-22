@@ -7,10 +7,10 @@ import Router from 'koa-router';
 import type { Provider } from 'oidc-provider';
 import type { QueryResult, QueryResultRow } from 'slonik';
 import { createMockPool, createMockQueryResult } from 'slonik';
-import type { PrimitiveValueExpression } from 'slonik/dist/src/types.d';
+import type { PrimitiveValueExpression } from 'slonik/dist/src/types.js';
 import request from 'supertest';
 
-import type { AuthedRouter, AnonymousRouter } from '@/routes/types';
+import type { AuthedRouter, AnonymousRouter } from '#src/routes/types.js';
 
 /**
  *  Slonik Query Mock Utils

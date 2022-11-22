@@ -2,14 +2,14 @@ import { dateRegex } from '@logto/core-kit';
 import { endOfDay, format, subDays } from 'date-fns';
 import { object, string } from 'zod';
 
-import koaGuard from '@/middleware/koa-guard';
+import koaGuard from '#src/middleware/koa-guard.js';
 import {
   countActiveUsersByTimeInterval,
   getDailyActiveUserCountsByTimeInterval,
-} from '@/queries/log';
-import { countUsers, getDailyNewUserCountsByTimeInterval } from '@/queries/user';
+} from '#src/queries/log.js';
+import { countUsers, getDailyNewUserCountsByTimeInterval } from '#src/queries/user.js';
 
-import type { AuthedRouter } from './types';
+import type { AuthedRouter } from './types.js';
 
 const getDateString = (date: Date | number) => format(date, 'yyyy-MM-dd');
 

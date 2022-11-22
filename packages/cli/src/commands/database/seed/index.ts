@@ -10,16 +10,16 @@ import { raw } from 'slonik-sql-tag-raw';
 import type { CommandModule } from 'yargs';
 import { z } from 'zod';
 
-import { createPoolAndDatabaseIfNeeded, insertInto } from '../../../database';
+import { createPoolAndDatabaseIfNeeded, insertInto } from '../../../database.js';
 import {
   getRowsByKeys,
   doesConfigsTableExist,
   updateDatabaseTimestamp,
   updateValueByKey,
-} from '../../../queries/logto-config';
-import { getPathInModule, log, oraPromise } from '../../../utilities';
-import { getLatestAlterationTimestamp } from '../alteration';
-import { oidcConfigReaders } from './oidc-config';
+} from '../../../queries/logto-config.js';
+import { getPathInModule, log, oraPromise } from '../../../utilities.js';
+import { getLatestAlterationTimestamp } from '../alteration/index.js';
+import { oidcConfigReaders } from './oidc-config.js';
 
 const createTables = async (connection: DatabaseTransactionConnection) => {
   const tableDirectory = getPathInModule('@logto/schemas', 'tables');

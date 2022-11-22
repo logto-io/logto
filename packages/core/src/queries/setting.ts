@@ -2,8 +2,8 @@ import type { Setting, CreateSetting } from '@logto/schemas';
 import { Settings } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 
-import { buildFindEntityById } from '@/database/find-entity-by-id';
-import { buildUpdateWhere } from '@/database/update-where';
+import { buildFindEntityById } from '#src/database/find-entity-by-id.js';
+import { buildUpdateWhere } from '#src/database/update-where.js';
 
 export const defaultSettingId = 'default';
 

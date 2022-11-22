@@ -1,13 +1,16 @@
 import { isBuiltInLanguageTag } from '@logto/phrases-ui';
-import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
+import {
+  adminConsoleApplicationId,
+  adminConsoleSignInExperience,
+} from '@logto/schemas/lib/seeds/index.js';
 import type { Provider } from 'oidc-provider';
 
-import detectLanguage from '@/i18n/detect-language';
-import { getPhrase } from '@/lib/phrase';
-import { findAllCustomLanguageTags } from '@/queries/custom-phrase';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
+import detectLanguage from '#src/i18n/detect-language.js';
+import { getPhrase } from '#src/lib/phrase.js';
+import { findAllCustomLanguageTags } from '#src/queries/custom-phrase.js';
+import { findDefaultSignInExperience } from '#src/queries/sign-in-experience.js';
 
-import type { AnonymousRouter } from './types';
+import type { AnonymousRouter } from './types.js';
 
 const getLanguageInfo = async (applicationId: unknown) => {
   if (applicationId === adminConsoleApplicationId) {

@@ -1,11 +1,11 @@
 import { Logs } from '@logto/schemas';
 import { object, string } from 'zod';
 
-import koaGuard from '@/middleware/koa-guard';
-import koaPagination from '@/middleware/koa-pagination';
-import { countLogs, findLogById, findLogs } from '@/queries/log';
+import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
+import { countLogs, findLogById, findLogs } from '#src/queries/log.js';
 
-import type { AuthedRouter } from './types';
+import type { AuthedRouter } from './types.js';
 
 export default function logRoutes<T extends AuthedRouter>(router: T) {
   router.get(

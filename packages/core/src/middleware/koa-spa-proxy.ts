@@ -5,8 +5,8 @@ import type { MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import type { IRouterParamContext } from 'koa-router';
 
-import envSet, { MountedApps } from '@/env-set';
-import serveStatic from '@/middleware/koa-serve-static';
+import envSet, { MountedApps } from '#src/env-set/index.js';
+import serveStatic from '#src/middleware/koa-serve-static.js';
 
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
   packagePath = 'ui',

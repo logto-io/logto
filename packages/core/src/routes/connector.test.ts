@@ -8,15 +8,15 @@ import {
   mockConnector,
   mockVirtualConnector,
   mockLogtoConnectorList,
-} from '@/__mocks__';
-import { defaultConnectorMethods } from '@/connectors/consts';
-import type { VirtualConnector, LogtoConnector } from '@/connectors/types';
-import RequestError from '@/errors/RequestError';
-import { countConnectorByConnectorId, deleteConnectorById } from '@/queries/connector';
-import assertThat from '@/utils/assert-that';
-import { createRequester } from '@/utils/test-utils';
+} from '#src/__mocks__/index.js';
+import { defaultConnectorMethods } from '#src/connectors/consts.js';
+import type { VirtualConnector, LogtoConnector } from '#src/connectors/types.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { countConnectorByConnectorId, deleteConnectorById } from '#src/queries/connector.js';
+import assertThat from '#src/utils/assert-that.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import connectorRoutes from './connector';
+import connectorRoutes from './connector.js';
 
 const loadVirtualConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<VirtualConnector[]>
@@ -25,13 +25,13 @@ const getLogtoConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<LogtoConnector[]>
 >;
 
-jest.mock('@/queries/connector', () => ({
+jest.mock('#src/queries/connector.js', () => ({
   countConnectorByConnectorId: jest.fn(),
   deleteConnectorById: jest.fn(),
   insertConnector: jest.fn(async (body: unknown) => body),
 }));
 
-jest.mock('@/connectors', () => ({
+jest.mock('#src/connectors/index.js', () => ({
   loadVirtualConnectors: async () => loadVirtualConnectorsPlaceHolder(),
   getLogtoConnectors: async () => getLogtoConnectorsPlaceHolder(),
   getLogtoConnectorById: async (connectorId: string) => {

@@ -1,4 +1,4 @@
-import { parseType, getType, splitTableFieldDefinitions } from './utils';
+import { parseType, getType, splitTableFieldDefinitions } from './utils.js';
 
 describe('splitTableFieldDefinitions', () => {
   it('splitTableFieldDefinitions should split at each comma that is not in the parentheses', () => {

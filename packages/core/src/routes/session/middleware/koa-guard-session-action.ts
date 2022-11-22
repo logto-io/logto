@@ -1,13 +1,13 @@
 import { SignInMode } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import type { MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
-import RequestError from '@/errors/RequestError';
-import { getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import { getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export default function koaGuardSessionAction<StateT, ContextT, ResponseBodyT>(
   provider: Provider,

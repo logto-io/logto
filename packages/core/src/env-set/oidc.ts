@@ -4,7 +4,7 @@ import type { LogtoOidcConfigType } from '@logto/schemas';
 import { LogtoOidcConfigKey } from '@logto/schemas';
 import { createLocalJWKSet } from 'jose';
 
-import { exportJWK } from '@/utils/jwks';
+import { exportJWK } from '#src/utils/jwks.js';
 
 const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
   const cookieKeys = configs[LogtoOidcConfigKey.CookieKeys];

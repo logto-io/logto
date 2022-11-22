@@ -1,6 +1,6 @@
-import { createRequester } from '@/utils/test-utils';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import statusRoutes from './status';
+import statusRoutes from './status.js';
 
 describe('status router', () => {
   const requester = createRequester({ anonymousRoutes: statusRoutes });

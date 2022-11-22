@@ -1,4 +1,4 @@
-import { getUserClaims } from './scope';
+import { getUserClaims } from './scope.js';
 
 const use = {
   idToken: 'id_token',

@@ -6,12 +6,12 @@ import path from 'path';
 
 import { assert } from '@silverhand/essentials';
 import chalk from 'chalk';
-import { remove, writeFile } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import inquirer from 'inquirer';
 import * as semver from 'semver';
 import tar from 'tar';
 
-import { createPoolAndDatabaseIfNeeded } from '../../database';
+import { createPoolAndDatabaseIfNeeded } from '../../database.js';
 import {
   cliConfig,
   ConfigKey,
@@ -20,8 +20,8 @@ import {
   log,
   oraPromise,
   safeExecSync,
-} from '../../utilities';
-import { seedByPool } from '../database/seed';
+} from '../../utilities.js';
+import { seedByPool } from '../database/seed/index.js';
 
 export const defaultPath = path.join(os.homedir(), 'logto');
 const pgRequired = new semver.SemVer('14.0.0');
@@ -140,7 +140,7 @@ export const seedDatabase = async (instancePath: string) => {
   } catch (error: unknown) {
     console.error(error);
 
-    await oraPromise(remove(instancePath), {
+    await oraPromise(fsExtra.remove(instancePath), {
       text: 'Clean up',
       prefixText: chalk.blue('[info]'),
     });
@@ -156,7 +156,7 @@ export const seedDatabase = async (instancePath: string) => {
 
 export const createEnv = async (instancePath: string, databaseUrl: string) => {
   const dotEnvPath = path.resolve(instancePath, '.env');
-  await writeFile(dotEnvPath, `DB_URL=${databaseUrl}`, {
+  await fsExtra.writeFile(dotEnvPath, `DB_URL=${databaseUrl}`, {
     encoding: 'utf8',
   });
   log.info(`Saved database URL to ${chalk.blue(dotEnvPath)}`);

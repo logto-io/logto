@@ -2,10 +2,10 @@ import { PasscodeType } from '@logto/schemas';
 import { addDays, subSeconds } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
-import { mockUser } from '@/__mocks__';
-import { createRequester } from '@/utils/test-utils';
+import { mockUser } from '#src/__mocks__/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import continueRoutes, { continueRoute } from './continue';
+import continueRoutes, { continueRoute } from './continue.js';
 
 const getTomorrowIsoString = () => addDays(Date.now(), 1).toISOString();
 const getVerificationStorageFromInteraction = jest.fn();
@@ -17,7 +17,7 @@ jest.mock('./utils', () => ({
   getVerificationStorageFromInteraction: () => getVerificationStorageFromInteraction(),
 }));
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: jest.fn(),
 }));
 
@@ -27,7 +27,7 @@ const hasUser = jest.fn();
 const hasUserWithPhone = jest.fn();
 const hasUserWithEmail = jest.fn();
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   findUserById: async () => findUserById(),
   hasUser: async () => hasUser(),

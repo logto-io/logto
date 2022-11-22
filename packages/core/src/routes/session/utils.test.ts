@@ -4,10 +4,10 @@ import { createMockContext } from '@shopify/jest-koa-mocks';
 import type { Nullable } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience, mockSignInMethod, mockUser } from '@/__mocks__';
-import RequestError from '@/errors/RequestError';
+import { mockSignInExperience, mockSignInMethod, mockUser } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import { signInWithPassword } from './utils';
+import { signInWithPassword } from './utils.js';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
@@ -21,7 +21,7 @@ const findDefaultSignInExperience = jest.fn(async () => ({
   },
 }));
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   findUserById: async () => findUserById(),
   findUserByIdentity: async () => ({ id: 'id', identities: {} }),
   findUserByPhone: async () => ({ id: 'id' }),
@@ -40,11 +40,11 @@ jest.mock('@/queries/user', () => ({
   },
 }));
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
-jest.mock('@/lib/user', () => ({
+jest.mock('#src/lib/user.js', () => ({
   async verifyUserPassword(user: Nullable<User>, password: string) {
     if (!user) {
       throw new RequestError('session.invalid_credentials');

@@ -1,9 +1,9 @@
 import { Provider } from 'oidc-provider';
 
-import { MountedApps } from '@/env-set';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import { MountedApps } from '#src/env-set/index.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaSpaSessionGuard, { sessionNotFoundPath, guardedPath } from './koa-spa-session-guard';
+import koaSpaSessionGuard, { sessionNotFoundPath, guardedPath } from './koa-spa-session-guard.js';
 
 jest.mock('fs/promises', () => ({
   ...jest.requireActual('fs/promises'),

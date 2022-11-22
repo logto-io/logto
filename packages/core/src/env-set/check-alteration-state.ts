@@ -1,4 +1,4 @@
-import { getUndeployedAlterations } from '@logto/cli/lib/commands/database/alteration';
+import { getUndeployedAlterations } from '@logto/cli/lib/commands/database/alteration/index.js';
 import chalk from 'chalk';
 import type { DatabasePool } from 'slonik';
 

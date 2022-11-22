@@ -4,7 +4,7 @@ import type { CustomPhrase } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import deepmerge from 'deepmerge';
 
-import { findCustomPhraseByLanguageTag } from '@/queries/custom-phrase';
+import { findCustomPhraseByLanguageTag } from '#src/queries/custom-phrase.js';
 
 export const getPhrase = async (supportedLanguage: string, customLanguages: string[]) => {
   if (!isBuiltInLanguageTag(supportedLanguage)) {

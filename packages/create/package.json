@@ -3,6 +3,7 @@
   "version": "1.0.0-beta.14",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
+  "type": "module",
   "publishConfig": {
     "access": "public"
   },

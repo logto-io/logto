@@ -1,13 +1,13 @@
 import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 
-import { mockApplication } from '@/__mocks__';
-import { findApplicationById } from '@/queries/application';
-import { createRequester } from '@/utils/test-utils';
+import { mockApplication } from '#src/__mocks__/index.js';
+import { findApplicationById } from '#src/queries/application.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import applicationRoutes from './application';
+import applicationRoutes from './application.js';
 
-jest.mock('@/queries/application', () => ({
+jest.mock('#src/queries/application.js', () => ({
   findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
   findAllApplications: jest.fn(async () => [mockApplication]),
   findApplicationById: jest.fn(async () => mockApplication),
