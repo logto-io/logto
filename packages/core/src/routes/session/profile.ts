@@ -235,7 +235,6 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
         new RequestError({ code: 'user.identity_not_exists', status: 404 })
       );
 
-      console.log('##############shit:', userId, target);
       await deleteUserIdentity(userId, target);
 
       ctx.status = 204;
