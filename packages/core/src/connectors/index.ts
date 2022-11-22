@@ -14,12 +14,15 @@ import { findAllConnectors, insertConnector } from '#src/queries/connector.js';
 
 import { defaultConnectorMethods } from './consts.js';
 import { metaUrl } from './meta-url.js';
-import type { VirtualConnector, LogtoConnector } from './types.js';
+import type { VirtualConnector, VirtualConnectorInfo, LogtoConnector } from './types.js';
 import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities/index.js';
 
 const currentDirname = path.dirname(fileURLToPath(metaUrl));
+
 // eslint-disable-next-line @silverhand/fp/no-let
 let cachedVirtualConnectors: VirtualConnector[] | undefined;
+
+const metadataIdToPackagePathMap = new Map<string, VirtualConnectorInfo>();
 
 export const loadVirtualConnectors = async () => {
   if (cachedVirtualConnectors) {
@@ -49,6 +52,12 @@ export const loadVirtualConnectors = async () => {
         };
         const rawConnector = await createConnector({ getConfig: getConnectorConfig });
         validateConnectorModule(rawConnector);
+
+        metadataIdToPackagePathMap.set(rawConnector.metadata.id, {
+          metadata: rawConnector.metadata,
+          type: rawConnector.type,
+          path: packagePath,
+        });
 
         const connector: VirtualConnector = {
           ...defaultConnectorMethods,
@@ -99,24 +108,66 @@ export const loadVirtualConnectors = async () => {
 export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
   const connectors = await findAllConnectors();
 
-  const virtualConnectors = await loadVirtualConnectors();
+  const logtoConnectors = await Promise.all(
+    connectors.map(async (connector) => {
+      const { id, metadata, connectorId } = connector;
 
-  return connectors
-    .map((connector) => {
-      const { metadata, connectorId } = connector;
-      const virtualConnector = virtualConnectors.find(({ metadata: { id } }) => id === connectorId);
+      const virtualConnectorInfo = metadataIdToPackagePathMap.get(connectorId);
 
-      if (!virtualConnector) {
+      if (!virtualConnectorInfo || !virtualConnectorInfo.path) {
         return;
       }
+      const { path: packagePath } = virtualConnectorInfo;
 
-      return {
-        ...virtualConnector,
-        metadata: { ...virtualConnector.metadata, ...metadata },
-        dbEntry: connector,
-      };
+      try {
+        const {
+          default: { default: createConnector },
+          // eslint-disable-next-line no-restricted-syntax
+        } = (await import(packagePath + '/lib/index.js')) as {
+          default: {
+            default: CreateConnector<AllConnector>;
+          };
+        };
+        const rawConnector = await createConnector({
+          getConfig: async () => {
+            return getConnectorConfig(id);
+          },
+        });
+        validateConnectorModule(rawConnector);
+
+        const virtualConnector: VirtualConnector = {
+          ...defaultConnectorMethods,
+          ...rawConnector,
+          metadata: {
+            ...rawConnector.metadata,
+            logo: await readUrl(rawConnector.metadata.logo, packagePath, 'svg'),
+            logoDark:
+              rawConnector.metadata.logoDark &&
+              (await readUrl(rawConnector.metadata.logoDark, packagePath, 'svg')),
+            readme: await readUrl(rawConnector.metadata.readme, packagePath, 'text'),
+            configTemplate: await readUrl(
+              rawConnector.metadata.configTemplate,
+              packagePath,
+              'text'
+            ),
+          },
+          validateConfig: (config: unknown) => {
+            validateConfig(config, rawConnector.configGuard);
+          },
+        };
+
+        return {
+          ...virtualConnector,
+          metadata: { ...virtualConnector.metadata, ...metadata },
+          dbEntry: connector,
+        };
+      } catch {}
     })
-    .filter((connector): connector is LogtoConnector => connector !== undefined);
+  );
+
+  return logtoConnectors.filter(
+    (connector): connector is LogtoConnector => connector !== undefined
+  );
 };
 
 export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector> => {

@@ -3,12 +3,6 @@ import { MessageTypes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import {
-  mockMetadata,
-  mockConnector,
-  mockVirtualConnector,
-  mockLogtoConnectorList,
-} from '#src/__mocks__/index.js';
 import { defaultConnectorMethods } from '#src/connectors/consts.js';
 import type { VirtualConnector, LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -17,6 +11,13 @@ import assertThat from '#src/utils/assert-that.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 import connectorRoutes from './connector.js';
+
+import {
+  mockMetadata,
+  mockConnector,
+  mockVirtualConnector,
+  mockLogtoConnectorList,
+} from '#src/__mocks__/index.js';
 
 const loadVirtualConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<VirtualConnector[]>

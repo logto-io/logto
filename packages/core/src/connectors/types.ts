@@ -23,6 +23,13 @@ export type VirtualConnector<T extends AllConnector = AllConnector> = T & {
   validateConfig: (config: unknown) => void;
 };
 
+export type VirtualConnectorInfo<T extends AllConnector = AllConnector> = Pick<
+  T,
+  'type' | 'metadata'
+> & {
+  path: string;
+};
+
 /**
  * The connector type with full context.
  */
