@@ -35,9 +35,11 @@ describe('social sign-in and register', () => {
   beforeAll(async () => {
     const connectors = await listConnectors();
     await Promise.all(
-      connectors.map(async ({ id }) => {
-        await deleteConnectorById(id);
-      })
+      connectors
+        .filter(({ connectorId }) => connectorId.startsWith('mock-'))
+        .map(async ({ id }) => {
+          await deleteConnectorById(id);
+        })
     );
     connectorIdMap.clear();
 
