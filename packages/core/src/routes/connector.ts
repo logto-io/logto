@@ -71,9 +71,9 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     }
   );
 
-  router.get('/connector-packages', async (ctx, next) => {
-    const connectorPackages = await loadConnectors();
-    ctx.body = connectorPackages.map(({ metadata, type }) => ({ type, ...metadata }));
+  router.get('/connector-factories', async (ctx, next) => {
+    const connectorFactories = await loadConnectorFactories();
+    ctx.body = connectorFactories.map(({ metadata, type }) => ({ type, ...metadata }));
 
     return next();
   });

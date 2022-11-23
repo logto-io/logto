@@ -23,7 +23,13 @@ import {
   mockMetadata6,
 } from './connector-base-data.js';
 
-export { mockMetadata } from './connector-base-data.js';
+export {
+  mockMetadata,
+  mockMetadata0,
+  mockMetadata1,
+  mockMetadata2,
+  mockMetadata3,
+} from './connector-base-data.js';
 
 export const mockConnector: Connector = {
   id: 'id',
