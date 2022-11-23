@@ -78,29 +78,27 @@ const Users = () => {
         </Modal>
       </div>
 
-      <div className={classNames(resourcesStyles.table)}>
-        <div className={tableStyles.scrollable}>
-          <table className={classNames(styles.table, !data && tableStyles.empty)}>
+      <div className={classNames(resourcesStyles.table, styles.tableLayout)}>
+        <div className={styles.filter}>
+          <Search
+            defaultValue={keyword}
+            isClearable={Boolean(keyword)}
+            onSearch={(value) => {
+              setQuery(value ? { search: value } : {});
+            }}
+            onClearSearch={() => {
+              setQuery({});
+            }}
+          />
+        </div>
+        <div className={classNames(tableStyles.scrollable, styles.tableContainer)}>
+          <table className={conditional(!data && tableStyles.empty)}>
             <colgroup>
               <col className={styles.userName} />
               <col />
               <col />
             </colgroup>
             <thead>
-              <tr>
-                <th colSpan={userTableColumn} className={styles.filter}>
-                  <Search
-                    defaultValue={keyword}
-                    isClearable={Boolean(keyword)}
-                    onSearch={(value) => {
-                      setQuery(value ? { search: value } : {});
-                    }}
-                    onClearSearch={() => {
-                      setQuery({});
-                    }}
-                  />
-                </th>
-              </tr>
               <tr>
                 <th>{t('users.user_name')}</th>
                 <th>{t('users.application_name')}</th>
@@ -110,14 +108,14 @@ const Users = () => {
             <tbody>
               {!data && error && (
                 <TableError
-                  columns={3}
+                  columns={userTableColumn}
                   content={error.body?.message ?? error.message}
                   onRetry={async () => mutate(undefined, true)}
                 />
               )}
-              {isLoading && <TableLoading columns={3} />}
+              {isLoading && <TableLoading columns={userTableColumn} />}
               {users?.length === 0 && (
-                <TableEmpty columns={3}>
+                <TableEmpty columns={userTableColumn}>
                   <Button
                     title="users.create"
                     type="outline"
