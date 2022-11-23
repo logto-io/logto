@@ -69,7 +69,7 @@ const AuditLogTable = ({ userId }: Props) => {
 
   return (
     <div className={styles.container}>
-      <div className={classNames(styles.tableLayout)}>
+      <div className={styles.tableLayout}>
         <div className={styles.filter}>
           <div className={styles.title}>{t('logs.filter_by')}</div>
           <div className={styles.eventSelector}>
