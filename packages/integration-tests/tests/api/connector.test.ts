@@ -68,7 +68,7 @@ test('connector set-up flow', async () => {
   /*
    * Change to another SMS/Email connector
    */
-  // FIXME @Darcy: complete this IT after finishing LOG-4747
+  // FIXME @Darcy [LOG-4750,4751]: complete this IT after add another mock sms/email connector (or other current existing connector could be affected)
 
   /*
    * Delete (i.e. disable) a connector
