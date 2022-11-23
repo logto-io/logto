@@ -57,7 +57,7 @@ const Settings = () => {
           onSubmit={onSubmit}
           onDiscard={reset}
         >
-          <FormCard title="settings.settings" description="settings.settings_description">
+          <FormCard title="settings.settings">
             <FormField title="settings.language">
               <Controller
                 name="language"

@@ -2,7 +2,6 @@ const settings = {
   title: '설정',
   description: '전체 설정을 관리해보세요.',
   settings: '설정',
-  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   custom_domain: '커스텀 도메인',
   language: '언어',
   appearance: '모습',

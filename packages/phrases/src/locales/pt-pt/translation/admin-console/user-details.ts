@@ -18,7 +18,8 @@ const user_details = {
   },
   tab_logs: 'Registros do utilizador',
   settings: 'Settings', // UNTRANSLATED
-  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
+  settings_description:
+    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
   field_email: 'Email',
   field_phone: 'Telefone',
   field_username: 'Nome de utilizador',

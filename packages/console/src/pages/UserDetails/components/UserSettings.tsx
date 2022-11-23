@@ -102,7 +102,11 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
         onSubmit={onSubmit}
         onDiscard={reset}
       >
-        <FormCard title="user_details.settings" description="user_details.settings_description">
+        <FormCard
+          title="user_details.settings"
+          description="user_details.settings_description"
+          learnMoreLink="https://docs.logto.io/docs/references/users"
+        >
           {getValues('primaryEmail') && (
             <FormField title="user_details.field_email">
               <TextInput readOnly {...register('primaryEmail')} />

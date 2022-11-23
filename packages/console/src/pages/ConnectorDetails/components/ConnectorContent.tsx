@@ -80,6 +80,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
         <FormCard
           title="connector_details.settings"
           description="connector_details.settings_description"
+          learnMoreLink="https://docs.logto.io/docs/references/connectors"
         >
           <Controller
             name="configJson"

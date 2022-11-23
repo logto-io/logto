@@ -16,7 +16,8 @@ const user_details = {
   },
   tab_logs: '사용자 기록',
   settings: 'Settings', // UNTRANSLATED
-  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
+  settings_description:
+    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
   field_email: '메인 이메일',
   field_phone: '메인 휴대전화번호',
   field_username: '사용자 이름',

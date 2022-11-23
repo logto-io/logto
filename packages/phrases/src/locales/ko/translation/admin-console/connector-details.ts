@@ -3,7 +3,7 @@ const connector_details = {
   check_readme: 'README 확인',
   settings: 'Settings', // UNTRANSLATED
   settings_description:
-    'It real sent your at. Amounted all shy set why followed declared. Repeated of endeavor mr position kindness offering ignorant so up. Simplicity are melancholy preference considered saw companions.', // UNTRANSLATED
+    'Connectors play a critical role in Logto. With their help, Logto enables end-users to use passwordless registration or sign-in and the capabilities of signing in with social accounts.', // UNTRANSLATED
   save_error_empty_config: '설정을 입력해주세요.',
   send: '보내기',
   send_error_invalid_format: '유효하지 않은 입력',

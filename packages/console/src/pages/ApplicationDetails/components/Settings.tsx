@@ -40,6 +40,7 @@ const Settings = ({ data }: Props) => {
     <FormCard
       title="application_details.settings"
       description="application_details.settings_description"
+      learnMoreLink="https://docs.logto.io/docs/references/applications"
     >
       <FormField isRequired title="application_details.application_name">
         <TextInput

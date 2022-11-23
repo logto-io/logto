@@ -2,7 +2,7 @@ const api_resource_details = {
   back_to_api_resources: 'Zurück zu API Ressourcen',
   settings: 'Settings', // UNTRANSLATED
   settings_description:
-    'With Applications you can. Setup a mobile, web or IoT application to use Logto for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
+    'API resources, a.k.a. Resource Indicators, indicate the target services or resources to be requested, usually, a URI format variable representing the resource‘s identity.', // UNTRANSLATED
   token_expiration_time_in_seconds: 'Token Ablaufzeit (in Sekunden)',
   token_expiration_time_in_seconds_placeholder: 'Gib die Ablaufzeit des Tokens ein',
   delete_description:

@@ -2,7 +2,6 @@ const settings = {
   title: '设置',
   description: '管理全局设置',
   settings: '设置',
-  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   custom_domain: '自定义域名',
   language: '语言',
   appearance: '外观',

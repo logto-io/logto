@@ -3,10 +3,10 @@ const application_details = {
   check_guide: 'Check Guide',
   settings: 'Settings',
   settings_description:
-    'With Applications you can. Setup a mobile, web or IoT application to use Logto for Authentication. Configure the allowed Callback URLs and Secrets for your Application.',
+    'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.',
   advanced_settings: 'Advanced settings',
   advanced_settings_description:
-    'It real sent your at. Amounted all shy set why followed declared.',
+    'Advanced settings include OIDC related terms. You can check out the Token Endpoint for more information.',
   application_name: 'Application name',
   application_name_placeholder: 'My App',
   description: 'Description',
