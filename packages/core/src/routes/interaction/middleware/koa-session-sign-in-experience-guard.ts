@@ -1,6 +1,7 @@
 import type { SignInExperience } from '@logto/schemas';
 import { SignInMode } from '@logto/schemas';
-import type { MiddlewareType, Context } from 'koa';
+import type { MiddlewareType } from 'koa';
+import type { IRouterParamContext } from 'koa-router';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -17,9 +18,11 @@ export type WithSignInExperienceContext<ContextT> = ContextT & {
 
 export default function koaSessionSignInExperienceGuard<
   StateT,
-  ContextT extends WithSignInExperienceContext<WithGuardedIdentifierPayloadContext<Context>>,
+  ContextT extends WithGuardedIdentifierPayloadContext<IRouterParamContext>,
   ResponseBodyT
->(provider: Provider): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+>(
+  provider: Provider
+): MiddlewareType<StateT, WithSignInExperienceContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     const interaction = await provider.interactionDetails(ctx.req, ctx.res);
     const { event } = ctx.interactionPayload;
