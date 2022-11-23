@@ -3,7 +3,7 @@ import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import type { LogtoConnector, VirtualConnectorFactory } from '#src/connectors/types.js';
+import type { LogtoConnector, ConnectorFactory } from '#src/connectors/types.js';
 
 import {
   mockConnector0,
@@ -43,7 +43,7 @@ export const mockLogtoConnector = {
   configGuard: any(),
 };
 
-export const mockVirtualConnectorFactory: VirtualConnectorFactory = {
+export const mockConnectorFactory: ConnectorFactory = {
   metadata: mockMetadata,
   type: ConnectorType.Social,
   path: 'random_path',
