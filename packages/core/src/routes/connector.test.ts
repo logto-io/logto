@@ -3,6 +3,20 @@ import { MessageTypes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
+import { defaultConnectorMethods } from '#src/connectors/consts.js';
+import type { ConnectorFactory, LogtoConnector } from '#src/connectors/types.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { removeUnavailableSocialConnectorTargets } from '#src/lib/sign-in-experience/index.js';
+import {
+  findConnectorById,
+  countConnectorByConnectorId,
+  deleteConnectorById,
+} from '#src/queries/connector.js';
+import assertThat from '#src/utils/assert-that.js';
+import { createRequester } from '#src/utils/test-utils.js';
+
+import connectorRoutes from './connector.js';
+
 import {
   mockMetadata,
   mockMetadata0,
@@ -12,22 +26,7 @@ import {
   mockConnector,
   mockConnectorFactory,
   mockLogtoConnectorList,
-  mockLogtoConnector,
 } from '#src/__mocks__/index.js';
-import { defaultConnectorMethods } from '#src/connectors/consts.js';
-import type { ConnectorFactory, LogtoConnector } from '#src/connectors/types.js';
-import RequestError from '#src/errors/RequestError/index.js';
-import { removeUnavailableSocialConnectorTargets } from '#src/lib/sign-in-experience/index.js';
-import {
-  findConnectorById,
-  countConnectorByConnectorId,
-  deleteConnectorById,
-  deleteConnectorByIds,
-} from '#src/queries/connector.js';
-import assertThat from '#src/utils/assert-that.js';
-import { createRequester } from '#src/utils/test-utils.js';
-
-import connectorRoutes from './connector.js';
 
 const loadConnectorFactoriesPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<ConnectorFactory[]>
@@ -225,27 +224,19 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 422);
     });
 
-    it('should add a new record and delete old records with same connector type when add passwordless connectors', async () => {
-      loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
+    it('should post a new record when add more than 1 instance with virtual connector', async () => {
+      loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
         {
-          ...mockConnectorFactory,
+          ...mockVirtualConnector,
           type: ConnectorType.Sms,
-          metadata: { ...mockConnectorFactory.metadata, id: 'id0', isStandard: true },
+          metadata: { ...mockVirtualConnector.metadata, id: 'id0', isStandard: true },
         },
       ]);
-      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
-        {
-          dbEntry: { ...mockConnector, connectorId: 'id0' },
-          metadata: { ...mockMetadata, id: 'id0' },
-          type: ConnectorType.Sms,
-          ...mockLogtoConnector,
-        },
-      ]);
+      mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
       });
-      expect(response).toHaveProperty('statusCode', 200);
       expect(response.body).toMatchObject(
         expect.objectContaining({
           connectorId: 'id0',
@@ -255,7 +246,8 @@ describe('connector route', () => {
           },
         })
       );
-      expect(deleteConnectorByIds).toHaveBeenCalledWith(['id']);
+      expect(response).toHaveProperty('statusCode', 200);
+      expect(deleteConnectorById).toHaveBeenCalledWith({ id: 'id0' });
     });
   });
 
