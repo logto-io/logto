@@ -2,8 +2,12 @@
 
 .filter {
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   align-items: center;
+  padding: _.unit(3);
+  border-bottom: 1px solid var(--color-divider);
+  background-color: var(--color-layer-1);
+  border-radius: 12px 12px 0 0;
 
   .title {
     color: var(--color-text-secondary);
@@ -21,6 +25,15 @@
   }
 }
 
+.tableLayout {
+  display: flex;
+  flex-direction: column;
+
+  .tableContainer {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
 
 .pagination {
   margin-top: _.unit(4);
