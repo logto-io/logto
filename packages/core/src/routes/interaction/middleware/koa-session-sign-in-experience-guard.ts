@@ -12,7 +12,9 @@ import type { WithGuardedIdentifierPayloadContext } from './koa-interaction-body
 
 const forbiddenEventError = new RequestError({ code: 'auth.forbidden', status: 403 });
 
-export type WithSignInExperienceContext<ContextT> = ContextT & {
+export type WithSignInExperienceContext<
+  ContextT extends WithGuardedIdentifierPayloadContext<IRouterParamContext>
+> = ContextT & {
   signInExperience: SignInExperience;
 };
 
