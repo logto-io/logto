@@ -6,11 +6,11 @@ import { any } from 'zod';
 import {
   mockMetadata,
   mockConnector,
-  mockVirtualConnector,
+  mockVirtualConnectorFactory,
   mockLogtoConnectorList,
 } from '#src/__mocks__/index.js';
 import { defaultConnectorMethods } from '#src/connectors/consts.js';
-import type { VirtualConnector, LogtoConnector } from '#src/connectors/types.js';
+import type { VirtualConnectorFactory, LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { countConnectorByConnectorId, deleteConnectorById } from '#src/queries/connector.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -18,8 +18,8 @@ import { createRequester } from '#src/utils/test-utils.js';
 
 import connectorRoutes from './connector.js';
 
-const loadVirtualConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
-  () => Promise<VirtualConnector[]>
+const loadVirtualConnectorFactoriesPlaceHolder = jest.fn() as jest.MockedFunction<
+  () => Promise<VirtualConnectorFactory[]>
 >;
 const getLogtoConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<LogtoConnector[]>
@@ -32,7 +32,7 @@ jest.mock('#src/queries/connector.js', () => ({
 }));
 
 jest.mock('#src/connectors/index.js', () => ({
-  loadVirtualConnectors: async () => loadVirtualConnectorsPlaceHolder(),
+  loadVirtualConnectorFactories: async () => loadVirtualConnectorFactoriesPlaceHolder(),
   getLogtoConnectors: async () => getLogtoConnectorsPlaceHolder(),
   getLogtoConnectorById: async (connectorId: string) => {
     const connectors = await getLogtoConnectorsPlaceHolder();
@@ -112,10 +112,10 @@ describe('connector route', () => {
     });
 
     it('should post a new connector record', async () => {
-      loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
+      loadVirtualConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
         {
-          ...mockVirtualConnector,
-          metadata: { ...mockVirtualConnector.metadata, id: 'connectorId' },
+          ...mockVirtualConnectorFactory,
+          metadata: { ...mockVirtualConnectorFactory.metadata, id: 'connectorId' },
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
@@ -136,10 +136,10 @@ describe('connector route', () => {
     });
 
     it('throws when virtual connector not found', async () => {
-      loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
+      loadVirtualConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
         {
-          ...mockVirtualConnector,
-          metadata: { ...mockVirtualConnector.metadata, id: 'connectorId' },
+          ...mockVirtualConnectorFactory,
+          metadata: { ...mockVirtualConnectorFactory.metadata, id: 'connectorId' },
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
@@ -151,10 +151,10 @@ describe('connector route', () => {
     });
 
     it('should post a new record when add more than 1 instance with virtual connector', async () => {
-      loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
+      loadVirtualConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
         {
-          ...mockVirtualConnector,
-          metadata: { ...mockVirtualConnector.metadata, id: 'id0', isStandard: true },
+          ...mockVirtualConnectorFactory,
+          metadata: { ...mockVirtualConnectorFactory.metadata, id: 'id0', isStandard: true },
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
@@ -175,10 +175,10 @@ describe('connector route', () => {
     });
 
     it('throws when add more than 1 instance with non-virtual connector', async () => {
-      loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
+      loadVirtualConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
         {
-          ...mockVirtualConnector,
-          metadata: { ...mockVirtualConnector.metadata, id: 'id0' },
+          ...mockVirtualConnectorFactory,
+          metadata: { ...mockVirtualConnectorFactory.metadata, id: 'id0' },
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });

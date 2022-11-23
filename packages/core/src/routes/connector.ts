@@ -8,7 +8,7 @@ import { object, string } from 'zod';
 import {
   getLogtoConnectorById,
   getLogtoConnectors,
-  loadVirtualConnectors,
+  loadVirtualConnectorFactories,
 } from '#src/connectors/index.js';
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -101,10 +101,12 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const virtualConnectors = await loadVirtualConnectors();
-      const virtualConnector = virtualConnectors.find(({ metadata: { id } }) => id === connectorId);
+      const virtualConnectorFactories = await loadVirtualConnectorFactories();
+      const virtualConnectorFactory = virtualConnectorFactories.find(
+        ({ metadata: { id } }) => id === connectorId
+      );
 
-      if (!virtualConnector) {
+      if (!virtualConnectorFactory) {
         throw new RequestError({
           code: 'connector.not_found_with_connector_id',
           status: 422,
@@ -113,7 +115,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       const { count } = await countConnectorByConnectorId(connectorId);
       assertThat(
-        count === 0 || virtualConnector.metadata.isStandard === true,
+        count === 0 || virtualConnectorFactory.metadata.isStandard === true,
         new RequestError({
           code: 'connector.multiple_instances_not_supported',
           status: 422,

@@ -1,4 +1,4 @@
-import type { AllConnector } from '@logto/connector-kit';
+import type { AllConnector, CreateConnector } from '@logto/connector-kit';
 import type { Connector, PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -23,10 +23,11 @@ export type VirtualConnector<T extends AllConnector = AllConnector> = T & {
   validateConfig: (config: unknown) => void;
 };
 
-export type VirtualConnectorInfo<T extends AllConnector = AllConnector> = Pick<
+export type VirtualConnectorFactory<T extends AllConnector = AllConnector> = Pick<
   T,
   'type' | 'metadata'
 > & {
+  createConnector: CreateConnector<AllConnector>;
   path: string;
 };
 

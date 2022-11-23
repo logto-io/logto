@@ -14,19 +14,17 @@ import { findAllConnectors, insertConnector } from '#src/queries/connector.js';
 
 import { defaultConnectorMethods } from './consts.js';
 import { metaUrl } from './meta-url.js';
-import type { VirtualConnector, VirtualConnectorInfo, LogtoConnector } from './types.js';
+import type { VirtualConnector, VirtualConnectorFactory, LogtoConnector } from './types.js';
 import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities/index.js';
 
 const currentDirname = path.dirname(fileURLToPath(metaUrl));
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedVirtualConnectors: VirtualConnector[] | undefined;
+let cachedVirtualConnectorFactories: VirtualConnectorFactory[] | undefined;
 
-const metadataIdToPackagePathMap = new Map<string, VirtualConnectorInfo>();
-
-export const loadVirtualConnectors = async () => {
-  if (cachedVirtualConnectors) {
-    return cachedVirtualConnectors;
+export const loadVirtualConnectorFactories = async () => {
+  if (cachedVirtualConnectorFactories) {
+    return cachedVirtualConnectorFactories;
   }
 
   const coreDirectory = await findPackage(currentDirname);
@@ -38,7 +36,7 @@ export const loadVirtualConnectors = async () => {
 
   const connectorPackages = await getConnectorPackagesFromDirectory(directory);
 
-  const connectors = await Promise.all(
+  const connectorFactories = await Promise.all(
     connectorPackages.map(async ({ path: packagePath, name }) => {
       try {
         // TODO: fix type and remove `/lib/index.js` suffix once we upgrade all connectors to ESM
@@ -53,34 +51,12 @@ export const loadVirtualConnectors = async () => {
         const rawConnector = await createConnector({ getConfig: getConnectorConfig });
         validateConnectorModule(rawConnector);
 
-        metadataIdToPackagePathMap.set(rawConnector.metadata.id, {
+        return {
           metadata: rawConnector.metadata,
           type: rawConnector.type,
-          path: packagePath,
-        });
-
-        const connector: VirtualConnector = {
-          ...defaultConnectorMethods,
-          ...rawConnector,
-          metadata: {
-            ...rawConnector.metadata,
-            logo: await readUrl(rawConnector.metadata.logo, packagePath, 'svg'),
-            logoDark:
-              rawConnector.metadata.logoDark &&
-              (await readUrl(rawConnector.metadata.logoDark, packagePath, 'svg')),
-            readme: await readUrl(rawConnector.metadata.readme, packagePath, 'text'),
-            configTemplate: await readUrl(
-              rawConnector.metadata.configTemplate,
-              packagePath,
-              'text'
-            ),
-          },
-          validateConfig: (config: unknown) => {
-            validateConfig(config, rawConnector.configGuard);
-          },
+          createConnector,
+          path: packagePath + '/lib/index.js',
         };
-
-        return connector;
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log(
@@ -98,11 +74,12 @@ export const loadVirtualConnectors = async () => {
   );
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  cachedVirtualConnectors = connectors.filter(
-    (connector): connector is VirtualConnector => connector !== undefined
+  cachedVirtualConnectorFactories = connectorFactories.filter(
+    (connectorFactory): connectorFactory is VirtualConnectorFactory =>
+      connectorFactory !== undefined
   );
 
-  return cachedVirtualConnectors;
+  return cachedVirtualConnectorFactories;
 };
 
 export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
@@ -112,22 +89,18 @@ export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
     connectors.map(async (connector) => {
       const { id, metadata, connectorId } = connector;
 
-      const virtualConnectorInfo = metadataIdToPackagePathMap.get(connectorId);
+      const virtualConnectorFactories = await loadVirtualConnectorFactories();
+      const virtualConnectorFactory = virtualConnectorFactories.find(
+        ({ metadata }) => metadata.id === connectorId
+      );
 
-      if (!virtualConnectorInfo || !virtualConnectorInfo.path) {
+      if (!virtualConnectorFactory) {
         return;
       }
-      const { path: packagePath } = virtualConnectorInfo;
+
+      const { createConnector, path: packagePath } = virtualConnectorFactory;
 
       try {
-        const {
-          default: { default: createConnector },
-          // eslint-disable-next-line no-restricted-syntax
-        } = (await import(packagePath + '/lib/index.js')) as {
-          default: {
-            default: CreateConnector<AllConnector>;
-          };
-        };
         const rawConnector = await createConnector({
           getConfig: async () => {
             return getConnectorConfig(id);
@@ -187,8 +160,10 @@ export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector>
 
 export const initConnectors = async () => {
   const connectors = await findAllConnectors();
-  const existingConnectors = new Map(connectors.map((connector) => [connector.id, connector]));
-  const allConnectors = await loadVirtualConnectors();
+  const existingConnectors = new Map(
+    connectors.map((connector) => [connector.connectorId, connector])
+  );
+  const allConnectors = await loadVirtualConnectorFactories();
   const newConnectors = allConnectors.filter(({ metadata: { id } }) => {
     const connector = existingConnectors.get(id);
 
