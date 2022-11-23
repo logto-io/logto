@@ -4,13 +4,17 @@ import { merge } from '@silverhand/jest-config';
 const config: Config.InitialOptions = {
   ...merge({
     // Will update common config soon
-    transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto))/)'],
+    transformIgnorePatterns: [
+      'node_modules/(?!(.*(nanoid|jose|ky|@logto|got|chalk|decamelize|find-up|nanoid|ora|p-retry))/)',
+    ],
     moduleNameMapper: {
       '^(\\.{1,2}/.*)\\.js$': '$1',
     },
   }),
   // Will update common config soon
-  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto))/)'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(.*(nanoid|jose|ky|@logto|got|chalk|decamelize|find-up|nanoid|ora|p-retry))/)',
+  ],
 };
 
 export default config;

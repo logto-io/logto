@@ -11,7 +11,9 @@ const config: Config.InitialOptions = {
     },
   }),
   // Will update common config soon
-  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto))/)'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(.*(nanoid|jose|ky|@logto|got|chalk|decamelize|find-up|nanoid|ora|p-retry))/)',
+  ],
 };
 
 export default config;
