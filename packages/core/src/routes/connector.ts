@@ -130,10 +130,27 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
+      const insertConnectorId = generateConnectorId();
       ctx.body = await insertConnector({
-        id: generateConnectorId(),
+        id: insertConnectorId,
         ...body,
       });
+
+      if (
+        connectorFactory.type === ConnectorType.Sms ||
+        connectorFactory.type === ConnectorType.Email
+      ) {
+        const logtoConnectors = await getLogtoConnectors();
+        const allSameTypeConnectorsIds = logtoConnectors
+          .filter((logtoConnector) => logtoConnector.type === connectorFactory.type)
+          .map((logtoConnector) => logtoConnector.dbEntry.id)
+          .filter((id) => id !== insertConnectorId);
+        await Promise.all(
+          allSameTypeConnectorsIds.map(async (id) => {
+            await deleteConnectorById(id);
+          })
+        );
+      }
 
       return next();
     }
