@@ -1,29 +1,37 @@
 @use '@/scss/underscore' as _;
 
-.table {
-  .filterTableHead {
-    padding: _.unit(3);
+.filter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: _.unit(3);
+  border-bottom: 1px solid var(--color-divider);
+  background-color: var(--color-layer-1);
+  border-radius: 12px 12px 0 0;
+
+  .title {
+    color: var(--color-text-secondary);
+    font: var(--font-body-medium);
   }
 
-  .filter {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  .eventSelector {
+    width: 300px;
+    margin-left: _.unit(2);
+  }
 
-    .title {
-      color: var(--color-text-secondary);
-      font: var(--font-body-medium);
-    }
+  .applicationSelector {
+    width: 250px;
+    margin-left: _.unit(2);
+  }
+}
 
-    .eventSelector {
-      width: 300px;
-      margin-left: _.unit(2);
-    }
+.tableLayout {
+  display: flex;
+  flex-direction: column;
 
-    .applicationSelector {
-      width: 250px;
-      margin-left: _.unit(2);
-    }
+  .tableContainer {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 }
 
