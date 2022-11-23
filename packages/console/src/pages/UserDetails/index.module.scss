@@ -4,6 +4,10 @@
   margin: _.unit(1) 0 0 _.unit(1);
 }
 
+.resourceLayout {
+  height: 100%;
+}
+
 .header {
   padding: _.unit(6);
   display: flex;
