@@ -25,6 +25,7 @@ import {
   mockMetadata3,
   mockConnector,
   mockConnectorFactory,
+  mockLogtoConnector,
   mockLogtoConnectorList,
 } from '#src/__mocks__/index.js';
 
@@ -224,19 +225,27 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 422);
     });
 
-    it('should post a new record when add more than 1 instance with virtual connector', async () => {
-      loadVirtualConnectorsPlaceHolder.mockResolvedValueOnce([
+    it('should post a new record when add more than 1 instance with connector factory', async () => {
+      loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
         {
-          ...mockVirtualConnector,
+          ...mockConnectorFactory,
           type: ConnectorType.Sms,
-          metadata: { ...mockVirtualConnector.metadata, id: 'id0', isStandard: true },
+          metadata: { ...mockConnectorFactory.metadata, id: 'id0', isStandard: true },
         },
       ]);
-      mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
+      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
+        {
+          dbEntry: { ...mockConnector, connectorId: 'id0' },
+          metadata: { ...mockMetadata, id: 'id0' },
+          type: ConnectorType.Sms,
+          ...mockLogtoConnector,
+        },
+      ]);
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
       });
+      expect(response).toHaveProperty('statusCode', 200);
       expect(response.body).toMatchObject(
         expect.objectContaining({
           connectorId: 'id0',
@@ -246,8 +255,7 @@ describe('connector route', () => {
           },
         })
       );
-      expect(response).toHaveProperty('statusCode', 200);
-      expect(deleteConnectorById).toHaveBeenCalledWith({ id: 'id0' });
+      expect(deleteConnectorById).toHaveBeenCalledWith('id');
     });
   });
 
