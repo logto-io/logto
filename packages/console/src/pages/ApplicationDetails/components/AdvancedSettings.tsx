@@ -23,6 +23,7 @@ const AdvancedSettings = ({ applicationType, oidcConfig }: Props) => {
     <FormCard
       title="application_details.advanced_settings"
       description="application_details.advanced_settings_description"
+      learnMoreLink="https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint"
     >
       <FormField
         title="application_details.authorization_endpoint"

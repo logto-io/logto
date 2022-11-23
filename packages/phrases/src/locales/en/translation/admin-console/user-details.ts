@@ -15,8 +15,9 @@ const user_details = {
     new_password: 'New password:',
   },
   tab_logs: 'User logs',
-  settings: 'Settings', // UNTRANSLATED
-  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
+  settings: 'Settings',
+  settings_description:
+    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.',
   field_email: 'Primary email',
   field_phone: 'Primary phone',
   field_username: 'Username',

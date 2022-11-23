@@ -171,6 +171,7 @@ const ApiResourceDetails = () => {
             <FormCard
               title="api_resource_details.settings"
               description="api_resource_details.settings_description"
+              learnMoreLink="https://docs.logto.io/docs/recipes/protect-your-api"
             >
               <FormField isRequired title="api_resources.api_name">
                 <TextInput

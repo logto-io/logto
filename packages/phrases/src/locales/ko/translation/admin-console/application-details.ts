@@ -3,10 +3,10 @@ const application_details = {
   check_guide: '가이드 확인',
   settings: 'Settings', // UNTRANSLATED
   settings_description:
-    'With Applications you can. Setup a mobile, web or IoT application to use Logto for Authentication. Configure the allowed Callback URLs and Secrets for your Application.', // UNTRANSLATED
+    'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.', // UNTRANSLATED
   advanced_settings: '고급 설정',
   advanced_settings_description:
-    'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
+    'Advanced settings include OIDC related terms. You can check out the Token Endpoint for more information.', // UNTRANSLATED
   application_name: '어플리케이션 이름',
   application_name_placeholder: '나의 앱',
   description: '설명',

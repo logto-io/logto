@@ -2,7 +2,6 @@ const settings = {
   title: 'Settings',
   description: 'Manage the global settings',
   settings: 'Settings',
-  settings_description: 'It real sent your at. Amounted all shy set why followed declared.', // UNTRANSLATED
   custom_domain: 'Custom domain',
   language: 'Language',
   appearance: 'Appearance',
