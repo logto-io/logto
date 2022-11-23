@@ -226,8 +226,7 @@ export const mockLogtoConnectors = [
 ];
 
 export const socialTarget01 = 'socialTarget-id01';
-export const socialTarget03 = 'socialTarget-id02';
-export const socialTarget02 = 'socialTarget-id03';
+export const socialTarget02 = 'socialTarget-id02';
 
 export const mockSocialConnectors: LogtoConnector[] = [
   {
@@ -258,22 +257,6 @@ export const mockSocialConnectors: LogtoConnector[] = [
     metadata: {
       ...mockMetadata,
       target: socialTarget02,
-    },
-    type: ConnectorType.Social,
-    ...mockLogtoConnector,
-  },
-  {
-    dbEntry: {
-      id: 'id2',
-      config: {},
-      createdAt: 1_234_567_890_123,
-      syncProfile: false,
-      metadata: {},
-      connectorId: 'id2',
-    },
-    metadata: {
-      ...mockMetadata,
-      target: socialTarget03,
     },
     type: ConnectorType.Social,
     ...mockLogtoConnector,

@@ -5,7 +5,6 @@ import { BrandingStyle } from '@logto/schemas';
 
 import {
   socialTarget01,
-  socialTarget03,
   socialTarget02,
   mockBranding,
   mockSignInExperience,
@@ -165,10 +164,10 @@ describe('remove unavailable social connector targets', () => {
       socialSignInConnectorTargets: mockSocialConnectorTargets,
     });
     getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(mockSocialConnectors);
-    expect(mockSocialConnectorTargets).toEqual([socialTarget01, socialTarget02, socialTarget03]);
+    expect(mockSocialConnectorTargets).toEqual([socialTarget01, socialTarget02]);
     await removeUnavailableSocialConnectorTargets();
     expect(updateDefaultSignInExperience).toBeCalledWith({
-      socialSignInConnectorTargets: [socialTarget01, socialTarget02, socialTarget03],
+      socialSignInConnectorTargets: [socialTarget01, socialTarget02],
     });
   });
 });

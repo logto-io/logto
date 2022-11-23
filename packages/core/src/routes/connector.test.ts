@@ -25,7 +25,6 @@ import {
   mockMetadata3,
   mockConnector,
   mockConnectorFactory,
-  mockLogtoConnector,
   mockLogtoConnectorList,
 } from '#src/__mocks__/index.js';
 
@@ -75,13 +74,13 @@ describe('connector route', () => {
       jest.clearAllMocks();
     });
 
-    it('throws if more than one email connector is added', async () => {
+    it('throws if more than one email connector exists', async () => {
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(mockLogtoConnectorList);
       const response = await connectorRequest.get('/connectors').send({});
       expect(response).toHaveProperty('statusCode', 400);
     });
 
-    it('throws if more than one SMS connector is added', async () => {
+    it('throws if more than one SMS connector exists', async () => {
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(
         mockLogtoConnectorList.filter((connector) => connector.type !== ConnectorType.Email)
       );
@@ -223,39 +222,6 @@ describe('connector route', () => {
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
       });
       expect(response).toHaveProperty('statusCode', 422);
-    });
-
-    it('should post a new record when add more than 1 instance with connector factory', async () => {
-      loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
-        {
-          ...mockConnectorFactory,
-          type: ConnectorType.Sms,
-          metadata: { ...mockConnectorFactory.metadata, id: 'id0', isStandard: true },
-        },
-      ]);
-      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
-        {
-          dbEntry: { ...mockConnector, connectorId: 'id0' },
-          metadata: { ...mockMetadata, id: 'id0' },
-          type: ConnectorType.Sms,
-          ...mockLogtoConnector,
-        },
-      ]);
-      const response = await connectorRequest.post('/connectors').send({
-        connectorId: 'id0',
-        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
-      });
-      expect(response).toHaveProperty('statusCode', 200);
-      expect(response.body).toMatchObject(
-        expect.objectContaining({
-          connectorId: 'id0',
-          config: {
-            cliend_id: 'client_id',
-            client_secret: 'client_secret',
-          },
-        })
-      );
-      expect(deleteConnectorById).toHaveBeenCalledWith('id');
     });
   });
 
