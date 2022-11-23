@@ -46,6 +46,8 @@
 }
 
 .body {
+  margin-bottom: _.unit(6);
+
   > :not(:first-child) {
     margin-top: _.unit(4);
   }
