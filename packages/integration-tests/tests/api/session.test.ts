@@ -69,11 +69,9 @@ describe('email and password flow', () => {
   beforeAll(async () => {
     const connectors = await listConnectors();
     await Promise.all(
-      connectors
-        .filter(({ connectorId }) => connectorId.startsWith('mock-'))
-        .map(async ({ id }) => {
-          await deleteConnectorById(id);
-        })
+      connectors.map(async ({ id }) => {
+        await deleteConnectorById(id);
+      })
     );
     connectorIdMap.clear();
 
@@ -112,11 +110,9 @@ describe('email passwordless flow', () => {
   beforeAll(async () => {
     const connectors = await listConnectors();
     await Promise.all(
-      connectors
-        .filter(({ connectorId }) => connectorId.startsWith('mock-'))
-        .map(async ({ id }) => {
-          await deleteConnectorById(id);
-        })
+      connectors.map(async ({ id }) => {
+        await deleteConnectorById(id);
+      })
     );
     connectorIdMap.clear();
 
@@ -213,11 +209,9 @@ describe('sms passwordless flow', () => {
   beforeAll(async () => {
     const connectors = await listConnectors();
     await Promise.all(
-      connectors
-        .filter(({ connectorId }) => connectorId.startsWith('mock-'))
-        .map(async ({ id }) => {
-          await deleteConnectorById(id);
-        })
+      connectors.map(async ({ id }) => {
+        await deleteConnectorById(id);
+      })
     );
     connectorIdMap.clear();
 

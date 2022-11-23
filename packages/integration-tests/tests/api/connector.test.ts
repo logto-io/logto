@@ -28,11 +28,9 @@ const connectorIdMap = new Map();
 test('connector set-up flow', async () => {
   const connectors = await listConnectors();
   await Promise.all(
-    connectors
-      .filter(({ connectorId }) => connectorId.startsWith('mock-'))
-      .map(async ({ id }) => {
-        await deleteConnectorById(id);
-      })
+    connectors.map(async ({ id }) => {
+      await deleteConnectorById(id);
+    })
   );
 
   /*
@@ -105,11 +103,9 @@ test('connector set-up flow', async () => {
 test('send SMS/email test message', async () => {
   const connectors = await listConnectors();
   await Promise.all(
-    connectors
-      .filter(({ connectorId }) => connectorId.startsWith('mock-'))
-      .map(async ({ id }) => {
-        await deleteConnectorById(id);
-      })
+    connectors.map(async ({ id }) => {
+      await deleteConnectorById(id);
+    })
   );
   connectorIdMap.clear();
 

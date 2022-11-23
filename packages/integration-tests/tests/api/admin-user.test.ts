@@ -72,11 +72,9 @@ describe('admin console user management', () => {
   it('should delete user identities successfully', async () => {
     const connectors = await listConnectors();
     await Promise.all(
-      connectors
-        .filter(({ connectorId }) => connectorId.startsWith('mock-'))
-        .map(async ({ id }) => {
-          await deleteConnectorById(id);
-        })
+      connectors.map(async ({ id }) => {
+        await deleteConnectorById(id);
+      })
     );
     const { id } = await postConnector(mockSocialConnectorId);
     await updateConnectorConfig(id, mockSocialConnectorConfig);
