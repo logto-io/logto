@@ -5,14 +5,9 @@ export const interactionMocks = [
       password: 'password',
     },
     output: {
-      identity: {
-        type: 'username',
-        value: 'username',
-      },
-      verification: {
-        type: 'password',
-        value: 'password',
-      },
+      type: 'username_password',
+      username: 'username',
+      password: 'password',
     },
   },
   {
@@ -21,14 +16,9 @@ export const interactionMocks = [
       password: 'password',
     },
     output: {
-      identity: {
-        type: 'email',
-        value: 'email',
-      },
-      verification: {
-        type: 'password',
-        value: 'password',
-      },
+      type: 'email_password',
+      email: 'email',
+      password: 'password',
     },
   },
   {
@@ -37,14 +27,9 @@ export const interactionMocks = [
       password: 'password',
     },
     output: {
-      identity: {
-        type: 'phone',
-        value: 'phone',
-      },
-      verification: {
-        type: 'password',
-        value: 'password',
-      },
+      type: 'phone_password',
+      phone: 'phone',
+      password: 'password',
     },
   },
   {
@@ -53,14 +38,9 @@ export const interactionMocks = [
       passcode: 'passcode',
     },
     output: {
-      identity: {
-        type: 'email',
-        value: 'email@logto.io',
-      },
-      verification: {
-        type: 'passcode',
-        value: 'passcode',
-      },
+      type: 'email_passcode',
+      email: 'email@logto.io',
+      passcode: 'passcode',
     },
   },
   {
@@ -69,14 +49,9 @@ export const interactionMocks = [
       passcode: 'passcode',
     },
     output: {
-      identity: {
-        type: 'phone',
-        value: '123456',
-      },
-      verification: {
-        type: 'passcode',
-        value: 'passcode',
-      },
+      type: 'phone_passcode',
+      phone: '123456',
+      passcode: 'passcode',
     },
   },
   {
@@ -85,14 +60,9 @@ export const interactionMocks = [
       data: { code: 'code' },
     },
     output: {
-      identity: {
-        type: 'connectorId',
-        value: 'connectorId',
-      },
-      verification: {
-        type: 'social',
-        value: { code: 'code' },
-      },
+      type: 'social',
+      connectorId: 'connectorId',
+      data: { code: 'code' },
     },
   },
 ];

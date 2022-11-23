@@ -10,25 +10,12 @@ export type VerifiedEmailIdentifier = { key: 'verifiedEmail'; value: string };
 
 export type VerifiedPhoneIdentifier = { key: 'verifiedPhone'; value: string };
 
-export type SocialIdentifier = { key: string; value: UseInfo };
+export type SocialIdentifier = { key: 'social'; connectorId: string; value: UseInfo };
 
 type UseInfo = {
-  email?: string | undefined;
-  phone?: string | undefined;
-  name?: string | undefined;
-  avatar?: string | undefined;
+  email?: string;
+  phone?: string;
+  name?: string;
+  avatar?: string;
   id: string;
-};
-
-export type IdentifierPayload = {
-  identity: {
-    type: 'username' | 'email' | 'phone' | 'connectorId';
-    value: string;
-  };
-  verification:
-    | {
-        type: 'password' | 'passcode';
-        value: string;
-      }
-    | { type: 'social'; value: unknown };
 };

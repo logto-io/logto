@@ -6,16 +6,11 @@ import koaInteractionBodyGuard from './koa-interaction-body-guard.js';
 jest.mock('koa-body', () => emptyMiddleware);
 
 // User this to bypass the context type assertion
-const mockIdentifierPayload = {
-  identity: Object.freeze({
-    type: 'username',
-    value: 'username',
-  }),
-  verification: Object.freeze({
-    type: 'password',
-    value: 'password,',
-  }),
-};
+const mockIdentifierPayload = Object.freeze({
+  type: 'username_password',
+  username: 'username',
+  password: 'password',
+});
 
 describe('koaInteractionBodyGuard', () => {
   const baseCtx = createContextWithRouteParameters();
