@@ -14,20 +14,37 @@ import {
   bindWithSocial,
   signInWithPassword,
   getUser,
+  listConnectors,
+  deleteConnectorById,
+  postConnector,
+  updateConnectorConfig,
 } from '@/api';
 import MockClient from '@/client';
-import { setUpConnector, createUserByAdmin, setSignUpIdentifier } from '@/helpers';
+import { createUserByAdmin, setSignUpIdentifier } from '@/helpers';
 import { generateUsername, generatePassword } from '@/utils';
 
 const state = 'foo_state';
 const redirectUri = 'http://foo.dev/callback';
 const code = 'auth_code_foo';
 
+const connectorIdMap = new Map<string, string>();
+
 describe('social sign-in and register', () => {
   const socialUserId = crypto.randomUUID();
 
   beforeAll(async () => {
-    await setUpConnector(mockSocialConnectorId, mockSocialConnectorConfig);
+    const connectors = await listConnectors();
+    await Promise.all(
+      connectors.map(async ({ id }) => {
+        await deleteConnectorById(id);
+      })
+    );
+    connectorIdMap.clear();
+
+    const { id } = await postConnector(mockSocialConnectorId);
+    connectorIdMap.set(mockSocialConnectorId, id);
+    await updateConnectorConfig(id, mockSocialConnectorConfig);
+
     await setSignUpIdentifier(SignUpIdentifier.None, false);
   });
 
@@ -39,14 +56,14 @@ describe('social sign-in and register', () => {
 
     await expect(
       signInWithSocial(
-        { state, connectorId: mockSocialConnectorId, redirectUri },
+        { state, connectorId: connectorIdMap.get(mockSocialConnectorId) ?? '', redirectUri },
         client.interactionCookie
       )
     ).resolves.toBeTruthy();
 
     const response = await getAuthWithSocial(
       {
-        connectorId: mockSocialConnectorId,
+        connectorId: connectorIdMap.get(mockSocialConnectorId) ?? '',
         data: { state, redirectUri, code, userId: socialUserId },
       },
       client.interactionCookie
@@ -57,7 +74,7 @@ describe('social sign-in and register', () => {
 
     // Register with social
     const { redirectTo } = await registerWithSocial(
-      mockSocialConnectorId,
+      connectorIdMap.get(mockSocialConnectorId) ?? '',
       client.interactionCookie
     );
 
@@ -78,14 +95,14 @@ describe('social sign-in and register', () => {
 
     await expect(
       signInWithSocial(
-        { state, connectorId: mockSocialConnectorId, redirectUri },
+        { state, connectorId: connectorIdMap.get(mockSocialConnectorId) ?? '', redirectUri },
         client.interactionCookie
       )
     ).resolves.toBeTruthy();
 
     const { redirectTo } = await getAuthWithSocial(
       {
-        connectorId: mockSocialConnectorId,
+        connectorId: connectorIdMap.get(mockSocialConnectorId) ?? '',
         data: { state, redirectUri, code, userId: socialUserId },
       },
       client.interactionCookie
@@ -113,13 +130,16 @@ describe('social bind account', () => {
 
     await expect(
       signInWithSocial(
-        { state, connectorId: mockSocialConnectorId, redirectUri },
+        { state, connectorId: connectorIdMap.get(mockSocialConnectorId) ?? '', redirectUri },
         client.interactionCookie
       )
     ).resolves.toBeTruthy();
 
     const response = await getAuthWithSocial(
-      { connectorId: mockSocialConnectorId, data: { state, redirectUri, code } },
+      {
+        connectorId: connectorIdMap.get(mockSocialConnectorId) ?? '',
+        data: { state, redirectUri, code },
+      },
       client.interactionCookie
     ).catch((error: unknown) => error);
 
@@ -133,7 +153,7 @@ describe('social bind account', () => {
     });
 
     await expect(
-      bindWithSocial(mockSocialConnectorId, client.interactionCookie)
+      bindWithSocial(connectorIdMap.get(mockSocialConnectorId) ?? '', client.interactionCookie)
     ).resolves.not.toThrow();
 
     await client.processSession(redirectTo);

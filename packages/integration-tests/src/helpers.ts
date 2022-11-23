@@ -9,17 +9,13 @@ import {
   createUser,
   registerUserWithUsernameAndPassword,
   signInWithPassword,
-  updateConnectorConfig,
   bindWithSocial,
   getAuthWithSocial,
-  postConnector,
   signInWithSocial,
   updateSignInExperience,
 } from '@/api';
 import MockClient from '@/client';
 import { generateUsername, generatePassword } from '@/utils';
-
-import { mockSocialConnectorId } from './__mocks__/connectors-mock';
 
 export const createUserByAdmin = (username?: string, password?: string, primaryEmail?: string) => {
   return createUser({
@@ -71,15 +67,6 @@ export const signIn = async ({ username, email, password }: SignInHelper) => {
   assert(client.isAuthenticated, new Error('Sign in failed'));
 };
 
-export const setUpConnector = async (connectorId: string, config: Record<string, unknown>) => {
-  try {
-    await updateConnectorConfig(connectorId, config);
-  } catch {
-    await postConnector(connectorId);
-    await updateConnectorConfig(connectorId, config);
-  }
-};
-
 export const setSignUpIdentifier = async (
   identifier: SignUpIdentifier,
   password = true,
@@ -112,7 +99,7 @@ export const readPasscode = async (): Promise<PasscodeRecord> => {
   return JSON.parse(content) as PasscodeRecord;
 };
 
-export const bindSocialToNewCreatedUser = async () => {
+export const bindSocialToNewCreatedUser = async (connectorId: string) => {
   const username = generateUsername();
   const password = generatePassword();
 
@@ -127,13 +114,10 @@ export const bindSocialToNewCreatedUser = async () => {
   await client.initSession();
   assert(client.interactionCookie, new Error('Session not found'));
 
-  await signInWithSocial(
-    { state, connectorId: mockSocialConnectorId, redirectUri },
-    client.interactionCookie
-  );
+  await signInWithSocial({ state, connectorId, redirectUri }, client.interactionCookie);
 
   const response = await getAuthWithSocial(
-    { connectorId: mockSocialConnectorId, data: { state, redirectUri, code } },
+    { connectorId, data: { state, redirectUri, code } },
     client.interactionCookie
   ).catch((error: unknown) => error);
 
@@ -149,7 +133,7 @@ export const bindSocialToNewCreatedUser = async () => {
     interactionCookie: client.interactionCookie,
   });
 
-  await bindWithSocial(mockSocialConnectorId, client.interactionCookie);
+  await bindWithSocial(connectorId, client.interactionCookie);
 
   await client.processSession(redirectTo);
 
