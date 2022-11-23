@@ -95,12 +95,12 @@ const AuditLogDetails = () => {
               </div>
             </div>
           </Card>
+          <TabNav>
+            <TabNavItem href={`/audit-logs/${logId ?? ''}`}>
+              {t('log_details.tab_details')}
+            </TabNavItem>
+          </TabNav>
           <Card className={classNames(styles.body, detailsStyles.body)}>
-            <TabNav>
-              <TabNavItem href={`/audit-logs/${logId ?? ''}`}>
-                {t('log_details.tab_details')}
-              </TabNavItem>
-            </TabNav>
             <div className={styles.main}>
               <FormField title="log_details.raw_data">
                 <CodeEditor language="json" value={JSON.stringify(data.payload, null, 2)} />
