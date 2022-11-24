@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import PhoneInfo from '@/assets/images/phone-info.svg';
-import Card from '@/components/Card';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
@@ -142,7 +141,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   }, [postPreviewMessage]);
 
   return (
-    <Card className={classNames(styles.preview, className)}>
+    <div className={classNames(styles.preview, className)}>
       <div className={styles.header}>
         <div className={styles.title}>{t('sign_in_exp.preview.title')}</div>
         <div className={styles.selects}>
@@ -222,7 +221,7 @@ const Preview = ({ signInExperience, className }: Props) => {
           </div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 
