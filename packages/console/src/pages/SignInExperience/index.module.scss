@@ -10,27 +10,32 @@
   }
 
   .content {
+    flex: 1;
     display: flex;
+    flex-direction: column;
 
-    .formWrapper {
+    .contentTop {
+      display: flex;
       flex: 1;
-      margin: 0 _.unit(3) _.unit(6) 0;
-
-      &.withSubmitActionBar {
-        margin-bottom: _.unit(3);
-      }
 
       .form {
+        flex: 1;
+        margin: 0 _.unit(3) _.unit(6) 0;
+
+        &.withSubmitActionBar {
+          margin-bottom: _.unit(3);
+        }
+
         > :not(:first-child) {
           margin-top: _.unit(3);
         }
       }
-    }
 
-    .preview {
-      position: sticky;
-      top: _.unit(4);
-      align-self: flex-start;
+      .preview {
+        position: sticky;
+        top: _.unit(4);
+        align-self: flex-start;
+      }
     }
   }
 }

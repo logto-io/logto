@@ -130,27 +130,32 @@ const SignInExperience = () => {
         </TabNavItem>
         <TabNavItem href="/sign-in-experience/others">{t('sign_in_exp.tabs.others')}</TabNavItem>
       </TabNav>
-      <div className={styles.content}>
-        <div className={classNames(styles.formWrapper, isDirty && styles.withSubmitActionBar)}>
-          {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-          {data && defaultFormData && (
+      {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
+      {data && defaultFormData && (
+        <div className={styles.content}>
+          <div className={styles.contentTop}>
             <FormProvider {...methods}>
-              <form id={formId} className={styles.form}>
+              <form
+                id={formId}
+                className={classNames(styles.form, isDirty && styles.withSubmitActionBar)}
+              >
                 {tab === 'branding' && <Branding />}
                 {tab === 'sign-up-and-sign-in' && <SignUpAndSignIn />}
                 {tab === 'others' && <Others />}
               </form>
             </FormProvider>
-          )}
+            {formData.id && (
+              <Preview signInExperience={previewConfigs} className={styles.preview} />
+            )}
+          </div>
+          <SubmitFormChangesActionBar
+            isOpen={isDirty}
+            isSubmitting={isSubmitting}
+            onDiscard={reset}
+            onSubmit={onSubmit}
+          />
         </div>
-        {formData.id && <Preview signInExperience={previewConfigs} className={styles.preview} />}
-      </div>
-      <SubmitFormChangesActionBar
-        isOpen={isDirty}
-        isSubmitting={isSubmitting}
-        onDiscard={reset}
-        onSubmit={onSubmit}
-      />
+      )}
       {data && (
         <ConfirmModal
           isOpen={Boolean(dataToCompare)}
