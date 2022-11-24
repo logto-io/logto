@@ -1,48 +1,40 @@
-import type { SignInExperience } from '@logto/schemas';
-import { SignInMode } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import type { Provider } from 'oidc-provider';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
-import assertThat from '#src/utils/assert-that.js';
 
+import {
+  signInModeValidation,
+  identifierValidation,
+  profileValidation,
+} from '../utils/sign-in-experience-validation.js';
 import type { WithGuardedIdentifierPayloadContext } from './koa-interaction-body-guard.js';
-
-const forbiddenEventError = new RequestError({ code: 'auth.forbidden', status: 403 });
-
-export type WithSignInExperienceContext<
-  ContextT extends WithGuardedIdentifierPayloadContext<IRouterParamContext>
-> = ContextT & {
-  signInExperience: SignInExperience;
-};
 
 export default function koaSessionSignInExperienceGuard<
   StateT,
   ContextT extends WithGuardedIdentifierPayloadContext<IRouterParamContext>,
   ResponseBodyT
->(
-  provider: Provider
-): MiddlewareType<StateT, WithSignInExperienceContext<ContextT>, ResponseBodyT> {
+>(provider: Provider): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
     const interaction = await provider.interactionDetails(ctx.req, ctx.res);
-    const { event } = ctx.interactionPayload;
+    const { event, identifier, profile } = ctx.interactionPayload;
 
     const signInExperience = await getSignInExperienceForApplication(
       typeof interaction.params.client_id === 'string' ? interaction.params.client_id : undefined
     );
 
-    // SignInMode validation
-    if (event === 'sign-in') {
-      assertThat(signInExperience.signInMode !== SignInMode.Register, forbiddenEventError);
+    if (event) {
+      signInModeValidation(event, signInExperience);
     }
 
-    if (event === 'register') {
-      assertThat(signInExperience.signInMode !== SignInMode.SignIn, forbiddenEventError);
+    if (identifier) {
+      identifierValidation(identifier, signInExperience);
     }
 
-    ctx.signInExperience = signInExperience;
+    if (profile) {
+      profileValidation(profile, signInExperience);
+    }
 
     return next();
   };

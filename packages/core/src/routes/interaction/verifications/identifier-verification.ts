@@ -1,9 +1,6 @@
-import { SignInIdentifier } from '@logto/schemas';
-
 import RequestError from '#src/errors/RequestError/index.js';
 import { findUserByEmail, findUserByPhone, findUserByUsername } from '#src/queries/user.js';
 
-import { isUsernamePassword, isPhonePassword, isEmailPassword } from '../types/guard.js';
 import type { InteractionContext, Identifier } from '../types/index.js';
 import { verifyUserByPassword } from '../utils/index.js';
 
@@ -12,41 +9,30 @@ export default async function identifierVerification(
 ): Promise<Identifier[]> {
   const { identifier } = ctx.interactionPayload;
 
-  if (isUsernamePassword(identifier)) {
+  if (!identifier) {
+    return [];
+  }
+
+  if ('username' in identifier) {
     const { username, password } = identifier;
 
-    const accountId = await verifyUserByPassword(ctx, {
-      identifier: username,
-      password,
-      findUser: findUserByUsername,
-      identifierType: SignInIdentifier.Username,
-    });
+    const accountId = await verifyUserByPassword(username, password, findUserByUsername);
 
     return [{ key: 'accountId', value: accountId }];
   }
 
-  if (isPhonePassword(identifier)) {
+  if ('phone' in identifier && 'password' in identifier) {
     const { phone, password } = identifier;
 
-    const accountId = await verifyUserByPassword(ctx, {
-      identifier: phone,
-      password,
-      findUser: findUserByPhone,
-      identifierType: SignInIdentifier.Sms,
-    });
+    const accountId = await verifyUserByPassword(phone, password, findUserByPhone);
 
     return [{ key: 'accountId', value: accountId }];
   }
 
-  if (isEmailPassword(identifier)) {
+  if ('email' in identifier && 'password' in identifier) {
     const { email, password } = identifier;
 
-    const accountId = await verifyUserByPassword(ctx, {
-      identifier: email,
-      password,
-      findUser: findUserByEmail,
-      identifierType: SignInIdentifier.Email,
-    });
+    const accountId = await verifyUserByPassword(email, password, findUserByEmail);
 
     return [{ key: 'accountId', value: accountId }];
   }

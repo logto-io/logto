@@ -52,15 +52,14 @@ export const eventGuard = z.union([
 
 export type Event = z.infer<typeof eventGuard>;
 
-export const identifierGuard = z.object({
-  username: z.string().min(1).optional(),
-  email: z.string().min(1).optional(),
-  phone: z.string().min(1).optional(),
-  connectorId: z.string().min(1).optional(),
-  password: z.string().min(1).optional(),
-  passcode: z.string().min(1).optional(),
-  connectorData: z.unknown().optional(),
-});
+export const identifierGuard = z.union([
+  usernamePasswordPayloadGuard,
+  emailPasswordPayloadGuard,
+  phonePasswordPayloadGuard,
+  emailPasscodePayloadGuard,
+  phonePasscodePayloadGuard,
+  socialConnectorPayloadGuard,
+]);
 
 export const profileGuard = z.object({
   username: z.string().regex(usernameRegEx).optional(),

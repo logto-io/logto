@@ -56,7 +56,7 @@ describe('koaInteractionBodyGuard', () => {
   });
 
   describe('identifier', () => {
-    it('invalid identifier should not parsed', async () => {
+    it('invalid identifier should throw', async () => {
       const ctx: WithGuardedIdentifierPayloadContext<Context> = {
         ...baseCtx,
         request: {
@@ -64,15 +64,15 @@ describe('koaInteractionBodyGuard', () => {
           body: {
             event: 'sign-in',
             identifier: {
-              google: 'username',
+              username: 'username',
+              passcode: 'passcode',
             },
           },
         },
         interactionPayload: {},
       };
 
-      await expect(koaInteractionBodyGuard()(ctx, next)).resolves.not.toThrow();
-      expect(ctx.interactionPayload.identifier).not.toContain({ google: 'username' });
+      await expect(koaInteractionBodyGuard()(ctx, next)).rejects.toThrow();
     });
 
     it.each(interactionMocks)('interaction methods should parse successfully', async (input) => {
