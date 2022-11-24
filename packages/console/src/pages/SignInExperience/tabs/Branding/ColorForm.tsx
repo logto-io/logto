@@ -4,6 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
+import Card from '@/components/Card';
 import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
@@ -45,7 +46,7 @@ const ColorForm = () => {
   }, [handleResetColor, isDarkModeEnabled, isDirty, primaryColor, setValue]);
 
   return (
-    <>
+    <Card>
       <div className={styles.title}>{t('sign_in_exp.color.title')}</div>
       <FormField title="sign_in_exp.color.primary_color">
         <Controller
@@ -86,7 +87,7 @@ const ColorForm = () => {
           )}
         </>
       )}
-    </>
+    </Card>
   );
 };
 

@@ -5,6 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import Card from '@/components/Card';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import Switch from '@/components/Switch';
@@ -44,7 +45,7 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
   }, [languages, selectedDefaultLanguage, setValue, signInExperience]);
 
   return (
-    <>
+    <Card>
       <div className={styles.title}>{t('sign_in_exp.others.languages.title')}</div>
       <FormField title="sign_in_exp.others.languages.enable_auto_detect">
         <Switch
@@ -69,7 +70,7 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
             : t('sign_in_exp.others.languages.default_language_description_fixed')}
         </div>
       </FormField>
-    </>
+    </Card>
   );
 };
 

@@ -1,38 +1,36 @@
 @use '@/scss/underscore' as _;
 
-.wrapper {
+.container {
   display: flex;
-  align-items: stretch;
-  min-width: 950px;
+  flex-direction: column;
   height: 100%;
 
-  .setup {
-    flex: 1;
-    margin-right: _.unit(3);
-    height: 100%;
-    overflow-y: scroll;
+  .tabs {
+    margin: _.unit(4) 0;
+  }
 
-    .tabs {
-      padding-top: _.unit(2);
-      margin-top: _.unit(4);
-    }
-
-    .card {
-      padding-bottom: 0;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
+  .content {
+    display: flex;
 
     .formWrapper {
       flex: 1;
-      display: flex;
-      flex-direction: column;
+      margin: 0 _.unit(3) _.unit(6) 0;
+
+      &.withSubmitActionBar {
+        margin-bottom: _.unit(3);
+      }
+
+      .form {
+        > :not(:first-child) {
+          margin-top: _.unit(3);
+        }
+      }
     }
 
-    .form {
-      padding-bottom: _.unit(8);
-      flex: 1;
+    .preview {
+      position: sticky;
+      top: _.unit(4);
+      align-self: flex-start;
     }
   }
 }
