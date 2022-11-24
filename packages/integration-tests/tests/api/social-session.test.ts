@@ -14,8 +14,6 @@ import {
   bindWithSocial,
   signInWithPassword,
   getUser,
-  listConnectors,
-  deleteConnectorById,
   postConnector,
   updateConnectorConfig,
 } from '@/api';
@@ -33,14 +31,6 @@ describe('social sign-in and register', () => {
   const socialUserId = crypto.randomUUID();
 
   beforeAll(async () => {
-    const connectors = await listConnectors();
-    await Promise.all(
-      connectors.map(async ({ id }) => {
-        await deleteConnectorById(id);
-      })
-    );
-    connectorIdMap.clear();
-
     const { id } = await postConnector(mockSocialConnectorId);
     connectorIdMap.set(mockSocialConnectorId, id);
     await updateConnectorConfig(id, mockSocialConnectorConfig);

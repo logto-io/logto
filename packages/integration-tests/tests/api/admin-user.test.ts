@@ -12,8 +12,6 @@ import {
   deleteUser,
   updateUserPassword,
   deleteUserIdentity,
-  listConnectors,
-  deleteConnectorById,
   postConnector,
   updateConnectorConfig,
 } from '@/api';
@@ -70,12 +68,6 @@ describe('admin console user management', () => {
   });
 
   it('should delete user identities successfully', async () => {
-    const connectors = await listConnectors();
-    await Promise.all(
-      connectors.map(async ({ id }) => {
-        await deleteConnectorById(id);
-      })
-    );
     const { id } = await postConnector(mockSocialConnectorId);
     await updateConnectorConfig(id, mockSocialConnectorConfig);
 

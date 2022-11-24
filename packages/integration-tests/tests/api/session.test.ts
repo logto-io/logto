@@ -67,14 +67,6 @@ describe('email and password flow', () => {
   assert(localPart && domain, new Error('Email address local part or domain is empty'));
 
   beforeAll(async () => {
-    const connectors = await listConnectors();
-    await Promise.all(
-      connectors.map(async ({ id }) => {
-        await deleteConnectorById(id);
-      })
-    );
-    connectorIdMap.clear();
-
     const { id } = await postConnector(mockEmailConnectorId);
     await updateConnectorConfig(id, mockEmailConnectorConfig);
     connectorIdMap.set(mockEmailConnectorId, id);
