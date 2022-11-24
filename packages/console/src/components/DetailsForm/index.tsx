@@ -1,26 +1,25 @@
 import { forwardRef } from 'react';
-import type { ForwardedRef, HTMLProps, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import SubmitFormChangesActionBar from '../SubmitFormChangesActionBar';
 import * as styles from './index.module.scss';
 
-type Props = HTMLProps<HTMLFormElement> & {
+type Props = {
   isDirty: boolean;
   isSubmitting: boolean;
   children: ReactNode;
+  onSubmit: () => Promise<void>;
   onDiscard: () => void;
 };
 
-const DetailsForm = (
-  { isDirty, isSubmitting, onDiscard, children, ...rest }: Props,
-  reference: ForwardedRef<HTMLFormElement>
-) => {
+const DetailsForm = ({ isDirty, isSubmitting, onSubmit, onDiscard, children }: Props) => {
   return (
-    <form {...rest} ref={reference} className={styles.container}>
+    <form className={styles.container}>
       <div className={styles.fields}>{children}</div>
       <SubmitFormChangesActionBar
         isOpen={isDirty}
         isSubmitting={isSubmitting}
+        onSubmit={onSubmit}
         onDiscard={onDiscard}
       />
     </form>

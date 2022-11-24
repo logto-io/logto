@@ -4,10 +4,11 @@ import * as styles from './index.module.scss';
 type Props = {
   isOpen: boolean;
   isSubmitting: boolean;
+  onSubmit: () => Promise<void>;
   onDiscard: () => void;
 };
 
-const SubmitFormChangesActionBar = ({ isOpen, isSubmitting, onDiscard }: Props) => {
+const SubmitFormChangesActionBar = ({ isOpen, isSubmitting, onSubmit, onDiscard }: Props) => {
   if (!isOpen) {
     return null;
   }
@@ -24,10 +25,10 @@ const SubmitFormChangesActionBar = ({ isOpen, isSubmitting, onDiscard }: Props) 
       />
       <Button
         isLoading={isSubmitting}
-        htmlType="submit"
         type="primary"
         size="medium"
         title="general.save_changes"
+        onClick={async () => onSubmit()}
       />
     </div>
   );
