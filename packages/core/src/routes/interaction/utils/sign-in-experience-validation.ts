@@ -69,6 +69,8 @@ export const identifierValidation = (
       }),
       forbiddenIdentifierError
     );
+
+    return;
   }
 
   // Phone Identifier
