@@ -13,7 +13,6 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import UserName from '@/components/UserName';
 import type { RequestError } from '@/hooks/use-api';
-import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import ApplicationSelector from './components/ApplicationSelector';
@@ -69,8 +68,8 @@ const AuditLogTable = ({ userId }: Props) => {
   };
 
   return (
-    <>
-      <div className={classNames(resourcesStyles.table, styles.tableLayout)}>
+    <div className={styles.container}>
+      <div className={styles.tableLayout}>
         <div className={styles.filter}>
           <div className={styles.title}>{t('logs.filter_by')}</div>
           <div className={styles.eventSelector}>
@@ -153,7 +152,7 @@ const AuditLogTable = ({ userId }: Props) => {
           updateQuery('page', String(page));
         }}
       />
-    </>
+    </div>
   );
 };
 

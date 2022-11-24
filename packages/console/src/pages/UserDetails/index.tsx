@@ -1,4 +1,5 @@
 import type { User } from '@logto/schemas';
+import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -78,7 +79,7 @@ const UserDetails = () => {
   };
 
   return (
-    <div className={detailsStyles.container}>
+    <div className={classNames(detailsStyles.container, isLogs && styles.resourceLayout)}>
       <LinkButton
         to="/users"
         icon={<Back />}
