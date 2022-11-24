@@ -26,11 +26,7 @@ const UserInfo = () => {
     (async () => {
       if (isAuthenticated) {
         const userInfo = await getIdTokenClaims();
-        // TODO: revert after SDK updated
-        setUser({
-          picture: undefined,
-          ...(userInfo ?? { sub: '', username: 'N/A' }),
-        }); // Provide a fallback to avoid infinite loading state
+        setUser(userInfo ?? { sub: '', username: 'N/A' }); // Provide a fallback to avoid infinite loading state
       }
     })();
   }, [isAuthenticated, getIdTokenClaims]);
@@ -55,8 +51,7 @@ const UserInfo = () => {
           setShowDropdown(true);
         }}
       >
-        {/* TODO: revert after SDK updated */}
-        <img src={picture ? String(picture) : generateAvatarPlaceHolderById(id)} alt="avatar" />
+        <img src={picture ?? generateAvatarPlaceHolderById(id)} alt="avatar" />
         <div className={styles.wrapper}>
           <div className={styles.name}>{username}</div>
         </div>
