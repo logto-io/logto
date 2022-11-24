@@ -30,6 +30,7 @@ import ResetPasswordForm from './components/ResetPasswordForm';
 import UserLogs from './components/UserLogs';
 import UserSettings from './components/UserSettings';
 import * as styles from './index.module.scss';
+import { userDetailsParser } from './utils';
 
 const UserDetails = () => {
   const location = useLocation();
@@ -53,10 +54,7 @@ const UserDetails = () => {
       return;
     }
 
-    return {
-      ...data,
-      customData: JSON.stringify(data.customData, null, 2),
-    };
+    return userDetailsParser.toLocalForm(data);
   }, [data]);
 
   const onDelete = async () => {

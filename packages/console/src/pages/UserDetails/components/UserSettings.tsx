@@ -1,6 +1,5 @@
 import type { User } from '@logto/schemas';
 import { arbitraryObjectGuard } from '@logto/schemas';
-import type { Nullable } from '@silverhand/essentials';
 import { useEffect } from 'react';
 import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -16,21 +15,12 @@ import useApi from '@/hooks/use-api';
 import { safeParseJson } from '@/utilities/json';
 import { uriValidator } from '@/utilities/validator';
 
+import type { UserDetailsForm } from '../types';
 import UserConnectors from './UserConnectors';
-
-type FormData = {
-  primaryEmail: Nullable<string>;
-  primaryPhone: Nullable<string>;
-  username: Nullable<string>;
-  name: Nullable<string>;
-  avatar: Nullable<string>;
-  roleNames: string[];
-  customData: string;
-};
 
 type Props = {
   userData: User;
-  userFormData: FormData;
+  userFormData: UserDetailsForm;
   onUserUpdated: (user?: User) => void;
   isDeleted: boolean;
 };
@@ -45,7 +35,7 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
     reset,
     formState: { isSubmitting, errors, isDirty },
     getValues,
-  } = useForm<FormData>();
+  } = useForm<UserDetailsForm>();
 
   const {
     field: { onChange, value },
