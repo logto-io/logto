@@ -1,11 +1,11 @@
 import { findUserByUsername, findUserByEmail, findUserByPhone } from '#src/queries/user.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { verifyUserByPassword } from '../utils/index.js';
+import verifyUserByPassword from '../utils/verify-user-by-password.js';
 import identifierVerification from './identifier-verification.js';
 
-jest.mock('../utils/index.js', () => ({
-  verifyUserByPassword: jest.fn(),
+jest.mock('../utils/verify-user-by-password.js', () => ({
+  default: jest.fn(),
 }));
 
 describe('identifier verification', () => {
