@@ -1,11 +1,15 @@
 @use '@/scss/underscore' as _;
 
-.container {
+.page {
   width: 100%;
   display: flex;
   flex-direction: column;
   padding-bottom: _.unit(6);
   height: 100%;
+
+  > :not(:first-child) {
+    margin-top: _.unit(4);
+  }
 }
 
 .headline {
@@ -13,8 +17,7 @@
   justify-content: space-between;
 }
 
-.table {
+.content {
   flex: 1;
-  margin-top: _.unit(4);
   overflow: hidden;
 }

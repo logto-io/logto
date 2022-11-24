@@ -12,13 +12,13 @@ import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
+import PageLayout, { Content, HeadLine } from '@/components/PageLayout';
 import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
-import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
@@ -41,8 +41,8 @@ const Applications = () => {
   const [applications, totalCount] = data ?? [];
 
   return (
-    <div className={resourcesStyles.container}>
-      <div className={resourcesStyles.headline}>
+    <PageLayout>
+      <HeadLine>
         <CardTitle title="applications.title" subtitle="applications.subtitle" />
         <Button
           icon={<Plus />}
@@ -69,8 +69,8 @@ const Applications = () => {
             }}
           />
         </Modal>
-      </div>{' '}
-      <div className={resourcesStyles.table}>
+      </HeadLine>
+      <Content>
         <div className={tableStyles.scrollable}>
           <table className={classNames(!data && tableStyles.empty)}>
             <colgroup>
@@ -129,7 +129,7 @@ const Applications = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </Content>
       <Pagination
         pageIndex={pageIndex}
         totalCount={totalCount ?? 0}
@@ -139,7 +139,7 @@ const Applications = () => {
           setQuery({ page: String(page) });
         }}
       />
-    </div>
+    </PageLayout>
   );
 };
 

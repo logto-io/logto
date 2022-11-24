@@ -1,17 +1,17 @@
 import AuditLogTable from '@/components/AuditLogTable';
 import CardTitle from '@/components/CardTitle';
-import * as resourcesStyles from '@/scss/resources.module.scss';
+import PageLayout, { Content, HeadLine } from '@/components/PageLayout';
 
 const AuditLogs = () => {
   return (
-    <div className={resourcesStyles.container}>
-      <div className={resourcesStyles.headline}>
+    <PageLayout>
+      <HeadLine>
         <CardTitle title="logs.title" subtitle="logs.subtitle" />
-      </div>
-      <div className={resourcesStyles.table}>
+      </HeadLine>
+      <Content>
         <AuditLogTable />
-      </div>
-    </div>
+      </Content>
+    </PageLayout>
   );
 };
 

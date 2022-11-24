@@ -15,6 +15,7 @@ import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
+import PageLayout, { Content, HeadLine } from '@/components/PageLayout';
 import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
@@ -22,7 +23,6 @@ import TableLoading from '@/components/Table/TableLoading';
 import type { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
-import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import CreateForm from './components/CreateForm';
@@ -46,8 +46,8 @@ const ApiResources = () => {
   const [apiResources, totalCount] = data ?? [];
 
   return (
-    <div className={resourcesStyles.container}>
-      <div className={resourcesStyles.headline}>
+    <PageLayout>
+      <HeadLine>
         <CardTitle title="api_resources.title" subtitle="api_resources.subtitle" />
         <Button
           title="api_resources.create"
@@ -76,8 +76,8 @@ const ApiResources = () => {
             }}
           />
         </Modal>
-      </div>
-      <div className={resourcesStyles.table}>
+      </HeadLine>
+      <Content>
         <div className={tableStyles.scrollable}>
           <table className={classNames(!data && tableStyles.empty)}>
             <colgroup>
@@ -138,7 +138,7 @@ const ApiResources = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </Content>
       <Pagination
         pageIndex={pageIndex}
         totalCount={totalCount ?? 0}
@@ -148,7 +148,7 @@ const ApiResources = () => {
           setQuery({ page: String(page) });
         }}
       />
-    </div>
+    </PageLayout>
   );
 };
 

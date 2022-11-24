@@ -1,15 +1,18 @@
 @use '@/scss/underscore' as _;
 
-.filter {
-  padding: _.unit(3);
-  background-color: var(--color-layer-1);
-  border-bottom: 1px solid var(--color-divider);
-  border-radius: 12px 12px 0 0;
-}
 
 .tableLayout {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+
+  .filter {
+    padding: _.unit(3);
+    background-color: var(--color-layer-1);
+    border-bottom: 1px solid var(--color-divider);
+    border-radius: 12px 12px 0 0;
+  }
 
   .tableContainer {
     border-top-left-radius: 0;
