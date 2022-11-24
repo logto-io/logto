@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -29,6 +29,7 @@ import ResetPasswordForm from './components/ResetPasswordForm';
 import UserLogs from './components/UserLogs';
 import UserSettings from './components/UserSettings';
 import * as styles from './index.module.scss';
+import { userDetailsParser } from './utils';
 
 const UserDetails = () => {
   const location = useLocation();
@@ -46,6 +47,14 @@ const UserDetails = () => {
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
+
+  const userFormData = useMemo(() => {
+    if (!data) {
+      return;
+    }
+
+    return userDetailsParser.toLocalForm(data);
+  }, [data]);
 
   const onDelete = async () => {
     if (!data || isDeleting) {
@@ -163,9 +172,10 @@ const UserDetails = () => {
             <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
           </TabNav>
           {isLogs && <UserLogs userId={data.id} />}
-          {!isLogs && (
+          {!isLogs && userFormData && (
             <UserSettings
-              data={data}
+              userData={data}
+              userFormData={userFormData}
               isDeleted={isDeleted}
               onUserUpdated={(user) => {
                 void mutate(user);

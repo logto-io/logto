@@ -16,16 +16,16 @@ import { safeParseJson } from '@/utilities/json';
 import { uriValidator } from '@/utilities/validator';
 
 import type { UserDetailsForm } from '../types';
-import { userDetailsParser } from '../utils';
 import UserConnectors from './UserConnectors';
 
 type Props = {
-  data: User;
+  userData: User;
+  userFormData: UserDetailsForm;
   onUserUpdated: (user?: User) => void;
   isDeleted: boolean;
 };
 
-const UserSettings = ({ data, isDeleted, onUserUpdated }: Props) => {
+const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -44,8 +44,8 @@ const UserSettings = ({ data, isDeleted, onUserUpdated }: Props) => {
   const api = useApi();
 
   useEffect(() => {
-    reset(userDetailsParser.toLocalForm(data));
-  }, [reset, data]);
+    reset(userFormData);
+  }, [reset, userFormData]);
 
   const onSubmit = handleSubmit(async (formData) => {
     if (isSubmitting) {
@@ -77,7 +77,9 @@ const UserSettings = ({ data, isDeleted, onUserUpdated }: Props) => {
       customData: guardResult.data,
     };
 
-    const updatedUser = await api.patch(`/api/users/${data.id}`, { json: payload }).json<User>();
+    const updatedUser = await api
+      .patch(`/api/users/${userData.id}`, { json: payload })
+      .json<User>();
     onUserUpdated(updatedUser);
     toast.success(t('general.saved'));
   });
@@ -126,8 +128,8 @@ const UserSettings = ({ data, isDeleted, onUserUpdated }: Props) => {
           </FormField>
           <FormField title="user_details.field_connectors">
             <UserConnectors
-              userId={data.id}
-              connectors={data.identities}
+              userId={userData.id}
+              connectors={userData.identities}
               onDelete={() => {
                 onUserUpdated();
               }}
