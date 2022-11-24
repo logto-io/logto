@@ -1,6 +1,3 @@
-import { SignInIdentifier } from '@logto/schemas';
-
-import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { findUserByUsername, findUserByEmail, findUserByPhone } from '#src/queries/user.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -15,12 +12,15 @@ describe('identifier verification', () => {
   const baseCtx = createContextWithRouteParameters();
   const verifyUserByPasswordMock = verifyUserByPassword as jest.Mock;
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('username password', async () => {
     verifyUserByPasswordMock.mockResolvedValueOnce('userId');
 
     const ctx = {
       ...baseCtx,
-      signInExperience: mockSignInExperience,
       interactionPayload: Object.freeze({
         event: 'sign-in',
         identifier: {
@@ -32,12 +32,7 @@ describe('identifier verification', () => {
 
     const result = await identifierVerification(ctx);
 
-    expect(verifyUserByPasswordMock).toBeCalledWith(ctx, {
-      findUser: findUserByUsername,
-      identifier: 'username',
-      identifierType: SignInIdentifier.Username,
-      password: 'password',
-    });
+    expect(verifyUserByPasswordMock).toBeCalledWith('username', 'password', findUserByUsername);
     expect(result).toEqual([{ key: 'accountId', value: 'userId' }]);
   });
 
@@ -46,7 +41,6 @@ describe('identifier verification', () => {
 
     const ctx = {
       ...baseCtx,
-      signInExperience: mockSignInExperience,
       interactionPayload: Object.freeze({
         event: 'sign-in',
         identifier: {
@@ -58,12 +52,7 @@ describe('identifier verification', () => {
 
     const result = await identifierVerification(ctx);
 
-    expect(verifyUserByPasswordMock).toBeCalledWith(ctx, {
-      findUser: findUserByEmail,
-      identifier: 'email',
-      identifierType: SignInIdentifier.Email,
-      password: 'password',
-    });
+    expect(verifyUserByPasswordMock).toBeCalledWith('email', 'password', findUserByEmail);
     expect(result).toEqual([{ key: 'accountId', value: 'userId' }]);
   });
 
@@ -72,7 +61,6 @@ describe('identifier verification', () => {
 
     const ctx = {
       ...baseCtx,
-      signInExperience: mockSignInExperience,
       interactionPayload: Object.freeze({
         event: 'sign-in',
         identifier: {
@@ -84,12 +72,7 @@ describe('identifier verification', () => {
 
     const result = await identifierVerification(ctx);
 
-    expect(verifyUserByPasswordMock).toBeCalledWith(ctx, {
-      findUser: findUserByPhone,
-      identifier: '123456',
-      identifierType: SignInIdentifier.Sms,
-      password: 'password',
-    });
+    expect(verifyUserByPasswordMock).toBeCalledWith('123456', 'password', findUserByPhone);
     expect(result).toEqual([{ key: 'accountId', value: 'userId' }]);
   });
 });

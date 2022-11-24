@@ -2,7 +2,6 @@ import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import type { WithGuardedIdentifierPayloadContext } from '../middleware/koa-interaction-body-guard.js';
-import type { WithSignInExperienceContext } from '../middleware/koa-session-sign-in-experience-guard.js';
 
 export type Identifier =
   | AccountIdIdentifier
@@ -26,6 +25,4 @@ type UseInfo = {
   id: string;
 };
 
-export type InteractionContext = WithSignInExperienceContext<
-  WithGuardedIdentifierPayloadContext<IRouterParamContext & Context>
->;
+export type InteractionContext = WithGuardedIdentifierPayloadContext<IRouterParamContext & Context>;

@@ -1,14 +1,23 @@
-import { SignInMode } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
+import {
+  signInModeValidation,
+  identifierValidation,
+  profileValidation,
+} from '../utils/sign-in-experience-validation.js';
 import koaSessionSignInExperienceGuard from './koa-session-sign-in-experience-guard.js';
 
 jest.mock('#src/lib/sign-in-experience/index.js', () => ({
-  getSignInExperienceForApplication: jest.fn(),
+  getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
+}));
+
+jest.mock('../utils/sign-in-experience-validation.js', () => ({
+  signInModeValidation: jest.fn(),
+  identifierValidation: jest.fn(),
+  profileValidation: jest.fn(),
 }));
 
 jest.mock('oidc-provider', () => ({
@@ -18,62 +27,26 @@ jest.mock('oidc-provider', () => ({
 }));
 
 describe('koaSessionSignInExperienceGuard', () => {
-  const getSignInExperienceForApplicationMock = getSignInExperienceForApplication as jest.Mock;
   const baseCtx = createContextWithRouteParameters();
   const next = jest.fn();
 
-  describe('sign-in mode guard', () => {
-    it('should reject register', async () => {
-      getSignInExperienceForApplicationMock.mockImplementationOnce(() => ({
-        signInMode: SignInMode.SignIn,
-      }));
+  it('should call validation method properly', async () => {
+    const ctx = {
+      ...baseCtx,
+      interactionPayload: Object.freeze({
+        event: 'register',
+        identifier: { username: 'username', password: 'password' },
+        profile: { email: 'email' },
+      }),
+    };
 
-      const ctx = {
-        ...baseCtx,
-        interactionPayload: Object.freeze({
-          event: 'register',
-        }),
-        signInExperience: mockSignInExperience,
-      };
+    await koaSessionSignInExperienceGuard(new Provider(''))(ctx, next);
 
-      await expect(koaSessionSignInExperienceGuard(new Provider(''))(ctx, next)).rejects.toThrow();
-    });
-
-    it('should reject sign-in', async () => {
-      getSignInExperienceForApplicationMock.mockImplementationOnce(() => ({
-        signInMode: SignInMode.Register,
-      }));
-
-      const ctx = {
-        ...baseCtx,
-        interactionPayload: Object.freeze({
-          event: 'sign-in',
-        }),
-        signInExperience: mockSignInExperience,
-      };
-
-      await expect(koaSessionSignInExperienceGuard(new Provider(''))(ctx, next)).rejects.toThrow();
-    });
-
-    it('should allow register', async () => {
-      getSignInExperienceForApplicationMock.mockImplementationOnce(() => ({
-        signInMode: SignInMode.SignInAndRegister,
-      }));
-
-      const ctx = {
-        ...baseCtx,
-        interactionPayload: Object.freeze({
-          event: 'register',
-        }),
-        signInExperience: mockSignInExperience,
-      };
-
-      await expect(
-        koaSessionSignInExperienceGuard(new Provider(''))(ctx, next)
-      ).resolves.not.toThrow();
-      expect(ctx.signInExperience).toEqual({
-        signInMode: SignInMode.SignInAndRegister,
-      });
-    });
+    expect(signInModeValidation).toBeCalledWith('register', mockSignInExperience);
+    expect(identifierValidation).toBeCalledWith(
+      { username: 'username', password: 'password' },
+      mockSignInExperience
+    );
+    expect(profileValidation).toBeCalledWith({ email: 'email' }, mockSignInExperience);
   });
 });
