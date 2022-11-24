@@ -4,9 +4,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import verifyUserByPassword from '../utils/verify-user-by-password.js';
 import identifierVerification from './identifier-verification.js';
 
-jest.mock('../utils/verify-user-by-password.js', () => ({
-  default: jest.fn(),
-}));
+jest.mock('../utils/verify-user-by-password.js', () => jest.fn());
 
 describe('identifier verification', () => {
   const baseCtx = createContextWithRouteParameters();
