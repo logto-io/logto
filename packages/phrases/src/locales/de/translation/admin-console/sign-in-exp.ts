@@ -138,8 +138,8 @@ const sign_in_exp = {
         '{{language}} ist als Standardsprache eingestellt und kann nicht gelöscht werden. ',
       got_it: 'Alles klar',
     },
-    authentication: {
-      title: 'AUTHENTIFIZIERUNG',
+    advanced_options: {
+      title: 'ERWEITERTE OPTIONEN',
       enable_create_account: 'Aktiviere Registrierung',
       enable_create_account_description:
         'Aktiviere oder deaktiviere Konto Registrierung. Wenn diese Funktion deaktiviert ist, können deine Kunden keine Konten über die Anmeldeoberfläche erstellen, aber du kannst immer noch Benutzer in der Admin Konsole hinzufügen.',

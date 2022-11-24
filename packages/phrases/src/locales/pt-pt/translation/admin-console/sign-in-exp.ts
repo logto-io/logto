@@ -135,8 +135,8 @@ const sign_in_exp = {
         '{{language}} is set as your default language and can’t be deleted. ', // UNTRANSLATED
       got_it: 'Got It', // UNTRANSLATED
     },
-    authentication: {
-      title: 'AUTENTICAÇÃO',
+    advanced_options: {
+      title: 'OPÇÕES AVANÇADAS',
       enable_user_registration: 'Enable user registration', // UNTRANSLATED
       enable_user_registration_description:
         'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.', // UNTRANSLATED
