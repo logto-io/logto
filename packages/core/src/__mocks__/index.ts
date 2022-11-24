@@ -32,6 +32,7 @@ export const mockResource: Resource = {
 };
 
 export const mockRole: Role = {
+  id: 'role_id',
   name: 'admin',
   description: 'admin',
 };

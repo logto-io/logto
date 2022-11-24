@@ -13,6 +13,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { encryptPassword } from '#src/utils/password.js';
 
 const userId = buildIdGenerator(12);
+const roleId = buildIdGenerator(21);
 
 export const generateUserId = async (retries = 500) =>
   pRetry(
@@ -76,7 +77,11 @@ export const insertUser: typeof insertUserQuery = async ({ roleNames, ...rest })
 
     if (missingRoleNames.length > 0) {
       await insertRoles(
-        missingRoleNames.map((name) => ({ name, description: 'User default role.' }))
+        missingRoleNames.map((name) => ({
+          id: roleId(),
+          name,
+          description: 'User default role.',
+        }))
       );
     }
   }
