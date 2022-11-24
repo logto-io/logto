@@ -1,6 +1,5 @@
 import type { User } from '@logto/schemas';
 import { arbitraryObjectGuard } from '@logto/schemas';
-import type { Nullable } from '@silverhand/essentials';
 import { useEffect } from 'react';
 import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -16,26 +15,17 @@ import useApi from '@/hooks/use-api';
 import { safeParseJson } from '@/utilities/json';
 import { uriValidator } from '@/utilities/validator';
 
+import type { UserDetailsForm } from '../types';
+import { userDetailsParser } from '../utils';
 import UserConnectors from './UserConnectors';
 
-type FormData = {
-  primaryEmail: Nullable<string>;
-  primaryPhone: Nullable<string>;
-  username: Nullable<string>;
-  name: Nullable<string>;
-  avatar: Nullable<string>;
-  roleNames: string[];
-  customData: string;
-};
-
 type Props = {
-  userData: User;
-  userFormData: FormData;
+  data: User;
   onUserUpdated: (user?: User) => void;
   isDeleted: boolean;
 };
 
-const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Props) => {
+const UserSettings = ({ data, isDeleted, onUserUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -45,7 +35,7 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
     reset,
     formState: { isSubmitting, errors, isDirty },
     getValues,
-  } = useForm<FormData>();
+  } = useForm<UserDetailsForm>();
 
   const {
     field: { onChange, value },
@@ -54,8 +44,8 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
   const api = useApi();
 
   useEffect(() => {
-    reset(userFormData);
-  }, [reset, userFormData]);
+    reset(userDetailsParser.toLocalForm(data));
+  }, [reset, data]);
 
   const onSubmit = handleSubmit(async (formData) => {
     if (isSubmitting) {
@@ -87,9 +77,7 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
       customData: guardResult.data,
     };
 
-    const updatedUser = await api
-      .patch(`/api/users/${userData.id}`, { json: payload })
-      .json<User>();
+    const updatedUser = await api.patch(`/api/users/${data.id}`, { json: payload }).json<User>();
     onUserUpdated(updatedUser);
     toast.success(t('general.saved'));
   });
@@ -138,8 +126,8 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
           </FormField>
           <FormField title="user_details.field_connectors">
             <UserConnectors
-              userId={userData.id}
-              connectors={userData.identities}
+              userId={data.id}
+              connectors={data.identities}
               onDelete={() => {
                 onUserUpdated();
               }}

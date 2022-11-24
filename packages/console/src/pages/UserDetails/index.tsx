@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -46,17 +46,6 @@ const UserDetails = () => {
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
-
-  const userFormData = useMemo(() => {
-    if (!data) {
-      return;
-    }
-
-    return {
-      ...data,
-      customData: JSON.stringify(data.customData, null, 2),
-    };
-  }, [data]);
 
   const onDelete = async () => {
     if (!data || isDeleting) {
@@ -174,10 +163,9 @@ const UserDetails = () => {
             <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
           </TabNav>
           {isLogs && <UserLogs userId={data.id} />}
-          {!isLogs && userFormData && (
+          {!isLogs && (
             <UserSettings
-              userData={data}
-              userFormData={userFormData}
+              data={data}
               isDeleted={isDeleted}
               onUserUpdated={(user) => {
                 void mutate(user);
