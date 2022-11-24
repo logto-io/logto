@@ -137,6 +137,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         ...body,
       });
 
+      /**
+       * We can have only one working email/sms connector:
+       * once we insert a new one, old connectors with same type should be deleted.
+       */
       if (
         connectorFactory.type === ConnectorType.Sms ||
         connectorFactory.type === ConnectorType.Email
