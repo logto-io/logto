@@ -18,11 +18,20 @@ type BlockerNavigator = Navigator & {
   block: BlockFunction;
 };
 
-type Props = {
+type BaseProps = {
   hasUnsavedChanges: boolean;
 };
 
-const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
+type PathDepthProps = {
+  pathDepth: string;
+  subPathKey: string;
+};
+
+type Props =
+  | (BaseProps & Partial<Record<keyof PathDepthProps, undefined>>)
+  | (BaseProps & PathDepthProps);
+
+const UnsavedChangesAlertModal = ({ hasUnsavedChanges, pathDepth, subPathKey }: Props) => {
   const { navigator } = useContext(UNSAFE_NavigationContext);
 
   const [displayAlert, setDisplayAlert] = useState(false);
@@ -53,6 +62,13 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
         return;
       }
 
+      if (pathDepth && targetPathname.startsWith(pathDepth)) {
+        unblock();
+        transition.retry();
+
+        return;
+      }
+
       setDisplayAlert(true);
 
       setTransition({
@@ -65,7 +81,7 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
     });
 
     return unblock;
-  }, [navigator, hasUnsavedChanges]);
+  }, [navigator, hasUnsavedChanges, pathDepth, subPathKey]);
 
   const leavePage = useCallback(() => {
     transition?.retry();

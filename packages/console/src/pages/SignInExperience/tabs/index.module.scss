@@ -1,5 +1,11 @@
 @use '@/scss/underscore' as _;
 
+.tabContent {
+  > :not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}
+
 .title {
   @include _.subhead-cap;
   color: var(--color-neutral-variant-60);

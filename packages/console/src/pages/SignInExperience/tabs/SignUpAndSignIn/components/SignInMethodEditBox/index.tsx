@@ -129,6 +129,7 @@ const SignInMethodEditBox = () => {
                     }}
                     onDelete={() => {
                       remove(index);
+                      revalidate();
                     }}
                   />
                 )}
@@ -147,6 +148,7 @@ const SignInMethodEditBox = () => {
             verificationCode: getSignInMethodVerificationCodeCheckState(identifier),
             isPasswordPrimary: true,
           });
+          revalidate();
         }}
       />
     </div>
