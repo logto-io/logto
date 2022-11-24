@@ -109,7 +109,7 @@ describe('identifier validation', () => {
   });
 
   it('email passcode', () => {
-    const identifier = { email: 'username', passcode: 'passcode' };
+    const identifier = { email: 'email', passcode: 'passcode' };
 
     expect(() => {
       identifierValidation(identifier, mockSignInExperience);
