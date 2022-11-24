@@ -277,6 +277,14 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       await deleteConnectorById(id);
 
+      try {
+        const logtoConnector = await getLogtoConnectorById(id);
+
+        if (logtoConnector.type === ConnectorType.Social) {
+          await removeUnavailableSocialConnectorTargets();
+        }
+      } catch {}
+
       ctx.status = 204;
 
       return next();
