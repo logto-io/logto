@@ -18,6 +18,7 @@ import {
   findConnectorById,
   countConnectorByConnectorId,
   deleteConnectorById,
+  deleteConnectorByIds,
   insertConnector,
   updateConnector,
 } from '#src/queries/connector.js';
@@ -143,13 +144,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         const logtoConnectors = await getLogtoConnectors();
         const allSameTypeConnectorsIds = logtoConnectors
           .filter((logtoConnector) => logtoConnector.type === connectorFactory.type)
-          .map((logtoConnector) => logtoConnector.dbEntry.id)
-          .filter((id) => id !== insertConnectorId);
-        await Promise.all(
-          allSameTypeConnectorsIds.map(async (id) => {
-            await deleteConnectorById(id);
-          })
-        );
+          .map((logtoConnector) => logtoConnector.dbEntry.id);
+        await deleteConnectorByIds(allSameTypeConnectorsIds, insertConnectorId);
       }
 
       return next();

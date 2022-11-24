@@ -22,6 +22,7 @@ import {
   findConnectorById,
   countConnectorByConnectorId,
   deleteConnectorById,
+  deleteConnectorByIds,
 } from '#src/queries/connector.js';
 import assertThat from '#src/utils/assert-that.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -43,6 +44,7 @@ jest.mock('#src/queries/connector.js', () => ({
   findConnectorById: jest.fn(),
   countConnectorByConnectorId: jest.fn(),
   deleteConnectorById: jest.fn(),
+  deleteConnectorByIds: jest.fn(),
   insertConnector: jest.fn(async (body: unknown) => body),
 }));
 
@@ -223,7 +225,7 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 422);
     });
 
-    it('should post a new record and delete old records with same connector type when add passwordless connectors', async () => {
+    it('should add a new record and delete old records with same connector type when add passwordless connectors', async () => {
       loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
         {
           ...mockConnectorFactory,
@@ -253,7 +255,7 @@ describe('connector route', () => {
           },
         })
       );
-      expect(deleteConnectorById).toHaveBeenCalledWith('id');
+      expect(deleteConnectorByIds).toHaveBeenCalledWith(['id'], response.body.id);
     });
   });
 

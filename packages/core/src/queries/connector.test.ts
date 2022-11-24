@@ -13,6 +13,7 @@ import {
   findConnectorById,
   countConnectorByConnectorId,
   deleteConnectorById,
+  deleteConnectorByIds,
   insertConnector,
   updateConnector,
 } from './connector.js';
@@ -123,6 +124,47 @@ describe('connector queries', () => {
 
     await expect(deleteConnectorById(id)).rejects.toMatchError(
       new DeletionError(Connectors.table, id)
+    );
+  });
+
+  it('deleteConnectorByIds', async () => {
+    const rowData = [{ id: 'foo' }, { id: 'bar' }, { id: 'baz' }];
+    const ids = ['foo', 'bar', 'baz'];
+    const excludesConnectorId = 'baz';
+    const expectSql = sql`
+      delete from ${table}
+      where ${fields.id} in ($1, $2, $3)
+      and ${fields.id}<>$4
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([...ids, excludesConnectorId]);
+
+      return createMockQueryResult(rowData.slice(0, -1));
+    });
+
+    await deleteConnectorByIds(ids, excludesConnectorId);
+  });
+
+  it('deleteConnectorByIds should throw with zero response', async () => {
+    const ids = ['foo', 'bar', 'baz'];
+    const excludesConnectorId = 'baz';
+    const expectSql = sql`
+      delete from ${table}
+      where ${fields.id} in ($1, $2, $3)
+      and ${fields.id}<>$4
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([...ids, excludesConnectorId]);
+
+      return createMockQueryResult([]);
+    });
+
+    await expect(deleteConnectorByIds(ids, excludesConnectorId)).rejects.toMatchError(
+      new DeletionError(Connectors.table, JSON.stringify({ ids, excludesConnectorId }))
     );
   });
 
