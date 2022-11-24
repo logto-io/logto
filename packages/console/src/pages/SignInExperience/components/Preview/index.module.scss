@@ -2,10 +2,11 @@
 
 .preview {
   width: 480px;
-  padding: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: var(--color-layer-1);
+  border-radius: _.unit(4);
 
   .header {
     display: flex;
