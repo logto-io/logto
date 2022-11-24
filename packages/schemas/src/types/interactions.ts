@@ -24,13 +24,13 @@ export const phonePasswordPayloadGuard = z.object({
 export type PhonePasswordPayload = z.infer<typeof phonePasswordPayloadGuard>;
 
 export const emailPasscodePayloadGuard = z.object({
-  email: z.string().min(1),
+  email: z.string().regex(emailRegEx),
   passcode: z.string().min(1),
 });
 export type EmailPasscodePayload = z.infer<typeof emailPasscodePayloadGuard>;
 
 export const phonePasscodePayloadGuard = z.object({
-  phone: z.string().min(1),
+  phone: z.string().regex(phoneRegEx),
   passcode: z.string().min(1),
 });
 export type PhonePasscodePayload = z.infer<typeof phonePasscodePayloadGuard>;

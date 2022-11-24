@@ -1,8 +1,12 @@
 import type { Provider } from 'oidc-provider';
 
+import RequestError from '#src/errors/RequestError/index.js';
+import assertThat from '#src/utils/assert-that.js';
+
 import type { AnonymousRouter } from '../types.js';
 import koaInteractionBodyGuard from './middleware/koa-interaction-body-guard.js';
 import koaSessionSignInExperienceGuard from './middleware/koa-session-sign-in-experience-guard.js';
+import { identifierVerification } from './verifications/index.js';
 
 export default function interactionRoutes<T extends AnonymousRouter>(
   router: T,
@@ -16,19 +20,10 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       // Check interaction session
       await provider.interactionDetails(ctx.req, ctx.res);
 
-      const { event } = ctx.interactionPayload;
+      // PUT method must provides an event type
+      assertThat(ctx.interactionPayload.event, new RequestError('guard.invalid_input'));
 
-      if (event === 'sign-in') {
-        // Sign-in flow
-        return next();
-      }
-
-      if (event === 'register') {
-        // Register flow
-        return next();
-      }
-
-      // Forgot password flow
+      const verifiedIdentifiers = await identifierVerification(ctx);
 
       return next();
     }
