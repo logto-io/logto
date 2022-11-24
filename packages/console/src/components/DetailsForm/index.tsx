@@ -1,4 +1,3 @@
-import { forwardRef } from 'react';
 import type { ReactNode } from 'react';
 
 import SubmitFormChangesActionBar from '../SubmitFormChangesActionBar';
@@ -26,4 +25,4 @@ const DetailsForm = ({ isDirty, isSubmitting, onSubmit, onDiscard, children }: P
   );
 };
 
-export default forwardRef(DetailsForm);
+export default DetailsForm;
