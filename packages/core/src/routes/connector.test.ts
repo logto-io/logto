@@ -5,6 +5,10 @@ import { any } from 'zod';
 
 import {
   mockMetadata,
+  mockMetadata0,
+  mockMetadata1,
+  mockMetadata2,
+  mockMetadata3,
   mockConnector,
   mockConnectorFactory,
   mockLogtoConnectorList,
@@ -77,6 +81,25 @@ describe('connector route', () => {
         mockLogtoConnectorList.filter((connector) => connector.type === ConnectorType.Social)
       );
       const response = await connectorRequest.get('/connectors').send({});
+      expect(response).toHaveProperty('statusCode', 200);
+    });
+  });
+
+  describe('GET /connector-factories', () => {
+    it('show all connector factories', async () => {
+      (loadConnectorFactoriesPlaceHolder as jest.Mock).mockResolvedValueOnce([
+        { ...mockConnectorFactory, metadata: mockMetadata0, type: ConnectorType.Sms },
+        { ...mockConnectorFactory, metadata: mockMetadata1, type: ConnectorType.Social },
+        { ...mockConnectorFactory, metadata: mockMetadata2, type: ConnectorType.Email },
+        { ...mockConnectorFactory, metadata: mockMetadata3, type: ConnectorType.Social },
+      ]);
+      const response = await connectorRequest.get('/connector-factories').send({});
+      expect(response.body).toMatchObject([
+        { ...mockMetadata0, type: ConnectorType.Sms },
+        { ...mockMetadata1, type: ConnectorType.Social },
+        { ...mockMetadata2, type: ConnectorType.Email },
+        { ...mockMetadata3, type: ConnectorType.Social },
+      ]);
       expect(response).toHaveProperty('statusCode', 200);
     });
   });
