@@ -2,6 +2,7 @@ import { BrandingStyle } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import Card from '@/components/Card';
 import FormField from '@/components/FormField';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
@@ -24,7 +25,7 @@ const BrandingForm = () => {
   const isSloganRequired = style === BrandingStyle.Logo_Slogan;
 
   return (
-    <>
+    <Card>
       <div className={styles.title}>{t('sign_in_exp.branding.title')}</div>
       <FormField title="sign_in_exp.branding.ui_style">
         <Controller
@@ -74,7 +75,7 @@ const BrandingForm = () => {
           />
         </FormField>
       )}
-    </>
+    </Card>
   );
 };
 

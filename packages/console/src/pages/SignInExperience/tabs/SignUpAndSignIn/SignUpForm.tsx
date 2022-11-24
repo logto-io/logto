@@ -3,12 +3,14 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
 
+import Card from '@/components/Card';
 import Checkbox from '@/components/Checkbox';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
 import type { SignInExperienceForm } from '../../types';
+import * as styles from '../index.module.scss';
 import ConnectorSetupWarning from './components/ConnectorSetupWarning';
 import {
   getSignInMethodPasswordCheckState,
@@ -20,7 +22,6 @@ import {
   signUpIdentifierToRequiredConnectorMapping,
   signUpToSignInIdentifierMapping,
 } from './constants';
-import * as styles from './index.module.scss';
 
 const SignUpForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -108,7 +109,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <>
+    <Card>
       <div className={styles.title}>{t('sign_in_exp.sign_up_and_sign_in.sign_up.title')}</div>
       <FormField title="sign_in_exp.sign_up_and_sign_in.sign_up.sign_up_identifier">
         <div className={styles.formFieldDescription}>
@@ -203,7 +204,7 @@ const SignUpForm = () => {
           </div>
         </FormField>
       )}
-    </>
+    </Card>
   );
 };
 

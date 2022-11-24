@@ -1,23 +1,22 @@
 import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
-import { useEffect, useMemo, useState } from 'react';
+import { nanoid } from 'nanoid';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Button from '@/components/Button';
-import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import ConfirmModal from '@/components/ConfirmModal';
+import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 import useUiLanguages from '@/hooks/use-ui-languages';
-import * as detailsStyles from '@/scss/details.module.scss';
 
 import Preview from './components/Preview';
 import SignUpAndSignInChangePreview from './components/SignUpAndSignInChangePreview';
@@ -39,6 +38,7 @@ const SignInExperience = () => {
   const { error: languageError, isLoading: isLoadingLanguages } = useUiLanguages();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
 
+  const { current: formId } = useRef(nanoid());
   const methods = useForm<SignInExperienceForm>();
   const {
     reset,
@@ -78,7 +78,7 @@ const SignInExperience = () => {
     toast.success(t('general.saved'));
   };
 
-  const onSubmit = handleSubmit(async (formData) => {
+  const onSubmit = handleSubmit(async (formData: SignInExperienceForm) => {
     if (!data || isSubmitting) {
       return;
     }
@@ -119,47 +119,43 @@ const SignInExperience = () => {
   }
 
   return (
-    <div className={styles.wrapper}>
-      <div className={classNames(styles.setup, detailsStyles.container)}>
-        <Card className={styles.card}>
-          <CardTitle title="sign_in_exp.title" subtitle="sign_in_exp.description" />
-          <TabNav className={styles.tabs}>
-            <TabNavItem href="/sign-in-experience/branding">
-              {t('sign_in_exp.tabs.branding')}
-            </TabNavItem>
-            <TabNavItem href="/sign-in-experience/sign-up-and-sign-in">
-              {t('sign_in_exp.tabs.sign_up_and_sign_in')}
-            </TabNavItem>
-            <TabNavItem href="/sign-in-experience/others">
-              {t('sign_in_exp.tabs.others')}
-            </TabNavItem>
-          </TabNav>
-          {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-          {data && defaultFormData && (
+    <div className={styles.container}>
+      <CardTitle title="sign_in_exp.title" subtitle="sign_in_exp.description" />
+      <TabNav className={styles.tabs}>
+        <TabNavItem href="/sign-in-experience/branding">
+          {t('sign_in_exp.tabs.branding')}
+        </TabNavItem>
+        <TabNavItem href="/sign-in-experience/sign-up-and-sign-in">
+          {t('sign_in_exp.tabs.sign_up_and_sign_in')}
+        </TabNavItem>
+        <TabNavItem href="/sign-in-experience/others">{t('sign_in_exp.tabs.others')}</TabNavItem>
+      </TabNav>
+      {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
+      {data && defaultFormData && (
+        <div className={styles.content}>
+          <div className={styles.contentTop}>
             <FormProvider {...methods}>
-              <form className={styles.formWrapper} onSubmit={onSubmit}>
-                <div className={classNames(detailsStyles.body, styles.form)}>
-                  {tab === 'branding' && <Branding />}
-                  {tab === 'sign-up-and-sign-in' && <SignUpAndSignIn />}
-                  {tab === 'others' && <Others />}
-                </div>
-                <div className={detailsStyles.footer}>
-                  <div className={detailsStyles.footerMain}>
-                    <Button
-                      isLoading={isSubmitting}
-                      type="primary"
-                      size="large"
-                      htmlType="submit"
-                      title="general.save_changes"
-                    />
-                  </div>
-                </div>
+              <form
+                id={formId}
+                className={classNames(styles.form, isDirty && styles.withSubmitActionBar)}
+              >
+                {tab === 'branding' && <Branding />}
+                {tab === 'sign-up-and-sign-in' && <SignUpAndSignIn />}
+                {tab === 'others' && <Others />}
               </form>
             </FormProvider>
-          )}
-        </Card>
-      </div>
-      {formData.id && <Preview signInExperience={previewConfigs} />}
+            {formData.id && (
+              <Preview signInExperience={previewConfigs} className={styles.preview} />
+            )}
+          </div>
+          <SubmitFormChangesActionBar
+            isOpen={isDirty}
+            isSubmitting={isSubmitting}
+            onDiscard={reset}
+            onSubmit={onSubmit}
+          />
+        </div>
+      )}
       {data && (
         <ConfirmModal
           isOpen={Boolean(dataToCompare)}

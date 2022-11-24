@@ -1,6 +1,7 @@
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import Card from '@/components/Card';
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
@@ -19,7 +20,7 @@ const TermsForm = () => {
   const enabled = watch('termsOfUse.enabled');
 
   return (
-    <>
+    <Card>
       <div className={styles.title}>{t('sign_in_exp.others.terms_of_use.title')}</div>
       <FormField title="sign_in_exp.others.terms_of_use.enable">
         <Switch
@@ -44,7 +45,7 @@ const TermsForm = () => {
           />
         </FormField>
       )}
-    </>
+    </Card>
   );
 };
 
