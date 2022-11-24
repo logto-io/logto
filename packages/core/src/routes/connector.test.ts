@@ -8,13 +8,16 @@ import {
   mockConnector,
   mockConnectorFactory,
   mockLogtoConnectorList,
-  mockLogtoConnector,
 } from '#src/__mocks__/index.js';
 import { defaultConnectorMethods } from '#src/connectors/consts.js';
 import type { ConnectorFactory, LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { removeUnavailableSocialConnectorTargets } from '#src/lib/sign-in-experience/index.js';
-import { countConnectorByConnectorId, deleteConnectorById } from '#src/queries/connector.js';
+import {
+  findConnectorById,
+  countConnectorByConnectorId,
+  deleteConnectorById,
+} from '#src/queries/connector.js';
 import assertThat from '#src/utils/assert-that.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -32,6 +35,7 @@ jest.mock('#src/lib/sign-in-experience/index.js', () => ({
 }));
 
 jest.mock('#src/queries/connector.js', () => ({
+  findConnectorById: jest.fn(),
   countConnectorByConnectorId: jest.fn(),
   deleteConnectorById: jest.fn(),
   insertConnector: jest.fn(async (body: unknown) => body),
@@ -290,23 +294,37 @@ describe('connector route', () => {
       jest.clearAllMocks();
     });
 
-    it('delete connector instance', async () => {
-      await connectorRequest.delete('/connectors/id').send({});
-      expect(deleteConnectorById).toHaveBeenCalledTimes(1);
-    });
-
     it('delete connector instance and remove unavailable social connector targets', async () => {
-      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
-        {
-          dbEntry: mockConnector,
-          metadata: mockMetadata,
-          type: ConnectorType.Social,
-          ...mockLogtoConnector,
-        },
-      ]);
+      (findConnectorById as jest.Mock).mockResolvedValueOnce(mockConnector);
+      loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([mockConnectorFactory]);
       await connectorRequest.delete('/connectors/id').send({});
       expect(deleteConnectorById).toHaveBeenCalledTimes(1);
       expect(removeUnavailableSocialConnectorTargets).toHaveBeenCalledTimes(1);
+    });
+
+    it('delete connector instance (connector factory is not social type)', async () => {
+      (findConnectorById as jest.Mock).mockResolvedValueOnce(mockConnector);
+      loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
+        { ...mockConnectorFactory, type: ConnectorType.Sms },
+      ]);
+      await connectorRequest.delete('/connectors/id').send({});
+      expect(deleteConnectorById).toHaveBeenCalledTimes(1);
+      expect(removeUnavailableSocialConnectorTargets).toHaveBeenCalledTimes(0);
+    });
+
+    it('delete connector instance (connector factory is not found)', async () => {
+      (findConnectorById as jest.Mock).mockResolvedValueOnce(mockConnector);
+      loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([]);
+      await connectorRequest.delete('/connectors/id').send({});
+      expect(deleteConnectorById).toHaveBeenCalledTimes(1);
+      expect(removeUnavailableSocialConnectorTargets).toHaveBeenCalledTimes(0);
+    });
+
+    it('throws when connector not exists with `id`', async () => {
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      (findConnectorById as jest.Mock).mockResolvedValueOnce(undefined);
+      const response = await connectorRequest.delete('/connectors/id').send({});
+      expect(response).toHaveProperty('statusCode', 500);
     });
   });
 });
