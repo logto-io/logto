@@ -28,9 +28,7 @@ const SubmitFormChangesActionBar = ({ isOpen, isSubmitting, onSubmit, onDiscard 
         type="primary"
         size="medium"
         title="general.save_changes"
-        onClick={async () => {
-          await onSubmit();
-        }}
+        onClick={async () => onSubmit()}
       />
     </div>
   );
