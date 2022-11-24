@@ -255,7 +255,7 @@ describe('connector route', () => {
           },
         })
       );
-      expect(deleteConnectorByIds).toHaveBeenCalledWith(['id'], response.body.id);
+      expect(deleteConnectorByIds).toHaveBeenCalledWith(['id']);
     });
   });
 
