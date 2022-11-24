@@ -317,5 +317,59 @@ describe('connector PATCH routes', () => {
       );
       expect(response).toHaveProperty('statusCode', 200);
     });
+
+    it('throws when set syncProfile to `true` and with non-social connector', async () => {
+      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+        {
+          dbEntry: mockConnector,
+          metadata: mockMetadata,
+          type: ConnectorType.Sms,
+          ...mockLogtoConnector,
+        },
+      ]);
+      const response = await connectorRequest.patch('/connectors/id').send({ syncProfile: true });
+      expect(response).toHaveProperty('statusCode', 422);
+      expect(updateConnector).toHaveBeenCalledTimes(0);
+    });
+
+    it('successfully set syncProfile to `true` and with social connector', async () => {
+      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+        {
+          dbEntry: { ...mockConnector, syncProfile: false },
+          metadata: mockMetadata,
+          type: ConnectorType.Social,
+          ...mockLogtoConnector,
+        },
+      ]);
+      const response = await connectorRequest.patch('/connectors/id').send({ syncProfile: true });
+      expect(updateConnector).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'id' },
+          set: { syncProfile: true },
+          jsonbMode: 'replace',
+        })
+      );
+      expect(response).toHaveProperty('statusCode', 200);
+    });
+
+    it('successfully set syncProfile to `false`', async () => {
+      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+        {
+          dbEntry: { ...mockConnector, syncProfile: false },
+          metadata: mockMetadata,
+          type: ConnectorType.Social,
+          ...mockLogtoConnector,
+        },
+      ]);
+      const response = await connectorRequest.patch('/connectors/id').send({ syncProfile: false });
+      expect(updateConnector).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'id' },
+          set: { syncProfile: false },
+          jsonbMode: 'replace',
+        })
+      );
+      expect(response).toHaveProperty('statusCode', 200);
+    });
   });
 });

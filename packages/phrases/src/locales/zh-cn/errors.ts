@@ -97,6 +97,7 @@ const errors = {
     db_connector_type_mismatch: '数据库中存在一个类型不匹配的连接。',
     not_found_with_connector_id: '找不到所给 connector id 对应的连接器',
     multiple_instances_not_supported: '你选择的连接器不支持创建多实例。',
+    invalid_type_for_syncing_profile: '只有社交连接器可以开启用户档案同步。',
   },
   passcode: {
     phone_email_empty: '手机号与邮箱地址均为空',
