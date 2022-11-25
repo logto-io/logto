@@ -1,40 +1,54 @@
+import type { Provider } from 'oidc-provider';
+
 import RequestError from '#src/errors/RequestError/index.js';
-import { findUserByEmail, findUserByPhone, findUserByUsername } from '#src/queries/user.js';
 
 import type { InteractionContext, Identifier } from '../types/index.js';
-import verifyUserByPassword from '../utils/verify-user-by-password.js';
+import {
+  isPasscodeIdentifier,
+  isPasswordIdentifier,
+  isProfileIdentifier,
+} from '../utils/index.ts.js';
+import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
+import {
+  verifyUserByIdentityAndPassword,
+  verifyUserByVerifiedPasscodeIdentity,
+} from '../utils/verify-user.js';
 
 export default async function identifierVerification(
-  ctx: InteractionContext
+  ctx: InteractionContext,
+  provider: Provider
 ): Promise<Identifier[]> {
-  const { identifier } = ctx.interactionPayload;
+  const { identifier, event, profile } = ctx.interactionPayload;
 
   if (!identifier) {
     return [];
   }
 
-  if ('username' in identifier) {
-    const { username, password } = identifier;
-
-    const accountId = await verifyUserByPassword(username, password, findUserByUsername);
+  if (isPasswordIdentifier(identifier)) {
+    const accountId = await verifyUserByIdentityAndPassword(identifier);
 
     return [{ key: 'accountId', value: accountId }];
   }
 
-  if ('phone' in identifier && 'password' in identifier) {
-    const { phone, password } = identifier;
+  if (isPasscodeIdentifier(identifier) && event) {
+    const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
-    const accountId = await verifyUserByPassword(phone, password, findUserByPhone);
+    await verifyIdentifierByPasscode({ ...identifier, event }, jti, ctx.log);
 
-    return [{ key: 'accountId', value: accountId }];
-  }
+    const verifiedPasscodeIdentifier: Identifier =
+      'email' in identifier
+        ? { key: 'verifiedEmail', value: identifier.email }
+        : { key: 'verifiedPhone', value: identifier.phone };
 
-  if ('email' in identifier && 'password' in identifier) {
-    const { email, password } = identifier;
+    // Return the verified identity directly if it is for new profile validation
+    if (isProfileIdentifier(identifier, profile)) {
+      return [verifiedPasscodeIdentifier];
+    }
 
-    const accountId = await verifyUserByPassword(email, password, findUserByEmail);
+    // Find userAccount and return
+    const accountId = await verifyUserByVerifiedPasscodeIdentity(identifier);
 
-    return [{ key: 'accountId', value: accountId }];
+    return [{ key: 'accountId', value: accountId }, verifiedPasscodeIdentifier];
   }
 
   // Invalid identifier input

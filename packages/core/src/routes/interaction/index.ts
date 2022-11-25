@@ -26,7 +26,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       // PUT method must provides an event type
       assertThat(ctx.interactionPayload.event, new RequestError('guard.invalid_input'));
 
-      const verifiedIdentifiers = await identifierVerification(ctx);
+      const verifiedIdentifiers = await identifierVerification(ctx, provider);
 
       ctx.status = 200;
 

@@ -55,6 +55,7 @@ const errors = {
     sms_exists: '该手机号码已被其它账户绑定',
     require_email_or_sms: '请绑定邮箱地址或手机号码',
     suspended: '账号已被禁用',
+    user_not_exist: 'User with {{ identity }} has not been registered yet', // UNTRANSLATED,
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',
