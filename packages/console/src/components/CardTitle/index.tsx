@@ -10,16 +10,17 @@ type Props = {
   title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   size?: 'small' | 'medium' | 'large';
+  className?: string;
 };
 
 /**
  * Always use this component to render CardTitle, with built-in i18n support.
  */
-const CardTitle = ({ title, subtitle, size = 'large' }: Props) => {
+const CardTitle = ({ title, subtitle, size = 'large', className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
-    <div className={classNames(styles.container, styles[size])}>
+    <div className={classNames(styles.container, styles[size], className)}>
       <div className={styles.title}>{typeof title === 'string' ? t(title) : title}</div>
       {subtitle && (
         <div className={styles.subtitle}>

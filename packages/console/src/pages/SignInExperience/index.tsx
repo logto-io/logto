@@ -120,7 +120,11 @@ const SignInExperience = () => {
 
   return (
     <div className={styles.container}>
-      <CardTitle title="sign_in_exp.title" subtitle="sign_in_exp.description" />
+      <CardTitle
+        title="sign_in_exp.title"
+        subtitle="sign_in_exp.description"
+        className={styles.cardTitle}
+      />
       <TabNav className={styles.tabs}>
         <TabNavItem href="/sign-in-experience/branding">
           {t('sign_in_exp.tabs.branding')}

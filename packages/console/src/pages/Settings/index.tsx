@@ -47,7 +47,11 @@ const Settings = () => {
 
   return (
     <div className={styles.container}>
-      <CardTitle title="settings.title" subtitle="settings.description" />
+      <CardTitle
+        title="settings.title"
+        subtitle="settings.description"
+        className={styles.cardTitle}
+      />
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {isLoaded && (
