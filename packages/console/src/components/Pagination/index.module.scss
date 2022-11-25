@@ -3,10 +3,10 @@
 .container {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .positionInfo {
-  align-self: flex-end;
   font: var(--font-body-medium);
   color: var(--color-text-secondary);
 }
@@ -15,6 +15,7 @@
   display: flex;
   justify-content: right;
   margin: 0;
+  height: 28px;
   padding-inline-start: _.unit(4);
 
   li {
