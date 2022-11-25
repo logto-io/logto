@@ -20,10 +20,18 @@ type BlockerNavigator = Navigator & {
 
 type Props = {
   hasUnsavedChanges: boolean;
+  parentPath?: string;
 };
 
-const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
+const UnsavedChangesAlertModal = ({ hasUnsavedChanges, parentPath }: Props) => {
   const { navigator } = useContext(UNSAFE_NavigationContext);
+
+  /**
+   * Props `block` and `location` are removed from `Navigator` type in react-router, for the same reason as above.
+   * So we have to define our own type `BlockerNavigator` to acquire these props that actually exist in `navigator` object.
+   */
+  // eslint-disable-next-line no-restricted-syntax
+  const { block, location } = navigator as BlockerNavigator;
 
   const [displayAlert, setDisplayAlert] = useState(false);
   const [transition, setTransition] = useState<Transition>();
@@ -35,12 +43,6 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
       return;
     }
 
-    /**
-     * Props `block` and `location` are removed from `Navigator` type in react-router, for the same reason as above.
-     * So we have to define our own type `BlockerNavigator` to acquire these props that actually exist in `navigator` object.
-     */
-    // eslint-disable-next-line no-restricted-syntax
-    const { block, location } = navigator as BlockerNavigator;
     const { pathname } = location;
 
     const unblock = block((transition) => {
@@ -50,6 +52,13 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
 
       // Note: We don't want to show the alert if the user is navigating to the same page.
       if (targetPathname === pathname) {
+        return;
+      }
+
+      if (parentPath && targetPathname.startsWith(parentPath)) {
+        unblock();
+        transition.retry();
+
         return;
       }
 
@@ -65,7 +74,7 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
     });
 
     return unblock;
-  }, [navigator, hasUnsavedChanges]);
+  }, [navigator, hasUnsavedChanges, location, block, parentPath]);
 
   const leavePage = useCallback(() => {
     transition?.retry();

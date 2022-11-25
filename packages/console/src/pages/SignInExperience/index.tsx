@@ -1,7 +1,6 @@
 import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
-import { nanoid } from 'nanoid';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -28,7 +27,13 @@ import Branding from './tabs/Branding';
 import Others from './tabs/Others';
 import SignUpAndSignIn from './tabs/SignUpAndSignIn';
 import type { SignInExperienceForm } from './types';
-import { compareSignUpAndSignInConfigs, signInExperienceParser } from './utilities';
+import {
+  compareSignUpAndSignInConfigs,
+  getBrandingErrorCount,
+  getOthersErrorCount,
+  getSignUpAndSignInErrorCount,
+  signInExperienceParser,
+} from './utilities';
 
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -38,14 +43,13 @@ const SignInExperience = () => {
   const { error: languageError, isLoading: isLoadingLanguages } = useUiLanguages();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
 
-  const { current: formId } = useRef(nanoid());
   const methods = useForm<SignInExperienceForm>();
   const {
     reset,
     handleSubmit,
     getValues,
     watch,
-    formState: { isSubmitting, isDirty },
+    formState: { isSubmitting, isDirty, errors },
   } = methods;
   const api = useApi();
   const formData = watch();
@@ -64,7 +68,7 @@ const SignInExperience = () => {
     if (defaultFormData) {
       reset(defaultFormData);
     }
-  }, [reset, defaultFormData, tab]);
+  }, [reset, defaultFormData]);
 
   const saveData = async () => {
     const updatedData = await api
@@ -126,26 +130,29 @@ const SignInExperience = () => {
         className={styles.cardTitle}
       />
       <TabNav className={styles.tabs}>
-        <TabNavItem href="/sign-in-experience/branding">
+        <TabNavItem href="/sign-in-experience/branding" errorCount={getBrandingErrorCount(errors)}>
           {t('sign_in_exp.tabs.branding')}
         </TabNavItem>
-        <TabNavItem href="/sign-in-experience/sign-up-and-sign-in">
+        <TabNavItem
+          href="/sign-in-experience/sign-up-and-sign-in"
+          errorCount={getSignUpAndSignInErrorCount(errors, formData)}
+        >
           {t('sign_in_exp.tabs.sign_up_and_sign_in')}
         </TabNavItem>
-        <TabNavItem href="/sign-in-experience/others">{t('sign_in_exp.tabs.others')}</TabNavItem>
+        <TabNavItem href="/sign-in-experience/others" errorCount={getOthersErrorCount(errors)}>
+          {t('sign_in_exp.tabs.others')}
+        </TabNavItem>
       </TabNav>
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {data && defaultFormData && (
         <div className={styles.content}>
           <div className={styles.contentTop}>
             <FormProvider {...methods}>
-              <form
-                id={formId}
-                className={classNames(styles.form, isDirty && styles.withSubmitActionBar)}
-              >
-                {tab === 'branding' && <Branding />}
-                {tab === 'sign-up-and-sign-in' && <SignUpAndSignIn />}
-                {tab === 'others' && <Others />}
+              <form className={classNames(styles.form, isDirty && styles.withSubmitActionBar)}>
+                {/* Todo: LOG-4766 Add Constants To Guard Router Path */}
+                <Branding isActive={tab === 'branding'} />
+                <SignUpAndSignIn isActive={tab === 'sign-up-and-sign-in'} />
+                <Others isActive={tab === 'others'} />
               </form>
             </FormProvider>
             {formData.id && (
@@ -173,7 +180,10 @@ const SignInExperience = () => {
           {dataToCompare && <SignUpAndSignInChangePreview before={data} after={dataToCompare} />}
         </ConfirmModal>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+      <UnsavedChangesAlertModal
+        hasUnsavedChanges={isDirty}
+        parentPath="/console/sign-in-experience"
+      />
     </div>
   );
 };
