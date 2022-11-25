@@ -5,6 +5,10 @@
   flex-direction: column;
   height: 100%;
 
+  .cardTitle {
+    flex-shrink: 0;
+  }
+
   .tabs {
     margin: _.unit(4) 0;
   }

@@ -5,6 +5,10 @@
   display: flex;
   flex-direction: column;
 
+  .cardTitle {
+    flex-shrink: 0;
+  }
+
   >:not(:first-child) {
     margin-top: _.unit(4);
   }
