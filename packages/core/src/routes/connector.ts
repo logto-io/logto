@@ -147,11 +147,12 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       ) {
         const logtoConnectors = await getLogtoConnectors();
         const conflictingConnectorIds = logtoConnectors
-          .filter((logtoConnector) => logtoConnector.type === connectorFactory.type)
-          .map((logtoConnector) => logtoConnector.dbEntry.id);
-        await deleteConnectorByIds(
-          conflictingConnectorIds.filter((id) => id !== insertConnectorId)
-        );
+          .filter(
+            ({ dbEntry: { id }, type }) =>
+              type === connectorFactory.type && id !== insertConnectorId
+          )
+          .map(({ dbEntry: { id } }) => id);
+        await deleteConnectorByIds(conflictingConnectorIds);
       }
 
       return next();
