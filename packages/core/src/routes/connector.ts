@@ -282,8 +282,6 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         ({ metadata }) => metadata.id === connectorId
       );
 
-      console.log(connectorId, connectorFactories);
-
       await deleteConnectorById(id);
 
       if (connectorFactory?.type === ConnectorType.Social) {
