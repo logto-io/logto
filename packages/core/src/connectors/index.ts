@@ -55,7 +55,7 @@ export const loadConnectorFactories = async () => {
           metadata: rawConnector.metadata,
           type: rawConnector.type,
           createConnector,
-          path: packagePath + '/lib/index.js',
+          path: packagePath,
         };
       } catch (error: unknown) {
         if (error instanceof Error) {
