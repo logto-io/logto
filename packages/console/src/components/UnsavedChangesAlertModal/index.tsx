@@ -18,21 +18,20 @@ type BlockerNavigator = Navigator & {
   block: BlockFunction;
 };
 
-type BaseProps = {
+type Props = {
   hasUnsavedChanges: boolean;
+  parentPath?: string;
 };
 
-type PathDepthProps = {
-  pathDepth: string;
-  subPathKey: string;
-};
-
-type Props =
-  | (BaseProps & Partial<Record<keyof PathDepthProps, undefined>>)
-  | (BaseProps & PathDepthProps);
-
-const UnsavedChangesAlertModal = ({ hasUnsavedChanges, pathDepth, subPathKey }: Props) => {
+const UnsavedChangesAlertModal = ({ hasUnsavedChanges, parentPath }: Props) => {
   const { navigator } = useContext(UNSAFE_NavigationContext);
+
+  /**
+   * Props `block` and `location` are removed from `Navigator` type in react-router, for the same reason as above.
+   * So we have to define our own type `BlockerNavigator` to acquire these props that actually exist in `navigator` object.
+   */
+  // eslint-disable-next-line no-restricted-syntax
+  const { block, location } = navigator as BlockerNavigator;
 
   const [displayAlert, setDisplayAlert] = useState(false);
   const [transition, setTransition] = useState<Transition>();
@@ -44,12 +43,6 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges, pathDepth, subPathKey }: 
       return;
     }
 
-    /**
-     * Props `block` and `location` are removed from `Navigator` type in react-router, for the same reason as above.
-     * So we have to define our own type `BlockerNavigator` to acquire these props that actually exist in `navigator` object.
-     */
-    // eslint-disable-next-line no-restricted-syntax
-    const { block, location } = navigator as BlockerNavigator;
     const { pathname } = location;
 
     const unblock = block((transition) => {
@@ -62,7 +55,7 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges, pathDepth, subPathKey }: 
         return;
       }
 
-      if (pathDepth && targetPathname.startsWith(pathDepth)) {
+      if (parentPath && targetPathname.startsWith(parentPath)) {
         unblock();
         transition.retry();
 
@@ -81,7 +74,7 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges, pathDepth, subPathKey }: 
     });
 
     return unblock;
-  }, [navigator, hasUnsavedChanges, pathDepth, subPathKey]);
+  }, [navigator, hasUnsavedChanges, location, block, parentPath]);
 
   const leavePage = useCallback(() => {
     transition?.retry();

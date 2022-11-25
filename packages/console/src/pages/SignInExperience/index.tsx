@@ -37,7 +37,7 @@ import {
 
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { tab = 'branding' } = useParams();
+  const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
   const { settings, error: settingsError, updateSettings, mutate: mutateSettings } = useSettings();
   const { error: languageError, isLoading: isLoadingLanguages } = useUiLanguages();
@@ -182,8 +182,7 @@ const SignInExperience = () => {
       )}
       <UnsavedChangesAlertModal
         hasUnsavedChanges={isDirty}
-        pathDepth="/console/sign-in-experience"
-        subPathKey={tab}
+        parentPath="/console/sign-in-experience"
       />
     </div>
   );
