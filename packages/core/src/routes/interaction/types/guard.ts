@@ -53,3 +53,5 @@ export const getSocialAuthorizationUrlPayloadGuard = z.object({
   state: z.string(),
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
 });
+
+export type SocialAuthorizationUrlPayload = z.infer<typeof getSocialAuthorizationUrlPayloadGuard>;

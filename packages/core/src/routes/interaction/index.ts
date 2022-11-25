@@ -1,7 +1,5 @@
-import { ConnectorType } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 
-import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -11,6 +9,7 @@ import koaInteractionBodyGuard from './middleware/koa-interaction-body-guard.js'
 import koaSessionSignInExperienceGuard from './middleware/koa-session-sign-in-experience-guard.js';
 import { sendPasscodePayloadGuard, getSocialAuthorizationUrlPayloadGuard } from './types/guard.js';
 import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
+import { createSocialAuthorizationUrl } from './utils/social-verification.js';
 import { identifierVerification } from './verifications/index.js';
 
 export const identifierPrefix = '/identifier';
@@ -46,15 +45,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       // Check interaction session
       await provider.interactionDetails(ctx.req, ctx.res);
 
-      const { connectorId, state, redirectUri } = ctx.guard.body;
-      assertThat(state && redirectUri, 'session.insufficient_info');
-
-      const connector = await getLogtoConnectorById(connectorId);
-
-      assertThat(connector.dbEntry.enabled, 'connector.not_enabled');
-      assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
-
-      const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
+      const redirectTo = await createSocialAuthorizationUrl(ctx.guard.body);
 
       ctx.body = { redirectTo };
 
