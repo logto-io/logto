@@ -15,6 +15,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { removeUnavailableSocialConnectorTargets } from '#src/lib/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import {
+  findConnectorById,
   countConnectorByConnectorId,
   deleteConnectorById,
   insertConnector,
@@ -291,7 +292,17 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
       } = ctx.guard;
 
+      const { connectorId } = await findConnectorById(id);
+      const connectorFactories = await loadConnectorFactories();
+      const connectorFactory = connectorFactories.find(
+        ({ metadata }) => metadata.id === connectorId
+      );
+
       await deleteConnectorById(id);
+
+      if (connectorFactory?.type === ConnectorType.Social) {
+        await removeUnavailableSocialConnectorTargets();
+      }
 
       ctx.status = 204;
 
