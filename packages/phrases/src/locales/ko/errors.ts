@@ -55,6 +55,7 @@ const errors = {
     sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
     require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
+    user_not_exist: 'User with {{ identity }} has not been registered yet', // UNTRANSLATED,
   },
   password: {
     unsupported_encryption_method: '{{name}} 암호화 방법을 지원하지 않아요.',

@@ -1,42 +1,70 @@
-import RequestError from '#src/errors/RequestError/index.js';
-import { findUserByEmail, findUserByPhone, findUserByUsername } from '#src/queries/user.js';
+import type { Provider } from 'oidc-provider';
 
 import type { InteractionContext, Identifier } from '../types/index.js';
-import { verifyUserByPassword } from '../utils/index.js';
+import {
+  isPasscodeIdentifier,
+  isPasswordIdentifier,
+  isProfileIdentifier,
+} from '../utils/index.ts.js';
+import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
+import { verifySocialIdentity } from '../utils/social-verification.js';
+import {
+  verifyUserByIdentityAndPassword,
+  verifyUserByVerifiedPasscodeIdentity,
+  verifyUserBySocialIdentity,
+} from '../utils/verify-user.js';
 
+// eslint-disable-next-line complexity
 export default async function identifierVerification(
-  ctx: InteractionContext
+  ctx: InteractionContext,
+  provider: Provider
 ): Promise<Identifier[]> {
-  const { identifier } = ctx.interactionPayload;
+  const { identifier, event, profile } = ctx.interactionPayload;
 
-  if (!identifier) {
+  if (!identifier || !event) {
     return [];
   }
 
-  if ('username' in identifier) {
-    const { username, password } = identifier;
-
-    const accountId = await verifyUserByPassword(username, password, findUserByUsername);
+  if (isPasswordIdentifier(identifier)) {
+    const accountId = await verifyUserByIdentityAndPassword(identifier);
 
     return [{ key: 'accountId', value: accountId }];
   }
 
-  if ('phone' in identifier && 'password' in identifier) {
-    const { phone, password } = identifier;
+  if (isPasscodeIdentifier(identifier)) {
+    const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
-    const accountId = await verifyUserByPassword(phone, password, findUserByPhone);
+    await verifyIdentifierByPasscode({ ...identifier, event }, jti, ctx.log);
 
-    return [{ key: 'accountId', value: accountId }];
+    const verifiedPasscodeIdentifier: Identifier =
+      'email' in identifier
+        ? { key: 'verifiedEmail', value: identifier.email }
+        : { key: 'verifiedPhone', value: identifier.phone };
+
+    // Return the verified identity directly if it is new profile identities
+    if (isProfileIdentifier(identifier, profile)) {
+      return [verifiedPasscodeIdentifier];
+    }
+
+    // Find userAccount and return
+    const accountId = await verifyUserByVerifiedPasscodeIdentity(identifier);
+
+    return [{ key: 'accountId', value: accountId }, verifiedPasscodeIdentifier];
   }
 
-  if ('email' in identifier && 'password' in identifier) {
-    const { email, password } = identifier;
+  // Social Identifier
+  const socialUserInfo = await verifySocialIdentity(identifier, ctx.log);
 
-    const accountId = await verifyUserByPassword(email, password, findUserByEmail);
+  const { connectorId } = identifier;
 
-    return [{ key: 'accountId', value: accountId }];
+  if (isProfileIdentifier(identifier, profile)) {
+    return [{ key: 'social', connectorId, value: socialUserInfo }];
   }
 
-  // Invalid identifier input
-  throw new RequestError('guard.invalid_input', identifier);
+  const accountId = await verifyUserBySocialIdentity(connectorId, socialUserInfo);
+
+  return [
+    { key: 'accountId', value: accountId },
+    { key: 'social', connectorId, value: socialUserInfo },
+  ];
 }
