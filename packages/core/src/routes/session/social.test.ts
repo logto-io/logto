@@ -45,7 +45,7 @@ jest.mock('#src/lib/social.js', () => ({
 const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => mockUser);
-const findUserByIdentity = jest.fn(async () => mockUser);
+const findUserByIdentity = jest.fn().mockResolvedValue(mockUser);
 
 jest.mock('#src/queries/user.js', () => ({
   findUserById: async () => findUserById(),
@@ -275,9 +275,9 @@ describe('session -> socialRoutes', () => {
     });
 
     it('throw error when identity exists', async () => {
-      const wrongConnectorTarget = 'wrongConnectorTarget';
+      findUserByIdentity.mockResolvedValueOnce(null);
       (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
-        metadata: { target: wrongConnectorTarget },
+        metadata: { target: connectorTarget },
         dbEntry: { syncProfile: false },
       });
       const response = await sessionRequest.post(`${signInRoute}/auth`).send({

@@ -39,7 +39,7 @@ export const findUserById = async (id: string) =>
   `);
 
 export const findUserByIdentity = async (target: string, userId: string) =>
-  envSet.pool.one<User>(
+  envSet.pool.maybeOne<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
