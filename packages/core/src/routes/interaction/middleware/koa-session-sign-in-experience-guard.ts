@@ -1,3 +1,4 @@
+import { Event } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import type { Provider } from 'oidc-provider';
@@ -20,7 +21,7 @@ export default function koaSessionSignInExperienceGuard<
     const interaction = await provider.interactionDetails(ctx.req, ctx.res);
     const { event, identifier, profile } = ctx.interactionPayload;
 
-    if (event === 'forgot-password') {
+    if (event === Event.ForgotPassword) {
       return next();
     }
 

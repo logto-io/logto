@@ -3,12 +3,12 @@ import {
   findUserByEmail,
   findUserByUsername,
   findUserByPhone,
-  findUserByIdentity as findUserBySocialIdentity,
+  findUserByIdentity,
 } from '#src/queries/user.js';
 
 import type { UserIdentity } from '../types/index.js';
 
-export default async function findUserByIdentity(identity: UserIdentity) {
+export default async function findUserByIdentifier(identity: UserIdentity) {
   if ('username' in identity) {
     return findUserByUsername(identity.username);
   }
@@ -26,7 +26,7 @@ export default async function findUserByIdentity(identity: UserIdentity) {
       metadata: { target },
     } = await getLogtoConnectorById(identity.connectorId);
 
-    return findUserBySocialIdentity(target, identity.userInfo.id);
+    return findUserByIdentity(target, identity.userInfo.id);
   }
 
   return null;

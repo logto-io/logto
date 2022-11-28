@@ -1,4 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
+import { Event } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -75,7 +76,7 @@ describe('session -> interactionRoutes', () => {
     const path = `${verificationPrefix}/passcode`;
     it('should call send passcode properly', async () => {
       const body = {
-        event: 'sign-in',
+        event: Event.SignIn,
         email: 'email@logto.io',
       };
 

@@ -1,5 +1,5 @@
-import type { Event, SignInExperience, Profile } from '@logto/schemas';
-import { SignUpIdentifier, SignInMode, SignInIdentifier } from '@logto/schemas';
+import type { SignInExperience, Profile } from '@logto/schemas';
+import { SignUpIdentifier, SignInMode, SignInIdentifier, Event } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -14,11 +14,11 @@ const forbiddenIdentifierError = new RequestError({
 });
 
 export const signInModeValidation = (event: Event, { signInMode }: SignInExperience) => {
-  if (event === 'sign-in') {
+  if (event === Event.SignIn) {
     assertThat(signInMode !== SignInMode.Register, forbiddenEventError);
   }
 
-  if (event === 'register') {
+  if (event === Event.Register) {
     assertThat(signInMode !== SignInMode.SignIn, forbiddenEventError);
   }
 };

@@ -1,5 +1,5 @@
-import { PasscodeType } from '@logto/schemas';
 import type { Event } from '@logto/schemas';
+import { PasscodeType } from '@logto/schemas';
 
 import { createPasscode, sendPasscode, verifyPasscode } from '#src/lib/passcode.js';
 import type { LogContext } from '#src/middleware/koa-log.js';
@@ -12,9 +12,9 @@ import type { SendPasscodePayload, PasscodeIdentifierPayload } from '../types/gu
  * This is a work around to map the latest interaction event type to old PasscodeType
  *  */
 const eventToPasscodeTypeMap: Record<Event, PasscodeType> = {
-  'sign-in': PasscodeType.SignIn,
-  register: PasscodeType.Register,
-  'forgot-password': PasscodeType.ForgotPassword,
+  SignIn: PasscodeType.SignIn,
+  Register: PasscodeType.Register,
+  ForgotPassword: PasscodeType.ForgotPassword,
 };
 
 const getPasscodeTypeByEvent = (event: Event): PasscodeType => eventToPasscodeTypeMap[event];
