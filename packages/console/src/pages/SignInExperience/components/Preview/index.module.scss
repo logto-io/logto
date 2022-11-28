@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .preview {
-  width: 480px;
+  width: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -51,6 +51,7 @@
         height: 380px;
         position: relative;
         background: var(--color-surface-1);
+        margin: 0 auto;
 
         iframe {
           width: 960px;
