@@ -24,6 +24,9 @@ import * as styles from './index.module.scss';
 const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
   `/${pathname.slice(0, pathname.lastIndexOf('/'))}`;
 
+const getDetailsTabNavLink = (logId: string, userId?: string) =>
+  userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
+
 const AuditLogDetails = () => {
   const { userId, logId } = useParams();
   const { pathname } = useLocation();
@@ -41,6 +44,10 @@ const AuditLogDetails = () => {
   ) : (
     'log_details.back_to_logs'
   );
+
+  if (!logId) {
+    return null;
+  }
 
   return (
     <div className={detailsStyles.container}>
@@ -96,7 +103,7 @@ const AuditLogDetails = () => {
             </div>
           </Card>
           <TabNav>
-            <TabNavItem href={`/audit-logs/${logId ?? ''}`}>
+            <TabNavItem href={getDetailsTabNavLink(logId, userId)}>
               {t('log_details.tab_details')}
             </TabNavItem>
           </TabNav>
