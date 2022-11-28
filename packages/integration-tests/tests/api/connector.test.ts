@@ -26,6 +26,14 @@ const connectorIdMap = new Map();
  * for testing updating configs and enabling/disabling for now.
  */
 test('connector set-up flow', async () => {
+  const connectors = await listConnectors();
+  await Promise.all(
+    connectors.map(async ({ id }) => {
+      await deleteConnectorById(id);
+    })
+  );
+  connectorIdMap.clear();
+
   /*
    * Set up social/SMS/email connectors
    */

@@ -15,7 +15,6 @@ export const createSocialAuthorizationUrl = async (payload: SocialAuthorizationU
 
   const connector = await getLogtoConnectorById(connectorId);
 
-  assertThat(connector.dbEntry.enabled, 'connector.not_enabled');
   assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
 
   return connector.getAuthorizationUri({ state, redirectUri });

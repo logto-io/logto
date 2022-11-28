@@ -10,9 +10,6 @@ jest.mock('#src/lib/social.js', () => ({
 
 jest.mock('#src/connectors.js', () => ({
   getLogtoConnectorById: jest.fn().mockResolvedValue({
-    dbEntry: {
-      enabled: true,
-    },
     metadata: {
       id: 'social',
     },
