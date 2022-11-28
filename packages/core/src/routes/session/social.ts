@@ -77,7 +77,10 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       const userInfo = await getUserInfoByAuthCode(connectorId, data);
       ctx.log(type, { userInfo });
 
-      if (!(await hasUserWithIdentity(target, userInfo.id))) {
+      const user = await findUserByIdentity(target, userInfo.id);
+
+      // User with identity not found
+      if (!user) {
         await assignInteractionResults(
           ctx,
           provider,
@@ -95,7 +98,6 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
         );
       }
 
-      const user = await findUserByIdentity(target, userInfo.id);
       const { id, identities, isSuspended } = user;
       assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
       ctx.log(type, { userId: id });
