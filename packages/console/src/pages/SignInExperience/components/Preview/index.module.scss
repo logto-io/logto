@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .preview {
-  width: 100%;
+  min-width: 480px;
   overflow: hidden;
   display: flex;
   flex-direction: column;

@@ -28,7 +28,7 @@
       }
 
       .form {
-        width: 100%;
+        flex: 1;
         margin-right: _.unit(3);
 
         > :not(:first-child) {
@@ -37,6 +37,7 @@
       }
 
       .preview {
+        flex: 1;
         position: sticky;
         top: _.unit(4);
         align-self: flex-start;

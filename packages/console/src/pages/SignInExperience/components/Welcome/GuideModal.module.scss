@@ -54,7 +54,7 @@
     @include _.main-content-width;
 
     .form {
-      width: 100%;
+      flex: 1;
 
       > :not(:first-child) {
         margin-top: _.unit(3);
@@ -62,6 +62,7 @@
     }
 
     .preview {
+      flex: 1;
       margin-left: _.unit(8);
       position: sticky;
       top: _.unit(4);
