@@ -39,7 +39,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    `${verificationPrefix}/social/authorization_uri`,
+    `${verificationPrefix}/social/authorization-uri`,
     koaGuard({ body: getSocialAuthorizationUrlPayloadGuard }),
     async (ctx, next) => {
       // Check interaction session

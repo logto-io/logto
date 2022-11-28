@@ -85,8 +85,8 @@ describe('session -> interactionRoutes', () => {
     });
   });
 
-  describe('POST /verification/social/authorization_uri', () => {
-    const path = `${verificationPrefix}/social/authorization_uri`;
+  describe('POST /verification/social/authorization-uri', () => {
+    const path = `${verificationPrefix}/social/authorization-uri`;
 
     it('should throw when redirectURI is invalid', async () => {
       const response = await sessionRequest.post(path).send({
@@ -97,7 +97,7 @@ describe('session -> interactionRoutes', () => {
       expect(response.statusCode).toEqual(400);
     });
 
-    it('should return the authorization_uri properly', async () => {
+    it('should return the authorization-uri properly', async () => {
       const response = await sessionRequest.post(path).send({
         connectorId: 'social_enabled',
         state: 'state',
