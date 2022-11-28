@@ -1,11 +1,7 @@
 import type { Provider } from 'oidc-provider';
 
 import type { InteractionContext, Identifier } from '../types/index.js';
-import {
-  isPasscodeIdentifier,
-  isPasswordIdentifier,
-  isProfileIdentifier,
-} from '../utils/index.ts.js';
+import { isPasscodeIdentifier, isPasswordIdentifier, isProfileIdentifier } from '../utils/index.js';
 import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
 import { verifySocialIdentity } from '../utils/social-verification.js';
 import {
@@ -14,14 +10,13 @@ import {
   verifyUserBySocialIdentity,
 } from '../utils/verify-user.js';
 
-// eslint-disable-next-line complexity
 export default async function identifierVerification(
   ctx: InteractionContext,
   provider: Provider
 ): Promise<Identifier[]> {
   const { identifier, event, profile } = ctx.interactionPayload;
 
-  if (!identifier || !event) {
+  if (!identifier) {
     return [];
   }
 

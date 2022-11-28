@@ -34,7 +34,7 @@ describe('koaSessionSignInExperienceGuard', () => {
     const ctx = {
       ...baseCtx,
       interactionPayload: Object.freeze({
-        event: 'register',
+        event: 'sign-in',
         identifier: { username: 'username', password: 'password' },
         profile: { email: 'email' },
       }),
@@ -42,7 +42,7 @@ describe('koaSessionSignInExperienceGuard', () => {
 
     await koaSessionSignInExperienceGuard(new Provider(''))(ctx, next);
 
-    expect(signInModeValidation).toBeCalledWith('register', mockSignInExperience);
+    expect(signInModeValidation).toBeCalledWith('sign-in', mockSignInExperience);
     expect(identifierValidation).toBeCalledWith(
       { username: 'username', password: 'password' },
       mockSignInExperience

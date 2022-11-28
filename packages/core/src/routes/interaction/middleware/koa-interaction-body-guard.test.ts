@@ -29,7 +29,7 @@ describe('koaInteractionBodyGuard', () => {
             event: 'test',
           },
         },
-        interactionPayload: {},
+        interactionPayload: { event: 'sign-in' },
       };
 
       await expect(koaInteractionBodyGuard()(ctx, next)).rejects.toThrow();
@@ -46,7 +46,7 @@ describe('koaInteractionBodyGuard', () => {
               event,
             },
           },
-          interactionPayload: {},
+          interactionPayload: { event: 'sign-in' },
         };
 
         await expect(koaInteractionBodyGuard()(ctx, next)).resolves.not.toThrow();
@@ -69,7 +69,7 @@ describe('koaInteractionBodyGuard', () => {
             },
           },
         },
-        interactionPayload: {},
+        interactionPayload: { event: 'sign-in' },
       };
 
       await expect(koaInteractionBodyGuard()(ctx, next)).rejects.toThrow();
@@ -85,7 +85,7 @@ describe('koaInteractionBodyGuard', () => {
             identifier: input,
           },
         },
-        interactionPayload: {},
+        interactionPayload: { event: 'sign-in' },
       };
 
       await expect(koaInteractionBodyGuard()(ctx, next)).resolves.not.toThrow();
@@ -106,7 +106,7 @@ describe('koaInteractionBodyGuard', () => {
             },
           },
         },
-        interactionPayload: {},
+        interactionPayload: { event: 'sign-in' },
       };
       await expect(koaInteractionBodyGuard()(ctx, next)).rejects.toThrow();
     });
@@ -129,7 +129,7 @@ describe('koaInteractionBodyGuard', () => {
             profile,
           },
         },
-        interactionPayload: {},
+        interactionPayload: { event: 'sign-in' },
       };
       await expect(koaInteractionBodyGuard()(ctx, next)).resolves.not.toThrow();
       expect(ctx.interactionPayload.profile).toEqual(profile);

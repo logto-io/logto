@@ -6,15 +6,42 @@ import type {
   PhonePasswordPayload,
   PhonePasscodePayload,
 } from '@logto/schemas';
-import { eventGuard, profileGuard, identifierGuard } from '@logto/schemas';
+import {
+  socialConnectorPayloadGuard,
+  emailPasscodePayloadGuard,
+  phonePasscodePayloadGuard,
+  eventGuard,
+  profileGuard,
+  identifierGuard,
+} from '@logto/schemas';
 import { z } from 'zod';
 
 // Interaction Route Guard
-export const interactionPayloadGuard = z.object({
-  event: eventGuard.optional(),
+const forgotPasswordInteractionPayloadGuard = z.object({
+  event: z.literal('forgot-password'),
+  identifier: z.union([emailPasscodePayloadGuard, phonePasscodePayloadGuard]).optional(),
+  profile: profileGuard.pick({ password: true }).optional(),
+});
+
+const registerInteractionPayloadGuard = z.object({
+  event: z.literal('register'),
+  identifier: z
+    .union([emailPasscodePayloadGuard, phonePasscodePayloadGuard, socialConnectorPayloadGuard])
+    .optional(),
+  profile: profileGuard.optional(),
+});
+
+const signInInteractionPayloadGuard = z.object({
+  event: z.literal('sign-in'),
   identifier: identifierGuard.optional(),
   profile: profileGuard.optional(),
 });
+
+export const interactionPayloadGuard = z.discriminatedUnion('event', [
+  signInInteractionPayloadGuard,
+  registerInteractionPayloadGuard,
+  forgotPasswordInteractionPayloadGuard,
+]);
 
 export type InteractionPayload = z.infer<typeof interactionPayloadGuard>;
 export type IdentifierPayload = z.infer<typeof identifierGuard>;

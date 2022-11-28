@@ -20,13 +20,15 @@ export default function koaSessionSignInExperienceGuard<
     const interaction = await provider.interactionDetails(ctx.req, ctx.res);
     const { event, identifier, profile } = ctx.interactionPayload;
 
+    if (event === 'forgot-password') {
+      return next();
+    }
+
     const signInExperience = await getSignInExperienceForApplication(
       typeof interaction.params.client_id === 'string' ? interaction.params.client_id : undefined
     );
 
-    if (event) {
-      signInModeValidation(event, signInExperience);
-    }
+    signInModeValidation(event, signInExperience);
 
     if (identifier) {
       identifierValidation(identifier, signInExperience);
