@@ -1,5 +1,6 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType, validateRedirectUrl } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -71,22 +72,23 @@ const Settings = ({ data }: Props) => {
         </FormField>
       )}
       {applicationType !== ApplicationType.MachineToMachine && (
-        <FormField
-          isRequired
-          title="application_details.redirect_uris"
-          tooltip="application_details.redirect_uri_tip"
-        >
-          <Controller
-            name="oidcClientMetadata.redirectUris"
-            control={control}
-            defaultValue={[]}
-            rules={{
-              validate: createValidatorForRhf({
-                ...uriPatternRules,
-                required: t('application_details.redirect_uri_required'),
-              }),
-            }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <Controller
+          name="oidcClientMetadata.redirectUris"
+          control={control}
+          defaultValue={[]}
+          rules={{
+            validate: createValidatorForRhf({
+              ...uriPatternRules,
+              required: t('application_details.redirect_uri_required'),
+            }),
+          }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <FormField
+              isRequired
+              title="application_details.redirect_uris"
+              tooltip="application_details.redirect_uri_tip"
+              className={conditional(value.length > 1 && styles.multiTextInputHeadline)}
+            >
               <MultiTextInput
                 title="application_details.redirect_uris"
                 value={value}
@@ -98,23 +100,24 @@ const Settings = ({ data }: Props) => {
                 }
                 onChange={onChange}
               />
-            )}
-          />
-        </FormField>
+            </FormField>
+          )}
+        />
       )}
       {applicationType !== ApplicationType.MachineToMachine && (
-        <FormField
-          title="application_details.post_sign_out_redirect_uris"
-          tooltip="application_details.post_sign_out_redirect_uri_tip"
-        >
-          <Controller
-            name="oidcClientMetadata.postLogoutRedirectUris"
-            control={control}
-            defaultValue={[]}
-            rules={{
-              validate: createValidatorForRhf(uriPatternRules),
-            }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <Controller
+          name="oidcClientMetadata.postLogoutRedirectUris"
+          control={control}
+          defaultValue={[]}
+          rules={{
+            validate: createValidatorForRhf(uriPatternRules),
+          }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <FormField
+              title="application_details.post_sign_out_redirect_uris"
+              tooltip="application_details.post_sign_out_redirect_uri_tip"
+              className={conditional(value.length > 1 && styles.multiTextInputHeadline)}
+            >
               <MultiTextInput
                 title="application_details.post_sign_out_redirect_uris"
                 value={value}
@@ -122,28 +125,29 @@ const Settings = ({ data }: Props) => {
                 placeholder={t('application_details.post_sign_out_redirect_uri_placeholder')}
                 onChange={onChange}
               />
-            )}
-          />
-        </FormField>
+            </FormField>
+          )}
+        />
       )}
       {applicationType !== ApplicationType.MachineToMachine && (
-        <FormField
-          title="application_details.cors_allowed_origins"
-          tooltip="application_details.cors_allowed_origins_tip"
-        >
-          <Controller
-            name="customClientMetadata.corsAllowedOrigins"
-            control={control}
-            defaultValue={[]}
-            rules={{
-              validate: createValidatorForRhf({
-                pattern: {
-                  verify: (value) => !value || uriOriginValidator(value),
-                  message: t('errors.invalid_origin_format'),
-                },
-              }),
-            }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <Controller
+          name="customClientMetadata.corsAllowedOrigins"
+          control={control}
+          defaultValue={[]}
+          rules={{
+            validate: createValidatorForRhf({
+              pattern: {
+                verify: (value) => !value || uriOriginValidator(value),
+                message: t('errors.invalid_origin_format'),
+              },
+            }),
+          }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <FormField
+              title="application_details.cors_allowed_origins"
+              tooltip="application_details.cors_allowed_origins_tip"
+              className={conditional(value && value.length > 1 && styles.multiTextInputHeadline)}
+            >
               <MultiTextInput
                 title="application_details.cors_allowed_origins"
                 value={value}
@@ -151,9 +155,9 @@ const Settings = ({ data }: Props) => {
                 placeholder={t('application_details.cors_allowed_origins_placeholder')}
                 onChange={onChange}
               />
-            )}
-          />
-        </FormField>
+            </FormField>
+          )}
+        />
       )}
     </FormCard>
   );

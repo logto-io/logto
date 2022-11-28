@@ -1,4 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import classNames from 'classnames';
 import type { KeyboardEvent } from 'react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,9 +20,18 @@ type Props = {
   onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void;
   error?: MultiTextInputError;
   placeholder?: string;
+  className?: string;
 };
 
-const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder }: Props) => {
+const MultiTextInput = ({
+  title,
+  value,
+  onChange,
+  onKeyPress,
+  error,
+  placeholder,
+  className,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [deleteFieldIndex, setDeleteFieldIndex] = useState<number>();
@@ -47,7 +57,7 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder
   };
 
   return (
-    <div className={styles.multilineInput}>
+    <div className={classNames(styles.multilineInput, className)}>
       {fields.map((fieldValue, fieldIndex) => (
         // eslint-disable-next-line react/no-array-index-key
         <div key={fieldIndex}>

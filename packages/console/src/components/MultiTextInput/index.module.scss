@@ -5,6 +5,12 @@
     margin-top: _.unit(2);
   }
 
+  > :first-child {
+    &:not(:nth-last-child(2)) {
+      padding-right: _.unit(9);
+    }
+  }
+
   .deletableInput {
     display: flex;
     align-items: center;

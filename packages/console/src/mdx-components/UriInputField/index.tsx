@@ -1,5 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
+import classNames from 'classnames';
 import type { KeyboardEvent } from 'react';
 import { useRef } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -69,31 +70,33 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
   return (
     <FormProvider {...methods}>
       <form>
-        <FormField isRequired={name === 'redirectUris'} className={styles.field} title={title}>
-          <Controller
-            name={name}
-            control={control}
-            defaultValue={data?.oidcClientMetadata[name]}
-            rules={{
-              validate: createValidatorForRhf({
-                required: t(
-                  isSingle
-                    ? 'errors.required_field_missing'
-                    : 'errors.required_field_missing_plural',
-                  { field: title }
-                ),
-                pattern: {
-                  verify: (value) => !value || uriValidator(value),
-                  message: t('errors.invalid_uri_format'),
-                },
-              }),
-            }}
-            render={({ field: { onChange, value = [] }, fieldState: { error, isDirty } }) => {
-              const errorObject = convertRhfErrorMessage(error?.message);
+        <Controller
+          name={name}
+          control={control}
+          defaultValue={data?.oidcClientMetadata[name]}
+          rules={{
+            validate: createValidatorForRhf({
+              required: t(
+                isSingle ? 'errors.required_field_missing' : 'errors.required_field_missing_plural',
+                { field: title }
+              ),
+              pattern: {
+                verify: (value) => !value || uriValidator(value),
+                message: t('errors.invalid_uri_format'),
+              },
+            }),
+          }}
+          render={({ field: { onChange, value = [] }, fieldState: { error, isDirty } }) => {
+            const errorObject = convertRhfErrorMessage(error?.message);
 
-              return (
-                <div ref={ref} className={styles.wrapper}>
-                  {isSingle && (
+            return (
+              <div ref={ref} className={styles.wrapper}>
+                {isSingle && (
+                  <FormField
+                    isRequired={name === 'redirectUris'}
+                    className={styles.field}
+                    title={title}
+                  >
                     <TextInput
                       className={styles.field}
                       value={value[0]}
@@ -105,31 +108,41 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
                         onKeyPress(event, value);
                       }}
                     />
-                  )}
-                  {!isSingle && (
+                  </FormField>
+                )}
+                {!isSingle && (
+                  <FormField
+                    isRequired={name === 'redirectUris'}
+                    className={classNames(
+                      styles.field,
+                      value.length > 1 && styles.multiTextInputHeadLine
+                    )}
+                    title={title}
+                  >
                     <MultiTextInput
                       title={title}
                       value={value}
                       error={errorObject}
+                      className={styles.multiTextInput}
                       onChange={onChange}
                       onKeyPress={(event) => {
                         onKeyPress(event, value);
                       }}
                     />
-                  )}
-                  <Button
-                    className={styles.saveButton}
-                    disabled={!isDirty}
-                    isLoading={isSubmitting}
-                    title="general.save"
-                    type="primary"
-                    onClick={handleSubmit(async () => onSubmit(value))}
-                  />
-                </div>
-              );
-            }}
-          />
-        </FormField>
+                  </FormField>
+                )}
+                <Button
+                  className={styles.saveButton}
+                  disabled={!isDirty}
+                  isLoading={isSubmitting}
+                  title="general.save"
+                  type="primary"
+                  onClick={handleSubmit(async () => onSubmit(value))}
+                />
+              </div>
+            );
+          }}
+        />
       </form>
     </FormProvider>
   );

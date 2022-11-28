@@ -22,6 +22,12 @@
   @include _.form-text-field;
 }
 
+.multiTextInputHeadline {
+  >:first-child {
+    margin-right: _.unit(9);
+  }
+}
+
 .header {
   flex: 0;
   display: flex;

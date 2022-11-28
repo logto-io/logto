@@ -5,13 +5,22 @@
   align-items: flex-start;
   position: relative;
 
-  .saveButton {
-    position: absolute;
-    left: calc(556px + _.unit(3));
-    top: 0;
-  }
-}
+  .field {
+    flex: 1;
 
-.field {
-  width: 556px;
+    &.multiTextInputHeadLine {
+      > :first-child {
+        padding-right: _.unit(9);
+      }
+    }
+
+    .multiTextInput {
+      flex: 1;
+    }
+  }
+
+  .saveButton {
+    flex-shrink: 0;
+    margin: _.unit(6) 0 0 _.unit(2);
+  }
 }
