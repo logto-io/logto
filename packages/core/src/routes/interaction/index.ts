@@ -7,16 +7,20 @@ import assertThat from '#src/utils/assert-that.js';
 import type { AnonymousRouter } from '../types.js';
 import koaInteractionBodyGuard from './middleware/koa-interaction-body-guard.js';
 import koaSessionSignInExperienceGuard from './middleware/koa-session-sign-in-experience-guard.js';
-import { sendPasscodePayloadGuard } from './types/guard.js';
+import { sendPasscodePayloadGuard, getSocialAuthorizationUrlPayloadGuard } from './types/guard.js';
 import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
+import { createSocialAuthorizationUrl } from './utils/social-verification.js';
 import { identifierVerification } from './verifications/index.js';
+
+export const identifierPrefix = '/identifier';
+export const verificationPrefix = '/verification';
 
 export default function interactionRoutes<T extends AnonymousRouter>(
   router: T,
   provider: Provider
 ) {
   router.put(
-    '/interaction',
+    identifierPrefix,
     koaInteractionBodyGuard(),
     koaSessionSignInExperienceGuard(provider),
     async (ctx, next) => {
@@ -35,7 +39,22 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    '/passcode/send',
+    `${verificationPrefix}/social/authorization-uri`,
+    koaGuard({ body: getSocialAuthorizationUrlPayloadGuard }),
+    async (ctx, next) => {
+      // Check interaction session
+      await provider.interactionDetails(ctx.req, ctx.res);
+
+      const redirectTo = await createSocialAuthorizationUrl(ctx.guard.body);
+
+      ctx.body = { redirectTo };
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${verificationPrefix}/passcode`,
     koaGuard({
       body: sendPasscodePayloadGuard,
     }),

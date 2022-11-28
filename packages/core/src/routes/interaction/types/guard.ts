@@ -1,15 +1,15 @@
-import { emailRegEx, phoneRegEx } from '@logto/core-kit';
+import { emailRegEx, phoneRegEx, validateRedirectUrl } from '@logto/core-kit';
 import type {
   UsernamePasswordPayload,
   EmailPasswordPayload,
   EmailPasscodePayload,
   PhonePasswordPayload,
   PhonePasscodePayload,
-  SocialConnectorPayload,
 } from '@logto/schemas';
 import { eventGuard, profileGuard, identifierGuard } from '@logto/schemas';
 import { z } from 'zod';
 
+// Interaction Route Guard
 export const interactionPayloadGuard = z.object({
   event: eventGuard.optional(),
   identifier: identifierGuard.optional(),
@@ -19,6 +19,14 @@ export const interactionPayloadGuard = z.object({
 export type InteractionPayload = z.infer<typeof interactionPayloadGuard>;
 export type IdentifierPayload = z.infer<typeof identifierGuard>;
 
+export type PasswordIdentifierPayload =
+  | UsernamePasswordPayload
+  | EmailPasswordPayload
+  | PhonePasswordPayload;
+
+export type PasscodeIdentifierPayload = EmailPasscodePayload | PhonePasscodePayload;
+
+// Passcode Send Route Guard
 export const sendPasscodePayloadGuard = z.union([
   z.object({
     event: eventGuard,
@@ -32,23 +40,11 @@ export const sendPasscodePayloadGuard = z.union([
 
 export type SendPasscodePayload = z.infer<typeof sendPasscodePayloadGuard>;
 
-export type PasswordIdentifierPayload =
-  | UsernamePasswordPayload
-  | EmailPasswordPayload
-  | PhonePasswordPayload;
+// Social Authorization Uri Route Guard
+export const getSocialAuthorizationUrlPayloadGuard = z.object({
+  connectorId: z.string(),
+  state: z.string(),
+  redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
+});
 
-export type PasscodeIdentifierPayload = EmailPasscodePayload | PhonePasscodePayload;
-
-export type UserIdentity =
-  | Omit<UsernamePasswordPayload, 'password'>
-  | Omit<EmailPasswordPayload, 'password'>
-  | Omit<PhonePasswordPayload, 'password'>
-  | Omit<SocialConnectorPayload, 'data'>;
-
-export const isPasswordIdentifier = (
-  identifier: IdentifierPayload
-): identifier is PasswordIdentifierPayload => 'password' in identifier;
-
-export const isPasscodeIdentifier = (
-  identifier: IdentifierPayload
-): identifier is PasscodeIdentifierPayload => 'passcode' in identifier;
+export type SocialAuthorizationUrlPayload = z.infer<typeof getSocialAuthorizationUrlPayloadGuard>;

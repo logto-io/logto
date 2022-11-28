@@ -1,6 +1,8 @@
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
+import type { SocialUserInfo } from '#src/connectors/types.js';
+
 import type { WithGuardedIdentifierPayloadContext } from '../middleware/koa-interaction-body-guard.js';
 
 export type Identifier =
@@ -26,3 +28,9 @@ type UseInfo = {
 };
 
 export type InteractionContext = WithGuardedIdentifierPayloadContext<IRouterParamContext & Context>;
+
+export type UserIdentity =
+  | { username: string }
+  | { email: string }
+  | { phone: string }
+  | { connectorId: string; userInfo: SocialUserInfo };

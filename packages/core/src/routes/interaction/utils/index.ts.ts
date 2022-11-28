@@ -14,6 +14,10 @@ export const isPasscodeIdentifier = (
   identifier: IdentifierPayload
 ): identifier is PasscodeIdentifierPayload => 'passcode' in identifier;
 
+export const isSocialIdentifier = (
+  identifier: IdentifierPayload
+): identifier is SocialConnectorPayload => 'connectorId' in identifier;
+
 export const isProfileIdentifier = (
   identifier: PasscodeIdentifierPayload | SocialConnectorPayload,
   profile?: Profile
