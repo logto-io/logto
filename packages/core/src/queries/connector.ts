@@ -50,7 +50,7 @@ export const deleteConnectorByIds = async (ids: string[]) => {
     where ${fields.id} in (${sql.join(ids, sql`, `)})
   `);
 
-  if (rowCount < 1) {
+  if (rowCount !== ids.length) {
     throw new DeletionError(Connectors.table, JSON.stringify({ ids }));
   }
 };

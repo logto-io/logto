@@ -145,7 +145,7 @@ describe('connector queries', () => {
     await deleteConnectorByIds(ids);
   });
 
-  it('deleteConnectorByIds should throw with zero response', async () => {
+  it('deleteConnectorByIds should throw with row count does not match length of ids', async () => {
     const ids = ['foo', 'bar', 'baz'];
     const expectSql = sql`
       delete from ${table}
@@ -156,7 +156,7 @@ describe('connector queries', () => {
       expectSqlAssert(sql, expectSql.sql);
       expect(values).toEqual(ids);
 
-      return createMockQueryResult([]);
+      return createMockQueryResult([{ id: 'foo' }, { id: 'bar' }]);
     });
 
     await expect(deleteConnectorByIds(ids)).rejects.toMatchError(
