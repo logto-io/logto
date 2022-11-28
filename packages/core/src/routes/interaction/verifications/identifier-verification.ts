@@ -1,7 +1,5 @@
 import type { Provider } from 'oidc-provider';
 
-import RequestError from '#src/errors/RequestError/index.js';
-
 import type { InteractionContext, Identifier } from '../types/index.js';
 import {
   isPasscodeIdentifier,
@@ -9,18 +7,21 @@ import {
   isProfileIdentifier,
 } from '../utils/index.ts.js';
 import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
+import { verifySocialIdentity } from '../utils/social-verification.js';
 import {
   verifyUserByIdentityAndPassword,
   verifyUserByVerifiedPasscodeIdentity,
+  verifyUserBySocialIdentity,
 } from '../utils/verify-user.js';
 
+// eslint-disable-next-line complexity
 export default async function identifierVerification(
   ctx: InteractionContext,
   provider: Provider
 ): Promise<Identifier[]> {
   const { identifier, event, profile } = ctx.interactionPayload;
 
-  if (!identifier) {
+  if (!identifier || !event) {
     return [];
   }
 
@@ -30,7 +31,7 @@ export default async function identifierVerification(
     return [{ key: 'accountId', value: accountId }];
   }
 
-  if (isPasscodeIdentifier(identifier) && event) {
+  if (isPasscodeIdentifier(identifier)) {
     const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
     await verifyIdentifierByPasscode({ ...identifier, event }, jti, ctx.log);
@@ -40,7 +41,7 @@ export default async function identifierVerification(
         ? { key: 'verifiedEmail', value: identifier.email }
         : { key: 'verifiedPhone', value: identifier.phone };
 
-    // Return the verified identity directly if it is for new profile validation
+    // Return the verified identity directly if it is new profile identities
     if (isProfileIdentifier(identifier, profile)) {
       return [verifiedPasscodeIdentifier];
     }
@@ -51,6 +52,19 @@ export default async function identifierVerification(
     return [{ key: 'accountId', value: accountId }, verifiedPasscodeIdentifier];
   }
 
-  // Invalid identifier input
-  throw new RequestError('guard.invalid_input', identifier);
+  // Social Identifier
+  const socialUserInfo = await verifySocialIdentity(identifier, ctx.log);
+
+  const { connectorId } = identifier;
+
+  if (isProfileIdentifier(identifier, profile)) {
+    return [{ key: 'social', connectorId, value: socialUserInfo }];
+  }
+
+  const accountId = await verifyUserBySocialIdentity(connectorId, socialUserInfo);
+
+  return [
+    { key: 'accountId', value: accountId },
+    { key: 'social', connectorId, value: socialUserInfo },
+  ];
 }

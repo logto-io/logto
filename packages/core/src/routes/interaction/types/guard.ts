@@ -5,7 +5,6 @@ import type {
   EmailPasscodePayload,
   PhonePasswordPayload,
   PhonePasscodePayload,
-  SocialConnectorPayload,
 } from '@logto/schemas';
 import { eventGuard, profileGuard, identifierGuard } from '@logto/schemas';
 import { z } from 'zod';
@@ -26,12 +25,6 @@ export type PasswordIdentifierPayload =
   | PhonePasswordPayload;
 
 export type PasscodeIdentifierPayload = EmailPasscodePayload | PhonePasscodePayload;
-
-export type UserIdentity =
-  | Omit<UsernamePasswordPayload, 'password'>
-  | Omit<EmailPasswordPayload, 'password'>
-  | Omit<PhonePasswordPayload, 'password'>
-  | Omit<SocialConnectorPayload, 'data'>;
 
 // Passcode Send Route Guard
 export const sendPasscodePayloadGuard = z.union([
