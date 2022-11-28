@@ -146,9 +146,9 @@ const SignInExperience = () => {
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {data && defaultFormData && (
         <div className={styles.content}>
-          <div className={styles.contentTop}>
+          <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
             <FormProvider {...methods}>
-              <form className={classNames(styles.form, isDirty && styles.withSubmitActionBar)}>
+              <form className={styles.form}>
                 {/* Todo: LOG-4766 Add Constants To Guard Router Path */}
                 <Branding isActive={tab === 'branding'} />
                 <SignUpAndSignIn isActive={tab === 'sign-up-and-sign-in'} />
