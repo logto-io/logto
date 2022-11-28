@@ -11,8 +11,10 @@
 
     > :first-child {
       @include _.form-text-field;
-      margin-right: _.unit(2);
-      flex-shrink: 0;
+    }
+
+    > :not(:first-child) {
+      margin-left: _.unit(2);
     }
   }
 
