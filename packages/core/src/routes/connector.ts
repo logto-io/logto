@@ -12,6 +12,7 @@ import {
 } from '#src/connectors/index.js';
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { removeUnavailableSocialConnectorTargets } from '#src/lib/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import {
   findConnectorById,
@@ -147,7 +148,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
               type === connectorFactory.type && id !== insertConnectorId
           )
           .map(({ dbEntry: { id } }) => id);
-        await deleteConnectorByIds(conflictingConnectorIds);
+
+        if (conflictingConnectorIds.length > 0) {
+          await deleteConnectorByIds(conflictingConnectorIds);
+        }
       }
 
       return next();

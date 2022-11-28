@@ -11,6 +11,7 @@ import {
   findConnectorById,
   countConnectorByConnectorId,
   deleteConnectorById,
+  deleteConnectorByIds,
 } from '#src/queries/connector.js';
 import assertThat from '#src/utils/assert-that.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -26,6 +27,7 @@ import {
   mockConnector,
   mockConnectorFactory,
   mockLogtoConnectorList,
+  mockLogtoConnector,
 } from '#src/__mocks__/index.js';
 
 const loadConnectorFactoriesPlaceHolder = jest.fn() as jest.MockedFunction<
@@ -222,6 +224,39 @@ describe('connector route', () => {
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
       });
       expect(response).toHaveProperty('statusCode', 422);
+    });
+
+    it('should add a new record and delete old records with same connector type when add passwordless connectors', async () => {
+      loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
+        {
+          ...mockConnectorFactory,
+          type: ConnectorType.Sms,
+          metadata: { ...mockConnectorFactory.metadata, id: 'id0', isStandard: true },
+        },
+      ]);
+      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
+        {
+          dbEntry: { ...mockConnector, connectorId: 'id0' },
+          metadata: { ...mockMetadata, id: 'id0' },
+          type: ConnectorType.Sms,
+          ...mockLogtoConnector,
+        },
+      ]);
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'id0',
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
+      expect(response).toHaveProperty('statusCode', 200);
+      expect(response.body).toMatchObject(
+        expect.objectContaining({
+          connectorId: 'id0',
+          config: {
+            cliend_id: 'client_id',
+            client_secret: 'client_secret',
+          },
+        })
+      );
+      expect(deleteConnectorByIds).toHaveBeenCalledWith(['id']);
     });
   });
 
