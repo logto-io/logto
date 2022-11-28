@@ -18,6 +18,7 @@ import {
   findConnectorById,
   countConnectorByConnectorId,
   deleteConnectorById,
+  deleteConnectorByIds,
   insertConnector,
   updateConnector,
 } from '#src/queries/connector.js';
@@ -130,10 +131,29 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
+      const insertConnectorId = generateConnectorId();
       ctx.body = await insertConnector({
-        id: generateConnectorId(),
+        id: insertConnectorId,
         ...body,
       });
+
+      /**
+       * We can have only one working email/sms connector:
+       * once we insert a new one, old connectors with same type should be deleted.
+       */
+      if (
+        connectorFactory.type === ConnectorType.Sms ||
+        connectorFactory.type === ConnectorType.Email
+      ) {
+        const logtoConnectors = await getLogtoConnectors();
+        const conflictingConnectorIds = logtoConnectors
+          .filter(
+            ({ dbEntry: { id }, type }) =>
+              type === connectorFactory.type && id !== insertConnectorId
+          )
+          .map(({ dbEntry: { id } }) => id);
+        await deleteConnectorByIds(conflictingConnectorIds);
+      }
 
       return next();
     }

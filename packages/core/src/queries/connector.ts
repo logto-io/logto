@@ -1,6 +1,6 @@
 import type { Connector, CreateConnector } from '@logto/schemas';
 import { Connectors } from '@logto/schemas';
-import { convertToIdentifiers, manyRows } from '@logto/shared';
+import { manyRows, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '#src/database/insert-into.js';
@@ -41,6 +41,17 @@ export const deleteConnectorById = async (id: string) => {
 
   if (rowCount < 1) {
     throw new DeletionError(Connectors.table, id);
+  }
+};
+
+export const deleteConnectorByIds = async (ids: string[]) => {
+  const { rowCount } = await envSet.pool.query(sql`
+    delete from ${table}
+    where ${fields.id} in (${sql.join(ids, sql`, `)})
+  `);
+
+  if (rowCount !== ids.length) {
+    throw new DeletionError(Connectors.table, JSON.stringify({ ids }));
   }
 };
 
