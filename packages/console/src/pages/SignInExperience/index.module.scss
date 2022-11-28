@@ -30,10 +30,6 @@
       .form {
         flex: 1;
         margin-right: _.unit(3);
-
-        > :not(:first-child) {
-          margin-top: _.unit(3);
-        }
       }
 
       .preview {
