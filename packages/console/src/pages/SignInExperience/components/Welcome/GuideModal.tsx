@@ -111,18 +111,10 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
               )}
               <div className={styles.main}>
                 <div className={styles.form}>
-                  <div className={styles.card}>
-                    <ColorForm />
-                  </div>
-                  <div className={styles.card}>
-                    <BrandingForm />
-                  </div>
-                  <div className={styles.card}>
-                    <TermsForm />
-                  </div>
-                  <div className={styles.card}>
-                    <LanguagesForm />
-                  </div>
+                  <ColorForm />
+                  <BrandingForm />
+                  <TermsForm />
+                  <LanguagesForm />
                 </div>
                 {formData.id && (
                   <Preview signInExperience={previewConfigs} className={styles.preview} />

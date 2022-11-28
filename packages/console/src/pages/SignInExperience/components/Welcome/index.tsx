@@ -22,9 +22,13 @@ const Welcome = ({ mutate }: Props) => {
   const theme = useTheme();
 
   return (
-    <>
+    <div className={styles.container}>
       <Card className={styles.welcome}>
-        <CardTitle title="sign_in_exp.title" subtitle="sign_in_exp.description" />
+        <CardTitle
+          title="sign_in_exp.title"
+          subtitle="sign_in_exp.description"
+          className={styles.cardTitle}
+        />
         <div className={styles.content}>
           {theme === AppearanceMode.LightMode ? <WelcomeImage /> : <WelcomeImageDark />}
           <div className={styles.text}>{t('sign_in_exp.welcome.title')}</div>
@@ -44,7 +48,7 @@ const Welcome = ({ mutate }: Props) => {
           mutate();
         }}
       />
-    </>
+    </div>
   );
 };
 
