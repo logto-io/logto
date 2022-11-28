@@ -8,3 +8,9 @@ export { ConnectorType, ConnectorPlatform } from '@logto/connector-kit';
 export type ConnectorResponse = Omit<Connector, 'metadata'> &
   Omit<BaseConnector<ConnectorType>, 'configGuard' | 'metadata'> &
   ConnectorMetadata;
+
+export type ConnectorFactoryResponse = Omit<
+  BaseConnector<ConnectorType>,
+  'configGuard' | 'metadata'
+> &
+  ConnectorMetadata;

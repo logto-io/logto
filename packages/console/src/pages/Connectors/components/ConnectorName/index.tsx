@@ -24,8 +24,7 @@ type Props = {
 
 const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const enabledConnectors = connectors.filter(({ enabled }) => enabled);
-  const connector = enabledConnectors[0];
+  const connector = connectors[0];
   const theme = useTheme();
 
   if (!connector) {
@@ -59,7 +58,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
             {type !== ConnectorType.Social && connector.id}
             {type === ConnectorType.Social && connectors.length > 1 && (
               <div className={styles.platforms}>
-                {enabledConnectors.map(
+                {connectors.map(
                   ({ id, platform }) =>
                     platform && (
                       <div key={id} className={styles.platform}>

@@ -88,18 +88,14 @@ const Preview = ({ signInExperience, className }: Props) => {
     >(
       (previous, connectorTarget) => [
         ...previous,
-        ...allConnectors.filter(({ target, enabled }) => target === connectorTarget && enabled),
+        ...allConnectors.filter(({ target }) => target === connectorTarget),
       ],
       []
     );
 
-    const hasEmailConnector = allConnectors.some(
-      ({ type, enabled }) => enabled && type === ConnectorType.Email
-    );
+    const hasEmailConnector = allConnectors.some(({ type }) => type === ConnectorType.Email);
 
-    const hasSmsConnector = allConnectors.some(
-      ({ type, enabled }) => enabled && type === ConnectorType.Sms
-    );
+    const hasSmsConnector = allConnectors.some(({ type }) => type === ConnectorType.Sms);
 
     return {
       signInExperience: {

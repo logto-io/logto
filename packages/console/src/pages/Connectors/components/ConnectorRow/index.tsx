@@ -19,17 +19,17 @@ type Props = {
 
 const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const firstEnabledConnector = connectors.find(({ enabled }) => enabled);
-  const inUse = useConnectorInUse(type, firstEnabledConnector?.target);
+  const firstConnector = connectors[0];
+  const inUse = useConnectorInUse(type, firstConnector?.target);
   const navigate = useNavigate();
-  const showSetupButton = type !== ConnectorType.Social && !firstEnabledConnector;
+  const showSetupButton = type !== ConnectorType.Social && !firstConnector;
 
   const handleClickRow = () => {
-    if (showSetupButton || !firstEnabledConnector) {
+    if (showSetupButton || !firstConnector) {
       return;
     }
 
-    navigate(`/connectors/${firstEnabledConnector.id}`);
+    navigate(`/connectors/${firstConnector.id}`);
   };
 
   return (

@@ -15,7 +15,7 @@ import { findAllConnectors } from '#src/queries/connector.js';
 import { defaultConnectorMethods } from './consts.js';
 import { metaUrl } from './meta-url.js';
 import type { ConnectorFactory, LogtoConnector } from './types.js';
-import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities/index.js';
+import { getConnectorConfig, parseMetadata, validateConnectorModule } from './utilities/index.js';
 
 const currentDirname = path.dirname(fileURLToPath(metaUrl));
 
@@ -52,7 +52,7 @@ export const loadConnectorFactories = async () => {
         validateConnectorModule(rawConnector);
 
         return {
-          metadata: rawConnector.metadata,
+          metadata: await parseMetadata(rawConnector.metadata, packagePath),
           type: rawConnector.type,
           createConnector,
           path: packagePath,
@@ -106,22 +106,13 @@ export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
           },
         });
         validateConnectorModule(rawConnector);
+        const rawMetadata = await parseMetadata(rawConnector.metadata, packagePath);
 
         const connector: AllConnector = {
           ...defaultConnectorMethods,
           ...rawConnector,
           metadata: {
-            ...rawConnector.metadata,
-            logo: await readUrl(rawConnector.metadata.logo, packagePath, 'svg'),
-            logoDark:
-              rawConnector.metadata.logoDark &&
-              (await readUrl(rawConnector.metadata.logoDark, packagePath, 'svg')),
-            readme: await readUrl(rawConnector.metadata.readme, packagePath, 'text'),
-            configTemplate: await readUrl(
-              rawConnector.metadata.configTemplate,
-              packagePath,
-              'text'
-            ),
+            ...rawMetadata,
             ...metadata,
           },
         };

@@ -67,11 +67,7 @@ const ConnectorDetails = () => {
       return;
     }
 
-    await api
-      .patch(`/api/connectors/${connectorId}/enabled`, {
-        json: { enabled: false },
-      })
-      .json<ConnectorResponse>();
+    await api.delete(`/api/connectors/${connectorId}`).json<ConnectorResponse>();
 
     setIsDeleted(true);
 

@@ -16,13 +16,7 @@ const SignInExperienceSetupNotice = () => {
     update,
   } = useUserPreferences();
 
-  if (!connectors || connectorSieNoticeConfirmed) {
-    return null;
-  }
-
-  const hasSetupConnector = connectors.some(({ enabled }) => enabled);
-
-  if (!hasSetupConnector) {
+  if (!connectors || connectors.length > 0 || connectorSieNoticeConfirmed) {
     return null;
   }
 

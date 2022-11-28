@@ -35,17 +35,13 @@ const Connectors = () => {
   const isLightMode = theme === AppearanceMode.LightMode;
 
   const emailConnector = useMemo(() => {
-    const emailConnectorGroup = data?.find(
-      ({ enabled, type }) => enabled && type === ConnectorType.Email
-    );
+    const emailConnectorGroup = data?.find(({ type }) => type === ConnectorType.Email);
 
     return emailConnectorGroup?.connectors[0];
   }, [data]);
 
   const smsConnector = useMemo(() => {
-    const smsConnectorGroup = data?.find(
-      ({ enabled, type }) => enabled && type === ConnectorType.Sms
-    );
+    const smsConnectorGroup = data?.find(({ type }) => type === ConnectorType.Sms);
 
     return smsConnectorGroup?.connectors[0];
   }, [data]);
@@ -55,7 +51,7 @@ const Connectors = () => {
       return;
     }
 
-    return data?.filter(({ enabled, type }) => enabled && type === ConnectorType.Social);
+    return data?.filter(({ type }) => type === ConnectorType.Social);
   }, [data, isSocial]);
 
   return (

@@ -1,6 +1,6 @@
 import { MessageTypes } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
-import type { ConnectorResponse } from '@logto/schemas';
+import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
@@ -71,7 +71,13 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
   router.get('/connector-factories', async (ctx, next) => {
     const connectorFactories = await loadConnectorFactories();
-    ctx.body = connectorFactories.map(({ metadata, type }) => ({ type, ...metadata }));
+    const formatedFactories: ConnectorFactoryResponse[] = connectorFactories.map(
+      ({ metadata, type }) => ({
+        type,
+        ...metadata,
+      })
+    );
+    ctx.body = formatedFactories;
 
     return next();
   });
