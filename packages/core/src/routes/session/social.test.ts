@@ -170,15 +170,6 @@ describe('session -> socialRoutes', () => {
       expect(response.statusCode).toEqual(400);
     });
 
-    it('throw error when connector is disabled', async () => {
-      const response = await sessionRequest.post(`${signInRoute}`).send({
-        connectorId: 'social_disabled',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
-      });
-      expect(response.statusCode).toEqual(400);
-    });
-
     it('throw error when no social connector is found', async () => {
       const response = await sessionRequest.post(`${signInRoute}`).send({
         connectorId: 'others',

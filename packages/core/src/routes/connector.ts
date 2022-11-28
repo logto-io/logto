@@ -51,15 +51,11 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const connectors = await getLogtoConnectors();
 
       assertThat(
-        connectors.filter(
-          (connector) => connector.dbEntry.enabled && connector.type === ConnectorType.Email
-        ).length <= 1,
+        connectors.filter((connector) => connector.type === ConnectorType.Email).length <= 1,
         'connector.more_than_one_email'
       );
       assertThat(
-        connectors.filter(
-          (connector) => connector.dbEntry.enabled && connector.type === ConnectorType.Sms
-        ).length <= 1,
+        connectors.filter((connector) => connector.type === ConnectorType.Sms).length <= 1,
         'connector.more_than_one_sms'
       );
 
@@ -152,63 +148,11 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
               type === connectorFactory.type && id !== insertConnectorId
           )
           .map(({ dbEntry: { id } }) => id);
-        await deleteConnectorByIds(conflictingConnectorIds);
+
+        if (conflictingConnectorIds.length > 0) {
+          await deleteConnectorByIds(conflictingConnectorIds);
+        }
       }
-
-      return next();
-    }
-  );
-
-  router.patch(
-    '/connectors/:id/enabled',
-    koaGuard({
-      params: object({ id: string().min(1) }),
-      body: Connectors.createGuard.pick({ enabled: true }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { id },
-        body: { enabled },
-      } = ctx.guard;
-
-      const {
-        type,
-        dbEntry: { config },
-        metadata,
-        validateConfig,
-      } = await getLogtoConnectorById(id);
-
-      if (enabled) {
-        validateConfig(config);
-      }
-
-      // Only allow one enabled connector for SMS and Email.
-      // disable other connectors before enable this one.
-      if (enabled && (type === ConnectorType.Sms || type === ConnectorType.Email)) {
-        const connectors = await getLogtoConnectors();
-        await Promise.all(
-          connectors
-            .filter(
-              ({ dbEntry: { enabled }, type: currentType }) => type === currentType && enabled
-            )
-            .map(async ({ dbEntry: { id } }) =>
-              updateConnector({ set: { enabled: false }, where: { id }, jsonbMode: 'merge' })
-            )
-        );
-      }
-
-      const connector = await updateConnector({
-        set: { enabled },
-        where: { id },
-        jsonbMode: 'merge',
-      });
-
-      // Delete the social connector in the sign-in experience if it is disabled.
-      if (!enabled && type === ConnectorType.Social) {
-        await removeUnavailableSocialConnectorTargets();
-      }
-
-      ctx.body = { ...connector, metadata, type };
 
       return next();
     }
@@ -269,11 +213,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
       const { phone, email, config } = body;
 
-      const logtoConnectors = await getLogtoConnectors();
       const subject = phone ?? email;
       assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
 
-      const connector = logtoConnectors.find(({ metadata: { id: currentId } }) => currentId === id);
+      const connector = await getLogtoConnectorById(id);
       const expectType = phone ? ConnectorType.Sms : ConnectorType.Email;
 
       assertThat(

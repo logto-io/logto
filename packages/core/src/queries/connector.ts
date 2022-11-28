@@ -15,7 +15,7 @@ export const findAllConnectors = async () =>
     envSet.pool.query<Connector>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      order by ${fields.enabled} desc, ${fields.id} asc
+      order by ${fields.id} asc
     `)
   );
 

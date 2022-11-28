@@ -12,8 +12,10 @@ import {
   deleteUser,
   updateUserPassword,
   deleteUserIdentity,
+  postConnector,
+  updateConnectorConfig,
 } from '@/api';
-import { createUserByAdmin, bindSocialToNewCreatedUser, setUpConnector } from '@/helpers';
+import { createUserByAdmin, bindSocialToNewCreatedUser } from '@/helpers';
 
 describe('admin console user management', () => {
   it('should create user successfully', async () => {
@@ -66,9 +68,10 @@ describe('admin console user management', () => {
   });
 
   it('should delete user identities successfully', async () => {
-    await setUpConnector(mockSocialConnectorId, mockSocialConnectorConfig);
+    const { id } = await postConnector(mockSocialConnectorId);
+    await updateConnectorConfig(id, mockSocialConnectorConfig);
 
-    const createdUserId = await bindSocialToNewCreatedUser();
+    const createdUserId = await bindSocialToNewCreatedUser(id);
 
     const userInfo = await getUser(createdUserId);
     expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);

@@ -77,7 +77,6 @@ export const mockMetadata6: ConnectorMetadata = {
 
 export const mockConnector0: Connector = {
   id: 'id0',
-  enabled: true,
   config: {},
   createdAt: 1_234_567_890_123,
   syncProfile: false,
@@ -87,7 +86,6 @@ export const mockConnector0: Connector = {
 
 export const mockConnector1: Connector = {
   id: 'id1',
-  enabled: true,
   config: {},
   createdAt: 1_234_567_890_234,
   syncProfile: false,
@@ -97,7 +95,6 @@ export const mockConnector1: Connector = {
 
 export const mockConnector2: Connector = {
   id: 'id2',
-  enabled: true,
   config: {},
   createdAt: 1_234_567_890_345,
   syncProfile: false,
@@ -107,7 +104,6 @@ export const mockConnector2: Connector = {
 
 export const mockConnector3: Connector = {
   id: 'id3',
-  enabled: true,
   config: {},
   createdAt: 1_234_567_890_456,
   syncProfile: false,
@@ -117,7 +113,6 @@ export const mockConnector3: Connector = {
 
 export const mockConnector4: Connector = {
   id: 'id4',
-  enabled: true,
   config: {},
   createdAt: 1_234_567_890_567,
   syncProfile: false,
@@ -127,7 +122,6 @@ export const mockConnector4: Connector = {
 
 export const mockConnector5: Connector = {
   id: 'id5',
-  enabled: true,
   config: {},
   createdAt: 1_234_567_890_567,
   syncProfile: false,
@@ -137,7 +131,6 @@ export const mockConnector5: Connector = {
 
 export const mockConnector6: Connector = {
   id: 'id6',
-  enabled: true,
   config: {},
   createdAt: 1_234_567_890_567,
   syncProfile: false,

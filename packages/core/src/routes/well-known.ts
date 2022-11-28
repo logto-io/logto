@@ -22,12 +22,8 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
       ]);
 
       const forgotPassword = {
-        sms: logtoConnectors.some(
-          ({ type, dbEntry: { enabled } }) => type === ConnectorType.Sms && enabled
-        ),
-        email: logtoConnectors.some(
-          ({ type, dbEntry: { enabled } }) => type === ConnectorType.Email && enabled
-        ),
+        sms: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
+        email: logtoConnectors.some(({ type }) => type === ConnectorType.Email),
       };
 
       const socialConnectors =
@@ -37,8 +33,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
               Array<ConnectorMetadata & { id: string }>
             >((previous, connectorTarget) => {
               const connectors = logtoConnectors.filter(
-                ({ metadata: { target }, dbEntry: { enabled } }) =>
-                  target === connectorTarget && enabled
+                ({ metadata: { target } }) => target === connectorTarget
               );
 
               return [

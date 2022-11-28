@@ -10,7 +10,7 @@ import { findPackage } from '@logto/shared';
 import chalk from 'chalk';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { findAllConnectors, insertConnector } from '#src/queries/connector.js';
+import { findAllConnectors } from '#src/queries/connector.js';
 
 import { defaultConnectorMethods } from './consts.js';
 import { metaUrl } from './meta-url.js';
@@ -155,30 +155,4 @@ export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector>
   }
 
   return pickedConnector;
-};
-
-export const initConnectors = async () => {
-  const connectors = await findAllConnectors();
-  const existingConnectors = new Map(
-    connectors.map((connector) => [connector.connectorId, connector])
-  );
-  const allConnectors = await loadConnectorFactories();
-  const newConnectors = allConnectors.filter(({ metadata: { id } }) => {
-    const connector = existingConnectors.get(id);
-
-    if (!connector) {
-      return true;
-    }
-
-    return connector.config === JSON.stringify({});
-  });
-
-  await Promise.all(
-    newConnectors.map(async ({ metadata: { id } }) => {
-      await insertConnector({
-        id,
-        connectorId: id,
-      });
-    })
-  );
 };

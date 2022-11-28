@@ -36,7 +36,7 @@ describe('connector queries', () => {
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      order by ${fields.enabled} desc, ${fields.id} asc
+      order by ${fields.id} asc
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -172,8 +172,8 @@ describe('connector queries', () => {
     };
 
     const expectSql = `
-      insert into "connectors" ("id", "enabled", "sync_profile", "connector_id", "config", "metadata")
-      values ($1, $2, $3, $4, $5, $6)
+      insert into "connectors" ("id", "sync_profile", "connector_id", "config", "metadata")
+      values ($1, $2, $3, $4, $5)
       returning *
     `;
 
@@ -182,7 +182,6 @@ describe('connector queries', () => {
 
       expect(values).toEqual([
         connector.id,
-        connector.enabled,
         connector.syncProfile,
         connector.connectorId,
         connector.config,
@@ -197,27 +196,27 @@ describe('connector queries', () => {
 
   it('updateConnector (with id)', async () => {
     const id = 'foo';
-    const enabled = false;
+    const syncProfile = false;
 
     const expectSql = sql`
       update ${table}
-      set ${fields.enabled}=$1
+      set ${fields.syncProfile}=$1
       where ${fields.id}=$2
       returning *
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([enabled, id]);
+      expect(values).toEqual([syncProfile, id]);
 
-      return createMockQueryResult([{ id, enabled }]);
+      return createMockQueryResult([{ id, syncProfile }]);
     });
 
     await expect(
-      updateConnector({ where: { id }, set: { enabled }, jsonbMode: 'merge' })
+      updateConnector({ where: { id }, set: { syncProfile }, jsonbMode: 'merge' })
     ).resolves.toEqual({
       id,
-      enabled,
+      syncProfile,
     });
   });
 });

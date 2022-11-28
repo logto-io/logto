@@ -33,7 +33,6 @@ export {
 
 export const mockConnector: Connector = {
   id: 'id',
-  enabled: true,
   config: {},
   createdAt: 1_234_567_890_123,
   syncProfile: false,
@@ -205,7 +204,6 @@ export const mockGoogleConnector: LogtoConnector = {
   dbEntry: {
     ...mockConnector,
     id: 'google',
-    enabled: false,
   },
   metadata: {
     ...mockMetadata,
@@ -227,15 +225,13 @@ export const mockLogtoConnectors = [
   mockWechatNativeConnector,
 ];
 
-export const disabledSocialTarget01 = 'disableSocialTarget-id01';
-export const disabledSocialTarget02 = 'disableSocialTarget-id02';
-export const enabledSocialTarget01 = 'enabledSocialTarget-id01';
+export const socialTarget01 = 'socialTarget-id01';
+export const socialTarget02 = 'socialTarget-id02';
 
 export const mockSocialConnectors: LogtoConnector[] = [
   {
     dbEntry: {
       id: 'id0',
-      enabled: false,
       config: {},
       createdAt: 1_234_567_890_123,
       syncProfile: false,
@@ -244,7 +240,7 @@ export const mockSocialConnectors: LogtoConnector[] = [
     },
     metadata: {
       ...mockMetadata,
-      target: disabledSocialTarget01,
+      target: socialTarget01,
     },
     type: ConnectorType.Social,
     ...mockLogtoConnector,
@@ -252,7 +248,6 @@ export const mockSocialConnectors: LogtoConnector[] = [
   {
     dbEntry: {
       id: 'id1',
-      enabled: true,
       config: {},
       createdAt: 1_234_567_890_123,
       syncProfile: false,
@@ -261,24 +256,7 @@ export const mockSocialConnectors: LogtoConnector[] = [
     },
     metadata: {
       ...mockMetadata,
-      target: enabledSocialTarget01,
-    },
-    type: ConnectorType.Social,
-    ...mockLogtoConnector,
-  },
-  {
-    dbEntry: {
-      id: 'id2',
-      enabled: false,
-      config: {},
-      createdAt: 1_234_567_890_123,
-      syncProfile: false,
-      metadata: {},
-      connectorId: 'id2',
-    },
-    metadata: {
-      ...mockMetadata,
-      target: disabledSocialTarget02,
+      target: socialTarget02,
     },
     type: ConnectorType.Social,
     ...mockLogtoConnector,

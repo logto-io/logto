@@ -3,17 +3,6 @@ import { MessageTypes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import {
-  mockMetadata,
-  mockMetadata0,
-  mockMetadata1,
-  mockMetadata2,
-  mockMetadata3,
-  mockConnector,
-  mockConnectorFactory,
-  mockLogtoConnectorList,
-  mockLogtoConnector,
-} from '#src/__mocks__/index.js';
 import { defaultConnectorMethods } from '#src/connectors/consts.js';
 import type { ConnectorFactory, LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -28,6 +17,18 @@ import assertThat from '#src/utils/assert-that.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 import connectorRoutes from './connector.js';
+
+import {
+  mockMetadata,
+  mockMetadata0,
+  mockMetadata1,
+  mockMetadata2,
+  mockMetadata3,
+  mockConnector,
+  mockConnectorFactory,
+  mockLogtoConnectorList,
+  mockLogtoConnector,
+} from '#src/__mocks__/index.js';
 
 const loadConnectorFactoriesPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<ConnectorFactory[]>
@@ -75,13 +76,13 @@ describe('connector route', () => {
       jest.clearAllMocks();
     });
 
-    it('throws if more than one email connector is enabled', async () => {
+    it('throws if more than one email connector exists', async () => {
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(mockLogtoConnectorList);
       const response = await connectorRequest.get('/connectors').send({});
       expect(response).toHaveProperty('statusCode', 400);
     });
 
-    it('throws if more than one SMS connector is enabled', async () => {
+    it('throws if more than one SMS connector exists', async () => {
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(
         mockLogtoConnectorList.filter((connector) => connector.type !== ConnectorType.Email)
       );
