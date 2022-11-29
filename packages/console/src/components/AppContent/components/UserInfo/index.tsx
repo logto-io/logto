@@ -58,7 +58,6 @@ const UserInfo = () => {
       </div>
       <Dropdown
         anchorRef={anchorRef}
-        className={styles.dropdown}
         isOpen={showDropdown}
         horizontalAlign="end"
         onClose={() => {
