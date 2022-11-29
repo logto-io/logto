@@ -13,7 +13,7 @@ import TextInput from '../TextInput';
 import * as styles from './index.module.scss';
 import type { MultiTextInputError } from './types';
 
-type Props = {
+export type Props = {
   title: AdminConsoleKey;
   value?: string[];
   onChange: (value: string[]) => void;

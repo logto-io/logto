@@ -1,15 +1,14 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType, validateRedirectUrl } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/components/CopyToClipboard';
 import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
-import MultiTextInput from '@/components/MultiTextInput';
 import type { MultiTextInputRule } from '@/components/MultiTextInput/types';
 import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
+import MultiTextInputField from '@/components/MultiTextInputField';
 import TextInput from '@/components/TextInput';
 import { uriOriginValidator } from '@/utilities/validator';
 
@@ -83,24 +82,19 @@ const Settings = ({ data }: Props) => {
             }),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <FormField
+            <MultiTextInputField
               isRequired
               title="application_details.redirect_uris"
               tooltip="application_details.redirect_uri_tip"
-              className={conditional(value.length > 1 && styles.multiTextInputHeadline)}
-            >
-              <MultiTextInput
-                title="application_details.redirect_uris"
-                value={value}
-                error={convertRhfErrorMessage(error?.message)}
-                placeholder={
-                  applicationType === ApplicationType.Native
-                    ? t('application_details.redirect_uri_placeholder_native')
-                    : t('application_details.redirect_uri_placeholder')
-                }
-                onChange={onChange}
-              />
-            </FormField>
+              value={value}
+              error={convertRhfErrorMessage(error?.message)}
+              placeholder={
+                applicationType === ApplicationType.Native
+                  ? t('application_details.redirect_uri_placeholder_native')
+                  : t('application_details.redirect_uri_placeholder')
+              }
+              onChange={onChange}
+            />
           )}
         />
       )}
@@ -113,19 +107,14 @@ const Settings = ({ data }: Props) => {
             validate: createValidatorForRhf(uriPatternRules),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <FormField
+            <MultiTextInputField
               title="application_details.post_sign_out_redirect_uris"
               tooltip="application_details.post_sign_out_redirect_uri_tip"
-              className={conditional(value.length > 1 && styles.multiTextInputHeadline)}
-            >
-              <MultiTextInput
-                title="application_details.post_sign_out_redirect_uris"
-                value={value}
-                error={convertRhfErrorMessage(error?.message)}
-                placeholder={t('application_details.post_sign_out_redirect_uri_placeholder')}
-                onChange={onChange}
-              />
-            </FormField>
+              value={value}
+              error={convertRhfErrorMessage(error?.message)}
+              placeholder={t('application_details.post_sign_out_redirect_uri_placeholder')}
+              onChange={onChange}
+            />
           )}
         />
       )}
@@ -143,19 +132,14 @@ const Settings = ({ data }: Props) => {
             }),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <FormField
+            <MultiTextInputField
               title="application_details.cors_allowed_origins"
               tooltip="application_details.cors_allowed_origins_tip"
-              className={conditional(value && value.length > 1 && styles.multiTextInputHeadline)}
-            >
-              <MultiTextInput
-                title="application_details.cors_allowed_origins"
-                value={value}
-                error={convertRhfErrorMessage(error?.message)}
-                placeholder={t('application_details.cors_allowed_origins_placeholder')}
-                onChange={onChange}
-              />
-            </FormField>
+              value={value}
+              error={convertRhfErrorMessage(error?.message)}
+              placeholder={t('application_details.cors_allowed_origins_placeholder')}
+              onChange={onChange}
+            />
           )}
         />
       )}

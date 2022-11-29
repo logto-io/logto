@@ -8,12 +8,6 @@
   .field {
     flex: 1;
 
-    &.multiTextInputHeadLine {
-      > :first-child {
-        padding-right: _.unit(9);
-      }
-    }
-
     .multiTextInput {
       flex: 1;
     }

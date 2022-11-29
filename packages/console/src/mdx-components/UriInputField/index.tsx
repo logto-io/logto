@@ -1,6 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
-import classNames from 'classnames';
 import type { KeyboardEvent } from 'react';
 import { useRef } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -10,8 +9,8 @@ import useSWR from 'swr';
 
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
-import MultiTextInput from '@/components/MultiTextInput';
 import { convertRhfErrorMessage, createValidatorForRhf } from '@/components/MultiTextInput/utils';
+import MultiTextInputField from '@/components/MultiTextInputField';
 import TextInput from '@/components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
@@ -111,25 +110,18 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
                   </FormField>
                 )}
                 {!isSingle && (
-                  <FormField
+                  <MultiTextInputField
                     isRequired={name === 'redirectUris'}
-                    className={classNames(
-                      styles.field,
-                      value.length > 1 && styles.multiTextInputHeadLine
-                    )}
+                    formFieldClassName={styles.field}
                     title={title}
-                  >
-                    <MultiTextInput
-                      title={title}
-                      value={value}
-                      error={errorObject}
-                      className={styles.multiTextInput}
-                      onChange={onChange}
-                      onKeyPress={(event) => {
-                        onKeyPress(event, value);
-                      }}
-                    />
-                  </FormField>
+                    value={value}
+                    error={errorObject}
+                    className={styles.multiTextInput}
+                    onChange={onChange}
+                    onKeyPress={(event) => {
+                      onKeyPress(event, value);
+                    }}
+                  />
                 )}
                 <Button
                   className={styles.saveButton}
