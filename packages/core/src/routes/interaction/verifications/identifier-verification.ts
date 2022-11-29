@@ -45,7 +45,7 @@ const passcodeIdentifierVerification = async (
       ? { key: 'verifiedEmail', value: identifier.email }
       : { key: 'verifiedPhone', value: identifier.phone };
 
-  // Return the verified identity directly if it is new profile identities
+  // Return the verified identity directly if it is for new profile identity verification
   if (isProfileIdentifier(identifier, profile)) {
     return [verifiedPasscodeIdentifier];
   }
@@ -53,7 +53,7 @@ const passcodeIdentifierVerification = async (
   const user = await findUserByIdentifier(identifier);
 
   if (!user) {
-    // Throw verification result and assign verification result
+    // Throw verification result and assign verified identifiers
     if (event !== Event.ForgotPassword) {
       await assignIdentifierVerificationResult(
         { event, identifiers: [verifiedPasscodeIdentifier] },
@@ -82,7 +82,7 @@ const socialIdentifierVerification = async (
   const { connectorId } = identifier;
   const socialIdentifier: SocialIdentifier = { key: 'social', connectorId, value: userInfo };
 
-  // Return the verified identity directly if it is new profile identities
+  // Return the verified identity directly if it is for new profile identity verification
   if (isProfileIdentifier(identifier, profile)) {
     return [socialIdentifier];
   }
@@ -90,6 +90,7 @@ const socialIdentifierVerification = async (
   const user = await findUserByIdentifier({ connectorId, userInfo });
 
   if (!user) {
+    // Throw verification result and assign verified identifiers
     await assignIdentifierVerificationResult(
       { event, identifiers: [socialIdentifier] },
       ctx,

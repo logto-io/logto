@@ -7,7 +7,6 @@ import type {
   PhonePasscodePayload,
 } from '@logto/schemas';
 import {
-  socialConnectorPayloadGuard,
   emailPasscodePayloadGuard,
   phonePasscodePayloadGuard,
   eventGuard,
@@ -26,9 +25,7 @@ const forgotPasswordInteractionPayloadGuard = z.object({
 
 const registerInteractionPayloadGuard = z.object({
   event: z.literal(Event.Register),
-  identifier: z
-    .union([emailPasscodePayloadGuard, phonePasscodePayloadGuard, socialConnectorPayloadGuard])
-    .optional(),
+  identifier: z.union([emailPasscodePayloadGuard, phonePasscodePayloadGuard]).optional(),
   profile: profileGuard.optional(),
 });
 
