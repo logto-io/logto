@@ -1,7 +1,9 @@
 @use '@/scss/underscore' as _;
 
-.tabs {
-  margin-top: _.unit(4);
+.container {
+  .tabs {
+    margin-top: _.unit(4);
+  }
 }
 
 .connectorName {

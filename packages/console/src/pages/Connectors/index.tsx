@@ -60,7 +60,7 @@ const Connectors = () => {
 
   return (
     <>
-      <div className={resourcesStyles.container}>
+      <div className={classNames(resourcesStyles.container, styles.container)}>
         <div className={resourcesStyles.headline}>
           <CardTitle title="connectors.title" subtitle="connectors.subtitle" />
           {isSocial && (
