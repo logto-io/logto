@@ -64,7 +64,7 @@ const MultiTextInput = ({
           // eslint-disable-next-line react/no-array-index-key
           key={fieldIndex}
           className={conditional(
-            fields.length > 1 && fieldIndex === 0 && styles.firstFiledWithMultiInputs
+            fields.length > 1 && fieldIndex === 0 && styles.firstFieldWithMultiInputs
           )}
         >
           <div className={styles.deletableInput}>
