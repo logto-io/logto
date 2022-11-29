@@ -25,7 +25,7 @@ const MultiTextInputField = ({
     isRequired={isRequired}
     tooltip={tooltip}
     className={formFieldClassName}
-    headlineClassName={conditional(value && value.length > 1 && styles.headlineWithMultiInputs)}
+    headlineClassName={conditional(Boolean(value?.length) && styles.headlineWithMultiInputs)}
   >
     <MultiTextInput title={title} value={value} {...rest} />
   </FormField>
