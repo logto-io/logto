@@ -1,4 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { KeyboardEvent } from 'react';
 import { useMemo, useState } from 'react';
@@ -59,8 +60,13 @@ const MultiTextInput = ({
   return (
     <div className={classNames(styles.multilineInput, className)}>
       {fields.map((fieldValue, fieldIndex) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <div key={fieldIndex}>
+        <div
+          // eslint-disable-next-line react/no-array-index-key
+          key={fieldIndex}
+          className={conditional(
+            fields.length > 1 && fieldIndex === 0 && styles.firstFiledWithMultiInputs
+          )}
+        >
           <div className={styles.deletableInput}>
             <TextInput
               hasError={Boolean(
