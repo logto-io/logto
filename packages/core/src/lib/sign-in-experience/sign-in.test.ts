@@ -1,4 +1,4 @@
-import { ConnectorType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInExperienceIdentifier } from '@logto/schemas';
 
 import {
   mockAliyunDmConnector,
@@ -21,19 +21,19 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Email,
+                identifier: SignInExperienceIdentifier.Email,
                 verificationCode: true,
               },
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Sms,
+                identifier: SignInExperienceIdentifier.Sms,
                 verificationCode: true,
               },
             ],
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.EmailOrSms,
+            identifiers: [SignInExperienceIdentifier.Email, SignInExperienceIdentifier.Sms],
             password: false,
             verify: true,
           },
@@ -49,14 +49,14 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Username,
+                identifier: SignInExperienceIdentifier.Username,
                 password: true,
               },
             ],
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Username,
+            identifiers: [SignInExperienceIdentifier.Username],
             password: true,
           },
           []
@@ -73,7 +73,7 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Email,
+                identifier: SignInExperienceIdentifier.Email,
                 verificationCode: true,
               },
             ],
@@ -96,7 +96,7 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Sms,
+                identifier: SignInExperienceIdentifier.Sms,
                 verificationCode: true,
               },
             ],
@@ -121,13 +121,13 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Sms,
+                identifier: SignInExperienceIdentifier.Sms,
               },
             ],
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Username,
+            identifiers: [SignInExperienceIdentifier.Username],
           },
           enabledConnectors
         );
@@ -145,13 +145,13 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Username,
+                identifier: SignInExperienceIdentifier.Username,
               },
             ],
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Email,
+            identifiers: [SignInExperienceIdentifier.Email],
           },
           enabledConnectors
         );
@@ -169,13 +169,13 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Username,
+                identifier: SignInExperienceIdentifier.Username,
               },
             ],
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Sms,
+            identifiers: [SignInExperienceIdentifier.Sms],
           },
           enabledConnectors
         );
@@ -193,13 +193,13 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Email,
+                identifier: SignInExperienceIdentifier.Email,
               },
             ],
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.EmailOrSms,
+            identifiers: [SignInExperienceIdentifier.Email, SignInExperienceIdentifier.Sms],
           },
           enabledConnectors
         );
@@ -218,7 +218,7 @@ describe('validate sign-in', () => {
           methods: [
             {
               ...mockSignInMethod,
-              identifier: SignInIdentifier.Email,
+              identifier: SignInExperienceIdentifier.Email,
               password: false,
               verificationCode: true,
             },
@@ -226,7 +226,7 @@ describe('validate sign-in', () => {
         },
         {
           ...mockSignUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInExperienceIdentifier.Email],
           password: true,
         },
         enabledConnectors
@@ -245,14 +245,14 @@ describe('validate sign-in', () => {
           methods: [
             {
               ...mockSignInMethod,
-              identifier: SignInIdentifier.Email,
+              identifier: SignInExperienceIdentifier.Email,
               verificationCode: false,
             },
           ],
         },
         {
           ...mockSignUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInExperienceIdentifier.Email],
           password: false,
           verify: true,
         },
@@ -272,13 +272,13 @@ describe('validate sign-in', () => {
           methods: [
             {
               ...mockSignInMethod,
-              identifier: SignInIdentifier.Email,
+              identifier: SignInExperienceIdentifier.Email,
               verificationCode: false,
               password: false,
             },
             {
               ...mockSignInMethod,
-              identifier: SignInIdentifier.Sms,
+              identifier: SignInExperienceIdentifier.Sms,
               verificationCode: true,
               password: false,
             },
@@ -286,7 +286,7 @@ describe('validate sign-in', () => {
         },
         {
           ...mockSignUp,
-          identifier: SignUpIdentifier.Sms,
+          identifiers: [SignInExperienceIdentifier.Sms],
           password: false,
           verify: true,
         },

@@ -1,5 +1,5 @@
 import type { Event, SignInExperience, Profile } from '@logto/schemas';
-import { SignUpIdentifier, SignInMode, SignInIdentifier } from '@logto/schemas';
+import { SignInMode, SignInExperienceIdentifier } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -33,7 +33,8 @@ export const identifierValidation = (
   if ('username' in identifier) {
     assertThat(
       signIn.methods.some(
-        ({ identifier: method, password }) => method === SignInIdentifier.Username && password
+        ({ identifier: method, password }) =>
+          method === SignInExperienceIdentifier.Username && password
       ),
       forbiddenIdentifierError
     );
@@ -46,7 +47,7 @@ export const identifierValidation = (
     assertThat(
       // eslint-disable-next-line complexity
       signIn.methods.some(({ identifier: method, password, verificationCode }) => {
-        if (method !== SignInIdentifier.Email) {
+        if (method !== SignInExperienceIdentifier.Email) {
           return false;
         }
 
@@ -59,7 +60,7 @@ export const identifierValidation = (
         if (
           'passcode' in identifier &&
           !verificationCode &&
-          ![SignUpIdentifier.Email, SignUpIdentifier.EmailOrSms].includes(signUp.identifier) &&
+          !signUp.identifiers.includes(SignInExperienceIdentifier.Email) &&
           !signUp.verify
         ) {
           return false;
@@ -78,7 +79,7 @@ export const identifierValidation = (
     assertThat(
       // eslint-disable-next-line complexity
       signIn.methods.some(({ identifier: method, password, verificationCode }) => {
-        if (method !== SignInIdentifier.Sms) {
+        if (method !== SignInExperienceIdentifier.Sms) {
           return false;
         }
 
@@ -91,7 +92,7 @@ export const identifierValidation = (
         if (
           'passcode' in identifier &&
           !verificationCode &&
-          ![SignUpIdentifier.Sms, SignUpIdentifier.EmailOrSms].includes(signUp.identifier) &&
+          !signUp.identifiers.includes(SignInExperienceIdentifier.Sms) &&
           !signUp.verify
         ) {
           return false;
@@ -109,22 +110,23 @@ export const identifierValidation = (
 export const profileValidation = (profile: Profile, { signUp }: SignInExperience) => {
   if (profile.phone) {
     assertThat(
-      signUp.identifier === SignUpIdentifier.Sms ||
-        signUp.identifier === SignUpIdentifier.EmailOrSms,
+      signUp.identifiers.includes(SignInExperienceIdentifier.Sms),
       forbiddenIdentifierError
     );
   }
 
   if (profile.email) {
     assertThat(
-      signUp.identifier === SignUpIdentifier.Email ||
-        signUp.identifier === SignUpIdentifier.EmailOrSms,
+      signUp.identifiers.includes(SignInExperienceIdentifier.Email),
       forbiddenIdentifierError
     );
   }
 
   if (profile.username) {
-    assertThat(signUp.identifier === SignUpIdentifier.Username, forbiddenIdentifierError);
+    assertThat(
+      signUp.identifiers.includes(SignInExperienceIdentifier.Username),
+      forbiddenIdentifierError
+    );
   }
 
   if (profile.password) {

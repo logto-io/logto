@@ -1,5 +1,5 @@
 import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
-import { SignInIdentifier, SignUpIdentifier, UserRole } from '@logto/schemas';
+import { SignInExperienceIdentifier, UserRole } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
@@ -37,7 +37,7 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
       const { username, password } = ctx.guard.body;
       const type = 'SignInUsernamePassword';
       await signInWithPassword(ctx, provider, {
-        identifier: SignInIdentifier.Username,
+        identifier: SignInExperienceIdentifier.Username,
         password,
         logType: type,
         logPayload: { username },
@@ -60,7 +60,7 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
       const { email, password } = ctx.guard.body;
       const type = 'SignInEmailPassword';
       await signInWithPassword(ctx, provider, {
-        identifier: SignInIdentifier.Email,
+        identifier: SignInExperienceIdentifier.Email,
         password,
         logType: type,
         logPayload: { email },
@@ -83,7 +83,7 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
       const { phone, password } = ctx.guard.body;
       const type = 'SignInSmsPassword';
       await signInWithPassword(ctx, provider, {
-        identifier: SignInIdentifier.Sms,
+        identifier: SignInExperienceIdentifier.Sms,
         password,
         logType: type,
         logPayload: { phone },
@@ -108,7 +108,7 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
         await getApplicationIdFromInteraction(ctx, provider)
       );
       assertThat(
-        signInExperience.signUp.identifier === SignUpIdentifier.Username,
+        signInExperience.signUp.identifiers.includes(SignInExperienceIdentifier.Username),
         new RequestError({
           code: 'user.sign_up_method_not_enabled',
           status: 422,
@@ -146,7 +146,7 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
         await getApplicationIdFromInteraction(ctx, provider)
       );
       assertThat(
-        signInExperience.signUp.identifier === SignUpIdentifier.Username,
+        signInExperience.signUp.identifiers.includes(SignInExperienceIdentifier.Username),
         new RequestError({
           code: 'user.sign_up_method_not_enabled',
           status: 422,

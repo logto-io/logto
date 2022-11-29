@@ -1,5 +1,5 @@
 import type { SignInExperience } from '@logto/schemas';
-import { SignUpIdentifier, SignInIdentifier, SignInMode } from '@logto/schemas';
+import { SignInExperienceIdentifier, SignInMode } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 
@@ -66,7 +66,7 @@ describe('identifier validation', () => {
         ...mockSignInExperience,
         signIn: {
           methods: mockSignInExperience.signIn.methods.filter(
-            ({ identifier }) => identifier !== SignInIdentifier.Username
+            ({ identifier }) => identifier !== SignInExperienceIdentifier.Username
           ),
         },
       });
@@ -85,7 +85,7 @@ describe('identifier validation', () => {
         ...mockSignInExperience,
         signIn: {
           methods: mockSignInExperience.signIn.methods.filter(
-            ({ identifier }) => identifier !== SignInIdentifier.Email
+            ({ identifier }) => identifier !== SignInExperienceIdentifier.Email
           ),
         },
       });
@@ -97,7 +97,7 @@ describe('identifier validation', () => {
         signIn: {
           methods: [
             {
-              identifier: SignInIdentifier.Email,
+              identifier: SignInExperienceIdentifier.Email,
               password: false,
               verificationCode: true,
               isPasswordPrimary: true,
@@ -120,7 +120,7 @@ describe('identifier validation', () => {
         ...mockSignInExperience,
         signIn: {
           methods: mockSignInExperience.signIn.methods.filter(
-            ({ identifier }) => identifier !== SignInIdentifier.Email
+            ({ identifier }) => identifier !== SignInExperienceIdentifier.Email
           ),
         },
       });
@@ -132,7 +132,7 @@ describe('identifier validation', () => {
         signIn: {
           methods: [
             {
-              identifier: SignInIdentifier.Email,
+              identifier: SignInExperienceIdentifier.Email,
               password: true,
               verificationCode: false,
               isPasswordPrimary: true,
@@ -146,14 +146,14 @@ describe('identifier validation', () => {
       identifierValidation(identifier, {
         ...mockSignInExperience,
         signUp: {
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInExperienceIdentifier.Email],
           password: false,
           verify: true,
         },
         signIn: {
           methods: [
             {
-              identifier: SignInIdentifier.Email,
+              identifier: SignInExperienceIdentifier.Email,
               password: true,
               verificationCode: false,
               isPasswordPrimary: true,
@@ -176,7 +176,7 @@ describe('identifier validation', () => {
         ...mockSignInExperience,
         signIn: {
           methods: mockSignInExperience.signIn.methods.filter(
-            ({ identifier }) => identifier !== SignInIdentifier.Sms
+            ({ identifier }) => identifier !== SignInExperienceIdentifier.Sms
           ),
         },
       });
@@ -188,7 +188,7 @@ describe('identifier validation', () => {
         signIn: {
           methods: [
             {
-              identifier: SignInIdentifier.Sms,
+              identifier: SignInExperienceIdentifier.Sms,
               password: false,
               verificationCode: true,
               isPasswordPrimary: true,
@@ -211,7 +211,7 @@ describe('identifier validation', () => {
         ...mockSignInExperience,
         signIn: {
           methods: mockSignInExperience.signIn.methods.filter(
-            ({ identifier }) => identifier !== SignInIdentifier.Sms
+            ({ identifier }) => identifier !== SignInExperienceIdentifier.Sms
           ),
         },
       });
@@ -223,7 +223,7 @@ describe('identifier validation', () => {
         signIn: {
           methods: [
             {
-              identifier: SignInIdentifier.Sms,
+              identifier: SignInExperienceIdentifier.Sms,
               password: true,
               verificationCode: false,
               isPasswordPrimary: true,
@@ -237,14 +237,14 @@ describe('identifier validation', () => {
       identifierValidation(identifier, {
         ...mockSignInExperience,
         signUp: {
-          identifier: SignUpIdentifier.Sms,
+          identifiers: [SignInExperienceIdentifier.Sms],
           password: false,
           verify: true,
         },
         signIn: {
           methods: [
             {
-              identifier: SignInIdentifier.Sms,
+              identifier: SignInExperienceIdentifier.Sms,
               password: true,
               verificationCode: false,
               isPasswordPrimary: true,

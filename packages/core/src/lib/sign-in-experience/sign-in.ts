@@ -1,5 +1,5 @@
 import type { SignIn, SignUp } from '@logto/schemas';
-import { ConnectorType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInExperienceIdentifier } from '@logto/schemas';
 
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -14,7 +14,7 @@ export const validateSignIn = (
   if (
     signIn.methods.some(
       ({ identifier, verificationCode }) =>
-        verificationCode && identifier === SignInIdentifier.Email
+        verificationCode && identifier === SignInExperienceIdentifier.Email
     )
   ) {
     assertThat(
@@ -28,7 +28,8 @@ export const validateSignIn = (
 
   if (
     signIn.methods.some(
-      ({ identifier, verificationCode }) => verificationCode && identifier === SignInIdentifier.Sms
+      ({ identifier, verificationCode }) =>
+        verificationCode && identifier === SignInExperienceIdentifier.Sms
     )
   ) {
     assertThat(
@@ -47,56 +48,31 @@ export const validateSignIn = (
     })
   );
 
-  switch (signUp.identifier) {
-    case SignUpIdentifier.Username: {
-      assertThat(
-        signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Username),
-        new RequestError({
-          code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
-        })
-      );
+  if (signUp.identifiers.includes(SignInExperienceIdentifier.Username)) {
+    assertThat(
+      signIn.methods.some(({ identifier }) => identifier === SignInExperienceIdentifier.Username),
+      new RequestError({
+        code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
+      })
+    );
+  }
 
-      break;
-    }
+  if (signUp.identifiers.includes(SignInExperienceIdentifier.Email)) {
+    assertThat(
+      signIn.methods.some(({ identifier }) => identifier === SignInExperienceIdentifier.Email),
+      new RequestError({
+        code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
+      })
+    );
+  }
 
-    case SignUpIdentifier.Email: {
-      assertThat(
-        signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Email),
-        new RequestError({
-          code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
-        })
-      );
-
-      break;
-    }
-
-    case SignUpIdentifier.Sms: {
-      assertThat(
-        signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Sms),
-        new RequestError({
-          code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
-        })
-      );
-
-      break;
-    }
-
-    case SignUpIdentifier.EmailOrSms: {
-      assertThat(
-        signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Email) &&
-          signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Sms),
-        new RequestError({
-          code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
-        })
-      );
-
-      break;
-    }
-
-    case SignUpIdentifier.None: {
-      // No requirement
-    }
-    // No default
+  if (signUp.identifiers.includes(SignInExperienceIdentifier.Sms)) {
+    assertThat(
+      signIn.methods.some(({ identifier }) => identifier === SignInExperienceIdentifier.Sms),
+      new RequestError({
+        code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
+      })
+    );
   }
 
   if (signUp.password) {
@@ -112,7 +88,7 @@ export const validateSignIn = (
     assertThat(
       signIn.methods.every(
         ({ verificationCode, identifier }) =>
-          verificationCode || identifier === SignInIdentifier.Username
+          verificationCode || identifier === SignInExperienceIdentifier.Username
       ),
       new RequestError({
         code: 'sign_in_experiences.code_sign_in_must_be_enabled',

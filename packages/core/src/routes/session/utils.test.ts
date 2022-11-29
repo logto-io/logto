@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { UserRole, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { UserRole, SignInExperienceIdentifier } from '@logto/schemas';
 import { createMockContext } from '@shopify/jest-koa-mocks';
 import type { Nullable } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
@@ -17,7 +17,7 @@ const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
   signUp: {
     ...mockSignInExperience.signUp,
-    identifier: SignUpIdentifier.Username,
+    identifiers: [SignInExperienceIdentifier.Username],
   },
 }));
 
@@ -112,7 +112,7 @@ describe('signInWithPassword()', () => {
   it('assign result', async () => {
     interactionDetails.mockResolvedValueOnce({ params: {} });
     await signInWithPassword(createContext(), createProvider(), {
-      identifier: SignInIdentifier.Username,
+      identifier: SignInExperienceIdentifier.Username,
       password: 'password',
       findUser: jest.fn(async () => mockUser),
       logType: 'SignInUsernamePassword',
@@ -130,7 +130,7 @@ describe('signInWithPassword()', () => {
     interactionDetails.mockResolvedValueOnce({ params: {} });
     await expect(
       signInWithPassword(createContext(), createProvider(), {
-        identifier: SignInIdentifier.Username,
+        identifier: SignInExperienceIdentifier.Username,
         password: 'password',
         findUser: jest.fn(async () => null),
         logType: 'SignInUsernamePassword',
@@ -143,7 +143,7 @@ describe('signInWithPassword()', () => {
     interactionDetails.mockResolvedValueOnce({ params: {} });
     await expect(
       signInWithPassword(createContext(), createProvider(), {
-        identifier: SignInIdentifier.Username,
+        identifier: SignInExperienceIdentifier.Username,
         password: '_password',
         findUser: jest.fn(async () => mockUser),
         logType: 'SignInUsernamePassword',
@@ -156,7 +156,7 @@ describe('signInWithPassword()', () => {
     interactionDetails.mockResolvedValueOnce({ params: {} });
     await expect(
       signInWithPassword(createContext(), createProvider(), {
-        identifier: SignInIdentifier.Username,
+        identifier: SignInExperienceIdentifier.Username,
         password: 'password',
         findUser: jest.fn(async () => ({
           ...mockUser,
@@ -175,7 +175,7 @@ describe('signInWithPassword()', () => {
         methods: [
           {
             ...mockSignInMethod,
-            identifier: SignInIdentifier.Sms,
+            identifier: SignInExperienceIdentifier.Sms,
             password: false,
           },
         ],
@@ -184,7 +184,7 @@ describe('signInWithPassword()', () => {
     interactionDetails.mockResolvedValueOnce({ params: {} });
     await expect(
       signInWithPassword(createContext(), createProvider(), {
-        identifier: SignInIdentifier.Username,
+        identifier: SignInExperienceIdentifier.Username,
         password: 'password',
         findUser: jest.fn(async () => mockUser),
         logType: 'SignInUsernamePassword',

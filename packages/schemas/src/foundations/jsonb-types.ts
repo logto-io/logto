@@ -133,6 +133,13 @@ export const languageInfoGuard = z.object({
 
 export type LanguageInfo = z.infer<typeof languageInfoGuard>;
 
+export enum SignInExperienceIdentifier {
+  Username = 'username',
+  Email = 'email',
+  Sms = 'sms',
+}
+
+// Todo: @xiaoyijun deprecate this type
 export enum SignUpIdentifier {
   Email = 'email',
   Sms = 'sms',
@@ -141,24 +148,25 @@ export enum SignUpIdentifier {
   None = 'none',
 }
 
-export const signUpGuard = z.object({
-  identifier: z.nativeEnum(SignUpIdentifier),
-  password: z.boolean(),
-  verify: z.boolean(),
-});
-
-export type SignUp = z.infer<typeof signUpGuard>;
-
+// Todo: @xiaoyijun deprecate this type
 export enum SignInIdentifier {
   Email = 'email',
   Sms = 'sms',
   Username = 'username',
 }
 
+export const signUpGuard = z.object({
+  identifiers: z.nativeEnum(SignInExperienceIdentifier).array(),
+  password: z.boolean(),
+  verify: z.boolean(),
+});
+
+export type SignUp = z.infer<typeof signUpGuard>;
+
 export const signInGuard = z.object({
   methods: z
     .object({
-      identifier: z.nativeEnum(SignInIdentifier),
+      identifier: z.nativeEnum(SignInExperienceIdentifier),
       password: z.boolean(),
       verificationCode: z.boolean(),
       isPasswordPrimary: z.boolean(),

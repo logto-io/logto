@@ -1,15 +1,12 @@
 import type { SignUp } from '@logto/schemas';
-import { ConnectorType, SignUpIdentifier } from '@logto/schemas';
+import { SignInExperienceIdentifier, ConnectorType } from '@logto/schemas';
 
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 export const validateSignUp = (signUp: SignUp, enabledConnectors: LogtoConnector[]) => {
-  if (
-    signUp.identifier === SignUpIdentifier.Email ||
-    signUp.identifier === SignUpIdentifier.EmailOrSms
-  ) {
+  if (signUp.identifiers.includes(SignInExperienceIdentifier.Email)) {
     assertThat(
       enabledConnectors.some((item) => item.type === ConnectorType.Email),
       new RequestError({
@@ -19,10 +16,7 @@ export const validateSignUp = (signUp: SignUp, enabledConnectors: LogtoConnector
     );
   }
 
-  if (
-    signUp.identifier === SignUpIdentifier.Sms ||
-    signUp.identifier === SignUpIdentifier.EmailOrSms
-  ) {
+  if (signUp.identifiers.includes(SignInExperienceIdentifier.Sms)) {
     assertThat(
       enabledConnectors.some((item) => item.type === ConnectorType.Sms),
       new RequestError({
@@ -32,7 +26,7 @@ export const validateSignUp = (signUp: SignUp, enabledConnectors: LogtoConnector
     );
   }
 
-  if (signUp.identifier === SignUpIdentifier.Username) {
+  if (signUp.identifiers.includes(SignInExperienceIdentifier.Username)) {
     assertThat(
       signUp.password,
       new RequestError({
@@ -42,9 +36,8 @@ export const validateSignUp = (signUp: SignUp, enabledConnectors: LogtoConnector
   }
 
   if (
-    [SignUpIdentifier.Sms, SignUpIdentifier.Email, SignUpIdentifier.EmailOrSms].includes(
-      signUp.identifier
-    )
+    signUp.identifiers.includes(SignInExperienceIdentifier.Email) ||
+    signUp.identifiers.includes(SignInExperienceIdentifier.Sms)
   ) {
     assertThat(
       signUp.verify,

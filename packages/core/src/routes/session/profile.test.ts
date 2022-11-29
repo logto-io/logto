@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import type { CreateUser, User } from '@logto/schemas';
-import { ConnectorType, SignUpIdentifier } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { getUnixTime } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
@@ -80,7 +80,7 @@ jest.mock('#src/queries/user.js', () => ({
 
 const mockFindDefaultSignInExperience = jest.fn(async () => ({
   signUp: {
-    identifier: SignUpIdentifier.None,
+    identifier: [],
     password: false,
     verify: false,
   },

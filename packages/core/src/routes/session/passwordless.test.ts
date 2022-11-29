@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import type { User } from '@logto/schemas';
-import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { PasscodeType, SignInExperienceIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import { addDays, addSeconds, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
@@ -22,7 +22,7 @@ const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
   signUp: {
     ...mockSignInExperience.signUp,
-    identifier: SignUpIdentifier.Username,
+    identifiers: [SignInExperienceIdentifier.Username],
     password: false,
     verify: true,
   },
@@ -538,7 +538,7 @@ describe('session -> passwordlessRoutes', () => {
           methods: [
             {
               ...mockSignInMethod,
-              identifier: SignInIdentifier.Username,
+              identifier: SignInExperienceIdentifier.Username,
             },
           ],
         },
@@ -554,7 +554,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInExperienceIdentifier.Email],
           password: false,
           verify: true,
         },
@@ -693,7 +693,7 @@ describe('session -> passwordlessRoutes', () => {
           methods: [
             {
               ...mockSignInMethod,
-              identifier: SignInIdentifier.Username,
+              identifier: SignInExperienceIdentifier.Username,
             },
           ],
         },
@@ -709,7 +709,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Sms,
+          identifiers: [SignInExperienceIdentifier.Sms],
           password: false,
         },
       });
@@ -822,7 +822,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInExperienceIdentifier.Email],
         },
       });
 
@@ -837,7 +837,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInExperienceIdentifier.Email],
           password: false,
         },
       });
@@ -950,7 +950,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Sms,
+          identifiers: [SignInExperienceIdentifier.Sms],
         },
       });
 

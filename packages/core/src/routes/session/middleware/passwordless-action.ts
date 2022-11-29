@@ -1,4 +1,4 @@
-import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { PasscodeType, SignInExperienceIdentifier } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
 
@@ -34,7 +34,7 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContext, Respons
     assertThat(
       signInExperience.signIn.methods.some(
         ({ identifier, verificationCode }) =>
-          identifier === SignInIdentifier.Sms && verificationCode
+          identifier === SignInExperienceIdentifier.Sms && verificationCode
       ),
       new RequestError({
         code: 'user.sign_in_method_not_enabled',
@@ -79,7 +79,7 @@ export const emailSignInAction = <StateT, ContextT extends WithLogContext, Respo
     assertThat(
       signInExperience.signIn.methods.some(
         ({ identifier, verificationCode }) =>
-          identifier === SignInIdentifier.Email && verificationCode
+          identifier === SignInExperienceIdentifier.Email && verificationCode
       ),
       new RequestError({
         code: 'user.sign_in_method_not_enabled',
@@ -121,9 +121,9 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContext, Respo
     const signInExperience = await getSignInExperienceForApplication(
       await getApplicationIdFromInteraction(ctx, provider)
     );
+
     assertThat(
-      signInExperience.signUp.identifier === SignUpIdentifier.Sms ||
-        signInExperience.signUp.identifier === SignUpIdentifier.EmailOrSms,
+      signInExperience.signUp.identifiers.includes(SignInExperienceIdentifier.Sms),
       new RequestError({
         code: 'user.sign_up_method_not_enabled',
         status: 422,
@@ -165,9 +165,9 @@ export const emailRegisterAction = <StateT, ContextT extends WithLogContext, Res
     const signInExperience = await getSignInExperienceForApplication(
       await getApplicationIdFromInteraction(ctx, provider)
     );
+
     assertThat(
-      signInExperience.signUp.identifier === SignUpIdentifier.Email ||
-        signInExperience.signUp.identifier === SignUpIdentifier.EmailOrSms,
+      signInExperience.signUp.identifiers.includes(SignInExperienceIdentifier.Email),
       new RequestError({
         code: 'user.sign_up_method_not_enabled',
         status: 422,

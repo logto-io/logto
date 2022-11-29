@@ -7,7 +7,7 @@ import type {
   SignUp,
   SignIn,
 } from '@logto/schemas';
-import { BrandingStyle, SignInMode, SignUpIdentifier, SignInIdentifier } from '@logto/schemas';
+import { BrandingStyle, SignInMode, SignInExperienceIdentifier } from '@logto/schemas';
 
 export const mockSignInExperience: SignInExperience = {
   id: 'foo',
@@ -29,26 +29,26 @@ export const mockSignInExperience: SignInExperience = {
     fallbackLanguage: 'en',
   },
   signUp: {
-    identifier: SignUpIdentifier.Username,
+    identifiers: [SignInExperienceIdentifier.Username],
     password: true,
     verify: false,
   },
   signIn: {
     methods: [
       {
-        identifier: SignInIdentifier.Username,
+        identifier: SignInExperienceIdentifier.Username,
         password: true,
         isPasswordPrimary: true,
         verificationCode: true,
       },
       {
-        identifier: SignInIdentifier.Email,
+        identifier: SignInExperienceIdentifier.Email,
         password: true,
         verificationCode: true,
         isPasswordPrimary: true,
       },
       {
-        identifier: SignInIdentifier.Sms,
+        identifier: SignInExperienceIdentifier.Sms,
         password: true,
         verificationCode: true,
         isPasswordPrimary: true,
@@ -82,13 +82,13 @@ export const mockLanguageInfo: LanguageInfo = {
 };
 
 export const mockSignUp: SignUp = {
-  identifier: SignUpIdentifier.Username,
+  identifiers: [SignInExperienceIdentifier.Username],
   password: true,
   verify: false,
 };
 
 export const mockSignInMethod: SignIn['methods'][0] = {
-  identifier: SignInIdentifier.Username,
+  identifier: SignInExperienceIdentifier.Username,
   password: true,
   verificationCode: false,
   isPasswordPrimary: true,
