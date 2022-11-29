@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.0.0-beta.15
+
+### Patch Changes
+
+- Bump connector kit version to fix "Continue" issues on sending email/sms.
+- Updated dependencies
+  - @logto/schemas@1.0.0-beta.15
+  - @logto/cli@1.0.0-beta.15
+  - @logto/shared@1.0.0-beta.15
+
 ## 1.0.0-beta.14
 
 ### Patch Changes

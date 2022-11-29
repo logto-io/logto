@@ -15,6 +15,7 @@
     "@logto/ui": "1.0.0-beta.12"
   },
   "changesets": [
+    "clever-panthers-lay",
     "fifty-balloons-taste",
     "grumpy-clocks-refuse",
     "quick-turtles-joke",

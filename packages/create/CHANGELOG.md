@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-beta.15
+
+### Patch Changes
+
+- @logto/cli@1.0.0-beta.15
+
 ## 1.0.0-beta.14
 
 ### Patch Changes

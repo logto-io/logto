@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.0.0-beta.15
+
+### Patch Changes
+
+- Updated dependencies
+  - @logto/schemas@1.0.0-beta.15
+
 ## 1.0.0-beta.14
 
 ### Patch Changes
