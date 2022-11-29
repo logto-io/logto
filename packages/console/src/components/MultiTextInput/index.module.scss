@@ -16,7 +16,7 @@
     align-items: center;
 
     > :first-child {
-      @include _.form-text-field;
+      flex: 1;
     }
 
     > :not(:first-child) {
