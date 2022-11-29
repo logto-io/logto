@@ -24,20 +24,21 @@ type Props = {
 };
 
 const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
-  const { data: connectors, error: connectorsError } = useSWR<ConnectorResponse[], RequestError>(
-    '/api/connectors'
-  );
+  const { data: existingConnectors, error: connectorsError } = useSWR<
+    ConnectorResponse[],
+    RequestError
+  >('/api/connectors');
   const { data: factories, error: factoriesError } = useSWR<
     ConnectorFactoryResponse[],
     RequestError
   >('/api/connector-factories');
-  const isLoading = !factories && !connectors && !connectorsError && !factoriesError;
+  const isLoading = !factories && !existingConnectors && !connectorsError && !factoriesError;
   const [activeGroupId, setActiveGroupId] = useState<string>();
   const [activeFactoryId, setActiveFactoryId] = useState<string>();
   const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
 
   const groups = useMemo(() => {
-    if (!factories || !connectors) {
+    if (!factories || !existingConnectors) {
       return [];
     }
 
@@ -49,10 +50,10 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
       ...group,
       connectors: group.connectors.map((connector) => ({
         ...connector,
-        added: connectors.some(({ connectorId }) => connector.id === connectorId),
+        added: existingConnectors.some(({ connectorId }) => connector.id === connectorId),
       })),
     }));
-  }, [factories, type, connectors]);
+  }, [factories, type, existingConnectors]);
 
   const activeGroup = useMemo(
     () => groups.find(({ id }) => id === activeGroupId),
