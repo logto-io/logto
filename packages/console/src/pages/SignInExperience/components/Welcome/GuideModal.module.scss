@@ -44,7 +44,7 @@
       position: relative;
       padding: _.unit(6) _.unit(17);
       // Space for footer
-      padding-bottom: 112px;
+      padding-bottom: 108px;
     }
   }
 
@@ -56,18 +56,13 @@
     .form {
       flex: 1;
 
-      .card {
-        background: var(--color-layer-1);
-        padding: _.unit(2) _.unit(6) _.unit(6);
-        border-radius: 16px;
-
-        &:not(:last-child) {
-          margin-bottom: _.unit(6);
-        }
+      > :not(:first-child) {
+        margin-top: _.unit(3);
       }
     }
 
     .preview {
+      flex: 1;
       margin-left: _.unit(8);
       position: sticky;
       top: _.unit(4);
