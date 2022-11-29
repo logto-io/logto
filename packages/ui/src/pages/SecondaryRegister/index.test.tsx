@@ -24,7 +24,7 @@ describe('<SecondaryRegister />', () => {
                   ...mockSignInExperienceSettings,
                   signUp: {
                     ...mockSignInExperienceSettings.signUp,
-                    methods: [SignInIdentifier.Sms],
+                    identifiers: [SignInIdentifier.Sms],
                   },
                 }}
               >
@@ -51,7 +51,7 @@ describe('<SecondaryRegister />', () => {
                   ...mockSignInExperienceSettings,
                   signUp: {
                     ...mockSignInExperienceSettings.signUp,
-                    methods: [SignInIdentifier.Email],
+                    identifiers: [SignInIdentifier.Email],
                   },
                 }}
               >
@@ -115,7 +115,7 @@ describe('<SecondaryRegister />', () => {
                 settings={{
                   ...mockSignInExperienceSettings,
                   signUp: {
-                    methods: [SignInIdentifier.Email],
+                    identifiers: [SignInIdentifier.Email],
                     password: true,
                     verify: false,
                   },

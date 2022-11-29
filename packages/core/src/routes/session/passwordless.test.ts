@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import type { User } from '@logto/schemas';
-import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { PasscodeType, SignInIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import { addDays, addSeconds, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
@@ -22,7 +22,7 @@ const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
   signUp: {
     ...mockSignInExperience.signUp,
-    identifier: SignUpIdentifier.Username,
+    identifiers: [SignInIdentifier.Username],
     password: false,
     verify: true,
   },
@@ -554,7 +554,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInIdentifier.Email],
           password: false,
           verify: true,
         },
@@ -709,7 +709,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Sms,
+          identifiers: [SignInIdentifier.Sms],
           password: false,
         },
       });
@@ -822,7 +822,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInIdentifier.Email],
         },
       });
 
@@ -837,7 +837,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInIdentifier.Email],
           password: false,
         },
       });
@@ -950,7 +950,7 @@ describe('session -> passwordlessRoutes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Sms,
+          identifiers: [SignInIdentifier.Sms],
         },
       });
 

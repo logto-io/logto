@@ -1,5 +1,5 @@
 import type { CreateUser, Role, User } from '@logto/schemas';
-import { SignUpIdentifier, userInfoSelectFields } from '@logto/schemas';
+import { userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
 
 import {
@@ -30,7 +30,7 @@ const filterUsersWithSearch = (users: User[], search: string) =>
 
 const mockFindDefaultSignInExperience = jest.fn(async () => ({
   signUp: {
-    identifier: SignUpIdentifier.None,
+    identifiers: [],
     password: false,
     verify: false,
   },

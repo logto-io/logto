@@ -1,6 +1,5 @@
-import en from '@logto/phrases-ui/lib/locales/en';
-import type { SignInExperience, Translation } from '@logto/schemas';
-import { SignUpIdentifier, SignInMode } from '@logto/schemas';
+import type { SignInExperience, SignUp } from '@logto/schemas';
+import { SignInMode, SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { DeepRequired, FieldErrorsImpl } from 'react-hook-form';
 
@@ -8,15 +7,35 @@ import {
   isSignInMethodsDifferent,
   isSignUpDifferent,
   isSocialTargetsDifferent,
-} from './components/SignUpAndSignInChangePreview/SignUpAndSignInDiffSection/utilities';
-import type { SignInExperienceForm } from './types';
+} from '../components/SignUpAndSignInChangePreview/SignUpAndSignInDiffSection/utilities';
+import { signUpIdentifiersMapping } from '../constants';
+import { SignUpIdentifier } from '../types';
+import type { SignInExperienceForm, SignUpForm } from '../types';
+import { mapIdentifiersToSignUpIdentifier } from './identifier';
 
 export const signInExperienceParser = {
+  toLocalSignUp: (signUp: SignUp): SignUpForm => {
+    const { identifiers, ...signUpData } = signUp;
+
+    return {
+      identifier: mapIdentifiersToSignUpIdentifier(identifiers),
+      ...signUpData,
+    };
+  },
+  toRemoteSignUp: (signUpForm: SignUpForm): SignUp => {
+    const { identifier, ...signUpFormData } = signUpForm;
+
+    return {
+      identifiers: signUpIdentifiersMapping[identifier],
+      ...signUpFormData,
+    };
+  },
   toLocalForm: (signInExperience: SignInExperience): SignInExperienceForm => {
-    const { signInMode } = signInExperience;
+    const { signUp, signInMode } = signInExperience;
 
     return {
       ...signInExperience,
+      signUp: signInExperienceParser.toLocalSignUp(signUp),
       createAccountEnabled: signInMode !== SignInMode.SignIn,
     };
   },
@@ -31,11 +50,13 @@ export const signInExperienceParser = {
         darkLogoUrl: conditional(branding.darkLogoUrl?.length && branding.darkLogoUrl),
         slogan: conditional(branding.slogan?.length && branding.slogan),
       },
-      signUp: signUp ?? {
-        identifier: SignUpIdentifier.Username,
-        password: true,
-        verify: false,
-      },
+      signUp: signUp
+        ? signInExperienceParser.toRemoteSignUp(signUp)
+        : {
+            identifiers: [SignInIdentifier.Username],
+            password: true,
+            verify: false,
+          },
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
     };
   },
@@ -54,37 +75,6 @@ export const compareSignUpAndSignInConfigs = (
     )
   );
 };
-
-export const flattenTranslation = (
-  translation: Translation,
-  keyPrefix = ''
-): Record<string, string> =>
-  Object.keys(translation).reduce((result, key) => {
-    const prefix = keyPrefix ? `${keyPrefix}.` : keyPrefix;
-    const unwrappedKey = `${prefix}${key}`;
-    const unwrapped = translation[key];
-
-    return unwrapped === undefined
-      ? result
-      : {
-          ...result,
-          ...(typeof unwrapped === 'string'
-            ? { [unwrappedKey]: unwrapped }
-            : flattenTranslation(unwrapped, unwrappedKey)),
-        };
-  }, {});
-
-const emptyTranslation = (translation: Translation): Translation =>
-  Object.entries(translation).reduce((result, [key, value]) => {
-    return typeof value === 'string'
-      ? { ...result, [key]: '' }
-      : {
-          ...result,
-          [key]: emptyTranslation(value),
-        };
-  }, {});
-
-export const createEmptyUiTranslation = () => emptyTranslation(en.translation);
 
 export const getBrandingErrorCount = (
   errors: FieldErrorsImpl<DeepRequired<SignInExperienceForm>>

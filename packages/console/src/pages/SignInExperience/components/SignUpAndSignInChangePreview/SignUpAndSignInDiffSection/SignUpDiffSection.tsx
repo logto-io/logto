@@ -1,15 +1,16 @@
-import type { SignUp } from '@logto/schemas';
 import { diff } from 'deep-object-diff';
 import get from 'lodash.get';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
 
+import type { SignUpForm } from '@/pages/SignInExperience/types';
+
 import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
 
 type Props = {
-  before: SignUp;
-  after: SignUp;
+  before: SignUpForm;
+  after: SignUpForm;
   isAfter?: boolean;
 };
 
@@ -17,7 +18,7 @@ const SignUpDiffSection = ({ before, after, isAfter = false }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const signUpDiff = isAfter ? diff(before, after) : diff(after, before);
   const signUp = isAfter ? after : before;
-  const hasChanged = (path: keyof SignUp) => get(signUpDiff, path) !== undefined;
+  const hasChanged = (path: keyof SignUpForm) => get(signUpDiff, path) !== undefined;
 
   const { identifier, password, verify } = signUp;
   const hasAuthentication = password || verify;

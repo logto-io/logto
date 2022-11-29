@@ -1,6 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
-import { SignUpIdentifier } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
 import { mockLogtoConnectorList, mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
@@ -58,7 +57,7 @@ jest.mock('#src/queries/sign-in-experience.js', () => ({
     ...mockSignInExperience,
     signUp: {
       ...mockSignInExperience.signUp,
-      identifier: SignUpIdentifier.None,
+      identifiers: [],
     },
   }),
 }));

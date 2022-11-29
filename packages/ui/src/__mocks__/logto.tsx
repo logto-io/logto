@@ -5,10 +5,9 @@ import {
   ConnectorType,
   SignInIdentifier,
   SignInMode,
-  SignUpIdentifier,
 } from '@logto/schemas';
 
-import type { SignInExperienceSettings } from '@/types';
+import type { SignInExperienceResponse } from '@/types';
 
 export const appLogo = 'https://avatars.githubusercontent.com/u/88327661?s=200&v=4';
 export const appHeadline = 'Build user identity in a modern way';
@@ -202,7 +201,7 @@ export const mockSignInExperience: SignInExperience = {
     fallbackLanguage: 'en',
   },
   signUp: {
-    identifier: SignUpIdentifier.Username,
+    identifiers: [SignInIdentifier.Username],
     password: true,
     verify: true,
   },
@@ -213,7 +212,7 @@ export const mockSignInExperience: SignInExperience = {
   signInMode: SignInMode.SignInAndRegister,
 };
 
-export const mockSignInExperienceSettings: SignInExperienceSettings = {
+export const mockSignInExperienceSettings: SignInExperienceResponse = {
   id: mockSignInExperience.id,
   color: mockSignInExperience.color,
   branding: mockSignInExperience.branding,
@@ -221,7 +220,7 @@ export const mockSignInExperienceSettings: SignInExperienceSettings = {
   languageInfo: mockSignInExperience.languageInfo,
   signIn: mockSignInExperience.signIn,
   signUp: {
-    methods: [SignInIdentifier.Username],
+    identifiers: [SignInIdentifier.Username],
     password: true,
     verify: true,
   },

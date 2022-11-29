@@ -33,7 +33,7 @@ import {
   getOthersErrorCount,
   getSignUpAndSignInErrorCount,
   signInExperienceParser,
-} from './utilities';
+} from './utils/form';
 
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

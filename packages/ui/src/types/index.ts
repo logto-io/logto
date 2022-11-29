@@ -1,9 +1,4 @@
-import type {
-  SignInExperience,
-  ConnectorMetadata,
-  AppearanceMode,
-  SignInIdentifier,
-} from '@logto/schemas';
+import type { SignInExperience, ConnectorMetadata, AppearanceMode } from '@logto/schemas';
 
 export enum UserFlow {
   signIn = 'sign-in',
@@ -23,23 +18,13 @@ export type Platform = 'web' | 'mobile';
 // TODO: @simeng, @sijie, @charles should we combine this with admin console?
 export type Theme = 'dark' | 'light';
 
-// Omit signInMethods property since it is deprecated,
 // Omit socialSignInConnectorTargets since it is being translated into socialConnectors
-export type SignInExperienceResponse = Omit<
-  SignInExperience,
-  'signInMethods' | 'socialSignInConnectorTargets'
-> & {
+export type SignInExperienceResponse = Omit<SignInExperience, 'socialSignInConnectorTargets'> & {
   socialConnectors: ConnectorMetadata[];
   notification?: string;
   forgotPassword: {
     sms: boolean;
     email: boolean;
-  };
-};
-
-export type SignInExperienceSettings = Omit<SignInExperienceResponse, 'signUp'> & {
-  signUp: Omit<SignInExperienceResponse['signUp'], 'identifier'> & {
-    methods: SignInIdentifier[];
   };
 };
 

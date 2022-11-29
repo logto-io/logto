@@ -1,5 +1,5 @@
 import type { SignInExperience } from '@logto/schemas';
-import { SignUpIdentifier, SignInIdentifier, SignInMode, Event } from '@logto/schemas';
+import { SignInIdentifier, SignInMode, Event } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 
@@ -146,7 +146,7 @@ describe('identifier validation', () => {
       identifierValidation(identifier, {
         ...mockSignInExperience,
         signUp: {
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInIdentifier.Email],
           password: false,
           verify: true,
         },
@@ -237,7 +237,7 @@ describe('identifier validation', () => {
       identifierValidation(identifier, {
         ...mockSignInExperience,
         signUp: {
-          identifier: SignUpIdentifier.Sms,
+          identifiers: [SignInIdentifier.Sms],
           password: false,
           verify: true,
         },

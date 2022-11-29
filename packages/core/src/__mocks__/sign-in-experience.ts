@@ -7,7 +7,7 @@ import type {
   SignUp,
   SignIn,
 } from '@logto/schemas';
-import { BrandingStyle, SignInMode, SignUpIdentifier, SignInIdentifier } from '@logto/schemas';
+import { BrandingStyle, SignInMode, SignInIdentifier } from '@logto/schemas';
 
 export const mockSignInExperience: SignInExperience = {
   id: 'foo',
@@ -29,7 +29,7 @@ export const mockSignInExperience: SignInExperience = {
     fallbackLanguage: 'en',
   },
   signUp: {
-    identifier: SignUpIdentifier.Username,
+    identifiers: [SignInIdentifier.Username],
     password: true,
     verify: false,
   },
@@ -82,7 +82,7 @@ export const mockLanguageInfo: LanguageInfo = {
 };
 
 export const mockSignUp: SignUp = {
-  identifier: SignUpIdentifier.Username,
+  identifiers: [SignInIdentifier.Username],
   password: true,
   verify: false,
 };

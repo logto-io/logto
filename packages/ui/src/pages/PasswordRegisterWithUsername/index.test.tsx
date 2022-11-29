@@ -59,7 +59,10 @@ describe('<PasswordRegisterWithUsername />', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          signUp: { ...mockSignInExperienceSettings.signUp, methods: [SignInIdentifier.Email] },
+          signUp: {
+            ...mockSignInExperienceSettings.signUp,
+            identifiers: [SignInIdentifier.Email],
+          },
         }}
       >
         <PasswordRegisterWithUsername />

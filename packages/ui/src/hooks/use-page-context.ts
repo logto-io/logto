@@ -1,7 +1,7 @@
 import { useState, useMemo, createContext } from 'react';
 import { isMobile } from 'react-device-detect';
 
-import type { SignInExperienceSettings, Platform, Theme } from '@/types';
+import type { SignInExperienceResponse, Platform, Theme } from '@/types';
 
 export type Context = {
   theme: Theme;
@@ -9,13 +9,13 @@ export type Context = {
   loading: boolean;
   platform: Platform;
   termsAgreement: boolean;
-  experienceSettings: SignInExperienceSettings | undefined;
+  experienceSettings: SignInExperienceResponse | undefined;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
   setToast: React.Dispatch<React.SetStateAction<string>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setPlatform: React.Dispatch<React.SetStateAction<Platform>>;
   setTermsAgreement: React.Dispatch<React.SetStateAction<boolean>>;
-  setExperienceSettings: React.Dispatch<React.SetStateAction<SignInExperienceSettings | undefined>>;
+  setExperienceSettings: React.Dispatch<React.SetStateAction<SignInExperienceResponse | undefined>>;
 };
 
 const noop = () => {
@@ -42,7 +42,7 @@ const usePageContext = () => {
   const [toast, setToast] = useState('');
   const [theme, setTheme] = useState<Theme>('light');
   const [platform, setPlatform] = useState<Platform>(isMobile ? 'mobile' : 'web');
-  const [experienceSettings, setExperienceSettings] = useState<SignInExperienceSettings>();
+  const [experienceSettings, setExperienceSettings] = useState<SignInExperienceResponse>();
   const [termsAgreement, setTermsAgreement] = useState(false);
 
   const context = useMemo(

@@ -2,12 +2,12 @@ import type { ReactElement } from 'react';
 import { useContext, useEffect } from 'react';
 
 import { PageContext } from '@/hooks/use-page-context';
-import type { SignInExperienceSettings } from '@/types';
+import type { SignInExperienceResponse } from '@/types';
 
 import { mockSignInExperienceSettings } from '../logto';
 
 type Props = {
-  settings?: SignInExperienceSettings;
+  settings?: SignInExperienceResponse;
   children: ReactElement;
 };
 

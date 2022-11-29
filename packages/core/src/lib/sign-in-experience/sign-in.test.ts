@@ -1,4 +1,4 @@
-import { ConnectorType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import {
   mockAliyunDmConnector,
@@ -33,7 +33,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.EmailOrSms,
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
             password: false,
             verify: true,
           },
@@ -56,7 +56,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Username,
+            identifiers: [SignInIdentifier.Username],
             password: true,
           },
           []
@@ -127,7 +127,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Username,
+            identifiers: [SignInIdentifier.Username],
           },
           enabledConnectors
         );
@@ -151,7 +151,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Email,
+            identifiers: [SignInIdentifier.Email],
           },
           enabledConnectors
         );
@@ -175,7 +175,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Sms,
+            identifiers: [SignInIdentifier.Sms],
           },
           enabledConnectors
         );
@@ -199,7 +199,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.EmailOrSms,
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
           },
           enabledConnectors
         );
@@ -226,7 +226,7 @@ describe('validate sign-in', () => {
         },
         {
           ...mockSignUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInIdentifier.Email],
           password: true,
         },
         enabledConnectors
@@ -252,7 +252,7 @@ describe('validate sign-in', () => {
         },
         {
           ...mockSignUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInIdentifier.Email],
           password: false,
           verify: true,
         },
@@ -286,7 +286,7 @@ describe('validate sign-in', () => {
         },
         {
           ...mockSignUp,
-          identifier: SignUpIdentifier.Sms,
+          identifiers: [SignInIdentifier.Sms],
           password: false,
           verify: true,
         },

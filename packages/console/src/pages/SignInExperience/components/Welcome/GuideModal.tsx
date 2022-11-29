@@ -22,7 +22,7 @@ import ColorForm from '../../tabs/Branding/ColorForm';
 import LanguagesForm from '../../tabs/Others/LanguagesForm';
 import TermsForm from '../../tabs/Others/TermsForm';
 import type { SignInExperienceForm } from '../../types';
-import { signInExperienceParser } from '../../utilities';
+import { signInExperienceParser } from '../../utils/form';
 import Preview from '../Preview';
 import * as styles from './GuideModal.module.scss';
 

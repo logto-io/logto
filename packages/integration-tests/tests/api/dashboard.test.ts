@@ -1,13 +1,12 @@
-import { SignUpIdentifier } from '@logto/schemas';
-
 import type { StatisticsData } from '@/api';
 import { getTotalUsersCount, getNewUsersData, getActiveUsersData } from '@/api';
+import { signUpIdentifiers } from '@/constants';
 import { createUserByAdmin, registerNewUser, setSignUpIdentifier, signIn } from '@/helpers';
 import { generateUsername, generatePassword } from '@/utils';
 
 describe('admin console dashboard', () => {
   beforeAll(async () => {
-    await setSignUpIdentifier(SignUpIdentifier.Username);
+    await setSignUpIdentifier(signUpIdentifiers.username);
   });
 
   it('should get total user count successfully', async () => {

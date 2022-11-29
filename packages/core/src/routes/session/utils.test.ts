@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { UserRole, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { UserRole, SignInIdentifier } from '@logto/schemas';
 import { createMockContext } from '@shopify/jest-koa-mocks';
 import type { Nullable } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
@@ -17,7 +17,7 @@ const findDefaultSignInExperience = jest.fn(async () => ({
   ...mockSignInExperience,
   signUp: {
     ...mockSignInExperience.signUp,
-    identifier: SignUpIdentifier.Username,
+    identifiers: [SignInIdentifier.Username],
   },
 }));
 

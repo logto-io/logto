@@ -6,9 +6,8 @@ import * as styles from '@/containers/AppContent/index.module.scss';
 import type { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';
-import type { SignInExperienceSettings, PreviewConfig } from '@/types';
+import type { SignInExperienceResponse, PreviewConfig } from '@/types';
 import { parseQueryParameters } from '@/utils';
-import { signUpIdentifierMap } from '@/utils/sign-in-experience';
 import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
 
 const usePreview = (context: Context): [boolean, PreviewConfig?] => {
@@ -54,24 +53,18 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     }
 
     const {
-      signInExperience: { signUp, socialConnectors, color, ...rest },
+      signInExperience: { socialConnectors, color, ...rest },
       language,
       mode,
       platform,
       isNative,
     } = previewConfig;
 
-    const { identifier, ...signUpSettings } = signUp;
-
-    const experienceSettings: SignInExperienceSettings = {
+    const experienceSettings: SignInExperienceResponse = {
       ...rest,
       color: {
         ...color,
         isDarkModeEnabled: false, // Disable theme mode auto detection on preview
-      },
-      signUp: {
-        methods: signUpIdentifierMap[identifier],
-        ...signUpSettings,
       },
       socialConnectors: filterPreviewSocialConnectors(
         isNative ? ConnectorPlatform.Native : ConnectorPlatform.Web,

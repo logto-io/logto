@@ -1,12 +1,5 @@
-import type {
-  LogPayload,
-  LogType,
-  PasscodeType,
-  SignInExperience,
-  SignInIdentifier,
-  User,
-} from '@logto/schemas';
-import { SignUpIdentifier, logTypeGuard } from '@logto/schemas';
+import type { LogPayload, LogType, PasscodeType, SignInExperience, User } from '@logto/schemas';
+import { SignInIdentifier, logTypeGuard } from '@logto/schemas';
 import type { Nullable, Truthy } from '@silverhand/essentials';
 import { addSeconds, isAfter, isValid } from 'date-fns';
 import type { Context } from 'koa';
@@ -176,24 +169,29 @@ export const checkRequiredProfile = async (
     throw new RequestError({ code: 'user.require_password', status: 422 });
   }
 
-  if (signUp.identifier === SignUpIdentifier.Username && !username) {
+  if (signUp.identifiers.includes(SignInIdentifier.Username) && !username) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
     throw new RequestError({ code: 'user.require_username', status: 422 });
   }
 
-  if (signUp.identifier === SignUpIdentifier.Email && !primaryEmail) {
+  if (
+    signUp.identifiers.includes(SignInIdentifier.Email) &&
+    signUp.identifiers.includes(SignInIdentifier.Sms) &&
+    !primaryEmail &&
+    !primaryPhone
+  ) {
+    await assignContinueSignInResult(ctx, provider, { userId: id });
+    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
+  }
+
+  if (signUp.identifiers.includes(SignInIdentifier.Email) && !primaryEmail) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
     throw new RequestError({ code: 'user.require_email', status: 422 });
   }
 
-  if (signUp.identifier === SignUpIdentifier.Sms && !primaryPhone) {
+  if (signUp.identifiers.includes(SignInIdentifier.Sms) && !primaryPhone) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
     throw new RequestError({ code: 'user.require_sms', status: 422 });
-  }
-
-  if (signUp.identifier === SignUpIdentifier.EmailOrSms && !primaryEmail && !primaryPhone) {
-    await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
   }
 };
 
@@ -206,16 +204,21 @@ export const checkMissingRequiredSignUpIdentifiers = async (identifiers: {
 
   const { signUp } = await getSignInExperienceForApplication();
 
-  if (signUp.identifier === SignUpIdentifier.Email && !primaryEmail) {
+  if (
+    signUp.identifiers.includes(SignInIdentifier.Email) &&
+    signUp.identifiers.includes(SignInIdentifier.Sms) &&
+    !primaryEmail &&
+    !primaryPhone
+  ) {
+    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
+  }
+
+  if (signUp.identifiers.includes(SignInIdentifier.Email) && !primaryEmail) {
     throw new RequestError({ code: 'user.require_email', status: 422 });
   }
 
-  if (signUp.identifier === SignUpIdentifier.Sms && !primaryPhone) {
+  if (signUp.identifiers.includes(SignInIdentifier.Sms) && !primaryPhone) {
     throw new RequestError({ code: 'user.require_sms', status: 422 });
-  }
-
-  if (signUp.identifier === SignUpIdentifier.EmailOrSms && !primaryEmail && !primaryPhone) {
-    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
   }
 };
 /* eslint-enable complexity */

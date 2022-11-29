@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { UserRole, SignUpIdentifier } from '@logto/schemas';
+import { UserRole, SignInIdentifier } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import { Provider } from 'oidc-provider';
 
@@ -239,7 +239,7 @@ describe('session -> password routes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInIdentifier.Email],
         },
       });
 
@@ -283,7 +283,7 @@ describe('session -> password routes', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInIdentifier.Email],
         },
       });
 

@@ -1,7 +1,7 @@
-import { SignUpIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import { getLogs, getLog } from '@/api';
+import { signUpIdentifiers } from '@/constants';
 import { registerNewUser, setSignUpIdentifier } from '@/helpers';
 import { generateUsername, generatePassword } from '@/utils';
 
@@ -10,7 +10,7 @@ describe('admin console logs', () => {
   const password = generatePassword();
 
   beforeAll(async () => {
-    await setSignUpIdentifier(SignUpIdentifier.Username);
+    await setSignUpIdentifier(signUpIdentifiers.username);
   });
 
   it('should get logs and visit log details successfully', async () => {

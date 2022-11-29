@@ -1,12 +1,10 @@
-import type { SignInExperience } from '@logto/schemas';
+import type { SignUp } from '@logto/schemas';
 import { diff } from 'deep-object-diff';
 
 import type { SignInMethod, SignInMethodsObject } from '@/pages/SignInExperience/types';
 
-export const isSignUpDifferent = (
-  before: SignInExperience['signUp'],
-  after: SignInExperience['signUp']
-) => Object.keys(diff(before, after)).length > 0;
+export const isSignUpDifferent = (before: SignUp, after: SignUp) =>
+  Object.keys(diff(before, after)).length > 0;
 
 export const convertToSignInMethodsObject = (signInMethods: SignInMethod[]): SignInMethodsObject =>
   signInMethods.reduce<SignInMethodsObject>(
