@@ -251,7 +251,7 @@ importers:
   packages/core:
     specifiers:
       '@logto/cli': workspace:^
-      '@logto/connector-kit': 1.0.0-beta.20
+      '@logto/connector-kit': 1.0.0-beta.27
       '@logto/core-kit': ^1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.20
       '@logto/phrases': workspace:^
@@ -329,7 +329,7 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@logto/cli': link:../cli
-      '@logto/connector-kit': 1.0.0-beta.20
+      '@logto/connector-kit': 1.0.0-beta.27_zod@3.19.1
       '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.20
       '@logto/phrases': link:../phrases
@@ -575,7 +575,7 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-kit': 1.0.0-beta.20
+      '@logto/connector-kit': 1.0.0-beta.27
       '@logto/core-kit': 1.0.0-beta.20
       '@logto/language-kit': 1.0.0-beta.20
       '@logto/phrases': workspace:^
@@ -600,7 +600,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.19.1
     dependencies:
-      '@logto/connector-kit': 1.0.0-beta.20
+      '@logto/connector-kit': 1.0.0-beta.27_zod@3.19.1
       '@logto/core-kit': 1.0.0-beta.20
       '@logto/language-kit': 1.0.0-beta.20
       '@logto/phrases': link:../phrases
@@ -2293,12 +2293,14 @@ packages:
       lodash.once: 4.1.1
     dev: true
 
-  /@logto/connector-kit/1.0.0-beta.20:
-    resolution: {integrity: sha512-Z9rrrjpUJFKdxfs7CKrabiTmrHFyTFnUuPFfl6HG38I6EUOaURITJ3c6FJjCdu60nIRuwaM29+i/h4AChzLwew==}
-    engines: {node: ^16.0.0}
+  /@logto/connector-kit/1.0.0-beta.27_zod@3.19.1:
+    resolution: {integrity: sha512-wN+m1cQWUZXzci36yUJXNbCTPcj1IZ485+m26rMt/kJ0xosUq9Bt7OtCwL3FNNxkPs+5fF7EbHTWSttW4R90Jw==}
+    engines: {node: ^16.13.0 || ^18.12.0}
+    peerDependencies:
+      zod: ^3.19.1
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/language-kit': 1.0.0-beta.20
+      '@logto/core-kit': 1.0.0-beta.26_zod@3.19.1
+      '@logto/language-kit': 1.0.0-beta.26_zod@3.19.1
       '@silverhand/essentials': 1.3.0
       zod: 3.19.1
     dev: false
@@ -2322,6 +2324,18 @@ packages:
       nanoid: 3.3.4
       zod: 3.19.1
 
+  /@logto/core-kit/1.0.0-beta.26_zod@3.19.1:
+    resolution: {integrity: sha512-WsgJ6sIPNO0yH+5V94Vjomi6pP0txky53MkIk7tGV3xGUQSJTBFjEHciTwCl2tHUB6VsPeerjs22jawakFyfFg==}
+    engines: {node: ^16.13.0 || ^18.12.0}
+    peerDependencies:
+      zod: ^3.19.1
+    dependencies:
+      '@logto/language-kit': 1.0.0-beta.26_zod@3.19.1
+      color: 4.2.3
+      nanoid: 3.3.4
+      zod: 3.19.1
+    dev: false
+
   /@logto/js/1.0.0-beta.13:
     resolution: {integrity: sha512-a3dhoJre/VOXgGxFNon/xY5E4fVs0CiFW5Ci0gt2W7v2zD/1VmzIvcJnECTLocxyz9W2UTkfYzm7q/iXF48WXw==}
     dependencies:
@@ -2337,6 +2351,15 @@ packages:
     engines: {node: ^16.0.0}
     dependencies:
       zod: 3.19.1
+
+  /@logto/language-kit/1.0.0-beta.26_zod@3.19.1:
+    resolution: {integrity: sha512-z8YufwLQoVfx3NcNiz2ORlmOIRFy8K+OY0e8bAhnT+N3x8MSPPlcFmK2EidEpl3DqL27QLJVHQaOsEnDHCad8g==}
+    engines: {node: ^16.13.0 || ^18.12.0}
+    peerDependencies:
+      zod: ^3.19.1
+    dependencies:
+      zod: 3.19.1
+    dev: false
 
   /@logto/node/1.0.0-beta.13:
     resolution: {integrity: sha512-e+Vspi17izZdt6PU2+uFXrD2XydZ8ohthtOMJqhrzpC1DiOSlmb47UXo3K+IS93eULiuPNo5mA04hRn3kt6rcQ==}
