@@ -4,17 +4,17 @@
   .tabs {
     margin-top: _.unit(4);
   }
-}
 
-.connectorName {
-  width: 360px;
-}
+  .connectorName {
+    width: 360px;
+  }
 
-.empty {
-  text-align: center;
-  font-size: var(--font-body-medium);
-}
+  .empty {
+    text-align: center;
+    font-size: var(--font-body-medium);
+  }
 
-.emptyLine {
-  padding: _.unit(2) 0;
+  .emptyLine {
+    padding: _.unit(2) 0;
+  }
 }
