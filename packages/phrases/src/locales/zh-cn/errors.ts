@@ -62,7 +62,7 @@ const errors = {
   },
   session: {
     not_found: '未找到会话。请返回并重新登录。',
-    invalid_credentials: '密码错误，请检查你的输入。',
+    invalid_credentials: '无效的密码，请检查你的输入。',
     invalid_sign_in_method: '当前登录方式不可用',
     invalid_connector_id: '找不到 ID 为 {{connectorId}} 的可用连接器。',
     insufficient_info: '登录信息缺失，请检查你的输入。',
