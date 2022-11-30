@@ -44,13 +44,13 @@ export type SocialConnectorPayload = z.infer<typeof socialConnectorPayloadGuard>
 /**
  * Interaction Payload Guard
  */
-export const eventGuard = z.union([
-  z.literal('sign-in'),
-  z.literal('register'),
-  z.literal('forgot-password'),
-]);
+export enum Event {
+  SignIn = 'SignIn',
+  Register = 'Register',
+  ForgotPassword = 'ForgotPassword',
+}
 
-export type Event = z.infer<typeof eventGuard>;
+export const eventGuard = z.nativeEnum(Event);
 
 export const identifierGuard = z.union([
   usernamePasswordPayloadGuard,

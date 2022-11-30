@@ -1,3 +1,4 @@
+import { Event } from '@logto/schemas';
 import type { Context } from 'koa';
 
 import { interactionMocks } from '#src/__mocks__/interactions.js';
@@ -29,13 +30,13 @@ describe('koaInteractionBodyGuard', () => {
             event: 'test',
           },
         },
-        interactionPayload: { event: 'sign-in' },
+        interactionPayload: { event: Event.SignIn },
       };
 
       await expect(koaInteractionBodyGuard()(ctx, next)).rejects.toThrow();
     });
 
-    it.each(['sign-in', 'register', 'forgot-password'])(
+    it.each([Event.SignIn, Event.Register, Event.ForgotPassword])(
       '%p should parse successfully',
       async (event) => {
         const ctx: WithGuardedIdentifierPayloadContext<Context> = {
@@ -46,7 +47,7 @@ describe('koaInteractionBodyGuard', () => {
               event,
             },
           },
-          interactionPayload: { event: 'sign-in' },
+          interactionPayload: { event: Event.SignIn },
         };
 
         await expect(koaInteractionBodyGuard()(ctx, next)).resolves.not.toThrow();
@@ -62,14 +63,14 @@ describe('koaInteractionBodyGuard', () => {
         request: {
           ...baseCtx.request,
           body: {
-            event: 'sign-in',
+            event: Event.SignIn,
             identifier: {
               username: 'username',
               passcode: 'passcode',
             },
           },
         },
-        interactionPayload: { event: 'sign-in' },
+        interactionPayload: { event: Event.SignIn },
       };
 
       await expect(koaInteractionBodyGuard()(ctx, next)).rejects.toThrow();
@@ -81,11 +82,11 @@ describe('koaInteractionBodyGuard', () => {
         request: {
           ...baseCtx.request,
           body: {
-            event: 'sign-in',
+            event: Event.SignIn,
             identifier: input,
           },
         },
-        interactionPayload: { event: 'sign-in' },
+        interactionPayload: { event: Event.SignIn },
       };
 
       await expect(koaInteractionBodyGuard()(ctx, next)).resolves.not.toThrow();
@@ -100,13 +101,13 @@ describe('koaInteractionBodyGuard', () => {
         request: {
           ...baseCtx.request,
           body: {
-            event: 'sign-in',
+            event: Event.SignIn,
             profile: {
               email: 'username',
             },
           },
         },
-        interactionPayload: { event: 'sign-in' },
+        interactionPayload: { event: Event.SignIn },
       };
       await expect(koaInteractionBodyGuard()(ctx, next)).rejects.toThrow();
     });
@@ -125,11 +126,11 @@ describe('koaInteractionBodyGuard', () => {
         request: {
           ...baseCtx.request,
           body: {
-            event: 'sign-in',
+            event: Event.SignIn,
             profile,
           },
         },
-        interactionPayload: { event: 'sign-in' },
+        interactionPayload: { event: Event.SignIn },
       };
       await expect(koaInteractionBodyGuard()(ctx, next)).resolves.not.toThrow();
       expect(ctx.interactionPayload.profile).toEqual(profile);

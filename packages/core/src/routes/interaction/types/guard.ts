@@ -7,32 +7,30 @@ import type {
   PhonePasscodePayload,
 } from '@logto/schemas';
 import {
-  socialConnectorPayloadGuard,
   emailPasscodePayloadGuard,
   phonePasscodePayloadGuard,
   eventGuard,
   profileGuard,
   identifierGuard,
+  Event,
 } from '@logto/schemas';
 import { z } from 'zod';
 
 // Interaction Route Guard
 const forgotPasswordInteractionPayloadGuard = z.object({
-  event: z.literal('forgot-password'),
+  event: z.literal(Event.ForgotPassword),
   identifier: z.union([emailPasscodePayloadGuard, phonePasscodePayloadGuard]).optional(),
   profile: profileGuard.pick({ password: true }).optional(),
 });
 
 const registerInteractionPayloadGuard = z.object({
-  event: z.literal('register'),
-  identifier: z
-    .union([emailPasscodePayloadGuard, phonePasscodePayloadGuard, socialConnectorPayloadGuard])
-    .optional(),
+  event: z.literal(Event.Register),
+  identifier: z.union([emailPasscodePayloadGuard, phonePasscodePayloadGuard]).optional(),
   profile: profileGuard.optional(),
 });
 
 const signInInteractionPayloadGuard = z.object({
-  event: z.literal('sign-in'),
+  event: z.literal(Event.SignIn),
   identifier: identifierGuard.optional(),
   profile: profileGuard.optional(),
 });
