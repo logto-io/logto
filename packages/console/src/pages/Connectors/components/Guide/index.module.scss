@@ -42,11 +42,31 @@
       background-color: var(--color-layer-1);
       border-radius: 16px;
       padding: 0 _.unit(6);
-      margin: _.unit(6) _.unit(10) _.unit(6) _.unit(18);
+      margin: _.unit(6) _.unit(3) _.unit(6) _.unit(18);
     }
 
     .setup {
-      padding: _.unit(6) _.unit(18) _.unit(6) 0;
+      background-color: var(--color-layer-1);
+      border-radius: 16px;
+      padding: 0 _.unit(6) _.unit(6);
+      margin: _.unit(6) _.unit(18) _.unit(6) _.unit(3);
+
+      .title {
+        font: var(--font-title-large);
+        margin: _.unit(6) 0;
+      }
+
+      .tip {
+        color: var(--color-text-secondary);
+        font: var(--font-body-medium);
+        margin-top: _.unit(0.5);
+      }
+
+      .footer {
+        margin-top: _.unit(6);
+        display: flex;
+        justify-content: right;
+      }
     }
 
     form + div {
@@ -55,7 +75,6 @@
   }
 }
 
-.editor,
 .tester {
   margin-top: _.unit(6);
 }

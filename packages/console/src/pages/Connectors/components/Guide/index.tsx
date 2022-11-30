@@ -3,24 +3,24 @@ import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
-import { Controller, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/images/close.svg';
+import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
-import CodeEditor from '@/components/CodeEditor';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Markdown from '@/components/Markdown';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
-import Step from '@/mdx-components/Step';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
-import type { GuideForm } from '@/types/guide';
 import { safeParseJson } from '@/utilities/json';
 
+import Form from './Form';
 import * as styles from './index.module.scss';
+import type { CreateConnectorForm } from './types';
 
 type Props = {
   connector: ConnectorFactoryResponse;
@@ -31,25 +31,25 @@ const Guide = ({ connector, onClose }: Props) => {
   const api = useApi();
   const { updateSettings } = useSettings();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { id: connectorId, type: connectorType, name, configTemplate, readme } = connector;
+  const { id: connectorId, type: connectorType, name, readme, isStandard } = connector;
   const { language } = i18next;
   const connectorName = conditional(isLanguageTag(language) && name[language]) ?? name.en;
   const isSocialConnector =
     connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
-  const methods = useForm<GuideForm>({ reValidateMode: 'onBlur' });
+  const methods = useForm<CreateConnectorForm>({ reValidateMode: 'onBlur' });
   const {
-    control,
     formState: { isSubmitting },
     handleSubmit,
     watch,
   } = methods;
 
-  const onSubmit = handleSubmit(async ({ connectorConfigJson }) => {
+  const onSubmit = handleSubmit(async (data) => {
     if (isSubmitting) {
       return;
     }
 
-    const result = safeParseJson(connectorConfigJson);
+    const { config, name, ...otherData } = data;
+    const result = safeParseJson(config);
 
     if (!result.success) {
       toast.error(result.error);
@@ -60,7 +60,18 @@ const Guide = ({ connector, onClose }: Props) => {
     const { id: connectorId } = connector;
 
     await api
-      .post('/api/connectors', { json: { config: result.data, connectorId } })
+      .post('/api/connectors', {
+        json: {
+          config: result.data,
+          connectorId,
+          metadata: conditional(
+            isStandard && {
+              ...otherData,
+              name: { en: name },
+            }
+          ),
+        },
+      })
       .json<ConnectorResponse>();
 
     await updateSettings({
@@ -88,39 +99,28 @@ const Guide = ({ connector, onClose }: Props) => {
       <div className={styles.content}>
         <Markdown className={styles.readme}>{readme}</Markdown>
         <div className={styles.setup}>
-          <Step
-            title={t('connector_details.edit_config_label')}
-            index={0}
-            activeIndex={0}
-            buttonText="connectors.save_and_done"
-            buttonType="primary"
-            isLoading={isSubmitting}
-            onButtonClick={onSubmit}
-          >
-            <form {...methods}>
-              <Controller
-                name="connectorConfigJson"
-                control={control}
-                defaultValue={configTemplate}
-                render={({ field: { onChange, value } }) => (
-                  <CodeEditor
-                    className={styles.editor}
-                    language="json"
-                    value={value}
-                    onChange={onChange}
-                  />
-                )}
-              />
+          <div className={styles.title}>{t('connectors.guide.connector_setting')}</div>
+          <FormProvider {...methods}>
+            <form onSubmit={onSubmit}>
+              <Form connector={connector} />
+              {!isSocialConnector && (
+                <SenderTester
+                  className={styles.tester}
+                  connectorId={connectorId}
+                  connectorType={connectorType}
+                  config={watch('config')}
+                />
+              )}
+              <div className={styles.footer}>
+                <Button
+                  title="connectors.save_and_done"
+                  type="primary"
+                  htmlType="submit"
+                  isLoading={isSubmitting}
+                />
+              </div>
             </form>
-            {!isSocialConnector && (
-              <SenderTester
-                className={styles.tester}
-                connectorId={connectorId}
-                connectorType={connectorType}
-                config={watch('connectorConfigJson')}
-              />
-            )}
-          </Step>
+          </FormProvider>
         </div>
       </div>
     </div>

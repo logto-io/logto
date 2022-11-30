@@ -30,6 +30,21 @@ const connectors = {
   },
   guide: {
     subtitle: 'A step by step guide to configure your connector',
+    connector_setting: 'Connector setting',
+    name: 'Connector name',
+    name_tip: 'Connector button’s name will display as "Continue with {{Connector Name}}".',
+    logo: 'Connector logo URL',
+    logo_placelholder: 'https://your.cdn.domain/logo.png',
+    logo_tip: 'The logo image will also display on the connector button.',
+    logo_dark: 'Connector logo URL (Dark mode)',
+    logo_dark_placelholder: 'https://your.cdn.domain/logo.png',
+    logo_dark_tip:
+      'This will be used when opening “Enable dark mode” in the setting of sign in experience.',
+    logo_dark_collapse: 'Collapse',
+    logo_dark_show: 'Show "Logo for dark mode"',
+    target: 'Connector identity target',
+    target_tip: 'A unique identifier for the connector.',
+    config: 'Enter your JSON here',
   },
   platform: {
     universal: 'Universal',

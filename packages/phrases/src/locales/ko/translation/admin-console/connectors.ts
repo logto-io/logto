@@ -30,6 +30,21 @@ const connectors = {
   },
   guide: {
     subtitle: '단계별 가이드를 따라, 연동해주세요.',
+    connector_setting: 'Connector setting', // UNTRANSLATED
+    name: 'Connector name', // UNTRANSLATED
+    name_tip: 'Connector button’s name will display as "Continue with {{Connector Name}}".', // UNTRANSLATED
+    logo: 'Connector logo URL', // UNTRANSLATED
+    logo_placelholder: 'https://your.cdn.domain/logo.png', // UNTRANSLATED
+    logo_tip: 'The logo image will also display on the connector button.', // UNTRANSLATED
+    logo_dark: 'Connector logo URL (Dark mode)', // UNTRANSLATED
+    logo_dark_placelholder: 'https://your.cdn.domain/logo.png', // UNTRANSLATED
+    logo_dark_tip:
+      'This will be used when opening “Enable dark mode” in the setting of sign in experience.', // UNTRANSLATED
+    logo_dark_collapse: 'Collapse', // UNTRANSLATED
+    logo_dark_show: 'Show "Logo for dark mode"', // UNTRANSLATED
+    target: 'Connector identity target', // UNTRANSLATED
+    target_tip: 'A unique identifier for the connector.', // UNTRANSLATED
+    config: 'Enter your JSON here', // UNTRANSLATED
   },
   platform: {
     universal: 'Universal',

@@ -25,6 +25,7 @@ export const getConnectorGroups = <
           description: item.description,
           target: item.target,
           type: item.type,
+          isStandard: item.isStandard,
           connectors: [item],
         },
       ];
