@@ -38,7 +38,7 @@ const findUserByIdentifier = async (identifiers: Identifier[]) => {
   return findUserById(accountIdentifier.value);
 };
 
-const verifiyProtectedIdentifiers = (
+const verifyProtectedIdentifiers = (
   { email, phone, connectorId }: Profile,
   identifiers: Identifier[]
 ) => {
@@ -118,7 +118,7 @@ const profileRegisteredValidation = async (
       (identifier): identifier is SocialIdentifier => identifier.key === 'social'
     );
 
-    // Social identifier session should be verified by verifiyProtectedIdentifiers
+    // Social identifier session should be verified by verifyProtectedIdentifiers
     if (!socialIdentifier) {
       return;
     }
@@ -184,7 +184,7 @@ export default async function profileVerification(
     return;
   }
 
-  verifiyProtectedIdentifiers(profile, identifiers);
+  verifyProtectedIdentifiers(profile, identifiers);
 
   if (event === Event.SignIn) {
     // Find existing account
