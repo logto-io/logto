@@ -1,4 +1,4 @@
-import { PasscodeType } from '@logto/schemas';
+import { PasscodeType, Event } from '@logto/schemas';
 
 import { createPasscode, sendPasscode } from '#src/lib/passcode.js';
 
@@ -12,27 +12,27 @@ jest.mock('#src/lib/passcode.js', () => ({
 
 const sendPasscodeTestCase = [
   {
-    payload: { email: 'email', event: 'sign-in' },
+    payload: { email: 'email', event: Event.SignIn },
     createPasscodeParams: [PasscodeType.SignIn, { email: 'email' }],
   },
   {
-    payload: { email: 'email', event: 'register' },
+    payload: { email: 'email', event: Event.Register },
     createPasscodeParams: [PasscodeType.Register, { email: 'email' }],
   },
   {
-    payload: { email: 'email', event: 'forgot-password' },
+    payload: { email: 'email', event: Event.ForgotPassword },
     createPasscodeParams: [PasscodeType.ForgotPassword, { email: 'email' }],
   },
   {
-    payload: { phone: 'phone', event: 'sign-in' },
+    payload: { phone: 'phone', event: Event.SignIn },
     createPasscodeParams: [PasscodeType.SignIn, { phone: 'phone' }],
   },
   {
-    payload: { phone: 'phone', event: 'register' },
+    payload: { phone: 'phone', event: Event.Register },
     createPasscodeParams: [PasscodeType.Register, { phone: 'phone' }],
   },
   {
-    payload: { phone: 'phone', event: 'forgot-password' },
+    payload: { phone: 'phone', event: Event.ForgotPassword },
     createPasscodeParams: [PasscodeType.ForgotPassword, { phone: 'phone' }],
   },
 ];

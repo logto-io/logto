@@ -1,20 +1,20 @@
 import type { SignInExperience } from '@logto/schemas';
-import { SignUpIdentifier, SignInIdentifier, SignInMode } from '@logto/schemas';
+import { SignUpIdentifier, SignInIdentifier, SignInMode, Event } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 
 import { signInModeValidation, identifierValidation } from './sign-in-experience-validation.js';
 
 describe('signInModeValidation', () => {
-  it('register', () => {
+  it(Event.Register, () => {
     expect(() => {
-      signInModeValidation('register', { signInMode: SignInMode.SignIn } as SignInExperience);
+      signInModeValidation(Event.Register, { signInMode: SignInMode.SignIn } as SignInExperience);
     }).toThrow();
     expect(() => {
-      signInModeValidation('register', { signInMode: SignInMode.Register } as SignInExperience);
+      signInModeValidation(Event.Register, { signInMode: SignInMode.Register } as SignInExperience);
     }).not.toThrow();
     expect(() => {
-      signInModeValidation('register', {
+      signInModeValidation(Event.Register, {
         signInMode: SignInMode.SignInAndRegister,
       } as SignInExperience);
     }).not.toThrow();
@@ -22,31 +22,31 @@ describe('signInModeValidation', () => {
 
   it('SignIn', () => {
     expect(() => {
-      signInModeValidation('sign-in', { signInMode: SignInMode.SignIn } as SignInExperience);
+      signInModeValidation(Event.SignIn, { signInMode: SignInMode.SignIn } as SignInExperience);
     }).not.toThrow();
     expect(() => {
-      signInModeValidation('sign-in', { signInMode: SignInMode.Register } as SignInExperience);
+      signInModeValidation(Event.SignIn, { signInMode: SignInMode.Register } as SignInExperience);
     }).toThrow();
     expect(() => {
-      signInModeValidation('sign-in', {
+      signInModeValidation(Event.SignIn, {
         signInMode: SignInMode.SignInAndRegister,
       } as SignInExperience);
     }).not.toThrow();
   });
 
-  it('forgot-password', () => {
+  it(Event.ForgotPassword, () => {
     expect(() => {
-      signInModeValidation('forgot-password', {
+      signInModeValidation(Event.ForgotPassword, {
         signInMode: SignInMode.SignIn,
       } as SignInExperience);
     }).not.toThrow();
     expect(() => {
-      signInModeValidation('forgot-password', {
+      signInModeValidation(Event.ForgotPassword, {
         signInMode: SignInMode.Register,
       } as SignInExperience);
     }).not.toThrow();
     expect(() => {
-      signInModeValidation('forgot-password', {
+      signInModeValidation(Event.ForgotPassword, {
         signInMode: SignInMode.SignInAndRegister,
       } as SignInExperience);
     }).not.toThrow();

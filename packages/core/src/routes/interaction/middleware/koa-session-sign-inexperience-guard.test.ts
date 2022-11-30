@@ -1,3 +1,4 @@
+import { Event } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
@@ -34,7 +35,7 @@ describe('koaSessionSignInExperienceGuard', () => {
     const ctx = {
       ...baseCtx,
       interactionPayload: Object.freeze({
-        event: 'register',
+        event: Event.SignIn,
         identifier: { username: 'username', password: 'password' },
         profile: { email: 'email' },
       }),
@@ -42,7 +43,7 @@ describe('koaSessionSignInExperienceGuard', () => {
 
     await koaSessionSignInExperienceGuard(new Provider(''))(ctx, next);
 
-    expect(signInModeValidation).toBeCalledWith('register', mockSignInExperience);
+    expect(signInModeValidation).toBeCalledWith(Event.SignIn, mockSignInExperience);
     expect(identifierValidation).toBeCalledWith(
       { username: 'username', password: 'password' },
       mockSignInExperience
