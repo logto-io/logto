@@ -17,8 +17,8 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@logto/core-kit": "1.0.0-beta.25",
-    "@logto/language-kit": "1.0.0-beta.24",
+    "@logto/core-kit": "1.0.0-beta.26",
+    "@logto/language-kit": "1.0.0-beta.26",
     "@logto/phrases": "workspace:^",
     "@logto/phrases-ui": "workspace:^",
     "@logto/schemas": "workspace:^",
