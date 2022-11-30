@@ -24,7 +24,9 @@ const useSignInWithSmsPasscodeValidation = (phone: string, errorCallback?: () =>
 
   const { signInMode } = useSieMethods();
 
-  const { run: registerWithSmsAsync } = useApi(registerWithSms);
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
+
+  const { run: registerWithSmsAsync } = useApi(registerWithSms, requiredProfileErrorHandlers);
 
   const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
 
@@ -33,8 +35,6 @@ const useSignInWithSmsPasscodeValidation = (phone: string, errorCallback?: () =>
     SignInIdentifier.Sms,
     phone
   );
-
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
   const phoneNotExistRegisterErrorHandler = useCallback(async () => {
     const [confirm] = await show({
