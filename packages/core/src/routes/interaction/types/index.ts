@@ -13,9 +13,9 @@ export type Identifier =
 
 export type AccountIdIdentifier = { key: 'accountId'; value: string };
 
-export type VerifiedEmailIdentifier = { key: 'verifiedEmail'; value: string };
+export type VerifiedEmailIdentifier = { key: 'emailVerified'; value: string };
 
-export type VerifiedPhoneIdentifier = { key: 'verifiedPhone'; value: string };
+export type VerifiedPhoneIdentifier = { key: 'phoneVerified'; value: string };
 
 export type SocialIdentifier = { key: 'social'; connectorId: string; value: UseInfo };
 

@@ -150,7 +150,7 @@ describe('identifier verification', () => {
 
     expect(result).toEqual([
       { key: 'accountId', value: 'foo' },
-      { key: 'verifiedEmail', value: 'email' },
+      { key: 'emailVerified', value: 'email' },
     ]);
   });
 
@@ -178,7 +178,7 @@ describe('identifier verification', () => {
     expect(assignIdentifierVerificationResult).toBeCalledWith(
       {
         event: Event.SignIn,
-        identifiers: [{ key: 'verifiedEmail', value: 'email' }],
+        identifiers: [{ key: 'emailVerified', value: 'email' }],
       },
       ctx,
       provider
@@ -231,7 +231,7 @@ describe('identifier verification', () => {
     );
     expect(findUserByIdentifierMock).not.toBeCalled();
 
-    expect(result).toEqual([{ key: 'verifiedEmail', value: 'email' }]);
+    expect(result).toEqual([{ key: 'emailVerified', value: 'email' }]);
   });
 
   it('phone passcode with no profile', async () => {
@@ -256,7 +256,7 @@ describe('identifier verification', () => {
 
     expect(result).toEqual([
       { key: 'accountId', value: 'foo' },
-      { key: 'verifiedPhone', value: 'phone' },
+      { key: 'phoneVerified', value: 'phone' },
     ]);
   });
 
@@ -282,6 +282,6 @@ describe('identifier verification', () => {
     );
     expect(findUserByIdentifierMock).not.toBeCalled();
 
-    expect(result).toEqual([{ key: 'verifiedPhone', value: 'phone' }]);
+    expect(result).toEqual([{ key: 'phoneVerified', value: 'phone' }]);
   });
 });

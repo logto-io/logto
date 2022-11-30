@@ -42,8 +42,8 @@ const passcodeIdentifierVerification = async (
 
   const verifiedPasscodeIdentifier: Identifier =
     'email' in identifier
-      ? { key: 'verifiedEmail', value: identifier.email }
-      : { key: 'verifiedPhone', value: identifier.phone };
+      ? { key: 'emailVerified', value: identifier.email }
+      : { key: 'phoneVerified', value: identifier.phone };
 
   // Return the verified identity directly if it is for new profile identity verification
   if (isProfileIdentifier(identifier, profile)) {

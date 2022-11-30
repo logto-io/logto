@@ -38,13 +38,13 @@ const findUserByIdentifier = async (identifiers: Identifier[]) => {
   return findUserById(accountIdentifier.value);
 };
 
-const protectedIdentifierVerification = (
+const verifiyProtectedIdentifiers = (
   { email, phone, connectorId }: Profile,
   identifiers: Identifier[]
 ) => {
   if (email) {
     assertThat(
-      identifiers.some(({ key, value }) => key === 'verifiedEmail' && value === email),
+      identifiers.some(({ key, value }) => key === 'emailVerified' && value === email),
       new RequestError({
         code: 'session.verification_session_not_found',
         status: 404,
@@ -54,7 +54,7 @@ const protectedIdentifierVerification = (
 
   if (phone) {
     assertThat(
-      identifiers.some(({ key, value }) => key === 'verifiedPhone' && value === phone),
+      identifiers.some(({ key, value }) => key === 'phoneVerified' && value === phone),
       new RequestError({
         code: 'session.verification_session_not_found',
         status: 404,
@@ -118,7 +118,7 @@ const profileRegisteredValidation = async (
       (identifier): identifier is SocialIdentifier => identifier.key === 'social'
     );
 
-    // Social identifier session should be verified by protectedIdentifierVerification
+    // Social identifier session should be verified by verifiyProtectedIdentifiers
     if (!socialIdentifier) {
       return;
     }
@@ -184,10 +184,10 @@ export default async function profileVerification(
     return;
   }
 
-  protectedIdentifierVerification(profile, identifiers);
+  verifiyProtectedIdentifiers(profile, identifiers);
 
   if (event === Event.SignIn) {
-    // Find exist account
+    // Find existing account
     const user = await findUserByIdentifier(identifiers);
 
     await profileExistValidation(profile, user);

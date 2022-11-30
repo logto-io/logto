@@ -29,8 +29,8 @@ jest.mock('#src/connectors/index.js', () => ({
 const baseCtx = createContextWithRouteParameters();
 const identifiers: Identifier[] = [
   { key: 'accountId', value: 'foo' },
-  { key: 'verifiedEmail', value: 'email@logto.io' },
-  { key: 'verifiedPhone', value: '123456' },
+  { key: 'emailVerified', value: 'email@logto.io' },
+  { key: 'phoneVerified', value: '123456' },
   { key: 'social', connectorId: 'connectorId', value: { id: 'foo' } },
 ];
 

@@ -22,8 +22,8 @@ describe('Existed profile should throw', () => {
   const baseCtx = createContextWithRouteParameters();
   const identifiers: Identifier[] = [
     { key: 'accountId', value: 'foo' },
-    { key: 'verifiedEmail', value: 'email' },
-    { key: 'verifiedPhone', value: 'phone' },
+    { key: 'emailVerified', value: 'email' },
+    { key: 'phoneVerified', value: 'phone' },
     { key: 'social', connectorId: 'connectorId', value: { id: 'foo' } },
   ];
 

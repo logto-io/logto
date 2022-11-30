@@ -58,7 +58,7 @@ describe('profile protected identifier verification', () => {
 
       const identifiers: Identifier[] = [
         { key: 'accountId', value: 'foo' },
-        { key: 'verifiedEmail', value: 'phone' },
+        { key: 'emailVerified', value: 'phone' },
       ];
       await expect(profileVerification(ctx, identifiers)).rejects.toMatchError(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
@@ -78,7 +78,7 @@ describe('profile protected identifier verification', () => {
 
       const identifiers: Identifier[] = [
         { key: 'accountId', value: 'foo' },
-        { key: 'verifiedEmail', value: 'email' },
+        { key: 'emailVerified', value: 'email' },
       ];
       await expect(profileVerification(ctx, identifiers)).resolves.not.toThrow();
     });
@@ -114,7 +114,7 @@ describe('profile protected identifier verification', () => {
 
       const identifiers: Identifier[] = [
         { key: 'accountId', value: 'foo' },
-        { key: 'verifiedPhone', value: 'email' },
+        { key: 'phoneVerified', value: 'email' },
       ];
       await expect(profileVerification(ctx, identifiers)).rejects.toMatchError(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
@@ -134,7 +134,7 @@ describe('profile protected identifier verification', () => {
 
       const identifiers: Identifier[] = [
         { key: 'accountId', value: 'foo' },
-        { key: 'verifiedPhone', value: 'phone' },
+        { key: 'phoneVerified', value: 'phone' },
       ];
       await expect(profileVerification(ctx, identifiers)).resolves.not.toThrow();
     });
