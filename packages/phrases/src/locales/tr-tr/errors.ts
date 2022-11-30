@@ -57,6 +57,7 @@ const errors = {
     require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
     user_not_exist: 'User with {{ identity }} has not been registered yet', // UNTRANSLATED,
+    missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '{{name}} şifreleme metodu desteklenmiyor.',

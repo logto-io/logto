@@ -70,3 +70,11 @@ export const profileGuard = z.object({
 });
 
 export type Profile = z.infer<typeof profileGuard>;
+
+export enum MissingProfile {
+  username = 'username',
+  email = 'email',
+  phone = 'phone',
+  password = 'password',
+  emailOrPhone = 'emailOrPhone',
+}
