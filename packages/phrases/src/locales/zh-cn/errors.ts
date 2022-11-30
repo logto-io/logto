@@ -56,6 +56,7 @@ const errors = {
     require_email_or_sms: '请绑定邮箱地址或手机号码',
     suspended: '账号已被禁用',
     user_not_exist: 'User with {{ identity }} has not been registered yet', // UNTRANSLATED,
+    missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',

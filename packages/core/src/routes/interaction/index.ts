@@ -1,3 +1,4 @@
+import { Event } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -8,7 +9,11 @@ import koaSessionSignInExperienceGuard from './middleware/koa-session-sign-in-ex
 import { sendPasscodePayloadGuard, getSocialAuthorizationUrlPayloadGuard } from './types/guard.js';
 import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
 import { createSocialAuthorizationUrl } from './utils/social-verification.js';
-import { identifierVerification } from './verifications/index.js';
+import {
+  identifierVerification,
+  profileVerification,
+  mandatoryUserProfileValidation,
+} from './verifications/index.js';
 
 export const identifierPrefix = '/identifier';
 export const verificationPrefix = '/verification';
@@ -26,6 +31,16 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       await provider.interactionDetails(ctx.req, ctx.res);
 
       const verifiedIdentifiers = await identifierVerification(ctx, provider);
+
+      const profile = await profileVerification(ctx, verifiedIdentifiers);
+
+      const { event } = ctx.interactionPayload;
+
+      if (event !== Event.ForgotPassword) {
+        await mandatoryUserProfileValidation(ctx, verifiedIdentifiers, profile);
+      }
+
+      // TODO: SignIn Register & ResetPassword final step
 
       ctx.status = 200;
 
