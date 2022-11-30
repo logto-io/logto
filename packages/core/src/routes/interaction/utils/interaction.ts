@@ -9,5 +9,5 @@ export const assignIdentifierVerificationResult = async (
   ctx: Context,
   provider: Provider
 ) => {
-  await provider.interactionResult(ctx.req, ctx.res, payload);
+  await provider.interactionResult(ctx.req, ctx.res, payload, { mergeWithLastSubmission: true });
 };
