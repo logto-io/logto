@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-beta.16
+
+### Patch Changes
+
+- 38970fb8: Fix a Sign-in experience bug that may block some users to sign in.
+
 ## 1.0.0-beta.15
 
 ## 1.0.0-beta.14
