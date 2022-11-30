@@ -52,7 +52,7 @@ export const removeUnavailableSocialConnectorTargets = async () => {
   const connectors = await getLogtoConnectors();
   const availableSocialConnectorTargets = new Set(
     connectors
-      .filter(({ type, dbEntry: { enabled } }) => enabled && type === ConnectorType.Social)
+      .filter(({ type }) => type === ConnectorType.Social)
       .map(({ metadata: { target } }) => target)
   );
 

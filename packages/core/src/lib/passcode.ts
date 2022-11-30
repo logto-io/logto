@@ -53,7 +53,7 @@ export const sendPasscode = async (passcode: Passcode) => {
 
   const connector = connectors.find(
     (connector): connector is LogtoConnector<SmsConnector | EmailConnector> =>
-      connector.dbEntry.enabled && connector.type === expectType
+      connector.type === expectType
   );
 
   assertThat(

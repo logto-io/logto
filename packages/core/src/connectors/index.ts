@@ -10,12 +10,12 @@ import { findPackage } from '@logto/shared';
 import chalk from 'chalk';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { findAllConnectors, insertConnector } from '#src/queries/connector.js';
+import { findAllConnectors } from '#src/queries/connector.js';
 
 import { defaultConnectorMethods } from './consts.js';
 import { metaUrl } from './meta-url.js';
 import type { ConnectorFactory, LogtoConnector } from './types.js';
-import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities/index.js';
+import { getConnectorConfig, parseMetadata, validateConnectorModule } from './utilities/index.js';
 
 const currentDirname = path.dirname(fileURLToPath(metaUrl));
 
@@ -52,7 +52,7 @@ export const loadConnectorFactories = async () => {
         validateConnectorModule(rawConnector);
 
         return {
-          metadata: rawConnector.metadata,
+          metadata: await parseMetadata(rawConnector.metadata, packagePath),
           type: rawConnector.type,
           createConnector,
           path: packagePath,
@@ -106,22 +106,13 @@ export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
           },
         });
         validateConnectorModule(rawConnector);
+        const rawMetadata = await parseMetadata(rawConnector.metadata, packagePath);
 
         const connector: AllConnector = {
           ...defaultConnectorMethods,
           ...rawConnector,
           metadata: {
-            ...rawConnector.metadata,
-            logo: await readUrl(rawConnector.metadata.logo, packagePath, 'svg'),
-            logoDark:
-              rawConnector.metadata.logoDark &&
-              (await readUrl(rawConnector.metadata.logoDark, packagePath, 'svg')),
-            readme: await readUrl(rawConnector.metadata.readme, packagePath, 'text'),
-            configTemplate: await readUrl(
-              rawConnector.metadata.configTemplate,
-              packagePath,
-              'text'
-            ),
+            ...rawMetadata,
             ...metadata,
           },
         };
@@ -155,30 +146,4 @@ export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector>
   }
 
   return pickedConnector;
-};
-
-export const initConnectors = async () => {
-  const connectors = await findAllConnectors();
-  const existingConnectors = new Map(
-    connectors.map((connector) => [connector.connectorId, connector])
-  );
-  const allConnectors = await loadConnectorFactories();
-  const newConnectors = allConnectors.filter(({ metadata: { id } }) => {
-    const connector = existingConnectors.get(id);
-
-    if (!connector) {
-      return true;
-    }
-
-    return connector.config === JSON.stringify({});
-  });
-
-  await Promise.all(
-    newConnectors.map(async ({ metadata: { id } }) => {
-      await insertConnector({
-        id,
-        connectorId: id,
-      });
-    })
-  );
 };

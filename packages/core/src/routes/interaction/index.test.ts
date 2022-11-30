@@ -8,6 +8,7 @@ import { createRequester } from '#src/utils/test-utils.js';
 import interactionRoutes, { verificationPrefix } from './index.js';
 import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
 
+// FIXME @Darcy: no more `enabled` for `connectors` table
 const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
   const database = {
     enabled: connectorId === 'social_enabled',
@@ -121,15 +122,6 @@ describe('session -> interactionRoutes', () => {
       const response = await sessionRequest.post(path).send({
         connectorId: 'social_enabled',
         state: 'state',
-      });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error when connector is disabled', async () => {
-      const response = await sessionRequest.post(path).send({
-        connectorId: 'social_disabled',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
       });
       expect(response.statusCode).toEqual(400);
     });

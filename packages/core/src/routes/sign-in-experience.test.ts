@@ -94,7 +94,7 @@ describe('PATCH /sign-in-exp', () => {
       status: 200,
       body: {
         ...mockSignInExperience,
-        socialSignInConnectorTargets: ['github', 'facebook'],
+        socialSignInConnectorTargets: ['github', 'facebook', 'google'],
       },
     });
   });
@@ -118,18 +118,12 @@ describe('PATCH /sign-in-exp', () => {
       signUp: mockSignUp,
       signIn: mockSignIn,
     });
-    const connectors = [
-      mockFacebookConnector,
-      mockGithubConnector,
-      mockWechatConnector,
-      mockAliyunSmsConnector,
-    ];
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateLanguageInfo).toHaveBeenCalledWith(mockLanguageInfo);
     expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
-    expect(validateSignUp).toHaveBeenCalledWith(mockSignUp, connectors);
-    expect(validateSignIn).toHaveBeenCalledWith(mockSignIn, mockSignUp, connectors);
+    expect(validateSignUp).toHaveBeenCalledWith(mockSignUp, logtoConnectors);
+    expect(validateSignIn).toHaveBeenCalledWith(mockSignIn, mockSignUp, logtoConnectors);
 
     expect(response).toMatchObject({
       status: 200,

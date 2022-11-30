@@ -54,8 +54,7 @@ const SocialConnectorEditBox = ({ value, onChange }: Props) => {
     .filter((item): item is ConnectorGroup => Boolean(item));
 
   const connectorOptions = connectorData.filter(
-    ({ target, type, enabled }) =>
-      !value.includes(target) && type === ConnectorType.Social && enabled
+    ({ target, type }) => !value.includes(target) && type === ConnectorType.Social
   );
 
   return (

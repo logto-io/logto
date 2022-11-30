@@ -1,4 +1,4 @@
-import type { ConnectorResponse } from '@logto/schemas';
+import type { Connector, ConnectorResponse } from '@logto/schemas';
 
 import { authedAdminApi } from './api';
 
@@ -15,27 +15,16 @@ export const postConnector = async (connectorId: string) =>
       url: `connectors`,
       json: { connectorId },
     })
-    .json();
+    .json<Connector>();
+
+export const deleteConnectorById = async (id: string) =>
+  authedAdminApi.delete({ url: `connectors/${id}` }).json();
 
 export const updateConnectorConfig = async (connectorId: string, config: Record<string, unknown>) =>
   authedAdminApi
     .patch({
       url: `connectors/${connectorId}`,
       json: { config },
-    })
-    .json<ConnectorResponse>();
-
-export const enableConnector = async (connectorId: string) =>
-  updateConnectorEnabledProperty(connectorId, true);
-
-export const disableConnector = async (connectorId: string) =>
-  updateConnectorEnabledProperty(connectorId, false);
-
-const updateConnectorEnabledProperty = (connectorId: string, enabled: boolean) =>
-  authedAdminApi
-    .patch({
-      url: `connectors/${connectorId}/enabled`,
-      json: { enabled },
     })
     .json<ConnectorResponse>();
 

@@ -50,25 +50,24 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       }
 
       const connectors = await getLogtoConnectors();
-      const enabledConnectors = connectors.filter(({ dbEntry: { enabled } }) => enabled);
 
       // Remove unavailable connectors
       const filteredSocialSignInConnectorTargets = socialSignInConnectorTargets?.filter((target) =>
-        enabledConnectors.some(
+        connectors.some(
           (connector) =>
             connector.metadata.target === target && connector.type === ConnectorType.Social
         )
       );
 
       if (signUp) {
-        validateSignUp(signUp, enabledConnectors);
+        validateSignUp(signUp, connectors);
       }
 
       if (signIn && signUp) {
-        validateSignIn(signIn, signUp, enabledConnectors);
+        validateSignIn(signIn, signUp, connectors);
       } else if (signIn) {
         const signInExperience = await findDefaultSignInExperience();
-        validateSignIn(signIn, signInExperience.signUp, enabledConnectors);
+        validateSignIn(signIn, signInExperience.signUp, connectors);
       }
       ctx.body = await updateDefaultSignInExperience(
         filteredSocialSignInConnectorTargets
