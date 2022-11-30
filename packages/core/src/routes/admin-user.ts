@@ -4,13 +4,13 @@ import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { boolean, literal, object, string } from 'zod';
 
-import { isTrue } from '@/env-set/parameters';
-import RequestError from '@/errors/RequestError';
-import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
-import koaGuard from '@/middleware/koa-guard';
-import koaPagination from '@/middleware/koa-pagination';
-import { revokeInstanceByUserId } from '@/queries/oidc-model-instance';
-import { findRolesByRoleNames } from '@/queries/roles';
+import { isTrue } from '#src/env-set/parameters.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { encryptUserPassword, generateUserId, insertUser } from '#src/lib/user.js';
+import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
+import { revokeInstanceByUserId } from '#src/queries/oidc-model-instance.js';
+import { findRolesByRoleNames } from '#src/queries/roles.js';
 import {
   deleteUserById,
   deleteUserIdentity,
@@ -20,11 +20,11 @@ import {
   hasUser,
   updateUserById,
   hasUserWithEmail,
-} from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+} from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import { checkExistingSignUpIdentifiers } from './session/utils';
-import type { AuthedRouter } from './types';
+import { checkSignUpIdentifierCollision } from './session/utils.js';
+import type { AuthedRouter } from './types.js';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.get(
@@ -187,7 +187,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       await findUserById(userId);
-      await checkExistingSignUpIdentifiers(body, userId);
+      await checkSignUpIdentifierCollision(body, userId);
 
       // Temp solution to validate the existence of input roleNames
       if (body.roleNames?.length) {

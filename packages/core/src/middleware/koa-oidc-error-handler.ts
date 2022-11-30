@@ -3,7 +3,7 @@ import decamelize from 'decamelize';
 import type { Middleware } from 'koa';
 import { errors } from 'oidc-provider';
 
-import RequestError from '@/errors/RequestError';
+import RequestError from '#src/errors/RequestError/index.js';
 
 /**
  * OIDC Provider Error Definition: https://github.com/panva/node-oidc-provider/blob/main/lib/helpers/errors.js

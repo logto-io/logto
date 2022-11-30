@@ -10,17 +10,17 @@ import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import envSet from '@/env-set';
-import postgresAdapter from '@/oidc/adapter';
-import { isOriginAllowed, validateCustomClientMetadata } from '@/oidc/utils';
-import { findApplicationById } from '@/queries/application';
-import { findResourceByIndicator } from '@/queries/resource';
-import { findUserById } from '@/queries/user';
-import { routes } from '@/routes/consts';
-import assertThat from '@/utils/assert-that';
-import { addOidcEventListeners } from '@/utils/oidc-provider-event-listener';
+import envSet from '#src/env-set/index.js';
+import postgresAdapter from '#src/oidc/adapter.js';
+import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.js';
+import { findApplicationById } from '#src/queries/application.js';
+import { findResourceByIndicator } from '#src/queries/resource.js';
+import { findUserById } from '#src/queries/user.js';
+import { routes } from '#src/routes/consts.js';
+import assertThat from '#src/utils/assert-that.js';
+import { addOidcEventListeners } from '#src/utils/oidc-provider-event-listener.js';
 
-import { claimToUserKey, getUserClaims } from './scope';
+import { claimToUserKey, getUserClaims } from './scope.js';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
   const { issuer, cookieKeys, privateJwks, defaultIdTokenTtl, defaultRefreshTokenTtl } =

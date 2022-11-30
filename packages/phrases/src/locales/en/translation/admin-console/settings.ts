@@ -1,9 +1,7 @@
 const settings = {
   title: 'Settings',
   description: 'Manage the global settings',
-  tabs: {
-    general: 'General',
-  },
+  settings: 'Settings',
   custom_domain: 'Custom domain',
   language: 'Language',
   appearance: 'Appearance',

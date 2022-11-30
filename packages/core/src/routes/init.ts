@@ -4,26 +4,26 @@ import mount from 'koa-mount';
 import Router from 'koa-router';
 import type { Provider } from 'oidc-provider';
 
-import koaAuth from '@/middleware/koa-auth';
-import koaLogSession from '@/middleware/koa-log-session';
-import adminUserRoutes from '@/routes/admin-user';
-import applicationRoutes from '@/routes/application';
-import authnRoutes from '@/routes/authn';
-import connectorRoutes from '@/routes/connector';
-import customPhraseRoutes from '@/routes/custom-phrase';
-import dashboardRoutes from '@/routes/dashboard';
-import logRoutes from '@/routes/log';
-import phraseRoutes from '@/routes/phrase';
-import resourceRoutes from '@/routes/resource';
-import roleRoutes from '@/routes/role';
-import sessionRoutes from '@/routes/session';
-import settingRoutes from '@/routes/setting';
-import signInExperiencesRoutes from '@/routes/sign-in-experience';
-import statusRoutes from '@/routes/status';
-import swaggerRoutes from '@/routes/swagger';
-import wellKnownRoutes from '@/routes/well-known';
+import koaAuth from '#src/middleware/koa-auth.js';
+import koaLogSession from '#src/middleware/koa-log-session.js';
+import adminUserRoutes from '#src/routes/admin-user.js';
+import applicationRoutes from '#src/routes/application.js';
+import authnRoutes from '#src/routes/authn.js';
+import connectorRoutes from '#src/routes/connector.js';
+import customPhraseRoutes from '#src/routes/custom-phrase.js';
+import dashboardRoutes from '#src/routes/dashboard.js';
+import logRoutes from '#src/routes/log.js';
+import phraseRoutes from '#src/routes/phrase.js';
+import resourceRoutes from '#src/routes/resource.js';
+import roleRoutes from '#src/routes/role.js';
+import sessionRoutes from '#src/routes/session/index.js';
+import settingRoutes from '#src/routes/setting.js';
+import signInExperiencesRoutes from '#src/routes/sign-in-experience.js';
+import statusRoutes from '#src/routes/status.js';
+import swaggerRoutes from '#src/routes/swagger.js';
+import wellKnownRoutes from '#src/routes/well-known.js';
 
-import type { AnonymousRouter, AuthedRouter } from './types';
+import type { AnonymousRouter, AuthedRouter } from './types.js';
 
 const createRouters = (provider: Provider) => {
   const sessionRouter: AnonymousRouter = new Router();

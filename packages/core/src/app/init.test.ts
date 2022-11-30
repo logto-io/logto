@@ -1,16 +1,16 @@
 import Koa from 'koa';
 
-import * as koaErrorHandler from '@/middleware/koa-error-handler';
-import * as koaI18next from '@/middleware/koa-i18next';
-import * as koaLog from '@/middleware/koa-log';
-import * as koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
-import * as koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
-import * as koaSpaProxy from '@/middleware/koa-spa-proxy';
-import * as initOidc from '@/oidc/init';
-import * as initRouter from '@/routes/init';
+import * as koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import * as koaI18next from '#src/middleware/koa-i18next.js';
+import * as koaLog from '#src/middleware/koa-log.js';
+import * as koaOIDCErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
+import * as koaSlonikErrorHandler from '#src/middleware/koa-slonik-error-handler.js';
+import * as koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
+import * as initOidc from '#src/oidc/init.js';
+import * as initRouter from '#src/routes/init.js';
 
-import initI18n from '../i18n/init';
-import initApp from './init';
+import initI18n from '../i18n/init.js';
+import initApp from './init.js';
 
 describe('App Init', () => {
   const listenMock = jest.spyOn(Koa.prototype, 'listen').mockImplementation(jest.fn());

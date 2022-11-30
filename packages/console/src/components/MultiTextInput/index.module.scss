@@ -5,14 +5,20 @@
     margin-top: _.unit(2);
   }
 
+  .firstFieldWithMultiInputs {
+    padding-right: _.unit(9);
+  }
+
   .deletableInput {
     display: flex;
     align-items: center;
 
     > :first-child {
-      @include _.form-text-field;
-      margin-right: _.unit(2);
-      flex-shrink: 0;
+      flex: 1;
+    }
+
+    > :not(:first-child) {
+      margin-left: _.unit(2);
     }
   }
 

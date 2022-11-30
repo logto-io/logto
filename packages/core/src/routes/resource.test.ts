@@ -1,11 +1,11 @@
 import type { Resource, CreateResource } from '@logto/schemas';
 
-import { mockResource } from '@/__mocks__';
-import { createRequester } from '@/utils/test-utils';
+import { mockResource } from '#src/__mocks__/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import resourceRoutes from './resource';
+import resourceRoutes from './resource.js';
 
-jest.mock('@/queries/resource', () => ({
+jest.mock('#src/queries/resource.js', () => ({
   findTotalNumberOfResources: jest.fn(async () => ({ count: 10 })),
   findAllResources: jest.fn(async (): Promise<Resource[]> => [mockResource]),
   findResourceById: jest.fn(async (): Promise<Resource> => mockResource),

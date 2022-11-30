@@ -7,29 +7,33 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Button from '@/components/Button';
-import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import ConfirmModal from '@/components/ConfirmModal';
+import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 import useUiLanguages from '@/hooks/use-ui-languages';
-import * as detailsStyles from '@/scss/details.module.scss';
 
 import Preview from './components/Preview';
-import SignInMethodsChangePreview from './components/SignInMethodsChangePreview';
+import SignUpAndSignInChangePreview from './components/SignUpAndSignInChangePreview';
 import Skeleton from './components/Skeleton';
 import Welcome from './components/Welcome';
-import usePreviewConfigs from './hooks';
+import usePreviewConfigs from './hooks/use-preview-configs';
 import * as styles from './index.module.scss';
-import BrandingTab from './tabs/BrandingTab';
-import OthersTab from './tabs/OthersTab';
-import SignUpAndSignInTab from './tabs/SignUpAndSignInTab';
+import Branding from './tabs/Branding';
+import Others from './tabs/Others';
+import SignUpAndSignIn from './tabs/SignUpAndSignIn';
 import type { SignInExperienceForm } from './types';
-import { compareSignUpAndSignInConfigs, signInExperienceParser } from './utilities';
+import {
+  compareSignUpAndSignInConfigs,
+  getBrandingErrorCount,
+  getOthersErrorCount,
+  getSignUpAndSignInErrorCount,
+  signInExperienceParser,
+} from './utilities';
 
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -45,7 +49,7 @@ const SignInExperience = () => {
     handleSubmit,
     getValues,
     watch,
-    formState: { isSubmitting, isDirty },
+    formState: { isSubmitting, isDirty, errors },
   } = methods;
   const api = useApi();
   const formData = watch();
@@ -64,7 +68,7 @@ const SignInExperience = () => {
     if (defaultFormData) {
       reset(defaultFormData);
     }
-  }, [reset, defaultFormData, tab]);
+  }, [reset, defaultFormData]);
 
   const saveData = async () => {
     const updatedData = await api
@@ -78,7 +82,7 @@ const SignInExperience = () => {
     toast.success(t('general.saved'));
   };
 
-  const onSubmit = handleSubmit(async (formData) => {
+  const onSubmit = handleSubmit(async (formData: SignInExperienceForm) => {
     if (!data || isSubmitting) {
       return;
     }
@@ -119,47 +123,50 @@ const SignInExperience = () => {
   }
 
   return (
-    <div className={styles.wrapper}>
-      <div className={classNames(styles.setup, detailsStyles.container)}>
-        <Card className={styles.card}>
-          <CardTitle title="sign_in_exp.title" subtitle="sign_in_exp.description" />
-          <TabNav className={styles.tabs}>
-            <TabNavItem href="/sign-in-experience/branding">
-              {t('sign_in_exp.tabs.branding')}
-            </TabNavItem>
-            <TabNavItem href="/sign-in-experience/sign-up-and-sign-in">
-              {t('sign_in_exp.tabs.sign_up_and_sign_in')}
-            </TabNavItem>
-            <TabNavItem href="/sign-in-experience/others">
-              {t('sign_in_exp.tabs.others')}
-            </TabNavItem>
-          </TabNav>
-          {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-          {data && defaultFormData && (
+    <div className={styles.container}>
+      <CardTitle
+        title="sign_in_exp.title"
+        subtitle="sign_in_exp.description"
+        className={styles.cardTitle}
+      />
+      <TabNav className={styles.tabs}>
+        <TabNavItem href="/sign-in-experience/branding" errorCount={getBrandingErrorCount(errors)}>
+          {t('sign_in_exp.tabs.branding')}
+        </TabNavItem>
+        <TabNavItem
+          href="/sign-in-experience/sign-up-and-sign-in"
+          errorCount={getSignUpAndSignInErrorCount(errors, formData)}
+        >
+          {t('sign_in_exp.tabs.sign_up_and_sign_in')}
+        </TabNavItem>
+        <TabNavItem href="/sign-in-experience/others" errorCount={getOthersErrorCount(errors)}>
+          {t('sign_in_exp.tabs.others')}
+        </TabNavItem>
+      </TabNav>
+      {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
+      {data && defaultFormData && (
+        <div className={styles.content}>
+          <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
             <FormProvider {...methods}>
-              <form className={styles.formWrapper} onSubmit={onSubmit}>
-                <div className={classNames(detailsStyles.body, styles.form)}>
-                  {tab === 'branding' && <BrandingTab />}
-                  {tab === 'sign-up-and-sign-in' && <SignUpAndSignInTab />}
-                  {tab === 'others' && <OthersTab />}
-                </div>
-                <div className={detailsStyles.footer}>
-                  <div className={detailsStyles.footerMain}>
-                    <Button
-                      isLoading={isSubmitting}
-                      type="primary"
-                      size="large"
-                      htmlType="submit"
-                      title="general.save_changes"
-                    />
-                  </div>
-                </div>
+              <form className={styles.form}>
+                {/* Todo: LOG-4766 Add Constants To Guard Router Path */}
+                <Branding isActive={tab === 'branding'} />
+                <SignUpAndSignIn isActive={tab === 'sign-up-and-sign-in'} />
+                <Others isActive={tab === 'others'} />
               </form>
             </FormProvider>
-          )}
-        </Card>
-      </div>
-      {formData.id && <Preview signInExperience={previewConfigs} />}
+            {formData.id && (
+              <Preview signInExperience={previewConfigs} className={styles.preview} />
+            )}
+          </div>
+          <SubmitFormChangesActionBar
+            isOpen={isDirty}
+            isSubmitting={isSubmitting}
+            onDiscard={reset}
+            onSubmit={onSubmit}
+          />
+        </div>
+      )}
       {data && (
         <ConfirmModal
           isOpen={Boolean(dataToCompare)}
@@ -170,10 +177,13 @@ const SignInExperience = () => {
             await saveData();
           }}
         >
-          {dataToCompare && <SignInMethodsChangePreview before={data} after={dataToCompare} />}
+          {dataToCompare && <SignUpAndSignInChangePreview before={data} after={dataToCompare} />}
         </ConfirmModal>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+      <UnsavedChangesAlertModal
+        hasUnsavedChanges={isDirty}
+        parentPath="/console/sign-in-experience"
+      />
     </div>
   );
 };

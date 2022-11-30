@@ -5,7 +5,7 @@ import {
   buildOidcClientMetadata,
   getConstantClientMetadata,
   validateCustomClientMetadata,
-} from './utils';
+} from './utils.js';
 
 describe('getConstantClientMetadata()', () => {
   expect(getConstantClientMetadata(ApplicationType.SPA)).toEqual({

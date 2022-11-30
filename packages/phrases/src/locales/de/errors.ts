@@ -56,6 +56,7 @@ const errors = {
     sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
     require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
+    user_not_exist: 'User with {{ identity }} has not been registered yet', // UNTRANSLATED,
   },
   password: {
     unsupported_encryption_method: 'Die Verschlüsselungsmethode {{name}} wird nicht unterstützt.',
@@ -99,6 +100,10 @@ const errors = {
     more_than_one_sms: 'The number of SMS connectors is larger then 1.',
     more_than_one_email: 'The number of Email connectors is larger then 1.',
     db_connector_type_mismatch: 'There is a connector in the DB that does not match the type.',
+    not_found_with_connector_id: 'Can not find connector with given standard connector id.',
+    multiple_instances_not_supported:
+      'Can not create multiple instance with picked standard connector.',
+    invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.',
   },
   passcode: {
     phone_email_empty: 'Telefonnummer oder E-Mail darf nicht leer sein.',

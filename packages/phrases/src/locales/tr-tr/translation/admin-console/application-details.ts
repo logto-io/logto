@@ -1,7 +1,12 @@
 const application_details = {
   back_to_applications: 'Uygulamalara geri dön',
   check_guide: 'Kılavuza Göz At',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.', // UNTRANSLATED
   advanced_settings: 'Gelişmiş Ayarlar',
+  advanced_settings_description:
+    'Advanced settings include OIDC related terms. You can check out the Token Endpoint for more information.', // UNTRANSLATED
   application_name: 'Uygulama Adı',
   application_name_placeholder: 'Uygulamam',
   description: 'Açıklama',

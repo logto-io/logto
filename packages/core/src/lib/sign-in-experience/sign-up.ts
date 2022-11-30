@@ -1,9 +1,9 @@
 import type { SignUp } from '@logto/schemas';
 import { ConnectorType, SignUpIdentifier } from '@logto/schemas';
 
-import type { LogtoConnector } from '@/connectors/types';
-import RequestError from '@/errors/RequestError';
-import assertThat from '@/utils/assert-that';
+import type { LogtoConnector } from '#src/connectors/types.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export const validateSignUp = (signUp: SignUp, enabledConnectors: LogtoConnector[]) => {
   if (

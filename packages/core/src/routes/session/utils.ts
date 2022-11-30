@@ -14,17 +14,17 @@ import type { Provider } from 'oidc-provider';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
-import { verifyUserPassword } from '@/lib/user';
-import type { LogContext } from '@/middleware/koa-log';
-import { hasUser, hasUserWithEmail, hasUserWithPhone, updateUserById } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import { verifyUserPassword } from '#src/lib/user.js';
+import type { LogContext } from '#src/middleware/koa-log.js';
+import { hasUser, hasUserWithEmail, hasUserWithPhone, updateUserById } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import { continueSignInTimeout, verificationTimeout } from './consts';
-import type { Method, Operation, VerificationResult, VerificationStorage } from './types';
-import { continueSignInStorageGuard } from './types';
+import { continueSignInTimeout, verificationTimeout } from './consts.js';
+import type { Method, Operation, VerificationResult, VerificationStorage } from './types.js';
+import { continueSignInStorageGuard } from './types.js';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
@@ -200,15 +200,37 @@ export const checkRequiredProfile = async (
     throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
   }
 };
+
+export const checkMissingRequiredSignUpIdentifiers = async (identifiers: {
+  primaryEmail?: Nullable<string>;
+  primaryPhone?: Nullable<string>;
+}) => {
+  // We do not check username as we decided to prohibit the removal of username from user profile.
+  const { primaryEmail, primaryPhone } = identifiers;
+
+  const { signUp } = await getSignInExperienceForApplication();
+
+  if (signUp.identifier === SignUpIdentifier.Email && !primaryEmail) {
+    throw new RequestError({ code: 'user.require_email', status: 422 });
+  }
+
+  if (signUp.identifier === SignUpIdentifier.Sms && !primaryPhone) {
+    throw new RequestError({ code: 'user.require_sms', status: 422 });
+  }
+
+  if (signUp.identifier === SignUpIdentifier.EmailOrSms && !primaryEmail && !primaryPhone) {
+    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
+  }
+};
 /* eslint-enable complexity */
 
-export const checkExistingSignUpIdentifiers = async (
+export const checkSignUpIdentifierCollision = async (
   identifiers: {
     username?: Nullable<string>;
     primaryEmail?: Nullable<string>;
     primaryPhone?: Nullable<string>;
   },
-  excludeUserId: string
+  excludeUserId?: string
 ) => {
   const { username, primaryEmail, primaryPhone } = identifiers;
 

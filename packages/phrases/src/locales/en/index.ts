@@ -1,5 +1,5 @@
-import errors from './errors';
-import translation from './translation';
+import errors from './errors.js';
+import translation from './translation/index.js';
 
 const en = Object.freeze({
   translation,

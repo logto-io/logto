@@ -1,33 +1,20 @@
 @use '@/scss/underscore' as _;
 
-.card {
-  @include _.flex-column;
-}
+.container {
+  .tabs {
+    margin-top: _.unit(4);
+  }
 
-.headline {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  .connectorName {
+    width: 360px;
+  }
 
-.tabs {
-  margin-top: _.unit(4);
-}
+  .empty {
+    text-align: center;
+    font-size: var(--font-body-medium);
+  }
 
-.table {
-  margin-top: _.unit(4);
-  flex: 1;
-}
-
-.connectorName {
-  width: 360px;
-}
-
-.empty {
-  text-align: center;
-  font-size: var(--font-body-medium);
-}
-
-.emptyLine {
-  padding: _.unit(2) 0;
+  .emptyLine {
+    padding: _.unit(2) 0;
+  }
 }

@@ -1,9 +1,7 @@
 const settings = {
   title: '设置',
   description: '管理全局设置',
-  tabs: {
-    general: '通用',
-  },
+  settings: '设置',
   custom_domain: '自定义域名',
   language: '语言',
   appearance: '外观',

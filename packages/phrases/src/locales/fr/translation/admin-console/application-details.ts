@@ -1,7 +1,12 @@
 const application_details = {
   back_to_applications: 'Retour aux applications',
   check_guide: 'Aller voir le guide',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.', // UNTRANSLATED
   advanced_settings: 'Paramètres avancés',
+  advanced_settings_description:
+    'Advanced settings include OIDC related terms. You can check out the Token Endpoint for more information.', // UNTRANSLATED
   application_name: "Nom de l'application",
   application_name_placeholder: 'Mon App',
   description: 'Description',

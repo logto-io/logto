@@ -1,31 +1,33 @@
 import { existsSync } from 'fs';
+import { fileURLToPath } from 'node:url';
 import path from 'path';
 
-import { connectorDirectory } from '@logto/cli/lib/constants';
-import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utilities';
+import { connectorDirectory } from '@logto/cli/lib/constants.js';
+import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utilities.js';
 import type { AllConnector, CreateConnector } from '@logto/connector-kit';
 import { validateConfig } from '@logto/connector-kit';
 import { findPackage } from '@logto/shared';
 import chalk from 'chalk';
 
-import RequestError from '@/errors/RequestError';
-import { findAllConnectors, insertConnector } from '@/queries/connector';
+import RequestError from '#src/errors/RequestError/index.js';
+import { findAllConnectors } from '#src/queries/connector.js';
 
-import { defaultConnectorMethods } from './consts';
-import type { LoadConnector, LogtoConnector } from './types';
-import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities';
+import { defaultConnectorMethods } from './consts.js';
+import { metaUrl } from './meta-url.js';
+import type { ConnectorFactory, LogtoConnector } from './types.js';
+import { getConnectorConfig, parseMetadata, validateConnectorModule } from './utilities/index.js';
+
+const currentDirname = path.dirname(fileURLToPath(metaUrl));
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: LoadConnector[] | undefined;
+let cachedConnectorFactories: ConnectorFactory[] | undefined;
 
-const loadConnectors = async () => {
-  if (cachedConnectors) {
-    return cachedConnectors;
+export const loadConnectorFactories = async () => {
+  if (cachedConnectorFactories) {
+    return cachedConnectorFactories;
   }
 
-  // Until we migrate to ESM
-  // eslint-disable-next-line unicorn/prefer-module
-  const coreDirectory = await findPackage(__dirname);
+  const coreDirectory = await findPackage(currentDirname);
   const directory = coreDirectory && path.join(coreDirectory, connectorDirectory);
 
   if (!directory || !existsSync(directory)) {
@@ -34,38 +36,27 @@ const loadConnectors = async () => {
 
   const connectorPackages = await getConnectorPackagesFromDirectory(directory);
 
-  const connectors = await Promise.all(
+  const connectorFactories = await Promise.all(
     connectorPackages.map(async ({ path: packagePath, name }) => {
       try {
-        // eslint-disable-next-line no-restricted-syntax
-        const { default: createConnector } = (await import(packagePath)) as {
-          default: CreateConnector<AllConnector>;
+        // TODO: fix type and remove `/lib/index.js` suffix once we upgrade all connectors to ESM
+        const {
+          default: { default: createConnector },
+          // eslint-disable-next-line no-restricted-syntax
+        } = (await import(packagePath + '/lib/index.js')) as {
+          default: {
+            default: CreateConnector<AllConnector>;
+          };
         };
         const rawConnector = await createConnector({ getConfig: getConnectorConfig });
         validateConnectorModule(rawConnector);
 
-        const connector: LoadConnector = {
-          ...defaultConnectorMethods,
-          ...rawConnector,
-          metadata: {
-            ...rawConnector.metadata,
-            logo: await readUrl(rawConnector.metadata.logo, packagePath, 'svg'),
-            logoDark:
-              rawConnector.metadata.logoDark &&
-              (await readUrl(rawConnector.metadata.logoDark, packagePath, 'svg')),
-            readme: await readUrl(rawConnector.metadata.readme, packagePath, 'text'),
-            configTemplate: await readUrl(
-              rawConnector.metadata.configTemplate,
-              packagePath,
-              'text'
-            ),
-          },
-          validateConfig: (config: unknown) => {
-            validateConfig(config, rawConnector.configGuard);
-          },
+        return {
+          metadata: await parseMetadata(rawConnector.metadata, packagePath),
+          type: rawConnector.type,
+          createConnector,
+          path: packagePath,
         };
-
-        return connector;
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.log(
@@ -83,32 +74,63 @@ const loadConnectors = async () => {
   );
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  cachedConnectors = connectors.filter(
-    (connector): connector is LoadConnector => connector !== undefined
+  cachedConnectorFactories = connectorFactories.filter(
+    (connectorFactory): connectorFactory is ConnectorFactory => connectorFactory !== undefined
   );
 
-  return cachedConnectors;
+  return cachedConnectorFactories;
 };
 
 export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
-  const connectors = await findAllConnectors();
-  const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
+  const databaseConnectors = await findAllConnectors();
 
-  const logtoConnectors = await loadConnectors();
+  const logtoConnectors = await Promise.all(
+    databaseConnectors.map(async (databaseConnector) => {
+      const { id, metadata, connectorId } = databaseConnector;
 
-  return logtoConnectors.map((element) => {
-    const { id } = element.metadata;
-    const connector = connectorMap.get(id);
+      const connectorFactories = await loadConnectorFactories();
+      const connectorFactory = connectorFactories.find(
+        ({ metadata }) => metadata.id === connectorId
+      );
 
-    if (!connector) {
-      throw new RequestError({ code: 'entity.not_found', id, status: 404 });
-    }
+      if (!connectorFactory) {
+        return;
+      }
 
-    return {
-      ...element,
-      dbEntry: connector,
-    };
-  });
+      const { createConnector, path: packagePath } = connectorFactory;
+
+      try {
+        const rawConnector = await createConnector({
+          getConfig: async () => {
+            return getConnectorConfig(id);
+          },
+        });
+        validateConnectorModule(rawConnector);
+        const rawMetadata = await parseMetadata(rawConnector.metadata, packagePath);
+
+        const connector: AllConnector = {
+          ...defaultConnectorMethods,
+          ...rawConnector,
+          metadata: {
+            ...rawMetadata,
+            ...metadata,
+          },
+        };
+
+        return {
+          ...connector,
+          validateConfig: (config: unknown) => {
+            validateConfig(config, rawConnector.configGuard);
+          },
+          dbEntry: databaseConnector,
+        };
+      } catch {}
+    })
+  );
+
+  return logtoConnectors.filter(
+    (logtoConnector): logtoConnector is LogtoConnector => logtoConnector !== undefined
+  );
 };
 
 export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector> => {
@@ -124,27 +146,4 @@ export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector>
   }
 
   return pickedConnector;
-};
-
-export const initConnectors = async () => {
-  const connectors = await findAllConnectors();
-  const existingConnectors = new Map(connectors.map((connector) => [connector.id, connector]));
-  const allConnectors = await loadConnectors();
-  const newConnectors = allConnectors.filter(({ metadata: { id } }) => {
-    const connector = existingConnectors.get(id);
-
-    if (!connector) {
-      return true;
-    }
-
-    return connector.config === JSON.stringify({});
-  });
-
-  await Promise.all(
-    newConnectors.map(async ({ metadata: { id } }) => {
-      await insertConnector({
-        id,
-      });
-    })
-  );
 };

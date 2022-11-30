@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import type { Log } from '../db-entries';
+import type { Log } from '../db-entries/index.js';
 
 export enum LogResult {
   Success = 'Success',

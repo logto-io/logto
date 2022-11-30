@@ -68,6 +68,7 @@ const sign_in_exp = {
       password_auth: 'Password',
       verification_code_auth: 'Verification code',
       auth_swap_tip: 'Swap the options below to determine which appears first in the flow.',
+      require_auth_factor: 'You have to select at least one authentication factor.',
     },
     social_sign_in: {
       title: 'SOCIAL SIGN-IN',
@@ -134,8 +135,8 @@ const sign_in_exp = {
         '{{language}} is set as your default language and can’t be deleted. ',
       got_it: 'Got It',
     },
-    authentication: {
-      title: 'AUTHENTICATION',
+    advanced_options: {
+      title: 'ADVANCED OPTIONS',
       enable_user_registration: 'Enable user registration',
       enable_user_registration_description:
         'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',

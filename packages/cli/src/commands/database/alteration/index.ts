@@ -1,22 +1,26 @@
+import { fileURLToPath } from 'node:url';
 import path from 'path';
 
-import type { AlterationScript } from '@logto/schemas/lib/types/alteration';
+import type { AlterationScript } from '@logto/schemas/lib/types/alteration.js';
 import { findPackage } from '@logto/shared';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
-import { copy, existsSync, remove, readdir } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import type { DatabasePool } from 'slonik';
 import type { CommandModule } from 'yargs';
 
-import { createPoolFromConfig } from '../../../database';
+import { createPoolFromConfig } from '../../../database.js';
 import {
   getCurrentDatabaseAlterationTimestamp,
   updateDatabaseTimestamp,
-} from '../../../queries/logto-config';
-import { getPathInModule, log } from '../../../utilities';
-import type { AlterationFile } from './type';
-import { chooseAlterationsByVersion } from './version';
+} from '../../../queries/logto-config.js';
+import { getPathInModule, log } from '../../../utilities.js';
+import { metaUrl } from './meta-url.js';
+import type { AlterationFile } from './type.js';
+import { chooseAlterationsByVersion } from './version.js';
 
+const currentDirname = path.dirname(fileURLToPath(metaUrl));
+const { copy, existsSync, remove, readdir } = fsExtra;
 const alterationFilenameRegex = /-(\d+)-?.*\.js$/;
 
 const getTimestampFromFilename = (filename: string) => {
@@ -45,16 +49,10 @@ export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
    * since they need a proper context that includes required dependencies (such as slonik) in `node_modules/`.
    * While the original `@logto/schemas` may remove them in production.
    */
-  const packageDirectory = await findPackage(
-    // Until we migrate to ESM
-    // eslint-disable-next-line unicorn/prefer-module
-    __dirname
-  );
+  const packageDirectory = await findPackage(currentDirname);
 
   const localAlterationDirectory = path.resolve(
-    // Until we migrate to ESM
-    // eslint-disable-next-line unicorn/prefer-module
-    packageDirectory ?? __dirname,
+    packageDirectory ?? currentDirname,
     'alteration-scripts'
   );
 

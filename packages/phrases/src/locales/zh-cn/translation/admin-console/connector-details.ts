@@ -1,6 +1,9 @@
 const connector_details = {
   back_to_connectors: '返回连接器',
   check_readme: '查看 README',
+  settings: '设置',
+  settings_description:
+    'Connectors play a critical role in Logto. With their help, Logto enables end-users to use passwordless registration or sign-in and the capabilities of signing in with social accounts.', // UNTRANSLATED
   save_error_empty_config: '请输入配置内容',
   send: '发送',
   send_error_invalid_format: '无效输入',

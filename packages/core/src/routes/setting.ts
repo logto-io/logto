@@ -1,9 +1,9 @@
 import { Settings } from '@logto/schemas';
 
-import koaGuard from '@/middleware/koa-guard';
-import { getSetting, updateSetting } from '@/queries/setting';
+import koaGuard from '#src/middleware/koa-guard.js';
+import { getSetting, updateSetting } from '#src/queries/setting.js';
 
-import type { AuthedRouter } from './types';
+import type { AuthedRouter } from './types.js';
 
 export default function settingRoutes<T extends AuthedRouter>(router: T) {
   router.get('/settings', async (ctx, next) => {

@@ -4,12 +4,12 @@ import type { OmitAutoSetFields } from '@logto/shared';
 import { convertToIdentifiers, conditionalSql, manyRows } from '@logto/shared';
 import { sql } from 'slonik';
 
-import { buildFindEntityById } from '@/database/find-entity-by-id';
-import { buildInsertInto } from '@/database/insert-into';
-import { getTotalRowCount } from '@/database/row-count';
-import { buildUpdateWhere } from '@/database/update-where';
-import envSet from '@/env-set';
-import { DeletionError } from '@/errors/SlonikError';
+import { buildFindEntityById } from '#src/database/find-entity-by-id.js';
+import { buildInsertInto } from '#src/database/insert-into.js';
+import { getTotalRowCount } from '#src/database/row-count.js';
+import { buildUpdateWhere } from '#src/database/update-where.js';
+import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Resources);
 

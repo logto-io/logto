@@ -1,4 +1,4 @@
-import { maskUserInfo } from './format';
+import { maskUserInfo } from './format.js';
 
 describe('maskUserInfo', () => {
   it('phone', () => {

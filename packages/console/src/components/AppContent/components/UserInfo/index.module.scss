@@ -41,12 +41,9 @@
   }
 }
 
-.dropdown {
-  padding: _.unit(2);
-}
-
 .dropdownItem {
   min-width: 170px;
+  padding: _.unit(2.5) _.unit(2);
 
   &.loading {
     opacity: 60%;

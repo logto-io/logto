@@ -1,20 +1,20 @@
 import { ConnectorType, SignUpIdentifier } from '@logto/schemas';
 
-import { mockAliyunDmConnector, mockAliyunSmsConnector, mockSignUp } from '@/__mocks__';
-import RequestError from '@/errors/RequestError';
+import { mockAliyunDmConnector, mockAliyunSmsConnector, mockSignUp } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import { validateSignUp } from './sign-up';
+import { validateSignUp } from './sign-up.js';
 
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 
-jest.mock('@/lib/session', () => ({
-  ...jest.requireActual('@/lib/session'),
+jest.mock('#src/lib/session.js', () => ({
+  ...jest.requireActual('#src/lib/session.js'),
   getApplicationIdFromInteraction: jest.fn(),
 }));
 
 describe('validate sign-up', () => {
-  describe('There must be at least one enabled connector for the specific identifier.', () => {
-    test('should throw when there is no enabled email connector and identifier is email', async () => {
+  describe('There must be at least one connector for the specific identifier.', () => {
+    test('should throw when there is no email connector and identifier is email', async () => {
       expect(() => {
         validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.Email }, []);
       }).toMatchError(
@@ -25,7 +25,7 @@ describe('validate sign-up', () => {
       );
     });
 
-    test('should throw when there is no enabled email connector and identifier is email or phone', async () => {
+    test('should throw when there is no email connector and identifier is email or phone', async () => {
       expect(() => {
         validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms }, []);
       }).toMatchError(
@@ -36,7 +36,7 @@ describe('validate sign-up', () => {
       );
     });
 
-    test('should throw when there is no enabled sms connector and identifier is phone', async () => {
+    test('should throw when there is no sms connector and identifier is phone', async () => {
       expect(() => {
         validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.Sms }, []);
       }).toMatchError(
@@ -47,7 +47,7 @@ describe('validate sign-up', () => {
       );
     });
 
-    test('should throw when there is no enabled email connector and identifier is email or phone', async () => {
+    test('should throw when there is no email connector and identifier is email or phone', async () => {
       expect(() => {
         validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms }, [
           mockAliyunDmConnector,

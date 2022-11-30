@@ -1,6 +1,9 @@
 const connector_details = {
   back_to_connectors: 'Zurück zu Connectoren',
   check_readme: 'Zur README',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'Connectors play a critical role in Logto. With their help, Logto enables end-users to use passwordless registration or sign-in and the capabilities of signing in with social accounts.', // UNTRANSLATED
   save_error_empty_config: 'Bitte fülle die Konfiguration aus',
   send: 'Senden',
   send_error_invalid_format: 'Ungültige Eingabe',

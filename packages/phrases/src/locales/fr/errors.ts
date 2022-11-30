@@ -57,6 +57,7 @@ const errors = {
     sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
     require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
+    user_not_exist: 'User with {{ identity }} has not been registered yet', // UNTRANSLATED,
   },
   password: {
     unsupported_encryption_method: "La méthode de cryptage {{name}} n'est pas prise en charge.",
@@ -105,6 +106,10 @@ const errors = {
     more_than_one_email: 'Le nombre de connecteurs Email est supérieur à 1.',
     db_connector_type_mismatch:
       'Il y a un connecteur dans la base de donnée qui ne correspond pas au type.',
+    not_found_with_connector_id: 'Can not find connector with given standard connector id.', // UNTRANSLATED
+    multiple_instances_not_supported:
+      'Can not create multiple instance with picked standard connector.', // UNTRANSLATED
+    invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: "Le téléphone et l'email sont vides.",

@@ -4,6 +4,7 @@
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
+  "type": "module",
   "files": [
     "lib",
     "alterations",
@@ -16,7 +17,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "version": "./update-next.sh && git add alterations/",
-    "generate": "rm -rf src/db-entries && ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
+    "generate": "rm -rf src/db-entries && ts-node-esm src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
     "build:alterations": "rm -rf alterations-js && tsc -p tsconfig.build.alterations.json",
     "build": "pnpm generate && rm -rf lib/ && tsc -p tsconfig.build.json && pnpm build:alterations",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
@@ -38,7 +39,7 @@
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "^16.0.0",
     "@types/pluralize": "^0.0.29",
-    "camelcase": "^6.2.0",
+    "camelcase": "^7.0.0",
     "eslint": "^8.21.0",
     "jest": "^29.1.2",
     "lint-staged": "^13.0.0",
@@ -68,8 +69,8 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "@logto/connector-kit": "1.0.0-beta.27",
-    "@logto/core-kit": "1.0.0-beta.20",
-    "@logto/language-kit": "1.0.0-beta.20",
+    "@logto/core-kit": "1.0.0-beta.25",
+    "@logto/language-kit": "1.0.0-beta.24",
     "@logto/phrases": "workspace:^",
     "@logto/phrases-ui": "workspace:^",
     "zod": "^3.19.1"

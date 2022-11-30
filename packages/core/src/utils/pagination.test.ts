@@ -1,4 +1,4 @@
-import { buildLink } from './pagination';
+import { buildLink } from './pagination.js';
 
 const request = {
   origin: 'https://logto.dev',

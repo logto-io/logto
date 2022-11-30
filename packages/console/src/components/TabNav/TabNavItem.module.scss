@@ -1,27 +1,62 @@
 @use '@/scss/underscore' as _;
 
-.link {
-  font: var(--font-subhead-2);
+.item {
+  display: flex;
+  align-items: center;
 
   &:not(:last-child) {
     margin-right: _.unit(6);
   }
 
-  a {
-    display: inline-block;
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    cursor: pointer;
-    padding-bottom: _.unit(1);
+  .link {
+    font: var(--font-subhead-2);
+    padding: _.unit(0.5) _.unit(1.5);
+    margin-bottom: _.unit(1);
+    border-radius: 4px;
+
+    a {
+      display: inline-block;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    &:hover {
+      background-color: var(--color-hover-variant);
+    }
   }
-}
 
-.selected {
-  color: var(--color-text-link);
-  border-bottom: 2px solid var(--color-text-link);
-  margin-bottom: -1px;
-
-  a {
+  .selected {
+    position: relative;
     color: var(--color-text-link);
+
+    a {
+      color: var(--color-text-link);
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      // Note: link item's margin-bottom (_.unit(1)) + TabNav's border-bottom width (1px)
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      border-top: 2px solid var(--color-text-link);
+      border-radius: 8px 8px 0 0;
+    }
+  }
+
+  .errors {
+    margin-left: _.unit(0.5);
+    font: var(--font-label-medium);
+    color: var(--color-white);
+    padding: _.unit(0.5) _.unit(1.5);
+    background-color: var(--color-error-50);
+    border-radius: 10px;
+    vertical-align: middle;
+    margin-bottom: _.unit(1);
+    cursor: default;
   }
 }
+

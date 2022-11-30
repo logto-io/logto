@@ -1,6 +1,6 @@
 import type { LogDto } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
-import { conditionalString } from '@silverhand/essentials';
+import { conditional, conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -26,6 +26,8 @@ type Props = {
   userId?: string;
 };
 
+const defaultTableColumn = 4;
+
 const AuditLogTable = ({ userId }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
@@ -49,6 +51,7 @@ const AuditLogTable = ({ userId }: Props) => {
   const navigate = useNavigate();
   const [logs, totalCount] = data ?? [];
   const showUserColumn = !userId;
+  const tableColumnCount = showUserColumn ? defaultTableColumn : defaultTableColumn - 1;
 
   const updateQuery = (key: string, value: string) => {
     const queries: Record<string, string> = {};
@@ -65,91 +68,91 @@ const AuditLogTable = ({ userId }: Props) => {
   };
 
   return (
-    <>
-      <div className={styles.filter}>
-        <div className={styles.title}>{t('logs.filter_by')}</div>
-        <div className={styles.eventSelector}>
-          <EventSelector
-            value={event ?? undefined}
-            onChange={(value) => {
-              updateQuery('event', value ?? '');
-            }}
-          />
+    <div className={styles.container}>
+      <div className={styles.tableLayout}>
+        <div className={styles.filter}>
+          <div className={styles.title}>{t('logs.filter_by')}</div>
+          <div className={styles.eventSelector}>
+            <EventSelector
+              value={event ?? undefined}
+              onChange={(value) => {
+                updateQuery('event', value ?? '');
+              }}
+            />
+          </div>
+          <div className={styles.applicationSelector}>
+            <ApplicationSelector
+              value={applicationId ?? undefined}
+              onChange={(value) => {
+                updateQuery('applicationId', value ?? '');
+              }}
+            />
+          </div>
         </div>
-        <div className={styles.applicationSelector}>
-          <ApplicationSelector
-            value={applicationId ?? undefined}
-            onChange={(value) => {
-              updateQuery('applicationId', value ?? '');
-            }}
-          />
-        </div>
-      </div>
-      <div className={classNames(styles.table, tableStyles.scrollable)}>
-        <table className={classNames(logs?.length === 0 && tableStyles.empty)}>
-          <colgroup>
-            <col className={styles.eventName} />
-            {showUserColumn && <col />}
-            <col />
-            <col />
-          </colgroup>
-          <thead>
-            <tr>
-              <th>{t('logs.event')}</th>
-              {showUserColumn && <th>{t('logs.user')}</th>}
-              <th>{t('logs.application')}</th>
-              <th>{t('logs.time')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!data && error && (
-              <TableError
-                columns={4}
-                content={error.body?.message ?? error.message}
-                onRetry={async () => mutate(undefined, true)}
-              />
-            )}
-            {isLoading && <TableLoading columns={4} />}
-            {logs?.length === 0 && <TableEmpty columns={4} />}
-            {logs?.map(({ type, payload, createdAt, id }) => (
-              <tr
-                key={id}
-                className={tableStyles.clickable}
-                onClick={() => {
-                  navigate(`${pathname}/${id}`);
-                }}
-              >
-                <td>
-                  <EventName type={type} isSuccess={payload.result === LogResult.Success} />
-                </td>
-                {showUserColumn && (
-                  <td>{payload.userId ? <UserName userId={payload.userId} /> : '-'}</td>
-                )}
-                <td>
-                  {payload.applicationId ? (
-                    <ApplicationName applicationId={payload.applicationId} />
-                  ) : (
-                    '-'
-                  )}
-                </td>
-                <td>{new Date(createdAt).toLocaleString()}</td>
+        <div className={classNames(tableStyles.scrollable, styles.tableContainer)}>
+          <table className={conditional(logs?.length === 0 && tableStyles.empty)}>
+            <colgroup>
+              <col className={styles.eventName} />
+              {showUserColumn && <col />}
+              <col />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>{t('logs.event')}</th>
+                {showUserColumn && <th>{t('logs.user')}</th>}
+                <th>{t('logs.application')}</th>
+                <th>{t('logs.time')}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {!data && error && (
+                <TableError
+                  columns={tableColumnCount}
+                  content={error.body?.message ?? error.message}
+                  onRetry={async () => mutate(undefined, true)}
+                />
+              )}
+              {isLoading && <TableLoading columns={tableColumnCount} />}
+              {logs?.length === 0 && <TableEmpty columns={tableColumnCount} />}
+              {logs?.map(({ type, payload, createdAt, id }) => (
+                <tr
+                  key={id}
+                  className={tableStyles.clickable}
+                  onClick={() => {
+                    navigate(`${pathname}/${id}`);
+                  }}
+                >
+                  <td>
+                    <EventName type={type} isSuccess={payload.result === LogResult.Success} />
+                  </td>
+                  {showUserColumn && (
+                    <td>{payload.userId ? <UserName userId={payload.userId} /> : '-'}</td>
+                  )}
+                  <td>
+                    {payload.applicationId ? (
+                      <ApplicationName applicationId={payload.applicationId} />
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                  <td>{new Date(createdAt).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div className={styles.pagination}>
-        {!!totalCount && (
-          <Pagination
-            pageCount={Math.ceil(totalCount / pageSize)}
-            pageIndex={pageIndex}
-            onChange={(page) => {
-              updateQuery('page', String(page));
-            }}
-          />
-        )}
-      </div>
-    </>
+      <Pagination
+        pageIndex={pageIndex}
+        totalCount={totalCount ?? 0}
+        pageSize={pageSize}
+        className={styles.pagination}
+        onChange={(page) => {
+          updateQuery('page', String(page));
+        }}
+      />
+    </div>
   );
 };
 

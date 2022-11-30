@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import { verifyBearerTokenFromRequest } from '@/middleware/koa-auth';
-import koaGuard from '@/middleware/koa-guard';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import { verifyBearerTokenFromRequest } from '#src/middleware/koa-auth.js';
+import koaGuard from '#src/middleware/koa-guard.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from './types';
+import type { AnonymousRouter } from './types.js';
 
 /**
  * Authn stands for authentication.

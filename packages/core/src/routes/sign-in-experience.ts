@@ -1,20 +1,20 @@
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
 
-import { getLogtoConnectors } from '@/connectors';
+import { getLogtoConnectors } from '#src/connectors/index.js';
 import {
   validateBranding,
   validateLanguageInfo,
   validateTermsOfUse,
   validateSignUp,
   validateSignIn,
-} from '@/lib/sign-in-experience';
-import koaGuard from '@/middleware/koa-guard';
+} from '#src/lib/sign-in-experience/index.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 import {
   findDefaultSignInExperience,
   updateDefaultSignInExperience,
-} from '@/queries/sign-in-experience';
+} from '#src/queries/sign-in-experience.js';
 
-import type { AuthedRouter } from './types';
+import type { AuthedRouter } from './types.js';
 
 export default function signInExperiencesRoutes<T extends AuthedRouter>(router: T) {
   /**
@@ -50,25 +50,24 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       }
 
       const connectors = await getLogtoConnectors();
-      const enabledConnectors = connectors.filter(({ dbEntry: { enabled } }) => enabled);
 
       // Remove unavailable connectors
       const filteredSocialSignInConnectorTargets = socialSignInConnectorTargets?.filter((target) =>
-        enabledConnectors.some(
+        connectors.some(
           (connector) =>
             connector.metadata.target === target && connector.type === ConnectorType.Social
         )
       );
 
       if (signUp) {
-        validateSignUp(signUp, enabledConnectors);
+        validateSignUp(signUp, connectors);
       }
 
       if (signIn && signUp) {
-        validateSignIn(signIn, signUp, enabledConnectors);
+        validateSignIn(signIn, signUp, connectors);
       } else if (signIn) {
         const signInExperience = await findDefaultSignInExperience();
-        validateSignIn(signIn, signInExperience.signUp, enabledConnectors);
+        validateSignIn(signIn, signInExperience.signUp, connectors);
       }
       ctx.body = await updateDefaultSignInExperience(
         filteredSocialSignInConnectorTargets

@@ -1,11 +1,11 @@
 import type { Setting, CreateSetting } from '@logto/schemas';
 
-import { mockSetting } from '@/__mocks__';
-import { createRequester } from '@/utils/test-utils';
+import { mockSetting } from '#src/__mocks__/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import settingRoutes from './setting';
+import settingRoutes from './setting.js';
 
-jest.mock('@/queries/setting', () => ({
+jest.mock('#src/queries/setting.js', () => ({
   getSetting: jest.fn(async (): Promise<Setting> => mockSetting),
   updateSetting: jest.fn(
     async (data: Partial<CreateSetting>): Promise<Setting> => ({

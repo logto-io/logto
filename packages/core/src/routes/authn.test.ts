@@ -1,8 +1,8 @@
-import RequestError from '@/errors/RequestError';
-import * as functions from '@/middleware/koa-auth';
-import { createRequester } from '@/utils/test-utils';
+import RequestError from '#src/errors/RequestError/index.js';
+import * as functions from '#src/middleware/koa-auth.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import authnRoutes from './authn';
+import authnRoutes from './authn.js';
 
 describe('authn route for Hasura', () => {
   const request = createRequester({ anonymousRoutes: authnRoutes });

@@ -1,5 +1,5 @@
-import type { CreateSetting } from '../db-entries';
-import { AppearanceMode } from '../foundations';
+import type { CreateSetting } from '../db-entries/index.js';
+import { AppearanceMode } from '../foundations/index.js';
 
 export const defaultSettingId = 'default';
 

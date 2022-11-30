@@ -1,7 +1,12 @@
 const application_details = {
   back_to_applications: '返回全部应用',
   check_guide: '查看指南',
+  settings: '设置',
+  settings_description:
+    'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.', // UNTRANSLATED
   advanced_settings: '高级设置',
+  advanced_settings_description:
+    'Advanced settings include OIDC related terms. You can check out the Token Endpoint for more information.', // UNTRANSLATED
   application_name: '应用名称',
   application_name_placeholder: '我的应用',
   description: '描述',

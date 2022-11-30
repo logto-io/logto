@@ -1,5 +1,8 @@
 const api_resource_details = {
   back_to_api_resources: 'API Kaynaklarına geri dön',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'API resources, a.k.a. Resource Indicators, indicate the target services or resources to be requested, usually, a URI format variable representing the resource‘s identity.', // UNTRANSLATED
   token_expiration_time_in_seconds: 'Token sona erme süresi (saniye)',
   token_expiration_time_in_seconds_placeholder: 'Token zaman aşım süresini giriniz',
   delete_description:

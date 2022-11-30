@@ -10,9 +10,9 @@ import {
   trTrTag,
   zhCnTag,
   zhHkTag,
-} from '@/__mocks__/custom-phrase';
-import RequestError from '@/errors/RequestError';
-import { getPhrase } from '@/lib/phrase';
+} from '#src/__mocks__/custom-phrase.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { getPhrase } from '#src/lib/phrase.js';
 
 const englishBuiltInPhrase = resource[enTag];
 
@@ -39,7 +39,7 @@ const findCustomPhraseByLanguageTag = jest.fn(async (languageTag: string) => {
   return mockCustomPhrase;
 });
 
-jest.mock('@/queries/custom-phrase', () => ({
+jest.mock('#src/queries/custom-phrase.js', () => ({
   findCustomPhraseByLanguageTag: async (key: string) => findCustomPhraseByLanguageTag(key),
 }));
 

@@ -1,9 +1,9 @@
 import { createMockPool } from 'slonik';
 
-import * as functions from '.';
-import * as queries from '../../../queries/logto-config';
-import type { QueryType } from '../../../test-utilities';
-import { chooseAlterationsByVersion } from './version';
+import * as queries from '../../../queries/logto-config.js';
+import type { QueryType } from '../../../test-utilities.js';
+import * as functions from './index.js';
+import { chooseAlterationsByVersion } from './version.js';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 

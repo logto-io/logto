@@ -1,9 +1,9 @@
 import { createMockContext } from '@shopify/jest-koa-mocks';
 import createHttpError from 'http-errors';
 
-import RequestError from '@/errors/RequestError';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import koaErrorHandler from './koa-error-handler';
+import koaErrorHandler from './koa-error-handler.js';
 
 describe('koaErrorHandler middleware', () => {
   const mockBody = { data: 'foo' };

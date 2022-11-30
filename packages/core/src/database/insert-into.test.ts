@@ -3,11 +3,11 @@ import { Users } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import decamelize from 'decamelize';
 
-import envSet from '@/env-set';
-import { InsertionError } from '@/errors/SlonikError';
-import { createTestPool } from '@/utils/test-utils';
+import envSet from '#src/env-set/index.js';
+import { InsertionError } from '#src/errors/SlonikError/index.js';
+import { createTestPool } from '#src/utils/test-utils.js';
 
-import { buildInsertInto } from './insert-into';
+import { buildInsertInto } from './insert-into.js';
 
 const poolSpy = jest.spyOn(envSet, 'pool', 'get');
 

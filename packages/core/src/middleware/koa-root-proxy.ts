@@ -1,8 +1,8 @@
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
-import envSet from '@/env-set';
-import { appendPath } from '@/utils/url';
+import envSet from '#src/env-set/index.js';
+import { appendPath } from '#src/utils/url.js';
 
 export default function koaRootProxy<
   StateT,

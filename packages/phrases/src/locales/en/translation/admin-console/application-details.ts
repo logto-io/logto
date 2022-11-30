@@ -1,7 +1,12 @@
 const application_details = {
   back_to_applications: 'Back to Applications',
   check_guide: 'Check Guide',
+  settings: 'Settings',
+  settings_description:
+    'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.',
   advanced_settings: 'Advanced settings',
+  advanced_settings_description:
+    'Advanced settings include OIDC related terms. You can check out the Token Endpoint for more information.',
   application_name: 'Application name',
   application_name_placeholder: 'My App',
   description: 'Description',

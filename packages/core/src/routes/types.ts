@@ -1,8 +1,8 @@
 import type Router from 'koa-router';
 
-import type { WithAuthContext } from '@/middleware/koa-auth';
-import type { WithI18nContext } from '@/middleware/koa-i18next';
-import type { WithLogContext } from '@/middleware/koa-log';
+import type { WithAuthContext } from '#src/middleware/koa-auth.js';
+import type { WithI18nContext } from '#src/middleware/koa-i18next.js';
+import type { WithLogContext } from '#src/middleware/koa-log.js';
 
 export type AnonymousRouter = Router<unknown, WithLogContext & WithI18nContext>;
 

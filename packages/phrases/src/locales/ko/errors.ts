@@ -55,6 +55,7 @@ const errors = {
     sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
     require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
+    user_not_exist: 'User with {{ identity }} has not been registered yet', // UNTRANSLATED,
   },
   password: {
     unsupported_encryption_method: '{{name}} 암호화 방법을 지원하지 않아요.',
@@ -97,6 +98,10 @@ const errors = {
     more_than_one_sms: '연동된 SMS 서비스가 1개 이상이여야 해요.',
     more_than_one_email: '연동된 이메일 서비스가 1개 이상이여야 해요.',
     db_connector_type_mismatch: '종류가 일치하지 않은 연동 서비스가 DB에 존재해요.',
+    not_found_with_connector_id: 'Can not find connector with given standard connector id.', // UNTRANSLATED
+    multiple_instances_not_supported:
+      'Can not create multiple instance with picked standard connector.', // UNTRANSLATED
+    invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: '휴대전화번호 그리고 이메일이 비어있어요.',

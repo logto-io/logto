@@ -15,6 +15,9 @@ const user_details = {
     new_password: 'Yeni şifre:',
   },
   tab_logs: 'Kullanıcı kayıtları',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
   field_email: 'Öncelikli e-posta adresi',
   field_phone: 'Öncelikli telefon',
   field_username: 'Kullanıcı Adı',

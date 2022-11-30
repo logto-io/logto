@@ -5,7 +5,11 @@
   "main": "build/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
+  "type": "module",
   "private": true,
+  "imports": {
+    "#src/*": "./build/*"
+  },
   "scripts": {
     "precommit": "lint-staged",
     "copyfiles": "copyfiles -u 1 src/**/*.md build",
@@ -21,8 +25,8 @@
   "dependencies": {
     "@logto/cli": "workspace:^",
     "@logto/connector-kit": "1.0.0-beta.27",
-    "@logto/core-kit": "^1.0.0-beta.18",
-    "@logto/language-kit": "1.0.0-beta.20",
+    "@logto/core-kit": "1.0.0-beta.25",
+    "@logto/language-kit": "1.0.0-beta.24",
     "@logto/phrases": "workspace:^",
     "@logto/phrases-ui": "workspace:^",
     "@logto/schemas": "workspace:^",
@@ -38,11 +42,10 @@
     "etag": "^1.8.1",
     "find-up": "^5.0.0",
     "fs-extra": "^10.1.0",
-    "got": "^11.8.5",
     "hash-wasm": "^4.9.0",
     "i18next": "^21.8.16",
     "iconv-lite": "0.6.3",
-    "jose": "^4.0.0",
+    "jose": "^4.11.0",
     "js-yaml": "^4.1.0",
     "koa": "^2.13.1",
     "koa-body": "^5.0.0",
@@ -53,7 +56,6 @@
     "koa-router": "^12.0.0",
     "koa-send": "^5.0.1",
     "lodash.pick": "^4.4.0",
-    "module-alias": "^2.2.2",
     "nanoid": "^3.1.23",
     "oidc-provider": "^7.13.0",
     "p-retry": "^4.6.1",
@@ -63,11 +65,11 @@
     "slonik-interceptor-preset": "^1.2.10",
     "slonik-sql-tag-raw": "^1.1.4",
     "snake-case": "^3.0.4",
-    "snakecase-keys": "^5.1.0",
+    "snakecase-keys": "^5.4.4",
     "zod": "^3.19.1"
   },
   "devDependencies": {
-    "@shopify/jest-koa-mocks": "^5.0.0",
+    "@shopify/jest-koa-mocks": "^5.0.1",
     "@silverhand/eslint-config": "1.3.0",
     "@silverhand/jest-config": "1.2.2",
     "@silverhand/ts-config": "1.2.1",
@@ -97,13 +99,10 @@
     "openapi-types": "^12.0.0",
     "prettier": "^2.7.1",
     "supertest": "^6.2.2",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.3"
   },
   "engines": {
     "node": "^16.13.0 || ^18.12.0"
-  },
-  "_moduleAliases": {
-    "@": "./build"
   },
   "eslintConfig": {
     "extends": "@silverhand"

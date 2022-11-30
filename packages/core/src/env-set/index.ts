@@ -2,13 +2,13 @@ import type { Optional } from '@silverhand/essentials';
 import { getEnv, getEnvAsStringArray } from '@silverhand/essentials';
 import type { DatabasePool } from 'slonik';
 
-import { getOidcConfigs } from '@/lib/logto-config';
-import { appendPath } from '@/utils/url';
+import { getOidcConfigs } from '#src/lib/logto-config.js';
+import { appendPath } from '#src/utils/url.js';
 
-import { checkAlterationState } from './check-alteration-state';
-import createPoolByEnv from './create-pool-by-env';
-import loadOidcValues from './oidc';
-import { isTrue } from './parameters';
+import { checkAlterationState } from './check-alteration-state.js';
+import createPoolByEnv from './create-pool-by-env.js';
+import loadOidcValues from './oidc.js';
+import { isTrue } from './parameters.js';
 
 export enum MountedApps {
   Api = 'api',

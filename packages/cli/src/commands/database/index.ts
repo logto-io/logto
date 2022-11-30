@@ -1,9 +1,9 @@
 import { noop } from '@silverhand/essentials';
 import type { CommandModule } from 'yargs';
 
-import alteration from './alteration';
-import config from './config';
-import seed from './seed';
+import alteration from './alteration/index.js';
+import config from './config.js';
+import seed from './seed/index.js';
 
 const database: CommandModule = {
   command: ['database', 'db'],

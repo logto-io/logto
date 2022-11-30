@@ -24,6 +24,9 @@ import * as styles from './index.module.scss';
 const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
   `/${pathname.slice(0, pathname.lastIndexOf('/'))}`;
 
+const getDetailsTabNavLink = (logId: string, userId?: string) =>
+  userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
+
 const AuditLogDetails = () => {
   const { userId, logId } = useParams();
   const { pathname } = useLocation();
@@ -41,6 +44,10 @@ const AuditLogDetails = () => {
   ) : (
     'log_details.back_to_logs'
   );
+
+  if (!logId) {
+    return null;
+  }
 
   return (
     <div className={detailsStyles.container}>
@@ -95,12 +102,12 @@ const AuditLogDetails = () => {
               </div>
             </div>
           </Card>
+          <TabNav>
+            <TabNavItem href={getDetailsTabNavLink(logId, userId)}>
+              {t('log_details.tab_details')}
+            </TabNavItem>
+          </TabNav>
           <Card className={classNames(styles.body, detailsStyles.body)}>
-            <TabNav>
-              <TabNavItem href={`/audit-logs/${logId ?? ''}`}>
-                {t('log_details.tab_details')}
-              </TabNavItem>
-            </TabNav>
             <div className={styles.main}>
               <FormField title="log_details.raw_data">
                 <CodeEditor language="json" value={JSON.stringify(data.payload, null, 2)} />

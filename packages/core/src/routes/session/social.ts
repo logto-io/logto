@@ -1,31 +1,32 @@
 import { validateRedirectUrl } from '@logto/core-kit';
 import { ConnectorType, userInfoSelectFields } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import type { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';
 
-import { getLogtoConnectorById } from '@/connectors';
-import RequestError from '@/errors/RequestError';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
+import { getLogtoConnectorById } from '#src/connectors/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
 import {
   findSocialRelatedUser,
   getUserInfoByAuthCode,
   getUserInfoFromInteractionResult,
-} from '@/lib/social';
-import { generateUserId, insertUser } from '@/lib/user';
-import koaGuard from '@/middleware/koa-guard';
+} from '#src/lib/social.js';
+import { generateUserId, insertUser } from '#src/lib/user.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 import {
   hasUserWithIdentity,
   findUserById,
   updateUserById,
   findUserByIdentity,
-} from '@/queries/user';
-import assertThat from '@/utils/assert-that';
-import { maskUserInfo } from '@/utils/format';
+} from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
+import { maskUserInfo } from '#src/utils/format.js';
 
-import type { AnonymousRouter } from '../types';
-import { checkRequiredProfile, getRoutePrefix } from './utils';
+import type { AnonymousRouter } from '../types.js';
+import { checkRequiredProfile, getRoutePrefix } from './utils.js';
 
 export const registerRoute = getRoutePrefix('register', 'social');
 export const signInRoute = getRoutePrefix('sign-in', 'social');
@@ -45,7 +46,6 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       const { connectorId, state, redirectUri } = ctx.guard.body;
       assertThat(state && redirectUri, 'session.insufficient_info');
       const connector = await getLogtoConnectorById(connectorId);
-      assertThat(connector.dbEntry.enabled, 'connector.not_enabled');
       assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
       const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
       ctx.body = { redirectTo };
@@ -70,12 +70,16 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       ctx.log(type, { connectorId, data });
       const {
         metadata: { target },
+        dbEntry: { syncProfile },
       } = await getLogtoConnectorById(connectorId);
 
       const userInfo = await getUserInfoByAuthCode(connectorId, data);
       ctx.log(type, { userInfo });
 
-      if (!(await hasUserWithIdentity(target, userInfo.id))) {
+      const user = await findUserByIdentity(target, userInfo.id);
+
+      // User with identity not found
+      if (!user) {
         await assignInteractionResults(
           ctx,
           provider,
@@ -93,15 +97,23 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
         );
       }
 
-      const user = await findUserByIdentity(target, userInfo.id);
       const { id, identities, isSuspended } = user;
       assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
       ctx.log(type, { userId: id });
+
+      const { name, avatar } = userInfo;
+      const profileUpdate = Object.fromEntries(
+        Object.entries({
+          name: conditional(syncProfile && name),
+          avatar: conditional(syncProfile && avatar),
+        }).filter(([_key, value]) => value !== undefined)
+      );
 
       // Update social connector's user info
       await updateUserById(id, {
         identities: { ...identities, [target]: { userId: userInfo.id, details: userInfo } },
         lastSignInAt: Date.now(),
+        ...profileUpdate,
       });
 
       const signInExperience = await getSignInExperienceForApplication(

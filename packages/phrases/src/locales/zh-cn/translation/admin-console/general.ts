@@ -10,6 +10,7 @@ const general = {
   save: '保存',
   save_changes: '保存更改',
   saved: '保存成功!',
+  discard: 'Discard', // UNTRANSLATED
   loading: '读取中...',
   redirecting: '页面跳转中...',
   add: '添加',
@@ -37,6 +38,9 @@ const general = {
   stay_on_page: '留在此页',
   type_to_search: '输入搜索',
   got_it: 'Got it', // UNTRANSLATED
+  page_info: '{{min, number}}-{{max, number}} 共 {{total, number}} 条', // UNTRANSLATED
+  learn_more: 'Learn more', // UNTRANSLATED
+  tab_errors: '{{count, number}} errors', // UNTRANSLATED
 };
 
 export default general;

@@ -4,6 +4,10 @@
   margin: _.unit(1) 0 0 _.unit(1);
 }
 
+.resourceLayout {
+  height: 100%;
+}
+
 .header {
   padding: _.unit(6);
   display: flex;
@@ -68,31 +72,6 @@
   }
 }
 
-.body {
-  > :first-child {
-    margin-top: 0;
-  }
-
-  .form {
-    margin-top: _.unit(8);
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .fields {
-    padding-bottom: _.unit(10);
-    flex: 1;
-  }
-
-  .textField {
-    @include _.form-text-field;
-  }
-
-  .logs {
-    padding: _.unit(6) 0;
-  }
-}
 
 .resetIcon {
   color: var(--color-text-secondary);

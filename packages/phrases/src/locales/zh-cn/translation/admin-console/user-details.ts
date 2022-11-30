@@ -15,6 +15,9 @@ const user_details = {
     new_password: '新密码：',
   },
   tab_logs: '用户日志',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
   field_email: '主要邮箱',
   field_phone: '主要手机号码',
   field_username: '用户名',

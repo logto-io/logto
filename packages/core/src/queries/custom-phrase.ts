@@ -3,9 +3,9 @@ import { CustomPhrases } from '@logto/schemas';
 import { convertToIdentifiers, manyRows } from '@logto/shared';
 import { sql } from 'slonik';
 
-import { buildInsertInto } from '@/database/insert-into';
-import envSet from '@/env-set';
-import { DeletionError } from '@/errors/SlonikError';
+import { buildInsertInto } from '#src/database/insert-into.js';
+import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(CustomPhrases);
 

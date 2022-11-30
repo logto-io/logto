@@ -3,11 +3,15 @@ import { PasscodeType } from '@logto/schemas';
 import { addDays, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
-import { mockPasswordEncrypted, mockSignInExperience, mockUserWithPassword } from '@/__mocks__';
-import RequestError from '@/errors/RequestError';
-import { createRequester } from '@/utils/test-utils';
+import {
+  mockPasswordEncrypted,
+  mockSignInExperience,
+  mockUserWithPassword,
+} from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import forgotPasswordRoutes, { forgotPasswordRoute } from './forgot-password';
+import forgotPasswordRoutes, { forgotPasswordRoute } from './forgot-password.js';
 
 const encryptUserPassword = jest.fn(async (password: string) => ({
   passwordEncrypted: password + '_user1',
@@ -19,13 +23,13 @@ const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
 const getYesterdayDate = () => subDays(Date.now(), 1);
 const getTomorrowDate = () => addDays(Date.now(), 1);
 
-jest.mock('@/lib/user', () => ({
-  ...jest.requireActual('@/lib/user'),
+jest.mock('#src/lib/user.js', () => ({
+  ...jest.requireActual('#src/lib/user.js'),
   encryptUserPassword: async (password: string) => encryptUserPassword(password),
 }));
 
-jest.mock('@/queries/user', () => ({
-  ...jest.requireActual('@/queries/user'),
+jest.mock('#src/queries/user.js', () => ({
+  ...jest.requireActual('#src/queries/user.js'),
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   findUserByPhone: async () => ({ userId: 'id' }),
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
@@ -34,12 +38,12 @@ jest.mock('@/queries/user', () => ({
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
 }));
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
-jest.mock('@/lib/passcode', () => ({
+jest.mock('#src/lib/passcode.js', () => ({
   createPasscode: async () => ({ userId: 'id' }),
   sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {
@@ -197,7 +201,7 @@ describe('session -> forgotPasswordRoutes', () => {
       const response = await sessionRequest
         .post(`${forgotPasswordRoute}/reset`)
         .send({ password: mockPasswordEncrypted });
-      expect(response).toHaveProperty('status', 400);
+      expect(response).toHaveProperty('status', 422);
       expect(updateUserById).toBeCalledTimes(0);
     });
     it('should redirect when there was no old password', async () => {

@@ -1,5 +1,5 @@
 import { isLanguageTag } from '@logto/language-kit';
-import type { ConnectorResponse } from '@logto/schemas';
+import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
@@ -23,7 +23,7 @@ import { safeParseJson } from '@/utilities/json';
 import * as styles from './index.module.scss';
 
 type Props = {
-  connector: ConnectorResponse;
+  connector: ConnectorFactoryResponse;
   onClose: () => void;
 };
 
@@ -57,11 +57,10 @@ const Guide = ({ connector, onClose }: Props) => {
       return;
     }
 
+    const { id: connectorId } = connector;
+
     await api
-      .patch(`/api/connectors/${connectorId}`, { json: { config: result.data } })
-      .json<ConnectorResponse>();
-    await api
-      .patch(`/api/connectors/${connectorId}/enabled`, { json: { enabled: true } })
+      .post('/api/connectors', { json: { config: result.data, connectorId } })
       .json<ConnectorResponse>();
 
     await updateSettings({

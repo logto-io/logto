@@ -55,6 +55,7 @@ const errors = {
     sms_exists: '该手机号码已被其它账户绑定',
     require_email_or_sms: '请绑定邮箱地址或手机号码',
     suspended: '账号已被禁用',
+    user_not_exist: 'User with {{ identity }} has not been registered yet', // UNTRANSLATED,
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',
@@ -95,6 +96,9 @@ const errors = {
     more_than_one_sms: '同时存在超过 1 个短信连接器',
     more_than_one_email: '同时存在超过 1 个邮件连接器',
     db_connector_type_mismatch: '数据库中存在一个类型不匹配的连接。',
+    not_found_with_connector_id: '找不到所给 connector id 对应的连接器',
+    multiple_instances_not_supported: '你选择的连接器不支持创建多实例。',
+    invalid_type_for_syncing_profile: '只有社交连接器可以开启用户档案同步。',
   },
   passcode: {
     phone_email_empty: '手机号与邮箱地址均为空',

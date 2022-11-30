@@ -10,6 +10,7 @@ const general = {
   save: '저장',
   save_changes: '변경 내용 저장',
   saved: '저장됨!',
+  discard: 'Discard', // UNTRANSLATED
   loading: '로딩 중...',
   redirecting: '리다이렉팅 중...',
   add: '추가',
@@ -37,6 +38,9 @@ const general = {
   stay_on_page: '페이지 유지하기',
   type_to_search: 'Type to search', // UNTRANSLATED
   got_it: 'Got it', // UNTRANSLATED
+  page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
+  learn_more: 'Learn more', // UNTRANSLATED
+  tab_errors: '{{count, number}} errors', // UNTRANSLATED
 };
 
 export default general;

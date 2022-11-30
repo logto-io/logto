@@ -5,6 +5,7 @@
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
   "license": "MPL-2.0",
+  "type": "module",
   "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
@@ -31,8 +32,8 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@logto/core-kit": "1.0.0-beta.20",
-    "@logto/language-kit": "1.0.0-beta.20",
+    "@logto/core-kit": "1.0.0-beta.25",
+    "@logto/language-kit": "1.0.0-beta.24",
     "@silverhand/essentials": "^1.3.0",
     "zod": "^3.19.1"
   },

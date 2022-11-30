@@ -63,6 +63,7 @@ const sign_in_exp = {
       password_auth: '密码',
       verification_code_auth: '验证码',
       auth_swap_tip: '交换以下选项的位置即可设定它们在用户登录流程中出现的先后。',
+      require_auth_factor: '请至少选择一种认证方式。',
     },
     social_sign_in: {
       title: '社交登录',
@@ -125,11 +126,11 @@ const sign_in_exp = {
         '你已设置{{language}}为你的默认语言，你无法删除默认语言。',
       got_it: '知道了',
     },
-    authentication: {
-      title: '身份验证',
-      enable_user_registration: 'Enable user registration', // UNTRANSLATED
+    advanced_options: {
+      title: '高级选项',
+      enable_user_registration: '启用用户注册',
       enable_user_registration_description:
-        'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.', // UNTRANSLATED
+        '开启或关闭用户注册功能。一旦关闭，用户将无法通过登录界面自行注册账号，但管理员仍可通过管理控制台添加用户。',
     },
   },
   setup_warning: {

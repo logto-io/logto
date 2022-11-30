@@ -12,13 +12,13 @@ import {
   mockSignIn,
   mockLanguageInfo,
   mockAliyunSmsConnector,
-} from '@/__mocks__';
-import * as signInExpLib from '@/lib/sign-in-experience';
-import * as signInLib from '@/lib/sign-in-experience/sign-in';
-import * as signUpLib from '@/lib/sign-in-experience/sign-up';
-import { createRequester } from '@/utils/test-utils';
+} from '#src/__mocks__/index.js';
+import * as signInExpLib from '#src/lib/sign-in-experience/index.js';
+import * as signInLib from '#src/lib/sign-in-experience/sign-in.js';
+import * as signUpLib from '#src/lib/sign-in-experience/sign-up.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import signInExperiencesRoutes from './sign-in-experience';
+import signInExperiencesRoutes from './sign-in-experience.js';
 
 const logtoConnectors = [
   mockFacebookConnector,
@@ -30,16 +30,16 @@ const logtoConnectors = [
 
 const getLogtoConnectors = jest.fn(async () => logtoConnectors);
 
-jest.mock('@/connectors', () => {
+jest.mock('#src/connectors.js', () => {
   return {
-    ...jest.requireActual('@/connectors'),
+    ...jest.requireActual('#src/connectors.js'),
     getLogtoConnectors: jest.fn(async () => getLogtoConnectors()),
   };
 });
 
 const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: jest.fn(async () => findDefaultSignInExperience()),
   updateDefaultSignInExperience: jest.fn(
     async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
@@ -51,7 +51,7 @@ jest.mock('@/queries/sign-in-experience', () => ({
 
 const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
-jest.mock('@/queries/custom-phrase', () => ({
+jest.mock('#src/queries/custom-phrase.js', () => ({
   findAllCustomLanguageTags: async () => [],
 }));
 
@@ -94,7 +94,7 @@ describe('PATCH /sign-in-exp', () => {
       status: 200,
       body: {
         ...mockSignInExperience,
-        socialSignInConnectorTargets: ['github', 'facebook'],
+        socialSignInConnectorTargets: ['github', 'facebook', 'google'],
       },
     });
   });
@@ -118,18 +118,12 @@ describe('PATCH /sign-in-exp', () => {
       signUp: mockSignUp,
       signIn: mockSignIn,
     });
-    const connectors = [
-      mockFacebookConnector,
-      mockGithubConnector,
-      mockWechatConnector,
-      mockAliyunSmsConnector,
-    ];
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateLanguageInfo).toHaveBeenCalledWith(mockLanguageInfo);
     expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
-    expect(validateSignUp).toHaveBeenCalledWith(mockSignUp, connectors);
-    expect(validateSignIn).toHaveBeenCalledWith(mockSignIn, mockSignUp, connectors);
+    expect(validateSignUp).toHaveBeenCalledWith(mockSignUp, logtoConnectors);
+    expect(validateSignIn).toHaveBeenCalledWith(mockSignIn, mockSignUp, logtoConnectors);
 
     expect(response).toMatchObject({
       status: 200,

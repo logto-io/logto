@@ -1,9 +1,7 @@
 const settings = {
   title: 'Paramètres',
   description: 'Gérer les paramètres globaux',
-  tabs: {
-    general: 'Général',
-  },
+  settings: 'Paramètres',
   custom_domain: 'Domaine personnalisé',
   language: 'Langue',
   appearance: 'Apparence',

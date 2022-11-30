@@ -5,14 +5,15 @@ import type { Nullable } from '@silverhand/essentials';
 import { argon2Verify } from 'hash-wasm';
 import pRetry from 'p-retry';
 
-import { buildInsertInto } from '@/database/insert-into';
-import envSet from '@/env-set';
-import { findRolesByRoleNames, insertRoles } from '@/queries/roles';
-import { hasUserWithId } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
-import { encryptPassword } from '@/utils/password';
+import { buildInsertInto } from '#src/database/insert-into.js';
+import envSet from '#src/env-set/index.js';
+import { findRolesByRoleNames, insertRoles } from '#src/queries/roles.js';
+import { hasUserWithId } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
+import { encryptPassword } from '#src/utils/password.js';
 
 const userId = buildIdGenerator(12);
+const roleId = buildIdGenerator(21);
 
 export const generateUserId = async (retries = 500) =>
   pRetry(
@@ -76,7 +77,11 @@ export const insertUser: typeof insertUserQuery = async ({ roleNames, ...rest })
 
     if (missingRoleNames.length > 0) {
       await insertRoles(
-        missingRoleNames.map((name) => ({ name, description: 'User default role.' }))
+        missingRoleNames.map((name) => ({
+          id: roleId(),
+          name,
+          description: 'User default role.',
+        }))
       );
     }
   }

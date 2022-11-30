@@ -5,10 +5,10 @@ import type { Truthy } from '@silverhand/essentials';
 import { notFalsy } from '@silverhand/essentials';
 import { sql } from 'slonik';
 
-import envSet from '@/env-set';
-import { UpdateError } from '@/errors/SlonikError';
-import assertThat from '@/utils/assert-that';
-import { isKeyOf } from '@/utils/schema';
+import envSet from '#src/env-set/index.js';
+import { UpdateError } from '#src/errors/SlonikError/index.js';
+import assertThat from '#src/utils/assert-that.js';
+import { isKeyOf } from '#src/utils/schema.js';
 
 type BuildUpdateWhere = {
   <Schema extends SchemaLike, ReturnType extends SchemaLike>(

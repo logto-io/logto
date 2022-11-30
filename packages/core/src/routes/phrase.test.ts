@@ -1,13 +1,16 @@
-import zhCN from '@logto/phrases-ui/lib/locales/zh-cn';
+import zhCN from '@logto/phrases-ui/lib/locales/zh-cn.js';
 import type { SignInExperience } from '@logto/schemas';
-import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
+import {
+  adminConsoleApplicationId,
+  adminConsoleSignInExperience,
+} from '@logto/schemas/lib/seeds/index.js';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience } from '@/__mocks__';
-import { zhCnTag } from '@/__mocks__/custom-phrase';
-import * as detectLanguage from '@/i18n/detect-language';
-import phraseRoutes from '@/routes/phrase';
-import { createRequester } from '@/utils/test-utils';
+import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
+import { mockSignInExperience } from '#src/__mocks__/index.js';
+import * as detectLanguage from '#src/i18n/detect-language.js';
+import phraseRoutes from '#src/routes/phrase.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const mockApplicationId = 'mockApplicationIdValue';
 
@@ -33,7 +36,7 @@ const findDefaultSignInExperience = jest.fn(
   })
 );
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
@@ -42,15 +45,15 @@ const detectLanguageSpy = jest.spyOn(detectLanguage, 'default');
 const findAllCustomLanguageTags = jest.fn(async () => [customizedLanguage]);
 const findCustomPhraseByLanguageTag = jest.fn(async (tag: string) => ({}));
 
-jest.mock('@/queries/custom-phrase', () => ({
+jest.mock('#src/queries/custom-phrase.js', () => ({
   findAllCustomLanguageTags: async () => findAllCustomLanguageTags(),
   findCustomPhraseByLanguageTag: async (tag: string) => findCustomPhraseByLanguageTag(tag),
 }));
 
 const getPhrase = jest.fn(async (language: string, customLanguages: string[]) => zhCN);
 
-jest.mock('@/lib/phrase', () => ({
-  ...jest.requireActual('@/lib/phrase'),
+jest.mock('#src/lib/phrase.js', () => ({
+  ...jest.requireActual('#src/lib/phrase.js'),
   getPhrase: async (language: string, customLanguages: string[]) =>
     getPhrase(language, customLanguages),
 }));

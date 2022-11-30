@@ -12,7 +12,6 @@ import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
 import ApiResource from '@/assets/images/api-resource.svg';
 import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
-import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
@@ -23,6 +22,7 @@ import TableLoading from '@/components/Table/TableLoading';
 import type { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
+import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import CreateForm from './components/CreateForm';
@@ -46,8 +46,8 @@ const ApiResources = () => {
   const [apiResources, totalCount] = data ?? [];
 
   return (
-    <Card className={styles.card}>
-      <div className={styles.headline}>
+    <div className={resourcesStyles.container}>
+      <div className={resourcesStyles.headline}>
         <CardTitle title="api_resources.title" subtitle="api_resources.subtitle" />
         <Button
           title="api_resources.create"
@@ -77,78 +77,78 @@ const ApiResources = () => {
           />
         </Modal>
       </div>
-      <div className={classNames(styles.table, tableStyles.scrollable)}>
-        <table className={classNames(!data && tableStyles.empty)}>
-          <colgroup>
-            <col className={styles.apiResourceName} />
-            <col />
-          </colgroup>
-          <thead>
-            <tr>
-              <th>{t('api_resources.api_name')}</th>
-              <th>{t('api_resources.api_identifier')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!data && error && (
-              <TableError
-                columns={2}
-                content={error.body?.message ?? error.message}
-                onRetry={async () => mutate(undefined, true)}
-              />
-            )}
-            {isLoading && <TableLoading columns={2} />}
-            {apiResources?.length === 0 && (
-              <TableEmpty columns={2}>
-                <Button
-                  title="api_resources.create"
-                  type="outline"
-                  onClick={() => {
-                    setIsCreateFormOpen(true);
-                  }}
+      <div className={resourcesStyles.table}>
+        <div className={tableStyles.scrollable}>
+          <table className={classNames(!data && tableStyles.empty)}>
+            <colgroup>
+              <col className={styles.apiResourceName} />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>{t('api_resources.api_name')}</th>
+                <th>{t('api_resources.api_identifier')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {!data && error && (
+                <TableError
+                  columns={2}
+                  content={error.body?.message ?? error.message}
+                  onRetry={async () => mutate(undefined, true)}
                 />
-              </TableEmpty>
-            )}
-            {apiResources?.map(({ id, name, indicator }) => {
-              const ResourceIcon =
-                theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
+              )}
+              {isLoading && <TableLoading columns={2} />}
+              {apiResources?.length === 0 && (
+                <TableEmpty columns={2}>
+                  <Button
+                    title="api_resources.create"
+                    type="outline"
+                    onClick={() => {
+                      setIsCreateFormOpen(true);
+                    }}
+                  />
+                </TableEmpty>
+              )}
+              {apiResources?.map(({ id, name, indicator }) => {
+                const ResourceIcon =
+                  theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
 
-              return (
-                <tr
-                  key={id}
-                  className={tableStyles.clickable}
-                  onClick={() => {
-                    navigate(buildDetailsLink(id));
-                  }}
-                >
-                  <td>
-                    <ItemPreview
-                      title={name}
-                      icon={<ResourceIcon className={styles.icon} />}
-                      to={buildDetailsLink(id)}
-                    />
-                  </td>
-                  <td>
-                    <CopyToClipboard value={indicator} variant="text" />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                return (
+                  <tr
+                    key={id}
+                    className={tableStyles.clickable}
+                    onClick={() => {
+                      navigate(buildDetailsLink(id));
+                    }}
+                  >
+                    <td>
+                      <ItemPreview
+                        title={name}
+                        icon={<ResourceIcon className={styles.icon} />}
+                        to={buildDetailsLink(id)}
+                      />
+                    </td>
+                    <td>
+                      <CopyToClipboard value={indicator} variant="text" />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div className={styles.pagination}>
-        {!!totalCount && (
-          <Pagination
-            pageCount={Math.ceil(totalCount / pageSize)}
-            pageIndex={pageIndex}
-            onChange={(page) => {
-              setQuery({ page: String(page) });
-            }}
-          />
-        )}
-      </div>
-    </Card>
+      <Pagination
+        pageIndex={pageIndex}
+        totalCount={totalCount ?? 0}
+        pageSize={pageSize}
+        className={styles.pagination}
+        onChange={(page) => {
+          setQuery({ page: String(page) });
+        }}
+      />
+    </div>
   );
 };
 

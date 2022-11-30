@@ -1,5 +1,8 @@
 const api_resource_details = {
   back_to_api_resources: '返回 API 资源',
+  settings: '设置',
+  settings_description:
+    'API resources, a.k.a. Resource Indicators, indicate the target services or resources to be requested, usually, a URI format variable representing the resource‘s identity.', // UNTRANSLATED
   token_expiration_time_in_seconds: 'Token 过期时间（秒）',
   token_expiration_time_in_seconds_placeholder: '请输入你的 token 过期时间',
   delete_description:

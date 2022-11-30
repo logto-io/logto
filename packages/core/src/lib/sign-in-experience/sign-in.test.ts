@@ -5,10 +5,10 @@ import {
   mockAliyunSmsConnector,
   mockSignInMethod,
   mockSignUp,
-} from '@/__mocks__';
-import RequestError from '@/errors/RequestError';
+} from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import { validateSignIn } from './sign-in';
+import { validateSignIn } from './sign-in.js';
 
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 
@@ -65,8 +65,8 @@ describe('validate sign-in', () => {
     });
   });
 
-  describe('There must be at least one enabled connector for the specific identifier.', () => {
-    it('throws when there is no enabled email connector and identifiers includes email with verification code checked', () => {
+  describe('There must be at least one connector for the specific identifier.', () => {
+    it('throws when there is no email connector and identifiers includes email with verification code checked', () => {
       expect(() => {
         validateSignIn(
           {
@@ -89,7 +89,7 @@ describe('validate sign-in', () => {
       );
     });
 
-    it('throws when there is no enabled sms connector and identifiers includes phone with verification code checked', () => {
+    it('throws when there is no sms connector and identifiers includes phone with verification code checked', () => {
       expect(() => {
         validateSignIn(
           {

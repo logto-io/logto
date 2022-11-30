@@ -6,8 +6,8 @@ import type { IRouterParamContext } from 'koa-router';
 import pick from 'lodash.pick';
 import { nanoid } from 'nanoid';
 
-import RequestError from '@/errors/RequestError';
-import { insertLog } from '@/queries/log';
+import RequestError from '#src/errors/RequestError/index.js';
+import { insertLog } from '#src/queries/log.js';
 
 type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
 

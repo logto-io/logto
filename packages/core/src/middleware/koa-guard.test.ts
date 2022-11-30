@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-import { emptyMiddleware, createContextWithRouteParameters } from '@/utils/test-utils';
+import { emptyMiddleware, createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaGuard, { isGuardMiddleware } from './koa-guard';
+import koaGuard, { isGuardMiddleware } from './koa-guard.js';
 
 jest.mock('koa-body', () => emptyMiddleware);
 

@@ -10,6 +10,7 @@ const general = {
   save: 'Speichern',
   save_changes: 'Änderungen speichern',
   saved: 'Gespeichert!',
+  discard: 'Discard', // UNTRANSLATED
   loading: 'Lade...',
   redirecting: 'Weiterleiten...',
   add: 'Hinzufügen',
@@ -38,6 +39,9 @@ const general = {
   stay_on_page: 'Auf Seite bleiben',
   type_to_search: 'Tippe um zu suchen',
   got_it: 'Got it', // UNTRANSLATED
+  page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
+  learn_more: 'Learn more', // UNTRANSLATED
+  tab_errors: '{{count, number}} errors', // UNTRANSLATED
 };
 
 export default general;

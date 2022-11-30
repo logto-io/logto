@@ -1,10 +1,10 @@
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 
-import { hasUserWithId, updateUserById } from '@/queries/user';
+import { hasUserWithId, updateUserById } from '#src/queries/user.js';
 
-import { encryptUserPassword, generateUserId } from './user';
+import { encryptUserPassword, generateUserId } from './user.js';
 
-jest.mock('@/queries/user');
+jest.mock('#src/queries/user.js');
 
 describe('generateUserId()', () => {
   afterEach(() => {

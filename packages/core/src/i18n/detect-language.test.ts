@@ -1,7 +1,7 @@
 import { createMockContext } from '@shopify/jest-koa-mocks';
 import type { ParameterizedContext } from 'koa';
 
-import detectLanguage from './detect-language';
+import detectLanguage from './detect-language.js';
 
 describe('detectLanguage', () => {
   it('detectLanguage with request header', () => {

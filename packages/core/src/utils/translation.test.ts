@@ -1,7 +1,7 @@
-import en from '@logto/phrases-ui/lib/locales/en';
-import fr from '@logto/phrases-ui/lib/locales/fr';
+import en from '@logto/phrases-ui/lib/locales/en.js';
+import fr from '@logto/phrases-ui/lib/locales/fr.js';
 
-import { isStrictlyPartial } from '@/utils/translation';
+import { isStrictlyPartial } from '#src/utils/translation.js';
 
 const customizedFrTranslation = {
   secondary: {

@@ -1,5 +1,5 @@
-import type { CreateApplication } from '../db-entries';
-import { ApplicationType } from '../db-entries';
+import type { CreateApplication } from '../db-entries/index.js';
+import { ApplicationType } from '../db-entries/index.js';
 
 /**
  * The fixed application ID for Admin Console.

@@ -1,0 +1,23 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  >:not(:first-child) {
+    margin-top: _.unit(4);
+  }
+
+  .fields {
+    flex-grow: 1;
+
+    > :not(:first-child) {
+      margin-top: _.unit(4);
+    }
+
+    &:last-child {
+      margin-bottom: _.unit(6);
+    }
+  }
+}

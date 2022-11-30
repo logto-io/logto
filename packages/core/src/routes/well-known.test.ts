@@ -1,5 +1,8 @@
 import { SignInMode } from '@logto/schemas';
-import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
+import {
+  adminConsoleApplicationId,
+  adminConsoleSignInExperience,
+} from '@logto/schemas/lib/seeds/index.js';
 import { Provider } from 'oidc-provider';
 
 import {
@@ -11,10 +14,10 @@ import {
   mockSignInExperience,
   mockWechatConnector,
   mockWechatNativeConnector,
-} from '@/__mocks__';
-import * as signInExperienceQueries from '@/queries/sign-in-experience';
-import wellKnownRoutes from '@/routes/well-known';
-import { createRequester } from '@/utils/test-utils';
+} from '#src/__mocks__/index.js';
+import * as signInExperienceQueries from '#src/queries/sign-in-experience.js';
+import wellKnownRoutes from '#src/routes/well-known.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const getLogtoConnectors = jest.fn(async () => [
   mockAliyunDmConnector,
@@ -26,11 +29,11 @@ const getLogtoConnectors = jest.fn(async () => [
   mockWechatNativeConnector,
 ]);
 
-jest.mock('@/connectors', () => ({
+jest.mock('#src/connectors.js', () => ({
   getLogtoConnectors: async () => getLogtoConnectors(),
 }));
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   hasActiveUsers: jest.fn().mockResolvedValue(true),
 }));
 

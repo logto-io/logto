@@ -5,10 +5,10 @@ import koaBody from 'koa-body';
 import type { IMiddleware, IRouterParamContext } from 'koa-router';
 import type { ZodType, ZodTypeDef } from 'zod';
 
-import envSet from '@/env-set';
-import RequestError from '@/errors/RequestError';
-import ServerError from '@/errors/ServerError';
-import assertThat from '@/utils/assert-that';
+import envSet from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import ServerError from '#src/errors/ServerError/index.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT> = {
   query?: ZodType<QueryT>;

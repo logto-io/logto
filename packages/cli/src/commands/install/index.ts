@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
-import { getDatabaseUrlFromConfig } from '../../database';
-import { log } from '../../utilities';
-import { addOfficialConnectors } from '../connector/utils';
+import { getDatabaseUrlFromConfig } from '../../database.js';
+import { log } from '../../utilities.js';
+import { addOfficialConnectors } from '../connector/utils.js';
 import {
   validateNodeVersion,
   inquireInstancePath,
@@ -15,7 +15,7 @@ import {
   decompress,
   inquireOfficialConnectors,
   isUrl,
-} from './utils';
+} from './utils.js';
 
 export type InstallArgs = {
   path?: string;

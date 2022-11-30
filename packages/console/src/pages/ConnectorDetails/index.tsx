@@ -1,6 +1,5 @@
 import type { ConnectorResponse } from '@logto/schemas';
 import { AppearanceMode, ConnectorType } from '@logto/schemas';
-import classNames from 'classnames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -68,15 +67,12 @@ const ConnectorDetails = () => {
       return;
     }
 
-    await api
-      .patch(`/api/connectors/${connectorId}/enabled`, {
-        json: { enabled: false },
-      })
-      .json<ConnectorResponse>();
-    toast.success(t('connector_details.connector_deleted'));
+    await api.delete(`/api/connectors/${connectorId}`).json<ConnectorResponse>();
 
-    await mutateGlobal('/api/connectors');
     setIsDeleted(true);
+
+    toast.success(t('connector_details.connector_deleted'));
+    await mutateGlobal('/api/connectors');
 
     if (isSocial) {
       navigate(`/connectors/social`, { replace: true });
@@ -178,21 +174,19 @@ const ConnectorDetails = () => {
           </div>
         </Card>
       )}
+      <TabNav>
+        <TabNavItem href={`/connectors/${connectorId ?? ''}`}>
+          {t('general.settings_nav')}
+        </TabNavItem>
+      </TabNav>
       {data && (
-        <Card className={classNames(styles.body, detailsStyles.body)}>
-          <TabNav>
-            <TabNavItem href={`/connectors/${connectorId ?? ''}`}>
-              {t('general.settings_nav')}
-            </TabNavItem>
-          </TabNav>
-          <ConnectorContent
-            isDeleted={isDeleted}
-            connectorData={data}
-            onConnectorUpdated={(connector) => {
-              void mutate(connector);
-            }}
-          />
-        </Card>
+        <ConnectorContent
+          isDeleted={isDeleted}
+          connectorData={data}
+          onConnectorUpdated={(connector) => {
+            void mutate(connector);
+          }}
+        />
       )}
       {data && (
         <ConfirmModal

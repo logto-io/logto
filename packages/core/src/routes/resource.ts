@@ -2,8 +2,8 @@ import { Resources } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
 
-import koaGuard from '@/middleware/koa-guard';
-import koaPagination from '@/middleware/koa-pagination';
+import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
 import {
   findTotalNumberOfResources,
   findAllResources,
@@ -11,9 +11,9 @@ import {
   insertResource,
   updateResourceById,
   deleteResourceById,
-} from '@/queries/resource';
+} from '#src/queries/resource.js';
 
-import type { AuthedRouter } from './types';
+import type { AuthedRouter } from './types.js';
 
 const resourceId = buildIdGenerator(21);
 

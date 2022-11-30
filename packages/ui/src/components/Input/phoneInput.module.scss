@@ -40,6 +40,11 @@
       width: 16px;
       height: 16px;
     }
+
+    + input {
+      // hot fix unknown android bug of input width
+      width: 0;
+    }
   }
 }
 

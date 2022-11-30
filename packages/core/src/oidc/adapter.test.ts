@@ -1,7 +1,7 @@
 import type { Application } from '@logto/schemas';
 import snakecaseKeys from 'snakecase-keys';
 
-import { mockApplication } from '@/__mocks__';
+import { mockApplication } from '#src/__mocks__/index.js';
 import {
   consumeInstanceById,
   destroyInstanceById,
@@ -9,16 +9,16 @@ import {
   findPayloadByPayloadField,
   revokeInstanceByGrantId,
   upsertInstance,
-} from '@/queries/oidc-model-instance';
+} from '#src/queries/oidc-model-instance.js';
 
-import postgresAdapter from './adapter';
-import { getConstantClientMetadata } from './utils';
+import postgresAdapter from './adapter.js';
+import { getConstantClientMetadata } from './utils.js';
 
-jest.mock('@/queries/application', () => ({
+jest.mock('#src/queries/application.js', () => ({
   findApplicationById: jest.fn(async (): Promise<Application> => mockApplication),
 }));
 
-jest.mock('@/queries/oidc-model-instance', () => ({
+jest.mock('#src/queries/oidc-model-instance.js', () => ({
   upsertInstance: jest.fn(),
   findPayloadById: jest.fn(),
   findPayloadByPayloadField: jest.fn(),
