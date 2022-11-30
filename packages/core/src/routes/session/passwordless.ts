@@ -122,6 +122,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       }
 
       await assignVerificationResult(ctx, provider, { flow, phone });
+      ctx.status = 204;
 
       return next();
     }
@@ -171,6 +172,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       }
 
       await assignVerificationResult(ctx, provider, { flow, email });
+      ctx.status = 204;
 
       return next();
     }

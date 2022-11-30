@@ -92,7 +92,9 @@ export const assignVerificationResult = async (
     expiresAt: addSeconds(Date.now(), verificationTimeout).toISOString(),
   };
 
+  const details = await provider.interactionDetails(ctx.req, ctx.res);
   await provider.interactionResult(ctx.req, ctx.res, {
+    ...details.result,
     verification,
   });
 };
@@ -114,7 +116,9 @@ export const assignContinueSignInResult = async (
   provider: Provider,
   payload: { userId: string }
 ) => {
+  const details = await provider.interactionDetails(ctx.req, ctx.res);
   await provider.interactionResult(ctx.req, ctx.res, {
+    ...details.result,
     continueSignIn: {
       ...payload,
       expiresAt: addSeconds(Date.now(), continueSignInTimeout).toISOString(),
