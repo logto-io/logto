@@ -42,9 +42,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       const { error, verifiedIdentifiers } = await identifierVerification(ctx, provider);
 
       // Assign identifiers ahead before throwing exceptions
-      if (verifiedIdentifiers) {
-        await storeInteractionResult({ event, identifiers: verifiedIdentifiers }, ctx, provider);
-      }
+      await storeInteractionResult({ event, identifiers: verifiedIdentifiers }, ctx, provider);
 
       if (error) {
         throw error;
