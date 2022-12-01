@@ -42,6 +42,7 @@ const ActionMenu = ({
       />
       <Dropdown
         title={title}
+        titleClassName={styles.dropdownTitle}
         anchorRef={anchorReference}
         isOpen={isOpen}
         className={classNames(styles.content, dropdownClassName)}

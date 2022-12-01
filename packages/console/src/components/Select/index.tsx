@@ -97,6 +97,7 @@ const Select = <T extends string>({
       <Dropdown
         isFullWidth
         anchorRef={anchorRef}
+        className={styles.dropdown}
         isOpen={isOpen}
         onClose={() => {
           setIsOpen(false);

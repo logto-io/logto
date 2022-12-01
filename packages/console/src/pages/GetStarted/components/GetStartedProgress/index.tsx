@@ -43,7 +43,7 @@ const GetStartedProgress = () => {
         ref={anchorRef}
         role="button"
         tabIndex={0}
-        className={classNames(styles.container, showDropdown && styles.active)}
+        className={classNames(styles.progress, showDropdown && styles.active)}
         onKeyDown={onKeyDownHandler({
           Esc: hideDropDown,
           Enter: showDropDown,
@@ -68,16 +68,18 @@ const GetStartedProgress = () => {
         titleClassName={styles.dropdownTitle}
         onClose={hideDropDown}
       >
-        {data.map(({ id, title, isComplete, onClick }, index) => (
-          <DropdownItem
-            key={id}
-            className={styles.dropdownItem}
-            icon={<Index className={styles.index} index={index + 1} isComplete={isComplete} />}
-            onClick={onClick}
-          >
-            {t(title)}
-          </DropdownItem>
-        ))}
+        <div className={styles.dropdownItemWrapper}>
+          {data.map(({ id, title, isComplete, onClick }, index) => (
+            <DropdownItem
+              key={id}
+              className={styles.dropdownItem}
+              icon={<Index className={styles.index} index={index + 1} isComplete={isComplete} />}
+              onClick={onClick}
+            >
+              {t(title)}
+            </DropdownItem>
+          ))}
+        </div>
       </Dropdown>
     </>
   );
