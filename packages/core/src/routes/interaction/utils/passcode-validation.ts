@@ -5,7 +5,7 @@ import { createPasscode, sendPasscode, verifyPasscode } from '#src/lib/passcode.
 import type { LogContext } from '#src/middleware/koa-log.js';
 import { getPasswordlessRelatedLogType } from '#src/routes/session/utils.js';
 
-import type { SendPasscodePayload, PasscodeIdentifierPayload } from '../types/guard.js';
+import type { SendPasscodePayload, PasscodeIdentifierPayload } from '../types/index.js';
 
 /**
  * Refactor Needed:
