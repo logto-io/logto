@@ -1,11 +1,12 @@
 import { Event } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { verifyUserPassword } from '#src/lib/user.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
-import { assignIdentifierVerificationResult } from '../utils/interaction.js';
+import { storeInteractionResult } from '../utils/interaction.js';
 import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
 import identifierVerification from './identifier-verification.js';
 
@@ -16,7 +17,7 @@ jest.mock('#src/lib/user.js', () => ({
 jest.mock('../utils/find-user-by-identifier.js', () => jest.fn());
 
 jest.mock('../utils/interaction.js', () => ({
-  assignIdentifierVerificationResult: jest.fn(),
+  storeInteractionResult: jest.fn(),
 }));
 
 jest.mock('../utils/passcode-validation.js', () => ({
@@ -43,6 +44,7 @@ describe('identifier verification', () => {
 
   it('username password user not found', async () => {
     findUserByIdentifierMock.mockResolvedValueOnce(null);
+
     const identifier = {
       username: 'username',
       password: 'password',
@@ -77,7 +79,9 @@ describe('identifier verification', () => {
       }),
     };
 
-    await expect(identifierVerification(ctx, new Provider(''))).rejects.toThrow();
+    await expect(identifierVerification(ctx, new Provider(''))).resolves.toEqual({
+      error: new RequestError({ code: 'user.suspended', status: 401 }),
+    });
     expect(findUserByIdentifier).toBeCalledWith({ username: 'username' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
   });
@@ -102,7 +106,7 @@ describe('identifier verification', () => {
     const result = await identifierVerification(ctx, new Provider(''));
     expect(findUserByIdentifier).toBeCalledWith({ email: 'email' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
-    expect(result).toEqual([{ key: 'accountId', value: 'foo' }]);
+    expect(result).toEqual({ verifiedIdentifiers: [{ key: 'accountId', value: 'foo' }] });
   });
 
   it('phone password', async () => {
@@ -125,7 +129,7 @@ describe('identifier verification', () => {
     const result = await identifierVerification(ctx, new Provider(''));
     expect(findUserByIdentifier).toBeCalledWith({ phone: 'phone' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
-    expect(result).toEqual([{ key: 'accountId', value: 'foo' }]);
+    expect(result).toEqual({ verifiedIdentifiers: [{ key: 'accountId', value: 'foo' }] });
   });
 
   it('email passcode with no profile', async () => {
@@ -148,10 +152,12 @@ describe('identifier verification', () => {
     );
     expect(findUserByIdentifier).toBeCalledWith(identifier);
 
-    expect(result).toEqual([
-      { key: 'accountId', value: 'foo' },
-      { key: 'emailVerified', value: 'email' },
-    ]);
+    expect(result).toEqual({
+      verifiedIdentifiers: [
+        { key: 'accountId', value: 'foo' },
+        { key: 'emailVerified', value: 'email' },
+      ],
+    });
   });
 
   it('email passcode with no profile and no user should throw and assign interaction', async () => {
@@ -160,6 +166,7 @@ describe('identifier verification', () => {
 
     const ctx = {
       ...baseCtx,
+      method: 'put',
       interactionPayload: Object.freeze({
         event: Event.SignIn,
         identifier,
@@ -168,21 +175,19 @@ describe('identifier verification', () => {
 
     const provider = new Provider('');
 
-    await expect(identifierVerification(ctx, provider)).rejects.toThrow();
+    const result = await identifierVerification(ctx, provider);
+
     expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
       { ...identifier, event: Event.SignIn },
       'jti',
       log
     );
     expect(findUserByIdentifier).toBeCalledWith(identifier);
-    expect(assignIdentifierVerificationResult).toBeCalledWith(
-      {
-        event: Event.SignIn,
-        identifiers: [{ key: 'emailVerified', value: 'email' }],
-      },
-      ctx,
-      provider
-    );
+
+    expect(result).toEqual({
+      error: new RequestError({ code: 'user.user_not_exist', status: 404 }),
+      verifiedIdentifiers: [{ key: 'emailVerified', value: 'email' }],
+    });
   });
 
   it('forgot password email passcode with no profile and no user should throw', async () => {
@@ -199,14 +204,16 @@ describe('identifier verification', () => {
 
     const provider = new Provider('');
 
-    await expect(identifierVerification(ctx, provider)).rejects.toThrow();
+    await expect(identifierVerification(ctx, provider)).resolves.toEqual({
+      error: new RequestError({ code: 'user.user_not_exist', status: 404 }),
+    });
     expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
       { ...identifier, event: Event.ForgotPassword },
       'jti',
       log
     );
     expect(findUserByIdentifier).toBeCalledWith(identifier);
-    expect(assignIdentifierVerificationResult).not.toBeCalled();
+    expect(storeInteractionResult).not.toBeCalled();
   });
 
   it('email passcode with profile', async () => {
@@ -231,7 +238,7 @@ describe('identifier verification', () => {
     );
     expect(findUserByIdentifierMock).not.toBeCalled();
 
-    expect(result).toEqual([{ key: 'emailVerified', value: 'email' }]);
+    expect(result).toEqual({ verifiedIdentifiers: [{ key: 'emailVerified', value: 'email' }] });
   });
 
   it('phone passcode with no profile', async () => {
@@ -254,10 +261,12 @@ describe('identifier verification', () => {
     );
     expect(findUserByIdentifier).toBeCalledWith(identifier);
 
-    expect(result).toEqual([
-      { key: 'accountId', value: 'foo' },
-      { key: 'phoneVerified', value: 'phone' },
-    ]);
+    expect(result).toEqual({
+      verifiedIdentifiers: [
+        { key: 'accountId', value: 'foo' },
+        { key: 'phoneVerified', value: 'phone' },
+      ],
+    });
   });
 
   it('phone passcode with profile', async () => {
@@ -282,6 +291,6 @@ describe('identifier verification', () => {
     );
     expect(findUserByIdentifierMock).not.toBeCalled();
 
-    expect(result).toEqual([{ key: 'phoneVerified', value: 'phone' }]);
+    expect(result).toEqual({ verifiedIdentifiers: [{ key: 'phoneVerified', value: 'phone' }] });
   });
 });

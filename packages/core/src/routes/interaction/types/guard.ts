@@ -98,7 +98,7 @@ export const identifierGuard = z.discriminatedUnion('key', [
 ]);
 
 export const customInteractionResultGuard = z.object({
-  event: eventGuard.optional(),
+  event: eventGuard,
   profile: profileGuard.optional(),
   identifiers: z.array(identifierGuard).optional(),
 });

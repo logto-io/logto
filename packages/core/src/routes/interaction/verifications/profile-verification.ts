@@ -176,7 +176,7 @@ const profileExistValidation = async (
 
 export default async function profileVerification(
   ctx: InteractionContext,
-  identifiers: Identifier[]
+  identifiers: Identifier[] = []
 ): Promise<Profile | undefined> {
   const { profile, event } = ctx.interactionPayload;
 
@@ -212,6 +212,7 @@ export default async function profileVerification(
   // ForgotPassword
   const { password } = profile;
   const { passwordEncrypted: oldPasswordEncrypted } = await findUserByIdentifier(identifiers);
+
   assertThat(
     !oldPasswordEncrypted || !(await argon2Verify({ password, hash: oldPasswordEncrypted })),
     new RequestError({ code: 'user.same_password', status: 422 })

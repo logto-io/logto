@@ -21,6 +21,7 @@ import type {
   verifiedPhoneIdentifierGuard,
   socialIdentifierGuard,
   identifierGuard,
+  customInteractionResultGuard,
 } from './guard.js';
 
 // Payload Types
@@ -47,6 +48,8 @@ export type VerifiedPhoneIdentifier = z.infer<typeof verifiedPhoneIdentifierGuar
 export type SocialIdentifier = z.infer<typeof socialIdentifierGuard>;
 
 export type Identifier = z.infer<typeof identifierGuard>;
+
+export type CustomInteractionResult = z.infer<typeof customInteractionResultGuard>;
 
 export type InteractionContext = WithGuardedIdentifierPayloadContext<IRouterParamContext & Context>;
 

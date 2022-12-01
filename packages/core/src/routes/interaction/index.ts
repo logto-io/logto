@@ -1,12 +1,19 @@
 import { Event } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouter } from '../types.js';
 import koaInteractionBodyGuard from './middleware/koa-interaction-body-guard.js';
 import koaSessionSignInExperienceGuard from './middleware/koa-session-sign-in-experience-guard.js';
-import { sendPasscodePayloadGuard, getSocialAuthorizationUrlPayloadGuard } from './types/guard.js';
+import {
+  sendPasscodePayloadGuard,
+  getSocialAuthorizationUrlPayloadGuard,
+  customInteractionResultGuard,
+} from './types/guard.js';
+import { storeInteractionResult, mergeIdentifiers } from './utils/interaction.js';
 import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
 import { createSocialAuthorizationUrl } from './utils/social-verification.js';
 import {
@@ -27,23 +34,93 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaInteractionBodyGuard(),
     koaSessionSignInExperienceGuard(provider),
     async (ctx, next) => {
+      const { event } = ctx.interactionPayload;
+
       // Check interaction session
       await provider.interactionDetails(ctx.req, ctx.res);
 
-      const verifiedIdentifiers = await identifierVerification(ctx, provider);
+      const { error, verifiedIdentifiers } = await identifierVerification(ctx, provider);
+
+      // Assign identifiers ahead before throwing exceptions
+      if (verifiedIdentifiers) {
+        await storeInteractionResult({ event, identifiers: verifiedIdentifiers }, ctx, provider);
+      }
+
+      if (error) {
+        throw error;
+      }
 
       const profile = await profileVerification(ctx, verifiedIdentifiers);
 
-      const { event } = ctx.interactionPayload;
+      await storeInteractionResult({ profile }, ctx, provider);
 
       if (event !== Event.ForgotPassword) {
         await mandatoryUserProfileValidation(ctx, verifiedIdentifiers, profile);
       }
 
-      // TODO: SignIn Register & ResetPassword final step
+      // TODO: SignIn Register & ResetPassword submit
 
       ctx.status = 200;
 
+      return next();
+    }
+  );
+
+  router.patch(
+    identifierPrefix,
+    koaInteractionBodyGuard(),
+    koaSessionSignInExperienceGuard(provider),
+    async (ctx, next) => {
+      const { event } = ctx.interactionPayload;
+
+      // Check interaction storage
+      const result = await provider.interactionDetails(ctx.req, ctx.res);
+      const parseResult = customInteractionResultGuard.safeParse(result);
+
+      assertThat(
+        parseResult.success,
+        new RequestError({ code: 'session.verification_session_not_found' })
+      );
+
+      const interactionStorage = parseResult.data;
+
+      // Forgot-password event session validation
+      if (event === Event.ForgotPassword) {
+        assertThat(
+          interactionStorage.event === Event.ForgotPassword,
+          new RequestError({ code: 'session.verification_session_not_found' })
+        );
+      }
+
+      const { error, verifiedIdentifiers } = await identifierVerification(ctx, provider);
+
+      const newIdentifiers = mergeIdentifiers({
+        oldIdentifiers: interactionStorage.identifiers,
+        newIdentifiers: verifiedIdentifiers,
+      });
+
+      // Assign identifiers ahead before throwing exceptions
+      if (verifiedIdentifiers && verifiedIdentifiers.length > 0) {
+        await storeInteractionResult({ event, identifiers: newIdentifiers }, ctx, provider);
+      }
+
+      if (error) {
+        throw error;
+      }
+
+      const profile = await profileVerification(ctx, newIdentifiers);
+
+      const newProfile = { ...interactionStorage.profile, ...profile };
+
+      if (profile) {
+        await storeInteractionResult({ profile: newProfile }, ctx, provider);
+      }
+
+      if (event !== Event.ForgotPassword) {
+        await mandatoryUserProfileValidation(ctx, newIdentifiers, newProfile);
+      }
+
+      // TODO: SignIn Register & ResetPassword submit
       return next();
     }
   );

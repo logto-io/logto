@@ -25,7 +25,7 @@ const findUserByIdentifiers = async (identifiers: Identifier[]) => {
 // eslint-disable-next-line complexity
 export default async function mandatoryUserProfileValidation(
   ctx: WithSignInExperienceContext<Context>,
-  identifiers: Identifier[],
+  identifiers: Identifier[] = [],
   profile?: Profile
 ) {
   const {
