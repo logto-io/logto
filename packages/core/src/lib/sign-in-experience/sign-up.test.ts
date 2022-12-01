@@ -58,9 +58,10 @@ describe('validate sign-up', () => {
         validateSignUp(
           {
             ...mockSignUp,
+            verify: true,
             identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
           },
-          [mockAliyunDmConnector]
+          [mockAliyunSmsConnector]
         );
       }).toMatchError(
         new RequestError({
