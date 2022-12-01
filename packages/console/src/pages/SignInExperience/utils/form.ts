@@ -4,9 +4,9 @@ import { conditional } from '@silverhand/essentials';
 import type { DeepRequired, FieldErrorsImpl } from 'react-hook-form';
 
 import {
-  isSignInMethodsDifferent,
-  isSignUpDifferent,
-  isSocialTargetsDifferent,
+  hasSignInMethodsChanged,
+  hasSignUpSettingsChanged,
+  hasSocialTargetsChanged,
 } from '../components/SignUpAndSignInChangePreview/SignUpAndSignInDiffSection/utilities';
 import { signUpIdentifiersMapping } from '../constants';
 import { SignUpIdentifier } from '../types';
@@ -62,14 +62,14 @@ export const signInExperienceParser = {
   },
 };
 
-export const compareSignUpAndSignInConfigs = (
+export const hasSignUpAndSignInConfigChanged = (
   before: SignInExperience,
   after: SignInExperience
 ): boolean => {
   return (
-    !isSignUpDifferent(before.signUp, after.signUp) &&
-    !isSignInMethodsDifferent(before.signIn.methods, after.signIn.methods) &&
-    !isSocialTargetsDifferent(
+    !hasSignUpSettingsChanged(before.signUp, after.signUp) &&
+    !hasSignInMethodsChanged(before.signIn.methods, after.signIn.methods) &&
+    !hasSocialTargetsChanged(
       before.socialSignInConnectorTargets,
       after.socialSignInConnectorTargets
     )
