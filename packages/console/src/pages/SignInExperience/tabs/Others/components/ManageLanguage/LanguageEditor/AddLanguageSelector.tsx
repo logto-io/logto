@@ -1,6 +1,5 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
-import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -66,26 +65,28 @@ const AddLanguageSelector = ({ options, onSelect }: Props) => {
   return (
     <div ref={selectorRef} className={style.languageSelector}>
       <div className={style.input}>
-        <Button
-          className={classNames(style.addLanguageButton, isDropDownOpen && style.hidden)}
-          icon={<Plus className={style.buttonIcon} />}
-          title="sign_in_exp.others.manage_language.add_language"
-          type="default"
-          size="medium"
-          onClick={() => {
-            setIsDropDownOpen(true);
-          }}
-        />
-        <TextInput
-          ref={searchInputRef}
-          icon={<SearchIcon className={style.buttonIcon} />}
-          className={classNames(!isDropDownOpen && style.hidden)}
-          placeholder={t('general.type_to_search')}
-          value={searchInputValue}
-          onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            setSearchInputValue(event.target.value);
-          }}
-        />
+        {isDropDownOpen ? (
+          <TextInput
+            ref={searchInputRef}
+            icon={<SearchIcon className={style.buttonIcon} />}
+            placeholder={t('general.type_to_search')}
+            value={searchInputValue}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setSearchInputValue(event.target.value);
+            }}
+          />
+        ) : (
+          <Button
+            className={style.addLanguageButton}
+            icon={<Plus className={style.buttonIcon} />}
+            title="sign_in_exp.others.manage_language.add_language"
+            type="default"
+            size="medium"
+            onClick={() => {
+              setIsDropDownOpen(true);
+            }}
+          />
+        )}
       </div>
       {isDropDownOpen && filteredOptions.length > 0 && (
         <ul className={style.dropDown}>
