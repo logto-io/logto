@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import type { ReactNode } from 'react';
 
 import SubmitFormChangesActionBar from '../SubmitFormChangesActionBar';
@@ -13,7 +14,7 @@ type Props = {
 
 const DetailsForm = ({ isDirty, isSubmitting, onSubmit, onDiscard, children }: Props) => {
   return (
-    <form className={styles.container}>
+    <form className={classNames(styles.container, isDirty && styles.withSubmitActionBar)}>
       <div className={styles.fields}>{children}</div>
       <SubmitFormChangesActionBar
         isOpen={isDirty}

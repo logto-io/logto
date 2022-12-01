@@ -1,3 +1,5 @@
+import classNames from 'classnames';
+
 import Button from '../Button';
 import * as styles from './index.module.scss';
 
@@ -8,13 +10,9 @@ type Props = {
   onDiscard: () => void;
 };
 
-const SubmitFormChangesActionBar = ({ isOpen, isSubmitting, onSubmit, onDiscard }: Props) => {
-  if (!isOpen) {
-    return null;
-  }
-
-  return (
-    <div className={styles.container}>
+const SubmitFormChangesActionBar = ({ isOpen, isSubmitting, onSubmit, onDiscard }: Props) => (
+  <div className={classNames(styles.container, isOpen && styles.active)}>
+    <div className={styles.actionBar}>
       <Button
         size="medium"
         title="general.discard"
@@ -31,7 +29,7 @@ const SubmitFormChangesActionBar = ({ isOpen, isSubmitting, onSubmit, onDiscard 
         onClick={async () => onSubmit()}
       />
     </div>
-  );
-};
+  </div>
+);
 
 export default SubmitFormChangesActionBar;
