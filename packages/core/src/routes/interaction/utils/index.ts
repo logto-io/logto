@@ -1,10 +1,6 @@
-import type { Profile, SocialConnectorPayload, User } from '@logto/schemas';
+import type { Profile, SocialConnectorPayload, User, IdentifierPayload } from '@logto/schemas';
 
-import type {
-  PasscodeIdentifierPayload,
-  IdentifierPayload,
-  PasswordIdentifierPayload,
-} from '../types/guard.js';
+import type { PasscodeIdentifierPayload, PasswordIdentifierPayload } from '../types/index.js';
 
 export const isPasswordIdentifier = (
   identifier: IdentifierPayload

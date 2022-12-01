@@ -1,11 +1,4 @@
 import { emailRegEx, phoneRegEx, validateRedirectUrl } from '@logto/core-kit';
-import type {
-  UsernamePasswordPayload,
-  EmailPasswordPayload,
-  EmailPasscodePayload,
-  PhonePasswordPayload,
-  PhonePasscodePayload,
-} from '@logto/schemas';
 import {
   usernamePasswordPayloadGuard,
   emailPasscodePayloadGuard,
@@ -13,12 +6,14 @@ import {
   socialConnectorPayloadGuard,
   eventGuard,
   profileGuard,
-  identifierGuard,
+  identifierPayloadGuard,
   Event,
 } from '@logto/schemas';
 import { z } from 'zod';
 
-// Interaction Route Guard
+import { socialUserInfoGuard } from '#src/connectors/types.js';
+
+// Interaction Payload Guard
 const forgotPasswordInteractionPayloadGuard = z.object({
   event: z.literal(Event.ForgotPassword),
   identifier: z.union([emailPasscodePayloadGuard, phonePasscodePayloadGuard]).optional(),
@@ -33,7 +28,7 @@ const registerInteractionPayloadGuard = z.object({
 
 const signInInteractionPayloadGuard = z.object({
   event: z.literal(Event.SignIn),
-  identifier: identifierGuard.optional(),
+  identifier: identifierPayloadGuard.optional(),
   profile: profileGuard.optional(),
 });
 
@@ -42,16 +37,6 @@ export const interactionPayloadGuard = z.discriminatedUnion('event', [
   registerInteractionPayloadGuard,
   forgotPasswordInteractionPayloadGuard,
 ]);
-
-export type InteractionPayload = z.infer<typeof interactionPayloadGuard>;
-export type IdentifierPayload = z.infer<typeof identifierGuard>;
-
-export type PasswordIdentifierPayload =
-  | UsernamePasswordPayload
-  | EmailPasswordPayload
-  | PhonePasswordPayload;
-
-export type PasscodeIdentifierPayload = EmailPasscodePayload | PhonePasscodePayload;
 
 // Passcode Send Route Payload Guard
 export const sendPasscodePayloadGuard = z.union([
@@ -64,7 +49,6 @@ export const sendPasscodePayloadGuard = z.union([
     phone: z.string().regex(phoneRegEx),
   }),
 ]);
-export type SendPasscodePayload = z.infer<typeof sendPasscodePayloadGuard>;
 
 // Social Authorization Uri Route Payload Guard
 export const getSocialAuthorizationUrlPayloadGuard = z.object({
@@ -72,8 +56,6 @@ export const getSocialAuthorizationUrlPayloadGuard = z.object({
   state: z.string(),
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
 });
-export type SocialAuthorizationUrlPayload = z.infer<typeof getSocialAuthorizationUrlPayloadGuard>;
-
 // Register Profile Guard
 const emailProfileGuard = emailPasscodePayloadGuard.pick({ email: true });
 const phoneProfileGuard = phonePasscodePayloadGuard.pick({ phone: true });
@@ -85,3 +67,38 @@ export const registerProfileSafeGuard = z.union([
   phoneProfileGuard,
   socialProfileGuard,
 ]);
+
+// Identifier Guard
+export const accountIdIdentifierGuard = z.object({
+  key: z.literal('accountId'),
+  value: z.string(),
+});
+
+export const verifiedEmailIdentifierGuard = z.object({
+  key: z.literal('emailVerified'),
+  value: z.string(),
+});
+
+export const verifiedPhoneIdentifierGuard = z.object({
+  key: z.literal('phoneVerified'),
+  value: z.string(),
+});
+
+export const socialIdentifierGuard = z.object({
+  key: z.literal('social'),
+  connectorId: z.string(),
+  value: socialUserInfoGuard,
+});
+
+export const identifierGuard = z.discriminatedUnion('key', [
+  accountIdIdentifierGuard,
+  verifiedEmailIdentifierGuard,
+  verifiedPhoneIdentifierGuard,
+  socialIdentifierGuard,
+]);
+
+export const customInteractionResultGuard = z.object({
+  event: eventGuard.optional(),
+  profile: profileGuard.optional(),
+  identifiers: z.array(identifierGuard).optional(),
+});
