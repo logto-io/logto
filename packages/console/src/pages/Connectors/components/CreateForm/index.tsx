@@ -50,7 +50,9 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
       ...group,
       connectors: group.connectors.map((connector) => ({
         ...connector,
-        added: existingConnectors.some(({ connectorId }) => connector.id === connectorId),
+        added: group.isStandard
+          ? false
+          : existingConnectors.some(({ connectorId }) => connector.id === connectorId),
       })),
     }));
   }, [factories, type, existingConnectors]);
