@@ -2,6 +2,10 @@ import type { Event } from '@logto/schemas';
 import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 
+import RequestError from '#src/errors/RequestError/index.js';
+import assertThat from '#src/utils/assert-that.js';
+
+import { customInteractionResultGuard } from '../types/guard.js';
 import type { Identifier, CustomInteractionResult } from '../types/index.js';
 
 // Unique identifier type is required
@@ -43,4 +47,16 @@ export const storeInteractionResult = async (
     { ...result, ...payload },
     { mergeWithLastSubmission: true }
   );
+};
+
+export const getInteractionStorage = async (ctx: Context, provider: Provider) => {
+  const result = await provider.interactionDetails(ctx.req, ctx.res);
+  const parseResult = customInteractionResultGuard.safeParse(result);
+
+  assertThat(
+    parseResult.success,
+    new RequestError({ code: 'session.verification_session_not_found' })
+  );
+
+  return parseResult.data;
 };

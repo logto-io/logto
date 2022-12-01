@@ -8,12 +8,12 @@ import assertThat from '#src/utils/assert-that.js';
 import type { AnonymousRouter } from '../types.js';
 import koaInteractionBodyGuard from './middleware/koa-interaction-body-guard.js';
 import koaSessionSignInExperienceGuard from './middleware/koa-session-sign-in-experience-guard.js';
+import { sendPasscodePayloadGuard, getSocialAuthorizationUrlPayloadGuard } from './types/guard.js';
 import {
-  sendPasscodePayloadGuard,
-  getSocialAuthorizationUrlPayloadGuard,
-  customInteractionResultGuard,
-} from './types/guard.js';
-import { storeInteractionResult, mergeIdentifiers } from './utils/interaction.js';
+  storeInteractionResult,
+  mergeIdentifiers,
+  getInteractionStorage,
+} from './utils/interaction.js';
 import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
 import { createSocialAuthorizationUrl } from './utils/social-verification.js';
 import {
@@ -73,16 +73,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { event } = ctx.interactionPayload;
 
-      // Check interaction storage
-      const result = await provider.interactionDetails(ctx.req, ctx.res);
-      const parseResult = customInteractionResultGuard.safeParse(result);
-
-      assertThat(
-        parseResult.success,
-        new RequestError({ code: 'session.verification_session_not_found' })
-      );
-
-      const interactionStorage = parseResult.data;
+      const interactionStorage = await getInteractionStorage(ctx, provider);
 
       // Forgot-password event session validation
       if (event === Event.ForgotPassword) {
