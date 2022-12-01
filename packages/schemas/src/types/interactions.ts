@@ -52,7 +52,7 @@ export enum Event {
 
 export const eventGuard = z.nativeEnum(Event);
 
-export const identifierGuard = z.union([
+export const identifierPayloadGuard = z.union([
   usernamePasswordPayloadGuard,
   emailPasswordPayloadGuard,
   phonePasswordPayloadGuard,
@@ -60,6 +60,14 @@ export const identifierGuard = z.union([
   phonePasscodePayloadGuard,
   socialConnectorPayloadGuard,
 ]);
+
+export type IdentifierPayload =
+  | UsernamePasswordPayload
+  | EmailPasswordPayload
+  | PhonePasswordPayload
+  | EmailPasscodePayload
+  | PhonePasscodePayload
+  | SocialConnectorPayload;
 
 export const profileGuard = z.object({
   username: z.string().regex(usernameRegEx).optional(),

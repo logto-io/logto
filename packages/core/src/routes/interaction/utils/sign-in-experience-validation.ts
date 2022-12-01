@@ -1,10 +1,8 @@
-import type { SignInExperience, Profile } from '@logto/schemas';
+import type { SignInExperience, Profile, IdentifierPayload } from '@logto/schemas';
 import { SignInMode, SignInIdentifier, Event } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
-
-import type { IdentifierPayload } from '../types/guard.js';
 
 const forbiddenEventError = new RequestError({ code: 'auth.forbidden', status: 403 });
 

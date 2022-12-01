@@ -2,7 +2,7 @@ import { PasscodeType, Event } from '@logto/schemas';
 
 import { createPasscode, sendPasscode } from '#src/lib/passcode.js';
 
-import type { SendPasscodePayload } from '../types/guard.js';
+import type { SendPasscodePayload } from '../types/index.js';
 import { sendPasscodeToIdentifier } from './passcode-validation.js';
 
 jest.mock('#src/lib/passcode.js', () => ({
