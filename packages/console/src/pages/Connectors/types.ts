@@ -1,4 +1,4 @@
-export type CreateConnectorForm = {
+export type ConnectorFormType = {
   config: string;
   name: string;
   logo: string;

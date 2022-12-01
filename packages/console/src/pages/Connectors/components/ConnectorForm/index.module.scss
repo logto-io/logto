@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.tip {
+  color: var(--color-text-secondary);
+  font: var(--font-body-medium);
+  margin-top: _.unit(0.5);
+}
