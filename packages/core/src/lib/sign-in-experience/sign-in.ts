@@ -47,31 +47,33 @@ export const validateSignIn = (
     })
   );
 
-  if (signUp.identifiers.includes(SignInIdentifier.Username)) {
-    assertThat(
-      signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Username),
-      new RequestError({
-        code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
-      })
-    );
-  }
+  for (const identifier of signUp.identifiers) {
+    if (identifier === SignInIdentifier.Username) {
+      assertThat(
+        signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Username),
+        new RequestError({
+          code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
+        })
+      );
+    }
 
-  if (signUp.identifiers.includes(SignInIdentifier.Email)) {
-    assertThat(
-      signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Email),
-      new RequestError({
-        code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
-      })
-    );
-  }
+    if (identifier === SignInIdentifier.Email) {
+      assertThat(
+        signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Email),
+        new RequestError({
+          code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
+        })
+      );
+    }
 
-  if (signUp.identifiers.includes(SignInIdentifier.Sms)) {
-    assertThat(
-      signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Sms),
-      new RequestError({
-        code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
-      })
-    );
+    if (identifier === SignInIdentifier.Sms) {
+      assertThat(
+        signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Sms),
+        new RequestError({
+          code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
+        })
+      );
+    }
   }
 
   if (signUp.password) {
