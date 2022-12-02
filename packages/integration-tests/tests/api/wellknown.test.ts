@@ -16,7 +16,7 @@ describe('wellknown api', () => {
 
     expect(response).toMatchObject({
       signUp: {
-        identifier: 'username',
+        identifiers: ['username'],
         password: true,
         verify: false,
       },

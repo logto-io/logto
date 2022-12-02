@@ -1,4 +1,4 @@
-import { ConnectorType, SignUpIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import { mockAliyunDmConnector, mockAliyunSmsConnector, mockSignUp } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -16,7 +16,7 @@ describe('validate sign-up', () => {
   describe('There must be at least one connector for the specific identifier.', () => {
     test('should throw when there is no email connector and identifier is email', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.Email }, []);
+        validateSignUp({ ...mockSignUp, identifiers: [SignInIdentifier.Email] }, []);
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -27,7 +27,13 @@ describe('validate sign-up', () => {
 
     test('should throw when there is no email connector and identifier is email or phone', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms }, []);
+        validateSignUp(
+          {
+            ...mockSignUp,
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+          },
+          []
+        );
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -38,7 +44,7 @@ describe('validate sign-up', () => {
 
     test('should throw when there is no sms connector and identifier is phone', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.Sms }, []);
+        validateSignUp({ ...mockSignUp, identifiers: [SignInIdentifier.Sms] }, []);
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -49,9 +55,14 @@ describe('validate sign-up', () => {
 
     test('should throw when there is no email connector and identifier is email or phone', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms }, [
-          mockAliyunDmConnector,
-        ]);
+        validateSignUp(
+          {
+            ...mockSignUp,
+            verify: true,
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+          },
+          [mockAliyunSmsConnector]
+        );
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -64,7 +75,7 @@ describe('validate sign-up', () => {
   test('should throw when identifier is username and password is false', async () => {
     expect(() => {
       validateSignUp(
-        { ...mockSignUp, identifier: SignUpIdentifier.Username, password: false },
+        { ...mockSignUp, identifiers: [SignInIdentifier.Username], password: false },
         enabledConnectors
       );
     }).toMatchError(
@@ -78,7 +89,7 @@ describe('validate sign-up', () => {
     test('should throw when identifier is email', async () => {
       expect(() => {
         validateSignUp(
-          { ...mockSignUp, identifier: SignUpIdentifier.Email, verify: false },
+          { ...mockSignUp, identifiers: [SignInIdentifier.Email], verify: false },
           enabledConnectors
         );
       }).toMatchError(
@@ -91,7 +102,7 @@ describe('validate sign-up', () => {
     test('should throw when identifier is phone', async () => {
       expect(() => {
         validateSignUp(
-          { ...mockSignUp, identifier: SignUpIdentifier.Email, verify: false },
+          { ...mockSignUp, identifiers: [SignInIdentifier.Email], verify: false },
           enabledConnectors
         );
       }).toMatchError(
@@ -104,7 +115,11 @@ describe('validate sign-up', () => {
     test('should throw when identifier is email or phone', async () => {
       expect(() => {
         validateSignUp(
-          { ...mockSignUp, identifier: SignUpIdentifier.EmailOrSms, verify: false },
+          {
+            ...mockSignUp,
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+            verify: false,
+          },
           enabledConnectors
         );
       }).toMatchError(

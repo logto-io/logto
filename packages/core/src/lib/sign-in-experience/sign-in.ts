@@ -1,5 +1,5 @@
 import type { SignIn, SignUp } from '@logto/schemas';
-import { ConnectorType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -47,56 +47,33 @@ export const validateSignIn = (
     })
   );
 
-  switch (signUp.identifier) {
-    case SignUpIdentifier.Username: {
+  for (const identifier of signUp.identifiers) {
+    if (identifier === SignInIdentifier.Username) {
       assertThat(
         signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Username),
         new RequestError({
           code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
         })
       );
-
-      break;
     }
 
-    case SignUpIdentifier.Email: {
+    if (identifier === SignInIdentifier.Email) {
       assertThat(
         signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Email),
         new RequestError({
           code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
         })
       );
-
-      break;
     }
 
-    case SignUpIdentifier.Sms: {
+    if (identifier === SignInIdentifier.Sms) {
       assertThat(
         signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Sms),
         new RequestError({
           code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
         })
       );
-
-      break;
     }
-
-    case SignUpIdentifier.EmailOrSms: {
-      assertThat(
-        signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Email) &&
-          signIn.methods.some(({ identifier }) => identifier === SignInIdentifier.Sms),
-        new RequestError({
-          code: 'sign_in_experiences.miss_sign_up_identifier_in_sign_in',
-        })
-      );
-
-      break;
-    }
-
-    case SignUpIdentifier.None: {
-      // No requirement
-    }
-    // No default
   }
 
   if (signUp.password) {

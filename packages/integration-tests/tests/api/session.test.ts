@@ -1,4 +1,4 @@
-import { SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 
@@ -25,6 +25,7 @@ import {
   updateConnectorConfig,
 } from '@/api';
 import MockClient from '@/client';
+import { signUpIdentifiers } from '@/constants';
 import {
   registerNewUser,
   signIn,
@@ -42,7 +43,7 @@ describe('username and password flow', () => {
   const password = generatePassword();
 
   beforeAll(async () => {
-    await setSignUpIdentifier(SignUpIdentifier.Username, true);
+    await setSignUpIdentifier(signUpIdentifiers.username, true);
     await setSignInMethod([
       {
         identifier: SignInIdentifier.Username,
@@ -71,7 +72,7 @@ describe('email and password flow', () => {
     await updateConnectorConfig(id, mockEmailConnectorConfig);
     connectorIdMap.set(mockEmailConnectorId, id);
 
-    await setSignUpIdentifier(SignUpIdentifier.Email, true);
+    await setSignUpIdentifier(signUpIdentifiers.email, true);
     await setSignInMethod([
       {
         identifier: SignInIdentifier.Email,
@@ -112,7 +113,7 @@ describe('email passwordless flow', () => {
     await updateConnectorConfig(id, mockEmailConnectorConfig);
     connectorIdMap.set(mockEmailConnectorId, id);
 
-    await setSignUpIdentifier(SignUpIdentifier.Email, false);
+    await setSignUpIdentifier(signUpIdentifiers.email, false);
     await setSignInMethod([
       {
         identifier: SignInIdentifier.Username,
@@ -211,7 +212,7 @@ describe('sms passwordless flow', () => {
     await updateConnectorConfig(id, mockSmsConnectorConfig);
     connectorIdMap.set(mockSmsConnectorId, id);
 
-    await setSignUpIdentifier(SignUpIdentifier.Sms, false);
+    await setSignUpIdentifier(signUpIdentifiers.sms, false);
     await setSignInMethod([
       {
         identifier: SignInIdentifier.Username,
@@ -302,7 +303,7 @@ describe('sign-in and sign-out', () => {
 
   beforeAll(async () => {
     await createUserByAdmin(username, password);
-    await setSignUpIdentifier(SignUpIdentifier.Username);
+    await setSignUpIdentifier(signUpIdentifiers.username);
   });
 
   it('verify sign-in and then sign-out', async () => {

@@ -6,14 +6,14 @@ import { useTranslation } from 'react-i18next';
 import DragDropProvider from '@/components/Transfer/DragDropProvider';
 import DraggableItem from '@/components/Transfer/DraggableItem';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
-import type { SignInExperienceForm } from '@/pages/SignInExperience/types';
-
 import {
+  identifierRequiredConnectorMapping,
   signInIdentifiers,
-  signInIdentifierToRequiredConnectorMapping,
-  signUpIdentifierToRequiredConnectorMapping,
-  signUpToSignInIdentifierMapping,
-} from '../../constants';
+  signUpIdentifiersMapping,
+} from '@/pages/SignInExperience/constants';
+import type { SignInExperienceForm } from '@/pages/SignInExperience/types';
+import { getSignUpRequiredConnectorTypes } from '@/pages/SignInExperience/utils/identifier';
+
 import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
 import * as styles from './index.module.scss';
@@ -55,8 +55,8 @@ const SignInMethodEditBox = () => {
     verify: isSignUpVerificationRequired,
   } = signUp;
 
-  const requiredSignInIdentifiers = signUpToSignInIdentifierMapping[signUpIdentifier];
-  const ignoredWarningConnectors = signUpIdentifierToRequiredConnectorMapping[signUpIdentifier];
+  const requiredSignInIdentifiers = signUpIdentifiersMapping[signUpIdentifier];
+  const ignoredWarningConnectors = getSignUpRequiredConnectorTypes(signUpIdentifier);
 
   const signInIdentifierOptions = signInIdentifiers.filter((candidateIdentifier) =>
     fields.every(({ identifier }) => identifier !== candidateIdentifier)
@@ -67,13 +67,14 @@ const SignInMethodEditBox = () => {
       <DragDropProvider>
         {fields.map((signInMethod, index) => {
           const { id, identifier, verificationCode, isPasswordPrimary } = signInMethod;
-
+          const signInRelatedConnector = identifierRequiredConnectorMapping[identifier];
           const requiredConnectors =
             conditional(
               verificationCode &&
-                signInIdentifierToRequiredConnectorMapping[identifier].filter(
-                  (connector) => !ignoredWarningConnectors.includes(connector)
-                )
+                signInRelatedConnector &&
+                !ignoredWarningConnectors.includes(signInRelatedConnector) && [
+                  signInRelatedConnector,
+                ]
             ) ?? [];
 
           return (

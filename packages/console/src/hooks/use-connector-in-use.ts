@@ -1,5 +1,5 @@
 import type { SignInExperience } from '@logto/schemas';
-import { SignUpIdentifier, SignInIdentifier, ConnectorType } from '@logto/schemas';
+import { SignInIdentifier, ConnectorType } from '@logto/schemas';
 import useSWR from 'swr';
 
 import type { RequestError } from './use-api';
@@ -17,7 +17,7 @@ const useConnectorInUse = (type?: ConnectorType, target?: string): boolean | und
         ({ identifier, verificationCode }) =>
           verificationCode && identifier === SignInIdentifier.Email
       ) ||
-      (data.signUp.identifier === SignUpIdentifier.Email && data.signUp.verify)
+      (data.signUp.identifiers.includes(SignInIdentifier.Email) && data.signUp.verify)
     );
   }
 
@@ -27,7 +27,7 @@ const useConnectorInUse = (type?: ConnectorType, target?: string): boolean | und
         ({ identifier, verificationCode }) =>
           verificationCode && identifier === SignInIdentifier.Sms
       ) ||
-      (data.signUp.identifier === SignUpIdentifier.Sms && data.signUp.verify)
+      (data.signUp.identifiers.includes(SignInIdentifier.Sms) && data.signUp.verify)
     );
   }
 

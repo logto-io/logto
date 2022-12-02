@@ -1,5 +1,5 @@
 import type { SignInExperience, Profile } from '@logto/schemas';
-import { SignUpIdentifier, SignInMode, SignInIdentifier, Event } from '@logto/schemas';
+import { SignInMode, SignInIdentifier, Event } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -59,7 +59,7 @@ export const identifierValidation = (
         if (
           'passcode' in identifier &&
           !verificationCode &&
-          ![SignUpIdentifier.Email, SignUpIdentifier.EmailOrSms].includes(signUp.identifier) &&
+          !signUp.identifiers.includes(SignInIdentifier.Email) &&
           !signUp.verify
         ) {
           return false;
@@ -91,7 +91,7 @@ export const identifierValidation = (
         if (
           'passcode' in identifier &&
           !verificationCode &&
-          ![SignUpIdentifier.Sms, SignUpIdentifier.EmailOrSms].includes(signUp.identifier) &&
+          !signUp.identifiers.includes(SignInIdentifier.Sms) &&
           !signUp.verify
         ) {
           return false;
@@ -108,23 +108,15 @@ export const identifierValidation = (
 
 export const profileValidation = (profile: Profile, { signUp }: SignInExperience) => {
   if (profile.phone) {
-    assertThat(
-      signUp.identifier === SignUpIdentifier.Sms ||
-        signUp.identifier === SignUpIdentifier.EmailOrSms,
-      forbiddenIdentifierError
-    );
+    assertThat(signUp.identifiers.includes(SignInIdentifier.Sms), forbiddenIdentifierError);
   }
 
   if (profile.email) {
-    assertThat(
-      signUp.identifier === SignUpIdentifier.Email ||
-        signUp.identifier === SignUpIdentifier.EmailOrSms,
-      forbiddenIdentifierError
-    );
+    assertThat(signUp.identifiers.includes(SignInIdentifier.Email), forbiddenIdentifierError);
   }
 
   if (profile.username) {
-    assertThat(signUp.identifier === SignUpIdentifier.Username, forbiddenIdentifierError);
+    assertThat(signUp.identifiers.includes(SignInIdentifier.Username), forbiddenIdentifierError);
   }
 
   if (profile.password) {

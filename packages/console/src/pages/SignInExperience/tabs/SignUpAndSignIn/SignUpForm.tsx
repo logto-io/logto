@@ -1,4 +1,3 @@
-import { SignUpIdentifier } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
@@ -9,19 +8,19 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
+import { signUpIdentifiers, signUpIdentifiersMapping } from '../../constants';
 import type { SignInExperienceForm } from '../../types';
+import { SignUpIdentifier } from '../../types';
+import {
+  getSignUpRequiredConnectorTypes,
+  isVerificationRequiredSignUpIdentifiers,
+} from '../../utils/identifier';
 import * as styles from '../index.module.scss';
 import ConnectorSetupWarning from './components/ConnectorSetupWarning';
 import {
   getSignInMethodPasswordCheckState,
   getSignInMethodVerificationCodeCheckState,
 } from './components/SignInMethodEditBox/utilities';
-import {
-  requiredVerifySignUpIdentifiers,
-  signUpIdentifiers,
-  signUpIdentifierToRequiredConnectorMapping,
-  signUpToSignInIdentifierMapping,
-} from './constants';
 
 const SignUpForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -56,7 +55,7 @@ const SignUpForm = () => {
       return;
     }
 
-    if (requiredVerifySignUpIdentifiers.includes(signUpIdentifier)) {
+    if (isVerificationRequiredSignUpIdentifiers(signUpIdentifier)) {
       setValue('signUp.verify', true);
     }
   };
@@ -67,7 +66,7 @@ const SignUpForm = () => {
     const isSignUpPasswordRequired = getValues('signUp.password');
 
     // Note: append required sign-in methods according to the sign-up identifier config
-    const requiredSignInIdentifiers = signUpToSignInIdentifierMapping[signUpIdentifier];
+    const requiredSignInIdentifiers = signUpIdentifiersMapping[signUpIdentifier];
     const allSignInMethods = requiredSignInIdentifiers.reduce((methods, requiredIdentifier) => {
       if (signInMethods.some(({ identifier }) => identifier === requiredIdentifier)) {
         return methods;
@@ -120,7 +119,7 @@ const SignUpForm = () => {
           control={control}
           rules={{
             validate: (value) => {
-              return signUpIdentifierToRequiredConnectorMapping[value].every((connectorType) =>
+              return getSignUpRequiredConnectorTypes(value).every((connectorType) =>
                 isConnectorTypeEnabled(connectorType)
               );
             },
@@ -158,7 +157,7 @@ const SignUpForm = () => {
           )}
         />
         <ConnectorSetupWarning
-          requiredConnectors={signUpIdentifierToRequiredConnectorMapping[signUpIdentifier]}
+          requiredConnectors={getSignUpRequiredConnectorTypes(signUpIdentifier)}
         />
       </FormField>
       {signUpIdentifier !== SignUpIdentifier.None && (
@@ -191,7 +190,7 @@ const SignUpForm = () => {
                   <Checkbox
                     label={t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
                     value={value}
-                    disabled={requiredVerifySignUpIdentifiers.includes(signUpIdentifier)}
+                    disabled={isVerificationRequiredSignUpIdentifiers(signUpIdentifier)}
                     disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.verify_at_sign_up')}
                     onChange={(value) => {
                       onChange(value);

@@ -28,12 +28,12 @@ import Others from './tabs/Others';
 import SignUpAndSignIn from './tabs/SignUpAndSignIn';
 import type { SignInExperienceForm } from './types';
 import {
-  compareSignUpAndSignInConfigs,
+  hasSignUpAndSignInConfigChanged,
   getBrandingErrorCount,
   getOthersErrorCount,
   getSignUpAndSignInErrorCount,
   signInExperienceParser,
-} from './utilities';
+} from './utils/form';
 
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -90,7 +90,7 @@ const SignInExperience = () => {
     const formatted = signInExperienceParser.toRemoteModel(formData);
 
     // Sign-in methods changed, need to show confirm modal first.
-    if (!compareSignUpAndSignInConfigs(data, formatted)) {
+    if (!hasSignUpAndSignInConfigChanged(data, formatted)) {
       setDataToCompare(formatted);
 
       return;

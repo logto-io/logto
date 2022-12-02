@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import type { User, SignUpIdentifier, SignIn } from '@logto/schemas';
+import type { User, SignIn, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
@@ -68,11 +68,11 @@ export const signIn = async ({ username, email, password }: SignInHelper) => {
 };
 
 export const setSignUpIdentifier = async (
-  identifier: SignUpIdentifier,
+  identifiers: SignInIdentifier[],
   password = true,
   verify = true
 ) => {
-  await updateSignInExperience({ signUp: { identifier, password, verify } });
+  await updateSignInExperience({ signUp: { identifiers, password, verify } });
 };
 
 export const setSignInMethod = async (methods: SignIn['methods']) => {

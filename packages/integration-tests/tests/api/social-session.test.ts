@@ -1,4 +1,3 @@
-import { SignUpIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
@@ -18,6 +17,7 @@ import {
   updateConnectorConfig,
 } from '@/api';
 import MockClient from '@/client';
+import { signUpIdentifiers } from '@/constants';
 import { createUserByAdmin, setSignUpIdentifier } from '@/helpers';
 import { generateUsername, generatePassword } from '@/utils';
 
@@ -35,7 +35,7 @@ describe('social sign-in and register', () => {
     connectorIdMap.set(mockSocialConnectorId, id);
     await updateConnectorConfig(id, mockSocialConnectorConfig);
 
-    await setSignUpIdentifier(SignUpIdentifier.None, false);
+    await setSignUpIdentifier(signUpIdentifiers.none, false);
   });
 
   it('register with social', async () => {

@@ -1,4 +1,4 @@
-import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { PasscodeType, SignInIdentifier } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
 
@@ -121,9 +121,9 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContext, Respo
     const signInExperience = await getSignInExperienceForApplication(
       await getApplicationIdFromInteraction(ctx, provider)
     );
+
     assertThat(
-      signInExperience.signUp.identifier === SignUpIdentifier.Sms ||
-        signInExperience.signUp.identifier === SignUpIdentifier.EmailOrSms,
+      signInExperience.signUp.identifiers.includes(SignInIdentifier.Sms),
       new RequestError({
         code: 'user.sign_up_method_not_enabled',
         status: 422,
@@ -165,9 +165,9 @@ export const emailRegisterAction = <StateT, ContextT extends WithLogContext, Res
     const signInExperience = await getSignInExperienceForApplication(
       await getApplicationIdFromInteraction(ctx, provider)
     );
+
     assertThat(
-      signInExperience.signUp.identifier === SignUpIdentifier.Email ||
-        signInExperience.signUp.identifier === SignUpIdentifier.EmailOrSms,
+      signInExperience.signUp.identifiers.includes(SignInIdentifier.Email),
       new RequestError({
         code: 'user.sign_up_method_not_enabled',
         status: 422,

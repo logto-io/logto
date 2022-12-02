@@ -1,7 +1,19 @@
 import type { SignInExperience, SignInIdentifier, SignUp } from '@logto/schemas';
 
+export enum SignUpIdentifier {
+  Email = 'email',
+  Sms = 'sms',
+  Username = 'username',
+  EmailOrSms = 'emailOrSms',
+  None = 'none',
+}
+
+export type SignUpForm = Omit<SignUp, 'identifiers'> & {
+  identifier: SignUpIdentifier;
+};
+
 export type SignInExperienceForm = Omit<SignInExperience, 'signUp'> & {
-  signUp?: SignUp;
+  signUp?: SignUpForm;
   createAccountEnabled: boolean;
 };
 

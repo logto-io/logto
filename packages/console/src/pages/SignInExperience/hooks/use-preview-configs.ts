@@ -2,7 +2,7 @@ import type { SignInExperience } from '@logto/schemas';
 import { useMemo } from 'react';
 
 import type { SignInExperienceForm } from '../types';
-import { signInExperienceParser } from '../utilities';
+import { signInExperienceParser } from '../utils/form';
 
 const usePreviewConfigs = (
   formData: SignInExperienceForm,
