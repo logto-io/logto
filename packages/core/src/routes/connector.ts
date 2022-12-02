@@ -3,6 +3,7 @@ import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
+import cleanDeep from 'clean-deep';
 import { object, string } from 'zod';
 
 import {
@@ -106,6 +107,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         syncProfile: true,
       }),
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         body: { connectorId },
@@ -134,10 +136,21 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       );
 
       const insertConnectorId = generateConnectorId();
-      ctx.body = await insertConnector({
-        id: insertConnectorId,
-        ...body,
-      });
+      const { metadata, ...rest } = body;
+
+      const isMetadataEmpty = !metadata || Object.entries(cleanDeep(metadata)).length === 0;
+      ctx.body = await insertConnector(
+        isMetadataEmpty
+          ? {
+              id: insertConnectorId,
+              ...rest,
+            }
+          : {
+              id: insertConnectorId,
+              metadata: cleanDeep(metadata),
+              ...rest,
+            }
+      );
 
       /**
        * We can have only one working email/sms connector:
@@ -193,7 +206,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         validateConfig(config);
       }
 
-      await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
+      // FIXME @Darcy [LOG-4696]: revisit databaseMetadata check when implementing AC
+
+      const { metadata: databaseMetadata, ...rest } = body;
+      const isMetadataEmpty =
+        !databaseMetadata || Object.entries(cleanDeep(databaseMetadata)).length === 0;
+      await updateConnector({
+        set: isMetadataEmpty ? rest : { metadata: cleanDeep(databaseMetadata), ...rest },
+        where: { id },
+        jsonbMode: 'replace',
+      });
       const connector = await getLogtoConnectorById(id);
       ctx.body = transpileLogtoConnector(connector);
 

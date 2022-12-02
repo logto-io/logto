@@ -126,7 +126,6 @@ describe('connector PATCH routes', () => {
               target: 'target',
               name: { en: 'connector_name', fr: 'connector_name' },
               logo: 'new_logo.png',
-              logoDark: null,
             },
           },
           jsonbMode: 'replace',
