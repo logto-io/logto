@@ -62,10 +62,6 @@
         .name {
           font: var(--font-subhead-2);
           @include _.multi-line-ellipsis(1);
-
-          &.nameWithRightPadding {
-            padding-right: _.unit(12); /* For check mark and added label */
-          }
         }
 
         .connectorId {

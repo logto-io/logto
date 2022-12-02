@@ -46,15 +46,17 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
       factories.filter(({ type: factoryType }) => factoryType === type)
     );
 
-    return allGroups.map((group) => ({
-      ...group,
-      connectors: group.connectors.map((connector) => ({
-        ...connector,
-        added: group.isStandard
-          ? false
-          : existingConnectors.some(({ connectorId }) => connector.id === connectorId),
-      })),
-    }));
+    return allGroups
+      .map((group) => ({
+        ...group,
+        connectors: group.connectors.map((connector) => ({
+          ...connector,
+          added:
+            !group.isStandard &&
+            existingConnectors.some(({ connectorId }) => connector.id === connectorId),
+        })),
+      }))
+      .filter(({ connectors }) => !connectors.every(({ added }) => added));
   }, [factories, type, existingConnectors]);
 
   const activeGroup = useMemo(
@@ -143,29 +145,23 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
           className={classNames(styles.connectorGroup, styles[modalSize])}
           onChange={handleGroupChange}
         >
-          {groups.map(({ id, name, logo, description, connectors }) => {
-            const isDisabled = connectors.every(({ added }) => added);
-
-            return (
-              <Radio key={id} value={id} isDisabled={isDisabled} disabledLabel="general.added">
-                <div className={styles.connector}>
-                  <div className={styles.logo}>
-                    <img src={logo} alt="logo" />
+          {groups.map(({ id, name, logo, description }) => (
+            <Radio key={id} value={id}>
+              <div className={styles.connector}>
+                <div className={styles.logo}>
+                  <img src={logo} alt="logo" />
+                </div>
+                <div className={styles.content}>
+                  <div className={classNames(styles.name)}>
+                    <UnnamedTrans resource={name} />
                   </div>
-                  <div className={styles.content}>
-                    <div
-                      className={classNames(styles.name, isDisabled && styles.nameWithRightPadding)}
-                    >
-                      <UnnamedTrans resource={name} />
-                    </div>
-                    <div className={styles.description}>
-                      <UnnamedTrans resource={description} />
-                    </div>
+                  <div className={styles.description}>
+                    <UnnamedTrans resource={description} />
                   </div>
                 </div>
-              </Radio>
-            );
-          })}
+              </div>
+            </Radio>
+          ))}
         </RadioGroup>
         {activeGroup && (
           <PlatformSelector
