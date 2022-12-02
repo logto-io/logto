@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/Button';
 import CodeEditor from '@/components/CodeEditor';
 import FormField from '@/components/FormField';
+import Select from '@/components/Select';
 import TextInput from '@/components/TextInput';
 
 import type { ConnectorFormType } from '../../types';
+import { SyncProfileMode } from '../../types';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -24,6 +26,17 @@ const ConnectorForm = ({ connector }: Props) => {
   const toggleDarkVisible = () => {
     setDarkVisible((previous) => !previous);
   };
+
+  const syncProfileOptions = [
+    {
+      value: SyncProfileMode.OnlyAtRegister,
+      title: t('connectors.guide.sync_profile_only_at_register'),
+    },
+    {
+      value: SyncProfileMode.EachSignIn,
+      title: t('connectors.guide.sync_profile_each_sign_in'),
+    },
+  ];
 
   return (
     <div>
@@ -76,6 +89,16 @@ const ConnectorForm = ({ connector }: Props) => {
           rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
             <CodeEditor language="json" value={value} onChange={onChange} />
+          )}
+        />
+      </FormField>
+      <FormField isRequired title="connectors.guide.sync_profile">
+        <Controller
+          name="syncProfile"
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, value } }) => (
+            <Select options={syncProfileOptions} value={value} onChange={onChange} />
           )}
         />
       </FormField>

@@ -45,6 +45,9 @@ const connectors = {
     target: 'Connector identity target',
     target_tip: 'A unique identifier for the connector.',
     config: 'Enter your JSON here',
+    sync_profile: 'Sync profile information form the social provider',
+    sync_profile_only_at_register: 'Only sync at register',
+    sync_profile_each_sign_in: 'Always sync at each sign-in',
   },
   platform: {
     universal: 'Universal',

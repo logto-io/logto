@@ -4,4 +4,10 @@ export type ConnectorFormType = {
   logo: string;
   logoDark: string;
   target: string;
+  syncProfile: SyncProfileMode;
 };
+
+export enum SyncProfileMode {
+  OnlyAtRegister = 'OnlyAtRegister',
+  EachSignIn = 'EachSignIn',
+}
