@@ -1,6 +1,7 @@
 import type { LogPayload, LogType, PasscodeType, SignInExperience, User } from '@logto/schemas';
 import { SignInIdentifier, logTypeGuard } from '@logto/schemas';
 import type { Nullable, Truthy } from '@silverhand/essentials';
+import { isSameArray } from '@silverhand/essentials';
 import { addSeconds, isAfter, isValid } from 'date-fns';
 import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
@@ -169,29 +170,28 @@ export const checkRequiredProfile = async (
     throw new RequestError({ code: 'user.require_password', status: 422 });
   }
 
-  if (signUp.identifiers.includes(SignInIdentifier.Username) && !username) {
+  if (isSameArray(signUp.identifiers, [SignInIdentifier.Username]) && !username) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
     throw new RequestError({ code: 'user.require_username', status: 422 });
   }
 
+  if (isSameArray(signUp.identifiers, [SignInIdentifier.Email]) && !primaryEmail) {
+    await assignContinueSignInResult(ctx, provider, { userId: id });
+    throw new RequestError({ code: 'user.require_email', status: 422 });
+  }
+
+  if (isSameArray(signUp.identifiers, [SignInIdentifier.Sms]) && !primaryPhone) {
+    await assignContinueSignInResult(ctx, provider, { userId: id });
+    throw new RequestError({ code: 'user.require_sms', status: 422 });
+  }
+
   if (
-    signUp.identifiers.includes(SignInIdentifier.Email) &&
-    signUp.identifiers.includes(SignInIdentifier.Sms) &&
+    isSameArray(signUp.identifiers, [SignInIdentifier.Email, SignInIdentifier.Sms]) &&
     !primaryEmail &&
     !primaryPhone
   ) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
     throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
-  }
-
-  if (signUp.identifiers.includes(SignInIdentifier.Email) && !primaryEmail) {
-    await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_email', status: 422 });
-  }
-
-  if (signUp.identifiers.includes(SignInIdentifier.Sms) && !primaryPhone) {
-    await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_sms', status: 422 });
   }
 };
 /* eslint-enable complexity */
