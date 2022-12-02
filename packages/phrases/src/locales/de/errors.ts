@@ -106,6 +106,8 @@ const errors = {
       'Can not create multiple instance with picked standard connector.',
     invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.',
     can_not_modify_target: 'The connector target can not be modified.',
+    multiple_target_with_same_platform:
+      'You can not have multiple social connectors that have same target and platform.',
   },
   passcode: {
     phone_email_empty: 'Telefonnummer oder E-Mail darf nicht leer sein.',
