@@ -194,33 +194,6 @@ export const checkRequiredProfile = async (
     throw new RequestError({ code: 'user.require_sms', status: 422 });
   }
 };
-
-export const checkMissingRequiredSignUpIdentifiers = async (identifiers: {
-  primaryEmail?: Nullable<string>;
-  primaryPhone?: Nullable<string>;
-}) => {
-  // We do not check username as we decided to prohibit the removal of username from user profile.
-  const { primaryEmail, primaryPhone } = identifiers;
-
-  const { signUp } = await getSignInExperienceForApplication();
-
-  if (
-    signUp.identifiers.includes(SignInIdentifier.Email) &&
-    signUp.identifiers.includes(SignInIdentifier.Sms) &&
-    !primaryEmail &&
-    !primaryPhone
-  ) {
-    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
-  }
-
-  if (signUp.identifiers.includes(SignInIdentifier.Email) && !primaryEmail) {
-    throw new RequestError({ code: 'user.require_email', status: 422 });
-  }
-
-  if (signUp.identifiers.includes(SignInIdentifier.Sms) && !primaryPhone) {
-    throw new RequestError({ code: 'user.require_sms', status: 422 });
-  }
-};
 /* eslint-enable complexity */
 
 export const checkSignUpIdentifierCollision = async (
