@@ -7,7 +7,7 @@ import { Provider } from 'oidc-provider';
 import { mockSignInExperience, mockSignInMethod, mockUser } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
-import { signInWithPassword } from './utils.js';
+import { checkRequiredProfile, signInWithPassword } from './utils.js';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
@@ -106,6 +106,178 @@ jest.mock('oidc-provider', () => ({
 afterEach(() => {
   grantSave.mockClear();
   interactionResult.mockClear();
+});
+
+describe('checkRequiredProfile', () => {
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let mockDate: jest.SpyInstance;
+  const mockedExpiredAt = '2022-02-02';
+  beforeEach(() => {
+    interactionDetails.mockResolvedValueOnce({ params: {} });
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    mockDate = jest.spyOn(Date.prototype, 'toISOString').mockReturnValue(mockedExpiredAt);
+  });
+
+  afterEach(() => {
+    mockDate.mockRestore();
+  });
+
+  it("throw if password is required but the user's password is not set", async () => {
+    const user = {
+      ...mockUser,
+      passwordEncrypted: null,
+      passwordEncryptionMethod: null,
+      identities: {},
+    };
+
+    const signInExperience = {
+      ...mockSignInExperience,
+      signUp: {
+        ...mockSignInExperience.signUp,
+        password: true,
+      },
+    };
+
+    await expect(
+      checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
+    ).rejects.toThrowError(new RequestError({ code: 'user.require_password', status: 422 }));
+
+    expect(interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ continueSignIn: { userId: user.id, expiresAt: mockedExpiredAt } })
+    );
+  });
+
+  it("throw if the sign up identifier is ['username'] but the user's username is missing", async () => {
+    const user = {
+      ...mockUser,
+      username: null,
+    };
+    const signInExperience = {
+      ...mockSignInExperience,
+      signUp: {
+        ...mockSignInExperience.signUp,
+        identifiers: [SignInIdentifier.Username],
+        password: true,
+        verify: false,
+      },
+    };
+
+    await expect(
+      checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
+    ).rejects.toThrowError(new RequestError({ code: 'user.require_username', status: 422 }));
+
+    expect(interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ continueSignIn: { userId: user.id, expiresAt: mockedExpiredAt } })
+    );
+  });
+
+  it("throw if the sign up identifier is ['email'] but the user's email is missing", async () => {
+    const user = {
+      ...mockUser,
+      primaryEmail: null,
+    };
+    const signInExperience = {
+      ...mockSignInExperience,
+      signUp: {
+        ...mockSignInExperience.signUp,
+        identifiers: [SignInIdentifier.Email],
+        password: true,
+        verify: true,
+      },
+    };
+
+    await expect(
+      checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
+    ).rejects.toThrowError(new RequestError({ code: 'user.require_email', status: 422 }));
+
+    expect(interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ continueSignIn: { userId: user.id, expiresAt: mockedExpiredAt } })
+    );
+  });
+
+  it("throw if the sign up identifier is ['sms'] but the user's phone is missing", async () => {
+    const user = {
+      ...mockUser,
+      primaryPhone: null,
+    };
+    const signInExperience = {
+      ...mockSignInExperience,
+      signUp: {
+        ...mockSignInExperience.signUp,
+        identifiers: [SignInIdentifier.Sms],
+        password: true,
+        verify: true,
+      },
+    };
+
+    await expect(
+      checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
+    ).rejects.toThrowError(new RequestError({ code: 'user.require_sms', status: 422 }));
+
+    expect(interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ continueSignIn: { userId: user.id, expiresAt: mockedExpiredAt } })
+    );
+  });
+
+  it("throw if the sign up identifier is ['email', 'sms'] but the user's email and phone are missing", async () => {
+    const user = {
+      ...mockUser,
+      primaryEmail: null,
+      primaryPhone: null,
+    };
+    const signInExperience = {
+      ...mockSignInExperience,
+      signUp: {
+        ...mockSignInExperience.signUp,
+        identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+        password: true,
+        verify: true,
+      },
+    };
+
+    await expect(
+      checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
+    ).rejects.toThrowError(new RequestError({ code: 'user.require_email_or_sms', status: 422 }));
+
+    expect(interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ continueSignIn: { userId: user.id, expiresAt: mockedExpiredAt } })
+    );
+  });
+
+  it.each([{ primaryEmail: null }, { primaryPhone: null }])(
+    "check successfully if the sign up identifier is ['email', 'sms'] and the user has an email or phone",
+    async (userProfile) => {
+      const user = {
+        ...mockUser,
+        ...userProfile,
+      };
+      const signInExperience = {
+        ...mockSignInExperience,
+        signUp: {
+          ...mockSignInExperience.signUp,
+          identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+          password: true,
+          verify: true,
+        },
+      };
+
+      await expect(
+        checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
+      ).resolves.not.toThrow();
+
+      expect(interactionResult).not.toBeCalled();
+    }
+  );
 });
 
 describe('signInWithPassword()', () => {
