@@ -1,4 +1,4 @@
-import { MissingProfile, SignUpIdentifier } from '@logto/schemas';
+import { MissingProfile, SignInIdentifier } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -63,7 +63,7 @@ describe('mandatoryUserProfileValidation', () => {
       ...baseCtx,
       signInExperience: {
         ...mockSignInExperience,
-        signUp: { identifier: SignUpIdentifier.Email, password: false, verify: true },
+        signUp: { identifiers: [SignInIdentifier.Email], password: false, verify: true },
       },
     };
 
@@ -86,7 +86,7 @@ describe('mandatoryUserProfileValidation', () => {
       ...baseCtx,
       signInExperience: {
         ...mockSignInExperience,
-        signUp: { identifier: SignUpIdentifier.Email, password: false, verify: true },
+        signUp: { identifiers: [SignInIdentifier.Email], password: false, verify: true },
       },
     };
 
@@ -100,7 +100,7 @@ describe('mandatoryUserProfileValidation', () => {
       ...baseCtx,
       signInExperience: {
         ...mockSignInExperience,
-        signUp: { identifier: SignUpIdentifier.Sms, password: false, verify: true },
+        signUp: { identifiers: [SignInIdentifier.Sms], password: false, verify: true },
       },
     };
 
@@ -123,7 +123,7 @@ describe('mandatoryUserProfileValidation', () => {
       ...baseCtx,
       signInExperience: {
         ...mockSignInExperience,
-        signUp: { identifier: SignUpIdentifier.Sms, password: false, verify: true },
+        signUp: { identifiers: [SignInIdentifier.Sms], password: false, verify: true },
       },
     };
 
@@ -137,7 +137,11 @@ describe('mandatoryUserProfileValidation', () => {
       ...baseCtx,
       signInExperience: {
         ...mockSignInExperience,
-        signUp: { identifier: SignUpIdentifier.EmailOrSms, password: false, verify: true },
+        signUp: {
+          identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+          password: false,
+          verify: true,
+        },
       },
     };
 
