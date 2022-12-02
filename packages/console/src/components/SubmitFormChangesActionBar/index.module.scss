@@ -4,16 +4,34 @@
   position: sticky;
   bottom: 0;
   width: 100%;
-  height: 60px;
-  border: 1px solid var(--color-line-divider);
-  display: flex;
-  padding: _.unit(3) _.unit(8);
-  justify-content: flex-end;
-  background-color: var(--color-float);
-  box-shadow: var(--shadow-3);
-  border-radius: 12px 12px 0 0;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease-out 0.1s;
 
-  > :not(:first-child) {
-    margin-left: _.unit(3);
+  .actionBar {
+    height: 60px;
+    border: 1px solid var(--color-line-divider);
+    display: flex;
+    padding: _.unit(3) _.unit(8);
+    justify-content: flex-end;
+    background-color: var(--color-float);
+    box-shadow: var(--shadow-3);
+    border-radius: 12px 12px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-out;
+
+    > button + button {
+      margin-left: _.unit(3);
+    }
+  }
+
+  &.active {
+    height: 60px;
+    overflow: visible;
+
+    .actionBar {
+      transform: translateY(0);
+      transition: transform 0.3s ease-in;
+    }
   }
 }
