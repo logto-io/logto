@@ -1,5 +1,4 @@
 import { deduplicate } from '@silverhand/essentials';
-import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -14,6 +13,7 @@ import type {
   PreAccountVerifiedInteractionResult,
   AccountVerifiedInteractionResult,
   Identifier,
+  InteractionContext,
 } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
 import { isProfileIdentifier } from '../utils/index.js';
@@ -76,11 +76,14 @@ const identifyUser = async (identifier: Identifier) => {
 
 export default async function userIdentityVerification(
   interaction: PreAccountVerifiedInteractionResult,
-  ctx: Context,
+  ctx: InteractionContext,
   provider: Provider
 ): Promise<AccountVerifiedInteractionResult> {
-  const { identifiers = [], profile, accountId } = interaction;
+  const { identifiers = [], accountId } = interaction;
+  // Need to merge the profile in payload
+  const profile = { ...interaction.profile, ...ctx.interactionPayload.profile };
 
+  // Filter all non-profile identifiers
   const userIdentifiers = identifiers.filter(
     (identifier) => !isProfileIdentifier(identifier, profile)
   );

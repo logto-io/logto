@@ -4,7 +4,7 @@ import { Provider } from 'oidc-provider';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import type { PayloadVerifiedInteractionResult } from '../types/index.js';
+import type { InteractionContext, PayloadVerifiedInteractionResult } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
 import { storeInteractionResult } from '../utils/interaction.js';
 import userIdentityVerification from './user-identity-verification.js';
@@ -28,7 +28,12 @@ jest.mock('../utils/interaction.js', () => ({
 describe('userIdentityVerification', () => {
   const findUserByIdentifierMock = findUserByIdentifier as jest.Mock;
 
-  const ctx = createContextWithRouteParameters();
+  const ctx = {
+    ...createContextWithRouteParameters(),
+    interactionPayload: {
+      event: Event.SignIn,
+    },
+  };
   const provider = new Provider('');
 
   afterEach(() => {
@@ -245,6 +250,7 @@ describe('userIdentityVerification', () => {
     const interaction: PayloadVerifiedInteractionResult = {
       event: Event.SignIn,
       identifiers: [
+        { key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } },
         { key: 'emailVerified', value: 'email' },
         { key: 'phoneVerified', value: '123456' },
       ],
@@ -253,13 +259,26 @@ describe('userIdentityVerification', () => {
       },
     };
 
-    const result = await userIdentityVerification(interaction, ctx, provider);
+    const ctxWithSocialProfile: InteractionContext = {
+      ...ctx,
+      interactionPayload: {
+        event: Event.SignIn,
+        profile: {
+          connectorId: 'connectorId',
+        },
+      },
+    };
+
+    const result = await userIdentityVerification(interaction, ctxWithSocialProfile, provider);
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
-    expect(storeInteractionResult).toBeCalledWith(result, ctx, provider);
+    expect(storeInteractionResult).toBeCalledWith(result, ctxWithSocialProfile, provider);
     expect(result).toEqual({
       event: Event.SignIn,
       accountId: 'foo',
-      identifiers: [{ key: 'phoneVerified', value: '123456' }],
+      identifiers: [
+        { key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } },
+        { key: 'phoneVerified', value: '123456' },
+      ],
       profile: {
         phone: '123456',
       },
