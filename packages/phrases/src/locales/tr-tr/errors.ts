@@ -79,6 +79,8 @@ const errors = {
     unauthorized: 'Lütfen önce oturum açın.',
     unsupported_prompt_name: 'Desteklenmeyen prompt adı.',
     forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
+    verification_failed:
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
   },
   connector: {
     general: 'Bağlayıcıda beklenmeyen bir hata oldu.{{errorDescription}}',

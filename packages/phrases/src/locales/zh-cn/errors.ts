@@ -75,6 +75,7 @@ const errors = {
     unauthorized: '请先登录',
     unsupported_prompt_name: '不支持的 prompt name',
     forgot_password_not_enabled: '忘记密码功能没有开启。',
+    verification_failed: '验证失败，请重新验证。',
   },
   connector: {
     general: '连接器发生未知错误{{errorDescription}}',

@@ -1,6 +1,7 @@
 import type { Profile, User } from '@logto/schemas';
 import { Event } from '@logto/schemas';
 import { argon2Verify } from 'hash-wasm';
+import type { Provider } from 'oidc-provider';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -17,34 +18,21 @@ import { registerProfileSafeGuard } from '../types/guard.js';
 import type {
   InteractionContext,
   Identifier,
-  AccountIdIdentifier,
   SocialIdentifier,
+  IdentifierVerifiedInteractionResult,
 } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
+import { storeInteractionResult } from '../utils/interaction.js';
 
-const findUserByIdentifier = async (identifiers: Identifier[]) => {
-  const accountIdentifier = identifiers.find(
-    (identifier): identifier is AccountIdIdentifier => identifier.key === 'accountId'
-  );
-
-  assertThat(
-    accountIdentifier,
-    new RequestError({
-      code: 'session.unauthorized',
-      status: 401,
-    })
-  );
-
-  return findUserById(accountIdentifier.value);
-};
-
-const verifyProtectedIdentifiers = (
+const verifyProfileIdentifiers = (
   { email, phone, connectorId }: Profile,
-  identifiers: Identifier[]
+  identifiers: Identifier[] = []
 ) => {
   if (email) {
     assertThat(
-      identifiers.some(({ key, value }) => key === 'emailVerified' && value === email),
+      identifiers.some(
+        (identifier) => identifier.key === 'emailVerified' && identifier.value === email
+      ),
       new RequestError({
         code: 'session.verification_session_not_found',
         status: 404,
@@ -54,7 +42,9 @@ const verifyProtectedIdentifiers = (
 
   if (phone) {
     assertThat(
-      identifiers.some(({ key, value }) => key === 'phoneVerified' && value === phone),
+      identifiers.some(
+        (identifier) => identifier.key === 'phoneVerified' && identifier.value === phone
+      ),
       new RequestError({
         code: 'session.verification_session_not_found',
         status: 404,
@@ -77,7 +67,7 @@ const verifyProtectedIdentifiers = (
 
 const profileRegisteredValidation = async (
   { username, email, phone, connectorId }: Profile,
-  identifiers: Identifier[]
+  identifiers: Identifier[] = []
 ) => {
   if (username) {
     assertThat(
@@ -118,13 +108,13 @@ const profileRegisteredValidation = async (
       (identifier): identifier is SocialIdentifier => identifier.key === 'social'
     );
 
-    // Social identifier session should be verified by verifyProtectedIdentifiers
+    // Social identifier session should be verified by verifyProfileIdentifiers
     if (!socialIdentifier) {
       return;
     }
 
     assertThat(
-      !(await hasUserWithIdentity(target, socialIdentifier.value.id)),
+      !(await hasUserWithIdentity(target, socialIdentifier.userInfo.id)),
       new RequestError({
         code: 'user.identity_exists',
         status: 422,
@@ -174,48 +164,64 @@ const profileExistValidation = async (
   }
 };
 
+// eslint-disable-next-line complexity
 export default async function profileVerification(
   ctx: InteractionContext,
-  identifiers: Identifier[]
-): Promise<Profile | undefined> {
-  const { profile, event } = ctx.interactionPayload;
-
-  if (!profile) {
-    return;
+  provider: Provider,
+  interaction: IdentifierVerifiedInteractionResult
+): Promise<IdentifierVerifiedInteractionResult> {
+  if (!interaction.profile && !ctx.interactionPayload.profile) {
+    return interaction;
   }
 
-  verifyProtectedIdentifiers(profile, identifiers);
+  const profile = { ...interaction.profile, ...ctx.interactionPayload.profile };
 
-  if (event === Event.SignIn) {
-    // Find existing account
-    const user = await findUserByIdentifier(identifiers);
+  const { event, identifiers, accountId } = interaction;
 
-    await profileExistValidation(profile, user);
-    await profileRegisteredValidation(profile, identifiers);
+  switch (event) {
+    case Event.Register: {
+      // Verify the profile includes sufficient identifiers to register a new account
+      try {
+        registerProfileSafeGuard.parse(profile);
+      } catch (error: unknown) {
+        throw new RequestError({ code: 'guard.invalid_input' }, error);
+      }
 
-    return profile;
-  }
-
-  if (event === Event.Register) {
-    // Verify the profile includes sufficient identifiers to register a new account
-    try {
-      registerProfileSafeGuard.parse(profile);
-    } catch (error: unknown) {
-      throw new RequestError({ code: 'guard.invalid_input' }, error);
+      verifyProfileIdentifiers(profile, identifiers);
+      await profileRegisteredValidation(profile, identifiers);
+      break;
     }
 
-    await profileRegisteredValidation(profile, identifiers);
+    case Event.SignIn: {
+      verifyProfileIdentifiers(profile, identifiers);
+      // Find existing account
+      const user = await findUserById(accountId);
+      await profileExistValidation(profile, user);
+      await profileRegisteredValidation(profile, identifiers);
+      break;
+    }
 
-    return profile;
+    case Event.ForgotPassword: {
+      // Forgot Password
+      const { password } = profile;
+
+      if (password) {
+        const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(accountId);
+
+        assertThat(
+          !oldPasswordEncrypted || !(await argon2Verify({ password, hash: oldPasswordEncrypted })),
+          new RequestError({ code: 'user.same_password', status: 422 })
+        );
+      }
+
+      break;
+    }
+    default:
+      break;
   }
 
-  // ForgotPassword
-  const { password } = profile;
-  const { passwordEncrypted: oldPasswordEncrypted } = await findUserByIdentifier(identifiers);
-  assertThat(
-    !oldPasswordEncrypted || !(await argon2Verify({ password, hash: oldPasswordEncrypted })),
-    new RequestError({ code: 'user.same_password', status: 422 })
-  );
+  const interactionWithProfile = { ...interaction, profile };
+  await storeInteractionResult(interactionWithProfile, ctx, provider);
 
-  return profile;
+  return interactionWithProfile;
 }

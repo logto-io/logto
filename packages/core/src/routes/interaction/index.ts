@@ -27,20 +27,20 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaInteractionBodyGuard(),
     koaSessionSignInExperienceGuard(provider),
     async (ctx, next) => {
+      const { event } = ctx.interactionPayload;
+
       // Check interaction session
       await provider.interactionDetails(ctx.req, ctx.res);
 
-      const verifiedIdentifiers = await identifierVerification(ctx, provider);
+      const identifierVerifiedInteraction = await identifierVerification(ctx, provider);
 
-      const profile = await profileVerification(ctx, verifiedIdentifiers);
-
-      const { event } = ctx.interactionPayload;
+      const interaction = await profileVerification(ctx, provider, identifierVerifiedInteraction);
 
       if (event !== Event.ForgotPassword) {
-        await mandatoryUserProfileValidation(ctx, verifiedIdentifiers, profile);
+        await mandatoryUserProfileValidation(ctx, interaction);
       }
 
-      // TODO: SignIn Register & ResetPassword final step
+      // TODO: SignIn Register & ResetPassword submit
 
       ctx.status = 200;
 

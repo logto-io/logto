@@ -79,6 +79,8 @@ const errors = {
     unauthorized: 'Faça login primeiro.',
     unsupported_prompt_name: 'Nome de prompt não suportado.',
     forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
+    verification_failed:
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
   },
   connector: {
     general: 'Ocorreu um erro inesperado no conector.{{errorDescription}}',

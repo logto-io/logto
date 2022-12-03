@@ -1,13 +1,15 @@
 import { Event } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { verifyUserPassword } from '#src/lib/user.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
+import type { VerifiedPhoneIdentifier } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
-import { assignIdentifierVerificationResult } from '../utils/interaction.js';
 import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
-import identifierVerification from './identifier-verification.js';
+import { verifySocialIdentity } from '../utils/social-verification.js';
+import identifierPayloadVerification from './identifier-payload-verification.js';
 
 jest.mock('#src/lib/user.js', () => ({
   verifyUserPassword: jest.fn(),
@@ -16,7 +18,8 @@ jest.mock('#src/lib/user.js', () => ({
 jest.mock('../utils/find-user-by-identifier.js', () => jest.fn());
 
 jest.mock('../utils/interaction.js', () => ({
-  assignIdentifierVerificationResult: jest.fn(),
+  ...jest.requireActual('../utils/interaction.js'),
+  storeInteractionResult: jest.fn(),
 }));
 
 jest.mock('../utils/passcode-validation.js', () => ({
@@ -27,6 +30,10 @@ jest.mock('oidc-provider', () => ({
   Provider: jest.fn(() => ({
     interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
   })),
+}));
+
+jest.mock('../utils/social-verification.js', () => ({
+  verifySocialIdentity: jest.fn().mockResolvedValue({ id: 'foo' }),
 }));
 
 const log = jest.fn();
@@ -43,6 +50,7 @@ describe('identifier verification', () => {
 
   it('username password user not found', async () => {
     findUserByIdentifierMock.mockResolvedValueOnce(null);
+
     const identifier = {
       username: 'username',
       password: 'password',
@@ -56,7 +64,7 @@ describe('identifier verification', () => {
       }),
     };
 
-    await expect(identifierVerification(ctx, new Provider(''))).rejects.toThrow();
+    await expect(identifierPayloadVerification(ctx, new Provider(''))).rejects.toThrow();
     expect(findUserByIdentifier).toBeCalledWith({ username: 'username' });
     expect(verifyUserPassword).toBeCalledWith(null, 'password');
   });
@@ -77,7 +85,10 @@ describe('identifier verification', () => {
       }),
     };
 
-    await expect(identifierVerification(ctx, new Provider(''))).rejects.toThrow();
+    await expect(identifierPayloadVerification(ctx, new Provider(''))).rejects.toMatchError(
+      new RequestError({ code: 'user.suspended', status: 401 })
+    );
+
     expect(findUserByIdentifier).toBeCalledWith({ username: 'username' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
   });
@@ -99,10 +110,13 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierVerification(ctx, new Provider(''));
+    const result = await identifierPayloadVerification(ctx, new Provider(''));
     expect(findUserByIdentifier).toBeCalledWith({ email: 'email' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
-    expect(result).toEqual([{ key: 'accountId', value: 'foo' }]);
+    expect(result).toEqual({
+      event: Event.SignIn,
+      identifiers: [{ key: 'accountId', value: 'foo' }],
+    });
   });
 
   it('phone password', async () => {
@@ -122,14 +136,16 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierVerification(ctx, new Provider(''));
+    const result = await identifierPayloadVerification(ctx, new Provider(''));
     expect(findUserByIdentifier).toBeCalledWith({ phone: 'phone' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
-    expect(result).toEqual([{ key: 'accountId', value: 'foo' }]);
+    expect(result).toEqual({
+      event: Event.SignIn,
+      identifiers: [{ key: 'accountId', value: 'foo' }],
+    });
   });
 
-  it('email passcode with no profile', async () => {
-    findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
+  it('email passcode', async () => {
     const identifier = { email: 'email', passcode: 'passcode' };
 
     const ctx = {
@@ -140,102 +156,20 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierVerification(ctx, new Provider(''));
+    const result = await identifierPayloadVerification(ctx, new Provider(''));
     expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
       { ...identifier, event: Event.SignIn },
       'jti',
       log
     );
-    expect(findUserByIdentifier).toBeCalledWith(identifier);
 
-    expect(result).toEqual([
-      { key: 'accountId', value: 'foo' },
-      { key: 'emailVerified', value: 'email' },
-    ]);
+    expect(result).toEqual({
+      event: Event.SignIn,
+      identifiers: [{ key: 'emailVerified', value: identifier.email }],
+    });
   });
 
-  it('email passcode with no profile and no user should throw and assign interaction', async () => {
-    findUserByIdentifierMock.mockResolvedValueOnce(null);
-    const identifier = { email: 'email', passcode: 'passcode' };
-
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier,
-      }),
-    };
-
-    const provider = new Provider('');
-
-    await expect(identifierVerification(ctx, provider)).rejects.toThrow();
-    expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
-      { ...identifier, event: Event.SignIn },
-      'jti',
-      log
-    );
-    expect(findUserByIdentifier).toBeCalledWith(identifier);
-    expect(assignIdentifierVerificationResult).toBeCalledWith(
-      {
-        event: Event.SignIn,
-        identifiers: [{ key: 'emailVerified', value: 'email' }],
-      },
-      ctx,
-      provider
-    );
-  });
-
-  it('forgot password email passcode with no profile and no user should throw', async () => {
-    findUserByIdentifierMock.mockResolvedValueOnce(null);
-    const identifier = { email: 'email', passcode: 'passcode' };
-
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.ForgotPassword,
-        identifier,
-      }),
-    };
-
-    const provider = new Provider('');
-
-    await expect(identifierVerification(ctx, provider)).rejects.toThrow();
-    expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
-      { ...identifier, event: Event.ForgotPassword },
-      'jti',
-      log
-    );
-    expect(findUserByIdentifier).toBeCalledWith(identifier);
-    expect(assignIdentifierVerificationResult).not.toBeCalled();
-  });
-
-  it('email passcode with profile', async () => {
-    const identifier = { email: 'email', passcode: 'passcode' };
-
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier,
-        profile: {
-          email: 'email',
-        },
-      }),
-    };
-
-    const result = await identifierVerification(ctx, new Provider(''));
-    expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
-      { ...identifier, event: Event.SignIn },
-      'jti',
-      log
-    );
-    expect(findUserByIdentifierMock).not.toBeCalled();
-
-    expect(result).toEqual([{ key: 'emailVerified', value: 'email' }]);
-  });
-
-  it('phone passcode with no profile', async () => {
-    findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
+  it('phone passcode', async () => {
     const identifier = { phone: 'phone', passcode: 'passcode' };
 
     const ctx = {
@@ -246,42 +180,69 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierVerification(ctx, new Provider(''));
+    const result = await identifierPayloadVerification(ctx, new Provider(''));
     expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
       { ...identifier, event: Event.SignIn },
       'jti',
       log
     );
-    expect(findUserByIdentifier).toBeCalledWith(identifier);
 
-    expect(result).toEqual([
-      { key: 'accountId', value: 'foo' },
-      { key: 'phoneVerified', value: 'phone' },
-    ]);
+    expect(result).toEqual({
+      event: Event.SignIn,
+      identifiers: [{ key: 'phoneVerified', value: identifier.phone }],
+    });
   });
 
-  it('phone passcode with profile', async () => {
-    const identifier = { phone: 'phone', passcode: 'passcode' };
+  it('social', async () => {
+    const identifier = { connectorId: 'logto', connectorData: {} };
 
     const ctx = {
       ...baseCtx,
       interactionPayload: Object.freeze({
         event: Event.SignIn,
         identifier,
-        profile: {
-          phone: 'phone',
-        },
       }),
     };
 
-    const result = await identifierVerification(ctx, new Provider(''));
+    const result = await identifierPayloadVerification(ctx, new Provider(''));
+
+    expect(verifySocialIdentity).toBeCalledWith(identifier, log);
+    expect(findUserByIdentifierMock).not.toBeCalled();
+
+    expect(result).toEqual({
+      event: Event.SignIn,
+      identifiers: [
+        { key: 'social', connectorId: identifier.connectorId, userInfo: { id: 'foo' } },
+      ],
+    });
+  });
+
+  it('should merge identifier if exist', async () => {
+    const identifier = { email: 'email', passcode: 'passcode' };
+    const oldIdentifier: VerifiedPhoneIdentifier = { key: 'phoneVerified', value: '123456' };
+
+    const ctx = {
+      ...baseCtx,
+      interactionPayload: Object.freeze({
+        event: Event.SignIn,
+        identifier,
+      }),
+    };
+
+    const result = await identifierPayloadVerification(ctx, new Provider(''), {
+      event: Event.Register,
+      identifiers: [oldIdentifier],
+    });
+
     expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
       { ...identifier, event: Event.SignIn },
       'jti',
       log
     );
-    expect(findUserByIdentifierMock).not.toBeCalled();
 
-    expect(result).toEqual([{ key: 'phoneVerified', value: 'phone' }]);
+    expect(result).toEqual({
+      event: Event.SignIn,
+      identifiers: [oldIdentifier, { key: 'emailVerified', value: identifier.email }],
+    });
   });
 });

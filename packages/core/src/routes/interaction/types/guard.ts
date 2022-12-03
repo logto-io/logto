@@ -87,7 +87,7 @@ export const verifiedPhoneIdentifierGuard = z.object({
 export const socialIdentifierGuard = z.object({
   key: z.literal('social'),
   connectorId: z.string(),
-  value: socialUserInfoGuard,
+  userInfo: socialUserInfoGuard,
 });
 
 export const identifierGuard = z.discriminatedUnion('key', [
@@ -98,7 +98,8 @@ export const identifierGuard = z.discriminatedUnion('key', [
 ]);
 
 export const customInteractionResultGuard = z.object({
-  event: eventGuard.optional(),
+  event: eventGuard,
   profile: profileGuard.optional(),
+  accountId: z.string().optional(),
   identifiers: z.array(identifierGuard).optional(),
 });

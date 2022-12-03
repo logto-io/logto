@@ -78,6 +78,8 @@ const errors = {
     unauthorized: 'Bitte melde dich erst an.',
     unsupported_prompt_name: 'Nicht unterstützter prompt Name.',
     forgot_password_not_enabled: 'Forgot password is not enabled.',
+    verification_failed:
+      'Die Verifizierung war nicht erfolgreich. Starte die Verifizierung neu und versuche es erneut.',
   },
   connector: {
     // UNTRANSLATED

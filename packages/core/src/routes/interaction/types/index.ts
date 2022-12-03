@@ -4,6 +4,7 @@ import type {
   EmailPasscodePayload,
   PhonePasswordPayload,
   PhonePasscodePayload,
+  Event,
 } from '@logto/schemas';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
@@ -21,6 +22,7 @@ import type {
   verifiedPhoneIdentifierGuard,
   socialIdentifierGuard,
   identifierGuard,
+  customInteractionResultGuard,
 } from './guard.js';
 
 // Payload Types
@@ -37,7 +39,7 @@ export type SendPasscodePayload = z.infer<typeof sendPasscodePayloadGuard>;
 
 export type SocialAuthorizationUrlPayload = z.infer<typeof getSocialAuthorizationUrlPayloadGuard>;
 
-// Identifier Types
+// Interaction Types
 export type AccountIdIdentifier = z.infer<typeof accountIdIdentifierGuard>;
 
 export type VerifiedEmailIdentifier = z.infer<typeof verifiedEmailIdentifierGuard>;
@@ -47,6 +49,31 @@ export type VerifiedPhoneIdentifier = z.infer<typeof verifiedPhoneIdentifierGuar
 export type SocialIdentifier = z.infer<typeof socialIdentifierGuard>;
 
 export type Identifier = z.infer<typeof identifierGuard>;
+
+export type AnonymousInteractionResult = z.infer<typeof customInteractionResultGuard>;
+
+export type RegisterInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
+  event: Event.Register;
+};
+
+export type PreAccountVerifiedInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
+  event: Event.SignIn | Event.ForgotPassword;
+};
+
+export type PayloadVerifiedInteractionResult =
+  | RegisterInteractionResult
+  | PreAccountVerifiedInteractionResult;
+
+export type AccountVerifiedInteractionResult = Omit<
+  PreAccountVerifiedInteractionResult,
+  'accountId'
+> & {
+  accountId: string;
+};
+
+export type IdentifierVerifiedInteractionResult =
+  | RegisterInteractionResult
+  | AccountVerifiedInteractionResult;
 
 export type InteractionContext = WithGuardedIdentifierPayloadContext<IRouterParamContext & Context>;
 

@@ -83,6 +83,8 @@ const errors = {
     unauthorized: "Veuillez vous enregistrer d'abord.",
     unsupported_prompt_name: "Nom d'invite non supporté.",
     forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
+    verification_failed:
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
   },
   connector: {
     general: "Une erreur inattendue s'est produite dans le connecteur. {{errorDescription}}",

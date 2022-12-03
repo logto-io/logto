@@ -78,6 +78,8 @@ const errors = {
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name.',
     forgot_password_not_enabled: 'Forgot password is not enabled.',
+    verification_failed:
+      'The verification was not successful. Restart the verification flow and try again.',
   },
   connector: {
     general: 'An unexpected error occurred in connector.{{errorDescription}}',
