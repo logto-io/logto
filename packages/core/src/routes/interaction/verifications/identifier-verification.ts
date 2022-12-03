@@ -8,8 +8,13 @@ import { verifyUserPassword } from '#src/lib/user.js';
 import assertThat from '#src/utils/assert-that.js';
 import { maskUserInfo } from '#src/utils/format.js';
 
-import type { PasswordIdentifierPayload, PasscodeIdentifierPayload } from '../types/guard.js';
-import type { InteractionContext, Identifier, SocialIdentifier } from '../types/index.js';
+import type {
+  PasswordIdentifierPayload,
+  PasscodeIdentifierPayload,
+  InteractionContext,
+  Identifier,
+  SocialIdentifier,
+} from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
 import { isPasscodeIdentifier, isPasswordIdentifier, isProfileIdentifier } from '../utils/index.js';
 import { assignIdentifierVerificationResult } from '../utils/interaction.js';
@@ -53,7 +58,7 @@ const passcodeIdentifierVerification = async (
   const user = await findUserByIdentifier(identifier);
 
   if (!user) {
-    // Throw verification result and assign verified identifiers
+    // Throw verification exception and assign verified identifiers to the interaction
     if (event !== Event.ForgotPassword) {
       await assignIdentifierVerificationResult(
         { event, identifiers: [verifiedPasscodeIdentifier] },
@@ -90,7 +95,7 @@ const socialIdentifierVerification = async (
   const user = await findUserByIdentifier({ connectorId, userInfo });
 
   if (!user) {
-    // Throw verification result and assign verified identifiers
+    // Throw verification exception and assign verified identifiers to the interaction
     await assignIdentifierVerificationResult(
       { event, identifiers: [socialIdentifier] },
       ctx,

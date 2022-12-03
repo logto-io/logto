@@ -7,7 +7,7 @@ import { getUserInfoByAuthCode } from '#src/lib/social.js';
 import type { LogContext } from '#src/middleware/koa-log.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { SocialAuthorizationUrlPayload } from '../types/guard.js';
+import type { SocialAuthorizationUrlPayload } from '../types/index.js';
 
 export const createSocialAuthorizationUrl = async (payload: SocialAuthorizationUrlPayload) => {
   const { connectorId, state, redirectUri } = payload;
