@@ -15,9 +15,9 @@ const user_details = {
     new_password: '새로운 비밀번호:',
   },
   tab_logs: '사용자 기록',
-  settings: 'Settings', // UNTRANSLATED
+  settings: '설정',
   settings_description:
-    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
+    '각 사용자는 모든 사용자 정보를 포함하는 프로파일을 가지고 있어요. 프로파일은 기본 데이터, 소셜 ID, 사용자 정의 데이터로 구성되어 있어요.',
   field_email: '메인 이메일',
   field_phone: '메인 휴대전화번호',
   field_username: '사용자 이름',
@@ -36,7 +36,7 @@ const user_details = {
     not_connected: '이 사용자는 아직 소셜에 연동되지 않았아요.',
     deletion_confirmation: '<name/> 신원을 삭제하려고 해요. 정말로 진행할까요?',
   },
-  suspended: 'Suspended', // UNTRANSLATED
+  suspended: '정지됨',
 };
 
 export default user_details;

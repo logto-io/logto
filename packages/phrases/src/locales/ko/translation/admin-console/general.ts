@@ -10,7 +10,7 @@ const general = {
   save: '저장',
   save_changes: '변경 내용 저장',
   saved: '저장됨!',
-  discard: 'Discard', // UNTRANSLATED
+  discard: '디스코드',
   loading: '로딩 중...',
   redirecting: '리다이렉팅 중...',
   add: '추가',
@@ -36,11 +36,11 @@ const general = {
   unsaved_changes_warning: '수정된 내용이 있어요. 정말로 현재 페이지를 벗어날까요?',
   leave_page: '페이지 나가기',
   stay_on_page: '페이지 유지하기',
-  type_to_search: 'Type to search', // UNTRANSLATED
-  got_it: '네',
-  page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
-  learn_more: 'Learn more', // UNTRANSLATED
-  tab_errors: '{{count, number}} errors', // UNTRANSLATED
+  type_to_search: '검색어 입력',
+  got_it: '알겠어요',
+  page_info: '{{min, number}}-{{max, number}} / {{total, number}}',
+  learn_more: '더 알아보기',
+  tab_errors: '{{count, number}} 오류',
 };
 
 export default general;

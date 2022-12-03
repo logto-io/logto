@@ -3,7 +3,7 @@ const sign_in_exp = {
   description: '로그인 화면을 브랜드에 맞게 커스터마이징 그리고 실시간으로 확인해보세요.',
   tabs: {
     branding: '브랜딩',
-    sign_up_and_sign_in: 'Sign up and Sign in', // UNTRANSLATED
+    sign_up_and_sign_in: 'Sign up and Sign in',
     others: '기타',
   },
   welcome: {
@@ -35,59 +35,57 @@ const sign_in_exp = {
     slogan_placeholder: 'Unleash your creativity',
   },
   sign_up_and_sign_in: {
-    identifiers: 'Sign-up identifiers', // UNTRANSLATED
-    identifiers_email: 'Email address', // UNTRANSLATED
-    identifiers_sms: 'Phone number', // UNTRANSLATED
-    identifiers_username: 'Username', // UNTRANSLATED
-    identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
-    identifiers_none: 'Not applicable', // UNTRANSLATED
-    and: 'and', // UNTRANSLATED
-    or: 'or', // UNTRANSLATED
+    identifiers: '회원가입 ID',
+    identifiers_email: '이메일 주소',
+    identifiers_sms: '휴대전화번호',
+    identifiers_username: '사용자 이름',
+    identifiers_email_or_sms: '이메일 주소 또는 휴대전화번호',
+    identifiers_none: '해당없음',
+    and: '그리고',
+    or: '또는',
     sign_up: {
-      title: 'SIGN UP', // UNTRANSLATED
-      sign_up_identifier: 'Sign-up identifier', // UNTRANSLATED
+      title: '회원가입',
+      sign_up_identifier: '회원가입 ID',
       identifier_description:
-        'The sign-up identifier is required for account creation and must be included in your sign-in screen.', // UNTRANSLATED
-      sign_up_authentication: 'Authentication setting for sign-up', // UNTRANSLATED
-      authentication_description:
-        'All selected actions will be obligatory for users to complete the flow.', // UNTRANSLATED
-      set_a_password_option: 'Create your password', // UNTRANSLATED
-      verify_at_sign_up_option: 'Verify at sign-up', // UNTRANSLATED
-      social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
+        '회원가입 ID는 계정을 생성하기 위해 필수이며, 회원가입 화면에서 반드시 포함되어야 해요.',
+      sign_up_authentication: '회원가입 인증 설정',
+      authentication_description: '선택된 모든 작업들은 사용자가 모두 마무리 해야 해요.',
+      set_a_password_option: '비밀번호 생성',
+      verify_at_sign_up_option: '회원가입 인증',
+      social_only_creation_description: '(이것은 소셜 전용 계정 생성에 적용되요.)',
     },
     sign_in: {
-      title: 'SIGN IN', // UNTRANSLATED
-      sign_in_identifier_and_auth: 'Identifier and authentication settings for sign-in', // UNTRANSLATED
+      title: '로그인',
+      sign_in_identifier_and_auth: '로그인을 위한 ID 그리고 인증 설정',
       description:
-        'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.', // UNTRANSLATED
-      add_sign_in_method: 'Add Sign-in Method', // UNTRANSLATED
-      password_auth: 'Password', // UNTRANSLATED
-      verification_code_auth: 'Verification code', // UNTRANSLATED
-      auth_swap_tip: 'Swap the options below to determine which appears first in the flow.', // UNTRANSLATED
-      require_auth_factor: 'You have to select at least one authentication factor.', // UNTRANSLATED
+        '사용자는 주어진 옵션 중에 아무 방법으로 로그인을 할 수 있어요. 주어진 옵션을 드래그하여 조절해주세요.',
+      add_sign_in_method: '로그인 방법 추가',
+      password_auth: '비밀번호',
+      verification_code_auth: '인증 코드',
+      auth_swap_tip: '아래 옵션을 변경하여 흐름에 가장 먼저 나타나는 옵션을 설정할 수 있어요.',
+      require_auth_factor: '반드시 최소 하나의 인증 방법을 선택해야해요.',
     },
     social_sign_in: {
-      title: 'SOCIAL SIGN-IN', // UNTRANSLATED
-      social_sign_in: 'Social sign-in', // UNTRANSLATED
+      title: '소셜 로그인',
+      social_sign_in: '소셜 로그인',
       description:
-        'Depending on the mandatory identifier you set up, your user may be asked to provide an identifier when signing up via social connector.', // UNTRANSLATED
-      add_social_connector: 'Link Social Connector', // UNTRANSLATED
+        '설정된 필수 ID에 따라서, 사용자가 소셜 연동을 통해 회원가입, 로그인을 할 수 있어요.',
+      add_social_connector: '소셜 연동으로',
       set_up_hint: {
-        not_in_list: 'Not in the list?', // UNTRANSLATED
-        set_up_more: 'Set up', // UNTRANSLATED
-        go_to: 'other social connectors now.', // UNTRANSLATED
+        not_in_list: '리스트에 없나요?',
+        set_up_more: '설정하기',
+        go_to: '다른 소셜 연동으로',
       },
     },
     tip: {
-      set_a_password: 'A unique set of a password to your username is a must.', // UNTRANSLATED
+      set_a_password: '사용자 이름에 대한 고유한 암호 집합은 필수에요.',
       verify_at_sign_up:
-        'We currently only support verified email. Your user base may contain a large number of poor-quality email addresses if no validation.', // UNTRANSLATED
+        '현재 확인된 이메일만 지원해요. 유효성 검사가 없는 경우 사용자 기반에 품질이 낮은 전자 메일 주소가 많이 포함되어 있을 수 있어요.',
       password_auth:
-        'This is essential as you have enabled the option to set a password during the sign-up process.', // UNTRANSLATED
+        '회원가입 중에 비밀번호를 설정하는 옵션을 사용으로 설정했기 때문에 이 옵션은 필수에요.',
       verification_code_auth:
-        'This is essential as you have only enabled the option to provide verification code when signing up. You’re free to uncheck the box when password set-up is allowed at the sign-up process.', // UNTRANSLATED
-      delete_sign_in_method:
-        'This is essential as you have selected {{identifier}} as a required identifier.', // UNTRANSLATED
+        '가입 시 인증 코드를 제공하는 옵션만 활성화했기 때문에 이것은 필수에요. 회원가입에서 비밀번호 설정이 허용되면 이 옵션을 취소할 수 있습니다.',
+      delete_sign_in_method: '{{identifier}}를 필수 ID로 설정했기 때문에 이 옵션은 필수에요.',
     },
   },
   others: {
@@ -99,62 +97,61 @@ const sign_in_exp = {
     },
     languages: {
       title: '언어',
-      enable_auto_detect: 'Enable auto-detect', // UNTRANSLATED
+      enable_auto_detect: '자동 감지 활성화',
       description:
-        "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.", // UNTRANSLATED
-      manage_language: 'Manage language', // UNTRANSLATED
-      default_language: 'Default language', // UNTRANSLATED
+        '사용자의 언어 설정을 감지하고, 해당 언어로 자동으로 변경해요. 직접 번역하여 새로운 언어를 추가할 수 도 있어요.',
+      manage_language: '언어 관리',
+      default_language: '기본 언어',
       default_language_description_auto:
-        'The default language will be used when the detected user language isn’t covered in the current language library.', // UNTRANSLATED
+        '사용자의 언어를 지원하지 않을 경우, 기본 언어로 사용자에게 보여줘요.',
       default_language_description_fixed:
-        'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.', // UNTRANSLATED
+        '자동 감지가 꺼져있을 경우, 기본 언어로만 사용자에게 보여줘요. 더욱 나은 경험을 위해, 자동 감지를 켜주세요.',
     },
     manage_language: {
-      title: 'Manage language', // UNTRANSLATED
+      title: '언어 관리',
       subtitle:
-        'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.', // UNTRANSLATED
-      add_language: 'Add Language', // UNTRANSLATED
-      logto_provided: 'Logto provided', // UNTRANSLATED
-      key: 'Key', // UNTRANSLATED
-      logto_source_values: 'Logto source values', // UNTRANSLATED
-      custom_values: 'Custom values', // UNTRANSLATED
-      clear_all_tip: 'Clear all values', // UNTRANSLATED
-      unsaved_description: 'Changes won’t be saved if you leave this page without saving.', // UNTRANSLATED
-      deletion_tip: 'Delete the language', // UNTRANSLATED
-      deletion_title: 'Do you want to delete the added language?', // UNTRANSLATED
-      deletion_description:
-        'After deletion, your users won’t be able to browse in that language again.', // UNTRANSLATED
-      default_language_deletion_title: 'Default language can’t be deleted.', // UNTRANSLATED
+        '언어와 번역을 추가하여 제품 경험을 현지화해요. 사용자의 기여를 기본 언어로 설정할 수 있어요.',
+      add_language: '언어 추가',
+      logto_provided: 'Logto 제공',
+      key: '키',
+      logto_source_values: 'Logto 소스 값',
+      custom_values: '사용자 정의 값',
+      clear_all_tip: '모든 값 삭제',
+      unsaved_description: '이 페이지를 벗어날 경우, 변경점이 적용되지 않아요.',
+      deletion_tip: '언어 삭제',
+      deletion_title: '추가된 언어를 삭제할건가요?',
+      deletion_description: '삭제된 후에 사용자들인 더 이상 해당 언어로 볼 수 없어요.',
+      default_language_deletion_title: '기본 언어는 삭제될 수 없어요.',
       default_language_deletion_description:
-        '{{language}} is set as your default language and can’t be deleted. ', // UNTRANSLATED
+        '{{language}} 언어는 기본 언어로 설정되어 있어요. 기본 언어를 변경한 후에 삭제할 수 있어요.',
     },
     advanced_options: {
       title: '고급 옵션',
-      enable_user_registration: 'Enable user registration', // UNTRANSLATED
+      enable_user_registration: '회원가입 활성화',
       enable_user_registration_description:
-        'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.', // UNTRANSLATED
+        '사용자 등록을 활성화하거나 비활성화합니다. 비활성화된 후에도 사용자를 관리 콘솔에 추가할 수 있지만 사용자는 더 이상 로그인 UI를 통해 계정을 설정할 수 없어요.',
     },
   },
   setup_warning: {
     no_connector: '',
     no_connector_sms:
-      'No SMS connector set-up yet. Until you finish configuring your SMS connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"', // UNTRANSLATED
+      'SMS 연동 설정이 아직 없습니다. SMS 연동 구성을 완료할 때까지 로그인할 수 없습니다. <a>{{link}}</a> in "Connectors"',
     no_connector_email:
-      'No email connector set-up yet. Until you finish configuring your email connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"', // UNTRANSLATED
+      '이메일 연동 설정이 아직 없습니다. 이메일 연동 구성을 완료할 때까지 로그인할 수 없습니다. <a>{{link}}</a> in "Connectors"',
     no_connector_social:
-      'No social connector set-up yet. Until you finish configuring your social connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"', // UNTRANSLATED
+      '소셜 연동 설정이 아직 없습니다. 소셜 연동 구성을 완료할 때까지 로그인할 수 없습니다. <a>{{link}}</a> in "Connectors"',
     no_added_social_connector:
       '보다 많은 소셜 연동들을 설정하여, 고객에게 보다 나은 경험을 제공해보세요.',
     setup_link: 'Set up',
   },
   save_alert: {
     description:
-      'You are implementing new sign-in and sign-up procedures. All of your users may be affected by the new set-up. Are you sure to commit to the change?', // UNTRANSLATED
+      '새 로그인 및 회원가입 방법을 추가하고 있어요. 모든 사용자가 새 설정의 영향을 받을 수 있어요. 정말로 하실건가요?',
     before: '이전',
     after: '이후',
-    sign_up: 'Sign-up', // UNTRANSLATED
-    sign_in: 'Sign-in', // UNTRANSLATED
-    social: 'Social', // UNTRANSLATED
+    sign_up: '회원가입',
+    sign_in: '로그인',
+    social: '소셜',
   },
   preview: {
     title: '로그인 화면 미리보기',

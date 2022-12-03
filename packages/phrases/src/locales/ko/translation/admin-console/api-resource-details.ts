@@ -1,8 +1,8 @@
 const api_resource_details = {
   back_to_api_resources: 'API 리소스로 돌아가기',
-  settings: 'Settings', // UNTRANSLATED
+  settings: '설정',
   settings_description:
-    'API resources, a.k.a. Resource Indicators, indicate the target services or resources to be requested, usually, a URI format variable representing the resource‘s identity.', // UNTRANSLATED
+    'API 리소스(리소스 표시기) - 요청할 대상 서비스 또는 리소스(일반적으로 리소스의 ID를 나타내는 URI 형식 변수)를 나타냅니다.',
   token_expiration_time_in_seconds: '토큰 만료 시간 (초)',
   token_expiration_time_in_seconds_placeholder: '토큰 만료 시간을 입력해주세요',
   delete_description:

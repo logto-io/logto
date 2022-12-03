@@ -10,28 +10,27 @@ const applications = {
   no_application_type_selected: '어플리케이션 종류를 선택하지 않았아요.',
   application_created:
     '{{name}} 어플리케이션이 성공적으로 생성되었어요! \n이제 어플리케이션 설정을 마무리해주세요.',
-  app_id: 'App ID',
+  app_id: '앱 ID',
   type: {
     native: {
       title: 'Native App',
       subtitle: 'Native 환경에서 작동하는 어플리케이션',
-      description: '예) iOS App, Android App',
+      description: '예) iOS, Android 앱',
     },
     spa: {
       title: 'Single Page App',
       subtitle: '웹 브라우저에서 작동하며, 한 페이지에서 유동적으로 업데이트 되는 웹',
-      description: '예) React DOM App, Vue App',
+      description: '예) React DOM, Vue 앱',
     },
     traditional: {
       title: 'Traditional Web',
       subtitle: '서버를 통하여 웹 페이지가 업데이트 되는 앱',
       description: '예) JSP, PHP',
     },
-    // UNTRANSLATED
     machine_to_machine: {
       title: 'Machine to Machine',
-      subtitle: 'An app (usually a service) that directly talks to resources',
-      description: 'E.g., Backend service',
+      subtitle: '직접 리소스에 접근하는 엡(서비스)',
+      description: '예) 백엔드 서비스',
     },
   },
   guide: {

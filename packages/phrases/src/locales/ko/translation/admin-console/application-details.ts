@@ -1,12 +1,12 @@
 const application_details = {
   back_to_applications: '어플리케이션으로 돌아가기',
   check_guide: '가이드 확인',
-  settings: 'Settings', // UNTRANSLATED
+  settings: '설정',
   settings_description:
-    'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.', // UNTRANSLATED
+    'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.',
   advanced_settings: '고급 설정',
   advanced_settings_description:
-    'Advanced settings include OIDC related terms. You can check out the Token Endpoint for more information.', // UNTRANSLATED
+    'Advanced settings include OIDC related terms. You can check out the Token Endpoint for more information.',
   application_name: '어플리케이션 이름',
   application_name_placeholder: '나의 앱',
   description: '설명',
@@ -37,9 +37,9 @@ const application_details = {
   refresh_token_expiration: 'Refresh 토큰 만료',
   token_endpoint: '토큰 End-Point',
   user_info_endpoint: '사용자 정보 End-Point',
-  enable_admin_access: 'Enable admin access', // UNTRANSLATED
+  enable_admin_access: '관리자 접근 활성화',
   enable_admin_access_label:
-    'Enable or disable the access to Management API. Once enabled, you can use access tokens to call Management API on behalf on this application.', // UNTRANSLATED
+    '관리 API에 대한 접근을 활성화, 비활성화 할 수 있어요. 활성화 한다면, 이 어플리케이션에서 Access 토큰을 통해 관리 API를 사용할 수 있어요.',
   delete_description:
     '이 행동은 취소될 수 없어요. 어플리케이션을 영원히 삭제할 거에요. 삭제를 진행하기 위해 <span>{{name}}</span> 를 입력해주세요.',
   enter_your_application_name: '어플리케이션 이름을 입력해주세요.',
