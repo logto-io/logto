@@ -3,7 +3,7 @@ const sign_in_exp = {
   description: '로그인 화면을 브랜드에 맞게 커스터마이징 그리고 실시간으로 확인해보세요.',
   tabs: {
     branding: '브랜딩',
-    sign_up_and_sign_in: 'Sign up and Sign in',
+    sign_up_and_sign_in: '회원가입/로그인',
     others: '기타',
   },
   welcome: {
