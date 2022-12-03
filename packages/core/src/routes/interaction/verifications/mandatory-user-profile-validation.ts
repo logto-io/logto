@@ -35,7 +35,7 @@ const getMissingProfileBySignUpIdentifiers = ({
 }) => {
   const missingProfile = new Set<MissingProfile>();
 
-  if (signUp.password && !((user && isUserPasswordSet(user)) ?? profile?.password)) {
+  if (signUp.password && !(user && isUserPasswordSet(user)) && !profile?.password) {
     missingProfile.add(MissingProfile.password);
   }
 
@@ -90,13 +90,13 @@ export default async function mandatoryUserProfileValidation(
     signInExperience: { signUp },
   } = ctx;
   const user = await findUserByIdentifiers(identifiers);
-  const missProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
+  const missingProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
 
   assertThat(
-    missProfileSet.size === 0,
+    missingProfileSet.size === 0,
     new RequestError(
       { code: 'user.missing_profile', status: 422 },
-      { missingProfile: Array.from(missProfileSet) }
+      { missingProfile: Array.from(missingProfileSet) }
     )
   );
 }
