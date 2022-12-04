@@ -22,7 +22,11 @@ import type {
   verifiedPhoneIdentifierGuard,
   socialIdentifierGuard,
   identifierGuard,
-  customInteractionResultGuard,
+  anonymousInteractionResultGuard,
+  verifiedRegisterInteractionResultGuard,
+  verifiedSignInteractionResultGuard,
+  verifiedForgotPasswordInteractionResultGuard,
+  registerProfileSafeGuard,
 } from './guard.js';
 
 // Payload Types
@@ -50,30 +54,56 @@ export type SocialIdentifier = z.infer<typeof socialIdentifierGuard>;
 
 export type Identifier = z.infer<typeof identifierGuard>;
 
-export type AnonymousInteractionResult = z.infer<typeof customInteractionResultGuard>;
+export type AnonymousInteractionResult = z.infer<typeof anonymousInteractionResultGuard>;
+
+export type RegisterSafeProfile = z.infer<typeof registerProfileSafeGuard>;
+
+export type VerifiedRegisterInteractionResult = z.infer<
+  typeof verifiedRegisterInteractionResultGuard
+>;
+
+export type VerifiedSignInInteractionResult = z.infer<typeof verifiedSignInteractionResultGuard>;
+
+export type VerifiedForgotPasswordInteractionResult = z.infer<
+  typeof verifiedForgotPasswordInteractionResultGuard
+>;
 
 export type RegisterInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
   event: Event.Register;
 };
 
-export type PreAccountVerifiedInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
-  event: Event.SignIn | Event.ForgotPassword;
+export type SignInInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
+  event: Event.SignIn;
 };
+
+export type ForgotPasswordInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
+  event: Event.ForgotPassword;
+};
+
+export type PreAccountVerifiedInteractionResult =
+  | SignInInteractionResult
+  | ForgotPasswordInteractionResult;
 
 export type PayloadVerifiedInteractionResult =
   | RegisterInteractionResult
   | PreAccountVerifiedInteractionResult;
 
-export type AccountVerifiedInteractionResult = Omit<
-  PreAccountVerifiedInteractionResult,
-  'accountId'
-> & {
-  accountId: string;
-};
+export type AccountVerifiedInteractionResult =
+  | (Omit<SignInInteractionResult, 'accountId'> & {
+      accountId: string;
+    })
+  | (Omit<ForgotPasswordInteractionResult, 'accountId'> & {
+      accountId: string;
+    });
 
 export type IdentifierVerifiedInteractionResult =
   | RegisterInteractionResult
   | AccountVerifiedInteractionResult;
+
+export type VerifiedInteractionResult =
+  | VerifiedRegisterInteractionResult
+  | VerifiedSignInInteractionResult
+  | VerifiedForgotPasswordInteractionResult;
 
 export type InteractionContext = WithGuardedIdentifierPayloadContext<IRouterParamContext & Context>;
 

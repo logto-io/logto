@@ -46,6 +46,7 @@ const errors = {
     sign_in_method_not_enabled: '登录方式尚未启用',
     same_password: '为确保你的账户安全，新密码不能与旧密码一致',
     require_password: '请设置密码',
+    require_new_password: '请设置新密码',
     password_exists: '密码已设置过',
     require_username: '请设置用户名',
     username_exists: '该用户名已存在',

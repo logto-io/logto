@@ -47,6 +47,7 @@ const errors = {
     sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
     same_password: 'Das neue Passwort muss sich vom alten unterscheiden.',
     require_password: 'You need to set a password before signing-in.', // UNTRANSLATED
+    require_new_password: 'You need to set a new password', // UNTRANSLATED
     password_exists: 'Your password has been set.', // UNTRANSLATED
     require_username: 'You need to set a username before signing-in.', // UNTRANSLATED
     username_exists: 'This username is already in use.', // UNTRANSLATED

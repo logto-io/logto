@@ -28,7 +28,7 @@ jest.mock('../utils/interaction.js', () => ({
 describe('userIdentityVerification', () => {
   const findUserByIdentifierMock = findUserByIdentifier as jest.Mock;
 
-  const ctx = {
+  const ctx: InteractionContext = {
     ...createContextWithRouteParameters(),
     interactionPayload: {
       event: Event.SignIn,

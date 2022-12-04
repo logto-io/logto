@@ -8,6 +8,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouter } from '../types.js';
+import submitInteraction from './actions/submit-interaction.js';
 import koaInteractionBodyGuard from './middleware/koa-interaction-body-guard.js';
 import koaSessionSignInExperienceGuard from './middleware/koa-session-sign-in-experience-guard.js';
 import { sendPasscodePayloadGuard, getSocialAuthorizationUrlPayloadGuard } from './types/guard.js';
@@ -45,9 +46,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         await mandatoryUserProfileValidation(ctx, interaction);
       }
 
-      // TODO: SignIn Register & ResetPassword submit
-
-      ctx.status = 200;
+      await submitInteraction(interaction, ctx, provider);
 
       return next();
     }
@@ -81,9 +80,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         await mandatoryUserProfileValidation(ctx, interaction);
       }
 
-      // TODO: SignIn Register & ResetPassword submit
-
-      ctx.status = 200;
+      await submitInteraction(interaction, ctx, provider);
 
       return next();
     }

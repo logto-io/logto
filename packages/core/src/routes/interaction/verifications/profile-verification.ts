@@ -20,6 +20,11 @@ import type {
   Identifier,
   SocialIdentifier,
   IdentifierVerifiedInteractionResult,
+  VerifiedInteractionResult,
+  VerifiedRegisterInteractionResult,
+  RegisterSafeProfile,
+  VerifiedSignInInteractionResult,
+  VerifiedForgotPasswordInteractionResult,
 } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
 import { storeInteractionResult } from '../utils/interaction.js';
@@ -164,63 +169,64 @@ const profileExistValidation = async (
   }
 };
 
-// eslint-disable-next-line complexity
+const isValidRegisterProfile = (profile: Profile): profile is RegisterSafeProfile =>
+  registerProfileSafeGuard.safeParse(profile).success;
+
+const hasPasswordInProfile = (profile: Profile): profile is { password: string } =>
+  Boolean(profile.password);
+
 export default async function profileVerification(
   ctx: InteractionContext,
   provider: Provider,
   interaction: IdentifierVerifiedInteractionResult
-): Promise<IdentifierVerifiedInteractionResult> {
-  if (!interaction.profile && !ctx.interactionPayload.profile) {
-    return interaction;
-  }
-
+): Promise<VerifiedInteractionResult> {
   const profile = { ...interaction.profile, ...ctx.interactionPayload.profile };
 
   const { event, identifiers, accountId } = interaction;
 
-  switch (event) {
-    case Event.Register: {
-      // Verify the profile includes sufficient identifiers to register a new account
-      try {
-        registerProfileSafeGuard.parse(profile);
-      } catch (error: unknown) {
-        throw new RequestError({ code: 'guard.invalid_input' }, error);
-      }
+  if (event === Event.Register) {
+    // Verify the profile includes sufficient identifiers to register a new account
+    assertThat(isValidRegisterProfile(profile), new RequestError({ code: 'guard.invalid_input' }));
 
-      verifyProfileIdentifiers(profile, identifiers);
-      await profileRegisteredValidation(profile, identifiers);
-      break;
-    }
+    verifyProfileIdentifiers(profile, identifiers);
+    await profileRegisteredValidation(profile, identifiers);
 
-    case Event.SignIn: {
-      verifyProfileIdentifiers(profile, identifiers);
-      // Find existing account
-      const user = await findUserById(accountId);
-      await profileExistValidation(profile, user);
-      await profileRegisteredValidation(profile, identifiers);
-      break;
-    }
+    const interactionWithProfile: VerifiedRegisterInteractionResult = { ...interaction, profile };
+    await storeInteractionResult(interactionWithProfile, ctx, provider);
 
-    case Event.ForgotPassword: {
-      // Forgot Password
-      const { password } = profile;
-
-      if (password) {
-        const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(accountId);
-
-        assertThat(
-          !oldPasswordEncrypted || !(await argon2Verify({ password, hash: oldPasswordEncrypted })),
-          new RequestError({ code: 'user.same_password', status: 422 })
-        );
-      }
-
-      break;
-    }
-    default:
-      break;
+    return interactionWithProfile;
   }
 
-  const interactionWithProfile = { ...interaction, profile };
+  if (event === Event.SignIn) {
+    verifyProfileIdentifiers(profile, identifiers);
+    // Find existing account
+    const user = await findUserById(accountId);
+    await profileExistValidation(profile, user);
+    await profileRegisteredValidation(profile, identifiers);
+
+    const interactionWithProfile: VerifiedSignInInteractionResult = { ...interaction, profile };
+    await storeInteractionResult(interactionWithProfile, ctx, provider);
+
+    return interactionWithProfile;
+  }
+
+  // Forgot Password
+  if (!hasPasswordInProfile(profile)) {
+    throw new RequestError({ code: 'user.require_new_password', status: 422 });
+  }
+
+  const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(accountId);
+
+  assertThat(
+    !oldPasswordEncrypted ||
+      !(await argon2Verify({ password: profile.password, hash: oldPasswordEncrypted })),
+    new RequestError({ code: 'user.same_password', status: 422 })
+  );
+
+  const interactionWithProfile: VerifiedForgotPasswordInteractionResult = {
+    ...interaction,
+    profile,
+  };
   await storeInteractionResult(interactionWithProfile, ctx, provider);
 
   return interactionWithProfile;
