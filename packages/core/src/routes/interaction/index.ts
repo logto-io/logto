@@ -1,12 +1,15 @@
 import { Event } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouter } from '../types.js';
 import koaInteractionBodyGuard from './middleware/koa-interaction-body-guard.js';
 import koaSessionSignInExperienceGuard from './middleware/koa-session-sign-in-experience-guard.js';
 import { sendPasscodePayloadGuard, getSocialAuthorizationUrlPayloadGuard } from './types/guard.js';
+import { getInteractionStorage } from './utils/interaction.js';
 import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
 import { createSocialAuthorizationUrl } from './utils/social-verification.js';
 import {
@@ -33,6 +36,42 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       await provider.interactionDetails(ctx.req, ctx.res);
 
       const identifierVerifiedInteraction = await identifierVerification(ctx, provider);
+
+      const interaction = await profileVerification(ctx, provider, identifierVerifiedInteraction);
+
+      if (event !== Event.ForgotPassword) {
+        await mandatoryUserProfileValidation(ctx, interaction);
+      }
+
+      // TODO: SignIn Register & ResetPassword submit
+
+      ctx.status = 200;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    identifierPrefix,
+    koaInteractionBodyGuard(),
+    koaSessionSignInExperienceGuard(provider),
+    async (ctx, next) => {
+      const { event } = ctx.interactionPayload;
+      const interactionStorage = await getInteractionStorage(ctx, provider);
+
+      if (event === Event.ForgotPassword) {
+        // Forgot Password specific event interaction session is required
+        assertThat(
+          interactionStorage.event === Event.ForgotPassword,
+          new RequestError({ code: 'session.verification_session_not_found' })
+        );
+      }
+
+      const identifierVerifiedInteraction = await identifierVerification(
+        ctx,
+        provider,
+        interactionStorage
+      );
 
       const interaction = await profileVerification(ctx, provider, identifierVerifiedInteraction);
 
