@@ -58,7 +58,7 @@ export const storeInteractionResult = async (
 };
 
 export const getInteractionStorage = async (ctx: Context, provider: Provider) => {
-  const result = await provider.interactionDetails(ctx.req, ctx.res);
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
   const parseResult = customInteractionResultGuard.safeParse(result);
 
   assertThat(
