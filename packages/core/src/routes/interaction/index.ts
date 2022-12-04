@@ -59,13 +59,13 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       const { event } = ctx.interactionPayload;
       const interactionStorage = await getInteractionStorage(ctx, provider);
 
-      if (event === Event.ForgotPassword) {
-        // Forgot Password specific event interaction session is required
-        assertThat(
-          interactionStorage.event === Event.ForgotPassword,
-          new RequestError({ code: 'session.verification_session_not_found' })
-        );
-      }
+      // Forgot Password specific event interaction can't be shared with other types of interactions
+      assertThat(
+        event === Event.ForgotPassword
+          ? interactionStorage.event === Event.ForgotPassword
+          : interactionStorage.event !== Event.ForgotPassword,
+        new RequestError({ code: 'session.verification_session_not_found' })
+      );
 
       const identifierVerifiedInteraction = await identifierVerification(
         ctx,
