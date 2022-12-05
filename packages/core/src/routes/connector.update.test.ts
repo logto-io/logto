@@ -91,7 +91,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('successfully updates connector configs', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+      getLogtoConnectorsPlaceholder.mockResolvedValue([
         {
           dbEntry: mockConnector,
           metadata: { ...mockMetadata, isStandard: true },
@@ -150,7 +150,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('successfully set syncProfile to `true` and with social connector', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+      getLogtoConnectorsPlaceholder.mockResolvedValue([
         {
           dbEntry: { ...mockConnector, syncProfile: false },
           metadata: mockMetadata,
@@ -170,7 +170,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('successfully set syncProfile to `false`', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+      getLogtoConnectorsPlaceholder.mockResolvedValue([
         {
           dbEntry: { ...mockConnector, syncProfile: false },
           metadata: mockMetadata,

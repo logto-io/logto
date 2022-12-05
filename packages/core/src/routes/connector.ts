@@ -180,7 +180,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const { metadata, type, validateConfig } = await getLogtoConnectorById(id);
+      const { type, validateConfig } = await getLogtoConnectorById(id);
 
       if (body.syncProfile) {
         assertThat(
@@ -193,10 +193,9 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         validateConfig(config);
       }
 
-      // FIXME @Darcy [LOG-4696]: revisit databaseMetadata check when implementing AC
-
-      const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
-      ctx.body = { ...connector, metadata, type };
+      await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
+      const connector = await getLogtoConnectorById(id);
+      ctx.body = transpileLogtoConnector(connector);
 
       return next();
     }

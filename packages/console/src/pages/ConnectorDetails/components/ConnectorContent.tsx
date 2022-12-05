@@ -1,17 +1,16 @@
-import type { Connector, ConnectorResponse, ConnectorMetadata } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { useEffect, useMemo } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 
-import CodeEditor from '@/components/CodeEditor';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
-import FormField from '@/components/FormField';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import ConnectorForm from '@/pages/Connectors/components/ConnectorForm';
+import type { ConnectorFormType } from '@/pages/Connectors/types';
 import { safeParseJson } from '@/utilities/json';
 
 import * as styles from '../index.module.scss';
@@ -25,34 +24,35 @@ type Props = {
 
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { connectorId } = useParams();
   const api = useApi();
+  const methods = useForm<ConnectorFormType>({ reValidateMode: 'onBlur' });
   const {
-    control,
     formState: { isSubmitting, isDirty },
     handleSubmit,
     watch,
     reset,
-  } = useForm<{ configJson: string }>({ reValidateMode: 'onBlur' });
-
-  const defaultConfig = useMemo(() => {
-    const hasData = Object.keys(connectorData.config).length > 0;
-
-    return hasData ? JSON.stringify(connectorData.config, null, 2) : connectorData.configTemplate;
-  }, [connectorData]);
+  } = methods;
 
   useEffect(() => {
-    reset();
-  }, [connectorId, reset]);
+    const { name, logo, logoDark, target } = connectorData.metadata;
+    const { config } = connectorData;
+    reset({
+      target,
+      logo,
+      logoDark: logoDark ?? '',
+      name: name?.en,
+      config: JSON.stringify(config, null, 2),
+    });
+  }, [connectorData, reset]);
 
-  const onSubmit = handleSubmit(async ({ configJson }) => {
-    if (!configJson) {
+  const onSubmit = handleSubmit(async ({ config, ...metadata }) => {
+    if (!config) {
       toast.error(t('connector_details.save_error_empty_config'));
 
       return;
     }
 
-    const result = safeParseJson(configJson);
+    const result = safeParseJson(config);
 
     if (!result.success) {
       toast.error(result.error);
@@ -60,17 +60,22 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       return;
     }
 
-    const { metadata, ...rest } = await api
-      .patch(`/api/connectors/${connectorData.id}`, { json: { config: result.data } })
-      .json<Connector & { metadata: ConnectorMetadata; type: ConnectorType }>();
+    const body = connectorData.isStandard
+      ? { config: result.data, metadata: { ...metadata, name: { en: metadata.name } } }
+      : { config: result.data };
 
-    onConnectorUpdated({ ...rest, ...metadata });
-    reset({ configJson: JSON.stringify(result.data, null, 2) });
+    const updatedConnector = await api
+      .patch(`/api/connectors/${connectorData.id}`, {
+        json: body,
+      })
+      .json<ConnectorResponse>();
+
+    onConnectorUpdated(updatedConnector);
     toast.success(t('general.saved'));
   });
 
   return (
-    <>
+    <FormProvider {...methods}>
       <DetailsForm
         isDirty={isDirty}
         isSubmitting={isSubmitting}
@@ -82,33 +87,19 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
           description="connector_details.settings_description"
           learnMoreLink="https://docs.logto.io/docs/references/connectors"
         >
-          <Controller
-            name="configJson"
-            control={control}
-            defaultValue={defaultConfig}
-            render={({ field: { onChange, value } }) => (
-              <FormField title="connector_details.edit_config_label">
-                <CodeEditor
-                  className={styles.codeEditor}
-                  language="json"
-                  value={value}
-                  onChange={onChange}
-                />
-              </FormField>
-            )}
-          />
+          <ConnectorForm connector={connectorData} />
           {connectorData.type !== ConnectorType.Social && (
             <SenderTester
               className={styles.senderTest}
               connectorId={connectorData.id}
               connectorType={connectorData.type}
-              config={watch('configJson')}
+              config={watch('config')}
             />
           )}
         </FormCard>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
-    </>
+    </FormProvider>
   );
 };
 

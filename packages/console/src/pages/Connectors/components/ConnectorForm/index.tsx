@@ -8,17 +8,17 @@ import CodeEditor from '@/components/CodeEditor';
 import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 
+import type { ConnectorFormType } from '../../types';
 import * as styles from './index.module.scss';
-import type { CreateConnectorForm } from './types';
 
 type Props = {
   connector: ConnectorFactoryResponse;
 };
 
-const Form = ({ connector }: Props) => {
+const ConnectorForm = ({ connector }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { configTemplate, isStandard } = connector;
-  const { control, register } = useFormContext<CreateConnectorForm>();
+  const { control, register } = useFormContext<ConnectorFormType>();
   const [darkVisible, setDarkVisible] = useState(false);
 
   const toggleDarkVisible = () => {
@@ -43,14 +43,6 @@ const Form = ({ connector }: Props) => {
             />
             <div className={styles.tip}>{t('connectors.guide.logo_tip')}</div>
           </FormField>
-          {!darkVisible && (
-            <Button
-              size="small"
-              type="text"
-              title="connectors.guide.logo_dark_show"
-              onClick={toggleDarkVisible}
-            />
-          )}
           {darkVisible && (
             <FormField title="connectors.guide.logo_dark">
               <TextInput
@@ -60,14 +52,16 @@ const Form = ({ connector }: Props) => {
               <div className={styles.tip}>{t('connectors.guide.logo_dark_tip')}</div>
             </FormField>
           )}
-          {darkVisible && (
-            <Button
-              size="small"
-              type="text"
-              title="connectors.guide.logo_dark_collapse"
-              onClick={toggleDarkVisible}
-            />
-          )}
+          <Button
+            size="small"
+            type="text"
+            title={
+              darkVisible
+                ? 'connectors.guide.logo_dark_collapse'
+                : 'connectors.guide.logo_dark_show'
+            }
+            onClick={toggleDarkVisible}
+          />
           <FormField isRequired title="connectors.guide.target">
             <TextInput {...register('target', { required: true })} />
             <div className={styles.tip}>{t('connectors.guide.target_tip')}</div>
@@ -89,4 +83,4 @@ const Form = ({ connector }: Props) => {
   );
 };
 
-export default Form;
+export default ConnectorForm;
