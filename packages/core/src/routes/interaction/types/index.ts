@@ -27,6 +27,7 @@ import type {
   verifiedSignInteractionResultGuard,
   verifiedForgotPasswordInteractionResultGuard,
   registerProfileSafeGuard,
+  forgotPasswordProfileGuard,
 } from './guard.js';
 
 // Payload Types
@@ -57,6 +58,8 @@ export type Identifier = z.infer<typeof identifierGuard>;
 export type AnonymousInteractionResult = z.infer<typeof anonymousInteractionResultGuard>;
 
 export type RegisterSafeProfile = z.infer<typeof registerProfileSafeGuard>;
+
+export type ForgotPasswordProfile = z.infer<typeof forgotPasswordProfileGuard>;
 
 export type VerifiedRegisterInteractionResult = z.infer<
   typeof verifiedRegisterInteractionResultGuard

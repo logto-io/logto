@@ -14,7 +14,7 @@ import {
 } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { registerProfileSafeGuard } from '../types/guard.js';
+import { registerProfileSafeGuard, forgotPasswordProfileGuard } from '../types/guard.js';
 import type {
   InteractionContext,
   Identifier,
@@ -70,7 +70,7 @@ const verifyProfileIdentifiers = (
   }
 };
 
-const profileRegisteredValidation = async (
+const verifyProfileNotRegistered = async (
   { username, email, phone, connectorId }: Profile,
   identifiers: Identifier[] = []
 ) => {
@@ -128,10 +128,7 @@ const profileRegisteredValidation = async (
   }
 };
 
-const profileExistValidation = async (
-  { username, email, phone, password }: Profile,
-  user: User
-) => {
+const verifyProfileNotExist = async ({ username, email, phone, password }: Profile, user: User) => {
   if (username) {
     assertThat(
       !user.username,
@@ -172,9 +169,6 @@ const profileExistValidation = async (
 const isValidRegisterProfile = (profile: Profile): profile is RegisterSafeProfile =>
   registerProfileSafeGuard.safeParse(profile).success;
 
-const hasPasswordInProfile = (profile: Profile): profile is { password: string } =>
-  Boolean(profile.password);
-
 export default async function profileVerification(
   ctx: InteractionContext,
   provider: Provider,
@@ -189,7 +183,7 @@ export default async function profileVerification(
     assertThat(isValidRegisterProfile(profile), new RequestError({ code: 'guard.invalid_input' }));
 
     verifyProfileIdentifiers(profile, identifiers);
-    await profileRegisteredValidation(profile, identifiers);
+    await verifyProfileNotRegistered(profile, identifiers);
 
     const interactionWithProfile: VerifiedRegisterInteractionResult = { ...interaction, profile };
     await storeInteractionResult(interactionWithProfile, ctx, provider);
@@ -201,8 +195,8 @@ export default async function profileVerification(
     verifyProfileIdentifiers(profile, identifiers);
     // Find existing account
     const user = await findUserById(accountId);
-    await profileExistValidation(profile, user);
-    await profileRegisteredValidation(profile, identifiers);
+    await verifyProfileNotExist(profile, user);
+    await verifyProfileNotRegistered(profile, identifiers);
 
     const interactionWithProfile: VerifiedSignInInteractionResult = { ...interaction, profile };
     await storeInteractionResult(interactionWithProfile, ctx, provider);
@@ -211,21 +205,25 @@ export default async function profileVerification(
   }
 
   // Forgot Password
-  if (!hasPasswordInProfile(profile)) {
-    throw new RequestError({ code: 'user.require_new_password', status: 422 });
-  }
+  const passwordProfileResult = forgotPasswordProfileGuard.safeParse(profile);
+  assertThat(
+    passwordProfileResult.success,
+    new RequestError({ code: 'user.require_new_password', status: 422 })
+  );
+
+  const passwordProfile = passwordProfileResult.data;
 
   const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(accountId);
 
   assertThat(
     !oldPasswordEncrypted ||
-      !(await argon2Verify({ password: profile.password, hash: oldPasswordEncrypted })),
+      !(await argon2Verify({ password: passwordProfile.password, hash: oldPasswordEncrypted })),
     new RequestError({ code: 'user.same_password', status: 422 })
   );
 
   const interactionWithProfile: VerifiedForgotPasswordInteractionResult = {
     ...interaction,
-    profile,
+    profile: passwordProfile,
   };
   await storeInteractionResult(interactionWithProfile, ctx, provider);
 

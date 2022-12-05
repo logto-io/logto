@@ -117,10 +117,12 @@ export const verifiedSignInteractionResultGuard = z.object({
   identifiers: z.array(identifierGuard).optional(),
 });
 
+export const forgotPasswordProfileGuard = z.object({
+  password: z.string(),
+});
+
 export const verifiedForgotPasswordInteractionResultGuard = z.object({
   event: z.literal(Event.ForgotPassword),
   accountId: z.string(),
-  profile: z.object({
-    password: z.string(),
-  }),
+  profile: forgotPasswordProfileGuard,
 });
