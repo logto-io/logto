@@ -43,6 +43,9 @@ const connectors = {
     target: '连接器 target',
     target_tip: '连接器标识符',
     config: '请在此输入你的 JSON 配置',
+    sync_profile: '从社交服务商同步用户数据',
+    sync_profile_only_at_register: '仅在注册时同步',
+    sync_profile_each_sign_in: '每次登录都同步',
   },
   platform: {
     universal: '通用',

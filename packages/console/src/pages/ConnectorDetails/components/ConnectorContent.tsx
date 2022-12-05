@@ -11,6 +11,7 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import ConnectorForm from '@/pages/Connectors/components/ConnectorForm';
 import type { ConnectorFormType } from '@/pages/Connectors/types';
+import { SyncProfileMode } from '@/pages/Connectors/types';
 import { safeParseJson } from '@/utilities/json';
 
 import * as styles from '../index.module.scss';
@@ -25,7 +26,12 @@ type Props = {
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
-  const methods = useForm<ConnectorFormType>({ reValidateMode: 'onBlur' });
+  const methods = useForm<ConnectorFormType>({
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      syncProfile: SyncProfileMode.OnlyAtRegister,
+    },
+  });
   const {
     formState: { isSubmitting, isDirty },
     handleSubmit,
@@ -35,17 +41,18 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
 
   useEffect(() => {
     const { name, logo, logoDark, target } = connectorData.metadata;
-    const { config } = connectorData;
+    const { config, syncProfile } = connectorData;
     reset({
       target,
       logo,
       logoDark: logoDark ?? '',
       name: name?.en,
       config: JSON.stringify(config, null, 2),
+      syncProfile: syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,
     });
   }, [connectorData, reset]);
 
-  const onSubmit = handleSubmit(async ({ config, ...metadata }) => {
+  const onSubmit = handleSubmit(async ({ config, syncProfile, ...metadata }) => {
     if (!config) {
       toast.error(t('connector_details.save_error_empty_config'));
 
@@ -60,9 +67,15 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       return;
     }
 
-    const body = connectorData.isStandard
-      ? { config: result.data, metadata: { ...metadata, name: { en: metadata.name } } }
-      : { config: result.data };
+    const payload = {
+      config: result.data,
+      syncProfile: syncProfile === SyncProfileMode.EachSignIn,
+    };
+    const standardConnectorPayload = {
+      ...payload,
+      metadata: { ...metadata, name: { en: metadata.name } },
+    };
+    const body = connectorData.isStandard ? standardConnectorPayload : payload;
 
     const updatedConnector = await api
       .patch(`/api/connectors/${connectorData.id}`, {

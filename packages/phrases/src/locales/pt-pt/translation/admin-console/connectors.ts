@@ -45,6 +45,9 @@ const connectors = {
     target: 'Connector identity target', // UNTRANSLATED
     target_tip: 'A unique identifier for the connector.', // UNTRANSLATED
     config: 'Enter your JSON here', // UNTRANSLATED
+    sync_profile: 'Sync profile information form the social provider', // UNTRANSLATED
+    sync_profile_only_at_register: 'Only sync at register', // UNTRANSLATED
+    sync_profile_each_sign_in: 'Always sync at each sign-in', // UNTRANSLATED
   },
   platform: {
     universal: 'Universal',
