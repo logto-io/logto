@@ -1,5 +1,6 @@
 import type { User } from '@logto/schemas';
 import { Event } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
@@ -47,8 +48,8 @@ const getSocialUpdateProfile = async ({
   const profileUpdate =
     syncProfile || !user // Always sync profile on register
       ? {
-          ...(name ? { name } : undefined),
-          ...(avatar ? { avatar } : undefined),
+          ...conditional(name && { name }),
+          ...conditional(avatar && { avatar }),
         }
       : undefined;
 
@@ -68,12 +69,17 @@ const parseUserProfile = async (
 
   const { phone, username, email, connectorId, password } = profile;
 
+  const [passwordProfile, socialProfile] = await Promise.all([
+    conditional(password && (await encryptUserPassword(password))),
+    conditional(connectorId && (await getSocialUpdateProfile({ connectorId, identifiers, user }))),
+  ]);
+
   return {
-    ...(phone ? { primaryPhone: phone } : undefined),
-    ...(username ? { username } : undefined),
-    ...(email ? { primaryEmail: email } : undefined),
-    ...(password ? await encryptUserPassword(password) : undefined),
-    ...(connectorId ? await getSocialUpdateProfile({ connectorId, identifiers, user }) : undefined),
+    ...conditional(phone && { primaryPhone: phone }),
+    ...conditional(username && { username }),
+    ...conditional(email && { primaryEmail: email }),
+    ...passwordProfile,
+    ...socialProfile,
     lastSignInAt: Date.now(),
   };
 };
