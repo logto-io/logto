@@ -17,9 +17,10 @@ import * as styles from './index.module.scss';
 
 type Props = {
   connector: ConnectorFactoryResponse;
+  isAllowEditTarget?: boolean;
 };
 
-const ConnectorForm = ({ connector }: Props) => {
+const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { configTemplate, isStandard } = connector;
   const {
@@ -86,6 +87,7 @@ const ConnectorForm = ({ connector }: Props) => {
           <FormField isRequired title="connectors.guide.target">
             <TextInput
               hasError={Boolean(errors.target)}
+              disabled={!isAllowEditTarget}
               {...register('target', { required: true })}
             />
             <div className={styles.tip}>{t('connectors.guide.target_tip')}</div>

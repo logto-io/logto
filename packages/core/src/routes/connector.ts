@@ -197,6 +197,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       if (config) {
         validateConfig(config);
       }
+      // Once created, target can not be modified.
+      assertThat(body.metadata?.target === undefined, 'connector.can_not_modify_target');
 
       const { metadata: databaseMetadata, ...rest } = body;
       await updateConnector({
