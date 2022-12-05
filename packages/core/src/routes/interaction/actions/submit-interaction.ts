@@ -45,13 +45,12 @@ const getSocialUpdateProfile = async ({
   const { userInfo } = socialIdentifier;
   const { name, avatar, id } = userInfo;
 
-  const profileUpdate =
-    syncProfile || !user // Always sync profile on register
-      ? {
-          ...conditional(name && { name }),
-          ...conditional(avatar && { avatar }),
-        }
-      : undefined;
+  const profileUpdate = conditional(
+    (syncProfile || !user) && {
+      ...conditional(name && { name }),
+      ...conditional(avatar && { avatar }),
+    }
+  );
 
   return {
     identities: { ...user?.identities, [target]: { userId: id, details: userInfo } },

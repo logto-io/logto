@@ -76,4 +76,21 @@ describe('forgot password interaction profile verification', () => {
     expect(argon2Verify).toBeCalledWith({ password: 'password', hash: 'passwordHash' });
     expect(storeInteractionResult).not.toBeCalled();
   });
+
+  it('proper set password', async () => {
+    const ctx: InteractionContext = {
+      ...baseCtx,
+      interactionPayload: {
+        event: Event.ForgotPassword,
+        profile: {
+          password: 'password',
+        },
+      },
+    };
+
+    await expect(profileVerification(ctx, provider, interaction)).resolves.not.toThrow();
+    expect(findUserById).toBeCalledWith(interaction.accountId);
+    expect(argon2Verify).toBeCalledWith({ password: 'password', hash: 'passwordHash' });
+    expect(storeInteractionResult).toBeCalled();
+  });
 });
