@@ -44,12 +44,13 @@ const getSocialUpdateProfile = async ({
   const { userInfo } = socialIdentifier;
   const { name, avatar, id } = userInfo;
 
-  const profileUpdate = syncProfile
-    ? {
-        ...(name ? { name } : undefined),
-        ...(avatar ? { avatar } : undefined),
-      }
-    : undefined;
+  const profileUpdate =
+    syncProfile || !user // Always sync profile on register
+      ? {
+          ...(name ? { name } : undefined),
+          ...(avatar ? { avatar } : undefined),
+        }
+      : undefined;
 
   return {
     identities: { ...user?.identities, [target]: { userId: id, details: userInfo } },
