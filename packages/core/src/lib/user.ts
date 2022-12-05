@@ -7,8 +7,9 @@ import pRetry from 'p-retry';
 
 import { buildInsertInto } from '#src/database/insert-into.js';
 import envSet from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { findRolesByRoleNames, insertRoles } from '#src/queries/roles.js';
-import { hasUserWithId } from '#src/queries/user.js';
+import { hasUser, hasUserWithEmail, hasUserWithId, hasUserWithPhone } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 import { encryptPassword } from '#src/utils/password.js';
 
@@ -87,4 +88,27 @@ export const insertUser: typeof insertUserQuery = async ({ roleNames, ...rest })
   }
 
   return insertUserQuery({ roleNames: computedRoleNames, ...rest });
+};
+
+export const checkIdentifierCollision = async (
+  identifiers: {
+    username?: Nullable<string>;
+    primaryEmail?: Nullable<string>;
+    primaryPhone?: Nullable<string>;
+  },
+  excludeUserId?: string
+) => {
+  const { username, primaryEmail, primaryPhone } = identifiers;
+
+  if (username && (await hasUser(username, excludeUserId))) {
+    throw new RequestError({ code: 'user.username_exists', status: 422 });
+  }
+
+  if (primaryEmail && (await hasUserWithEmail(primaryEmail, excludeUserId))) {
+    throw new RequestError({ code: 'user.email_exists', status: 422 });
+  }
+
+  if (primaryPhone && (await hasUserWithPhone(primaryPhone, excludeUserId))) {
+    throw new RequestError({ code: 'user.sms_exists', status: 422 });
+  }
 };

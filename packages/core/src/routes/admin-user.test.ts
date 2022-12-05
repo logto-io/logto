@@ -66,6 +66,7 @@ jest.mock('#src/queries/user.js', () => ({
 }));
 
 jest.mock('#src/lib/user.js', () => ({
+  ...jest.requireActual('#src/lib/user.js'),
   generateUserId: jest.fn(() => 'fooId'),
   encryptUserPassword: jest.fn(() => ({
     passwordEncrypted: 'password',
