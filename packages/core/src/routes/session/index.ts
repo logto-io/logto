@@ -18,7 +18,6 @@ import forgotPasswordRoutes from './forgot-password.js';
 import koaGuardSessionAction from './middleware/koa-guard-session-action.js';
 import passwordRoutes from './password.js';
 import passwordlessRoutes from './passwordless.js';
-import profileRoutes from './profile.js';
 import socialRoutes from './social.js';
 import { getRoutePrefix } from './utils.js';
 
@@ -106,5 +105,4 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   socialRoutes(router, provider);
   continueRoutes(router, provider);
   forgotPasswordRoutes(router, provider);
-  profileRoutes(router, provider);
 }

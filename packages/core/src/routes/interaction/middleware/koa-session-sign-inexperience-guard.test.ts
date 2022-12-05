@@ -39,6 +39,7 @@ describe('koaSessionSignInExperienceGuard', () => {
         identifier: { username: 'username', password: 'password' },
         profile: { email: 'email' },
       }),
+      signInExperience: mockSignInExperience,
     };
 
     await koaSessionSignInExperienceGuard(new Provider(''))(ctx, next);

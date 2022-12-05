@@ -10,16 +10,15 @@ import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { checkSessionHealth } from '#src/lib/session.js';
 import { getUserInfoByAuthCode } from '#src/lib/social.js';
-import { encryptUserPassword } from '#src/lib/user.js';
+import { checkIdentifierCollision, encryptUserPassword } from '#src/lib/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { deleteUserIdentity, findUserById, updateUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types.js';
 import { verificationTimeout } from './consts.js';
-import { checkSignUpIdentifierCollision } from './utils.js';
+import type { AnonymousRouter } from './types.js';
 
-export const profileRoute = '/session/profile';
+export const profileRoute = '/profile';
 
 export default function profileRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.get(profileRoute, async (ctx, next) => {
@@ -30,6 +29,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
     const user = await findUserById(userId);
 
     ctx.body = pick(user, ...userInfoSelectFields);
+    ctx.status = 200;
 
     return next();
   });
@@ -70,7 +70,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
 
       const { username } = ctx.guard.body;
 
-      await checkSignUpIdentifierCollision({ username }, userId);
+      await checkIdentifierCollision({ username }, userId);
 
       const user = await updateUserById(userId, { username }, 'replace');
 
@@ -120,7 +120,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
 
       const { primaryEmail } = ctx.guard.body;
 
-      await checkSignUpIdentifierCollision({ primaryEmail });
+      await checkIdentifierCollision({ primaryEmail });
       await updateUserById(userId, { primaryEmail });
 
       ctx.status = 204;
@@ -157,7 +157,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
 
       const { primaryPhone } = ctx.guard.body;
 
-      await checkSignUpIdentifierCollision({ primaryPhone });
+      await checkIdentifierCollision({ primaryPhone });
       await updateUserById(userId, { primaryPhone });
 
       ctx.status = 204;

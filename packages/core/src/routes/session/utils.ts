@@ -13,10 +13,10 @@ import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/
 import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
 import { verifyUserPassword } from '#src/lib/user.js';
 import type { LogContext } from '#src/middleware/koa-log.js';
-import { hasUser, hasUserWithEmail, hasUserWithPhone, updateUserById } from '#src/queries/user.js';
+import { updateUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { continueSignInTimeout, verificationTimeout } from './consts.js';
+import { continueSignInTimeout, verificationTimeout } from '../consts.js';
 import type { Method, Operation, VerificationResult, VerificationStorage } from './types.js';
 import { continueSignInStorageGuard } from './types.js';
 
@@ -195,29 +195,6 @@ export const checkRequiredProfile = async (
   }
 };
 /* eslint-enable complexity */
-
-export const checkSignUpIdentifierCollision = async (
-  identifiers: {
-    username?: Nullable<string>;
-    primaryEmail?: Nullable<string>;
-    primaryPhone?: Nullable<string>;
-  },
-  excludeUserId?: string
-) => {
-  const { username, primaryEmail, primaryPhone } = identifiers;
-
-  if (username && (await hasUser(username, excludeUserId))) {
-    throw new RequestError({ code: 'user.username_exists', status: 422 });
-  }
-
-  if (primaryEmail && (await hasUserWithEmail(primaryEmail, excludeUserId))) {
-    throw new RequestError({ code: 'user.email_exists', status: 422 });
-  }
-
-  if (primaryPhone && (await hasUserWithPhone(primaryPhone, excludeUserId))) {
-    throw new RequestError({ code: 'user.sms_exists', status: 422 });
-  }
-};
 
 type SignInWithPasswordParameter = {
   identifier: SignInIdentifier;

@@ -6,9 +6,11 @@ const dashboard = {
   new_users_today: 'Novos usuários hoje',
   new_users_today_tip: 'O número de novos usuários registrados em seus aplicativos hoje',
   new_users_7_days: 'Novos usuários nos últimos 7 dias',
-  new_users_7_days_tip: 'O número de novos usuários registrados em seus aplicativos nos últimos 7 dias',
+  new_users_7_days_tip:
+    'O número de novos usuários registrados em seus aplicativos nos últimos 7 dias',
   daily_active_users: 'Usuários ativos diariamente',
-  daily_active_users_tip: 'O número de tokens trocados por usuários únicos em seus aplicativos hoje',
+  daily_active_users_tip:
+    'O número de tokens trocados por usuários únicos em seus aplicativos hoje',
   weekly_active_users: 'Usuários ativos semanalmente',
   weekly_active_users_tip:
     'O número de tokens trocados por usuários únicos em seus aplicativos nos últimos 7 dias',

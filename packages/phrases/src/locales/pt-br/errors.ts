@@ -58,6 +58,7 @@ const errors = {
       'Você precisa adicionar um endereço de e-mail ou número de telefone antes de fazer login.',
     suspended: 'Esta conta está suspensa.',
     user_not_exist: 'O usuário com {{ identity }} ainda não existe',
+    missing_profile: 'Você precisa fornecer informações adicionais antes de fazer login.',
   },
   password: {
     unsupported_encryption_method: 'O método de criptografia {{name}} não é suportado.',

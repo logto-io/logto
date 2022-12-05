@@ -3,8 +3,8 @@ import koaBody from 'koa-body';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
-import type { InteractionPayload } from '../types/guard.js';
 import { interactionPayloadGuard } from '../types/guard.js';
+import type { InteractionPayload } from '../types/index.js';
 
 export type WithGuardedIdentifierPayloadContext<ContextT> = ContextT & {
   interactionPayload: InteractionPayload;

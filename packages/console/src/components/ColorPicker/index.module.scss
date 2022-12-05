@@ -47,9 +47,7 @@
   }
 
   label {
-    display: flex;
-    align-items: center;
-    position: relative;
+    flex: 1;
     margin-left: _.unit(2);
   }
 }

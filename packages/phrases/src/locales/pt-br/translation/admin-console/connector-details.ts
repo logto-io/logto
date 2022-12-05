@@ -13,7 +13,8 @@ const connector_details = {
   test_email_placeholder: 'Insira um endereço de e-mail de teste',
   test_sms_placeholder: 'Digite um número de telefone de teste',
   test_message_sent: 'Mensagem de teste enviada!',
-  test_sender_description: 'Você receberá uma mensagem se seu json estiver configurado corretamente',
+  test_sender_description:
+    'Você receberá uma mensagem se seu json estiver configurado corretamente',
   options_change_email: 'Alterar conector de e-mail',
   options_change_sms: 'Alterar conector de SMS',
   connector_deleted: 'O conector foi excluído com sucesso',

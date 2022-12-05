@@ -57,6 +57,7 @@ const errors = {
     require_email_or_sms: 'You need to add an email address or phone number before signing-in.',
     suspended: 'This account is suspended.',
     user_not_exist: 'User with {{ identity }} has not been registered yet',
+    missing_profile: 'You need to provide additional info before signing-in.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',

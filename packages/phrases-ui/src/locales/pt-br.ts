@@ -47,8 +47,7 @@ const translation = {
     resend_after_seconds: 'Reenviar depois <span>{{seconds}}</span> segundos',
     resend_passcode: 'Reenviar código de verificação',
     continue_with: 'Continue com',
-    create_account_id_exists:
-      'A conta com {{type}} {{value}} já existe, gostaria de entrar?',
+    create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de entrar?',
     sign_in_id_does_not_exists:
       'A conta com {{type}} {{value}} não existe, gostaria de criar uma nova conta?',
     sign_in_id_does_not_exists_alert: 'A conta com {{type}} {{value}} não existe.',
@@ -56,7 +55,8 @@ const translation = {
     bind_account_title: 'Link da conta',
     social_create_account: 'Sem conta? Você pode criar uma nova conta e link.',
     social_bind_account: 'Já tinha uma conta? Faça login para vinculá-lo à sua identidade social.',
-    social_bind_with_existing: 'Encontramos uma conta relacionada, você pode vinculá-la diretamente.',
+    social_bind_with_existing:
+      'Encontramos uma conta relacionada, você pode vinculá-la diretamente.',
     reset_password: 'Redefinir senha',
     reset_password_description_email:
       'Digite o endereço de e-mail associado à sua conta e enviaremos por e-mail o código de verificação para redefinir sua senha.',

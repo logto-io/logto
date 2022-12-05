@@ -18,9 +18,10 @@ import useSettings from '@/hooks/use-settings';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
 import { safeParseJson } from '@/utilities/json';
 
-import Form from './Form';
+import type { ConnectorFormType } from '../../types';
+import { SyncProfileMode } from '../../types';
+import ConnectorForm from '../ConnectorForm';
 import * as styles from './index.module.scss';
-import type { CreateConnectorForm } from './types';
 
 type Props = {
   connector: ConnectorFactoryResponse;
@@ -36,7 +37,12 @@ const Guide = ({ connector, onClose }: Props) => {
   const connectorName = conditional(isLanguageTag(language) && name[language]) ?? name.en;
   const isSocialConnector =
     connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
-  const methods = useForm<CreateConnectorForm>({ reValidateMode: 'onBlur' });
+  const methods = useForm<ConnectorFormType>({
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      syncProfile: SyncProfileMode.OnlyAtRegister,
+    },
+  });
   const {
     formState: { isSubmitting },
     handleSubmit,
@@ -48,7 +54,7 @@ const Guide = ({ connector, onClose }: Props) => {
       return;
     }
 
-    const { config, name, ...otherData } = data;
+    const { config, name, syncProfile, ...otherData } = data;
     const result = safeParseJson(config);
 
     if (!result.success) {
@@ -64,6 +70,7 @@ const Guide = ({ connector, onClose }: Props) => {
         json: {
           config: result.data,
           connectorId,
+          syncProfile: syncProfile === SyncProfileMode.EachSignIn,
           metadata: conditional(
             isStandard && {
               ...otherData,
@@ -102,7 +109,7 @@ const Guide = ({ connector, onClose }: Props) => {
           <div className={styles.title}>{t('connectors.guide.connector_setting')}</div>
           <FormProvider {...methods}>
             <form onSubmit={onSubmit}>
-              <Form connector={connector} />
+              <ConnectorForm connector={connector} />
               {!isSocialConnector && (
                 <SenderTester
                   className={styles.tester}

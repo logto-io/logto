@@ -177,7 +177,7 @@ const profileExistValidation = async (
 export default async function profileVerification(
   ctx: InteractionContext,
   identifiers: Identifier[]
-) {
+): Promise<Profile | undefined> {
   const { profile, event } = ctx.interactionPayload;
 
   if (!profile) {
@@ -193,7 +193,7 @@ export default async function profileVerification(
     await profileExistValidation(profile, user);
     await profileRegisteredValidation(profile, identifiers);
 
-    return;
+    return profile;
   }
 
   if (event === Event.Register) {
@@ -206,7 +206,7 @@ export default async function profileVerification(
 
     await profileRegisteredValidation(profile, identifiers);
 
-    return;
+    return profile;
   }
 
   // ForgotPassword
@@ -216,4 +216,6 @@ export default async function profileVerification(
     !oldPasswordEncrypted || !(await argon2Verify({ password, hash: oldPasswordEncrypted })),
     new RequestError({ code: 'user.same_password', status: 422 })
   );
+
+  return profile;
 }
