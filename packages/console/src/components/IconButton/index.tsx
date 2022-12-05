@@ -8,10 +8,11 @@ import * as styles from './index.module.scss';
 export type Props = Omit<HTMLProps<HTMLButtonElement>, 'size' | 'type'> & {
   size?: 'small' | 'medium' | 'large';
   tooltip?: ReactNode;
+  iconClassName?: string;
 };
 
 const IconButton = (
-  { size = 'medium', children, className, tooltip, ...rest }: Props,
+  { size = 'medium', children, className, tooltip, iconClassName, ...rest }: Props,
   reference: ForwardedRef<HTMLButtonElement>
 ) => {
   const tipRef = useRef<HTMLDivElement>(null);
@@ -23,7 +24,7 @@ const IconButton = (
       className={classNames(styles.button, styles[size], className)}
       {...rest}
     >
-      <div ref={tipRef} className={styles.icon}>
+      <div ref={tipRef} className={classNames(styles.icon, iconClassName)}>
         {children}
       </div>
       {tooltip && (

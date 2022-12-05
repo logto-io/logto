@@ -9,7 +9,7 @@
   cursor: default;
 
   &.contained {
-    padding: _.unit(1) _.unit(1) _.unit(1) _.unit(3);
+    padding: _.unit(1) _.unit(2);
     background: var(--color-layer-2);
   }
 
@@ -31,12 +31,16 @@
       text-overflow: ellipsis;
     }
 
-    .copyIcon {
+    .copyIconButton {
       margin-left: _.unit(3);
+      height: 20px;
+      width: 20px;
 
-      svg {
-        width: 16px;
-        height: 16px;
+      .copyIcon {
+        svg {
+          width: 16px;
+          height: 16px;
+        }
       }
     }
   }

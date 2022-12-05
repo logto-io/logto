@@ -28,7 +28,7 @@ const CopyToClipboard = ({
   hasVisibilityToggle,
   variant = 'contained',
 }: Props) => {
-  const copyIconReference = useRef<HTMLDivElement>(null);
+  const copyIconReference = useRef<HTMLButtonElement>(null);
   const [copyState, setCopyState] = useState<CopyState>('copy');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.general' });
   const [showHiddenContent, setShowHiddenContent] = useState(false);
@@ -78,11 +78,14 @@ const CopyToClipboard = ({
             </IconButton>
           </div>
         )}
-        <div ref={copyIconReference} className={styles.copyIcon}>
-          <IconButton onClick={copy}>
-            <Copy />
-          </IconButton>
-        </div>
+        <IconButton
+          ref={copyIconReference}
+          className={styles.copyIconButton}
+          iconClassName={styles.copyIcon}
+          onClick={copy}
+        >
+          <Copy />
+        </IconButton>
         <Tooltip
           anchorRef={copyIconReference}
           content={t(copyState)}
