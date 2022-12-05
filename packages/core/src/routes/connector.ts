@@ -107,7 +107,6 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         syncProfile: true,
       }),
     }),
-    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         body: { connectorId },
@@ -138,19 +137,11 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const insertConnectorId = generateConnectorId();
       const { metadata, ...rest } = body;
 
-      const isMetadataEmpty = !metadata || Object.entries(cleanDeep(metadata)).length === 0;
-      ctx.body = await insertConnector(
-        isMetadataEmpty
-          ? {
-              id: insertConnectorId,
-              ...rest,
-            }
-          : {
-              id: insertConnectorId,
-              metadata: cleanDeep(metadata),
-              ...rest,
-            }
-      );
+      ctx.body = await insertConnector({
+        id: insertConnectorId,
+        ...(metadata && { metadata: cleanDeep(metadata) }),
+        ...rest,
+      });
 
       /**
        * We can have only one working email/sms connector:
@@ -206,11 +197,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         validateConfig(config);
       }
 
-      // FIXME @Darcy [LOG-4696]: revisit databaseMetadata check when implementing AC
-
       const { metadata: databaseMetadata, ...rest } = body;
-      const isMetadataEmpty =
-        !databaseMetadata || Object.entries(cleanDeep(databaseMetadata)).length === 0;
+      const isMetadataEmpty = !databaseMetadata;
       await updateConnector({
         set: isMetadataEmpty ? rest : { metadata: cleanDeep(databaseMetadata), ...rest },
         where: { id },
