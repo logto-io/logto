@@ -9,7 +9,7 @@ import { mockSignInExperience, mockSignInMethod, mockUser } from '#src/__mocks__
 import RequestError from '#src/errors/RequestError/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import { verificationTimeout } from './consts.js';
+import { verificationTimeout } from '../consts.js';
 import * as passwordlessActions from './middleware/passwordless-action.js';
 import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless.js';
 

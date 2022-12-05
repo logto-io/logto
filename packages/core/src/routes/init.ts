@@ -4,26 +4,26 @@ import mount from 'koa-mount';
 import Router from 'koa-router';
 import type { Provider } from 'oidc-provider';
 
-import koaAuth from '#src/middleware/koa-auth.js';
-import koaLogSession from '#src/middleware/koa-log-session.js';
-import adminUserRoutes from '#src/routes/admin-user.js';
-import applicationRoutes from '#src/routes/application.js';
-import authnRoutes from '#src/routes/authn.js';
-import connectorRoutes from '#src/routes/connector.js';
-import customPhraseRoutes from '#src/routes/custom-phrase.js';
-import dashboardRoutes from '#src/routes/dashboard.js';
-import logRoutes from '#src/routes/log.js';
-import phraseRoutes from '#src/routes/phrase.js';
-import resourceRoutes from '#src/routes/resource.js';
-import roleRoutes from '#src/routes/role.js';
-import sessionRoutes from '#src/routes/session/index.js';
-import settingRoutes from '#src/routes/setting.js';
-import signInExperiencesRoutes from '#src/routes/sign-in-experience.js';
-import statusRoutes from '#src/routes/status.js';
-import swaggerRoutes from '#src/routes/swagger.js';
-import wellKnownRoutes from '#src/routes/well-known.js';
-
+import koaAuth from '../middleware/koa-auth.js';
+import koaLogSession from '../middleware/koa-log-session.js';
+import adminUserRoutes from './admin-user.js';
+import applicationRoutes from './application.js';
+import authnRoutes from './authn.js';
+import connectorRoutes from './connector.js';
+import customPhraseRoutes from './custom-phrase.js';
+import dashboardRoutes from './dashboard.js';
+import logRoutes from './log.js';
+import phraseRoutes from './phrase.js';
+import profileRoutes from './profile.js';
+import resourceRoutes from './resource.js';
+import roleRoutes from './role.js';
+import sessionRoutes from './session/index.js';
+import settingRoutes from './setting.js';
+import signInExperiencesRoutes from './sign-in-experience.js';
+import statusRoutes from './status.js';
+import swaggerRoutes from './swagger.js';
 import type { AnonymousRouter, AuthedRouter } from './types.js';
+import wellKnownRoutes from './well-known.js';
 
 const createRouters = (provider: Provider) => {
   const sessionRouter: AnonymousRouter = new Router();
@@ -43,15 +43,18 @@ const createRouters = (provider: Provider) => {
   dashboardRoutes(managementRouter);
   customPhraseRoutes(managementRouter);
 
+  const profileRouter: AnonymousRouter = new Router();
+  profileRoutes(profileRouter, provider);
+
   const anonymousRouter: AnonymousRouter = new Router();
   phraseRoutes(anonymousRouter, provider);
   wellKnownRoutes(anonymousRouter, provider);
   statusRoutes(anonymousRouter);
   authnRoutes(anonymousRouter);
   // The swagger.json should contain all API routers.
-  swaggerRoutes(anonymousRouter, [sessionRouter, managementRouter, anonymousRouter]);
+  swaggerRoutes(anonymousRouter, [sessionRouter, profileRouter, managementRouter, anonymousRouter]);
 
-  return [sessionRouter, managementRouter, anonymousRouter];
+  return [sessionRouter, profileRouter, managementRouter, anonymousRouter];
 };
 
 export default function initRouter(app: Koa, provider: Provider) {

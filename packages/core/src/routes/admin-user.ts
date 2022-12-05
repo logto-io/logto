@@ -6,7 +6,12 @@ import { boolean, literal, object, string } from 'zod';
 
 import { isTrue } from '#src/env-set/parameters.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { encryptUserPassword, generateUserId, insertUser } from '#src/lib/user.js';
+import {
+  checkIdentifierCollision,
+  encryptUserPassword,
+  generateUserId,
+  insertUser,
+} from '#src/lib/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { revokeInstanceByUserId } from '#src/queries/oidc-model-instance.js';
@@ -23,7 +28,6 @@ import {
 } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { checkSignUpIdentifierCollision } from './session/utils.js';
 import type { AuthedRouter } from './types.js';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
@@ -187,7 +191,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       await findUserById(userId);
-      await checkSignUpIdentifierCollision(body, userId);
+      await checkIdentifierCollision(body, userId);
 
       // Temp solution to validate the existence of input roleNames
       if (body.roleNames?.length) {
