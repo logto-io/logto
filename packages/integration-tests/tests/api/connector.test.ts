@@ -7,6 +7,8 @@ import {
   mockSmsConnectorId,
   mockSocialConnectorConfig,
   mockSocialConnectorId,
+  mockStandardEmailConnectorConfig,
+  mockStandardEmailConnectorId,
 } from '@/__mocks__/connectors-mock';
 import {
   deleteConnectorById,
@@ -69,15 +71,30 @@ test('connector set-up flow', async () => {
   /*
    * Change to another SMS/Email connector
    */
-  // FIXME @Darcy [LOG-4750,4751]: complete this IT after add another mock sms/email connector (or other current existing connector could be affected)
+  const { id } = await postConnector(mockStandardEmailConnectorId);
+  await updateConnectorConfig(id, mockStandardEmailConnectorConfig);
+  connectorIdMap.set(mockStandardEmailConnectorId, id);
+  const currentConnectors = await listConnectors();
+  expect(
+    currentConnectors.filter((connector) => connector.connectorId === mockEmailConnectorId).length
+  ).toEqual(0);
+  expect(
+    currentConnectors.filter((connector) => connector.connectorId === mockStandardEmailConnectorId)
+      .length
+  ).toEqual(1);
+  expect(
+    currentConnectors.find((connector) => connector.connectorId === mockStandardEmailConnectorId)
+      ?.config
+  ).toEqual(mockStandardEmailConnectorConfig);
+  connectorIdMap.delete(mockEmailConnectorId);
 
   /*
    * Delete (i.e. disable) a connector
    */
   await expect(
-    deleteConnectorById(connectorIdMap.get(mockEmailConnectorId))
+    deleteConnectorById(connectorIdMap.get(mockStandardEmailConnectorId))
   ).resolves.not.toThrow();
-  connectorIdMap.delete(mockEmailConnectorId);
+  connectorIdMap.delete(mockStandardEmailConnectorId);
 
   /**
    * List connectors after manually setting up connectors.
@@ -130,4 +147,9 @@ test('send SMS/email test message', async () => {
   ).resolves.not.toThrow();
   await expect(sendSmsTestMessage(mockSmsConnectorId, phone, {})).rejects.toThrow(HTTPError);
   await expect(sendEmailTestMessage(mockEmailConnectorId, email, {})).rejects.toThrow(HTTPError);
+
+  for (const [_connectorId, id] of connectorIdMap.entries()) {
+    // eslint-disable-next-line no-await-in-loop
+    await deleteConnectorById(id);
+  }
 });

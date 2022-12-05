@@ -14,6 +14,7 @@ import {
   deleteUserIdentity,
   postConnector,
   updateConnectorConfig,
+  deleteConnectorById,
 } from '@/api';
 import { createUserByAdmin, bindSocialToNewCreatedUser } from '@/helpers';
 
@@ -81,5 +82,7 @@ describe('admin console user management', () => {
     const updatedUser = await getUser(createdUserId);
 
     expect(updatedUser.identities).not.toHaveProperty(mockSocialConnectorTarget);
+
+    await deleteConnectorById(id);
   });
 });
