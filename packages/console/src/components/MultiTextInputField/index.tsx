@@ -8,14 +8,14 @@ import MultiTextInput from '../MultiTextInput';
 import * as styles from './index.module.scss';
 
 type Props = MultiTextInputProps &
-  Pick<FormFieldProps, 'isRequired' | 'tooltip'> & {
+  Pick<FormFieldProps, 'isRequired' | 'tip'> & {
     formFieldClassName?: FormFieldProps['className'];
   };
 
 const MultiTextInputField = ({
   title,
   isRequired,
-  tooltip,
+  tip,
   formFieldClassName,
   value,
   ...rest
@@ -23,7 +23,7 @@ const MultiTextInputField = ({
   <FormField
     title={title}
     isRequired={isRequired}
-    tooltip={tooltip}
+    tip={tip}
     className={formFieldClassName}
     headlineClassName={conditional(value && value.length > 1 && styles.headlineWithMultiInputs)}
   >
