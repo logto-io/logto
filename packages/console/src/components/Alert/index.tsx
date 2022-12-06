@@ -36,11 +36,7 @@ const Alert = ({
         <Info />
       </div>
       <div className={styles.content}>{children}</div>
-      {action && href && (
-        <div className={styles.action}>
-          <TextLink to={href}>{t(action)}</TextLink>
-        </div>
-      )}
+      {action && href && <TextLink to={href}>{t(action)}</TextLink>}
       {action && onClick && (
         <div className={styles.action}>
           <Button title={action} type="text" size="small" onClick={onClick} />
