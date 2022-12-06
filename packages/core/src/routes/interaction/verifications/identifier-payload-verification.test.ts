@@ -5,7 +5,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { verifyUserPassword } from '#src/lib/user.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import type { VerifiedPhoneIdentifier } from '../types/index.js';
+import type { AnonymousInteractionResult, VerifiedPhoneIdentifier } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
 import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
 import { verifySocialIdentity } from '../utils/social-verification.js';
@@ -215,6 +215,96 @@ describe('identifier verification', () => {
         { key: 'social', connectorId: identifier.connectorId, userInfo: { id: 'foo' } },
       ],
     });
+  });
+
+  it('verified social email', async () => {
+    const interactionRecord: AnonymousInteractionResult = {
+      event: Event.SignIn,
+      identifiers: [
+        {
+          key: 'social',
+          connectorId: 'logto',
+          userInfo: {
+            id: 'foo',
+            email: 'email@logto.io',
+          },
+        },
+      ],
+    };
+
+    const identifierPayload = { connectorId: 'logto', identityType: 'email' };
+
+    const ctx = {
+      ...baseCtx,
+      interactionPayload: Object.freeze({
+        event: Event.SignIn,
+        identifier: identifierPayload,
+      }),
+    };
+
+    const result = await identifierPayloadVerification(ctx, new Provider(''), interactionRecord);
+    expect(result).toEqual({
+      event: Event.SignIn,
+      identifiers: [
+        {
+          key: 'social',
+          connectorId: 'logto',
+          userInfo: {
+            id: 'foo',
+            email: 'email@logto.io',
+          },
+        },
+        {
+          key: 'emailVerified',
+          value: 'email@logto.io',
+        },
+      ],
+    });
+  });
+
+  it('verified social email should throw if social session not found', async () => {
+    const identifierPayload = { connectorId: 'logto', identityType: 'email' };
+
+    const ctx = {
+      ...baseCtx,
+      interactionPayload: Object.freeze({
+        event: Event.SignIn,
+        identifier: identifierPayload,
+      }),
+    };
+
+    await expect(identifierPayloadVerification(ctx, new Provider(''))).rejects.toMatchError(
+      new RequestError('session.connector_session_not_found')
+    );
+  });
+
+  it('verified social email should throw if social identity not found', async () => {
+    const interactionRecord: AnonymousInteractionResult = {
+      event: Event.SignIn,
+      identifiers: [
+        {
+          key: 'social',
+          connectorId: 'logto',
+          userInfo: {
+            id: 'foo',
+          },
+        },
+      ],
+    };
+
+    const identifierPayload = { connectorId: 'logto', identityType: 'email' };
+
+    const ctx = {
+      ...baseCtx,
+      interactionPayload: Object.freeze({
+        event: Event.SignIn,
+        identifier: identifierPayload,
+      }),
+    };
+
+    await expect(
+      identifierPayloadVerification(ctx, new Provider(''), interactionRecord)
+    ).rejects.toMatchError(new RequestError('session.connector_session_not_found'));
   });
 
   it('should merge identifier if exist', async () => {

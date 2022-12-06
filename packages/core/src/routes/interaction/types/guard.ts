@@ -56,6 +56,7 @@ export const getSocialAuthorizationUrlPayloadGuard = z.object({
   state: z.string(),
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
 });
+
 // Register Profile Guard
 const emailProfileGuard = emailPasscodePayloadGuard.pick({ email: true });
 const phoneProfileGuard = phonePasscodePayloadGuard.pick({ phone: true });

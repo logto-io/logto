@@ -16,7 +16,8 @@ export const isPasscodeIdentifier = (
 
 export const isSocialIdentifier = (
   identifier: IdentifierPayload
-): identifier is SocialConnectorPayload => 'connectorId' in identifier;
+): identifier is SocialConnectorPayload =>
+  'connectorId' in identifier && 'connectorData' in identifier;
 
 export const isProfileIdentifier = (identifier: Identifier, profile?: Profile) => {
   if (identifier.key === 'accountId') {
