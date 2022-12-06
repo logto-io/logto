@@ -17,6 +17,7 @@ type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> &
   size?: 'small' | 'medium' | 'large';
   isLoading?: boolean;
   loadingDelay?: number;
+  trailingIcon?: ReactNode;
 };
 
 type TitleButtonProps = BaseProps & {
@@ -41,6 +42,7 @@ const Button = ({
   isLoading = false,
   loadingDelay = 500,
   onClick,
+  trailingIcon,
   ...rest
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -84,6 +86,7 @@ const Button = ({
       {showSpinner && <Spinner className={styles.spinner} />}
       {icon && <span className={styles.icon}>{icon}</span>}
       {title && (typeof title === 'string' ? <span>{t(title)}</span> : title)}
+      {trailingIcon && <span className={styles.trailingIcon}>{trailingIcon}</span>}
     </button>
   );
 };

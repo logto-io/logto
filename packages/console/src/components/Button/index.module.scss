@@ -49,6 +49,12 @@
     }
   }
 
+  .trailingIcon {
+    display: block;
+    width: 16px;
+    height: 16px;
+  }
+
   &.small {
     height: 30px;
     padding: 0 _.unit(3);
