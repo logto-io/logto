@@ -15,6 +15,7 @@ import {
   getUser,
   postConnector,
   updateConnectorConfig,
+  deleteConnectorById,
 } from '@/api';
 import MockClient from '@/client';
 import { signUpIdentifiers } from '@/constants';
@@ -110,6 +111,13 @@ describe('social bind account', () => {
 
   beforeAll(async () => {
     await createUserByAdmin(username, password);
+  });
+
+  afterAll(async () => {
+    for (const [_connectorId, id] of connectorIdMap.entries()) {
+      // eslint-disable-next-line no-await-in-loop
+      await deleteConnectorById(id);
+    }
   });
 
   it('bind new social account', async () => {
