@@ -27,7 +27,7 @@ const AdvancedSettings = ({ applicationType, oidcConfig }: Props) => {
     >
       <FormField
         title="application_details.authorization_endpoint"
-        tooltip="application_details.authorization_endpoint_tip"
+        tip="application_details.authorization_endpoint_tip"
       >
         <CopyToClipboard
           className={styles.textField}
