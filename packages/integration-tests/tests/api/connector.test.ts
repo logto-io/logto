@@ -76,12 +76,11 @@ test('connector set-up flow', async () => {
   connectorIdMap.set(mockStandardEmailConnectorId, id);
   const currentConnectors = await listConnectors();
   expect(
-    currentConnectors.filter((connector) => connector.connectorId === mockEmailConnectorId).length
-  ).toEqual(0);
+    currentConnectors.some((connector) => connector.connectorId === mockEmailConnectorId)
+  ).toBeFalsy();
   expect(
-    currentConnectors.filter((connector) => connector.connectorId === mockStandardEmailConnectorId)
-      .length
-  ).toEqual(1);
+    currentConnectors.some((connector) => connector.connectorId === mockStandardEmailConnectorId)
+  ).toBeTruthy();
   expect(
     currentConnectors.find((connector) => connector.connectorId === mockStandardEmailConnectorId)
       ?.config
