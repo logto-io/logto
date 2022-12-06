@@ -7,10 +7,7 @@ const SetPassword = () => {
   const { setPassword } = useSetPassword();
 
   return (
-    <SecondaryPageWrapper
-      title="description.set_password"
-      notification="description.continue_with_more_information"
-    >
+    <SecondaryPageWrapper title="description.set_password">
       <SetPasswordForm autoFocus onSubmit={setPassword} />
     </SecondaryPageWrapper>
   );

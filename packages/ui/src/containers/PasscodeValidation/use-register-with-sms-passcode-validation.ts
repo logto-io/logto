@@ -23,15 +23,15 @@ const useRegisterWithSmsPasscodeValidation = (phone: string, errorCallback?: () 
   const { errorMessage, clearErrorMessage, sharedErrorHandlers } = useSharedErrorHandler();
   const { signInMode } = useSieMethods();
 
-  const { run: signInWithSmsAsync } = useApi(signInWithSms);
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
+
+  const { run: signInWithSmsAsync } = useApi(signInWithSms, requiredProfileErrorHandlers);
 
   const identifierExistErrorHandler = useIdentifierErrorAlert(
     UserFlow.register,
     SignInIdentifier.Sms,
     formatPhoneNumberWithCountryCallingCode(phone)
   );
-
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
   const phoneExistSignInErrorHandler = useCallback(async () => {
     const [confirm] = await show({

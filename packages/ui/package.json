@@ -1,6 +1,6 @@
 {
   "name": "@logto/ui",
-  "version": "1.0.0-beta.14",
+  "version": "1.0.0-beta.16",
   "license": "MPL-2.0",
   "type": "module",
   "private": true,
@@ -17,8 +17,8 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@logto/core-kit": "1.0.0-beta.25",
-    "@logto/language-kit": "1.0.0-beta.24",
+    "@logto/core-kit": "1.0.0-beta.28",
+    "@logto/language-kit": "1.0.0-beta.28",
     "@logto/phrases": "workspace:^",
     "@logto/phrases-ui": "workspace:^",
     "@logto/schemas": "workspace:^",

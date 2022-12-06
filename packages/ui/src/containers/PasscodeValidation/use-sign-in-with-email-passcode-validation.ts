@@ -24,7 +24,9 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
 
   const { signInMode } = useSieMethods();
 
-  const { run: registerWithEmailAsync } = useApi(registerWithEmail);
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
+
+  const { run: registerWithEmailAsync } = useApi(registerWithEmail, requiredProfileErrorHandlers);
 
   const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
 
@@ -33,8 +35,6 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
     SignInIdentifier.Email,
     email
   );
-
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
   const emailNotExistRegisterErrorHandler = useCallback(async () => {
     const [confirm] = await show({
