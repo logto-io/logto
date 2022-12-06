@@ -105,6 +105,7 @@ const errors = {
     multiple_instances_not_supported:
       'Can not create multiple instance with picked standard connector.', // UNTRANSLATED
     invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.', // UNTRANSLATED
+    can_not_modify_target: 'The connector target can not be modified.', // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: 'Hem telefon hem de e-posta adresi yok.',

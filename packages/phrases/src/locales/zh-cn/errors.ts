@@ -100,6 +100,7 @@ const errors = {
     not_found_with_connector_id: '找不到所给 connector id 对应的连接器',
     multiple_instances_not_supported: '你选择的连接器不支持创建多实例。',
     invalid_type_for_syncing_profile: '只有社交连接器可以开启用户档案同步。',
+    can_not_modify_target: '不可修改连接器 target。',
   },
   passcode: {
     phone_email_empty: '手机号与邮箱地址均为空',
