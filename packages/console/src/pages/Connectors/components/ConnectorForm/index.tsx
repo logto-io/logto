@@ -20,7 +20,11 @@ type Props = {
 const ConnectorForm = ({ connector }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { configTemplate, isStandard } = connector;
-  const { control, register } = useFormContext<ConnectorFormType>();
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext<ConnectorFormType>();
   const [darkVisible, setDarkVisible] = useState(false);
 
   const toggleDarkVisible = () => {
@@ -45,6 +49,7 @@ const ConnectorForm = ({ connector }: Props) => {
           <FormField isRequired title="connectors.guide.name">
             <TextInput
               placeholder={t('connectors.guide.name')}
+              hasError={Boolean(errors.name)}
               {...register('name', { required: true })}
             />
             <div className={styles.tip}>{t('connectors.guide.name_tip')}</div>
@@ -76,7 +81,10 @@ const ConnectorForm = ({ connector }: Props) => {
             onClick={toggleDarkVisible}
           />
           <FormField isRequired title="connectors.guide.target">
-            <TextInput {...register('target', { required: true })} />
+            <TextInput
+              hasError={Boolean(errors.target)}
+              {...register('target', { required: true })}
+            />
             <div className={styles.tip}>{t('connectors.guide.target_tip')}</div>
           </FormField>
         </>
