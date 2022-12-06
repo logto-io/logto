@@ -244,6 +244,7 @@ describe('connector route', () => {
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+        metadata: { target: 'target', name: { en: '' }, logo: '', logoDark: null },
       });
       expect(response).toHaveProperty('statusCode', 200);
       expect(response.body).toMatchObject(
@@ -253,6 +254,7 @@ describe('connector route', () => {
             cliend_id: 'client_id',
             client_secret: 'client_secret',
           },
+          metadata: { target: 'target' },
         })
       );
       expect(deleteConnectorByIds).toHaveBeenCalledWith(['id']);

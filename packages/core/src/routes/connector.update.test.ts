@@ -105,7 +105,6 @@ describe('connector PATCH routes', () => {
           target: 'target',
           name: { en: 'connector_name', fr: 'connector_name' },
           logo: 'new_logo.png',
-          logoDark: null,
         },
       });
       const response = await connectorRequest.patch('/connectors/id').send({
@@ -126,8 +125,45 @@ describe('connector PATCH routes', () => {
               target: 'target',
               name: { en: 'connector_name', fr: 'connector_name' },
               logo: 'new_logo.png',
-              logoDark: null,
             },
+          },
+          jsonbMode: 'replace',
+        })
+      );
+      expect(response).toHaveProperty('statusCode', 200);
+    });
+
+    it('successfully clear connector config metadata', async () => {
+      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+        {
+          dbEntry: mockConnector,
+          metadata: { ...mockMetadata, isStandard: true },
+          type: ConnectorType.Social,
+          ...mockLogtoConnector,
+        },
+      ]);
+      mockedUpdateConnector.mockResolvedValueOnce({
+        ...mockConnector,
+        metadata: {
+          target: '',
+          name: { en: '' },
+          logo: '',
+          logoDark: '',
+        },
+      });
+      const response = await connectorRequest.patch('/connectors/id').send({
+        metadata: {
+          target: '',
+          name: { en: '' },
+          logo: '',
+          logoDark: '',
+        },
+      });
+      expect(updateConnector).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'id' },
+          set: {
+            metadata: {},
           },
           jsonbMode: 'replace',
         })

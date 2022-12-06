@@ -3,6 +3,8 @@ import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
+import cleanDeep from 'clean-deep';
 import { object, string } from 'zod';
 
 import {
@@ -134,9 +136,12 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       );
 
       const insertConnectorId = generateConnectorId();
+      const { metadata, ...rest } = body;
+
       ctx.body = await insertConnector({
         id: insertConnectorId,
-        ...body,
+        ...conditional(metadata && { metadata: cleanDeep(metadata) }),
+        ...rest,
       });
 
       /**
@@ -193,7 +198,12 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         validateConfig(config);
       }
 
-      await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
+      const { metadata: databaseMetadata, ...rest } = body;
+      await updateConnector({
+        set: databaseMetadata ? { metadata: cleanDeep(databaseMetadata), ...rest } : rest,
+        where: { id },
+        jsonbMode: 'replace',
+      });
       const connector = await getLogtoConnectorById(id);
       ctx.body = transpileLogtoConnector(connector);
 
