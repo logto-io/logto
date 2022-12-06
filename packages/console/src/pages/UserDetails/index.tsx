@@ -16,8 +16,8 @@ import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
-import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import TextLink from '@/components/TextLink';
 import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import type { RequestError } from '@/hooks/use-api';
@@ -78,12 +78,9 @@ const UserDetails = () => {
 
   return (
     <div className={classNames(detailsStyles.container, isLogs && styles.resourceLayout)}>
-      <LinkButton
-        to="/users"
-        icon={<Back />}
-        title="user_details.back_to_users"
-        className={styles.backLink}
-      />
+      <TextLink to="/users" icon={<Back />} className={styles.backLink}>
+        {t('user_details.back_to_users')}
+      </TextLink>
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {userId && data && (

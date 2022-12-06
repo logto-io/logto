@@ -1,7 +1,8 @@
 import { ConnectorType } from '@logto/schemas';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import Alert from '@/components/Alert';
+import TextLink from '@/components/TextLink';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
 type Props = {
@@ -23,14 +24,22 @@ const ConnectorSetupWarning = ({ requiredConnectors }: Props) => {
   return (
     <>
       {missingConnectors.map((connectorType) => (
-        <Alert
-          key={connectorType}
-          action="general.set_up"
-          href={connectorType === ConnectorType.Social ? '/connectors/social' : '/connectors'}
-        >
-          {t('sign_in_exp.setup_warning.no_connector', {
-            context: connectorType.toLowerCase(),
-          })}
+        <Alert key={connectorType}>
+          <Trans
+            components={{
+              a: (
+                <TextLink
+                  to={connectorType === ConnectorType.Social ? '/connectors/social' : '/connectors'}
+                  target="_blank"
+                />
+              ),
+            }}
+          >
+            {t('sign_in_exp.setup_warning.no_connector', {
+              context: connectorType.toLowerCase(),
+              link: t('sign_in_exp.setup_warning.setup_link'),
+            })}
+          </Trans>
         </Alert>
       ))}
     </>

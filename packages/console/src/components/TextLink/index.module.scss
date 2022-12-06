@@ -1,21 +1,20 @@
 @use '@/scss/underscore' as _;
 
-.linkButton {
-  background: none;
+.link {
+  display: inline-flex;
+  max-width: fit-content;
+  text-decoration: none;
   border-color: transparent;
   font: var(--font-body-medium);
   color: var(--color-text-link);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  user-select: none;
+  gap: _.unit(1);
 
-  > *:not(:first-child) {
-    margin-left: _.unit(1);
+  &.trailingIcon {
+    flex-direction: row-reverse;
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--color-focused-variant);
+  &:active {
+    color: var(--color-primary-pressed);
   }
 
   &:disabled {
@@ -28,6 +27,7 @@
   }
 
   > svg {
-    color: var(--color-text-link);
+    display: inline-block;
+    vertical-align: baseline;
   }
 }
