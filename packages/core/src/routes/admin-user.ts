@@ -139,14 +139,14 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       assertThat(
         !username || !(await hasUser(username)),
         new RequestError({
-          code: 'user.username_exists_register',
+          code: 'user.username_already_in_use',
           status: 422,
         })
       );
       assertThat(
         !primaryEmail || !(await hasUserWithEmail(primaryEmail)),
         new RequestError({
-          code: 'user.email_exists_register',
+          code: 'user.email_already_in_use',
           status: 422,
         })
       );
@@ -310,7 +310,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       const { identities } = await findUserById(userId);
 
       if (!has(identities, target)) {
-        throw new RequestError({ code: 'user.identity_not_exists', status: 404 });
+        throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
       }
 
       const updatedUser = await deleteUserIdentity(userId, target);

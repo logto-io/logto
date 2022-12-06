@@ -136,7 +136,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
 
     const { primaryEmail } = await findUserById(userId);
 
-    assertThat(primaryEmail, new RequestError({ code: 'user.email_not_exists', status: 422 }));
+    assertThat(primaryEmail, new RequestError({ code: 'user.email_not_exist', status: 422 }));
 
     await updateUserById(userId, { primaryEmail: null });
 
@@ -173,7 +173,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
 
     const { primaryPhone } = await findUserById(userId);
 
-    assertThat(primaryPhone, new RequestError({ code: 'user.phone_not_exists', status: 422 }));
+    assertThat(primaryPhone, new RequestError({ code: 'user.phone_not_exist', status: 422 }));
 
     await updateUserById(userId, { primaryPhone: null });
 
@@ -232,7 +232,7 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
 
       assertThat(
         has(identities, target),
-        new RequestError({ code: 'user.identity_not_exists', status: 404 })
+        new RequestError({ code: 'user.identity_not_exist', status: 404 })
       );
 
       await deleteUserIdentity(userId, target);

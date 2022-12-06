@@ -90,7 +90,7 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
 
         throw new RequestError(
           {
-            code: 'user.identity_not_exists',
+            code: 'user.identity_not_exist',
             status: 422,
           },
           relatedInfo && { relatedUser: maskUserInfo(relatedInfo[0]) }
@@ -190,7 +190,7 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log(type, { userInfo });
-      assertThat(!(await hasUserWithIdentity(target, userInfo.id)), 'user.identity_exists');
+      assertThat(!(await hasUserWithIdentity(target, userInfo.id)), 'user.identity_already_in_use');
 
       const id = await generateUserId();
       const user = await insertUser({

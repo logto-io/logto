@@ -31,32 +31,33 @@ const errors = {
     provider_error: 'OIDC 내부 오류: {{message}}.',
   },
   user: {
-    username_exists_register: '사용자 이름이 이미 등록되있어요.',
-    email_exists_register: '이메일이 이미 등록되있어요.',
-    phone_exists_register: '휴대전화번호가 이미 등록되있어요.',
+    username_already_in_use: 'This username is already in use.', // UNTRANSLATED
+    email_already_in_use: 'This email is associated with an existing account.', // UNTRANSLATED
+    phone_already_in_use: 'This phone number is associated with an existing account.', // UNTRANSLATED
     invalid_email: '유효하지 않은 이메일이예요.',
     invalid_phone: '유효하지 않은 휴대전화번호에요',
-    email_not_exists: '이메일 주소가 아직 등록되지 않았어요.',
-    phone_not_exists: '휴대전화번호가 아직 등록되지 않았어요.',
-    identity_not_exists: '소셜 계정이 아직 등록되지 않았어요.',
-    identity_exists: '소셜 계정이 이미 등록되있어요.',
+    email_not_exist: '이메일 주소가 아직 등록되지 않았어요.',
+    phone_not_exist: '휴대전화번호가 아직 등록되지 않았어요.',
+    identity_not_exist: '소셜 계정이 아직 등록되지 않았어요.',
+    identity_already_in_use: '소셜 계정이 이미 등록되있어요.',
     invalid_role_names: '직책 명({{roleNames}})이 유효하지 않아요.',
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
-    sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
-    sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
+    sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
+    sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED
     same_password: 'New password cannot be the same as your old password.', // UNTRANSLATED
-    require_password: 'You need to set a password before signing-in.', // UNTRANSLATED
-    require_new_password: 'You need to set a new password', // UNTRANSLATED
-    password_exists: 'Your password has been set.', // UNTRANSLATED
-    require_username: 'You need to set a username before signing-in.', // UNTRANSLATED
-    username_exists: 'This username is already in use.', // UNTRANSLATED
-    require_email: 'You need to add an email address before signing-in.', // UNTRANSLATED
-    email_exists: 'This email is associated with an existing account.', // UNTRANSLATED
-    require_sms: 'You need to add a phone number before signing-in.', // UNTRANSLATED
-    sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
-    require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
+    password_required_in_profile: 'You need to set a password before signing-in.', // UNTRANSLATED
+    new_password_required_in_profile: 'You need to set a new password.', // UNTRANSLATED
+    password_exists_in_profile: 'Password already exists in your profile.', // UNTRANSLATED
+    username_required_in_profile: 'You need to set a username before signing-in.', // UNTRANSLATED
+    username_exists_in_profile: 'Username already exists in your profile.', // UNTRANSLATED
+    email_required_in_profile: 'You need to add an email address before signing-in.', // UNTRANSLATED
+    email_exists_in_profile: 'Your profile has already associated with an email address.', // UNTRANSLATED
+    phone_required_in_profile: 'You need to add a phone number before signing-in.', // UNTRANSLATED
+    phone_exists_in_profile: 'Your profile has already associated with a phone number.', // UNTRANSLATED
+    email_or_phone_required_in_profile:
+      'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
-    user_not_exist: 'User with {{ identifier }} has not been registered yet', // UNTRANSLATED,
+    user_not_exist: 'User with {{ identifier }} does not exist.', // UNTRANSLATED,
     missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
   },
   password: {

@@ -17,7 +17,7 @@ const useUsernameRegister = () => {
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.username_exists_register': (error) => {
+      'user.username_already_in_use': (error) => {
         setErrorMessage(error.message);
       },
     }),

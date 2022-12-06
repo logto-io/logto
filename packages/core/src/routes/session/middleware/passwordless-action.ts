@@ -56,7 +56,7 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContext, Respons
     checkValidateExpiration(expiresAt);
 
     const user = await findUserByPhone(phone);
-    assertThat(user, new RequestError({ code: 'user.phone_not_exists', status: 404 }));
+    assertThat(user, new RequestError({ code: 'user.phone_not_exist', status: 404 }));
     const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
     ctx.log(type, { userId: id });
@@ -101,7 +101,7 @@ export const emailSignInAction = <StateT, ContextT extends WithLogContext, Respo
     checkValidateExpiration(expiresAt);
 
     const user = await findUserByEmail(email);
-    assertThat(user, new RequestError({ code: 'user.email_not_exists', status: 404 }));
+    assertThat(user, new RequestError({ code: 'user.email_not_exist', status: 404 }));
     const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
     ctx.log(type, { userId: id });
@@ -145,7 +145,7 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContext, Respo
 
     assertThat(
       !(await hasUserWithPhone(phone)),
-      new RequestError({ code: 'user.phone_exists_register', status: 422 })
+      new RequestError({ code: 'user.phone_already_in_use', status: 422 })
     );
     const id = await generateUserId();
     ctx.log(type, { userId: id });
@@ -189,7 +189,7 @@ export const emailRegisterAction = <StateT, ContextT extends WithLogContext, Res
 
     assertThat(
       !(await hasUserWithEmail(email)),
-      new RequestError({ code: 'user.email_exists_register', status: 422 })
+      new RequestError({ code: 'user.email_already_in_use', status: 422 })
     );
     const id = await generateUserId();
     ctx.log(type, { userId: id });

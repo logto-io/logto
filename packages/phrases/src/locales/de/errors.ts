@@ -32,32 +32,33 @@ const errors = {
     provider_error: 'OIDC interner Fehler: {{message}}.',
   },
   user: {
-    username_exists_register: 'Der Benutzername wurde registriert.',
-    email_exists_register: 'Die E-Mail wurde registriert.',
-    phone_exists_register: 'Die Telefonnummer wurde registriert.',
+    username_already_in_use: 'This username is already in use.', // UNTRANSLATED
+    email_already_in_use: 'This email is associated with an existing account.', // UNTRANSLATED
+    phone_already_in_use: 'This phone number is associated with an existing account.', // UNTRANSLATED
     invalid_email: 'Ungültige E-Mail.',
     invalid_phone: 'Ungültige Telefonnummer.',
-    email_not_exists: 'Die E-Mail wurde noch nicht registriert.',
-    phone_not_exists: 'Die Telefonnummer wurde noch nicht registriert.',
-    identity_not_exists: 'Die Identität wurde noch nicht registriert.',
-    identity_exists: 'Die Identität wurde registriert.',
+    email_not_exist: 'Die E-Mail wurde noch nicht registriert.',
+    phone_not_exist: 'Die Telefonnummer wurde noch nicht registriert.',
+    identity_not_exist: 'Die Identität wurde noch nicht registriert.',
+    identity_already_in_use: 'Die Identität wurde registriert.',
     invalid_role_names: 'Rollennamen ({{roleNames}}) sind ungültig',
     cannot_delete_self: 'Du kannst dich nicht selbst löschen.',
-    sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
-    sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
+    sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
+    sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED
     same_password: 'Das neue Passwort muss sich vom alten unterscheiden.',
-    require_password: 'You need to set a password before signing-in.', // UNTRANSLATED
-    require_new_password: 'You need to set a new password', // UNTRANSLATED
-    password_exists: 'Your password has been set.', // UNTRANSLATED
-    require_username: 'You need to set a username before signing-in.', // UNTRANSLATED
-    username_exists: 'This username is already in use.', // UNTRANSLATED
-    require_email: 'You need to add an email address before signing-in.', // UNTRANSLATED
-    email_exists: 'This email is associated with an existing account.', // UNTRANSLATED
-    require_sms: 'You need to add a phone number before signing-in.', // UNTRANSLATED
-    sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
-    require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
+    password_required_in_profile: 'You need to set a password before signing-in.', // UNTRANSLATED
+    new_password_required_in_profile: 'You need to set a new password.', // UNTRANSLATED
+    password_exists_in_profile: 'Password already exists in your profile.', // UNTRANSLATED
+    username_required_in_profile: 'You need to set a username before signing-in.', // UNTRANSLATED
+    username_exists_in_profile: 'Username already exists in your profile.', // UNTRANSLATED
+    email_required_in_profile: 'You need to add an email address before signing-in.', // UNTRANSLATED
+    email_exists_in_profile: 'Your profile has already associated with an email address.', // UNTRANSLATED
+    phone_required_in_profile: 'You need to add a phone number before signing-in.', // UNTRANSLATED
+    phone_exists_in_profile: 'Your profile has already associated with a phone number.', // UNTRANSLATED
+    email_or_phone_required_in_profile:
+      'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
-    user_not_exist: 'User with {{ identifier }} has not been registered yet', // UNTRANSLATED,
+    user_not_exist: 'User with {{ identifier }} does not exist.', // UNTRANSLATED,
     missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
   },
   password: {

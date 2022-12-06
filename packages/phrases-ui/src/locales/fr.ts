@@ -51,9 +51,9 @@ const translation = {
     continue_with: 'Continuer avec',
     create_account_id_exists:
       'Le compte avec {{type}} {{value}} existe déjà, voulez-vous vous connecter ?',
-    sign_in_id_does_not_exists:
+    sign_in_id_does_not_exist:
       "Le compte avec {{type}} {{value}} n'existe pas, voulez-vous créer un nouveau compte ?",
-    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
     create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
     bind_account_title: 'Lier le compte',
     social_create_account: 'Pas de compte ? Vous pouvez créer un nouveau compte et un lien.',
