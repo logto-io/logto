@@ -1,3 +1,4 @@
+import { noop } from '@silverhand/essentials';
 import { useState, useMemo, createContext } from 'react';
 import { isMobile } from 'react-device-detect';
 
@@ -16,10 +17,6 @@ export type Context = {
   setPlatform: React.Dispatch<React.SetStateAction<Platform>>;
   setTermsAgreement: React.Dispatch<React.SetStateAction<boolean>>;
   setExperienceSettings: React.Dispatch<React.SetStateAction<SignInExperienceResponse | undefined>>;
-};
-
-const noop = () => {
-  throw new Error('Context provider not found');
 };
 
 export const PageContext = createContext<Context>({

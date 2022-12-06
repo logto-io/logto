@@ -1,9 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
+import { noop } from '@silverhand/essentials';
 import { createContext, useMemo, useState } from 'react';
-
-const noop = () => {
-  throw new Error('Context provider not found');
-};
 
 export type ConfirmationState = 'none' | 'try-close' | 'try-switch-language' | 'try-add-language';
 

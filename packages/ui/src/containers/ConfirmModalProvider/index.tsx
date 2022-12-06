@@ -1,4 +1,5 @@
 import type { Nullable } from '@silverhand/essentials';
+import { noop } from '@silverhand/essentials';
 import { useState, useRef, useMemo, createContext, useCallback } from 'react';
 
 import type { ModalProps } from '@/components/ConfirmModal';
@@ -23,10 +24,6 @@ type ConfirmModalContextType = {
   show: (props: ConfirmModalProps) => Promise<[boolean, unknown?]>;
   confirm: (data?: unknown) => void;
   cancel: (data?: unknown) => void;
-};
-
-const noop = () => {
-  throw new Error('Context provider not found');
 };
 
 export const ConfirmModalContext = createContext<ConfirmModalContextType>({
