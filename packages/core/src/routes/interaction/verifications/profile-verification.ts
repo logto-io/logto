@@ -169,7 +169,7 @@ const verifyProfileNotExist = async ({ username, email, phone, password }: Profi
 const isValidRegisterProfile = (profile: Profile): profile is RegisterSafeProfile =>
   registerProfileSafeGuard.safeParse(profile).success;
 
-export default async function profileVerification(
+export default async function verifyProfile(
   ctx: InteractionContext,
   provider: Provider,
   interaction: IdentifierVerifiedInteractionResult

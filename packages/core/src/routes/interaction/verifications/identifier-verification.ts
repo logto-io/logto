@@ -9,7 +9,7 @@ import type {
 import identifierPayloadVerification from './identifier-payload-verification.js';
 import userIdentityVerification from './user-identity-verification.js';
 
-export default async function identifierVerification(
+export default async function verifyIdentifier(
   ctx: InteractionContext,
   provider: Provider,
   interactionRecord?: AnonymousInteractionResult

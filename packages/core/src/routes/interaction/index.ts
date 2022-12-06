@@ -16,9 +16,9 @@ import { getInteractionStorage } from './utils/interaction.js';
 import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
 import { createSocialAuthorizationUrl } from './utils/social-verification.js';
 import {
-  identifierVerification,
-  profileVerification,
-  mandatoryUserProfileValidation,
+  verifyIdentifier,
+  verifyProfile,
+  validateMandatoryUserProfile,
 } from './verifications/index.js';
 
 export const identifierPrefix = '/identifier';
@@ -38,12 +38,12 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       // Check interaction session
       await provider.interactionDetails(ctx.req, ctx.res);
 
-      const identifierVerifiedInteraction = await identifierVerification(ctx, provider);
+      const identifierVerifiedInteraction = await verifyIdentifier(ctx, provider);
 
-      const interaction = await profileVerification(ctx, provider, identifierVerifiedInteraction);
+      const interaction = await verifyProfile(ctx, provider, identifierVerifiedInteraction);
 
       if (event !== Event.ForgotPassword) {
-        await mandatoryUserProfileValidation(ctx, interaction);
+        await validateMandatoryUserProfile(ctx, interaction);
       }
 
       await submitInteraction(interaction, ctx, provider);
@@ -68,16 +68,16 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         new RequestError({ code: 'session.verification_session_not_found' })
       );
 
-      const identifierVerifiedInteraction = await identifierVerification(
+      const identifierVerifiedInteraction = await verifyIdentifier(
         ctx,
         provider,
         interactionStorage
       );
 
-      const interaction = await profileVerification(ctx, provider, identifierVerifiedInteraction);
+      const interaction = await verifyProfile(ctx, provider, identifierVerifiedInteraction);
 
       if (event !== Event.ForgotPassword) {
-        await mandatoryUserProfileValidation(ctx, interaction);
+        await validateMandatoryUserProfile(ctx, interaction);
       }
 
       await submitInteraction(interaction, ctx, provider);

@@ -11,7 +11,7 @@ import type {
   InteractionContext,
 } from '../types/index.js';
 import { storeInteractionResult } from '../utils/interaction.js';
-import profileVerification from './profile-verification.js';
+import verifyProfile from './profile-verification.js';
 
 jest.mock('oidc-provider', () => ({
   Provider: jest.fn(() => ({
@@ -66,7 +66,7 @@ describe('Existed profile should throw', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.username_exists',
       })
@@ -87,7 +87,7 @@ describe('Existed profile should throw', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.email_exists',
       })
@@ -108,7 +108,7 @@ describe('Existed profile should throw', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.sms_exists',
       })
@@ -129,7 +129,7 @@ describe('Existed profile should throw', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.password_exists',
       })

@@ -8,7 +8,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { InteractionContext } from '../types/index.js';
 import { storeInteractionResult } from '../utils/interaction.js';
-import profileVerification from './profile-verification.js';
+import verifyProfile from './profile-verification.js';
 
 jest.mock('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
@@ -45,7 +45,7 @@ describe('forgot password interaction profile verification', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.require_new_password',
         status: 422,
@@ -66,7 +66,7 @@ describe('forgot password interaction profile verification', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.same_password',
         status: 422,
@@ -88,7 +88,7 @@ describe('forgot password interaction profile verification', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).resolves.not.toThrow();
+    await expect(verifyProfile(ctx, provider, interaction)).resolves.not.toThrow();
     expect(findUserById).toBeCalledWith(interaction.accountId);
     expect(argon2Verify).toBeCalledWith({ password: 'password', hash: 'passwordHash' });
     expect(storeInteractionResult).toBeCalled();
