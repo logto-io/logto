@@ -1,7 +1,9 @@
+import type { LogtoErrorCode } from '@logto/phrases';
 import { Event } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults } from '#src/lib/session.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -86,6 +88,14 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       return next();
     }
   );
+
+  router.delete(identifierPrefix, async (ctx, next) => {
+    await provider.interactionDetails(ctx.req, ctx.res);
+    const error: LogtoErrorCode = 'oidc.aborted';
+    await assignInteractionResults(ctx, provider, { error });
+
+    return next();
+  });
 
   router.post(
     `${verificationPrefix}/social/authorization-uri`,
