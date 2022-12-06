@@ -2,6 +2,7 @@ import type { CreateApplication, OidcClientMetadata } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import { tryThat } from '@logto/shared';
+import { deduplicate } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
 import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import { errors } from 'oidc-provider';
@@ -23,9 +24,10 @@ import { getConstantClientMetadata } from './utils.js';
 
 const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
   const { localhostUrl, adminConsoleUrl } = envSet.values;
-  const urls = [
-    ...new Set([appendPath(localhostUrl, '/console').toString(), adminConsoleUrl.toString()]),
-  ];
+  const urls = deduplicate([
+    appendPath(localhostUrl, '/console').toString(),
+    adminConsoleUrl.toString(),
+  ]);
 
   return {
     ...getConstantClientMetadata(ApplicationType.SPA),
@@ -46,8 +48,8 @@ const buildDemoAppUris = (
   ];
 
   const data = {
-    redirectUris: [...new Set([...urls, ...oidcClientMetadata.redirectUris])],
-    postLogoutRedirectUris: [...new Set([...urls, ...oidcClientMetadata.postLogoutRedirectUris])],
+    redirectUris: deduplicate([...urls, ...oidcClientMetadata.redirectUris]),
+    postLogoutRedirectUris: deduplicate([...urls, ...oidcClientMetadata.postLogoutRedirectUris]),
   };
 
   return data;

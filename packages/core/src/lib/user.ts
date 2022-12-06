@@ -2,6 +2,7 @@ import type { User, CreateUser } from '@logto/schemas';
 import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
+import { deduplicate } from '@silverhand/essentials';
 import { argon2Verify } from 'hash-wasm';
 import pRetry from 'p-retry';
 
@@ -66,9 +67,9 @@ const insertUserQuery = buildInsertInto<CreateUser, User>(Users, {
 // Temp solution since Hasura requires a role to proceed authn.
 // The source of default roles should be guarded and moved to database once we implement RBAC.
 export const insertUser: typeof insertUserQuery = async ({ roleNames, ...rest }) => {
-  const computedRoleNames = [
-    ...new Set((roleNames ?? []).concat(envSet.values.userDefaultRoleNames)),
-  ];
+  const computedRoleNames = deduplicate(
+    (roleNames ?? []).concat(envSet.values.userDefaultRoleNames)
+  );
 
   if (computedRoleNames.length > 0) {
     const existingRoles = await findRolesByRoleNames(computedRoleNames);

@@ -6,6 +6,7 @@ import {
   adminConsoleSignInExperience,
   demoAppApplicationId,
 } from '@logto/schemas/lib/seeds/index.js';
+import { deduplicate } from '@silverhand/essentials';
 import i18next from 'i18next';
 
 import { getLogtoConnectors } from '#src/connectors/index.js';
@@ -50,7 +51,7 @@ export const validateTermsOfUse = (termsOfUse: TermsOfUse) => {
 
 export const removeUnavailableSocialConnectorTargets = async () => {
   const connectors = await getLogtoConnectors();
-  const availableSocialConnectorTargets = new Set(
+  const availableSocialConnectorTargets = deduplicate(
     connectors
       .filter(({ type }) => type === ConnectorType.Social)
       .map(({ metadata: { target } }) => target)
@@ -59,7 +60,7 @@ export const removeUnavailableSocialConnectorTargets = async () => {
   const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
   await updateDefaultSignInExperience({
     socialSignInConnectorTargets: socialSignInConnectorTargets.filter((target) =>
-      availableSocialConnectorTargets.has(target)
+      availableSocialConnectorTargets.includes(target)
     ),
   });
 };
