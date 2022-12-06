@@ -27,6 +27,7 @@ tr.clickable {
       background: var(--color-layer-1);
       position: sticky;
       top: 0;
+      z-index: 1;
     }
 
     tbody {
