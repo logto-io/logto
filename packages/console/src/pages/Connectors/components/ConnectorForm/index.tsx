@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import CaretDown from '@/assets/images/caret-down.svg';
+import CaretUp from '@/assets/images/caret-up.svg';
 import Button from '@/components/Button';
 import CodeEditor from '@/components/CodeEditor';
 import FormField from '@/components/FormField';
@@ -78,6 +80,7 @@ const ConnectorForm = ({ connector }: Props) => {
                 ? 'connectors.guide.logo_dark_collapse'
                 : 'connectors.guide.logo_dark_show'
             }
+            trailingIcon={darkVisible ? <CaretUp /> : <CaretDown />}
             onClick={toggleDarkVisible}
           />
           <FormField isRequired title="connectors.guide.target">
