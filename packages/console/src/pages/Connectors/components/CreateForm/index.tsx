@@ -16,6 +16,7 @@ import { getConnectorGroups } from '../../utils';
 import Guide from '../Guide';
 import PlatformSelector from './PlatformSelector';
 import * as styles from './index.module.scss';
+import { getConnectorOrder } from './utils';
 
 type Props = {
   isOpen: boolean;
@@ -56,7 +57,14 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
             existingConnectors.some(({ connectorId }) => connector.id === connectorId),
         })),
       }))
-      .filter(({ connectors }) => !connectors.every(({ added }) => added));
+      .filter(({ connectors }) => !connectors.every(({ added }) => added))
+      .slice()
+      .sort((connectorA, connectorB) => {
+        const orderA = getConnectorOrder(connectorA.target, connectorA.isStandard);
+        const orderB = getConnectorOrder(connectorB.target, connectorB.isStandard);
+
+        return orderA - orderB;
+      });
   }, [factories, type, existingConnectors]);
 
   const activeGroup = useMemo(
