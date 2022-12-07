@@ -37,7 +37,7 @@ importers:
       '@types/tar': ^6.1.2
       '@types/yargs': ^17.0.13
       chalk: ^5.0.0
-      decamelize: ^5.0.0
+      decamelize: ^6.0.0
       dotenv: ^16.0.0
       eslint: ^8.21.0
       fs-extra: ^10.1.0
@@ -66,7 +66,7 @@ importers:
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.3.0
       chalk: 5.1.2
-      decamelize: 5.0.1
+      decamelize: 6.0.0
       dotenv: 16.0.0
       fs-extra: 10.1.0
       got: 12.5.3
@@ -283,7 +283,7 @@ importers:
       copyfiles: ^2.4.1
       date-fns: ^2.29.3
       debug: ^4.3.4
-      decamelize: ^5.0.0
+      decamelize: ^6.0.0
       deepmerge: ^4.2.2
       dotenv: ^16.0.0
       eslint: ^8.21.0
@@ -339,7 +339,7 @@ importers:
       clean-deep: 3.4.0
       date-fns: 2.29.3
       debug: 4.3.4
-      decamelize: 5.0.1
+      decamelize: 6.0.0
       deepmerge: 4.2.2
       dotenv: 16.0.0
       etag: 1.8.1
@@ -6143,9 +6143,9 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /decamelize/5.0.1:
-    resolution: {integrity: sha512-VfxadyCECXgQlkoEAjeghAr5gY3Hf+IKjKb+X8tGVDtveCjN+USwprd2q3QXBR9T1+x2DG0XZF5/w+7HAtSaXA==}
-    engines: {node: '>=10'}
+  /decamelize/6.0.0:
+    resolution: {integrity: sha512-Fv96DCsdOgB6mdGl67MT5JaTNKRzrzill5OH5s8bjYJXVlcXyPYGyPsUkWyGV5p1TXI5esYIYMMeDJL0hEIwaA==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 
   /decimal.js-light/2.5.1:

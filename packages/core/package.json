@@ -36,7 +36,7 @@
     "clean-deep": "^3.4.0",
     "date-fns": "^2.29.3",
     "debug": "^4.3.4",
-    "decamelize": "^5.0.0",
+    "decamelize": "^6.0.0",
     "deepmerge": "^4.2.2",
     "dotenv": "^16.0.0",
     "etag": "^1.8.1",
