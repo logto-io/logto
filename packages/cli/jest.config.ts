@@ -7,6 +7,7 @@ const config: Config.InitialOptions = {
     roots: ['./src'],
     moduleNameMapper: {
       '^(\\.{1,2}/.*)\\.js$': '$1',
+      '^(chalk|inquirer|ora)$': '<rootDir>/../shared/src/utils/module-proxy.ts',
     },
   }),
   // Will update common config soon

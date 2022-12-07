@@ -8,10 +8,11 @@ const config: Config.InitialOptions = {
     moduleNameMapper: {
       '^#src/(.*)\\.js(x)?$': '<rootDir>/src/$1',
       '^(\\.{1,2}/.*)\\.js$': '$1',
+      '^(chalk|inquirer|ora)$': '<rootDir>/../shared/src/utils/module-proxy.ts',
     },
   }),
   // Will update common config soon
-  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto))/)'],
+  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto|got))/)'],
 };
 
 export default config;
