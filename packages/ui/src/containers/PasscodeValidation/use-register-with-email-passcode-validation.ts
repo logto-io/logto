@@ -23,15 +23,15 @@ const useRegisterWithEmailPasscodeValidation = (email: string, errorCallback?: (
 
   const { signInMode } = useSieMethods();
 
-  const { run: signInWithEmailAsync } = useApi(signInWithEmail);
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
+
+  const { run: signInWithEmailAsync } = useApi(signInWithEmail, requiredProfileErrorHandlers);
 
   const identifierExistErrorHandler = useIdentifierErrorAlert(
     UserFlow.register,
     SignInIdentifier.Email,
     email
   );
-
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
   const emailExistSignInErrorHandler = useCallback(async () => {
     const [confirm] = await show({

@@ -3,6 +3,8 @@ import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
+import cleanDeep from 'clean-deep';
 import { object, string } from 'zod';
 
 import {
@@ -12,6 +14,7 @@ import {
 } from '#src/connectors/index.js';
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/lib/connector.js';
 import { removeUnavailableSocialConnectorTargets } from '#src/lib/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import {
@@ -49,6 +52,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const { target: filterTarget } = ctx.query;
       const connectors = await getLogtoConnectors();
+
+      checkSocialConnectorTargetAndPlatformUniqueness(connectors);
 
       assertThat(
         connectors.filter((connector) => connector.type === ConnectorType.Email).length <= 1,
@@ -106,12 +111,12 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         syncProfile: true,
       }),
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         body: { connectorId },
         body,
       } = ctx.guard;
-
       const connectorFactories = await loadConnectorFactories();
       const connectorFactory = connectorFactories.find(
         ({ metadata: { id } }) => id === connectorId
@@ -133,10 +138,24 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
+      if (body.metadata?.target && connectorFactory.type === ConnectorType.Social) {
+        const connectors = await getLogtoConnectors();
+        assertThat(
+          !connectors.some(
+            ({ metadata: { target, platform } }) =>
+              target === body.metadata?.target && platform === connectorFactory.metadata.platform
+          ),
+          new RequestError({ code: 'connector.multiple_target_with_same_platform', status: 422 })
+        );
+      }
+
       const insertConnectorId = generateConnectorId();
+      const { metadata, ...rest } = body;
+
       ctx.body = await insertConnector({
         id: insertConnectorId,
-        ...body,
+        ...conditional(metadata && { metadata: cleanDeep(metadata) }),
+        ...rest,
       });
 
       /**
@@ -192,8 +211,15 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       if (config) {
         validateConfig(config);
       }
+      // Once created, target can not be modified.
+      assertThat(body.metadata?.target === undefined, 'connector.can_not_modify_target');
 
-      await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
+      const { metadata: databaseMetadata, ...rest } = body;
+      await updateConnector({
+        set: databaseMetadata ? { metadata: cleanDeep(databaseMetadata), ...rest } : rest,
+        where: { id },
+        jsonbMode: 'replace',
+      });
       const connector = await getLogtoConnectorById(id);
       ctx.body = transpileLogtoConnector(connector);
 

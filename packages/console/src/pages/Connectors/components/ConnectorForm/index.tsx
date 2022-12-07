@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import CaretDown from '@/assets/images/caret-down.svg';
+import CaretUp from '@/assets/images/caret-up.svg';
 import Button from '@/components/Button';
 import CodeEditor from '@/components/CodeEditor';
 import FormField from '@/components/FormField';
@@ -15,12 +17,17 @@ import * as styles from './index.module.scss';
 
 type Props = {
   connector: ConnectorFactoryResponse;
+  isAllowEditTarget?: boolean;
 };
 
-const ConnectorForm = ({ connector }: Props) => {
+const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { configTemplate, isStandard } = connector;
-  const { control, register } = useFormContext<ConnectorFormType>();
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext<ConnectorFormType>();
   const [darkVisible, setDarkVisible] = useState(false);
 
   const toggleDarkVisible = () => {
@@ -45,6 +52,7 @@ const ConnectorForm = ({ connector }: Props) => {
           <FormField isRequired title="connectors.guide.name">
             <TextInput
               placeholder={t('connectors.guide.name')}
+              hasError={Boolean(errors.name)}
               {...register('name', { required: true })}
             />
             <div className={styles.tip}>{t('connectors.guide.name_tip')}</div>
@@ -73,10 +81,15 @@ const ConnectorForm = ({ connector }: Props) => {
                 ? 'connectors.guide.logo_dark_collapse'
                 : 'connectors.guide.logo_dark_show'
             }
+            trailingIcon={darkVisible ? <CaretUp /> : <CaretDown />}
             onClick={toggleDarkVisible}
           />
           <FormField isRequired title="connectors.guide.target">
-            <TextInput {...register('target', { required: true })} />
+            <TextInput
+              hasError={Boolean(errors.target)}
+              disabled={!isAllowEditTarget}
+              {...register('target', { required: true })}
+            />
             <div className={styles.tip}>{t('connectors.guide.target_tip')}</div>
           </FormField>
         </>

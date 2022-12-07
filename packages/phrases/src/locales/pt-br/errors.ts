@@ -47,6 +47,7 @@ const errors = {
     sign_in_method_not_enabled: 'Este método de login não está habilitado.',
     same_password: 'A nova senha não pode ser igual à senha antiga.',
     require_password: 'Você precisa definir uma senha antes de entrar.',
+    require_new_password: 'Você precisa definir uma nova senha',
     password_exists: 'Sua senha foi definida.',
     require_username: 'Você precisa definir um nome de usuário antes de entrar.',
     username_exists: 'Este nome de usuário já está em uso.',
@@ -57,7 +58,7 @@ const errors = {
     require_email_or_sms:
       'Você precisa adicionar um endereço de e-mail ou número de telefone antes de fazer login.',
     suspended: 'Esta conta está suspensa.',
-    user_not_exist: 'O usuário com {{ identity }} ainda não existe',
+    user_not_exist: 'O usuário com {{ identifier }} ainda não existe',
     missing_profile: 'Você precisa fornecer informações adicionais antes de fazer login.',
   },
   password: {
@@ -80,6 +81,8 @@ const errors = {
     unauthorized: 'Faça login primeiro.',
     unsupported_prompt_name: 'Prompt name incompatível.',
     forgot_password_not_enabled: 'Esqueceu a senha não está ativado.',
+    verification_failed:
+      'A verificação não foi bem-sucedida. Reinicie o fluxo de verificação e tente novamente.',
   },
   connector: {
     general: 'Ocorreu um erro inesperado no conector.{{errorDescription}}',
@@ -109,6 +112,9 @@ const errors = {
       'Não é possível criar várias instâncias com conector padrão escolhido.',
     invalid_type_for_syncing_profile:
       'Você só pode sincronizar o perfil do usuário com conectores sociais.',
+    can_not_modify_target: 'O destino do conector não pode ser modificado.',
+    multiple_target_with_same_platform:
+      'Você não pode ter vários conectores sociais com o mesmo destino e plataforma.',
   },
   passcode: {
     phone_email_empty: 'Telefone e e-mail estão vazios.',

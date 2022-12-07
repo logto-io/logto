@@ -24,6 +24,8 @@ import {
 } from './connector-base-data.js';
 
 export {
+  mockConnector0,
+  mockConnector1,
   mockMetadata,
   mockMetadata0,
   mockMetadata1,

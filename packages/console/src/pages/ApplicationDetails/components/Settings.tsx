@@ -85,7 +85,7 @@ const Settings = ({ data }: Props) => {
             <MultiTextInputField
               isRequired
               title="application_details.redirect_uris"
-              tooltip="application_details.redirect_uri_tip"
+              tip="application_details.redirect_uri_tip"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               placeholder={
@@ -109,7 +109,7 @@ const Settings = ({ data }: Props) => {
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInputField
               title="application_details.post_sign_out_redirect_uris"
-              tooltip="application_details.post_sign_out_redirect_uri_tip"
+              tip="application_details.post_sign_out_redirect_uri_tip"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               placeholder={t('application_details.post_sign_out_redirect_uri_placeholder')}
@@ -134,7 +134,7 @@ const Settings = ({ data }: Props) => {
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInputField
               title="application_details.cors_allowed_origins"
-              tooltip="application_details.cors_allowed_origins_tip"
+              tip="application_details.cors_allowed_origins_tip"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               placeholder={t('application_details.cors_allowed_origins_placeholder')}

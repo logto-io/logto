@@ -147,13 +147,14 @@ const sign_in_exp = {
   setup_warning: {
     no_connector: '',
     no_connector_sms:
-      'Nenhum conector SMS configurado ainda. Até terminar de configurar seu conector SMS, você não poderá entrar.',
+      'Nenhum conector SMS configurado ainda. Até terminar de configurar seu conector SMS, você não poderá fazer login. <a>{{link}}</a> em "Conectores"',
     no_connector_email:
-      'Nenhum conector de e-mail configurado ainda. Até terminar de configurar seu conector de e-mail, você não poderá entrar.',
+      'Nenhum conector e-mail configurado ainda. Até terminar de configurar seu conector SMS, você não poderá fazer login. <a>{{link}}</a> em "Conectores"',
     no_connector_social:
-      'Nenhum conector social configurado ainda. Até terminar de configurar seu conector social, você não poderá entrar.',
+      'Nenhum conector social configurado ainda. Até terminar de configurar seu conector SMS, você não poderá fazer login. <a>{{link}}</a> em "Conectores"',
     no_added_social_connector:
       'Você configurou alguns conectores sociais agora. Certifique-se de adicionar alguns à sua experiência de login.',
+    setup_link: 'Configurar',
   },
   save_alert: {
     description:

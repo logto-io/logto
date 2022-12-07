@@ -1,5 +1,6 @@
 import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
 import { ApplicationType, UserRole } from '@logto/schemas';
+import { deduplicate } from '@silverhand/essentials';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -27,7 +28,7 @@ const AdvancedSettings = ({ applicationType, oidcConfig }: Props) => {
     >
       <FormField
         title="application_details.authorization_endpoint"
-        tooltip="application_details.authorization_endpoint_tip"
+        tip="application_details.authorization_endpoint_tip"
       >
         <CopyToClipboard
           className={styles.textField}
@@ -61,7 +62,7 @@ const AdvancedSettings = ({ applicationType, oidcConfig }: Props) => {
                 checked={value.includes(UserRole.Admin)}
                 onChange={({ currentTarget: { checked } }) => {
                   if (checked) {
-                    onChange([...new Set(value.concat(UserRole.Admin))]);
+                    onChange(deduplicate(value.concat(UserRole.Admin)));
                   } else {
                     onChange(value.filter((value) => value !== UserRole.Admin));
                   }

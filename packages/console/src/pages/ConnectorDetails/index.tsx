@@ -17,10 +17,10 @@ import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
-import LinkButton from '@/components/LinkButton';
 import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import TextLink from '@/components/TextLink';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
@@ -83,12 +83,13 @@ const ConnectorDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <LinkButton
+      <TextLink
         to={isSocial ? '/connectors/social' : '/connectors'}
         icon={<Back />}
-        title="connector_details.back_to_connectors"
         className={styles.backLink}
-      />
+      >
+        {t('connector_details.back_to_connectors')}
+      </TextLink>
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {isSocial && <ConnectorTabs target={data.target} connectorId={data.id} />}

@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import https from 'https';
 
+import { deduplicate } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type Koa from 'koa';
 import compose from 'koa-compose';
@@ -25,7 +26,7 @@ import initRouter from '#src/routes/init.js';
 const logListening = () => {
   const { localhostUrl, endpoint } = envSet.values;
 
-  for (const url of new Set([localhostUrl, endpoint])) {
+  for (const url of deduplicate([localhostUrl, endpoint])) {
     console.log(chalk.bold(chalk.green(`App is running at ${url}`)));
   }
 };

@@ -1,11 +1,12 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Info from '@/assets/images/info.svg';
-import LinkButton from '@/components/LinkButton';
 
 import Button from '../Button';
+import TextLink from '../TextLink';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -27,17 +28,15 @@ const Alert = ({
   variant = 'plain',
   className,
 }: Props) => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
   return (
     <div className={classNames(styles.alert, styles[severity], styles[variant], className)}>
       <div className={styles.icon}>
         <Info />
       </div>
       <div className={styles.content}>{children}</div>
-      {action && href && (
-        <div className={styles.action}>
-          <LinkButton title={action} to={href} />
-        </div>
-      )}
+      {action && href && <TextLink to={href}>{t(action)}</TextLink>}
       {action && onClick && (
         <div className={styles.action}>
           <Button title={action} type="text" size="small" onClick={onClick} />

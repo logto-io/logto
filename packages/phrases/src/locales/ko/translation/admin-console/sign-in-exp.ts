@@ -142,13 +142,14 @@ const sign_in_exp = {
   setup_warning: {
     no_connector: '',
     no_connector_sms:
-      'No SMS connector set-up yet. Until you finish configuring your SMS connector, you won’t be able to sign in.', // UNTRANSLATED
+      'No SMS connector set-up yet. Until you finish configuring your SMS connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"', // UNTRANSLATED
     no_connector_email:
-      'No email connector set-up yet. Until you finish configuring your email connector, you won’t be able to sign in.', // UNTRANSLATED
+      'No email connector set-up yet. Until you finish configuring your email connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"', // UNTRANSLATED
     no_connector_social:
-      'No social connector set-up yet. Until you finish configuring your social connector, you won’t be able to sign in.', // UNTRANSLATED
+      'No social connector set-up yet. Until you finish configuring your social connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"', // UNTRANSLATED
     no_added_social_connector:
       '보다 많은 소셜 연동들을 설정하여, 고객에게 보다 나은 경험을 제공해보세요.',
+    setup_link: 'Set up',
   },
   save_alert: {
     description:

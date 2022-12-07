@@ -71,16 +71,6 @@
     }
   }
 
-  a {
-    font: var(--font-body-medium);
-    color: var(--color-text-link);
-    text-decoration: none;
-
-    &:hover {
-      border-bottom: 1px solid var(--color-text-link);
-    }
-  }
-
   h3 {
     font: var(--font-title-medium);
     color: var(--color-text-secondary);

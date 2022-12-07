@@ -1,0 +1,19 @@
+@use '@/scss/underscore' as _;
+
+.toggleTipButton {
+  border-radius: 4px;
+  padding: _.unit(1);
+
+  .icon {
+    > svg {
+      display: block;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &:hover {
+    background: var(--color-hover);
+  }
+}

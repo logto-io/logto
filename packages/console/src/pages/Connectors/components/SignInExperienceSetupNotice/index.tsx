@@ -1,9 +1,9 @@
 import type { ConnectorResponse } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Alert from '@/components/Alert';
+import TextLink from '@/components/TextLink';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 import * as styles from './index.module.scss';
@@ -31,7 +31,7 @@ const SignInExperienceSetupNotice = () => {
       >
         <Trans
           components={{
-            a: <Link to="/sign-in-experience/sign-up-and-sign-in" target="_blank" />,
+            a: <TextLink to="/sign-in-experience/sign-up-and-sign-in" target="_blank" />,
           }}
         >
           {t('connectors.config_sie_notice', { link: t('connectors.config_sie_link_text') })}

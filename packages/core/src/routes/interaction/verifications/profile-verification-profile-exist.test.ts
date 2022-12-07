@@ -1,11 +1,23 @@
 import { Event } from '@logto/schemas';
+import { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { findUserById } from '#src/queries/user.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import type { Identifier, InteractionContext } from '../types/index.js';
-import profileVerification from './profile-verification.js';
+import type {
+  Identifier,
+  IdentifierVerifiedInteractionResult,
+  InteractionContext,
+} from '../types/index.js';
+import { storeInteractionResult } from '../utils/interaction.js';
+import verifyProfile from './profile-verification.js';
+
+jest.mock('oidc-provider', () => ({
+  Provider: jest.fn(() => ({
+    interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
+  })),
+}));
 
 jest.mock('#src/queries/user.js', () => ({
   findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
@@ -14,18 +26,28 @@ jest.mock('#src/queries/user.js', () => ({
   hasUserWithIdentity: jest.fn().mockResolvedValue(false),
 }));
 
+jest.mock('../utils/interaction.js', () => ({
+  storeInteractionResult: jest.fn(),
+}));
+
 jest.mock('../utils/index.js', () => ({
   isUserPasswordSet: jest.fn().mockResolvedValueOnce(true),
 }));
 
 describe('Existed profile should throw', () => {
+  const provider = new Provider('');
   const baseCtx = createContextWithRouteParameters();
   const identifiers: Identifier[] = [
     { key: 'accountId', value: 'foo' },
     { key: 'emailVerified', value: 'email' },
     { key: 'phoneVerified', value: 'phone' },
-    { key: 'social', connectorId: 'connectorId', value: { id: 'foo' } },
+    { key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } },
   ];
+  const interaction: IdentifierVerifiedInteractionResult = {
+    event: Event.SignIn,
+    accountId: 'foo',
+    identifiers,
+  };
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -44,11 +66,12 @@ describe('Existed profile should throw', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.username_exists',
       })
     );
+    expect(storeInteractionResult).not.toBeCalled();
   });
 
   it('email exist', async () => {
@@ -64,11 +87,12 @@ describe('Existed profile should throw', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.email_exists',
       })
     );
+    expect(storeInteractionResult).not.toBeCalled();
   });
 
   it('phone exist', async () => {
@@ -84,11 +108,12 @@ describe('Existed profile should throw', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.sms_exists',
       })
     );
+    expect(storeInteractionResult).not.toBeCalled();
   });
 
   it('password exist', async () => {
@@ -104,10 +129,11 @@ describe('Existed profile should throw', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.password_exists',
       })
     );
+    expect(storeInteractionResult).not.toBeCalled();
   });
 });

@@ -19,8 +19,8 @@ import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsForm from '@/components/DetailsForm';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
-import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
@@ -126,12 +126,9 @@ const ApplicationDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <LinkButton
-        to="/applications"
-        icon={<Back />}
-        title="application_details.back_to_applications"
-        className={styles.backLink}
-      />
+      <TextLink to="/applications" icon={<Back />} className={styles.backLink}>
+        {t('application_details.back_to_applications')}
+      </TextLink>
       {isLoading && <DetailsSkeleton />}
       {data && oidcConfig && (
         <>

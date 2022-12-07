@@ -1,5 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages as builtInUiLanguages } from '@logto/phrases-ui';
+import { deduplicate } from '@silverhand/essentials';
 import { useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 
@@ -17,12 +18,10 @@ const useUiLanguages = () => {
 
   const languages = useMemo(
     () =>
-      [
-        ...new Set([
-          ...builtInUiLanguages,
-          ...(customPhraseList?.map(({ languageTag }) => languageTag) ?? []),
-        ]),
-      ]
+      deduplicate([
+        ...builtInUiLanguages,
+        ...(customPhraseList?.map(({ languageTag }) => languageTag) ?? []),
+      ])
         .slice()
         .sort(),
     [customPhraseList]

@@ -9,8 +9,7 @@
   color: var(--color-text-secondary);
   margin-top: _.unit(2);
 
-  a {
-    color: var(--color-text-link);
-    text-decoration: none;
+  .setup {
+    margin: 0 _.unit(1);
   }
 }

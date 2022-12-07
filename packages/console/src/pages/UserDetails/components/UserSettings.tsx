@@ -138,7 +138,7 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
           <FormField
             isRequired
             title="user_details.field_custom_data"
-            tooltip="user_details.field_custom_data_tip"
+            tip="user_details.field_custom_data_tip"
           >
             <CodeEditor language="json" value={value} onChange={onChange} />
           </FormField>

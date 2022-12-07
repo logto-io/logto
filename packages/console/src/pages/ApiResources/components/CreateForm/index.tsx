@@ -64,7 +64,7 @@ const CreateForm = ({ onClose }: Props) => {
         <FormField
           isRequired
           title="api_resources.api_identifier"
-          tooltip="api_resources.api_identifier_tip"
+          tip="api_resources.api_identifier_tip"
         >
           <TextInput
             {...register('indicator', { required: true })}

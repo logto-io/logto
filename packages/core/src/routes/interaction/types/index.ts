@@ -4,6 +4,7 @@ import type {
   EmailPasscodePayload,
   PhonePasswordPayload,
   PhonePasscodePayload,
+  Event,
 } from '@logto/schemas';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
@@ -21,6 +22,12 @@ import type {
   verifiedPhoneIdentifierGuard,
   socialIdentifierGuard,
   identifierGuard,
+  anonymousInteractionResultGuard,
+  verifiedRegisterInteractionResultGuard,
+  verifiedSignInteractionResultGuard,
+  verifiedForgotPasswordInteractionResultGuard,
+  registerProfileSafeGuard,
+  forgotPasswordProfileGuard,
 } from './guard.js';
 
 // Payload Types
@@ -37,7 +44,7 @@ export type SendPasscodePayload = z.infer<typeof sendPasscodePayloadGuard>;
 
 export type SocialAuthorizationUrlPayload = z.infer<typeof getSocialAuthorizationUrlPayloadGuard>;
 
-// Identifier Types
+// Interaction Types
 export type AccountIdIdentifier = z.infer<typeof accountIdIdentifierGuard>;
 
 export type VerifiedEmailIdentifier = z.infer<typeof verifiedEmailIdentifierGuard>;
@@ -47,6 +54,59 @@ export type VerifiedPhoneIdentifier = z.infer<typeof verifiedPhoneIdentifierGuar
 export type SocialIdentifier = z.infer<typeof socialIdentifierGuard>;
 
 export type Identifier = z.infer<typeof identifierGuard>;
+
+export type AnonymousInteractionResult = z.infer<typeof anonymousInteractionResultGuard>;
+
+export type RegisterSafeProfile = z.infer<typeof registerProfileSafeGuard>;
+
+export type ForgotPasswordProfile = z.infer<typeof forgotPasswordProfileGuard>;
+
+export type VerifiedRegisterInteractionResult = z.infer<
+  typeof verifiedRegisterInteractionResultGuard
+>;
+
+export type VerifiedSignInInteractionResult = z.infer<typeof verifiedSignInteractionResultGuard>;
+
+export type VerifiedForgotPasswordInteractionResult = z.infer<
+  typeof verifiedForgotPasswordInteractionResultGuard
+>;
+
+export type RegisterInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
+  event: Event.Register;
+};
+
+export type SignInInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
+  event: Event.SignIn;
+};
+
+export type ForgotPasswordInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
+  event: Event.ForgotPassword;
+};
+
+export type PreAccountVerifiedInteractionResult =
+  | SignInInteractionResult
+  | ForgotPasswordInteractionResult;
+
+export type PayloadVerifiedInteractionResult =
+  | RegisterInteractionResult
+  | PreAccountVerifiedInteractionResult;
+
+export type AccountVerifiedInteractionResult =
+  | (Omit<SignInInteractionResult, 'accountId'> & {
+      accountId: string;
+    })
+  | (Omit<ForgotPasswordInteractionResult, 'accountId'> & {
+      accountId: string;
+    });
+
+export type IdentifierVerifiedInteractionResult =
+  | RegisterInteractionResult
+  | AccountVerifiedInteractionResult;
+
+export type VerifiedInteractionResult =
+  | VerifiedRegisterInteractionResult
+  | VerifiedSignInInteractionResult
+  | VerifiedForgotPasswordInteractionResult;
 
 export type InteractionContext = WithGuardedIdentifierPayloadContext<IRouterParamContext & Context>;
 

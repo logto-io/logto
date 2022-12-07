@@ -1,4 +1,5 @@
 import { Event } from '@logto/schemas';
+import { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import {
@@ -9,8 +10,23 @@ import {
 } from '#src/queries/user.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import type { Identifier, InteractionContext } from '../types/index.js';
-import profileVerification from './profile-verification.js';
+import type {
+  Identifier,
+  InteractionContext,
+  IdentifierVerifiedInteractionResult,
+} from '../types/index.js';
+import { storeInteractionResult } from '../utils/interaction.js';
+import verifyProfile from './profile-verification.js';
+
+jest.mock('oidc-provider', () => ({
+  Provider: jest.fn(() => ({
+    interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
+  })),
+}));
+
+jest.mock('../utils/interaction.js', () => ({
+  storeInteractionResult: jest.fn(),
+}));
 
 jest.mock('#src/queries/user.js', () => ({
   hasUser: jest.fn().mockResolvedValue(false),
@@ -31,10 +47,20 @@ const identifiers: Identifier[] = [
   { key: 'accountId', value: 'foo' },
   { key: 'emailVerified', value: 'email@logto.io' },
   { key: 'phoneVerified', value: '123456' },
-  { key: 'social', connectorId: 'connectorId', value: { id: 'foo' } },
+  { key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } },
 ];
+const provider = new Provider('');
+
+const interaction: IdentifierVerifiedInteractionResult = {
+  event: Event.Register,
+  identifiers,
+};
 
 describe('register payload guard', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('username only should throw', async () => {
     const ctx: InteractionContext = {
       ...baseCtx,
@@ -46,7 +72,8 @@ describe('register payload guard', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).rejects.toThrow();
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toThrow();
+    expect(storeInteractionResult).not.toBeCalled();
   });
 
   it('password only should throw', async () => {
@@ -60,7 +87,8 @@ describe('register payload guard', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).rejects.toThrow();
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toThrow();
+    expect(storeInteractionResult).not.toBeCalled();
   });
 
   it('username password is valid', async () => {
@@ -75,7 +103,8 @@ describe('register payload guard', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).resolves.not.toThrow();
+    const result = await verifyProfile(ctx, provider, interaction);
+    expect(result).toEqual({ ...interaction, profile: ctx.interactionPayload.profile });
   });
 
   it('username with a given email is valid', async () => {
@@ -90,7 +119,7 @@ describe('register payload guard', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).resolves.not.toThrow();
+    await expect(verifyProfile(ctx, provider, interaction)).resolves.not.toThrow();
   });
 
   it('password with a given email is valid', async () => {
@@ -105,7 +134,7 @@ describe('register payload guard', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).resolves.not.toThrow();
+    await expect(verifyProfile(ctx, provider, interaction)).resolves.not.toThrow();
   });
 });
 
@@ -124,12 +153,13 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.username_exists_register',
         status: 422,
       })
     );
+    expect(storeInteractionResult).not.toBeCalled();
   });
 
   it('email is registered', async () => {
@@ -145,12 +175,13 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.email_exists_register',
         status: 422,
       })
     );
+    expect(storeInteractionResult).not.toBeCalled();
   });
 
   it('phone is registered', async () => {
@@ -166,12 +197,13 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.phone_exists_register',
         status: 422,
       })
     );
+    expect(storeInteractionResult).not.toBeCalled();
   });
 
   it('connector identity exist', async () => {
@@ -187,11 +219,12 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(profileVerification(ctx, identifiers)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.identity_exists',
         status: 422,
       })
     );
+    expect(storeInteractionResult).not.toBeCalled();
   });
 });
