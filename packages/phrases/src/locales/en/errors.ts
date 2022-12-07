@@ -47,6 +47,7 @@ const errors = {
     sign_in_method_not_enabled: 'This sign in method is not enabled.',
     same_password: 'New password cannot be the same as your old password.',
     require_password: 'You need to set a password before signing-in.',
+    require_new_password: 'You need to set a new password',
     password_exists: 'Your password has been set.',
     require_username: 'You need to set a username before signing-in.',
     username_exists: 'This username is already in use.',
@@ -56,7 +57,7 @@ const errors = {
     sms_exists: 'This phone number is associated with an existing account.',
     require_email_or_sms: 'You need to add an email address or phone number before signing-in.',
     suspended: 'This account is suspended.',
-    user_not_exist: 'User with {{ identity }} has not been registered yet',
+    user_not_exist: 'User with {{ identifier }} has not been registered yet',
     missing_profile: 'You need to provide additional info before signing-in.',
   },
   password: {
@@ -78,6 +79,8 @@ const errors = {
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name.',
     forgot_password_not_enabled: 'Forgot password is not enabled.',
+    verification_failed:
+      'The verification was not successful. Restart the verification flow and try again.',
   },
   connector: {
     general: 'An unexpected error occurred in connector.{{errorDescription}}',

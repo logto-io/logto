@@ -1,5 +1,5 @@
 import type { Profile, SignInExperience, User } from '@logto/schemas';
-import { MissingProfile, SignInIdentifier } from '@logto/schemas';
+import { Event, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { Context } from 'koa';
 
@@ -8,20 +8,8 @@ import { findUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { WithSignInExperienceContext } from '../middleware/koa-session-sign-in-experience-guard.js';
-import type { Identifier, AccountIdIdentifier } from '../types/index.js';
+import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
-
-const findUserByIdentifiers = async (identifiers: Identifier[]) => {
-  const accountIdentifier = identifiers.find(
-    (identifier): identifier is AccountIdIdentifier => identifier.key === 'accountId'
-  );
-
-  if (!accountIdentifier) {
-    return null;
-  }
-
-  return findUserById(accountIdentifier.value);
-};
 
 // eslint-disable-next-line complexity
 const getMissingProfileBySignUpIdentifiers = ({
@@ -81,15 +69,16 @@ const getMissingProfileBySignUpIdentifiers = ({
   return missingProfile;
 };
 
-export default async function mandatoryUserProfileValidation(
+export default async function validateMandatoryUserProfile(
   ctx: WithSignInExperienceContext<Context>,
-  identifiers: Identifier[],
-  profile?: Profile
+  interaction: IdentifierVerifiedInteractionResult
 ) {
   const {
     signInExperience: { signUp },
   } = ctx;
-  const user = await findUserByIdentifiers(identifiers);
+  const { event, accountId, profile } = interaction;
+
+  const user = event === Event.Register ? null : await findUserById(accountId);
   const missingProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
 
   assertThat(

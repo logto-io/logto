@@ -23,7 +23,7 @@ const forgotPasswordInteractionPayloadGuard = z.object({
 const registerInteractionPayloadGuard = z.object({
   event: z.literal(Event.Register),
   identifier: z.union([emailPasscodePayloadGuard, phonePasscodePayloadGuard]).optional(),
-  profile: profileGuard.optional(),
+  profile: profileGuard,
 });
 
 const signInInteractionPayloadGuard = z.object({
@@ -56,16 +56,17 @@ export const getSocialAuthorizationUrlPayloadGuard = z.object({
   state: z.string(),
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
 });
+
 // Register Profile Guard
 const emailProfileGuard = emailPasscodePayloadGuard.pick({ email: true });
 const phoneProfileGuard = phonePasscodePayloadGuard.pick({ phone: true });
 const socialProfileGuard = socialConnectorPayloadGuard.pick({ connectorId: true });
 
 export const registerProfileSafeGuard = z.union([
-  usernamePasswordPayloadGuard,
-  emailProfileGuard,
-  phoneProfileGuard,
-  socialProfileGuard,
+  usernamePasswordPayloadGuard.merge(profileGuard.omit({ username: true, password: true })),
+  emailProfileGuard.merge(profileGuard.omit({ email: true })),
+  phoneProfileGuard.merge(profileGuard.omit({ phone: true })),
+  socialProfileGuard.merge(profileGuard.omit({ connectorId: true })),
 ]);
 
 // Identifier Guard
@@ -87,7 +88,7 @@ export const verifiedPhoneIdentifierGuard = z.object({
 export const socialIdentifierGuard = z.object({
   key: z.literal('social'),
   connectorId: z.string(),
-  value: socialUserInfoGuard,
+  userInfo: socialUserInfoGuard,
 });
 
 export const identifierGuard = z.discriminatedUnion('key', [
@@ -97,8 +98,32 @@ export const identifierGuard = z.discriminatedUnion('key', [
   socialIdentifierGuard,
 ]);
 
-export const customInteractionResultGuard = z.object({
-  event: eventGuard.optional(),
+export const anonymousInteractionResultGuard = z.object({
+  event: eventGuard,
+  profile: profileGuard.optional(),
+  accountId: z.string().optional(),
+  identifiers: z.array(identifierGuard).optional(),
+});
+
+export const verifiedRegisterInteractionResultGuard = z.object({
+  event: z.literal(Event.Register),
+  profile: registerProfileSafeGuard,
+  identifiers: z.array(identifierGuard).optional(),
+});
+
+export const verifiedSignInteractionResultGuard = z.object({
+  event: z.literal(Event.SignIn),
+  accountId: z.string(),
   profile: profileGuard.optional(),
   identifiers: z.array(identifierGuard).optional(),
+});
+
+export const forgotPasswordProfileGuard = z.object({
+  password: z.string(),
+});
+
+export const verifiedForgotPasswordInteractionResultGuard = z.object({
+  event: z.literal(Event.ForgotPassword),
+  accountId: z.string(),
+  profile: forgotPasswordProfileGuard,
 });

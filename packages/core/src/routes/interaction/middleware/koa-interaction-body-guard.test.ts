@@ -36,24 +36,38 @@ describe('koaInteractionBodyGuard', () => {
       await expect(koaInteractionBodyGuard()(ctx, next)).rejects.toThrow();
     });
 
-    it.each([Event.SignIn, Event.Register, Event.ForgotPassword])(
-      '%p should parse successfully',
-      async (event) => {
-        const ctx: WithGuardedIdentifierPayloadContext<Context> = {
-          ...baseCtx,
-          request: {
-            ...baseCtx.request,
-            body: {
-              event,
-            },
+    it.each([Event.SignIn, Event.ForgotPassword])('%p should parse successfully', async (event) => {
+      const ctx: WithGuardedIdentifierPayloadContext<Context> = {
+        ...baseCtx,
+        request: {
+          ...baseCtx.request,
+          body: {
+            event,
           },
-          interactionPayload: { event: Event.SignIn },
-        };
+        },
+        interactionPayload: { event: Event.SignIn },
+      };
 
-        await expect(koaInteractionBodyGuard()(ctx, next)).resolves.not.toThrow();
-        expect(ctx.interactionPayload.event).toEqual(event);
-      }
-    );
+      await expect(koaInteractionBodyGuard()(ctx, next)).resolves.not.toThrow();
+      expect(ctx.interactionPayload.event).toEqual(event);
+    });
+
+    it('register should parse successfully', async () => {
+      const ctx: WithGuardedIdentifierPayloadContext<Context> = {
+        ...baseCtx,
+        request: {
+          ...baseCtx.request,
+          body: {
+            event: Event.Register,
+            profile: { username: 'username', password: 'password' },
+          },
+        },
+        interactionPayload: { event: Event.SignIn },
+      };
+
+      await expect(koaInteractionBodyGuard()(ctx, next)).resolves.not.toThrow();
+      expect(ctx.interactionPayload.event).toEqual(Event.Register);
+    });
   });
 
   describe('identifier', () => {

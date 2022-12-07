@@ -46,16 +46,17 @@ const errors = {
     sign_in_method_not_enabled: '登录方式尚未启用',
     same_password: '为确保你的账户安全，新密码不能与旧密码一致',
     require_password: '请设置密码',
+    require_new_password: '请设置新密码',
     password_exists: '密码已设置过',
     require_username: '请设置用户名',
     username_exists: '该用户名已存在',
     require_email: '请绑定邮箱地址',
-    email_exists: '该邮箱地址已被其它账户绑定',
+    email_exists: '该用户已绑定邮箱',
     require_sms: '请绑定手机号码',
-    sms_exists: '该手机号码已被其它账户绑定',
+    sms_exists: '该用户已绑定手机号',
     require_email_or_sms: '请绑定邮箱地址或手机号码',
     suspended: '账号已被禁用',
-    user_not_exist: 'User with {{ identity }} has not been registered yet', // UNTRANSLATED,
+    user_not_exist: 'User with {{ identifier }} has not been registered yet', // UNTRANSLATED,
     missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
   },
   password: {
@@ -75,6 +76,7 @@ const errors = {
     unauthorized: '请先登录',
     unsupported_prompt_name: '不支持的 prompt name',
     forgot_password_not_enabled: '忘记密码功能没有开启。',
+    verification_failed: '验证失败，请重新验证。',
   },
   connector: {
     general: '连接器发生未知错误{{errorDescription}}',

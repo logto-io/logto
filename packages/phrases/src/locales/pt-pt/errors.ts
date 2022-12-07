@@ -46,6 +46,7 @@ const errors = {
     sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
     same_password: 'New password cannot be the same as your old password.', // UNTRANSLATED
     require_password: 'You need to set a password before signing-in.', // UNTRANSLATED
+    require_new_password: 'You need to set a new password', // UNTRANSLATED
     password_exists: 'Your password has been set.', // UNTRANSLATED
     require_username: 'You need to set a username before signing-in.', // UNTRANSLATED
     username_exists: 'This username is already in use.', // UNTRANSLATED
@@ -55,7 +56,7 @@ const errors = {
     sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
     require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
-    user_not_exist: 'User with {{ identity }} has not been registered yet', // UNTRANSLATED,
+    user_not_exist: 'User with {{ identifier }} has not been registered yet', // UNTRANSLATED,
     missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
   },
   password: {
@@ -79,6 +80,8 @@ const errors = {
     unauthorized: 'Faça login primeiro.',
     unsupported_prompt_name: 'Nome de prompt não suportado.',
     forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
+    verification_failed:
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
   },
   connector: {
     general: 'Ocorreu um erro inesperado no conector.{{errorDescription}}',
