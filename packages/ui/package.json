@@ -19,9 +19,9 @@
   "devDependencies": {
     "@logto/core-kit": "1.0.0-beta.28",
     "@logto/language-kit": "1.0.0-beta.28",
-    "@logto/phrases": "workspace:^",
-    "@logto/phrases-ui": "workspace:^",
-    "@logto/schemas": "workspace:^",
+    "@logto/phrases": "workspace:*",
+    "@logto/phrases-ui": "workspace:*",
+    "@logto/schemas": "workspace:*",
     "@parcel/core": "2.8.0",
     "@parcel/transformer-sass": "2.8.0",
     "@parcel/transformer-svg-react": "2.8.0",

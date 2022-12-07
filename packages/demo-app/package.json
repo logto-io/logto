@@ -18,9 +18,9 @@
   "devDependencies": {
     "@logto/core-kit": "1.0.0-beta.28",
     "@logto/language-kit": "1.0.0-beta.28",
-    "@logto/phrases": "workspace:^",
+    "@logto/phrases": "workspace:*",
     "@logto/react": "1.0.0-beta.13",
-    "@logto/schemas": "workspace:^",
+    "@logto/schemas": "workspace:*",
     "@parcel/core": "2.8.0",
     "@parcel/transformer-sass": "2.8.0",
     "@silverhand/eslint-config": "1.3.0",
