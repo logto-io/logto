@@ -21,9 +21,9 @@ import DetailsForm from '@/components/DetailsForm';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
-import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
+import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
@@ -105,12 +105,9 @@ const ApiResourceDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <LinkButton
-        to="/api-resources"
-        icon={<Back />}
-        title="api_resource_details.back_to_api_resources"
-        className={styles.backLink}
-      />
+      <TextLink to="/api-resources" icon={<Back />} className={styles.backLink}>
+        {t('api_resource_details.back_to_api_resources')}
+      </TextLink>
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {data && (

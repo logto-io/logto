@@ -24,13 +24,6 @@
     margin: 0 _.unit(3);
   }
 
-  .action {
-    a {
-      color: var(--color-text);
-      text-decoration: underline;
-    }
-  }
-
   &.info {
     background: var(--color-surface-variant);
 

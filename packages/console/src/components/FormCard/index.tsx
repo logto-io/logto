@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Card from '../Card';
+import TextLink from '../TextLink';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -23,9 +24,9 @@ const FormCard = ({ title, description, learnMoreLink, children }: Props) => {
           <div className={styles.description}>
             {t(description)}
             {learnMoreLink && (
-              <a href={learnMoreLink} target="_blank" rel="noopener">
+              <TextLink href={learnMoreLink} target="_blank" rel="noopener" className={styles.link}>
                 {t('general.learn_more')}
-              </a>
+              </TextLink>
             )}
           </div>
         )}

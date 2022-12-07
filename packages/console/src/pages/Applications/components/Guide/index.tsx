@@ -7,6 +7,7 @@ import type { LazyExoticComponent } from 'react';
 import { cloneElement, lazy, Suspense, useEffect, useState } from 'react';
 
 import CodeEditor from '@/components/CodeEditor';
+import TextLink from '@/components/TextLink';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
 import type { SupportedSdk } from '@/types/applications';
 import { applicationTypeAndSdkTypeMappings } from '@/types/applications';
@@ -97,9 +98,9 @@ const Guide = ({ app, isCompact, onClose }: Props) => {
               );
             },
             a: ({ children, ...props }) => (
-              <a {...props} target="_blank" rel="noopener noreferrer">
+              <TextLink {...props} target="_blank" rel="noopener noreferrer">
                 {children}
-              </a>
+              </TextLink>
             ),
             details: DetailsSummary,
           }}

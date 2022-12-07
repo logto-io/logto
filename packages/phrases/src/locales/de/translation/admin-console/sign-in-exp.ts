@@ -151,13 +151,14 @@ const sign_in_exp = {
   setup_warning: {
     no_connector: '',
     no_connector_sms:
-      'No SMS connector set-up yet. Until you finish configuring your SMS connector, you won’t be able to sign in.', // UNTRANSLATED
+      'No SMS connector set-up yet. Until you finish configuring your SMS connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"', // UNTRANSLATED
     no_connector_email:
-      'No email connector set-up yet. Until you finish configuring your email connector, you won’t be able to sign in.', // UNTRANSLATED
+      'No email connector set-up yet. Until you finish configuring your email connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"', // UNTRANSLATED
     no_connector_social:
-      'No social connector set-up yet. Until you finish configuring your social connector, you won’t be able to sign in.', // UNTRANSLATED
+      'No social connector set-up yet. Until you finish configuring your social connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"', // UNTRANSLATED
     no_added_social_connector:
       'Du hast jetzt ein paar Social Connectoren eingerichtet. Füge jetzt einige zu deinem Anmeldeerlebnis hinzu.',
+    setup_link: 'Set up',
   },
   save_alert: {
     description:

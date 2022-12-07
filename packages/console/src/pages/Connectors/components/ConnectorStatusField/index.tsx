@@ -1,6 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 
+import TextLink from '@/components/TextLink';
 import ToggleTipButton from '@/components/ToggleTipButton';
 
 import * as styles from './index.module.scss';
@@ -21,9 +21,10 @@ const ConnectorStatusField = () => {
               <Trans
                 components={{
                   a: (
-                    <Link
+                    <TextLink
                       to="/sign-in-experience/sign-up-and-sign-in"
                       target="_blank"
+                      className={styles.link}
                       onClick={closeTipHandler}
                     />
                   ),

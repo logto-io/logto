@@ -8,11 +8,10 @@ import Back from '@/assets/images/back.svg';
 import ApplicationName from '@/components/ApplicationName';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
-import DangerousRaw from '@/components/DangerousRaw';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import FormField from '@/components/FormField';
-import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import TextLink from '@/components/TextLink';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
 import type { RequestError } from '@/hooks/use-api';
@@ -37,13 +36,9 @@ const AuditLogDetails = () => {
   const isLoading = !data && !error;
 
   const backLink = getAuditLogDetailsRelatedResourceLink(pathname);
-  const backLinkTitle = userId ? (
-    <DangerousRaw>
-      {t('log_details.back_to_user', { name: userData?.name ?? t('users.unnamed') })}
-    </DangerousRaw>
-  ) : (
-    'log_details.back_to_logs'
-  );
+  const backLinkTitle = userId
+    ? t('log_details.back_to_user', { name: userData?.name ?? t('users.unnamed') })
+    : t('log_details.back_to_logs');
 
   if (!logId) {
     return null;
@@ -51,7 +46,9 @@ const AuditLogDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <LinkButton to={backLink} icon={<Back />} title={backLinkTitle} className={styles.backLink} />
+      <TextLink to={backLink} icon={<Back />} className={styles.backLink}>
+        {backLinkTitle}
+      </TextLink>
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {data && (
