@@ -194,17 +194,15 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         .pick({ config: true, metadata: true, syncProfile: true })
         .partial(),
     }),
-
     async (ctx, next) => {
       const {
         params: { id },
-        body: { config },
-        body,
+        body: { config, syncProfile, metadata },
       } = ctx.guard;
 
-      const { type, validateConfig } = await getLogtoConnectorById(id);
+      const { type, validateConfig, metadata: originalMetadata } = await getLogtoConnectorById(id);
 
-      if (body.syncProfile) {
+      if (syncProfile) {
         assertThat(
           type === ConnectorType.Social,
           new RequestError({ code: 'connector.invalid_type_for_syncing_profile', status: 422 })
@@ -214,12 +212,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       if (config) {
         validateConfig(config);
       }
-      // Once created, target can not be modified.
-      assertThat(body.metadata?.target === undefined, 'connector.can_not_modify_target');
 
-      const { metadata: databaseMetadata, ...rest } = body;
+      // TODO [LOG-4887]: constrain on assigning/updating `target`.
+      // Once created, target can not be modified.
+      assertThat(
+        !metadata || metadata.target === originalMetadata.target,
+        'connector.can_not_modify_target'
+      );
+
       await updateConnector({
-        set: databaseMetadata ? { metadata: cleanDeep(databaseMetadata), ...rest } : rest,
+        set: cleanDeep({ metadata, syncProfile, config }),
         where: { id },
         jsonbMode: 'replace',
       });

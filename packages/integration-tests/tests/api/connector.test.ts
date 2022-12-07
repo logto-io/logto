@@ -78,6 +78,7 @@ test('connector set-up flow', async () => {
   expect(
     currentConnectors.some((connector) => connector.connectorId === mockEmailConnectorId)
   ).toBeFalsy();
+  connectorIdMap.delete(mockEmailConnectorId);
   expect(
     currentConnectors.some((connector) => connector.connectorId === mockStandardEmailConnectorId)
   ).toBeTruthy();
@@ -85,7 +86,6 @@ test('connector set-up flow', async () => {
     currentConnectors.find((connector) => connector.connectorId === mockStandardEmailConnectorId)
       ?.config
   ).toEqual(mockStandardEmailConnectorConfig);
-  connectorIdMap.delete(mockEmailConnectorId);
 
   /*
    * Delete (i.e. disable) a connector
