@@ -119,7 +119,7 @@ describe('connector PATCH routes', () => {
       mockedUpdateConnector.mockResolvedValueOnce({
         ...mockConnector,
         metadata: {
-          target: 'target',
+          target: 'connector',
           name: { en: 'connector_name', fr: 'connector_name' },
           logo: 'new_logo.png',
         },
@@ -130,6 +130,7 @@ describe('connector PATCH routes', () => {
           name: { en: 'connector_name', fr: 'connector_name' },
           logo: 'new_logo.png',
           logoDark: null,
+          target: 'connector',
         },
       });
       expect(updateConnector).toHaveBeenCalledWith(
@@ -140,6 +141,7 @@ describe('connector PATCH routes', () => {
             metadata: {
               name: { en: 'connector_name', fr: 'connector_name' },
               logo: 'new_logo.png',
+              target: 'connector',
             },
           },
           jsonbMode: 'replace',
@@ -160,24 +162,20 @@ describe('connector PATCH routes', () => {
       mockedUpdateConnector.mockResolvedValueOnce({
         ...mockConnector,
         metadata: {
-          target: '',
+          target: 'connector',
           name: { en: '' },
           logo: '',
           logoDark: '',
         },
       });
       const response = await connectorRequest.patch('/connectors/id').send({
-        metadata: {
-          name: { en: '' },
-          logo: '',
-          logoDark: '',
-        },
+        metadata: { target: 'connector', name: { en: '' }, logo: '', logoDark: '' },
       });
       expect(updateConnector).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: 'id' },
           set: {
-            metadata: {},
+            metadata: { target: 'connector' },
           },
           jsonbMode: 'replace',
         })
@@ -208,11 +206,13 @@ describe('connector PATCH routes', () => {
           ...mockLogtoConnector,
         },
       ]);
-      const response = await connectorRequest.patch('/connectors/id').send({ syncProfile: true });
+      const response = await connectorRequest
+        .patch('/connectors/id')
+        .send({ syncProfile: true, metadata: { target: 'connector' } });
       expect(updateConnector).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: 'id' },
-          set: { syncProfile: true },
+          set: { syncProfile: true, metadata: { target: 'connector' } },
           jsonbMode: 'replace',
         })
       );
@@ -228,11 +228,13 @@ describe('connector PATCH routes', () => {
           ...mockLogtoConnector,
         },
       ]);
-      const response = await connectorRequest.patch('/connectors/id').send({ syncProfile: false });
+      const response = await connectorRequest
+        .patch('/connectors/id')
+        .send({ syncProfile: false, metadata: { target: 'connector' } });
       expect(updateConnector).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: 'id' },
-          set: { syncProfile: false },
+          set: { syncProfile: false, metadata: { target: 'connector' } },
           jsonbMode: 'replace',
         })
       );
