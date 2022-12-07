@@ -1,4 +1,4 @@
-import type { Event } from '@logto/schemas';
+import type { Event, Profile } from '@logto/schemas';
 import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 
@@ -12,26 +12,68 @@ import type {
   AccountVerifiedInteractionResult,
 } from '../types/index.js';
 
-// Unique identifier type is required
-export const mergeIdentifiers = (pairs: {
-  newIdentifiers?: Identifier[];
-  oldIdentifiers?: Identifier[];
-}) => {
-  const { newIdentifiers, oldIdentifiers } = pairs;
-
-  if (!newIdentifiers) {
-    return oldIdentifiers;
+const isProfileIdentifier = (identifier: Identifier, profile?: Profile) => {
+  if (identifier.key === 'accountId') {
+    return false;
   }
 
+  if (identifier.key === 'emailVerified') {
+    return profile?.email === identifier.value;
+  }
+
+  if (identifier.key === 'phoneVerified') {
+    return profile?.phone === identifier.value;
+  }
+
+  return profile?.connectorId === identifier.connectorId;
+};
+
+// Unique identifier type is required
+export const mergeIdentifiers = (newIdentifiers: Identifier[], oldIdentifiers?: Identifier[]) => {
   if (!oldIdentifiers) {
     return newIdentifiers;
   }
 
+  // Filter out identifiers with the same key in the oldIdentifiers and replaced with new ones
   const leftOvers = oldIdentifiers.filter((oldIdentifier) => {
     return !newIdentifiers.some((newIdentifier) => newIdentifier.key === oldIdentifier.key);
   });
 
   return [...leftOvers, ...newIdentifiers];
+};
+
+/**
+ * Categorize the identifiers based on their different use cases
+ * @typedef {Object} result
+ * @property {Identifier[]} userAccountIdentifiers - identifiers to verify a specific user account e.g. for sign-in and reset-password
+ * @property {Identifier[]} profileIdentifiers - identifiers to verify a new anonymous profile e.g. new email, new phone or new social identity
+ *
+ * @param {Identifier[]} identifiers
+ * @param {Profile} profile
+ * @returns
+ */
+export const categorizeIdentifiers = (
+  identifiers: Identifier[],
+  profile?: Profile
+): {
+  userAccountIdentifiers: Identifier[];
+  profileIdentifiers: Identifier[];
+} => {
+  const userAccountIdentifiers = new Set<Identifier>();
+  const profileIdentifiers = new Set<Identifier>();
+
+  for (const identifier of identifiers) {
+    if (isProfileIdentifier(identifier, profile)) {
+      profileIdentifiers.add(identifier);
+      continue;
+    }
+    userAccountIdentifiers.add(identifier);
+  }
+
+  return {
+    userAccountIdentifiers: [...userAccountIdentifiers],
+    profileIdentifiers: [...profileIdentifiers],
+  };
 };
 
 export const isAccountVerifiedInteractionResult = (
