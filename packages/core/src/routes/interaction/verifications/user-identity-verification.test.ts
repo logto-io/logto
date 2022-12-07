@@ -7,7 +7,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import type { InteractionContext, PayloadVerifiedInteractionResult } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
 import { storeInteractionResult } from '../utils/interaction.js';
-import userIdentityVerification from './user-identity-verification.js';
+import userAccountVerification from './user-identity-verification.js';
 
 jest.mock('oidc-provider', () => ({
   Provider: jest.fn(() => ({
@@ -25,7 +25,7 @@ jest.mock('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
-describe('userIdentityVerification', () => {
+describe('userAccountVerification', () => {
   const findUserByIdentifierMock = findUserByIdentifier as jest.Mock;
 
   const ctx = {
@@ -46,7 +46,7 @@ describe('userIdentityVerification', () => {
       accountId: 'foo',
     };
 
-    const result = await userIdentityVerification(interaction, ctx, provider);
+    const result = await userAccountVerification(interaction, ctx, provider);
 
     expect(storeInteractionResult).not.toBeCalled();
     expect(result).toEqual(result);
@@ -57,7 +57,7 @@ describe('userIdentityVerification', () => {
       event: Event.SignIn,
     };
 
-    await expect(userIdentityVerification(interaction, ctx, provider)).rejects.toMatchError(
+    await expect(userAccountVerification(interaction, ctx, provider)).rejects.toMatchError(
       new RequestError({ code: 'session.unauthorized', status: 401 })
     );
     expect(storeInteractionResult).not.toBeCalled();
@@ -69,7 +69,7 @@ describe('userIdentityVerification', () => {
       identifiers: [{ key: 'accountId', value: 'foo' }],
     };
 
-    const result = await userIdentityVerification(interaction, ctx, provider);
+    const result = await userAccountVerification(interaction, ctx, provider);
 
     expect(storeInteractionResult).toBeCalledWith(result, ctx, provider);
     expect(result).toEqual({ event: Event.SignIn, accountId: 'foo', identifiers: [] });
@@ -83,7 +83,7 @@ describe('userIdentityVerification', () => {
       identifiers: [{ key: 'emailVerified', value: 'email' }],
     };
 
-    const result = await userIdentityVerification(interaction, ctx, provider);
+    const result = await userAccountVerification(interaction, ctx, provider);
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
     expect(storeInteractionResult).toBeCalledWith(result, ctx, provider);
 
@@ -98,7 +98,7 @@ describe('userIdentityVerification', () => {
       identifiers: [{ key: 'phoneVerified', value: '123456' }],
     };
 
-    const result = await userIdentityVerification(interaction, ctx, provider);
+    const result = await userAccountVerification(interaction, ctx, provider);
     expect(findUserByIdentifierMock).toBeCalledWith({ phone: '123456' });
     expect(storeInteractionResult).toBeCalledWith(result, ctx, provider);
 
@@ -113,7 +113,7 @@ describe('userIdentityVerification', () => {
       identifiers: [{ key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } }],
     };
 
-    const result = await userIdentityVerification(interaction, ctx, provider);
+    const result = await userAccountVerification(interaction, ctx, provider);
     expect(findUserByIdentifierMock).toBeCalledWith({
       connectorId: 'connectorId',
       userInfo: { id: 'foo' },
@@ -131,7 +131,7 @@ describe('userIdentityVerification', () => {
       identifiers: [{ key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } }],
     };
 
-    await expect(userIdentityVerification(interaction, ctx, provider)).rejects.toMatchError(
+    await expect(userAccountVerification(interaction, ctx, provider)).rejects.toMatchError(
       new RequestError(
         {
           code: 'user.identity_not_exists',
@@ -160,7 +160,7 @@ describe('userIdentityVerification', () => {
       ],
     };
 
-    const result = await userIdentityVerification(interaction, ctx, provider);
+    const result = await userAccountVerification(interaction, ctx, provider);
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
     expect(storeInteractionResult).toBeCalledWith(result, ctx, provider);
     expect(result).toEqual({ event: Event.SignIn, accountId: 'foo', identifiers: [] });
@@ -177,8 +177,8 @@ describe('userIdentityVerification', () => {
       ],
     };
 
-    await expect(userIdentityVerification(interaction, ctx, provider)).rejects.toMatchError(
-      new RequestError({ code: 'user.user_not_exist', status: 404 })
+    await expect(userAccountVerification(interaction, ctx, provider)).rejects.toMatchError(
+      new RequestError({ code: 'user.user_not_exist', status: 404 }, { identity: 'email' })
     );
 
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
@@ -198,7 +198,7 @@ describe('userIdentityVerification', () => {
       ],
     };
 
-    await expect(userIdentityVerification(interaction, ctx, provider)).rejects.toMatchError(
+    await expect(userAccountVerification(interaction, ctx, provider)).rejects.toMatchError(
       new RequestError({ code: 'user.suspended', status: 401 })
     );
 
@@ -220,7 +220,7 @@ describe('userIdentityVerification', () => {
       ],
     };
 
-    await expect(userIdentityVerification(interaction, ctx, provider)).rejects.toMatchError(
+    await expect(userAccountVerification(interaction, ctx, provider)).rejects.toMatchError(
       new RequestError('session.verification_failed')
     );
     expect(findUserByIdentifierMock).toHaveBeenNthCalledWith(1, { email: 'email' });
@@ -237,7 +237,7 @@ describe('userIdentityVerification', () => {
       identifiers: [{ key: 'emailVerified', value: 'email' }],
     };
 
-    await expect(userIdentityVerification(interaction, ctx, provider)).rejects.toMatchError(
+    await expect(userAccountVerification(interaction, ctx, provider)).rejects.toMatchError(
       new RequestError('session.verification_failed')
     );
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
@@ -269,7 +269,7 @@ describe('userIdentityVerification', () => {
       },
     };
 
-    const result = await userIdentityVerification(interaction, ctxWithSocialProfile, provider);
+    const result = await userAccountVerification(interaction, ctxWithSocialProfile, provider);
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
     expect(storeInteractionResult).toBeCalledWith(result, ctxWithSocialProfile, provider);
     expect(result).toEqual({

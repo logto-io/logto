@@ -22,14 +22,17 @@ import {
   isAccountVerifiedInteractionResult,
 } from '../utils/interaction.js';
 
-const identifyUserByVerifiedPasscodeIdentifier = async (
+const identifyUserByVerifiedEmailOrPhone = async (
   identifier: VerifiedEmailIdentifier | VerifiedPhoneIdentifier
 ) => {
   const user = await findUserByIdentifier(
     identifier.key === 'emailVerified' ? { email: identifier.value } : { phone: identifier.value }
   );
 
-  assertThat(user, new RequestError({ code: 'user.user_not_exist', status: 404 }));
+  assertThat(
+    user,
+    new RequestError({ code: 'user.user_not_exist', status: 404 }, { identity: identifier.value })
+  );
 
   const { id, isSuspended } = user;
 
@@ -71,10 +74,10 @@ const identifyUser = async (identifier: Identifier) => {
     return identifier.value;
   }
 
-  return identifyUserByVerifiedPasscodeIdentifier(identifier);
+  return identifyUserByVerifiedEmailOrPhone(identifier);
 };
 
-export default async function userIdentityVerification(
+export default async function userAccountVerification(
   interaction: PreAccountVerifiedInteractionResult,
   ctx: InteractionContext,
   provider: Provider

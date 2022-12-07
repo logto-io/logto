@@ -7,7 +7,7 @@ import type {
   IdentifierVerifiedInteractionResult,
 } from '../types/index.js';
 import identifierPayloadVerification from './identifier-payload-verification.js';
-import userIdentityVerification from './user-identity-verification.js';
+import userAccountVerification from './user-identity-verification.js';
 
 export default async function identifierVerification(
   ctx: InteractionContext,
@@ -20,5 +20,5 @@ export default async function identifierVerification(
     return verifiedInteraction;
   }
 
-  return userIdentityVerification(verifiedInteraction, ctx, provider);
+  return userAccountVerification(verifiedInteraction, ctx, provider);
 }
