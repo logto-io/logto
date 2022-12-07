@@ -1,5 +1,5 @@
 import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
-import { MessageTypes } from '@logto/connector-kit';
+import { ConnectorPlatform, MessageTypes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
@@ -35,6 +35,10 @@ const loadConnectorFactoriesPlaceHolder = jest.fn() as jest.MockedFunction<
 const getLogtoConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<LogtoConnector[]>
 >;
+
+jest.mock('#src/lib/connector.js', () => ({
+  checkSocialConnectorTargetAndPlatformUniqueness: jest.fn(),
+}));
 
 jest.mock('#src/lib/sign-in-experience/index.js', () => ({
   removeUnavailableSocialConnectorTargets: jest.fn(),
@@ -258,6 +262,39 @@ describe('connector route', () => {
         })
       );
       expect(deleteConnectorByIds).toHaveBeenCalledWith(['id']);
+    });
+
+    it('throws when add more than 1 social connector instance with same target and platform', async () => {
+      loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
+        {
+          ...mockConnectorFactory,
+          metadata: {
+            ...mockConnectorFactory.metadata,
+            id: 'id0',
+            platform: ConnectorPlatform.Universal,
+            isStandard: true,
+          },
+        },
+      ]);
+      mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
+      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
+        {
+          dbEntry: { ...mockConnector, connectorId: 'id0', metadata: { target: 'target' } },
+          metadata: {
+            ...mockMetadata,
+            id: 'id0',
+            target: 'target',
+            platform: ConnectorPlatform.Universal,
+          },
+          type: ConnectorType.Social,
+          ...mockLogtoConnector,
+        },
+      ]);
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'id0',
+        metadata: { target: 'target' },
+      });
+      expect(response).toHaveProperty('statusCode', 422);
     });
   });
 

@@ -14,6 +14,7 @@ import {
 } from '#src/connectors/index.js';
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/lib/connector.js';
 import { removeUnavailableSocialConnectorTargets } from '#src/lib/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import {
@@ -51,6 +52,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const { target: filterTarget } = ctx.query;
       const connectors = await getLogtoConnectors();
+
+      checkSocialConnectorTargetAndPlatformUniqueness(connectors);
 
       assertThat(
         connectors.filter((connector) => connector.type === ConnectorType.Email).length <= 1,
@@ -108,12 +111,12 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         syncProfile: true,
       }),
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         body: { connectorId },
         body,
       } = ctx.guard;
-
       const connectorFactories = await loadConnectorFactories();
       const connectorFactory = connectorFactories.find(
         ({ metadata: { id } }) => id === connectorId
@@ -134,6 +137,17 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
           status: 422,
         })
       );
+
+      if (body.metadata?.target && connectorFactory.type === ConnectorType.Social) {
+        const connectors = await getLogtoConnectors();
+        assertThat(
+          !connectors.some(
+            ({ metadata: { target, platform } }) =>
+              target === body.metadata?.target && platform === connectorFactory.metadata.platform
+          ),
+          new RequestError({ code: 'connector.multiple_target_with_same_platform', status: 422 })
+        );
+      }
 
       const insertConnectorId = generateConnectorId();
       const { metadata, ...rest } = body;

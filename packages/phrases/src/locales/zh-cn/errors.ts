@@ -101,6 +101,7 @@ const errors = {
     multiple_instances_not_supported: '你选择的连接器不支持创建多实例。',
     invalid_type_for_syncing_profile: '只有社交连接器可以开启用户档案同步。',
     can_not_modify_target: '不可修改连接器 target。',
+    multiple_target_with_same_platform: '不能同时存在多个有相同 target 和平台类型的社交连接器。',
   },
   passcode: {
     phone_email_empty: '手机号与邮箱地址均为空',
