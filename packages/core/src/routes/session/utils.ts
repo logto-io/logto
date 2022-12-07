@@ -171,22 +171,22 @@ export const checkRequiredProfile = async (
 
   if (signUp.password && !isUserPasswordSet(user)) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_password', status: 422 });
+    throw new RequestError({ code: 'user.password_required_in_profile', status: 422 });
   }
 
   if (isSameArray(signUp.identifiers, [SignInIdentifier.Username]) && !username) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_username', status: 422 });
+    throw new RequestError({ code: 'user.username_required_in_profile', status: 422 });
   }
 
   if (isSameArray(signUp.identifiers, [SignInIdentifier.Email]) && !primaryEmail) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_email', status: 422 });
+    throw new RequestError({ code: 'user.email_required_in_profile', status: 422 });
   }
 
   if (isSameArray(signUp.identifiers, [SignInIdentifier.Sms]) && !primaryPhone) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_sms', status: 422 });
+    throw new RequestError({ code: 'user.phone_required_in_profile', status: 422 });
   }
 
   if (
@@ -195,7 +195,7 @@ export const checkRequiredProfile = async (
     !primaryPhone
   ) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
+    throw new RequestError({ code: 'user.email_or_phone_required_in_profile', status: 422 });
   }
 };
 /* eslint-enable complexity */

@@ -102,14 +102,14 @@ export const checkIdentifierCollision = async (
   const { username, primaryEmail, primaryPhone } = identifiers;
 
   if (username && (await hasUser(username, excludeUserId))) {
-    throw new RequestError({ code: 'user.username_exists', status: 422 });
+    throw new RequestError({ code: 'user.username_already_in_use', status: 422 });
   }
 
   if (primaryEmail && (await hasUserWithEmail(primaryEmail, excludeUserId))) {
-    throw new RequestError({ code: 'user.email_exists', status: 422 });
+    throw new RequestError({ code: 'user.email_already_in_use', status: 422 });
   }
 
   if (primaryPhone && (await hasUserWithPhone(primaryPhone, excludeUserId))) {
-    throw new RequestError({ code: 'user.sms_exists', status: 422 });
+    throw new RequestError({ code: 'user.phone_already_in_use', status: 422 });
   }
 };

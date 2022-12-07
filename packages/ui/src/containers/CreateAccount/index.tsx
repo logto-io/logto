@@ -49,7 +49,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
 
   const registerErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.username_exists_register': () => {
+      'user.username_already_in_use': () => {
         setFieldErrors((state) => ({
           ...state,
           username: 'username_exists',

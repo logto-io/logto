@@ -51,7 +51,7 @@ const identifyUserBySocialIdentifier = async (identifier: SocialIdentifier) => {
 
     throw new RequestError(
       {
-        code: 'user.identity_not_exists',
+        code: 'user.identity_not_exist',
         status: 422,
       },
       relatedInfo && { relatedUser: maskUserInfo(relatedInfo[0]) }

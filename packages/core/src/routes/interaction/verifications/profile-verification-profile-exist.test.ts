@@ -34,7 +34,7 @@ jest.mock('../utils/index.js', () => ({
   isUserPasswordSet: jest.fn().mockResolvedValueOnce(true),
 }));
 
-describe('Existed profile should throw', () => {
+describe('Should throw when providing existing identifiers in profile', () => {
   const provider = new Provider('');
   const baseCtx = createContextWithRouteParameters();
   const identifiers: Identifier[] = [
@@ -53,7 +53,7 @@ describe('Existed profile should throw', () => {
     jest.clearAllMocks();
   });
 
-  it('username exist', async () => {
+  it('username exists', async () => {
     (findUserById as jest.Mock).mockResolvedValueOnce({ id: 'foo', username: 'foo' });
 
     const ctx: InteractionContext = {
@@ -68,13 +68,13 @@ describe('Existed profile should throw', () => {
 
     await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
-        code: 'user.username_exists',
+        code: 'user.username_exists_in_profile',
       })
     );
     expect(storeInteractionResult).not.toBeCalled();
   });
 
-  it('email exist', async () => {
+  it('email exists', async () => {
     (findUserById as jest.Mock).mockResolvedValueOnce({ id: 'foo', primaryEmail: 'email' });
 
     const ctx: InteractionContext = {
@@ -89,13 +89,13 @@ describe('Existed profile should throw', () => {
 
     await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
-        code: 'user.email_exists',
+        code: 'user.email_exists_in_profile',
       })
     );
     expect(storeInteractionResult).not.toBeCalled();
   });
 
-  it('phone exist', async () => {
+  it('phone exists', async () => {
     (findUserById as jest.Mock).mockResolvedValueOnce({ id: 'foo', primaryPhone: 'phone' });
 
     const ctx: InteractionContext = {
@@ -110,13 +110,13 @@ describe('Existed profile should throw', () => {
 
     await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
-        code: 'user.sms_exists',
+        code: 'user.phone_exists_in_profile',
       })
     );
     expect(storeInteractionResult).not.toBeCalled();
   });
 
-  it('password exist', async () => {
+  it('password exists', async () => {
     (findUserById as jest.Mock).mockResolvedValueOnce({ id: 'foo' });
 
     const ctx: InteractionContext = {
@@ -131,7 +131,7 @@ describe('Existed profile should throw', () => {
 
     await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
-        code: 'user.password_exists',
+        code: 'user.password_exists_in_profile',
       })
     );
     expect(storeInteractionResult).not.toBeCalled();

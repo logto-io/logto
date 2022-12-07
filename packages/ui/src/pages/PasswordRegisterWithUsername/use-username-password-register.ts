@@ -16,7 +16,7 @@ const useUsernamePasswordRegister = () => {
 
   const resetPasswordErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.username_exists_register': async (error) => {
+      'user.username_already_in_use': async (error) => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
         navigate(-1);
       },

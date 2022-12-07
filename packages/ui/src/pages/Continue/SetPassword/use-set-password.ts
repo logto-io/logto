@@ -17,7 +17,7 @@ const useSetPassword = () => {
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.password_exists': async (error) => {
+      'user.password_exists_in_profile': async (error) => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
         navigate(-1);
       },

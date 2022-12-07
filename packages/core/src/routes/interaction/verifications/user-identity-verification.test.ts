@@ -134,7 +134,7 @@ describe('userAccountVerification', () => {
     await expect(userAccountVerification(interaction, ctx, provider)).rejects.toMatchError(
       new RequestError(
         {
-          code: 'user.identity_not_exists',
+          code: 'user.identity_not_exist',
           status: 422,
         },
         null

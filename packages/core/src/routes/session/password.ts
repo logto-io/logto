@@ -118,7 +118,7 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
       assertThat(
         !(await hasUser(username)),
         new RequestError({
-          code: 'user.username_exists_register',
+          code: 'user.username_already_in_use',
           status: 422,
         })
       );
@@ -156,7 +156,7 @@ export default function passwordRoutes<T extends AnonymousRouter>(router: T, pro
       assertThat(
         !(await hasUser(username)),
         new RequestError({
-          code: 'user.username_exists_register',
+          code: 'user.username_already_in_use',
           status: 422,
         })
       );

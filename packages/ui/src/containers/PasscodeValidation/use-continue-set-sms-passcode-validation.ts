@@ -34,7 +34,7 @@ const useContinueSetSmsPasscodeValidation = (phone: string, errorCallback?: () =
 
   const setPhoneErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.phone_not_exists': identifierNotExistErrorHandler,
+      'user.phone_not_exist': identifierNotExistErrorHandler,
       ...requiredProfileErrorHandler,
       callback: errorCallback,
     }),

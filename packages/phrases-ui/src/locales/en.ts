@@ -49,9 +49,9 @@ const translation = {
     continue_with: 'Continue with',
     create_account_id_exists:
       'The account with {{type}} {{value}} already exists, would you like to sign in?',
-    sign_in_id_does_not_exists:
+    sign_in_id_does_not_exist:
       'The account with {{type}} {{value}} does not exist, would you like to create a new account?',
-    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.',
+    sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.',
     create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists',
     bind_account_title: 'Link account',
     social_create_account: 'No account? You can create a new account and link.',

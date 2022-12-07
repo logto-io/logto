@@ -105,7 +105,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       if (flow === PasscodeType.ForgotPassword) {
         const user = await findUserByPhone(phone);
-        assertThat(user, new RequestError({ code: 'user.phone_not_exists', status: 404 }));
+        assertThat(user, new RequestError({ code: 'user.phone_not_exist', status: 404 }));
 
         await assignVerificationResult(ctx, provider, { flow, userId: user.id });
         ctx.status = 204;
@@ -155,7 +155,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       if (flow === PasscodeType.ForgotPassword) {
         const user = await findUserByEmail(email);
 
-        assertThat(user, new RequestError({ code: 'user.email_not_exists', status: 404 }));
+        assertThat(user, new RequestError({ code: 'user.email_not_exist', status: 404 }));
 
         await assignVerificationResult(ctx, provider, { flow, userId: user.id });
         ctx.status = 204;
