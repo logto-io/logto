@@ -47,7 +47,7 @@ describe('forgot password interaction profile verification', () => {
 
     await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
-        code: 'user.require_new_password',
+        code: 'user.new_password_required_in_profile',
         status: 422,
       })
     );

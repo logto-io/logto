@@ -48,9 +48,9 @@ const translation = {
     resend_passcode: 'Reenviar código de verificação',
     continue_with: 'Continue com',
     create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de entrar?',
-    sign_in_id_does_not_exists:
+    sign_in_id_does_not_exist:
       'A conta com {{type}} {{value}} não existe, gostaria de criar uma nova conta?',
-    sign_in_id_does_not_exists_alert: 'A conta com {{type}} {{value}} não existe.',
+    sign_in_id_does_not_exist_alert: 'A conta com {{type}} {{value}} não existe.',
     create_account_id_exists_alert: 'A conta com {{type}} {{value}} já existe',
     bind_account_title: 'Link da conta',
     social_create_account: 'Sem conta? Você pode criar uma nova conta e link.',

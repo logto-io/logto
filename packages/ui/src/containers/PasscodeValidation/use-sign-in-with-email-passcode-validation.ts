@@ -39,7 +39,7 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
   const emailNotExistRegisterErrorHandler = useCallback(async () => {
     const [confirm] = await show({
       confirmText: 'action.create',
-      ModalContent: t('description.sign_in_id_does_not_exists', {
+      ModalContent: t('description.sign_in_id_does_not_exist', {
         type: t(`description.email`),
         value: email,
       }),
@@ -60,7 +60,7 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
 
   const errorHandlers = useMemo<ErrorHandlers>(
     () => ({
-      'user.email_not_exists':
+      'user.email_not_exist':
         // Block user auto register if is bind social or sign-in only flow
         signInMode === SignInMode.SignIn || socialToBind
           ? identifierNotExistErrorHandler

@@ -21,7 +21,7 @@ const useForgotPasswordSmsPasscodeValidation = (phone: string, errorCallback?: (
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.phone_not_exists': identifierNotExistErrorHandler,
+      'user.phone_not_exist': identifierNotExistErrorHandler,
       ...sharedErrorHandlers,
       callback: errorCallback,
     }),

@@ -140,7 +140,9 @@ describe('checkRequiredProfile', () => {
 
     await expect(
       checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
-    ).rejects.toThrowError(new RequestError({ code: 'user.require_password', status: 422 }));
+    ).rejects.toThrowError(
+      new RequestError({ code: 'user.password_required_in_profile', status: 422 })
+    );
 
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
@@ -166,7 +168,9 @@ describe('checkRequiredProfile', () => {
 
     await expect(
       checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
-    ).rejects.toThrowError(new RequestError({ code: 'user.require_username', status: 422 }));
+    ).rejects.toThrowError(
+      new RequestError({ code: 'user.username_required_in_profile', status: 422 })
+    );
 
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
@@ -192,7 +196,9 @@ describe('checkRequiredProfile', () => {
 
     await expect(
       checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
-    ).rejects.toThrowError(new RequestError({ code: 'user.require_email', status: 422 }));
+    ).rejects.toThrowError(
+      new RequestError({ code: 'user.email_required_in_profile', status: 422 })
+    );
 
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
@@ -218,7 +224,9 @@ describe('checkRequiredProfile', () => {
 
     await expect(
       checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
-    ).rejects.toThrowError(new RequestError({ code: 'user.require_sms', status: 422 }));
+    ).rejects.toThrowError(
+      new RequestError({ code: 'user.phone_required_in_profile', status: 422 })
+    );
 
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
@@ -245,7 +253,9 @@ describe('checkRequiredProfile', () => {
 
     await expect(
       checkRequiredProfile(createContext(), createProvider(), user, signInExperience)
-    ).rejects.toThrowError(new RequestError({ code: 'user.require_email_or_sms', status: 422 }));
+    ).rejects.toThrowError(
+      new RequestError({ code: 'user.email_or_phone_required_in_profile', status: 422 })
+    );
 
     expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),

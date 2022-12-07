@@ -22,7 +22,7 @@ const useForgotPasswordEmailPasscodeValidation = (email: string, errorCallback?:
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.email_not_exists': identifierNotExistErrorHandler,
+      'user.email_not_exist': identifierNotExistErrorHandler,
       ...sharedErrorHandlers,
       callback: errorCallback,
     }),

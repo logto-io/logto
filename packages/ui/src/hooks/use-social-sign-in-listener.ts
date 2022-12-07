@@ -22,7 +22,7 @@ const useSocialSignInListener = () => {
 
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.identity_not_exists': (error) => {
+      'user.identity_not_exist': (error) => {
         // Should not let user register under sign-in only mode
         if (experienceSettings?.signInMode === SignInMode.SignIn) {
           setToast(error.message);

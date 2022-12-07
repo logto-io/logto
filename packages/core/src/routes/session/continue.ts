@@ -45,7 +45,7 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
       assertThat(
         !isUserPasswordSet(user),
         new RequestError({
-          code: 'user.password_exists',
+          code: 'user.password_exists_in_profile',
         })
       );
 
@@ -79,14 +79,14 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
       assertThat(
         !user.username,
         new RequestError({
-          code: 'user.username_exists',
+          code: 'user.username_exists_in_profile',
         })
       );
 
       assertThat(
         !(await hasUser(username)),
         new RequestError({
-          code: 'user.username_exists_register',
+          code: 'user.username_already_in_use',
           status: 422,
         })
       );
@@ -116,14 +116,14 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
     assertThat(
       !user.primaryEmail,
       new RequestError({
-        code: 'user.email_exists',
+        code: 'user.email_exists_in_profile',
       })
     );
 
     assertThat(
       !(await hasUserWithEmail(email)),
       new RequestError({
-        code: 'user.email_exists_register',
+        code: 'user.email_already_in_use',
         status: 422,
       })
     );
@@ -152,14 +152,14 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
     assertThat(
       !user.primaryPhone,
       new RequestError({
-        code: 'user.sms_exists',
+        code: 'user.phone_exists_in_profile',
       })
     );
 
     assertThat(
       !(await hasUserWithPhone(phone)),
       new RequestError({
-        code: 'user.phone_exists_register',
+        code: 'user.phone_already_in_use',
         status: 422,
       })
     );

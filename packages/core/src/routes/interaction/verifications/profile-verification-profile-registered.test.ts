@@ -155,7 +155,7 @@ describe('profile registered validation', () => {
 
     await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
-        code: 'user.username_exists_register',
+        code: 'user.username_already_in_use',
         status: 422,
       })
     );
@@ -177,7 +177,7 @@ describe('profile registered validation', () => {
 
     await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
-        code: 'user.email_exists_register',
+        code: 'user.email_already_in_use',
         status: 422,
       })
     );
@@ -199,7 +199,7 @@ describe('profile registered validation', () => {
 
     await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
-        code: 'user.phone_exists_register',
+        code: 'user.phone_already_in_use',
         status: 422,
       })
     );
@@ -221,7 +221,7 @@ describe('profile registered validation', () => {
 
     await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
-        code: 'user.identity_exists',
+        code: 'user.identity_already_in_use',
         status: 422,
       })
     );

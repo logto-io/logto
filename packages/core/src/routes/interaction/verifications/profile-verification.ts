@@ -78,7 +78,7 @@ const verifyProfileNotRegistered = async (
     assertThat(
       !(await hasUser(username)),
       new RequestError({
-        code: 'user.username_exists_register',
+        code: 'user.username_already_in_use',
         status: 422,
       })
     );
@@ -88,7 +88,7 @@ const verifyProfileNotRegistered = async (
     assertThat(
       !(await hasUserWithEmail(email)),
       new RequestError({
-        code: 'user.email_exists_register',
+        code: 'user.email_already_in_use',
         status: 422,
       })
     );
@@ -98,7 +98,7 @@ const verifyProfileNotRegistered = async (
     assertThat(
       !(await hasUserWithPhone(phone)),
       new RequestError({
-        code: 'user.phone_exists_register',
+        code: 'user.phone_already_in_use',
         status: 422,
       })
     );
@@ -121,7 +121,7 @@ const verifyProfileNotRegistered = async (
     assertThat(
       !(await hasUserWithIdentity(target, socialIdentifier.userInfo.id)),
       new RequestError({
-        code: 'user.identity_exists',
+        code: 'user.identity_already_in_use',
         status: 422,
       })
     );
@@ -133,7 +133,7 @@ const verifyProfileNotExist = async ({ username, email, phone, password }: Profi
     assertThat(
       !user.username,
       new RequestError({
-        code: 'user.username_exists',
+        code: 'user.username_exists_in_profile',
       })
     );
   }
@@ -142,7 +142,7 @@ const verifyProfileNotExist = async ({ username, email, phone, password }: Profi
     assertThat(
       !user.primaryEmail,
       new RequestError({
-        code: 'user.email_exists',
+        code: 'user.email_exists_in_profile',
       })
     );
   }
@@ -151,7 +151,7 @@ const verifyProfileNotExist = async ({ username, email, phone, password }: Profi
     assertThat(
       !user.primaryPhone,
       new RequestError({
-        code: 'user.sms_exists',
+        code: 'user.phone_exists_in_profile',
       })
     );
   }
@@ -160,7 +160,7 @@ const verifyProfileNotExist = async ({ username, email, phone, password }: Profi
     assertThat(
       !isUserPasswordSet(user),
       new RequestError({
-        code: 'user.password_exists',
+        code: 'user.password_exists_in_profile',
       })
     );
   }
@@ -208,7 +208,7 @@ export default async function verifyProfile(
   const passwordProfileResult = forgotPasswordProfileGuard.safeParse(profile);
   assertThat(
     passwordProfileResult.success,
-    new RequestError({ code: 'user.require_new_password', status: 422 })
+    new RequestError({ code: 'user.new_password_required_in_profile', status: 422 })
   );
 
   const passwordProfile = passwordProfileResult.data;

@@ -57,7 +57,7 @@ const useRegisterWithSmsPasscodeValidation = (phone: string, errorCallback?: () 
 
   const errorHandlers = useMemo<ErrorHandlers>(
     () => ({
-      'user.phone_exists_register':
+      'user.phone_already_in_use':
         signInMode === SignInMode.Register
           ? identifierExistErrorHandler
           : phoneExistSignInErrorHandler,
