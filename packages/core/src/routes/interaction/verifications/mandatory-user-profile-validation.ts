@@ -69,7 +69,7 @@ const getMissingProfileBySignUpIdentifiers = ({
   return missingProfile;
 };
 
-export default async function mandatoryUserProfileValidation(
+export default async function validateMandatoryUserProfile(
   ctx: WithSignInExperienceContext<Context>,
   interaction: IdentifierVerifiedInteractionResult
 ) {

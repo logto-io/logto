@@ -5,7 +5,7 @@ import type { Provider } from 'oidc-provider';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { customInteractionResultGuard } from '../types/guard.js';
+import { anonymousInteractionResultGuard } from '../types/guard.js';
 import type {
   Identifier,
   AnonymousInteractionResult,
@@ -59,7 +59,7 @@ export const storeInteractionResult = async (
 
 export const getInteractionStorage = async (ctx: Context, provider: Provider) => {
   const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-  const parseResult = customInteractionResultGuard.safeParse(result);
+  const parseResult = anonymousInteractionResultGuard.safeParse(result);
 
   assertThat(
     parseResult.success,

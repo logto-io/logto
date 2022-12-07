@@ -7,7 +7,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
-import mandatoryUserProfileValidation from './mandatory-user-profile-validation.js';
+import validateMandatoryUserProfile from './mandatory-user-profile-validation.js';
 
 jest.mock('oidc-provider', () => ({
   Provider: jest.fn(() => ({
@@ -23,7 +23,7 @@ jest.mock('../utils/index.js', () => ({
   isUserPasswordSet: jest.fn(),
 }));
 
-describe('mandatoryUserProfileValidation', () => {
+describe('validateMandatoryUserProfile', () => {
   const baseCtx = createContextWithRouteParameters();
   const interaction: IdentifierVerifiedInteractionResult = {
     event: Event.SignIn,
@@ -36,7 +36,7 @@ describe('mandatoryUserProfileValidation', () => {
       signInExperience: mockSignInExperience,
     };
 
-    await expect(mandatoryUserProfileValidation(ctx, interaction)).rejects.toMatchError(
+    await expect(validateMandatoryUserProfile(ctx, interaction)).rejects.toMatchError(
       new RequestError(
         { code: 'user.missing_profile', status: 422 },
         { missingProfile: [MissingProfile.password, MissingProfile.username] }
@@ -44,7 +44,7 @@ describe('mandatoryUserProfileValidation', () => {
     );
 
     await expect(
-      mandatoryUserProfileValidation(ctx, {
+      validateMandatoryUserProfile(ctx, {
         ...interaction,
         profile: {
           username: 'username',
@@ -65,7 +65,7 @@ describe('mandatoryUserProfileValidation', () => {
       signInExperience: mockSignInExperience,
     };
 
-    await expect(mandatoryUserProfileValidation(ctx, interaction)).resolves.not.toThrow();
+    await expect(validateMandatoryUserProfile(ctx, interaction)).resolves.not.toThrow();
   });
 
   it('email missing but required', async () => {
@@ -77,7 +77,7 @@ describe('mandatoryUserProfileValidation', () => {
       },
     };
 
-    await expect(mandatoryUserProfileValidation(ctx, interaction)).rejects.toMatchError(
+    await expect(validateMandatoryUserProfile(ctx, interaction)).rejects.toMatchError(
       new RequestError(
         { code: 'user.missing_profile', status: 422 },
         { missingProfile: [MissingProfile.email] }
@@ -98,7 +98,7 @@ describe('mandatoryUserProfileValidation', () => {
       },
     };
 
-    await expect(mandatoryUserProfileValidation(ctx, interaction)).resolves.not.toThrow();
+    await expect(validateMandatoryUserProfile(ctx, interaction)).resolves.not.toThrow();
   });
 
   it('phone missing but required', async () => {
@@ -110,7 +110,7 @@ describe('mandatoryUserProfileValidation', () => {
       },
     };
 
-    await expect(mandatoryUserProfileValidation(ctx, interaction)).rejects.toMatchError(
+    await expect(validateMandatoryUserProfile(ctx, interaction)).rejects.toMatchError(
       new RequestError(
         { code: 'user.missing_profile', status: 422 },
         { missingProfile: [MissingProfile.phone] }
@@ -131,7 +131,7 @@ describe('mandatoryUserProfileValidation', () => {
       },
     };
 
-    await expect(mandatoryUserProfileValidation(ctx, interaction)).resolves.not.toThrow();
+    await expect(validateMandatoryUserProfile(ctx, interaction)).resolves.not.toThrow();
   });
 
   it('email or Phone required', async () => {
@@ -147,7 +147,7 @@ describe('mandatoryUserProfileValidation', () => {
       },
     };
 
-    await expect(mandatoryUserProfileValidation(ctx, interaction)).rejects.toMatchError(
+    await expect(validateMandatoryUserProfile(ctx, interaction)).rejects.toMatchError(
       new RequestError(
         { code: 'user.missing_profile', status: 422 },
         { missingProfile: [MissingProfile.emailOrPhone] }
@@ -155,11 +155,11 @@ describe('mandatoryUserProfileValidation', () => {
     );
 
     await expect(
-      mandatoryUserProfileValidation(ctx, { ...interaction, profile: { email: 'email' } })
+      validateMandatoryUserProfile(ctx, { ...interaction, profile: { email: 'email' } })
     ).resolves.not.toThrow();
 
     await expect(
-      mandatoryUserProfileValidation(ctx, { ...interaction, profile: { phone: '123456' } })
+      validateMandatoryUserProfile(ctx, { ...interaction, profile: { phone: '123456' } })
     ).resolves.not.toThrow();
   });
 });
