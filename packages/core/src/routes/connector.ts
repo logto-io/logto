@@ -138,13 +138,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
-      if (body.metadata?.target && connectorFactory.type === ConnectorType.Social) {
+      if (connectorFactory.type === ConnectorType.Social) {
         const connectors = await getLogtoConnectors();
+        const connectorTarget = body.metadata?.target ?? connectorFactory.metadata.target;
         assertThat(
-          !connectors.some(
-            ({ metadata: { target, platform } }) =>
-              target === body.metadata?.target && platform === connectorFactory.metadata.platform
-          ),
+          !connectors
+            .filter(({ type }) => type === ConnectorType.Social)
+            .some(
+              ({ metadata: { target, platform } }) =>
+                target === connectorTarget && platform === connectorFactory.metadata.platform
+            ),
           new RequestError({ code: 'connector.multiple_target_with_same_platform', status: 422 })
         );
       }

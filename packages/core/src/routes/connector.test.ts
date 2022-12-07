@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
 import { ConnectorPlatform, MessageTypes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
@@ -159,6 +160,14 @@ describe('connector route', () => {
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
+      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
+        {
+          dbEntry: { ...mockConnector, connectorId: 'id0' },
+          metadata: { ...mockMetadata, id: 'id0' },
+          type: ConnectorType.Sms,
+          ...mockLogtoConnector,
+        },
+      ]);
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'connectorId',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
@@ -194,13 +203,27 @@ describe('connector route', () => {
       loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
         {
           ...mockConnectorFactory,
-          metadata: { ...mockConnectorFactory.metadata, id: 'id0', isStandard: true },
+          metadata: {
+            ...mockMetadata,
+            id: 'id0',
+            isStandard: true,
+            platform: ConnectorPlatform.Universal,
+          },
         },
       ]);
       mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 1 });
+      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
+        {
+          dbEntry: { ...mockConnector, connectorId: 'id0' },
+          metadata: { ...mockMetadata, id: 'id0', platform: ConnectorPlatform.Universal },
+          type: ConnectorType.Social,
+          ...mockLogtoConnector,
+        },
+      ]);
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+        metadata: { target: 'new_target' },
       });
       expect(response.body).toMatchObject(
         expect.objectContaining({
@@ -209,6 +232,7 @@ describe('connector route', () => {
             cliend_id: 'client_id',
             client_secret: 'client_secret',
           },
+          metadata: { target: 'new_target' },
         })
       );
       expect(response).toHaveProperty('statusCode', 200);
@@ -264,7 +288,7 @@ describe('connector route', () => {
       expect(deleteConnectorByIds).toHaveBeenCalledWith(['id']);
     });
 
-    it('throws when add more than 1 social connector instance with same target and platform', async () => {
+    it('throws when add more than 1 social connector instance with same target and platform (add from standard connector)', async () => {
       loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
         {
           ...mockConnectorFactory,
@@ -293,6 +317,39 @@ describe('connector route', () => {
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         metadata: { target: 'target' },
+      });
+      expect(response).toHaveProperty('statusCode', 422);
+    });
+
+    it('throws when add more than 1 social connector instance with same target and platform (add social connector)', async () => {
+      loadConnectorFactoriesPlaceHolder.mockResolvedValueOnce([
+        {
+          ...mockConnectorFactory,
+          metadata: {
+            ...mockConnectorFactory.metadata,
+            id: 'id0',
+            platform: ConnectorPlatform.Universal,
+            target: 'target',
+            isStandard: true,
+          },
+        },
+      ]);
+      mockedCountConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
+      getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([
+        {
+          dbEntry: { ...mockConnector, connectorId: 'id0', metadata: { target: 'target' } },
+          metadata: {
+            ...mockMetadata,
+            id: 'id0',
+            target: 'target',
+            platform: ConnectorPlatform.Universal,
+          },
+          type: ConnectorType.Social,
+          ...mockLogtoConnector,
+        },
+      ]);
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'id0',
       });
       expect(response).toHaveProperty('statusCode', 422);
     });
@@ -426,3 +483,4 @@ describe('connector route', () => {
     });
   });
 });
+/* eslint-enable max-lines */
