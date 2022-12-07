@@ -48,7 +48,7 @@ importers:
       lint-staged: ^13.0.0
       nanoid: ^3.3.4
       ora: ^5.0.0
-      p-retry: ^4.6.1
+      p-retry: ^5.0.0
       prettier: ^2.7.1
       rimraf: ^3.0.2
       roarr: ^7.11.0
@@ -74,7 +74,7 @@ importers:
       inquirer: 8.2.2
       nanoid: 3.3.4
       ora: 5.4.1
-      p-retry: 4.6.1
+      p-retry: 5.1.2
       roarr: 7.11.0
       semver: 7.3.8
       slonik: 30.1.2
@@ -313,7 +313,7 @@ importers:
       nodemon: ^2.0.19
       oidc-provider: ^7.13.0
       openapi-types: ^12.0.0
-      p-retry: ^4.6.1
+      p-retry: ^5.0.0
       prettier: ^2.7.1
       query-string: ^7.0.1
       roarr: ^7.11.0
@@ -361,7 +361,7 @@ importers:
       lodash.pick: 4.4.0
       nanoid: 3.1.30
       oidc-provider: 7.13.0
-      p-retry: 4.6.1
+      p-retry: 5.1.2
       query-string: 7.0.1
       roarr: 7.11.0
       slonik: 30.1.2
@@ -11795,9 +11795,9 @@ packages:
       aggregate-error: 3.1.0
     dev: true
 
-  /p-retry/4.6.1:
-    resolution: {integrity: sha512-e2xXGNhZOZ0lfgR9kL34iGlU8N/KO0xZnQxVEwdeOvpqNDQfdnxIYizvWtK8RglUa3bGqI8g0R/BdfzLMxRkiA==}
-    engines: {node: '>=8'}
+  /p-retry/5.1.2:
+    resolution: {integrity: sha512-couX95waDu98NfNZV+i/iLt+fdVxmI7CbrrdC2uDWfPdUAApyxT4wmDlyOtR5KtTDmkDO0zDScDjDou9YHhd9g==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       '@types/retry': 0.12.1
       retry: 0.13.1
