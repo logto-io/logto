@@ -16,6 +16,7 @@ import Delete from '@/assets/images/delete.svg';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import IconButton from '@/components/IconButton';
+import { Tooltip } from '@/components/Tip';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import {
@@ -162,14 +163,15 @@ const LanguageDetails = () => {
           )}
         </div>
         {!isBuiltIn && (
-          <IconButton
-            tooltip={t('sign_in_exp.others.manage_language.deletion_tip')}
-            onClick={() => {
-              setIsDeletionAlertOpen(true);
-            }}
-          >
-            <Delete />
-          </IconButton>
+          <Tooltip content={t('sign_in_exp.others.manage_language.deletion_tip')}>
+            <IconButton
+              onClick={() => {
+                setIsDeletionAlertOpen(true);
+              }}
+            >
+              <Delete />
+            </IconButton>
+          </Tooltip>
         )}
       </div>
       <form
@@ -189,20 +191,23 @@ const LanguageDetails = () => {
                 <th>
                   <span className={style.customValuesColumn}>
                     {t('sign_in_exp.others.manage_language.custom_values')}
-                    <IconButton
-                      size="small"
-                      className={style.clearButton}
-                      tooltip={t('sign_in_exp.others.manage_language.clear_all_tip')}
-                      onClick={() => {
-                        for (const [key, value] of Object.entries(
-                          flattenTranslation(emptyUiTranslation)
-                        )) {
-                          setValue(key, value, { shouldDirty: true });
-                        }
-                      }}
+                    <Tooltip
+                      anchorClassName={style.clearButton}
+                      content={t('sign_in_exp.others.manage_language.clear_all_tip')}
                     >
-                      <Clear className={style.clearIcon} />
-                    </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          for (const [key, value] of Object.entries(
+                            flattenTranslation(emptyUiTranslation)
+                          )) {
+                            setValue(key, value, { shouldDirty: true });
+                          }
+                        }}
+                      >
+                        <Clear className={style.clearIcon} />
+                      </IconButton>
+                    </Tooltip>
                   </span>
                 </th>
               </tr>

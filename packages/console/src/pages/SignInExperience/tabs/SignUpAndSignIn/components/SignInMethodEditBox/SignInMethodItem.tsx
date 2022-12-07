@@ -10,6 +10,7 @@ import Minus from '@/assets/images/minus.svg';
 import SwitchArrowIcon from '@/assets/images/switch-arrow.svg';
 import Checkbox from '@/components/Checkbox';
 import IconButton from '@/components/IconButton';
+import { Tooltip } from '@/components/Tip';
 import type { SignInMethod } from '@/pages/SignInExperience/types';
 
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
@@ -73,13 +74,14 @@ const SignInMethodItem = ({
             />
             {identifier !== SignInIdentifier.Username && (
               <>
-                <IconButton
-                  className={styles.swapButton}
-                  tooltip={t('sign_in_exp.sign_up_and_sign_in.sign_in.auth_swap_tip')}
-                  onClick={onToggleVerificationPrimary}
+                <Tooltip
+                  anchorClassName={styles.swapButton}
+                  content={t('sign_in_exp.sign_up_and_sign_in.sign_in.auth_swap_tip')}
                 >
-                  <SwitchArrowIcon />
-                </IconButton>
+                  <IconButton onClick={onToggleVerificationPrimary}>
+                    <SwitchArrowIcon />
+                  </IconButton>
+                </Tooltip>
                 <Checkbox
                   className={styles.checkBox}
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
@@ -94,9 +96,8 @@ const SignInMethodItem = ({
             )}
           </div>
         </div>
-        <IconButton
-          disabled={!isDeletable}
-          tooltip={conditional(
+        <Tooltip
+          content={conditional(
             !isDeletable &&
               t('sign_in_exp.sign_up_and_sign_in.tip.delete_sign_in_method', {
                 identifier: t('sign_in_exp.sign_up_and_sign_in.identifiers', {
@@ -104,10 +105,11 @@ const SignInMethodItem = ({
                 }).toLocaleLowerCase(),
               })
           )}
-          onClick={onDelete}
         >
-          <Minus />
-        </IconButton>
+          <IconButton disabled={!isDeletable} onClick={onDelete}>
+            <Minus />
+          </IconButton>
+        </Tooltip>
       </div>
       {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
       <ConnectorSetupWarning requiredConnectors={requiredConnectors} />
