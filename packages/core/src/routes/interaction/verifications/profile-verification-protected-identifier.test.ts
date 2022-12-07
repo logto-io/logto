@@ -6,7 +6,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { Identifier, InteractionContext } from '../types/index.js';
 import { storeInteractionResult } from '../utils/interaction.js';
-import profileVerification from './profile-verification.js';
+import verifyProfile from './profile-verification.js';
 
 jest.mock('oidc-provider', () => ({
   Provider: jest.fn(() => ({
@@ -52,7 +52,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+      await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
       expect(storeInteractionResult).not.toBeCalled();
@@ -71,7 +71,7 @@ describe('profile protected identifier verification', () => {
 
       const identifiers: Identifier[] = [{ key: 'emailVerified', value: 'phone' }];
       await expect(
-        profileVerification(ctx, provider, { ...interaction, identifiers })
+        verifyProfile(ctx, provider, { ...interaction, identifiers })
       ).rejects.toMatchError(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
@@ -91,7 +91,7 @@ describe('profile protected identifier verification', () => {
 
       const identifiers: Identifier[] = [{ key: 'emailVerified', value: 'email' }];
       await expect(
-        profileVerification(ctx, provider, { ...interaction, identifiers })
+        verifyProfile(ctx, provider, { ...interaction, identifiers })
       ).resolves.not.toThrow();
       expect(storeInteractionResult).toBeCalledWith(
         {
@@ -115,7 +115,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+      await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
       expect(storeInteractionResult).not.toBeCalled();
@@ -134,7 +134,7 @@ describe('profile protected identifier verification', () => {
 
       const identifiers: Identifier[] = [{ key: 'phoneVerified', value: 'email' }];
       await expect(
-        profileVerification(ctx, provider, { ...interaction, identifiers })
+        verifyProfile(ctx, provider, { ...interaction, identifiers })
       ).rejects.toMatchError(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
@@ -154,7 +154,7 @@ describe('profile protected identifier verification', () => {
 
       const identifiers: Identifier[] = [{ key: 'phoneVerified', value: 'phone' }];
       await expect(
-        profileVerification(ctx, provider, { ...interaction, identifiers })
+        verifyProfile(ctx, provider, { ...interaction, identifiers })
       ).resolves.not.toThrow();
       expect(storeInteractionResult).toBeCalledWith(
         {
@@ -181,7 +181,7 @@ describe('profile protected identifier verification', () => {
       const identifiers: Identifier[] = [{ key: 'emailVerified', value: 'foo@logto.io' }];
 
       await expect(
-        profileVerification(ctx, provider, { ...interaction, identifiers })
+        verifyProfile(ctx, provider, { ...interaction, identifiers })
       ).rejects.toMatchError(
         new RequestError({ code: 'session.connector_session_not_found', status: 404 })
       );
@@ -203,7 +203,7 @@ describe('profile protected identifier verification', () => {
         { key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } },
       ];
       await expect(
-        profileVerification(ctx, provider, { ...interaction, identifiers })
+        verifyProfile(ctx, provider, { ...interaction, identifiers })
       ).rejects.toMatchError(
         new RequestError({ code: 'session.connector_session_not_found', status: 404 })
       );
@@ -227,7 +227,7 @@ describe('profile protected identifier verification', () => {
       ];
 
       await expect(
-        profileVerification(ctx, provider, { ...interaction, identifiers })
+        verifyProfile(ctx, provider, { ...interaction, identifiers })
       ).resolves.not.toThrow();
       expect(storeInteractionResult).toBeCalledWith(
         {

@@ -16,7 +16,7 @@ import type {
   IdentifierVerifiedInteractionResult,
 } from '../types/index.js';
 import { storeInteractionResult } from '../utils/interaction.js';
-import profileVerification from './profile-verification.js';
+import verifyProfile from './profile-verification.js';
 
 jest.mock('oidc-provider', () => ({
   Provider: jest.fn(() => ({
@@ -72,7 +72,7 @@ describe('register payload guard', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toThrow();
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toThrow();
     expect(storeInteractionResult).not.toBeCalled();
   });
 
@@ -87,7 +87,7 @@ describe('register payload guard', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toThrow();
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toThrow();
     expect(storeInteractionResult).not.toBeCalled();
   });
 
@@ -103,7 +103,7 @@ describe('register payload guard', () => {
       },
     };
 
-    const result = await profileVerification(ctx, provider, interaction);
+    const result = await verifyProfile(ctx, provider, interaction);
     expect(result).toEqual({ ...interaction, profile: ctx.interactionPayload.profile });
   });
 
@@ -119,7 +119,7 @@ describe('register payload guard', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).resolves.not.toThrow();
+    await expect(verifyProfile(ctx, provider, interaction)).resolves.not.toThrow();
   });
 
   it('password with a given email is valid', async () => {
@@ -134,7 +134,7 @@ describe('register payload guard', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).resolves.not.toThrow();
+    await expect(verifyProfile(ctx, provider, interaction)).resolves.not.toThrow();
   });
 });
 
@@ -153,7 +153,7 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.username_exists_register',
         status: 422,
@@ -175,7 +175,7 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.email_exists_register',
         status: 422,
@@ -197,7 +197,7 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.phone_exists_register',
         status: 422,
@@ -219,7 +219,7 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(profileVerification(ctx, provider, interaction)).rejects.toMatchError(
+    await expect(verifyProfile(ctx, provider, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.identity_exists',
         status: 422,

@@ -47,6 +47,7 @@ const errors = {
     sign_in_method_not_enabled: 'This sign in method is not enabled.',
     same_password: 'New password cannot be the same as your old password.',
     require_password: 'You need to set a password before signing-in.',
+    require_new_password: 'You need to set a new password',
     password_exists: 'Your password has been set.',
     require_username: 'You need to set a username before signing-in.',
     username_exists: 'This username is already in use.',
