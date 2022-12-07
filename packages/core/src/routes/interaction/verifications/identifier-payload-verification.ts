@@ -1,4 +1,4 @@
-import type { Event, SocialConnectorPayload } from '@logto/schemas';
+import type { Event, SocialConnectorPayload, SocialIdentityPayload } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -18,7 +18,7 @@ import type {
   AccountIdIdentifier,
 } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
-import { isPasscodeIdentifier, isPasswordIdentifier } from '../utils/index.js';
+import { isPasscodeIdentifier, isPasswordIdentifier, isSocialIdentifier } from '../utils/index.js';
 import { mergeIdentifiers, storeInteractionResult } from '../utils/interaction.js';
 import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
 import { verifySocialIdentity } from '../utils/social-verification.js';
@@ -62,9 +62,29 @@ const verifySocialIdentifier = async (
   return { key: 'social', connectorId: identifier.connectorId, userInfo };
 };
 
+const verifySocialIdentityInInteractionRecord = async (
+  { connectorId, identityType }: SocialIdentityPayload,
+  interactionRecord?: AnonymousInteractionResult
+): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
+  const socialIdentifierRecord = interactionRecord?.identifiers?.find(
+    (entity): entity is SocialIdentifier =>
+      entity.key === 'social' && entity.connectorId === connectorId
+  );
+
+  const verifiedSocialIdentity = socialIdentifierRecord?.userInfo[identityType];
+
+  assertThat(verifiedSocialIdentity, new RequestError('session.connector_session_not_found'));
+
+  return {
+    key: identityType === 'email' ? 'emailVerified' : 'phoneVerified',
+    value: verifiedSocialIdentity,
+  };
+};
+
 const verifyIdentifierPayload = async (
   ctx: InteractionContext,
-  provider: Provider
+  provider: Provider,
+  interactionRecord?: AnonymousInteractionResult
 ): Promise<Identifier | undefined> => {
   const { identifier, event } = ctx.interactionPayload;
 
@@ -80,7 +100,11 @@ const verifyIdentifierPayload = async (
     return verifyPasscodeIdentifier(event, identifier, ctx, provider);
   }
 
-  return verifySocialIdentifier(identifier, ctx);
+  if (isSocialIdentifier(identifier)) {
+    return verifySocialIdentifier(identifier, ctx);
+  }
+
+  return verifySocialIdentityInInteractionRecord(identifier, interactionRecord);
 };
 
 export default async function identifierPayloadVerification(
@@ -90,7 +114,7 @@ export default async function identifierPayloadVerification(
 ): Promise<PayloadVerifiedInteractionResult> {
   const { event } = ctx.interactionPayload;
 
-  const identifier = await verifyIdentifierPayload(ctx, provider);
+  const identifier = await verifyIdentifierPayload(ctx, provider, interactionRecord);
 
   const interaction: PayloadVerifiedInteractionResult = {
     ...interactionRecord,
