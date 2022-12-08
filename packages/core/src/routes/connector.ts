@@ -3,7 +3,6 @@ import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { object, string } from 'zod';
 
@@ -114,9 +113,9 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
-        body: { connectorId },
-        body,
+        body: { connectorId, metadata, config, syncProfile },
       } = ctx.guard;
+
       const connectorFactories = await loadConnectorFactories();
       const connectorFactory = connectorFactories.find(
         ({ metadata: { id } }) => id === connectorId
@@ -129,6 +128,15 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         });
       }
 
+      assertThat(
+        connectorFactory.metadata.isStandard !== true || metadata?.target,
+        'connector.can_not_modify_target'
+      );
+      assertThat(
+        connectorFactory.metadata.isStandard === true || metadata === undefined,
+        'connector.cannot_change_metadata_for_non_standard_connector'
+      );
+
       const { count } = await countConnectorByConnectorId(connectorId);
       assertThat(
         count === 0 || connectorFactory.metadata.isStandard === true,
@@ -140,25 +148,23 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       if (connectorFactory.type === ConnectorType.Social) {
         const connectors = await getLogtoConnectors();
-        const connectorTarget = body.metadata?.target ?? connectorFactory.metadata.target;
         assertThat(
           !connectors
             .filter(({ type }) => type === ConnectorType.Social)
             .some(
               ({ metadata: { target, platform } }) =>
-                target === connectorTarget && platform === connectorFactory.metadata.platform
+                target === cleanDeep(metadata)?.target &&
+                platform === connectorFactory.metadata.platform
             ),
           new RequestError({ code: 'connector.multiple_target_with_same_platform', status: 422 })
         );
       }
 
       const insertConnectorId = generateConnectorId();
-      const { metadata, ...rest } = body;
-
       ctx.body = await insertConnector({
         id: insertConnectorId,
-        ...conditional(metadata && { metadata: cleanDeep(metadata) }),
-        ...rest,
+        connectorId,
+        ...cleanDeep({ syncProfile, config, metadata }),
       });
 
       /**
@@ -197,10 +203,20 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const {
         params: { id },
-        body: { config, syncProfile, metadata },
+        body: { config, metadata, syncProfile },
       } = ctx.guard;
 
       const { type, validateConfig, metadata: originalMetadata } = await getLogtoConnectorById(id);
+
+      assertThat(
+        originalMetadata.isStandard !== true || metadata?.target === originalMetadata.target,
+        'connector.can_not_modify_target'
+      );
+
+      assertThat(
+        originalMetadata.isStandard === true || metadata === undefined,
+        'connector.cannot_change_metadata_for_non_standard_connector'
+      );
 
       if (syncProfile) {
         assertThat(
@@ -213,15 +229,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         validateConfig(config);
       }
 
-      // TODO [LOG-4887]: constrain on assigning/updating `target`.
-      // Once created, target can not be modified.
-      assertThat(
-        !metadata || metadata.target === originalMetadata.target,
-        'connector.can_not_modify_target'
-      );
-
       await updateConnector({
-        set: cleanDeep({ metadata, syncProfile, config }),
+        set: cleanDeep({ config, metadata, syncProfile }),
         where: { id },
         jsonbMode: 'replace',
       });

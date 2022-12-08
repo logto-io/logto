@@ -103,6 +103,7 @@ const errors = {
     invalid_type_for_syncing_profile: '只有社交连接器可以开启用户档案同步。',
     can_not_modify_target: '不可修改连接器 target。',
     multiple_target_with_same_platform: '不能同时存在多个有相同 target 和平台类型的社交连接器。',
+    cannot_change_metadata_for_non_standard_connector: '不可配置该连接器的 metadata 参数。',
   },
   passcode: {
     phone_email_empty: '手机号与邮箱地址均为空',
