@@ -173,6 +173,7 @@ const LanguageDetails = () => {
         )}
       </div>
       <form
+        className={style.form}
         onSubmit={async (event) => {
           // Note: Avoid propagating the 'submit' event to the outer sign-in-experience form.
           event.stopPropagation();
