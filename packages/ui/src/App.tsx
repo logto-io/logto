@@ -2,6 +2,7 @@ import { SignInMode } from '@logto/schemas';
 import { useEffect } from 'react';
 import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 
+import AppBoundary from './containers/AppBoundary';
 import AppContent from './containers/AppContent';
 import LoadingLayerProvider from './containers/LoadingLayerProvider';
 import usePageContext from './hooks/use-page-context';
@@ -15,6 +16,7 @@ import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import Passcode from './pages/Passcode';
 import PasswordRegisterWithUsername from './pages/PasswordRegisterWithUsername';
+import Profile from './pages/Profile';
 import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 import SecondaryRegister from './pages/SecondaryRegister';
@@ -57,60 +59,66 @@ const App = () => {
   const isSignInOnly = experienceSettings.signInMode === SignInMode.SignIn;
 
   return (
-    <Provider value={context}>
-      <AppContent>
-        <BrowserRouter>
+    <BrowserRouter>
+      <Provider value={context}>
+        <AppBoundary>
           <Routes>
-            <Route path="/" element={<Navigate replace to="/sign-in" />} />
-            <Route path="/sign-in/consent" element={<Consent />} />
-            <Route
-              path="/unknown-session"
-              element={<ErrorPage message="error.invalid_session" />}
-            />
-
-            <Route element={<LoadingLayerProvider />}>
-              {/* Sign-in */}
+            <Route path="/profile" element={<Profile />} />
+            <Route element={<AppContent />}>
+              <Route path="/" element={<Navigate replace to="/sign-in" />} />
+              <Route path="/sign-in/consent" element={<Consent />} />
               <Route
-                path="/sign-in"
-                element={isRegisterOnly ? <Navigate replace to="/register" /> : <SignIn />}
+                path="/unknown-session"
+                element={<ErrorPage message="error.invalid_session" />}
               />
-              <Route path="/sign-in/social/:connector" element={<SocialSignIn />} />
-              <Route path="/sign-in/:method" element={<SecondarySignIn />} />
-              <Route path="/sign-in/:method/password" element={<SignInPassword />} />
 
-              {/* Register */}
-              <Route
-                path="/register"
-                element={isSignInOnly ? <Navigate replace to="/sign-in" /> : <Register />}
-              />
-              <Route
-                path="/register/username/password"
-                element={<PasswordRegisterWithUsername />}
-              />
-              <Route path="/register/:method" element={<SecondaryRegister />} />
+              <Route element={<LoadingLayerProvider />}>
+                {/* Sign-in */}
+                <Route
+                  path="/sign-in"
+                  element={isRegisterOnly ? <Navigate replace to="/register" /> : <SignIn />}
+                />
+                <Route path="/sign-in/social/:connector" element={<SocialSignIn />} />
+                <Route path="/sign-in/:method" element={<SecondarySignIn />} />
+                <Route path="/sign-in/:method/password" element={<SignInPassword />} />
 
-              {/* Forgot password */}
-              <Route path="/forgot-password/reset" element={<ResetPassword />} />
-              <Route path="/forgot-password/:method" element={<ForgotPassword />} />
+                {/* Register */}
+                <Route
+                  path="/register"
+                  element={isSignInOnly ? <Navigate replace to="/sign-in" /> : <Register />}
+                />
+                <Route
+                  path="/register/username/password"
+                  element={<PasswordRegisterWithUsername />}
+                />
+                <Route path="/register/:method" element={<SecondaryRegister />} />
 
-              {/* Continue set up missing profile */}
-              <Route path="/continue/email-or-sms/:method" element={<ContinueWithEmailOrPhone />} />
-              <Route path="/continue/:method" element={<Continue />} />
+                {/* Forgot password */}
+                <Route path="/forgot-password/reset" element={<ResetPassword />} />
+                <Route path="/forgot-password/:method" element={<ForgotPassword />} />
 
-              {/* Social sign-in pages */}
-              <Route path="/callback/:connector" element={<Callback />} />
-              <Route path="/social/register/:connector" element={<SocialRegister />} />
-              <Route path="/social/landing/:connector" element={<SocialLanding />} />
+                {/* Continue set up missing profile */}
+                <Route
+                  path="/continue/email-or-sms/:method"
+                  element={<ContinueWithEmailOrPhone />}
+                />
+                <Route path="/continue/:method" element={<Continue />} />
 
-              {/* Always keep route path with param as the last one */}
-              <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
+                {/* Social sign-in pages */}
+                <Route path="/callback/:connector" element={<Callback />} />
+                <Route path="/social/register/:connector" element={<SocialRegister />} />
+                <Route path="/social/landing/:connector" element={<SocialLanding />} />
+
+                {/* Always keep route path with param as the last one */}
+                <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
+              </Route>
+
+              <Route path="*" element={<ErrorPage />} />
             </Route>
-
-            <Route path="*" element={<ErrorPage />} />
           </Routes>
-        </BrowserRouter>
-      </AppContent>
-    </Provider>
+        </AppBoundary>
+      </Provider>
+    </BrowserRouter>
   );
 };
 

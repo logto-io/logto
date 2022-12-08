@@ -1,7 +1,18 @@
+@use '@/scss/colors' as colors;
+@use '@/scss/fonts' as fonts;
+
 body {
+  @include colors.static;
+  @include fonts.fonts;
+
+  --radius: 8px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: auto;
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  word-break: break-word;
+  color: var(--color-type-primary);
+  font: var(--font-body-2);
 }
 
 * {
