@@ -1,3 +1,5 @@
+import type { LocalePhrase } from '../types.js';
+
 const translation = {
   input: {
     username: 'Nome de usuário',
@@ -100,7 +102,7 @@ const translation = {
   },
 };
 
-const ptBR = Object.freeze({
+const ptBR: LocalePhrase = Object.freeze({
   translation,
 });
 
