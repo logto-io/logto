@@ -110,3 +110,12 @@ export const getInteractionStorage = async (ctx: Context, provider: Provider) =>
 
   return parseResult.data;
 };
+
+export const clearInteractionStorage = async (ctx: Context, provider: Provider) => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  if (result) {
+    const { event, profile, identifier, ...rest } = result;
+    await provider.interactionResult(ctx.req, ctx.res, { ...rest });
+  }
+};
