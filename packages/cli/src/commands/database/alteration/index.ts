@@ -23,7 +23,7 @@ const currentDirname = path.dirname(fileURLToPath(metaUrl));
 const { copy, existsSync, remove, readdir } = fsExtra;
 const alterationFilenameRegex = /-(\d+)-?.*\.js$/;
 
-const getTimestampFromFilename = (filename: string) => {
+export const getTimestampFromFilename = (filename: string) => {
   const match = alterationFilenameRegex.exec(filename);
 
   if (!match?.[1]) {

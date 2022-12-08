@@ -1,42 +1,41 @@
-import { createMockPool } from 'slonik';
+import { AlterationStateKey } from '@logto/schemas';
+import Sinon from 'sinon';
+import { createMockPool, createMockQueryResult } from 'slonik';
 
-import * as queries from '../../../queries/logto-config.js';
-import type { QueryType } from '../../../test-utilities.js';
-import * as functions from './index.js';
+import { getAlterationFiles, getTimestampFromFilename, getUndeployedAlterations } from './index.js';
 import { chooseAlterationsByVersion } from './version.js';
 
-const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
-
-const pool = createMockPool({
-  query: async (sql, values) => {
-    return mockQuery(sql, values);
-  },
-});
-
-describe('getUndeployedAlterations()', () => {
-  const files = Object.freeze([
-    { filename: '1.0.0-1663923770-a.js', path: '/alterations-js/1.0.0-1663923770-a.js' },
-    { filename: '1.0.0-1663923771-b.js', path: '/alterations-js/1.0.0-1663923771-b.js' },
-    { filename: '1.0.0-1663923772-c.js', path: '/alterations-js/1.0.0-1663923772-c.js' },
-  ]);
-
-  beforeEach(() => {
-    // `getAlterationFiles()` will ensure the order
-    jest.spyOn(functions, 'getAlterationFiles').mockResolvedValueOnce([...files]);
+const createPoolWithAlterationTimestamp = (timestamp: number) =>
+  createMockPool({
+    query: async () => {
+      return createMockQueryResult([
+        {
+          key: AlterationStateKey.AlterationState,
+          // @ts-expect-error should allow JSON type
+          value: { timestamp },
+        },
+      ]);
+    },
   });
 
+describe('getUndeployedAlterations()', () => {
   it('returns all files if database timestamp is 0', async () => {
-    jest.spyOn(queries, 'getCurrentDatabaseAlterationTimestamp').mockResolvedValueOnce(0);
+    const files = await getAlterationFiles();
+    const pool = createPoolWithAlterationTimestamp(0);
 
-    await expect(functions.getUndeployedAlterations(pool)).resolves.toEqual(files);
+    // Make sure it's worth to test
+    expect(files.length).toBeGreaterThan(3);
+    await expect(getUndeployedAlterations(pool)).resolves.toEqual(files);
   });
 
   it('returns files whose timestamp is greater then database timestamp', async () => {
-    jest
-      .spyOn(queries, 'getCurrentDatabaseAlterationTimestamp')
-      .mockResolvedValueOnce(1_663_923_770);
+    const files = await getAlterationFiles();
+    const testTime = 1_663_923_770;
+    const pool = createPoolWithAlterationTimestamp(testTime);
 
-    await expect(functions.getUndeployedAlterations(pool)).resolves.toEqual([files[1], files[2]]);
+    await expect(getUndeployedAlterations(pool)).resolves.toEqual(
+      files.filter(({ filename }) => getTimestampFromFilename(filename) > testTime)
+    );
   });
 });
 
@@ -61,12 +60,15 @@ describe('chooseAlterationsByVersion()', () => {
 
   it('chooses nothing when input version is invalid', async () => {
     await expect(chooseAlterationsByVersion(files, 'next1')).rejects.toThrow(
-      'Invalid Version: next1'
+      new TypeError('Invalid Version: next1')
     );
-    await expect(chooseAlterationsByVersion([], 'ok')).rejects.toThrow('Invalid Version: ok');
+    await expect(chooseAlterationsByVersion([], 'ok')).rejects.toThrow(
+      new TypeError('Invalid Version: ok')
+    );
   });
 
   it('chooses correct alteration files', async () => {
+    const stub = Sinon.stub(global, 'process').value({ stdin: { isTTY: false } });
     await Promise.all([
       expect(chooseAlterationsByVersion([], 'v1.0.0')).resolves.toEqual([]),
       expect(chooseAlterationsByVersion(files, 'v1.0.0')).resolves.toEqual(files.slice(0, 7)),
@@ -77,5 +79,6 @@ describe('chooseAlterationsByVersion()', () => {
       expect(chooseAlterationsByVersion(files, 'v1.2.0')).resolves.toEqual(files.slice(0, 9)),
       expect(chooseAlterationsByVersion(files, 'next')).resolves.toEqual(files.slice(0, 12)),
     ]);
+    stub.restore();
   });
 });

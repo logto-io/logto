@@ -11,6 +11,7 @@ import type { Progress } from 'got';
 import { got } from 'got';
 import { HttpsProxyAgent } from 'hpagent';
 import inquirer from 'inquirer';
+import type { Options } from 'ora';
 import ora from 'ora';
 import { z } from 'zod';
 
@@ -92,7 +93,7 @@ export const getPathInModule = (moduleName: string, relativePath = '/') =>
 
 export const oraPromise = async <T>(
   promise: PromiseLike<T>,
-  options?: ora.Options,
+  options?: Options,
   exitOnError = false
 ) => {
   const spinner = ora(options).start();
