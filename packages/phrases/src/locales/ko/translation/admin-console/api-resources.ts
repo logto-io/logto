@@ -6,7 +6,7 @@ const api_resources = {
   api_name_placeholder: 'API 이름 입력',
   api_identifier: 'API 식별자',
   api_identifier_tip:
-    'API 리소스에 대한 유일한 식별자예요. 반드시, 절대적인 URI 이여야 하며, 프래그먼트 (#) 요소가 없어야해요. OAuth 2.0의 리소스 파라미터와 동일해요.',
+    'The unique identifier to the API resource. It must be an absolute URI and has no fragment (#) component. Equals to the <a>resource parameter</a> in OAuth 2.0.', // UNTRANSLATED
   api_resource_created: '{{name}} API 리소스가 성공적으로 생성되었어요.',
   api_identifier_placeholder: 'https://your-api-identifier/',
 };

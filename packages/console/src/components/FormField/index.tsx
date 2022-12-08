@@ -9,6 +9,7 @@ import type DangerousRaw from '../DangerousRaw';
 import IconButton from '../IconButton';
 import Spacer from '../Spacer';
 import { ToggleTip } from '../Tip';
+import type { Props as ToggleTipProps } from '../Tip/ToggleTip';
 import * as styles from './index.module.scss';
 
 export type Props = {
@@ -17,7 +18,7 @@ export type Props = {
   isRequired?: boolean;
   className?: string;
   headlineClassName?: string;
-  tip?: AdminConsoleKey;
+  tip?: ToggleTipProps['content'];
 };
 
 const FormField = ({ title, children, isRequired, className, tip, headlineClassName }: Props) => {
@@ -28,7 +29,7 @@ const FormField = ({ title, children, isRequired, className, tip, headlineClassN
       <div className={classNames(styles.headline, headlineClassName)}>
         <div className={styles.title}>{typeof title === 'string' ? t(title) : title}</div>
         {tip && (
-          <ToggleTip anchorClassName={styles.toggleTipButton} content={<div>{t(tip)}</div>}>
+          <ToggleTip anchorClassName={styles.toggleTipButton} content={tip}>
             <IconButton size="small">
               <Tip />
             </IconButton>
