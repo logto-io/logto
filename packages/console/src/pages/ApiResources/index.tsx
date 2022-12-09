@@ -59,9 +59,13 @@ const ApiResources = () => {
           }}
         />
         <Modal
+          shouldCloseOnEsc
           isOpen={isCreateFormOpen}
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
+          onRequestClose={() => {
+            setIsCreateFormOpen(false);
+          }}
         >
           <CreateForm
             onClose={(createdApiResource) => {

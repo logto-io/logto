@@ -124,9 +124,13 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
 
   return (
     <Modal
+      shouldCloseOnEsc
       isOpen={isFormOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
+      onRequestClose={() => {
+        onClose?.();
+      }}
     >
       <ModalLayout
         title={cardTitle}
@@ -179,7 +183,12 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
           />
         )}
         {activeFactory && (
-          <Modal isOpen={isGetStartedModalOpen} className={modalStyles.fullScreen}>
+          <Modal
+            shouldCloseOnEsc
+            isOpen={isGetStartedModalOpen}
+            className={modalStyles.fullScreen}
+            onRequestClose={closeModal}
+          >
             <Guide connector={activeFactory} onClose={closeModal} />
           </Modal>
         )}

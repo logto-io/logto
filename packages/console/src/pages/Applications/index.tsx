@@ -54,18 +54,23 @@ const Applications = () => {
           }}
         />
         <Modal
+          shouldCloseOnEsc
           isOpen={isCreateNew}
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
+          onRequestClose={() => {
+            navigate('/applications');
+          }}
         >
           <CreateForm
             onClose={(createdApp) => {
-              navigate('/applications');
-
               if (createdApp) {
                 toast.success(t('applications.application_created', { name: createdApp.name }));
                 navigate(`/applications/${createdApp.id}`);
+
+                return;
               }
+              navigate('/applications');
             }}
           />
         </Modal>
