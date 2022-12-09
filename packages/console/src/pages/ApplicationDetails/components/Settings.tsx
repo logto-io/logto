@@ -1,7 +1,7 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType, validateRedirectUrl } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/components/CopyToClipboard';
 import FormCard from '@/components/FormCard';
@@ -10,6 +10,7 @@ import type { MultiTextInputRule } from '@/components/MultiTextInput/types';
 import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
 import MultiTextInputField from '@/components/MultiTextInputField';
 import TextInput from '@/components/TextInput';
+import TextLink from '@/components/TextLink';
 import { uriOriginValidator } from '@/utilities/validator';
 
 import * as styles from '../index.module.scss';
@@ -55,7 +56,24 @@ const Settings = ({ data }: Props) => {
           placeholder={t('application_details.description_placeholder')}
         />
       </FormField>
-      <FormField title="application_details.application_id">
+      <FormField
+        title="application_details.application_id"
+        tip={(closeTipHandler) => (
+          <Trans
+            components={{
+              a: (
+                <TextLink
+                  href="https://openid.net/specs/openid-connect-core-1_0.html"
+                  target="_blank"
+                  onClick={closeTipHandler}
+                />
+              ),
+            }}
+          >
+            {t('application_details.application_id_tip')}
+          </Trans>
+        )}
+      >
         <CopyToClipboard value={id} variant="border" className={styles.textField} />
       </FormField>
       {[ApplicationType.Traditional, ApplicationType.MachineToMachine].includes(
@@ -85,7 +103,21 @@ const Settings = ({ data }: Props) => {
             <MultiTextInputField
               isRequired
               title="application_details.redirect_uris"
-              tip="application_details.redirect_uri_tip"
+              tip={(closeTipHandler) => (
+                <Trans
+                  components={{
+                    a: (
+                      <TextLink
+                        href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest"
+                        target="_blank"
+                        onClick={closeTipHandler}
+                      />
+                    ),
+                  }}
+                >
+                  {t('application_details.redirect_uri_tip')}
+                </Trans>
+              )}
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               placeholder={
@@ -109,7 +141,7 @@ const Settings = ({ data }: Props) => {
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInputField
               title="application_details.post_sign_out_redirect_uris"
-              tip="application_details.post_sign_out_redirect_uri_tip"
+              tip={t('application_details.post_sign_out_redirect_uri_tip')}
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               placeholder={t('application_details.post_sign_out_redirect_uri_placeholder')}
@@ -134,7 +166,21 @@ const Settings = ({ data }: Props) => {
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInputField
               title="application_details.cors_allowed_origins"
-              tip="application_details.cors_allowed_origins_tip"
+              tip={(closeTipHandler) => (
+                <Trans
+                  components={{
+                    a: (
+                      <TextLink
+                        href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"
+                        target="_blank"
+                        onClick={closeTipHandler}
+                      />
+                    ),
+                  }}
+                >
+                  {t('application_details.cors_allowed_origins_tip')}
+                </Trans>
+              )}
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               placeholder={t('application_details.cors_allowed_origins_placeholder')}

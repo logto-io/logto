@@ -16,7 +16,7 @@ import {
 } from '../TipBubble/utils';
 import * as styles from './index.module.scss';
 
-type Props = {
+export type Props = {
   children: ReactNode;
   className?: string;
   anchorClassName?: string;

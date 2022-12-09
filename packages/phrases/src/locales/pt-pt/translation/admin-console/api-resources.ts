@@ -6,7 +6,7 @@ const api_resources = {
   api_name_placeholder: 'Introduza o nome da sua API',
   api_identifier: 'identificador da API',
   api_identifier_tip:
-    'O identificador exclusivo para o recurso API. Deve ser um URI absoluto e não tem componente de fragmento (#). Igual ao resource parameter no OAuth 2.0.',
+    'O identificador exclusivo para o recurso API. Deve ser um URI absoluto e não tem componente de fragmento (#). Igual ao <a>resource parameter</a> no OAuth 2.0.',
   api_resource_created: 'O recurso API {{name}} foi criado com sucesso',
   api_identifier_placeholder: 'https://your-api-identifier/',
 };

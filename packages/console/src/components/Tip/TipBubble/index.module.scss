@@ -10,6 +10,14 @@
   font: var(--font-body-medium);
   max-width: 300px;
 
+  a {
+    color: #cabeff;
+
+    &:active {
+      color: #cabeff;
+    }
+  }
+
   &::after {
     content: '';
     display: block;
