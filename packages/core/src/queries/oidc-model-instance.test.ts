@@ -7,15 +7,7 @@ import envSet from '#src/env-set/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import {
-  upsertInstance,
-  findPayloadById,
-  findPayloadByPayloadField,
-  consumeInstanceById,
-  destroyInstanceById,
-  revokeInstanceByGrantId,
-} from './oidc-model-instance.js';
-
+const { jest } = import.meta;
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
 jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
@@ -26,10 +18,21 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
   })
 );
 
-jest.mock('@logto/shared', () => ({
-  ...jest.requireActual('@logto/shared'),
+const shared = await import('@logto/shared');
+
+jest.unstable_mockModule('@logto/shared', () => ({
+  ...shared,
   convertToTimestamp: () => 100,
 }));
+
+const {
+  upsertInstance,
+  findPayloadById,
+  findPayloadByPayloadField,
+  consumeInstanceById,
+  destroyInstanceById,
+  revokeInstanceByGrantId,
+} = await import('./oidc-model-instance.js');
 
 describe('oidc-model-instance query', () => {
   const { table, fields } = convertToIdentifiers(OidcModelInstances);

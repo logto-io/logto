@@ -26,6 +26,7 @@ import {
   deleteUserIdentity,
 } from './user.js';
 
+const { jest } = import.meta;
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
 jest.spyOn(envSet, 'pool', 'get').mockReturnValue(

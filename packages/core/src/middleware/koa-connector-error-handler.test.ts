@@ -5,6 +5,8 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import koaConnectorErrorHandler from './koa-connector-error-handler.js';
 
+const { jest } = import.meta;
+
 describe('koaConnectorErrorHandler middleware', () => {
   const next = jest.fn();
   const ctx = createContextWithRouteParameters();

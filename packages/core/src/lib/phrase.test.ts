@@ -12,8 +12,9 @@ import {
   zhHkTag,
 } from '#src/__mocks__/custom-phrase.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { getPhrase } from '#src/lib/phrase.js';
+import { mockEsm } from '#src/test-utils/mock.js';
 
+const { jest } = import.meta;
 const englishBuiltInPhrase = resource[enTag];
 
 const customOnlyLanguage = zhHkTag;
@@ -39,9 +40,11 @@ const findCustomPhraseByLanguageTag = jest.fn(async (languageTag: string) => {
   return mockCustomPhrase;
 });
 
-jest.mock('#src/queries/custom-phrase.js', () => ({
-  findCustomPhraseByLanguageTag: async (key: string) => findCustomPhraseByLanguageTag(key),
+mockEsm('#src/queries/custom-phrase.js', () => ({
+  findCustomPhraseByLanguageTag,
 }));
+
+const { getPhrase } = await import('#src/lib/phrase.js');
 
 afterEach(() => {
   jest.clearAllMocks();

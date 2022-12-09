@@ -1,13 +1,14 @@
 import i18next from 'i18next';
 
-import initI18n from '#src/i18n/init.js';
+import { mockEsmDefault, pickDefault } from '#src/test-utils/mock.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaI18next from './koa-i18next.js';
+const { jest } = import.meta;
+const mockLanguage = () => ['zh-cn'];
+mockEsmDefault('#src/i18n/detect-language.js', () => mockLanguage);
 
-// Can not access outter scope function in jest mock
-// eslint-disable-next-line unicorn/consistent-function-scoping
-jest.mock('#src/i18n/detect-language.js', () => () => ['zh-cn']);
+const initI18n = await pickDefault(import('#src/i18n/init.js'));
+const koaI18next = await pickDefault(import('./koa-i18next.js'));
 const changLanguageSpy = jest.spyOn(i18next, 'changeLanguage');
 
 describe('koaI18next', () => {

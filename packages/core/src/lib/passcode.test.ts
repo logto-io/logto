@@ -5,48 +5,40 @@ import { any } from 'zod';
 
 import { mockConnector, mockMetadata } from '#src/__mocks__/index.js';
 import { defaultConnectorMethods } from '#src/connectors/consts.js';
-import { getLogtoConnectors } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import {
-  consumePasscode,
-  deletePasscodesByIds,
-  findUnconsumedPasscodeByJtiAndType,
-  findUnconsumedPasscodesByJtiAndType,
-  increasePasscodeTryCount,
-  insertPasscode,
-} from '#src/queries/passcode.js';
+import { mockEsm } from '#src/test-utils/mock.js';
 
-import {
+const { jest } = import.meta;
+
+const mockedFindUnconsumedPasscodesByJtiAndType = jest.fn();
+const mockedFindUnconsumedPasscodeByJtiAndType = jest.fn();
+const mockedDeletePasscodesByIds = jest.fn();
+const mockedInsertPasscode = jest.fn();
+const mockedGetLogtoConnectors = jest.fn();
+const mockedConsumePasscode = jest.fn();
+const mockedIncreasePasscodeTryCount = jest.fn();
+
+mockEsm('#src/queries/passcode.js', () => ({
+  findUnconsumedPasscodesByJtiAndType: mockedFindUnconsumedPasscodesByJtiAndType,
+  findUnconsumedPasscodeByJtiAndType: mockedFindUnconsumedPasscodeByJtiAndType,
+  deletePasscodesByIds: mockedDeletePasscodesByIds,
+  insertPasscode: mockedInsertPasscode,
+  consumePasscode: mockedConsumePasscode,
+  increasePasscodeTryCount: mockedIncreasePasscodeTryCount,
+}));
+
+mockEsm('#src/connectors/index.js', () => ({
+  getLogtoConnectors: mockedGetLogtoConnectors,
+}));
+
+const {
   createPasscode,
   passcodeExpiration,
   passcodeMaxTryCount,
   passcodeLength,
   sendPasscode,
   verifyPasscode,
-} from './passcode.js';
-
-jest.mock('#src/queries/passcode.js');
-jest.mock('#src/connectors.js');
-
-const mockedFindUnconsumedPasscodesByJtiAndType =
-  findUnconsumedPasscodesByJtiAndType as jest.MockedFunction<
-    typeof findUnconsumedPasscodesByJtiAndType
-  >;
-const mockedFindUnconsumedPasscodeByJtiAndType =
-  findUnconsumedPasscodeByJtiAndType as jest.MockedFunction<
-    typeof findUnconsumedPasscodeByJtiAndType
-  >;
-const mockedDeletePasscodesByIds = deletePasscodesByIds as jest.MockedFunction<
-  typeof deletePasscodesByIds
->;
-const mockedInsertPasscode = insertPasscode as jest.MockedFunction<typeof insertPasscode>;
-const mockedGetLogtoConnectors = getLogtoConnectors as jest.MockedFunction<
-  typeof getLogtoConnectors
->;
-const mockedConsumePasscode = consumePasscode as jest.MockedFunction<typeof consumePasscode>;
-const mockedIncreasePasscodeTryCount = increasePasscodeTryCount as jest.MockedFunction<
-  typeof increasePasscodeTryCount
->;
+} = await import('./passcode.js');
 
 beforeAll(() => {
   mockedFindUnconsumedPasscodesByJtiAndType.mockResolvedValue([]);

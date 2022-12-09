@@ -3,27 +3,30 @@ import { LogResult } from '@logto/schemas';
 import i18next from 'i18next';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { insertLog } from '#src/queries/log.js';
+import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { WithLogContext } from './koa-log.js';
-import koaLog from './koa-log.js';
+
+const { jest } = import.meta;
 
 const nanoIdMock = 'mockId';
 
 const addLogContext = jest.fn();
 const log = jest.fn();
+const insertLogMock = jest.fn();
 
-jest.mock('#src/queries/log.js', () => ({
-  insertLog: jest.fn(async () => 0),
+mockEsm('#src/queries/log.js', () => ({
+  insertLog: insertLogMock,
 }));
 
-jest.mock('nanoid', () => ({
-  nanoid: jest.fn(() => nanoIdMock),
+mockEsm('nanoid', () => ({
+  nanoid: () => nanoIdMock,
 }));
+
+const koaLog = await pickDefault(import('./koa-log.js'));
 
 describe('koaLog middleware', () => {
-  const insertLogMock = insertLog as jest.Mock;
   const type = 'SignInUsernamePassword';
   const mockPayload: LogPayload = {
     userId: 'foo',

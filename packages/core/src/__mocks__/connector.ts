@@ -33,6 +33,8 @@ export {
   mockMetadata3,
 } from './connector-base-data.js';
 
+const { jest } = import.meta;
+
 export const mockConnector: Connector = {
   id: 'id',
   config: {},

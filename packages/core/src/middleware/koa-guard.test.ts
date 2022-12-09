@@ -1,10 +1,12 @@
 import { z } from 'zod';
 
+import { mockEsmDefault } from '#src/test-utils/mock.js';
 import { emptyMiddleware, createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaGuard, { isGuardMiddleware } from './koa-guard.js';
+const { jest } = import.meta;
 
-jest.mock('koa-body', () => emptyMiddleware);
+mockEsmDefault('koa-body', () => emptyMiddleware);
+const { default: koaGuard, isGuardMiddleware } = await import('./koa-guard.js');
 
 describe('koaGuardMiddleware', () => {
   describe('isGuardMiddleware', () => {

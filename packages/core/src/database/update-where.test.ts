@@ -8,6 +8,7 @@ import { createTestPool } from '#src/utils/test-utils.js';
 
 import { buildUpdateWhere } from './update-where.js';
 
+const { jest } = import.meta;
 const poolSpy = jest.spyOn(envSet, 'pool', 'get');
 
 describe('buildUpdateWhere()', () => {

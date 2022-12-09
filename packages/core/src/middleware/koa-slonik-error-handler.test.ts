@@ -7,6 +7,8 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import koaSlonikErrorHandler from './koa-slonik-error-handler.js';
 
+const { jest } = import.meta;
+
 describe('koaSlonikErrorHandler middleware', () => {
   const next = jest.fn();
   const ctx = createContextWithRouteParameters();

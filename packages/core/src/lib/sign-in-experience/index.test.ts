@@ -10,42 +10,36 @@ import {
   mockSignInExperience,
   mockSocialConnectors,
 } from '#src/__mocks__/index.js';
-import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import {
+import { mockEsm } from '#src/test-utils/mock.js';
+
+const { jest } = import.meta;
+const allCustomLanguageTags: LanguageTag[] = [];
+const findAllCustomLanguageTags = jest.fn(async () => allCustomLanguageTags);
+const getLogtoConnectorsPlaceholder = jest.fn();
+const findDefaultSignInExperience = jest.fn();
+const updateDefaultSignInExperience = jest.fn(
+  async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+    ...mockSignInExperience,
+    ...data,
+  })
+);
+
+mockEsm('#src/queries/custom-phrase.js', () => ({ findAllCustomLanguageTags }));
+mockEsm('#src/connectors.js', () => ({
+  getLogtoConnectors: getLogtoConnectorsPlaceholder,
+}));
+mockEsm('#src/queries/sign-in-experience.js', () => ({
+  findDefaultSignInExperience,
+  updateDefaultSignInExperience,
+}));
+
+const {
   validateBranding,
   validateTermsOfUse,
   validateLanguageInfo,
   removeUnavailableSocialConnectorTargets,
-} from '#src/lib/sign-in-experience/index.js';
-import { updateDefaultSignInExperience } from '#src/queries/sign-in-experience.js';
-
-const allCustomLanguageTags: LanguageTag[] = [];
-const findAllCustomLanguageTags = jest.fn(async () => allCustomLanguageTags);
-const getLogtoConnectorsPlaceHolder = jest.fn() as jest.MockedFunction<
-  () => Promise<LogtoConnector[]>
->;
-const findDefaultSignInExperience = jest.fn() as jest.MockedFunction<
-  () => Promise<SignInExperience>
->;
-
-jest.mock('#src/queries/custom-phrase.js', () => ({
-  findAllCustomLanguageTags: async () => findAllCustomLanguageTags(),
-}));
-
-jest.mock('#src/connectors.js', () => ({
-  getLogtoConnectors: async () => getLogtoConnectorsPlaceHolder(),
-}));
-
-jest.mock('#src/queries/sign-in-experience.js', () => ({
-  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
-  updateDefaultSignInExperience: jest.fn(
-    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
-      ...mockSignInExperience,
-      ...data,
-    })
-  ),
-}));
+} = await import('./index.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -163,7 +157,7 @@ describe('remove unavailable social connector targets', () => {
       ...mockSignInExperience,
       socialSignInConnectorTargets: mockSocialConnectorTargets,
     });
-    getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(mockSocialConnectors);
+    getLogtoConnectorsPlaceholder.mockResolvedValueOnce(mockSocialConnectors);
     expect(mockSocialConnectorTargets).toEqual([socialTarget01, socialTarget02]);
     await removeUnavailableSocialConnectorTargets();
     expect(updateDefaultSignInExperience).toBeCalledWith({
