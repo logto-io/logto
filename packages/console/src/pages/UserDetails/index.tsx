@@ -138,9 +138,13 @@ const UserDetails = () => {
                 </ActionMenuItem>
               </ActionMenu>
               <ReactModal
+                shouldCloseOnEsc
                 isOpen={isResetPasswordFormOpen}
                 className={modalStyles.content}
                 overlayClassName={modalStyles.overlay}
+                onRequestClose={() => {
+                  setIsResetPasswordFormOpen(false);
+                }}
               >
                 <ResetPasswordForm
                   userId={data.id}

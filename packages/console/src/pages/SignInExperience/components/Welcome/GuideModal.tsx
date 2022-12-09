@@ -82,7 +82,12 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <Modal isOpen={isOpen} className={modalStyles.fullScreen}>
+    <Modal
+      shouldCloseOnEsc
+      isOpen={isOpen}
+      className={modalStyles.fullScreen}
+      onRequestClose={onSkip}
+    >
       <div className={styles.container}>
         <div className={styles.header}>
           <IconButton size="large" disabled={isLoading} onClick={onSkip}>

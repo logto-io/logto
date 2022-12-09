@@ -71,7 +71,13 @@ const LanguageEditorModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <Modal isOpen={isOpen} className={styles.modalContent} overlayClassName={styles.modalOverlay}>
+    <Modal
+      shouldCloseOnEsc
+      isOpen={isOpen}
+      className={styles.modalContent}
+      overlayClassName={styles.modalOverlay}
+      onRequestClose={onCloseModal}
+    >
       <Card className={styles.editor}>
         <div className={styles.header}>
           <CardTitle
