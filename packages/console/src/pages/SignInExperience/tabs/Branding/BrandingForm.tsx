@@ -33,7 +33,7 @@ const BrandingForm = () => {
           control={control}
           defaultValue={BrandingStyle.Logo_Slogan}
           render={({ field: { onChange, value, name } }) => (
-            <RadioGroup value={value} name={name} onChange={onChange}>
+            <RadioGroup value={value} name={name} className={styles.radioGroup} onChange={onChange}>
               <Radio
                 value={BrandingStyle.Logo_Slogan}
                 title="sign_in_exp.branding.styles.logo_slogan"

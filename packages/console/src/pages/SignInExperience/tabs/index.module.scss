@@ -11,6 +11,10 @@
   color: var(--color-neutral-variant-60);
 }
 
+.radioGroup {
+  margin-top: _.unit(3);
+}
+
 .formFieldDescription {
   font: var(--font-body-medium);
   color: var(--color-text-secondary);
