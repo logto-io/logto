@@ -1,12 +1,12 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { Event } from '@logto/schemas';
-import { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { mockEsmWithActual } from '#src/test-utils/mock.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import interactionRoutes, { verificationPrefix } from './index.js';
-import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
+const { jest } = import.meta;
 
 // FIXME @Darcy: no more `enabled` for `connectors` table
 const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
@@ -30,7 +30,7 @@ const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
   };
 });
 
-jest.mock('#src/connectors.js', () => ({
+await mockEsmWithActual('#src/connectors/index.js', () => ({
   getLogtoConnectorById: jest.fn(async (connectorId: string) => {
     const connector = await getLogtoConnectorByIdHelper(connectorId);
 
@@ -45,24 +45,20 @@ jest.mock('#src/connectors.js', () => ({
   }),
 }));
 
-jest.mock('./utils/passcode-validation.js', () => ({
-  sendPasscodeToIdentifier: jest.fn(),
-}));
+const { sendPasscodeToIdentifier } = await mockEsmWithActual(
+  '#src/routes/interaction/utils/passcode-validation.js',
+  () => ({
+    sendPasscodeToIdentifier: jest.fn(),
+  })
+);
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn().mockResolvedValue({
-      jti: 'jti',
-    }),
-  })),
-}));
-
+const { default: interactionRoutes, verificationPrefix } = await import('./index.js');
 const log = jest.fn();
 
 describe('session -> interactionRoutes', () => {
   const sessionRequest = createRequester({
     anonymousRoutes: interactionRoutes,
-    provider: new Provider(''),
+    provider: createMockProvider(),
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();

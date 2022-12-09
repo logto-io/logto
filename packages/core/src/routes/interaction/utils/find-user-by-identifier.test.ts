@@ -1,43 +1,41 @@
-import { getLogtoConnectorById } from '#src/connectors/index.js';
-import {
-  findUserByEmail,
-  findUserByUsername,
-  findUserByPhone,
-  findUserByIdentity,
-} from '#src/queries/user.js';
+import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 
-import findUserByIdentifier from './find-user-by-identifier.js';
+const { jest } = import.meta;
 
-jest.mock('#src/queries/user.js', () => ({
+const queries = {
   findUserByEmail: jest.fn(),
   findUserByUsername: jest.fn(),
   findUserByPhone: jest.fn(),
   findUserByIdentity: jest.fn(),
-}));
+};
 
-jest.mock('#src/connectors/index.js', () => ({
+mockEsm('#src/queries/user.js', () => queries);
+
+const { getLogtoConnectorById } = mockEsm('#src/connectors/index.js', () => ({
   getLogtoConnectorById: jest.fn().mockResolvedValue({ metadata: { target: 'logto' } }),
 }));
+
+const findUserByIdentifier = await pickDefault(import('./find-user-by-identifier.js'));
 
 describe('findUserByIdentifier', () => {
   it('username', async () => {
     await findUserByIdentifier({ username: 'foo' });
-    expect(findUserByUsername).toBeCalledWith('foo');
+    expect(queries.findUserByUsername).toBeCalledWith('foo');
   });
 
   it('email', async () => {
     await findUserByIdentifier({ email: 'foo@logto.io' });
-    expect(findUserByEmail).toBeCalledWith('foo@logto.io');
+    expect(queries.findUserByEmail).toBeCalledWith('foo@logto.io');
   });
 
   it('phone', async () => {
     await findUserByIdentifier({ phone: '123456' });
-    expect(findUserByPhone).toBeCalledWith('123456');
+    expect(queries.findUserByPhone).toBeCalledWith('123456');
   });
 
   it('social', async () => {
     await findUserByIdentifier({ connectorId: 'connector', userInfo: { id: 'foo' } });
     expect(getLogtoConnectorById).toBeCalledWith('connector');
-    expect(findUserByIdentity).toBeCalledWith('logto', 'foo');
+    expect(queries.findUserByIdentity).toBeCalledWith('logto', 'foo');
   });
 });

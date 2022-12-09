@@ -16,11 +16,17 @@ export const mockEsmWithActual: <T>(
 };
 
 export const mockEsm = <T>(...args: Parameters<typeof jest.unstable_mockModule<T>>) => {
-  jest.unstable_mockModule(...args);
+  const mocked = args[1]();
+  jest.unstable_mockModule(args[0], () => mocked);
+
+  return mocked;
 };
 
 export const mockEsmDefault = <T>(...args: Parameters<typeof jest.unstable_mockModule<T>>) => {
-  jest.unstable_mockModule(args[0], () => ({ default: args[1]() }));
+  const mocked = args[1]();
+  jest.unstable_mockModule(args[0], () => ({ default: mocked }));
+
+  return mocked;
 };
 
 export const pickDefault = async <T extends Record<'default', unknown>>(

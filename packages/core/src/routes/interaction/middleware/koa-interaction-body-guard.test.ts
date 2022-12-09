@@ -2,19 +2,16 @@ import { Event } from '@logto/schemas';
 import type { Context } from 'koa';
 
 import { interactionMocks } from '#src/__mocks__/interactions.js';
+import { mockEsmDefault, pickDefault } from '#src/test-utils/mock.js';
 import { emptyMiddleware, createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { WithGuardedIdentifierPayloadContext } from './koa-interaction-body-guard.js';
-import koaInteractionBodyGuard from './koa-interaction-body-guard.js';
 
-jest.mock('koa-body', () => emptyMiddleware);
+const { jest } = import.meta;
 
-// User this to bypass the context type assertion
-const mockIdentifierPayload = Object.freeze({
-  type: 'username_password',
-  username: 'username',
-  password: 'password',
-});
+mockEsmDefault('koa-body', () => emptyMiddleware);
+
+const koaInteractionBodyGuard = await pickDefault(import('./koa-interaction-body-guard.js'));
 
 describe('koaInteractionBodyGuard', () => {
   const baseCtx = createContextWithRouteParameters();

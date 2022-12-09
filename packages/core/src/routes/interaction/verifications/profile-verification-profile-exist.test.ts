@@ -1,8 +1,8 @@
 import { Event } from '@logto/schemas';
-import { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { findUserById } from '#src/queries/user.js';
+import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type {
@@ -10,32 +10,28 @@ import type {
   IdentifierVerifiedInteractionResult,
   InteractionContext,
 } from '../types/index.js';
-import { storeInteractionResult } from '../utils/interaction.js';
-import verifyProfile from './profile-verification.js';
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
-  })),
-}));
+const { jest } = import.meta;
 
-jest.mock('#src/queries/user.js', () => ({
+const { findUserById } = await mockEsmWithActual('#src/queries/user.js', () => ({
   findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
   hasUserWithPhone: jest.fn().mockResolvedValue(false),
   hasUserWithIdentity: jest.fn().mockResolvedValue(false),
 }));
 
-jest.mock('../utils/interaction.js', () => ({
+const { storeInteractionResult } = mockEsm('#src/routes/interaction/utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
-jest.mock('../utils/index.js', () => ({
+mockEsm('#src/routes/interaction/utils/index.js', () => ({
   isUserPasswordSet: jest.fn().mockResolvedValueOnce(true),
 }));
 
+const verifyProfile = await pickDefault(import('./profile-verification.js'));
+
 describe('Should throw when providing existing identifiers in profile', () => {
-  const provider = new Provider('');
+  const provider = createMockProvider();
   const baseCtx = createContextWithRouteParameters();
   const identifiers: Identifier[] = [
     { key: 'accountId', value: 'foo' },
@@ -54,7 +50,7 @@ describe('Should throw when providing existing identifiers in profile', () => {
   });
 
   it('username exists', async () => {
-    (findUserById as jest.Mock).mockResolvedValueOnce({ id: 'foo', username: 'foo' });
+    findUserById.mockResolvedValueOnce({ id: 'foo', username: 'foo' });
 
     const ctx: InteractionContext = {
       ...baseCtx,
@@ -75,7 +71,7 @@ describe('Should throw when providing existing identifiers in profile', () => {
   });
 
   it('email exists', async () => {
-    (findUserById as jest.Mock).mockResolvedValueOnce({ id: 'foo', primaryEmail: 'email' });
+    findUserById.mockResolvedValueOnce({ id: 'foo', primaryEmail: 'email' });
 
     const ctx: InteractionContext = {
       ...baseCtx,
@@ -96,7 +92,7 @@ describe('Should throw when providing existing identifiers in profile', () => {
   });
 
   it('phone exists', async () => {
-    (findUserById as jest.Mock).mockResolvedValueOnce({ id: 'foo', primaryPhone: 'phone' });
+    findUserById.mockResolvedValueOnce({ id: 'foo', primaryPhone: 'phone' });
 
     const ctx: InteractionContext = {
       ...baseCtx,
@@ -117,7 +113,7 @@ describe('Should throw when providing existing identifiers in profile', () => {
   });
 
   it('password exists', async () => {
-    (findUserById as jest.Mock).mockResolvedValueOnce({ id: 'foo' });
+    findUserById.mockResolvedValueOnce({ id: 'foo' });
 
     const ctx: InteractionContext = {
       ...baseCtx,

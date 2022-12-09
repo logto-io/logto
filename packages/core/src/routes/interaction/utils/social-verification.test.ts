@@ -1,14 +1,14 @@
 import { ConnectorType } from '@logto/connector-kit';
 
-import { getUserInfoByAuthCode } from '#src/lib/social.js';
+import { mockEsm } from '#src/test-utils/mock.js';
 
-import { verifySocialIdentity } from './social-verification.js';
+const { jest } = import.meta;
 
-jest.mock('#src/lib/social.js', () => ({
+const { getUserInfoByAuthCode } = mockEsm('#src/lib/social.js', () => ({
   getUserInfoByAuthCode: jest.fn().mockResolvedValue({ id: 'foo' }),
 }));
 
-jest.mock('#src/connectors.js', () => ({
+mockEsm('#src/connectors.js', () => ({
   getLogtoConnectorById: jest.fn().mockResolvedValue({
     metadata: {
       id: 'social',
@@ -18,6 +18,7 @@ jest.mock('#src/connectors.js', () => ({
   }),
 }));
 
+const { verifySocialIdentity } = await import('./social-verification.js');
 const log = jest.fn();
 
 describe('social-verification', () => {

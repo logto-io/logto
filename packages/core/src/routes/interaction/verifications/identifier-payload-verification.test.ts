@@ -1,55 +1,56 @@
 import { Event } from '@logto/schemas';
-import { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { verifyUserPassword } from '#src/lib/user.js';
+import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { AnonymousInteractionResult, VerifiedPhoneIdentifier } from '../types/index.js';
-import findUserByIdentifier from '../utils/find-user-by-identifier.js';
-import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
-import { verifySocialIdentity } from '../utils/social-verification.js';
-import identifierPayloadVerification from './identifier-payload-verification.js';
 
-jest.mock('#src/lib/user.js', () => ({
+const { jest } = import.meta;
+
+const { verifyUserPassword } = mockEsm('#src/lib/user.js', () => ({
   verifyUserPassword: jest.fn(),
 }));
 
-jest.mock('../utils/find-user-by-identifier.js', () => jest.fn());
+const findUserByIdentifier = mockEsmDefault(
+  '#src/routes/interaction/utils/find-user-by-identifier.js',
+  () => jest.fn()
+);
 
-jest.mock('../utils/interaction.js', () => ({
-  ...jest.requireActual('../utils/interaction.js'),
+await mockEsmWithActual('#src/routes/interaction/utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
-jest.mock('../utils/passcode-validation.js', () => ({
-  verifyIdentifierByPasscode: jest.fn(),
-}));
+const { verifyIdentifierByPasscode } = mockEsm(
+  '#src/routes/interaction/utils/passcode-validation.js',
+  () => ({
+    verifyIdentifierByPasscode: jest.fn(),
+  })
+);
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
-  })),
-}));
+const { verifySocialIdentity } = mockEsm(
+  '#src/routes/interaction/utils/social-verification.js',
+  () => ({
+    verifySocialIdentity: jest.fn().mockResolvedValue({ id: 'foo' }),
+  })
+);
 
-jest.mock('../utils/social-verification.js', () => ({
-  verifySocialIdentity: jest.fn().mockResolvedValue({ id: 'foo' }),
-}));
+const identifierPayloadVerification = await pickDefault(
+  import('./identifier-payload-verification.js')
+);
 
 const log = jest.fn();
 
 describe('identifier verification', () => {
   const baseCtx = { ...createContextWithRouteParameters(), log };
-  const verifyUserPasswordMock = verifyUserPassword as jest.Mock;
-  const findUserByIdentifierMock = findUserByIdentifier as jest.Mock;
-  const verifyIdentifierByPasscodeMock = verifyIdentifierByPasscode as jest.Mock;
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('username password user not found', async () => {
-    findUserByIdentifierMock.mockResolvedValueOnce(null);
+    findUserByIdentifier.mockResolvedValueOnce(null);
 
     const identifier = {
       username: 'username',
@@ -64,14 +65,14 @@ describe('identifier verification', () => {
       }),
     };
 
-    await expect(identifierPayloadVerification(ctx, new Provider(''))).rejects.toThrow();
+    await expect(identifierPayloadVerification(ctx, createMockProvider())).rejects.toThrow();
     expect(findUserByIdentifier).toBeCalledWith({ username: 'username' });
     expect(verifyUserPassword).toBeCalledWith(null, 'password');
   });
 
   it('username password user is suspended', async () => {
-    findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
-    verifyUserPasswordMock.mockResolvedValueOnce({ id: 'foo', isSuspended: true });
+    findUserByIdentifier.mockResolvedValueOnce({ id: 'foo' });
+    verifyUserPassword.mockResolvedValueOnce({ id: 'foo', isSuspended: true });
     const identifier = {
       username: 'username',
       password: 'password',
@@ -85,7 +86,7 @@ describe('identifier verification', () => {
       }),
     };
 
-    await expect(identifierPayloadVerification(ctx, new Provider(''))).rejects.toMatchError(
+    await expect(identifierPayloadVerification(ctx, createMockProvider())).rejects.toMatchError(
       new RequestError({ code: 'user.suspended', status: 401 })
     );
 
@@ -94,8 +95,8 @@ describe('identifier verification', () => {
   });
 
   it('email password', async () => {
-    findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
-    verifyUserPasswordMock.mockResolvedValueOnce({ id: 'foo', isSuspended: false });
+    findUserByIdentifier.mockResolvedValueOnce({ id: 'foo' });
+    verifyUserPassword.mockResolvedValueOnce({ id: 'foo', isSuspended: false });
 
     const identifier = {
       email: 'email',
@@ -110,7 +111,7 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierPayloadVerification(ctx, new Provider(''));
+    const result = await identifierPayloadVerification(ctx, createMockProvider());
     expect(findUserByIdentifier).toBeCalledWith({ email: 'email' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
     expect(result).toEqual({
@@ -120,8 +121,8 @@ describe('identifier verification', () => {
   });
 
   it('phone password', async () => {
-    findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
-    verifyUserPasswordMock.mockResolvedValueOnce({ id: 'foo', isSuspended: false });
+    findUserByIdentifier.mockResolvedValueOnce({ id: 'foo' });
+    verifyUserPassword.mockResolvedValueOnce({ id: 'foo', isSuspended: false });
 
     const identifier = {
       phone: 'phone',
@@ -136,7 +137,7 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierPayloadVerification(ctx, new Provider(''));
+    const result = await identifierPayloadVerification(ctx, createMockProvider());
     expect(findUserByIdentifier).toBeCalledWith({ phone: 'phone' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
     expect(result).toEqual({
@@ -156,8 +157,8 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierPayloadVerification(ctx, new Provider(''));
-    expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
+    const result = await identifierPayloadVerification(ctx, createMockProvider());
+    expect(verifyIdentifierByPasscode).toBeCalledWith(
       { ...identifier, event: Event.SignIn },
       'jti',
       log
@@ -180,8 +181,8 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierPayloadVerification(ctx, new Provider(''));
-    expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
+    const result = await identifierPayloadVerification(ctx, createMockProvider());
+    expect(verifyIdentifierByPasscode).toBeCalledWith(
       { ...identifier, event: Event.SignIn },
       'jti',
       log
@@ -204,10 +205,10 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierPayloadVerification(ctx, new Provider(''));
+    const result = await identifierPayloadVerification(ctx, createMockProvider());
 
     expect(verifySocialIdentity).toBeCalledWith(identifier, log);
-    expect(findUserByIdentifierMock).not.toBeCalled();
+    expect(findUserByIdentifier).not.toBeCalled();
 
     expect(result).toEqual({
       event: Event.SignIn,
@@ -242,7 +243,11 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierPayloadVerification(ctx, new Provider(''), interactionRecord);
+    const result = await identifierPayloadVerification(
+      ctx,
+      createMockProvider(),
+      interactionRecord
+    );
     expect(result).toEqual({
       event: Event.SignIn,
       identifiers: [
@@ -273,7 +278,7 @@ describe('identifier verification', () => {
       }),
     };
 
-    await expect(identifierPayloadVerification(ctx, new Provider(''))).rejects.toMatchError(
+    await expect(identifierPayloadVerification(ctx, createMockProvider())).rejects.toMatchError(
       new RequestError('session.connector_session_not_found')
     );
   });
@@ -303,7 +308,7 @@ describe('identifier verification', () => {
     };
 
     await expect(
-      identifierPayloadVerification(ctx, new Provider(''), interactionRecord)
+      identifierPayloadVerification(ctx, createMockProvider(), interactionRecord)
     ).rejects.toMatchError(new RequestError('session.connector_session_not_found'));
   });
 
@@ -319,12 +324,12 @@ describe('identifier verification', () => {
       }),
     };
 
-    const result = await identifierPayloadVerification(ctx, new Provider(''), {
+    const result = await identifierPayloadVerification(ctx, createMockProvider(), {
       event: Event.Register,
       identifiers: [oldIdentifier],
     });
 
-    expect(verifyIdentifierByPasscodeMock).toBeCalledWith(
+    expect(verifyIdentifierByPasscode).toBeCalledWith(
       { ...identifier, event: Event.SignIn },
       'jti',
       log

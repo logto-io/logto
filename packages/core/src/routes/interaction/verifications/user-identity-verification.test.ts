@@ -1,32 +1,34 @@
 import { Event } from '@logto/schemas';
-import { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { InteractionContext, PayloadVerifiedInteractionResult } from '../types/index.js';
-import findUserByIdentifier from '../utils/find-user-by-identifier.js';
-import { storeInteractionResult } from '../utils/interaction.js';
-import userAccountVerification from './user-identity-verification.js';
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
-  })),
-}));
+const { jest } = import.meta;
 
-jest.mock('../utils/find-user-by-identifier.js', () => jest.fn());
-jest.mock('#src/lib/social.js', () => ({
+const findUserByIdentifier = mockEsmDefault(
+  '#src/routes/interaction/utils/find-user-by-identifier.js',
+  () => jest.fn()
+);
+
+mockEsm('#src/lib/social.js', () => ({
   findSocialRelatedUser: jest.fn().mockResolvedValue(null),
 }));
 
-jest.mock('../utils/interaction.js', () => ({
-  ...jest.requireActual('../utils/interaction.js'),
-  storeInteractionResult: jest.fn(),
-}));
+const { storeInteractionResult } = await mockEsmWithActual(
+  '#src/routes/interaction/utils/interaction.js',
+  () => ({
+    storeInteractionResult: jest.fn(),
+  })
+);
+
+const userAccountVerification = await pickDefault(import('./user-identity-verification.js'));
 
 describe('userAccountVerification', () => {
-  const findUserByIdentifierMock = findUserByIdentifier as jest.Mock;
+  const findUserByIdentifierMock = findUserByIdentifier;
 
   const ctx: InteractionContext = {
     ...createContextWithRouteParameters(),
@@ -34,7 +36,7 @@ describe('userAccountVerification', () => {
       event: Event.SignIn,
     },
   };
-  const provider = new Provider('');
+  const provider = createMockProvider();
 
   afterEach(() => {
     jest.clearAllMocks();

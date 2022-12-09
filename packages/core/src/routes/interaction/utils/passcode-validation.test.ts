@@ -1,14 +1,18 @@
 import { PasscodeType, Event } from '@logto/schemas';
 
-import { createPasscode, sendPasscode } from '#src/lib/passcode.js';
+import { mockEsmWithActual } from '#src/test-utils/mock.js';
 
 import type { SendPasscodePayload } from '../types/index.js';
-import { sendPasscodeToIdentifier } from './passcode-validation.js';
 
-jest.mock('#src/lib/passcode.js', () => ({
+const { jest } = import.meta;
+const passcode = {
   createPasscode: jest.fn(() => ({})),
   sendPasscode: jest.fn().mockResolvedValue({ dbEntry: { id: 'foo' } }),
-}));
+};
+
+await mockEsmWithActual('#src/lib/passcode.js', () => passcode);
+
+const { sendPasscodeToIdentifier } = await import('./passcode-validation.js');
 
 const sendPasscodeTestCase = [
   {
@@ -38,8 +42,6 @@ const sendPasscodeTestCase = [
 ];
 
 describe('passcode-validation utils', () => {
-  const createPasscodeMock = createPasscode as jest.Mock;
-  const sendPasscodeMock = sendPasscode as jest.Mock;
   const log = jest.fn();
 
   afterEach(() => {
@@ -50,8 +52,8 @@ describe('passcode-validation utils', () => {
     'send passcode successfully',
     async ({ payload, createPasscodeParams }) => {
       await sendPasscodeToIdentifier(payload as SendPasscodePayload, 'jti', log);
-      expect(createPasscodeMock).toBeCalledWith('jti', ...createPasscodeParams);
-      expect(sendPasscodeMock).toBeCalled();
+      expect(passcode.createPasscode).toBeCalledWith('jti', ...createPasscodeParams);
+      expect(passcode.sendPasscode).toBeCalled();
     }
   );
 });

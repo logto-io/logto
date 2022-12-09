@@ -2,26 +2,24 @@ import { Event, MissingProfile, SignInIdentifier } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { findUserById } from '#src/queries/user.js';
+import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
-import { isUserPasswordSet } from '../utils/index.js';
-import validateMandatoryUserProfile from './mandatory-user-profile-validation.js';
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
-  })),
-}));
+const { jest } = import.meta;
 
-jest.mock('#src/queries/user.js', () => ({
+const { findUserById } = await mockEsmWithActual('#src/queries/user.js', () => ({
   findUserById: jest.fn(),
 }));
 
-jest.mock('../utils/index.js', () => ({
+const { isUserPasswordSet } = mockEsm('#src/routes/interaction/utils/index.js', () => ({
   isUserPasswordSet: jest.fn(),
 }));
+
+const validateMandatoryUserProfile = await pickDefault(
+  import('./mandatory-user-profile-validation.js')
+);
 
 describe('validateMandatoryUserProfile', () => {
   const baseCtx = createContextWithRouteParameters();
@@ -55,10 +53,10 @@ describe('validateMandatoryUserProfile', () => {
   });
 
   it('user account has username and password', async () => {
-    (findUserById as jest.Mock).mockResolvedValueOnce({
+    findUserById.mockResolvedValueOnce({
       username: 'foo',
     });
-    (isUserPasswordSet as jest.Mock).mockResolvedValueOnce(true);
+    isUserPasswordSet.mockResolvedValueOnce(true);
 
     const ctx = {
       ...baseCtx,
@@ -86,7 +84,7 @@ describe('validateMandatoryUserProfile', () => {
   });
 
   it('user account has email', async () => {
-    (findUserById as jest.Mock).mockResolvedValueOnce({
+    findUserById.mockResolvedValueOnce({
       primaryEmail: 'email',
     });
 
@@ -119,7 +117,7 @@ describe('validateMandatoryUserProfile', () => {
   });
 
   it('user account has phone', async () => {
-    (findUserById as jest.Mock).mockResolvedValueOnce({
+    findUserById.mockResolvedValueOnce({
       primaryPhone: 'phone',
     });
 
