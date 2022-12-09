@@ -6,13 +6,23 @@ import { onKeyDownHandler } from '@/utilities/a11y';
 
 import * as styles from './TabNavItem.module.scss';
 
-type Props = {
-  href?: string;
+type BaseProps = {
   isActive?: boolean;
   errorCount?: number;
-  onClick?: () => void;
   children: React.ReactNode;
 };
+
+type LinkStyleProps = {
+  href: string;
+};
+
+type TabStyleProps = {
+  onClick: () => void;
+};
+
+type Props =
+  | (BaseProps & LinkStyleProps & Partial<Record<keyof TabStyleProps, undefined>>)
+  | (BaseProps & TabStyleProps & Partial<Record<keyof LinkStyleProps, undefined>>);
 
 const TabNavItem = ({ children, href, isActive, errorCount = 0, onClick }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
