@@ -16,10 +16,10 @@ import type {
   InteractionContext,
 } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
-import { isProfileIdentifier } from '../utils/index.js';
 import {
   storeInteractionResult,
   isAccountVerifiedInteractionResult,
+  categorizeIdentifiers,
 } from '../utils/interaction.js';
 
 const identifyUserByVerifiedEmailOrPhone = async (
@@ -82,46 +82,48 @@ export default async function userAccountVerification(
   ctx: InteractionContext,
   provider: Provider
 ): Promise<AccountVerifiedInteractionResult> {
-  const { identifiers = [], accountId } = interaction;
-  // Need to merge the profile in payload
-  const profile = { ...interaction.profile, ...ctx.interactionPayload.profile };
+  const { identifiers = [], accountId, profile } = interaction;
 
-  // Filter all non-profile identifiers
-  const userIdentifiers = identifiers.filter(
-    (identifier) => !isProfileIdentifier(identifier, profile)
+  const { userAccountIdentifiers, profileIdentifiers } = categorizeIdentifiers(
+    identifiers,
+    // Need to merge the profile in payload
+    { ...profile, ...ctx.interactionPayload.profile }
   );
 
-  if (isAccountVerifiedInteractionResult(interaction) && userIdentifiers.length === 0) {
+  // Return the interaction directly if it is accountVerified and has no unverified userAccountIdentifiers
+  // e.g. profile fulfillment request with account already verified in the interaction result
+  if (isAccountVerifiedInteractionResult(interaction) && userAccountIdentifiers.length === 0) {
     return interaction;
   }
 
+  // _userAccountIdentifiers is required to identify a user account
   assertThat(
-    userIdentifiers.length > 0,
+    userAccountIdentifiers.length > 0,
     new RequestError({
-      code: 'session.unauthorized',
-      status: 401,
+      code: 'session.verification_session_not_found',
+      status: 404,
     })
   );
 
-  // Verify All non-profile identifiers
+  // Verify userAccountIdentifiers
   const accountIds = await Promise.all(
-    userIdentifiers.map(async (identifier) => identifyUser(identifier))
+    userAccountIdentifiers.map(async (identifier) => identifyUser(identifier))
   );
-
   const deduplicateAccountIds = deduplicate(accountIds);
 
-  // Inconsistent identities
+  // Inconsistent account identifiers check
+  assertThat(deduplicateAccountIds.length === 1, new RequestError('session.verification_failed'));
+
+  // Valid accountId verification. Should also equal to the accountId in record if exist. Else throw
   assertThat(
-    deduplicateAccountIds.length === 1 &&
-      deduplicateAccountIds[0] &&
-      (!accountId || accountId === deduplicateAccountIds[0]),
+    deduplicateAccountIds[0] && (!accountId || accountId === deduplicateAccountIds[0]),
     new RequestError('session.verification_failed')
   );
 
-  // Assign verification result and filter out account verified identifiers
+  // Assign the verification result and store the profile identifiers left
   const verifiedInteraction: AccountVerifiedInteractionResult = {
     ...interaction,
-    identifiers: identifiers.filter((identifier) => isProfileIdentifier(identifier, profile)),
+    identifiers: profileIdentifiers,
     accountId: deduplicateAccountIds[0],
   };
 

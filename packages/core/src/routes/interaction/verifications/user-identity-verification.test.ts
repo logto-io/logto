@@ -58,7 +58,7 @@ describe('userAccountVerification', () => {
     };
 
     await expect(userAccountVerification(interaction, ctx, provider)).rejects.toMatchError(
-      new RequestError({ code: 'session.unauthorized', status: 401 })
+      new RequestError({ code: 'session.verification_session_not_found', status: 404 })
     );
     expect(storeInteractionResult).not.toBeCalled();
   });
