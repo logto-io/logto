@@ -49,20 +49,19 @@ const errors = {
     sign_up_method_not_enabled: '이 회원가입 방법은 활성화 되어있지 않아요.',
     sign_in_method_not_enabled: '이 로그인 방법은 활성화 되어있지 않아요.',
     same_password: '새로운 비밀번호는 이전 비밀번호와 같으면 안되요.',
-    password_required_in_profile: 'You need to set a password before signing-in.', // UNTRANSLATED
-    new_password_required_in_profile: 'You need to set a new password.', // UNTRANSLATED
-    password_exists_in_profile: 'Password already exists in your profile.', // UNTRANSLATED
-    username_required_in_profile: 'You need to set a username before signing-in.', // UNTRANSLATED
-    username_exists_in_profile: 'Username already exists in your profile.', // UNTRANSLATED
-    email_required_in_profile: 'You need to add an email address before signing-in.', // UNTRANSLATED
-    email_exists_in_profile: 'Your profile has already associated with an email address.', // UNTRANSLATED
-    phone_required_in_profile: 'You need to add a phone number before signing-in.', // UNTRANSLATED
-    phone_exists_in_profile: 'Your profile has already associated with a phone number.', // UNTRANSLATED
-    email_or_phone_required_in_profile:
-      'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
-    suspended: '이 계정은 일시 정지되었어요.',
-    user_not_exist: '{{identity}}의 사용자가 아직 등록되지 않았습니다.',
-    missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
+    password_required_in_profile: '로그인 전에 비밀번호를 설정해야해요.',
+    new_password_required_in_profile: '새로운 비밀번호를 설정해야해요.',
+    password_exists_in_profile: '이미 비밀번호가 설정되어있어요.',
+    username_required_in_profile: '로그인 전에 사용자 이름을 설정해야해요.',
+    username_exists_in_profile: '이미 사용자 이름이 설정되어있어요.',
+    email_required_in_profile: '로그인 전에 이메일 주소를 설정해야해요.',
+    email_exists_in_profile: '이미 이메일 주소가 설정되어있어요.',
+    phone_required_in_profile: '로그인 전에 휴대전화번호를 설정해야해요.',
+    phone_exists_in_profile: '이미 휴대전화번호가 설정되어있어요.',
+    email_or_phone_required_in_profile: '로그인 전에 이메일 주소 또는 휴대전화번호를 설정해야해요.',
+    suspended: '이 계정은 일시 정시되었어요.',
+    user_not_exist: '{{identifier}}의 사용자가 아직 등록되지 않았어요.',
+    missing_profile: '로그인 전에 추가 정보를 제공해야해요.',
   },
   password: {
     unsupported_encryption_method: '{{name}} 암호화 방법을 지원하지 않아요.',
