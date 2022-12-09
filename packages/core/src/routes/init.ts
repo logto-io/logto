@@ -12,6 +12,7 @@ import authnRoutes from './authn.js';
 import connectorRoutes from './connector.js';
 import customPhraseRoutes from './custom-phrase.js';
 import dashboardRoutes from './dashboard.js';
+import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
 import phraseRoutes from './phrase.js';
 import profileRoutes from './profile.js';
@@ -29,6 +30,10 @@ const createRouters = (provider: Provider) => {
   const sessionRouter: AnonymousRouter = new Router();
   sessionRouter.use(koaLogSession(provider));
   sessionRoutes(sessionRouter, provider);
+
+  const interactionRouter: AnonymousRouter = new Router();
+  interactionRouter.use(koaLogSession(provider));
+  interactionRoutes(interactionRouter, provider);
 
   const managementRouter: AuthedRouter = new Router();
   managementRouter.use(koaAuth(UserRole.Admin));
@@ -52,9 +57,15 @@ const createRouters = (provider: Provider) => {
   statusRoutes(anonymousRouter);
   authnRoutes(anonymousRouter);
   // The swagger.json should contain all API routers.
-  swaggerRoutes(anonymousRouter, [sessionRouter, profileRouter, managementRouter, anonymousRouter]);
+  swaggerRoutes(anonymousRouter, [
+    sessionRouter,
+    interactionRouter,
+    profileRouter,
+    managementRouter,
+    anonymousRouter,
+  ]);
 
-  return [sessionRouter, profileRouter, managementRouter, anonymousRouter];
+  return [sessionRouter, interactionRouter, profileRouter, managementRouter, anonymousRouter];
 };
 
 export default function initRouter(app: Koa, provider: Provider) {

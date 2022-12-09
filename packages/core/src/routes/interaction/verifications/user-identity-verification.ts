@@ -100,8 +100,8 @@ export default async function userAccountVerification(
   assertThat(
     userAccountIdentifiers.length > 0,
     new RequestError({
-      code: 'session.unauthorized',
-      status: 401,
+      code: 'session.verification_session_not_found',
+      status: 404,
     })
   );
 

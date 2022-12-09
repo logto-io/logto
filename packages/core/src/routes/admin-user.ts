@@ -25,6 +25,7 @@ import {
   hasUser,
   updateUserById,
   hasUserWithEmail,
+  hasUserWithPhone,
 } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -127,6 +128,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users',
     koaGuard({
       body: object({
+        primaryPhone: string().regex(phoneRegEx).optional(),
         primaryEmail: string().regex(emailRegEx).optional(),
         username: string().regex(usernameRegEx).optional(),
         password: string().regex(passwordRegEx),
@@ -134,7 +136,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       }),
     }),
     async (ctx, next) => {
-      const { primaryEmail, username, password, name } = ctx.guard.body;
+      const { primaryEmail, primaryPhone, username, password, name } = ctx.guard.body;
 
       assertThat(
         !username || !(await hasUser(username)),
@@ -150,6 +152,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
           status: 422,
         })
       );
+      assertThat(
+        !primaryPhone || !(await hasUserWithPhone(primaryPhone)),
+        new RequestError({ code: 'user.phone_already_in_use' })
+      );
 
       const id = await generateUserId();
 
@@ -158,6 +164,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       const user = await insertUser({
         id,
         primaryEmail,
+        primaryPhone,
         username,
         passwordEncrypted,
         passwordEncryptionMethod,
