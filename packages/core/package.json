@@ -18,7 +18,8 @@
     "lint:report": "pnpm lint --format json --output-file report.json",
     "dev": "rm -rf build/ && pnpm run copyfiles && nodemon",
     "start": "NODE_ENV=production node build/index.js",
-    "test": "jest",
+    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "pnpm build -p tsconfig.test.json && NODE_OPTIONS=--experimental-vm-modules jest",
     "test:ci": "jest --coverage --silent",
     "test:report": "codecov -F core"
   },
@@ -95,6 +96,7 @@
     "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^13.0.0",
     "nock": "^13.2.2",
+    "node-mocks-http": "^1.12.1",
     "nodemon": "^2.0.19",
     "openapi-types": "^12.0.0",
     "prettier": "^2.7.1",

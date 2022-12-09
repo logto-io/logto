@@ -3,9 +3,12 @@ import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import { Provider } from 'oidc-provider';
 
 import { mockUser } from '#src/__mocks__/index.js';
+import * as queries from '#src/queries/user.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 import sessionRoutes from './index.js';
+
+const { jest } = import.meta;
 
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
@@ -16,10 +19,12 @@ const grantAddResourceScope = jest.fn();
 const interactionResult = jest.fn(async () => 'redirectTo');
 const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({}));
 
-jest.mock('#src/queries/user.js', () => ({
-  findUserById: async () => findUserById(),
-  updateUserById: async (...args: unknown[]) => updateUserById(...args),
-}));
+jest.spyOn(queries, 'findUserById').mockResolvedValue(mockUser);
+
+// Jest.mock('#src/queries/user.js', () => ({
+//   findUserById: async () => findUserById(),
+//   updateUserById: async (...args: unknown[]) => updateUserById(...args),
+// }));
 
 class Grant {
   static async find(id: string) {
