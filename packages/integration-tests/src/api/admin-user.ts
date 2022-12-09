@@ -3,10 +3,11 @@ import type { User } from '@logto/schemas';
 import { authedAdminApi } from './api.js';
 
 type CreateUserPayload = {
+  primaryPhone?: string;
   primaryEmail?: string;
-  username: string;
+  username?: string;
   password: string;
-  name: string;
+  name?: string;
 };
 
 export const createUser = (payload: CreateUserPayload) =>
