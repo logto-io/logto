@@ -129,11 +129,11 @@ describe('adminUserRoutes', () => {
     const username = 'MJAtLogto';
     const password = 'PASSWORD';
     const name = 'Michael';
-    const primaryEmail = 'foo@logto.io';
+    const { primaryEmail, primaryPhone } = mockUser;
 
     const response = await userRequest
       .post('/users')
-      .send({ primaryEmail, username, password, name });
+      .send({ primaryEmail, primaryPhone, username, password, name });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockUserResponse,

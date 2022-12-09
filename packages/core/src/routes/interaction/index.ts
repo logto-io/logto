@@ -21,7 +21,7 @@ import {
   validateMandatoryUserProfile,
 } from './verifications/index.js';
 
-export const identifierPrefix = '/identifier';
+export const interactionPrefix = '/interaction';
 export const verificationPrefix = '/verification';
 
 export default function interactionRoutes<T extends AnonymousRouter>(
@@ -29,7 +29,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   provider: Provider
 ) {
   router.put(
-    identifierPrefix,
+    interactionPrefix,
     koaInteractionBodyGuard(),
     koaSessionSignInExperienceGuard(provider),
     async (ctx, next) => {
@@ -53,7 +53,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   );
 
   router.patch(
-    identifierPrefix,
+    interactionPrefix,
     koaInteractionBodyGuard(),
     koaSessionSignInExperienceGuard(provider),
     async (ctx, next) => {
@@ -65,7 +65,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         event === Event.ForgotPassword
           ? interactionStorage.event === Event.ForgotPassword
           : interactionStorage.event !== Event.ForgotPassword,
-        new RequestError({ code: 'session.verification_session_not_found' })
+        new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
 
       const identifierVerifiedInteraction = await verifyIdentifier(
@@ -86,7 +86,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     }
   );
 
-  router.delete(identifierPrefix, async (ctx, next) => {
+  router.delete(interactionPrefix, async (ctx, next) => {
     await provider.interactionDetails(ctx.req, ctx.res);
     const error: LogtoErrorCode = 'oidc.aborted';
     await assignInteractionResults(ctx, provider, { error });
