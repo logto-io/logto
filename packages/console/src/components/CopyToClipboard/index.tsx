@@ -18,6 +18,7 @@ type Props = {
   className?: string;
   variant?: 'text' | 'contained' | 'border' | 'icon';
   hasVisibilityToggle?: boolean;
+  size?: 'default' | 'small';
 };
 
 type CopyState = TFuncKey<'translation', 'admin_console.general'>;
@@ -27,6 +28,7 @@ const CopyToClipboard = ({
   className,
   hasVisibilityToggle,
   variant = 'contained',
+  size = 'default',
 }: Props) => {
   const copyIconReference = useRef<HTMLButtonElement>(null);
   const [copyState, setCopyState] = useState<CopyState>('copy');
@@ -59,7 +61,7 @@ const CopyToClipboard = ({
 
   return (
     <div
-      className={classNames(styles.container, styles[variant], className)}
+      className={classNames(styles.container, styles[variant], styles[size], className)}
       role="button"
       tabIndex={0}
       onKeyDown={onKeyDownHandler((event) => {
@@ -72,11 +74,13 @@ const CopyToClipboard = ({
       <div className={styles.row}>
         {variant !== 'icon' && <div className={styles.content}>{displayValue}</div>}
         {hasVisibilityToggle && (
-          <div className={styles.eye}>
-            <IconButton onClick={toggleHiddenContent}>
-              {showHiddenContent ? <EyeClosed /> : <Eye />}
-            </IconButton>
-          </div>
+          <IconButton
+            className={styles.iconButton}
+            iconClassName={styles.icon}
+            onClick={toggleHiddenContent}
+          >
+            {showHiddenContent ? <EyeClosed /> : <Eye />}
+          </IconButton>
         )}
         <Tooltip
           className={classNames(copyState === 'copied' && styles.successfulTooltip)}
@@ -85,8 +89,8 @@ const CopyToClipboard = ({
         >
           <IconButton
             ref={copyIconReference}
-            className={styles.copyIconButton}
-            iconClassName={styles.copyIcon}
+            className={styles.iconButton}
+            iconClassName={styles.icon}
             onClick={copy}
           >
             <Copy />
