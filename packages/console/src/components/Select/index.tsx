@@ -80,7 +80,7 @@ const Select = <T extends string>({
           }
         }}
       >
-        {current?.title ?? placeholder}
+        <div className={styles.title}>{current?.title ?? placeholder}</div>
         {isClearable && (
           <IconButton
             className={classNames(styles.icon, styles.clear)}
