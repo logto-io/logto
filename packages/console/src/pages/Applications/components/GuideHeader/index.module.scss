@@ -17,9 +17,11 @@
     color: var(--color-text-secondary);
   }
 
-  .githubIcon {
+  .githubToolTipAnchor {
     margin-right: _.unit(4);
+  }
 
+  .githubIcon {
     div {
       display: flex;
     }

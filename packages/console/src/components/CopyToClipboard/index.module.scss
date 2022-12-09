@@ -31,8 +31,11 @@
       text-overflow: ellipsis;
     }
 
-    .copyIconButton {
+    .copyToolTipAnchor {
       margin-left: _.unit(3);
+    }
+
+    .copyIconButton {
       height: 20px;
       width: 20px;
 

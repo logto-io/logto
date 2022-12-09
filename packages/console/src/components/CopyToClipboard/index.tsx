@@ -10,7 +10,7 @@ import Eye from '@/assets/images/eye.svg';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import IconButton from '../IconButton';
-import Tooltip from '../Tooltip';
+import { Tooltip } from '../Tip';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -78,20 +78,20 @@ const CopyToClipboard = ({
             </IconButton>
           </div>
         )}
-        <IconButton
-          ref={copyIconReference}
-          className={styles.copyIconButton}
-          iconClassName={styles.copyIcon}
-          onClick={copy}
-        >
-          <Copy />
-        </IconButton>
         <Tooltip
-          anchorRef={copyIconReference}
-          content={t(copyState)}
-          horizontalAlign="center"
           className={classNames(copyState === 'copied' && styles.successfulTooltip)}
-        />
+          anchorClassName={styles.copyToolTipAnchor}
+          content={t(copyState)}
+        >
+          <IconButton
+            ref={copyIconReference}
+            className={styles.copyIconButton}
+            iconClassName={styles.copyIcon}
+            onClick={copy}
+          >
+            <Copy />
+          </IconButton>
+        </Tooltip>
       </div>
     </div>
   );
