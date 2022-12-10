@@ -4,7 +4,7 @@ import { demoAppApplicationId } from '@logto/schemas/lib/seeds/application.js';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
+import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -88,14 +88,14 @@ const koaSessionSignInExperienceGuard = await pickDefault(
   import('./middleware/koa-session-sign-in-experience-guard.js')
 );
 
-const { default: koaInteractionBodyGuardSpy } = await mockEsmWithActual(
+const koaInteractionBodyGuardSpy = mockEsmDefault(
   '#src/routes/interaction/middleware/koa-interaction-body-guard.js',
-  () => ({ default: jest.fn(koaInteractionBodyGuard) })
+  () => jest.fn(koaInteractionBodyGuard)
 );
 
-const { default: koaSessionSignInExperienceGuardSpy } = await mockEsmWithActual(
+const koaSessionSignInExperienceGuardSpy = mockEsmDefault(
   '#src/routes/interaction/middleware/koa-session-sign-in-experience-guard.js',
-  () => ({ default: jest.fn(koaSessionSignInExperienceGuard) })
+  () => jest.fn(koaSessionSignInExperienceGuard)
 );
 
 const {

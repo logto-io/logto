@@ -1,5 +1,5 @@
 import envSet, { MountedApps } from '#src/env-set/index.js';
-import { mockEsmDefault, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
+import { mockEsmDefault, pickDefault } from '#src/test-utils/mock.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -7,14 +7,12 @@ const { jest } = import.meta;
 const mockProxyMiddleware = jest.fn();
 const mockStaticMiddleware = jest.fn();
 
-await mockEsmWithActual('fs/promises', () => ({
+mockEsmDefault('fs/promises', () => ({
   readdir: jest.fn().mockResolvedValue(['sign-in']),
 }));
 
-await mockEsmDefault('koa-proxies', () => jest.fn(() => mockProxyMiddleware));
-await mockEsmDefault('#src/middleware/koa-serve-static.js', () =>
-  jest.fn(() => mockStaticMiddleware)
-);
+mockEsmDefault('koa-proxies', () => jest.fn(() => mockProxyMiddleware));
+mockEsmDefault('#src/middleware/koa-serve-static.js', () => jest.fn(() => mockStaticMiddleware));
 
 const koaSpaProxy = await pickDefault(import('./koa-spa-proxy.js'));
 

@@ -1,5 +1,5 @@
 const config = {
-  coveragePathIgnorePatterns: ['/node_modules/', '/lib/', '/build/', '/src/__mocks__/'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/src/__mocks__/'],
   coverageReporters: ['text-summary', 'lcov'],
   roots: ['./lib'],
   moduleNameMapper: {

@@ -1,6 +1,6 @@
 /** @type {import('jest').Config} */
 const config = {
-  coveragePathIgnorePatterns: ['/node_modules/', '/lib/', '/build/', '/src/__mocks__/'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/src/__mocks__/'],
   coverageReporters: ['text-summary', 'lcov'],
   testPathIgnorePatterns: ['/node_modules/', '/build/routes/session/'],
   setupFilesAfterEnv: ['jest-matcher-specific-error', './jest.setup.js'],
