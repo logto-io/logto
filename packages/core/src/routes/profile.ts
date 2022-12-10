@@ -65,15 +65,12 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
     }),
     async (ctx, next) => {
       const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
-
       assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
       const { username } = ctx.guard.body;
-
       await checkIdentifierCollision({ username }, userId);
 
       const user = await updateUserById(userId, { username }, 'replace');
-
       ctx.body = pick(user, ...userInfoSelectFields);
 
       return next();

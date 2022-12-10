@@ -1,25 +1,21 @@
-import type { LogCondition } from '#src/queries/log.js';
-import logRoutes from '#src/routes/log.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
+
+const { jest } = import.meta;
 
 const mockBody = { type: 'a', payload: {}, createdAt: 123 };
 const mockLog = { id: '1', ...mockBody };
 const mockLogs = [mockLog, { id: '2', ...mockBody }];
 
-const countLogs = jest.fn(async (condition: LogCondition) => ({
-  count: mockLogs.length,
+const { countLogs, findLogs, findLogById } = mockEsm('#src/queries/log.js', () => ({
+  countLogs: jest.fn().mockResolvedValue({
+    count: mockLogs.length,
+  }),
+  findLogs: jest.fn().mockResolvedValue(mockLogs),
+  findLogById: jest.fn().mockResolvedValue(mockLog),
 }));
-const findLogs = jest.fn(
-  async (limit: number, offset: number, condition: LogCondition) => mockLogs
-);
-const findLogById = jest.fn(async (id: string) => mockLog);
 
-jest.mock('#src/queries/log.js', () => ({
-  countLogs: async (condition: LogCondition) => countLogs(condition),
-  findLogs: async (limit: number, offset: number, condition: LogCondition) =>
-    findLogs(limit, offset, condition),
-  findLogById: async (id: string) => findLogById(id),
-}));
+const { createRequester } = await import('#src/utils/test-utils.js');
+const logRoutes = await pickDefault(import('./log.js'));
 
 describe('logRoutes', () => {
   const logRequest = createRequester({ authedRoutes: logRoutes });

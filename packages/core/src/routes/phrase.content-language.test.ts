@@ -1,51 +1,43 @@
 import en from '@logto/phrases-ui/lib/locales/en.js';
-import { Provider } from 'oidc-provider';
 
 import { trTrTag, zhCnTag, zhHkTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
-import phraseRoutes from '#src/routes/phrase.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 
-const mockApplicationId = 'mockApplicationIdValue';
-
-const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({
-  params: { client_id: mockApplicationId },
-}));
-
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails,
-  })),
-}));
+const { jest } = import.meta;
 
 const fallbackLanguage = trTrTag;
 const unsupportedLanguageX = 'xx-XX';
 const unsupportedLanguageY = 'yy-YY';
 
-const findDefaultSignInExperience = jest.fn(async () => ({
-  ...mockSignInExperience,
-  languageInfo: {
-    autoDetect: true,
-    fallbackLanguage,
-  },
-}));
+const { findDefaultSignInExperience } = await mockEsmWithActual(
+  '#src/queries/sign-in-experience.js',
+  () => ({
+    findDefaultSignInExperience: jest.fn(async () => ({
+      ...mockSignInExperience,
+      languageInfo: {
+        autoDetect: true,
+        fallbackLanguage,
+      },
+    })),
+  })
+);
 
-jest.mock('#src/queries/sign-in-experience.js', () => ({
-  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
-}));
-
-jest.mock('#src/queries/custom-phrase.js', () => ({
+await mockEsmWithActual('#src/queries/custom-phrase.js', () => ({
   findAllCustomLanguageTags: async () => [trTrTag, zhCnTag],
 }));
 
-jest.mock('#src/lib/phrase.js', () => ({
-  ...jest.requireActual('#src/lib/phrase.js'),
+await mockEsmWithActual('#src/lib/phrase.js', () => ({
   getPhrase: jest.fn().mockResolvedValue(en),
 }));
 
+const { createRequester } = await import('#src/utils/test-utils.js');
+const phraseRoutes = await pickDefault(import('./phrase.js'));
+
 const phraseRequest = createRequester({
   anonymousRoutes: phraseRoutes,
-  provider: new Provider(''),
+  provider: createMockProvider(),
 });
 
 afterEach(() => {

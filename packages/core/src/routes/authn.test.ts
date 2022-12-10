@@ -1,11 +1,22 @@
 import RequestError from '#src/errors/RequestError/index.js';
-import * as functions from '#src/middleware/koa-auth.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 
-import authnRoutes from './authn.js';
+const { jest } = import.meta;
+
+const { verifyBearerTokenFromRequest } = await mockEsmWithActual(
+  '#src/middleware/koa-auth.js',
+  () => ({
+    verifyBearerTokenFromRequest: jest.fn(),
+  })
+);
+
+const { createRequester } = await import('#src/utils/test-utils.js');
+
+const request = createRequester({
+  anonymousRoutes: await pickDefault(import('#src/routes/authn.js')),
+});
 
 describe('authn route for Hasura', () => {
-  const request = createRequester({ anonymousRoutes: authnRoutes });
   const mockUserId = 'foo';
   const mockExpectedRole = 'some_role';
   const mockUnauthorizedRole = 'V';
@@ -16,8 +27,8 @@ describe('authn route for Hasura', () => {
   });
 
   describe('with successful verification', () => {
-    beforeEach(() => {
-      jest.spyOn(functions, 'verifyBearerTokenFromRequest').mockResolvedValue({
+    beforeEach(async () => {
+      verifyBearerTokenFromRequest.mockResolvedValue({
         clientId: 'ok',
         sub: mockUserId,
         roleNames: [mockExpectedRole],
@@ -58,16 +69,14 @@ describe('authn route for Hasura', () => {
   });
 
   describe('with failed verification', () => {
-    beforeEach(() => {
-      jest
-        .spyOn(functions, 'verifyBearerTokenFromRequest')
-        .mockImplementation(async (_, resource) => {
-          if (resource) {
-            throw new RequestError({ code: 'auth.jwt_sub_missing', status: 401 });
-          }
+    beforeEach(async () => {
+      verifyBearerTokenFromRequest.mockImplementation(async (_, resource) => {
+        if (resource) {
+          throw new RequestError({ code: 'auth.jwt_sub_missing', status: 401 });
+        }
 
-          return { clientId: 'not ok', sub: mockUserId };
-        });
+        return { clientId: 'not ok', sub: mockUserId };
+      });
     });
 
     it('throws 401 if no unauthorized role presents', async () => {
@@ -91,9 +100,10 @@ describe('authn route for Hasura', () => {
     });
 
     it('falls back to unauthorized role if JWT is invalid', async () => {
-      jest
-        .spyOn(functions, 'verifyBearerTokenFromRequest')
-        .mockRejectedValue(new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
+      verifyBearerTokenFromRequest.mockRejectedValue(
+        new RequestError({ code: 'auth.jwt_sub_missing', status: 401 })
+      );
+
       const response = await request
         .get('/authn/hasura')
         .query({ resource: 'https://api.logto.io', unauthorizedRole: mockUnauthorizedRole });

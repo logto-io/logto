@@ -1,8 +1,9 @@
 import type { Connector } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { mockEsmWithActual } from '#src/test-utils/mock.js';
 
-import { getConnectorConfig } from './index.js';
+const { jest } = import.meta;
 
 const connectors: Connector[] = [
   {
@@ -15,12 +16,11 @@ const connectors: Connector[] = [
   },
 ];
 
-const findAllConnectors = jest.fn(async () => connectors);
-
-jest.mock('#src/queries/connector.js', () => ({
-  ...jest.requireActual('#src/queries/connector.js'),
-  findAllConnectors: async () => findAllConnectors(),
+await mockEsmWithActual('#src/queries/connector.js', () => ({
+  findAllConnectors: jest.fn(async () => connectors),
 }));
+
+const { getConnectorConfig } = await import('./index.js');
 
 it('getConnectorConfig() should return right config', async () => {
   const config = await getConnectorConfig('id');

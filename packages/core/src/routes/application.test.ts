@@ -2,12 +2,12 @@ import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 
 import { mockApplication } from '#src/__mocks__/index.js';
-import { findApplicationById } from '#src/queries/application.js';
+import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import applicationRoutes from './application.js';
+const { jest } = import.meta;
 
-jest.mock('#src/queries/application.js', () => ({
+const { findApplicationById } = mockEsm('#src/queries/application.js', () => ({
   findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
   findAllApplications: jest.fn(async () => [mockApplication]),
   findApplicationById: jest.fn(async () => mockApplication),
@@ -30,11 +30,13 @@ jest.mock('#src/queries/application.js', () => ({
   ),
 }));
 
-jest.mock('@logto/shared', () => ({
+mockEsm('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: jest.fn(() => () => 'randomId'),
   buildApplicationSecret: jest.fn(() => 'randomId'),
 }));
+
+const applicationRoutes = await pickDefault(import('./application.js'));
 
 const customClientMetadata = {
   corsAllowedOrigins: ['http://localhost:5000', 'http://localhost:5001', 'https://silverhand.com'],

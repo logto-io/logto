@@ -1,11 +1,11 @@
 import type { Resource, CreateResource } from '@logto/schemas';
 
 import { mockResource } from '#src/__mocks__/index.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 
-import resourceRoutes from './resource.js';
+const { jest } = import.meta;
 
-jest.mock('#src/queries/resource.js', () => ({
+mockEsm('#src/queries/resource.js', () => ({
   findTotalNumberOfResources: jest.fn(async () => ({ count: 10 })),
   findAllResources: jest.fn(async (): Promise<Resource[]> => [mockResource]),
   findResourceById: jest.fn(async (): Promise<Resource> => mockResource),
@@ -24,10 +24,13 @@ jest.mock('#src/queries/resource.js', () => ({
   deleteResourceById: jest.fn(),
 }));
 
-jest.mock('@logto/shared', () => ({
+mockEsm('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: jest.fn(() => () => 'randomId'),
 }));
+
+const { createRequester } = await import('#src/utils/test-utils.js');
+const resourceRoutes = await pickDefault(import('./resource.js'));
 
 describe('resource routes', () => {
   const resourceRequest = createRequester({ authedRoutes: resourceRoutes });

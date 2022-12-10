@@ -9,17 +9,14 @@ import {
 } from '#src/__mocks__/index.js';
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { updateConnector } from '#src/queries/connector.js';
+import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import assertThat from '#src/utils/assert-that.js';
-import { createRequester } from '#src/utils/test-utils.js';
 
-import connectorRoutes from './connector.js';
+const { jest } = import.meta;
 
-const getLogtoConnectorsPlaceholder = jest.fn() as jest.MockedFunction<
-  () => Promise<LogtoConnector[]>
->;
-const getLogtoConnectorByIdPlaceholder = jest.fn(async (connectorId: string) => {
-  const connectors = await getLogtoConnectorsPlaceholder();
+const getLogtoConnectors = jest.fn() as jest.MockedFunction<() => Promise<LogtoConnector[]>>;
+const getLogtoConnectorById = jest.fn(async (connectorId: string) => {
+  const connectors = await getLogtoConnectors();
   const connector = connectors.find(({ dbEntry }) => dbEntry.id === connectorId);
 
   assertThat(
@@ -36,21 +33,25 @@ const getLogtoConnectorByIdPlaceholder = jest.fn(async (connectorId: string) => 
     sendMessage: sendMessagePlaceHolder,
   };
 }) as jest.MockedFunction<(connectorId: string) => Promise<LogtoConnector>>;
-const mockedUpdateConnector = updateConnector as jest.Mock;
+
 const sendMessagePlaceHolder = jest.fn();
 
-jest.mock('#src/queries/connector.js', () => ({
+const { updateConnector } = await mockEsmWithActual('#src/queries/connector.js', () => ({
   updateConnector: jest.fn(),
 }));
-jest.mock('#src/connectors.js', () => ({
-  getLogtoConnectors: async () => getLogtoConnectorsPlaceholder(),
-  getLogtoConnectorById: async (connectorId: string) =>
-    getLogtoConnectorByIdPlaceholder(connectorId),
+
+await mockEsmWithActual('#src/connectors.js', () => ({
+  getLogtoConnectors,
+  getLogtoConnectorById,
 }));
-jest.mock('#src/lib/sign-in-experience.js', () => ({
+
+mockEsm('#src/lib/sign-in-experience.js', () => ({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   removeUnavailableSocialConnectorTargets: async () => {},
 }));
+
+const { createRequester } = await import('#src/utils/test-utils.js');
+const connectorRoutes = await pickDefault(import('./connector.js'));
 
 describe('connector PATCH routes', () => {
   const connectorRequest = createRequester({ authedRoutes: connectorRoutes });
@@ -61,19 +62,19 @@ describe('connector PATCH routes', () => {
     });
 
     it('throws when connector can not be found by given connectorId (locally)', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValueOnce(mockLogtoConnectorList.slice(0, 1));
+      getLogtoConnectors.mockResolvedValueOnce(mockLogtoConnectorList.slice(0, 1));
       const response = await connectorRequest.patch('/connectors/findConnector').send({});
       expect(response).toHaveProperty('statusCode', 404);
     });
 
     it('throws when connector can not be found by given connectorId (remotely)', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([]);
+      getLogtoConnectors.mockResolvedValueOnce([]);
       const response = await connectorRequest.patch('/connectors/id0').send({});
       expect(response).toHaveProperty('statusCode', 404);
     });
 
     it('config validation fails', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+      getLogtoConnectors.mockResolvedValueOnce([
         {
           dbEntry: mockConnector,
           metadata: mockMetadata,
@@ -91,7 +92,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('throws when trying to update target', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValue([
+      getLogtoConnectors.mockResolvedValue([
         {
           dbEntry: mockConnector,
           metadata: { ...mockMetadata, isStandard: true },
@@ -108,7 +109,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('successfully updates connector configs', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValue([
+      getLogtoConnectors.mockResolvedValue([
         {
           dbEntry: mockConnector,
           metadata: { ...mockMetadata, isStandard: true },
@@ -116,7 +117,7 @@ describe('connector PATCH routes', () => {
           ...mockLogtoConnector,
         },
       ]);
-      mockedUpdateConnector.mockResolvedValueOnce({
+      updateConnector.mockResolvedValueOnce({
         ...mockConnector,
         metadata: {
           target: 'target',
@@ -149,7 +150,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('successfully clear connector config metadata', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+      getLogtoConnectors.mockResolvedValueOnce([
         {
           dbEntry: mockConnector,
           metadata: { ...mockMetadata, isStandard: true },
@@ -157,7 +158,7 @@ describe('connector PATCH routes', () => {
           ...mockLogtoConnector,
         },
       ]);
-      mockedUpdateConnector.mockResolvedValueOnce({
+      updateConnector.mockResolvedValueOnce({
         ...mockConnector,
         metadata: {
           target: '',
@@ -186,7 +187,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('throws when set syncProfile to `true` and with non-social connector', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
+      getLogtoConnectors.mockResolvedValueOnce([
         {
           dbEntry: mockConnector,
           metadata: mockMetadata,
@@ -200,7 +201,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('successfully set syncProfile to `true` and with social connector', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValue([
+      getLogtoConnectors.mockResolvedValue([
         {
           dbEntry: { ...mockConnector, syncProfile: false },
           metadata: mockMetadata,
@@ -220,7 +221,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('successfully set syncProfile to `false`', async () => {
-      getLogtoConnectorsPlaceholder.mockResolvedValue([
+      getLogtoConnectors.mockResolvedValue([
         {
           dbEntry: { ...mockConnector, syncProfile: false },
           metadata: mockMetadata,

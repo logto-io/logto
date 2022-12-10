@@ -13,12 +13,24 @@ import {
   mockLanguageInfo,
   mockAliyunSmsConnector,
 } from '#src/__mocks__/index.js';
-import * as signInExpLib from '#src/lib/sign-in-experience/index.js';
-import * as signInLib from '#src/lib/sign-in-experience/sign-in.js';
-import * as signUpLib from '#src/lib/sign-in-experience/sign-up.js';
+import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import signInExperiencesRoutes from './sign-in-experience.js';
+const { jest } = import.meta;
+
+const {
+  validateBranding,
+  validateLanguageInfo,
+  validateTermsOfUse,
+  validateSignIn,
+  validateSignUp,
+} = await mockEsmWithActual('#src/lib/sign-in-experience/index.js', () => ({
+  validateBranding: jest.fn(),
+  validateLanguageInfo: jest.fn(),
+  validateTermsOfUse: jest.fn(),
+  validateSignIn: jest.fn(),
+  validateSignUp: jest.fn(),
+}));
 
 const logtoConnectors = [
   mockFacebookConnector,
@@ -28,32 +40,26 @@ const logtoConnectors = [
   mockAliyunSmsConnector,
 ];
 
-const getLogtoConnectors = jest.fn(async () => logtoConnectors);
-
-jest.mock('#src/connectors.js', () => {
-  return {
-    ...jest.requireActual('#src/connectors.js'),
-    getLogtoConnectors: jest.fn(async () => getLogtoConnectors()),
-  };
-});
-
-const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
-
-jest.mock('#src/queries/sign-in-experience.js', () => ({
-  findDefaultSignInExperience: jest.fn(async () => findDefaultSignInExperience()),
-  updateDefaultSignInExperience: jest.fn(
-    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
-      ...mockSignInExperience,
-      ...data,
-    })
-  ),
+await mockEsmWithActual('#src/connectors.js', () => ({
+  getLogtoConnectors: async () => logtoConnectors,
 }));
 
-const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
+const { findDefaultSignInExperience } = mockEsm('#src/queries/sign-in-experience.js', () => ({
+  findDefaultSignInExperience: jest.fn(async () => mockSignInExperience),
+  updateDefaultSignInExperience: async (
+    data: Partial<CreateSignInExperience>
+  ): Promise<SignInExperience> => ({
+    ...mockSignInExperience,
+    ...data,
+  }),
+}));
 
-jest.mock('#src/queries/custom-phrase.js', () => ({
+mockEsm('#src/queries/custom-phrase.js', () => ({
   findAllCustomLanguageTags: async () => [],
 }));
+
+const signInExperiencesRoutes = await pickDefault(import('./sign-in-experience.js'));
+const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
 describe('GET /sign-in-exp', () => {
   afterAll(() => {
@@ -102,12 +108,6 @@ describe('PATCH /sign-in-exp', () => {
   it('should succeed to update when the input is valid', async () => {
     const termsOfUse: TermsOfUse = { enabled: false };
     const socialSignInConnectorTargets = ['github', 'facebook', 'wechat'];
-
-    const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
-    const validateLanguageInfo = jest.spyOn(signInExpLib, 'validateLanguageInfo');
-    const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');
-    const validateSignIn = jest.spyOn(signInLib, 'validateSignIn');
-    const validateSignUp = jest.spyOn(signUpLib, 'validateSignUp');
 
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       color: mockColor,

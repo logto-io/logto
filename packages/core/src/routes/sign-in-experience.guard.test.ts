@@ -1,4 +1,4 @@
-import type { CreateSignInExperience, LanguageInfo, SignInExperience } from '@logto/schemas';
+import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 
 import {
   mockAliyunDmConnector,
@@ -10,11 +10,12 @@ import {
   mockSignInExperience,
   mockTermsOfUse,
 } from '#src/__mocks__/index.js';
+import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import signInExperiencesRoutes from './sign-in-experience.js';
+const { jest } = import.meta;
 
-jest.mock('#src/connectors.js', () => ({
+mockEsm('#src/connectors.js', () => ({
   getLogtoConnectors: jest.fn(async () => [
     mockAliyunDmConnector,
     mockAliyunSmsConnector,
@@ -24,15 +25,11 @@ jest.mock('#src/connectors.js', () => ({
   ]),
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const validateLanguageInfo = jest.fn(async (languageInfo: LanguageInfo): Promise<void> => {});
-
-jest.mock('#src/lib/sign-in-experience.js', () => ({
-  ...jest.requireActual('#src/lib/sign-in-experience.js'),
-  validateLanguageInfo: async (languageInfo: LanguageInfo) => validateLanguageInfo(languageInfo),
+const { validateLanguageInfo } = await mockEsmWithActual('#src/lib/sign-in-experience.js', () => ({
+  validateLanguageInfo: jest.fn(),
 }));
 
-jest.mock('#src/queries/sign-in-experience.js', () => ({
+await mockEsmWithActual('#src/queries/sign-in-experience.js', () => ({
   updateDefaultSignInExperience: jest.fn(
     async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
       ...mockSignInExperience,
@@ -41,6 +38,7 @@ jest.mock('#src/queries/sign-in-experience.js', () => ({
   ),
 }));
 
+const signInExperiencesRoutes = await pickDefault(import('./sign-in-experience.js'));
 const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
 const expectPatchResponseStatus = async (
