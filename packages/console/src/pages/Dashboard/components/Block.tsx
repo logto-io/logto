@@ -5,8 +5,11 @@ import { useTranslation } from 'react-i18next';
 
 import ArrowDown from '@/assets/images/arrow-down.svg';
 import ArrowUp from '@/assets/images/arrow-up.svg';
+import Tip from '@/assets/images/tip.svg';
 import Card from '@/components/Card';
-import ToggleTipButton from '@/components/ToggleTipButton';
+import IconButton from '@/components/IconButton';
+import { ToggleTip } from '@/components/Tip';
+import type { Props as ToggleTipProps } from '@/components/Tip/ToggleTip';
 import { formatNumberWithComma } from '@/utilities/number';
 
 import * as styles from './Block.module.scss';
@@ -15,7 +18,7 @@ type Props = {
   count: number;
   delta?: number;
   title: AdminConsoleKey;
-  tip?: AdminConsoleKey;
+  tip?: ToggleTipProps['content'];
   variant?: 'bordered' | 'default' | 'plain';
 };
 
@@ -29,7 +32,11 @@ const Block = ({ variant = 'default', count, delta, title, tip }: Props) => {
       <div className={styles.title}>
         {t(title)}
         {tip && (
-          <ToggleTipButton className={styles.toggleTipButton} render={() => <div>{t(tip)}</div>} />
+          <ToggleTip anchorClassName={styles.toggleTipButton} content={tip}>
+            <IconButton size="small">
+              <Tip />
+            </IconButton>
+          </ToggleTip>
         )}
       </div>
       <div className={styles.content}>

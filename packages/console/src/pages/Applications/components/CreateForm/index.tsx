@@ -118,7 +118,12 @@ const CreateForm = ({ onClose }: Props) => {
         </FormField>
       </form>
       {createdApp && (
-        <Modal isOpen={isGetStartedModalOpen} className={modalStyles.fullScreen}>
+        <Modal
+          shouldCloseOnEsc
+          isOpen={isGetStartedModalOpen}
+          className={modalStyles.fullScreen}
+          onRequestClose={closeModal}
+        >
           <Guide app={createdApp} onClose={closeModal} />
         </Modal>
       )}

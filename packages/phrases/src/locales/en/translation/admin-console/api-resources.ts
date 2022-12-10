@@ -6,7 +6,7 @@ const api_resources = {
   api_name_placeholder: 'Enter your API name',
   api_identifier: 'API identifier',
   api_identifier_tip:
-    'The unique identifier to the API resource. It must be an absolute URI and has no fragment (#) component. Equals to the resource parameter in OAuth 2.0.',
+    'The unique identifier to the API resource. It must be an absolute URI and has no fragment (#) component. Equals to the <a>resource parameter</a> in OAuth 2.0.',
   api_resource_created: 'The API resource {{name}} has been successfully created',
   api_identifier_placeholder: 'https://your-api-identifier/',
 };

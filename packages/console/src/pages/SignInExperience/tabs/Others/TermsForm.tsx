@@ -32,7 +32,7 @@ const TermsForm = () => {
         <FormField
           isRequired
           title="sign_in_exp.others.terms_of_use.terms_of_use"
-          tip="sign_in_exp.others.terms_of_use.terms_of_use_tip"
+          tip={t('sign_in_exp.others.terms_of_use.terms_of_use_tip')}
         >
           <TextInput
             {...register('termsOfUse.contentUrl', {

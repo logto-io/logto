@@ -66,6 +66,7 @@ const verifySocialIdentityInInteractionRecord = async (
   { connectorId, identityType }: SocialIdentityPayload,
   interactionRecord?: AnonymousInteractionResult
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
+  // Sign-In with social verified email or phone requires a social identifier in the interaction result
   const socialIdentifierRecord = interactionRecord?.identifiers?.find(
     (entity): entity is SocialIdentifier =>
       entity.key === 'social' && entity.connectorId === connectorId
@@ -88,6 +89,7 @@ const verifyIdentifierPayload = async (
 ): Promise<Identifier | undefined> => {
   const { identifier, event } = ctx.interactionPayload;
 
+  // No Identifier in payload
   if (!identifier) {
     return;
   }
@@ -104,6 +106,7 @@ const verifyIdentifierPayload = async (
     return verifySocialIdentifier(identifier, ctx);
   }
 
+  // Sign-In with social verified email or phone
   return verifySocialIdentityInInteractionRecord(identifier, interactionRecord);
 };
 
@@ -119,10 +122,9 @@ export default async function identifierPayloadVerification(
   const interaction: PayloadVerifiedInteractionResult = {
     ...interactionRecord,
     event,
-    identifiers: mergeIdentifiers({
-      oldIdentifiers: interactionRecord?.identifiers,
-      newIdentifiers: identifier && [identifier],
-    }),
+    identifiers: identifier
+      ? mergeIdentifiers([identifier], interactionRecord?.identifiers)
+      : interactionRecord?.identifiers,
   };
 
   await storeInteractionResult(interaction, ctx, provider);

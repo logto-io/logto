@@ -2,14 +2,16 @@ import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
+import Close from '@/assets/images/close.svg';
+import Card from '@/components/Card';
+import CardTitle from '@/components/CardTitle';
 import ConfirmModal from '@/components/ConfirmModal';
-import ModalLayout from '@/components/ModalLayout';
+import IconButton from '@/components/IconButton';
 import useUiLanguages from '@/hooks/use-ui-languages';
-import * as modalStyles from '@/scss/modal.module.scss';
 
 import LanguageDetails from './LanguageDetails';
 import LanguageNav from './LanguageNav';
-import * as style from './index.module.scss';
+import * as styles from './index.module.scss';
 import useLanguageEditorContext, { LanguageEditorContext } from './use-language-editor-context';
 
 type Props = {
@@ -69,18 +71,28 @@ const LanguageEditorModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <Modal isOpen={isOpen} className={modalStyles.content} overlayClassName={modalStyles.overlay}>
-      <ModalLayout
-        title="sign_in_exp.others.manage_language.title"
-        subtitle="sign_in_exp.others.manage_language.subtitle"
-        size="xlarge"
-        onClose={onCloseModal}
-      >
-        <div className={style.container}>
+    <Modal
+      shouldCloseOnEsc
+      isOpen={isOpen}
+      className={styles.modalContent}
+      overlayClassName={styles.modalOverlay}
+      onRequestClose={onCloseModal}
+    >
+      <Card className={styles.editor}>
+        <div className={styles.header}>
+          <CardTitle
+            title="sign_in_exp.others.manage_language.title"
+            subtitle="sign_in_exp.others.manage_language.subtitle"
+          />
+          <IconButton onClick={onCloseModal}>
+            <Close />
+          </IconButton>
+        </div>
+        <div className={styles.content}>
           <LanguageNav />
           <LanguageDetails />
         </div>
-      </ModalLayout>
+      </Card>
       <ConfirmModal
         isOpen={confirmationState !== 'none'}
         cancelButtonText="general.stay_on_page"

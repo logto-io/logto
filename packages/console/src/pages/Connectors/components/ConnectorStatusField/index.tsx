@@ -1,7 +1,9 @@
 import { Trans, useTranslation } from 'react-i18next';
 
+import Tip from '@/assets/images/tip.svg';
+import IconButton from '@/components/IconButton';
 import TextLink from '@/components/TextLink';
-import ToggleTipButton from '@/components/ToggleTipButton';
+import { ToggleTip } from '@/components/Tip';
 
 import * as styles from './index.module.scss';
 
@@ -11,10 +13,9 @@ const ConnectorStatusField = () => {
   return (
     <div className={styles.field}>
       {t('connectors.connector_status')}
-      <ToggleTipButton
-        tipHorizontalAlignment="center"
-        className={styles.tipButton}
-        render={(closeTipHandler) => (
+      <ToggleTip
+        anchorClassName={styles.tipButton}
+        content={(closeTipHandler) => (
           <>
             <div className={styles.title}>{t('connectors.connector_status')}</div>
             <div className={styles.content}>
@@ -24,7 +25,6 @@ const ConnectorStatusField = () => {
                     <TextLink
                       to="/sign-in-experience/sign-up-and-sign-in"
                       target="_blank"
-                      className={styles.link}
                       onClick={closeTipHandler}
                     />
                   ),
@@ -37,7 +37,11 @@ const ConnectorStatusField = () => {
             </div>
           </>
         )}
-      />
+      >
+        <IconButton size="small">
+          <Tip />
+        </IconButton>
+      </ToggleTip>
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import { nanoid } from 'nanoid';
 import type { ReactNode } from 'react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
-import Tooltip from '../Tooltip';
+import { Tooltip } from '../Tip';
 import Icon from './Icon';
 import * as styles from './index.module.scss';
 
@@ -21,8 +21,6 @@ type Props = {
 const Checkbox = ({ value, onChange, label, disabled, className, disabledTooltip }: Props) => {
   const [id, setId] = useState(nanoid());
 
-  const tipRef = useRef<HTMLDivElement>(null);
-
   return (
     <div className={classNames(styles.checkbox, className)}>
       <input
@@ -35,10 +33,11 @@ const Checkbox = ({ value, onChange, label, disabled, className, disabledTooltip
         }}
       />
       {disabled && disabledTooltip && (
-        <>
-          <div ref={tipRef} className={styles.disabledMask} />
-          <Tooltip anchorRef={tipRef} content={disabledTooltip} />
-        </>
+        <Tooltip
+          horizontalAlign="start"
+          anchorClassName={styles.disabledMask}
+          content={disabledTooltip}
+        />
       )}
       <Icon className={styles.icon} />
       {label && <label htmlFor={id}>{label}</label>}

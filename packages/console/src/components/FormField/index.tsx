@@ -3,9 +3,13 @@ import classNames from 'classnames';
 import type { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Tip from '@/assets/images/tip.svg';
+
 import type DangerousRaw from '../DangerousRaw';
+import IconButton from '../IconButton';
 import Spacer from '../Spacer';
-import ToggleTipButton from '../ToggleTipButton';
+import { ToggleTip } from '../Tip';
+import type { Props as ToggleTipProps } from '../Tip/ToggleTip';
 import * as styles from './index.module.scss';
 
 export type Props = {
@@ -14,7 +18,7 @@ export type Props = {
   isRequired?: boolean;
   className?: string;
   headlineClassName?: string;
-  tip?: AdminConsoleKey;
+  tip?: ToggleTipProps['content'];
 };
 
 const FormField = ({ title, children, isRequired, className, tip, headlineClassName }: Props) => {
@@ -25,7 +29,11 @@ const FormField = ({ title, children, isRequired, className, tip, headlineClassN
       <div className={classNames(styles.headline, headlineClassName)}>
         <div className={styles.title}>{typeof title === 'string' ? t(title) : title}</div>
         {tip && (
-          <ToggleTipButton className={styles.toggleTipButton} render={() => <div>{t(tip)}</div>} />
+          <ToggleTip anchorClassName={styles.toggleTipButton} content={tip}>
+            <IconButton size="small">
+              <Tip />
+            </IconButton>
+          </ToggleTip>
         )}
         <Spacer />
         {isRequired && <div className={styles.required}>{t('general.required')}</div>}

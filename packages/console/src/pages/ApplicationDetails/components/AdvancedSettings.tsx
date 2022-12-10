@@ -2,12 +2,13 @@ import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
 import { ApplicationType, UserRole } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/components/CopyToClipboard';
 import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
+import TextLink from '@/components/TextLink';
 
 import * as styles from '../index.module.scss';
 
@@ -28,7 +29,21 @@ const AdvancedSettings = ({ applicationType, oidcConfig }: Props) => {
     >
       <FormField
         title="application_details.authorization_endpoint"
-        tip="application_details.authorization_endpoint_tip"
+        tip={(closeTipHandler) => (
+          <Trans
+            components={{
+              a: (
+                <TextLink
+                  href="https://openid.net/specs/openid-connect-core-1_0.html#Authentication"
+                  target="_blank"
+                  onClick={closeTipHandler}
+                />
+              ),
+            }}
+          >
+            {t('application_details.authorization_endpoint_tip')}
+          </Trans>
+        )}
       >
         <CopyToClipboard
           className={styles.textField}

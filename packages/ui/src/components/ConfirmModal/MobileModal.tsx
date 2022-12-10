@@ -18,10 +18,12 @@ const MobileModal = ({
 }: ModalProps) => {
   return (
     <ReactModal
+      shouldCloseOnEsc
       role="dialog"
       isOpen={isOpen}
       className={classNames(styles.modal, className)}
       overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
+      onRequestClose={onClose}
     >
       <div className={styles.container}>
         <div className={styles.content}>{children}</div>

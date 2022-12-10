@@ -5,7 +5,7 @@
   align-items: center;
 
   .tipButton {
-    margin-left: _.unit(1);
+    margin-left: _.unit(0.5);
   }
 }
 
@@ -15,12 +15,4 @@
 
 .content {
   font: var(--font-body-medium);
-
-  .link {
-    color: #cabeff;
-
-    &:active {
-      color: #cabeff;
-    }
-  }
 }

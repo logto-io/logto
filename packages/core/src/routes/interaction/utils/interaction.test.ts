@@ -6,40 +6,37 @@ describe('interaction utils', () => {
   const emailIdentifier: Identifier = { key: 'emailVerified', value: 'foo@logto.io' };
   const phoneIdentifier: Identifier = { key: 'phoneVerified', value: '12346' };
 
-  it('mergeIdentifiers', () => {
-    expect(mergeIdentifiers({})).toEqual(undefined);
-    expect(mergeIdentifiers({ oldIdentifiers: [usernameIdentifier] })).toEqual([
-      usernameIdentifier,
-    ]);
-    expect(mergeIdentifiers({ newIdentifiers: [usernameIdentifier] })).toEqual([
-      usernameIdentifier,
-    ]);
-    expect(
-      mergeIdentifiers({
-        oldIdentifiers: [usernameIdentifier],
-        newIdentifiers: [usernameIdentifier],
-      })
-    ).toEqual([usernameIdentifier]);
+  describe('mergeIdentifiers', () => {
+    it('new identifiers only ', () => {
+      expect(mergeIdentifiers([usernameIdentifier])).toEqual([usernameIdentifier]);
+    });
 
-    expect(
-      mergeIdentifiers({
-        oldIdentifiers: [emailIdentifier],
-        newIdentifiers: [usernameIdentifier],
-      })
-    ).toEqual([emailIdentifier, usernameIdentifier]);
+    it('same identifiers should replace', () => {
+      expect(mergeIdentifiers([usernameIdentifier], [{ key: 'accountId', value: 'foo2' }])).toEqual(
+        [usernameIdentifier]
+      );
+    });
 
-    expect(
-      mergeIdentifiers({
-        oldIdentifiers: [emailIdentifier, phoneIdentifier],
-        newIdentifiers: [phoneIdentifier, usernameIdentifier],
-      })
-    ).toEqual([emailIdentifier, phoneIdentifier, usernameIdentifier]);
+    it('different identifiers should merge', () => {
+      expect(mergeIdentifiers([emailIdentifier], [usernameIdentifier])).toEqual([
+        usernameIdentifier,
+        emailIdentifier,
+      ]);
 
-    expect(
-      mergeIdentifiers({
-        oldIdentifiers: [emailIdentifier, phoneIdentifier],
-        newIdentifiers: [usernameIdentifier],
-      })
-    ).toEqual([emailIdentifier, phoneIdentifier, usernameIdentifier]);
+      expect(mergeIdentifiers([usernameIdentifier], [emailIdentifier, phoneIdentifier])).toEqual([
+        emailIdentifier,
+        phoneIdentifier,
+        usernameIdentifier,
+      ]);
+    });
+
+    it('mixed identifiers should replace and merge', () => {
+      expect(
+        mergeIdentifiers(
+          [phoneIdentifier, usernameIdentifier],
+          [emailIdentifier, { key: 'phoneVerified', value: '465789' }]
+        )
+      ).toEqual([emailIdentifier, phoneIdentifier, usernameIdentifier]);
+    });
   });
 });

@@ -31,15 +31,35 @@
       text-overflow: ellipsis;
     }
 
-    .copyIconButton {
-      margin-left: _.unit(3);
-      height: 20px;
-      width: 20px;
 
-      .copyIcon {
-        svg {
-          width: 16px;
-          height: 16px;
+    .copyToolTipAnchor {
+      margin-left: _.unit(2);
+    }
+  }
+
+  &.default {
+    .row {
+      .copyToolTipAnchor {
+        margin-left: _.unit(3);
+      }
+    }
+  }
+
+  &.small {
+    .row {
+      .copyToolTipAnchor {
+        margin-left: _.unit(1);
+      }
+
+      .iconButton {
+        height: 20px;
+        width: 20px;
+
+        .icon {
+          svg {
+            width: 12px;
+            height: 12px;
+          }
         }
       }
     }

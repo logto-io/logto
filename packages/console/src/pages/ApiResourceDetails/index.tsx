@@ -117,7 +117,7 @@ const ApiResourceDetails = () => {
               <Icon className={styles.icon} />
               <div className={styles.meta}>
                 <div className={styles.name}>{data.name}</div>
-                <CopyToClipboard value={data.indicator} />
+                <CopyToClipboard size="small" value={data.indicator} />
               </div>
             </div>
             {!isLogtoManagementApiResource && (

@@ -16,6 +16,7 @@ import type {
   VerifiedSignInInteractionResult,
   VerifiedRegisterInteractionResult,
 } from '../types/index.js';
+import { clearInteractionStorage } from '../utils/interaction.js';
 
 const getSocialUpdateProfile = async ({
   user,
@@ -124,5 +125,6 @@ export default async function submitInteraction(
     profile.password
   );
   await updateUserById(accountId, { passwordEncrypted, passwordEncryptionMethod });
+  await clearInteractionStorage(ctx, provider);
   ctx.status = 204;
 }

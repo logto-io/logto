@@ -1,10 +1,6 @@
-import type { Profile, SocialConnectorPayload, User, IdentifierPayload } from '@logto/schemas';
+import type { SocialConnectorPayload, User, IdentifierPayload } from '@logto/schemas';
 
-import type {
-  PasscodeIdentifierPayload,
-  PasswordIdentifierPayload,
-  Identifier,
-} from '../types/index.js';
+import type { PasscodeIdentifierPayload, PasswordIdentifierPayload } from '../types/index.js';
 
 export const isPasswordIdentifier = (
   identifier: IdentifierPayload
@@ -18,22 +14,6 @@ export const isSocialIdentifier = (
   identifier: IdentifierPayload
 ): identifier is SocialConnectorPayload =>
   'connectorId' in identifier && 'connectorData' in identifier;
-
-export const isProfileIdentifier = (identifier: Identifier, profile?: Profile) => {
-  if (identifier.key === 'accountId') {
-    return false;
-  }
-
-  if (identifier.key === 'emailVerified') {
-    return profile?.email === identifier.value;
-  }
-
-  if (identifier.key === 'phoneVerified') {
-    return profile?.phone === identifier.value;
-  }
-
-  return profile?.connectorId === identifier.connectorId;
-};
 
 // Social identities can take place the role of password
 export const isUserPasswordSet = ({

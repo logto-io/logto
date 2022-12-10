@@ -1,9 +1,11 @@
 @use '@/scss/underscore' as _;
 
 .languageDetails {
-  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 
   .title {
+    flex-shrink: 0;
     padding: _.unit(6) _.unit(5);
     font: var(--font-title-large);
     color: var(--color-text);
@@ -31,68 +33,78 @@
     }
   }
 
-  .content {
-    border-top: 1px solid var(--color-divider);
-    height: 481px;
+  .form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
 
-    > table {
-      border: none;
+    .content {
+      flex: 1;
+      border-top: 1px solid var(--color-divider);
+      overflow-y: auto;
 
-      > thead {
-        position: sticky;
-        top: 0;
-        // Note: cells with `position: relative` style will overlap this sticky header, add a z-index to fix it.
-        z-index: 1;
+      .customValuesColumn {
+        display: flex;
+        align-items: center;
+      }
 
-        tr > th {
-          padding: _.unit(1) _.unit(5);
-          font: var(--font-label-large);
-          color: var(--color-text);
-          background-color: var(--color-layer-1);
+      .clearButton {
+        margin-left: _.unit(1);
+      }
+
+      .clearIcon {
+        width: 16px;
+        height: 16px;
+      }
+
+      > table {
+        border: none;
+
+        > thead {
+          position: sticky;
+          top: 0;
+          // Note: cells with `position: relative` style will overlap this sticky header, add a z-index to fix it.
+          z-index: 1;
+
+          tr > th {
+            padding: _.unit(1) _.unit(5);
+            font: var(--font-label-large);
+            color: var(--color-text);
+            background-color: var(--color-layer-1);
+          }
+        }
+
+        > tbody > tr > td {
+          padding: _.unit(2) _.unit(5);
+          border: none;
+          word-wrap: break-word;
         }
       }
 
-      > tbody > tr > td {
-        padding: _.unit(2) _.unit(5);
-        border: none;
+      .sectionTitle {
+        @include _.subhead-cap;
+        background-color: var(--color-layer-light);
+      }
+
+      .sectionDataKey {
+        padding: _.unit(4) _.unit(5);
+        font: var(--font-body-medium);
+        color: var(--color-text);
+      }
+
+      .sectionBuiltInText {
+        padding: _.unit(2) 0;
       }
     }
 
-    .customValuesColumn {
+    .footer {
+      flex-shrink: 0;
+      border-top: 1px solid var(--color-divider);
+      height: 85px;
       display: flex;
-      align-items: center;
+      flex-direction: row-reverse;
+      padding: _.unit(5);
     }
-
-    .clearButton {
-      margin-left: _.unit(1);
-    }
-
-    .clearIcon {
-      width: 16px;
-      height: 16px;
-    }
-
-    .sectionTitle {
-      @include _.subhead-cap;
-      background-color: var(--color-layer-light);
-    }
-
-    .sectionDataKey {
-      padding: _.unit(4) _.unit(5);
-      font: var(--font-body-medium);
-      color: var(--color-text);
-    }
-
-    .sectionBuiltInText {
-      padding: _.unit(2) 0;
-    }
-  }
-
-  .footer {
-    border-top: 1px solid var(--color-divider);
-    display: flex;
-    flex-direction: row-reverse;
-    padding: _.unit(5);
   }
 }

@@ -110,7 +110,7 @@ const UserDetails = () => {
                   </>
                 )}
                 <div className={styles.text}>User ID</div>
-                <CopyToClipboard value={data.id} />
+                <CopyToClipboard size="small" value={data.id} />
               </div>
             </div>
             <div>
@@ -138,9 +138,13 @@ const UserDetails = () => {
                 </ActionMenuItem>
               </ActionMenu>
               <ReactModal
+                shouldCloseOnEsc
                 isOpen={isResetPasswordFormOpen}
                 className={modalStyles.content}
                 overlayClassName={modalStyles.overlay}
+                onRequestClose={() => {
+                  setIsResetPasswordFormOpen(false);
+                }}
               >
                 <ResetPasswordForm
                   userId={data.id}

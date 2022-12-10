@@ -70,7 +70,7 @@ const verifyProfileIdentifiers = (
   }
 };
 
-const verifyProfileNotRegistered = async (
+const verifyProfileNotRegisteredByOtherUserAccount = async (
   { username, email, phone, connectorId }: Profile,
   identifiers: Identifier[] = []
 ) => {
@@ -128,7 +128,10 @@ const verifyProfileNotRegistered = async (
   }
 };
 
-const verifyProfileNotExist = async ({ username, email, phone, password }: Profile, user: User) => {
+const verifyProfileNotExistInCurrentUserAccount = async (
+  { username, email, phone, password }: Profile,
+  user: User
+) => {
   if (username) {
     assertThat(
       !user.username,
@@ -183,7 +186,7 @@ export default async function verifyProfile(
     assertThat(isValidRegisterProfile(profile), new RequestError({ code: 'guard.invalid_input' }));
 
     verifyProfileIdentifiers(profile, identifiers);
-    await verifyProfileNotRegistered(profile, identifiers);
+    await verifyProfileNotRegisteredByOtherUserAccount(profile, identifiers);
 
     const interactionWithProfile: VerifiedRegisterInteractionResult = { ...interaction, profile };
     await storeInteractionResult(interactionWithProfile, ctx, provider);
@@ -195,8 +198,8 @@ export default async function verifyProfile(
     verifyProfileIdentifiers(profile, identifiers);
     // Find existing account
     const user = await findUserById(accountId);
-    await verifyProfileNotExist(profile, user);
-    await verifyProfileNotRegistered(profile, identifiers);
+    await verifyProfileNotExistInCurrentUserAccount(profile, user);
+    await verifyProfileNotRegisteredByOtherUserAccount(profile, identifiers);
 
     const interactionWithProfile: VerifiedSignInInteractionResult = { ...interaction, profile };
     await storeInteractionResult(interactionWithProfile, ctx, provider);
