@@ -58,16 +58,13 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
             <div className={styles.tip}>{t('connectors.guide.name_tip')}</div>
           </FormField>
           <FormField title="connectors.guide.logo">
-            <TextInput
-              placeholder={t('connectors.guide.logo_placelholder')}
-              {...register('logo')}
-            />
+            <TextInput placeholder={t('connectors.guide.logo_placeholder')} {...register('logo')} />
             <div className={styles.tip}>{t('connectors.guide.logo_tip')}</div>
           </FormField>
           {darkVisible && (
             <FormField title="connectors.guide.logo_dark">
               <TextInput
-                placeholder={t('connectors.guide.logo_dark_placelholder')}
+                placeholder={t('connectors.guide.logo_dark_placeholder')}
                 {...register('logoDark')}
               />
               <div className={styles.tip}>{t('connectors.guide.logo_dark_tip')}</div>

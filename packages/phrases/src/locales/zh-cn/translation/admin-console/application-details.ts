@@ -28,7 +28,7 @@ const application_details = {
   post_sign_out_redirect_uris: 'Post sign out redirect URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
   post_sign_out_redirect_uri_tip:
-    '在用户登出后重定向的目标 URI（可选）。在某些应用类型中可能无实质作用。',
+    '在用户退出登录后重定向的目标 URI（可选）。在某些应用类型中可能无实质作用。',
   cors_allowed_origins: 'CORS Allowed Origins',
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
