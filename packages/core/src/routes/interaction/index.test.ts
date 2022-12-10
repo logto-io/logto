@@ -1,9 +1,10 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { Event } from '@logto/schemas';
+import { demoAppApplicationId } from '@logto/schemas/lib/seeds/application.js';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, mockEsmWithActual } from '#src/test-utils/mock.js';
+import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -80,14 +81,21 @@ const { getInteractionStorage } = mockEsm('#src/routes/interaction/utils/interac
 
 const log = jest.fn();
 
-const { default: koaInteractionBodyGuardSpy } = mockEsm(
-  '#src/routes/interaction/middleware/koa-interaction-body-guard.js',
-  () => ({ default: jest.fn() })
+const koaInteractionBodyGuard = await pickDefault(
+  import('./middleware/koa-interaction-body-guard.js')
+);
+const koaSessionSignInExperienceGuard = await pickDefault(
+  import('./middleware/koa-session-sign-in-experience-guard.js')
 );
 
-const { default: koaSessionSignInExperienceGuardSpy } = mockEsm(
+const { default: koaInteractionBodyGuardSpy } = await mockEsmWithActual(
+  '#src/routes/interaction/middleware/koa-interaction-body-guard.js',
+  () => ({ default: jest.fn(koaInteractionBodyGuard) })
+);
+
+const { default: koaSessionSignInExperienceGuardSpy } = await mockEsmWithActual(
   '#src/routes/interaction/middleware/koa-session-sign-in-experience-guard.js',
-  () => ({ default: jest.fn() })
+  () => ({ default: jest.fn(koaSessionSignInExperienceGuard) })
 );
 
 const {
@@ -99,7 +107,9 @@ const {
 describe('session -> interactionRoutes', () => {
   const sessionRequest = createRequester({
     anonymousRoutes: interactionRoutes,
-    provider: createMockProvider(),
+    provider: createMockProvider(
+      jest.fn().mockResolvedValue({ params: {}, jti: 'jti', client_id: demoAppApplicationId })
+    ),
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();

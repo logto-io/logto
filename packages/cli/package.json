@@ -25,13 +25,14 @@
     "precommit": "lint-staged",
     "prepare:package-json": "node -p \"'export const packageJson = ' + JSON.stringify(require('./package.json'), undefined, 2) + ';'\" > src/package-json.ts",
     "build": "rimraf lib && pnpm prepare:package-json && tsc -p tsconfig.build.json",
+    "build:test": "rm -rf build/ && tsc -p tsconfig.test.json --sourcemap",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "start": "node .",
     "start:dev": "ts-node --files src/index.ts",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "pnpm build -p tsconfig.test.json && NODE_OPTIONS=--experimental-vm-modules jest",
-    "test:ci": "jest",
+    "test": "pnpm build:test && NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:ci": "pnpm run test",
     "prepack": "pnpm build"
   },
   "engines": {
