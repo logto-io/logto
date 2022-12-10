@@ -14,13 +14,14 @@
     "precommit": "lint-staged",
     "copyfiles": "copyfiles -u 1 src/**/*.md build",
     "build": "rm -rf build/ && tsc -p tsconfig.build.json && pnpm run copyfiles",
+    "build:test": "rm -rf build/ && tsc -p tsconfig.test.json --sourcemap",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "dev": "rm -rf build/ && pnpm run copyfiles && nodemon",
     "start": "NODE_ENV=production node build/index.js",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build -p tsconfig.test.json && NODE_OPTIONS=--experimental-vm-modules jest",
-    "test:ci": "jest --coverage --silent",
+    "test": "pnpm build:test && pnpm test:only build/",
+    "test:ci": "pnpm test --coverage --silent",
     "test:report": "codecov -F core"
   },
   "dependencies": {
