@@ -1,12 +1,11 @@
 import type { User } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import { Provider } from 'oidc-provider';
-import Sinon from 'sinon';
 
 import { mockUser } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-const { jest } = import.meta;
+import sessionRoutes from './index.js';
 
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
@@ -14,16 +13,13 @@ const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const grantSave = jest.fn(async () => 'finalGrantId');
 const grantAddOIDCScope = jest.fn();
 const grantAddResourceScope = jest.fn();
+const interactionResult = jest.fn(async () => 'redirectTo');
+const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({}));
 
-const queries = await import('#src/queries/user.js');
-
-jest.unstable_mockModule('#src/queries/user.js', () => ({
-  ...queries,
+jest.mock('#src/queries/user.js', () => ({
   findUserById: async () => findUserById(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
 }));
-
-const { default: sessionRoutes } = await import('./index.js');
 
 class Grant {
   static async find(id: string) {
@@ -41,18 +37,23 @@ class Grant {
   }
 }
 
-describe('sessionRoutes', () => {
-  const provider = new Provider('https://logto.test');
-  Sinon.stub(provider, 'Grant').value(Grant);
-  // @ts-expect-error for testing
-  const interactionDetails = jest.spyOn(provider, 'interactionDetails').mockResolvedValue({});
-  const interactionResult = jest
-    .spyOn(provider, 'interactionResult')
-    .mockResolvedValue('redirectTo');
+jest.mock('oidc-provider', () => ({
+  Provider: jest.fn(() => ({
+    Grant,
+    interactionDetails,
+    interactionResult,
+  })),
+}));
 
+afterEach(() => {
+  grantSave.mockClear();
+  interactionResult.mockClear();
+});
+
+describe('sessionRoutes', () => {
   const sessionRequest = createRequester({
     anonymousRoutes: sessionRoutes,
-    provider,
+    provider: new Provider(''),
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();
@@ -63,15 +64,9 @@ describe('sessionRoutes', () => {
     ],
   });
 
-  afterEach(() => {
-    grantSave.mockClear();
-    interactionResult.mockClear();
-  });
-
   describe('POST /session', () => {
     it('should redirect to /session/consent with consent prompt name', async () => {
       interactionDetails.mockResolvedValueOnce({
-        // @ts-expect-error for testing
         prompt: { name: 'consent' },
       });
       const response = await sessionRequest.post('/session');
@@ -85,7 +80,6 @@ describe('sessionRoutes', () => {
 
     it('throw error with other prompt name', async () => {
       interactionDetails.mockResolvedValueOnce({
-        // @ts-expect-error for testing
         prompt: { name: 'invalid' },
       });
       await expect(sessionRequest.post('/session').send({})).resolves.toHaveProperty('status', 400);
@@ -100,10 +94,8 @@ describe('sessionRoutes', () => {
 
       it('with empty details and reusing old grant', async () => {
         interactionDetails.mockResolvedValueOnce({
-          // @ts-expect-error for testing
           session: { accountId: 'accountId' },
           params: { client_id: 'clientId' },
-          // @ts-expect-error for testing
           prompt: { details: {} },
         });
         const response = await sessionRequest.post('/session/consent');
@@ -120,10 +112,8 @@ describe('sessionRoutes', () => {
       });
       it('with empty details and creating new grant', async () => {
         interactionDetails.mockResolvedValueOnce({
-          // @ts-expect-error for testing
           session: { accountId: 'accountId' },
           params: { client_id: 'clientId' },
-          // @ts-expect-error for testing
           prompt: { details: {} },
           grantId: 'exists',
         });
@@ -142,7 +132,6 @@ describe('sessionRoutes', () => {
 
       it('should save application id when the user first consented', async () => {
         interactionDetails.mockResolvedValueOnce({
-          // @ts-expect-error for testing
           session: { accountId: mockUser.id },
           params: { client_id: 'clientId' },
           prompt: {
@@ -163,10 +152,8 @@ describe('sessionRoutes', () => {
 
       it('missingOIDCScope and missingResourceScopes', async () => {
         interactionDetails.mockResolvedValueOnce({
-          // @ts-expect-error for testing
           session: { accountId: 'accountId' },
           params: { client_id: 'clientId' },
-          // @ts-expect-error for testing
           prompt: {
             details: {
               missingOIDCScope: ['scope1', 'scope2'],
@@ -195,7 +182,6 @@ describe('sessionRoutes', () => {
 
     it('should throw is non-admin user request for AC consent', async () => {
       interactionDetails.mockResolvedValueOnce({
-        // @ts-expect-error for testing
         session: { accountId: mockUser.id },
         params: { client_id: adminConsoleApplicationId },
         prompt: {
@@ -218,7 +204,6 @@ describe('sessionRoutes', () => {
     });
 
     it('throws if session is missing', async () => {
-      // @ts-expect-error for testing
       interactionDetails.mockResolvedValueOnce({ params: { client_id: 'clientId' } });
       await expect(sessionRequest.post('/session/consent')).resolves.toHaveProperty(
         'statusCode',
