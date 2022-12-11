@@ -27,7 +27,7 @@ describe('authn route for Hasura', () => {
   });
 
   describe('with successful verification', () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       verifyBearerTokenFromRequest.mockResolvedValue({
         clientId: 'ok',
         sub: mockUserId,
@@ -69,7 +69,7 @@ describe('authn route for Hasura', () => {
   });
 
   describe('with failed verification', () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       verifyBearerTokenFromRequest.mockImplementation(async (_, resource) => {
         if (resource) {
           throw new RequestError({ code: 'auth.jwt_sub_missing', status: 401 });

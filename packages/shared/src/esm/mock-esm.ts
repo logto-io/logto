@@ -44,6 +44,7 @@ export const mockEsmWithActual: <T>(...args: MockParameters<T>) => Promise<T> = 
     ...factory(),
   }));
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return import(resolvedModule);
 };
 
