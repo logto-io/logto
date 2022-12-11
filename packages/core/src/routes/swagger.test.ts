@@ -1,3 +1,4 @@
+import { mockEsm } from '@logto/shared/esm';
 import Koa from 'koa';
 import Router from 'koa-router';
 import request from 'supertest';
@@ -6,7 +7,6 @@ import { number, object, string } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type { AnonymousRouter } from '#src/routes/types.js';
-import { mockEsm } from '#src/test-utils/mock.js';
 
 const { jest } = import.meta;
 

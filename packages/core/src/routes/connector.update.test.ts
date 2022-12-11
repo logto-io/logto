@@ -1,5 +1,6 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import {
   mockMetadata,
@@ -9,7 +10,6 @@ import {
 } from '#src/__mocks__/index.js';
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import assertThat from '#src/utils/assert-that.js';
 
 const { jest } = import.meta;

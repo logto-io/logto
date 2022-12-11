@@ -1,7 +1,7 @@
+import { mockEsmWithActual } from '@logto/shared/esm';
 import { Provider } from 'oidc-provider';
 
 import { MountedApps } from '#src/env-set/index.js';
-import { mockEsmWithActual } from '#src/test-utils/mock.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;

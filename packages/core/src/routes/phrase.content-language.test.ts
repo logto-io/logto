@@ -1,8 +1,8 @@
 import en from '@logto/phrases-ui/lib/locales/en.js';
+import { mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import { trTrTag, zhCnTag, zhHkTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
-import { mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 
 const { jest } = import.meta;

@@ -3,6 +3,7 @@ import {
   adminConsoleApplicationId,
   adminConsoleSignInExperience,
 } from '@logto/schemas/lib/seeds/index.js';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import {
   mockAliyunDmConnector,
@@ -14,7 +15,6 @@ import {
   mockWechatConnector,
   mockWechatNativeConnector,
 } from '#src/__mocks__/index.js';
-import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 

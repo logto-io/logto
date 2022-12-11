@@ -3,7 +3,7 @@ const config = {
   coverageReporters: ['text-summary', 'lcov'],
   roots: ['./lib'],
   moduleNameMapper: {
-    '^(chalk|inquirer)$': '<rootDir>/../shared/lib/utils/module-proxy.js',
+    '^(chalk|inquirer)$': '<rootDir>/../shared/lib/esm/module-proxy.js',
   },
 };
 

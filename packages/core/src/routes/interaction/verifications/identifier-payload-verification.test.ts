@@ -1,7 +1,7 @@
 import { Event } from '@logto/schemas';
+import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -13,28 +13,19 @@ const { verifyUserPassword } = mockEsm('#src/lib/user.js', () => ({
   verifyUserPassword: jest.fn(),
 }));
 
-const findUserByIdentifier = mockEsmDefault(
-  '#src/routes/interaction/utils/find-user-by-identifier.js',
-  () => jest.fn()
-);
+const findUserByIdentifier = mockEsmDefault('../utils/find-user-by-identifier.js', () => jest.fn());
 
-await mockEsmWithActual('#src/routes/interaction/utils/interaction.js', () => ({
+await mockEsmWithActual('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
-const { verifyIdentifierByPasscode } = mockEsm(
-  '#src/routes/interaction/utils/passcode-validation.js',
-  () => ({
-    verifyIdentifierByPasscode: jest.fn(),
-  })
-);
+const { verifyIdentifierByPasscode } = mockEsm('../utils/passcode-validation.js', () => ({
+  verifyIdentifierByPasscode: jest.fn(),
+}));
 
-const { verifySocialIdentity } = mockEsm(
-  '#src/routes/interaction/utils/social-verification.js',
-  () => ({
-    verifySocialIdentity: jest.fn().mockResolvedValue({ id: 'foo' }),
-  })
-);
+const { verifySocialIdentity } = mockEsm('../utils/social-verification.js', () => ({
+  verifySocialIdentity: jest.fn().mockResolvedValue({ id: 'foo' }),
+}));
 
 const identifierPayloadVerification = await pickDefault(
   import('./identifier-payload-verification.js')

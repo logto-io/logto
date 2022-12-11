@@ -1,7 +1,7 @@
 import { Event } from '@logto/schemas';
+import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -9,21 +9,15 @@ import type { InteractionContext, PayloadVerifiedInteractionResult } from '../ty
 
 const { jest } = import.meta;
 
-const findUserByIdentifier = mockEsmDefault(
-  '#src/routes/interaction/utils/find-user-by-identifier.js',
-  () => jest.fn()
-);
+const findUserByIdentifier = mockEsmDefault('../utils/find-user-by-identifier.js', () => jest.fn());
 
 mockEsm('#src/lib/social.js', () => ({
   findSocialRelatedUser: jest.fn().mockResolvedValue(null),
 }));
 
-const { storeInteractionResult } = await mockEsmWithActual(
-  '#src/routes/interaction/utils/interaction.js',
-  () => ({
-    storeInteractionResult: jest.fn(),
-  })
-);
+const { storeInteractionResult } = await mockEsmWithActual('../utils/interaction.js', () => ({
+  storeInteractionResult: jest.fn(),
+}));
 
 const userAccountVerification = await pickDefault(import('./user-identity-verification.js'));
 

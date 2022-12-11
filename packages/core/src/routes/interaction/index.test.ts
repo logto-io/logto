@@ -1,10 +1,10 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { Event } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds/application.js';
+import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -47,7 +47,7 @@ await mockEsmWithActual('#src/connectors/index.js', () => ({
 }));
 
 const { sendPasscodeToIdentifier } = await mockEsmWithActual(
-  '#src/routes/interaction/utils/passcode-validation.js',
+  './utils/passcode-validation.js',
   () => ({
     sendPasscodeToIdentifier: jest.fn(),
   })
@@ -58,7 +58,7 @@ mockEsm('#src/lib/sign-in-experience/index.js', () => ({
 }));
 
 const { verifyIdentifier, verifyProfile, validateMandatoryUserProfile } = mockEsm(
-  '#src/routes/interaction/verifications/index.js',
+  './verifications/index.js',
   () => ({
     verifyIdentifier: jest.fn(),
     verifyProfile: jest.fn(),
@@ -66,16 +66,13 @@ const { verifyIdentifier, verifyProfile, validateMandatoryUserProfile } = mockEs
   })
 );
 
-const { default: submitInteraction } = mockEsm(
-  '#src/routes/interaction/actions/submit-interaction.js',
-  () => ({
-    default: jest.fn((_interaction, ctx: InteractionContext) => {
-      ctx.body = { redirectUri: 'logto.io' };
-    }),
-  })
-);
+const { default: submitInteraction } = mockEsm('./actions/submit-interaction.js', () => ({
+  default: jest.fn((_interaction, ctx: InteractionContext) => {
+    ctx.body = { redirectUri: 'logto.io' };
+  }),
+}));
 
-const { getInteractionStorage } = mockEsm('#src/routes/interaction/utils/interaction.js', () => ({
+const { getInteractionStorage } = mockEsm('./utils/interaction.js', () => ({
   getInteractionStorage: jest.fn(),
 }));
 
@@ -89,12 +86,12 @@ const koaSessionSignInExperienceGuard = await pickDefault(
 );
 
 const koaInteractionBodyGuardSpy = mockEsmDefault(
-  '#src/routes/interaction/middleware/koa-interaction-body-guard.js',
+  './middleware/koa-interaction-body-guard.js',
   () => jest.fn(koaInteractionBodyGuard)
 );
 
 const koaSessionSignInExperienceGuardSpy = mockEsmDefault(
-  '#src/routes/interaction/middleware/koa-session-sign-in-experience-guard.js',
+  './middleware/koa-session-sign-in-experience-guard.js',
   () => jest.fn(koaSessionSignInExperienceGuard)
 );
 

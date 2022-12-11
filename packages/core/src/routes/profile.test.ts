@@ -1,5 +1,6 @@
 import type { CreateUser, User } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual } from '@logto/shared/esm';
 import { getUnixTime } from 'date-fns';
 
 import {
@@ -9,7 +10,6 @@ import {
   mockUserResponse,
 } from '#src/__mocks__/index.js';
 import type { SocialUserInfo } from '#src/connectors/types.js';
-import { mockEsm, mockEsmWithActual } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 

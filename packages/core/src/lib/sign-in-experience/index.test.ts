@@ -2,6 +2,7 @@ import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-ui';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 import { BrandingStyle } from '@logto/schemas';
+import { mockEsm } from '@logto/shared/esm';
 
 import {
   socialTarget01,
@@ -11,7 +12,6 @@ import {
   mockSocialConnectors,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm } from '#src/test-utils/mock.js';
 
 const { jest } = import.meta;
 const allCustomLanguageTags: LanguageTag[] = [];

@@ -1,6 +1,5 @@
 import { PasscodeType, Event } from '@logto/schemas';
-
-import { mockEsmWithActual } from '#src/test-utils/mock.js';
+import { mockEsmWithActual } from '@logto/shared/esm';
 
 import type { SendPasscodePayload } from '../types/index.js';
 

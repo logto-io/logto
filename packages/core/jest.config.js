@@ -7,7 +7,7 @@ const config = {
   roots: ['./build'],
   moduleNameMapper: {
     '^#src/(.*)\\.js(x)?$': '<rootDir>/build/$1',
-    '^(chalk|inquirer)$': '<rootDir>/../shared/lib/utils/module-proxy.js',
+    '^(chalk|inquirer)$': '<rootDir>/../shared/lib/esm/module-proxy.js',
   },
 };
 

@@ -1,8 +1,8 @@
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 import { BrandingStyle } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import { mockBranding, mockSignInExperience } from '#src/__mocks__/index.js';
-import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;

@@ -1,8 +1,8 @@
 import { Event } from '@logto/schemas';
+import { mockEsmDefault, pickDefault } from '@logto/shared/esm';
 import type { Context } from 'koa';
 
 import { interactionMocks } from '#src/__mocks__/interactions.js';
-import { mockEsmDefault, pickDefault } from '#src/test-utils/mock.js';
 import { emptyMiddleware, createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { WithGuardedIdentifierPayloadContext } from './koa-interaction-body-guard.js';

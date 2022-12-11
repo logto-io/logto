@@ -1,5 +1,6 @@
 import type { CreateUser, Role, User } from '@logto/schemas';
 import { userInfoSelectFields } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 import pick from 'lodash.pick';
 
 import {
@@ -8,7 +9,6 @@ import {
   mockUserListResponse,
   mockUserResponse,
 } from '#src/__mocks__/index.js';
-import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;

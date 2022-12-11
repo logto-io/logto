@@ -1,4 +1,4 @@
-import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
 const { jest } = import.meta;
 

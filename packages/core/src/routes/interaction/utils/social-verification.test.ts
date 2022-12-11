@@ -1,6 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-
-import { mockEsm } from '#src/test-utils/mock.js';
+import { mockEsm } from '@logto/shared/esm';
 
 const { jest } = import.meta;
 

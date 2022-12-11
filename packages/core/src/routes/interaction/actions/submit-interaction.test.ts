@@ -1,6 +1,6 @@
 import { Event } from '@logto/schemas';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
-import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 

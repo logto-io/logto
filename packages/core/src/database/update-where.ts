@@ -1,6 +1,6 @@
 import type { SchemaLike, GeneratedSchema } from '@logto/schemas';
-import type { UpdateWhereData } from '@logto/shared';
 import { convertToIdentifiers, convertToPrimitiveOrSql, conditionalSql } from '@logto/shared';
+import type { UpdateWhereData } from '@logto/shared';
 import type { Truthy } from '@silverhand/essentials';
 import { notFalsy } from '@silverhand/essentials';
 import { sql } from 'slonik';

@@ -1,6 +1,6 @@
+import { mockEsmDefault, pickDefault } from '@logto/shared/esm';
 import Koa from 'koa';
 
-import { mockEsmDefault, pickDefault } from '#src/test-utils/mock.js';
 import { emptyMiddleware } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;

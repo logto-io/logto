@@ -1,5 +1,6 @@
 import resource from '@logto/phrases-ui';
 import type { CustomPhrase } from '@logto/schemas';
+import { mockEsm } from '@logto/shared/esm';
 import deepmerge from 'deepmerge';
 
 import {
@@ -12,7 +13,6 @@ import {
   zhHkTag,
 } from '#src/__mocks__/custom-phrase.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm } from '#src/test-utils/mock.js';
 
 const { jest } = import.meta;
 const englishBuiltInPhrase = resource[enTag];

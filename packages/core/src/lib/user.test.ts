@@ -1,6 +1,5 @@
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
-
-import { mockEsmWithActual } from '#src/test-utils/mock.js';
+import { mockEsmWithActual } from '@logto/shared/esm';
 
 const { jest } = import.meta;
 const updateUserById = jest.fn();

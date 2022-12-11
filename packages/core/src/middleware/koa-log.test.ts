@@ -1,9 +1,9 @@
 import type { LogPayload } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 import i18next from 'i18next';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { WithLogContext } from './koa-log.js';

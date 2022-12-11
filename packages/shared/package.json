@@ -8,6 +8,14 @@
   "files": [
     "lib"
   ],
+  "exports": {
+    ".": {
+      "import": "./lib/index.js"
+    },
+    "./esm": {
+      "import": "./lib/esm/index.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },

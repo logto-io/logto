@@ -1,10 +1,10 @@
 import en from '@logto/phrases-ui/lib/locales/en.js';
 import type { CustomPhrase, SignInExperience } from '@logto/schemas';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
 import { mockZhCnCustomPhrase, trTrTag, zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;

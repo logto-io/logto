@@ -1,7 +1,7 @@
 import type { Role } from '@logto/schemas';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
 import { mockRole } from '#src/__mocks__/index.js';
-import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 
 const { jest } = import.meta;
 

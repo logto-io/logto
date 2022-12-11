@@ -1,8 +1,8 @@
 import { ConnectorType, SignInIdentifier } from '@logto/schemas';
+import { mockEsmWithActual } from '@logto/shared/esm';
 
 import { mockAliyunDmConnector, mockAliyunSmsConnector, mockSignUp } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsmWithActual } from '#src/test-utils/mock.js';
 
 const { jest } = import.meta;
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];

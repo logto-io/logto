@@ -1,7 +1,7 @@
 import type { Connector } from '@logto/schemas';
+import { mockEsmWithActual } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsmWithActual } from '#src/test-utils/mock.js';
 
 const { jest } = import.meta;
 

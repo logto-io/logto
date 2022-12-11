@@ -1,8 +1,8 @@
 import { Event, MissingProfile, SignInIdentifier } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
@@ -13,7 +13,7 @@ const { findUserById } = await mockEsmWithActual('#src/queries/user.js', () => (
   findUserById: jest.fn(),
 }));
 
-const { isUserPasswordSet } = mockEsm('#src/routes/interaction/utils/index.js', () => ({
+const { isUserPasswordSet } = mockEsm('../utils/index.js', () => ({
   isUserPasswordSet: jest.fn(),
 }));
 

@@ -4,10 +4,10 @@ import {
   adminConsoleApplicationId,
   adminConsoleSignInExperience,
 } from '@logto/schemas/lib/seeds/index.js';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
-import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 
 const { jest } = import.meta;

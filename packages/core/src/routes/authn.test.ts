@@ -1,5 +1,6 @@
+import { mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 
 const { jest } = import.meta;
 

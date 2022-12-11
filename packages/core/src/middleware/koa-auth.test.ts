@@ -1,10 +1,10 @@
 import { UserRole } from '@logto/schemas';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import envSet from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { WithAuthContext } from './koa-auth.js';

@@ -1,5 +1,6 @@
+import { mockEsm, pickDefault } from '@logto/shared/esm';
+
 import envSet, { MountedApps } from '#src/env-set/index.js';
-import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;

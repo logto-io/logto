@@ -2,6 +2,7 @@
 import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
 import { ConnectorPlatform, MessageTypes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 import { any } from 'zod';
 
 import {
@@ -18,7 +19,6 @@ import {
 import { defaultConnectorMethods } from '#src/connectors/consts.js';
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import assertThat from '#src/utils/assert-that.js';
 
 const { jest } = import.meta;

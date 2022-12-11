@@ -1,6 +1,6 @@
+import { mockEsmDefault } from '@logto/shared/esm';
 import { z } from 'zod';
 
-import { mockEsmDefault } from '#src/test-utils/mock.js';
 import { emptyMiddleware, createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;

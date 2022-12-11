@@ -1,7 +1,7 @@
 import { Event } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEsm, mockEsmWithActual, pickDefault } from '#src/test-utils/mock.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -20,11 +20,11 @@ const { findUserById } = await mockEsmWithActual('#src/queries/user.js', () => (
   hasUserWithIdentity: jest.fn().mockResolvedValue(false),
 }));
 
-const { storeInteractionResult } = mockEsm('#src/routes/interaction/utils/interaction.js', () => ({
+const { storeInteractionResult } = mockEsm('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
-mockEsm('#src/routes/interaction/utils/index.js', () => ({
+mockEsm('../utils/index.js', () => ({
   isUserPasswordSet: jest.fn().mockResolvedValueOnce(true),
 }));
 

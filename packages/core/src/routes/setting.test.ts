@@ -1,7 +1,7 @@
 import type { Setting, CreateSetting } from '@logto/schemas';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
 import { mockSetting } from '#src/__mocks__/index.js';
-import { mockEsm, pickDefault } from '#src/test-utils/mock.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
