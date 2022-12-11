@@ -2,11 +2,12 @@
  * Setup environment variables for unit test
  */
 
+import { mockEsm } from '@logto/shared/esm';
 import { createMockQueryResult, createMockPool } from 'slonik';
 
 const { jest } = import.meta;
 
-jest.unstable_mockModule('#src/env-set/index.js', () => ({
+mockEsm('#src/env-set/index.js', () => ({
   MountedApps: {
     Api: 'api',
     Oidc: 'oidc',
@@ -33,5 +34,6 @@ jest.unstable_mockModule('#src/env-set/index.js', () => ({
   },
 }));
 
+// Logger is not considered in all test cases
 // eslint-disable-next-line unicorn/consistent-function-scoping
-jest.unstable_mockModule('koa-logger', () => ({ default: () => (_, next) => next() }));
+mockEsm('koa-logger', () => ({ default: () => (_, next) => next() }));

@@ -11,6 +11,7 @@ import {
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
@@ -50,7 +51,6 @@ mockEsm('#src/lib/sign-in-experience.js', () => ({
   removeUnavailableSocialConnectorTargets: async () => {},
 }));
 
-const { createRequester } = await import('#src/utils/test-utils.js');
 const connectorRoutes = await pickDefault(import('./connector.js'));
 
 describe('connector PATCH routes', () => {

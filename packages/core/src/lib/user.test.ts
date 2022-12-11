@@ -2,12 +2,10 @@ import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { mockEsmWithActual } from '@logto/shared/esm';
 
 const { jest } = import.meta;
-const updateUserById = jest.fn();
-const hasUserWithId = jest.fn();
 
-await mockEsmWithActual('#src/queries/user.js', () => ({
-  updateUserById,
-  hasUserWithId,
+const { updateUserById, hasUserWithId } = await mockEsmWithActual('#src/queries/user.js', () => ({
+  updateUserById: jest.fn(),
+  hasUserWithId: jest.fn(),
 }));
 
 const { encryptUserPassword, generateUserId } = await import('./user.js');

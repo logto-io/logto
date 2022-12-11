@@ -20,6 +20,7 @@ import { defaultConnectorMethods } from '#src/connectors/consts.js';
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
@@ -67,8 +68,6 @@ const { loadConnectorFactories } = mockEsm('#src/connectors/index.js', () => ({
     return connector;
   },
 }));
-
-const { createRequester } = await import('#src/utils/test-utils.js');
 const connectorRoutes = await pickDefault(import('./connector.js'));
 
 describe('connector route', () => {

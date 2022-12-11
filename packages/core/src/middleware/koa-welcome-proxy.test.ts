@@ -5,10 +5,8 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-const hasActiveUsers = jest.fn();
-
-mockEsm('#src/queries/user.js', () => ({
-  hasActiveUsers,
+const { hasActiveUsers } = mockEsm('#src/queries/user.js', () => ({
+  hasActiveUsers: jest.fn(),
 }));
 
 const koaWelcomeProxy = await pickDefault(import('./koa-welcome-proxy.js'));

@@ -4,6 +4,7 @@ import { mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 import { trTrTag, zhCnTag, zhHkTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
@@ -31,8 +32,6 @@ await mockEsmWithActual('#src/queries/custom-phrase.js', () => ({
 await mockEsmWithActual('#src/lib/phrase.js', () => ({
   getPhrase: jest.fn().mockResolvedValue(en),
 }));
-
-const { createRequester } = await import('#src/utils/test-utils.js');
 const phraseRoutes = await pickDefault(import('./phrase.js'));
 
 const phraseRequest = createRequester({

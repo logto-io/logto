@@ -2,7 +2,7 @@
 const config = {
   coveragePathIgnorePatterns: ['/node_modules/', '/src/__mocks__/'],
   coverageReporters: ['text-summary', 'lcov'],
-  testPathIgnorePatterns: ['/node_modules/', '/build/routes/session/'],
+  testPathIgnorePatterns: ['/node_modules/', '/build/routes/session/'], // `routes/session` is freezed
   setupFilesAfterEnv: ['jest-matcher-specific-error', './jest.setup.js'],
   roots: ['./build'],
   moduleNameMapper: {

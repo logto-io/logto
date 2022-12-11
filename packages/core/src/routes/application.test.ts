@@ -3,7 +3,6 @@ import { ApplicationType } from '@logto/schemas';
 import { mockEsm, pickDefault } from '@logto/shared/esm';
 
 import { mockApplication } from '#src/__mocks__/index.js';
-import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
@@ -36,17 +35,13 @@ mockEsm('@logto/shared', () => ({
   buildApplicationSecret: jest.fn(() => 'randomId'),
 }));
 
+const { createRequester } = await import('#src/utils/test-utils.js');
 const applicationRoutes = await pickDefault(import('./application.js'));
 
 const customClientMetadata = {
   corsAllowedOrigins: ['http://localhost:5000', 'http://localhost:5001', 'https://silverhand.com'],
   idTokenTtl: 999_999,
   refreshTokenTtl: 100_000_000,
-};
-
-const customOidcClientMetadata = {
-  redirectUris: [],
-  postLogoutRedirectUris: [],
 };
 
 describe('application route', () => {

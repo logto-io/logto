@@ -3,6 +3,8 @@
 import { mockEsm, pickDefault } from '@logto/shared/esm';
 import { endOfDay, subDays } from 'date-fns';
 import { format } from 'date-fns/fp';
+
+import { createRequester } from '#src/utils/test-utils.js';
 /* eslint-enable import/no-duplicates */
 
 const { jest } = import.meta;
@@ -44,8 +46,6 @@ const { getDailyActiveUserCountsByTimeInterval, countActiveUsersByTimeInterval }
     countActiveUsersByTimeInterval: jest.fn().mockResolvedValue({ count: mockActiveUserCount }),
   })
 );
-
-const { createRequester } = await import('#src/utils/test-utils.js');
 const dashboardRoutes = await pickDefault(import('./dashboard.js'));
 
 describe('dashboardRoutes', () => {

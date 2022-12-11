@@ -40,9 +40,9 @@ const { getPhrase } = await mockEsmWithActual('#src/lib/phrase.js', () => ({
 }));
 
 const interactionDetails = jest.fn();
-const { createRequester } = await import('#src/utils/test-utils.js');
 const phraseRoutes = await pickDefault(import('./phrase.js'));
 
+const { createRequester } = await import('#src/utils/test-utils.js');
 const phraseRequest = createRequester({
   anonymousRoutes: phraseRoutes,
   provider: createMockProvider(interactionDetails),

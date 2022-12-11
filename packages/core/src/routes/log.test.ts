@@ -1,5 +1,7 @@
 import { mockEsm, pickDefault } from '@logto/shared/esm';
 
+import { createRequester } from '#src/utils/test-utils.js';
+
 const { jest } = import.meta;
 
 const mockBody = { type: 'a', payload: {}, createdAt: 123 };
@@ -13,8 +15,6 @@ const { countLogs, findLogs, findLogById } = mockEsm('#src/queries/log.js', () =
   findLogs: jest.fn().mockResolvedValue(mockLogs),
   findLogById: jest.fn().mockResolvedValue(mockLog),
 }));
-
-const { createRequester } = await import('#src/utils/test-utils.js');
 const logRoutes = await pickDefault(import('./log.js'));
 
 describe('logRoutes', () => {

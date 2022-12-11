@@ -1,4 +1,5 @@
 import type { Application } from '@logto/schemas';
+import { mockEsm } from '@logto/shared/esm';
 import snakecaseKeys from 'snakecase-keys';
 
 import { mockApplication } from '#src/__mocks__/index.js';
@@ -7,11 +8,11 @@ import { getConstantClientMetadata } from './utils.js';
 
 const { jest } = import.meta;
 
-jest.unstable_mockModule('#src/queries/application.js', () => ({
+mockEsm('#src/queries/application.js', () => ({
   findApplicationById: jest.fn(async (): Promise<Application> => mockApplication),
 }));
 
-jest.unstable_mockModule('#src/queries/oidc-model-instance.js', () => ({
+mockEsm('#src/queries/oidc-model-instance.js', () => ({
   upsertInstance: jest.fn(),
   findPayloadById: jest.fn(),
   findPayloadByPayloadField: jest.fn(),
@@ -20,7 +21,7 @@ jest.unstable_mockModule('#src/queries/oidc-model-instance.js', () => ({
   revokeInstanceByGrantId: jest.fn(),
 }));
 
-jest.unstable_mockModule(
+mockEsm(
   'date-fns',
   jest.fn(() => ({
     addSeconds: jest.fn((_: Date, seconds: number) => new Date(now + seconds * 1000)),

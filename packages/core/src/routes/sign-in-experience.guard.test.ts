@@ -11,7 +11,6 @@ import {
   mockSignInExperience,
   mockTermsOfUse,
 } from '#src/__mocks__/index.js';
-import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
@@ -30,15 +29,16 @@ const { validateLanguageInfo } = await mockEsmWithActual('#src/lib/sign-in-exper
 }));
 
 await mockEsmWithActual('#src/queries/sign-in-experience.js', () => ({
-  updateDefaultSignInExperience: jest.fn(
-    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
-      ...mockSignInExperience,
-      ...data,
-    })
-  ),
+  updateDefaultSignInExperience: async (
+    data: Partial<CreateSignInExperience>
+  ): Promise<SignInExperience> => ({
+    ...mockSignInExperience,
+    ...data,
+  }),
 }));
 
 const signInExperiencesRoutes = await pickDefault(import('./sign-in-experience.js'));
+const { createRequester } = await import('#src/utils/test-utils.js');
 const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
 const expectPatchResponseStatus = async (

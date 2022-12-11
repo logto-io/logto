@@ -61,13 +61,13 @@ const { encryptUserPassword } = await mockEsmWithActual('#src/lib/user.js', () =
 }));
 
 mockEsm('#src/queries/sign-in-experience.js', () => ({
-  findDefaultSignInExperience: jest.fn(async () => ({
+  findDefaultSignInExperience: async () => ({
     signUp: {
       identifier: [],
       password: false,
       verify: false,
     },
-  })),
+  }),
 }));
 
 const { argon2Verify } = mockEsm('hash-wasm', () => ({

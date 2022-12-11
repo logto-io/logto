@@ -1,6 +1,7 @@
 import { mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
@@ -10,8 +11,6 @@ const { verifyBearerTokenFromRequest } = await mockEsmWithActual(
     verifyBearerTokenFromRequest: jest.fn(),
   })
 );
-
-const { createRequester } = await import('#src/utils/test-utils.js');
 
 const request = createRequester({
   anonymousRoutes: await pickDefault(import('#src/routes/authn.js')),

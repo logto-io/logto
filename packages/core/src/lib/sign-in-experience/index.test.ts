@@ -15,24 +15,25 @@ import RequestError from '#src/errors/RequestError/index.js';
 
 const { jest } = import.meta;
 const allCustomLanguageTags: LanguageTag[] = [];
-const findAllCustomLanguageTags = jest.fn(async () => allCustomLanguageTags);
-const getLogtoConnectorsPlaceholder = jest.fn();
-const findDefaultSignInExperience = jest.fn();
-const updateDefaultSignInExperience = jest.fn(
-  async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
-    ...mockSignInExperience,
-    ...data,
+
+const { findAllCustomLanguageTags } = mockEsm('#src/queries/custom-phrase.js', () => ({
+  findAllCustomLanguageTags: jest.fn(async () => allCustomLanguageTags),
+}));
+const { getLogtoConnectors } = mockEsm('#src/connectors.js', () => ({
+  getLogtoConnectors: jest.fn(),
+}));
+const { findDefaultSignInExperience, updateDefaultSignInExperience } = mockEsm(
+  '#src/queries/sign-in-experience.js',
+  () => ({
+    findDefaultSignInExperience: jest.fn(),
+    updateDefaultSignInExperience: jest.fn(
+      async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+        ...mockSignInExperience,
+        ...data,
+      })
+    ),
   })
 );
-
-mockEsm('#src/queries/custom-phrase.js', () => ({ findAllCustomLanguageTags }));
-mockEsm('#src/connectors.js', () => ({
-  getLogtoConnectors: getLogtoConnectorsPlaceholder,
-}));
-mockEsm('#src/queries/sign-in-experience.js', () => ({
-  findDefaultSignInExperience,
-  updateDefaultSignInExperience,
-}));
 
 const {
   validateBranding,
@@ -157,7 +158,7 @@ describe('remove unavailable social connector targets', () => {
       ...mockSignInExperience,
       socialSignInConnectorTargets: mockSocialConnectorTargets,
     });
-    getLogtoConnectorsPlaceholder.mockResolvedValueOnce(mockSocialConnectors);
+    getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
     expect(mockSocialConnectorTargets).toEqual([socialTarget01, socialTarget02]);
     await removeUnavailableSocialConnectorTargets();
     expect(updateDefaultSignInExperience).toBeCalledWith({

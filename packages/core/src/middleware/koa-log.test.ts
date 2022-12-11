@@ -14,10 +14,9 @@ const nanoIdMock = 'mockId';
 
 const addLogContext = jest.fn();
 const log = jest.fn();
-const insertLogMock = jest.fn();
 
-mockEsm('#src/queries/log.js', () => ({
-  insertLog: insertLogMock,
+const { insertLog } = mockEsm('#src/queries/log.js', () => ({
+  insertLog: jest.fn(),
 }));
 
 mockEsm('nanoid', () => ({
@@ -57,7 +56,7 @@ describe('koaLog middleware', () => {
     };
     await koaLog()(ctx, next);
 
-    expect(insertLogMock).toBeCalledWith({
+    expect(insertLog).toBeCalledWith({
       id: nanoIdMock,
       type,
       payload: {
@@ -82,7 +81,7 @@ describe('koaLog middleware', () => {
     // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/no-empty-function
     const next = async () => {};
     await koaLog()(ctx, next);
-    expect(insertLogMock).not.toBeCalled();
+    expect(insertLog).not.toBeCalled();
   });
 
   describe('should insert an error log with the error message when next() throws an error', () => {
@@ -104,7 +103,7 @@ describe('koaLog middleware', () => {
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
 
-      expect(insertLogMock).toBeCalledWith({
+      expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
         type,
         payload: {
@@ -138,7 +137,7 @@ describe('koaLog middleware', () => {
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
 
-      expect(insertLogMock).toBeCalledWith({
+      expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
         type,
         payload: {

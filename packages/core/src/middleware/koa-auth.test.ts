@@ -11,12 +11,8 @@ import type { WithAuthContext } from './koa-auth.js';
 
 const { jest } = import.meta;
 
-const mockJwtVerify = jest
-  .fn()
-  .mockReturnValue({ payload: { sub: 'fooUser', role_names: ['admin'] } });
-
-mockEsm('jose', () => ({
-  jwtVerify: mockJwtVerify,
+const { jwtVerify } = mockEsm('jose', () => ({
+  jwtVerify: jest.fn().mockReturnValue({ payload: { sub: 'fooUser', role_names: ['admin'] } }),
 }));
 
 const koaAuth = await pickDefault(import('./koa-auth.js'));
@@ -143,7 +139,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to throw if jwt sub is missing', async () => {
-    mockJwtVerify.mockImplementationOnce(() => ({ payload: {} }));
+    jwtVerify.mockImplementationOnce(() => ({ payload: {} }));
 
     ctx.request = {
       ...ctx.request,
@@ -156,7 +152,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to have `client` type per jwt verify result', async () => {
-    mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'bar', client_id: 'bar' } }));
+    jwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'bar', client_id: 'bar' } }));
 
     ctx.request = {
       ...ctx.request,
@@ -170,7 +166,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to throw if jwt role_names is missing', async () => {
-    mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'fooUser' } }));
+    jwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'fooUser' } }));
 
     ctx.request = {
       ...ctx.request,
@@ -183,7 +179,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to throw if jwt role_names does not include admin', async () => {
-    mockJwtVerify.mockImplementationOnce(() => ({
+    jwtVerify.mockImplementationOnce(() => ({
       payload: { sub: 'fooUser', role_names: ['foo'] },
     }));
 
@@ -198,7 +194,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to throw unauthorized error if unknown error occurs', async () => {
-    mockJwtVerify.mockImplementationOnce(() => {
+    jwtVerify.mockImplementationOnce(() => {
       throw new Error('unknown error');
     });
     ctx.request = {

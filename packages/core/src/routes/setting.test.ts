@@ -4,16 +4,12 @@ import { mockEsm, pickDefault } from '@logto/shared/esm';
 import { mockSetting } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-const { jest } = import.meta;
-
 mockEsm('#src/queries/setting.js', () => ({
-  getSetting: jest.fn(async (): Promise<Setting> => mockSetting),
-  updateSetting: jest.fn(
-    async (data: Partial<CreateSetting>): Promise<Setting> => ({
-      ...mockSetting,
-      ...data,
-    })
-  ),
+  getSetting: async (): Promise<Setting> => mockSetting,
+  updateSetting: async (data: Partial<CreateSetting>): Promise<Setting> => ({
+    ...mockSetting,
+    ...data,
+  }),
 }));
 
 const settingRoutes = await pickDefault(import('./setting.js'));

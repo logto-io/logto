@@ -5,19 +5,17 @@ import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 import { mockBranding, mockSignInExperience } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-const { jest } = import.meta;
-
 await mockEsmWithActual('#src/queries/sign-in-experience.js', () => ({
-  updateDefaultSignInExperience: jest.fn(
-    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
-      ...mockSignInExperience,
-      ...data,
-    })
-  ),
+  updateDefaultSignInExperience: async (
+    data: Partial<CreateSignInExperience>
+  ): Promise<SignInExperience> => ({
+    ...mockSignInExperience,
+    ...data,
+  }),
 }));
 
 mockEsm('#src/connectors.js', () => ({
-  getLogtoConnectors: jest.fn(async () => []),
+  getLogtoConnectors: async () => [],
 }));
 
 const signInExperiencesRoutes = await pickDefault(import('./sign-in-experience.js'));

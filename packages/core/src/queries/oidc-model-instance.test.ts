@@ -1,6 +1,7 @@
 import type { CreateOidcModelInstance } from '@logto/schemas';
 import { OidcModelInstances } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
+import { mockEsmWithActual } from '@logto/shared/esm';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import envSet from '#src/env-set/index.js';
@@ -18,10 +19,7 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
   })
 );
 
-const shared = await import('@logto/shared');
-
-jest.unstable_mockModule('@logto/shared', () => ({
-  ...shared,
+await mockEsmWithActual('@logto/shared', () => ({
   convertToTimestamp: () => 100,
 }));
 
