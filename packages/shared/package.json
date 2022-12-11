@@ -22,16 +22,17 @@
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "build:test": "rm -rf lib/ && tsc -p tsconfig.test.json --sourcemap",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
-    "test": "jest",
-    "test:ci": "jest"
+    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "pnpm build:test && pnpm test:only",
+    "test:ci": "pnpm run test"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.3.0",
-    "@silverhand/jest-config": "1.2.2",
     "@silverhand/ts-config": "1.2.1",
     "@types/jest": "^29.1.2",
     "@types/node": "^16.0.0",

@@ -20,7 +20,7 @@
     "dev": "rm -rf build/ && pnpm run copyfiles && nodemon",
     "start": "NODE_ENV=production node build/index.js",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build:test && pnpm test:only build/",
+    "test": "pnpm build:test && pnpm test:only",
     "test:ci": "pnpm run test --coverage --silent",
     "test:report": "codecov -F core"
   },

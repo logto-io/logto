@@ -8,7 +8,6 @@
   },
   "include": [
     "src",
-    "alterations",
-    "jest.config.ts"
+    "alterations"
   ]
 }

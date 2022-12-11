@@ -9,8 +9,7 @@
     "types": ["node", "jest"]
   },
   "include": [
-    "src",
-    "jest.*.ts"
+    "src"
   ],
   "exclude": ["**/alteration-scripts"]
 }

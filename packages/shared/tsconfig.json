@@ -8,7 +8,6 @@
     "module": "es2022"
   },
   "include": [
-    "src",
-    "jest.config.ts"
+    "src"
   ]
 }
