@@ -26,6 +26,8 @@ const RadioGroup = (
           return child;
         }
 
+        // FIXME: @Charles
+        // @ts-expect-error to be fixed
         return cloneElement<RadioProps>(child, {
           name,
           isChecked: value === child.props.value,
