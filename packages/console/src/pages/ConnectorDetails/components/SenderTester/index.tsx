@@ -12,6 +12,7 @@ import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import { Tooltip } from '@/components/Tip';
 import useApi from '@/hooks/use-api';
+import { onKeyDownHandler } from '@/utilities/a11y';
 import { safeParseJson } from '@/utilities/json';
 
 import * as styles from './index.module.scss';
@@ -91,6 +92,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
                 ? t('connector_details.test_sms_placeholder')
                 : t('connector_details.test_email_placeholder')
             }
+            onKeyDown={onKeyDownHandler({ Enter: onSubmit })}
             {...register('sendTo', {
               required: true,
               pattern: {

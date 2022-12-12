@@ -15,7 +15,11 @@ export const onKeyDownHandler =
     }
 
     if (typeof callback === 'object') {
-      callback[key]?.(event);
-      event.preventDefault();
+      const handler = callback[key];
+
+      if (handler) {
+        handler(event);
+        event.preventDefault();
+      }
     }
   };
