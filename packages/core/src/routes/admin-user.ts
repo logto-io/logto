@@ -28,42 +28,27 @@ import {
   hasUserWithPhone,
 } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
+import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter } from './types.js';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
-  router.get(
-    '/users',
-    koaPagination(),
-    koaGuard({
-      query: object({
-        search: string().optional(),
-        // Use `.transform()` once the type issue fixed
-        hideAdminUser: string().optional(),
-        isCaseSensitive: string().optional(),
-      }),
-    }),
-    async (ctx, next) => {
-      const { limit, offset } = ctx.pagination;
-      const {
-        query: { search, hideAdminUser: _hideAdminUser, isCaseSensitive: _isCaseSensitive },
-      } = ctx.guard;
+  router.get('/users', koaPagination(), async (ctx, next) => {
+    const { limit, offset } = ctx.pagination;
+    const { searchParams } = ctx.request.URL;
+    const search = parseSearchParamsForSearch(searchParams);
+    const hideAdminUser = isTrue(searchParams.get('hideAdminUser'));
 
-      console.log(ctx.request.URL.searchParams.keys());
+    const [{ count }, users] = await Promise.all([
+      countUsers(search, hideAdminUser),
+      findUsers(limit, offset, search, hideAdminUser),
+    ]);
 
-      const hideAdminUser = isTrue(_hideAdminUser);
-      const isCaseSensitive = isTrue(_isCaseSensitive);
-      const [{ count }, users] = await Promise.all([
-        countUsers(search, hideAdminUser, isCaseSensitive),
-        findUsers(limit, offset, search, hideAdminUser, isCaseSensitive),
-      ]);
+    ctx.pagination.totalCount = count;
+    ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
 
-      ctx.pagination.totalCount = count;
-      ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
-
-      return next();
-    }
-  );
+    return next();
+  });
 
   router.get(
     '/users/:userId',

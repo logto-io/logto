@@ -1,5 +1,5 @@
 import type { User, CreateUser } from '@logto/schemas';
-import { Users, UserRole } from '@logto/schemas';
+import { SearchJointMode, Users, UserRole } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
@@ -7,6 +7,8 @@ import { sql } from 'slonik';
 import { buildUpdateWhere } from '#src/database/update-where.js';
 import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import type { Search } from '#src/utils/search.js';
+import { buildConditionsFromSearch } from '#src/utils/search.js';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -87,64 +89,52 @@ export const hasUserWithIdentity = async (target: string, userId: string) =>
     `
   );
 
-const buildUserSearchConditionSql = (search: string, isCaseSensitive = false) => {
-  const searchFields = [fields.primaryEmail, fields.primaryPhone, fields.username, fields.name];
+const buildUserConditions = (search: Search, hideAdminUser: boolean) => {
+  const hasSearch = search.matches.length > 0;
+  const searchFields = [
+    Users.fields.id,
+    Users.fields.primaryEmail,
+    Users.fields.primaryPhone,
+    Users.fields.username,
+    Users.fields.name,
+  ];
 
-  return sql`${sql.join(
-    searchFields.map(
-      (filedName) =>
-        sql`${filedName} ${isCaseSensitive ? sql`like` : sql`ilike`} ${'%' + search + '%'}`
-    ),
-    sql` or `
-  )}`;
-};
-
-const buildUserConditions = (
-  search?: string,
-  hideAdminUser?: boolean,
-  isCaseSensitive?: boolean
-) => {
   if (hideAdminUser) {
     return sql`
-      where not (${fields.roleNames}::jsonb?${UserRole.Admin})
+      where not ${UserRole.Admin}=any(${fields.roleNames})
       ${conditionalSql(
-        search,
-        (search) => sql`and (${buildUserSearchConditionSql(search, isCaseSensitive)})`
+        hasSearch,
+        () => sql`and (${buildConditionsFromSearch(search, searchFields)})`
       )}
     `;
   }
 
-  return sql`
-    ${conditionalSql(
-      search,
-      (search) => sql`where ${buildUserSearchConditionSql(search, isCaseSensitive)}`
-    )}
-  `;
+  return conditionalSql(
+    hasSearch,
+    () => sql`where ${buildConditionsFromSearch(search, searchFields)}`
+  );
 };
 
-export const countUsers = async (
-  search?: string,
-  hideAdminUser?: boolean,
-  isCaseSensitive?: boolean
-) =>
+export const defaultUserSearch = { matches: [], isCaseSensitive: false, joint: SearchJointMode.Or };
+
+export const countUsers = async (search: Search = defaultUserSearch, hideAdminUser = false) =>
   envSet.pool.one<{ count: number }>(sql`
     select count(*)
     from ${table}
-    ${buildUserConditions(search, hideAdminUser, isCaseSensitive)}
+    ${buildUserConditions(search, hideAdminUser)}
   `);
 
 export const findUsers = async (
   limit: number,
   offset: number,
-  search?: string,
-  hideAdminUser?: boolean,
-  isCaseSensitive?: boolean
+  search: Search,
+  hideAdminUser: boolean
 ) =>
   envSet.pool.any<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      ${buildUserConditions(search, hideAdminUser, isCaseSensitive)}
+      ${buildUserConditions(search, hideAdminUser)}
       limit ${limit}
       offset ${offset}
     `
