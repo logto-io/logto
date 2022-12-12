@@ -5,7 +5,7 @@
     "declaration": true,
     "types": ["node", "jest"],
     "moduleResolution": "nodenext",
-    "module": "es2022"
+    "module": "esnext"
   },
   "include": [
     "src"

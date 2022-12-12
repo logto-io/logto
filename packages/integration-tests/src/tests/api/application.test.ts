@@ -2,7 +2,12 @@ import { ApplicationType } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { HTTPError } from 'got';
 
-import { createApplication, getApplication, updateApplication, deleteApplication } from '#src/api/index.js';
+import {
+  createApplication,
+  getApplication,
+  updateApplication,
+  deleteApplication,
+} from '#src/api/index.js';
 
 describe('admin console application', () => {
   it('should get demo app details successfully', async () => {

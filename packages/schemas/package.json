@@ -20,14 +20,14 @@
     "generate": "./generate.sh",
     "build:alterations": "rm -rf alterations-js && tsc -p tsconfig.build.alterations.json",
     "build": "pnpm generate && rm -rf lib/ && tsc -p tsconfig.build.json && pnpm build:alterations",
-    "build:test": "rm -rf lib/ && tsc -p tsconfig.test.json --sourcemap",
+    "build:test": "pnpm generate && rm -rf lib/ && tsc -p tsconfig.test.json --sourcemap",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm run test"
+    "test:ci": "pnpm run test:only"
   },
   "engines": {
     "node": "^16.13.0 || ^18.12.0"

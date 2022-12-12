@@ -2,7 +2,7 @@
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
     "moduleResolution": "nodenext",
-    "module": "es2022",
+    "module": "esnext",
     "declaration": false,
     "outDir": "build",
     "baseUrl": ".",
