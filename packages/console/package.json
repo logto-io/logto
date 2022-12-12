@@ -23,7 +23,7 @@
     "@logto/language-kit": "1.0.0-beta.28",
     "@logto/phrases": "workspace:*",
     "@logto/phrases-ui": "workspace:*",
-    "@logto/react": "1.0.0-beta.13",
+    "@logto/react": "1.0.0-beta.14",
     "@logto/schemas": "workspace:*",
     "@mdx-js/react": "^1.6.22",
     "@parcel/core": "2.8.0",
