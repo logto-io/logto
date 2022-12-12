@@ -3,5 +3,6 @@
   "compilerOptions": {
     "isolatedModules": false,
     "allowJs": true
-  }
+  },
+  "include": ["src"]
 }

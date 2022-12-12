@@ -1,31 +1,27 @@
 import { Event } from '@logto/schemas';
-import { Provider } from 'oidc-provider';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import {
-  signInModeValidation,
-  identifierValidation,
-  profileValidation,
-} from '../utils/sign-in-experience-validation.js';
-import koaSessionSignInExperienceGuard from './koa-session-sign-in-experience-guard.js';
+const { jest } = import.meta;
 
-jest.mock('#src/lib/sign-in-experience/index.js', () => ({
+mockEsm('#src/lib/sign-in-experience/index.js', () => ({
   getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
 }));
 
-jest.mock('../utils/sign-in-experience-validation.js', () => ({
+const mockUtils = {
   signInModeValidation: jest.fn(),
   identifierValidation: jest.fn(),
   profileValidation: jest.fn(),
-}));
+};
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn(async () => ({ params: {} })),
-  })),
-}));
+mockEsm('../utils/sign-in-experience-validation.js', () => mockUtils);
+
+const koaSessionSignInExperienceGuard = await pickDefault(
+  import('./koa-session-sign-in-experience-guard.js')
+);
 
 describe('koaSessionSignInExperienceGuard', () => {
   const baseCtx = createContextWithRouteParameters();
@@ -41,14 +37,15 @@ describe('koaSessionSignInExperienceGuard', () => {
       }),
       signInExperience: mockSignInExperience,
     };
+    const provider = createMockProvider();
 
-    await koaSessionSignInExperienceGuard(new Provider(''))(ctx, next);
+    await koaSessionSignInExperienceGuard(provider)(ctx, next);
 
-    expect(signInModeValidation).toBeCalledWith(Event.SignIn, mockSignInExperience);
-    expect(identifierValidation).toBeCalledWith(
+    expect(mockUtils.signInModeValidation).toBeCalledWith(Event.SignIn, mockSignInExperience);
+    expect(mockUtils.identifierValidation).toBeCalledWith(
       { username: 'username', password: 'password' },
       mockSignInExperience
     );
-    expect(profileValidation).toBeCalledWith({ email: 'email' }, mockSignInExperience);
+    expect(mockUtils.profileValidation).toBeCalledWith({ email: 'email' }, mockSignInExperience);
   });
 });

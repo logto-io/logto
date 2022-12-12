@@ -1,35 +1,30 @@
 import { Event } from '@logto/schemas';
-import { argon2Verify } from 'hash-wasm';
-import { Provider } from 'oidc-provider';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { findUserById } from '#src/queries/user.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { InteractionContext } from '../types/index.js';
-import { storeInteractionResult } from '../utils/interaction.js';
-import verifyProfile from './profile-verification.js';
 
-jest.mock('../utils/interaction.js', () => ({
+const { jest } = import.meta;
+
+const { storeInteractionResult } = mockEsm('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
-  })),
-}));
-
-jest.mock('#src/queries/user.js', () => ({
+const { findUserById } = await mockEsmWithActual('#src/queries/user.js', () => ({
   findUserById: jest.fn().mockResolvedValue({ id: 'foo', passwordEncrypted: 'passwordHash' }),
 }));
 
-jest.mock('hash-wasm', () => ({
+const { argon2Verify } = mockEsm('hash-wasm', () => ({
   argon2Verify: jest.fn(),
 }));
 
+const verifyProfile = await pickDefault(import('./profile-verification.js'));
+
 describe('forgot password interaction profile verification', () => {
-  const provider = new Provider('');
+  const provider = createMockProvider();
   const baseCtx = createContextWithRouteParameters();
 
   const interaction = {
@@ -55,7 +50,7 @@ describe('forgot password interaction profile verification', () => {
   });
 
   it('same password', async () => {
-    (argon2Verify as jest.Mock).mockResolvedValueOnce(true);
+    argon2Verify.mockResolvedValueOnce(true);
     const ctx: InteractionContext = {
       ...baseCtx,
       interactionPayload: {

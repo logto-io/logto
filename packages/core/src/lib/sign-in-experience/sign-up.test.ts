@@ -1,16 +1,17 @@
 import { ConnectorType, SignInIdentifier } from '@logto/schemas';
+import { mockEsmWithActual } from '@logto/shared/esm';
 
 import { mockAliyunDmConnector, mockAliyunSmsConnector, mockSignUp } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
-import { validateSignUp } from './sign-up.js';
-
+const { jest } = import.meta;
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 
-jest.mock('#src/lib/session.js', () => ({
-  ...jest.requireActual('#src/lib/session.js'),
+await mockEsmWithActual('#src/lib/session.js', () => ({
   getApplicationIdFromInteraction: jest.fn(),
 }));
+
+const { validateSignUp } = await import('./sign-up.js');
 
 describe('validate sign-up', () => {
   describe('There must be at least one connector for the specific identifier.', () => {

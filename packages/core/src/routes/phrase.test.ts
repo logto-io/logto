@@ -4,67 +4,48 @@ import {
   adminConsoleApplicationId,
   adminConsoleSignInExperience,
 } from '@logto/schemas/lib/seeds/index.js';
-import { Provider } from 'oidc-provider';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
-import * as detectLanguage from '#src/i18n/detect-language.js';
-import phraseRoutes from '#src/routes/phrase.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 
-const mockApplicationId = 'mockApplicationIdValue';
-
-const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({
-  params: { client_id: mockApplicationId },
-}));
-
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails,
-  })),
-}));
+const { jest } = import.meta;
 
 const customizedLanguage = zhCnTag;
 
-const findDefaultSignInExperience = jest.fn(
-  async (): Promise<SignInExperience> => ({
-    ...mockSignInExperience,
-    languageInfo: {
-      autoDetect: true,
-      fallbackLanguage: customizedLanguage,
-    },
-  })
-);
-
-jest.mock('#src/queries/sign-in-experience.js', () => ({
-  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
+const { findDefaultSignInExperience } = mockEsm('#src/queries/sign-in-experience.js', () => ({
+  findDefaultSignInExperience: jest.fn(
+    async (): Promise<SignInExperience> => ({
+      ...mockSignInExperience,
+      languageInfo: {
+        autoDetect: true,
+        fallbackLanguage: customizedLanguage,
+      },
+    })
+  ),
 }));
 
-const detectLanguageSpy = jest.spyOn(detectLanguage, 'default');
-
-const findAllCustomLanguageTags = jest.fn(async () => [customizedLanguage]);
-const findCustomPhraseByLanguageTag = jest.fn(async (tag: string) => ({}));
-
-jest.mock('#src/queries/custom-phrase.js', () => ({
-  findAllCustomLanguageTags: async () => findAllCustomLanguageTags(),
-  findCustomPhraseByLanguageTag: async (tag: string) => findCustomPhraseByLanguageTag(tag),
+const { default: detectLanguageSpy } = mockEsm('#src/i18n/detect-language.js', () => ({
+  default: jest.fn().mockReturnValue([]),
 }));
 
-const getPhrase = jest.fn(async (language: string, customLanguages: string[]) => zhCN);
-
-jest.mock('#src/lib/phrase.js', () => ({
-  ...jest.requireActual('#src/lib/phrase.js'),
-  getPhrase: async (language: string, customLanguages: string[]) =>
-    getPhrase(language, customLanguages),
+const { findAllCustomLanguageTags } = mockEsm('#src/queries/custom-phrase.js', () => ({
+  findAllCustomLanguageTags: jest.fn(async () => [customizedLanguage]),
+  findCustomPhraseByLanguageTag: jest.fn(async (tag: string) => ({})),
 }));
 
+const { getPhrase } = await mockEsmWithActual('#src/lib/phrase.js', () => ({
+  getPhrase: jest.fn(async () => zhCN),
+}));
+
+const interactionDetails = jest.fn();
+const phraseRoutes = await pickDefault(import('./phrase.js'));
+
+const { createRequester } = await import('#src/utils/test-utils.js');
 const phraseRequest = createRequester({
   anonymousRoutes: phraseRoutes,
-  provider: new Provider(''),
-});
-
-afterEach(() => {
-  jest.clearAllMocks();
+  provider: createMockProvider(interactionDetails),
 });
 
 describe('when the application is admin-console', () => {
@@ -72,6 +53,10 @@ describe('when the application is admin-console', () => {
     interactionDetails.mockResolvedValueOnce({
       params: { client_id: adminConsoleApplicationId },
     });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should call interactionDetails', async () => {
@@ -104,6 +89,18 @@ describe('when the application is admin-console', () => {
 });
 
 describe('when the application is not admin-console', () => {
+  beforeEach(() => {
+    interactionDetails.mockResolvedValue({
+      params: {},
+      jti: 'jti',
+      client_id: 'mockApplicationId',
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should call interactionDetails', async () => {
     await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
     expect(interactionDetails).toBeCalledTimes(1);

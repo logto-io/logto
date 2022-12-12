@@ -1,8 +1,7 @@
-/* eslint-disable max-lines */
 import type { CreateUser, User } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual } from '@logto/shared/esm';
 import { getUnixTime } from 'date-fns';
-import { Provider } from 'oidc-provider';
 
 import {
   mockLogtoConnectorList,
@@ -11,101 +10,79 @@ import {
   mockUserResponse,
 } from '#src/__mocks__/index.js';
 import type { SocialUserInfo } from '#src/connectors/types.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import profileRoutes, { profileRoute } from './profile.js';
+const { jest } = import.meta;
 
-const mockFindUserById = jest.fn(async (): Promise<User> => mockUser);
-const mockHasUser = jest.fn(async () => false);
-const mockHasUserWithEmail = jest.fn(async () => false);
-const mockHasUserWithPhone = jest.fn(async () => false);
-const mockUpdateUserById = jest.fn(
-  async (_, data: Partial<CreateUser>): Promise<User> => ({
-    ...mockUser,
-    ...data,
-  })
-);
-const mockDeleteUserIdentity = jest.fn();
-const encryptUserPassword = jest.fn(async (password: string) => ({
-  passwordEncrypted: password + '_user1',
-  passwordEncryptionMethod: 'Argon2i',
-}));
-const mockArgon2Verify = jest.fn(async (password: string) => password === mockPasswordEncrypted);
-const mockGetSession = jest.fn();
-
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    Session: {
-      get: async () => mockGetSession(),
-    },
-  })),
-}));
-
-jest.mock('#src/lib/user.js', () => ({
-  ...jest.requireActual('#src/lib/user.js'),
-  encryptUserPassword: async (password: string) => encryptUserPassword(password),
-}));
-
-const mockGetLogtoConnectorById = jest.fn(async () => ({
+const getLogtoConnectorById = jest.fn(async () => ({
   dbEntry: { enabled: true },
   metadata: { id: 'connectorId', target: 'mock_social' },
   type: ConnectorType.Social,
   getAuthorizationUri: jest.fn(async () => ''),
 }));
 
-jest.mock('#src/connectors/index.js', () => ({
-  getLogtoConnectors: jest.fn(async () => mockLogtoConnectorList),
-  getLogtoConnectorById: jest.fn(async () => mockGetLogtoConnectorById()),
+mockEsm('#src/connectors/index.js', () => ({
+  getLogtoConnectors: mockLogtoConnectorList,
+  getLogtoConnectorById,
 }));
 
-const mockFindSocialRelatedUser = jest.fn(async () => [
-  { id: 'user1', identities: {}, isSuspended: false },
-]);
-const mockGetUserInfoByAuthCode = jest.fn();
-jest.mock('#src/lib/social.js', () => ({
-  ...jest.requireActual('#src/lib/social.js'),
-  findSocialRelatedUser: async () => mockFindSocialRelatedUser(),
-  getUserInfoByAuthCode: async () => mockGetUserInfoByAuthCode(),
+const { getUserInfoByAuthCode } = await mockEsmWithActual('#src/lib/social.js', () => ({
+  findSocialRelatedUser: jest.fn(async () => [{ id: 'user1', identities: {}, isSuspended: false }]),
+  getUserInfoByAuthCode: jest.fn(),
 }));
 
-jest.mock('#src/queries/user.js', () => ({
-  ...jest.requireActual('#src/queries/user.js'),
-  findUserById: async () => mockFindUserById(),
-  hasUser: async () => mockHasUser(),
-  hasUserWithEmail: async () => mockHasUserWithEmail(),
-  hasUserWithPhone: async () => mockHasUserWithPhone(),
-  updateUserById: async (id: string, data: Partial<CreateUser>) => mockUpdateUserById(id, data),
-  deleteUserIdentity: async (...args: unknown[]) => mockDeleteUserIdentity(...args),
+const {
+  findUserById,
+  hasUser,
+  hasUserWithEmail,
+  hasUserWithPhone,
+  updateUserById,
+  deleteUserIdentity,
+} = await mockEsmWithActual('#src/queries/user.js', () => ({
+  findUserById: jest.fn(async (): Promise<User> => mockUser),
+  hasUser: jest.fn(async () => false),
+  hasUserWithEmail: jest.fn(async () => false),
+  hasUserWithPhone: jest.fn(async () => false),
+  updateUserById: jest.fn(
+    async (_, data: Partial<CreateUser>): Promise<User> => ({
+      ...mockUser,
+      ...data,
+    })
+  ),
+  deleteUserIdentity: jest.fn(),
 }));
 
-const mockFindDefaultSignInExperience = jest.fn(async () => ({
-  signUp: {
-    identifier: [],
-    password: false,
-    verify: false,
-  },
+const { encryptUserPassword } = await mockEsmWithActual('#src/lib/user.js', () => ({
+  encryptUserPassword: jest.fn(async (password: string) => ({
+    passwordEncrypted: password + '_user1',
+    passwordEncryptionMethod: 'Argon2i',
+  })),
 }));
 
-jest.mock('#src/queries/sign-in-experience.js', () => ({
-  findDefaultSignInExperience: jest.fn(async () => mockFindDefaultSignInExperience()),
+mockEsm('#src/queries/sign-in-experience.js', () => ({
+  findDefaultSignInExperience: async () => ({
+    signUp: {
+      identifier: [],
+      password: false,
+      verify: false,
+    },
+  }),
 }));
 
-jest.mock('hash-wasm', () => ({
-  argon2Verify: async (password: string) => mockArgon2Verify(password),
+const { argon2Verify } = mockEsm('hash-wasm', () => ({
+  argon2Verify: jest.fn(async (password: string) => password === mockPasswordEncrypted),
 }));
+
+const { default: profileRoutes, profileRoute } = await import('./profile.js');
 
 describe('session -> profileRoutes', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockGetSession.mockImplementation(async () => ({
-      accountId: 'id',
-      loginTs: getUnixTime(new Date()) - 60,
-    }));
-  });
-
+  const provider = createMockProvider();
+  // @ts-expect-error for testing
+  const mockGetSession: jest.Mock = jest.spyOn(provider.Session, 'get');
   const sessionRequest = createRequester({
     anonymousRoutes: profileRoutes,
-    provider: new Provider(''),
+    provider,
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();
@@ -114,6 +91,14 @@ describe('session -> profileRoutes', () => {
         return next();
       },
     ],
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockGetSession.mockImplementation(async () => ({
+      accountId: 'id',
+      loginTs: getUnixTime(new Date()) - 60,
+    }));
   });
 
   describe('GET /session/profile', () => {
@@ -146,7 +131,7 @@ describe('session -> profileRoutes', () => {
 
       const response = await sessionRequest.patch(profileRoute).send(updatedUserInfo);
 
-      expect(mockUpdateUserById).toBeCalledWith('id', expect.objectContaining(updatedUserInfo));
+      expect(updateUserById).toBeCalledWith('id', expect.objectContaining(updatedUserInfo));
       expect(response.statusCode).toEqual(204);
     });
 
@@ -175,7 +160,7 @@ describe('session -> profileRoutes', () => {
         .send({ username: 'test' });
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should update username with the new value', async () => {
@@ -190,7 +175,7 @@ describe('session -> profileRoutes', () => {
     });
 
     it('should throw when username is already in use', async () => {
-      mockHasUser.mockImplementationOnce(async () => true);
+      hasUser.mockImplementationOnce(async () => true);
 
       const response = await sessionRequest
         .patch(`${profileRoute}/username`)
@@ -212,7 +197,7 @@ describe('session -> profileRoutes', () => {
         .send({ password: mockPasswordEncrypted });
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should update password with the new value', async () => {
@@ -220,7 +205,7 @@ describe('session -> profileRoutes', () => {
         .patch(`${profileRoute}/password`)
         .send({ password: mockPasswordEncrypted });
 
-      expect(mockUpdateUserById).toBeCalledWith(
+      expect(updateUserById).toBeCalledWith(
         'id',
         expect.objectContaining({
           passwordEncrypted: 'a1b2c3_user1',
@@ -235,14 +220,14 @@ describe('session -> profileRoutes', () => {
         passwordEncrypted: password,
         passwordEncryptionMethod: 'Argon2i',
       }));
-      mockArgon2Verify.mockResolvedValueOnce(true);
+      argon2Verify.mockResolvedValueOnce(true);
 
       const response = await sessionRequest
         .patch(`${profileRoute}/password`)
         .send({ password: 'password' });
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
   });
 
@@ -258,7 +243,7 @@ describe('session -> profileRoutes', () => {
         .send({ primaryEmail: 'test@logto.io' });
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should link email address to the user profile', async () => {
@@ -267,7 +252,7 @@ describe('session -> profileRoutes', () => {
         .patch(`${profileRoute}/email`)
         .send({ primaryEmail: mockEmailAddress });
 
-      expect(mockUpdateUserById).toBeCalledWith(
+      expect(updateUserById).toBeCalledWith(
         'id',
         expect.objectContaining({
           primaryEmail: mockEmailAddress,
@@ -277,25 +262,25 @@ describe('session -> profileRoutes', () => {
     });
 
     it('should throw when email address already exists', async () => {
-      mockHasUserWithEmail.mockImplementationOnce(async () => true);
+      hasUserWithEmail.mockImplementationOnce(async () => true);
 
       const response = await sessionRequest
         .patch(`${profileRoute}/email`)
         .send({ primaryEmail: mockUser.primaryEmail });
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should throw when email address is invalid', async () => {
-      mockHasUserWithEmail.mockImplementationOnce(async () => true);
+      hasUserWithEmail.mockImplementationOnce(async () => true);
 
       const response = await sessionRequest
         .patch(`${profileRoute}/email`)
         .send({ primaryEmail: 'test' });
 
       expect(response.statusCode).toEqual(400);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should throw if last authentication time is over 10 mins ago on unlinking email', async () => {
@@ -307,13 +292,13 @@ describe('session -> profileRoutes', () => {
       const response = await sessionRequest.delete(`${profileRoute}/email`);
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should unlink email address from user', async () => {
       const response = await sessionRequest.delete(`${profileRoute}/email`);
       expect(response.statusCode).toEqual(204);
-      expect(mockUpdateUserById).toBeCalledWith(
+      expect(updateUserById).toBeCalledWith(
         'id',
         expect.objectContaining({
           primaryEmail: null,
@@ -322,11 +307,11 @@ describe('session -> profileRoutes', () => {
     });
 
     it('should throw when no email address found in user on unlinking email', async () => {
-      mockFindUserById.mockImplementationOnce(async () => ({ ...mockUser, primaryEmail: null }));
+      findUserById.mockImplementationOnce(async () => ({ ...mockUser, primaryEmail: null }));
       const response = await sessionRequest.delete(`${profileRoute}/email`);
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
   });
 
@@ -342,7 +327,7 @@ describe('session -> profileRoutes', () => {
         .send({ primaryPhone: '6533333333' });
 
       expect(updateResponse.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should link phone number to the user profile', async () => {
@@ -351,7 +336,7 @@ describe('session -> profileRoutes', () => {
         .patch(`${profileRoute}/phone`)
         .send({ primaryPhone: mockPhoneNumber });
 
-      expect(mockUpdateUserById).toBeCalledWith(
+      expect(updateUserById).toBeCalledWith(
         'id',
         expect.objectContaining({
           primaryPhone: mockPhoneNumber,
@@ -361,25 +346,25 @@ describe('session -> profileRoutes', () => {
     });
 
     it('should throw when phone number already exists on linking phone number', async () => {
-      mockHasUserWithPhone.mockImplementationOnce(async () => true);
+      hasUserWithPhone.mockImplementationOnce(async () => true);
 
       const response = await sessionRequest
         .patch(`${profileRoute}/phone`)
         .send({ primaryPhone: mockUser.primaryPhone });
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should throw when phone number is invalid', async () => {
-      mockHasUserWithPhone.mockImplementationOnce(async () => true);
+      hasUserWithPhone.mockImplementationOnce(async () => true);
 
       const response = await sessionRequest
         .patch(`${profileRoute}/phone`)
         .send({ primaryPhone: 'invalid' });
 
       expect(response.statusCode).toEqual(400);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should throw if last authentication time is over 10 mins ago on unlinking phone number', async () => {
@@ -391,13 +376,13 @@ describe('session -> profileRoutes', () => {
       const response = await sessionRequest.delete(`${profileRoute}/phone`);
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should unlink phone number from user', async () => {
       const response = await sessionRequest.delete(`${profileRoute}/phone`);
       expect(response.statusCode).toEqual(204);
-      expect(mockUpdateUserById).toBeCalledWith(
+      expect(updateUserById).toBeCalledWith(
         'id',
         expect.objectContaining({
           primaryPhone: null,
@@ -406,11 +391,11 @@ describe('session -> profileRoutes', () => {
     });
 
     it('should throw when no phone number found in user on unlinking phone number', async () => {
-      mockFindUserById.mockImplementationOnce(async () => ({ ...mockUser, primaryPhone: null }));
+      findUserById.mockImplementationOnce(async () => ({ ...mockUser, primaryPhone: null }));
       const response = await sessionRequest.delete(`${profileRoute}/phone`);
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
   });
 
@@ -423,7 +408,7 @@ describe('session -> profileRoutes', () => {
         email: 'johndoe@social.com',
         phone: '123456789',
       };
-      mockGetUserInfoByAuthCode.mockReturnValueOnce(mockSocialUserInfo);
+      getUserInfoByAuthCode.mockReturnValueOnce(mockSocialUserInfo);
 
       const response = await sessionRequest.patch(`${profileRoute}/identities`).send({
         connectorId: 'connectorId',
@@ -431,7 +416,7 @@ describe('session -> profileRoutes', () => {
       });
 
       expect(response.statusCode).toEqual(204);
-      expect(mockUpdateUserById).toBeCalledWith(
+      expect(updateUserById).toBeCalledWith(
         'id',
         expect.objectContaining({
           identities: {
@@ -456,7 +441,7 @@ describe('session -> profileRoutes', () => {
       });
 
       expect(response.statusCode).toEqual(401);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should throw if last authentication time is over 10 mins ago on linking email', async () => {
@@ -470,11 +455,11 @@ describe('session -> profileRoutes', () => {
         .send({ connectorId: 'connectorId', data: { code: '123456' } });
 
       expect(response.statusCode).toEqual(422);
-      expect(mockUpdateUserById).not.toBeCalled();
+      expect(updateUserById).not.toBeCalled();
     });
 
     it('should unlink social identities from user', async () => {
-      mockFindUserById.mockImplementationOnce(async () => ({
+      findUserById.mockImplementationOnce(async () => ({
         ...mockUser,
         identities: {
           mock_social: {
@@ -490,8 +475,7 @@ describe('session -> profileRoutes', () => {
       const response = await sessionRequest.delete(`${profileRoute}/identities/mock_social`);
 
       expect(response.statusCode).toEqual(204);
-      expect(mockDeleteUserIdentity).toBeCalledWith('id', 'mock_social');
+      expect(deleteUserIdentity).toBeCalledWith('id', 'mock_social');
     });
   });
 });
-/* eslint-enable max-lines */

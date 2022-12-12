@@ -1,5 +1,5 @@
 import { UserRole } from '@logto/schemas';
-import { jwtVerify } from 'jose';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
@@ -8,11 +8,14 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { WithAuthContext } from './koa-auth.js';
-import koaAuth from './koa-auth.js';
 
-jest.mock('jose', () => ({
-  jwtVerify: jest.fn(() => ({ payload: { sub: 'fooUser', role_names: ['admin'] } })),
+const { jest } = import.meta;
+
+const { jwtVerify } = mockEsm('jose', () => ({
+  jwtVerify: jest.fn().mockReturnValue({ payload: { sub: 'fooUser', role_names: ['admin'] } }),
 }));
+
+const koaAuth = await pickDefault(import('./koa-auth.js'));
 
 describe('koaAuth middleware', () => {
   const baseCtx = createContextWithRouteParameters();
@@ -136,8 +139,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to throw if jwt sub is missing', async () => {
-    const mockJwtVerify = jwtVerify as jest.Mock;
-    mockJwtVerify.mockImplementationOnce(() => ({ payload: {} }));
+    jwtVerify.mockImplementationOnce(() => ({ payload: {} }));
 
     ctx.request = {
       ...ctx.request,
@@ -150,8 +152,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to have `client` type per jwt verify result', async () => {
-    const mockJwtVerify = jwtVerify as jest.Mock;
-    mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'bar', client_id: 'bar' } }));
+    jwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'bar', client_id: 'bar' } }));
 
     ctx.request = {
       ...ctx.request,
@@ -165,8 +166,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to throw if jwt role_names is missing', async () => {
-    const mockJwtVerify = jwtVerify as jest.Mock;
-    mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'fooUser' } }));
+    jwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'fooUser' } }));
 
     ctx.request = {
       ...ctx.request,
@@ -179,8 +179,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to throw if jwt role_names does not include admin', async () => {
-    const mockJwtVerify = jwtVerify as jest.Mock;
-    mockJwtVerify.mockImplementationOnce(() => ({
+    jwtVerify.mockImplementationOnce(() => ({
       payload: { sub: 'fooUser', role_names: ['foo'] },
     }));
 
@@ -195,8 +194,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to throw unauthorized error if unknown error occurs', async () => {
-    const mockJwtVerify = jwtVerify as jest.Mock;
-    mockJwtVerify.mockImplementationOnce(() => {
+    jwtVerify.mockImplementationOnce(() => {
       throw new Error('unknown error');
     });
     ctx.request = {

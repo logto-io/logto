@@ -42,6 +42,7 @@ export const chooseAlterationsByVersion = async (
     .filter((version, index, self) => index === self.findIndex((another) => eq(version, another)))
     .slice()
     .sort((i, j) => compare(j, i));
+
   const initialSemVersion = conditional(
     initialVersion && initialVersion !== latestTag && new SemVer(initialVersion)
   );

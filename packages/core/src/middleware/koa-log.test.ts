@@ -1,29 +1,31 @@
 import type { LogPayload } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 import i18next from 'i18next';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { insertLog } from '#src/queries/log.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { WithLogContext } from './koa-log.js';
-import koaLog from './koa-log.js';
+
+const { jest } = import.meta;
 
 const nanoIdMock = 'mockId';
 
 const addLogContext = jest.fn();
 const log = jest.fn();
 
-jest.mock('#src/queries/log.js', () => ({
-  insertLog: jest.fn(async () => 0),
+const { insertLog } = mockEsm('#src/queries/log.js', () => ({
+  insertLog: jest.fn(),
 }));
 
-jest.mock('nanoid', () => ({
-  nanoid: jest.fn(() => nanoIdMock),
+mockEsm('nanoid', () => ({
+  nanoid: () => nanoIdMock,
 }));
+
+const koaLog = await pickDefault(import('./koa-log.js'));
 
 describe('koaLog middleware', () => {
-  const insertLogMock = insertLog as jest.Mock;
   const type = 'SignInUsernamePassword';
   const mockPayload: LogPayload = {
     userId: 'foo',
@@ -54,7 +56,7 @@ describe('koaLog middleware', () => {
     };
     await koaLog()(ctx, next);
 
-    expect(insertLogMock).toBeCalledWith({
+    expect(insertLog).toBeCalledWith({
       id: nanoIdMock,
       type,
       payload: {
@@ -79,7 +81,7 @@ describe('koaLog middleware', () => {
     // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/no-empty-function
     const next = async () => {};
     await koaLog()(ctx, next);
-    expect(insertLogMock).not.toBeCalled();
+    expect(insertLog).not.toBeCalled();
   });
 
   describe('should insert an error log with the error message when next() throws an error', () => {
@@ -101,7 +103,7 @@ describe('koaLog middleware', () => {
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
 
-      expect(insertLogMock).toBeCalledWith({
+      expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
         type,
         payload: {
@@ -135,7 +137,7 @@ describe('koaLog middleware', () => {
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
 
-      expect(insertLogMock).toBeCalledWith({
+      expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
         type,
         payload: {

@@ -1,5 +1,3 @@
-import type { Options } from '@shopify/jest-koa-mocks';
-import { createMockContext } from '@shopify/jest-koa-mocks';
 import type { MiddlewareType, Context, Middleware } from 'koa';
 import Koa from 'koa';
 import type { IRouterParamContext } from 'koa-router';
@@ -11,6 +9,8 @@ import type { PrimitiveValueExpression } from 'slonik/dist/src/types.js';
 import request from 'supertest';
 
 import type { AuthedRouter, AnonymousRouter } from '#src/routes/types.js';
+import type { Options } from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
+import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 
 /**
  *  Slonik Query Mock Utils

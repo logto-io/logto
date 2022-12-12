@@ -1,13 +1,8 @@
 import { Event } from '@logto/schemas';
-import { Provider } from 'oidc-provider';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import {
-  hasUser,
-  hasUserWithEmail,
-  hasUserWithPhone,
-  hasUserWithIdentity,
-} from '#src/queries/user.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type {
@@ -15,32 +10,29 @@ import type {
   InteractionContext,
   IdentifierVerifiedInteractionResult,
 } from '../types/index.js';
-import { storeInteractionResult } from '../utils/interaction.js';
-import verifyProfile from './profile-verification.js';
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
-  })),
-}));
+const { jest } = import.meta;
 
-jest.mock('../utils/interaction.js', () => ({
+const { storeInteractionResult } = mockEsm('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
-jest.mock('#src/queries/user.js', () => ({
-  hasUser: jest.fn().mockResolvedValue(false),
-  findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
-  hasUserWithEmail: jest.fn().mockResolvedValue(false),
-  hasUserWithPhone: jest.fn().mockResolvedValue(false),
-  hasUserWithIdentity: jest.fn().mockResolvedValue(false),
-}));
+const { hasUser, hasUserWithEmail, hasUserWithPhone, hasUserWithIdentity } =
+  await mockEsmWithActual('#src/queries/user.js', () => ({
+    hasUser: jest.fn().mockResolvedValue(false),
+    findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
+    hasUserWithEmail: jest.fn().mockResolvedValue(false),
+    hasUserWithPhone: jest.fn().mockResolvedValue(false),
+    hasUserWithIdentity: jest.fn().mockResolvedValue(false),
+  }));
 
-jest.mock('#src/connectors/index.js', () => ({
+mockEsm('#src/connectors/index.js', () => ({
   getLogtoConnectorById: jest.fn().mockResolvedValue({
     metadata: { target: 'logto' },
   }),
 }));
+
+const verifyProfile = await pickDefault(import('./profile-verification.js'));
 
 const baseCtx = createContextWithRouteParameters();
 const identifiers: Identifier[] = [
@@ -49,7 +41,7 @@ const identifiers: Identifier[] = [
   { key: 'phoneVerified', value: '123456' },
   { key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } },
 ];
-const provider = new Provider('');
+const provider = createMockProvider();
 
 const interaction: IdentifierVerifiedInteractionResult = {
   event: Event.Register,
@@ -140,7 +132,7 @@ describe('register payload guard', () => {
 
 describe('profile registered validation', () => {
   it('username is registered', async () => {
-    (hasUser as jest.Mock).mockResolvedValueOnce(true);
+    hasUser.mockResolvedValueOnce(true);
 
     const ctx: InteractionContext = {
       ...baseCtx,
@@ -163,7 +155,7 @@ describe('profile registered validation', () => {
   });
 
   it('email is registered', async () => {
-    (hasUserWithEmail as jest.Mock).mockResolvedValueOnce(true);
+    hasUserWithEmail.mockResolvedValueOnce(true);
 
     const ctx: InteractionContext = {
       ...baseCtx,
@@ -185,7 +177,7 @@ describe('profile registered validation', () => {
   });
 
   it('phone is registered', async () => {
-    (hasUserWithPhone as jest.Mock).mockResolvedValueOnce(true);
+    hasUserWithPhone.mockResolvedValueOnce(true);
 
     const ctx: InteractionContext = {
       ...baseCtx,
@@ -207,7 +199,7 @@ describe('profile registered validation', () => {
   });
 
   it('connector identity exist', async () => {
-    (hasUserWithIdentity as jest.Mock).mockResolvedValueOnce(true);
+    hasUserWithIdentity.mockResolvedValueOnce(true);
 
     const ctx: InteractionContext = {
       ...baseCtx,

@@ -1,11 +1,11 @@
 import type { User } from '@logto/schemas';
 import { UserRole, SignInIdentifier } from '@logto/schemas';
-import { createMockContext } from '@shopify/jest-koa-mocks';
 import type { Nullable } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
 
 import { mockSignInExperience, mockSignInMethod, mockUser } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 
 import { checkRequiredProfile, signInWithPassword } from './utils.js';
 

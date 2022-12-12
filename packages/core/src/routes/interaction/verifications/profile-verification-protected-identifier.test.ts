@@ -1,40 +1,37 @@
 import { Event } from '@logto/schemas';
-import { Provider } from 'oidc-provider';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { Identifier, InteractionContext } from '../types/index.js';
-import { storeInteractionResult } from '../utils/interaction.js';
-import verifyProfile from './profile-verification.js';
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
-  })),
-}));
+const { jest } = import.meta;
 
-jest.mock('../utils/interaction.js', () => ({
+const { storeInteractionResult } = mockEsm('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
-jest.mock('#src/queries/user.js', () => ({
+await mockEsmWithActual('#src/queries/user.js', () => ({
   findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
   hasUserWithPhone: jest.fn().mockResolvedValue(false),
   hasUserWithIdentity: jest.fn().mockResolvedValue(false),
 }));
 
-jest.mock('#src/connectors/index.js', () => ({
+mockEsm('#src/connectors/index.js', () => ({
   getLogtoConnectorById: jest.fn().mockResolvedValue({
     metadata: { target: 'logto' },
   }),
 }));
 
+const verifyProfile = await pickDefault(import('./profile-verification.js'));
+
 describe('profile protected identifier verification', () => {
   const baseCtx = createContextWithRouteParameters();
   const interaction = { event: Event.SignIn, accountId: 'foo' };
-  const provider = new Provider('');
+  const provider = createMockProvider();
 
   afterEach(() => {
     jest.clearAllMocks();

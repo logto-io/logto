@@ -1,33 +1,32 @@
 import type { Resource, CreateResource } from '@logto/schemas';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
 import { mockResource } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import resourceRoutes from './resource.js';
+const { jest } = import.meta;
 
-jest.mock('#src/queries/resource.js', () => ({
-  findTotalNumberOfResources: jest.fn(async () => ({ count: 10 })),
-  findAllResources: jest.fn(async (): Promise<Resource[]> => [mockResource]),
-  findResourceById: jest.fn(async (): Promise<Resource> => mockResource),
-  insertResource: jest.fn(
-    async (body: CreateResource): Promise<Resource> => ({
-      ...mockResource,
-      ...body,
-    })
-  ),
-  updateResourceById: jest.fn(
-    async (_, data: Partial<CreateResource>): Promise<Resource> => ({
-      ...mockResource,
-      ...data,
-    })
-  ),
+mockEsm('#src/queries/resource.js', () => ({
+  findTotalNumberOfResources: async () => ({ count: 10 }),
+  findAllResources: async (): Promise<Resource[]> => [mockResource],
+  findResourceById: async (): Promise<Resource> => mockResource,
+  insertResource: async (body: CreateResource): Promise<Resource> => ({
+    ...mockResource,
+    ...body,
+  }),
+  updateResourceById: async (_: unknown, data: Partial<CreateResource>): Promise<Resource> => ({
+    ...mockResource,
+    ...data,
+  }),
   deleteResourceById: jest.fn(),
 }));
 
-jest.mock('@logto/shared', () => ({
+mockEsm('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
-  buildIdGenerator: jest.fn(() => () => 'randomId'),
+  buildIdGenerator: () => () => 'randomId',
 }));
+
+const resourceRoutes = await pickDefault(import('./resource.js'));
 
 describe('resource routes', () => {
   const resourceRequest = createRequester({ authedRoutes: resourceRoutes });

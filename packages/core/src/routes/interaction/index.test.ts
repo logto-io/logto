@@ -1,21 +1,16 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { Event } from '@logto/schemas';
-import { Provider } from 'oidc-provider';
+import { demoAppApplicationId } from '@logto/schemas/lib/seeds/application.js';
+import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import submitInteraction from './actions/submit-interaction.js';
-import interactionRoutes, { verificationPrefix, interactionPrefix } from './index.js';
 import type { InteractionContext } from './types/index.js';
-import { getInteractionStorage } from './utils/interaction.js';
-import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
-import {
-  verifyIdentifier,
-  verifyProfile,
-  validateMandatoryUserProfile,
-} from './verifications/index.js';
+
+const { jest } = import.meta;
 
 // FIXME @Darcy: no more `enabled` for `connectors` table
 const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
@@ -36,7 +31,7 @@ const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
   };
 });
 
-jest.mock('#src/connectors.js', () => ({
+await mockEsmWithActual('#src/connectors/index.js', () => ({
   getLogtoConnectorById: jest.fn(async (connectorId: string) => {
     const connector = await getLogtoConnectorByIdHelper(connectorId);
 
@@ -51,57 +46,67 @@ jest.mock('#src/connectors.js', () => ({
   }),
 }));
 
-jest.mock('./utils/passcode-validation.js', () => ({
-  sendPasscodeToIdentifier: jest.fn(),
-}));
-
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn().mockResolvedValue({
-      jti: 'jti',
-      result: {},
-      params: {
-        client_id: 'demo_app',
-      },
-    }),
-  })),
-}));
-
-jest.mock('#src/lib/sign-in-experience/index.js', () => ({
-  getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
-}));
-
-jest.mock('./verifications/index.js', () => ({
-  verifyIdentifier: jest.fn(),
-  verifyProfile: jest.fn(),
-  validateMandatoryUserProfile: jest.fn(),
-}));
-
-jest.mock('./actions/submit-interaction.js', () =>
-  jest.fn((_interaction, ctx: InteractionContext) => {
-    ctx.body = { redirectUri: 'logto.io' };
+const { sendPasscodeToIdentifier } = await mockEsmWithActual(
+  './utils/passcode-validation.js',
+  () => ({
+    sendPasscodeToIdentifier: jest.fn(),
   })
 );
 
-jest.mock('./utils/interaction.js', () => ({
+mockEsm('#src/lib/sign-in-experience/index.js', () => ({
+  getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
+}));
+
+const { verifyIdentifier, verifyProfile, validateMandatoryUserProfile } = mockEsm(
+  './verifications/index.js',
+  () => ({
+    verifyIdentifier: jest.fn(),
+    verifyProfile: jest.fn(),
+    validateMandatoryUserProfile: jest.fn(),
+  })
+);
+
+const { default: submitInteraction } = mockEsm('./actions/submit-interaction.js', () => ({
+  default: jest.fn((_interaction, ctx: InteractionContext) => {
+    ctx.body = { redirectUri: 'logto.io' };
+  }),
+}));
+
+const { getInteractionStorage } = mockEsm('./utils/interaction.js', () => ({
   getInteractionStorage: jest.fn(),
 }));
 
 const log = jest.fn();
 
-const koaInteractionBodyGuardSpy = jest.spyOn(
-  jest.requireActual('./middleware/koa-interaction-body-guard.js'),
-  'default'
+const koaInteractionBodyGuard = await pickDefault(
+  import('./middleware/koa-interaction-body-guard.js')
 );
-const koaSessionSignInExperienceGuardSpy = jest.spyOn(
-  jest.requireActual('./middleware/koa-session-sign-in-experience-guard.js'),
-  'default'
+const koaSessionSignInExperienceGuard = await pickDefault(
+  import('./middleware/koa-session-sign-in-experience-guard.js')
 );
+
+const koaInteractionBodyGuardSpy = mockEsmDefault(
+  './middleware/koa-interaction-body-guard.js',
+  () => jest.fn(koaInteractionBodyGuard)
+);
+
+const koaSessionSignInExperienceGuardSpy = mockEsmDefault(
+  './middleware/koa-session-sign-in-experience-guard.js',
+  () => jest.fn(koaSessionSignInExperienceGuard)
+);
+
+const {
+  default: interactionRoutes,
+  verificationPrefix,
+  interactionPrefix,
+} = await import('./index.js');
 
 describe('session -> interactionRoutes', () => {
   const sessionRequest = createRequester({
     anonymousRoutes: interactionRoutes,
-    provider: new Provider(''),
+    provider: createMockProvider(
+      jest.fn().mockResolvedValue({ params: {}, jti: 'jti', client_id: demoAppApplicationId })
+    ),
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();
@@ -162,14 +167,13 @@ describe('session -> interactionRoutes', () => {
 
   describe('PATCH /interaction', () => {
     const path = interactionPrefix;
-    const getInteractionStorageMock = getInteractionStorage as jest.Mock;
 
     afterEach(() => {
       jest.clearAllMocks();
     });
 
     it('sign-in event with register event interaction session in record should call methods properly', async () => {
-      getInteractionStorageMock.mockResolvedValueOnce({ event: Event.Register });
+      getInteractionStorage.mockResolvedValueOnce({ event: Event.Register });
 
       const body = {
         event: Event.SignIn,
@@ -185,7 +189,7 @@ describe('session -> interactionRoutes', () => {
     });
 
     it('sign-in event with forgot password event interaction session in record should reject', async () => {
-      getInteractionStorageMock.mockResolvedValueOnce({ event: Event.ForgotPassword });
+      getInteractionStorage.mockResolvedValueOnce({ event: Event.ForgotPassword });
 
       const body = {
         event: Event.SignIn,
@@ -200,7 +204,7 @@ describe('session -> interactionRoutes', () => {
     });
 
     it('Forgot event with forgot password event interaction session in record should call methods properly', async () => {
-      getInteractionStorageMock.mockResolvedValueOnce({ event: Event.ForgotPassword });
+      getInteractionStorage.mockResolvedValueOnce({ event: Event.ForgotPassword });
 
       const body = {
         event: Event.ForgotPassword,
@@ -216,7 +220,7 @@ describe('session -> interactionRoutes', () => {
     });
 
     it('Forgot event with sign-in event interaction session in record should call methods properly', async () => {
-      getInteractionStorageMock.mockResolvedValueOnce({ event: Event.SignIn });
+      getInteractionStorage.mockResolvedValueOnce({ event: Event.SignIn });
 
       const body = {
         event: Event.ForgotPassword,

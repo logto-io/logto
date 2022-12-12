@@ -1,4 +1,5 @@
-import type { CreateSignInExperience, LanguageInfo, SignInExperience } from '@logto/schemas';
+import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import {
   mockAliyunDmConnector,
@@ -10,11 +11,10 @@ import {
   mockSignInExperience,
   mockTermsOfUse,
 } from '#src/__mocks__/index.js';
-import { createRequester } from '#src/utils/test-utils.js';
 
-import signInExperiencesRoutes from './sign-in-experience.js';
+const { jest } = import.meta;
 
-jest.mock('#src/connectors.js', () => ({
+mockEsm('#src/connectors.js', () => ({
   getLogtoConnectors: jest.fn(async () => [
     mockAliyunDmConnector,
     mockAliyunSmsConnector,
@@ -24,23 +24,21 @@ jest.mock('#src/connectors.js', () => ({
   ]),
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const validateLanguageInfo = jest.fn(async (languageInfo: LanguageInfo): Promise<void> => {});
-
-jest.mock('#src/lib/sign-in-experience.js', () => ({
-  ...jest.requireActual('#src/lib/sign-in-experience.js'),
-  validateLanguageInfo: async (languageInfo: LanguageInfo) => validateLanguageInfo(languageInfo),
+const { validateLanguageInfo } = await mockEsmWithActual('#src/lib/sign-in-experience.js', () => ({
+  validateLanguageInfo: jest.fn(),
 }));
 
-jest.mock('#src/queries/sign-in-experience.js', () => ({
-  updateDefaultSignInExperience: jest.fn(
-    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
-      ...mockSignInExperience,
-      ...data,
-    })
-  ),
+await mockEsmWithActual('#src/queries/sign-in-experience.js', () => ({
+  updateDefaultSignInExperience: async (
+    data: Partial<CreateSignInExperience>
+  ): Promise<SignInExperience> => ({
+    ...mockSignInExperience,
+    ...data,
+  }),
 }));
 
+const signInExperiencesRoutes = await pickDefault(import('./sign-in-experience.js'));
+const { createRequester } = await import('#src/utils/test-utils.js');
 const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
 const expectPatchResponseStatus = async (

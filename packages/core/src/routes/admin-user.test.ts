@@ -1,5 +1,6 @@
 import type { CreateUser, Role, User } from '@logto/schemas';
 import { userInfoSelectFields } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 import pick from 'lodash.pick';
 
 import {
@@ -8,19 +9,9 @@ import {
   mockUserListResponse,
   mockUserResponse,
 } from '#src/__mocks__/index.js';
-import { encryptUserPassword } from '#src/lib/user.js';
-import { findRolesByRoleNames } from '#src/queries/roles.js';
-import {
-  hasUser,
-  findUserById,
-  updateUserById,
-  deleteUserIdentity,
-  deleteUserById,
-} from '#src/queries/user.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import adminUserRoutes from './admin-user.js';
-
+const { jest } = import.meta;
 const filterUsersWithSearch = (users: User[], search: string) =>
   users.filter((user) =>
     [user.username, user.primaryEmail, user.primaryPhone, user.name].some((value) =>
@@ -28,45 +19,44 @@ const filterUsersWithSearch = (users: User[], search: string) =>
     )
   );
 
-const mockFindDefaultSignInExperience = jest.fn(async () => ({
-  signUp: {
-    identifiers: [],
-    password: false,
-    verify: false,
-  },
-}));
-
-jest.mock('#src/queries/sign-in-experience.js', () => ({
-  findDefaultSignInExperience: jest.fn(async () => mockFindDefaultSignInExperience()),
+mockEsm('#src/queries/sign-in-experience.js', () => ({
+  findDefaultSignInExperience: jest.fn(async () => ({
+    signUp: {
+      identifiers: [],
+      password: false,
+      verify: false,
+    },
+  })),
 }));
 
 const mockHasUser = jest.fn(async () => false);
 const mockHasUserWithEmail = jest.fn(async () => false);
 const mockHasUserWithPhone = jest.fn(async () => false);
-jest.mock('#src/queries/user.js', () => ({
-  countUsers: jest.fn(async (search) => ({
-    count: search ? filterUsersWithSearch(mockUserList, search).length : mockUserList.length,
-  })),
-  findUsers: jest.fn(
-    async (limit, offset, search): Promise<User[]> =>
-      search ? filterUsersWithSearch(mockUserList, search) : mockUserList
-  ),
-  findUserById: jest.fn(async (): Promise<User> => mockUser),
-  hasUser: jest.fn(async () => mockHasUser()),
-  hasUserWithEmail: jest.fn(async () => mockHasUserWithEmail()),
-  hasUserWithPhone: jest.fn(async () => mockHasUserWithPhone()),
-  updateUserById: jest.fn(
-    async (_, data: Partial<CreateUser>): Promise<User> => ({
-      ...mockUser,
-      ...data,
-    })
-  ),
-  deleteUserById: jest.fn(),
-  deleteUserIdentity: jest.fn(),
-}));
 
-jest.mock('#src/lib/user.js', () => ({
-  ...jest.requireActual('#src/lib/user.js'),
+const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserById } =
+  await mockEsmWithActual('#src/queries/user.js', () => ({
+    countUsers: jest.fn(async (search) => ({
+      count: search ? filterUsersWithSearch(mockUserList, search).length : mockUserList.length,
+    })),
+    findUsers: jest.fn(
+      async (limit, offset, search): Promise<User[]> =>
+        search ? filterUsersWithSearch(mockUserList, search) : mockUserList
+    ),
+    findUserById: jest.fn(async (): Promise<User> => mockUser),
+    hasUser: jest.fn(async () => mockHasUser()),
+    hasUserWithEmail: jest.fn(async () => mockHasUserWithEmail()),
+    hasUserWithPhone: jest.fn(async () => mockHasUserWithPhone()),
+    updateUserById: jest.fn(
+      async (_, data: Partial<CreateUser>): Promise<User> => ({
+        ...mockUser,
+        ...data,
+      })
+    ),
+    deleteUserById: jest.fn(),
+    deleteUserIdentity: jest.fn(),
+  }));
+
+const { encryptUserPassword } = await mockEsmWithActual('#src/lib/user.js', () => ({
   generateUserId: jest.fn(() => 'fooId'),
   encryptUserPassword: jest.fn(() => ({
     passwordEncrypted: 'password',
@@ -80,17 +70,17 @@ jest.mock('#src/lib/user.js', () => ({
   ),
 }));
 
-jest.mock('#src/queries/roles.js', () => ({
+const { findRolesByRoleNames } = mockEsm('#src/queries/roles.js', () => ({
   findRolesByRoleNames: jest.fn(
     async (): Promise<Role[]> => [{ id: 'role_id', name: 'admin', description: 'none' }]
   ),
 }));
 
-const revokeInstanceByUserId = jest.fn();
-jest.mock('#src/queries/oidc-model-instance.js', () => ({
-  revokeInstanceByUserId: async (modelName: string, userId: string) =>
-    revokeInstanceByUserId(modelName, userId),
+const { revokeInstanceByUserId } = mockEsm('#src/queries/oidc-model-instance.js', () => ({
+  revokeInstanceByUserId: jest.fn(),
 }));
+
+const adminUserRoutes = await pickDefault(import('./admin-user.js'));
 
 describe('adminUserRoutes', () => {
   const userRequest = createRequester({ authedRoutes: adminUserRoutes });

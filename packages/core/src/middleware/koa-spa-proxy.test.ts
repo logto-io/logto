@@ -1,18 +1,21 @@
+import { mockEsmDefault, pickDefault } from '@logto/shared/esm';
+
 import envSet, { MountedApps } from '#src/env-set/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaSpaProxy from './koa-spa-proxy.js';
+const { jest } = import.meta;
 
 const mockProxyMiddleware = jest.fn();
 const mockStaticMiddleware = jest.fn();
 
-jest.mock('fs/promises', () => ({
-  ...jest.requireActual('fs/promises'),
+mockEsmDefault('fs/promises', () => ({
   readdir: jest.fn().mockResolvedValue(['sign-in']),
 }));
 
-jest.mock('koa-proxies', () => jest.fn(() => mockProxyMiddleware));
-jest.mock('#src/middleware/koa-serve-static.js', () => jest.fn(() => mockStaticMiddleware));
+mockEsmDefault('koa-proxies', () => jest.fn(() => mockProxyMiddleware));
+mockEsmDefault('#src/middleware/koa-serve-static.js', () => jest.fn(() => mockStaticMiddleware));
+
+const koaSpaProxy = await pickDefault(import('./koa-spa-proxy.js'));
 
 describe('koaSpaProxy middleware', () => {
   const envBackup = process.env;

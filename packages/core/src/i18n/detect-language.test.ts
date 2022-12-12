@@ -1,5 +1,6 @@
-import { createMockContext } from '@shopify/jest-koa-mocks';
 import type { ParameterizedContext } from 'koa';
+
+import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 
 import detectLanguage from './detect-language.js';
 

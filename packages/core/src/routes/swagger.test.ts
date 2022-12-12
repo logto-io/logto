@@ -1,4 +1,4 @@
-import { load } from 'js-yaml';
+import { mockEsm } from '@logto/shared/esm';
 import Koa from 'koa';
 import Router from 'koa-router';
 import request from 'supertest';
@@ -8,11 +8,17 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type { AnonymousRouter } from '#src/routes/types.js';
 
-import swaggerRoutes, { defaultResponses, paginationParameters } from './swagger.js';
+const { jest } = import.meta;
 
-jest.mock('js-yaml', () => ({
+const { load } = mockEsm('js-yaml', () => ({
   load: jest.fn().mockReturnValue({ paths: {} }),
 }));
+
+const {
+  default: swaggerRoutes,
+  defaultResponses,
+  paginationParameters,
+} = await import('./swagger.js');
 
 export const createSwaggerRequest = (
   allRouters: Router[],
@@ -221,7 +227,7 @@ describe('GET /swagger.json', () => {
 
   describe('should use correct responses', () => {
     it('should use "defaultResponses" if there is no custom "responses" from the additional swagger', async () => {
-      (load as jest.Mock).mockReturnValueOnce({
+      load.mockReturnValueOnce({
         paths: { '/api/mock': { delete: {} } },
       });
 
@@ -235,7 +241,7 @@ describe('GET /swagger.json', () => {
     });
 
     it('should use custom "responses" from the additional swagger if it exists', async () => {
-      (load as jest.Mock).mockReturnValueOnce({
+      load.mockReturnValueOnce({
         paths: {
           '/api/mock': {
             get: {

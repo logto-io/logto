@@ -5,6 +5,8 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import koaOIDCErrorHandler from './koa-oidc-error-handler.js';
 
+const { jest } = import.meta;
+
 describe('koaOIDCErrorHandler middleware', () => {
   const next = jest.fn();
   const ctx = createContextWithRouteParameters();

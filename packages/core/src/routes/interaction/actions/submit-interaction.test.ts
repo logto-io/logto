@@ -1,10 +1,7 @@
 import { Event } from '@logto/schemas';
-import { Provider } from 'oidc-provider';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
-import { getLogtoConnectorById } from '#src/connectors/index.js';
-import { assignInteractionResults } from '#src/lib/session.js';
-import { encryptUserPassword, generateUserId, insertUser } from '#src/lib/user.js';
-import { updateUserById } from '#src/queries/user.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type {
@@ -14,19 +11,20 @@ import type {
   VerifiedSignInInteractionResult,
   VerifiedForgotPasswordInteractionResult,
 } from '../types/index.js';
-import submitInteraction from './submit-interaction.js';
 
-jest.mock('#src/connectors/index.js', () => ({
+const { jest } = import.meta;
+
+const { getLogtoConnectorById } = mockEsm('#src/connectors/index.js', () => ({
   getLogtoConnectorById: jest
     .fn()
     .mockResolvedValue({ metadata: { target: 'logto' }, dbEntry: { syncProfile: true } }),
 }));
 
-jest.mock('#src/lib/session.js', () => ({
+const { assignInteractionResults } = mockEsm('#src/lib/session.js', () => ({
   assignInteractionResults: jest.fn(),
 }));
 
-jest.mock('#src/lib/user.js', () => ({
+const { encryptUserPassword, generateUserId, insertUser } = mockEsm('#src/lib/user.js', () => ({
   encryptUserPassword: jest.fn().mockResolvedValue({
     passwordEncrypted: 'passwordEncrypted',
     passwordEncryptionMethod: 'plain',
@@ -35,25 +33,21 @@ jest.mock('#src/lib/user.js', () => ({
   insertUser: jest.fn(),
 }));
 
-jest.mock('#src/queries/user.js', () => ({
+mockEsm('#src/queries/user.js', () => ({
   findUserById: jest
     .fn()
     .mockResolvedValue({ identities: { google: { userId: 'googleId', details: {} } } }),
   updateUserById: jest.fn(),
 }));
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn(async () => ({ params: {}, jti: 'jti' })),
-  })),
-}));
-
+const { updateUserById } = await import('#src/queries/user.js');
+const submitInteraction = await pickDefault(import('./submit-interaction.js'));
 const now = Date.now();
 
 jest.useFakeTimers().setSystemTime(now);
 
 describe('submit action', () => {
-  const provider = new Provider('');
+  const provider = createMockProvider();
   const log = jest.fn();
   const ctx: InteractionContext = {
     ...createContextWithRouteParameters(),
@@ -116,7 +110,7 @@ describe('submit action', () => {
   });
 
   it('sign-in', async () => {
-    (getLogtoConnectorById as jest.Mock).mockResolvedValueOnce({
+    getLogtoConnectorById.mockResolvedValueOnce({
       metadata: { target: 'logto' },
       dbEntry: { syncProfile: false },
     });
