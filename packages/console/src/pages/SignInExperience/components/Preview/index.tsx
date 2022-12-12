@@ -194,7 +194,7 @@ const Preview = ({ signInExperience, className }: Props) => {
         style={conditional(
           platform === 'desktopWeb' && {
             // Set background color to match iframe's background color on both dark and light mode.
-            backgroundColor: mode === AppearanceMode.DarkMode ? '#2A2C31' : '#e5e1ec',
+            backgroundColor: mode === AppearanceMode.DarkMode ? '#000' : '#e5e1ec',
           }
         )}
       >
