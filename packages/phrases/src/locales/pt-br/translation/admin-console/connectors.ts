@@ -35,10 +35,10 @@ const connectors = {
     name: 'Nome do conector',
     name_tip: 'O nome do botão do conector será exibido como "Continue com {{Connector Name}}".',
     logo: 'URL do logotipo do conector',
-    logo_placelholder: 'https://your.cdn.domain/logo.png',
+    logo_placeholder: 'https://your.cdn.domain/logo.png',
     logo_tip: 'A imagem do logotipo também será exibida no botão do conector.',
     logo_dark: 'URL do logotipo do conector (modo escuro)',
-    logo_dark_placelholder: 'https://your.cdn.domain/logo.png',
+    logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
     logo_dark_tip:
       'Isso será usado ao abrir "Ativar modo escuro" na configuração da experiência de login.',
     logo_dark_collapse: 'Collapse',
