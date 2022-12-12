@@ -1,6 +1,6 @@
 import { BrandingStyle } from '@logto/schemas';
 
-import { getSignInExperience, updateSignInExperience } from '@/api';
+import { getSignInExperience, updateSignInExperience } from '#src/api/index.js';
 
 describe('admin console sign-in experience', () => {
   it('should get sign-in experience successfully', async () => {

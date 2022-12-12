@@ -9,7 +9,7 @@ import {
   mockSocialConnectorId,
   mockStandardEmailConnectorConfig,
   mockStandardEmailConnectorId,
-} from '@/__mocks__/connectors-mock';
+} from '#src/__mocks__/connectors-mock.js';
 import {
   deleteConnectorById,
   getConnector,
@@ -18,7 +18,7 @@ import {
   sendEmailTestMessage,
   sendSmsTestMessage,
   updateConnectorConfig,
-} from '@/api/connector';
+} from '#src/api/connector.js';
 
 const connectorIdMap = new Map();
 

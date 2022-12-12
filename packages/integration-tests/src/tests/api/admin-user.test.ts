@@ -4,7 +4,7 @@ import {
   mockSocialConnectorConfig,
   mockSocialConnectorId,
   mockSocialConnectorTarget,
-} from '@/__mocks__/connectors-mock';
+} from '#src/__mocks__/connectors-mock.js';
 import {
   getUser,
   getUsers,
@@ -15,8 +15,8 @@ import {
   postConnector,
   updateConnectorConfig,
   deleteConnectorById,
-} from '@/api';
-import { createUserByAdmin, bindSocialToNewCreatedUser } from '@/helpers';
+} from '#src/api/index.js';
+import { createUserByAdmin, bindSocialToNewCreatedUser } from '#src/helpers.js';
 
 describe('admin console user management', () => {
   it('should create user successfully', async () => {

@@ -1,9 +1,9 @@
 import { assert } from '@silverhand/essentials';
 
-import { getLogs, getLog } from '@/api';
-import { signUpIdentifiers } from '@/constants';
-import { registerNewUser, setSignUpIdentifier } from '@/helpers';
-import { generateUsername, generatePassword } from '@/utils';
+import { getLogs, getLog } from '#src/api/index.js';
+import { signUpIdentifiers } from '#src/constants.js';
+import { registerNewUser, setSignUpIdentifier } from '#src/helpers.js';
+import { generateUsername, generatePassword } from '#src/utils.js';
 
 describe('admin console logs', () => {
   const username = generateUsername();

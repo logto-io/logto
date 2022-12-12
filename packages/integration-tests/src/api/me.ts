@@ -1,6 +1,6 @@
 import type { ArbitraryObject, UserInfo } from '@logto/schemas';
 
-import api from './api';
+import api from './api.js';
 
 export const getCurrentUserInfo = (userId: string) =>
   api.get(`me`, { headers: { 'development-user-id': userId } }).json<UserInfo>();

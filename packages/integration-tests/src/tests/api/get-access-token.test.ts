@@ -5,11 +5,11 @@ import { managementResource } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 import fetch from 'node-fetch';
 
-import { signInWithPassword } from '@/api';
-import MockClient, { defaultConfig } from '@/client';
-import { logtoUrl } from '@/constants';
-import { createUserByAdmin } from '@/helpers';
-import { generateUsername, generatePassword } from '@/utils';
+import { signInWithPassword } from '#src/api/index.js';
+import MockClient, { defaultConfig } from '#src/client/index.js';
+import { logtoUrl } from '#src/constants.js';
+import { createUserByAdmin } from '#src/helpers.js';
+import { generateUsername, generatePassword } from '#src/utils.js';
 
 describe('get access token', () => {
   const username = generateUsername();

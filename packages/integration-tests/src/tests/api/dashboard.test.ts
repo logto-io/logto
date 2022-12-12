@@ -1,8 +1,8 @@
-import type { StatisticsData } from '@/api';
-import { getTotalUsersCount, getNewUsersData, getActiveUsersData } from '@/api';
-import { signUpIdentifiers } from '@/constants';
-import { createUserByAdmin, registerNewUser, setSignUpIdentifier, signIn } from '@/helpers';
-import { generateUsername, generatePassword } from '@/utils';
+import type { StatisticsData } from '#src/api/index.js';
+import { getTotalUsersCount, getNewUsersData, getActiveUsersData } from '#src/api/index.js';
+import { signUpIdentifiers } from '#src/constants.js';
+import { createUserByAdmin, registerNewUser, setSignUpIdentifier, signIn } from '#src/helpers.js';
+import { generateUsername, generatePassword } from '#src/utils.js';
 
 describe('admin console dashboard', () => {
   beforeAll(async () => {

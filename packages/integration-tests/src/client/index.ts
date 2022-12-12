@@ -1,14 +1,14 @@
 import type { LogtoConfig } from '@logto/node';
 import LogtoClient from '@logto/node';
-import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
+import { demoAppApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import { assert } from '@silverhand/essentials';
-import got from 'got';
+import { got } from 'got';
 
-import { consent } from '@/api';
-import { demoAppRedirectUri, logtoUrl } from '@/constants';
-import { extractCookie } from '@/utils';
+import { consent } from '#src/api/index.js';
+import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
+import { extractCookie } from '#src/utils.js';
 
-import { MemoryStorage } from './storage';
+import { MemoryStorage } from './storage.js';
 
 export const defaultConfig = {
   endpoint: logtoUrl,

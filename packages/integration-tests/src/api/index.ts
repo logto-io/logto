@@ -1,12 +1,12 @@
-export * from './resource';
-export * from './connector';
-export * from './application';
-export * from './sign-in-experience';
-export * from './admin-user';
-export * from './session';
-export * from './logs';
-export * from './dashboard';
-export * from './me';
-export * from './wellknown';
+export * from './resource.js';
+export * from './connector.js';
+export * from './application.js';
+export * from './sign-in-experience.js';
+export * from './admin-user.js';
+export * from './session.js';
+export * from './logs.js';
+export * from './dashboard.js';
+export * from './me.js';
+export * from './wellknown.js';
 
-export { default as api, authedAdminApi } from './api';
+export { default as api, authedAdminApi } from './api.js';

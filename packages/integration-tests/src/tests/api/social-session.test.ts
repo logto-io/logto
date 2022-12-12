@@ -5,7 +5,7 @@ import {
   mockSocialConnectorId,
   mockSocialConnectorTarget,
   mockSocialConnectorConfig,
-} from '@/__mocks__/connectors-mock';
+} from '#src/__mocks__/connectors-mock.js';
 import {
   signInWithSocial,
   getAuthWithSocial,
@@ -16,11 +16,11 @@ import {
   postConnector,
   updateConnectorConfig,
   deleteConnectorById,
-} from '@/api';
-import MockClient from '@/client';
-import { signUpIdentifiers } from '@/constants';
-import { createUserByAdmin, setSignUpIdentifier } from '@/helpers';
-import { generateUsername, generatePassword } from '@/utils';
+} from '#src/api/index.js';
+import MockClient from '#src/client/index.js';
+import { signUpIdentifiers } from '#src/constants.js';
+import { createUserByAdmin, setSignUpIdentifier } from '#src/helpers.js';
+import { generateUsername, generatePassword } from '#src/utils.js';
 
 const state = 'foo_state';
 const redirectUri = 'http://foo.dev/callback';

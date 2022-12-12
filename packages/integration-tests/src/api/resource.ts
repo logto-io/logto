@@ -1,9 +1,9 @@
 import type { Resource, CreateResource } from '@logto/schemas';
 import type { OptionsOfTextResponseBody } from 'got';
 
-import { generateResourceIndicator, generateResourceName } from '@/utils';
+import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
 
-import { authedAdminApi } from './api';
+import { authedAdminApi } from './api.js';
 
 export const createResource = (name?: string, indicator?: string) =>
   authedAdminApi

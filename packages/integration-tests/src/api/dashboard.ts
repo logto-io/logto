@@ -1,4 +1,4 @@
-import { authedAdminApi } from './api';
+import { authedAdminApi } from './api.js';
 
 export type StatisticsData = {
   count: number;

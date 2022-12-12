@@ -1,4 +1,4 @@
-import { logtoUrl } from '@/constants';
+import { logtoUrl } from '#src/constants.js';
 
 describe('smoke testing', () => {
   it('opens with app element', async () => {
