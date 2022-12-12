@@ -49,6 +49,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         query: { search, hideAdminUser: _hideAdminUser, isCaseSensitive: _isCaseSensitive },
       } = ctx.guard;
 
+      console.log(ctx.request.URL.searchParams.keys());
+
       const hideAdminUser = isTrue(_hideAdminUser);
       const isCaseSensitive = isTrue(_isCaseSensitive);
       const [{ count }, users] = await Promise.all([
