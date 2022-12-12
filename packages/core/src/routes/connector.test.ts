@@ -5,12 +5,6 @@ import { ConnectorType } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 import { any } from 'zod';
 
-import { defaultConnectorMethods } from '#src/connectors/consts.js';
-import type { LogtoConnector } from '#src/connectors/types.js';
-import RequestError from '#src/errors/RequestError/index.js';
-import assertThat from '#src/utils/assert-that.js';
-import { createRequester } from '#src/utils/test-utils.js';
-
 import {
   mockMetadata,
   mockMetadata0,
@@ -22,6 +16,11 @@ import {
   mockLogtoConnectorList,
   mockLogtoConnector,
 } from '#src/__mocks__/index.js';
+import { defaultConnectorMethods } from '#src/connectors/consts.js';
+import type { LogtoConnector } from '#src/connectors/types.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import assertThat from '#src/utils/assert-that.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
@@ -189,7 +188,6 @@ describe('connector route', () => {
           metadata: { ...mockConnectorFactory.metadata, id: 'connectorId' },
         },
       ]);
-      countConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
