@@ -45,7 +45,6 @@ export const mockUserWithPassword: User = {
   isSuspended: false,
 };
 
-// Note: ordered by `created_at` desc
 export const mockUserList: User[] = [
   {
     id: '1',
@@ -61,7 +60,7 @@ export const mockUserList: User[] = [
     customData: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
-    createdAt: 1_650_969_000_999,
+    createdAt: 1_650_969_000_000,
     isSuspended: false,
   },
   {
@@ -78,7 +77,7 @@ export const mockUserList: User[] = [
     customData: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
-    createdAt: 1_650_969_000_998,
+    createdAt: 1_650_969_000_000,
     isSuspended: false,
   },
   {
@@ -95,7 +94,7 @@ export const mockUserList: User[] = [
     customData: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
-    createdAt: 1_650_969_000_997,
+    createdAt: 1_650_969_000_000,
     isSuspended: false,
   },
   {
@@ -129,7 +128,7 @@ export const mockUserList: User[] = [
     customData: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
-    createdAt: 1_650_969_000_996,
+    createdAt: 1_650_969_000_000,
     isSuspended: false,
   },
 ];
