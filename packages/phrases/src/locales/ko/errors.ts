@@ -110,6 +110,8 @@ const errors = {
     can_not_modify_target: 'The connector target can not be modified.', // UNTRANSLATED
     multiple_target_with_same_platform:
       'You can not have multiple social connectors that have same target and platform.', // UNTRANSLATED
+    cannot_change_metadata_for_non_standard_connector:
+      "This connector's `metadata` cannot be changed.", // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: '휴대전화번호 그리고 이메일이 비어있어요.',

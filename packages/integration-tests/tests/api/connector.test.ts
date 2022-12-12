@@ -71,8 +71,12 @@ test('connector set-up flow', async () => {
   /*
    * Change to another SMS/Email connector
    */
-  const { id } = await postConnector(mockStandardEmailConnectorId);
-  await updateConnectorConfig(id, mockStandardEmailConnectorConfig);
+  const { id } = await postConnector(mockStandardEmailConnectorId, {
+    target: 'mock-standard-mail',
+  }); // TODO [LOG-4862]: update mock connector
+  await updateConnectorConfig(id, mockStandardEmailConnectorConfig, {
+    target: 'mock-standard-mail',
+  }); // TODO [LOG-4862]: update mock connector
   connectorIdMap.set(mockStandardEmailConnectorId, id);
   const currentConnectors = await listConnectors();
   expect(
