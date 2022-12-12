@@ -42,7 +42,6 @@ export const identifierValidation = (
   // Email Identifier
   if ('email' in identifier) {
     assertThat(
-      // eslint-disable-next-line complexity
       signIn.methods.some(({ identifier: method, password, verificationCode }) => {
         if (method !== SignInIdentifier.Email) {
           return false;
@@ -74,7 +73,6 @@ export const identifierValidation = (
   // Phone Identifier
   if ('phone' in identifier) {
     assertThat(
-      // eslint-disable-next-line complexity
       signIn.methods.some(({ identifier: method, password, verificationCode }) => {
         if (method !== SignInIdentifier.Sms) {
           return false;

@@ -111,7 +111,6 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         syncProfile: true,
       }),
     }),
-    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         body: { connectorId },
