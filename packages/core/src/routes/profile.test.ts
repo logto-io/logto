@@ -15,6 +15,7 @@ import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
+const mockUserProfileResponse = { ...mockUserResponse, hasPasswordSet: true };
 const getLogtoConnectorById = jest.fn(async () => ({
   dbEntry: { enabled: true },
   metadata: { id: 'connectorId', target: 'mock_social' },
@@ -105,7 +106,7 @@ describe('session -> profileRoutes', () => {
     it('should return current user data', async () => {
       const response = await sessionRequest.get(profileRoute);
       expect(response.statusCode).toEqual(200);
-      expect(response.body).toEqual(mockUserResponse);
+      expect(response.body).toEqual(mockUserProfileResponse);
     });
 
     it('should throw when the user is not authenticated', async () => {
@@ -170,8 +171,7 @@ describe('session -> profileRoutes', () => {
         .patch(`${profileRoute}/username`)
         .send({ username: newUsername });
 
-      expect(response.statusCode).toEqual(200);
-      expect(response.body).toEqual({ ...mockUserResponse, username: newUsername });
+      expect(response.statusCode).toEqual(204);
     });
 
     it('should throw when username is already in use', async () => {

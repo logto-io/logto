@@ -18,9 +18,9 @@
   }
 }
 
-.backButton {
+.navButton {
   position: absolute;
-  left: _.unit(-2);
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
   font: var(--font-label-2);
@@ -29,13 +29,13 @@
 }
 
 :global(body.mobile) {
-  .backButton > span {
+  .navButton > span {
     display: none;
   }
 }
 
 :global(body.desktop) {
-  .backButton {
+  .navButton {
     &:hover {
       text-decoration: underline;
     }
