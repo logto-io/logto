@@ -13,7 +13,6 @@ const sign_in_exp = {
     get_started: 'Iniciar',
     apply_remind:
       'Observe que a experiência de login será aplicada a todos os aplicativos nesta conta.',
-    got_it: 'Entendi',
   },
   color: {
     title: 'COR',
@@ -135,7 +134,6 @@ const sign_in_exp = {
       default_language_deletion_title: 'O idioma padrão não pode ser excluído.',
       default_language_deletion_description:
         '{{language}} está definido como seu idioma padrão e não pode ser excluído. ',
-      got_it: 'Entendi',
     },
     advanced_options: {
       title: 'OPÇÕES AVANÇADAS',

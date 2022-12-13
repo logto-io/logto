@@ -12,7 +12,6 @@ const sign_in_exp = {
     get_started: 'Get Started',
     apply_remind:
       'Please note that sign-in experience will apply to all applications under this account.',
-    got_it: 'Got It',
   },
   color: {
     title: 'COLOR',
@@ -133,7 +132,6 @@ const sign_in_exp = {
       default_language_deletion_title: 'Default language can’t be deleted.',
       default_language_deletion_description:
         '{{language}} is set as your default language and can’t be deleted. ',
-      got_it: 'Got It',
     },
     advanced_options: {
       title: 'ADVANCED OPTIONS',

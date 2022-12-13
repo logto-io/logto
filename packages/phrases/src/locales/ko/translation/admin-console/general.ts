@@ -37,7 +37,7 @@ const general = {
   leave_page: '페이지 나가기',
   stay_on_page: '페이지 유지하기',
   type_to_search: 'Type to search', // UNTRANSLATED
-  got_it: 'Got it', // UNTRANSLATED
+  got_it: '네',
   page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
   learn_more: 'Learn more', // UNTRANSLATED
   tab_errors: '{{count, number}} errors', // UNTRANSLATED
