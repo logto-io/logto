@@ -9,22 +9,26 @@ export const getConnector = async (connectorId: string) =>
   authedAdminApi.get(`connectors/${connectorId}`).json<ConnectorResponse>();
 
 // FIXME @Darcy: correct use of `id` and `connectorId`.
-export const postConnector = async (connectorId: string) =>
+export const postConnector = async (connectorId: string, metadata?: Record<string, unknown>) =>
   authedAdminApi
     .post({
       url: `connectors`,
-      json: { connectorId },
+      json: { connectorId, metadata },
     })
     .json<Connector>();
 
 export const deleteConnectorById = async (id: string) =>
   authedAdminApi.delete({ url: `connectors/${id}` }).json();
 
-export const updateConnectorConfig = async (connectorId: string, config: Record<string, unknown>) =>
+export const updateConnectorConfig = async (
+  connectorId: string,
+  config: Record<string, unknown>,
+  metadata?: Record<string, unknown>
+) =>
   authedAdminApi
     .patch({
       url: `connectors/${connectorId}`,
-      json: { config },
+      json: { config, metadata },
     })
     .json<ConnectorResponse>();
 

@@ -5,6 +5,7 @@ import type { KeyboardEvent } from 'react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import CirclePlus from '@/assets/images/circle-plus.svg';
 import Minus from '@/assets/images/minus.svg';
 
 import Button from '../Button';
@@ -106,6 +107,7 @@ const MultiTextInput = ({
         type="text"
         title="general.add_another"
         className={styles.addAnother}
+        icon={<CirclePlus />}
         onClick={handleAdd}
       />
       <ConfirmModal

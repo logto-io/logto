@@ -33,7 +33,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     'Varsayılan olarak, Yönlendirme URIlerinin tüm originlerine izin verilir. Genellikle bu alan için herhangi bir işlem gerekmez. See the <a>MDN doc</a> for detailed info.', // UNTRANSLATED
-  add_another: 'Bir tane daha ekle',
   id_token_expiration: 'ID Token sona erme süresi',
   refresh_token_expiration: 'Refresh Token sona erme süresi',
   token_endpoint: 'Token bitiş noktası',

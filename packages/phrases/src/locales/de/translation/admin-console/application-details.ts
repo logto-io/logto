@@ -33,7 +33,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.de',
   cors_allowed_origins_tip:
     'Es sind standardmäßig alle Umleitungs-URI Origins erlaubt. Normalerweise ist dieses Feld nicht erforderlich. See the <a>MDN doc</a> for detailed info.', // UNTRANSLATED
-  add_another: 'Weitere hinzufügen',
   id_token_expiration: 'ID Token Ablaufzeit',
   refresh_token_expiration: 'Refresh Token Ablaufzeit',
   token_endpoint: 'Token Endpoint',

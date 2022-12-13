@@ -6,6 +6,7 @@ import i18next from 'i18next';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import Close from '@/assets/images/close.svg';
 import Button from '@/components/Button';
@@ -30,6 +31,7 @@ type Props = {
 
 const Guide = ({ connector, onClose }: Props) => {
   const api = useApi();
+  const navigate = useNavigate();
   const { updateSettings } = useSettings();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { id: connectorId, type: connectorType, name, readme, isStandard } = connector;
@@ -65,19 +67,24 @@ const Guide = ({ connector, onClose }: Props) => {
 
     const { id: connectorId } = connector;
 
-    await api
+    const basePayload = {
+      config: result.data,
+      connectorId,
+      metadata: conditional(
+        isStandard && {
+          ...otherData,
+          name: { en: name },
+        }
+      ),
+    };
+
+    const payload = isSocialConnector
+      ? { ...basePayload, syncProfile: syncProfile === SyncProfileMode.EachSignIn }
+      : basePayload;
+
+    const createdConnector = await api
       .post('/api/connectors', {
-        json: {
-          config: result.data,
-          connectorId,
-          syncProfile: syncProfile === SyncProfileMode.EachSignIn,
-          metadata: conditional(
-            isStandard && {
-              ...otherData,
-              name: { en: name },
-            }
-          ),
-        },
+        json: payload,
       })
       .json<ConnectorResponse>();
 
@@ -88,6 +95,7 @@ const Guide = ({ connector, onClose }: Props) => {
 
     onClose();
     toast.success(t('general.saved'));
+    navigate(`/connectors/${createdConnector.id}`);
   });
 
   return (

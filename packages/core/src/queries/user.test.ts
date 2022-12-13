@@ -307,6 +307,7 @@ describe('user query', () => {
       where ${fields.primaryEmail} ilike $1 or ${fields.primaryPhone} ilike $2 or ${
       fields.username
     } ilike $3 or ${fields.name} ilike $4
+      order by "created_at" desc
       limit $5
       offset $6
     `;
@@ -339,6 +340,7 @@ describe('user query', () => {
       and (${fields.primaryEmail} ilike $2 or ${fields.primaryPhone} ilike $3 or ${
       fields.username
     } ilike $4 or ${fields.name} ilike $5)
+      order by "created_at" desc
       limit $6
       offset $7
     `;
@@ -371,6 +373,7 @@ describe('user query', () => {
       where ${fields.primaryEmail} like $1 or ${fields.primaryPhone} like $2 or ${
       fields.username
     } like $3 or ${fields.name} like $4
+      order by "created_at" desc
       limit $5
       offset $6
     `;

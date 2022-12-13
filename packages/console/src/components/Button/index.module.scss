@@ -40,9 +40,8 @@
   }
 
   .icon {
-    display: block;
-    width: 20px;
-    height: 20px;
+    display: flex;
+    align-items: center;
 
     &:not(:last-child) {
       margin-right: _.unit(2);
@@ -61,6 +60,12 @@
 
     &.text {
       height: 24px;
+    }
+
+    .icon {
+      &:not(:last-child) {
+        margin-right: _.unit(1);
+      }
     }
   }
 
