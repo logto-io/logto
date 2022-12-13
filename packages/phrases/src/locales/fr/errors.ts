@@ -1,4 +1,7 @@
 const errors = {
+  request: {
+    invalid_input: 'Input is invalid. {{details}}', // UNTRANSLATED
+  },
   auth: {
     authorization_header_missing: "L'en-tête d'autorisation est manquant.",
     authorization_token_type_not_supported: "Le type d'autorisation n'est pas pris en charge.",

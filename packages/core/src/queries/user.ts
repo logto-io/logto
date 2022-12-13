@@ -100,8 +100,9 @@ const buildUserConditions = (search: Search, hideAdminUser: boolean) => {
   ];
 
   if (hideAdminUser) {
+    // Cannot use \`= any()\` here since we didn't find the Slonik way to do so. Consider replacing Slonik.
     return sql`
-      where not ${UserRole.Admin}=any(${fields.roleNames})
+      where not ${fields.roleNames} @> ${sql.jsonb([UserRole.Admin])}
       ${conditionalSql(
         hasSearch,
         () => sql`and (${buildConditionsFromSearch(search, searchFields)})`

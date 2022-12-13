@@ -1,4 +1,7 @@
 const errors = {
+  request: {
+    invalid_input: 'Input is invalid. {{details}}',
+  },
   auth: {
     authorization_header_missing: 'Authorization header is missing.',
     authorization_token_type_not_supported: 'Authorization type is not supported.',

@@ -1,7 +1,8 @@
 {
   "exec": "tsc -p tsconfig.build.json --incremental && node ./build/index.js || exit 1",
   "ignore": [
-    "node_modules/**/node_modules"
+    "node_modules/**/node_modules",
+    "../integration-tests/"
   ],
   "watch": [
     "../*/lib/",

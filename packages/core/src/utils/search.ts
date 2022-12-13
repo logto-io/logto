@@ -202,7 +202,7 @@ export const buildConditionsFromSearch = (search: Search, searchFields: string[]
     }
 
     const valueExpression =
-      values.length === 1 ? sql`${values[0]}` : sql`any(${sql.array(values, 'string')})`;
+      values.length === 1 ? sql`${values[0]}` : sql`any(${sql.array(values, 'varchar')})`;
 
     return sql`(${sql.join(
       fields.map(

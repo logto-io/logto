@@ -2,12 +2,14 @@ import type { User } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
-type CreateUserPayload = {
-  primaryEmail?: string;
+type CreateUserPayload = Partial<{
+  primaryEmail: string;
+  primaryPhone: string;
   username: string;
   password: string;
   name: string;
-};
+  isAdmin: boolean;
+}>;
 
 export const createUser = (payload: CreateUserPayload) =>
   authedAdminApi

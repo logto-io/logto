@@ -1,4 +1,7 @@
 const errors = {
+  request: {
+    invalid_input: 'Input is invalid. {{details}}', // UNTRANSLATED
+  },
   auth: {
     authorization_header_missing: 'O cabeçalho de autorização está ausente.',
     authorization_token_type_not_supported: 'O tipo de autorização não é suportado.',
