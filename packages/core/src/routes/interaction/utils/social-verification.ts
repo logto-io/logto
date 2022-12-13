@@ -1,3 +1,4 @@
+import type { GetSession, SetSession } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 
@@ -9,7 +10,10 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { SocialAuthorizationUrlPayload } from '../types/index.js';
 
-export const createSocialAuthorizationUrl = async (payload: SocialAuthorizationUrlPayload) => {
+export const createSocialAuthorizationUrl = async (
+  payload: SocialAuthorizationUrlPayload,
+  setConnectorSession?: SetSession
+) => {
   const { connectorId, state, redirectUri } = payload;
   assertThat(state && redirectUri, 'session.insufficient_info');
 
@@ -17,17 +21,18 @@ export const createSocialAuthorizationUrl = async (payload: SocialAuthorizationU
 
   assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
 
-  return connector.getAuthorizationUri({ state, redirectUri });
+  return connector.getAuthorizationUri({ state, redirectUri }, setConnectorSession);
 };
 
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
-  createLog: LogContext['createLog']
+  createLog: LogContext['createLog'],
+  getSession?: GetSession
 ): Promise<SocialUserInfo> => {
   const log = createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 
-  const userInfo = await getUserInfoByAuthCode(connectorId, connectorData);
+  const userInfo = await getUserInfoByAuthCode(connectorId, connectorData, getSession);
 
   log.append(userInfo);
 

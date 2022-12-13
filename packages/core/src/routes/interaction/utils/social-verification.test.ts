@@ -24,11 +24,16 @@ const log = createMockLogContext();
 
 describe('social-verification', () => {
   it('verifySocialIdentity', async () => {
+    const getStorage = jest.fn();
     const connectorId = 'connector';
     const connectorData = { authCode: 'code' };
-    const userInfo = await verifySocialIdentity({ connectorId, connectorData }, log.createLog);
+    const userInfo = await verifySocialIdentity(
+      { connectorId, connectorData },
+      log.createLog,
+      getStorage
+    );
 
-    expect(getUserInfoByAuthCode).toBeCalledWith(connectorId, connectorData);
+    expect(getUserInfoByAuthCode).toBeCalledWith(connectorId, connectorData, getStorage);
     expect(userInfo).toEqual({ id: 'foo' });
   });
 });

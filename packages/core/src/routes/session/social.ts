@@ -1,3 +1,4 @@
+import type { ConnectorSession } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
 import { ConnectorType, userInfoSelectFields } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -29,7 +30,12 @@ import assertThat from '#src/utils/assert-that.js';
 import { maskUserInfo } from '#src/utils/format.js';
 
 import type { AnonymousRouterLegacy } from '../types.js';
-import { checkRequiredProfile, getRoutePrefix } from './utils.js';
+import {
+  checkRequiredProfile,
+  getRoutePrefix,
+  assignConnectorSessionResult,
+  getConnectorSessionResult,
+} from './utils.js';
 
 export const registerRoute = getRoutePrefix('register', 'social');
 export const signInRoute = getRoutePrefix('sign-in', 'social');
@@ -53,7 +59,11 @@ export default function socialRoutes<T extends AnonymousRouterLegacy>(
       assertThat(state && redirectUri, 'session.insufficient_info');
       const connector = await getLogtoConnectorById(connectorId);
       assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
-      const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
+      const redirectTo = await connector.getAuthorizationUri(
+        { state, redirectUri },
+        async (connectorStorage: ConnectorSession) =>
+          assignConnectorSessionResult(ctx, provider, connectorStorage)
+      );
       ctx.body = { redirectTo };
 
       return next();
@@ -79,7 +89,9 @@ export default function socialRoutes<T extends AnonymousRouterLegacy>(
         dbEntry: { syncProfile },
       } = await getLogtoConnectorById(connectorId);
 
-      const userInfo = await getUserInfoByAuthCode(connectorId, data);
+      const userInfo = await getUserInfoByAuthCode(connectorId, data, async () =>
+        getConnectorSessionResult(ctx, provider)
+      );
       ctx.log(type, { userInfo });
 
       const user = await findUserByIdentity(target, userInfo.id);

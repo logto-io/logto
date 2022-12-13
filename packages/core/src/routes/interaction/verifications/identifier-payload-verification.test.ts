@@ -199,7 +199,11 @@ describe('identifier verification', () => {
 
     const result = await identifierPayloadVerification(ctx, createMockProvider());
 
-    expect(verifySocialIdentity).toBeCalledWith(identifier, logContext.createLog);
+    expect(verifySocialIdentity).toBeCalledWith(
+      identifier,
+      logContext.createLog,
+      expect.anything()
+    );
     expect(findUserByIdentifier).not.toBeCalled();
 
     expect(result).toEqual({

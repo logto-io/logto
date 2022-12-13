@@ -85,6 +85,8 @@ const errors = {
     forgot_password_not_enabled: 'Forgot password is not enabled.',
     verification_failed:
       'The verification was not successful. Restart the verification flow and try again.',
+    connector_validation_session_not_found:
+      'The connector session for token validation is not found.',
   },
   connector: {
     general: 'An unexpected error occurred in connector.{{errorDescription}}',

@@ -85,6 +85,8 @@ const errors = {
     forgot_password_not_enabled: 'Forgot password is not enabled.',
     verification_failed:
       'Die Verifizierung war nicht erfolgreich. Starte die Verifizierung neu und versuche es erneut.',
+    connector_validation_session_not_found:
+      'The connector session for token validation is not found.', // UNTRANSLATED
   },
   connector: {
     // UNTRANSLATED

@@ -1,3 +1,4 @@
+import type { GetSession } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
@@ -34,7 +35,8 @@ const getConnector = async (connectorId: string) => {
 
 export const getUserInfoByAuthCode = async (
   connectorId: string,
-  data: unknown
+  data: unknown,
+  getConnectorSession?: GetSession
 ): Promise<SocialUserInfo> => {
   const connector = await getConnector(connectorId);
 
@@ -47,7 +49,7 @@ export const getUserInfoByAuthCode = async (
     })
   );
 
-  return connector.getUserInfo(data);
+  return connector.getUserInfo(data, getConnectorSession);
 };
 
 export const getUserInfoFromInteractionResult = async (

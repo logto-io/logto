@@ -1,3 +1,5 @@
+import type { ConnectorSession } from '@logto/connector-kit';
+import { connectorSessionGuard } from '@logto/connector-kit';
 import type { PasscodeType, SignInExperience, User } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import type { LogPayload, LogType } from '@logto/schemas/lib/types/log-legacy.js';
@@ -153,6 +155,35 @@ export const getContinueSignInResult = async (
   );
 
   return rest;
+};
+
+export const assignConnectorSessionResult = async (
+  ctx: Context,
+  provider: Provider,
+  connectorSession: ConnectorSession
+) => {
+  const details = await provider.interactionDetails(ctx.req, ctx.res);
+  await provider.interactionResult(ctx.req, ctx.res, {
+    ...details.result,
+    connectorSession,
+  });
+};
+
+export const getConnectorSessionResult = async (
+  ctx: Context,
+  provider: Provider
+): Promise<ConnectorSession> => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  const signInResult = z
+    .object({
+      connectorSession: connectorSessionGuard,
+    })
+    .safeParse(result);
+
+  assertThat(signInResult.success, 'session.connector_validation_session_not_found');
+
+  return signInResult.data.connectorSession;
 };
 
 export const isUserPasswordSet = ({
