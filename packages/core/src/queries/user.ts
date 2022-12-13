@@ -145,6 +145,7 @@ export const findUsers = async (
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
       ${buildUserConditions(search, hideAdminUser, isCaseSensitive)}
+      order by ${fields.createdAt} desc
       limit ${limit}
       offset ${offset}
     `
