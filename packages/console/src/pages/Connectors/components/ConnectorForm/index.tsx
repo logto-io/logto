@@ -1,4 +1,5 @@
 import type { ConnectorFactoryResponse } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -102,16 +103,18 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
           )}
         />
       </FormField>
-      <FormField title="connectors.guide.sync_profile">
-        <Controller
-          name="syncProfile"
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, value } }) => (
-            <Select options={syncProfileOptions} value={value} onChange={onChange} />
-          )}
-        />
-      </FormField>
+      {connector.type === ConnectorType.Social && (
+        <FormField title="connectors.guide.sync_profile">
+          <Controller
+            name="syncProfile"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, value } }) => (
+              <Select options={syncProfileOptions} value={value} onChange={onChange} />
+            )}
+          />
+        </FormField>
+      )}
     </div>
   );
 };

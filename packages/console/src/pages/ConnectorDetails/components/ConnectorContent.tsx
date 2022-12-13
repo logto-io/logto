@@ -67,10 +67,13 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       return;
     }
 
-    const payload = {
-      config: result.data,
-      syncProfile: syncProfile === SyncProfileMode.EachSignIn,
-    };
+    const payload =
+      connectorData.type === ConnectorType.Social
+        ? {
+            config: result.data,
+            syncProfile: syncProfile === SyncProfileMode.EachSignIn,
+          }
+        : { config: result.data };
     const standardConnectorPayload = {
       ...payload,
       metadata: { ...metadata, name: { en: metadata.name } },

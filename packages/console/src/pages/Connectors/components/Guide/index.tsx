@@ -67,19 +67,24 @@ const Guide = ({ connector, onClose }: Props) => {
 
     const { id: connectorId } = connector;
 
+    const basePayload = {
+      config: result.data,
+      connectorId,
+      metadata: conditional(
+        isStandard && {
+          ...otherData,
+          name: { en: name },
+        }
+      ),
+    };
+
+    const payload = isSocialConnector
+      ? { ...basePayload, syncProfile: syncProfile === SyncProfileMode.EachSignIn }
+      : basePayload;
+
     const createdConnector = await api
       .post('/api/connectors', {
-        json: {
-          config: result.data,
-          connectorId,
-          syncProfile: syncProfile === SyncProfileMode.EachSignIn,
-          metadata: conditional(
-            isStandard && {
-              ...otherData,
-              name: { en: name },
-            }
-          ),
-        },
+        json: payload,
       })
       .json<ConnectorResponse>();
 
