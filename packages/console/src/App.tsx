@@ -31,6 +31,7 @@ import UserDetails from '@/pages/UserDetails';
 import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
+import { signInExperiencePage } from './consts/page-tabs';
 import { getBasename } from './utilities/router';
 
 void initI18n();
@@ -73,7 +74,7 @@ const Main = () => {
                 <Route path=":userId/logs/:logId" element={<AuditLogDetails />} />
               </Route>
               <Route path="sign-in-experience">
-                <Route index element={<Navigate replace to="branding" />} />
+                <Route index element={<Navigate replace to={signInExperiencePage.brandingTab} />} />
                 <Route path=":tab" element={<SignInExperience />} />
               </Route>
               <Route path="settings" element={<Settings />} />
