@@ -105,8 +105,8 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/core-kit': 1.0.0-beta.28
-      '@logto/language-kit': 1.0.0-beta.28
+      '@logto/core-kit': 1.0.0-beta.29
+      '@logto/language-kit': 1.0.0-beta.29
       '@logto/phrases': workspace:*
       '@logto/phrases-ui': workspace:*
       '@logto/react': 1.0.0-beta.14
@@ -177,8 +177,8 @@ importers:
       zod: ^3.19.1
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
-      '@logto/core-kit': 1.0.0-beta.28_zod@3.19.1
-      '@logto/language-kit': 1.0.0-beta.28_zod@3.19.1
+      '@logto/core-kit': 1.0.0-beta.29_zod@3.19.1
+      '@logto/language-kit': 1.0.0-beta.29_zod@3.19.1
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/react': 1.0.0-beta.14_react@18.2.0
@@ -251,9 +251,9 @@ importers:
   packages/core:
     specifiers:
       '@logto/cli': workspace:*
-      '@logto/connector-kit': 1.0.0-beta.28
-      '@logto/core-kit': 1.0.0-beta.28
-      '@logto/language-kit': 1.0.0-beta.28
+      '@logto/connector-kit': 1.0.0-beta.29
+      '@logto/core-kit': 1.0.0-beta.29
+      '@logto/language-kit': 1.0.0-beta.29
       '@logto/phrases': workspace:*
       '@logto/phrases-ui': workspace:*
       '@logto/schemas': workspace:*
@@ -327,9 +327,9 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@logto/cli': link:../cli
-      '@logto/connector-kit': 1.0.0-beta.28_zod@3.19.1
-      '@logto/core-kit': 1.0.0-beta.28_zod@3.19.1
-      '@logto/language-kit': 1.0.0-beta.28_zod@3.19.1
+      '@logto/connector-kit': 1.0.0-beta.29_zod@3.19.1
+      '@logto/core-kit': 1.0.0-beta.29_zod@3.19.1
+      '@logto/language-kit': 1.0.0-beta.29_zod@3.19.1
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
@@ -411,8 +411,8 @@ importers:
 
   packages/demo-app:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.28
-      '@logto/language-kit': 1.0.0-beta.28
+      '@logto/core-kit': 1.0.0-beta.29
+      '@logto/language-kit': 1.0.0-beta.29
       '@logto/phrases': workspace:*
       '@logto/react': 1.0.0-beta.14
       '@logto/schemas': workspace:*
@@ -439,8 +439,8 @@ importers:
       typescript: ^4.9.4
       zod: ^3.19.1
     devDependencies:
-      '@logto/core-kit': 1.0.0-beta.28_zod@3.19.1
-      '@logto/language-kit': 1.0.0-beta.28_zod@3.19.1
+      '@logto/core-kit': 1.0.0-beta.29_zod@3.19.1
+      '@logto/language-kit': 1.0.0-beta.29_zod@3.19.1
       '@logto/phrases': link:../phrases
       '@logto/react': 1.0.0-beta.14_react@18.2.0
       '@logto/schemas': link:../schemas
@@ -519,8 +519,8 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.28
-      '@logto/language-kit': 1.0.0-beta.28
+      '@logto/core-kit': 1.0.0-beta.29
+      '@logto/language-kit': 1.0.0-beta.29
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/essentials': ^1.3.0
       '@silverhand/ts-config': 1.2.1
@@ -530,8 +530,8 @@ importers:
       typescript: ^4.9.4
       zod: ^3.19.1
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.28_zod@3.19.1
-      '@logto/language-kit': 1.0.0-beta.28_zod@3.19.1
+      '@logto/core-kit': 1.0.0-beta.29_zod@3.19.1
+      '@logto/language-kit': 1.0.0-beta.29_zod@3.19.1
       '@silverhand/essentials': 1.3.0
       zod: 3.19.1
     devDependencies:
@@ -544,8 +544,8 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.28
-      '@logto/language-kit': 1.0.0-beta.28
+      '@logto/core-kit': 1.0.0-beta.29
+      '@logto/language-kit': 1.0.0-beta.29
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/essentials': ^1.3.0
       '@silverhand/ts-config': 1.2.1
@@ -555,8 +555,8 @@ importers:
       typescript: ^4.9.4
       zod: ^3.19.1
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.28_zod@3.19.1
-      '@logto/language-kit': 1.0.0-beta.28_zod@3.19.1
+      '@logto/core-kit': 1.0.0-beta.29_zod@3.19.1
+      '@logto/language-kit': 1.0.0-beta.29_zod@3.19.1
       '@silverhand/essentials': 1.3.0
       zod: 3.19.1
     devDependencies:
@@ -569,9 +569,9 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-kit': 1.0.0-beta.28
-      '@logto/core-kit': 1.0.0-beta.28
-      '@logto/language-kit': 1.0.0-beta.28
+      '@logto/connector-kit': 1.0.0-beta.29
+      '@logto/core-kit': 1.0.0-beta.29
+      '@logto/language-kit': 1.0.0-beta.29
       '@logto/phrases': workspace:*
       '@logto/phrases-ui': workspace:*
       '@silverhand/eslint-config': 1.3.0
@@ -592,9 +592,9 @@ importers:
       typescript: ^4.9.4
       zod: ^3.19.1
     dependencies:
-      '@logto/connector-kit': 1.0.0-beta.28_zod@3.19.1
-      '@logto/core-kit': 1.0.0-beta.28_zod@3.19.1
-      '@logto/language-kit': 1.0.0-beta.28_zod@3.19.1
+      '@logto/connector-kit': 1.0.0-beta.29_zod@3.19.1
+      '@logto/core-kit': 1.0.0-beta.29_zod@3.19.1
+      '@logto/language-kit': 1.0.0-beta.29_zod@3.19.1
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       zod: 3.19.1
@@ -651,8 +651,8 @@ importers:
 
   packages/ui:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.28
-      '@logto/language-kit': 1.0.0-beta.28
+      '@logto/core-kit': 1.0.0-beta.29
+      '@logto/language-kit': 1.0.0-beta.29
       '@logto/phrases': workspace:*
       '@logto/phrases-ui': workspace:*
       '@logto/schemas': workspace:*
@@ -705,8 +705,8 @@ importers:
       use-debounced-loader: ^0.1.1
       zod: ^3.19.1
     devDependencies:
-      '@logto/core-kit': 1.0.0-beta.28_zod@3.19.1
-      '@logto/language-kit': 1.0.0-beta.28_zod@3.19.1
+      '@logto/core-kit': 1.0.0-beta.29_zod@3.19.1
+      '@logto/language-kit': 1.0.0-beta.29_zod@3.19.1
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
@@ -1703,13 +1703,6 @@ packages:
       '@cspotcode/source-map-consumer': 0.8.0
     dev: true
 
-  /@cspotcode/source-map-support/0.8.1:
-    resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
-    engines: {node: '>=12'}
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.9
-    dev: true
-
   /@csstools/selector-specificity/2.0.2_444rcjjorr3kpoqtvoodsr46pu:
     resolution: {integrity: sha512-IkpVW/ehM1hWKln4fCA3NzJU8KwD+kIOvPZA4cqxoJHtE21CCzjyp+Kxbu0i5I4tBNOlXPL9mjwnWlL0VEG4Fg==}
     engines: {node: ^12 || ^14 || >=16}
@@ -1833,48 +1826,6 @@ packages:
       graceful-fs: 4.2.10
       jest-changed-files: 29.0.0
       jest-config: 29.1.2_@types+node@17.0.23
-      jest-haste-map: 29.1.2
-      jest-message-util: 29.1.2
-      jest-regex-util: 29.0.0
-      jest-resolve: 29.1.2
-      jest-resolve-dependencies: 29.1.2
-      jest-runner: 29.1.2
-      jest-runtime: 29.1.2
-      jest-snapshot: 29.1.2
-      jest-util: 29.2.1
-      jest-validate: 29.1.2
-      jest-watcher: 29.1.2
-      micromatch: 4.0.5
-      pretty-format: 29.1.2
-      slash: 3.0.0
-      strip-ansi: 6.0.1
-    transitivePeerDependencies:
-      - supports-color
-      - ts-node
-    dev: true
-
-  /@jest/core/29.1.2_ts-node@10.9.1:
-    resolution: {integrity: sha512-sCO2Va1gikvQU2ynDN8V4+6wB7iVrD2CvT0zaRst4rglf56yLly0NQ9nuRRAWFeimRf+tCdFsb1Vk1N9LrrMPA==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@jest/console': 29.1.2
-      '@jest/reporters': 29.1.2
-      '@jest/test-result': 29.1.2
-      '@jest/transform': 29.1.2
-      '@jest/types': 29.2.1
-      '@types/node': 17.0.23
-      ansi-escapes: 4.3.2
-      chalk: 4.1.2
-      ci-info: 3.5.0
-      exit: 0.1.2
-      graceful-fs: 4.2.10
-      jest-changed-files: 29.0.0
-      jest-config: 29.1.2_hvivgrlmkyd4vgu6rkkmg6acly
       jest-haste-map: 29.1.2
       jest-message-util: 29.1.2
       jest-regex-util: 29.0.0
@@ -2346,13 +2297,6 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@jridgewell/trace-mapping/0.3.9:
-    resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
-    dependencies:
-      '@jridgewell/resolve-uri': 3.1.0
-      '@jridgewell/sourcemap-codec': 1.4.14
-    dev: true
-
   /@koa/cors/3.4.3:
     resolution: {integrity: sha512-WPXQUaAeAMVaLTEFpoq3T2O1C+FstkjJnDQqy95Ck1UdILajsRhu6mhJ8H2f4NFPRBoCNN+qywTJfq/gGki5mw==}
     engines: {node: '>= 8.0.0'}
@@ -2438,14 +2382,14 @@ packages:
       lodash.once: 4.1.1
     dev: true
 
-  /@logto/connector-kit/1.0.0-beta.28_zod@3.19.1:
-    resolution: {integrity: sha512-f+Hnn84nC6cnu6jwKLDAYo2+rNypHhWhs1NWYQKWVPUtIoLBKircLKGlvVjzEQnXZM6Cnd47X1Zk15IVFhraWA==}
+  /@logto/connector-kit/1.0.0-beta.29_zod@3.19.1:
+    resolution: {integrity: sha512-YwIRHrPrCQmz0SkIpPikGoZiE+ATj5aAfgqfZvdkgcb4K0pdj5DS8isW76couL7ZcJDJBWpvxPF8JATg1QeC1A==}
     engines: {node: ^16.13.0 || ^18.12.0}
     peerDependencies:
       zod: ^3.19.1
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.28_zod@3.19.1
-      '@logto/language-kit': 1.0.0-beta.28_zod@3.19.1
+      '@logto/core-kit': 1.0.0-beta.29_zod@3.19.1
+      '@logto/language-kit': 1.0.0-beta.29_zod@3.19.1
       '@silverhand/essentials': 1.3.0
       zod: 3.19.1
     dev: false
@@ -2460,13 +2404,13 @@ packages:
       zod: 3.20.0
     dev: true
 
-  /@logto/core-kit/1.0.0-beta.28_zod@3.19.1:
-    resolution: {integrity: sha512-tbT34SupNvk7mriMhBq32KknCEe+qm7LrZBc2E7JDD3FBJmMxyHQCJgdPBlnR+0sXB0uG32NmYwLqG4p9slAPw==}
+  /@logto/core-kit/1.0.0-beta.29_zod@3.19.1:
+    resolution: {integrity: sha512-I1Tb4gOP3/Wga3cVmmCnyZixy5XbJlpucKuscYdhqZzIF9iHKZRBaRVCPKsvL+1nuoSyl5bWCyIi4s5msqQLCg==}
     engines: {node: ^16.13.0 || ^18.12.0}
     peerDependencies:
       zod: ^3.19.1
     dependencies:
-      '@logto/language-kit': 1.0.0-beta.28_zod@3.19.1
+      '@logto/language-kit': 1.0.0-beta.29_zod@3.19.1
       color: 4.2.3
       nanoid: 3.3.4
       zod: 3.19.1
@@ -2481,8 +2425,8 @@ packages:
       lodash.get: 4.4.2
     dev: true
 
-  /@logto/language-kit/1.0.0-beta.28_zod@3.19.1:
-    resolution: {integrity: sha512-levNkJ0uiTufnn0r8dLZLdPKgRFiV5mSQ0H04AhpP9dHlm7+1PMRspoi8NjcQqUgemhmcwpP8oCtn4rgW8vpJA==}
+  /@logto/language-kit/1.0.0-beta.29_zod@3.19.1:
+    resolution: {integrity: sha512-+YeAkawjEq0vwwnqq8RDrDKePWE6x1q2WdpLXtj0H6SQ3GB9pXcYLecjnANHOHB4Zp9Jnxd4eBGogNRWvspikg==}
     engines: {node: ^16.13.0 || ^18.12.0}
     peerDependencies:
       zod: ^3.19.1
@@ -3587,7 +3531,7 @@ packages:
       '@jest/types': 29.1.2
       deepmerge: 4.2.2
       identity-obj-proxy: 3.0.0
-      jest: 29.1.2_k5ytkvaprncdyzidqqws5bqksq
+      jest: 29.1.2
       jest-matcher-specific-error: 1.0.0
       jest-transform-stub: 2.0.0
       ts-jest: 29.0.3_5xcodqox2j6ogkdcajmxw2vjdu
@@ -7615,7 +7559,6 @@ packages:
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
-    dev: true
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
@@ -8712,34 +8655,6 @@ packages:
       - ts-node
     dev: true
 
-  /jest-cli/29.1.2_k5ytkvaprncdyzidqqws5bqksq:
-    resolution: {integrity: sha512-vsvBfQ7oS2o4MJdAH+4u9z76Vw5Q8WBQF5MchDbkylNknZdrPTX1Ix7YRJyTlOWqRaS7ue/cEAn+E4V1MWyMzw==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    hasBin: true
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@jest/core': 29.1.2_ts-node@10.9.1
-      '@jest/test-result': 29.1.2
-      '@jest/types': 29.2.1
-      chalk: 4.1.2
-      exit: 0.1.2
-      graceful-fs: 4.2.10
-      import-local: 3.1.0
-      jest-config: 29.1.2_k5ytkvaprncdyzidqqws5bqksq
-      jest-util: 29.2.1
-      jest-validate: 29.1.2
-      prompts: 2.4.2
-      yargs: 17.6.0
-    transitivePeerDependencies:
-      - '@types/node'
-      - supports-color
-      - ts-node
-    dev: true
-
   /jest-cli/29.3.1_@types+node@16.11.12:
     resolution: {integrity: sha512-TO/ewvwyvPOiBBuWZ0gm04z3WWP8TIK8acgPzE4IxgsLKQgb377NYGrQLc3Wl/7ndWzIH2CDNNsUjGxwLL43VQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -8880,86 +8795,6 @@ packages:
       pretty-format: 29.2.1
       slash: 3.0.0
       strip-json-comments: 3.1.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /jest-config/29.1.2_hvivgrlmkyd4vgu6rkkmg6acly:
-    resolution: {integrity: sha512-EC3Zi86HJUOz+2YWQcJYQXlf0zuBhJoeyxLM6vb6qJsVmpP7KcCP1JnyF0iaqTaXdBP8Rlwsvs7hnKWQWWLwwA==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    peerDependencies:
-      '@types/node': '*'
-      ts-node: '>=9.0.0'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      ts-node:
-        optional: true
-    dependencies:
-      '@babel/core': 7.19.3
-      '@jest/test-sequencer': 29.1.2
-      '@jest/types': 29.2.1
-      '@types/node': 17.0.23
-      babel-jest: 29.1.2_@babel+core@7.19.3
-      chalk: 4.1.2
-      ci-info: 3.5.0
-      deepmerge: 4.2.2
-      glob: 7.2.3
-      graceful-fs: 4.2.10
-      jest-circus: 29.1.2
-      jest-environment-node: 29.1.2
-      jest-get-type: 29.0.0
-      jest-regex-util: 29.0.0
-      jest-resolve: 29.1.2
-      jest-runner: 29.1.2
-      jest-util: 29.2.1
-      jest-validate: 29.1.2
-      micromatch: 4.0.5
-      parse-json: 5.2.0
-      pretty-format: 29.2.1
-      slash: 3.0.0
-      strip-json-comments: 3.1.1
-      ts-node: 10.9.1_ace2mtubvwruu4qt46fm3vtq3a
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /jest-config/29.1.2_k5ytkvaprncdyzidqqws5bqksq:
-    resolution: {integrity: sha512-EC3Zi86HJUOz+2YWQcJYQXlf0zuBhJoeyxLM6vb6qJsVmpP7KcCP1JnyF0iaqTaXdBP8Rlwsvs7hnKWQWWLwwA==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    peerDependencies:
-      '@types/node': '*'
-      ts-node: '>=9.0.0'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      ts-node:
-        optional: true
-    dependencies:
-      '@babel/core': 7.19.3
-      '@jest/test-sequencer': 29.1.2
-      '@jest/types': 29.2.1
-      '@types/node': 16.11.12
-      babel-jest: 29.1.2_@babel+core@7.19.3
-      chalk: 4.1.2
-      ci-info: 3.5.0
-      deepmerge: 4.2.2
-      glob: 7.2.3
-      graceful-fs: 4.2.10
-      jest-circus: 29.1.2
-      jest-environment-node: 29.1.2
-      jest-get-type: 29.0.0
-      jest-regex-util: 29.0.0
-      jest-resolve: 29.1.2
-      jest-runner: 29.1.2
-      jest-util: 29.2.1
-      jest-validate: 29.1.2
-      micromatch: 4.0.5
-      parse-json: 5.2.0
-      pretty-format: 29.2.1
-      slash: 3.0.0
-      strip-json-comments: 3.1.1
-      ts-node: 10.9.1_ace2mtubvwruu4qt46fm3vtq3a
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9800,26 +9635,6 @@ packages:
       - ts-node
     dev: true
 
-  /jest/29.1.2_k5ytkvaprncdyzidqqws5bqksq:
-    resolution: {integrity: sha512-5wEIPpCezgORnqf+rCaYD1SK+mNN7NsstWzIsuvsnrhR/hSxXWd82oI7DkrbJ+XTD28/eG8SmxdGvukrGGK6Tw==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    hasBin: true
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@jest/core': 29.1.2_ts-node@10.9.1
-      '@jest/types': 29.1.2
-      import-local: 3.1.0
-      jest-cli: 29.1.2_k5ytkvaprncdyzidqqws5bqksq
-    transitivePeerDependencies:
-      - '@types/node'
-      - supports-color
-      - ts-node
-    dev: true
-
   /jest/29.3.1_@types+node@16.11.12:
     resolution: {integrity: sha512-6iWfL5DTT0Np6UYs/y5Niu7WIfNv/wRTtN5RSXt2DIEft3dx3zPuw/3WJQBCJfmEzvDiEKwoqMbGD9n49+qLSA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -9852,6 +9667,7 @@ packages:
 
   /jose/4.11.0:
     resolution: {integrity: sha512-wLe+lJHeG8Xt6uEubS4x0LVjS/3kXXu9dGoj9BNnlhYq7Kts0Pbb2pvv5KiI0yaKH/eaiR0LUOBhOVo9ktd05A==}
+    dev: false
 
   /jose/4.11.1:
     resolution: {integrity: sha512-YRv4Tk/Wlug8qicwqFNFVEZSdbROCHRAC6qu/i0dyNKr5JQdoa2pIGoS04lLO/jXQX7Z9omoNewYIVIxqZBd9Q==}
@@ -9985,7 +9801,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
 
   /jsonparse/1.3.1:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
@@ -14372,7 +14188,7 @@ packages:
       '@jest/types': 29.1.2
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.1.2_k5ytkvaprncdyzidqqws5bqksq
+      jest: 29.1.2
       jest-util: 29.2.1
       json5: 2.2.1
       lodash.memoize: 4.1.2
@@ -14402,37 +14218,6 @@ packages:
       '@tsconfig/node14': 1.0.1
       '@tsconfig/node16': 1.0.2
       '@types/node': 17.0.23
-      acorn: 8.8.0
-      acorn-walk: 8.2.0
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 4.9.4
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    dev: true
-
-  /ts-node/10.9.1_ace2mtubvwruu4qt46fm3vtq3a:
-    resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
-    hasBin: true
-    peerDependencies:
-      '@swc/core': '>=1.2.50'
-      '@swc/wasm': '>=1.2.50'
-      '@types/node': '*'
-      typescript: '>=2.7'
-    peerDependenciesMeta:
-      '@swc/core':
-        optional: true
-      '@swc/wasm':
-        optional: true
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.8
-      '@tsconfig/node12': 1.0.9
-      '@tsconfig/node14': 1.0.1
-      '@tsconfig/node16': 1.0.2
-      '@types/node': 16.11.12
       acorn: 8.8.0
       acorn-walk: 8.2.0
       arg: 4.1.3
