@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 
+import CirclePlus from '@/assets/images/circle-plus.svg';
 import Plus from '@/assets/images/plus.svg';
 import ActionMenu from '@/components/ActionMenu';
 import type { Props as ButtonProps } from '@/components/Button';
@@ -32,6 +33,7 @@ const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
     type: 'text',
     size: 'small',
     title: 'general.add_another',
+    icon: <CirclePlus />,
   };
 
   return (

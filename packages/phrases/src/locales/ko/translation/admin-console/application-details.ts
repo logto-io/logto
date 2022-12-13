@@ -33,7 +33,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     '기본으로 모든 리다이렉트의 오리진들은 허용되요. 대체적으로 이 값을 건들 필요는 없어요. See the <a>MDN doc</a> for detailed info.', // UNTRANSLATED
-  add_another: '새로 추가',
   id_token_expiration: 'ID 토큰 만료',
   refresh_token_expiration: 'Refresh 토큰 만료',
   token_endpoint: '토큰 End-Point',

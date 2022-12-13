@@ -30,7 +30,7 @@ const general = {
   copying: 'Kopyalanıyor',
   copied: 'Kopyalandı',
   required: 'Gerekli',
-  add_another: '+ Bir tane daha ekle',
+  add_another: 'Bir tane daha ekle',
   deletion_confirmation: 'Bu dosyayı silmek istediğinize emin misiniz: {{title}}?',
   settings_nav: 'Ayarlar',
   unsaved_changes_warning:
