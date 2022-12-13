@@ -25,7 +25,9 @@ export const useForgotPasswordSettings = () => {
   const { forgotPassword } = experienceSettings ?? {};
 
   return {
-    isForgotPasswordEnabled: Boolean(forgotPassword?.email ?? forgotPassword?.sms),
+    isForgotPasswordEnabled: Boolean(
+      forgotPassword && (forgotPassword.email || forgotPassword.sms)
+    ),
     ...forgotPassword,
   };
 };
