@@ -61,7 +61,7 @@
     "nanoid": "^4.0.0",
     "oidc-provider": "^7.13.0",
     "p-retry": "^5.1.2",
-    "query-string": "^7.0.1",
+    "query-string": "^8.0.0",
     "roarr": "^7.11.0",
     "slonik": "^30.0.0",
     "slonik-interceptor-preset": "^1.2.10",

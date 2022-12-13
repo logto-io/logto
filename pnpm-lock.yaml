@@ -314,7 +314,7 @@ importers:
       openapi-types: ^12.0.0
       p-retry: ^5.1.2
       prettier: ^2.7.1
-      query-string: ^7.0.1
+      query-string: ^8.0.0
       roarr: ^7.11.0
       sinon: ^15.0.0
       slonik: ^30.0.0
@@ -362,7 +362,7 @@ importers:
       nanoid: 4.0.0
       oidc-provider: 7.13.0
       p-retry: 5.1.2
-      query-string: 7.0.1
+      query-string: 8.0.1
       roarr: 7.11.0
       slonik: 30.1.2
       slonik-interceptor-preset: 1.2.10
@@ -5969,8 +5969,8 @@ packages:
       character-entities: 2.0.1
     dev: true
 
-  /decode-uri-component/0.2.0:
-    resolution: {integrity: sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU=}
+  /decode-uri-component/0.2.2:
+    resolution: {integrity: sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==}
     engines: {node: '>=0.10'}
     dev: false
 
@@ -7105,9 +7105,9 @@ packages:
       to-regex-range: 5.0.1
     dev: true
 
-  /filter-obj/1.1.0:
-    resolution: {integrity: sha1-mzERErxsYSehbgFsbF1/GeCAXFs=}
-    engines: {node: '>=0.10.0'}
+  /filter-obj/5.1.0:
+    resolution: {integrity: sha512-qWeTREPoT7I0bifpPUXtxkZJ1XJzxWtfoWWkdVGqa+eCr3SHW/Ocp89o8vLvbUuQnadybJpjOKu4V+RwO6sGng==}
+    engines: {node: '>=14.16'}
     dev: false
 
   /find-file-up/0.1.3:
@@ -7593,7 +7593,6 @@ packages:
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
-    dev: true
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
@@ -9836,7 +9835,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
 
   /jsonparse/1.3.1:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
@@ -12371,14 +12370,13 @@ packages:
     resolution: {integrity: sha512-EbZYNarm6138UKKq46tdx08Yo/q9ZhFoAXAI1meAFd2GtbRDhbZY2WQSICskT0c5q99aFzLG1D4nvTk9tqfXIw==}
     engines: {node: '>=0.6'}
 
-  /query-string/7.0.1:
-    resolution: {integrity: sha512-uIw3iRvHnk9to1blJCG3BTc+Ro56CBowJXKmNNAm3RulvPBzWLRqKSiiDk+IplJhsydwtuNMHi8UGQFcCLVfkA==}
-    engines: {node: '>=6'}
+  /query-string/8.0.1:
+    resolution: {integrity: sha512-8SDmV7tHy3qJeb8TK07LQ/4GDp8tGDgNjAC4de/ma/+QfwK+yXO9lQaAnGLmHrd8LUI2z5WNnCE8DURkYUhzgw==}
+    engines: {node: '>=14.16'}
     dependencies:
-      decode-uri-component: 0.2.0
-      filter-obj: 1.1.0
+      decode-uri-component: 0.2.2
+      filter-obj: 5.1.0
       split-on-first: 1.1.0
-      strict-uri-encode: 2.0.0
     dev: false
 
   /querystringify/2.2.0:
@@ -13637,11 +13635,6 @@ packages:
     dependencies:
       mixme: 0.5.4
     dev: true
-
-  /strict-uri-encode/2.0.0:
-    resolution: {integrity: sha1-ucczDHBChi9rFC3CdLvMWGbONUY=}
-    engines: {node: '>=4'}
-    dev: false
 
   /string-argv/0.3.1:
     resolution: {integrity: sha512-a1uQGz7IyVy9YwhqjZIZu1c8JO8dNIe20xBmSS6qu9kv++k3JGzCVmprbNN5Kn+BgzD5E7YYwg1CcjuJMRNsvg==}
