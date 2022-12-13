@@ -1,8 +1,11 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import { conditional } from '@silverhand/essentials';
+import classNames from 'classnames';
 import type { KeyboardEvent } from 'react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import CirclePlus from '@/assets/images/circle-plus.svg';
 import Minus from '@/assets/images/minus.svg';
 
 import Button from '../Button';
@@ -12,16 +15,25 @@ import TextInput from '../TextInput';
 import * as styles from './index.module.scss';
 import type { MultiTextInputError } from './types';
 
-type Props = {
+export type Props = {
   title: AdminConsoleKey;
   value?: string[];
   onChange: (value: string[]) => void;
   onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void;
   error?: MultiTextInputError;
   placeholder?: string;
+  className?: string;
 };
 
-const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder }: Props) => {
+const MultiTextInput = ({
+  title,
+  value,
+  onChange,
+  onKeyPress,
+  error,
+  placeholder,
+  className,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [deleteFieldIndex, setDeleteFieldIndex] = useState<number>();
@@ -47,10 +59,15 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder
   };
 
   return (
-    <div className={styles.multilineInput}>
+    <div className={classNames(styles.multilineInput, className)}>
       {fields.map((fieldValue, fieldIndex) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <div key={fieldIndex}>
+        <div
+          // eslint-disable-next-line react/no-array-index-key
+          key={fieldIndex}
+          className={conditional(
+            fields.length > 1 && fieldIndex === 0 && styles.firstFieldWithMultiInputs
+          )}
+        >
           <div className={styles.deletableInput}>
             <TextInput
               hasError={Boolean(
@@ -90,6 +107,7 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder
         type="text"
         title="general.add_another"
         className={styles.addAnother}
+        icon={<CirclePlus />}
         onClick={handleAdd}
       />
       <ConfirmModal

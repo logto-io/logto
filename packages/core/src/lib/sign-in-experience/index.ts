@@ -5,21 +5,22 @@ import {
   adminConsoleApplicationId,
   adminConsoleSignInExperience,
   demoAppApplicationId,
-} from '@logto/schemas/lib/seeds';
+} from '@logto/schemas/lib/seeds/index.js';
+import { deduplicate } from '@silverhand/essentials';
 import i18next from 'i18next';
 
-import { getLogtoConnectors } from '@/connectors';
-import RequestError from '@/errors/RequestError';
-import { findAllCustomLanguageTags } from '@/queries/custom-phrase';
+import { getLogtoConnectors } from '#src/connectors/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { findAllCustomLanguageTags } from '#src/queries/custom-phrase.js';
 import {
   findDefaultSignInExperience,
   updateDefaultSignInExperience,
-} from '@/queries/sign-in-experience';
-import { hasActiveUsers } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+} from '#src/queries/sign-in-experience.js';
+import { hasActiveUsers } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-export * from './sign-up';
-export * from './sign-in';
+export * from './sign-up.js';
+export * from './sign-in.js';
 
 export const validateBranding = (branding: Branding) => {
   if (branding.style === BrandingStyle.Logo_Slogan) {
@@ -50,16 +51,16 @@ export const validateTermsOfUse = (termsOfUse: TermsOfUse) => {
 
 export const removeUnavailableSocialConnectorTargets = async () => {
   const connectors = await getLogtoConnectors();
-  const availableSocialConnectorTargets = new Set(
+  const availableSocialConnectorTargets = deduplicate(
     connectors
-      .filter(({ type, dbEntry: { enabled } }) => enabled && type === ConnectorType.Social)
+      .filter(({ type }) => type === ConnectorType.Social)
       .map(({ metadata: { target } }) => target)
   );
 
   const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
   await updateDefaultSignInExperience({
     socialSignInConnectorTargets: socialSignInConnectorTargets.filter((target) =>
-      availableSocialConnectorTargets.has(target)
+      availableSocialConnectorTargets.includes(target)
     ),
   });
 };

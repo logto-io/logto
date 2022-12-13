@@ -4,9 +4,9 @@ import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 
-import { buildUpdateWhere } from '@/database/update-where';
-import envSet from '@/env-set';
-import { DeletionError } from '@/errors/SlonikError';
+import { buildUpdateWhere } from '#src/database/update-where.js';
+import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -39,7 +39,7 @@ export const findUserById = async (id: string) =>
   `);
 
 export const findUserByIdentity = async (target: string, userId: string) =>
-  envSet.pool.one<User>(
+  envSet.pool.maybeOne<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
@@ -145,6 +145,7 @@ export const findUsers = async (
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
       ${buildUserConditions(search, hideAdminUser, isCaseSensitive)}
+      order by ${fields.createdAt} desc
       limit ${limit}
       offset ${offset}
     `

@@ -1,16 +1,16 @@
 import type { IncomingHttpHeaders } from 'http';
 
 import { UserRole } from '@logto/schemas';
-import { managementResource } from '@logto/schemas/lib/seeds';
+import { managementResource } from '@logto/schemas/lib/seeds/index.js';
 import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { jwtVerify } from 'jose';
 import type { MiddlewareType, Request } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
-import envSet from '@/env-set';
-import RequestError from '@/errors/RequestError';
-import assertThat from '@/utils/assert-that';
+import envSet from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export type Auth = {
   type: 'user' | 'app';

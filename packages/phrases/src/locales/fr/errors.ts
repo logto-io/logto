@@ -33,30 +33,34 @@ const errors = {
     provider_error: "Erreur interne de l'OIDC : {{message}}.",
   },
   user: {
-    username_exists_register: "Le nom d'utilisateur a été enregistré.",
-    email_exists_register: "L'adresse email a été enregistrée.",
-    phone_exists_register: 'Le numéro de téléphone a été enregistré',
+    username_already_in_use: 'This username is already in use.', // UNTRANSLATED
+    email_already_in_use: 'This email is associated with an existing account.', // UNTRANSLATED
+    phone_already_in_use: 'This phone number is associated with an existing account.', // UNTRANSLATED
     invalid_email: 'Addresse email incorrecte.',
     invalid_phone: 'Numéro de téléphone incorrect.',
-    email_not_exists: "L'adresse e-mail n'a pas encore été enregistrée.",
-    phone_not_exists: "Le numéro de téléphone n'a pas encore été enregistré.",
-    identity_not_exists: "Le compte social n'a pas encore été enregistré.",
-    identity_exists: 'Le compte social a été enregistré.',
-    invalid_role_names: 'les noms de rôles ({{roleNames}}) ne sont pas valides',
+    email_not_exist: "L'adresse e-mail n'a pas encore été enregistrée.",
+    phone_not_exist: "Le numéro de téléphone n'a pas encore été enregistré.",
+    identity_not_exist: "Le compte social n'a pas encore été enregistré.",
+    identity_already_in_use: 'Le compte social a été enregistré.',
+    invalid_role_names: 'Les noms de rôles ({{roleNames}}) ne sont pas valides',
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
-    sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
-    sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
+    sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
+    sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED
     same_password: 'New password cannot be the same as your old password.', // UNTRANSLATED
-    require_password: 'You need to set a password before signing-in.', // UNTRANSLATED
-    password_exists: 'Your password has been set.', // UNTRANSLATED
-    require_username: 'You need to set a username before signing-in.', // UNTRANSLATED
-    username_exists: 'This username is already in use.', // UNTRANSLATED
-    require_email: 'You need to add an email address before signing-in.', // UNTRANSLATED
-    email_exists: 'This email is associated with an existing account.', // UNTRANSLATED
-    require_sms: 'You need to add a phone number before signing-in.', // UNTRANSLATED
-    sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
-    require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
+    password_required_in_profile: 'You need to set a password before signing-in.', // UNTRANSLATED
+    new_password_required_in_profile: 'You need to set a new password.', // UNTRANSLATED
+    password_exists_in_profile: 'Password already exists in your profile.', // UNTRANSLATED
+    username_required_in_profile: 'You need to set a username before signing-in.', // UNTRANSLATED
+    username_exists_in_profile: 'Username already exists in your profile.', // UNTRANSLATED
+    email_required_in_profile: 'You need to add an email address before signing-in.', // UNTRANSLATED
+    email_exists_in_profile: 'Your profile has already associated with an email address.', // UNTRANSLATED
+    phone_required_in_profile: 'You need to add a phone number before signing-in.', // UNTRANSLATED
+    phone_exists_in_profile: 'Your profile has already associated with a phone number.', // UNTRANSLATED
+    email_or_phone_required_in_profile:
+      'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
+    user_not_exist: 'User with {{ identifier }} does not exist.', // UNTRANSLATED,
+    missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: "La méthode de cryptage {{name}} n'est pas prise en charge.",
@@ -81,6 +85,8 @@ const errors = {
     unauthorized: "Veuillez vous enregistrer d'abord.",
     unsupported_prompt_name: "Nom d'invite non supporté.",
     forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
+    verification_failed:
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
   },
   connector: {
     general: "Une erreur inattendue s'est produite dans le connecteur. {{errorDescription}}",
@@ -105,6 +111,15 @@ const errors = {
     more_than_one_email: 'Le nombre de connecteurs Email est supérieur à 1.',
     db_connector_type_mismatch:
       'Il y a un connecteur dans la base de donnée qui ne correspond pas au type.',
+    not_found_with_connector_id: 'Can not find connector with given standard connector id.', // UNTRANSLATED
+    multiple_instances_not_supported:
+      'Can not create multiple instance with picked standard connector.', // UNTRANSLATED
+    invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.', // UNTRANSLATED
+    can_not_modify_target: 'The connector target can not be modified.', // UNTRANSLATED
+    multiple_target_with_same_platform:
+      'You can not have multiple social connectors that have same target and platform.', // UNTRANSLATED
+    cannot_change_metadata_for_non_standard_connector:
+      "This connector's `metadata` cannot be changed.", // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: "Le téléphone et l'email sont vides.",

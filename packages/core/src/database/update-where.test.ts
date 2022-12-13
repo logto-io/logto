@@ -2,12 +2,13 @@ import type { CreateUser, User } from '@logto/schemas';
 import { Users, Applications } from '@logto/schemas';
 import type { UpdateWhereData } from '@logto/shared';
 
-import envSet from '@/env-set';
-import { UpdateError } from '@/errors/SlonikError';
-import { createTestPool } from '@/utils/test-utils';
+import envSet from '#src/env-set/index.js';
+import { UpdateError } from '#src/errors/SlonikError/index.js';
+import { createTestPool } from '#src/utils/test-utils.js';
 
-import { buildUpdateWhere } from './update-where';
+import { buildUpdateWhere } from './update-where.js';
 
+const { jest } = import.meta;
 const poolSpy = jest.spyOn(envSet, 'pool', 'get');
 
 describe('buildUpdateWhere()', () => {

@@ -1,6 +1,6 @@
 import { SlonikError } from 'slonik';
 
-import { DeletionError } from '.';
+import { DeletionError } from './index.js';
 
 describe('SlonikError', () => {
   it('DeletionError', () => {

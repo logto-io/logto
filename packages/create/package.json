@@ -3,6 +3,7 @@
   "version": "1.0.0-beta.16",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
+  "type": "module",
   "publishConfig": {
     "access": "public"
   },
@@ -14,6 +15,6 @@
     "node": "^16.13.0 || ^18.12.0"
   },
   "dependencies": {
-    "@logto/cli": "workspace:^"
+    "@logto/cli": "workspace:*"
   }
 }

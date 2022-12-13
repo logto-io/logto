@@ -1,23 +1,25 @@
+import { mockEsmWithActual } from '@logto/shared/esm';
 import { Provider } from 'oidc-provider';
 
-import { MountedApps } from '@/env-set';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import { MountedApps } from '#src/env-set/index.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaSpaSessionGuard, { sessionNotFoundPath, guardedPath } from './koa-spa-session-guard';
+const { jest } = import.meta;
 
-jest.mock('fs/promises', () => ({
-  ...jest.requireActual('fs/promises'),
+await mockEsmWithActual('fs/promises', () => ({
   readdir: jest.fn().mockResolvedValue(['index.js']),
 }));
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails: jest.fn(),
-  })),
-}));
+const {
+  default: koaSpaSessionGuard,
+  sessionNotFoundPath,
+  guardedPath,
+} = await import('./koa-spa-session-guard.js');
 
 describe('koaSpaSessionGuard', () => {
   const envBackup = process.env;
+  const provider = new Provider('https://logto.test');
+  const interactionDetails = jest.spyOn(provider, 'interactionDetails');
 
   beforeEach(() => {
     process.env = { ...envBackup };
@@ -33,7 +35,6 @@ describe('koaSpaSessionGuard', () => {
   for (const app of Object.values(MountedApps)) {
     // eslint-disable-next-line @typescript-eslint/no-loop-func
     it(`${app} path should not redirect`, async () => {
-      const provider = new Provider('');
       const ctx = createContextWithRouteParameters({
         url: `/${app}/foo`,
       });
@@ -45,9 +46,7 @@ describe('koaSpaSessionGuard', () => {
   }
 
   it(`should not redirect for path ${sessionNotFoundPath}`, async () => {
-    const provider = new Provider('');
-
-    (provider.interactionDetails as jest.Mock).mockRejectedValue(new Error('session not found'));
+    interactionDetails.mockRejectedValue(new Error('session not found'));
     const ctx = createContextWithRouteParameters({
       url: `${sessionNotFoundPath}`,
     });
@@ -56,9 +55,7 @@ describe('koaSpaSessionGuard', () => {
   });
 
   it(`should not redirect for path /callback`, async () => {
-    const provider = new Provider('');
-
-    (provider.interactionDetails as jest.Mock).mockRejectedValue(new Error('session not found'));
+    interactionDetails.mockRejectedValue(new Error('session not found'));
     const ctx = createContextWithRouteParameters({
       url: '/callback/github',
     });
@@ -67,7 +64,8 @@ describe('koaSpaSessionGuard', () => {
   });
 
   it('should not redirect if session found', async () => {
-    const provider = new Provider('');
+    // @ts-expect-error for testing
+    interactionDetails.mockResolvedValue({});
     const ctx = createContextWithRouteParameters({
       url: `/sign-in`,
     });
@@ -78,9 +76,7 @@ describe('koaSpaSessionGuard', () => {
   for (const path of guardedPath) {
     // eslint-disable-next-line @typescript-eslint/no-loop-func
     it(`should redirect if session not found for ${path}`, async () => {
-      const provider = new Provider('');
-
-      (provider.interactionDetails as jest.Mock).mockRejectedValue(new Error('session not found'));
+      interactionDetails.mockRejectedValue(new Error('session not found'));
       const ctx = createContextWithRouteParameters({
         url: `${path}/foo`,
       });

@@ -1,24 +1,26 @@
 import type { Connector } from '@logto/schemas';
+import { mockEsmWithActual } from '@logto/shared/esm';
 
-import RequestError from '@/errors/RequestError';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import { getConnectorConfig } from '.';
+const { jest } = import.meta;
 
 const connectors: Connector[] = [
   {
     id: 'id',
-    enabled: true,
     config: { foo: 'bar' },
     createdAt: 0,
+    syncProfile: false,
+    connectorId: 'id',
+    metadata: {},
   },
 ];
 
-const findAllConnectors = jest.fn(async () => connectors);
-
-jest.mock('@/queries/connector', () => ({
-  ...jest.requireActual('@/queries/connector'),
-  findAllConnectors: async () => findAllConnectors(),
+await mockEsmWithActual('#src/queries/connector.js', () => ({
+  findAllConnectors: jest.fn(async () => connectors),
 }));
+
+const { getConnectorConfig } = await import('./index.js');
 
 it('getConnectorConfig() should return right config', async () => {
   const config = await getConnectorConfig('id');

@@ -2,12 +2,12 @@ import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
 import path from 'path';
 
-import type { BaseConnector } from '@logto/connector-kit';
+import type { AllConnector, BaseConnector } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
 
-import RequestError from '@/errors/RequestError';
-import { findAllConnectors } from '@/queries/connector';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import { findAllConnectors } from '#src/queries/connector.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export const getConnectorConfig = async (id: string): Promise<unknown> => {
   const connectors = await findAllConnectors();
@@ -58,4 +58,14 @@ export const readUrl = async (
   }
 
   return readFile(path.join(baseUrl, url), 'utf8');
+};
+
+export const parseMetadata = async (metadata: AllConnector['metadata'], packagePath: string) => {
+  return {
+    ...metadata,
+    logo: await readUrl(metadata.logo, packagePath, 'svg'),
+    logoDark: metadata.logoDark && (await readUrl(metadata.logoDark, packagePath, 'svg')),
+    readme: await readUrl(metadata.readme, packagePath, 'text'),
+    configTemplate: await readUrl(metadata.configTemplate, packagePath, 'text'),
+  };
 };

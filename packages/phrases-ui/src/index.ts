@@ -4,20 +4,30 @@ import { languages } from '@logto/language-kit';
 import type { NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import de from './locales/de';
-import en from './locales/en';
-import fr from './locales/fr';
-import ko from './locales/ko';
-import ptPT from './locales/pt-pt';
-import trTR from './locales/tr-tr';
-import zhCN from './locales/zh-cn';
-import type { LocalePhrase } from './types';
+import de from './locales/de.js';
+import en from './locales/en.js';
+import fr from './locales/fr.js';
+import ko from './locales/ko.js';
+import ptBR from './locales/pt-br.js';
+import ptPT from './locales/pt-pt.js';
+import trTR from './locales/tr-tr.js';
+import zhCN from './locales/zh-cn.js';
+import type { LocalePhrase } from './types.js';
 
-export type { LocalePhrase } from './types';
+export type { LocalePhrase } from './types.js';
 
 export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 
-export const builtInLanguages = ['de', 'en', 'fr', 'ko', 'pt-PT', 'tr-TR', 'zh-CN'] as const;
+export const builtInLanguages = [
+  'de',
+  'en',
+  'fr',
+  'ko',
+  'pt-PT',
+  'pt-BR',
+  'tr-TR',
+  'zh-CN',
+] as const;
 
 export const builtInLanguageOptions = builtInLanguages.map((languageTag) => ({
   value: languageTag,
@@ -36,6 +46,7 @@ const resource: Resource = {
   fr,
   ko,
   'pt-PT': ptPT,
+  'pt-BR': ptBR,
   'tr-TR': trTR,
   'zh-CN': zhCN,
 };

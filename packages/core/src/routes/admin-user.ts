@@ -4,13 +4,18 @@ import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { boolean, literal, object, string } from 'zod';
 
-import { isTrue } from '@/env-set/parameters';
-import RequestError from '@/errors/RequestError';
-import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
-import koaGuard from '@/middleware/koa-guard';
-import koaPagination from '@/middleware/koa-pagination';
-import { revokeInstanceByUserId } from '@/queries/oidc-model-instance';
-import { findRolesByRoleNames } from '@/queries/roles';
+import { isTrue } from '#src/env-set/parameters.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import {
+  checkIdentifierCollision,
+  encryptUserPassword,
+  generateUserId,
+  insertUser,
+} from '#src/lib/user.js';
+import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
+import { revokeInstanceByUserId } from '#src/queries/oidc-model-instance.js';
+import { findRolesByRoleNames } from '#src/queries/roles.js';
 import {
   deleteUserById,
   deleteUserIdentity,
@@ -20,11 +25,11 @@ import {
   hasUser,
   updateUserById,
   hasUserWithEmail,
-} from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+  hasUserWithPhone,
+} from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import { checkExistingSignUpIdentifiers } from './session/utils';
-import type { AuthedRouter } from './types';
+import type { AuthedRouter } from './types.js';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.get(
@@ -123,6 +128,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users',
     koaGuard({
       body: object({
+        primaryPhone: string().regex(phoneRegEx).optional(),
         primaryEmail: string().regex(emailRegEx).optional(),
         username: string().regex(usernameRegEx).optional(),
         password: string().regex(passwordRegEx),
@@ -130,21 +136,25 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       }),
     }),
     async (ctx, next) => {
-      const { primaryEmail, username, password, name } = ctx.guard.body;
+      const { primaryEmail, primaryPhone, username, password, name } = ctx.guard.body;
 
       assertThat(
         !username || !(await hasUser(username)),
         new RequestError({
-          code: 'user.username_exists_register',
+          code: 'user.username_already_in_use',
           status: 422,
         })
       );
       assertThat(
         !primaryEmail || !(await hasUserWithEmail(primaryEmail)),
         new RequestError({
-          code: 'user.email_exists_register',
+          code: 'user.email_already_in_use',
           status: 422,
         })
+      );
+      assertThat(
+        !primaryPhone || !(await hasUserWithPhone(primaryPhone)),
+        new RequestError({ code: 'user.phone_already_in_use' })
       );
 
       const id = await generateUserId();
@@ -154,6 +164,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       const user = await insertUser({
         id,
         primaryEmail,
+        primaryPhone,
         username,
         passwordEncrypted,
         passwordEncryptionMethod,
@@ -187,7 +198,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       await findUserById(userId);
-      await checkExistingSignUpIdentifiers(body, userId);
+      await checkIdentifierCollision(body, userId);
 
       // Temp solution to validate the existence of input roleNames
       if (body.roleNames?.length) {
@@ -306,7 +317,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       const { identities } = await findUserById(userId);
 
       if (!has(identities, target)) {
-        throw new RequestError({ code: 'user.identity_not_exists', status: 404 });
+        throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
       }
 
       const updatedUser = await deleteUserIdentity(userId, target);

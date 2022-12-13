@@ -2,11 +2,12 @@
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
     "outDir": "lib",
-    "declaration": true
+    "declaration": true,
+    "moduleResolution": "nodenext",
+    "module": "esnext"
   },
   "include": [
     "src",
-    "alterations",
-    "jest.config.ts"
+    "alterations"
   ]
 }

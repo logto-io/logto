@@ -1,0 +1,24 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: _.unit(2);
+
+  &.withSubmitActionBar {
+    padding-bottom: 0;
+  }
+
+  >:not(:first-child) {
+    margin-top: _.unit(4);
+  }
+
+  .fields {
+    flex-grow: 1;
+
+    > :not(:first-child) {
+      margin-top: _.unit(4);
+    }
+  }
+}

@@ -1,12 +1,15 @@
-import envSet, { MountedApps } from '@/env-set';
-import { hasActiveUsers } from '@/queries/user';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
-import koaWelcomeProxy from './koa-welcome-proxy';
+import envSet, { MountedApps } from '#src/env-set/index.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-jest.mock('@/queries/user', () => ({
+const { jest } = import.meta;
+
+const { hasActiveUsers } = mockEsm('#src/queries/user.js', () => ({
   hasActiveUsers: jest.fn(),
 }));
+
+const koaWelcomeProxy = await pickDefault(import('./koa-welcome-proxy.js'));
 
 describe('koaWelcomeProxy', () => {
   const next = jest.fn();
@@ -18,7 +21,7 @@ describe('koaWelcomeProxy', () => {
 
   it('should redirect to admin console if has AdminUsers', async () => {
     const { endpoint } = envSet.values;
-    (hasActiveUsers as jest.Mock).mockResolvedValue(true);
+    hasActiveUsers.mockResolvedValue(true);
     const ctx = createContextWithRouteParameters({
       url: `/${MountedApps.Welcome}`,
     });
@@ -31,7 +34,7 @@ describe('koaWelcomeProxy', () => {
 
   it('should redirect to welcome page if has no Users', async () => {
     const { endpoint } = envSet.values;
-    (hasActiveUsers as jest.Mock).mockResolvedValue(false);
+    hasActiveUsers.mockResolvedValue(false);
     const ctx = createContextWithRouteParameters({
       url: `/${MountedApps.Welcome}`,
     });

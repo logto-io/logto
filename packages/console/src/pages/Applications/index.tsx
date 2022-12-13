@@ -9,7 +9,6 @@ import useSWR from 'swr';
 import Plus from '@/assets/images/plus.svg';
 import ApplicationIcon from '@/components/ApplicationIcon';
 import Button from '@/components/Button';
-import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
@@ -19,6 +18,7 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
@@ -41,8 +41,8 @@ const Applications = () => {
   const [applications, totalCount] = data ?? [];
 
   return (
-    <Card className={styles.card}>
-      <div className={styles.headline}>
+    <div className={resourcesStyles.container}>
+      <div className={resourcesStyles.headline}>
         <CardTitle title="applications.title" subtitle="applications.subtitle" />
         <Button
           icon={<Plus />}
@@ -54,90 +54,97 @@ const Applications = () => {
           }}
         />
         <Modal
+          shouldCloseOnEsc
           isOpen={isCreateNew}
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
+          onRequestClose={() => {
+            navigate('/applications');
+          }}
         >
           <CreateForm
             onClose={(createdApp) => {
-              navigate('/applications');
-
               if (createdApp) {
                 toast.success(t('applications.application_created', { name: createdApp.name }));
                 navigate(`/applications/${createdApp.id}`);
+
+                return;
               }
+              navigate('/applications');
             }}
           />
         </Modal>
-      </div>
-      <div className={classNames(styles.table, tableStyles.scrollable)}>
-        <table className={classNames(!data && tableStyles.empty)}>
-          <colgroup>
-            <col className={styles.applicationName} />
-            <col />
-          </colgroup>
-          <thead>
-            <tr>
-              <th>{t('applications.application_name')}</th>
-              <th>{t('applications.app_id')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!data && error && (
-              <TableError
-                columns={2}
-                content={error.body?.message ?? error.message}
-                onRetry={async () => mutate(undefined, true)}
-              />
-            )}
-            {isLoading && <TableLoading columns={2} />}
-            {applications?.length === 0 && (
-              <TableEmpty columns={2}>
-                <Button
-                  title="applications.create"
-                  type="outline"
-                  onClick={() => {
-                    navigate('/applications/create');
-                  }}
-                />
-              </TableEmpty>
-            )}
-            {applications?.map(({ id, name, type }) => (
-              <tr
-                key={id}
-                className={tableStyles.clickable}
-                onClick={() => {
-                  navigate(`/applications/${id}`);
-                }}
-              >
-                <td>
-                  <ItemPreview
-                    title={name}
-                    subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
-                    icon={<ApplicationIcon className={styles.icon} type={type} />}
-                    to={`/applications/${id}`}
-                  />
-                </td>
-                <td>
-                  <CopyToClipboard value={id} variant="text" />
-                </td>
+      </div>{' '}
+      <div className={resourcesStyles.table}>
+        <div className={tableStyles.scrollable}>
+          <table className={classNames(!data && tableStyles.empty)}>
+            <colgroup>
+              <col className={styles.applicationName} />
+              <col />
+            </colgroup>
+
+            <thead>
+              <tr>
+                <th>{t('applications.application_name')}</th>
+                <th>{t('applications.app_id')}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {!data && error && (
+                <TableError
+                  columns={2}
+                  content={error.body?.message ?? error.message}
+                  onRetry={async () => mutate(undefined, true)}
+                />
+              )}
+              {isLoading && <TableLoading columns={2} />}
+              {applications?.length === 0 && (
+                <TableEmpty columns={2}>
+                  <Button
+                    title="applications.create"
+                    type="outline"
+                    onClick={() => {
+                      navigate('/applications/create');
+                    }}
+                  />
+                </TableEmpty>
+              )}
+              {applications?.map(({ id, name, type }) => (
+                <tr
+                  key={id}
+                  className={tableStyles.clickable}
+                  onClick={() => {
+                    navigate(`/applications/${id}`);
+                  }}
+                >
+                  <td>
+                    <ItemPreview
+                      title={name}
+                      subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
+                      icon={<ApplicationIcon className={styles.icon} type={type} />}
+                      to={`/applications/${id}`}
+                    />
+                  </td>
+                  <td>
+                    <CopyToClipboard value={id} variant="text" />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div className={styles.pagination}>
-        {!!totalCount && (
-          <Pagination
-            pageCount={Math.ceil(totalCount / pageSize)}
-            pageIndex={pageIndex}
-            onChange={(page) => {
-              setQuery({ page: String(page) });
-            }}
-          />
-        )}
-      </div>
-    </Card>
+      <Pagination
+        pageIndex={pageIndex}
+        totalCount={totalCount ?? 0}
+        pageSize={pageSize}
+        className={styles.pagination}
+        onChange={(page) => {
+          setQuery({ page: String(page) });
+        }}
+      />
+    </div>
   );
 };
 

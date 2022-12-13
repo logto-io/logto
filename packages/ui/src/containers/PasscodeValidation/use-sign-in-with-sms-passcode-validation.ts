@@ -39,7 +39,7 @@ const useSignInWithSmsPasscodeValidation = (phone: string, errorCallback?: () =>
   const phoneNotExistRegisterErrorHandler = useCallback(async () => {
     const [confirm] = await show({
       confirmText: 'action.create',
-      ModalContent: t('description.sign_in_id_does_not_exists', {
+      ModalContent: t('description.sign_in_id_does_not_exist', {
         type: t(`description.phone_number`),
         value: phone,
       }),
@@ -60,7 +60,7 @@ const useSignInWithSmsPasscodeValidation = (phone: string, errorCallback?: () =>
 
   const errorHandlers = useMemo<ErrorHandlers>(
     () => ({
-      'user.phone_not_exists':
+      'user.phone_not_exist':
         // Block user auto register if is bind social or sign-in only flow
         signInMode === SignInMode.SignIn || socialToBind
           ? identifierNotExistErrorHandler

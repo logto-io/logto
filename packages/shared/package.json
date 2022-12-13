@@ -4,25 +4,35 @@
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
+  "type": "module",
   "files": [
     "lib"
   ],
+  "exports": {
+    ".": {
+      "import": "./lib/index.js"
+    },
+    "./esm": {
+      "import": "./lib/esm/index.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "build:test": "rm -rf lib/ && tsc -p tsconfig.test.json --sourcemap",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
-    "test": "jest",
-    "test:ci": "jest"
+    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "pnpm build:test && pnpm test:only",
+    "test:ci": "pnpm run test:only"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.3.0",
-    "@silverhand/jest-config": "1.2.2",
     "@silverhand/ts-config": "1.2.1",
     "@types/jest": "^29.1.2",
     "@types/node": "^16.0.0",
@@ -30,7 +40,7 @@
     "jest": "^29.1.2",
     "lint-staged": "^13.0.0",
     "prettier": "^2.7.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.4"
   },
   "engines": {
     "node": "^16.13.0 || ^18.12.0"
@@ -43,7 +53,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/schemas": "workspace:^",
+    "@logto/schemas": "workspace:*",
     "@silverhand/essentials": "^1.3.0",
     "find-up": "^5.0.0",
     "nanoid": "^3.3.4",

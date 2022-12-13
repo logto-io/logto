@@ -32,7 +32,10 @@ describe('<Register />', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          signUp: { ...mockSignInExperienceSettings.signUp, methods: [SignInIdentifier.Email] },
+          signUp: {
+            ...mockSignInExperienceSettings.signUp,
+            identifiers: [SignInIdentifier.Email],
+          },
         }}
       >
         <MemoryRouter>
@@ -49,7 +52,10 @@ describe('<Register />', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          signUp: { ...mockSignInExperienceSettings.signUp, methods: [SignInIdentifier.Sms] },
+          signUp: {
+            ...mockSignInExperienceSettings.signUp,
+            identifiers: [SignInIdentifier.Sms],
+          },
         }}
       >
         <MemoryRouter>
@@ -68,7 +74,7 @@ describe('<Register />', () => {
           ...mockSignInExperienceSettings,
           signUp: {
             ...mockSignInExperienceSettings.signUp,
-            methods: [SignInIdentifier.Email, SignInIdentifier.Sms],
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
           },
         }}
       >
@@ -86,7 +92,7 @@ describe('<Register />', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          signUp: { ...mockSignInExperienceSettings.signUp, methods: [] },
+          signUp: { ...mockSignInExperienceSettings.signUp, identifiers: [] },
         }}
       >
         <MemoryRouter>

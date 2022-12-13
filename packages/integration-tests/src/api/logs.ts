@@ -1,6 +1,6 @@
 import type { Log } from '@logto/schemas';
 
-import { authedAdminApi } from './api';
+import { authedAdminApi } from './api.js';
 
 export const getLogs = () => authedAdminApi.get('logs').json<Log[]>();
 

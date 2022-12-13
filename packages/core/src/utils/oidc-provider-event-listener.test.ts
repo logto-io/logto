@@ -6,8 +6,10 @@ import {
   grantErrorListener,
   grantRevokedListener,
   grantSuccessListener,
-} from '@/utils/oidc-provider-event-listener';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+} from '#src/utils/oidc-provider-event-listener.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+
+const { jest } = import.meta;
 
 const userId = 'userIdValue';
 const sessionId = 'sessionIdValue';
@@ -15,30 +17,18 @@ const applicationId = 'applicationIdValue';
 
 const addLogContext = jest.fn();
 const log = jest.fn();
-const addListener = jest.fn();
-
-jest.mock('oidc-provider', () => ({ Provider: jest.fn(() => ({ addListener })) }));
 
 describe('addOidcEventListeners', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should add grantSuccessListener', () => {
-    const provider = new Provider('');
+  it('should add proper listeners', () => {
+    const provider = new Provider('https://logto.test');
+    const addListener = jest.spyOn(provider, 'addListener');
     addOidcEventListeners(provider);
     expect(addListener).toHaveBeenCalledWith('grant.success', grantSuccessListener);
-  });
-
-  it('should add grantErrorListener', () => {
-    const provider = new Provider('');
-    addOidcEventListeners(provider);
     expect(addListener).toHaveBeenCalledWith('grant.error', grantErrorListener);
-  });
-
-  it('should add grantRevokedListener', () => {
-    const provider = new Provider('');
-    addOidcEventListeners(provider);
     expect(addListener).toHaveBeenCalledWith('grant.revoked', grantRevokedListener);
   });
 });

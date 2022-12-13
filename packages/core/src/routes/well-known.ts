@@ -1,14 +1,14 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
 import etag from 'etag';
 import type { Provider } from 'oidc-provider';
 
-import { getLogtoConnectors } from '@/connectors';
-import { getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
+import { getLogtoConnectors } from '#src/connectors/index.js';
+import { getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
 
-import type { AnonymousRouter } from './types';
+import type { AnonymousRouter } from './types.js';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.get(
@@ -22,12 +22,8 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
       ]);
 
       const forgotPassword = {
-        sms: logtoConnectors.some(
-          ({ type, dbEntry: { enabled } }) => type === ConnectorType.Sms && enabled
-        ),
-        email: logtoConnectors.some(
-          ({ type, dbEntry: { enabled } }) => type === ConnectorType.Email && enabled
-        ),
+        sms: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
+        email: logtoConnectors.some(({ type }) => type === ConnectorType.Email),
       };
 
       const socialConnectors =
@@ -37,8 +33,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
               Array<ConnectorMetadata & { id: string }>
             >((previous, connectorTarget) => {
               const connectors = logtoConnectors.filter(
-                ({ metadata: { target }, dbEntry: { enabled } }) =>
-                  target === connectorTarget && enabled
+                ({ metadata: { target } }) => target === connectorTarget
               );
 
               return [

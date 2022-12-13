@@ -1,4 +1,4 @@
-import type { LocalePhrase } from '../types';
+import type { LocalePhrase } from '../types.js';
 
 const translation = {
   input: {
@@ -50,8 +50,8 @@ const translation = {
     resend_passcode: '비밀번호 재전송',
     continue_with: '계속하기',
     create_account_id_exists: '{{type}} {{value}} 계정이 이미 존재해요. 로그인하시겠어요?',
-    sign_in_id_does_not_exists: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
-    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    sign_in_id_does_not_exist: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
+    sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
     create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
     bind_account_title: '계정 연동',
     social_create_account: '계정이 없으신가요? 새로운 계정을 만들고 연동해보세요.',

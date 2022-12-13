@@ -2,6 +2,7 @@
 
 .backLink {
   margin: _.unit(1) 0 0 _.unit(1);
+  user-select: none;
 }
 
 .header {
@@ -76,18 +77,12 @@
   }
 }
 
-.body {
-  > :not(:first-child) {
-    margin-top: _.unit(4);
-  }
+.codeEditor {
+  margin-bottom: _.unit(6);
+}
 
-  .main {
-    flex: 1;
-
-    .codeEditor {
-      margin-bottom: _.unit(6);
-    }
-  }
+.senderTest {
+  margin-top: _.unit(6);
 }
 
 .resetIcon {

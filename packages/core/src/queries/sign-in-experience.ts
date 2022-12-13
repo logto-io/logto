@@ -1,8 +1,8 @@
 import type { SignInExperience, CreateSignInExperience } from '@logto/schemas';
 import { SignInExperiences } from '@logto/schemas';
 
-import { buildFindEntityById } from '@/database/find-entity-by-id';
-import { buildUpdateWhere } from '@/database/update-where';
+import { buildFindEntityById } from '#src/database/find-entity-by-id.js';
+import { buildUpdateWhere } from '#src/database/update-where.js';
 
 const updateSignInExperience = buildUpdateWhere<CreateSignInExperience, SignInExperience>(
   SignInExperiences,

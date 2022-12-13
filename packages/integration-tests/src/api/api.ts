@@ -1,6 +1,6 @@
-import got from 'got';
+import { got } from 'got';
 
-import { logtoUrl } from '@/constants';
+import { logtoUrl } from '#src/constants.js';
 
 export default got.extend({ prefixUrl: new URL('/api', logtoUrl) });
 

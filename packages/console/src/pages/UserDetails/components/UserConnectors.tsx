@@ -1,15 +1,18 @@
 import type { Identities, ConnectorResponse } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 
 import Button from '@/components/Button';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import TableError from '@/components/Table/TableError';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import useConnectorGroups from '@/hooks/use-connector-groups';
+import { getConnectorGroups } from '@/pages/Connectors/utils';
 
 import * as styles from './UserConnectors.module.scss';
 
@@ -24,8 +27,9 @@ type DisplayConnector = Pick<ConnectorResponse, 'target' | 'logo' | 'name'> & { 
 const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data: connectorGroups, error, mutate } = useConnectorGroups();
+  const { data, error, mutate } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
   const [deletingConnector, setDeletingConnector] = useState<DisplayConnector>();
+  const connectorGroups = conditional(data && getConnectorGroups(data));
   const isLoading = !connectorGroups && !error;
   const [isSubmitting, setIsSubmitting] = useState(false);
 

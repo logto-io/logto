@@ -16,8 +16,8 @@ import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
-import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import TextLink from '@/components/TextLink';
 import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import type { RequestError } from '@/hooks/use-api';
@@ -30,6 +30,7 @@ import ResetPasswordForm from './components/ResetPasswordForm';
 import UserLogs from './components/UserLogs';
 import UserSettings from './components/UserSettings';
 import * as styles from './index.module.scss';
+import { userDetailsParser } from './utils';
 
 const UserDetails = () => {
   const location = useLocation();
@@ -53,10 +54,7 @@ const UserDetails = () => {
       return;
     }
 
-    return {
-      ...data,
-      customData: JSON.stringify(data.customData, null, 2),
-    };
+    return userDetailsParser.toLocalForm(data);
   }, [data]);
 
   const onDelete = async () => {
@@ -79,13 +77,10 @@ const UserDetails = () => {
   };
 
   return (
-    <div className={detailsStyles.container}>
-      <LinkButton
-        to="/users"
-        icon={<Back />}
-        title="user_details.back_to_users"
-        className={styles.backLink}
-      />
+    <div className={classNames(detailsStyles.container, isLogs && styles.resourceLayout)}>
+      <TextLink to="/users" icon={<Back />} className={styles.backLink}>
+        {t('user_details.back_to_users')}
+      </TextLink>
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {userId && data && (
@@ -115,7 +110,7 @@ const UserDetails = () => {
                   </>
                 )}
                 <div className={styles.text}>User ID</div>
-                <CopyToClipboard value={data.id} />
+                <CopyToClipboard size="small" value={data.id} />
               </div>
             </div>
             <div>
@@ -143,9 +138,13 @@ const UserDetails = () => {
                 </ActionMenuItem>
               </ActionMenu>
               <ReactModal
+                shouldCloseOnEsc
                 isOpen={isResetPasswordFormOpen}
                 className={modalStyles.content}
                 overlayClassName={modalStyles.overlay}
+                onRequestClose={() => {
+                  setIsResetPasswordFormOpen(false);
+                }}
               >
                 <ResetPasswordForm
                   userId={data.id}
@@ -170,23 +169,21 @@ const UserDetails = () => {
               </DeleteConfirmModal>
             </div>
           </Card>
-          <Card className={classNames(styles.body, detailsStyles.body)}>
-            <TabNav>
-              <TabNavItem href={`/users/${userId}`}>{t('general.settings_nav')}</TabNavItem>
-              <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
-            </TabNav>
-            {isLogs && <UserLogs userId={data.id} />}
-            {!isLogs && userFormData && (
-              <UserSettings
-                userData={data}
-                userFormData={userFormData}
-                isDeleted={isDeleted}
-                onUserUpdated={(user) => {
-                  void mutate(user);
-                }}
-              />
-            )}
-          </Card>
+          <TabNav>
+            <TabNavItem href={`/users/${userId}`}>{t('general.settings_nav')}</TabNavItem>
+            <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
+          </TabNav>
+          {isLogs && <UserLogs userId={data.id} />}
+          {!isLogs && userFormData && (
+            <UserSettings
+              userData={data}
+              userFormData={userFormData}
+              isDeleted={isDeleted}
+              onUserUpdated={(user) => {
+                void mutate(user);
+              }}
+            />
+          )}
         </>
       )}
       {data && password && (

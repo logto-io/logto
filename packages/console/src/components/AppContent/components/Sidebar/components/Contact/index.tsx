@@ -19,9 +19,11 @@ const Contact = ({ isOpen, onCancel }: Props) => {
 
   return (
     <ReactModal
+      shouldCloseOnEsc
       isOpen={isOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
+      onRequestClose={onCancel}
     >
       <ModalLayout title="contact.title" subtitle="contact.description" onClose={onCancel}>
         <div className={styles.main}>

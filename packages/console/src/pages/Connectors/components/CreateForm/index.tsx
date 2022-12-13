@@ -1,18 +1,22 @@
+import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import Modal from 'react-modal';
+import useSWR from 'swr';
 
 import Button from '@/components/Button';
 import ModalLayout from '@/components/ModalLayout';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import UnnamedTrans from '@/components/UnnamedTrans';
-import useConnectorGroups from '@/hooks/use-connector-groups';
+import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+import { getConnectorGroups } from '../../utils';
 import Guide from '../Guide';
 import PlatformSelector from './PlatformSelector';
 import * as styles from './index.module.scss';
+import { getConnectorOrder } from './utils';
 
 type Props = {
   isOpen: boolean;
@@ -21,25 +25,56 @@ type Props = {
 };
 
 const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
-  const { data: allGroups, connectors, error } = useConnectorGroups();
-  const isLoading = !allGroups && !connectors && !error;
+  const { data: existingConnectors, error: connectorsError } = useSWR<
+    ConnectorResponse[],
+    RequestError
+  >('/api/connectors');
+  const { data: factories, error: factoriesError } = useSWR<
+    ConnectorFactoryResponse[],
+    RequestError
+  >('/api/connector-factories');
+  const isLoading = !factories && !existingConnectors && !connectorsError && !factoriesError;
   const [activeGroupId, setActiveGroupId] = useState<string>();
-  const [activeConnectorId, setActiveConnectorId] = useState<string>();
+  const [activeFactoryId, setActiveFactoryId] = useState<string>();
   const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
 
-  const groups = useMemo(
-    () => allGroups?.filter((group) => group.type === type),
-    [allGroups, type]
-  );
+  const groups = useMemo(() => {
+    if (!factories || !existingConnectors) {
+      return [];
+    }
+
+    const allGroups = getConnectorGroups<ConnectorFactoryResponse>(
+      factories.filter(({ type: factoryType }) => factoryType === type)
+    );
+
+    return allGroups
+      .map((group) => ({
+        ...group,
+        connectors: group.connectors.map((connector) => ({
+          ...connector,
+          added:
+            !group.isStandard &&
+            existingConnectors.some(({ connectorId }) => connector.id === connectorId),
+        })),
+      }))
+      .filter(({ connectors }) => !connectors.every(({ added }) => added))
+      .slice()
+      .sort((connectorA, connectorB) => {
+        const orderA = getConnectorOrder(connectorA.target, connectorA.isStandard);
+        const orderB = getConnectorOrder(connectorB.target, connectorB.isStandard);
+
+        return orderA - orderB;
+      });
+  }, [factories, type, existingConnectors]);
 
   const activeGroup = useMemo(
-    () => groups?.find(({ id }) => id === activeGroupId),
+    () => groups.find(({ id }) => id === activeGroupId),
     [activeGroupId, groups]
   );
 
-  const activeConnector = useMemo(
-    () => connectors?.find(({ id }) => id === activeConnectorId),
-    [activeConnectorId, connectors]
+  const activeFactory = useMemo(
+    () => factories?.find(({ id }) => id === activeFactoryId),
+    [activeFactoryId, factories]
   );
 
   const cardTitle = useMemo(() => {
@@ -55,10 +90,6 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
   }, [type]);
 
   const handleGroupChange = (groupId: string) => {
-    if (!groups) {
-      return;
-    }
-
     setActiveGroupId(groupId);
 
     const group = groups.find(({ id }) => id === groupId);
@@ -67,20 +98,20 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
       return;
     }
 
-    const firstAvailableConnector = group.connectors.find(({ enabled }) => !enabled);
+    const firstAvailableConnector = group.connectors.find(({ added }) => !added);
 
-    setActiveConnectorId(firstAvailableConnector?.id);
+    setActiveFactoryId(firstAvailableConnector?.id);
   };
 
   const closeModal = () => {
     setIsGetStartedModalOpen(false);
-    onClose?.(activeConnectorId);
+    onClose?.(activeFactoryId);
     setActiveGroupId(undefined);
-    setActiveConnectorId(undefined);
+    setActiveFactoryId(undefined);
   };
 
   const modalSize = useMemo(() => {
-    if (!groups || groups.length <= 2) {
+    if (groups.length <= 2) {
       return 'medium';
     }
 
@@ -93,9 +124,13 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
 
   return (
     <Modal
+      shouldCloseOnEsc
       isOpen={isFormOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
+      onRequestClose={() => {
+        onClose?.();
+      }}
     >
       <ModalLayout
         title={cardTitle}
@@ -103,7 +138,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
           <Button
             title="general.next"
             type="primary"
-            disabled={!activeConnectorId}
+            disabled={!activeFactoryId}
             onClick={() => {
               setIsGetStartedModalOpen(true);
             }}
@@ -114,53 +149,47 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
         onClose={onClose}
       >
         {isLoading && 'Loading...'}
-        {error?.message}
-        {groups && (
-          <RadioGroup
-            name="group"
-            value={activeGroupId}
-            type="card"
-            className={classNames(styles.connectorGroup, styles[modalSize])}
-            onChange={handleGroupChange}
-          >
-            {groups.map(({ id, name, logo, description, connectors }) => {
-              const isDisabled = connectors.every(({ enabled }) => enabled);
-
-              return (
-                <Radio key={id} value={id} isDisabled={isDisabled} disabledLabel="general.added">
-                  <div className={styles.connector}>
-                    <div className={styles.logo}>
-                      <img src={logo} alt="logo" />
-                    </div>
-                    <div className={styles.content}>
-                      <div
-                        className={classNames(
-                          styles.name,
-                          isDisabled && styles.nameWithRightPadding
-                        )}
-                      >
-                        <UnnamedTrans resource={name} />
-                      </div>
-                      <div className={styles.description}>
-                        <UnnamedTrans resource={description} />
-                      </div>
-                    </div>
+        {factoriesError?.message ?? connectorsError?.message}
+        <RadioGroup
+          name="group"
+          value={activeGroupId}
+          type="card"
+          className={classNames(styles.connectorGroup, styles[modalSize])}
+          onChange={handleGroupChange}
+        >
+          {groups.map(({ id, name, logo, description }) => (
+            <Radio key={id} value={id}>
+              <div className={styles.connector}>
+                <div className={styles.logo}>
+                  <img src={logo} alt="logo" />
+                </div>
+                <div className={styles.content}>
+                  <div className={classNames(styles.name)}>
+                    <UnnamedTrans resource={name} />
                   </div>
-                </Radio>
-              );
-            })}
-          </RadioGroup>
-        )}
+                  <div className={styles.description}>
+                    <UnnamedTrans resource={description} />
+                  </div>
+                </div>
+              </div>
+            </Radio>
+          ))}
+        </RadioGroup>
         {activeGroup && (
           <PlatformSelector
             connectorGroup={activeGroup}
-            connectorId={activeConnectorId}
-            onConnectorIdChange={setActiveConnectorId}
+            connectorId={activeFactoryId}
+            onConnectorIdChange={setActiveFactoryId}
           />
         )}
-        {activeConnector && (
-          <Modal isOpen={isGetStartedModalOpen} className={modalStyles.fullScreen}>
-            <Guide connector={activeConnector} onClose={closeModal} />
+        {activeFactory && (
+          <Modal
+            shouldCloseOnEsc
+            isOpen={isGetStartedModalOpen}
+            className={modalStyles.fullScreen}
+            onRequestClose={closeModal}
+          >
+            <Guide connector={activeFactory} onClose={closeModal} />
           </Modal>
         )}
       </ModalLayout>

@@ -22,7 +22,7 @@ const useIdentifierErrorAlert = (
       ModalContent: t(
         flow === UserFlow.register
           ? 'description.create_account_id_exists_alert'
-          : 'description.sign_in_id_does_not_exists_alert',
+          : 'description.sign_in_id_does_not_exist_alert',
         {
           type: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
           value,

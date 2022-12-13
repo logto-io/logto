@@ -24,7 +24,10 @@ describe('SetPhone', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          signUp: { ...mockSignInExperienceSettings.signUp, methods: [SignInIdentifier.Sms] },
+          signUp: {
+            ...mockSignInExperienceSettings.signUp,
+            identifiers: [SignInIdentifier.Sms],
+          },
         }}
       >
         <SetPhone />

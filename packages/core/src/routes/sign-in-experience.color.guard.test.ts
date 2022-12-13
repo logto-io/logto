@@ -1,23 +1,23 @@
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
-import { mockColor, mockSignInExperience } from '@/__mocks__';
-import { createRequester } from '@/utils/test-utils';
+import { mockColor, mockSignInExperience } from '#src/__mocks__/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import signInExperiencesRoutes from './sign-in-experience';
-
-jest.mock('@/queries/sign-in-experience', () => ({
-  updateDefaultSignInExperience: jest.fn(
-    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
-      ...mockSignInExperience,
-      ...data,
-    })
-  ),
+await mockEsmWithActual('#src/queries/sign-in-experience.js', () => ({
+  updateDefaultSignInExperience: async (
+    data: Partial<CreateSignInExperience>
+  ): Promise<SignInExperience> => ({
+    ...mockSignInExperience,
+    ...data,
+  }),
 }));
 
-jest.mock('@/connectors', () => ({
-  getLogtoConnectors: jest.fn(async () => []),
+mockEsm('#src/connectors.js', () => ({
+  getLogtoConnectors: async () => [],
 }));
 
+const signInExperiencesRoutes = await pickDefault(import('./sign-in-experience.js'));
 const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
 const expectPatchResponseStatus = async (

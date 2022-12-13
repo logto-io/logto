@@ -90,6 +90,7 @@ jobs:
         with:
           # Set Git operations with the bot PAT since we have tag protection rule
           token: ${{ secrets.BOT_PAT }}
+          fetch-depth: 0
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2

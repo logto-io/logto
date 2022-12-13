@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
-import { getConnectorPackagesFrom, isOfficialConnector } from './utils';
+import { getConnectorPackagesFrom, isOfficialConnector } from './utils.js';
 
 const logConnectorNames = (type: string, names: string[]) => {
   if (names.length === 0) {

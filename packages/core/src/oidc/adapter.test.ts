@@ -1,24 +1,18 @@
 import type { Application } from '@logto/schemas';
+import { mockEsm } from '@logto/shared/esm';
 import snakecaseKeys from 'snakecase-keys';
 
-import { mockApplication } from '@/__mocks__';
-import {
-  consumeInstanceById,
-  destroyInstanceById,
-  findPayloadById,
-  findPayloadByPayloadField,
-  revokeInstanceByGrantId,
-  upsertInstance,
-} from '@/queries/oidc-model-instance';
+import { mockApplication } from '#src/__mocks__/index.js';
 
-import postgresAdapter from './adapter';
-import { getConstantClientMetadata } from './utils';
+import { getConstantClientMetadata } from './utils.js';
 
-jest.mock('@/queries/application', () => ({
+const { jest } = import.meta;
+
+mockEsm('#src/queries/application.js', () => ({
   findApplicationById: jest.fn(async (): Promise<Application> => mockApplication),
 }));
 
-jest.mock('@/queries/oidc-model-instance', () => ({
+mockEsm('#src/queries/oidc-model-instance.js', () => ({
   upsertInstance: jest.fn(),
   findPayloadById: jest.fn(),
   findPayloadByPayloadField: jest.fn(),
@@ -27,14 +21,24 @@ jest.mock('@/queries/oidc-model-instance', () => ({
   revokeInstanceByGrantId: jest.fn(),
 }));
 
-const now = Date.now();
-
-jest.mock(
+mockEsm(
   'date-fns',
   jest.fn(() => ({
     addSeconds: jest.fn((_: Date, seconds: number) => new Date(now + seconds * 1000)),
   }))
 );
+
+const { default: postgresAdapter } = await import('./adapter.js');
+const {
+  consumeInstanceById,
+  destroyInstanceById,
+  findPayloadById,
+  findPayloadByPayloadField,
+  revokeInstanceByGrantId,
+  upsertInstance,
+} = await import('#src/queries/oidc-model-instance.js');
+
+const now = Date.now();
 
 describe('postgres Adapter', () => {
   it('Client Modal', async () => {

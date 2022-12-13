@@ -4,10 +4,10 @@ import { PageContext } from './use-page-context';
 
 export const useSieMethods = () => {
   const { experienceSettings } = useContext(PageContext);
-  const { methods, password, verify } = experienceSettings?.signUp ?? {};
+  const { identifiers, password, verify } = experienceSettings?.signUp ?? {};
 
   return {
-    signUpMethods: methods ?? [],
+    signUpMethods: identifiers ?? [],
     signUpSettings: { password, verify },
     signInMethods:
       experienceSettings?.signIn.methods.filter(

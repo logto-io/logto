@@ -140,6 +140,45 @@ export const mockEmailConnectorConfig = {
   ],
 };
 
+export const mockStandardEmailConnectorId = 'mock-standard-email-service';
+export const mockStandardEmailConnectorConfig = {
+  apiKey: 'api-key-value',
+  fromEmail: 'noreply@logto.test.io',
+  fromName: 'from-name-value',
+  templates: [
+    {
+      usageType: 'SignIn',
+      type: 'text/plain',
+      subject: 'Logto SignIn Template',
+      content: 'This is for sign-in purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'Register',
+      type: 'text/plain',
+      subject: 'Logto Register Template',
+      content: 'This is for registering purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'ForgotPassword',
+      type: 'text/plain',
+      subject: 'Logto Forgot Password Template',
+      content: 'This is for forgot-password purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'Continue',
+      type: 'text/plain',
+      subject: 'Logto Continue Template',
+      content: 'This is for completing user profile purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'Test',
+      type: 'text/plain',
+      subject: 'Logto Test Template',
+      content: 'This is for testing purposes only. Your passcode is {{code}}.',
+    },
+  ],
+};
+
 export const mockSocialConnectorId = 'mock-social-connector';
 export const mockSocialConnectorTarget = 'mock-social';
 export const mockSocialConnectorConfig = {

@@ -1,11 +1,13 @@
 import { Users } from '@logto/schemas';
 import { NotFoundError, SlonikError } from 'slonik';
 
-import RequestError from '@/errors/RequestError';
-import { DeletionError, InsertionError, UpdateError } from '@/errors/SlonikError';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import RequestError from '#src/errors/RequestError/index.js';
+import { DeletionError, InsertionError, UpdateError } from '#src/errors/SlonikError/index.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaSlonikErrorHandler from './koa-slonik-error-handler';
+import koaSlonikErrorHandler from './koa-slonik-error-handler.js';
+
+const { jest } = import.meta;
 
 describe('koaSlonikErrorHandler middleware', () => {
   const next = jest.fn();

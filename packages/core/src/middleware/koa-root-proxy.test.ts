@@ -1,6 +1,8 @@
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaRootProxy from './koa-root-proxy';
+import koaRootProxy from './koa-root-proxy.js';
+
+const { jest } = import.meta;
 
 describe('koaRootProxy', () => {
   const next = jest.fn();

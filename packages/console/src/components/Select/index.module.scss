@@ -15,9 +15,10 @@
   font: var(--font-body-medium);
   cursor: pointer;
   position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+
+  .title {
+    @include _.text-ellipsis;
+  }
 
   &.open {
     border-color: var(--color-primary);
@@ -77,4 +78,9 @@
   &.large {
     height: 36px;
   }
+}
+
+.dropdown {
+  padding: _.unit(1);
+  max-height: 288px;
 }

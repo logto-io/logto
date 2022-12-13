@@ -8,7 +8,7 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
 
   const requiredProfileErrorHandler = useMemo(
     () => ({
-      'user.require_password': () => {
+      'user.password_required_in_profile': () => {
         navigate(
           {
             pathname: `/${UserFlow.continue}/password`,
@@ -17,7 +17,7 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
           { replace }
         );
       },
-      'user.require_username': () => {
+      'user.username_required_in_profile': () => {
         navigate(
           {
             pathname: `/${UserFlow.continue}/username`,
@@ -26,7 +26,7 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
           { replace }
         );
       },
-      'user.require_email': () => {
+      'user.email_required_in_profile': () => {
         navigate(
           {
             pathname: `/${UserFlow.continue}/email`,
@@ -35,7 +35,7 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
           { replace }
         );
       },
-      'user.require_sms': () => {
+      'user.phone_required_in_profile': () => {
         navigate(
           {
             pathname: `/${UserFlow.continue}/sms`,
@@ -44,7 +44,7 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
           { replace }
         );
       },
-      'user.require_email_or_sms': () => {
+      'user.email_or_phone_required_in_profile': () => {
         navigate(
           {
             pathname: `/${UserFlow.continue}/email-or-sms/email`,

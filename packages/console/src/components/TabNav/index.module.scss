@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .nav {
-  border-bottom: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-surface-5);
   display: flex;
-  margin: _.unit(1) 0;
+  margin-top: _.unit(1);
 }

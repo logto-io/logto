@@ -1,7 +1,6 @@
 import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorPlatform } from '@logto/schemas';
 import classNames from 'classnames';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
@@ -18,15 +17,11 @@ type Props = {
 
 const ConnectorTabs = ({ target, connectorId }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data } = useSWR<ConnectorResponse[]>(`/api/connectors?target=${target}`);
+  const { data: connectors } = useSWR<ConnectorResponse[]>(`/api/connectors?target=${target}`);
 
-  const connectors = useMemo(() => {
-    if (!data) {
-      return [];
-    }
-
-    return data.filter(({ enabled }) => enabled);
-  }, [data]);
+  if (!connectors) {
+    return null;
+  }
 
   if (connectors.length === 0) {
     return null;

@@ -3,14 +3,9 @@
 .field {
   display: flex;
   align-items: center;
-}
 
-.tipIcon {
-  margin-left: _.unit(1);
-
-  > svg {
-    display: block;
-    cursor: pointer;
+  .tipButton {
+    margin-left: _.unit(0.5);
   }
 }
 
@@ -20,9 +15,4 @@
 
 .content {
   font: var(--font-body-medium);
-
-  a {
-    color: #cabeff;
-    text-decoration: none;
-  }
 }

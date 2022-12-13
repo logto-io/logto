@@ -2,10 +2,11 @@ import { AlterationStateKey, LogtoConfigs } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import type { QueryType } from '../test-utilities';
-import { expectSqlAssert } from '../test-utilities';
-import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './logto-config';
+import type { QueryType } from '../test-utilities.js';
+import { expectSqlAssert } from '../test-utilities.js';
+import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './logto-config.js';
 
+const { jest } = import.meta;
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
 const pool = createMockPool({

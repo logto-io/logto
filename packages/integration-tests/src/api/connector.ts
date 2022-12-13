@@ -1,6 +1,6 @@
-import type { ConnectorResponse } from '@logto/schemas';
+import type { Connector, ConnectorResponse } from '@logto/schemas';
 
-import { authedAdminApi } from './api';
+import { authedAdminApi } from './api.js';
 
 export const listConnectors = async () =>
   authedAdminApi.get('connectors').json<ConnectorResponse[]>();
@@ -8,25 +8,27 @@ export const listConnectors = async () =>
 export const getConnector = async (connectorId: string) =>
   authedAdminApi.get(`connectors/${connectorId}`).json<ConnectorResponse>();
 
-export const updateConnectorConfig = async (connectorId: string, config: Record<string, unknown>) =>
+// FIXME @Darcy: correct use of `id` and `connectorId`.
+export const postConnector = async (connectorId: string, metadata?: Record<string, unknown>) =>
+  authedAdminApi
+    .post({
+      url: `connectors`,
+      json: { connectorId, metadata },
+    })
+    .json<Connector>();
+
+export const deleteConnectorById = async (id: string) =>
+  authedAdminApi.delete({ url: `connectors/${id}` }).json();
+
+export const updateConnectorConfig = async (
+  connectorId: string,
+  config: Record<string, unknown>,
+  metadata?: Record<string, unknown>
+) =>
   authedAdminApi
     .patch({
       url: `connectors/${connectorId}`,
-      json: { config },
-    })
-    .json<ConnectorResponse>();
-
-export const enableConnector = async (connectorId: string) =>
-  updateConnectorEnabledProperty(connectorId, true);
-
-export const disableConnector = async (connectorId: string) =>
-  updateConnectorEnabledProperty(connectorId, false);
-
-const updateConnectorEnabledProperty = (connectorId: string, enabled: boolean) =>
-  authedAdminApi
-    .patch({
-      url: `connectors/${connectorId}/enabled`,
-      json: { enabled },
+      json: { config, metadata },
     })
     .json<ConnectorResponse>();
 

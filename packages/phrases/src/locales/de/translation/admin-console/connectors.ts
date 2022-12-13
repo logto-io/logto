@@ -30,6 +30,24 @@ const connectors = {
   },
   guide: {
     subtitle: 'Eine Schritt-für-Schritt-Anleitung zur Konfiguration deines Connectors',
+    connector_setting: 'Connector setting', // UNTRANSLATED
+    name: 'Connector name', // UNTRANSLATED
+    name_tip: 'Connector button’s name will display as "Continue with {{Connector Name}}".', // UNTRANSLATED
+    logo: 'Connector logo URL', // UNTRANSLATED
+    logo_placeholder: 'https://your.cdn.domain/logo.png', // UNTRANSLATED
+    logo_tip: 'The logo image will also display on the connector button.', // UNTRANSLATED
+    logo_dark: 'Connector logo URL (Dark mode)', // UNTRANSLATED
+    logo_dark_placeholder: 'https://your.cdn.domain/logo.png', // UNTRANSLATED
+    logo_dark_tip:
+      'This will be used when opening “Enable dark mode” in the setting of sign in experience.', // UNTRANSLATED
+    logo_dark_collapse: 'Collapse', // UNTRANSLATED
+    logo_dark_show: 'Show "Logo for dark mode"', // UNTRANSLATED
+    target: 'Connector identity target', // UNTRANSLATED
+    target_tip: 'A unique identifier for the connector.', // UNTRANSLATED
+    config: 'Enter your JSON here', // UNTRANSLATED
+    sync_profile: 'Sync profile information from the social provider', // UNTRANSLATED
+    sync_profile_only_at_register: 'Only sync at register', // UNTRANSLATED
+    sync_profile_each_sign_in: 'Always sync at each sign-in', // UNTRANSLATED
   },
   platform: {
     universal: 'Universal',

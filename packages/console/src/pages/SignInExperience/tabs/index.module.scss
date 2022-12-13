@@ -1,0 +1,63 @@
+@use '@/scss/underscore' as _;
+
+.tabContent {
+  > :not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}
+
+.title {
+  @include _.subhead-cap;
+  color: var(--color-neutral-variant-60);
+}
+
+.radioGroup {
+  margin-top: _.unit(3);
+}
+
+.formFieldDescription {
+  font: var(--font-body-medium);
+  color: var(--color-text-secondary);
+  margin: _.unit(1) 0 _.unit(2);
+}
+
+.socialOnlyDescription {
+  margin-left: _.unit(1);
+  color: var(--color-text-secondary);
+}
+
+.selections {
+  > :not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}
+
+.primaryTag {
+  color: var(--color-text-secondary);
+}
+
+.method {
+  margin-top: _.unit(3);
+}
+
+.primarySocial {
+  margin-top: _.unit(2);
+}
+
+.darkModeTip {
+  display: flex;
+  align-items: baseline;
+  font: var(--font-body-medium);
+  color: var(--color-text-secondary);
+  margin-top: _.unit(1);
+}
+
+.manageLanguageButton {
+  margin-top: _.unit(1);
+}
+
+.defaultLanguageDescription {
+  padding-top: _.unit(2);
+  font: var(--font-body-medium);
+  color: var(--color-text-secondary);
+}

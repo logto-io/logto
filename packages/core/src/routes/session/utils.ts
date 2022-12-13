@@ -1,30 +1,24 @@
-import type {
-  LogPayload,
-  LogType,
-  PasscodeType,
-  SignInExperience,
-  SignInIdentifier,
-  User,
-} from '@logto/schemas';
-import { SignUpIdentifier, logTypeGuard } from '@logto/schemas';
+import type { LogPayload, LogType, PasscodeType, SignInExperience, User } from '@logto/schemas';
+import { SignInIdentifier, logTypeGuard } from '@logto/schemas';
 import type { Nullable, Truthy } from '@silverhand/essentials';
+import { isSameArray } from '@silverhand/essentials';
 import { addSeconds, isAfter, isValid } from 'date-fns';
 import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
-import { verifyUserPassword } from '@/lib/user';
-import type { LogContext } from '@/middleware/koa-log';
-import { hasUser, hasUserWithEmail, hasUserWithPhone, updateUserById } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import { verifyUserPassword } from '#src/lib/user.js';
+import type { LogContext } from '#src/middleware/koa-log.js';
+import { updateUserById } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import { continueSignInTimeout, verificationTimeout } from './consts';
-import type { Method, Operation, VerificationResult, VerificationStorage } from './types';
-import { continueSignInStorageGuard } from './types';
+import { continueSignInTimeout, verificationTimeout } from '../consts.js';
+import type { Method, Operation, VerificationResult, VerificationStorage } from './types.js';
+import { continueSignInStorageGuard } from './types.js';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
@@ -177,53 +171,34 @@ export const checkRequiredProfile = async (
 
   if (signUp.password && !isUserPasswordSet(user)) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_password', status: 422 });
+    throw new RequestError({ code: 'user.password_required_in_profile', status: 422 });
   }
 
-  if (signUp.identifier === SignUpIdentifier.Username && !username) {
+  if (isSameArray(signUp.identifiers, [SignInIdentifier.Username]) && !username) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_username', status: 422 });
+    throw new RequestError({ code: 'user.username_required_in_profile', status: 422 });
   }
 
-  if (signUp.identifier === SignUpIdentifier.Email && !primaryEmail) {
+  if (isSameArray(signUp.identifiers, [SignInIdentifier.Email]) && !primaryEmail) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_email', status: 422 });
+    throw new RequestError({ code: 'user.email_required_in_profile', status: 422 });
   }
 
-  if (signUp.identifier === SignUpIdentifier.Sms && !primaryPhone) {
+  if (isSameArray(signUp.identifiers, [SignInIdentifier.Sms]) && !primaryPhone) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_sms', status: 422 });
+    throw new RequestError({ code: 'user.phone_required_in_profile', status: 422 });
   }
 
-  if (signUp.identifier === SignUpIdentifier.EmailOrSms && !primaryEmail && !primaryPhone) {
+  if (
+    isSameArray(signUp.identifiers, [SignInIdentifier.Email, SignInIdentifier.Sms]) &&
+    !primaryEmail &&
+    !primaryPhone
+  ) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
-    throw new RequestError({ code: 'user.require_email_or_sms', status: 422 });
+    throw new RequestError({ code: 'user.email_or_phone_required_in_profile', status: 422 });
   }
 };
 /* eslint-enable complexity */
-
-export const checkExistingSignUpIdentifiers = async (
-  identifiers: {
-    username?: Nullable<string>;
-    primaryEmail?: Nullable<string>;
-    primaryPhone?: Nullable<string>;
-  },
-  excludeUserId: string
-) => {
-  const { username, primaryEmail, primaryPhone } = identifiers;
-
-  if (username && (await hasUser(username, excludeUserId))) {
-    throw new RequestError({ code: 'user.username_exists', status: 422 });
-  }
-
-  if (primaryEmail && (await hasUserWithEmail(primaryEmail, excludeUserId))) {
-    throw new RequestError({ code: 'user.email_exists', status: 422 });
-  }
-
-  if (primaryPhone && (await hasUserWithPhone(primaryPhone, excludeUserId))) {
-    throw new RequestError({ code: 'user.sms_exists', status: 422 });
-  }
-};
 
 type SignInWithPasswordParameter = {
   identifier: SignInIdentifier;

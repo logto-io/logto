@@ -1,9 +1,9 @@
 import { noop } from '@silverhand/essentials';
 import type { CommandModule } from 'yargs';
 
-import add from './add';
-import list from './list';
-import remove from './remove';
+import add from './add.js';
+import list from './list.js';
+import remove from './remove.js';
 
 const connector: CommandModule = {
   command: ['connector', 'c', 'connectors'],

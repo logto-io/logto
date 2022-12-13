@@ -3,10 +3,11 @@
   "compilerOptions": {
     "outDir": "lib",
     "declaration": true,
-    "types": ["node", "jest"]
+    "types": ["node", "jest"],
+    "moduleResolution": "nodenext",
+    "module": "esnext"
   },
   "include": [
-    "src",
-    "jest.config.ts"
+    "src"
   ]
 }

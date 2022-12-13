@@ -1,31 +1,32 @@
 import fs from 'fs/promises';
 import https from 'https';
 
+import { deduplicate } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type Koa from 'koa';
 import compose from 'koa-compose';
 import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 
-import envSet, { MountedApps } from '@/env-set';
-import koaCheckDemoApp from '@/middleware/koa-check-demo-app';
-import koaConnectorErrorHandler from '@/middleware/koa-connector-error-handler';
-import koaErrorHandler from '@/middleware/koa-error-handler';
-import koaI18next from '@/middleware/koa-i18next';
-import koaLog from '@/middleware/koa-log';
-import koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
-import koaRootProxy from '@/middleware/koa-root-proxy';
-import koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
-import koaSpaProxy from '@/middleware/koa-spa-proxy';
-import koaSpaSessionGuard from '@/middleware/koa-spa-session-guard';
-import koaWelcomeProxy from '@/middleware/koa-welcome-proxy';
-import initOidc from '@/oidc/init';
-import initRouter from '@/routes/init';
+import envSet, { MountedApps } from '#src/env-set/index.js';
+import koaCheckDemoApp from '#src/middleware/koa-check-demo-app.js';
+import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
+import koaLog from '#src/middleware/koa-log.js';
+import koaOIDCErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
+import koaRootProxy from '#src/middleware/koa-root-proxy.js';
+import koaSlonikErrorHandler from '#src/middleware/koa-slonik-error-handler.js';
+import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
+import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
+import koaWelcomeProxy from '#src/middleware/koa-welcome-proxy.js';
+import initOidc from '#src/oidc/init.js';
+import initRouter from '#src/routes/init.js';
 
 const logListening = () => {
   const { localhostUrl, endpoint } = envSet.values;
 
-  for (const url of new Set([localhostUrl, endpoint])) {
+  for (const url of deduplicate([localhostUrl, endpoint])) {
     console.log(chalk.bold(chalk.green(`App is running at ${url}`)));
   }
 };

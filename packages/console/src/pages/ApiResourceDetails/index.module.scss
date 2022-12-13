@@ -2,6 +2,7 @@
 
 .backLink {
   margin: _.unit(1) 0 0 _.unit(1);
+  user-select: none;
 }
 
 .deleteConfirm {
@@ -57,24 +58,5 @@
     > *:not(:first-child) {
       margin-left: _.unit(3);
     }
-  }
-}
-
-.body {
-  > :first-child {
-    margin-top: 0;
-  }
-
-  .form {
-    margin-top: _.unit(8);
-  }
-
-  .fields {
-    padding-bottom: _.unit(10);
-    flex: 1;
-  }
-
-  .textField {
-    @include _.form-text-field;
   }
 }

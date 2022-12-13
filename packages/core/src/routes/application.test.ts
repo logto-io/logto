@@ -1,13 +1,12 @@
 import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
-import { mockApplication } from '@/__mocks__';
-import { findApplicationById } from '@/queries/application';
-import { createRequester } from '@/utils/test-utils';
+import { mockApplication } from '#src/__mocks__/index.js';
 
-import applicationRoutes from './application';
+const { jest } = import.meta;
 
-jest.mock('@/queries/application', () => ({
+const { findApplicationById } = mockEsm('#src/queries/application.js', () => ({
   findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
   findAllApplications: jest.fn(async () => [mockApplication]),
   findApplicationById: jest.fn(async () => mockApplication),
@@ -30,21 +29,19 @@ jest.mock('@/queries/application', () => ({
   ),
 }));
 
-jest.mock('@logto/shared', () => ({
+mockEsm('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: jest.fn(() => () => 'randomId'),
   buildApplicationSecret: jest.fn(() => 'randomId'),
 }));
 
+const { createRequester } = await import('#src/utils/test-utils.js');
+const applicationRoutes = await pickDefault(import('./application.js'));
+
 const customClientMetadata = {
   corsAllowedOrigins: ['http://localhost:5000', 'http://localhost:5001', 'https://silverhand.com'],
   idTokenTtl: 999_999,
   refreshTokenTtl: 100_000_000,
-};
-
-const customOidcClientMetadata = {
-  redirectUris: [],
-  postLogoutRedirectUris: [],
 };
 
 describe('application route', () => {

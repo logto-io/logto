@@ -1,0 +1,21 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: _.unit(6);
+  height: 100%;
+}
+
+.headline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table {
+  flex: 1;
+  margin-top: _.unit(4);
+  overflow: hidden;
+}

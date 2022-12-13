@@ -5,6 +5,7 @@
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
   "license": "MPL-2.0",
+  "type": "module",
   "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
@@ -22,6 +23,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc",
+    "build:test": "pnpm build",
     "dev": "tsc --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
@@ -31,8 +33,8 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@logto/core-kit": "1.0.0-beta.20",
-    "@logto/language-kit": "1.0.0-beta.20",
+    "@logto/core-kit": "1.0.0-beta.28",
+    "@logto/language-kit": "1.0.0-beta.28",
     "@silverhand/essentials": "^1.3.0",
     "zod": "^3.19.1"
   },
@@ -42,7 +44,7 @@
     "eslint": "^8.21.0",
     "lint-staged": "^13.0.0",
     "prettier": "^2.7.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.4"
   },
   "engines": {
     "node": "^16.13.0 || ^18.12.0"

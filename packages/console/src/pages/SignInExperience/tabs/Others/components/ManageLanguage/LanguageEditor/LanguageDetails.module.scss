@@ -1,0 +1,110 @@
+@use '@/scss/underscore' as _;
+
+.languageDetails {
+  display: flex;
+  flex-direction: column;
+
+  .title {
+    flex-shrink: 0;
+    padding: _.unit(6) _.unit(5);
+    font: var(--font-title-large);
+    color: var(--color-text);
+    display: flex;
+    justify-content: space-between;
+
+    .languageInfo {
+      display: flex;
+      align-items: center;
+
+      > span {
+        margin-left: _.unit(2);
+        font: var(--font-body-medium);
+        color: var(--color-text-secondary);
+      }
+
+      .builtInFlag {
+        display: inline-block;
+        font: var(--font-label-medium);
+        color: var(--color-text);
+        background-color: var(--color-surface-variant);
+        padding: _.unit(0.5) _.unit(2);
+        border-radius: 10px;
+      }
+    }
+  }
+
+  .form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    .content {
+      flex: 1;
+      border-top: 1px solid var(--color-divider);
+      overflow-y: auto;
+
+      .customValuesColumn {
+        display: flex;
+        align-items: center;
+      }
+
+      .clearButton {
+        margin-left: _.unit(1);
+      }
+
+      .clearIcon {
+        width: 16px;
+        height: 16px;
+      }
+
+      > table {
+        border: none;
+
+        > thead {
+          position: sticky;
+          top: 0;
+          // Note: cells with `position: relative` style will overlap this sticky header, add a z-index to fix it.
+          z-index: 1;
+
+          tr > th {
+            padding: _.unit(1) _.unit(5);
+            font: var(--font-label-large);
+            color: var(--color-text);
+            background-color: var(--color-layer-1);
+          }
+        }
+
+        > tbody > tr > td {
+          padding: _.unit(2) _.unit(5);
+          border: none;
+          word-wrap: break-word;
+        }
+      }
+
+      .sectionTitle {
+        @include _.subhead-cap;
+        background-color: var(--color-layer-light);
+      }
+
+      .sectionDataKey {
+        padding: _.unit(4) _.unit(5);
+        font: var(--font-body-medium);
+        color: var(--color-text);
+      }
+
+      .sectionBuiltInText {
+        padding: _.unit(2) 0;
+      }
+    }
+
+    .footer {
+      flex-shrink: 0;
+      border-top: 1px solid var(--color-divider);
+      height: 85px;
+      display: flex;
+      flex-direction: row-reverse;
+      padding: _.unit(5);
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import type { LogtoErrorCode } from '@logto/phrases';
 import { assert } from '@silverhand/essentials';
 
-import RequestError from '@/errors/RequestError';
+import RequestError from '#src/errors/RequestError/index.js';
 
 export type AssertThatFunction = <E extends Error>(
   value: unknown,

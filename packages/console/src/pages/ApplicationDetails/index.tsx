@@ -1,6 +1,5 @@
 import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -17,10 +16,12 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
+import DetailsForm from '@/components/DetailsForm';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
-import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import TextLink from '@/components/TextLink';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -62,7 +63,7 @@ const ApplicationDetails = () => {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = formMethods;
 
   useEffect(() => {
@@ -123,16 +124,11 @@ const ApplicationDetails = () => {
     setIsReadmeOpen(false);
   };
 
-  const isAdvancedSettings = pathname.includes('advanced-settings');
-
   return (
     <div className={detailsStyles.container}>
-      <LinkButton
-        to="/applications"
-        icon={<Back />}
-        title="application_details.back_to_applications"
-        className={styles.backLink}
-      />
+      <TextLink to="/applications" icon={<Back />} className={styles.backLink}>
+        {t('application_details.back_to_applications')}
+      </TextLink>
       {isLoading && <DetailsSkeleton />}
       {data && oidcConfig && (
         <>
@@ -144,7 +140,7 @@ const ApplicationDetails = () => {
                 <div className={styles.type}>{t(`${applicationTypeI18nKey[data.type]}.title`)}</div>
                 <div className={styles.verticalBar} />
                 <div className={styles.text}>App ID</div>
-                <CopyToClipboard value={data.id} />
+                <CopyToClipboard size="small" value={data.id} />
               </div>
             </div>
             <div className={styles.operations}>
@@ -200,51 +196,25 @@ const ApplicationDetails = () => {
               </DeleteConfirmModal>
             </div>
           </Card>
-          <Card className={classNames(styles.body, detailsStyles.body)}>
-            <TabNav>
-              <TabNavItem href={`/applications/${data.id}/settings`}>
-                {t('general.settings_nav')}
-              </TabNavItem>
-              <TabNavItem href={`/applications/${data.id}/advanced-settings`}>
-                {t('application_details.advanced_settings')}
-              </TabNavItem>
-            </TabNav>
-            <FormProvider {...formMethods}>
-              <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
-                <div className={styles.fields}>
-                  {isAdvancedSettings && (
-                    <AdvancedSettings
-                      applicationType={data.type}
-                      oidcConfig={oidcConfig}
-                      defaultData={data}
-                      isDeleted={isDeleted}
-                    />
-                  )}
-                  {!isAdvancedSettings && (
-                    <Settings
-                      applicationType={data.type}
-                      oidcConfig={oidcConfig}
-                      defaultData={data}
-                      isDeleted={isDeleted}
-                    />
-                  )}
-                </div>
-                <div className={detailsStyles.footer}>
-                  <div className={detailsStyles.footerMain}>
-                    <Button
-                      isLoading={isSubmitting}
-                      htmlType="submit"
-                      type="primary"
-                      size="large"
-                      title="general.save_changes"
-                    />
-                  </div>
-                </div>
-              </form>
-            </FormProvider>
-          </Card>
+          <TabNav>
+            <TabNavItem href={`/applications/${data.id}/settings`}>
+              {t('general.settings_nav')}
+            </TabNavItem>
+          </TabNav>
+          <FormProvider {...formMethods}>
+            <DetailsForm
+              isDirty={isDirty}
+              isSubmitting={isSubmitting}
+              onDiscard={reset}
+              onSubmit={onSubmit}
+            >
+              <Settings data={data} />
+              <AdvancedSettings applicationType={data.type} oidcConfig={oidcConfig} />
+            </DetailsForm>
+          </FormProvider>
         </>
       )}
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </div>
   );
 };

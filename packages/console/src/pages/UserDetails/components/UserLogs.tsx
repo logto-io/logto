@@ -1,6 +1,6 @@
 import AuditLogTable from '@/components/AuditLogTable';
 
-import * as styles from '../index.module.scss';
+import * as styles from './UserLogs.module.scss';
 
 type Props = {
   userId: string;

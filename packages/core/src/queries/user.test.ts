@@ -2,11 +2,11 @@ import { UserRole, Users } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import { mockUser } from '@/__mocks__';
-import envSet from '@/env-set';
-import { DeletionError } from '@/errors/SlonikError';
-import type { QueryType } from '@/utils/test-utils';
-import { expectSqlAssert } from '@/utils/test-utils';
+import { mockUser } from '#src/__mocks__/index.js';
+import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
+import type { QueryType } from '#src/utils/test-utils.js';
+import { expectSqlAssert } from '#src/utils/test-utils.js';
 
 import {
   findUserByUsername,
@@ -24,8 +24,9 @@ import {
   updateUserById,
   deleteUserById,
   deleteUserIdentity,
-} from './user';
+} from './user.js';
 
+const { jest } = import.meta;
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
 jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
@@ -306,6 +307,7 @@ describe('user query', () => {
       where ${fields.primaryEmail} ilike $1 or ${fields.primaryPhone} ilike $2 or ${
       fields.username
     } ilike $3 or ${fields.name} ilike $4
+      order by "created_at" desc
       limit $5
       offset $6
     `;
@@ -338,6 +340,7 @@ describe('user query', () => {
       and (${fields.primaryEmail} ilike $2 or ${fields.primaryPhone} ilike $3 or ${
       fields.username
     } ilike $4 or ${fields.name} ilike $5)
+      order by "created_at" desc
       limit $6
       offset $7
     `;
@@ -370,6 +373,7 @@ describe('user query', () => {
       where ${fields.primaryEmail} like $1 or ${fields.primaryPhone} like $2 or ${
       fields.username
     } like $3 or ${fields.name} like $4
+      order by "created_at" desc
       limit $5
       offset $6
     `;

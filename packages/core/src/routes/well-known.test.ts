@@ -1,6 +1,9 @@
 import { SignInMode } from '@logto/schemas';
-import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
-import { Provider } from 'oidc-provider';
+import {
+  adminConsoleApplicationId,
+  adminConsoleSignInExperience,
+} from '@logto/schemas/lib/seeds/index.js';
+import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import {
   mockAliyunDmConnector,
@@ -11,51 +14,49 @@ import {
   mockSignInExperience,
   mockWechatConnector,
   mockWechatNativeConnector,
-} from '@/__mocks__';
-import * as signInExperienceQueries from '@/queries/sign-in-experience';
-import wellKnownRoutes from '@/routes/well-known';
-import { createRequester } from '@/utils/test-utils';
+} from '#src/__mocks__/index.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-const getLogtoConnectors = jest.fn(async () => [
-  mockAliyunDmConnector,
-  mockAliyunSmsConnector,
-  mockFacebookConnector,
-  mockGithubConnector,
-  mockGoogleConnector,
-  mockWechatConnector,
-  mockWechatNativeConnector,
-]);
-
-jest.mock('@/connectors', () => ({
-  getLogtoConnectors: async () => getLogtoConnectors(),
+const { jest } = import.meta;
+await mockEsmWithActual('i18next', () => ({
+  default: {
+    t: (key: string) => key,
+  },
 }));
 
-jest.mock('@/queries/user', () => ({
+const { findDefaultSignInExperience } = mockEsm('#src/queries/sign-in-experience.js', () => ({
+  updateDefaultSignInExperience: jest.fn(),
+  findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+}));
+
+await mockEsmWithActual('#src/queries/user.js', () => ({
   hasActiveUsers: jest.fn().mockResolvedValue(true),
 }));
 
-const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({
-  params: {},
+mockEsm('#src/connectors.js', () => ({
+  getLogtoConnectors: jest.fn(async () => [
+    mockAliyunDmConnector,
+    mockAliyunSmsConnector,
+    mockFacebookConnector,
+    mockGithubConnector,
+    mockGoogleConnector,
+    mockWechatConnector,
+    mockWechatNativeConnector,
+  ]),
 }));
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails,
-  })),
-}));
-
-jest.mock('i18next', () => ({
-  t: (key: string) => key,
-}));
+const wellKnownRoutes = await pickDefault(import('#src/routes/well-known.js'));
 
 describe('GET /.well-known/sign-in-exp', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
+  const provider = createMockProvider();
   const sessionRequest = createRequester({
     anonymousRoutes: wellKnownRoutes,
-    provider: new Provider(''),
+    provider,
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();
@@ -66,13 +67,9 @@ describe('GET /.well-known/sign-in-exp', () => {
     ],
   });
 
-  const signInExperienceQuerySpyOn = jest
-    .spyOn(signInExperienceQueries, 'findDefaultSignInExperience')
-    .mockResolvedValue(mockSignInExperience);
-
   it('should return github and facebook connector instances', async () => {
     const response = await sessionRequest.get('/.well-known/sign-in-exp');
-    expect(signInExperienceQuerySpyOn).toHaveBeenCalledTimes(1);
+    expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(response.body).toMatchObject({
       ...mockSignInExperience,
@@ -98,7 +95,10 @@ describe('GET /.well-known/sign-in-exp', () => {
   });
 
   it('should return admin console settings', async () => {
-    interactionDetails.mockResolvedValue({ params: { client_id: adminConsoleApplicationId } });
+    jest
+      .spyOn(provider, 'interactionDetails')
+      // @ts-expect-error for testing
+      .mockResolvedValue({ params: { client_id: adminConsoleApplicationId } });
     const response = await sessionRequest.get('/.well-known/sign-in-exp');
     expect(response.status).toEqual(200);
 

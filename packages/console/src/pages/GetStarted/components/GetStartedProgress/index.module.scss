@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.container {
+.progress {
   display: flex;
   align-items: center;
   padding: _.unit(2);
@@ -29,44 +29,46 @@
   }
 }
 
-.dropdownTitle {
-  @include _.subhead-cap;
-  padding: _.unit(5) _.unit(5) _.unit(3) _.unit(4);
-}
-
 .dropdown {
   padding: 0;
 }
 
-.index {
-  width: 20px;
-  height: 20px;
-  font: var(--font-subhead-cap);
-
-  > svg {
-    width: 16px;
-    height: 16px;
-  }
+.dropdownTitle {
+  @include _.subhead-cap;
+  padding: _.unit(3) _.unit(5) _.unit(3) _.unit(4);
 }
 
-.dropdownItem {
-  height: 42px;
-  padding: 0 _.unit(5) 0 _.unit(4);
-  border-top: 1px solid var(--color-hover);
-  border-bottom: 1px solid transparent;
-  border-radius: unset;
+.dropdownItemWrapper {
+  .index {
+    width: 20px;
+    height: 20px;
+    font: var(--font-subhead-cap);
 
-  &:last-child {
-    // Note: use 7px to avoid display issue with parent border-radius
-    border-bottom-left-radius: 7px;
-    border-bottom-right-radius: 7px;
+    > svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 
-  &:hover:not(:last-child) {
-    border-bottom-color: var(--color-hover);
+  .dropdownItem {
+    height: 42px;
+    padding: 0 _.unit(5) 0 _.unit(4);
+    border-top: 1px solid var(--color-hover);
+    border-bottom: 1px solid transparent;
+    border-radius: unset;
 
-    + .dropdownItem {
-      border-top-color: transparent;
+    &:last-child {
+      // Note: use 7px to avoid display issue with parent border-radius
+      border-bottom-left-radius: 7px;
+      border-bottom-right-radius: 7px;
+    }
+
+    &:hover:not(:last-child) {
+      border-bottom-color: var(--color-hover);
+
+      + .dropdownItem {
+        border-top-color: transparent;
+      }
     }
   }
 }

@@ -22,7 +22,6 @@
 
 .title {
   @include _.subhead-cap;
-  padding: _.unit(3);
 }
 
 .overlay {
@@ -33,7 +32,5 @@
 
 .list {
   margin: 0;
-  padding: _.unit(1);
-  max-height: 288px;
   overflow-y: auto;
 }

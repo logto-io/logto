@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.link {
+  display: inline-flex;
+  max-width: fit-content;
+  text-decoration: none;
+  border-color: transparent;
+  font: var(--font-body-medium);
+  color: var(--color-text-link);
+  gap: _.unit(1);
+
+  &.trailingIcon {
+    flex-direction: row-reverse;
+  }
+
+  &:active {
+    color: var(--color-primary-pressed);
+  }
+
+  &:disabled {
+    color: var(--color-disabled);
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  > svg {
+    display: inline-block;
+    vertical-align: baseline;
+  }
+}

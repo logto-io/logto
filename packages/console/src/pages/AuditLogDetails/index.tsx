@@ -8,11 +8,10 @@ import Back from '@/assets/images/back.svg';
 import ApplicationName from '@/components/ApplicationName';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
-import DangerousRaw from '@/components/DangerousRaw';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import FormField from '@/components/FormField';
-import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import TextLink from '@/components/TextLink';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
 import type { RequestError } from '@/hooks/use-api';
@@ -24,6 +23,9 @@ import * as styles from './index.module.scss';
 const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
   `/${pathname.slice(0, pathname.lastIndexOf('/'))}`;
 
+const getDetailsTabNavLink = (logId: string, userId?: string) =>
+  userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
+
 const AuditLogDetails = () => {
   const { userId, logId } = useParams();
   const { pathname } = useLocation();
@@ -34,17 +36,19 @@ const AuditLogDetails = () => {
   const isLoading = !data && !error;
 
   const backLink = getAuditLogDetailsRelatedResourceLink(pathname);
-  const backLinkTitle = userId ? (
-    <DangerousRaw>
-      {t('log_details.back_to_user', { name: userData?.name ?? t('users.unnamed') })}
-    </DangerousRaw>
-  ) : (
-    'log_details.back_to_logs'
-  );
+  const backLinkTitle = userId
+    ? t('log_details.back_to_user', { name: userData?.name ?? t('users.unnamed') })
+    : t('log_details.back_to_logs');
+
+  if (!logId) {
+    return null;
+  }
 
   return (
     <div className={detailsStyles.container}>
-      <LinkButton to={backLink} icon={<Back />} title={backLinkTitle} className={styles.backLink} />
+      <TextLink to={backLink} icon={<Back />} className={styles.backLink}>
+        {backLinkTitle}
+      </TextLink>
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {data && (
@@ -95,12 +99,12 @@ const AuditLogDetails = () => {
               </div>
             </div>
           </Card>
+          <TabNav>
+            <TabNavItem href={getDetailsTabNavLink(logId, userId)}>
+              {t('log_details.tab_details')}
+            </TabNavItem>
+          </TabNav>
           <Card className={classNames(styles.body, detailsStyles.body)}>
-            <TabNav>
-              <TabNavItem href={`/audit-logs/${logId ?? ''}`}>
-                {t('log_details.tab_details')}
-              </TabNavItem>
-            </TabNav>
             <div className={styles.main}>
               <FormField title="log_details.raw_data">
                 <CodeEditor language="json" value={JSON.stringify(data.payload, null, 2)} />

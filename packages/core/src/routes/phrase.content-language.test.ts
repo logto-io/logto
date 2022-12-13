@@ -1,51 +1,42 @@
-import en from '@logto/phrases-ui/lib/locales/en';
-import { Provider } from 'oidc-provider';
+import en from '@logto/phrases-ui/lib/locales/en.js';
+import { mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
-import { mockSignInExperience } from '@/__mocks__';
-import { trTrTag, zhCnTag, zhHkTag } from '@/__mocks__/custom-phrase';
-import phraseRoutes from '@/routes/phrase';
-import { createRequester } from '@/utils/test-utils';
+import { trTrTag, zhCnTag, zhHkTag } from '#src/__mocks__/custom-phrase.js';
+import { mockSignInExperience } from '#src/__mocks__/index.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-const mockApplicationId = 'mockApplicationIdValue';
-
-const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({
-  params: { client_id: mockApplicationId },
-}));
-
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails,
-  })),
-}));
+const { jest } = import.meta;
 
 const fallbackLanguage = trTrTag;
 const unsupportedLanguageX = 'xx-XX';
 const unsupportedLanguageY = 'yy-YY';
 
-const findDefaultSignInExperience = jest.fn(async () => ({
-  ...mockSignInExperience,
-  languageInfo: {
-    autoDetect: true,
-    fallbackLanguage,
-  },
-}));
+const { findDefaultSignInExperience } = await mockEsmWithActual(
+  '#src/queries/sign-in-experience.js',
+  () => ({
+    findDefaultSignInExperience: jest.fn(async () => ({
+      ...mockSignInExperience,
+      languageInfo: {
+        autoDetect: true,
+        fallbackLanguage,
+      },
+    })),
+  })
+);
 
-jest.mock('@/queries/sign-in-experience', () => ({
-  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
-}));
-
-jest.mock('@/queries/custom-phrase', () => ({
+await mockEsmWithActual('#src/queries/custom-phrase.js', () => ({
   findAllCustomLanguageTags: async () => [trTrTag, zhCnTag],
 }));
 
-jest.mock('@/lib/phrase', () => ({
-  ...jest.requireActual('@/lib/phrase'),
+await mockEsmWithActual('#src/lib/phrase.js', () => ({
   getPhrase: jest.fn().mockResolvedValue(en),
 }));
+const phraseRoutes = await pickDefault(import('./phrase.js'));
 
 const phraseRequest = createRequester({
   anonymousRoutes: phraseRoutes,
-  provider: new Provider(''),
+  provider: createMockProvider(),
 });
 
 afterEach(() => {

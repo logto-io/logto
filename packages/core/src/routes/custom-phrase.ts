@@ -5,19 +5,19 @@ import { CustomPhrases, translationGuard } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import { object } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import koaGuard from '@/middleware/koa-guard';
+import RequestError from '#src/errors/RequestError/index.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 import {
   deleteCustomPhraseByLanguageTag,
   findAllCustomPhrases,
   findCustomPhraseByLanguageTag,
   upsertCustomPhrase,
-} from '@/queries/custom-phrase';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
-import assertThat from '@/utils/assert-that';
-import { isStrictlyPartial } from '@/utils/translation';
+} from '#src/queries/custom-phrase.js';
+import { findDefaultSignInExperience } from '#src/queries/sign-in-experience.js';
+import assertThat from '#src/utils/assert-that.js';
+import { isStrictlyPartial } from '#src/utils/translation.js';
 
-import type { AuthedRouter } from './types';
+import type { AuthedRouter } from './types.js';
 
 const cleanDeepTranslation = (translation: Translation) =>
   // Since `Translation` type actually equals `Partial<Translation>`, force to cast it back to `Translation`.

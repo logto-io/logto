@@ -16,11 +16,8 @@
     color: var(--color-text);
   }
 
-  .icon {
-    margin-left: _.unit(1);
-    width: 16px;
-    height: 16px;
-    color: var(--color-text-secondary);
+  .toggleTipButton {
+    margin-left: _.unit(0.5);
   }
 
   .required {

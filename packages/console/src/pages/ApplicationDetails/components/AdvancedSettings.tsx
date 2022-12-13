@@ -1,45 +1,49 @@
 import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
 import { ApplicationType, UserRole } from '@logto/schemas';
-import { useEffect } from 'react';
+import { deduplicate } from '@silverhand/essentials';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/components/CopyToClipboard';
+import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
-import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import TextLink from '@/components/TextLink';
 
 import * as styles from '../index.module.scss';
 
 type Props = {
   applicationType: ApplicationType;
   oidcConfig: SnakeCaseOidcConfig;
-  defaultData: Application;
-  isDeleted: boolean;
 };
 
-const AdvancedSettings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props) => {
-  const {
-    control,
-    reset,
-    formState: { isDirty },
-  } = useFormContext<Application>();
+const AdvancedSettings = ({ applicationType, oidcConfig }: Props) => {
+  const { control } = useFormContext<Application>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  useEffect(() => {
-    reset(defaultData);
-
-    return () => {
-      reset(defaultData);
-    };
-  }, [reset, defaultData]);
-
   return (
-    <>
+    <FormCard
+      title="application_details.advanced_settings"
+      description="application_details.advanced_settings_description"
+      learnMoreLink="https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint"
+    >
       <FormField
         title="application_details.authorization_endpoint"
-        className={styles.textField}
-        tooltip="application_details.authorization_endpoint_tip"
+        tip={(closeTipHandler) => (
+          <Trans
+            components={{
+              a: (
+                <TextLink
+                  href="https://openid.net/specs/openid-connect-core-1_0.html#Authentication"
+                  target="_blank"
+                  onClick={closeTipHandler}
+                />
+              ),
+            }}
+          >
+            {t('application_details.authorization_endpoint_tip')}
+          </Trans>
+        )}
       >
         <CopyToClipboard
           className={styles.textField}
@@ -73,7 +77,7 @@ const AdvancedSettings = ({ applicationType, oidcConfig, defaultData, isDeleted 
                 checked={value.includes(UserRole.Admin)}
                 onChange={({ currentTarget: { checked } }) => {
                   if (checked) {
-                    onChange([...new Set(value.concat(UserRole.Admin))]);
+                    onChange(deduplicate(value.concat(UserRole.Admin)));
                   } else {
                     onChange(value.filter((value) => value !== UserRole.Admin));
                   }
@@ -83,8 +87,7 @@ const AdvancedSettings = ({ applicationType, oidcConfig, defaultData, isDeleted 
           />
         </FormField>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
-    </>
+    </FormCard>
   );
 };
 

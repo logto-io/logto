@@ -1,21 +1,20 @@
 import { ConnectorType } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
-import { SignUpIdentifier } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
-import { mockLogtoConnectorList, mockSignInExperience, mockUser } from '@/__mocks__';
-import { getLogtoConnectorById } from '@/connectors';
-import RequestError from '@/errors/RequestError';
-import { createRequester } from '@/utils/test-utils';
+import { mockLogtoConnectorList, mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
+import { getLogtoConnectorById } from '#src/connectors/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import socialRoutes, { registerRoute } from './social';
+import socialRoutes, { registerRoute } from './social.js';
 
 const findSocialRelatedUser = jest.fn(async () => [
   'phone',
   { id: 'user1', identities: {}, isSuspended: false },
 ]);
-jest.mock('@/lib/social', () => ({
-  ...jest.requireActual('@/lib/social'),
+jest.mock('#src/lib/social.js', () => ({
+  ...jest.requireActual('#src/lib/social.js'),
   findSocialRelatedUser: async () => findSocialRelatedUser(),
   async getUserInfoByAuthCode(connectorId: string, data: { code: string }) {
     if (connectorId === '_connectorId') {
@@ -40,7 +39,7 @@ const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => mockUser);
 const findUserByIdentity = jest.fn(async () => mockUser);
 
-jest.mock('@/queries/user', () => ({
+jest.mock('#src/queries/user.js', () => ({
   findUserById: async () => findUserById(),
   findUserByIdentity: async () => findUserByIdentity(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
@@ -48,17 +47,17 @@ jest.mock('@/queries/user', () => ({
     target === 'connectorTarget' && userId === mockUser.id,
 }));
 
-jest.mock('@/lib/user', () => ({
+jest.mock('#src/lib/user.js', () => ({
   generateUserId: () => 'user1',
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));
 
-jest.mock('@/queries/sign-in-experience', () => ({
+jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => ({
     ...mockSignInExperience,
     signUp: {
       ...mockSignInExperience.signUp,
-      identifier: SignUpIdentifier.None,
+      identifiers: [],
     },
   }),
 }));
@@ -84,7 +83,7 @@ const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
   };
 });
 
-jest.mock('@/connectors', () => ({
+jest.mock('#src/connectors.js', () => ({
   getLogtoConnectors: jest.fn(async () => mockLogtoConnectorList),
   getLogtoConnectorById: jest.fn(async (connectorId: string) => {
     const connector = await getLogtoConnectorByIdHelper(connectorId);

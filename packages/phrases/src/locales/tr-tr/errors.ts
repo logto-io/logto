@@ -32,30 +32,34 @@ const errors = {
     provider_error: 'Dahili OIDC Hatası: {{message}}.',
   },
   user: {
-    username_exists_register: 'Kullanıcı adı kaydedildi.',
-    email_exists_register: 'E-posta adresi kaydedildi.',
-    phone_exists_register: 'Telefon numarası kaydedildi.',
+    username_already_in_use: 'This username is already in use.', // UNTRANSLATED
+    email_already_in_use: 'This email is associated with an existing account.', // UNTRANSLATED
+    phone_already_in_use: 'This phone number is associated with an existing account.', // UNTRANSLATED
     invalid_email: 'Geçersiz e-posta adresi.',
     invalid_phone: 'Geçersiz telefon numarası.',
-    email_not_exists: 'E-posta adresi henüz kaydedilmedi.',
-    phone_not_exists: 'Telefon numarası henüz kaydedilmedi',
-    identity_not_exists: 'Sosyal platform hesabı henüz kaydedilmedi.',
-    identity_exists: 'Sosyal platform hesabı kaydedildi.',
+    email_not_exist: 'E-posta adresi henüz kaydedilmedi.',
+    phone_not_exist: 'Telefon numarası henüz kaydedilmedi',
+    identity_not_exist: 'Sosyal platform hesabı henüz kaydedilmedi.',
+    identity_already_in_use: 'Sosyal platform hesabı kaydedildi.',
     invalid_role_names: '({{roleNames}}) rol adları geçerli değil.',
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
-    sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
-    sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
+    sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
+    sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED
     same_password: 'New password cannot be the same as your old password.', // UNTRANSLATED
-    require_password: 'You need to set a password before signing-in.', // UNTRANSLATED
-    password_exists: 'Your password has been set.', // UNTRANSLATED
-    require_username: 'You need to set a username before signing-in.', // UNTRANSLATED
-    username_exists: 'This username is already in use.', // UNTRANSLATED
-    require_email: 'You need to add an email address before signing-in.', // UNTRANSLATED
-    email_exists: 'This email is associated with an existing account.', // UNTRANSLATED
-    require_sms: 'You need to add a phone number before signing-in.', // UNTRANSLATED
-    sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
-    require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
+    password_required_in_profile: 'You need to set a password before signing-in.', // UNTRANSLATED
+    new_password_required_in_profile: 'You need to set a new password.', // UNTRANSLATED
+    password_exists_in_profile: 'Password already exists in your profile.', // UNTRANSLATED
+    username_required_in_profile: 'You need to set a username before signing-in.', // UNTRANSLATED
+    username_exists_in_profile: 'Username already exists in your profile.', // UNTRANSLATED
+    email_required_in_profile: 'You need to add an email address before signing-in.', // UNTRANSLATED
+    email_exists_in_profile: 'Your profile has already associated with an email address.', // UNTRANSLATED
+    phone_required_in_profile: 'You need to add a phone number before signing-in.', // UNTRANSLATED
+    phone_exists_in_profile: 'Your profile has already associated with a phone number.', // UNTRANSLATED
+    email_or_phone_required_in_profile:
+      'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
+    user_not_exist: 'User with {{ identifier }} does not exist.', // UNTRANSLATED,
+    missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '{{name}} şifreleme metodu desteklenmiyor.',
@@ -77,6 +81,8 @@ const errors = {
     unauthorized: 'Lütfen önce oturum açın.',
     unsupported_prompt_name: 'Desteklenmeyen prompt adı.',
     forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
+    verification_failed:
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
   },
   connector: {
     general: 'Bağlayıcıda beklenmeyen bir hata oldu.{{errorDescription}}',
@@ -99,6 +105,15 @@ const errors = {
     more_than_one_sms: 'SMS bağlayıcılarının sayısı 1den fazla.',
     more_than_one_email: 'E-posta adresi bağlayıcılarının sayısı 1den fazla.',
     db_connector_type_mismatch: 'Dbde türle eşleşmeyen bir bağlayıcı var.',
+    not_found_with_connector_id: 'Can not find connector with given standard connector id.', // UNTRANSLATED
+    multiple_instances_not_supported:
+      'Can not create multiple instance with picked standard connector.', // UNTRANSLATED
+    invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.', // UNTRANSLATED
+    can_not_modify_target: 'The connector target can not be modified.', // UNTRANSLATED
+    multiple_target_with_same_platform:
+      'You can not have multiple social connectors that have same target and platform.', // UNTRANSLATED
+    cannot_change_metadata_for_non_standard_connector:
+      "This connector's `metadata` cannot be changed.", // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: 'Hem telefon hem de e-posta adresi yok.',

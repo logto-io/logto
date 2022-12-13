@@ -10,6 +10,7 @@ const general = {
   save: '저장',
   save_changes: '변경 내용 저장',
   saved: '저장됨!',
+  discard: 'Discard', // UNTRANSLATED
   loading: '로딩 중...',
   redirecting: '리다이렉팅 중...',
   add: '추가',
@@ -29,7 +30,7 @@ const general = {
   copying: '복사 중',
   copied: '복사됨',
   required: '필수',
-  add_another: '+ 새로 추가',
+  add_another: '새로 추가',
   deletion_confirmation: '정말로 {{title}}을/를 삭제할까요?',
   settings_nav: '설정',
   unsaved_changes_warning: '수정된 내용이 있어요. 정말로 현재 페이지를 벗어날까요?',
@@ -37,6 +38,9 @@ const general = {
   stay_on_page: '페이지 유지하기',
   type_to_search: 'Type to search', // UNTRANSLATED
   got_it: 'Got it', // UNTRANSLATED
+  page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
+  learn_more: 'Learn more', // UNTRANSLATED
+  tab_errors: '{{count, number}} errors', // UNTRANSLATED
 };
 
 export default general;

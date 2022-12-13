@@ -1,9 +1,11 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 
-import RequestError from '@/errors/RequestError';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import RequestError from '#src/errors/RequestError/index.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaConnectorErrorHandler from './koa-connector-error-handler';
+import koaConnectorErrorHandler from './koa-connector-error-handler.js';
+
+const { jest } = import.meta;
 
 describe('koaConnectorErrorHandler middleware', () => {
   const next = jest.fn();

@@ -39,15 +39,17 @@ const ConfirmModal = ({
 }: ConfirmModalProps) => {
   return (
     <ReactModal
+      shouldCloseOnEsc
       isOpen={isOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
+      onRequestClose={onCancel}
     >
       <ModalLayout
         title={title}
         footer={
           <>
-            <Button type="outline" title={cancelButtonText} onClick={onCancel} />
+            <Button title={cancelButtonText} onClick={onCancel} />
             <Button
               type={confirmButtonType}
               title={confirmButtonText}

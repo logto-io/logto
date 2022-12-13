@@ -3,7 +3,7 @@ import { conditional } from '@silverhand/essentials';
 import type { Middleware } from 'koa';
 import { z } from 'zod';
 
-import RequestError from '@/errors/RequestError';
+import RequestError from '#src/errors/RequestError/index.js';
 
 export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
   // Too many error types :-)

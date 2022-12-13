@@ -1,5 +1,6 @@
 import resource from '@logto/phrases-ui';
 import type { CustomPhrase } from '@logto/schemas';
+import { mockEsm } from '@logto/shared/esm';
 import deepmerge from 'deepmerge';
 
 import {
@@ -10,10 +11,10 @@ import {
   trTrTag,
   zhCnTag,
   zhHkTag,
-} from '@/__mocks__/custom-phrase';
-import RequestError from '@/errors/RequestError';
-import { getPhrase } from '@/lib/phrase';
+} from '#src/__mocks__/custom-phrase.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
+const { jest } = import.meta;
 const englishBuiltInPhrase = resource[enTag];
 
 const customOnlyLanguage = zhHkTag;
@@ -39,9 +40,11 @@ const findCustomPhraseByLanguageTag = jest.fn(async (languageTag: string) => {
   return mockCustomPhrase;
 });
 
-jest.mock('@/queries/custom-phrase', () => ({
-  findCustomPhraseByLanguageTag: async (key: string) => findCustomPhraseByLanguageTag(key),
+mockEsm('#src/queries/custom-phrase.js', () => ({
+  findCustomPhraseByLanguageTag,
 }));
+
+const { getPhrase } = await import('#src/lib/phrase.js');
 
 afterEach(() => {
   jest.clearAllMocks();

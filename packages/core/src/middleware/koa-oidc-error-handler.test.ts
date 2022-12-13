@@ -1,9 +1,11 @@
 import { errors } from 'oidc-provider';
 
-import RequestError from '@/errors/RequestError';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import RequestError from '#src/errors/RequestError/index.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaOIDCErrorHandler from './koa-oidc-error-handler';
+import koaOIDCErrorHandler from './koa-oidc-error-handler.js';
+
+const { jest } = import.meta;
 
 describe('koaOIDCErrorHandler middleware', () => {
   const next = jest.fn();

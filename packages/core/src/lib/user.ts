@@ -2,17 +2,20 @@ import type { User, CreateUser } from '@logto/schemas';
 import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
+import { deduplicate } from '@silverhand/essentials';
 import { argon2Verify } from 'hash-wasm';
 import pRetry from 'p-retry';
 
-import { buildInsertInto } from '@/database/insert-into';
-import envSet from '@/env-set';
-import { findRolesByRoleNames, insertRoles } from '@/queries/roles';
-import { hasUserWithId } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
-import { encryptPassword } from '@/utils/password';
+import { buildInsertInto } from '#src/database/insert-into.js';
+import envSet from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { findRolesByRoleNames, insertRoles } from '#src/queries/roles.js';
+import { hasUser, hasUserWithEmail, hasUserWithId, hasUserWithPhone } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
+import { encryptPassword } from '#src/utils/password.js';
 
 const userId = buildIdGenerator(12);
+const roleId = buildIdGenerator(21);
 
 export const generateUserId = async (retries = 500) =>
   pRetry(
@@ -64,9 +67,9 @@ const insertUserQuery = buildInsertInto<CreateUser, User>(Users, {
 // Temp solution since Hasura requires a role to proceed authn.
 // The source of default roles should be guarded and moved to database once we implement RBAC.
 export const insertUser: typeof insertUserQuery = async ({ roleNames, ...rest }) => {
-  const computedRoleNames = [
-    ...new Set((roleNames ?? []).concat(envSet.values.userDefaultRoleNames)),
-  ];
+  const computedRoleNames = deduplicate(
+    (roleNames ?? []).concat(envSet.values.userDefaultRoleNames)
+  );
 
   if (computedRoleNames.length > 0) {
     const existingRoles = await findRolesByRoleNames(computedRoleNames);
@@ -76,10 +79,37 @@ export const insertUser: typeof insertUserQuery = async ({ roleNames, ...rest })
 
     if (missingRoleNames.length > 0) {
       await insertRoles(
-        missingRoleNames.map((name) => ({ name, description: 'User default role.' }))
+        missingRoleNames.map((name) => ({
+          id: roleId(),
+          name,
+          description: 'User default role.',
+        }))
       );
     }
   }
 
   return insertUserQuery({ roleNames: computedRoleNames, ...rest });
+};
+
+export const checkIdentifierCollision = async (
+  identifiers: {
+    username?: Nullable<string>;
+    primaryEmail?: Nullable<string>;
+    primaryPhone?: Nullable<string>;
+  },
+  excludeUserId?: string
+) => {
+  const { username, primaryEmail, primaryPhone } = identifiers;
+
+  if (username && (await hasUser(username, excludeUserId))) {
+    throw new RequestError({ code: 'user.username_already_in_use', status: 422 });
+  }
+
+  if (primaryEmail && (await hasUserWithEmail(primaryEmail, excludeUserId))) {
+    throw new RequestError({ code: 'user.email_already_in_use', status: 422 });
+  }
+
+  if (primaryPhone && (await hasUserWithPhone(primaryPhone, excludeUserId))) {
+    throw new RequestError({ code: 'user.phone_already_in_use', status: 422 });
+  }
 };

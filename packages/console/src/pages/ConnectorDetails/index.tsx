@@ -1,6 +1,5 @@
 import type { ConnectorResponse } from '@logto/schemas';
 import { AppearanceMode, ConnectorType } from '@logto/schemas';
-import classNames from 'classnames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -18,10 +17,10 @@ import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
-import LinkButton from '@/components/LinkButton';
 import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import TextLink from '@/components/TextLink';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
@@ -68,15 +67,12 @@ const ConnectorDetails = () => {
       return;
     }
 
-    await api
-      .patch(`/api/connectors/${connectorId}/enabled`, {
-        json: { enabled: false },
-      })
-      .json<ConnectorResponse>();
-    toast.success(t('connector_details.connector_deleted'));
+    await api.delete(`/api/connectors/${connectorId}`).json<ConnectorResponse>();
 
-    await mutateGlobal('/api/connectors');
     setIsDeleted(true);
+
+    toast.success(t('connector_details.connector_deleted'));
+    await mutateGlobal('/api/connectors');
 
     if (isSocial) {
       navigate(`/connectors/social`, { replace: true });
@@ -87,12 +83,13 @@ const ConnectorDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <LinkButton
+      <TextLink
         to={isSocial ? '/connectors/social' : '/connectors'}
         icon={<Back />}
-        title="connector_details.back_to_connectors"
         className={styles.backLink}
-      />
+      >
+        {t('connector_details.back_to_connectors')}
+      </TextLink>
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {isSocial && <ConnectorTabs target={data.target} connectorId={data.id} />}
@@ -178,21 +175,19 @@ const ConnectorDetails = () => {
           </div>
         </Card>
       )}
+      <TabNav>
+        <TabNavItem href={`/connectors/${connectorId ?? ''}`}>
+          {t('general.settings_nav')}
+        </TabNavItem>
+      </TabNav>
       {data && (
-        <Card className={classNames(styles.body, detailsStyles.body)}>
-          <TabNav>
-            <TabNavItem href={`/connectors/${connectorId ?? ''}`}>
-              {t('general.settings_nav')}
-            </TabNavItem>
-          </TabNav>
-          <ConnectorContent
-            isDeleted={isDeleted}
-            connectorData={data}
-            onConnectorUpdated={(connector) => {
-              void mutate(connector);
-            }}
-          />
-        </Card>
+        <ConnectorContent
+          isDeleted={isDeleted}
+          connectorData={data}
+          onConnectorUpdated={(connector) => {
+            void mutate(connector);
+          }}
+        />
       )}
       {data && (
         <ConfirmModal

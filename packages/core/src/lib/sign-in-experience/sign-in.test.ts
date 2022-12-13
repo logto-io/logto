@@ -1,14 +1,14 @@
-import { ConnectorType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import {
   mockAliyunDmConnector,
   mockAliyunSmsConnector,
   mockSignInMethod,
   mockSignUp,
-} from '@/__mocks__';
-import RequestError from '@/errors/RequestError';
+} from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import { validateSignIn } from './sign-in';
+import { validateSignIn } from './sign-in.js';
 
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 
@@ -33,7 +33,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.EmailOrSms,
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
             password: false,
             verify: true,
           },
@@ -56,7 +56,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Username,
+            identifiers: [SignInIdentifier.Username],
             password: true,
           },
           []
@@ -65,8 +65,8 @@ describe('validate sign-in', () => {
     });
   });
 
-  describe('There must be at least one enabled connector for the specific identifier.', () => {
-    it('throws when there is no enabled email connector and identifiers includes email with verification code checked', () => {
+  describe('There must be at least one connector for the specific identifier.', () => {
+    it('throws when there is no email connector and identifiers includes email with verification code checked', () => {
       expect(() => {
         validateSignIn(
           {
@@ -89,7 +89,7 @@ describe('validate sign-in', () => {
       );
     });
 
-    it('throws when there is no enabled sms connector and identifiers includes phone with verification code checked', () => {
+    it('throws when there is no sms connector and identifiers includes phone with verification code checked', () => {
       expect(() => {
         validateSignIn(
           {
@@ -127,7 +127,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Username,
+            identifiers: [SignInIdentifier.Username],
           },
           enabledConnectors
         );
@@ -151,7 +151,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Email,
+            identifiers: [SignInIdentifier.Email],
           },
           enabledConnectors
         );
@@ -175,7 +175,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.Sms,
+            identifiers: [SignInIdentifier.Sms],
           },
           enabledConnectors
         );
@@ -199,7 +199,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifier: SignUpIdentifier.EmailOrSms,
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
           },
           enabledConnectors
         );
@@ -226,7 +226,7 @@ describe('validate sign-in', () => {
         },
         {
           ...mockSignUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInIdentifier.Email],
           password: true,
         },
         enabledConnectors
@@ -252,7 +252,7 @@ describe('validate sign-in', () => {
         },
         {
           ...mockSignUp,
-          identifier: SignUpIdentifier.Email,
+          identifiers: [SignInIdentifier.Email],
           password: false,
           verify: true,
         },
@@ -286,7 +286,7 @@ describe('validate sign-in', () => {
         },
         {
           ...mockSignUp,
-          identifier: SignUpIdentifier.Sms,
+          identifiers: [SignInIdentifier.Sms],
           password: false,
           verify: true,
         },

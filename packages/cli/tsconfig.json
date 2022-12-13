@@ -3,13 +3,13 @@
   "compilerOptions": {
     "outDir": "lib",
     "declaration": true,
-    "module": "node16",
+    "moduleResolution": "nodenext",
+    "module": "esnext",
     "target": "es2022",
     "types": ["node", "jest"]
   },
   "include": [
-    "src",
-    "jest.config.ts"
+    "src"
   ],
   "exclude": ["**/alteration-scripts"]
 }

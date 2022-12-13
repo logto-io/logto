@@ -32,30 +32,34 @@ const errors = {
     provider_error: 'OIDC interner Fehler: {{message}}.',
   },
   user: {
-    username_exists_register: 'Der Benutzername wurde registriert.',
-    email_exists_register: 'Die E-Mail wurde registriert.',
-    phone_exists_register: 'Die Telefonnummer wurde registriert.',
+    username_already_in_use: 'This username is already in use.', // UNTRANSLATED
+    email_already_in_use: 'This email is associated with an existing account.', // UNTRANSLATED
+    phone_already_in_use: 'This phone number is associated with an existing account.', // UNTRANSLATED
     invalid_email: 'Ungültige E-Mail.',
     invalid_phone: 'Ungültige Telefonnummer.',
-    email_not_exists: 'Die E-Mail wurde noch nicht registriert.',
-    phone_not_exists: 'Die Telefonnummer wurde noch nicht registriert.',
-    identity_not_exists: 'Die Identität wurde noch nicht registriert.',
-    identity_exists: 'Die Identität wurde registriert.',
+    email_not_exist: 'Die E-Mail wurde noch nicht registriert.',
+    phone_not_exist: 'Die Telefonnummer wurde noch nicht registriert.',
+    identity_not_exist: 'Die Identität wurde noch nicht registriert.',
+    identity_already_in_use: 'Die Identität wurde registriert.',
     invalid_role_names: 'Rollennamen ({{roleNames}}) sind ungültig',
     cannot_delete_self: 'Du kannst dich nicht selbst löschen.',
-    sign_up_method_not_enabled: 'This sign up method is not enabled.', // UNTRANSLATED
-    sign_in_method_not_enabled: 'This sign in method is not enabled.', // UNTRANSLATED
+    sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
+    sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED
     same_password: 'Das neue Passwort muss sich vom alten unterscheiden.',
-    require_password: 'You need to set a password before signing-in.', // UNTRANSLATED
-    password_exists: 'Your password has been set.', // UNTRANSLATED
-    require_username: 'You need to set a username before signing-in.', // UNTRANSLATED
-    username_exists: 'This username is already in use.', // UNTRANSLATED
-    require_email: 'You need to add an email address before signing-in.', // UNTRANSLATED
-    email_exists: 'This email is associated with an existing account.', // UNTRANSLATED
-    require_sms: 'You need to add a phone number before signing-in.', // UNTRANSLATED
-    sms_exists: 'This phone number is associated with an existing account.', // UNTRANSLATED
-    require_email_or_sms: 'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
+    password_required_in_profile: 'You need to set a password before signing-in.', // UNTRANSLATED
+    new_password_required_in_profile: 'You need to set a new password.', // UNTRANSLATED
+    password_exists_in_profile: 'Password already exists in your profile.', // UNTRANSLATED
+    username_required_in_profile: 'You need to set a username before signing-in.', // UNTRANSLATED
+    username_exists_in_profile: 'Username already exists in your profile.', // UNTRANSLATED
+    email_required_in_profile: 'You need to add an email address before signing-in.', // UNTRANSLATED
+    email_exists_in_profile: 'Your profile has already associated with an email address.', // UNTRANSLATED
+    phone_required_in_profile: 'You need to add a phone number before signing-in.', // UNTRANSLATED
+    phone_exists_in_profile: 'Your profile has already associated with a phone number.', // UNTRANSLATED
+    email_or_phone_required_in_profile:
+      'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
     suspended: 'This account is suspended.', // UNTRANSLATED
+    user_not_exist: 'User with {{ identifier }} does not exist.', // UNTRANSLATED,
+    missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: 'Die Verschlüsselungsmethode {{name}} wird nicht unterstützt.',
@@ -76,6 +80,8 @@ const errors = {
     unauthorized: 'Bitte melde dich erst an.',
     unsupported_prompt_name: 'Nicht unterstützter prompt Name.',
     forgot_password_not_enabled: 'Forgot password is not enabled.',
+    verification_failed:
+      'Die Verifizierung war nicht erfolgreich. Starte die Verifizierung neu und versuche es erneut.',
   },
   connector: {
     // UNTRANSLATED
@@ -99,6 +105,15 @@ const errors = {
     more_than_one_sms: 'The number of SMS connectors is larger then 1.',
     more_than_one_email: 'The number of Email connectors is larger then 1.',
     db_connector_type_mismatch: 'There is a connector in the DB that does not match the type.',
+    not_found_with_connector_id: 'Can not find connector with given standard connector id.',
+    multiple_instances_not_supported:
+      'Can not create multiple instance with picked standard connector.',
+    invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.',
+    can_not_modify_target: 'The connector target can not be modified.',
+    multiple_target_with_same_platform:
+      'You can not have multiple social connectors that have same target and platform.',
+    cannot_change_metadata_for_non_standard_connector:
+      "This connector's `metadata` cannot be changed.",
   },
   passcode: {
     phone_email_empty: 'Telefonnummer oder E-Mail darf nicht leer sein.',

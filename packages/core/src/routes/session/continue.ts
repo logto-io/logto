@@ -2,29 +2,29 @@ import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
-import { encryptUserPassword } from '@/lib/user';
-import koaGuard from '@/middleware/koa-guard';
+import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import { encryptUserPassword } from '#src/lib/user.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 import {
   findUserById,
   hasUser,
   hasUserWithEmail,
   hasUserWithPhone,
   updateUserById,
-} from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+} from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types';
-import { continueEmailSessionResultGuard, continueSmsSessionResultGuard } from './types';
+import type { AnonymousRouter } from '../types.js';
+import { continueEmailSessionResultGuard, continueSmsSessionResultGuard } from './types.js';
 import {
   checkRequiredProfile,
   getContinueSignInResult,
   getRoutePrefix,
   getVerificationStorageFromInteraction,
   isUserPasswordSet,
-} from './utils';
+} from './utils.js';
 
 export const continueRoute = getRoutePrefix('sign-in', 'continue');
 
@@ -45,7 +45,7 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
       assertThat(
         !isUserPasswordSet(user),
         new RequestError({
-          code: 'user.password_exists',
+          code: 'user.password_exists_in_profile',
         })
       );
 
@@ -79,14 +79,14 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
       assertThat(
         !user.username,
         new RequestError({
-          code: 'user.username_exists',
+          code: 'user.username_exists_in_profile',
         })
       );
 
       assertThat(
         !(await hasUser(username)),
         new RequestError({
-          code: 'user.username_exists_register',
+          code: 'user.username_already_in_use',
           status: 422,
         })
       );
@@ -116,14 +116,14 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
     assertThat(
       !user.primaryEmail,
       new RequestError({
-        code: 'user.email_exists',
+        code: 'user.email_exists_in_profile',
       })
     );
 
     assertThat(
       !(await hasUserWithEmail(email)),
       new RequestError({
-        code: 'user.email_exists_register',
+        code: 'user.email_already_in_use',
         status: 422,
       })
     );
@@ -152,14 +152,14 @@ export default function continueRoutes<T extends AnonymousRouter>(router: T, pro
     assertThat(
       !user.primaryPhone,
       new RequestError({
-        code: 'user.sms_exists',
+        code: 'user.phone_exists_in_profile',
       })
     );
 
     assertThat(
       !(await hasUserWithPhone(phone)),
       new RequestError({
-        code: 'user.phone_exists_register',
+        code: 'user.phone_already_in_use',
         status: 422,
       })
     );

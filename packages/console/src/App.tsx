@@ -55,7 +55,6 @@ const Main = () => {
                 <Route path=":id">
                   <Route index element={<Navigate replace to="settings" />} />
                   <Route path="settings" element={<ApplicationDetails />} />
-                  <Route path="advanced-settings" element={<ApplicationDetails />} />
                 </Route>
               </Route>
               <Route path="api-resources">

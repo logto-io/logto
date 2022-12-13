@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/images/close.svg';
@@ -8,7 +7,7 @@ import CardTitle from '@/components/CardTitle';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
-import Tooltip from '@/components/Tooltip';
+import Tooltip from '@/components/Tip/Tooltip';
 import { SupportedSdk } from '@/types/applications';
 
 import * as styles from './index.module.scss';
@@ -47,7 +46,6 @@ const getSampleProjectUrl = (sdk: SupportedSdk) => {
 
 const GuideHeader = ({ appName, selectedSdk, isCompact = false, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const tipRef = useRef<HTMLDivElement>(null);
 
   const onClickGetSample = () => {
     const sampleUrl = getSampleProjectUrl(selectedSdk);
@@ -64,12 +62,15 @@ const GuideHeader = ({ appName, selectedSdk, isCompact = false, onClose }: Props
             subtitle="applications.guide.header_description"
           />
           <Spacer />
-          <IconButton className={styles.githubIcon} size="large" onClick={onClickGetSample}>
-            <div ref={tipRef}>
+          <Tooltip
+            position="bottom"
+            anchorClassName={styles.githubToolTipAnchor}
+            content={t('applications.guide.get_sample_file')}
+          >
+            <IconButton className={styles.githubIcon} size="large" onClick={onClickGetSample}>
               <GetSample />
-            </div>
-            <Tooltip anchorRef={tipRef} content={t('applications.guide.get_sample_file')} />
-          </IconButton>
+            </IconButton>
+          </Tooltip>
           <IconButton size="large" onClick={onClose}>
             <Close className={styles.closeIcon} />
           </IconButton>

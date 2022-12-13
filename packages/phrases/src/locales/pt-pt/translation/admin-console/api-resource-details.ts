@@ -1,5 +1,8 @@
 const api_resource_details = {
   back_to_api_resources: 'Voltar aos recursos API',
+  settings: 'Settings', // UNTRANSLATED
+  settings_description:
+    'API resources, a.k.a. Resource Indicators, indicate the target services or resources to be requested, usually, a URI format variable representing the resource‘s identity.', // UNTRANSLATED
   token_expiration_time_in_seconds: 'Tempo de expiração do token (em segundos)',
   token_expiration_time_in_seconds_placeholder: 'Insira o tempo de expiração do token',
   delete_description:

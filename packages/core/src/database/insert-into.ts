@@ -10,9 +10,9 @@ import { has } from '@silverhand/essentials';
 import type { IdentifierSqlToken } from 'slonik';
 import { sql } from 'slonik';
 
-import envSet from '@/env-set';
-import { InsertionError } from '@/errors/SlonikError';
-import assertThat from '@/utils/assert-that';
+import envSet from '#src/env-set/index.js';
+import { InsertionError } from '#src/errors/SlonikError/index.js';
+import assertThat from '#src/utils/assert-that.js';
 
 const setExcluded = (...fields: IdentifierSqlToken[]) =>
   sql.join(

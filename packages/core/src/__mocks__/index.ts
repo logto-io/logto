@@ -1,9 +1,9 @@
 import type { Application, Passcode, Resource, Role, Setting } from '@logto/schemas';
 import { ApplicationType, PasscodeType } from '@logto/schemas';
 
-export * from './connector';
-export * from './sign-in-experience';
-export * from './user';
+export * from './connector.js';
+export * from './sign-in-experience.js';
+export * from './user.js';
 
 export const mockApplication: Application = {
   id: 'foo',
@@ -32,6 +32,7 @@ export const mockResource: Resource = {
 };
 
 export const mockRole: Role = {
+  id: 'role_id',
   name: 'admin',
   description: 'admin',
 };

@@ -1,0 +1,15 @@
+@use '@/scss/underscore' as _;
+
+.draggleItemContainer {
+  transform: translate(0, 0);
+}
+
+.setUpHint {
+  font: var(--font-body-medium);
+  color: var(--color-text-secondary);
+  margin-top: _.unit(2);
+
+  .setup {
+    margin: 0 _.unit(1);
+  }
+}

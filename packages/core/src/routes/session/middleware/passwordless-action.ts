@@ -1,28 +1,28 @@
-import { PasscodeType, SignInIdentifier, SignUpIdentifier } from '@logto/schemas';
+import { PasscodeType, SignInIdentifier } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
 
-import RequestError from '@/errors/RequestError';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '@/lib/session';
-import { getSignInExperienceForApplication } from '@/lib/sign-in-experience';
-import { generateUserId, insertUser } from '@/lib/user';
-import type { WithLogContext } from '@/middleware/koa-log';
+import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
+import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import { generateUserId, insertUser } from '#src/lib/user.js';
+import type { WithLogContext } from '#src/middleware/koa-log.js';
 import {
   hasUserWithPhone,
   hasUserWithEmail,
   findUserByPhone,
   findUserByEmail,
   updateUserById,
-} from '@/queries/user';
-import assertThat from '@/utils/assert-that';
+} from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import { smsSessionResultGuard, emailSessionResultGuard } from '../types';
+import { smsSessionResultGuard, emailSessionResultGuard } from '../types.js';
 import {
   getVerificationStorageFromInteraction,
   getPasswordlessRelatedLogType,
   checkValidateExpiration,
   checkRequiredProfile,
-} from '../utils';
+} from '../utils.js';
 
 export const smsSignInAction = <StateT, ContextT extends WithLogContext, ResponseBodyT>(
   provider: Provider
@@ -56,7 +56,7 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContext, Respons
     checkValidateExpiration(expiresAt);
 
     const user = await findUserByPhone(phone);
-    assertThat(user, new RequestError({ code: 'user.phone_not_exists', status: 404 }));
+    assertThat(user, new RequestError({ code: 'user.phone_not_exist', status: 404 }));
     const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
     ctx.log(type, { userId: id });
@@ -101,7 +101,7 @@ export const emailSignInAction = <StateT, ContextT extends WithLogContext, Respo
     checkValidateExpiration(expiresAt);
 
     const user = await findUserByEmail(email);
-    assertThat(user, new RequestError({ code: 'user.email_not_exists', status: 404 }));
+    assertThat(user, new RequestError({ code: 'user.email_not_exist', status: 404 }));
     const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
     ctx.log(type, { userId: id });
@@ -121,9 +121,9 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContext, Respo
     const signInExperience = await getSignInExperienceForApplication(
       await getApplicationIdFromInteraction(ctx, provider)
     );
+
     assertThat(
-      signInExperience.signUp.identifier === SignUpIdentifier.Sms ||
-        signInExperience.signUp.identifier === SignUpIdentifier.EmailOrSms,
+      signInExperience.signUp.identifiers.includes(SignInIdentifier.Sms),
       new RequestError({
         code: 'user.sign_up_method_not_enabled',
         status: 422,
@@ -145,7 +145,7 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContext, Respo
 
     assertThat(
       !(await hasUserWithPhone(phone)),
-      new RequestError({ code: 'user.phone_exists_register', status: 422 })
+      new RequestError({ code: 'user.phone_already_in_use', status: 422 })
     );
     const id = await generateUserId();
     ctx.log(type, { userId: id });
@@ -165,9 +165,9 @@ export const emailRegisterAction = <StateT, ContextT extends WithLogContext, Res
     const signInExperience = await getSignInExperienceForApplication(
       await getApplicationIdFromInteraction(ctx, provider)
     );
+
     assertThat(
-      signInExperience.signUp.identifier === SignUpIdentifier.Email ||
-        signInExperience.signUp.identifier === SignUpIdentifier.EmailOrSms,
+      signInExperience.signUp.identifiers.includes(SignInIdentifier.Email),
       new RequestError({
         code: 'user.sign_up_method_not_enabled',
         status: 422,
@@ -189,7 +189,7 @@ export const emailRegisterAction = <StateT, ContextT extends WithLogContext, Res
 
     assertThat(
       !(await hasUserWithEmail(email)),
-      new RequestError({ code: 'user.email_exists_register', status: 422 })
+      new RequestError({ code: 'user.email_already_in_use', status: 422 })
     );
     const id = await generateUserId();
     ctx.log(type, { userId: id });

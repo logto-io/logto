@@ -68,6 +68,7 @@ const sign_in_exp = {
       password_auth: 'Password',
       verification_code_auth: 'Verification code',
       auth_swap_tip: 'Swap the options below to determine which appears first in the flow.',
+      require_auth_factor: 'You have to select at least one authentication factor.',
     },
     social_sign_in: {
       title: 'SOCIAL SIGN-IN',
@@ -134,8 +135,8 @@ const sign_in_exp = {
         '{{language}} is set as your default language and can’t be deleted. ',
       got_it: 'Got It',
     },
-    authentication: {
-      title: 'AUTHENTICATION',
+    advanced_options: {
+      title: 'ADVANCED OPTIONS',
       enable_user_registration: 'Enable user registration',
       enable_user_registration_description:
         'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
@@ -144,13 +145,14 @@ const sign_in_exp = {
   setup_warning: {
     no_connector: '',
     no_connector_sms:
-      'No SMS connector set-up yet. Until you finish configuring your SMS connector, you won’t be able to sign in.',
+      'No SMS connector set-up yet. Until you finish configuring your SMS connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"',
     no_connector_email:
-      'No email connector set-up yet. Until you finish configuring your email connector, you won’t be able to sign in.',
+      'No email connector set-up yet. Until you finish configuring your email connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"',
     no_connector_social:
-      'No social connector set-up yet. Until you finish configuring your social connector, you won’t be able to sign in.',
+      'No social connector set-up yet. Until you finish configuring your social connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"',
     no_added_social_connector:
       'You’ve set up a few social connectors now. Make sure to add some to your sign in experience.',
+    setup_link: 'Set up',
   },
   save_alert: {
     description:

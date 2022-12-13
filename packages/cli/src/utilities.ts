@@ -1,17 +1,21 @@
 import { execSync } from 'child_process';
 import { createWriteStream, existsSync } from 'fs';
 import { readdir, readFile } from 'fs/promises';
+import { createRequire } from 'module';
 import path from 'path';
 
 import type { Optional } from '@silverhand/essentials';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { Progress } from 'got';
-import got from 'got';
+import { got } from 'got';
 import { HttpsProxyAgent } from 'hpagent';
 import inquirer from 'inquirer';
+import type { Options } from 'ora';
 import ora from 'ora';
 import { z } from 'zod';
+
+import { metaUrl } from './meta-url.js';
 
 export const safeExecSync = (command: string) => {
   try {
@@ -83,15 +87,13 @@ export const downloadFile = async (url: string, destination: string) => {
 export const getPathInModule = (moduleName: string, relativePath = '/') =>
   // https://stackoverflow.com/a/49455609/12514940
   path.join(
-    // Until we migrate to ESM
-    // eslint-disable-next-line unicorn/prefer-module
-    path.dirname(require.resolve(`${moduleName}/package.json`)),
+    path.dirname(createRequire(metaUrl).resolve(`${moduleName}/package.json`)),
     relativePath
   );
 
 export const oraPromise = async <T>(
   promise: PromiseLike<T>,
-  options?: ora.Options,
+  options?: Options,
   exitOnError = false
 ) => {
   const spinner = ora(options).start();

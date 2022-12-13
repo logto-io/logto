@@ -27,6 +27,7 @@ const AcModal = ({
 
   return (
     <ReactModal
+      shouldCloseOnEsc
       role="dialog"
       isOpen={isOpen}
       className={classNames(styles.modal, className)}
@@ -34,6 +35,7 @@ const AcModal = ({
       onAfterOpen={() => {
         contentRef.current?.focus();
       }}
+      onRequestClose={onClose}
     >
       <div
         ref={contentRef}

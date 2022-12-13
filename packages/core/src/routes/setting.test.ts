@@ -1,19 +1,18 @@
 import type { Setting, CreateSetting } from '@logto/schemas';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 
-import { mockSetting } from '@/__mocks__';
-import { createRequester } from '@/utils/test-utils';
+import { mockSetting } from '#src/__mocks__/index.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
-import settingRoutes from './setting';
-
-jest.mock('@/queries/setting', () => ({
-  getSetting: jest.fn(async (): Promise<Setting> => mockSetting),
-  updateSetting: jest.fn(
-    async (data: Partial<CreateSetting>): Promise<Setting> => ({
-      ...mockSetting,
-      ...data,
-    })
-  ),
+mockEsm('#src/queries/setting.js', () => ({
+  getSetting: async (): Promise<Setting> => mockSetting,
+  updateSetting: async (data: Partial<CreateSetting>): Promise<Setting> => ({
+    ...mockSetting,
+    ...data,
+  }),
 }));
+
+const settingRoutes = await pickDefault(import('./setting.js'));
 
 describe('settings routes', () => {
   const roleRequester = createRequester({ authedRoutes: settingRoutes });

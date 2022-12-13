@@ -40,13 +40,18 @@
   }
 
   .icon {
-    display: block;
-    width: 20px;
-    height: 20px;
+    display: flex;
+    align-items: center;
 
     &:not(:last-child) {
       margin-right: _.unit(2);
     }
+  }
+
+  .trailingIcon {
+    display: block;
+    width: 16px;
+    height: 16px;
   }
 
   &.small {
@@ -55,6 +60,12 @@
 
     &.text {
       height: 24px;
+    }
+
+    .icon {
+      &:not(:last-child) {
+        margin-right: _.unit(1);
+      }
     }
   }
 

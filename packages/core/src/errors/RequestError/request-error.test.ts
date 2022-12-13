@@ -1,9 +1,9 @@
 import type { LogtoErrorI18nKey } from '@logto/phrases';
 import i18next from 'i18next';
 
-import initI18n from '@/i18n/init';
+import initI18n from '#src/i18n/init.js';
 
-import RequestError from '.';
+import RequestError from './index.js';
 
 describe('RequestError', () => {
   beforeAll(async () => {

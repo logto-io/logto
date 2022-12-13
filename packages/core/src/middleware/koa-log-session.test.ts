@@ -1,16 +1,13 @@
 import { Provider } from 'oidc-provider';
 
-import type { WithLogContext } from '@/middleware/koa-log';
-import koaLogSession from '@/middleware/koa-log-session';
-import { createContextWithRouteParameters } from '@/utils/test-utils';
+import koaLogSession from '#src/middleware/koa-log-session.js';
+import type { WithLogContext } from '#src/middleware/koa-log.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({}));
+const { jest } = import.meta;
 
-jest.mock('oidc-provider', () => ({
-  Provider: jest.fn(() => ({
-    interactionDetails,
-  })),
-}));
+const provider = new Provider('https://logto.test');
+const interactionDetails = jest.spyOn(provider, 'interactionDetails');
 
 describe('koaLogSession', () => {
   const sessionId = 'sessionId';
@@ -19,6 +16,7 @@ describe('koaLogSession', () => {
   const log = jest.fn();
   const next = jest.fn();
 
+  // @ts-expect-error for testing
   interactionDetails.mockResolvedValue({
     jti: sessionId,
     params: {
@@ -37,7 +35,7 @@ describe('koaLogSession', () => {
       log,
     };
 
-    await expect(koaLogSession(new Provider(''))(ctx, next)).resolves.not.toThrow();
+    await expect(koaLogSession(provider)(ctx, next)).resolves.not.toThrow();
     expect(interactionDetails).toHaveBeenCalled();
   });
 
@@ -48,7 +46,7 @@ describe('koaLogSession', () => {
       log,
     };
 
-    await expect(koaLogSession(new Provider(''))(ctx, next)).resolves.not.toThrow();
+    await expect(koaLogSession(provider)(ctx, next)).resolves.not.toThrow();
     expect(addLogContext).toHaveBeenCalledWith({ sessionId, applicationId });
   });
 
@@ -59,7 +57,7 @@ describe('koaLogSession', () => {
       log,
     };
 
-    await expect(koaLogSession(new Provider(''))(ctx, next)).resolves.not.toThrow();
+    await expect(koaLogSession(provider)(ctx, next)).resolves.not.toThrow();
     expect(next).toHaveBeenCalled();
   });
 
@@ -74,6 +72,6 @@ describe('koaLogSession', () => {
       throw new Error('message');
     });
 
-    await expect(koaLogSession(new Provider(''))(ctx, next)).resolves.not.toThrow();
+    await expect(koaLogSession(provider)(ctx, next)).resolves.not.toThrow();
   });
 });

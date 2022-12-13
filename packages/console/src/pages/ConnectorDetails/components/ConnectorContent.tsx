@@ -1,16 +1,17 @@
-import type { Connector, ConnectorResponse, ConnectorMetadata } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { useMemo } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
-import CodeEditor from '@/components/CodeEditor';
-import FormField from '@/components/FormField';
+import DetailsForm from '@/components/DetailsForm';
+import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
-import * as detailsStyles from '@/scss/details.module.scss';
+import ConnectorForm from '@/pages/Connectors/components/ConnectorForm';
+import type { ConnectorFormType } from '@/pages/Connectors/types';
+import { SyncProfileMode } from '@/pages/Connectors/types';
 import { safeParseJson } from '@/utilities/json';
 
 import * as styles from '../index.module.scss';
@@ -25,29 +26,40 @@ type Props = {
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
-  const methods = useForm<{ configJson: string }>({ reValidateMode: 'onBlur' });
+  const methods = useForm<ConnectorFormType>({
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      syncProfile: SyncProfileMode.OnlyAtRegister,
+    },
+  });
   const {
-    control,
     formState: { isSubmitting, isDirty },
     handleSubmit,
     watch,
     reset,
   } = methods;
 
-  const defaultConfig = useMemo(() => {
-    const hasData = Object.keys(connectorData.config).length > 0;
+  useEffect(() => {
+    const { name, logo, logoDark, target } = connectorData.metadata;
+    const { config, syncProfile } = connectorData;
+    reset({
+      target,
+      logo,
+      logoDark: logoDark ?? '',
+      name: name?.en,
+      config: JSON.stringify(config, null, 2),
+      syncProfile: syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,
+    });
+  }, [connectorData, reset]);
 
-    return hasData ? JSON.stringify(connectorData.config, null, 2) : connectorData.configTemplate;
-  }, [connectorData]);
-
-  const onSubmit = handleSubmit(async ({ configJson }) => {
-    if (!configJson) {
+  const onSubmit = handleSubmit(async ({ config, syncProfile, ...metadata }) => {
+    if (!config) {
       toast.error(t('connector_details.save_error_empty_config'));
 
       return;
     }
 
-    const result = safeParseJson(configJson);
+    const result = safeParseJson(config);
 
     if (!result.success) {
       toast.error(result.error);
@@ -55,56 +67,55 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       return;
     }
 
-    const { metadata, ...rest } = await api
-      .patch(`/api/connectors/${connectorData.id}`, { json: { config: result.data } })
-      .json<Connector & { metadata: ConnectorMetadata; type: ConnectorType }>();
+    const payload =
+      connectorData.type === ConnectorType.Social
+        ? {
+            config: result.data,
+            syncProfile: syncProfile === SyncProfileMode.EachSignIn,
+          }
+        : { config: result.data };
+    const standardConnectorPayload = {
+      ...payload,
+      metadata: { ...metadata, name: { en: metadata.name } },
+    };
+    const body = connectorData.isStandard ? standardConnectorPayload : payload;
 
-    onConnectorUpdated({ ...rest, ...metadata });
-    reset({ configJson: JSON.stringify(result.data, null, 2) });
+    const updatedConnector = await api
+      .patch(`/api/connectors/${connectorData.id}`, {
+        json: body,
+      })
+      .json<ConnectorResponse>();
+
+    onConnectorUpdated(updatedConnector);
     toast.success(t('general.saved'));
   });
 
   return (
-    <>
-      <div className={styles.main}>
-        <form {...methods}>
-          <Controller
-            name="configJson"
-            control={control}
-            defaultValue={defaultConfig}
-            render={({ field: { onChange, value } }) => (
-              <FormField title="connector_details.edit_config_label">
-                <CodeEditor
-                  className={styles.codeEditor}
-                  language="json"
-                  value={value}
-                  onChange={onChange}
-                />
-              </FormField>
-            )}
-          />
-        </form>
-        {connectorData.type !== ConnectorType.Social && (
-          <SenderTester
-            connectorId={connectorData.id}
-            connectorType={connectorData.type}
-            config={watch('configJson')}
-          />
-        )}
-      </div>
-      <div className={detailsStyles.footer}>
-        <div className={detailsStyles.footerMain}>
-          <Button
-            type="primary"
-            size="large"
-            title="general.save_changes"
-            isLoading={isSubmitting}
-            onClick={onSubmit}
-          />
-        </div>
-      </div>
+    <FormProvider {...methods}>
+      <DetailsForm
+        isDirty={isDirty}
+        isSubmitting={isSubmitting}
+        onDiscard={reset}
+        onSubmit={onSubmit}
+      >
+        <FormCard
+          title="connector_details.settings"
+          description="connector_details.settings_description"
+          learnMoreLink="https://docs.logto.io/docs/references/connectors"
+        >
+          <ConnectorForm connector={connectorData} />
+          {connectorData.type !== ConnectorType.Social && (
+            <SenderTester
+              className={styles.senderTest}
+              connectorId={connectorData.id}
+              connectorType={connectorData.type}
+              config={watch('config')}
+            />
+          )}
+        </FormCard>
+      </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
-    </>
+    </FormProvider>
   );
 };
 

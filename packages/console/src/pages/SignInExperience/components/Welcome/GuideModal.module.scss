@@ -1,0 +1,86 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  background-color: var(--color-surface-1);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  .header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    background-color: var(--color-layer-1);
+    height: 64px;
+    padding: 0 _.unit(21) 0 _.unit(2);
+
+    button {
+      margin-left: _.unit(4);
+    }
+
+    .separator {
+      @include _.vertical-bar;
+      height: 20px;
+      margin: 0 _.unit(5) 0 _.unit(4);
+    }
+
+    .closeIcon {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    flex-direction: column;
+    align-items: center;
+
+    .reminder {
+      width: 550px;
+      margin: 0 auto _.unit(8);
+    }
+
+    > .form {
+      position: relative;
+      padding: _.unit(6) _.unit(17);
+      // Space for footer
+      padding-bottom: 108px;
+    }
+  }
+
+  .main {
+    display: flex;
+    align-items: flex-start;
+    @include _.main-content-width;
+
+    .form {
+      flex: 1;
+
+      > :not(:first-child) {
+        margin-top: _.unit(3);
+      }
+    }
+
+    .preview {
+      flex: 1;
+      margin-left: _.unit(8);
+      position: sticky;
+      top: _.unit(4);
+    }
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-layer-1);
+
+    .footerContent {
+      padding: _.unit(6) 0;
+      display: flex;
+      justify-content: right;
+      @include _.main-content-width;
+    }
+  }
+}

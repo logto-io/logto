@@ -10,6 +10,7 @@ const general = {
   save: 'Kaydet',
   save_changes: 'Değişiklikleri Kaydet',
   saved: 'Kaydedildi!',
+  discard: 'Discard', // UNTRANSLATED
   loading: 'Yükleniyor...',
   redirecting: 'Yönlendiriliyor...',
   add: 'Ekle',
@@ -29,7 +30,7 @@ const general = {
   copying: 'Kopyalanıyor',
   copied: 'Kopyalandı',
   required: 'Gerekli',
-  add_another: '+ Bir tane daha ekle',
+  add_another: 'Bir tane daha ekle',
   deletion_confirmation: 'Bu dosyayı silmek istediğinize emin misiniz: {{title}}?',
   settings_nav: 'Ayarlar',
   unsaved_changes_warning:
@@ -38,6 +39,9 @@ const general = {
   stay_on_page: 'Bu sayfada kal',
   type_to_search: 'Type to search', // UNTRANSLATED
   got_it: 'Got it', // UNTRANSLATED
+  page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
+  learn_more: 'Learn more', // UNTRANSLATED
+  tab_errors: '{{count, number}} errors', // UNTRANSLATED
 };
 
 export default general;

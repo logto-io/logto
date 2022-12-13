@@ -5,7 +5,7 @@ import type {
   OidcClientMetadata,
 } from '@logto/schemas';
 
-import { authedAdminApi } from './api';
+import { authedAdminApi } from './api.js';
 
 export const createApplication = (name: string, type: ApplicationType) =>
   authedAdminApi

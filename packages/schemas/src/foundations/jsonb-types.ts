@@ -2,6 +2,11 @@ import { hexColorRegEx } from '@logto/core-kit';
 import { languageTagGuard } from '@logto/language-kit';
 import { z } from 'zod';
 
+export {
+  configurableConnectorMetadataGuard,
+  type ConfigurableConnectorMetadata,
+} from '@logto/connector-kit';
+
 /**
  * Commonly Used
  */
@@ -128,27 +133,19 @@ export const languageInfoGuard = z.object({
 
 export type LanguageInfo = z.infer<typeof languageInfoGuard>;
 
-export enum SignUpIdentifier {
+export enum SignInIdentifier {
+  Username = 'username',
   Email = 'email',
   Sms = 'sms',
-  Username = 'username',
-  EmailOrSms = 'emailOrSms',
-  None = 'none',
 }
 
 export const signUpGuard = z.object({
-  identifier: z.nativeEnum(SignUpIdentifier),
+  identifiers: z.nativeEnum(SignInIdentifier).array(),
   password: z.boolean(),
   verify: z.boolean(),
 });
 
 export type SignUp = z.infer<typeof signUpGuard>;
-
-export enum SignInIdentifier {
-  Email = 'email',
-  Sms = 'sms',
-  Username = 'username',
-}
 
 export const signInGuard = z.object({
   methods: z

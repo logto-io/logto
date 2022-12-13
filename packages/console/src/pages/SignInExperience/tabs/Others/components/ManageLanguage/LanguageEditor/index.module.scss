@@ -1,0 +1,45 @@
+@use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
+
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+
+  .modalContent {
+    position: fixed;
+    inset: 0;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .editor {
+    margin: 0 auto;
+    max-width: dim.$modal-layout-width-xlarge;
+    max-height: 85vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-3);
+
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-shrink: 0;
+      margin-bottom: _.unit(6);
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      border: 1px solid var(--color-divider);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+  }
+}

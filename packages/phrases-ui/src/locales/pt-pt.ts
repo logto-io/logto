@@ -1,4 +1,4 @@
-import type { LocalePhrase } from '../types';
+import type { LocalePhrase } from '../types.js';
 
 const translation = {
   input: {
@@ -50,8 +50,8 @@ const translation = {
     resend_passcode: 'Reenviar senha',
     continue_with: 'Continuar com',
     create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de fazer login?',
-    sign_in_id_does_not_exists: 'A conta com {{type}} {{value}} não existe, gostaria de criar uma?',
-    sign_in_id_does_not_exists_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
+    sign_in_id_does_not_exist: 'A conta com {{type}} {{value}} não existe, gostaria de criar uma?',
+    sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
     create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
     bind_account_title: 'Agregar conta',
     social_create_account: 'Sem conta? Pode criar uma nova e agregar.',

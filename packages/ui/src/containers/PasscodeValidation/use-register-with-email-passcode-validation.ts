@@ -57,7 +57,7 @@ const useRegisterWithEmailPasscodeValidation = (email: string, errorCallback?: (
 
   const errorHandlers = useMemo<ErrorHandlers>(
     () => ({
-      'user.email_exists_register':
+      'user.email_already_in_use':
         signInMode === SignInMode.Register
           ? identifierExistErrorHandler
           : emailExistSignInErrorHandler,

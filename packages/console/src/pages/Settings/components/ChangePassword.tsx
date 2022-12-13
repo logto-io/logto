@@ -60,9 +60,13 @@ const ChangePassword = () => {
         </div>
       </FormField>
       <ReactModal
+        shouldCloseOnEsc
         isOpen={isOpen}
         className={modalStyles.content}
         overlayClassName={modalStyles.overlay}
+        onRequestClose={() => {
+          setIsOpen(false);
+        }}
       >
         <ModalLayout
           title="settings.change_modal_title"

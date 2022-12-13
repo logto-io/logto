@@ -1,9 +1,7 @@
 const settings = {
   title: 'Ayarlar',
   description: 'Genel ayarları yönet',
-  tabs: {
-    general: 'Genel',
-  },
+  settings: 'Ayarlar',
   custom_domain: 'Özel alan',
   language: 'Dil',
   appearance: 'Görünüm',

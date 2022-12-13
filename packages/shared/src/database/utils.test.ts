@@ -1,7 +1,7 @@
 import { sql } from 'slonik';
 import { SqlToken } from 'slonik/dist/src/tokens.js';
 
-import type { Table } from './types';
+import type { Table } from './types.js';
 import {
   excludeAutoSetFields,
   autoSetFields,
@@ -9,7 +9,9 @@ import {
   convertToIdentifiers,
   convertToTimestamp,
   conditionalSql,
-} from './utils';
+} from './utils.js';
+
+const { jest } = import.meta;
 
 describe('conditionalSql()', () => {
   it('returns empty sql when value is falsy', () => {

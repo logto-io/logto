@@ -24,7 +24,7 @@
 }
 
 @mixin form-text-field {
-  width: dim.$form-text-field-width;
+  width: 100%;
 }
 
 @mixin vertical-bar {

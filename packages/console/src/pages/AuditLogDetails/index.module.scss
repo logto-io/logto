@@ -2,6 +2,7 @@
 
 .backLink {
   margin: _.unit(1) 0 0 _.unit(1);
+  user-select: none;
 }
 
 .header {
@@ -46,6 +47,8 @@
 }
 
 .body {
+  margin-bottom: _.unit(6);
+
   > :not(:first-child) {
     margin-top: _.unit(4);
   }

@@ -6,7 +6,6 @@
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
     "dev": "cross-env PORT=5003 parcel src/index.html --public-url /demo-app --no-cache --hmr-port 6003",
@@ -17,13 +16,13 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "devDependencies": {
-    "@logto/core-kit": "1.0.0-beta.20",
-    "@logto/language-kit": "1.0.0-beta.20",
-    "@logto/phrases": "workspace:^",
-    "@logto/react": "1.0.0-beta.13",
-    "@logto/schemas": "workspace:^",
-    "@parcel/core": "2.7.0",
-    "@parcel/transformer-sass": "2.7.0",
+    "@logto/core-kit": "1.0.0-beta.28",
+    "@logto/language-kit": "1.0.0-beta.28",
+    "@logto/phrases": "workspace:*",
+    "@logto/react": "1.0.0-beta.14",
+    "@logto/schemas": "workspace:*",
+    "@parcel/core": "2.8.0",
+    "@parcel/transformer-sass": "2.8.0",
     "@silverhand/eslint-config": "1.3.0",
     "@silverhand/eslint-config-react": "1.3.0",
     "@silverhand/ts-config": "1.2.1",
@@ -35,14 +34,15 @@
     "i18next": "^21.8.16",
     "i18next-browser-languagedetector": "^6.1.4",
     "lint-staged": "^13.0.0",
-    "parcel": "2.7.0",
+    "parcel": "2.8.0",
     "postcss": "^8.4.6",
     "prettier": "^2.7.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-i18next": "^11.18.3",
     "stylelint": "^14.9.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.4",
+    "zod": "^3.19.1"
   },
   "engines": {
     "node": "^16.13.0 || ^18.12.0"
