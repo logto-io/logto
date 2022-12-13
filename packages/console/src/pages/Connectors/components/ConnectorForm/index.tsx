@@ -91,7 +91,7 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
           </FormField>
         </>
       )}
-      <FormField isRequired title="connectors.guide.config">
+      <FormField title="connectors.guide.config">
         <Controller
           name="config"
           control={control}
@@ -102,7 +102,7 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
           )}
         />
       </FormField>
-      <FormField isRequired title="connectors.guide.sync_profile">
+      <FormField title="connectors.guide.sync_profile">
         <Controller
           name="syncProfile"
           control={control}

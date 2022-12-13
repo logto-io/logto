@@ -77,7 +77,6 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
     <div className={className}>
       <div className={styles.fields}>
         <FormField
-          isRequired
           title={
             isSms ? 'connector_details.test_sms_sender' : 'connector_details.test_email_sender'
           }
