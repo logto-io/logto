@@ -11,6 +11,8 @@ import {
   conditionalSql,
 } from './utils.js';
 
+const { jest } = import.meta;
+
 describe('conditionalSql()', () => {
   it('returns empty sql when value is falsy', () => {
     expect(conditionalSql(false, () => sql`select 1`)).toEqual({

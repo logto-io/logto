@@ -20,8 +20,8 @@
     "dev": "rm -rf build/ && pnpm run copyfiles && nodemon",
     "start": "NODE_ENV=production node build/index.js",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build:test && pnpm test:only build/",
-    "test:ci": "pnpm run test --coverage --silent",
+    "test": "pnpm build:test && pnpm test:only",
+    "test:ci": "pnpm run test:only --coverage --silent",
     "test:report": "codecov -F core"
   },
   "dependencies": {
@@ -101,7 +101,7 @@
     "prettier": "^2.7.1",
     "sinon": "^15.0.0",
     "supertest": "^6.2.2",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   },
   "engines": {
     "node": "^16.13.0 || ^18.12.0"

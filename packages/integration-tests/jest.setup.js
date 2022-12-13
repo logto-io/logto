@@ -2,10 +2,10 @@
 // https://github.com/jsdom/jsdom/issues/1612
 import { Crypto } from '@peculiar/webcrypto';
 import dotenv from 'dotenv';
+import fetch from 'node-fetch';
 import { TextDecoder, TextEncoder } from 'text-encoder';
 
-// eslint-disable-next-line unicorn/prefer-module
-const fetch = require('node-fetch');
+const { jest } = import.meta;
 
 dotenv.config();
 

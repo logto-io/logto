@@ -1,7 +1,9 @@
-import OpenApiSchemaValidator from 'openapi-schema-validator';
+import Validator from 'openapi-schema-validator';
 import type { OpenAPI } from 'openapi-types';
 
-import { api } from '@/api';
+import { api } from '#src/api/index.js';
+
+const { default: OpenApiSchemaValidator } = Validator;
 
 describe('Swagger check', () => {
   it('should provide a valid swagger.json', async () => {

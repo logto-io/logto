@@ -1,9 +1,9 @@
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 
-import { getWellKnownSignInExperience } from '@/api';
-import MockClient from '@/client';
-import { adminConsoleRedirectUri } from '@/constants';
+import { getWellKnownSignInExperience } from '#src/api/index.js';
+import MockClient from '#src/client/index.js';
+import { adminConsoleRedirectUri } from '#src/constants.js';
 
 describe('wellknown api', () => {
   it('get /.well-known/sign-in-exp for AC', async () => {

@@ -4,7 +4,7 @@
     "outDir": "lib",
     "declaration": true,
     "moduleResolution": "nodenext",
-    "module": "es2022"
+    "module": "esnext"
   },
   "include": ["src"]
 }

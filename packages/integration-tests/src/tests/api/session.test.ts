@@ -7,7 +7,7 @@ import {
   mockEmailConnectorConfig,
   mockSmsConnectorId,
   mockSmsConnectorConfig,
-} from '@/__mocks__/connectors-mock';
+} from '#src/__mocks__/connectors-mock.js';
 import {
   sendRegisterUserWithEmailPasscode,
   verifyRegisterUserWithEmailPasscode,
@@ -23,9 +23,9 @@ import {
   deleteConnectorById,
   postConnector,
   updateConnectorConfig,
-} from '@/api';
-import MockClient from '@/client';
-import { signUpIdentifiers } from '@/constants';
+} from '#src/api/index.js';
+import MockClient from '#src/client/index.js';
+import { signUpIdentifiers } from '#src/constants.js';
 import {
   registerNewUser,
   signIn,
@@ -33,8 +33,8 @@ import {
   createUserByAdmin,
   setSignUpIdentifier,
   setSignInMethod,
-} from '@/helpers';
-import { generateUsername, generatePassword, generateEmail, generatePhone } from '@/utils';
+} from '#src/helpers.js';
+import { generateUsername, generatePassword, generateEmail, generatePhone } from '#src/utils.js';
 
 const connectorIdMap = new Map();
 

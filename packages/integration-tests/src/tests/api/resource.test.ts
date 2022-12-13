@@ -1,8 +1,8 @@
 import { managementResource } from '@logto/schemas/lib/seeds';
 import { HTTPError } from 'got';
 
-import { createResource, getResource, updateResource, deleteResource } from '@/api';
-import { generateResourceIndicator, generateResourceName } from '@/utils';
+import { createResource, getResource, updateResource, deleteResource } from '#src/api/index.js';
+import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
 
 describe('admin console api resources', () => {
   it('should get management api resource details successfully', async () => {

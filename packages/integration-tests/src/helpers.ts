@@ -13,9 +13,9 @@ import {
   getAuthWithSocial,
   signInWithSocial,
   updateSignInExperience,
-} from '@/api';
-import MockClient from '@/client';
-import { generateUsername, generatePassword } from '@/utils';
+} from '#src/api/index.js';
+import MockClient from '#src/client/index.js';
+import { generateUsername, generatePassword } from '#src/utils.js';
 
 export const createUserByAdmin = (username?: string, password?: string, primaryEmail?: string) => {
   return createUser({

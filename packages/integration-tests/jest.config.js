@@ -1,9 +1,10 @@
 /** @type {import('jest').Config} */
 const config = {
-  coveragePathIgnorePatterns: ['/node_modules/', '/src/__mocks__/'],
-  coverageReporters: ['text-summary', 'lcov'],
+  testPathIgnorePatterns: ['/node_modules/'],
+  setupFilesAfterEnv: ['./jest.setup.js'],
   roots: ['./lib'],
   moduleNameMapper: {
+    '^#src/(.*)\\.js(x)?$': '<rootDir>/lib/$1',
     '^(chalk|inquirer)$': '<rootDir>/../shared/lib/esm/module-proxy.js',
   },
 };

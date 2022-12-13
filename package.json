@@ -24,7 +24,7 @@
     "@commitlint/config-conventional": "^17.0.0",
     "@commitlint/types": "^17.0.0",
     "husky": "^8.0.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.4"
   },
   "workspaces": {
     "packages": [

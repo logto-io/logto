@@ -1,6 +1,6 @@
 import { PasscodeType } from '@logto/schemas';
 
-import api from './api';
+import api from './api.js';
 
 type RedirectResponse = {
   redirectTo: string;

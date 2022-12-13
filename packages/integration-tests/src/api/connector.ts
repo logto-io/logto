@@ -1,6 +1,6 @@
 import type { Connector, ConnectorResponse } from '@logto/schemas';
 
-import { authedAdminApi } from './api';
+import { authedAdminApi } from './api.js';
 
 export const listConnectors = async () =>
   authedAdminApi.get('connectors').json<ConnectorResponse[]>();

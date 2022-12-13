@@ -25,14 +25,15 @@
     "precommit": "lint-staged",
     "prepare:package-json": "node -p \"'export const packageJson = ' + JSON.stringify(require('./package.json'), undefined, 2) + ';'\" > src/package-json.ts",
     "build": "rimraf lib && pnpm prepare:package-json && tsc -p tsconfig.build.json",
-    "build:test": "rm -rf build/ && tsc -p tsconfig.test.json --sourcemap",
+    "build:test": "rimraf lib/ && pnpm prepare:package-json && tsc -p tsconfig.test.json --sourcemap",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "start": "node .",
-    "start:dev": "ts-node --files src/index.ts",
+    "start:dev": "pnpm build && node .",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "pnpm build:test && NODE_OPTIONS=--experimental-vm-modules jest",
-    "test:ci": "pnpm run test",
+    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "pnpm build:test && pnpm test:only",
+    "test:ci": "pnpm run test:only",
     "prepack": "pnpm build"
   },
   "engines": {
@@ -81,7 +82,7 @@
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
     "sinon": "^15.0.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.4"
   },
   "eslintConfig": {
     "extends": "@silverhand",
