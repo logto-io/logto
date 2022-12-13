@@ -30,7 +30,7 @@ const general = {
   copying: 'Copie',
   copied: 'Copié',
   required: 'Requis',
-  add_another: '+ Ajouter un autre',
+  add_another: 'Ajouter un autre',
   deletion_confirmation: 'Êtes-vous sûr de vouloir supprimer ce {{title}} ?',
   settings_nav: 'Paramètres',
   unsaved_changes_warning:

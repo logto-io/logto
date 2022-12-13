@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
 
+import CirclePlus from '@/assets/images/circle-plus.svg';
 import Plus from '@/assets/images/plus.svg';
 import ActionMenu from '@/components/ActionMenu';
 import type { Props as ButtonProps } from '@/components/Button';
@@ -33,6 +34,7 @@ const AddButton = ({ options, onSelected, hasSelectedIdentifiers }: Props) => {
     type: 'text',
     size: 'small',
     title: 'general.add_another',
+    icon: <CirclePlus />,
   };
 
   return (
