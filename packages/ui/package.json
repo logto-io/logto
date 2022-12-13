@@ -50,7 +50,7 @@
     "jest-environment-jsdom": "^29.0.0",
     "jest-transformer-svg": "^2.0.0",
     "js-base64": "^3.7.2",
-    "ky": "^0.32.0",
+    "ky": "^0.33.0",
     "libphonenumber-js": "^1.9.49",
     "lint-staged": "^13.0.0",
     "parcel": "2.8.0",
