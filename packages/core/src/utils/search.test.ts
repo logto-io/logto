@@ -175,7 +175,7 @@ describe('buildConditionsFromSearch()', () => {
           ['user_id', 'username']
         )
       ),
-      '(lower("user_id") = any($1::"string"[])) and ("user_id" ~~* $2 or "username" ~~* $3) and ("username" ~* $4)',
+      '(lower("user_id") = any($1::"varchar"[])) and ("user_id" ~~* $2 or "username" ~~* $3) and ("username" ~* $4)',
       [['foo', 'bar'], 't.*ma', 't.*ma', '^(b|c)']
     );
 
@@ -195,7 +195,7 @@ describe('buildConditionsFromSearch()', () => {
           ['user_id', 'username']
         )
       ),
-      '("user_id" = any($1::"string"[]))' +
+      '("user_id" = any($1::"varchar"[]))' +
         ' and ' +
         '("user_id" similar to $2 or "username" similar to $3)' +
         ' and ' +
