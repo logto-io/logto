@@ -30,7 +30,7 @@ const general = {
   copying: '복사 중',
   copied: '복사됨',
   required: '필수',
-  add_another: '+ 새로 추가',
+  add_another: '새로 추가',
   deletion_confirmation: '정말로 {{title}}을/를 삭제할까요?',
   settings_nav: '설정',
   unsaved_changes_warning: '수정된 내용이 있어요. 정말로 현재 페이지를 벗어날까요?',

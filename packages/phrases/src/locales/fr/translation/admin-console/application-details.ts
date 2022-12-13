@@ -33,7 +33,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://votre.site.com',
   cors_allowed_origins_tip:
     "Par défaut, toutes les origines des URI de redirection seront autorisées. En général, aucune action n'est requise pour ce champ. See the <a>MDN doc</a> for detailed info.", // UNTRANSLATED
-  add_another: 'Ajouter un autre',
   id_token_expiration: "Expiration du jeton d'identification",
   refresh_token_expiration: "Rafraîchir l'expiration du jeton",
   token_endpoint: 'Token Endpoint',

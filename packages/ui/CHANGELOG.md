@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-beta.17
+
+### Patch Changes
+
+- 02cc9abd: Fix a bug to show forgot password when only SMS connector is configured
+
 ## 1.0.0-beta.16
 
 ### Patch Changes

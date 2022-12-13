@@ -33,7 +33,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     'By default, all the origins of Redirect URIs will be allowed. Usually no action is required for this field. See the <a>MDN doc</a> for detailed info.',
-  add_another: 'Add Another',
   id_token_expiration: 'ID Token expiration',
   refresh_token_expiration: 'Refresh Token expiration',
   token_endpoint: 'Token Endpoint',

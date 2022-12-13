@@ -33,7 +33,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     '所有 Redirect URI 的 origin 将默认被允许。通常不需要对此字段进行操作。参见 <a>MDN 文档</a>以了解更多',
-  add_another: '新增',
   id_token_expiration: 'ID Token 过期时间',
   refresh_token_expiration: 'Refresh Token 过期时间',
   token_endpoint: 'Token Endpoint',
