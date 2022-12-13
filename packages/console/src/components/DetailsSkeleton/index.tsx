@@ -13,15 +13,22 @@ const DetailsSkeleton = () => (
       <Spacer />
       <div className={styles.button} />
     </div>
+    <div className={styles.tabBar} />
     <div className={styles.content}>
-      <div className={styles.tabBar} />
-      {Array.from({ length: 4 }).map((_, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <div key={index} className={styles.field} />
-      ))}
-      <Spacer />
-      <div className={styles.footer}>
-        <div className={styles.button} />
+      <div className={styles.introduction}>
+        <div className={styles.title} />
+        <div className={styles.description}>
+          {Array.from({ length: 2 }).map((_, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <div key={index} className={styles.text} />
+          ))}
+        </div>
+      </div>
+      <div className={styles.fields}>
+        {Array.from({ length: 4 }).map((_, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={index} className={styles.field} />
+        ))}
       </div>
     </div>
   </div>
