@@ -115,6 +115,8 @@ const errors = {
     can_not_modify_target: 'O destino do conector não pode ser modificado.',
     multiple_target_with_same_platform:
       'Você não pode ter vários conectores sociais com o mesmo destino e plataforma.',
+    cannot_change_metadata_for_non_standard_connector:
+      "This connector's `metadata` cannot be changed.", // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: 'Telefone e e-mail estão vazios.',

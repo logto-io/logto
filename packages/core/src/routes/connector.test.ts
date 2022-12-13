@@ -188,7 +188,6 @@ describe('connector route', () => {
           metadata: { ...mockConnectorFactory.metadata, id: 'connectorId' },
         },
       ]);
-      countConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
@@ -255,7 +254,7 @@ describe('connector route', () => {
         {
           ...mockConnectorFactory,
           type: ConnectorType.Sms,
-          metadata: { ...mockConnectorFactory.metadata, id: 'id0', isStandard: true },
+          metadata: { ...mockConnectorFactory.metadata, id: 'id1' },
         },
       ]);
       getLogtoConnectors.mockResolvedValueOnce([
@@ -266,20 +265,19 @@ describe('connector route', () => {
           ...mockLogtoConnector,
         },
       ]);
+      countConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
       const response = await connectorRequest.post('/connectors').send({
-        connectorId: 'id0',
+        connectorId: 'id1',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
-        metadata: { target: 'target', name: { en: '' }, logo: '', logoDark: null },
       });
       expect(response).toHaveProperty('statusCode', 200);
       expect(response.body).toMatchObject(
         expect.objectContaining({
-          connectorId: 'id0',
+          connectorId: 'id1',
           config: {
             cliend_id: 'client_id',
             client_secret: 'client_secret',
           },
-          metadata: { target: 'target' },
         })
       );
       expect(deleteConnectorByIds).toHaveBeenCalledWith(['id']);
@@ -347,6 +345,7 @@ describe('connector route', () => {
       ]);
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
+        metadata: { target: 'target' },
       });
       expect(response).toHaveProperty('statusCode', 422);
     });
