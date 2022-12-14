@@ -6,6 +6,7 @@ export const extractCookie = (response: Response) => {
   return headers['set-cookie']?.join('; ') ?? '';
 };
 
+export const generateName = () => crypto.randomUUID();
 export const generateUsername = () => `usr_${crypto.randomUUID().replaceAll('-', '_')}`;
 export const generatePassword = () => `pwd_${crypto.randomUUID()}`;
 
