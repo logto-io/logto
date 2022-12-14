@@ -6,6 +6,8 @@ import { snakeCase } from 'snake-case';
 
 import { isTrue } from '#src/env-set/parameters.js';
 
+import assertThat from './assert-that.js';
+
 const searchJointModes = Object.values(SearchJointMode);
 const searchMatchModes = Object.values(SearchMatchMode);
 
@@ -25,16 +27,34 @@ const isEnum = <T extends string>(list: T[], value: string): value is T =>
   // @ts-expect-error the easiest way to perform type checking for a string enum
   list.includes(value);
 
+/**
+ * Parse a field string with "search." prefix to the actual first-level field.
+ * If `allowedFields` is not `undefined`, ensure the parsed field is included in the list.
+ *
+ * Examples:
+ *
+ * ```ts
+ * getSearchField('search.foo') // 'foo'
+ * getSearchField('search.foo.bar') // TypeError
+ * getSearchField('search.foo', ['bar']) // TypeError
+ * getSearchField('search', ['bar']) // undefined
+ * ```
+ *
+ * @param field The field string to check.
+ * @param allowedFields Available search fields. Note the general field is always allowed.
+ * @returns The actual search field string, `undefined` if it's a general field.
+ */
 const getSearchField = (field: string, allowedFields?: string[]): Optional<string> => {
   const path = field.split('.');
 
-  if (path.length > 2) {
-    throw new TypeError(
+  assertThat(
+    path.length <= 2,
+    new TypeError(
       `Unsupported nested search field path \`${path
         .slice(1)
         .join('.')}\` detected. Only the first level field is supported.`
-    );
-  }
+    )
+  );
 
   if (allowedFields && path[1] && !allowedFields.includes(path[1])) {
     throw new TypeError(
@@ -50,11 +70,12 @@ const getJointMode = (value?: Nullable<string>): SearchJointMode => {
     return SearchJointMode.Or;
   }
 
-  if (!isEnum(searchJointModes, value)) {
-    throw new TypeError(
-      `Search joint mode \`${value}\` is not valid, expect one of ${searchJointModes.join(', ')}.,`
-    );
-  }
+  assertThat(
+    isEnum(searchJointModes, value),
+    new TypeError(
+      `Search joint mode \`${value}\` is not valid, expect one of ${searchJointModes.join(', ')}.`
+    )
+  );
 
   return value;
 };
@@ -74,13 +95,15 @@ const getSearchMetadata = (searchParameters: URLSearchParams, allowedFields?: st
     if (key.startsWith('mode')) {
       const field = getSearchField(key, allowedFields);
 
-      if (!isEnum(searchMatchModes, value)) {
-        throw new TypeError(
+      assertThat(
+        isEnum(searchMatchModes, value),
+        new TypeError(
           `Search match mode \`${value}\`${conditionalString(
             field && ` for field \`${field}\``
           )} is not valid, expect one of ${searchMatchModes.join(', ')}.`
-        );
-      }
+        )
+      );
+
       matchMode.set(field, value);
       continue;
     }
@@ -121,17 +144,13 @@ export const parseSearchParamsForSearch = (
     const mode = getModeFor(field);
 
     if (mode === SearchMatchMode.Exact) {
-      if (!values.every(Boolean)) {
-        throw new TypeError('Search value cannot be empty.');
-      }
+      assertThat(values.every(Boolean), new TypeError('Search value cannot be empty.'));
     } else {
-      if (values.length !== 1) {
-        throw new TypeError('Only one search value is allowed when search mode is not `exact`.');
-      }
-
-      if (!values[0]) {
-        throw new TypeError('Search value cannot be empty.');
-      }
+      assertThat(
+        values.length === 1,
+        new TypeError('Only one search value is allowed when search mode is not `exact`.')
+      );
+      assertThat(values[0], new TypeError('Search value cannot be empty.'));
     }
 
     matches.push({ mode, field, values });
@@ -157,9 +176,10 @@ const getMatchModeOperator = (match: SearchMatchMode, isCaseSensitive: boolean) 
     case SearchMatchMode.Like:
       return isCaseSensitive ? sql`~~` : sql`~~*`;
     case SearchMatchMode.SimilarTo:
-      if (!isCaseSensitive) {
-        throw new TypeError('Cannot use case-insensitive match for `similar to`.');
-      }
+      assertThat(
+        isCaseSensitive,
+        new TypeError('Cannot use case-insensitive match for `similar to`.')
+      );
 
       return sql`similar to`;
     case SearchMatchMode.Posix:
@@ -178,9 +198,7 @@ const getMatchModeOperator = (match: SearchMatchMode, isCaseSensitive: boolean) 
  * @throws TypeError error if fields in `search` do not match the `searchFields`, or invalid condition found (e.g. the value is empty).
  */
 export const buildConditionsFromSearch = (search: Search, searchFields: string[]) => {
-  if (searchFields.length === 0) {
-    throw new TypeError('No search field found.');
-  }
+  assertThat(searchFields.length > 0, new TypeError('No search field found.'));
 
   const { matches, joint, isCaseSensitive } = search;
   const conditions = matches.map(({ mode, field: rawField, values: rawValues }) => {
@@ -197,9 +215,10 @@ export const buildConditionsFromSearch = (search: Search, searchFields: string[]
     const values = shouldLowercase ? rawValues.map((value) => value.toLowerCase()) : rawValues;
 
     // Type check for the first value
-    if (!values[0] || !values.every(Boolean)) {
-      throw new TypeError(`Empty value found${conditionalString(field && ` for field ${field}`)}.`);
-    }
+    assertThat(
+      values[0] && values.every(Boolean),
+      new TypeError(`Empty value found${conditionalString(field && ` for field ${field}`)}.`)
+    );
 
     const valueExpression =
       values.length === 1 ? sql`${values[0]}` : sql`any(${sql.array(values, 'varchar')})`;

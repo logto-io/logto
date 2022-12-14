@@ -159,19 +159,14 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       const id = await generateUserId();
 
-      const { passwordEncrypted, passwordEncryptionMethod } = password
-        ? await encryptUserPassword(password)
-        : { passwordEncrypted: undefined, passwordEncryptionMethod: undefined };
-
       const user = await insertUser({
         id,
         primaryEmail,
         primaryPhone,
         username,
-        passwordEncrypted,
-        passwordEncryptionMethod,
         name,
         roleNames: conditional(isAdmin && [UserRole.Admin]),
+        ...conditional(password && (await encryptUserPassword(password))),
       });
 
       ctx.body = pick(user, ...userInfoSelectFields);
