@@ -77,9 +77,7 @@ test('connector set-up flow', async () => {
     connectorId: mockStandardEmailConnectorId,
     metadata: { target: 'mock-standard-mail' },
   });
-  await updateConnectorConfig(id, mockStandardEmailConnectorConfig, {
-    target: 'mock-standard-mail',
-  });
+  await updateConnectorConfig(id, mockStandardEmailConnectorConfig);
   connectorIdMap.set(mockStandardEmailConnectorId, id);
   const currentConnectors = await listConnectors();
   expect(
