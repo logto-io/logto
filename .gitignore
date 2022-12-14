@@ -6,16 +6,16 @@ node_modules
 .pnp.js
 
 # testing
-/packages/*/coverage
+/packages/**/coverage
 
 # report
 /report.json
-/packages/*/report.json
+/packages/**/report.json
 
 # production
-/packages/*/build
-/packages/*/lib
-/packages/*/dist
+/packages/**/build
+/packages/**/lib
+/packages/**/dist
 
 # logs
 logs

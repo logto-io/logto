@@ -7,7 +7,7 @@ import {
   validateTermsOfUse,
   validateSignUp,
   validateSignIn,
-} from '#src/lib/sign-in-experience/index.js';
+} from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import {
   findDefaultSignInExperience,

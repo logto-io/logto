@@ -5,8 +5,8 @@ import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { getApplicationIdFromInteraction } from '#src/lib/session.js';
-import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import { getApplicationIdFromInteraction } from '#src/libraries/session.js';
+import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 export default function koaGuardSessionAction<StateT, ContextT, ResponseBodyT>(

@@ -68,11 +68,11 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/connector-kit": "1.0.0-beta.28",
-    "@logto/core-kit": "1.0.0-beta.28",
-    "@logto/language-kit": "1.0.0-beta.28",
+    "@logto/connector-kit": "workspace:*",
+    "@logto/core-kit": "workspace:*",
+    "@logto/language-kit": "workspace:*",
     "@logto/phrases": "workspace:*",
     "@logto/phrases-ui": "workspace:*",
-    "zod": "^3.19.1"
+    "zod": "^3.20.2"
   }
 }

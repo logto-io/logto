@@ -7,14 +7,17 @@ import { object, string, unknown } from 'zod';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
-import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import {
+  assignInteractionResults,
+  getApplicationIdFromInteraction,
+} from '#src/libraries/session.js';
+import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
 import {
   findSocialRelatedUser,
   getUserInfoByAuthCode,
   getUserInfoFromInteractionResult,
-} from '#src/lib/social.js';
-import { generateUserId, insertUser } from '#src/lib/user.js';
+} from '#src/libraries/social.js';
+import { generateUserId, insertUser } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import {
   hasUserWithIdentity,
@@ -47,6 +50,8 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       assertThat(state && redirectUri, 'session.insufficient_info');
       const connector = await getLogtoConnectorById(connectorId);
       assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
+      // FIXME: @Darcy
+      // @ts-expect-error pending fix
       const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
       ctx.body = { redirectTo };
 

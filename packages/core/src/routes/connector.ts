@@ -13,8 +13,8 @@ import {
 } from '#src/connectors/index.js';
 import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/lib/connector.js';
-import { removeUnavailableSocialConnectorTargets } from '#src/lib/sign-in-experience/index.js';
+import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/libraries/connector.js';
+import { removeUnavailableSocialConnectorTargets } from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import {
   findConnectorById,

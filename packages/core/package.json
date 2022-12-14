@@ -26,9 +26,9 @@
   },
   "dependencies": {
     "@logto/cli": "workspace:*",
-    "@logto/connector-kit": "1.0.0-beta.28",
-    "@logto/core-kit": "1.0.0-beta.28",
-    "@logto/language-kit": "1.0.0-beta.28",
+    "@logto/connector-kit": "workspace:*",
+    "@logto/core-kit": "workspace:*",
+    "@logto/language-kit": "workspace:*",
     "@logto/phrases": "workspace:*",
     "@logto/phrases-ui": "workspace:*",
     "@logto/schemas": "workspace:*",
@@ -68,7 +68,7 @@
     "slonik-sql-tag-raw": "^1.1.4",
     "snake-case": "^3.0.4",
     "snakecase-keys": "^5.4.4",
-    "zod": "^3.19.1"
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.3.0",

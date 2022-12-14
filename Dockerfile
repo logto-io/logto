@@ -18,7 +18,7 @@ RUN pnpm -r build
 RUN pnpm cli connector add --official -p .
 
 # Prune dependencies for production
-RUN rm -rf node_modules packages/*/node_modules
+RUN rm -rf node_modules packages/**/node_modules
 RUN NODE_ENV=production pnpm i
 
 # Clean up

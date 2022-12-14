@@ -12,7 +12,7 @@ import {
   encryptUserPassword,
   generateUserId,
   insertUser,
-} from '#src/lib/user.js';
+} from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { revokeInstanceByUserId } from '#src/queries/oidc-model-instance.js';

@@ -3,7 +3,7 @@ import { ConnectorType } from '@logto/schemas';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import type { SocialUserInfo } from '#src/connectors/types.js';
-import { getUserInfoByAuthCode } from '#src/lib/social.js';
+import { getUserInfoByAuthCode } from '#src/libraries/social.js';
 import type { LogContext } from '#src/middleware/koa-log.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -17,6 +17,8 @@ export const createSocialAuthorizationUrl = async (payload: SocialAuthorizationU
 
   assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
 
+  // FIXME: @Darcy
+  // @ts-expect-error pending fix
   return connector.getAuthorizationUri({ state, redirectUri });
 };
 

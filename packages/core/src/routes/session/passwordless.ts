@@ -4,7 +4,7 @@ import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { createPasscode, sendPasscode, verifyPasscode } from '#src/lib/passcode.js';
+import { createPasscode, sendPasscode, verifyPasscode } from '#src/libraries/passcode.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { findUserByEmail, findUserByPhone } from '#src/queries/user.js';
 import { passcodeTypeGuard } from '#src/routes/session/types.js';

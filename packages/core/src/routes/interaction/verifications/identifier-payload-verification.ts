@@ -2,7 +2,7 @@ import type { Event, SocialConnectorPayload, SocialIdentityPayload } from '@logt
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { verifyUserPassword } from '#src/lib/user.js';
+import { verifyUserPassword } from '#src/libraries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type {

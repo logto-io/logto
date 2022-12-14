@@ -1,7 +1,7 @@
 import type { Event } from '@logto/schemas';
 import { PasscodeType } from '@logto/schemas';
 
-import { createPasscode, sendPasscode, verifyPasscode } from '#src/lib/passcode.js';
+import { createPasscode, sendPasscode, verifyPasscode } from '#src/libraries/passcode.js';
 import type { LogContext } from '#src/middleware/koa-log.js';
 import { getPasswordlessRelatedLogType } from '#src/routes/session/utils.js';
 

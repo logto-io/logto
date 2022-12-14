@@ -44,7 +44,7 @@ mockEsm('#src/queries/custom-phrase.js', () => ({
   findCustomPhraseByLanguageTag,
 }));
 
-const { getPhrase } = await import('#src/lib/phrase.js');
+const { getPhrase } = await import('#src/libraries/phrase.js');
 
 afterEach(() => {
   jest.clearAllMocks();

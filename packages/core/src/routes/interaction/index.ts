@@ -3,7 +3,7 @@ import { Event } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { assignInteractionResults } from '#src/lib/session.js';
+import { assignInteractionResults } from '#src/libraries/session.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 

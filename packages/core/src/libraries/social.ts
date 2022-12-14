@@ -47,6 +47,8 @@ export const getUserInfoByAuthCode = async (
     })
   );
 
+  // FIXME: @Darcy
+  // @ts-expect-error pending fix
   return connector.getUserInfo(data);
 };
 
