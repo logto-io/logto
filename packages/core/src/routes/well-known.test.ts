@@ -108,6 +108,7 @@ describe('GET /.well-known/sign-in-exp', () => {
         ...adminConsoleSignInExperience.branding,
         slogan: 'admin_console.welcome.title',
       },
+      termsOfUseUrl: mockSignInExperience.termsOfUseUrl,
       languageInfo: mockSignInExperience.languageInfo,
       socialConnectors: [],
       signInMode: SignInMode.SignIn,

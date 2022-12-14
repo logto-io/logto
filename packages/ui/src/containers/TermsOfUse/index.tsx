@@ -7,11 +7,11 @@ type Props = {
 };
 
 const TermsOfUse = ({ className }: Props) => {
-  const { termsAgreement, setTermsAgreement, termsSettings, termsOfUseIframeModalHandler } =
+  const { termsAgreement, setTermsAgreement, termsOfUseUrl, termsOfUseIframeModalHandler } =
     useTerms();
   const { isMobile } = usePlatform();
 
-  if (!termsSettings?.enabled || !termsSettings.contentUrl) {
+  if (!termsOfUseUrl) {
     return null;
   }
 
@@ -19,7 +19,7 @@ const TermsOfUse = ({ className }: Props) => {
     <TermsOfUseComponent
       className={className}
       name="termsAgreement"
-      termsUrl={termsSettings.contentUrl}
+      termsUrl={termsOfUseUrl}
       isChecked={termsAgreement}
       onChange={(checked) => {
         setTermsAgreement(checked);

@@ -9,7 +9,6 @@ import {
   mockGoogleConnector,
   mockLanguageInfo,
   mockSignInExperience,
-  mockTermsOfUse,
 } from '#src/__mocks__/index.js';
 
 const { jest } = import.meta;
@@ -59,44 +58,20 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-describe('terms of use', () => {
-  describe('enabled', () => {
-    test.each(validBooleans)('%p should success', async (enabled) => {
-      const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled } };
-      await expectPatchResponseStatus(signInExperience, 200);
-    });
-
-    test.each(invalidBooleans)('%p should fail', async (enabled) => {
-      const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled } };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-
-  describe('contentUrl', () => {
-    test.each([undefined, 'http://silverhand.com/terms', 'https://logto.dev/terms'])(
+describe('terms of use url', () => {
+  describe('termsOfUseUrl', () => {
+    test.each([undefined, null, '', 'http://silverhand.com/terms', 'https://logto.dev/terms'])(
       '%p should success',
-      async (contentUrl) => {
-        const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl } };
+      async (termsOfUseUrl) => {
+        const signInExperience = {
+          termsOfUseUrl,
+        };
         await expectPatchResponseStatus(signInExperience, 200);
       }
     );
 
-    test.each([null, ' \t\n\r', 'non-url'])('%p should fail', async (contentUrl) => {
-      const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl } };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-
-    test('should allow empty contentUrl if termsOfUse is disabled', async () => {
-      const signInExperience = {
-        termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl: '' },
-      };
-      await expectPatchResponseStatus(signInExperience, 200);
-    });
-
-    test('should not allow empty contentUrl if termsOfUse is enabled', async () => {
-      const signInExperience = {
-        termsOfUse: { ...mockTermsOfUse, enabled: true, contentUrl: '' },
-      };
+    test.each([' \t\n\r', 'non-url'])('%p should fail', async (termsOfUseUrl) => {
+      const signInExperience = { termsOfUseUrl };
       await expectPatchResponseStatus(signInExperience, 400);
     });
   });

@@ -1,4 +1,4 @@
-import type { SignInExperience, CreateSignInExperience, TermsOfUse } from '@logto/schemas';
+import type { SignInExperience, CreateSignInExperience } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import {
@@ -13,24 +13,19 @@ import {
   mockSignIn,
   mockLanguageInfo,
   mockAliyunSmsConnector,
+  mockTermsOfUseUrl,
 } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-const {
-  validateBranding,
-  validateLanguageInfo,
-  validateTermsOfUse,
-  validateSignIn,
-  validateSignUp,
-} = await mockEsmWithActual('#src/libraries/sign-in-experience/index.js', () => ({
-  validateBranding: jest.fn(),
-  validateLanguageInfo: jest.fn(),
-  validateTermsOfUse: jest.fn(),
-  validateSignIn: jest.fn(),
-  validateSignUp: jest.fn(),
-}));
+const { validateBranding, validateLanguageInfo, validateSignIn, validateSignUp } =
+  await mockEsmWithActual('#src/libraries/sign-in-experience/index.js', () => ({
+    validateBranding: jest.fn(),
+    validateLanguageInfo: jest.fn(),
+    validateSignIn: jest.fn(),
+    validateSignUp: jest.fn(),
+  }));
 
 const logtoConnectors = [
   mockFacebookConnector,
@@ -106,14 +101,13 @@ describe('PATCH /sign-in-exp', () => {
   });
 
   it('should succeed to update when the input is valid', async () => {
-    const termsOfUse: TermsOfUse = { enabled: false };
     const socialSignInConnectorTargets = ['github', 'facebook', 'wechat'];
 
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       color: mockColor,
       branding: mockBranding,
       languageInfo: mockLanguageInfo,
-      termsOfUse,
+      termsOfUseUrl: mockTermsOfUseUrl,
       socialSignInConnectorTargets,
       signUp: mockSignUp,
       signIn: mockSignIn,
@@ -121,7 +115,6 @@ describe('PATCH /sign-in-exp', () => {
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateLanguageInfo).toHaveBeenCalledWith(mockLanguageInfo);
-    expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
     expect(validateSignUp).toHaveBeenCalledWith(mockSignUp, logtoConnectors);
     expect(validateSignIn).toHaveBeenCalledWith(mockSignIn, mockSignUp, logtoConnectors);
 
@@ -131,7 +124,7 @@ describe('PATCH /sign-in-exp', () => {
         ...mockSignInExperience,
         color: mockColor,
         branding: mockBranding,
-        termsOfUse,
+        termsOfUseUrl: mockTermsOfUseUrl,
         socialSignInConnectorTargets,
         signIn: mockSignIn,
       },
