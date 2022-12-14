@@ -3,7 +3,7 @@ import path from 'path';
 
 import type { User, SignIn, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
-import { HTTPError } from 'got';
+import { HTTPError, RequestError } from 'got';
 
 import {
   createUser,
@@ -17,12 +17,21 @@ import {
 import MockClient from '#src/client/index.js';
 import { generateUsername, generatePassword } from '#src/utils.js';
 
-export const createUserByAdmin = (username?: string, password?: string, primaryEmail?: string) => {
+export const createUserByAdmin = (
+  username?: string,
+  password?: string,
+  primaryEmail?: string,
+  primaryPhone?: string,
+  name?: string,
+  isAdmin = false
+) => {
   return createUser({
     username: username ?? generateUsername(),
-    password: password ?? generatePassword(),
-    name: username ?? 'John',
+    password,
+    name: name ?? username ?? 'John',
     primaryEmail,
+    primaryPhone,
+    isAdmin,
   }).json<User>();
 };
 
@@ -140,4 +149,39 @@ export const bindSocialToNewCreatedUser = async (connectorId: string) => {
   const { sub } = await client.getIdTokenClaims();
 
   return sub;
+};
+
+export const expectRejects = async (
+  promise: Promise<unknown>,
+  code: string,
+  messageIncludes?: string
+) => {
+  try {
+    await promise;
+  } catch (error: unknown) {
+    expectRequestError(error, code, messageIncludes);
+
+    return;
+  }
+
+  fail();
+};
+
+export const expectRequestError = (error: unknown, code: string, messageIncludes?: string) => {
+  if (!(error instanceof RequestError)) {
+    fail('Error should be an instance of RequestError');
+  }
+
+  // JSON.parse returns `any`. Directly use `as` since we've already know the response body structure.
+  // eslint-disable-next-line no-restricted-syntax
+  const body = JSON.parse(String(error.response?.body)) as {
+    code: string;
+    message: string;
+  };
+
+  expect(body.code).toEqual(code);
+
+  if (messageIncludes) {
+    expect(body.message.includes(messageIncludes)).toBeTruthy();
+  }
 };

@@ -5,7 +5,6 @@ import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
-/* eslint-disable complexity */
 export const validateSignIn = (
   signIn: SignIn,
   signUp: SignUp,
@@ -97,4 +96,3 @@ export const validateSignIn = (
     );
   }
 };
-/* eslint-enable complexity */

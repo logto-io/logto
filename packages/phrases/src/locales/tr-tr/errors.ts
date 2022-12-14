@@ -1,4 +1,7 @@
 const errors = {
+  request: {
+    invalid_input: 'Input is invalid. {{details}}', // UNTRANSLATED
+  },
   auth: {
     authorization_header_missing: 'Yetkilendirme başlığı eksik.',
     authorization_token_type_not_supported: 'Yetkilendirme tipi desteklenmiyor.',

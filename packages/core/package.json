@@ -107,7 +107,11 @@
     "node": "^16.13.0 || ^18.12.0"
   },
   "eslintConfig": {
-    "extends": "@silverhand"
+    "extends": "@silverhand",
+    "rules": {
+      "complexity": ["error", 11],
+      "default-case": "off"
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

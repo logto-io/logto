@@ -1,6 +1,7 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
-import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
-import { has } from '@silverhand/essentials';
+import { arbitraryObjectGuard, userInfoSelectFields, UserRole } from '@logto/schemas';
+import { tryThat } from '@logto/shared';
+import { conditional, has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { boolean, literal, object, string } from 'zod';
 
@@ -28,40 +29,38 @@ import {
   hasUserWithPhone,
 } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
+import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter } from './types.js';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
-  router.get(
-    '/users',
-    koaPagination(),
-    koaGuard({
-      query: object({
-        search: string().optional(),
-        // Use `.transform()` once the type issue fixed
-        hideAdminUser: string().optional(),
-        isCaseSensitive: string().optional(),
-      }),
-    }),
-    async (ctx, next) => {
-      const { limit, offset } = ctx.pagination;
-      const {
-        query: { search, hideAdminUser: _hideAdminUser, isCaseSensitive: _isCaseSensitive },
-      } = ctx.guard;
+  router.get('/users', koaPagination(), async (ctx, next) => {
+    const { limit, offset } = ctx.pagination;
+    const { searchParams } = ctx.request.URL;
 
-      const hideAdminUser = isTrue(_hideAdminUser);
-      const isCaseSensitive = isTrue(_isCaseSensitive);
-      const [{ count }, users] = await Promise.all([
-        countUsers(search, hideAdminUser, isCaseSensitive),
-        findUsers(limit, offset, search, hideAdminUser, isCaseSensitive),
-      ]);
+    return tryThat(
+      async () => {
+        const search = parseSearchParamsForSearch(searchParams);
+        const hideAdminUser = isTrue(searchParams.get('hideAdminUser'));
 
-      ctx.pagination.totalCount = count;
-      ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
+        const [{ count }, users] = await Promise.all([
+          countUsers(search, hideAdminUser),
+          findUsers(limit, offset, search, hideAdminUser),
+        ]);
 
-      return next();
-    }
-  );
+        ctx.pagination.totalCount = count;
+        ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
+
+        return next();
+      },
+      (error) => {
+        if (error instanceof TypeError) {
+          throw new RequestError({ code: 'request.invalid_input', details: error.message }, error);
+        }
+        throw error;
+      }
+    );
+  });
 
   router.get(
     '/users/:userId',
@@ -128,15 +127,16 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users',
     koaGuard({
       body: object({
-        primaryPhone: string().regex(phoneRegEx).optional(),
-        primaryEmail: string().regex(emailRegEx).optional(),
-        username: string().regex(usernameRegEx).optional(),
+        primaryPhone: string().regex(phoneRegEx),
+        primaryEmail: string().regex(emailRegEx),
+        username: string().regex(usernameRegEx),
         password: string().regex(passwordRegEx),
-        name: string().optional(),
-      }),
+        isAdmin: boolean(),
+        name: string(),
+      }).partial(),
     }),
     async (ctx, next) => {
-      const { primaryEmail, primaryPhone, username, password, name } = ctx.guard.body;
+      const { primaryEmail, primaryPhone, username, password, name, isAdmin } = ctx.guard.body;
 
       assertThat(
         !username || !(await hasUser(username)),
@@ -159,16 +159,14 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       const id = await generateUserId();
 
-      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
-
       const user = await insertUser({
         id,
         primaryEmail,
         primaryPhone,
         username,
-        passwordEncrypted,
-        passwordEncryptionMethod,
         name,
+        roleNames: conditional(isAdmin && [UserRole.Admin]),
+        ...conditional(password && (await encryptUserPassword(password))),
       });
 
       ctx.body = pick(user, ...userInfoSelectFields);

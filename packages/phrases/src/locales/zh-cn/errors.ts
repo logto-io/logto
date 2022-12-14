@@ -1,4 +1,7 @@
 const errors = {
+  request: {
+    invalid_input: 'Input is invalid. {{details}}', // UNTRANSLATED
+  },
   auth: {
     authorization_header_missing: '缺少权限标题',
     authorization_token_type_not_supported: '权限类型不支持',

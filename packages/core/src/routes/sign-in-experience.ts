@@ -32,7 +32,6 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
     koaGuard({
       body: SignInExperiences.createGuard.omit({ id: true }).partial(),
     }),
-    /* eslint-disable complexity */
     async (ctx, next) => {
       const { socialSignInConnectorTargets, ...rest } = ctx.guard.body;
       const { branding, languageInfo, termsOfUse, signUp, signIn } = rest;
@@ -81,5 +80,4 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       return next();
     }
   );
-  /* eslint-enable complexity */
 }

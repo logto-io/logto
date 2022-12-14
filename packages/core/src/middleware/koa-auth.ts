@@ -46,8 +46,6 @@ type TokenInfo = {
   roleNames?: string[];
 };
 
-// TODO: @Gao refactor me
-// eslint-disable-next-line complexity
 export const verifyBearerTokenFromRequest = async (
   request: Request,
   resourceIndicator: Optional<string>

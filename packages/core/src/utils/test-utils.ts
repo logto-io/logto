@@ -5,7 +5,10 @@ import Router from 'koa-router';
 import type { Provider } from 'oidc-provider';
 import type { QueryResult, QueryResultRow } from 'slonik';
 import { createMockPool, createMockQueryResult } from 'slonik';
-import type { PrimitiveValueExpression } from 'slonik/dist/src/types.js';
+import type {
+  PrimitiveValueExpression,
+  TaggedTemplateLiteralInvocation,
+} from 'slonik/dist/src/types.js';
 import request from 'supertest';
 
 import type { AuthedRouter, AnonymousRouter } from '#src/routes/types.js';
@@ -27,6 +30,28 @@ export const expectSqlAssert = (sql: string, expectSql: string) => {
       .map((row) => row.trim())
       .filter(Boolean)
   );
+};
+
+export const expectSqlTokenAssert = (
+  sql: TaggedTemplateLiteralInvocation,
+  expectSql: string,
+  values?: unknown[]
+) => {
+  expect(
+    sql.sql
+      .split('\n')
+      .map((row) => row.trim())
+      .filter(Boolean)
+  ).toEqual(
+    expectSql
+      .split('\n')
+      .map((row) => row.trim())
+      .filter(Boolean)
+  );
+
+  if (values) {
+    expect(sql.values).toStrictEqual(values);
+  }
 };
 
 export type QueryType = (
@@ -102,8 +127,6 @@ export function createRequester(
       }
 ): request.SuperTest<request.Test>;
 
-// TODO: Refacttor me
-// eslint-disable-next-line complexity
 export function createRequester({
   anonymousRoutes,
   authedRoutes,

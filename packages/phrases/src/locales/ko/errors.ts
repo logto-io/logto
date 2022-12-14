@@ -1,4 +1,7 @@
 const errors = {
+  request: {
+    invalid_input: 'Input is invalid. {{details}}', // UNTRANSLATED
+  },
   auth: {
     authorization_header_missing: '인증 헤더가 존재하지 않아요.',
     authorization_token_type_not_supported: '해당 인증 방법을 지원하지 않아요.',

@@ -130,12 +130,12 @@ describe('adminUserRoutes', () => {
       id: 'fooId',
       username,
       name,
+      roleNames: undefined, // API will call `insertUser()` with `roleNames` specified
     });
   });
 
   it('POST /users should throw with invalid input params', async () => {
     const username = 'MJAtLogto';
-    const password = 'PASSWORD';
     const name = 'Michael';
 
     // Invalid input format
