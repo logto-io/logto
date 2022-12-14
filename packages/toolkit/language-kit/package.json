@@ -22,6 +22,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && rollup -c && tsc -p tsconfig.build.json",
+    "build:test": "pnpm build",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
