@@ -21,6 +21,15 @@ export const putInteraction = async (payload: interactionPayload, cookie: string
     })
     .json<RedirectResponse>();
 
+export const patchInteraction = async (payload: interactionPayload, cookie: string) =>
+  api
+    .patch('interaction', {
+      headers: { cookie },
+      json: payload,
+      followRedirect: false,
+    })
+    .json<RedirectResponse>();
+
 export type VerificationPasscodePayload =
   | {
       event: Event;

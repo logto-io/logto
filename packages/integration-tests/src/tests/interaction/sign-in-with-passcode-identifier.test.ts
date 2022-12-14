@@ -1,10 +1,17 @@
-import { ConnectorType, Event } from '@logto/schemas';
+import { ConnectorType, Event, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
-import { sendVerificationPasscode, putInteraction, deleteUser } from '#src/api/index.js';
-import MockClient from '#src/client/index.js';
+import {
+  sendVerificationPasscode,
+  putInteraction,
+  patchInteraction,
+  deleteUser,
+  updateSignInExperience,
+} from '#src/api/index.js';
 import { readPasscode } from '#src/helpers.js';
+import { generateEmail, generatePhone } from '#src/utils.js';
 
+import { initClient, processSessionAndLogout } from './utils/client.js';
 import { clearConnectorsByTypes, setEmailConnector, setSmsConnector } from './utils/connector.js';
 import { enableAllPasscodeSignInMethods } from './utils/sign-in-experience.js';
 import { generateNewUser } from './utils/user.js';
@@ -22,8 +29,7 @@ describe('Sign-In flow using passcode identifiers', () => {
 
   it('sign-in with email and passcode', async () => {
     const { userProfile, user } = await generateNewUser({ primaryEmail: true });
-    const client = new MockClient();
-    await client.initSession();
+    const client = await initClient();
     assert(client.interactionCookie, new Error('Session not found'));
 
     await expect(
@@ -56,21 +62,14 @@ describe('Sign-In flow using passcode identifiers', () => {
       client.interactionCookie
     );
 
-    await client.processSession(redirectTo);
-
-    await expect(client.isAuthenticated()).resolves.toBe(true);
-
-    await client.signOut();
-
-    await expect(client.isAuthenticated()).resolves.toBe(false);
+    await processSessionAndLogout(client, redirectTo);
 
     await deleteUser(user.id);
   });
 
   it('sign-in with phone and passcode', async () => {
     const { userProfile, user } = await generateNewUser({ primaryPhone: true });
-    const client = new MockClient();
-    await client.initSession();
+    const client = await initClient();
     assert(client.interactionCookie, new Error('Session not found'));
 
     await expect(
@@ -103,14 +102,112 @@ describe('Sign-In flow using passcode identifiers', () => {
       client.interactionCookie
     );
 
-    await client.processSession(redirectTo);
-
-    await expect(client.isAuthenticated()).resolves.toBe(true);
-
-    await client.signOut();
-
-    await expect(client.isAuthenticated()).resolves.toBe(false);
+    await processSessionAndLogout(client, redirectTo);
 
     await deleteUser(user.id);
+  });
+
+  it('sign-in with non-exist email account with passcode', async () => {
+    const newEmail = generateEmail();
+
+    // Enable email sign-up
+    await updateSignInExperience({
+      signUp: { identifiers: [SignInIdentifier.Email], password: false, verify: true },
+    });
+
+    const client = await initClient();
+    assert(client.interactionCookie, new Error('Session not found'));
+
+    await expect(
+      sendVerificationPasscode(
+        {
+          event: Event.SignIn,
+          email: newEmail,
+        },
+        client.interactionCookie
+      )
+    ).resolves.not.toThrow();
+
+    const passcodeRecord = await readPasscode();
+
+    const { code } = passcodeRecord;
+
+    // TODO: @simeng use expectRequestError after https://github.com/logto-io/logto/pull/2639/ PR merged
+    await expect(
+      putInteraction(
+        {
+          event: Event.SignIn,
+          identifier: {
+            email: newEmail,
+            passcode: code,
+          },
+        },
+        client.interactionCookie
+      )
+    ).rejects.toThrow();
+
+    const { redirectTo } = await patchInteraction(
+      {
+        event: Event.Register,
+        profile: {
+          email: newEmail,
+        },
+      },
+      client.interactionCookie
+    );
+
+    await processSessionAndLogout(client, redirectTo);
+  });
+
+  it('sign-in with non-exist phone account with passcode', async () => {
+    const newPhone = generatePhone();
+
+    // Enable phone sign-up
+    await updateSignInExperience({
+      signUp: { identifiers: [SignInIdentifier.Sms], password: false, verify: true },
+    });
+
+    const client = await initClient();
+    assert(client.interactionCookie, new Error('Session not found'));
+
+    await expect(
+      sendVerificationPasscode(
+        {
+          event: Event.SignIn,
+          phone: newPhone,
+        },
+        client.interactionCookie
+      )
+    ).resolves.not.toThrow();
+
+    const passcodeRecord = await readPasscode();
+
+    const { code } = passcodeRecord;
+
+    // TODO: @simeng use expectRequestError after https://github.com/logto-io/logto/pull/2639/ PR merged
+    await expect(
+      putInteraction(
+        {
+          event: Event.SignIn,
+          identifier: {
+            phone: newPhone,
+            passcode: code,
+          },
+        },
+        client.interactionCookie
+      )
+    ).rejects.toThrow();
+
+    const { redirectTo } = await patchInteraction(
+      {
+        event: Event.Register,
+        profile: {
+          phone: newPhone,
+        },
+      },
+      client.interactionCookie
+    );
+
+    await processSessionAndLogout(client, redirectTo);
   });
 });
