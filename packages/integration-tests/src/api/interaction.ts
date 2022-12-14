@@ -7,7 +7,7 @@ import type {
   UsernamePasswordPayload,
 } from '@logto/schemas';
 
-import api from './api';
+import api from './api.js';
 
 export type RedirectResponse = {
   redirectTo: string;
