@@ -22,12 +22,14 @@
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && rollup -c && tsc -p tsconfig.build.json",
-    "build:test": "pnpm build",
+    "build:test": "pnpm build -p tsconfig.test.json --sourcemap",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
-    "test": "jest",
-    "test:coverage": "jest --silent --coverage"
+    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "pnpm build:test && pnpm test:only",
+    "test:ci": "pnpm test:only",
+    "test:coverage": "pnpm test:only --silent --coverage"
   },
   "engines": {
     "node": "^16.13.0 || ^18.12.0"
@@ -47,7 +49,6 @@
     "lint-staged": "^13.0.0",
     "prettier": "^2.7.1",
     "rollup": "^3.6.0",
-    "ts-jest": "^29.0.1",
     "tslib": "^2.4.1",
     "typescript": "^4.9.4"
   },

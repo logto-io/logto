@@ -5,6 +5,5 @@
     "baseUrl": ".",
     "moduleResolution": "nodenext",
     "module": "esnext"
-  },
-  "include": ["src", "jest.config.ts"]
+  }
 }

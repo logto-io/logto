@@ -6,5 +6,5 @@
     "moduleResolution": "nodenext",
     "module": "esnext"
   },
-  "include": ["src", "declaration", "jest.config.ts"]
+  "include": ["src", "declaration"]
 }
