@@ -1,5 +1,5 @@
-export const signInExperiencePage = {
-  brandingTab: 'branding',
-  signUpAndSignInTab: 'sign-up-and-sign-in',
-  othersTab: 'others',
-};
+export enum SignInExperiencePage {
+  BrandingTab = 'branding',
+  SignUpAndSignInTab = 'sign-up-and-sign-in',
+  OthersTab = 'others',
+}
