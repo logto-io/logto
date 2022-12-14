@@ -1,16 +1,15 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 const useCacheValue = <T>(value: T) => {
-  const cachedValue = useRef<T>();
+  const [cachedValue, setCachedValue] = useState<T>();
 
   useEffect(() => {
     if (value !== undefined) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      cachedValue.current = value;
+      setCachedValue(value);
     }
-  }, [value, cachedValue]);
+  }, [value, setCachedValue]);
 
-  return cachedValue.current;
+  return cachedValue;
 };
 
 export default useCacheValue;
