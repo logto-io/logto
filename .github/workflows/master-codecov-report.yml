@@ -16,8 +16,8 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
-      - name: Prepack
-        run: pnpm prepack
+      - name: Build for test
+        run: pnpm -r build:test
 
       - name: Test
         run: pnpm ci:test
