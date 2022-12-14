@@ -61,7 +61,6 @@
     "nanoid": "^4.0.0",
     "oidc-provider": "^7.13.0",
     "p-retry": "^5.1.2",
-    "query-string": "^7.0.1",
     "roarr": "^7.11.0",
     "slonik": "^30.0.0",
     "slonik-interceptor-preset": "^1.2.10",
@@ -109,7 +108,10 @@
   "eslintConfig": {
     "extends": "@silverhand",
     "rules": {
-      "complexity": ["error", 11],
+      "complexity": [
+        "error",
+        11
+      ],
       "default-case": "off"
     }
   },
