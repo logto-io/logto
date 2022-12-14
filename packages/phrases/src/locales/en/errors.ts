@@ -108,11 +108,12 @@ const errors = {
     multiple_instances_not_supported:
       'Can not create multiple instance with picked standard connector.',
     invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.',
-    can_not_modify_target: 'The connector target can not be modified.',
+    can_not_modify_target: "The connector 'target' can not be modified.",
+    should_specify_target: "You should specify 'target'.",
     multiple_target_with_same_platform:
       'You can not have multiple social connectors that have same target and platform.',
-    cannot_change_metadata_for_non_standard_connector:
-      "This connector's `metadata` cannot be changed.",
+    cannot_overwrite_metadata_for_non_standard_connector:
+      "This connector's 'metadata' cannot be overwritten.",
   },
   passcode: {
     phone_email_empty: 'Both phone and email are empty.',
