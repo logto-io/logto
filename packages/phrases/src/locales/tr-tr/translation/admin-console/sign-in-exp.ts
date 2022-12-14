@@ -13,7 +13,6 @@ const sign_in_exp = {
     get_started: 'Başla',
     apply_remind:
       'Lütfen oturum açma deneyiminin bu hesap altındaki tüm uygulamalar için geçerli olacağını unutmayınız.',
-    got_it: 'Anladım',
   },
   color: {
     title: 'RENK',
@@ -134,7 +133,6 @@ const sign_in_exp = {
       default_language_deletion_title: 'Default language can’t be deleted.', // UNTRANSLATED
       default_language_deletion_description:
         '{{language}} is set as your default language and can’t be deleted. ', // UNTRANSLATED
-      got_it: 'Got It', // UNTRANSLATED
     },
     advanced_options: {
       title: 'GELİŞMİŞ OPSİYONLAR',
