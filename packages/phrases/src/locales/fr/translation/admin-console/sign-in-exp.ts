@@ -13,7 +13,6 @@ const sign_in_exp = {
     get_started: 'Commencez',
     apply_remind:
       "Veuillez noter que l'expérience de connexion s'appliquera à toutes les applications sous ce compte.",
-    got_it: 'Compris.',
   },
   color: {
     title: 'COULEUR',
@@ -135,7 +134,6 @@ const sign_in_exp = {
       default_language_deletion_title: 'Default language can’t be deleted.', // UNTRANSLATED
       default_language_deletion_description:
         '{{language}} is set as your default language and can’t be deleted. ', // UNTRANSLATED
-      got_it: 'Got It', // UNTRANSLATED
     },
     advanced_options: {
       title: 'OPTIONS AVANCÉES',

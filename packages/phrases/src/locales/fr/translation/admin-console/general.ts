@@ -38,7 +38,7 @@ const general = {
   leave_page: 'Quittez la page',
   stay_on_page: 'Rester sur la page',
   type_to_search: 'Type to search', // UNTRANSLATED
-  got_it: 'Got it', // UNTRANSLATED
+  got_it: 'Compris.',
   page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
   learn_more: 'Learn more', // UNTRANSLATED
   tab_errors: '{{count, number}} errors', // UNTRANSLATED

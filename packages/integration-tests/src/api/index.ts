@@ -8,5 +8,6 @@ export * from './logs.js';
 export * from './dashboard.js';
 export * from './me.js';
 export * from './wellknown.js';
+export * from './interaction.js';
 
 export { default as api, authedAdminApi } from './api.js';

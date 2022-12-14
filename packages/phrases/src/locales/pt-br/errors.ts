@@ -116,10 +116,11 @@ const errors = {
     invalid_type_for_syncing_profile:
       'Você só pode sincronizar o perfil do usuário com conectores sociais.',
     can_not_modify_target: 'O destino do conector não pode ser modificado.',
+    should_specify_target: "You should specify 'target'.", // UNTRANSLATED
     multiple_target_with_same_platform:
       'Você não pode ter vários conectores sociais com o mesmo destino e plataforma.',
-    cannot_change_metadata_for_non_standard_connector:
-      "This connector's `metadata` cannot be changed.", // UNTRANSLATED
+    cannot_overwrite_metadata_for_non_standard_connector:
+      "This connector's 'metadata' cannot be overwritten.", // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: 'Telefone e e-mail estão vazios.',

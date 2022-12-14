@@ -73,11 +73,10 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       - name: Deploy to containerapp
-        uses: azure/CLI@v1
+        uses: azure/webapps-deploy@v2
         with:
-          inlineScript: |
-            az config set extension.use_dynamic_install=yes_without_prompt
-            az containerapp update -n logto-dev -g LogtoDev --image svhd/logto:edge
+          app-name: logto-dev
+          images: svhd/logto:edge
 
   release-changesets:
     runs-on: ubuntu-latest

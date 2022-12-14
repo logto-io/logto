@@ -239,9 +239,7 @@ const LanguageDetails = () => {
             ? 'sign_in_exp.others.manage_language.default_language_deletion_title'
             : 'sign_in_exp.others.manage_language.deletion_title'
         }
-        confirmButtonText={
-          isDefaultLanguage ? 'sign_in_exp.others.manage_language.got_it' : 'general.delete'
-        }
+        confirmButtonText={isDefaultLanguage ? 'general.got_it' : 'general.delete'}
         confirmButtonType={isDefaultLanguage ? 'primary' : 'danger'}
         onCancel={() => {
           setIsDeletionAlertOpen(false);

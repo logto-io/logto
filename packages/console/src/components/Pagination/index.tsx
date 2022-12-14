@@ -2,6 +2,8 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import ReactPaginate from 'react-paginate';
 
+import useCacheValue from '@/hooks/use-cache-value';
+
 import Button from '../Button';
 import DangerousRaw from '../DangerousRaw';
 import Next from './Next';
@@ -10,7 +12,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   pageIndex: number;
-  totalCount: number;
+  totalCount?: number;
   pageSize: number;
   className?: string;
   onChange?: (pageIndex: number) => void;
@@ -18,19 +20,27 @@ type Props = {
 
 const Pagination = ({ pageIndex, totalCount, pageSize, className, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const pageCount = Math.ceil(totalCount / pageSize);
+
+  /**
+   * Note:
+   * The `totalCount` will become `undefined` temporarily when fetching data on page changes, and this causes the pagination to disappear.
+   * Cache `totalCount` to solve this problem.
+   */
+  const cachedTotalCount = useCacheValue(totalCount) ?? 0;
+
+  const pageCount = Math.ceil(cachedTotalCount / pageSize);
 
   if (pageCount <= 1) {
     return null;
   }
 
   const min = (pageIndex - 1) * pageSize + 1;
-  const max = Math.min(pageIndex * pageSize, totalCount);
+  const max = Math.min(pageIndex * pageSize, cachedTotalCount);
 
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.positionInfo}>
-        {t('general.page_info', { min, max, total: totalCount })}
+        {t('general.page_info', { min, max, total: cachedTotalCount })}
       </div>
       <ReactPaginate
         className={styles.pagination}

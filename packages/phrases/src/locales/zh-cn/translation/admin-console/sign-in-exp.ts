@@ -10,7 +10,6 @@ const sign_in_exp = {
     title: '这是你首次定义登录体验。跟随引导，完成登录体验的必要设置项。',
     get_started: '开始',
     apply_remind: '请注意，登录体验将会应用到当前帐户下的所有应用。',
-    got_it: '知道了',
   },
   color: {
     title: '颜色',
@@ -124,7 +123,6 @@ const sign_in_exp = {
       default_language_deletion_title: '你无法删除默认语言',
       default_language_deletion_description:
         '你已设置{{language}}为你的默认语言，你无法删除默认语言。',
-      got_it: '知道了',
     },
     advanced_options: {
       title: '高级选项',

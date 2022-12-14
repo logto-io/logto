@@ -37,7 +37,7 @@ const general = {
   leave_page: '离开此页',
   stay_on_page: '留在此页',
   type_to_search: '输入搜索',
-  got_it: 'Got it', // UNTRANSLATED
+  got_it: '知道了',
   page_info: '{{min, number}}-{{max, number}} 共 {{total, number}} 条', // UNTRANSLATED
   learn_more: 'Learn more', // UNTRANSLATED
   tab_errors: '{{count, number}} errors', // UNTRANSLATED

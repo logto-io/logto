@@ -10,7 +10,6 @@ const sign_in_exp = {
     title: '가이드를 따라, 필수 설정을 빠르게 수정해보세요.',
     get_started: '시작하기',
     apply_remind: '이 계정이 관리하는 모든 앱의 로그인 경험이 수정되는 것을 주의해주세요.',
-    got_it: '네',
   },
   color: {
     title: '색상',
@@ -130,7 +129,6 @@ const sign_in_exp = {
       default_language_deletion_title: 'Default language can’t be deleted.', // UNTRANSLATED
       default_language_deletion_description:
         '{{language}} is set as your default language and can’t be deleted. ', // UNTRANSLATED
-      got_it: 'Got It', // UNTRANSLATED
     },
     advanced_options: {
       title: '고급 옵션',

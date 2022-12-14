@@ -14,7 +14,6 @@ const sign_in_exp = {
     get_started: 'Erste Schritte',
     apply_remind:
       'Bitte beachte, dass die Anmeldeoberfläche für alle Anwendungen unter diesem Konto gilt.',
-    got_it: 'Alles klar',
   },
   sign_up_and_sign_in: {
     identifiers: 'Sign-up identifiers', // UNTRANSLATED
@@ -136,7 +135,6 @@ const sign_in_exp = {
       default_language_deletion_title: 'Die Standardsprache kann nicht gelöscht werden.',
       default_language_deletion_description:
         '{{language}} ist als Standardsprache eingestellt und kann nicht gelöscht werden. ',
-      got_it: 'Alles klar',
     },
     advanced_options: {
       title: 'ERWEITERTE OPTIONEN',

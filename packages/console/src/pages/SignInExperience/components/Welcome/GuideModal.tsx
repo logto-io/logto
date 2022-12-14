@@ -109,7 +109,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
             <form className={styles.form} onSubmit={onSubmit}>
               {!preferences.experienceNoticeConfirmed && (
                 <div className={styles.reminder}>
-                  <Alert action="sign_in_exp.welcome.got_it" variant="shadow" onClick={onGotIt}>
+                  <Alert action="general.got_it" variant="shadow" onClick={onGotIt}>
                     {t('sign_in_exp.welcome.apply_remind')}
                   </Alert>
                 </div>

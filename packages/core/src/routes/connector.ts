@@ -129,11 +129,11 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       assertThat(
         connectorFactory.metadata.isStandard !== true || metadata?.target,
-        'connector.can_not_modify_target'
+        'connector.should_specify_target'
       );
       assertThat(
         connectorFactory.metadata.isStandard === true || metadata === undefined,
-        'connector.cannot_change_metadata_for_non_standard_connector'
+        'connector.cannot_overwrite_metadata_for_non_standard_connector'
       );
 
       const { count } = await countConnectorByConnectorId(connectorId);
@@ -214,7 +214,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       assertThat(
         originalMetadata.isStandard === true || metadata === undefined,
-        'connector.cannot_change_metadata_for_non_standard_connector'
+        'connector.cannot_overwrite_metadata_for_non_standard_connector'
       );
 
       if (syncProfile) {

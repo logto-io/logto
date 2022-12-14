@@ -145,7 +145,7 @@ const AuditLogTable = ({ userId }: Props) => {
       </div>
       <Pagination
         pageIndex={pageIndex}
-        totalCount={totalCount ?? 0}
+        totalCount={totalCount}
         pageSize={pageSize}
         className={styles.pagination}
         onChange={(page) => {

@@ -110,11 +110,12 @@ const errors = {
     multiple_instances_not_supported:
       'Can not create multiple instance with picked standard connector.', // UNTRANSLATED
     invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.', // UNTRANSLATED
-    can_not_modify_target: 'The connector target can not be modified.', // UNTRANSLATED
+    can_not_modify_target: "The connector 'target' can not be modified.", // UNTRANSLATED
+    should_specify_target: "You should specify 'target'.", // UNTRANSLATED
     multiple_target_with_same_platform:
       'You can not have multiple social connectors that have same target and platform.', // UNTRANSLATED
-    cannot_change_metadata_for_non_standard_connector:
-      "This connector's `metadata` cannot be changed.", // UNTRANSLATED
+    cannot_overwrite_metadata_for_non_standard_connector:
+      "This connector's 'metadata' cannot be overwritten.", // UNTRANSLATED
   },
   passcode: {
     phone_email_empty: '휴대전화번호 그리고 이메일이 비어있어요.',

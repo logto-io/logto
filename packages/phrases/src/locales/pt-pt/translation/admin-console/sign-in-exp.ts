@@ -12,7 +12,6 @@ const sign_in_exp = {
       'Esta é a primeira vez que define a experiência de login. Este guia irá ajudá-lo a passar por todas as configurações necessárias e começar rapidamente.',
     get_started: 'Começar',
     apply_remind: 'Observe que a experiência de login será aplicada a todos os apps nesta conta.',
-    got_it: 'Entendi',
   },
   color: {
     title: 'COR',
@@ -133,7 +132,6 @@ const sign_in_exp = {
       default_language_deletion_title: 'Default language can’t be deleted.', // UNTRANSLATED
       default_language_deletion_description:
         '{{language}} is set as your default language and can’t be deleted. ', // UNTRANSLATED
-      got_it: 'Got It', // UNTRANSLATED
     },
     advanced_options: {
       title: 'OPÇÕES AVANÇADAS',
