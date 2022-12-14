@@ -7,7 +7,7 @@ const useCacheValue = <T>(value: T) => {
     if (value !== undefined) {
       setCachedValue(value);
     }
-  }, [value, setCachedValue]);
+  }, [value]);
 
   return cachedValue;
 };
