@@ -45,7 +45,8 @@ test('connector set-up flow', async () => {
       { connectorId: mockEmailConnectorId, config: mockEmailConnectorConfig },
       { connectorId: mockSocialConnectorId, config: mockSocialConnectorConfig },
     ].map(async ({ connectorId, config }) => {
-      const { id } = await postConnector(connectorId);
+      // @darcy FIXME: should call post method directly
+      const { id } = await postConnector({ connectorId });
       connectorIdMap.set(connectorId, id);
       const updatedConnector = await updateConnectorConfig(id, config);
       expect(updatedConnector.config).toEqual(config);
@@ -71,12 +72,9 @@ test('connector set-up flow', async () => {
   /*
    * Change to another SMS/Email connector
    */
-  const { id } = await postConnector(mockStandardEmailConnectorId, {
-    target: 'mock-standard-mail',
-  }); // TODO [LOG-4862]: update mock connector
-  await updateConnectorConfig(id, mockStandardEmailConnectorConfig, {
-    target: 'mock-standard-mail',
-  }); // TODO [LOG-4862]: update mock connector
+  // @darcy FIXME: should call post method directly
+  const { id } = await postConnector({ connectorId: mockStandardEmailConnectorId });
+  await updateConnectorConfig(id, mockStandardEmailConnectorConfig);
   connectorIdMap.set(mockStandardEmailConnectorId, id);
   const currentConnectors = await listConnectors();
   expect(
@@ -133,7 +131,7 @@ test('send SMS/email test message', async () => {
   await Promise.all(
     [{ connectorId: mockSmsConnectorId }, { connectorId: mockEmailConnectorId }].map(
       async ({ connectorId }) => {
-        const { id } = await postConnector(connectorId);
+        const { id } = await postConnector({ connectorId });
         connectorIdMap.set(connectorId, id);
       }
     )

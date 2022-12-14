@@ -68,11 +68,7 @@ describe('email and password flow', () => {
   assert(localPart && domain, new Error('Email address local part or domain is empty'));
 
   beforeAll(async () => {
-    const { id } = await postConnector(mockEmailConnectorId);
-    await updateConnectorConfig(id, mockEmailConnectorConfig);
-    connectorIdMap.set(mockEmailConnectorId, id);
-
-    await setSignUpIdentifier(signUpIdentifiers.email, true);
+    await setSignUpIdentifier(signUpIdentifiers.none, true);
     await setSignInMethod([
       {
         identifier: SignInIdentifier.Email,
@@ -109,7 +105,7 @@ describe('email passwordless flow', () => {
     );
     connectorIdMap.clear();
 
-    const { id } = await postConnector(mockEmailConnectorId);
+    const { id } = await postConnector({ connectorId: mockEmailConnectorId });
     await updateConnectorConfig(id, mockEmailConnectorConfig);
     connectorIdMap.set(mockEmailConnectorId, id);
 
@@ -208,7 +204,7 @@ describe('sms passwordless flow', () => {
     );
     connectorIdMap.clear();
 
-    const { id } = await postConnector(mockSmsConnectorId);
+    const { id } = await postConnector({ connectorId: mockSmsConnectorId });
     await updateConnectorConfig(id, mockSmsConnectorConfig);
     connectorIdMap.set(mockSmsConnectorId, id);
 

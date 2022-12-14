@@ -1,4 +1,4 @@
-import type { Connector, ConnectorResponse } from '@logto/schemas';
+import type { Connector, ConnectorResponse, CreateConnector } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
@@ -9,11 +9,13 @@ export const getConnector = async (connectorId: string) =>
   authedAdminApi.get(`connectors/${connectorId}`).json<ConnectorResponse>();
 
 // FIXME @Darcy: correct use of `id` and `connectorId`.
-export const postConnector = async (connectorId: string, metadata?: Record<string, unknown>) =>
+export const postConnector = async (
+  payload: Pick<CreateConnector, 'connectorId' | 'config' | 'metadata' | 'syncProfile'>
+) =>
   authedAdminApi
     .post({
       url: `connectors`,
-      json: { connectorId, metadata },
+      json: payload,
     })
     .json<Connector>();
 

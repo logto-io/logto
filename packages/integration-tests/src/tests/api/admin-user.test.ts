@@ -69,7 +69,8 @@ describe('admin console user management', () => {
   });
 
   it('should delete user identities successfully', async () => {
-    const { id } = await postConnector(mockSocialConnectorId);
+    // @darcy FIXME: merge post and update
+    const { id } = await postConnector({ connectorId: mockSocialConnectorId });
     await updateConnectorConfig(id, mockSocialConnectorConfig);
 
     const createdUserId = await bindSocialToNewCreatedUser(id);

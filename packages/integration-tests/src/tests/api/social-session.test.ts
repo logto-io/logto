@@ -32,7 +32,7 @@ describe('social sign-in and register', () => {
   const socialUserId = crypto.randomUUID();
 
   beforeAll(async () => {
-    const { id } = await postConnector(mockSocialConnectorId);
+    const { id } = await postConnector({ connectorId: mockSocialConnectorId });
     connectorIdMap.set(mockSocialConnectorId, id);
     await updateConnectorConfig(id, mockSocialConnectorConfig);
 
