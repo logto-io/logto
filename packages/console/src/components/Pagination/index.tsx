@@ -1,7 +1,8 @@
 import classNames from 'classnames';
-import { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactPaginate from 'react-paginate';
+
+import useCacheValue from '@/hooks/use-cache-value';
 
 import Button from '../Button';
 import DangerousRaw from '../DangerousRaw';
@@ -25,21 +26,7 @@ const Pagination = ({ pageIndex, totalCount, pageSize, className, onChange }: Pr
    * The `totalCount` will become `undefined` temporarily when fetching data on page changes, and this causes the pagination to disappear.
    * Cache `totalCount` to solve this problem.
    */
-  const totalCountRef = useRef(totalCount);
-  const cachedTotalCount = useMemo(() => {
-    if (totalCount === undefined) {
-      if (totalCountRef.current === undefined) {
-        return 0;
-      }
-
-      return totalCountRef.current;
-    }
-
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    totalCountRef.current = totalCount;
-
-    return totalCount;
-  }, [totalCount]);
+  const cachedTotalCount = useCacheValue(totalCount) ?? 0;
 
   const pageCount = Math.ceil(cachedTotalCount / pageSize);
 
