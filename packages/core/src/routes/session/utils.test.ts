@@ -44,7 +44,7 @@ jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
-jest.mock('#src/lib/user.js', () => ({
+jest.mock('#src/libraries/user.js', () => ({
   async verifyUserPassword(user: Nullable<User>, password: string) {
     if (!user) {
       throw new RequestError('session.invalid_credentials');

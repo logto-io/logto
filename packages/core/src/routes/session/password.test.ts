@@ -38,7 +38,7 @@ jest.mock('#src/queries/sign-in-experience.js', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
-jest.mock('#src/lib/user.js', () => ({
+jest.mock('#src/libraries/user.js', () => ({
   async verifyUserPassword(user: User) {
     return user;
   },
@@ -51,8 +51,8 @@ jest.mock('#src/lib/user.js', () => ({
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));
 
-jest.mock('#src/lib/session.js', () => ({
-  ...jest.requireActual('#src/lib/session.js'),
+jest.mock('#src/libraries/session.js', () => ({
+  ...jest.requireActual('#src/libraries/session.js'),
   getApplicationIdFromInteraction: jest.fn(),
 }));
 

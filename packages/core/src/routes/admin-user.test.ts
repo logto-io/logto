@@ -56,7 +56,7 @@ const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserByI
     deleteUserIdentity: jest.fn(),
   }));
 
-const { encryptUserPassword } = await mockEsmWithActual('#src/lib/user.js', () => ({
+const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
   generateUserId: jest.fn(() => 'fooId'),
   encryptUserPassword: jest.fn(() => ({
     passwordEncrypted: 'password',

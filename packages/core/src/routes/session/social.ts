@@ -50,8 +50,6 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       assertThat(state && redirectUri, 'session.insufficient_info');
       const connector = await getLogtoConnectorById(connectorId);
       assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
-      // FIXME: @Darcy
-      // @ts-expect-error pending fix
       const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
       ctx.body = { redirectTo };
 

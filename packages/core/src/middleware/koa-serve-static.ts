@@ -2,13 +2,10 @@
 
 import path from 'path';
 
-import buildDebug from 'debug';
 import type { MiddlewareType } from 'koa';
 import send from 'koa-send';
 
 import assertThat from '#src/utils/assert-that.js';
-
-const debug = buildDebug('koa-static');
 
 export default function serve(root: string) {
   assertThat(root, new Error('Root directory is required to serve files.'));
@@ -17,8 +14,6 @@ export default function serve(root: string) {
     root: path.resolve(root),
     index: 'index.html',
   };
-
-  debug('static "%s"', root);
 
   const serve: MiddlewareType = async (ctx, next) => {
     if (ctx.method === 'HEAD' || ctx.method === 'GET') {

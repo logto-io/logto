@@ -141,9 +141,8 @@ export type SocialConnector = BaseConnector<ConnectorType.Social> & {
 export type GetAuthorizationUri = (payload: {
   state: string;
   redirectUri: string;
-  nonce: string;
 }) => Promise<string>;
 
 export type GetUserInfo = (
-  data: Record<string, unknown> & { nonce: string; redirectUri: string }
+  data: unknown
 ) => Promise<{ id: string } & Record<string, string | boolean | number | undefined>>;

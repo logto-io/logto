@@ -35,8 +35,8 @@ const getUserInfoByAuthCode = jest.fn(
   }
 );
 
-jest.mock('#src/lib/social.js', () => ({
-  ...jest.requireActual('#src/lib/social.js'),
+jest.mock('#src/libraries/social.js', () => ({
+  ...jest.requireActual('#src/libraries/social.js'),
   findSocialRelatedUser: async () => findSocialRelatedUser(),
   getUserInfoByAuthCode: async (connectorId: string, data: { code: string }) =>
     getUserInfoByAuthCode(connectorId, data),
@@ -54,7 +54,7 @@ jest.mock('#src/queries/user.js', () => ({
     target === 'connectorTarget' && userId === mockUser.id,
 }));
 
-jest.mock('#src/lib/user.js', () => ({
+jest.mock('#src/libraries/user.js', () => ({
   generateUserId: () => 'user1',
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));

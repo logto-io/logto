@@ -53,7 +53,7 @@ const { sendPasscodeToIdentifier } = await mockEsmWithActual(
   })
 );
 
-mockEsm('#src/lib/sign-in-experience/index.js', () => ({
+mockEsm('#src/libraries/sign-in-experience/index.js', () => ({
   getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
 }));
 

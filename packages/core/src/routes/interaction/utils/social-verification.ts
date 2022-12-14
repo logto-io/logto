@@ -17,8 +17,6 @@ export const createSocialAuthorizationUrl = async (payload: SocialAuthorizationU
 
   assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
 
-  // FIXME: @Darcy
-  // @ts-expect-error pending fix
   return connector.getAuthorizationUri({ state, redirectUri });
 };
 

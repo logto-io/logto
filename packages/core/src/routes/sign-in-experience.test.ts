@@ -24,7 +24,7 @@ const {
   validateTermsOfUse,
   validateSignIn,
   validateSignUp,
-} = await mockEsmWithActual('#src/lib/sign-in-experience/index.js', () => ({
+} = await mockEsmWithActual('#src/libraries/sign-in-experience/index.js', () => ({
   validateBranding: jest.fn(),
   validateLanguageInfo: jest.fn(),
   validateTermsOfUse: jest.fn(),

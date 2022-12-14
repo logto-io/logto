@@ -281,7 +281,6 @@ importers:
       clean-deep: ^3.4.0
       copyfiles: ^2.4.1
       date-fns: ^2.29.3
-      debug: ^4.3.4
       decamelize: ^6.0.0
       deepmerge: ^4.2.2
       dotenv: ^16.0.0
@@ -338,7 +337,6 @@ importers:
       chalk: 5.1.2
       clean-deep: 3.4.0
       date-fns: 2.29.3
-      debug: 4.3.4
       decamelize: 6.0.0
       deepmerge: 4.2.2
       dotenv: 16.0.0
@@ -355,7 +353,7 @@ importers:
       koa-compose: 4.1.0
       koa-logger: 3.2.1
       koa-mount: 4.0.0
-      koa-proxies: 0.12.1_debug@4.3.4+koa@2.13.4
+      koa-proxies: 0.12.1_koa@2.13.4
       koa-router: 12.0.0
       koa-send: 5.0.1
       lodash.pick: 4.4.0
@@ -663,12 +661,14 @@ importers:
       prettier: ^2.7.1
       rollup: ^3.6.0
       tslib: ^2.4.1
-      typescript: ^4.7.4
+      typescript: ^4.9.4
       zod: ^3.20.2
     dependencies:
       '@logto/core-kit': link:../core-kit
       '@logto/language-kit': link:../language-kit
       '@silverhand/essentials': 1.3.0
+    optionalDependencies:
+      zod: 3.20.2
     devDependencies:
       '@rollup/plugin-typescript': 10.0.1_ksuudmkloucy44p3irodiuckje
       '@silverhand/eslint-config': 1.3.0_eu7dlo3qq5moigliolva3udaxa
@@ -680,7 +680,6 @@ importers:
       rollup: 3.7.4
       tslib: 2.4.1
       typescript: 4.9.4
-      zod: 3.20.2
 
   packages/toolkit/core-kit:
     specifiers:
@@ -700,19 +699,21 @@ importers:
       jest: ^29.0.3
       jest-matcher-specific-error: ^1.0.0
       lint-staged: ^13.0.0
-      nanoid: ^3.1.23
+      nanoid: ^4.0.0
       postcss: ^8.4.6
       prettier: ^2.7.1
       rollup: ^3.6.0
       stylelint: ^14.9.1
       ts-jest: ^29.0.1
       tslib: ^2.4.1
-      typescript: ^4.7.4
+      typescript: ^4.9.4
       zod: ^3.20.2
     dependencies:
       '@logto/language-kit': link:../language-kit
       color: 4.2.3
-      nanoid: 3.3.4
+      nanoid: 4.0.0
+    optionalDependencies:
+      zod: 3.20.2
     devDependencies:
       '@jest/types': 29.3.1
       '@rollup/plugin-typescript': 10.0.1_ksuudmkloucy44p3irodiuckje
@@ -735,7 +736,6 @@ importers:
       ts-jest: 29.0.3_a67wnu7kur6t3xg6vztzc6sc5i
       tslib: 2.4.1
       typescript: 4.9.4
-      zod: 3.20.2
 
   packages/toolkit/language-kit:
     specifiers:
@@ -752,8 +752,10 @@ importers:
       rollup: ^3.6.0
       ts-jest: ^29.0.1
       tslib: ^2.4.1
-      typescript: ^4.7.4
+      typescript: ^4.9.4
       zod: ^3.20.2
+    optionalDependencies:
+      zod: 3.20.2
     devDependencies:
       '@jest/types': 29.3.1
       '@rollup/plugin-typescript': 10.0.1_ksuudmkloucy44p3irodiuckje
@@ -769,7 +771,6 @@ importers:
       ts-jest: 29.0.3_a67wnu7kur6t3xg6vztzc6sc5i
       tslib: 2.4.1
       typescript: 4.9.4
-      zod: 3.20.2
 
   packages/ui:
     specifiers:
@@ -7331,7 +7332,7 @@ packages:
     resolution: {integrity: sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==}
     dev: true
 
-  /follow-redirects/1.14.6_debug@4.3.4:
+  /follow-redirects/1.14.6:
     resolution: {integrity: sha512-fhUl5EwSJbbl8AR+uYL2KQDxLkdSjZGR36xy46AO7cOMTrCMON6Sa28FmAnC2tRTDbd/Uuzz3aJBv7EBN7JH8A==}
     engines: {node: '>=4.0'}
     peerDependencies:
@@ -7339,8 +7340,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dependencies:
-      debug: 4.3.4
     dev: false
 
   /follow-redirects/1.15.1:
@@ -7745,7 +7744,6 @@ packages:
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
-    dev: true
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
@@ -8078,12 +8076,12 @@ packages:
       - supports-color
     dev: true
 
-  /http-proxy/1.18.1_debug@4.3.4:
+  /http-proxy/1.18.1:
     resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.14.6_debug@4.3.4
+      follow-redirects: 1.14.6
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -9988,7 +9986,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
 
   /jsonparse/1.3.1:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
@@ -10098,12 +10096,12 @@ packages:
       - supports-color
     dev: false
 
-  /koa-proxies/0.12.1_debug@4.3.4+koa@2.13.4:
+  /koa-proxies/0.12.1_koa@2.13.4:
     resolution: {integrity: sha512-qCOGY7Qoe/Ewn2VskP9TdLMZffmsv8JUBWllNlmTJmgl1059nxt5jl7QBWNniqx2BthVSU5TIBuhUULA5d6t+A==}
     peerDependencies:
       koa: '>=2'
     dependencies:
-      http-proxy: 1.18.1_debug@4.3.4
+      http-proxy: 1.18.1
       koa: 2.13.4
       path-match: 1.2.4
     transitivePeerDependencies:
@@ -15318,6 +15316,7 @@ packages:
 
   /zod/3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
+    requiresBuild: true
 
   /zwitch/1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}

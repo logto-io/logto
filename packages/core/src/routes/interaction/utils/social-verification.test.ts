@@ -3,7 +3,7 @@ import { mockEsm } from '@logto/shared/esm';
 
 const { jest } = import.meta;
 
-const { getUserInfoByAuthCode } = mockEsm('#src/lib/social.js', () => ({
+const { getUserInfoByAuthCode } = mockEsm('#src/libraries/social.js', () => ({
   getUserInfoByAuthCode: jest.fn().mockResolvedValue({ id: 'foo' }),
 }));
 

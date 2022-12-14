@@ -37,7 +37,6 @@
     "chalk": "^5.0.0",
     "clean-deep": "^3.4.0",
     "date-fns": "^2.29.3",
-    "debug": "^4.3.4",
     "decamelize": "^6.0.0",
     "deepmerge": "^4.2.2",
     "dotenv": "^16.0.0",

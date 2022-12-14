@@ -29,13 +29,13 @@ const findDefaultSignInExperience = jest.fn(async () => ({
 }));
 const getTomorrowIsoString = () => addDays(Date.now(), 1).toISOString();
 
-jest.mock('#src/lib/user.js', () => ({
+jest.mock('#src/libraries/user.js', () => ({
   generateUserId: () => 'user1',
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));
 
-jest.mock('#src/lib/session.js', () => ({
-  ...jest.requireActual('#src/lib/session.js'),
+jest.mock('#src/libraries/session.js', () => ({
+  ...jest.requireActual('#src/libraries/session.js'),
   getApplicationIdFromInteraction: jest.fn(),
 }));
 
@@ -59,7 +59,7 @@ const emailRegisterActionSpy = jest.spyOn(passwordlessActions, 'emailRegisterAct
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
 const createPasscode = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
-jest.mock('#src/lib/passcode.js', () => ({
+jest.mock('#src/libraries/passcode.js', () => ({
   createPasscode: async (..._args: unknown[]) => createPasscode(..._args),
   sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {

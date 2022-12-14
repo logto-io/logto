@@ -24,9 +24,12 @@ mockEsm('#src/connectors.js', () => ({
   ]),
 }));
 
-const { validateLanguageInfo } = await mockEsmWithActual('#src/lib/sign-in-experience.js', () => ({
-  validateLanguageInfo: jest.fn(),
-}));
+const { validateLanguageInfo } = await mockEsmWithActual(
+  '#src/libraries/sign-in-experience.js',
+  () => ({
+    validateLanguageInfo: jest.fn(),
+  })
+);
 
 await mockEsmWithActual('#src/queries/sign-in-experience.js', () => ({
   updateDefaultSignInExperience: async (

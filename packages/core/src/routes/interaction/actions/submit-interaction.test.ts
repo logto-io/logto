@@ -20,18 +20,21 @@ const { getLogtoConnectorById } = mockEsm('#src/connectors/index.js', () => ({
     .mockResolvedValue({ metadata: { target: 'logto' }, dbEntry: { syncProfile: true } }),
 }));
 
-const { assignInteractionResults } = mockEsm('#src/lib/session.js', () => ({
+const { assignInteractionResults } = mockEsm('#src/libraries/session.js', () => ({
   assignInteractionResults: jest.fn(),
 }));
 
-const { encryptUserPassword, generateUserId, insertUser } = mockEsm('#src/lib/user.js', () => ({
-  encryptUserPassword: jest.fn().mockResolvedValue({
-    passwordEncrypted: 'passwordEncrypted',
-    passwordEncryptionMethod: 'plain',
-  }),
-  generateUserId: jest.fn().mockResolvedValue('uid'),
-  insertUser: jest.fn(),
-}));
+const { encryptUserPassword, generateUserId, insertUser } = mockEsm(
+  '#src/libraries/user.js',
+  () => ({
+    encryptUserPassword: jest.fn().mockResolvedValue({
+      passwordEncrypted: 'passwordEncrypted',
+      passwordEncryptionMethod: 'plain',
+    }),
+    generateUserId: jest.fn().mockResolvedValue('uid'),
+    insertUser: jest.fn(),
+  })
+);
 
 mockEsm('#src/queries/user.js', () => ({
   findUserById: jest

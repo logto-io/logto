@@ -46,7 +46,7 @@ await mockEsmWithActual('#src/connectors.js', () => ({
   getLogtoConnectorById,
 }));
 
-mockEsm('#src/lib/sign-in-experience.js', () => ({
+mockEsm('#src/libraries/sign-in-experience.js', () => ({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   removeUnavailableSocialConnectorTargets: async () => {},
 }));

@@ -9,7 +9,7 @@ const passcode = {
   sendPasscode: jest.fn().mockResolvedValue({ dbEntry: { id: 'foo' } }),
 };
 
-await mockEsmWithActual('#src/lib/passcode.js', () => passcode);
+await mockEsmWithActual('#src/libraries/passcode.js', () => passcode);
 
 const { sendPasscodeToIdentifier } = await import('./passcode-validation.js');
 

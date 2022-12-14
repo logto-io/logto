@@ -35,7 +35,7 @@ const { findAllCustomLanguageTags } = mockEsm('#src/queries/custom-phrase.js', (
   findCustomPhraseByLanguageTag: jest.fn(async (tag: string) => ({})),
 }));
 
-const { getPhrase } = await mockEsmWithActual('#src/lib/phrase.js', () => ({
+const { getPhrase } = await mockEsmWithActual('#src/libraries/phrase.js', () => ({
   getPhrase: jest.fn(async () => zhCN),
 }));
 
