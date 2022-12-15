@@ -51,7 +51,7 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
         )},`;
       }
     ),
-    '  });',
+    '});',
     '',
     `const guard: Guard<${modelName}> = z.object({`,
 
