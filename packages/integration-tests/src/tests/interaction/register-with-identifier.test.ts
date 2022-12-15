@@ -5,23 +5,24 @@ import {
   sendVerificationPasscode,
   putInteraction,
   patchInteraction,
-  updateSignInExperience,
   deleteUser,
 } from '#src/api/index.js';
 import { readPasscode, expectRejects } from '#src/helpers.js';
 
 import { initClient, processSession, logoutClient } from './utils/client.js';
 import { clearConnectorsByTypes, setEmailConnector, setSmsConnector } from './utils/connector.js';
+import {
+  enableAllPasscodeSignInMethods,
+  enableAllPasswordSignInMethods,
+} from './utils/sign-in-experience.js';
 import { generateNewUserProfile, generateNewUser } from './utils/user.js';
 
 describe('Register with username and password', () => {
   it('register with username and password', async () => {
-    await updateSignInExperience({
-      signUp: {
-        identifiers: [SignInIdentifier.Username],
-        password: true,
-        verify: false,
-      },
+    await enableAllPasswordSignInMethods({
+      identifiers: [SignInIdentifier.Username],
+      password: true,
+      verify: false,
     });
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -56,12 +57,10 @@ describe('Register with passwordless identifier', () => {
   });
 
   it('register with email', async () => {
-    await updateSignInExperience({
-      signUp: {
-        identifiers: [SignInIdentifier.Email],
-        password: false,
-        verify: true,
-      },
+    await enableAllPasscodeSignInMethods({
+      identifiers: [SignInIdentifier.Email],
+      password: false,
+      verify: true,
     });
 
     const { primaryEmail } = generateNewUserProfile({ primaryEmail: true });
@@ -107,12 +106,10 @@ describe('Register with passwordless identifier', () => {
   });
 
   it('register with phone', async () => {
-    await updateSignInExperience({
-      signUp: {
-        identifiers: [SignInIdentifier.Sms],
-        password: false,
-        verify: true,
-      },
+    await enableAllPasscodeSignInMethods({
+      identifiers: [SignInIdentifier.Sms],
+      password: false,
+      verify: true,
     });
 
     const { primaryPhone } = generateNewUserProfile({ primaryPhone: true });
@@ -163,12 +160,10 @@ describe('Register with passwordless identifier', () => {
       userProfile: { primaryEmail },
     } = await generateNewUser({ primaryEmail: true });
 
-    await updateSignInExperience({
-      signUp: {
-        identifiers: [SignInIdentifier.Email],
-        password: false,
-        verify: true,
-      },
+    await enableAllPasscodeSignInMethods({
+      identifiers: [SignInIdentifier.Email],
+      password: false,
+      verify: true,
     });
 
     const client = await initClient();
@@ -227,12 +222,10 @@ describe('Register with passwordless identifier', () => {
       userProfile: { primaryPhone },
     } = await generateNewUser({ primaryPhone: true });
 
-    await updateSignInExperience({
-      signUp: {
-        identifiers: [SignInIdentifier.Sms],
-        password: false,
-        verify: true,
-      },
+    await enableAllPasscodeSignInMethods({
+      identifiers: [SignInIdentifier.Sms],
+      password: false,
+      verify: true,
     });
 
     const client = await initClient();
