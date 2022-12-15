@@ -89,8 +89,6 @@ const sign_in_exp = {
   others: {
     terms_of_use: {
       title: '使用条款',
-      enable: '开启使用条款',
-      description: '添加使用产品的法律协议。',
       terms_of_use: '使用条款',
       terms_of_use_placeholder: 'https://your.terms.of.use/',
       terms_of_use_tip: '使用条款 URL',

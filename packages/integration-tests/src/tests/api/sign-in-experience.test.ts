@@ -22,10 +22,7 @@ describe('admin console sign-in experience', () => {
         logoUrl: 'https://logto.io/new-logo.png',
         darkLogoUrl: 'https://logto.io/new-dark-logo.png',
       },
-      termsOfUse: {
-        enabled: true,
-        contentUrl: 'https://logto.io/terms',
-      },
+      termsOfUseUrl: 'https://logto.io/terms',
     };
 
     const updatedSignInExperience = await updateSignInExperience(newSignInExperience);

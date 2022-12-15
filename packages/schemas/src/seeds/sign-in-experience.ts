@@ -22,9 +22,7 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
     autoDetect: true,
     fallbackLanguage: 'en',
   },
-  termsOfUse: {
-    enabled: false,
-  },
+  termsOfUseUrl: null,
   signUp: {
     identifiers: [SignInIdentifier.Username],
     password: true,

@@ -98,8 +98,6 @@ const sign_in_exp = {
   others: {
     terms_of_use: {
       title: 'NUTZUNGSBEDINGUNGEN',
-      enable: 'Aktiviere Nutzungsbedingungen',
-      description: 'Füge die rechtlichen Vereinbarungen für die Nutzung deines Produkts hinzu',
       terms_of_use: 'Nutzungsbedingungen',
       terms_of_use_placeholder: 'https://beispiel.de/nutzungsbedingungen',
       terms_of_use_tip: 'URL zu den Nutzungsbedingungen',
