@@ -63,7 +63,7 @@ const GuideHeader = ({ appName, selectedSdk, isCompact = false, onClose }: Props
           />
           <Spacer />
           <Tooltip
-            position="bottom"
+            placement="bottom"
             anchorClassName={styles.githubToolTipAnchor}
             content={t('applications.guide.get_sample_file')}
           >

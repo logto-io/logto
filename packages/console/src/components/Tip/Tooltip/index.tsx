@@ -2,11 +2,11 @@ import type { ReactNode } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import type { HorizontalAlignment } from '@/hooks/use-position';
 import usePosition from '@/hooks/use-position';
+import type { HorizontalAlignment } from '@/types/positioning';
 
 import TipBubble from '../TipBubble';
-import type { TipBubblePosition } from '../TipBubble';
+import type { TipBubblePlacement } from '../TipBubble';
 import {
   getVerticalAlignment,
   getHorizontalAlignment,
@@ -18,7 +18,7 @@ import * as styles from './index.module.scss';
 type Props = {
   className?: string;
   isKeepOpen?: boolean;
-  position?: TipBubblePosition;
+  placement?: TipBubblePlacement;
   horizontalAlign?: HorizontalAlignment;
   anchorClassName?: string;
   children?: ReactNode;
@@ -28,7 +28,7 @@ type Props = {
 const Tooltip = ({
   className,
   isKeepOpen = false,
-  position = 'top',
+  placement = 'top',
   horizontalAlign = 'center',
   anchorClassName,
   children,
@@ -38,16 +38,12 @@ const Tooltip = ({
   const anchorRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
-  const {
-    position: layoutPosition,
-    positionState,
-    mutate,
-  } = usePosition({
-    verticalAlign: getVerticalAlignment(position),
-    horizontalAlign: getHorizontalAlignment(position, horizontalAlign),
+  const { position, positionState, mutate } = usePosition({
+    verticalAlign: getVerticalAlignment(placement),
+    horizontalAlign: getHorizontalAlignment(placement, horizontalAlign),
     offset: {
-      vertical: getVerticalOffset(position),
-      horizontal: getHorizontalOffset(position, horizontalAlign),
+      vertical: getVerticalOffset(placement),
+      horizontal: getHorizontalOffset(placement, horizontalAlign),
     },
     anchorRef,
     overlayRef: tooltipRef,
@@ -132,17 +128,16 @@ const Tooltip = ({
       {tooltipDom &&
         content &&
         createPortal(
-          <div className={styles.tooltip}>
-            <TipBubble
-              ref={tooltipRef}
-              className={className}
-              style={{ ...(!layoutPosition && { opacity: 0 }), ...layoutPosition }}
-              position={position}
-              horizontalAlignment={positionState.horizontalAlign}
-            >
-              <div className={styles.content}>{content}</div>
-            </TipBubble>
-          </div>,
+          <TipBubble
+            ref={tooltipRef}
+            anchorRef={anchorRef}
+            className={className}
+            position={position}
+            placement={placement}
+            horizontalAlignment={positionState.horizontalAlign}
+          >
+            <div className={styles.content}>{content}</div>
+          </TipBubble>,
           tooltipDom
         )}
     </>

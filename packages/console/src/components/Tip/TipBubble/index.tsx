@@ -1,41 +1,64 @@
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { forwardRef } from 'react';
-import type { ForwardedRef, ReactNode, HTMLProps } from 'react';
+import type { ForwardedRef, ReactNode, HTMLProps, RefObject } from 'react';
 
-import type { HorizontalAlignment } from '@/hooks/use-position';
+import type { HorizontalAlignment, Position } from '@/types/positioning';
 
 import * as styles from './index.module.scss';
 
-export type TipBubblePosition = 'top' | 'right' | 'bottom' | 'left';
+export type TipBubblePlacement = 'top' | 'right' | 'bottom' | 'left';
 
 type Props = HTMLProps<HTMLDivElement> & {
   children: ReactNode;
-  position?: TipBubblePosition;
+  position?: Position;
+  anchorRef: RefObject<Element>;
+  placement?: TipBubblePlacement;
   horizontalAlignment?: HorizontalAlignment;
   className?: string;
 };
 
-const supportHorizontalAlignmentPositions = new Set<TipBubblePosition>(['top', 'bottom']);
+const supportHorizontalAlignmentPlacements = new Set<TipBubblePlacement>(['top', 'bottom']);
 
 const TipBubble = (
-  { children, position = 'bottom', horizontalAlignment = 'center', className, ...rest }: Props,
+  {
+    children,
+    position,
+    placement = 'bottom',
+    horizontalAlignment = 'center',
+    className,
+    anchorRef,
+    ...rest
+  }: Props,
   reference: ForwardedRef<HTMLDivElement>
 ) => {
+  if (!anchorRef.current) {
+    return null;
+  }
+
+  const anchorRect = anchorRef.current.getBoundingClientRect();
+
+  const arrowPosition = conditional(
+    supportHorizontalAlignmentPlacements.has(placement) &&
+      position && {
+        left: anchorRect.x + anchorRect.width / 2 - Number(position.left),
+      }
+  );
+
   return (
     <div
       {...rest}
       ref={reference}
       className={classNames(
         styles.tipBubble,
-        styles[position],
-        conditional(
-          supportHorizontalAlignmentPositions.has(position) && styles[horizontalAlignment]
-        ),
+        styles[placement],
+        !position && styles.invisible,
         className
       )}
+      style={{ ...position }}
     >
-      {children}
+      <div>{children}</div>
+      <div className={styles.arrow} style={{ ...arrowPosition }} />
     </div>
   );
 };

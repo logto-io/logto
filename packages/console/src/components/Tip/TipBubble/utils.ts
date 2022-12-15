@@ -1,9 +1,9 @@
-import type { HorizontalAlignment, VerticalAlignment } from '@/hooks/use-position';
+import type { HorizontalAlignment, VerticalAlignment } from '@/types/positioning';
 
-import type { TipBubblePosition } from '.';
+import type { TipBubblePlacement } from '.';
 
-export const getVerticalOffset = (position: TipBubblePosition) => {
-  switch (position) {
+export const getVerticalOffset = (placement: TipBubblePlacement) => {
+  switch (placement) {
     case 'top':
       return -16;
     case 'bottom':
@@ -14,10 +14,10 @@ export const getVerticalOffset = (position: TipBubblePosition) => {
 };
 
 export const getHorizontalOffset = (
-  tooltipPosition: TipBubblePosition,
+  placement: TipBubblePlacement,
   horizontalAlignment: HorizontalAlignment
 ): number => {
-  if (tooltipPosition === 'top' || tooltipPosition === 'bottom') {
+  if (placement === 'top' || placement === 'bottom') {
     switch (horizontalAlignment) {
       case 'start':
         return -32;
@@ -27,12 +27,12 @@ export const getHorizontalOffset = (
         return 0;
     }
   } else {
-    return tooltipPosition === 'left' ? -32 : 32;
+    return placement === 'left' ? -32 : 32;
   }
 };
 
-export const getVerticalAlignment = (position: TipBubblePosition): VerticalAlignment => {
-  switch (position) {
+export const getVerticalAlignment = (placement: TipBubblePlacement): VerticalAlignment => {
+  switch (placement) {
     case 'top':
       return 'top';
     case 'bottom':
@@ -43,10 +43,10 @@ export const getVerticalAlignment = (position: TipBubblePosition): VerticalAlign
 };
 
 export const getHorizontalAlignment = (
-  position: TipBubblePosition,
+  placement: TipBubblePlacement,
   fallback: HorizontalAlignment
 ): HorizontalAlignment => {
-  switch (position) {
+  switch (placement) {
     case 'right':
       return 'start';
     case 'left':
