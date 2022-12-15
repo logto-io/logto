@@ -3,9 +3,12 @@ import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
-import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
-import { encryptUserPassword } from '#src/lib/user.js';
+import {
+  assignInteractionResults,
+  getApplicationIdFromInteraction,
+} from '#src/libraries/session.js';
+import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
+import { encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import {
   findUserById,

@@ -9,9 +9,12 @@ import type { ZodType } from 'zod';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
-import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
-import { verifyUserPassword } from '#src/lib/user.js';
+import {
+  assignInteractionResults,
+  getApplicationIdFromInteraction,
+} from '#src/libraries/session.js';
+import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
+import { verifyUserPassword } from '#src/libraries/user.js';
 import type { LogContext } from '#src/middleware/koa-log.js';
 import { updateUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';

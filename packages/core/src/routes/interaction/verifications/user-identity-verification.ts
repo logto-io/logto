@@ -2,7 +2,7 @@ import { deduplicate } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { findSocialRelatedUser } from '#src/lib/social.js';
+import { findSocialRelatedUser } from '#src/libraries/social.js';
 import assertThat from '#src/utils/assert-that.js';
 import { maskUserInfo } from '#src/utils/format.js';
 

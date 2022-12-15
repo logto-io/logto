@@ -21,14 +21,14 @@
     "start": "NODE_ENV=production node build/index.js",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm run test:only --coverage --silent",
+    "test:ci": "pnpm test:only --coverage --silent",
     "test:report": "codecov -F core"
   },
   "dependencies": {
     "@logto/cli": "workspace:*",
-    "@logto/connector-kit": "1.0.0-beta.28",
-    "@logto/core-kit": "1.0.0-beta.28",
-    "@logto/language-kit": "1.0.0-beta.28",
+    "@logto/connector-kit": "workspace:*",
+    "@logto/core-kit": "workspace:*",
+    "@logto/language-kit": "workspace:*",
     "@logto/phrases": "workspace:*",
     "@logto/phrases-ui": "workspace:*",
     "@logto/schemas": "workspace:*",
@@ -37,7 +37,6 @@
     "chalk": "^5.0.0",
     "clean-deep": "^3.4.0",
     "date-fns": "^2.29.3",
-    "debug": "^4.3.4",
     "decamelize": "^6.0.0",
     "deepmerge": "^4.2.2",
     "dotenv": "^16.0.0",
@@ -67,7 +66,7 @@
     "slonik-sql-tag-raw": "^1.1.4",
     "snake-case": "^3.0.4",
     "snakecase-keys": "^5.4.4",
-    "zod": "^3.19.1"
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.3.0",

@@ -8,9 +8,9 @@ import { object, string, unknown } from 'zod';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { checkSessionHealth } from '#src/lib/session.js';
-import { getUserInfoByAuthCode } from '#src/lib/social.js';
-import { checkIdentifierCollision, encryptUserPassword } from '#src/lib/user.js';
+import { checkSessionHealth } from '#src/libraries/session.js';
+import { getUserInfoByAuthCode } from '#src/libraries/social.js';
+import { checkIdentifierCollision, encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { deleteUserIdentity, findUserById, updateUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';

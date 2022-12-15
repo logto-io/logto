@@ -7,7 +7,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 const { jest } = import.meta;
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 
-await mockEsmWithActual('#src/lib/session.js', () => ({
+await mockEsmWithActual('#src/libraries/session.js', () => ({
   getApplicationIdFromInteraction: jest.fn(),
 }));
 

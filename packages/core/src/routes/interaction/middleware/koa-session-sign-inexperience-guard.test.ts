@@ -7,7 +7,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-mockEsm('#src/lib/sign-in-experience/index.js', () => ({
+mockEsm('#src/libraries/sign-in-experience/index.js', () => ({
   getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
 }));
 

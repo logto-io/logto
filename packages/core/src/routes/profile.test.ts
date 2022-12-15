@@ -27,7 +27,7 @@ mockEsm('#src/connectors/index.js', () => ({
   getLogtoConnectorById,
 }));
 
-const { getUserInfoByAuthCode } = await mockEsmWithActual('#src/lib/social.js', () => ({
+const { getUserInfoByAuthCode } = await mockEsmWithActual('#src/libraries/social.js', () => ({
   findSocialRelatedUser: jest.fn(async () => [{ id: 'user1', identities: {}, isSuspended: false }]),
   getUserInfoByAuthCode: jest.fn(),
 }));
@@ -53,7 +53,7 @@ const {
   deleteUserIdentity: jest.fn(),
 }));
 
-const { encryptUserPassword } = await mockEsmWithActual('#src/lib/user.js', () => ({
+const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
   encryptUserPassword: jest.fn(async (password: string) => ({
     passwordEncrypted: password + '_user1',
     passwordEncryptionMethod: 'Argon2i',

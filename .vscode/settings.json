@@ -8,7 +8,10 @@
   "stylelint.validate": ["css", "scss"],
   "eslint.workingDirectories": [
     {
-      "pattern": "./packages/*"
+      "pattern": "./packages/*",
+    },
+    {
+      "pattern": "./packages/toolkit/*",
     }
   ],
   "eslint.validate": [

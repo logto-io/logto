@@ -9,7 +9,7 @@ import type { AnonymousInteractionResult, VerifiedPhoneIdentifier } from '../typ
 
 const { jest } = import.meta;
 
-const { verifyUserPassword } = mockEsm('#src/lib/user.js', () => ({
+const { verifyUserPassword } = mockEsm('#src/libraries/user.js', () => ({
   verifyUserPassword: jest.fn(),
 }));
 

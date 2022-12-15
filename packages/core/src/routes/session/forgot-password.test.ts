@@ -23,8 +23,8 @@ const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
 const getYesterdayDate = () => subDays(Date.now(), 1);
 const getTomorrowDate = () => addDays(Date.now(), 1);
 
-jest.mock('#src/lib/user.js', () => ({
-  ...jest.requireActual('#src/lib/user.js'),
+jest.mock('#src/libraries/user.js', () => ({
+  ...jest.requireActual('#src/libraries/user.js'),
   encryptUserPassword: async (password: string) => encryptUserPassword(password),
 }));
 
@@ -43,7 +43,7 @@ jest.mock('#src/queries/sign-in-experience.js', () => ({
 }));
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
-jest.mock('#src/lib/passcode.js', () => ({
+jest.mock('#src/libraries/passcode.js', () => ({
   createPasscode: async () => ({ userId: 'id' }),
   sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {

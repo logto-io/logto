@@ -3,9 +3,12 @@ import type { MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { assignInteractionResults, getApplicationIdFromInteraction } from '#src/lib/session.js';
-import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
-import { generateUserId, insertUser } from '#src/lib/user.js';
+import {
+  assignInteractionResults,
+  getApplicationIdFromInteraction,
+} from '#src/libraries/session.js';
+import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
+import { generateUserId, insertUser } from '#src/libraries/user.js';
 import type { WithLogContext } from '#src/middleware/koa-log.js';
 import {
   hasUserWithPhone,

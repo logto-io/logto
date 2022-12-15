@@ -27,7 +27,7 @@
     "prepack": "pnpm build",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm run test:only"
+    "test:ci": "pnpm test:only"
   },
   "engines": {
     "node": "^16.13.0 || ^18.12.0"
@@ -69,11 +69,11 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/connector-kit": "1.0.0-beta.28",
-    "@logto/core-kit": "1.0.0-beta.28",
-    "@logto/language-kit": "1.0.0-beta.28",
+    "@logto/connector-kit": "workspace:*",
+    "@logto/core-kit": "workspace:*",
+    "@logto/language-kit": "workspace:*",
     "@logto/phrases": "workspace:*",
     "@logto/phrases-ui": "workspace:*",
-    "zod": "^3.19.1"
+    "zod": "^3.20.2"
   }
 }

@@ -2,7 +2,7 @@ import type { Optional } from '@silverhand/essentials';
 import { getEnv, getEnvAsStringArray } from '@silverhand/essentials';
 import type { DatabasePool } from 'slonik';
 
-import { getOidcConfigs } from '#src/lib/logto-config.js';
+import { getOidcConfigs } from '#src/libraries/logto-config.js';
 import { appendPath } from '#src/utils/url.js';
 
 import { checkAlterationState } from './check-alteration-state.js';

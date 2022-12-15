@@ -4,8 +4,8 @@ import { conditional } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
-import { assignInteractionResults } from '#src/lib/session.js';
-import { encryptUserPassword, generateUserId, insertUser } from '#src/lib/user.js';
+import { assignInteractionResults } from '#src/libraries/session.js';
+import { encryptUserPassword, generateUserId, insertUser } from '#src/libraries/user.js';
 import { findUserById, updateUserById } from '#src/queries/user.js';
 
 import type {

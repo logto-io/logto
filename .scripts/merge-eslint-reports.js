@@ -1,9 +1,13 @@
 const fs = require('fs');
+const path = require('path');
 
-const directories = fs.readdirSync('./packages');
+const directories = [
+  ...fs.readdirSync('./packages'),
+  ...fs.readdirSync('./packages/toolkit').map((dir) => 'toolkit/' + dir)
+];
 const reports = directories
-  // Filter out docs temporarily
-  .filter((dir) => !['docs', 'create'].includes(dir))
+  // Filter out unavailable paths
+  .filter((dir) => !['create', 'toolkit'].includes(dir) && !dir.includes('.'))
   .map((dir) => fs.readFileSync(`./packages/${dir}/report.json`, { encoding: 'utf-8' }));
 const merged = [];
 

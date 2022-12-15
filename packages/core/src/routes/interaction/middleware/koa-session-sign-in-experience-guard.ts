@@ -4,7 +4,7 @@ import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import type { Provider } from 'oidc-provider';
 
-import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
 
 import {
   signInModeValidation,

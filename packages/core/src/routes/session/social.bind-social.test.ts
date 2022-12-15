@@ -13,8 +13,8 @@ const findSocialRelatedUser = jest.fn(async () => [
   'phone',
   { id: 'user1', identities: {}, isSuspended: false },
 ]);
-jest.mock('#src/lib/social.js', () => ({
-  ...jest.requireActual('#src/lib/social.js'),
+jest.mock('#src/libraries/social.js', () => ({
+  ...jest.requireActual('#src/libraries/social.js'),
   findSocialRelatedUser: async () => findSocialRelatedUser(),
   async getUserInfoByAuthCode(connectorId: string, data: { code: string }) {
     if (connectorId === '_connectorId') {
@@ -47,7 +47,7 @@ jest.mock('#src/queries/user.js', () => ({
     target === 'connectorTarget' && userId === mockUser.id,
 }));
 
-jest.mock('#src/lib/user.js', () => ({
+jest.mock('#src/libraries/user.js', () => ({
   generateUserId: () => 'user1',
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));

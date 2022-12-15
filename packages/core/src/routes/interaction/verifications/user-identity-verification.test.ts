@@ -11,7 +11,7 @@ const { jest } = import.meta;
 
 const findUserByIdentifier = mockEsmDefault('../utils/find-user-by-identifier.js', () => jest.fn());
 
-mockEsm('#src/lib/social.js', () => ({
+mockEsm('#src/libraries/social.js', () => ({
   findSocialRelatedUser: jest.fn().mockResolvedValue(null),
 }));
 

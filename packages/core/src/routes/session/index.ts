@@ -8,7 +8,7 @@ import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { assignInteractionResults, saveUserFirstConsentedAppId } from '#src/lib/session.js';
+import { assignInteractionResults, saveUserFirstConsentedAppId } from '#src/libraries/session.js';
 import { findUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 

@@ -6,7 +6,7 @@ import {
 import type { Provider } from 'oidc-provider';
 
 import detectLanguage from '#src/i18n/detect-language.js';
-import { getPhrase } from '#src/lib/phrase.js';
+import { getPhrase } from '#src/libraries/phrase.js';
 import { findAllCustomLanguageTags } from '#src/queries/custom-phrase.js';
 import { findDefaultSignInExperience } from '#src/queries/sign-in-experience.js';
 

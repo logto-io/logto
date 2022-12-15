@@ -5,8 +5,8 @@ import etag from 'etag';
 import type { Provider } from 'oidc-provider';
 
 import { getLogtoConnectors } from '#src/connectors/index.js';
-import { getApplicationIdFromInteraction } from '#src/lib/session.js';
-import { getSignInExperienceForApplication } from '#src/lib/sign-in-experience/index.js';
+import { getApplicationIdFromInteraction } from '#src/libraries/session.js';
+import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
 
 import type { AnonymousRouter } from './types.js';
 

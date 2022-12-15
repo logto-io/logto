@@ -29,7 +29,7 @@ await mockEsmWithActual('#src/queries/custom-phrase.js', () => ({
   findAllCustomLanguageTags: async () => [trTrTag, zhCnTag],
 }));
 
-await mockEsmWithActual('#src/lib/phrase.js', () => ({
+await mockEsmWithActual('#src/libraries/phrase.js', () => ({
   getPhrase: jest.fn().mockResolvedValue(en),
 }));
 const phraseRoutes = await pickDefault(import('./phrase.js'));

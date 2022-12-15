@@ -24,12 +24,12 @@ import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-mockEsm('#src/lib/connector.js', () => ({
+mockEsm('#src/libraries/connector.js', () => ({
   checkSocialConnectorTargetAndPlatformUniqueness: jest.fn(),
 }));
 
 const { removeUnavailableSocialConnectorTargets } = mockEsm(
-  '#src/lib/sign-in-experience/index.js',
+  '#src/libraries/sign-in-experience/index.js',
   () => ({
     removeUnavailableSocialConnectorTargets: jest.fn(),
   })
