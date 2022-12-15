@@ -55,6 +55,7 @@
     "rules": {
       "@typescript-eslint/ban-types": "off"
     },
+    "ignorePatterns": ["src/db-entries/"],
     "overrides": [
       {
         "files": [
