@@ -172,7 +172,7 @@ importers:
       remark-gfm: ^3.0.1
       snake-case: ^3.0.4
       stylelint: ^14.9.1
-      swr: ^1.3.0
+      swr: ^2.0.0
       typescript: ^4.9.4
       zod: ^3.20.2
     devDependencies:
@@ -244,7 +244,7 @@ importers:
       remark-gfm: 3.0.1
       snake-case: 3.0.4
       stylelint: 14.9.1
-      swr: 1.3.0_react@18.2.0
+      swr: 2.0.0_react@18.2.0
       typescript: 4.9.4
       zod: 3.20.2
 
@@ -14153,12 +14153,14 @@ packages:
       stable: 0.1.8
     dev: true
 
-  /swr/1.3.0_react@18.2.0:
-    resolution: {integrity: sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==}
+  /swr/2.0.0_react@18.2.0:
+    resolution: {integrity: sha512-IhUx5yPkX+Fut3h0SqZycnaNLXLXsb2ECFq0Y29cxnK7d8r7auY2JWNbCW3IX+EqXUg3rwNJFlhrw5Ye/b6k7w==}
+    engines: {pnpm: '7'}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: true
 
   /symbol-tree/3.2.4:
@@ -14802,6 +14804,14 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16 || ^18.0.0'
+    dependencies:
+      react: 18.2.0
+    dev: true
+
+  /use-sync-external-store/1.2.0_react@18.2.0:
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
     dev: true
