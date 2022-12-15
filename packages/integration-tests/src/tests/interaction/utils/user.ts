@@ -9,30 +9,38 @@ import {
 
 export type NewUserProfileOptions = {
   username?: true;
+  password?: true;
+  name?: true;
   primaryEmail?: true;
   primaryPhone?: true;
 };
 
-export const generateNewUser = async <T extends NewUserProfileOptions>({
+export const generateNewUserProfile = <T extends NewUserProfileOptions>({
   username,
+  password,
+  name,
   primaryEmail,
   primaryPhone,
 }: T) => {
   type UserProfile = {
-    password: string;
-    name: string;
-  } & {
     [K in keyof T]: T[K] extends true ? string : never;
   };
 
   // @ts-expect-error - TS can't map the type of userProfile to the UserProfile defined above
   const userProfile: UserProfile = {
-    password: generatePassword(),
     name: generateName(),
     ...(username ? { username: generateUsername() } : {}),
+    ...(password ? { password: generatePassword() } : {}),
+    ...(name ? { name: generateName() } : {}),
     ...(primaryEmail ? { primaryEmail: generateEmail() } : {}),
     ...(primaryPhone ? { primaryPhone: generatePhone() } : {}),
   };
+
+  return userProfile;
+};
+
+export const generateNewUser = async <T extends NewUserProfileOptions>(options: T) => {
+  const userProfile = generateNewUserProfile(options);
 
   const user = await createUser(userProfile);
 
