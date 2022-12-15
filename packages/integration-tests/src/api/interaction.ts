@@ -1,11 +1,4 @@
-import { Event } from '@logto/schemas';
-import type {
-  IdentifierPayload,
-  PhonePasswordPayload,
-  EmailPasswordPayload,
-  Profile,
-  UsernamePasswordPayload,
-} from '@logto/schemas';
+import type { Event, IdentifierPayload, Profile } from '@logto/schemas';
 
 import api from './api.js';
 
@@ -19,19 +12,37 @@ export type interactionPayload = {
   profile?: Profile;
 };
 
-export const signInWithPasswordIdentifiers = async (
-  identifier: UsernamePasswordPayload | EmailPasswordPayload | PhonePasswordPayload,
-  cookie: string
-) =>
+export const putInteraction = async (payload: interactionPayload, cookie: string) =>
   api
     .put('interaction', {
-      headers: {
-        cookie,
-      },
-      json: {
-        event: Event.SignIn,
-        identifier,
-      },
+      headers: { cookie },
+      json: payload,
       followRedirect: false,
     })
     .json<RedirectResponse>();
+
+export const patchInteraction = async (payload: interactionPayload, cookie: string) =>
+  api
+    .patch('interaction', {
+      headers: { cookie },
+      json: payload,
+      followRedirect: false,
+    })
+    .json<RedirectResponse>();
+
+export type VerificationPasscodePayload =
+  | {
+      event: Event;
+      email: string;
+    }
+  | { event: Event; phone: string };
+
+export const sendVerificationPasscode = async (
+  payload: VerificationPasscodePayload,
+  cookie: string
+) =>
+  api.post('verification/passcode', {
+    headers: { cookie },
+    json: payload,
+    followRedirect: false,
+  });
