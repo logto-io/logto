@@ -57,7 +57,7 @@ const TipBubble = (
       )}
       style={{ ...position }}
     >
-      <div>{children}</div>
+      {children}
       <div className={styles.arrow} style={{ ...arrowPosition }} />
     </div>
   );
