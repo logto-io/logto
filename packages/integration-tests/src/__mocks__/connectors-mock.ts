@@ -107,6 +107,10 @@ export const mockSmsConnectorConfig = {
       usageType: 'Register',
     },
     {
+      usageType: 'ForgotPassword',
+      content: 'This is for forgot-password purposes only. Your passcode is {{code}}.',
+    },
+    {
       content: 'This is for testing purposes only. Your passcode is {{code}}.',
       usageType: 'Test',
     },
@@ -130,6 +134,12 @@ export const mockEmailConnectorConfig = {
       type: 'text/plain',
       subject: 'Logto Register Template',
       content: 'This is for registering purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'ForgotPassword',
+      type: 'text/plain',
+      subject: 'Logto Forgot Password Template',
+      content: 'This is for forgot-password purposes only. Your passcode is {{code}}.',
     },
     {
       usageType: 'Test',
