@@ -20,3 +20,4 @@ create table users (
 );
 
 create index users__created_at on users (created_at);
+create index users__name on users (name);
