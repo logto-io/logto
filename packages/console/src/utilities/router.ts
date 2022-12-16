@@ -11,6 +11,10 @@ export const getBasename = (prefix: string, developmentPort: string): string => 
   return isBasenameNeeded ? `/${prefix}` : '';
 };
 
+/**
+ * Application routes
+ */
+
 export const getApplicationsPathname = () => `/${PagePath.Applications}`;
 
 export const getApplicationDetailsPathname = (appId: string) =>
@@ -18,12 +22,20 @@ export const getApplicationDetailsPathname = (appId: string) =>
 
 export const getCreateApplicationPathname = () => `/${PagePath.Applications}/create`;
 
+/**
+ * API Resource routes
+ */
+
 export const getApiResourcesPathname = () => `/${PagePath.ApiResources}`;
 
 export const getApiResourceDetailsPathname = (resourceId: string) =>
   `/${PagePath.ApiResources}/${resourceId}`;
 
 export const getCreateApiResourcePathname = () => `/${PagePath.ApiResources}/create`;
+
+/**
+ * Connector routes
+ */
 
 export const getConnectorsPathname = (tab: ConnectorsTabs) => `/${PagePath.Connectors}/${tab}`;
 
@@ -41,6 +53,10 @@ export const getCreateConnectorPathname = (connectorType: ConnectorType) => {
   return `/${PagePath.ApiResources}/${tab}/create/${kebabCase(connectorType)}`;
 };
 
+/**
+ * User routes
+ */
+
 export const getUsersPathname = () => `/${PagePath.Users}`;
 
 export const getUserDetailsPathname = (userId: string) =>
@@ -51,6 +67,10 @@ export const getUserLogsPathname = (userId: string) =>
 
 export const getUserLogDetailsPathname = (userId: string, logId: string) =>
   `/${PagePath.Users}/${userId}/${UserTabs.Logs}/${logId}`;
+
+/**
+ * Audit Log routes
+ */
 
 export const getAuditLogsPathname = () => `/${PagePath.AuditLogs}`;
 
