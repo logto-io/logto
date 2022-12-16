@@ -19,7 +19,7 @@ export default function koaLogSessionLegacy<
       } = await provider.interactionDetails(ctx.req, ctx.res);
       ctx.addLogContext({ sessionId: jti, applicationId: String(client_id) });
     } catch (error: unknown) {
-      console.error(`"${ctx.url}" failed to get oidc provider interaction`, error);
+      console.error(`Failed to get oidc provider interaction`, error);
     }
   };
 }

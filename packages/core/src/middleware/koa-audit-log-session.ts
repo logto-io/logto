@@ -16,7 +16,7 @@ export default function koaAuditLogSession<StateT, ContextT extends WithLogConte
       } = await provider.interactionDetails(ctx.req, ctx.res);
       ctx.log({ sessionId: jti, applicationId: String(client_id) });
     } catch (error: unknown) {
-      console.error(`"${ctx.url}" failed to get oidc provider interaction`, error);
+      console.error(`Failed to get oidc provider interaction`, error);
     }
   };
 }

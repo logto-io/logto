@@ -24,7 +24,7 @@ export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
   log: LogContext['log']
 ): Promise<SocialUserInfo> => {
-  log.setKey('SignIn.SocialId.Social.Submit');
+  log.setKey('SignIn.SocialId.Social.Create');
   log({ connectorId, connectorData });
 
   const userInfo = await getUserInfoByAuthCode(connectorId, connectorData);

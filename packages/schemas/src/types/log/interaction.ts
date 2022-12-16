@@ -20,10 +20,12 @@ export enum Method {
 }
 
 export enum Action {
-  /** Submit updated info to an entity, or submit to the system. (E.g. submit an interaction, submit a verification code to get verified) */
-  Submit = 'Submit',
   /** Create a new entity. (E.g. create an interaction, create a verification code) */
   Create = 'Create',
+  /** Update an existing entity. (E.g. change interaction type) */
+  Update = 'Update',
+  /** Submit updated info to an entity, or submit to the system. (E.g. submit an interaction, submit a verification code to get verified) */
+  Submit = 'Submit',
 }
 
 /**
@@ -44,7 +46,7 @@ export enum Action {
 export type ForgotPasswordLogKey = `${Flow.ForgotPassword}.${Exclude<
   Identifier,
   'SocialId'
->}.${Method.VerificationCode}.${Action}`;
+>}.${Method.VerificationCode}.${Action.Create | Action.Submit}`;
 
 type SignInRegisterFlow = Exclude<Flow, 'ForgotPassword'>;
 
@@ -57,15 +59,18 @@ type SignInRegisterFlow = Exclude<Flow, 'ForgotPassword'>;
  *
  * Restrictions:
  *
- * - For social identifier and method, the value can only be `SignIn.SocialId.Social.Submit`.
- * - For password method, the action can only be `Submit`.
+ * - For social identifier and method, the value can only be `SignIn.SocialId.Social.Create`.
+ * - For password method, the action can only be `Create`.
+ * - For verification code method, the action can be `Create` or `Submit`.
  *
  * @see {@link SignInRegisterFlow}, {@link Identifier}, {@link Method}, {@link Action} for all available enums.
  */
 export type SignInRegisterLogKey =
-  | `${Flow.SignIn}.${Identifier.SocialId}.${Method.Social}.${Action.Submit}`
-  | `${SignInRegisterFlow}.${Exclude<Identifier, 'SocialId'>}.${Method.Password}.${Action.Submit}`
-  | `${SignInRegisterFlow}.${Exclude<Identifier, 'SocialId'>}.${Method.VerificationCode}.${Action}`;
+  | `${Flow.SignIn}.${Identifier.SocialId}.${Method.Social}.${Action.Create}`
+  | `${SignInRegisterFlow}.${Exclude<Identifier, 'SocialId'>}.${Method.Password}.${Action.Create}`
+  | `${SignInRegisterFlow}.${Exclude<Identifier, 'SocialId'>}.${Method.VerificationCode}.${
+      | Action.Create
+      | Action.Submit}`;
 
 export type FlowLogKey = `${Flow}.${Action}`;
 
@@ -81,14 +86,15 @@ export type FlowLogKey = `${Flow}.${Action}`;
  *
  * The key MUST describe an {@link Action}:
  *
- * - {@link Action.Submit} (submit updated info to an entity, or submit to the system);
- * - {@link Action.Create} (create a new entity).
+ * - {@link Action.Create} (Create a new entity);
+ * - {@link Action.Update} (Update an existing entity.);
+ * - {@link Action.Submit} (Submit updated info to an entity, or submit to the system).
  *
- * In an interaction, ONLY the interaction itself and verification codes can be created, i.e.:
+ * In an interaction, ONLY the interaction itself and verification codes can be submitted, i.e.:
  *
  * ```ts
- * `${Flow}.Create`
- * `${Flow}.${Identifier}.VerificationCode.Create`
+ * `${Flow}.Submit`
+ * `${Flow}.${Identifier}.VerificationCode.Submit`
  * ```
  *
  * There may be more restrictions, please see the specific type to learn more.
