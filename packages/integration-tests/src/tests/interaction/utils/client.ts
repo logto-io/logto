@@ -7,11 +7,17 @@ export const initClient = async () => {
   return client;
 };
 
-export const processSessionAndLogout = async (client: MockClient, redirectTo: string) => {
+export const processSession = async (client: MockClient, redirectTo: string) => {
   await client.processSession(redirectTo);
 
   await expect(client.isAuthenticated()).resolves.toBe(true);
 
+  const { sub } = await client.getIdTokenClaims();
+
+  return sub;
+};
+
+export const logoutClient = async (client: MockClient) => {
   await client.signOut();
 
   await expect(client.isAuthenticated()).resolves.toBe(false);

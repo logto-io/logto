@@ -8,10 +8,10 @@ import {
   deleteUser,
   updateSignInExperience,
 } from '#src/api/index.js';
-import { readPasscode } from '#src/helpers.js';
+import { expectRejects, readPasscode } from '#src/helpers.js';
 import { generateEmail, generatePhone } from '#src/utils.js';
 
-import { initClient, processSessionAndLogout } from './utils/client.js';
+import { initClient, processSession, logoutClient } from './utils/client.js';
 import { clearConnectorsByTypes, setEmailConnector, setSmsConnector } from './utils/connector.js';
 import { enableAllPasscodeSignInMethods } from './utils/sign-in-experience.js';
 import { generateNewUser } from './utils/user.js';
@@ -62,8 +62,8 @@ describe('Sign-In flow using passcode identifiers', () => {
       client.interactionCookie
     );
 
-    await processSessionAndLogout(client, redirectTo);
-
+    await processSession(client, redirectTo);
+    await logoutClient(client);
     await deleteUser(user.id);
   });
 
@@ -102,8 +102,8 @@ describe('Sign-In flow using passcode identifiers', () => {
       client.interactionCookie
     );
 
-    await processSessionAndLogout(client, redirectTo);
-
+    await processSession(client, redirectTo);
+    await logoutClient(client);
     await deleteUser(user.id);
   });
 
@@ -132,8 +132,7 @@ describe('Sign-In flow using passcode identifiers', () => {
 
     const { code } = passcodeRecord;
 
-    // TODO: @simeng use expectRequestError after https://github.com/logto-io/logto/pull/2639/ PR merged
-    await expect(
+    await expectRejects(
       putInteraction(
         {
           event: Event.SignIn,
@@ -143,8 +142,9 @@ describe('Sign-In flow using passcode identifiers', () => {
           },
         },
         client.interactionCookie
-      )
-    ).rejects.toThrow();
+      ),
+      'user.user_not_exist'
+    );
 
     const { redirectTo } = await patchInteraction(
       {
@@ -156,7 +156,9 @@ describe('Sign-In flow using passcode identifiers', () => {
       client.interactionCookie
     );
 
-    await processSessionAndLogout(client, redirectTo);
+    const id = await processSession(client, redirectTo);
+    await logoutClient(client);
+    await deleteUser(id);
   });
 
   it('sign-in with non-exist phone account with passcode', async () => {
@@ -184,8 +186,7 @@ describe('Sign-In flow using passcode identifiers', () => {
 
     const { code } = passcodeRecord;
 
-    // TODO: @simeng use expectRequestError after https://github.com/logto-io/logto/pull/2639/ PR merged
-    await expect(
+    await expectRejects(
       putInteraction(
         {
           event: Event.SignIn,
@@ -195,8 +196,9 @@ describe('Sign-In flow using passcode identifiers', () => {
           },
         },
         client.interactionCookie
-      )
-    ).rejects.toThrow();
+      ),
+      'user.user_not_exist'
+    );
 
     const { redirectTo } = await patchInteraction(
       {
@@ -208,6 +210,8 @@ describe('Sign-In flow using passcode identifiers', () => {
       client.interactionCookie
     );
 
-    await processSessionAndLogout(client, redirectTo);
+    const id = await processSession(client, redirectTo);
+    await logoutClient(client);
+    await deleteUser(id);
   });
 });
