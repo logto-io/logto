@@ -1,6 +1,4 @@
 @use '@/scss/underscore' as _;
-@use '@/scss/colors' as colors;
-@use '@/scss/fonts' as fonts;
 
 /* Preview Settings */
 .preview {
@@ -13,30 +11,10 @@
   }
 }
 
-/* Foundation */
-body {
-  --radius: 8px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: auto;
-  word-break: break-word;
-  @include colors.static;
-
-  &.light {
-    @include colors.light;
-  }
-
-  &.dark {
-    @include colors.dark;
-  }
-
-  @include fonts.fonts;
-}
-
 /* Main Layout */
 .container {
   position: absolute;
   inset: 0;
-  color: var(--color-type-primary);
   overflow: auto;
   @include _.flex_column(center, normal);
 }
@@ -51,14 +29,6 @@ body {
 }
 
 :global(body.mobile) {
-  --max-width: 360px;
-  background: var(--color-bg-body);
-
-  .container {
-    background: var(--color-bg-body);
-    font: var(--font-body-2);
-  }
-
   .main {
     flex: 1;
     align-self: stretch;
@@ -69,14 +39,6 @@ body {
 }
 
 :global(body.desktop) {
-  --max-width: 400px;
-  background: var(--color-bg-float-base);
-
-  .container {
-    background: var(--color-bg-float-base);
-    font: var(--font-body-2);
-  }
-
   .main {
     width: 640px;
     min-height: 640px;

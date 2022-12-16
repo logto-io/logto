@@ -1,0 +1,22 @@
+@use '@/scss/colors' as colors;
+@use '@/scss/underscore' as _;
+
+body {
+  &.light {
+    @include colors.light;
+  }
+
+  &.dark {
+    @include colors.dark;
+  }
+}
+
+:global(body.mobile) {
+  --max-width: 360px;
+  background: var(--color-bg-body);
+}
+
+:global(body.desktop) {
+  --max-width: 400px;
+  background: var(--color-bg-float-base);
+}
