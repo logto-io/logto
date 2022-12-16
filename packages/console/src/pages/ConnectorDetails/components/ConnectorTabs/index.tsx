@@ -1,14 +1,13 @@
 import type { ConnectorResponse } from '@logto/schemas';
-import { ConnectorType, ConnectorPlatform } from '@logto/schemas';
+import { ConnectorPlatform } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
 import { connectorPlatformLabel } from '@/consts';
-import { ConnectorsTabs } from '@/consts/page-tabs';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
-import { getConnectorPathname } from '@/utilities/router';
+import { getConnectorDetailsPathname } from '@/utilities/router';
 
 import * as styles from './index.module.scss';
 
@@ -38,12 +37,7 @@ const ConnectorTabs = ({ target, connectorId }: Props) => {
       {connectors.map((connector) => (
         <Link
           key={connector.id}
-          to={getConnectorPathname(
-            connector.type === ConnectorType.Social
-              ? ConnectorsTabs.Social
-              : ConnectorsTabs.Passwordless,
-            connector.id
-          )}
+          to={getConnectorDetailsPathname(connector.type, connector.id)}
           className={classNames(styles.tab, connector.id === connectorId && styles.active)}
         >
           {connector.platform && (

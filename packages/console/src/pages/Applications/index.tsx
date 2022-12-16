@@ -21,6 +21,11 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import {
+  getApplicationDetailsPathname,
+  getApplicationsPathname,
+  getCreateApplicationPathname,
+} from '@/utilities/router';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -29,8 +34,8 @@ const pageSize = 20;
 
 const Applications = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const isCreateNew = location.pathname.endsWith('/create');
+  const { pathname } = useLocation();
+  const isCreateNew = pathname.endsWith('/create');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
@@ -50,7 +55,7 @@ const Applications = () => {
           type="primary"
           size="large"
           onClick={() => {
-            navigate('/applications/create');
+            navigate(getCreateApplicationPathname());
           }}
         />
         <Modal
@@ -59,22 +64,22 @@ const Applications = () => {
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
           onRequestClose={() => {
-            navigate('/applications');
+            navigate(getApplicationsPathname());
           }}
         >
           <CreateForm
             onClose={(createdApp) => {
               if (createdApp) {
                 toast.success(t('applications.application_created', { name: createdApp.name }));
-                navigate(`/applications/${createdApp.id}`);
+                navigate(getApplicationDetailsPathname(createdApp.id), { replace: true });
 
                 return;
               }
-              navigate('/applications');
+              navigate(getApplicationsPathname());
             }}
           />
         </Modal>
-      </div>{' '}
+      </div>
       <div className={resourcesStyles.table}>
         <div className={tableStyles.scrollable}>
           <table className={classNames(!data && tableStyles.empty)}>
@@ -105,7 +110,7 @@ const Applications = () => {
                     title="applications.create"
                     type="outline"
                     onClick={() => {
-                      navigate('/applications/create');
+                      navigate(getCreateApplicationPathname());
                     }}
                   />
                 </TableEmpty>
@@ -115,7 +120,7 @@ const Applications = () => {
                   key={id}
                   className={tableStyles.clickable}
                   onClick={() => {
-                    navigate(`/applications/${id}`);
+                    navigate(getApplicationDetailsPathname(id));
                   }}
                 >
                   <td>
@@ -123,7 +128,7 @@ const Applications = () => {
                       title={name}
                       subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
                       icon={<ApplicationIcon className={styles.icon} type={type} />}
-                      to={`/applications/${id}`}
+                      to={getApplicationDetailsPathname(id)}
                     />
                   </td>
                   <td>

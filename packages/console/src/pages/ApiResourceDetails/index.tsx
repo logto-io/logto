@@ -29,6 +29,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
+import { getApiResourcesPathname } from '@/utilities/router';
 
 import * as styles from './index.module.scss';
 
@@ -97,7 +98,7 @@ const ApiResourceDetails = () => {
       setIsDeleting(false);
       setIsDeleteFormOpen(false);
       toast.success(t('api_resource_details.api_resource_deleted', { name: data.name }));
-      navigate(`/api-resources`);
+      navigate(getApiResourcesPathname());
     } catch {
       setIsDeleting(false);
     }
@@ -105,7 +106,7 @@ const ApiResourceDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <TextLink to="/api-resources" icon={<Back />} className={styles.backLink}>
+      <TextLink to={getApiResourcesPathname()} icon={<Back />} className={styles.backLink}>
         {t('api_resource_details.back_to_api_resources')}
       </TextLink>
       {isLoading && <DetailsSkeleton />}

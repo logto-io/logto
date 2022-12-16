@@ -7,7 +7,7 @@ import DraggableItem from '@/components/Transfer/DraggableItem';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import type { ConnectorGroup } from '@/types/connector';
-import { getConnectorPathname } from '@/utilities/router';
+import { getConnectorsPathname } from '@/utilities/router';
 
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
 import AddButton from './AddButton';
@@ -90,7 +90,7 @@ const SocialConnectorEditBox = ({ value, onChange }: Props) => {
       <div className={styles.setUpHint}>
         {t('sign_in_exp.sign_up_and_sign_in.social_sign_in.set_up_hint.not_in_list')}
         <TextLink
-          to={getConnectorPathname(ConnectorsTabs.Social)}
+          to={getConnectorsPathname(ConnectorsTabs.Social)}
           target="_blank"
           className={styles.setup}
         >

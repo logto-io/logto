@@ -6,10 +6,9 @@ import { useNavigate } from 'react-router-dom';
 
 import Status from '@/components/Status';
 import { connectorTitlePlaceHolder } from '@/consts/connectors';
-import { ConnectorsTabs } from '@/consts/page-tabs';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 import * as tableStyles from '@/scss/table.module.scss';
-import { getConnectorPathname } from '@/utilities/router';
+import { getConnectorDetailsPathname } from '@/utilities/router';
 
 import ConnectorName from '../ConnectorName';
 
@@ -31,12 +30,7 @@ const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
       return;
     }
 
-    navigate(
-      getConnectorPathname(
-        type === ConnectorType.Social ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless,
-        firstConnector.id
-      )
-    );
+    navigate(getConnectorDetailsPathname(type, firstConnector.id));
   };
 
   return (

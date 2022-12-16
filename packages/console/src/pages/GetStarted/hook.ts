@@ -23,7 +23,7 @@ import { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSettings from '@/hooks/use-settings';
 import { useTheme } from '@/hooks/use-theme';
-import { getConnectorPathname } from '@/utilities/router';
+import { getConnectorsPathname, getCreateApplicationPathname } from '@/utilities/router';
 
 type GetStartedMetadata = {
   id: string;
@@ -80,7 +80,7 @@ const useGetStartedMetadata = () => {
         buttonText: 'general.create',
         isComplete: settings?.applicationCreated,
         onClick: () => {
-          navigate('/applications/create');
+          navigate(getCreateApplicationPathname());
         },
       },
       {
@@ -102,7 +102,7 @@ const useGetStartedMetadata = () => {
         buttonText: 'general.set_up',
         isComplete: settings?.passwordlessConfigured,
         onClick: () => {
-          navigate(getConnectorPathname(ConnectorsTabs.Passwordless));
+          navigate(getConnectorsPathname(ConnectorsTabs.Passwordless));
         },
       },
       {
@@ -113,7 +113,7 @@ const useGetStartedMetadata = () => {
         buttonText: 'general.add',
         isComplete: settings?.socialSignInConfigured,
         onClick: () => {
-          navigate(getConnectorPathname(ConnectorsTabs.Social));
+          navigate(getConnectorsPathname(ConnectorsTabs.Social));
         },
       },
       {

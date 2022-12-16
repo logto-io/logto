@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
+import { getApplicationDetailsPathname } from '@/utilities/router';
+
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -21,7 +23,11 @@ const ApplicationName = ({ applicationId, isLink = false }: Props) => {
 
   if (isLink && !isAdminConsole) {
     return (
-      <Link className={styles.link} to={`/applications/${applicationId}`} target="_blank">
+      <Link
+        className={styles.link}
+        to={getApplicationDetailsPathname(applicationId)}
+        target="_blank"
+      >
         {name}
       </Link>
     );

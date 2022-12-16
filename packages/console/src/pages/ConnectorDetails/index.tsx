@@ -28,7 +28,7 @@ import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
-import { getConnectorPathname } from '@/utilities/router';
+import { getConnectorDetailsPathname, getConnectorsPathname } from '@/utilities/router';
 
 import CreateForm from '../Connectors/components/CreateForm';
 import ConnectorContent from './components/ConnectorContent';
@@ -76,13 +76,17 @@ const ConnectorDetails = () => {
     toast.success(t('connector_details.connector_deleted'));
     await mutateGlobal('/api/connectors');
 
-    navigate(getConnectorPathname(isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless));
+    navigate(getConnectorsPathname(isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless));
   };
+
+  if (!connectorId) {
+    return null;
+  }
 
   return (
     <div className={detailsStyles.container}>
       <TextLink
-        to={getConnectorPathname(isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless)}
+        to={getConnectorsPathname(isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless)}
         icon={<Back />}
         className={styles.backLink}
       >
@@ -90,128 +94,119 @@ const ConnectorDetails = () => {
       </TextLink>
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-      {isSocial && <ConnectorTabs target={data.target} connectorId={data.id} />}
       {data && (
-        <Card className={styles.header}>
-          <div className={styles.logoContainer}>
-            <img
-              src={theme === AppearanceMode.DarkMode && data.logoDark ? data.logoDark : data.logo}
-              alt="logo"
-              className={styles.logo}
-            />
-          </div>
-          <div className={styles.metadata}>
-            <div>
-              <div className={styles.name}>
-                <UnnamedTrans resource={data.name} />
+        <>
+          {isSocial && <ConnectorTabs target={data.target} connectorId={data.id} />}
+          <Card className={styles.header}>
+            <div className={styles.logoContainer}>
+              <img
+                src={theme === AppearanceMode.DarkMode && data.logoDark ? data.logoDark : data.logo}
+                alt="logo"
+                className={styles.logo}
+              />
+            </div>
+            <div className={styles.metadata}>
+              <div>
+                <div className={styles.name}>
+                  <UnnamedTrans resource={data.name} />
+                </div>
+              </div>
+              <div>
+                <ConnectorTypeName type={data.type} />
+                <div className={styles.verticalBar} />
+                {inUse !== undefined && (
+                  <Status status={inUse ? 'enabled' : 'disabled'} variant="outlined">
+                    {t('connectors.connector_status', {
+                      context: inUse ? 'in_use' : 'not_in_use',
+                    })}
+                  </Status>
+                )}
+                <div className={styles.verticalBar} />
+                <div className={styles.text}>ID</div>
+                <CopyToClipboard size="small" value={data.id} />
               </div>
             </div>
-            <div>
-              <ConnectorTypeName type={data.type} />
-              <div className={styles.verticalBar} />
-              {inUse !== undefined && (
-                <Status status={inUse ? 'enabled' : 'disabled'} variant="outlined">
-                  {t('connectors.connector_status', {
-                    context: inUse ? 'in_use' : 'not_in_use',
-                  })}
-                </Status>
-              )}
-              <div className={styles.verticalBar} />
-              <div className={styles.text}>ID</div>
-              <CopyToClipboard size="small" value={data.id} />
-            </div>
-          </div>
-          <div className={styles.operations}>
-            <Button
-              title="connector_details.check_readme"
-              size="large"
-              onClick={() => {
-                setIsReadMeOpen(true);
-              }}
-            />
-            <Drawer
-              title="connectors.title"
-              subtitle="connectors.subtitle"
-              isOpen={isReadMeOpen}
-              onClose={() => {
-                setIsReadMeOpen(false);
-              }}
-            >
-              <Markdown className={styles.readme}>{data.readme}</Markdown>
-            </Drawer>
-            <ActionMenu
-              buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
-              title={t('general.more_options')}
-            >
-              {!isSocial && (
-                <ActionMenuItem
-                  icon={<Reset />}
-                  iconClassName={styles.resetIcon}
-                  onClick={() => {
-                    setIsSetupOpen(true);
-                  }}
-                >
-                  {t(
-                    data.type === ConnectorType.Sms
-                      ? 'connector_details.options_change_sms'
-                      : 'connector_details.options_change_email'
-                  )}
+            <div className={styles.operations}>
+              <Button
+                title="connector_details.check_readme"
+                size="large"
+                onClick={() => {
+                  setIsReadMeOpen(true);
+                }}
+              />
+              <Drawer
+                title="connectors.title"
+                subtitle="connectors.subtitle"
+                isOpen={isReadMeOpen}
+                onClose={() => {
+                  setIsReadMeOpen(false);
+                }}
+              >
+                <Markdown className={styles.readme}>{data.readme}</Markdown>
+              </Drawer>
+              <ActionMenu
+                buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
+                title={t('general.more_options')}
+              >
+                {!isSocial && (
+                  <ActionMenuItem
+                    icon={<Reset />}
+                    iconClassName={styles.resetIcon}
+                    onClick={() => {
+                      setIsSetupOpen(true);
+                    }}
+                  >
+                    {t(
+                      data.type === ConnectorType.Sms
+                        ? 'connector_details.options_change_sms'
+                        : 'connector_details.options_change_email'
+                    )}
+                  </ActionMenuItem>
+                )}
+                <ActionMenuItem icon={<Delete />} type="danger" onClick={onDeleteClick}>
+                  {t('general.delete')}
                 </ActionMenuItem>
-              )}
-              <ActionMenuItem icon={<Delete />} type="danger" onClick={onDeleteClick}>
-                {t('general.delete')}
-              </ActionMenuItem>
-            </ActionMenu>
-            <CreateForm
-              isOpen={isSetupOpen}
-              type={data.type}
-              onClose={(connectorId?: string) => {
-                setIsSetupOpen(false);
-                navigate(
-                  getConnectorPathname(
-                    isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless,
-                    connectorId
-                  )
-                );
-              }}
-            />
-          </div>
-        </Card>
-      )}
-      <TabNav>
-        <TabNavItem
-          href={getConnectorPathname(
-            isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless,
-            connectorId
-          )}
-        >
-          {t('general.settings_nav')}
-        </TabNavItem>
-      </TabNav>
-      {data && (
-        <ConnectorContent
-          isDeleted={isDeleted}
-          connectorData={data}
-          onConnectorUpdated={(connector) => {
-            void mutate(connector);
-          }}
-        />
-      )}
-      {data && (
-        <ConfirmModal
-          isOpen={isDeleteAlertOpen}
-          confirmButtonText="general.delete"
-          onCancel={() => {
-            setIsDeleteAlertOpen(false);
-          }}
-          onConfirm={handleDelete}
-        >
-          <Trans
-            t={t}
-            i18nKey="connector_details.in_use_deletion_description"
-            components={{ name: <UnnamedTrans resource={data.name} /> }}
+              </ActionMenu>
+              <CreateForm
+                isOpen={isSetupOpen}
+                type={data.type}
+                onClose={(connectorId?: string) => {
+                  setIsSetupOpen(false);
+
+                  if (connectorId) {
+                    navigate(getConnectorDetailsPathname(data.type, connectorId));
+                  }
+                }}
+              />
+            </div>
+          </Card>
+          <TabNav>
+            <TabNavItem href={getConnectorDetailsPathname(data.type, connectorId)}>
+              {t('general.settings_nav')}
+            </TabNavItem>
+          </TabNav>
+          <ConnectorContent
+            isDeleted={isDeleted}
+            connectorData={data}
+            onConnectorUpdated={(connector) => {
+              void mutate(connector);
+            }}
           />
-        </ConfirmModal>
+          <ConfirmModal
+            isOpen={isDeleteAlertOpen}
+            confirmButtonText="general.delete"
+            onCancel={() => {
+              setIsDeleteAlertOpen(false);
+            }}
+            onConfirm={handleDelete}
+          >
+            <Trans
+              t={t}
+              i18nKey="connector_details.in_use_deletion_description"
+              components={{ name: <UnnamedTrans resource={data.name} /> }}
+            />
+          </ConfirmModal>
+        </>
       )}
     </div>
   );

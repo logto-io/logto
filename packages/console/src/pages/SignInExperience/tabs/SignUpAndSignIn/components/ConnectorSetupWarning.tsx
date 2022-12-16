@@ -5,7 +5,7 @@ import Alert from '@/components/Alert';
 import TextLink from '@/components/TextLink';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
-import { getConnectorPathname } from '@/utilities/router';
+import { getConnectorsPathname } from '@/utilities/router';
 
 type Props = {
   requiredConnectors: ConnectorType[];
@@ -31,7 +31,7 @@ const ConnectorSetupWarning = ({ requiredConnectors }: Props) => {
             components={{
               a: (
                 <TextLink
-                  to={getConnectorPathname(
+                  to={getConnectorsPathname(
                     connectorType === ConnectorType.Social
                       ? ConnectorsTabs.Social
                       : ConnectorsTabs.Passwordless

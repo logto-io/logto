@@ -27,6 +27,7 @@ import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import * as detailsStyles from '@/scss/details.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { getApplicationDetailsPathname, getApplicationsPathname } from '@/utilities/router';
 
 import Guide from '../Applications/components/Guide';
 import AdvancedSettings from './components/AdvancedSettings';
@@ -114,7 +115,7 @@ const ApplicationDetails = () => {
       setIsDeleting(false);
       setIsDeleteFormOpen(false);
       toast.success(t('application_details.application_deleted', { name: data.name }));
-      navigate(`/applications`);
+      navigate(getApplicationsPathname());
     } catch {
       setIsDeleting(false);
     }
@@ -126,7 +127,7 @@ const ApplicationDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <TextLink to="/applications" icon={<Back />} className={styles.backLink}>
+      <TextLink to={getApplicationsPathname()} icon={<Back />} className={styles.backLink}>
         {t('application_details.back_to_applications')}
       </TextLink>
       {isLoading && <DetailsSkeleton />}
@@ -197,7 +198,7 @@ const ApplicationDetails = () => {
             </div>
           </Card>
           <TabNav>
-            <TabNavItem href={`/applications/${data.id}/settings`}>
+            <TabNavItem href={getApplicationDetailsPathname(data.id)}>
               {t('general.settings_nav')}
             </TabNavItem>
           </TabNav>

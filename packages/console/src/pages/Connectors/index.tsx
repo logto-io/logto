@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { snakeCase } from 'snake-case';
 
 import Plus from '@/assets/images/plus.svg';
 import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
@@ -21,16 +20,13 @@ import useConnectorGroups from '@/hooks/use-connector-groups';
 import { useTheme } from '@/hooks/use-theme';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
-import { getConnectorPathname } from '@/utilities/router';
+import { getConnectorsPathname, getCreateConnectorPathname } from '@/utilities/router';
 
 import ConnectorRow from './components/ConnectorRow';
 import ConnectorStatusField from './components/ConnectorStatusField';
 import CreateForm from './components/CreateForm';
 import SignInExperienceSetupNotice from './components/SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
-
-const getCreatePagePathName = (connectorType: ConnectorType) =>
-  `create/${snakeCase(connectorType)}`;
 
 const isConnectorType = (value: string): value is ConnectorType =>
   Object.values<string>(ConnectorType).includes(value);
@@ -81,17 +77,17 @@ const Connectors = () => {
               size="large"
               icon={<Plus />}
               onClick={() => {
-                navigate(getCreatePagePathName(ConnectorType.Social));
+                navigate(getCreateConnectorPathname(ConnectorType.Social));
               }}
             />
           )}
         </div>
         <SignInExperienceSetupNotice />
         <TabNav className={styles.tabs}>
-          <TabNavItem href={getConnectorPathname(ConnectorsTabs.Passwordless)}>
+          <TabNavItem href={getConnectorsPathname(ConnectorsTabs.Passwordless)}>
             {t('connectors.tab_email_sms')}
           </TabNavItem>
-          <TabNavItem href={getConnectorPathname(ConnectorsTabs.Social)}>
+          <TabNavItem href={getConnectorsPathname(ConnectorsTabs.Social)}>
             {t('connectors.tab_social')}
           </TabNavItem>
         </TabNav>
@@ -132,7 +128,7 @@ const Connectors = () => {
                       title="connectors.create"
                       type="outline"
                       onClick={() => {
-                        navigate(getCreatePagePathName(ConnectorType.Social));
+                        navigate(getCreateConnectorPathname(ConnectorType.Social));
                       }}
                     />
                   </TableEmpty>
@@ -142,7 +138,7 @@ const Connectors = () => {
                     connectors={smsConnector ? [smsConnector] : []}
                     type={ConnectorType.Sms}
                     onClickSetup={() => {
-                      navigate(getCreatePagePathName(ConnectorType.Sms));
+                      navigate(getCreateConnectorPathname(ConnectorType.Sms));
                     }}
                   />
                 )}
@@ -151,7 +147,7 @@ const Connectors = () => {
                     connectors={emailConnector ? [emailConnector] : []}
                     type={ConnectorType.Email}
                     onClickSetup={() => {
-                      navigate(getCreatePagePathName(ConnectorType.Email));
+                      navigate(getCreateConnectorPathname(ConnectorType.Email));
                     }}
                   />
                 )}
@@ -170,7 +166,7 @@ const Connectors = () => {
         )}
         onClose={() => {
           navigate(
-            getConnectorPathname(isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless)
+            getConnectorsPathname(isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless)
           );
           void mutate();
         }}
