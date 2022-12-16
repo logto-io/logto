@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/schemas';
-import { snakeCase } from 'snake-case';
+import kebabCase from 'lodash.kebabcase';
 
 import { ConnectorsTabs, UserTabs } from '@/consts/page-tabs';
 
@@ -10,17 +10,17 @@ export const getBasename = (prefix: string, developmentPort: string): string => 
   return isBasenameNeeded ? '/' + prefix : '';
 };
 
-export const getApplicationsPathname = () => `/applications`;
+export const getApplicationsPathname = () => '/applications';
 
 export const getApplicationDetailsPathname = (appId: string) => `/applications/${appId}`;
 
-export const getCreateApplicationPathname = () => `/applications/create`;
+export const getCreateApplicationPathname = () => '/applications/create';
 
-export const getApiResourcesPathname = () => `/api-resources`;
+export const getApiResourcesPathname = () => '/api-resources';
 
 export const getApiResourceDetailsPathname = (resourceId: string) => `/api-resources/${resourceId}`;
 
-export const getCreateApiResourcePathname = () => `/api-resources/create`;
+export const getCreateApiResourcePathname = () => '/api-resources/create';
 
 export const getConnectorsPathname = (tab: ConnectorsTabs) => `/connectors/${tab}`;
 
@@ -35,8 +35,10 @@ export const getCreateConnectorPathname = (connectorType: ConnectorType) => {
   const tab =
     connectorType === ConnectorType.Social ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless;
 
-  return `/connectors/${tab}/create/${snakeCase(connectorType, { delimiter: '-' })}`;
+  return `/connectors/${tab}/create/${kebabCase(connectorType)}`;
 };
+
+export const getUsersPathname = () => '/users';
 
 export const getUserPathname = (userId: string, tab: UserTabs) => `/users/${userId}/${tab}`;
 

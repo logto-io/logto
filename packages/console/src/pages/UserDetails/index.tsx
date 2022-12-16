@@ -25,7 +25,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { getUserPathname } from '@/utilities/router';
+import { getUserPathname, getUsersPathname } from '@/utilities/router';
 
 import CreateSuccess from './components/CreateSuccess';
 import ResetPasswordForm from './components/ResetPasswordForm';
@@ -72,7 +72,7 @@ const UserDetails = () => {
       setIsDeleting(false);
       setIsDeleteFormOpen(false);
       toast.success(t('user_details.deleted', { name: data.name }));
-      navigate('/users');
+      navigate(getUsersPathname());
     } catch {
       setIsDeleting(false);
     }
@@ -80,7 +80,7 @@ const UserDetails = () => {
 
   return (
     <div className={classNames(detailsStyles.container, isLogs && styles.resourceLayout)}>
-      <TextLink to="/users" icon={<Back />} className={styles.backLink}>
+      <TextLink to={getUsersPathname()} icon={<Back />} className={styles.backLink}>
         {t('user_details.back_to_users')}
       </TextLink>
       {isLoading && <DetailsSkeleton />}
