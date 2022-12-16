@@ -1,14 +1,7 @@
 import type { RefObject } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
-export type VerticalAlignment = 'top' | 'middle' | 'bottom';
-
-export type HorizontalAlignment = 'start' | 'center' | 'end';
-
-type Offset = {
-  vertical: number;
-  horizontal: number;
-};
+import type { HorizontalAlignment, Offset, Position, VerticalAlignment } from '@/types/positioning';
 
 type Props = {
   verticalAlign: VerticalAlignment;
@@ -16,11 +9,6 @@ type Props = {
   offset: Offset;
   anchorRef: RefObject<Element>;
   overlayRef: RefObject<Element>;
-};
-
-type Position = {
-  top: number;
-  left: number;
 };
 
 // Leave space for box-shadow effect.

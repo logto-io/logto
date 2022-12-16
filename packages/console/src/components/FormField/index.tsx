@@ -29,7 +29,7 @@ const FormField = ({ title, children, isRequired, className, tip, headlineClassN
       <div className={classNames(styles.headline, headlineClassName)}>
         <div className={styles.title}>{typeof title === 'string' ? t(title) : title}</div>
         {tip && (
-          <ToggleTip anchorClassName={styles.toggleTipButton} content={tip}>
+          <ToggleTip anchorClassName={styles.toggleTipButton} content={tip} horizontalAlign="start">
             <IconButton size="small">
               <Tip />
             </IconButton>
