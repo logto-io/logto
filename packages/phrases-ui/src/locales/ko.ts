@@ -81,6 +81,33 @@ const translation = {
       'For added security, please link your email or phone with the account.', // UNTRANSLATED
     continue_with_more_information: 'For added security, please complete below account details.', // UNTRANSLATED
   },
+  profile: {
+    title: 'Account Settings', // UNTRANSLATED
+    description:
+      'Change your account settings and manage your personal information here to ensure your account security.', // UNTRANSLATED
+    settings: {
+      title: 'PROFILE SETTINGS', // UNTRANSLATED
+      profile_information: 'Profile Information', // UNTRANSLATED
+      avatar: 'Avatar', // UNTRANSLATED
+      name: 'Name', // UNTRANSLATED
+      username: 'Username', // UNTRANSLATED
+    },
+    password: {
+      title: 'PASSWORD', // UNTRANSLATED
+      reset_password: 'Reset Password', // UNTRANSLATED
+    },
+    link_account: {
+      title: 'LINK ACCOUNT', // UNTRANSLATED
+      email_phone_sign_in: 'Email / Phone Sign-In', // UNTRANSLATED
+      email: 'Email', // UNTRANSLATED
+      phone: 'Phone', // UNTRANSLATED
+      social_sign_in: 'Social Sign-In', // UNTRANSLATED
+    },
+    edit: 'Edit', // UNTRANSLATED
+    change: 'Change', // UNTRANSLATED
+    link: 'Link', // UNTRANSLATED
+    unlink: 'Unlink', // UNTRANSLATED
+  },
   error: {
     username_password_mismatch: '사용자 이름 또는 비밀번호가 일치하지 않아요.',
     username_required: '사용자 이름은 필수예요.',

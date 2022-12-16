@@ -81,6 +81,33 @@ const translation = {
       'For added security, please link your email or phone with the account.',
     continue_with_more_information: 'For added security, please complete below account details.',
   },
+  profile: {
+    title: 'Account Settings',
+    description:
+      'Change your account settings and manage your personal information here to ensure your account security.',
+    settings: {
+      title: 'PROFILE SETTINGS',
+      profile_information: 'Profile Information',
+      avatar: 'Avatar',
+      name: 'Name',
+      username: 'Username',
+    },
+    password: {
+      title: 'PASSWORD',
+      reset_password: 'Reset Password',
+    },
+    link_account: {
+      title: 'LINK ACCOUNT',
+      email_phone_sign_in: 'Email / Phone Sign-In',
+      email: 'Email',
+      phone: 'Phone',
+      social_sign_in: 'Social Sign-In',
+    },
+    edit: 'Edit',
+    change: 'Change',
+    link: 'Link',
+    unlink: 'Unlink',
+  },
   error: {
     username_password_mismatch: 'Username and password do not match',
     username_required: 'Username is required',
