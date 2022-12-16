@@ -4,7 +4,7 @@ import type { UserDetailsForm } from './types';
 
 export const userDetailsParser = {
   toLocalForm: (data: User): UserDetailsForm => {
-    const { primaryEmail, primaryPhone, username, name, avatar, roleNames, customData } = data;
+    const { primaryEmail, primaryPhone, username, name, avatar, customData } = data;
 
     return {
       primaryEmail: primaryEmail ?? '',
@@ -12,7 +12,6 @@ export const userDetailsParser = {
       username: username ?? '',
       name: name ?? '',
       avatar: avatar ?? '',
-      roleNames,
       customData: JSON.stringify(customData, null, 2),
     };
   },

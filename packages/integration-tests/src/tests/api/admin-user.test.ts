@@ -42,7 +42,6 @@ describe('admin console user management', () => {
       customData: {
         level: 1,
       },
-      roleNames: ['admin'],
     };
 
     const updatedUser = await updateUser(user.id, newUserData);

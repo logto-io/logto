@@ -1,4 +1,4 @@
-import { Users } from '@logto/schemas';
+import { Roles, Users, UsersRoles } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
@@ -12,7 +12,6 @@ import {
   findUserByUsername,
   findUserByEmail,
   findUserByPhone,
-  findUserById,
   findUserByIdentity,
   hasUser,
   hasUserWithId,
@@ -38,6 +37,8 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
 
 describe('user query', () => {
   const { table, fields } = convertToIdentifiers(Users);
+  const { fields: rolesFields, table: rolesTable } = convertToIdentifiers(Roles);
+  const { fields: usersRolesFields, table: usersRolesTable } = convertToIdentifiers(UsersRoles);
   const dbvalue = {
     ...mockUser,
     roleNames: JSON.stringify(mockUser.roleNames),
@@ -97,23 +98,6 @@ describe('user query', () => {
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expect(findUserByPhone(mockUser.primaryPhone!)).resolves.toEqual(dbvalue);
-  });
-
-  it('findUserById', async () => {
-    const expectSql = sql`
-      select ${sql.join(Object.values(fields), sql`,`)}
-      from ${table}
-      where ${fields.id}=$1
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([mockUser.id]);
-
-      return createMockQueryResult([dbvalue]);
-    });
-
-    await expect(findUserById(mockUser.id)).resolves.toEqual(dbvalue);
   });
 
   it('findUserByIdentity', async () => {

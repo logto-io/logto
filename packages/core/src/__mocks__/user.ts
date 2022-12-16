@@ -1,8 +1,8 @@
-import type { User } from '@logto/schemas';
+import type { UserWithRoleNames } from '@logto/schemas';
 import { userInfoSelectFields, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 
-export const mockUser: User = {
+export const mockUser: UserWithRoleNames = {
   id: 'foo',
   username: 'foo',
   primaryEmail: 'foo@logto.io',
@@ -25,7 +25,7 @@ export const mockUser: User = {
 export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);
 
 export const mockPasswordEncrypted = 'a1b2c3';
-export const mockUserWithPassword: User = {
+export const mockUserWithPassword: UserWithRoleNames = {
   id: 'id',
   username: 'username',
   primaryEmail: 'foo@logto.io',
@@ -45,7 +45,7 @@ export const mockUserWithPassword: User = {
   isSuspended: false,
 };
 
-export const mockUserList: User[] = [
+export const mockUserList: UserWithRoleNames[] = [
   {
     id: '1',
     username: 'foo1',

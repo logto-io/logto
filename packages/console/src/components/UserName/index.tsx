@@ -1,4 +1,4 @@
-import type { User } from '@logto/schemas';
+import type { UserWithRoleNames } from '@logto/schemas';
 import { UserRole } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const UserName = ({ userId, isLink = false }: Props) => {
-  const { data, error } = useSWR<User, RequestError>(`/api/users/${userId}`);
+  const { data, error } = useSWR<UserWithRoleNames, RequestError>(`/api/users/${userId}`);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const isLoading = !data && !error;

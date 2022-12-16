@@ -52,7 +52,7 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
       return;
     }
 
-    const { customData: inputCustomData, name, avatar, roleNames } = formData;
+    const { customData: inputCustomData, name, avatar } = formData;
 
     const parseResult = safeParseJson(inputCustomData);
 
@@ -73,7 +73,6 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
     const payload: Partial<User> = {
       name,
       avatar,
-      roleNames,
       customData: guardResult.data,
     };
 

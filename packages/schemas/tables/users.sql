@@ -10,7 +10,6 @@ create table users (
   name varchar(128),
   avatar varchar(2048),
   application_id varchar(21),
-  role_names jsonb /* @use RoleNames */ not null default '[]'::jsonb,
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
   custom_data jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,
   is_suspended boolean not null default false,

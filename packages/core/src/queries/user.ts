@@ -1,5 +1,5 @@
-import type { User, CreateUser } from '@logto/schemas';
-import { SearchJointMode, Users, UserRole } from '@logto/schemas';
+import type { User, CreateUser, UserWithRoleNames } from '@logto/schemas';
+import { SearchJointMode, Users } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
@@ -9,6 +9,9 @@ import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
+
+import { findRoleByRoleName, findRolesByRoleIds } from './roles.js';
+import { findUsersRolesByRoleId, findUsersRolesByUserId } from './users-roles.js';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -33,12 +36,22 @@ export const findUserByPhone = async (phone: string) =>
     where ${fields.primaryPhone}=${phone}
   `);
 
-export const findUserById = async (id: string) =>
-  envSet.pool.one<User>(sql`
+export const findUserById = async (id: string): Promise<UserWithRoleNames> => {
+  const user = await envSet.pool.one<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.id}=${id}
   `);
+  const userRoles = await findUsersRolesByUserId(user.id);
+
+  const roles =
+    userRoles.length > 0 ? await findRolesByRoleIds(userRoles.map(({ roleId }) => roleId)) : [];
+
+  return {
+    ...user,
+    roleNames: roles.map(({ name }) => name),
+  };
+};
 
 export const findUserByIdentity = async (target: string, userId: string) =>
   envSet.pool.maybeOne<User>(
@@ -89,7 +102,7 @@ export const hasUserWithIdentity = async (target: string, userId: string) =>
     `
   );
 
-const buildUserConditions = (search: Search, hideAdminUser: boolean) => {
+const buildUserConditions = (search: Search, excludeUserIds: string[]) => {
   const hasSearch = search.matches.length > 0;
   const searchFields = [
     Users.fields.id,
@@ -99,10 +112,11 @@ const buildUserConditions = (search: Search, hideAdminUser: boolean) => {
     Users.fields.name,
   ];
 
-  if (hideAdminUser) {
-    // Cannot use \`= any()\` here since we didn't find the Slonik way to do so. Consider replacing Slonik.
+  if (excludeUserIds.length > 0) {
+    // FIXME @sijie temp solution to filter out admin users,
+    // It is too complex to use join
     return sql`
-      where not ${fields.roleNames} @> ${sql.jsonb([UserRole.Admin])}
+      where ${fields.id} not in (${sql.join(excludeUserIds, sql`, `)})
       ${conditionalSql(
         hasSearch,
         () => sql`and (${buildConditionsFromSearch(search, searchFields)})`
@@ -118,28 +132,41 @@ const buildUserConditions = (search: Search, hideAdminUser: boolean) => {
 
 export const defaultUserSearch = { matches: [], isCaseSensitive: false, joint: SearchJointMode.Or };
 
-export const countUsers = async (search: Search = defaultUserSearch, hideAdminUser = false) =>
+export const countUsers = async (
+  search: Search = defaultUserSearch,
+  excludeUserIds: string[] = []
+) =>
   envSet.pool.one<{ count: number }>(sql`
     select count(*)
     from ${table}
-    ${buildUserConditions(search, hideAdminUser)}
+    ${buildUserConditions(search, excludeUserIds)}
   `);
 
 export const findUsers = async (
   limit: number,
   offset: number,
   search: Search,
-  hideAdminUser: boolean
+  excludeUserIds: string[] = []
 ) =>
   envSet.pool.any<User>(
     sql`
-      select ${sql.join(Object.values(fields), sql`,`)}
+      select ${sql.join(
+        Object.values(fields).map((field) => sql`${table}.${field}`),
+        sql`,`
+      )}
       from ${table}
-      ${buildUserConditions(search, hideAdminUser)}
+      ${buildUserConditions(search, excludeUserIds)}
       limit ${limit}
       offset ${offset}
     `
   );
+
+export const findUsersByIds = async (userIds: string[]) =>
+  envSet.pool.any<User>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+    where ${fields.id} in (${sql.join(userIds, sql`, `)})
+  `);
 
 const updateUser = buildUpdateWhere<CreateUser, User>(Users, true);
 
@@ -186,3 +213,19 @@ export const getDailyNewUserCountsByTimeInterval = async (
     and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
     group by date(${fields.createdAt})
   `);
+
+export const findUsersByRoleName = async (roleName: string) => {
+  const role = await findRoleByRoleName(roleName);
+
+  if (!role) {
+    return [];
+  }
+
+  const usersRoles = await findUsersRolesByRoleId(role.id);
+
+  if (usersRoles.length === 0) {
+    return [];
+  }
+
+  return findUsersByIds(usersRoles.map(({ userId }) => userId));
+};
