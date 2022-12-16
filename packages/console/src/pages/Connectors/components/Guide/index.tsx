@@ -14,10 +14,12 @@ import CardTitle from '@/components/CardTitle';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Markdown from '@/components/Markdown';
+import { ConnectorsPage } from '@/consts/page-tabs';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
 import { safeParseJson } from '@/utilities/json';
+import { getConnectorPathname } from '@/utilities/router';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
@@ -95,7 +97,12 @@ const Guide = ({ connector, onClose }: Props) => {
 
     onClose();
     toast.success(t('general.saved'));
-    navigate(`/connectors/${createdConnector.id}`);
+    navigate(
+      getConnectorPathname(
+        isSocialConnector ? ConnectorsPage.SocialTab : ConnectorsPage.Passwordless,
+        createdConnector.id
+      )
+    );
   });
 
   return (

@@ -27,7 +27,7 @@ type Props =
 const TabNavItem = ({ children, href, isActive, errorCount = 0, onClick }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const location = useLocation();
-  const selected = href ? location.pathname === href : isActive;
+  const selected = href ? location.pathname.startsWith(href) : isActive;
 
   return (
     <div className={styles.item}>

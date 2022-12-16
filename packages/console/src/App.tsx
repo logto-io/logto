@@ -31,7 +31,7 @@ import UserDetails from '@/pages/UserDetails';
 import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
-import { SignInExperiencePage } from './consts/page-tabs';
+import { ConnectorsPage, SignInExperiencePage } from './consts/page-tabs';
 import { getBasename } from './utilities/router';
 
 void initI18n();
@@ -63,9 +63,10 @@ const Main = () => {
                 <Route path=":id" element={<ApiResourceDetails />} />
               </Route>
               <Route path="connectors">
-                <Route index element={<Connectors />} />
-                <Route path="social" element={<Connectors />} />
-                <Route path=":connectorId" element={<ConnectorDetails />} />
+                <Route index element={<Navigate replace to={ConnectorsPage.Passwordless} />} />
+                <Route path=":tab" element={<Connectors />} />
+                <Route path=":tab/create/:createType" element={<Connectors />} />
+                <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
               </Route>
               <Route path="users">
                 <Route index element={<Users />} />

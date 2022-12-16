@@ -22,11 +22,13 @@ import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import { ConnectorsPage } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
+import { getConnectorPathname } from '@/utilities/router';
 
 import CreateForm from '../Connectors/components/CreateForm';
 import ConnectorContent from './components/ConnectorContent';
@@ -74,17 +76,15 @@ const ConnectorDetails = () => {
     toast.success(t('connector_details.connector_deleted'));
     await mutateGlobal('/api/connectors');
 
-    if (isSocial) {
-      navigate(`/connectors/social`, { replace: true });
-    } else {
-      navigate(`/connectors`, { replace: true });
-    }
+    navigate(
+      getConnectorPathname(isSocial ? ConnectorsPage.SocialTab : ConnectorsPage.Passwordless)
+    );
   };
 
   return (
     <div className={detailsStyles.container}>
       <TextLink
-        to={isSocial ? '/connectors/social' : '/connectors'}
+        to={getConnectorPathname(isSocial ? ConnectorsPage.SocialTab : ConnectorsPage.Passwordless)}
         icon={<Back />}
         className={styles.backLink}
       >
@@ -120,7 +120,7 @@ const ConnectorDetails = () => {
               )}
               <div className={styles.verticalBar} />
               <div className={styles.text}>ID</div>
-              <CopyToClipboard value={data.id} />
+              <CopyToClipboard size="small" value={data.id} />
             </div>
           </div>
           <div className={styles.operations}>
@@ -169,14 +169,24 @@ const ConnectorDetails = () => {
               type={data.type}
               onClose={(connectorId?: string) => {
                 setIsSetupOpen(false);
-                navigate(`/connectors/${connectorId ?? ''}`);
+                navigate(
+                  getConnectorPathname(
+                    isSocial ? ConnectorsPage.SocialTab : ConnectorsPage.Passwordless,
+                    connectorId
+                  )
+                );
               }}
             />
           </div>
         </Card>
       )}
       <TabNav>
-        <TabNavItem href={`/connectors/${connectorId ?? ''}`}>
+        <TabNavItem
+          href={getConnectorPathname(
+            isSocial ? ConnectorsPage.SocialTab : ConnectorsPage.Passwordless,
+            connectorId
+          )}
+        >
           {t('general.settings_nav')}
         </TabNavItem>
       </TabNav>

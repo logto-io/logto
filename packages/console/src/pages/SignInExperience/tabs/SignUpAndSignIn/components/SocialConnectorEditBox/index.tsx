@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next';
 import TextLink from '@/components/TextLink';
 import DragDropProvider from '@/components/Transfer/DragDropProvider';
 import DraggableItem from '@/components/Transfer/DraggableItem';
+import { ConnectorsPage } from '@/consts/page-tabs';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import type { ConnectorGroup } from '@/types/connector';
+import { getConnectorPathname } from '@/utilities/router';
 
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
 import AddButton from './AddButton';
@@ -87,7 +89,11 @@ const SocialConnectorEditBox = ({ value, onChange }: Props) => {
       <ConnectorSetupWarning requiredConnectors={[ConnectorType.Social]} />
       <div className={styles.setUpHint}>
         {t('sign_in_exp.sign_up_and_sign_in.social_sign_in.set_up_hint.not_in_list')}
-        <TextLink to="/connectors/social" target="_blank" className={styles.setup}>
+        <TextLink
+          to={getConnectorPathname(ConnectorsPage.SocialTab)}
+          target="_blank"
+          className={styles.setup}
+        >
           {t('sign_in_exp.sign_up_and_sign_in.social_sign_in.set_up_hint.set_up_more')}
         </TextLink>
         {t('sign_in_exp.sign_up_and_sign_in.social_sign_in.set_up_hint.go_to')}

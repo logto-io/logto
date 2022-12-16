@@ -131,6 +131,7 @@ importers:
       '@types/react-dom': ^18.0.0
       '@types/react-modal': ^3.13.1
       '@types/react-syntax-highlighter': ^15.5.1
+      camelcase: ^7.0.0
       classnames: ^2.3.1
       clean-deep: ^3.4.0
       cross-env: ^7.0.3
@@ -203,6 +204,7 @@ importers:
       '@types/react-dom': 18.0.6
       '@types/react-modal': 3.13.1
       '@types/react-syntax-highlighter': 15.5.1
+      camelcase: 7.0.0
       classnames: 2.3.1
       clean-deep: 3.4.0
       cross-env: 7.0.3
