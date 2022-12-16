@@ -1,3 +1,4 @@
+import { assert } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ReactChild, ReactNode } from 'react';
 import { useMemo, useState } from 'react';
@@ -5,7 +6,8 @@ import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { getPath } from '../../utils';
+import type { Page } from '@/consts/pathnames';
+
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -14,9 +16,10 @@ type Props = {
   isActive?: boolean;
   modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
   externalLink?: string;
+  pagePath?: Page;
 };
 
-const Item = ({ icon, titleKey, modal, externalLink, isActive = false }: Props) => {
+const Item = ({ icon, titleKey, modal, externalLink, pagePath, isActive = false }: Props) => {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tabs',
   });
@@ -58,8 +61,18 @@ const Item = ({ icon, titleKey, modal, externalLink, isActive = false }: Props) 
     );
   }
 
+  if (!pagePath) {
+    return null;
+  }
+  assert(
+    pagePath,
+    new Error(
+      'A `pagePath` is required when neither `modal` nor `externalLink` is specified to a side bar item.'
+    )
+  );
+
   return (
-    <Link to={getPath(titleKey)} className={classNames(styles.row, isActive && styles.active)}>
+    <Link to={`/${pagePath}`} className={classNames(styles.row, isActive && styles.active)}>
       {content}
     </Link>
   );

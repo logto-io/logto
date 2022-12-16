@@ -25,7 +25,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { getUserPathname, getUsersPathname } from '@/utilities/router';
+import { getUserDetailsPathname, getUserLogsPathname, getUsersPathname } from '@/utilities/router';
 
 import CreateSuccess from './components/CreateSuccess';
 import ResetPasswordForm from './components/ResetPasswordForm';
@@ -172,12 +172,10 @@ const UserDetails = () => {
             </div>
           </Card>
           <TabNav>
-            <TabNavItem href={getUserPathname(userId, UserTabs.Details)}>
+            <TabNavItem href={getUserDetailsPathname(userId)}>
               {t('general.settings_nav')}
             </TabNavItem>
-            <TabNavItem href={getUserPathname(userId, UserTabs.Logs)}>
-              {t('user_details.tab_logs')}
-            </TabNavItem>
+            <TabNavItem href={getUserLogsPathname(userId)}>{t('user_details.tab_logs')}</TabNavItem>
           </TabNav>
           {isLogs && <UserLogs userId={data.id} />}
           {!isLogs && userFormData && (

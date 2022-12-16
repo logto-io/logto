@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
+import { Page } from '@/consts/pathnames';
+
 import Item from './components/Item';
 import Section from './components/Section';
 import { useSidebarMenuItems } from './hook';
 import Gear from './icons/Gear';
 import * as styles from './index.module.scss';
-import { getPath } from './utils';
 
 const Sidebar = () => {
   const { t } = useTranslation(undefined, {
@@ -20,15 +21,16 @@ const Sidebar = () => {
       {sections.map(({ title, items }) => (
         <Section key={title} title={t(title)}>
           {items.map(
-            ({ title, Icon, isHidden, modal, externalLink }) =>
+            ({ title, Icon, isHidden, modal, externalLink, pagePath }) =>
               !isHidden && (
                 <Item
                   key={title}
                   titleKey={title}
                   icon={<Icon />}
-                  isActive={location.pathname.startsWith(getPath(title))}
+                  isActive={pagePath && location.pathname.startsWith(`/${pagePath}`)}
                   modal={modal}
                   externalLink={externalLink}
+                  pagePath={pagePath}
                 />
               )
           )}
@@ -38,12 +40,11 @@ const Sidebar = () => {
       <Item
         titleKey="settings"
         icon={<Gear />}
-        isActive={location.pathname.startsWith(getPath('settings'))}
+        isActive={location.pathname.startsWith(`/${Page.Settings}`)}
+        pagePath={Page.Settings}
       />
     </div>
   );
 };
 
 export default Sidebar;
-
-export * from './utils';

@@ -2,6 +2,7 @@ import type { Optional } from '@silverhand/essentials';
 import type { FC, ReactNode } from 'react';
 import type { TFuncKey } from 'react-i18next';
 
+import { Page } from '@/consts/pathnames';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
@@ -23,6 +24,7 @@ type SidebarItem = {
   isHidden?: boolean;
   modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
   externalLink?: string;
+  pagePath?: Page;
 };
 
 type SidebarSection = {
@@ -57,10 +59,12 @@ export const useSidebarMenuItems = (): {
           Icon: Bolt,
           title: 'get_started',
           isHidden: getStartedHidden,
+          pagePath: Page.GetStarted,
         },
         {
           Icon: BarGraph,
           title: 'dashboard',
+          pagePath: Page.Dashboard,
         },
       ],
     },
@@ -70,18 +74,22 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Box,
           title: 'applications',
+          pagePath: Page.Applications,
         },
         {
           Icon: Cloud,
           title: 'api_resources',
+          pagePath: Page.ApiResources,
         },
         {
           Icon: Web,
           title: 'sign_in_experience',
+          pagePath: Page.SignInExperience,
         },
         {
           Icon: Connection,
           title: 'connectors',
+          pagePath: Page.Connectors,
         },
       ],
     },
@@ -91,10 +99,12 @@ export const useSidebarMenuItems = (): {
         {
           Icon: UserProfile,
           title: 'users',
+          pagePath: Page.Users,
         },
         {
           Icon: List,
           title: 'audit_logs',
+          pagePath: Page.AuditLogs,
         },
       ],
     },

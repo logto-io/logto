@@ -11,7 +11,7 @@ import useScroll from '@/hooks/use-scroll';
 import useSettings from '@/hooks/use-settings';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
-import Sidebar, { getPath } from './components/Sidebar';
+import Sidebar from './components/Sidebar';
 import { useSidebarMenuItems } from './components/Sidebar/hook';
 import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
@@ -39,9 +39,9 @@ const AppContent = () => {
   useEffect(() => {
     // Navigate to the first menu item after configs are loaded.
     if (!isLoading && location.pathname === '/') {
-      navigate(getPath(firstItem?.title ?? ''));
+      navigate(`/${firstItem?.pagePath ?? ''}`);
     }
-  }, [firstItem?.title, isLoading, location.pathname, navigate]);
+  }, [firstItem?.pagePath, isLoading, location.pathname, navigate]);
 
   if (error) {
     if (error instanceof LogtoClientError) {
