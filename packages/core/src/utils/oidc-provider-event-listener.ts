@@ -7,9 +7,8 @@ import { stringifyError } from './format.js';
 import { isEnum } from './type.js';
 
 /**
- * OIDC provider listeners and events
- * https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#im-getting-a-client-authentication-failed-error-with-no-details
- * https://github.com/panva/node-oidc-provider/blob/v7.x/docs/events.md
+ * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/README.md#im-getting-a-client-authentication-failed-error-with-no-details Getting auth error with no details?}
+ * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/events.md OIDC Provider events}
  */
 export const addOidcEventListeners = (provider: Provider) => {
   provider.addListener('grant.success', grantListener);
@@ -17,6 +16,10 @@ export const addOidcEventListeners = (provider: Provider) => {
   provider.addListener('grant.revoked', grantRevocationListener);
 };
 
+/**
+ * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/lib/actions/token.js#L71 Success event emission}
+ * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/lib/shared/error_handler.js OIDC Provider error handler}
+ */
 export const grantListener = async (
   ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody },
   error?: errors.OIDCProviderError
@@ -47,7 +50,7 @@ export const grantListener = async (
   });
 };
 
-// The grant.revoked event is emitted at https://github.com/panva/node-oidc-provider/blob/564b1095ee869c89381d63dfdb5875c99f870f5f/lib/helpers/revoke.js#L25
+// The grant.revoked event is emitted at https://github.com/panva/node-oidc-provider/blob/v7.x/lib/helpers/revoke.js#L25
 export const grantRevocationListener = async (
   ctx: KoaContextWithOIDC & WithLogContext,
   grantId: string
@@ -65,9 +68,7 @@ export const grantRevocationListener = async (
 };
 
 /**
- * See https://github.com/panva/node-oidc-provider/tree/main/lib/actions/grants
- * - https://github.com/panva/node-oidc-provider/blob/564b1095ee869c89381d63dfdb5875c99f870f5f/lib/actions/grants/authorization_code.js#L209
- * - https://github.com/panva/node-oidc-provider/blob/564b1095ee869c89381d63dfdb5875c99f870f5f/lib/actions/grants/refresh_token.js#L225
+ * @see {@link https://github.com/panva/node-oidc-provider/tree/v7.x/lib/actions/grants grants source code} for predefined grant implementations and types.
  */
 type GrantBody = {
   access_token?: string;
@@ -91,12 +92,11 @@ const getExchangeByType = (grantType: unknown): token.ExchangeByType => {
 };
 
 /**
- * See [OAuth 2.0 Token Revocation](https://datatracker.ietf.org/doc/html/rfc7009) for RFC reference.
- *
  * Note the revocation may revoke related tokens as well. In oidc-provider, it will revoke the whole Grant when revoking Refresh Token.
  * So we don't assume the token type here.
  *
- * See [this function](https://github.com/panva/node-oidc-provider/blob/433d131989558e24c0c74970d2d700af2199485d/lib/actions/revocation.js#L56) for code reference.
+ * @see {@link https://datatracker.ietf.org/doc/html/rfc7009 OAuth 2.0 Token Revocation} for RFC reference.
+ * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/lib/actions/revocation.js#L56 this function} for code reference.
  **/
 const getRevocationTokenTypes = (oidc: KoaContextWithOIDC['oidc']): token.TokenType[] => {
   return Object.values(token.TokenType).filter((value) => oidc.entities[value]);

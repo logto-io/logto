@@ -13,7 +13,7 @@ const removeUndefinedKeys = (object: Record<string, unknown>) =>
 
 export type LogPayload = Partial<LogContextPayload> & Record<string, unknown>;
 
-type LogFunction = {
+export type LogFunction = {
   (data: Readonly<LogPayload>): void;
   setKey: (key: LogKey) => void;
 };
@@ -25,6 +25,41 @@ export type LogContext = {
 export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamContext> = ContextT &
   LogContext;
 
+/**
+ * The factory to create a new audit log middleware function.
+ * It will inject a {@link LogFunction} property named `log` to the context to enable audit logging.
+ *
+ * ---
+ *
+ * You need to explicitly call `ctx.log.setKey()` to set a {@link LogKey} thus the log can be categorized and indexed in database:
+ *
+ * ```ts
+ * ctx.log.setKey('SignIn.Submit'); // Key is typed
+ * ```
+ *
+ * To log data, call `ctx.log()`. It'll use object spread operators to update data (i.e. merge with one-level overwrite and shallow copy).
+ *
+ * ```ts
+ * ctx.log({ applicationId: 'foo' });
+ * ```
+ *
+ * The data has a initial value:
+ *
+ * ```ts
+ * {
+ *   key: LogKeyUnknown,
+ *   result: LogResult.Success,
+ *   ip, // Extract from request
+ *   userAgent, // Extract from request
+ * }
+ * ```
+ *
+ * Note: Both of the functions can be called multiple times.
+ *
+ * @see {@link LogKey} for all available log keys, and {@link LogResult} for result enums.
+ * @see {@link LogContextPayload} for the basic type suggestion of log data.
+ * @returns An audit log middleware function.
+ */
 export default function koaAuditLog<
   StateT,
   ContextT extends IRouterParamContext,

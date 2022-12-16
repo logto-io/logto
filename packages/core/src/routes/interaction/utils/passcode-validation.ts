@@ -29,7 +29,7 @@ export const sendPasscodeToIdentifier = async (
   const identifierType =
     'email' in identifier ? interaction.Identifier.Email : interaction.Identifier.Phone;
 
-  log.setKey(`${event}.${identifierType}.Passcode.Create`);
+  log.setKey(`${event}.${identifierType}.VerificationCode.Create`);
   log(identifier);
 
   const passcode = await createPasscode(jti, passcodeType, identifier);
@@ -51,7 +51,7 @@ export const verifyIdentifierByPasscode = async (
   const identifierType =
     'email' in identifier ? interaction.Identifier.Email : interaction.Identifier.Phone;
 
-  log.setKey(`${event}.${identifierType}.Passcode.Submit`);
+  log.setKey(`${event}.${identifierType}.VerificationCode.Submit`);
 
   await verifyPasscode(jti, passcodeType, passcode, identifier);
 };

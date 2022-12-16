@@ -26,7 +26,7 @@ mockEsm('nanoid', () => ({
 const koaLog = await pickDefault(import('./koa-audit-log.js'));
 
 describe('koaLog middleware', () => {
-  const logKey: LogKey = 'SignIn.Username.Passcode.Submit';
+  const logKey: LogKey = 'SignIn.Username.VerificationCode.Submit';
   const mockPayload: LogPayload = {
     userId: 'foo',
     username: 'Bar',

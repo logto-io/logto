@@ -1,5 +1,5 @@
-import type { LogDto } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
+import type { LogDto } from '@logto/schemas/lib/types/log-legacy.js';
 import { conditional, conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
