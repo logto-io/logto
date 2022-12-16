@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Back from '@/assets/images/back.svg';
@@ -22,6 +22,7 @@ import Drawer from '@/components/Drawer';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { Parameters } from '@/consts/pathnames';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -41,8 +42,7 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(new URL(uri).origin));
 
 const ApplicationDetails = () => {
-  const { id } = useParams();
-  const { pathname } = useLocation();
+  const { [Parameters.Id]: id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Application, RequestError>(
     id && `/api/applications/${id}`

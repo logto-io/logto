@@ -1,4 +1,4 @@
-export enum Page {
+export enum PagePath {
   Callback = 'callback',
   Welcome = 'welcome',
   GetStarted = 'get-started',
@@ -10,4 +10,17 @@ export enum Page {
   Users = 'users',
   AuditLogs = 'audit-logs',
   Settings = 'settings',
+}
+
+export enum ActionPath {
+  Create = 'create',
+}
+
+export enum Parameters {
+  Id = 'id',
+  UserId = 'userId',
+  LogId = 'logId',
+  ConnectorId = 'connectorId',
+  CreateType = 'createType',
+  Tab = 'tab',
 }

@@ -18,6 +18,7 @@ import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
+import { ActionPath } from '@/consts/pathnames';
 import type { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -36,7 +37,7 @@ const pageSize = 20;
 
 const ApiResources = () => {
   const { pathname } = useLocation();
-  const isCreateNew = pathname.endsWith('/create');
+  const isCreateNew = pathname.endsWith(`/${ActionPath.Create}`);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');

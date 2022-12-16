@@ -16,6 +16,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { ConnectorsTabs } from '@/consts/page-tabs';
+import { Parameters } from '@/consts/pathnames';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import { useTheme } from '@/hooks/use-theme';
 import * as resourcesStyles from '@/scss/resources.module.scss';
@@ -32,7 +33,10 @@ const isConnectorType = (value: string): value is ConnectorType =>
   Object.values<string>(ConnectorType).includes(value);
 
 const Connectors = () => {
-  const { tab = ConnectorsTabs.Passwordless, createType } = useParams();
+  const {
+    [Parameters.Tab]: tab = ConnectorsTabs.Passwordless,
+    [Parameters.CreateType]: createType,
+  } = useParams();
   const isSocial = tab === ConnectorsTabs.Social;
   const navigate = useNavigate();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

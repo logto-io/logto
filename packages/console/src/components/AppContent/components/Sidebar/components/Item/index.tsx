@@ -6,7 +6,7 @@ import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import type { Page } from '@/consts/pathnames';
+import type { PagePath } from '@/consts/pathnames';
 
 import * as styles from './index.module.scss';
 
@@ -16,7 +16,7 @@ type Props = {
   isActive?: boolean;
   modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
   externalLink?: string;
-  pagePath?: Page;
+  pagePath?: PagePath;
 };
 
 const Item = ({ icon, titleKey, modal, externalLink, pagePath, isActive = false }: Props) => {

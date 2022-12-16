@@ -23,6 +23,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { ConnectorsTabs } from '@/consts/page-tabs';
+import { Parameters } from '@/consts/pathnames';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
@@ -37,7 +38,7 @@ import ConnectorTypeName from './components/ConnectorTypeName';
 import * as styles from './index.module.scss';
 
 const ConnectorDetails = () => {
-  const { connectorId } = useParams();
+  const { [Parameters.ConnectorId]: connectorId } = useParams();
   const { mutate: mutateGlobal } = useSWRConfig();
   const [isDeleted, setIsDeleted] = useState(false);
   const [isReadMeOpen, setIsReadMeOpen] = useState(false);

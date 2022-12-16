@@ -32,7 +32,7 @@ import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
 import { ConnectorsTabs, SignInExperienceTabs, UserTabs } from './consts/page-tabs';
-import { Page } from './consts/pathnames';
+import { ActionPath, PagePath, Parameters } from './consts/pathnames';
 import { getBasename } from './utilities/router';
 
 void initI18n();
@@ -46,44 +46,59 @@ const Main = () => {
         <AppBoundary>
           <Toast />
           <Routes>
-            <Route path={Page.Callback} element={<Callback />} />
-            <Route path={Page.Welcome} element={<Welcome />} />
+            <Route path={PagePath.Callback} element={<Callback />} />
+            <Route path={PagePath.Welcome} element={<Welcome />} />
             <Route element={<AppContent />}>
               <Route path="*" element={<NotFound />} />
-              <Route path={Page.GetStarted} element={<GetStarted />} />
-              <Route path={Page.Applications}>
+              <Route path={PagePath.GetStarted} element={<GetStarted />} />
+              <Route path={PagePath.Applications}>
                 <Route index element={<Applications />} />
-                <Route path="create" element={<Applications />} />
-                <Route path=":id" element={<ApplicationDetails />} />
+                <Route path={`${ActionPath.Create}`} element={<Applications />} />
+                <Route path={`:${Parameters.Id}`} element={<ApplicationDetails />} />
               </Route>
-              <Route path={Page.ApiResources}>
+              <Route path={PagePath.ApiResources}>
                 <Route index element={<ApiResources />} />
-                <Route path="create" element={<ApiResources />} />
-                <Route path=":id" element={<ApiResourceDetails />} />
+                <Route path={`${ActionPath.Create}`} element={<ApiResources />} />
+                <Route path={`:${Parameters.Id}`} element={<ApiResourceDetails />} />
               </Route>
-              <Route path={Page.Connectors}>
+              <Route path={PagePath.Connectors}>
                 <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
-                <Route path=":tab" element={<Connectors />} />
-                <Route path=":tab/create/:createType" element={<Connectors />} />
-                <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
+                <Route path={`:${Parameters.Tab}`} element={<Connectors />} />
+                <Route
+                  path={`:${Parameters.Tab}/${ActionPath.Create}/:${Parameters.CreateType}`}
+                  element={<Connectors />}
+                />
+                <Route
+                  path={`:${Parameters.Tab}/:${Parameters.ConnectorId}`}
+                  element={<ConnectorDetails />}
+                />
               </Route>
-              <Route path={Page.Users}>
+              <Route path={PagePath.Users}>
                 <Route index element={<Users />} />
-                <Route path=":userId" element={<Navigate replace to={UserTabs.Details} />} />
-                <Route path={`:userId/${UserTabs.Details}`} element={<UserDetails />} />
-                <Route path={`:userId/${UserTabs.Logs}`} element={<UserDetails />} />
-                <Route path={`:userId/${UserTabs.Logs}/:logId`} element={<AuditLogDetails />} />
+                <Route
+                  path={`:${Parameters.UserId}`}
+                  element={<Navigate replace to={UserTabs.Details} />}
+                />
+                <Route
+                  path={`:${Parameters.UserId}/${UserTabs.Details}`}
+                  element={<UserDetails />}
+                />
+                <Route path={`:${Parameters.UserId}/${UserTabs.Logs}`} element={<UserDetails />} />
+                <Route
+                  path={`:${Parameters.UserId}/${UserTabs.Logs}/:${Parameters.LogId}`}
+                  element={<AuditLogDetails />}
+                />
               </Route>
-              <Route path={Page.SignInExperience}>
+              <Route path={PagePath.SignInExperience}>
                 <Route index element={<Navigate replace to={SignInExperienceTabs.Branding} />} />
-                <Route path=":tab" element={<SignInExperience />} />
+                <Route path={`:${Parameters.Tab}`} element={<SignInExperience />} />
               </Route>
-              <Route path={Page.Settings} element={<Settings />} />
-              <Route path={Page.AuditLogs}>
+              <Route path={PagePath.Settings} element={<Settings />} />
+              <Route path={PagePath.AuditLogs}>
                 <Route index element={<AuditLogs />} />
-                <Route path=":logId" element={<AuditLogDetails />} />
+                <Route path={`:${Parameters.LogId}`} element={<AuditLogDetails />} />
               </Route>
-              <Route path={Page.Dashboard} element={<Dashboard />} />
+              <Route path={PagePath.Dashboard} element={<Dashboard />} />
             </Route>
           </Routes>
         </AppBoundary>

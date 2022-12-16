@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
-import { Page } from '@/consts/pathnames';
+import { PagePath } from '@/consts/pathnames';
 
 import Item from './components/Item';
 import Section from './components/Section';
@@ -40,8 +40,8 @@ const Sidebar = () => {
       <Item
         titleKey="settings"
         icon={<Gear />}
-        isActive={location.pathname.startsWith(`/${Page.Settings}`)}
-        pagePath={Page.Settings}
+        isActive={location.pathname.startsWith(`/${PagePath.Settings}`)}
+        pagePath={PagePath.Settings}
       />
     </div>
   );

@@ -2,7 +2,7 @@ import type { Optional } from '@silverhand/essentials';
 import type { FC, ReactNode } from 'react';
 import type { TFuncKey } from 'react-i18next';
 
-import { Page } from '@/consts/pathnames';
+import { PagePath } from '@/consts/pathnames';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
@@ -24,7 +24,7 @@ type SidebarItem = {
   isHidden?: boolean;
   modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
   externalLink?: string;
-  pagePath?: Page;
+  pagePath?: PagePath;
 };
 
 type SidebarSection = {
@@ -59,12 +59,12 @@ export const useSidebarMenuItems = (): {
           Icon: Bolt,
           title: 'get_started',
           isHidden: getStartedHidden,
-          pagePath: Page.GetStarted,
+          pagePath: PagePath.GetStarted,
         },
         {
           Icon: BarGraph,
           title: 'dashboard',
-          pagePath: Page.Dashboard,
+          pagePath: PagePath.Dashboard,
         },
       ],
     },
@@ -74,22 +74,22 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Box,
           title: 'applications',
-          pagePath: Page.Applications,
+          pagePath: PagePath.Applications,
         },
         {
           Icon: Cloud,
           title: 'api_resources',
-          pagePath: Page.ApiResources,
+          pagePath: PagePath.ApiResources,
         },
         {
           Icon: Web,
           title: 'sign_in_experience',
-          pagePath: Page.SignInExperience,
+          pagePath: PagePath.SignInExperience,
         },
         {
           Icon: Connection,
           title: 'connectors',
-          pagePath: Page.Connectors,
+          pagePath: PagePath.Connectors,
         },
       ],
     },
@@ -99,12 +99,12 @@ export const useSidebarMenuItems = (): {
         {
           Icon: UserProfile,
           title: 'users',
-          pagePath: Page.Users,
+          pagePath: PagePath.Users,
         },
         {
           Icon: List,
           title: 'audit_logs',
-          pagePath: Page.AuditLogs,
+          pagePath: PagePath.AuditLogs,
         },
       ],
     },

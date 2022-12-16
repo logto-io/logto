@@ -13,6 +13,7 @@ import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar'
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { SignInExperienceTabs } from '@/consts/page-tabs';
+import { Parameters } from '@/consts/pathnames';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
@@ -38,7 +39,7 @@ import {
 
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { tab } = useParams();
+  const { [Parameters.Tab]: tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
   const { settings, error: settingsError, updateSettings, mutate: mutateSettings } = useSettings();
   const { error: languageError, isLoading: isLoadingLanguages } = useUiLanguages();

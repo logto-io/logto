@@ -14,9 +14,10 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
+import { Parameters } from '@/consts/pathnames';
 import type { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
-import { getUserLogDetailsPathname } from '@/utilities/router';
+import { getAuditLogDetailsPathname, getUserLogDetailsPathname } from '@/utilities/router';
 
 import EventIcon from './components/EventIcon';
 import * as styles from './index.module.scss';
@@ -25,10 +26,10 @@ const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
   `/${pathname.slice(0, pathname.lastIndexOf('/'))}`;
 
 const getDetailsTabNavLink = (logId: string, userId?: string) =>
-  userId ? getUserLogDetailsPathname(userId, logId) : `/audit-logs/${logId}`;
+  userId ? getUserLogDetailsPathname(userId, logId) : getAuditLogDetailsPathname(logId);
 
 const AuditLogDetails = () => {
-  const { userId, logId } = useParams();
+  const { [Parameters.UserId]: userId, [Parameters.LogId]: logId } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<LogDto, RequestError>(logId && `/api/logs/${logId}`);

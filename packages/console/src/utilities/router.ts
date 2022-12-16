@@ -2,7 +2,7 @@ import { ConnectorType } from '@logto/schemas';
 import kebabCase from 'lodash.kebabcase';
 
 import { ConnectorsTabs, UserTabs } from '@/consts/page-tabs';
-import { Page } from '@/consts/pathnames';
+import { PagePath } from '@/consts/pathnames';
 
 export const getBasename = (prefix: string, developmentPort: string): string => {
   const isBasenameNeeded =
@@ -11,41 +11,47 @@ export const getBasename = (prefix: string, developmentPort: string): string => 
   return isBasenameNeeded ? `/${prefix}` : '';
 };
 
-export const getApplicationsPathname = () => `/${Page.Applications}`;
+export const getApplicationsPathname = () => `/${PagePath.Applications}`;
 
-export const getApplicationDetailsPathname = (appId: string) => `/${Page.Applications}/${appId}`;
+export const getApplicationDetailsPathname = (appId: string) =>
+  `/${PagePath.Applications}/${appId}`;
 
-export const getCreateApplicationPathname = () => `/${Page.Applications}/create`;
+export const getCreateApplicationPathname = () => `/${PagePath.Applications}/create`;
 
-export const getApiResourcesPathname = () => `/${Page.ApiResources}`;
+export const getApiResourcesPathname = () => `/${PagePath.ApiResources}`;
 
 export const getApiResourceDetailsPathname = (resourceId: string) =>
-  `/${Page.ApiResources}/${resourceId}`;
+  `/${PagePath.ApiResources}/${resourceId}`;
 
-export const getCreateApiResourcePathname = () => `/${Page.ApiResources}/create`;
+export const getCreateApiResourcePathname = () => `/${PagePath.ApiResources}/create`;
 
-export const getConnectorsPathname = (tab: ConnectorsTabs) => `/${Page.Connectors}/${tab}`;
+export const getConnectorsPathname = (tab: ConnectorsTabs) => `/${PagePath.Connectors}/${tab}`;
 
 export const getConnectorDetailsPathname = (connectorType: ConnectorType, connectorId: string) => {
   const tab =
     connectorType === ConnectorType.Social ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless;
 
-  return `/${Page.ApiResources}/${tab}/${connectorId}`;
+  return `/${PagePath.ApiResources}/${tab}/${connectorId}`;
 };
 
 export const getCreateConnectorPathname = (connectorType: ConnectorType) => {
   const tab =
     connectorType === ConnectorType.Social ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless;
 
-  return `/${Page.ApiResources}/${tab}/create/${kebabCase(connectorType)}`;
+  return `/${PagePath.ApiResources}/${tab}/create/${kebabCase(connectorType)}`;
 };
 
-export const getUsersPathname = () => `/${Page.Users}`;
+export const getUsersPathname = () => `/${PagePath.Users}`;
 
 export const getUserDetailsPathname = (userId: string) =>
-  `/${Page.Users}/${userId}/${UserTabs.Details}`;
+  `/${PagePath.Users}/${userId}/${UserTabs.Details}`;
 
-export const getUserLogsPathname = (userId: string) => `/${Page.Users}/${userId}/${UserTabs.Logs}`;
+export const getUserLogsPathname = (userId: string) =>
+  `/${PagePath.Users}/${userId}/${UserTabs.Logs}`;
 
 export const getUserLogDetailsPathname = (userId: string, logId: string) =>
-  `/${Page.Users}/${userId}/${UserTabs.Logs}/${logId}`;
+  `/${PagePath.Users}/${userId}/${UserTabs.Logs}/${logId}`;
+
+export const getAuditLogsPathname = () => `/${PagePath.AuditLogs}`;
+
+export const getAuditLogDetailsPathname = (logId: string) => `/${PagePath.AuditLogs}/${logId}`;
