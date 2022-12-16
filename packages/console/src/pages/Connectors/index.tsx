@@ -16,7 +16,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
-import { ConnectorsPage } from '@/consts/page-tabs';
+import { ConnectorsTabs } from '@/consts/page-tabs';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import { useTheme } from '@/hooks/use-theme';
 import * as resourcesStyles from '@/scss/resources.module.scss';
@@ -36,8 +36,8 @@ const isConnectorType = (value: string): value is ConnectorType =>
   Object.values<string>(ConnectorType).includes(value);
 
 const Connectors = () => {
-  const { tab = ConnectorsPage.Passwordless, createType } = useParams();
-  const isSocial = tab === ConnectorsPage.SocialTab;
+  const { tab = ConnectorsTabs.Passwordless, createType } = useParams();
+  const isSocial = tab === ConnectorsTabs.Social;
   const navigate = useNavigate();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useConnectorGroups();
@@ -88,10 +88,10 @@ const Connectors = () => {
         </div>
         <SignInExperienceSetupNotice />
         <TabNav className={styles.tabs}>
-          <TabNavItem href={getConnectorPathname(ConnectorsPage.Passwordless)}>
+          <TabNavItem href={getConnectorPathname(ConnectorsTabs.Passwordless)}>
             {t('connectors.tab_email_sms')}
           </TabNavItem>
-          <TabNavItem href={getConnectorPathname(ConnectorsPage.SocialTab)}>
+          <TabNavItem href={getConnectorPathname(ConnectorsTabs.Social)}>
             {t('connectors.tab_social')}
           </TabNavItem>
         </TabNav>
@@ -170,7 +170,7 @@ const Connectors = () => {
         )}
         onClose={() => {
           navigate(
-            getConnectorPathname(isSocial ? ConnectorsPage.SocialTab : ConnectorsPage.Passwordless)
+            getConnectorPathname(isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless)
           );
           void mutate();
         }}

@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import Alert from '@/components/Alert';
 import TextLink from '@/components/TextLink';
-import { ConnectorsPage } from '@/consts/page-tabs';
+import { ConnectorsTabs } from '@/consts/page-tabs';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import { getConnectorPathname } from '@/utilities/router';
 
@@ -33,8 +33,8 @@ const ConnectorSetupWarning = ({ requiredConnectors }: Props) => {
                 <TextLink
                   to={getConnectorPathname(
                     connectorType === ConnectorType.Social
-                      ? ConnectorsPage.SocialTab
-                      : ConnectorsPage.Passwordless
+                      ? ConnectorsTabs.Social
+                      : ConnectorsTabs.Passwordless
                   )}
                   target="_blank"
                 />

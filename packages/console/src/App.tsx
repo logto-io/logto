@@ -31,7 +31,7 @@ import UserDetails from '@/pages/UserDetails';
 import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
-import { ConnectorsPage, SignInExperiencePage } from './consts/page-tabs';
+import { ConnectorsTabs, SignInExperienceTabs, UserTabs } from './consts/page-tabs';
 import { getBasename } from './utilities/router';
 
 void initI18n();
@@ -63,19 +63,20 @@ const Main = () => {
                 <Route path=":id" element={<ApiResourceDetails />} />
               </Route>
               <Route path="connectors">
-                <Route index element={<Navigate replace to={ConnectorsPage.Passwordless} />} />
+                <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
                 <Route path=":tab" element={<Connectors />} />
                 <Route path=":tab/create/:createType" element={<Connectors />} />
                 <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
               </Route>
               <Route path="users">
                 <Route index element={<Users />} />
-                <Route path=":userId" element={<UserDetails />} />
-                <Route path=":userId/logs" element={<UserDetails />} />
-                <Route path=":userId/logs/:logId" element={<AuditLogDetails />} />
+                <Route path=":userId" element={<Navigate replace to={UserTabs.Details} />} />
+                <Route path={`:userId/${UserTabs.Details}`} element={<UserDetails />} />
+                <Route path={`:userId/${UserTabs.Logs}`} element={<UserDetails />} />
+                <Route path={`:userId/${UserTabs.Logs}/:logId`} element={<AuditLogDetails />} />
               </Route>
               <Route path="sign-in-experience">
-                <Route index element={<Navigate replace to={SignInExperiencePage.BrandingTab} />} />
+                <Route index element={<Navigate replace to={SignInExperienceTabs.Branding} />} />
                 <Route path=":tab" element={<SignInExperience />} />
               </Route>
               <Route path="settings" element={<Settings />} />

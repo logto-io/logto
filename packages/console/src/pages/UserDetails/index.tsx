@@ -20,10 +20,12 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
+import { UserTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { getUserPathname } from '@/utilities/router';
 
 import CreateSuccess from './components/CreateSuccess';
 import ResetPasswordForm from './components/ResetPasswordForm';
@@ -34,7 +36,7 @@ import { userDetailsParser } from './utils';
 
 const UserDetails = () => {
   const location = useLocation();
-  const isLogs = location.pathname.endsWith('/logs');
+  const isLogs = location.pathname.endsWith(`/${UserTabs.Logs}`);
   const { userId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
@@ -170,8 +172,12 @@ const UserDetails = () => {
             </div>
           </Card>
           <TabNav>
-            <TabNavItem href={`/users/${userId}`}>{t('general.settings_nav')}</TabNavItem>
-            <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
+            <TabNavItem href={getUserPathname(userId, UserTabs.Details)}>
+              {t('general.settings_nav')}
+            </TabNavItem>
+            <TabNavItem href={getUserPathname(userId, UserTabs.Logs)}>
+              {t('user_details.tab_logs')}
+            </TabNavItem>
           </TabNav>
           {isLogs && <UserLogs userId={data.id} />}
           {!isLogs && userFormData && (

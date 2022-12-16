@@ -16,6 +16,7 @@ import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
 import type { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
+import { getUserLogPathname } from '@/utilities/router';
 
 import EventIcon from './components/EventIcon';
 import * as styles from './index.module.scss';
@@ -24,7 +25,7 @@ const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
   `/${pathname.slice(0, pathname.lastIndexOf('/'))}`;
 
 const getDetailsTabNavLink = (logId: string, userId?: string) =>
-  userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
+  userId ? getUserLogPathname(userId, logId) : `/audit-logs/${logId}`;
 
 const AuditLogDetails = () => {
   const { userId, logId } = useParams();

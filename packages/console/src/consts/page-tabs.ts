@@ -1,10 +1,15 @@
-export enum ConnectorsPage {
+export enum ConnectorsTabs {
   Passwordless = 'passwordless',
-  SocialTab = 'social',
+  Social = 'social',
 }
 
-export enum SignInExperiencePage {
-  BrandingTab = 'branding',
-  SignUpAndSignInTab = 'sign-up-and-sign-in',
-  OthersTab = 'others',
+export enum UserTabs {
+  Details = 'details',
+  Logs = 'logs',
+}
+
+export enum SignInExperienceTabs {
+  Branding = 'branding',
+  SignUpAndSignIn = 'sign-up-and-sign-in',
+  Others = 'others',
 }

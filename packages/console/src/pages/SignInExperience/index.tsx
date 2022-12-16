@@ -12,7 +12,7 @@ import ConfirmModal from '@/components/ConfirmModal';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { SignInExperiencePage } from '@/consts/page-tabs';
+import { SignInExperienceTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
@@ -132,19 +132,19 @@ const SignInExperience = () => {
       />
       <TabNav className={styles.tabs}>
         <TabNavItem
-          href={`/sign-in-experience/${SignInExperiencePage.BrandingTab}`}
+          href={`/sign-in-experience/${SignInExperienceTabs.Branding}`}
           errorCount={getBrandingErrorCount(errors)}
         >
           {t('sign_in_exp.tabs.branding')}
         </TabNavItem>
         <TabNavItem
-          href={`/sign-in-experience/${SignInExperiencePage.SignUpAndSignInTab}`}
+          href={`/sign-in-experience/${SignInExperienceTabs.SignUpAndSignIn}`}
           errorCount={getSignUpAndSignInErrorCount(errors, formData)}
         >
           {t('sign_in_exp.tabs.sign_up_and_sign_in')}
         </TabNavItem>
         <TabNavItem
-          href={`/sign-in-experience/${SignInExperiencePage.OthersTab}`}
+          href={`/sign-in-experience/${SignInExperienceTabs.Others}`}
           errorCount={getOthersErrorCount(errors)}
         >
           {t('sign_in_exp.tabs.others')}
@@ -156,9 +156,9 @@ const SignInExperience = () => {
           <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
             <FormProvider {...methods}>
               <form className={styles.form}>
-                <Branding isActive={tab === SignInExperiencePage.BrandingTab} />
-                <SignUpAndSignIn isActive={tab === SignInExperiencePage.SignUpAndSignInTab} />
-                <Others isActive={tab === SignInExperiencePage.OthersTab} />
+                <Branding isActive={tab === SignInExperienceTabs.Branding} />
+                <SignUpAndSignIn isActive={tab === SignInExperienceTabs.SignUpAndSignIn} />
+                <Others isActive={tab === SignInExperienceTabs.Others} />
               </form>
             </FormProvider>
             {formData.id && (

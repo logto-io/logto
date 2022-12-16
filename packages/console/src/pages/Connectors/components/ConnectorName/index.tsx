@@ -11,7 +11,7 @@ import {
   connectorPlatformLabel,
   connectorTitlePlaceHolder,
 } from '@/consts/connectors';
-import { ConnectorsPage } from '@/consts/page-tabs';
+import { ConnectorsTabs } from '@/consts/page-tabs';
 import { useTheme } from '@/hooks/use-theme';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import { getConnectorPathname } from '@/utilities/router';
@@ -55,8 +55,8 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
     <Link
       to={getConnectorPathname(
         connector.type === ConnectorType.Social
-          ? ConnectorsPage.SocialTab
-          : ConnectorsPage.Passwordless,
+          ? ConnectorsTabs.Social
+          : ConnectorsTabs.Passwordless,
         connector.id
       )}
       className={styles.link}

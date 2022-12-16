@@ -20,10 +20,12 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
+import { UserTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
+import { getUserPathname } from '@/utilities/router';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -75,7 +77,7 @@ const Users = () => {
 
               if (createdUser && password) {
                 sessionStorage.setItem(generatedPasswordStorageKey, password);
-                navigate(`/users/${createdUser.id}`);
+                navigate(getUserPathname(createdUser.id, UserTabs.Details));
               }
             }}
           />
@@ -134,7 +136,7 @@ const Users = () => {
                   key={id}
                   className={tableStyles.clickable}
                   onClick={() => {
-                    navigate(`/users/${id}`);
+                    navigate(getUserPathname(id, UserTabs.Details));
                   }}
                 >
                   <td>
@@ -148,7 +150,7 @@ const Users = () => {
                           src={avatar ?? generateAvatarPlaceHolderById(id)}
                         />
                       }
-                      to={`/users/${id}`}
+                      to={getUserPathname(id, UserTabs.Details)}
                       size="compact"
                     />
                   </td>

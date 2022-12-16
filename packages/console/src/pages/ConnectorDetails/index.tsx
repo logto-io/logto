@@ -22,7 +22,7 @@ import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UnnamedTrans from '@/components/UnnamedTrans';
-import { ConnectorsPage } from '@/consts/page-tabs';
+import { ConnectorsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
@@ -76,15 +76,13 @@ const ConnectorDetails = () => {
     toast.success(t('connector_details.connector_deleted'));
     await mutateGlobal('/api/connectors');
 
-    navigate(
-      getConnectorPathname(isSocial ? ConnectorsPage.SocialTab : ConnectorsPage.Passwordless)
-    );
+    navigate(getConnectorPathname(isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless));
   };
 
   return (
     <div className={detailsStyles.container}>
       <TextLink
-        to={getConnectorPathname(isSocial ? ConnectorsPage.SocialTab : ConnectorsPage.Passwordless)}
+        to={getConnectorPathname(isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless)}
         icon={<Back />}
         className={styles.backLink}
       >
@@ -171,7 +169,7 @@ const ConnectorDetails = () => {
                 setIsSetupOpen(false);
                 navigate(
                   getConnectorPathname(
-                    isSocial ? ConnectorsPage.SocialTab : ConnectorsPage.Passwordless,
+                    isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless,
                     connectorId
                   )
                 );
@@ -183,7 +181,7 @@ const ConnectorDetails = () => {
       <TabNav>
         <TabNavItem
           href={getConnectorPathname(
-            isSocial ? ConnectorsPage.SocialTab : ConnectorsPage.Passwordless,
+            isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless,
             connectorId
           )}
         >

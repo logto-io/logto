@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
 import { connectorPlatformLabel } from '@/consts';
-import { ConnectorsPage } from '@/consts/page-tabs';
+import { ConnectorsTabs } from '@/consts/page-tabs';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import { getConnectorPathname } from '@/utilities/router';
 
@@ -40,8 +40,8 @@ const ConnectorTabs = ({ target, connectorId }: Props) => {
           key={connector.id}
           to={getConnectorPathname(
             connector.type === ConnectorType.Social
-              ? ConnectorsPage.SocialTab
-              : ConnectorsPage.Passwordless,
+              ? ConnectorsTabs.Social
+              : ConnectorsTabs.Passwordless,
             connector.id
           )}
           className={classNames(styles.tab, connector.id === connectorId && styles.active)}

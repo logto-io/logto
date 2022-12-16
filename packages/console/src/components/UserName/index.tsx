@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
+import { UserTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
+import { getUserPathname } from '@/utilities/router';
 
 import * as styles from './index.module.scss';
 
@@ -29,7 +31,11 @@ const UserName = ({ userId, isLink = false }: Props) => {
   return (
     <div className={styles.userName}>
       {isLink && !isAdmin ? (
-        <Link to={`/users/${userId}`} target="_blank" className={styles.link}>
+        <Link
+          to={getUserPathname(userId, UserTabs.Details)}
+          target="_blank"
+          className={styles.link}
+        >
           {name}
         </Link>
       ) : (
