@@ -142,7 +142,7 @@ const sign_in_exp = {
       '소셜 연동 설정이 아직 없습니다. 소셜 연동 구성을 완료할 때까지 로그인할 수 없습니다. <a>{{link}}</a> in "Connectors"',
     no_added_social_connector:
       '보다 많은 소셜 연동들을 설정하여, 고객에게 보다 나은 경험을 제공해보세요.',
-    setup_link: 'Set up',
+    setup_link: '설정',
   },
   save_alert: {
     description:
