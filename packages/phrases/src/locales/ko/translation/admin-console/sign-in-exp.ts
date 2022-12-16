@@ -135,11 +135,11 @@ const sign_in_exp = {
   setup_warning: {
     no_connector: '',
     no_connector_sms:
-      'SMS 연동 설정이 아직 없습니다. SMS 연동 구성을 완료할 때까지 로그인할 수 없습니다. <a>{{link}}</a> in "Connectors"',
+      'SMS 연동 설정이 아직 없습니다. SMS 연동 구성을 완료할 때까지 로그인할 수 없습니다. <a>{{link}}</a> "연동"으로',
     no_connector_email:
-      '이메일 연동 설정이 아직 없습니다. 이메일 연동 구성을 완료할 때까지 로그인할 수 없습니다. <a>{{link}}</a> in "Connectors"',
+      '이메일 연동 설정이 아직 없습니다. 이메일 연동 구성을 완료할 때까지 로그인할 수 없습니다. <a>{{link}}</a> "연동"으로',
     no_connector_social:
-      '소셜 연동 설정이 아직 없습니다. 소셜 연동 구성을 완료할 때까지 로그인할 수 없습니다. <a>{{link}}</a> in "Connectors"',
+      '소셜 연동 설정이 아직 없습니다. 소셜 연동 구성을 완료할 때까지 로그인할 수 없습니다. <a>{{link}}</a> "연동"으로',
     no_added_social_connector:
       '보다 많은 소셜 연동들을 설정하여, 고객에게 보다 나은 경험을 제공해보세요.',
     setup_link: '설정',
