@@ -95,14 +95,18 @@ const translation = {
     password: {
       title: 'PASSWORD', // UNTRANSLATED
       reset_password: 'Reset Password', // UNTRANSLATED
+      reset_password_sc: 'Reset password', // UNTRANSLATED
     },
     link_account: {
       title: 'LINK ACCOUNT', // UNTRANSLATED
       email_phone_sign_in: 'Email / Phone Sign-In', // UNTRANSLATED
       email: 'Email', // UNTRANSLATED
       phone: 'Phone', // UNTRANSLATED
-      social_sign_in: 'Social Sign-In', // UNTRANSLATED
+      phone_sc: 'Phone number', // UNTRANSLATED
+      social: 'Social Sign-In', // UNTRANSLATED
+      social_sc: 'Social accounts', // UNTRANSLATED
     },
+    not_set: 'Not set', // UNTRANSLATED
     edit: 'Edit', // UNTRANSLATED
     change: 'Change', // UNTRANSLATED
     link: 'Link', // UNTRANSLATED

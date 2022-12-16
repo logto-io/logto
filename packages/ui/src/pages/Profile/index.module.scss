@@ -32,6 +32,16 @@
 :global(body.mobile) {
   .container {
     background: var(--color-bg-body-base);
+
+    .wrapper {
+      padding: 0;
+
+      .header {
+        margin: 0;
+        padding: 0 _.unit(4);
+        background: var(--color-bg-layer-1);
+      }
+    }
   }
 }
 
