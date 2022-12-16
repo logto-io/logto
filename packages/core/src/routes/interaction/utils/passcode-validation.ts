@@ -1,9 +1,8 @@
 import type { Event } from '@logto/schemas';
-import { PasscodeType } from '@logto/schemas';
+import { interaction, PasscodeType } from '@logto/schemas';
 
 import { createPasscode, sendPasscode, verifyPasscode } from '#src/libraries/passcode.js';
-import type { LogContext } from '#src/middleware/koa-log.js';
-import { getPasswordlessRelatedLogType } from '#src/routes/session/utils.js';
+import type { LogContext } from '#src/middleware/koa-audit-log.js';
 
 import type { SendPasscodePayload, PasscodeIdentifierPayload } from '../types/index.js';
 
@@ -26,20 +25,18 @@ export const sendPasscodeToIdentifier = async (
 ) => {
   const { event, ...identifier } = payload;
   const passcodeType = getPasscodeTypeByEvent(event);
+  // TODO: @Simeng this can be refactored
+  const identifierType =
+    'email' in identifier ? interaction.Identifier.Email : interaction.Identifier.Phone;
 
-  const logType = getPasswordlessRelatedLogType(
-    passcodeType,
-    'email' in identifier ? 'email' : 'sms',
-    'send'
-  );
-
-  log(logType, identifier);
+  log.setKey(`${event}.${identifierType}.Passcode.Create`);
+  log(identifier);
 
   const passcode = await createPasscode(jti, passcodeType, identifier);
 
   const { dbEntry } = await sendPasscode(passcode);
 
-  log(logType, { connectorId: dbEntry.id });
+  log({ connectorId: dbEntry.id });
 };
 
 export const verifyIdentifierByPasscode = async (
@@ -49,14 +46,12 @@ export const verifyIdentifierByPasscode = async (
 ) => {
   const { event, passcode, ...identifier } = payload;
   const passcodeType = getPasscodeTypeByEvent(event);
+  // TODO: @Simeng this can be refactored
 
-  const logType = getPasswordlessRelatedLogType(
-    passcodeType,
-    'email' in identifier ? 'email' : 'sms',
-    'verify'
-  );
+  const identifierType =
+    'email' in identifier ? interaction.Identifier.Email : interaction.Identifier.Phone;
 
-  log(logType, identifier);
+  log.setKey(`${event}.${identifierType}.Passcode.Submit`);
 
   await verifyPasscode(jti, passcodeType, passcode, identifier);
 };

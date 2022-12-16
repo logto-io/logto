@@ -2,13 +2,16 @@ import { z } from 'zod';
 
 import type { Log } from '../db-entries/index.js';
 
+/** @deprecated This will be removed soon. Use log types that can be directly imported from `@logto/schemas` instead. */
 export enum LogResult {
   Success = 'Success',
   Error = 'Error',
 }
 
+/** @deprecated This will be removed soon. Use log types that can be directly imported from `@logto/schemas` instead. */
 export const logResultGuard = z.nativeEnum(LogResult);
 
+/** @deprecated This will be removed soon. Use log types that can be directly imported from `@logto/schemas` instead. */
 export const baseLogPayloadGuard = z.object({
   result: logResultGuard.optional(),
   error: z.record(z.string(), z.unknown()).optional(),
@@ -18,10 +21,12 @@ export const baseLogPayloadGuard = z.object({
   sessionId: z.string().optional(),
 });
 
+/** @deprecated This will be removed soon. Use log types that can be directly imported from `@logto/schemas` instead. */
 export type BaseLogPayload = z.infer<typeof baseLogPayloadGuard>;
 
 const arbitraryLogPayloadGuard = z.record(z.string(), z.unknown());
 
+/** @deprecated This will be removed soon. Use log types that can be directly imported from `@logto/schemas` instead. */
 export type ArbitraryLogPayload = z.infer<typeof arbitraryLogPayloadGuard>;
 
 const registerUsernamePasswordLogPayloadGuard = arbitraryLogPayloadGuard.and(
@@ -257,14 +262,19 @@ const logPayloadsGuard = z.object({
   RevokeToken: revokeTokenLogPayloadGuard,
 });
 
+/** @deprecated This will be removed soon. Use log types that can be directly imported from `@logto/schemas` instead. */
 export type LogPayloads = z.infer<typeof logPayloadsGuard>;
 
+/** @deprecated This will be removed soon. Use log types that can be directly imported from `@logto/schemas` instead. */
 export const logTypeGuard = logPayloadsGuard.keyof();
 
+/** @deprecated This will be removed soon. Use log types that can be directly imported from `@logto/schemas` instead. */
 export type LogType = z.infer<typeof logTypeGuard>;
 
+/** @deprecated This will be removed soon. Use log types that can be directly imported from `@logto/schemas` instead. */
 export type LogPayload = LogPayloads[LogType];
 
+/** @deprecated This will be removed soon. Use log types that can be directly imported from `@logto/schemas` instead. */
 export type LogDto = Omit<Log, 'payload'> & {
   payload: {
     userId?: string;

@@ -9,7 +9,7 @@ import {
 } from '#src/libraries/session.js';
 import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
 import { generateUserId, insertUser } from '#src/libraries/user.js';
-import type { WithLogContext } from '#src/middleware/koa-log.js';
+import type { WithLogContextLegacy } from '#src/middleware/koa-audit-log-legacy.js';
 import {
   hasUserWithPhone,
   hasUserWithEmail,
@@ -27,7 +27,7 @@ import {
   checkRequiredProfile,
 } from '../utils.js';
 
-export const smsSignInAction = <StateT, ContextT extends WithLogContext, ResponseBodyT>(
+export const smsSignInAction = <StateT, ContextT extends WithLogContextLegacy, ResponseBodyT>(
   provider: Provider
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> => {
   return async (ctx, next) => {
@@ -72,7 +72,7 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContext, Respons
   };
 };
 
-export const emailSignInAction = <StateT, ContextT extends WithLogContext, ResponseBodyT>(
+export const emailSignInAction = <StateT, ContextT extends WithLogContextLegacy, ResponseBodyT>(
   provider: Provider
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> => {
   return async (ctx, next) => {
@@ -117,7 +117,7 @@ export const emailSignInAction = <StateT, ContextT extends WithLogContext, Respo
   };
 };
 
-export const smsRegisterAction = <StateT, ContextT extends WithLogContext, ResponseBodyT>(
+export const smsRegisterAction = <StateT, ContextT extends WithLogContextLegacy, ResponseBodyT>(
   provider: Provider
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> => {
   return async (ctx, next) => {
@@ -161,7 +161,7 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContext, Respo
   };
 };
 
-export const emailRegisterAction = <StateT, ContextT extends WithLogContext, ResponseBodyT>(
+export const emailRegisterAction = <StateT, ContextT extends WithLogContextLegacy, ResponseBodyT>(
   provider: Provider
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> => {
   return async (ctx, next) => {

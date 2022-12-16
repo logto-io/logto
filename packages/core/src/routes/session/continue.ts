@@ -19,7 +19,7 @@ import {
 } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types.js';
+import type { AnonymousRouterLegacy } from '../types.js';
 import { continueEmailSessionResultGuard, continueSmsSessionResultGuard } from './types.js';
 import {
   checkRequiredProfile,
@@ -31,7 +31,10 @@ import {
 
 export const continueRoute = getRoutePrefix('sign-in', 'continue');
 
-export default function continueRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
+export default function continueRoutes<T extends AnonymousRouterLegacy>(
+  router: T,
+  provider: Provider
+) {
   router.post(
     `${continueRoute}/password`,
     koaGuard({

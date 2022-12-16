@@ -12,7 +12,7 @@ import { assignInteractionResults, saveUserFirstConsentedAppId } from '#src/libr
 import { findUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types.js';
+import type { AnonymousRouterLegacy } from '../types.js';
 import continueRoutes from './continue.js';
 import forgotPasswordRoutes from './forgot-password.js';
 import koaGuardSessionAction from './middleware/koa-guard-session-action.js';
@@ -21,7 +21,10 @@ import passwordlessRoutes from './passwordless.js';
 import socialRoutes from './social.js';
 import { getRoutePrefix } from './utils.js';
 
-export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
+export default function sessionRoutes<T extends AnonymousRouterLegacy>(
+  router: T,
+  provider: Provider
+) {
   router.use(getRoutePrefix('sign-in'), koaGuardSessionAction(provider, 'sign-in'));
   router.use(getRoutePrefix('register'), koaGuardSessionAction(provider, 'register'));
 

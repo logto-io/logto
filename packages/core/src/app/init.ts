@@ -9,11 +9,11 @@ import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 
 import envSet, { MountedApps } from '#src/env-set/index.js';
+import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaCheckDemoApp from '#src/middleware/koa-check-demo-app.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
-import koaLog from '#src/middleware/koa-log.js';
 import koaOIDCErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
 import koaRootProxy from '#src/middleware/koa-root-proxy.js';
 import koaSlonikErrorHandler from '#src/middleware/koa-slonik-error-handler.js';
@@ -32,13 +32,12 @@ const logListening = () => {
 };
 
 export default async function initApp(app: Koa): Promise<void> {
+  app.use(koaLogger());
   app.use(koaErrorHandler());
   app.use(koaOIDCErrorHandler());
   app.use(koaSlonikErrorHandler());
   app.use(koaConnectorErrorHandler());
-
-  app.use(koaLog());
-  app.use(koaLogger());
+  app.use(koaAuditLog());
   app.use(koaI18next());
 
   const provider = await initOidc(app);

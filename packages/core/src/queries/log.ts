@@ -1,5 +1,6 @@
-import type { CreateLog, Log, LogType } from '@logto/schemas';
+import type { CreateLog, Log } from '@logto/schemas';
 import { Logs } from '@logto/schemas';
+import type { LogType } from '@logto/schemas/lib/types/log-legacy.js';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 

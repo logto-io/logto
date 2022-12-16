@@ -1,5 +1,7 @@
-import type { LogPayload, LogType, PasscodeType, SignInExperience, User } from '@logto/schemas';
-import { SignInIdentifier, logTypeGuard } from '@logto/schemas';
+import type { PasscodeType, SignInExperience, User } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
+import type { LogPayload, LogType } from '@logto/schemas/lib/types/log-legacy.js';
+import { logTypeGuard } from '@logto/schemas/lib/types/log-legacy.js';
 import type { Nullable, Truthy } from '@silverhand/essentials';
 import { isSameArray } from '@silverhand/essentials';
 import { addSeconds, isAfter, isValid } from 'date-fns';
@@ -15,7 +17,7 @@ import {
 } from '#src/libraries/session.js';
 import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
 import { verifyUserPassword } from '#src/libraries/user.js';
-import type { LogContext } from '#src/middleware/koa-log.js';
+import type { LogContextLegacy } from '#src/middleware/koa-audit-log-legacy.js';
 import { updateUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -212,7 +214,7 @@ type SignInWithPasswordParameter = {
 };
 
 export const signInWithPassword = async (
-  ctx: Context & LogContext,
+  ctx: Context & LogContextLegacy,
   provider: Provider,
   { identifier, findUser, password, logType, logPayload }: SignInWithPasswordParameter
 ) => {

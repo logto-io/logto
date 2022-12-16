@@ -21,13 +21,16 @@ import {
 } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types.js';
+import type { AnonymousRouterLegacy } from '../types.js';
 import { checkRequiredProfile, getRoutePrefix, signInWithPassword } from './utils.js';
 
 export const registerRoute = getRoutePrefix('register', 'password');
 export const signInRoute = getRoutePrefix('sign-in', 'password');
 
-export default function passwordRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
+export default function passwordRoutes<T extends AnonymousRouterLegacy>(
+  router: T,
+  provider: Provider
+) {
   router.post(
     `${signInRoute}/username`,
     koaGuard({

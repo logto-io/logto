@@ -7,6 +7,7 @@ import { snakeCase } from 'snake-case';
 import { isTrue } from '#src/env-set/parameters.js';
 
 import assertThat from './assert-that.js';
+import { isEnum } from './type.js';
 
 const searchJointModes = Object.values(SearchJointMode);
 const searchMatchModes = Object.values(SearchMatchMode);
@@ -22,10 +23,6 @@ export type Search = {
   joint: SearchJointMode;
   isCaseSensitive: boolean;
 };
-
-const isEnum = <T extends string>(list: T[], value: string): value is T =>
-  // @ts-expect-error the easiest way to perform type checking for a string enum
-  list.includes(value);
 
 /**
  * Parse a field string with "search." prefix to the actual first-level field.

@@ -1,11 +1,14 @@
 import type { MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
 
-import type { WithLogContext } from '#src/middleware/koa-log.js';
+import type { WithLogContextLegacy } from '#src/middleware/koa-audit-log-legacy.js';
 
-export default function koaLogSession<StateT, ContextT extends WithLogContext, ResponseBodyT>(
-  provider: Provider
-): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+/** @deprecated This will be removed soon. Use `kua-log-session.js` instead. */
+export default function koaLogSessionLegacy<
+  StateT,
+  ContextT extends WithLogContextLegacy,
+  ResponseBodyT
+>(provider: Provider): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
     await next();
 

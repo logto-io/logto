@@ -111,7 +111,8 @@
         "error",
         11
       ],
-      "default-case": "off"
+      "default-case": "off",
+      "import/extensions": "off"
     }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"

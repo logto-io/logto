@@ -8,7 +8,7 @@ const { jest } = import.meta;
 const middlewareList = [
   'error-handler',
   'i18next',
-  'log',
+  'audit-log',
   'oidc-error-handler',
   'slonik-error-handler',
   'spa-proxy',

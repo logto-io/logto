@@ -1,5 +1,10 @@
-import type { BaseLogPayload, LogPayload, LogPayloads, LogType } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
+import type {
+  BaseLogPayload,
+  LogPayload,
+  LogPayloads,
+  LogType,
+} from '@logto/schemas/lib/types/log-legacy.js';
 import deepmerge from 'deepmerge';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
@@ -18,13 +23,15 @@ type SessionPayload = {
 
 type AddLogContext = (sessionPayload: SessionPayload) => void;
 
-export type LogContext = {
+/** @deprecated This will be removed soon. Use `kua-audit-log.js` instead. */
+export type LogContextLegacy = {
   addLogContext: AddLogContext;
   log: MergeLog;
 };
 
-export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamContext> = ContextT &
-  LogContext;
+/** @deprecated This will be removed soon. Use `kua-audit-log.js` instead. */
+export type WithLogContextLegacy<ContextT extends IRouterParamContext = IRouterParamContext> =
+  ContextT & LogContextLegacy;
 
 type Logger = {
   type?: LogType;
@@ -77,11 +84,12 @@ const initLogger = (basePayload?: Readonly<BaseLogPayload>) => {
 };
 /* eslint-enable @silverhand/fp/no-mutation */
 
-export default function koaLog<
+/** @deprecated This will be removed soon. Use `kua-audit-log.js` instead. */
+export default function koaAuditLogLegacy<
   StateT,
   ContextT extends IRouterParamContext,
   ResponseBodyT
->(): MiddlewareType<StateT, WithLogContext<ContextT>, ResponseBodyT> {
+>(): MiddlewareType<StateT, WithLogContextLegacy<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     const {
       ip,
