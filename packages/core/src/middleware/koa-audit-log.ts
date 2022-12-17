@@ -21,6 +21,15 @@ export class LogEntry {
     };
   }
 
+  /** Update payload by spreading `data` first, then spreading `this.payload`. */
+  prepend(data: Readonly<LogPayload>) {
+    this.payload = {
+      ...removeUndefinedKeys(data),
+      ...this.payload,
+    };
+  }
+
+  /** Update payload by spreading `this.payload` first, then spreading `data`. */
   append(data: Readonly<LogPayload>) {
     this.payload = {
       ...this.payload,
@@ -33,6 +42,7 @@ export type LogPayload = Partial<LogContextPayload> & Record<string, unknown>;
 
 export type LogContext = {
   createLog: (key: LogKey) => LogEntry;
+  prependAllLogEntries: (payload: LogPayload) => void;
 };
 
 export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamContext> = ContextT &
@@ -40,46 +50,54 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
 
 /**
  * The factory to create a new audit log middleware function.
- * It will inject a {@link LogFunction} property named `log` to the context to enable audit logging.
+ * It will inject a `createLog` function the context to enable audit logging.
  *
- * #### Set log key
+ * #### Create a log entry
  *
- * You need to explicitly call `ctx.log.setKey()` to set a {@link LogKey} thus the log can be categorized and indexed in database:
+ * You need to explicitly call `ctx.createLog()` to create a new {@link LogEntry} instance,
+ * which accepts a read-only parameter {@link LogKey} thus the log can be categorized and indexed in database.
  *
  * ```ts
- * ctx.log.setKey('SignIn.Submit'); // Key is typed
+ * const log = ctx.createLog('Interaction.Create'); // Key is typed
  * ```
  *
- * If log key is {@link LogKeyUnknown} in the end, it will not be recorded to the persist storage.
+ * Note every time you call `ctx.createLog()`, it will create a new log entry instance for inserting. So multiple log entries may be inserted within one request.
+ *
+ * Remember to keep the log entry instance properly if you want to collect log data from multiple places.
  *
  * #### Log data
  *
- * To log data, call `ctx.log()`. It'll use object spread operators to update data (i.e. merge with one-level overwrite and shallow copy).
+ * To update log payload, call `log.append()`. It will use object spread operators to update payload (i.e. merge with one-level overwrite and shallow copy).
  *
  * ```ts
- * ctx.log({ applicationId: 'foo' });
+ * log.append({ applicationId: 'foo' });
  * ```
  *
- * The data has a initial value:
+ * This function can be called multiple times.
+ *
+ * #### Log context
+ *
+ * By default, before inserting the logs, it will extract the request context and prepend request IP and User Agent to every log entry:
  *
  * ```ts
  * {
- *   key: LogKeyUnknown,
- *   result: LogResult.Success,
- *   ip, // Extract from request
- *   userAgent, // Extract from request
+ *   ip: 'request-ip-addr',
+ *   userAgent: 'request-user-agent',
+ *   ...log.payload,
  * }
  * ```
  *
- * Note: Both of the functions can be called multiple times.
+ * To add more common data to log entries, try to create another middleware function after this one, and call `ctx.prependAllLogEntries()`.
  *
+ * @returns An audit log middleware function.
  * @see {@link LogKey} for all available log keys, and {@link LogResult} for result enums.
  * @see {@link LogContextPayload} for the basic type suggestion of log data.
- * @returns An audit log middleware function.
  */
-export default function koaAuditLog<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
-  dumpLogContext?: (ctx: ContextT) => Promise<Record<string, unknown>> | Record<string, unknown>
-): MiddlewareType<StateT, WithLogContext<ContextT>, ResponseBodyT> {
+export default function koaAuditLog<
+  StateT,
+  ContextT extends IRouterParamContext,
+  ResponseBodyT
+>(): MiddlewareType<StateT, WithLogContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     const entries: LogEntry[] = [];
 
@@ -89,6 +107,12 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
       entries.push(entry);
 
       return entry;
+    };
+
+    ctx.prependAllLogEntries = (payload) => {
+      for (const entry of entries) {
+        entry.prepend(payload);
+      }
     };
 
     try {
@@ -111,13 +135,12 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
         headers: { 'user-agent': userAgent },
       } = ctx.request;
 
-      const logContext = { ip, userAgent, ...(await dumpLogContext?.(ctx)) };
       await Promise.all(
         entries.map(async ({ payload }) => {
           return insertLog({
             id: nanoid(),
             type: payload.key,
-            payload: { ...logContext, ...payload },
+            payload: { ip, userAgent, ...payload },
           });
         })
       );

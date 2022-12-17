@@ -1,6 +1,7 @@
 import { Event } from '@logto/schemas';
 import { mockEsm, pickDefault } from '@logto/shared/esm';
 
+import { createMockLogContext } from '#src/test-utils/koa-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -51,10 +52,9 @@ jest.useFakeTimers().setSystemTime(now);
 
 describe('submit action', () => {
   const provider = createMockProvider();
-  const log = jest.fn();
   const ctx: InteractionContext = {
     ...createContextWithRouteParameters(),
-    log,
+    ...createMockLogContext(),
     interactionPayload: { event: Event.SignIn },
   };
   const profile = {

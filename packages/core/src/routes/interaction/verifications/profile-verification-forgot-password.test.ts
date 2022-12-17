@@ -2,6 +2,7 @@ import { Event } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { createMockLogContext } from '#src/test-utils/koa-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -25,7 +26,7 @@ const verifyProfile = await pickDefault(import('./profile-verification.js'));
 
 describe('forgot password interaction profile verification', () => {
   const provider = createMockProvider();
-  const baseCtx = createContextWithRouteParameters();
+  const baseCtx = { ...createContextWithRouteParameters(), ...createMockLogContext() };
 
   const interaction = {
     event: Event.ForgotPassword,

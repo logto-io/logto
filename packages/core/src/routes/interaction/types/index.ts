@@ -11,6 +11,7 @@ import type { IRouterParamContext } from 'koa-router';
 import type { z } from 'zod';
 
 import type { SocialUserInfo } from '#src/connectors/types.js';
+import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 
 import type { WithGuardedIdentifierPayloadContext } from '../middleware/koa-interaction-body-guard.js';
 import type {
@@ -108,7 +109,9 @@ export type VerifiedInteractionResult =
   | VerifiedSignInInteractionResult
   | VerifiedForgotPasswordInteractionResult;
 
-export type InteractionContext = WithGuardedIdentifierPayloadContext<IRouterParamContext & Context>;
+export type InteractionContext = WithGuardedIdentifierPayloadContext<
+  WithLogContext<IRouterParamContext & Context>
+>;
 
 export type UserIdentity =
   | { username: string }

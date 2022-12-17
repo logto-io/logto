@@ -1,9 +1,11 @@
 import type { LogtoErrorCode } from '@logto/phrases';
 import { Event } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
+import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -28,6 +30,24 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   router: T,
   provider: Provider
 ) {
+  router.use(koaAuditLog(), async (ctx, next) => {
+    await next();
+
+    // Prepend interaction context to log entries
+    try {
+      const {
+        jti,
+        params: { client_id },
+      } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.prependAllLogEntries({
+        sessionId: jti,
+        applicationId: conditional(typeof client_id === 'string' && client_id),
+      });
+    } catch (error: unknown) {
+      console.error(`Failed to get oidc provider interaction details`, error);
+    }
+  });
+
   router.put(
     interactionPrefix,
     koaInteractionBodyGuard(),
@@ -117,7 +137,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       // Check interaction session
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      await sendPasscodeToIdentifier(ctx.guard.body, jti, ctx.log);
+      await sendPasscodeToIdentifier(ctx.guard.body, jti, ctx.createLog);
 
       ctx.status = 204;
 

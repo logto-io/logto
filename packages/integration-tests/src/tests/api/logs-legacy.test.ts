@@ -20,9 +20,7 @@ describe('admin console logs (legacy)', () => {
     const logs = await getLogs();
 
     const registerLog = logs.filter(
-      ({ type, payload }) =>
-        type === 'RegisterUsernamePassword' &&
-        (payload as Record<string, unknown>).username === username
+      ({ type, payload }) => type === 'RegisterUsernamePassword' && payload.username === username
     );
 
     expect(registerLog.length).toBeGreaterThan(0);

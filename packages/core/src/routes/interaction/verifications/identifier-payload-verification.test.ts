@@ -2,6 +2,7 @@ import { Event } from '@logto/schemas';
 import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { createMockLogContext } from '#src/test-utils/koa-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -31,10 +32,10 @@ const identifierPayloadVerification = await pickDefault(
   import('./identifier-payload-verification.js')
 );
 
-const log = jest.fn();
+const logContext = createMockLogContext();
 
 describe('identifier verification', () => {
-  const baseCtx = { ...createContextWithRouteParameters(), log };
+  const baseCtx = { ...createContextWithRouteParameters(), ...logContext };
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -152,7 +153,7 @@ describe('identifier verification', () => {
     expect(verifyIdentifierByPasscode).toBeCalledWith(
       { ...identifier, event: Event.SignIn },
       'jti',
-      log
+      logContext.createLog
     );
 
     expect(result).toEqual({
@@ -176,7 +177,7 @@ describe('identifier verification', () => {
     expect(verifyIdentifierByPasscode).toBeCalledWith(
       { ...identifier, event: Event.SignIn },
       'jti',
-      log
+      logContext.createLog
     );
 
     expect(result).toEqual({
@@ -198,7 +199,7 @@ describe('identifier verification', () => {
 
     const result = await identifierPayloadVerification(ctx, createMockProvider());
 
-    expect(verifySocialIdentity).toBeCalledWith(identifier, log);
+    expect(verifySocialIdentity).toBeCalledWith(identifier, logContext.createLog);
     expect(findUserByIdentifier).not.toBeCalled();
 
     expect(result).toEqual({
@@ -323,7 +324,7 @@ describe('identifier verification', () => {
     expect(verifyIdentifierByPasscode).toBeCalledWith(
       { ...identifier, event: Event.SignIn },
       'jti',
-      log
+      logContext.createLog
     );
 
     expect(result).toEqual({

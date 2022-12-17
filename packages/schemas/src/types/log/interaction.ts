@@ -1,7 +1,5 @@
 import type { Event } from '../interactions.js';
 
-export { Event } from '../interactions.js';
-
 export type Prefix = 'Interaction';
 
 export const prefix: Prefix = 'Interaction';

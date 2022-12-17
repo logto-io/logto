@@ -46,7 +46,7 @@ const verifyPasscodeIdentifier = async (
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
   const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
-  await verifyIdentifierByPasscode({ ...identifier, event }, jti, ctx.log);
+  await verifyIdentifierByPasscode({ ...identifier, event }, jti, ctx.createLog);
 
   return 'email' in identifier
     ? { key: 'emailVerified', value: identifier.email }
@@ -57,7 +57,7 @@ const verifySocialIdentifier = async (
   identifier: SocialConnectorPayload,
   ctx: InteractionContext
 ): Promise<SocialIdentifier> => {
-  const userInfo = await verifySocialIdentity(identifier, ctx.log);
+  const userInfo = await verifySocialIdentity(identifier, ctx.createLog);
 
   return { key: 'social', connectorId: identifier.connectorId, userInfo };
 };
