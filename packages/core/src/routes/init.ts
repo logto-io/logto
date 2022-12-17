@@ -4,10 +4,10 @@ import mount from 'koa-mount';
 import Router from 'koa-router';
 import type { Provider } from 'oidc-provider';
 
+import { extractInteractionContext } from '#src/event-listeners/utils.js';
 import koaAuditLogLegacy from '#src/middleware/koa-audit-log-legacy.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 
-import koaAuditLogSession from '../middleware/koa-audit-log-session.js';
 import koaAuth from '../middleware/koa-auth.js';
 import koaLogSessionLegacy from '../middleware/koa-log-session-legacy.js';
 import adminUserRoutes from './admin-user.js';
@@ -36,7 +36,7 @@ const createRouters = (provider: Provider) => {
   sessionRoutes(sessionRouter, provider);
 
   const interactionRouter: AnonymousRouter = new Router();
-  interactionRouter.use(koaAuditLog(), koaAuditLogSession(provider));
+  interactionRouter.use(koaAuditLog(extractInteractionContext));
   interactionRoutes(interactionRouter, provider);
 
   const managementRouter: AuthedRouter = new Router();

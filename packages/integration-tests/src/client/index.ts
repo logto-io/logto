@@ -6,7 +6,6 @@ import { got } from 'got';
 
 import { consent } from '#src/api/index.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
-import { extractCookie } from '#src/utils.js';
 
 import { MemoryStorage } from './storage.js';
 
@@ -17,7 +16,7 @@ export const defaultConfig = {
 };
 
 export default class MockClient {
-  public interactionCookie?: string;
+  public rawCookies: string[] = [];
 
   private navigateUrl?: string;
   private readonly storage: MemoryStorage;
@@ -35,6 +34,11 @@ export default class MockClient {
         storage: this.storage,
       }
     );
+  }
+
+  // TODO: Rename to sessionCookies or something accurate
+  public get interactionCookie(): string {
+    return this.rawCookies.join('; ');
   }
 
   public async initSession(callbackUri = demoAppRedirectUri) {
@@ -58,7 +62,7 @@ export default class MockClient {
     );
 
     // Get session cookie
-    this.interactionCookie = extractCookie(response);
+    this.rawCookies = response.headers['set-cookie'] ?? [];
     assert(this.interactionCookie, new Error('Get cookie from authorization endpoint failed'));
   }
 
@@ -79,9 +83,10 @@ export default class MockClient {
       new Error('Invoke auth before consent failed')
     );
 
-    this.interactionCookie = extractCookie(authResponse);
+    this.rawCookies = authResponse.headers['set-cookie'] ?? [];
 
-    await this.consent();
+    const signInCallbackUri = await this.consent();
+    await this.logto.handleSignInCallback(signInCallbackUri);
   }
 
   public async getAccessToken(resource?: string) {
@@ -93,7 +98,12 @@ export default class MockClient {
   }
 
   public async signOut(postSignOutRedirectUri?: string) {
-    return this.logto.signOut(postSignOutRedirectUri);
+    if (!this.navigateUrl) {
+      throw new Error('No navigate URL found for sign-out');
+    }
+
+    await this.logto.signOut(postSignOutRedirectUri);
+    await got(this.navigateUrl);
   }
 
   public async isAuthenticated() {
@@ -105,7 +115,7 @@ export default class MockClient {
   }
 
   public assignCookie(cookie: string) {
-    this.interactionCookie = cookie;
+    this.rawCookies = cookie.split(';').map((value) => value.trim());
   }
 
   private readonly consent = async () => {
@@ -130,6 +140,6 @@ export default class MockClient {
     const signInCallbackUri = authCodeResponse.headers.location;
     assert(signInCallbackUri, new Error('Get sign in callback uri failed'));
 
-    await this.logto.handleSignInCallback(signInCallbackUri);
+    return signInCallbackUri;
   };
 }

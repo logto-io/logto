@@ -22,14 +22,14 @@ export const createSocialAuthorizationUrl = async (payload: SocialAuthorizationU
 
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
-  log: LogContext['log']
+  createLog: LogContext['createLog']
 ): Promise<SocialUserInfo> => {
-  log.setKey('SignIn.SocialId.Social.Create');
-  log({ connectorId, connectorData });
+  const log = createLog('Interaction.SignIn.Identifier.Social.Submit');
+  log.append({ connectorId, connectorData });
 
   const userInfo = await getUserInfoByAuthCode(connectorId, connectorData);
 
-  log(userInfo);
+  log.append(userInfo);
 
   return userInfo;
 };

@@ -2,15 +2,10 @@ import type { LogKey } from '@logto/schemas';
 import { LogResult, token } from '@logto/schemas';
 
 import { createMockLogContext } from '#src/test-utils/koa-log.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
-import {
-  addOidcEventListeners,
-  grantListener,
-  grantRevocationListener,
-} from '#src/utils/oidc-provider-event-listener.js';
+import { stringifyError } from '#src/utils/format.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { stringifyError } from './format.js';
+import { grantListener, grantRevocationListener } from './grant.js';
 
 const { jest } = import.meta;
 
@@ -20,30 +15,15 @@ const applicationId = 'applicationIdValue';
 
 const log = createMockLogContext();
 
-describe('addOidcEventListeners', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should add proper listeners', () => {
-    const provider = createMockProvider();
-    const addListener = jest.spyOn(provider, 'addListener');
-    addOidcEventListeners(provider);
-    expect(addListener).toHaveBeenCalledWith('grant.success', grantListener);
-    expect(addListener).toHaveBeenCalledWith('grant.error', grantListener);
-    expect(addListener).toHaveBeenCalledWith('grant.revoked', grantRevocationListener);
-  });
-});
-
 const entities = {
   Account: { accountId: userId },
-  Grant: { jti: sessionId },
+  Session: { jti: sessionId },
   Client: { clientId: applicationId },
 };
 
 const baseCallArgs = { applicationId, sessionId, userId };
 
-const testGrantListener = async (
+const testGrantListener = (
   parameters: { grant_type: string } & Record<string, unknown>,
   body: Record<string, string>,
   expectLogKey: LogKey,
@@ -52,15 +32,15 @@ const testGrantListener = async (
 ) => {
   const ctx = {
     ...createContextWithRouteParameters(),
-    log,
+    createLog: log.createLog,
     oidc: { entities, params: parameters },
     body,
   };
 
   // @ts-expect-error pass complex type check to mock ctx directly
-  await grantListener(ctx, expectError);
-  expect(log.setKey).toHaveBeenCalledWith(expectLogKey);
-  expect(log).toHaveBeenCalledWith({
+  grantListener(ctx, expectError);
+  expect(log.createLog).toHaveBeenCalledWith(expectLogKey);
+  expect(log.mockAppend).toHaveBeenCalledWith({
     ...baseCallArgs,
     result: expectError && LogResult.Error,
     tokenTypes: expectLogTokenTypes,
@@ -74,8 +54,8 @@ describe('grantSuccessListener', () => {
     jest.clearAllMocks();
   });
 
-  it('should log type ExchangeTokenBy when grant type is authorization_code', async () => {
-    await testGrantListener(
+  it('should log type ExchangeTokenBy when grant type is authorization_code', () => {
+    testGrantListener(
       { grant_type: 'authorization_code', code: 'codeValue' },
       {
         access_token: 'newAccessTokenValue',
@@ -87,8 +67,8 @@ describe('grantSuccessListener', () => {
     );
   });
 
-  it('should log type ExchangeTokenBy when grant type is refresh_code', async () => {
-    await testGrantListener(
+  it('should log type ExchangeTokenBy when grant type is refresh_code', () => {
+    testGrantListener(
       { grant_type: 'refresh_token', refresh_token: 'refreshTokenValue' },
       {
         access_token: 'newAccessTokenValue',
@@ -100,8 +80,8 @@ describe('grantSuccessListener', () => {
     );
   });
 
-  test('issued field should not contain "idToken" when there is no issued idToken', async () => {
-    await testGrantListener(
+  test('issued field should not contain "idToken" when there is no issued idToken', () => {
+    testGrantListener(
       { grant_type: 'refresh_token', refresh_token: 'refreshTokenValue' },
       { access_token: 'newAccessTokenValue', refresh_token: 'newRefreshTokenValue' },
       'ExchangeTokenBy.RefreshToken',
@@ -109,8 +89,8 @@ describe('grantSuccessListener', () => {
     );
   });
 
-  it('should log type ExchangeTokenBy when grant type is client_credentials', async () => {
-    await testGrantListener(
+  it('should log type ExchangeTokenBy when grant type is client_credentials', () => {
+    testGrantListener(
       { grant_type: 'client_credentials' },
       { access_token: 'newAccessTokenValue' },
       'ExchangeTokenBy.ClientCredentials',
@@ -118,8 +98,8 @@ describe('grantSuccessListener', () => {
     );
   });
 
-  it('should log type ExchangeTokenBy when grant type is unknown', async () => {
-    await testGrantListener(
+  it('should log type ExchangeTokenBy when grant type is unknown', () => {
+    testGrantListener(
       { grant_type: 'foo' },
       { access_token: 'newAccessTokenValue' },
       'ExchangeTokenBy.Unknown',
@@ -135,8 +115,8 @@ describe('grantErrorListener', () => {
     jest.clearAllMocks();
   });
 
-  it('should log type ExchangeTokenBy when error occurred', async () => {
-    await testGrantListener(
+  it('should log type ExchangeTokenBy when error occurred', () => {
+    testGrantListener(
       { grant_type: 'authorization_code', code: 'codeValue' },
       {
         access_token: 'newAccessTokenValue',
@@ -149,8 +129,8 @@ describe('grantErrorListener', () => {
     );
   });
 
-  it('should log unknown grant when error occurred', async () => {
-    await testGrantListener(
+  it('should log unknown grant when error occurred', () => {
+    testGrantListener(
       { grant_type: 'foo', code: 'codeValue' },
       { access_token: 'newAccessTokenValue' },
       'ExchangeTokenBy.Unknown',
@@ -173,10 +153,10 @@ describe('grantRevocationListener', () => {
     jest.clearAllMocks();
   });
 
-  it('should log token types properly', async () => {
+  it('should log token types properly', () => {
     const ctx = {
       ...createContextWithRouteParameters(),
-      log,
+      createLog: log.createLog,
       oidc: {
         entities: { Client: client, AccessToken: accessToken },
         params: parameters,
@@ -185,9 +165,9 @@ describe('grantRevocationListener', () => {
     };
 
     // @ts-expect-error pass complex type check to mock ctx directly
-    await grantRevocationListener(ctx, grantId);
-    expect(log.setKey).toHaveBeenCalledWith('RevokeToken');
-    expect(log).toHaveBeenCalledWith({
+    grantRevocationListener(ctx, grantId);
+    expect(log.createLog).toHaveBeenCalledWith('RevokeToken');
+    expect(log.mockAppend).toHaveBeenCalledWith({
       applicationId,
       userId,
       params: parameters,
@@ -196,10 +176,10 @@ describe('grantRevocationListener', () => {
     });
   });
 
-  it('should log token types properly 2', async () => {
+  it('should log token types properly 2', () => {
     const ctx = {
       ...createContextWithRouteParameters(),
-      log,
+      createLog: log.createLog,
       oidc: {
         entities: {
           Client: client,
@@ -213,9 +193,9 @@ describe('grantRevocationListener', () => {
     };
 
     // @ts-expect-error pass complex type check to mock ctx directly
-    await grantRevocationListener(ctx, grantId);
-    expect(log.setKey).toHaveBeenCalledWith('RevokeToken');
-    expect(log).toHaveBeenCalledWith({
+    grantRevocationListener(ctx, grantId);
+    expect(log.createLog).toHaveBeenCalledWith('RevokeToken');
+    expect(log.mockAppend).toHaveBeenCalledWith({
       applicationId,
       userId,
       params: parameters,

@@ -1,5 +1,5 @@
 import type { Event } from '@logto/schemas';
-import { interaction, PasscodeType } from '@logto/schemas';
+import { PasscodeType } from '@logto/schemas';
 
 import { createPasscode, sendPasscode, verifyPasscode } from '#src/libraries/passcode.js';
 import type { LogContext } from '#src/middleware/koa-audit-log.js';
@@ -21,37 +21,29 @@ const getPasscodeTypeByEvent = (event: Event): PasscodeType => eventToPasscodeTy
 export const sendPasscodeToIdentifier = async (
   payload: SendPasscodePayload,
   jti: string,
-  log: LogContext['log']
+  createLog: LogContext['createLog']
 ) => {
   const { event, ...identifier } = payload;
   const passcodeType = getPasscodeTypeByEvent(event);
-  // TODO: @Simeng this can be refactored
-  const identifierType =
-    'email' in identifier ? interaction.Identifier.Email : interaction.Identifier.Phone;
 
-  log.setKey(`${event}.${identifierType}.VerificationCode.Create`);
-  log(identifier);
+  const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Create`);
+  log.append(identifier);
 
   const passcode = await createPasscode(jti, passcodeType, identifier);
-
   const { dbEntry } = await sendPasscode(passcode);
 
-  log({ connectorId: dbEntry.id });
+  log.append({ connectorId: dbEntry.id });
 };
 
 export const verifyIdentifierByPasscode = async (
   payload: PasscodeIdentifierPayload & { event: Event },
   jti: string,
-  log: LogContext['log']
+  createLog: LogContext['createLog']
 ) => {
   const { event, passcode, ...identifier } = payload;
   const passcodeType = getPasscodeTypeByEvent(event);
-  // TODO: @Simeng this can be refactored
 
-  const identifierType =
-    'email' in identifier ? interaction.Identifier.Email : interaction.Identifier.Phone;
-
-  log.setKey(`${event}.${identifierType}.VerificationCode.Submit`);
-
+  // TODO: @simeng append more log content?
+  const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Submit`);
   await verifyPasscode(jti, passcodeType, passcode, identifier);
 };

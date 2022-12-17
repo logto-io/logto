@@ -4,6 +4,8 @@ export { Event } from '../interactions.js';
 
 export type Prefix = 'Interaction';
 
+export const prefix: Prefix = 'Interaction';
+
 /** The interaction field to update. This is valid based on we only allow users update one field at a time. */
 export enum Field {
   Event = 'Event',
@@ -25,6 +27,8 @@ export enum Action {
   Update = 'Update',
   /** Submit updated info to an entity, or submit to the system. (E.g. submit an interaction, submit a verification code to get verified) */
   Submit = 'Submit',
+  /** Change an entity to the end state. (E.g. end an interaction) */
+  End = 'End',
 }
 
 /**
@@ -39,10 +43,10 @@ export enum Action {
  * ### Keys breakdown
  *
  * ```ts
- * `Interaction.${Action.Create}`
+ * `Interaction.${Action.Create | Action.End}`
  * ```
  *
- * - Indicates an interaction is being created. Normally it is performed by an OIDC auth request.
+ * - Indicates an interaction is started or ended. Normally it is performed by OIDC Provider.
  *
  * ```ts
  * `Interaction.${Event}.${Action.Update | Action.Submit}`
@@ -70,7 +74,7 @@ export enum Action {
  *   - Otherwise, {@link Action} is fixed to `Submit` (other methods can be verified on submitting).
  */
 export type LogKey =
-  | `${Prefix}.${Action.Create}`
+  | `${Prefix}.${Action.Create | Action.End}`
   | `${Prefix}.${Event}.${Action.Update | Action.Submit}`
   | `${Prefix}.${Event}.${Field.Profile}.${Action.Update}`
   | `${Prefix}.${Event}.${Field.Identifier}.${Method.VerificationCode}.${

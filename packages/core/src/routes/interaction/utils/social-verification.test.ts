@@ -26,7 +26,7 @@ describe('social-verification', () => {
   it('verifySocialIdentity', async () => {
     const connectorId = 'connector';
     const connectorData = { authCode: 'code' };
-    const userInfo = await verifySocialIdentity({ connectorId, connectorData }, log);
+    const userInfo = await verifySocialIdentity({ connectorId, connectorData }, log.createLog);
 
     expect(getUserInfoByAuthCode).toBeCalledWith(connectorId, connectorData);
     expect(userInfo).toEqual({ id: 'foo' });

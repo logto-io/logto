@@ -1,5 +1,5 @@
 import type { LogContextPayload, LogKey } from '@logto/schemas';
-import { LogKeyUnknown, LogResult } from '@logto/schemas';
+import { LogResult } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import pick from 'lodash.pick';
@@ -11,15 +11,28 @@ import { insertLog } from '#src/queries/log.js';
 const removeUndefinedKeys = (object: Record<string, unknown>) =>
   Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
 
+export class LogEntry {
+  payload: LogContextPayload;
+
+  constructor(public readonly key: LogKey) {
+    this.payload = {
+      key,
+      result: LogResult.Success,
+    };
+  }
+
+  append(data: Readonly<LogPayload>) {
+    this.payload = {
+      ...this.payload,
+      ...removeUndefinedKeys(data),
+    };
+  }
+}
+
 export type LogPayload = Partial<LogContextPayload> & Record<string, unknown>;
 
-export type LogFunction = {
-  (data: Readonly<LogPayload>): void;
-  setKey: (key: LogKey) => void;
-};
-
 export type LogContext = {
-  log: LogFunction;
+  createLog: (key: LogKey) => LogEntry;
 };
 
 export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamContext> = ContextT &
@@ -29,13 +42,17 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
  * The factory to create a new audit log middleware function.
  * It will inject a {@link LogFunction} property named `log` to the context to enable audit logging.
  *
- * ---
+ * #### Set log key
  *
  * You need to explicitly call `ctx.log.setKey()` to set a {@link LogKey} thus the log can be categorized and indexed in database:
  *
  * ```ts
  * ctx.log.setKey('SignIn.Submit'); // Key is typed
  * ```
+ *
+ * If log key is {@link LogKeyUnknown} in the end, it will not be recorded to the persist storage.
+ *
+ * #### Log data
  *
  * To log data, call `ctx.log()`. It'll use object spread operators to update data (i.e. merge with one-level overwrite and shallow copy).
  *
@@ -60,61 +77,50 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
  * @see {@link LogContextPayload} for the basic type suggestion of log data.
  * @returns An audit log middleware function.
  */
-export default function koaAuditLog<
-  StateT,
-  ContextT extends IRouterParamContext,
-  ResponseBodyT
->(): MiddlewareType<StateT, WithLogContext<ContextT>, ResponseBodyT> {
+export default function koaAuditLog<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
+  dumpLogContext?: (ctx: ContextT) => Promise<Record<string, unknown>> | Record<string, unknown>
+): MiddlewareType<StateT, WithLogContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
-    const {
-      ip,
-      headers: { 'user-agent': userAgent },
-    } = ctx.request;
+    const entries: LogEntry[] = [];
 
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let payload: LogContextPayload = {
-      key: LogKeyUnknown,
-      result: LogResult.Success,
-      ip,
-      userAgent,
+    ctx.createLog = (key: LogKey) => {
+      const entry = new LogEntry(key);
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      entries.push(entry);
+
+      return entry;
     };
-
-    const log: LogFunction = Object.assign(
-      (data: Readonly<LogPayload>) => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        payload = {
-          ...payload,
-          ...removeUndefinedKeys(data),
-        };
-      },
-      {
-        setKey: (key: LogKey) => {
-          // eslint-disable-next-line @silverhand/fp/no-mutation
-          payload = { ...payload, key };
-        },
-      }
-    );
-
-    ctx.log = log;
 
     try {
       await next();
     } catch (error: unknown) {
-      log({
-        result: LogResult.Error,
-        error:
-          error instanceof RequestError
-            ? pick(error, 'message', 'code', 'data')
-            : { message: String(error) },
-      });
+      for (const entry of entries) {
+        entry.append({
+          result: LogResult.Error,
+          error:
+            error instanceof RequestError
+              ? pick(error, 'message', 'code', 'data')
+              : { message: String(error) },
+        });
+      }
       throw error;
     } finally {
-      // TODO: If no `payload.key` found, should we trigger an alert or something?
-      await insertLog({
-        id: nanoid(),
-        type: payload.key,
-        payload,
-      });
+      // Predefined context
+      const {
+        ip,
+        headers: { 'user-agent': userAgent },
+      } = ctx.request;
+
+      const logContext = { ip, userAgent, ...(await dumpLogContext?.(ctx)) };
+      await Promise.all(
+        entries.map(async ({ payload }) => {
+          return insertLog({
+            id: nanoid(),
+            type: payload.key,
+            payload: { ...logContext, ...payload },
+          });
+        })
+      );
     }
   };
 }

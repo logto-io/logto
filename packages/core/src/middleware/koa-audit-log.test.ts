@@ -12,9 +12,6 @@ const { jest } = import.meta;
 
 const nanoIdMock = 'mockId';
 
-// eslint-disable-next-line @silverhand/fp/no-mutating-assign
-const log = Object.assign(jest.fn(), { setKey: jest.fn() });
-
 const { insertLog } = mockEsm('#src/queries/log.js', () => ({
   insertLog: jest.fn(),
 }));
@@ -25,8 +22,9 @@ mockEsm('nanoid', () => ({
 
 const koaLog = await pickDefault(import('./koa-audit-log.js'));
 
-describe('koaLog middleware', () => {
-  const logKey: LogKey = 'SignIn.Username.VerificationCode.Submit';
+// TODO: test with multiple logs
+describe('koaAuditLog middleware', () => {
+  const logKey: LogKey = 'Interaction.SignIn.Identifier.VerificationCode.Submit';
   const mockPayload: LogPayload = {
     userId: 'foo',
     username: 'Bar',
@@ -41,17 +39,17 @@ describe('koaLog middleware', () => {
   });
 
   it('should insert a success log when next() does not throw an error', async () => {
+    // @ts-expect-error for testing
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-      log,
     };
     ctx.request.ip = ip;
     const additionalMockPayload: LogPayload = { foo: 'bar' };
 
     const next = async () => {
-      ctx.log.setKey(logKey);
-      ctx.log(mockPayload);
-      ctx.log(additionalMockPayload);
+      const log = ctx.createLog(logKey);
+      log.append(mockPayload);
+      log.append(additionalMockPayload);
     };
     await koaLog()(ctx, next);
 
@@ -69,33 +67,24 @@ describe('koaLog middleware', () => {
     });
   });
 
-  it('should insert a log with unknown key when there is no log type', async () => {
+  it('should not log when there is no log type', async () => {
+    // @ts-expect-error for testing
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-      log,
     };
     ctx.request.ip = ip;
 
     // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/no-empty-function
     const next = async () => {};
     await koaLog()(ctx, next);
-    expect(insertLog).toBeCalledWith({
-      id: nanoIdMock,
-      type: 'Unknown',
-      payload: {
-        key: 'Unknown',
-        result: LogResult.Success,
-        ip,
-        userAgent,
-      },
-    });
+    expect(insertLog).not.toBeCalled();
   });
 
   describe('should insert an error log with the error message when next() throws an error', () => {
     it('should log with error message when next throws a normal Error', async () => {
+      // @ts-expect-error for testing
       const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
         ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-        log,
       };
       ctx.request.ip = ip;
 
@@ -103,8 +92,8 @@ describe('koaLog middleware', () => {
       const error = new Error(message);
 
       const next = async () => {
-        ctx.log.setKey(logKey);
-        ctx.log(mockPayload);
+        const log = ctx.createLog(logKey);
+        log.append(mockPayload);
         throw error;
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
@@ -124,9 +113,9 @@ describe('koaLog middleware', () => {
     });
 
     it('should insert an error log with the error body when next() throws a RequestError', async () => {
+      // @ts-expect-error for testing
       const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
         ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-        log,
       };
       ctx.request.ip = ip;
 
@@ -137,8 +126,8 @@ describe('koaLog middleware', () => {
       const error = new RequestError(code, data);
 
       const next = async () => {
-        ctx.log.setKey(logKey);
-        ctx.log(mockPayload);
+        const log = ctx.createLog(logKey);
+        log.append(mockPayload);
         throw error;
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);

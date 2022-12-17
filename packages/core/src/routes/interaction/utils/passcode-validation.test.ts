@@ -52,7 +52,7 @@ describe('passcode-validation utils', () => {
   it.each(sendPasscodeTestCase)(
     'send passcode successfully',
     async ({ payload, createPasscodeParams }) => {
-      await sendPasscodeToIdentifier(payload as SendPasscodePayload, 'jti', log);
+      await sendPasscodeToIdentifier(payload as SendPasscodePayload, 'jti', log.createLog);
       expect(passcode.createPasscode).toBeCalledWith('jti', ...createPasscodeParams);
       expect(passcode.sendPasscode).toBeCalled();
     }

@@ -1,35 +1,25 @@
 import { GrantType, LogResult, token } from '@logto/schemas';
-import type { errors, KoaContextWithOIDC, Provider } from 'oidc-provider';
+import type { errors, KoaContextWithOIDC } from 'oidc-provider';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 
-import { stringifyError } from './format.js';
-import { isEnum } from './type.js';
-
-/**
- * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/README.md#im-getting-a-client-authentication-failed-error-with-no-details Getting auth error with no details?}
- * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/events.md OIDC Provider events}
- */
-export const addOidcEventListeners = (provider: Provider) => {
-  provider.addListener('grant.success', grantListener);
-  provider.addListener('grant.error', grantListener);
-  provider.addListener('grant.revoked', grantRevocationListener);
-};
+import { stringifyError } from '../utils/format.js';
+import { isEnum } from '../utils/type.js';
+import { extractInteractionContext } from './utils.js';
 
 /**
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/lib/actions/token.js#L71 Success event emission}
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/lib/shared/error_handler.js OIDC Provider error handler}
  */
-export const grantListener = async (
+export const grantListener = (
   ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody },
   error?: errors.OIDCProviderError
 ) => {
-  const {
-    entities: { Account: account, Grant: grant, Client: client },
-    params,
-  } = ctx.oidc;
+  const { params } = ctx.oidc;
 
-  ctx.log.setKey(`${token.Flow.ExchangeTokenBy}.${getExchangeByType(params?.grant_type)}`);
+  const log = ctx.createLog(
+    `${token.Flow.ExchangeTokenBy}.${getExchangeByType(params?.grant_type)}`
+  );
 
   const { access_token, refresh_token, id_token, scope } = ctx.body;
   const tokenTypes = [
@@ -38,12 +28,9 @@ export const grantListener = async (
     id_token && token.TokenType.IdToken,
   ].filter(Boolean);
 
-  ctx.log({
+  log.append({
+    ...extractInteractionContext(ctx),
     result: error && LogResult.Error,
-    applicationId: client?.clientId,
-    sessionId: grant?.jti,
-    userId: account?.accountId,
-    params,
     tokenTypes,
     scope,
     error: error && stringifyError(error),
@@ -51,20 +38,20 @@ export const grantListener = async (
 };
 
 // The grant.revoked event is emitted at https://github.com/panva/node-oidc-provider/blob/v7.x/lib/helpers/revoke.js#L25
-export const grantRevocationListener = async (
+export const grantRevocationListener = (
   ctx: KoaContextWithOIDC & WithLogContext,
   grantId: string
 ) => {
   const {
-    entities: { Client: client, AccessToken, RefreshToken },
-    params,
+    entities: { AccessToken, RefreshToken },
   } = ctx.oidc;
 
+  // TODO: Check if this is needed or just use `Account?.accountId`
   const userId = AccessToken?.accountId ?? RefreshToken?.accountId;
   const tokenTypes = getRevocationTokenTypes(ctx.oidc);
 
-  ctx.log.setKey('RevokeToken');
-  ctx.log({ userId, applicationId: client?.clientId, params, grantId, tokenTypes });
+  const log = ctx.createLog('RevokeToken');
+  log.append({ ...extractInteractionContext(ctx), userId, grantId, tokenTypes });
 };
 
 /**

@@ -11,7 +11,7 @@ import { Provider, errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
 import envSet from '#src/env-set/index.js';
-import koaAuditLog from '#src/middleware/koa-audit-log.js';
+import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.js';
 import { findApplicationById } from '#src/queries/application.js';
@@ -19,7 +19,6 @@ import { findResourceByIndicator } from '#src/queries/resource.js';
 import { findUserById } from '#src/queries/user.js';
 import { routes } from '#src/routes/consts.js';
 import assertThat from '#src/utils/assert-that.js';
-import { addOidcEventListeners } from '#src/utils/oidc-provider-event-listener.js';
 
 import { claimToUserKey, getUserClaims } from './scope.js';
 
@@ -188,9 +187,6 @@ export default async function initOidc(app: Koa): Promise<Provider> {
   });
 
   addOidcEventListeners(oidc);
-
-  // Session audit logs
-  oidc.use(koaAuditLog());
 
   app.use(mount('/oidc', oidc.app));
 

@@ -5,7 +5,8 @@ import { signUpIdentifiers } from '#src/constants.js';
 import { registerNewUser, setSignUpIdentifier } from '#src/helpers.js';
 import { generateUsername, generatePassword } from '#src/utils.js';
 
-describe('admin console logs', () => {
+/** @deprecated This will be removed soon. */
+describe('admin console logs (legacy)', () => {
   const username = generateUsername();
   const password = generatePassword();
 
