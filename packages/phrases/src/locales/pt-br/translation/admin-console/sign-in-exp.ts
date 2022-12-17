@@ -98,8 +98,6 @@ const sign_in_exp = {
   others: {
     terms_of_use: {
       title: 'TERMOS DE USO',
-      enable: 'Habilitar termos de uso',
-      description: 'Adicione os acordos legais para o uso do seu produto',
       terms_of_use: 'Termos de uso',
       terms_of_use_placeholder: 'https://your.terms.of.use/',
       terms_of_use_tip: 'URL dos termos de uso',

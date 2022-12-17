@@ -77,6 +77,37 @@ const translation = {
     link_email_or_phone_description: '绑定邮箱或手机号以保障您的账号安全',
     continue_with_more_information: '为保障您的账号安全，需要您补充以下信息。',
   },
+  profile: {
+    title: 'Account Settings', // UNTRANSLATED
+    description:
+      'Change your account settings and manage your personal information here to ensure your account security.', // UNTRANSLATED
+    settings: {
+      title: 'PROFILE SETTINGS', // UNTRANSLATED
+      profile_information: 'Profile Information', // UNTRANSLATED
+      avatar: 'Avatar', // UNTRANSLATED
+      name: 'Name', // UNTRANSLATED
+      username: 'Username', // UNTRANSLATED
+    },
+    password: {
+      title: 'PASSWORD', // UNTRANSLATED
+      reset_password: 'Reset Password', // UNTRANSLATED
+      reset_password_sc: 'Reset password', // UNTRANSLATED
+    },
+    link_account: {
+      title: 'LINK ACCOUNT', // UNTRANSLATED
+      email_phone_sign_in: 'Email / Phone Sign-In', // UNTRANSLATED
+      email: 'Email', // UNTRANSLATED
+      phone: 'Phone', // UNTRANSLATED
+      phone_sc: 'Phone number', // UNTRANSLATED
+      social: 'Social Sign-In', // UNTRANSLATED
+      social_sc: 'Social accounts', // UNTRANSLATED
+    },
+    not_set: 'Not set', // UNTRANSLATED
+    edit: 'Edit', // UNTRANSLATED
+    change: 'Change', // UNTRANSLATED
+    link: 'Link', // UNTRANSLATED
+    unlink: 'Unlink', // UNTRANSLATED
+  },
   error: {
     username_password_mismatch: '用户名和密码不匹配',
     username_required: '用户名必填',

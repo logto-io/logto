@@ -208,12 +208,14 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const { type, validateConfig, metadata: originalMetadata } = await getLogtoConnectorById(id);
 
       assertThat(
-        originalMetadata.isStandard !== true || metadata?.target === originalMetadata.target,
+        originalMetadata.isStandard !== true ||
+          !metadata ||
+          metadata.target === originalMetadata.target,
         'connector.can_not_modify_target'
       );
 
       assertThat(
-        originalMetadata.isStandard === true || metadata === undefined,
+        originalMetadata.isStandard === true || !metadata,
         'connector.cannot_overwrite_metadata_for_non_standard_connector'
       );
 

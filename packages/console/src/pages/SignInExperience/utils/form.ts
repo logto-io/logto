@@ -113,12 +113,5 @@ export const getSignUpAndSignInErrorCount = (
   return signUpErrorCount + signInMethodErrorCount;
 };
 
-export const getOthersErrorCount = (
-  errors: FieldErrorsImpl<DeepRequired<SignInExperienceForm>>
-) => {
-  const { termsOfUse } = errors;
-
-  const termsOfUseErrorCount = termsOfUse ? Object.keys(termsOfUse).length : 0;
-
-  return termsOfUseErrorCount;
-};
+export const getOthersErrorCount = (errors: FieldErrorsImpl<DeepRequired<SignInExperienceForm>>) =>
+  errors.termsOfUseUrl ? 1 : 0;

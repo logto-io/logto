@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useRef, useState } from 'react';
 
-import type { HorizontalAlignment } from '@/hooks/use-position';
+import type { HorizontalAlignment } from '@/types/positioning';
 
 import type { Props as ButtonProps } from '../Button';
 import Dropdown from '../Dropdown';

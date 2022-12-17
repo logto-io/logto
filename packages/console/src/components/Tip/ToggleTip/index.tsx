@@ -2,11 +2,11 @@ import type { ReactNode } from 'react';
 import { useCallback, useState, useRef } from 'react';
 import ReactModal from 'react-modal';
 
-import type { HorizontalAlignment } from '@/hooks/use-position';
 import usePosition from '@/hooks/use-position';
+import type { HorizontalAlignment } from '@/types/positioning';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
-import type { TipBubblePosition } from '../TipBubble';
+import type { TipBubblePlacement } from '../TipBubble';
 import TipBubble from '../TipBubble';
 import {
   getVerticalAlignment,
@@ -20,7 +20,7 @@ export type Props = {
   children: ReactNode;
   className?: string;
   anchorClassName?: string;
-  position?: TipBubblePosition;
+  placement?: TipBubblePlacement;
   horizontalAlign?: HorizontalAlignment;
   content?: ((closeTip: () => void) => ReactNode) | ReactNode;
 };
@@ -29,11 +29,11 @@ const ToggleTip = ({
   children,
   className,
   anchorClassName,
-  position = 'top',
+  placement = 'top',
   horizontalAlign = 'center',
   content,
 }: Props) => {
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const tipBubbleRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -47,14 +47,14 @@ const ToggleTip = ({
     positionState,
     mutate,
   } = usePosition({
-    verticalAlign: getVerticalAlignment(position),
-    horizontalAlign: getHorizontalAlignment(position, horizontalAlign),
+    verticalAlign: getVerticalAlignment(placement),
+    horizontalAlign: getHorizontalAlignment(placement, horizontalAlign),
     offset: {
-      vertical: getVerticalOffset(position),
-      horizontal: getHorizontalOffset(position, horizontalAlign),
+      vertical: getVerticalOffset(placement),
+      horizontal: getHorizontalOffset(placement, horizontalAlign),
     },
     anchorRef,
-    overlayRef,
+    overlayRef: tipBubbleRef,
   });
 
   return (
@@ -77,20 +77,16 @@ const ToggleTip = ({
         shouldCloseOnOverlayClick
         shouldCloseOnEsc
         isOpen={isOpen}
-        style={{
-          content: {
-            ...(!layoutPosition && { opacity: 0 }),
-            ...layoutPosition,
-          },
-        }}
         className={styles.content}
         overlayClassName={styles.overlay}
         onRequestClose={onClose}
         onAfterOpen={mutate}
       >
         <TipBubble
-          ref={overlayRef}
-          position={position}
+          ref={tipBubbleRef}
+          anchorRef={anchorRef}
+          position={layoutPosition}
+          placement={placement}
           className={className}
           horizontalAlignment={positionState.horizontalAlign}
         >

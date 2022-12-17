@@ -1,0 +1,31 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  padding: _.unit(6) _.unit(8);
+  display: flex;
+  margin-top: _.unit(4);
+  background: var(--color-bg-layer-1);
+  border-radius: 12px;
+}
+
+.title {
+  width: 405px;
+  flex-shrink: 0;
+  color: var(--color-neutral-variant-60);
+  font: var(--font-subhead-cap);
+}
+
+.content {
+  flex-grow: 1;
+}
+
+@media screen and (max-width: 1080px) {
+  .container {
+    flex-direction: column;
+
+    .content {
+      margin-top: _.unit(4);
+      flex-grow: unset;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { builtInLanguages } from '@logto/phrases-ui';
-import type { Branding, LanguageInfo, SignInExperience, TermsOfUse } from '@logto/schemas';
+import type { Branding, LanguageInfo, SignInExperience } from '@logto/schemas';
 import { SignInMode, ConnectorType, BrandingStyle } from '@logto/schemas';
 import {
   adminConsoleApplicationId,
@@ -42,13 +42,6 @@ export const validateLanguageInfo = async (languageInfo: LanguageInfo) => {
   );
 };
 
-export const validateTermsOfUse = (termsOfUse: TermsOfUse) => {
-  assertThat(
-    !termsOfUse.enabled || termsOfUse.contentUrl,
-    'sign_in_experiences.empty_content_url_of_terms_of_use'
-  );
-};
-
 export const removeUnavailableSocialConnectorTargets = async () => {
   const connectors = await getLogtoConnectors();
   const availableSocialConnectorTargets = deduplicate(
@@ -78,6 +71,7 @@ export const getSignInExperienceForApplication = async (
         ...adminConsoleSignInExperience.branding,
         slogan: i18next.t('admin_console.welcome.title'),
       },
+      termsOfUseUrl: signInExperience.termsOfUseUrl,
       languageInfo: signInExperience.languageInfo,
       signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
       socialSignInConnectorTargets: [],

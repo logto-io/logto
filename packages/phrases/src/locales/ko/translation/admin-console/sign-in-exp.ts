@@ -93,8 +93,6 @@ const sign_in_exp = {
   others: {
     terms_of_use: {
       title: '이용 약관',
-      enable: '이용 약관 활성화',
-      description: '서비스 사용을 위한 이용 약관을 추가해보세요.',
       terms_of_use: '이용 약관',
       terms_of_use_placeholder: 'https://your.terms.of.use/',
       terms_of_use_tip: '이용 약관 URL',

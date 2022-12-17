@@ -21,6 +21,8 @@ export type UserInfo<Keys extends keyof CreateUser = typeof userInfoSelectFields
   Keys
 >;
 
+export type UserProfileResponse = UserInfo & { hasPasswordSet: boolean };
+
 export enum UserRole {
   Admin = 'admin',
 }

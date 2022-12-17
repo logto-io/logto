@@ -28,7 +28,11 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
 
     const user = await findUserById(userId);
 
-    ctx.body = pick(user, ...userInfoSelectFields);
+    ctx.body = {
+      ...pick(user, ...userInfoSelectFields),
+      hasPasswordSet: Boolean(user.passwordEncrypted),
+    };
+
     ctx.status = 200;
 
     return next();
@@ -69,9 +73,9 @@ export default function profileRoutes<T extends AnonymousRouter>(router: T, prov
 
       const { username } = ctx.guard.body;
       await checkIdentifierCollision({ username }, userId);
+      await updateUserById(userId, { username }, 'replace');
 
-      const user = await updateUserById(userId, { username }, 'replace');
-      ctx.body = pick(user, ...userInfoSelectFields);
+      ctx.status = 204;
 
       return next();
     }

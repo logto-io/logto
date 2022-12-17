@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
 import TextLink from '@/components/TextLink';
+import type { Props as TextLinkProps } from '@/components/TextLink';
 import type { ModalContentRenderProps } from '@/hooks/use-confirm-modal';
 import { PageContext } from '@/hooks/use-page-context';
 import usePlatform from '@/hooks/use-platform';
@@ -9,19 +10,19 @@ import { ConfirmModalMessage } from '@/types';
 
 const TermsOfUseConfirmModalContent = ({ cancel }: ModalContentRenderProps) => {
   const { experienceSettings } = useContext(PageContext);
-  const { termsOfUse } = experienceSettings ?? {};
+  const { termsOfUseUrl } = experienceSettings ?? {};
 
   const { t } = useTranslation();
   const { isMobile } = usePlatform();
 
-  const linkProps = isMobile
+  const linkProps: TextLinkProps = isMobile
     ? {
         onClick: () => {
           cancel(ConfirmModalMessage.SHOW_TERMS_DETAIL_MODAL);
         },
       }
     : {
-        href: termsOfUse?.contentUrl,
+        href: termsOfUseUrl ?? undefined,
         target: '_blank',
       };
 

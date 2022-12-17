@@ -35,12 +35,8 @@ const { findDefaultSignInExperience, updateDefaultSignInExperience } = mockEsm(
   })
 );
 
-const {
-  validateBranding,
-  validateTermsOfUse,
-  validateLanguageInfo,
-  removeUnavailableSocialConnectorTargets,
-} = await import('./index.js');
+const { validateBranding, validateLanguageInfo, removeUnavailableSocialConnectorTargets } =
+  await import('./index.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -136,16 +132,6 @@ describe('validate language info', () => {
         language: unsupportedLanguage,
       })
     );
-  });
-});
-
-describe('validate terms of use', () => {
-  test('should throw when terms of use is enabled and content URL is empty', () => {
-    expect(() => {
-      validateTermsOfUse({
-        enabled: true,
-      });
-    }).toMatchError(new RequestError('sign_in_experiences.empty_content_url_of_terms_of_use'));
   });
 });
 

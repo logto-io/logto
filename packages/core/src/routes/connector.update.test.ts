@@ -108,7 +108,54 @@ describe('connector PATCH routes', () => {
       expect(response).toHaveProperty('statusCode', 400);
     });
 
-    it('successfully updates connector configs', async () => {
+    it('throws when updates non-standard connector metadata', async () => {
+      getLogtoConnectors.mockResolvedValue([
+        {
+          dbEntry: mockConnector,
+          metadata: { ...mockMetadata },
+          type: ConnectorType.Social,
+          ...mockLogtoConnector,
+        },
+      ]);
+      const response = await connectorRequest.patch('/connectors/id').send({
+        metadata: {
+          target: 'connector',
+          name: { en: 'connector_name', fr: 'connector_name' },
+          logo: 'new_logo.png',
+        },
+      });
+      expect(response).toHaveProperty('statusCode', 400);
+    });
+
+    it('successfully updates connector config', async () => {
+      getLogtoConnectors.mockResolvedValue([
+        {
+          dbEntry: mockConnector,
+          metadata: { ...mockMetadata, isStandard: true },
+          type: ConnectorType.Social,
+          ...mockLogtoConnector,
+        },
+      ]);
+      updateConnector.mockResolvedValueOnce({
+        ...mockConnector,
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
+      const response = await connectorRequest.patch('/connectors/id').send({
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
+      expect(response).toHaveProperty('statusCode', 200);
+      expect(updateConnector).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'id' },
+          set: {
+            config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+          },
+          jsonbMode: 'replace',
+        })
+      );
+    });
+
+    it('successfully updates connector config and metadata', async () => {
       getLogtoConnectors.mockResolvedValue([
         {
           dbEntry: mockConnector,
