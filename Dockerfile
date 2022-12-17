@@ -1,5 +1,5 @@
 # Build stage
-FROM node:16-alpine as builder
+FROM node:19-alpine as builder
 WORKDIR /etc/logto
 ENV CI=true
 
@@ -25,7 +25,7 @@ RUN NODE_ENV=production pnpm i
 RUN rm -rf .parcel-cache pnpm-*.yaml
 
 # Seal stage
-FROM node:16-alpine as app
+FROM node:19-alpine as app
 WORKDIR /etc/logto
 COPY --from=builder /etc/logto .
 EXPOSE 3001
