@@ -31,7 +31,7 @@
     "@silverhand/ts-config": "1.2.1",
     "@types/jest": "^29.1.2",
     "@types/jest-environment-puppeteer": "^5.0.2",
-    "@types/node": "^16.0.0",
+    "@types/node": "^18.0.0",
     "dotenv": "^16.0.0",
     "eslint": "^8.21.0",
     "got": "^12.5.3",
