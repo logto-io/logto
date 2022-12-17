@@ -1,15 +1,14 @@
-import { Event } from '../interactions.js';
+import type { Event } from '../interactions.js';
 
-import Flow = Event;
+export { Event } from '../interactions.js';
 
-export { Flow };
+export type Prefix = 'Interaction';
 
-/** Identifier to verify. */
-export enum Identifier {
-  Username = 'Username',
-  Email = 'Email',
-  Phone = 'Phone',
-  SocialId = 'SocialId',
+/** The interaction field to update. This is valid based on we only allow users update one field at a time. */
+export enum Field {
+  Event = 'Event',
+  Identifier = 'Identifier',
+  Profile = 'Profile',
 }
 
 /** Method to verify the identifier */
@@ -29,74 +28,55 @@ export enum Action {
 }
 
 /**
- * The forgot password flow log key type. Format:
- *
- * ```ts
- * `ForgotPassword.${Identifier}.VerificationCode.${Action}`
- * ```
- *
- * Since we can use only verification code for resetting password,
- * {@link Identifier.SocialId} is excluded and the method is fixed to {@link Method.VerificationCode}.
- *
- * {@link Action} definition:
- *
- * - {@link Action.Create} indicates the process of generating and sending a verification code.
- * - {@link Action.Submit} indicates the process of submitting a verification code to get verified.
- */
-export type ForgotPasswordLogKey = `${Flow.ForgotPassword}.${Exclude<
-  Identifier,
-  'SocialId'
->}.${Method.VerificationCode}.${Action.Create | Action.Submit}`;
-
-type SignInRegisterFlow = Exclude<Flow, 'ForgotPassword'>;
-
-/**
- * The sign-in / register flow log key type. Format:
- *
- * ```ts
- * `${Flow}.${Identifier}.${Method}.${Action}`
- * ```
- *
- * Restrictions:
- *
- * - For social identifier and method, the value can only be `SignIn.SocialId.Social.Create`.
- * - For password method, the action can only be `Create`.
- * - For verification code method, the action can be `Create` or `Submit`.
- *
- * @see {@link SignInRegisterFlow}, {@link Identifier}, {@link Method}, {@link Action} for all available enums.
- */
-export type SignInRegisterLogKey =
-  | `${Flow.SignIn}.${Identifier.SocialId}.${Method.Social}.${Action.Create}`
-  | `${SignInRegisterFlow}.${Exclude<Identifier, 'SocialId'>}.${Method.Password}.${Action.Create}`
-  | `${SignInRegisterFlow}.${Exclude<Identifier, 'SocialId'>}.${Method.VerificationCode}.${
-      | Action.Create
-      | Action.Submit}`;
-
-export type FlowLogKey = `${Flow}.${Action}`;
-
-/**
  * The union type of all available log keys for interaction.
- *
- * There are two formats of a key:
- *
- * ```ts
- * `${Flow}.${Identifier}.${Method}.${Action}`
- * `${Flow}.${Action}`
- * ```
  *
  * The key MUST describe an {@link Action}:
  *
  * - {@link Action.Create} (Create a new entity);
- * - {@link Action.Update} (Update an existing entity.);
+ * - {@link Action.Update} (Update an existing entity);
  * - {@link Action.Submit} (Submit updated info to an entity, or submit to the system).
  *
- * In an interaction, ONLY the interaction itself and verification codes can be submitted, i.e.:
+ * ### Keys breakdown
  *
  * ```ts
- * `${Flow}.Submit`
- * `${Flow}.${Identifier}.VerificationCode.Submit`
+ * `Interaction.${Action.Create}`
  * ```
  *
- * There may be more restrictions, please see the specific type to learn more.
+ * - Indicates an interaction is being created. Normally it is performed by an OIDC auth request.
+ *
+ * ```ts
+ * `Interaction.${Event}.${Action.Update | Action.Submit}`
+ * ```
+ *
+ * Since {@link Event} is the primary identifier of interaction type, most of log keys include this info for better query experience.
+ * The only exception is the initial creation of an interaction, which has a key of `Interaction.Create`,
+ * since we cannot know the type at that time.
+ *
+ * - When {@link Action} is `Update`, it indicates the type of interaction is updating to {@link Event}.
+ * - When {@link Action} is `Submit`, it indicates the whole interaction is being submitted.
+ *
+ * ```ts
+ * `Interaction.${Event}.${Field.Profile}.${Action.Update}`
+ * ```
+ *
+ * - Indicates the profile of an interaction is being updated. It may add or remove profile data.
+ *
+ * ```ts
+ * `Interaction.${Event}.${Field.Identifier}.${Method}.${Action}`
+ * ```
+ *
+ * - Indicates an identifier method is being created or submitted to an interaction.
+ *   - When {@link Method} is `VerificationCode`, {@link Action} can be `Create` (generate and send a code) or `Submit` (verify and submit to the identifiers);
+ *   - Otherwise, {@link Action} is fixed to `Submit` (other methods can be verified on submitting).
  */
-export type LogKey = ForgotPasswordLogKey | SignInRegisterLogKey | FlowLogKey;
+export type LogKey =
+  | `${Prefix}.${Action.Create}`
+  | `${Prefix}.${Event}.${Action.Update | Action.Submit}`
+  | `${Prefix}.${Event}.${Field.Profile}.${Action.Update}`
+  | `${Prefix}.${Event}.${Field.Identifier}.${Method.VerificationCode}.${
+      | Action.Create
+      | Action.Submit}`
+  | `${Prefix}.${Event}.${Field.Identifier}.${Exclude<
+      Method,
+      Method.VerificationCode
+    >}.${Action.Submit}`;
