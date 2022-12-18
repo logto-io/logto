@@ -6,7 +6,7 @@ import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type koaAuditLog from '#src/middleware/koa-audit-log.js';
-import { createMockLogContext } from '#src/test-utils/koa-log.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 

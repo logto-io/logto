@@ -1,6 +1,7 @@
 import type { LogtoConfig } from '@logto/node';
 import LogtoClient from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds/index.js';
+import type { Optional } from '@silverhand/essentials';
 import { assert } from '@silverhand/essentials';
 import { got } from 'got';
 
@@ -39,6 +40,22 @@ export default class MockClient {
   // TODO: Rename to sessionCookies or something accurate
   public get interactionCookie(): string {
     return this.rawCookies.join('; ');
+  }
+
+  public get parsedCookies(): Map<string, Optional<string>> {
+    const map = new Map<string, Optional<string>>();
+
+    for (const cookie of this.rawCookies) {
+      for (const element of cookie.split(';')) {
+        const [key, value] = element.trim().split('=');
+
+        if (key) {
+          map.set(key, value);
+        }
+      }
+    }
+
+    return map;
   }
 
   public async initSession(callbackUri = demoAppRedirectUri) {

@@ -1,7 +1,7 @@
 import type { LogKey } from '@logto/schemas';
 import { LogResult, token } from '@logto/schemas';
 
-import { createMockLogContext } from '#src/test-utils/koa-log.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { stringifyError } from '#src/utils/format.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 

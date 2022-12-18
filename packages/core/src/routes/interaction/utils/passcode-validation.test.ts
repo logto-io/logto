@@ -1,7 +1,7 @@
 import { PasscodeType, Event } from '@logto/schemas';
 import { mockEsmWithActual } from '@logto/shared/esm';
 
-import { createMockLogContext } from '#src/test-utils/koa-log.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 
 import type { SendPasscodePayload } from '../types/index.js';
 

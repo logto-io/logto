@@ -22,7 +22,6 @@ mockEsm('nanoid', () => ({
 
 const koaLog = await pickDefault(import('./koa-audit-log.js'));
 
-// TODO: test with multiple logs
 describe('koaAuditLog middleware', () => {
   const logKey: LogKey = 'Interaction.SignIn.Identifier.VerificationCode.Submit';
   const mockPayload: LogPayload = {
@@ -63,6 +62,46 @@ describe('koaAuditLog middleware', () => {
         result: LogResult.Success,
         ip,
         userAgent,
+      },
+    });
+  });
+
+  it('should insert multiple success logs when needed', async () => {
+    // @ts-expect-error for testing
+    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
+    };
+    ctx.request.ip = ip;
+    const additionalMockPayload: LogPayload = { foo: 'bar' };
+
+    const next = async () => {
+      const log = ctx.createLog(logKey);
+      log.append(mockPayload);
+      log.append(additionalMockPayload);
+      const log2 = ctx.createLog(logKey);
+      log2.append(mockPayload);
+    };
+    await koaLog()(ctx, next);
+
+    const basePayload = {
+      ...mockPayload,
+      key: logKey,
+      result: LogResult.Success,
+      ip,
+      userAgent,
+    };
+
+    expect(insertLog).toHaveBeenCalledWith({
+      id: nanoIdMock,
+      type: logKey,
+      payload: basePayload,
+    });
+    expect(insertLog).toHaveBeenCalledWith({
+      id: nanoIdMock,
+      type: logKey,
+      payload: {
+        ...basePayload,
+        ...additionalMockPayload,
       },
     });
   });
@@ -112,7 +151,7 @@ describe('koaAuditLog middleware', () => {
       });
     });
 
-    it('should insert an error log with the error body when next() throws a RequestError', async () => {
+    it('should update all logs with error result when next() throws a RequestError', async () => {
       // @ts-expect-error for testing
       const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
         ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
@@ -128,10 +167,13 @@ describe('koaAuditLog middleware', () => {
       const next = async () => {
         const log = ctx.createLog(logKey);
         log.append(mockPayload);
+        const log2 = ctx.createLog(logKey);
+        log2.append(mockPayload);
         throw error;
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
 
+      expect(insertLog).toHaveBeenCalledTimes(2);
       expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
         type: logKey,

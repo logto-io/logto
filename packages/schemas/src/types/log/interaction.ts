@@ -31,12 +31,7 @@ export enum Action {
 
 /**
  * The union type of all available log keys for interaction.
- *
- * The key MUST describe an {@link Action}:
- *
- * - {@link Action.Create} (Create a new entity);
- * - {@link Action.Update} (Update an existing entity);
- * - {@link Action.Submit} (Submit updated info to an entity, or submit to the system).
+ * The key MUST describe an {@link Action}.
  *
  * ### Keys breakdown
  *

@@ -1,7 +1,7 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { mockEsm } from '@logto/shared/esm';
 
-import { createMockLogContext } from '#src/test-utils/koa-log.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 
 const { jest } = import.meta;
 

@@ -1,7 +1,7 @@
 import type { LogKey } from '@logto/schemas';
 import type { PromptDetail } from 'oidc-provider';
 
-import { createMockLogContext } from '#src/test-utils/koa-log.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import { interactionEndedListener, interactionStartedListener } from './interaction.js';

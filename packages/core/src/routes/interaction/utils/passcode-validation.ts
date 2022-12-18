@@ -43,7 +43,9 @@ export const verifyIdentifierByPasscode = async (
   const { event, passcode, ...identifier } = payload;
   const passcodeType = getPasscodeTypeByEvent(event);
 
-  // TODO: @simeng append more log content?
+  // TODO: @Simeng maybe we should just log all interaction payload in every request?
   const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Submit`);
+  log.append(identifier);
+
   await verifyPasscode(jti, passcodeType, passcode, identifier);
 };
