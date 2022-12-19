@@ -1,4 +1,4 @@
-import { demoAppApplicationId } from '@logto/schemas/lib/seeds/index.js';
+import { demoAppApplicationId } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 
 import { findApplicationById } from '#src/queries/application.js';

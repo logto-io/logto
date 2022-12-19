@@ -1,5 +1,5 @@
 import type { Application } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 

@@ -1,4 +1,4 @@
-import { managementResource } from '@logto/schemas/lib/seeds';
+import { managementResource } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { createResource, getResource, updateResource, deleteResource } from '#src/api/index.js';

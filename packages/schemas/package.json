@@ -1,7 +1,6 @@
 {
   "name": "@logto/schemas",
   "version": "1.0.0-beta.16",
-  "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "type": "module",
@@ -11,6 +10,13 @@
     "alterations-js",
     "tables"
   ],
+  "main": "./lib/src/index.js",
+  "exports": {
+    ".": "./lib/src/index.js",
+    "./lib/*": "./lib/src/*",
+    "./models": "./lib/src-models/index.js",
+    "./package.json": "./package.json"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -55,7 +61,9 @@
     "rules": {
       "@typescript-eslint/ban-types": "off"
     },
-    "ignorePatterns": ["src/db-entries/"],
+    "ignorePatterns": [
+      "src/db-entries/"
+    ],
     "overrides": [
       {
         "files": [
@@ -74,6 +82,8 @@
     "@logto/language-kit": "workspace:*",
     "@logto/phrases": "workspace:*",
     "@logto/phrases-ui": "workspace:*",
+    "@withtyped/server": "^0.3.0",
+    "nanoid": "^4.0.0",
     "zod": "^3.20.2"
   }
 }

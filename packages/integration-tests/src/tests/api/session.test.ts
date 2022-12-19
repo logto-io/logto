@@ -1,5 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import {

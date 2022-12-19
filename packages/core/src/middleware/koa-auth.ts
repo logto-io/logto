@@ -1,7 +1,7 @@
 import type { IncomingHttpHeaders } from 'http';
 
 import { UserRole } from '@logto/schemas';
-import { managementResource } from '@logto/schemas/lib/seeds/index.js';
+import { managementResource } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { jwtVerify } from 'jose';

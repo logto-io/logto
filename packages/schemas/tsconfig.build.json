@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig",
-  "include": ["src"],
+  "include": ["src", "src-models"],
   "exclude": ["src/gen"]
 }

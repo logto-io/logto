@@ -30,6 +30,11 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
         return;
       }
 
+      // Should log 500 errors in prod anyway
+      if (envSet.values.isProduction) {
+        console.error(error);
+      }
+
       ctx.status = 500;
       ctx.body = { message: 'Internal server error.' };
     }

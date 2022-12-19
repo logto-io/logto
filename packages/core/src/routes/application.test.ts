@@ -29,10 +29,10 @@ const { findApplicationById } = mockEsm('#src/queries/application.js', () => ({
   ),
 }));
 
-mockEsm('@logto/shared', () => ({
+mockEsm('@logto/core-kit', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: jest.fn(() => () => 'randomId'),
-  buildApplicationSecret: jest.fn(() => 'randomId'),
+  generateStandardId: jest.fn(() => 'randomId'),
 }));
 
 const { createRequester } = await import('#src/utils/test-utils.js');

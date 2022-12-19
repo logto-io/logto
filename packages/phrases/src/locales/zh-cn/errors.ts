@@ -1,6 +1,7 @@
 const errors = {
   request: {
     invalid_input: 'Input is invalid. {{details}}', // UNTRANSLATED
+    general: 'Request error occurred.', // UNTRANSLATED
   },
   auth: {
     authorization_header_missing: 'Authorization 请求头缺失。',

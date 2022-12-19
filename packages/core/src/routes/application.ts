@@ -1,5 +1,5 @@
+import { generateStandardId, buildIdGenerator } from '@logto/core-kit';
 import { Applications } from '@logto/schemas';
-import { buildApplicationSecret, buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -47,7 +47,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
 
       ctx.body = await insertApplication({
         id: applicationId(),
-        secret: buildApplicationSecret(),
+        secret: generateStandardId(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
         ...rest,
       });

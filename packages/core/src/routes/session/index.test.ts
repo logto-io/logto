@@ -1,11 +1,12 @@
 import type { User } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
+import { adminConsoleApplicationId } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
-import { mockUser } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 import sessionRoutes from './index.js';
+
+import { mockUser } from '#src/__mocks__/index.js';
 
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));

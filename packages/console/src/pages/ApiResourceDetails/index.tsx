@@ -1,6 +1,5 @@
 import type { Resource } from '@logto/schemas';
-import { AppearanceMode } from '@logto/schemas';
-import { managementResource } from '@logto/schemas/lib/seeds';
+import { AppearanceMode, managementResource } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';

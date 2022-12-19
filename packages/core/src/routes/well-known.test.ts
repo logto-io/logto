@@ -1,9 +1,9 @@
 import { SignInMode } from '@logto/schemas';
-import {
-  adminConsoleApplicationId,
-  adminConsoleSignInExperience,
-} from '@logto/schemas/lib/seeds/index.js';
+import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 import {
   mockAliyunDmConnector,
@@ -15,8 +15,6 @@ import {
   mockWechatConnector,
   mockWechatNativeConnector,
 } from '#src/__mocks__/index.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
-import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 await mockEsmWithActual('i18next', () => ({

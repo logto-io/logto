@@ -1,6 +1,6 @@
 import type { LogtoConfig } from '@logto/node';
 import LogtoClient from '@logto/node';
-import { demoAppApplicationId } from '@logto/schemas/lib/seeds/index.js';
+import { demoAppApplicationId } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { assert } from '@silverhand/essentials';
 import { got } from 'got';

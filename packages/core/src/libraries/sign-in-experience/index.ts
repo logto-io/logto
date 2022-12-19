@@ -5,7 +5,7 @@ import {
   adminConsoleApplicationId,
   adminConsoleSignInExperience,
   demoAppApplicationId,
-} from '@logto/schemas/lib/seeds/index.js';
+} from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
 import i18next from 'i18next';
 

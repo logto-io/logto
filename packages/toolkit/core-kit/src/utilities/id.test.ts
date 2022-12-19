@@ -1,4 +1,4 @@
-import { buildIdGenerator, alphabet } from './id.js';
+import { buildIdGenerator } from './id.js';
 
 describe('id generator', () => {
   it('should match the input length', () => {
@@ -11,13 +11,5 @@ describe('id generator', () => {
     const id_2 = buildIdGenerator(10)();
 
     expect(id_1).not.toEqual(id_2);
-  });
-
-  it('should only contains provided alphabets', () => {
-    const id = buildIdGenerator(20)();
-
-    for (const char of id) {
-      expect(alphabet.includes(char)).toBeTruthy();
-    }
   });
 });

@@ -1,5 +1,5 @@
 import { ApplicationType } from '@logto/schemas';
-import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
+import { demoAppApplicationId } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import {
