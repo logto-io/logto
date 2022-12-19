@@ -22,7 +22,7 @@ import Drawer from '@/components/Drawer';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { Parameters } from '@/consts/pathnames';
+import type { Parameters } from '@/consts/pathnames';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -42,7 +42,7 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(new URL(uri).origin));
 
 const ApplicationDetails = () => {
-  const { [Parameters.Id]: id } = useParams();
+  const { id } = useParams<{ [Parameters.Id]: string }>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Application, RequestError>(
     id && `/api/applications/${id}`

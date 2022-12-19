@@ -43,14 +43,14 @@ export const getConnectorDetailsPathname = (connectorType: ConnectorType, connec
   const tab =
     connectorType === ConnectorType.Social ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless;
 
-  return `/${PagePath.ApiResources}/${tab}/${connectorId}`;
+  return `/${PagePath.Connectors}/${tab}/${connectorId}`;
 };
 
 export const getCreateConnectorPathname = (connectorType: ConnectorType) => {
   const tab =
     connectorType === ConnectorType.Social ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless;
 
-  return `/${PagePath.ApiResources}/${tab}/create/${kebabCase(connectorType)}`;
+  return `/${PagePath.Connectors}/${tab}/create/${kebabCase(connectorType)}`;
 };
 
 /**

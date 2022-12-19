@@ -21,7 +21,7 @@ import TextLink from '@/components/TextLink';
 import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import { UserTabs } from '@/consts/page-tabs';
-import { Parameters } from '@/consts/pathnames';
+import type { Parameters } from '@/consts/pathnames';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -38,7 +38,7 @@ import { userDetailsParser } from './utils';
 const UserDetails = () => {
   const location = useLocation();
   const isLogs = location.pathname.endsWith(`/${UserTabs.Logs}`);
-  const { [Parameters.UserId]: userId } = useParams();
+  const { userId } = useParams<{ [Parameters.UserId]: string }>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

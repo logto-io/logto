@@ -25,7 +25,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { Parameters } from '@/consts/pathnames';
+import type { Parameters } from '@/consts/pathnames';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
@@ -41,7 +41,7 @@ type FormData = {
 
 const ApiResourceDetails = () => {
   const location = useLocation();
-  const { [Parameters.Id]: id } = useParams();
+  const { id } = useParams<{ [Parameters.Id]: string }>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
