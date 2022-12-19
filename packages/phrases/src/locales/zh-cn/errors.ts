@@ -3,7 +3,7 @@ const errors = {
     invalid_input: 'Input is invalid. {{details}}', // UNTRANSLATED
   },
   auth: {
-    authorization_header_missing: 'Authorization 请求头部信息丢失。',
+    authorization_header_missing: 'Authorization 请求头缺失。',
     authorization_token_type_not_supported: 'Authorization token 类型不支持',
     unauthorized: '未经授权。请检查凭据及其范围。',
     forbidden: '禁止访问。请检查用户 role 与权限。',
