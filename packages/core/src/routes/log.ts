@@ -24,6 +24,7 @@ export default function logRoutes<T extends AuthedRouter>(router: T) {
         query: { userId, applicationId, logType },
       } = ctx.guard;
 
+      // TODO: @Gao refactor like user search
       const [{ count }, logs] = await Promise.all([
         countLogs({ logType, applicationId, userId }),
         findLogs(limit, offset, { logType, userId, applicationId }),

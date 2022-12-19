@@ -87,9 +87,9 @@ export const emptyMiddleware =
   };
 
 export const createContextWithRouteParameters = (
-  mockContestOptions?: Options<Record<string, unknown>>
+  mockContextOptions?: Options<Record<string, unknown>>
 ): Context & IRouterParamContext => {
-  const ctx = createMockContext(mockContestOptions);
+  const ctx = createMockContext(mockContextOptions);
 
   return {
     ...ctx,

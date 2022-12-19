@@ -1,7 +1,7 @@
 import { Provider } from 'oidc-provider';
 
-import koaLogSession from '#src/middleware/koa-log-session.js';
-import type { WithLogContext } from '#src/middleware/koa-log.js';
+import type { WithLogContextLegacy } from '#src/middleware/koa-audit-log-legacy.js';
+import koaLogSessionLegacy from '#src/middleware/koa-log-session-legacy.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -9,7 +9,7 @@ const { jest } = import.meta;
 const provider = new Provider('https://logto.test');
 const interactionDetails = jest.spyOn(provider, 'interactionDetails');
 
-describe('koaLogSession', () => {
+describe('koaLogSessionLegacy', () => {
   const sessionId = 'sessionId';
   const applicationId = 'applicationId';
   const addLogContext = jest.fn();
@@ -29,40 +29,40 @@ describe('koaLogSession', () => {
   });
 
   it('should get session info from the provider', async () => {
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+    const ctx: WithLogContextLegacy<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters(),
       addLogContext,
       log,
     };
 
-    await expect(koaLogSession(provider)(ctx, next)).resolves.not.toThrow();
+    await expect(koaLogSessionLegacy(provider)(ctx, next)).resolves.not.toThrow();
     expect(interactionDetails).toHaveBeenCalled();
   });
 
   it('should log session id and application id', async () => {
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+    const ctx: WithLogContextLegacy<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters(),
       addLogContext,
       log,
     };
 
-    await expect(koaLogSession(provider)(ctx, next)).resolves.not.toThrow();
+    await expect(koaLogSessionLegacy(provider)(ctx, next)).resolves.not.toThrow();
     expect(addLogContext).toHaveBeenCalledWith({ sessionId, applicationId });
   });
 
   it('should call next', async () => {
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+    const ctx: WithLogContextLegacy<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters(),
       addLogContext,
       log,
     };
 
-    await expect(koaLogSession(provider)(ctx, next)).resolves.not.toThrow();
+    await expect(koaLogSessionLegacy(provider)(ctx, next)).resolves.not.toThrow();
     expect(next).toHaveBeenCalled();
   });
 
   it('should not throw when interactionDetails throw error', async () => {
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+    const ctx: WithLogContextLegacy<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters(),
       addLogContext,
       log,
@@ -72,6 +72,6 @@ describe('koaLogSession', () => {
       throw new Error('message');
     });
 
-    await expect(koaLogSession(provider)(ctx, next)).resolves.not.toThrow();
+    await expect(koaLogSessionLegacy(provider)(ctx, next)).resolves.not.toThrow();
   });
 });

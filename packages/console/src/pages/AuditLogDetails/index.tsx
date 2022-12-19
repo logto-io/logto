@@ -1,4 +1,5 @@
-import type { LogDto, User } from '@logto/schemas';
+import type { User } from '@logto/schemas';
+import type { LogDto } from '@logto/schemas/lib/types/log-legacy.js';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';

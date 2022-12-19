@@ -1,10 +1,10 @@
-import type { SocialConnectorPayload, LogType } from '@logto/schemas';
+import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import type { SocialUserInfo } from '#src/connectors/types.js';
 import { getUserInfoByAuthCode } from '#src/libraries/social.js';
-import type { LogContext } from '#src/middleware/koa-log.js';
+import type { LogContext } from '#src/middleware/koa-audit-log.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { SocialAuthorizationUrlPayload } from '../types/index.js';
@@ -22,14 +22,14 @@ export const createSocialAuthorizationUrl = async (payload: SocialAuthorizationU
 
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
-  log: LogContext['log']
+  createLog: LogContext['createLog']
 ): Promise<SocialUserInfo> => {
-  const logType: LogType = 'SignInSocial';
-  log(logType, { connectorId, connectorData });
+  const log = createLog('Interaction.SignIn.Identifier.Social.Submit');
+  log.append({ connectorId, connectorData });
 
   const userInfo = await getUserInfoByAuthCode(connectorId, connectorData);
 
-  log(logType, userInfo);
+  log.append(userInfo);
 
   return userInfo;
 };

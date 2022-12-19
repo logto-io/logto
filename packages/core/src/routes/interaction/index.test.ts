@@ -5,6 +5,8 @@ import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import type koaAuditLog from '#src/middleware/koa-audit-log.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -76,7 +78,17 @@ const { getInteractionStorage } = mockEsm('./utils/interaction.js', () => ({
   getInteractionStorage: jest.fn(),
 }));
 
-const log = jest.fn();
+const { createLog, prependAllLogEntries } = createMockLogContext();
+mockEsmDefault(
+  '#src/middleware/koa-audit-log.js',
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  (): typeof koaAuditLog => () => async (ctx, next) => {
+    ctx.createLog = createLog;
+    ctx.prependAllLogEntries = prependAllLogEntries;
+
+    return next();
+  }
+);
 
 const koaInteractionBodyGuard = await pickDefault(
   import('./middleware/koa-interaction-body-guard.js')
@@ -107,14 +119,6 @@ describe('session -> interactionRoutes', () => {
     provider: createMockProvider(
       jest.fn().mockResolvedValue({ params: {}, jti: 'jti', client_id: demoAppApplicationId })
     ),
-    middlewares: [
-      async (ctx, next) => {
-        ctx.addLogContext = jest.fn();
-        ctx.log = log;
-
-        return next();
-      },
-    ],
   });
 
   afterEach(() => {
@@ -244,7 +248,7 @@ describe('session -> interactionRoutes', () => {
       };
 
       const response = await sessionRequest.post(path).send(body);
-      expect(sendPasscodeToIdentifier).toBeCalledWith(body, 'jti', log);
+      expect(sendPasscodeToIdentifier).toBeCalledWith(body, 'jti', createLog);
       expect(response.status).toEqual(204);
     });
   });

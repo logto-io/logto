@@ -5,7 +5,8 @@ import { signUpIdentifiers } from '#src/constants.js';
 import { registerNewUser, setSignUpIdentifier } from '#src/helpers.js';
 import { generateUsername, generatePassword } from '#src/utils.js';
 
-describe('admin console logs', () => {
+/** @deprecated This will be removed soon. */
+describe('admin console logs (legacy)', () => {
   const username = generateUsername();
   const password = generatePassword();
 
@@ -19,9 +20,7 @@ describe('admin console logs', () => {
     const logs = await getLogs();
 
     const registerLog = logs.filter(
-      ({ type, payload }) =>
-        type === 'RegisterUsernamePassword' &&
-        (payload as Record<string, unknown>).username === username
+      ({ type, payload }) => type === 'RegisterUsernamePassword' && payload.username === username
     );
 
     expect(registerLog.length).toBeGreaterThan(0);

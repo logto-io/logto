@@ -1,6 +1,8 @@
 import { PasscodeType, Event } from '@logto/schemas';
 import { mockEsmWithActual } from '@logto/shared/esm';
 
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
+
 import type { SendPasscodePayload } from '../types/index.js';
 
 const { jest } = import.meta;
@@ -41,7 +43,7 @@ const sendPasscodeTestCase = [
 ];
 
 describe('passcode-validation utils', () => {
-  const log = jest.fn();
+  const log = createMockLogContext();
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -50,7 +52,7 @@ describe('passcode-validation utils', () => {
   it.each(sendPasscodeTestCase)(
     'send passcode successfully',
     async ({ payload, createPasscodeParams }) => {
-      await sendPasscodeToIdentifier(payload as SendPasscodePayload, 'jti', log);
+      await sendPasscodeToIdentifier(payload as SendPasscodePayload, 'jti', log.createLog);
       expect(passcode.createPasscode).toBeCalledWith('jti', ...createPasscodeParams);
       expect(passcode.sendPasscode).toBeCalled();
     }

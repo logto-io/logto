@@ -2,6 +2,7 @@ import { Event } from '@logto/schemas';
 import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -26,6 +27,7 @@ describe('userAccountVerification', () => {
 
   const ctx: InteractionContext = {
     ...createContextWithRouteParameters(),
+    ...createMockLogContext(),
     interactionPayload: {
       event: Event.SignIn,
     },

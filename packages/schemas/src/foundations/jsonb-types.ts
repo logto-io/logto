@@ -11,9 +11,7 @@ export {
  * Commonly Used
  */
 
-// Cannot declare `z.object({}).catchall(z.unknown().optional())` to guard `{ [key: string]?: unknown }` (invalid type),
-// so do it another way to guard `{ [x: string]: unknown; } | {}`.
-export const arbitraryObjectGuard = z.union([z.object({}).catchall(z.unknown()), z.object({})]);
+export const arbitraryObjectGuard = z.record(z.unknown());
 
 export type ArbitraryObject = z.infer<typeof arbitraryObjectGuard>;
 

@@ -9,7 +9,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import { findUserById, updateUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types.js';
+import type { AnonymousRouterLegacy } from '../types.js';
 import { forgotPasswordSessionResultGuard } from './types.js';
 import {
   clearVerificationResult,
@@ -20,7 +20,7 @@ import {
 
 export const forgotPasswordRoute = getRoutePrefix('forgot-password');
 
-export default function forgotPasswordRoutes<T extends AnonymousRouter>(
+export default function forgotPasswordRoutes<T extends AnonymousRouterLegacy>(
   router: T,
   provider: Provider
 ) {

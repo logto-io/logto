@@ -47,9 +47,9 @@ export const socialIdentityPayloadGuard = z.object({
 });
 export type SocialIdentityPayload = z.infer<typeof socialIdentityPayloadGuard>;
 
-/**
- * Interaction Payload Guard
- */
+// Interaction Payload Guard
+
+/** Interaction flow (main flow) types. */
 export enum Event {
   SignIn = 'SignIn',
   Register = 'Register',

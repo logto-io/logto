@@ -1,4 +1,4 @@
-import type { LogPayload } from '@logto/schemas';
+import type { LogKey } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
 import { mockEsm, pickDefault } from '@logto/shared/esm';
 import i18next from 'i18next';
@@ -6,14 +6,11 @@ import i18next from 'i18next';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import type { WithLogContext } from './koa-log.js';
+import type { WithLogContext, LogPayload } from './koa-audit-log.js';
 
 const { jest } = import.meta;
 
 const nanoIdMock = 'mockId';
-
-const addLogContext = jest.fn();
-const log = jest.fn();
 
 const { insertLog } = mockEsm('#src/queries/log.js', () => ({
   insertLog: jest.fn(),
@@ -23,10 +20,10 @@ mockEsm('nanoid', () => ({
   nanoid: () => nanoIdMock,
 }));
 
-const koaLog = await pickDefault(import('./koa-log.js'));
+const koaLog = await pickDefault(import('./koa-audit-log.js'));
 
-describe('koaLog middleware', () => {
-  const type = 'SignInUsernamePassword';
+describe('koaAuditLog middleware', () => {
+  const logKey: LogKey = 'Interaction.SignIn.Identifier.VerificationCode.Submit';
   const mockPayload: LogPayload = {
     userId: 'foo',
     username: 'Bar',
@@ -41,27 +38,27 @@ describe('koaLog middleware', () => {
   });
 
   it('should insert a success log when next() does not throw an error', async () => {
+    // @ts-expect-error for testing
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-      // Bypass middleware context type assert
-      addLogContext,
-      log,
     };
     ctx.request.ip = ip;
     const additionalMockPayload: LogPayload = { foo: 'bar' };
 
     const next = async () => {
-      ctx.log(type, mockPayload);
-      ctx.log(type, additionalMockPayload);
+      const log = ctx.createLog(logKey);
+      log.append(mockPayload);
+      log.append(additionalMockPayload);
     };
     await koaLog()(ctx, next);
 
     expect(insertLog).toBeCalledWith({
       id: nanoIdMock,
-      type,
+      type: logKey,
       payload: {
         ...mockPayload,
         ...additionalMockPayload,
+        key: logKey,
         result: LogResult.Success,
         ip,
         userAgent,
@@ -69,12 +66,50 @@ describe('koaLog middleware', () => {
     });
   });
 
-  it('should not insert a log when there is no log type', async () => {
+  it('should insert multiple success logs when needed', async () => {
+    // @ts-expect-error for testing
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-      // Bypass middleware context type assert
-      addLogContext,
-      log,
+    };
+    ctx.request.ip = ip;
+    const additionalMockPayload: LogPayload = { foo: 'bar' };
+
+    const next = async () => {
+      const log = ctx.createLog(logKey);
+      log.append(mockPayload);
+      log.append(additionalMockPayload);
+      const log2 = ctx.createLog(logKey);
+      log2.append(mockPayload);
+    };
+    await koaLog()(ctx, next);
+
+    const basePayload = {
+      ...mockPayload,
+      key: logKey,
+      result: LogResult.Success,
+      ip,
+      userAgent,
+    };
+
+    expect(insertLog).toHaveBeenCalledWith({
+      id: nanoIdMock,
+      type: logKey,
+      payload: basePayload,
+    });
+    expect(insertLog).toHaveBeenCalledWith({
+      id: nanoIdMock,
+      type: logKey,
+      payload: {
+        ...basePayload,
+        ...additionalMockPayload,
+      },
+    });
+  });
+
+  it('should not log when there is no log type', async () => {
+    // @ts-expect-error for testing
+    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
     };
     ctx.request.ip = ip;
 
@@ -86,11 +121,9 @@ describe('koaLog middleware', () => {
 
   describe('should insert an error log with the error message when next() throws an error', () => {
     it('should log with error message when next throws a normal Error', async () => {
+      // @ts-expect-error for testing
       const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
         ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-        // Bypass middleware context type assert
-        addLogContext,
-        log,
       };
       ctx.request.ip = ip;
 
@@ -98,16 +131,18 @@ describe('koaLog middleware', () => {
       const error = new Error(message);
 
       const next = async () => {
-        ctx.log(type, mockPayload);
+        const log = ctx.createLog(logKey);
+        log.append(mockPayload);
         throw error;
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
 
       expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
-        type,
+        type: logKey,
         payload: {
           ...mockPayload,
+          key: logKey,
           result: LogResult.Error,
           error: { message: `Error: ${message}` },
           ip,
@@ -116,12 +151,10 @@ describe('koaLog middleware', () => {
       });
     });
 
-    it('should insert an error log with the error body when next() throws a RequestError', async () => {
+    it('should update all logs with error result when next() throws a RequestError', async () => {
+      // @ts-expect-error for testing
       const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
         ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-        // Bypass middleware context type assert
-        addLogContext,
-        log,
       };
       ctx.request.ip = ip;
 
@@ -132,16 +165,21 @@ describe('koaLog middleware', () => {
       const error = new RequestError(code, data);
 
       const next = async () => {
-        ctx.log(type, mockPayload);
+        const log = ctx.createLog(logKey);
+        log.append(mockPayload);
+        const log2 = ctx.createLog(logKey);
+        log2.append(mockPayload);
         throw error;
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
 
+      expect(insertLog).toHaveBeenCalledTimes(2);
       expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
-        type,
+        type: logKey,
         payload: {
           ...mockPayload,
+          key: logKey,
           result: LogResult.Error,
           error: { message, code, data },
           ip,

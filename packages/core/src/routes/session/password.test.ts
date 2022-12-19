@@ -93,6 +93,7 @@ afterEach(() => {
 
 describe('session -> password routes', () => {
   const sessionRequest = createRequester({
+    // @ts-expect-error will remove once interaction refactor finished
     anonymousRoutes: passwordRoutes,
     provider: new Provider(''),
     middlewares: [

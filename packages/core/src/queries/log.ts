@@ -1,5 +1,5 @@
-import type { CreateLog, Log, LogType } from '@logto/schemas';
-import { Logs } from '@logto/schemas';
+import type { CreateLog, Log } from '@logto/schemas';
+import { token, Logs } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 
@@ -50,10 +50,6 @@ export const findLogs = async (limit: number, offset: number, logCondition: LogC
 
 export const findLogById = buildFindEntityById<CreateLog, Log>(Logs);
 
-// The active user should exchange the tokens by the authorization code (i.e. sign-in)
-// or exchange the access token, which will expire in 2 hours, by the refresh token.
-const activeUserLogTypes: LogType[] = ['CodeExchangeToken', 'RefreshTokenExchangeToken'];
-
 export const getDailyActiveUserCountsByTimeInterval = async (
   startTimeExclusive: number,
   endTimeInclusive: number
@@ -63,7 +59,7 @@ export const getDailyActiveUserCountsByTimeInterval = async (
     from ${table}
     where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
     and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
-    and ${fields.type} in (${sql.join(activeUserLogTypes, sql`, `)})
+    and ${fields.type} like ${`${token.Flow.ExchangeTokenBy}.%`}
     and ${fields.payload}->>'result' = 'Success'
     group by date(${fields.createdAt})
   `);
@@ -77,6 +73,6 @@ export const countActiveUsersByTimeInterval = async (
     from ${table}
     where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
     and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
-    and ${fields.type} in (${sql.join(activeUserLogTypes, sql`, `)})
+    and ${fields.type} like ${`${token.Flow.ExchangeTokenBy}.%`}
     and ${fields.payload}->>'result' = 'Success'
   `);

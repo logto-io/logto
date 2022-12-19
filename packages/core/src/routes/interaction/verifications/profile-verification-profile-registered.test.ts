@@ -2,6 +2,7 @@ import { Event } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -34,7 +35,7 @@ mockEsm('#src/connectors/index.js', () => ({
 
 const verifyProfile = await pickDefault(import('./profile-verification.js'));
 
-const baseCtx = createContextWithRouteParameters();
+const baseCtx = { ...createContextWithRouteParameters(), ...createMockLogContext() };
 const identifiers: Identifier[] = [
   { key: 'accountId', value: 'foo' },
   { key: 'emailVerified', value: 'email@logto.io' },

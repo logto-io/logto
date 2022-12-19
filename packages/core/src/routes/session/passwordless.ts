@@ -10,7 +10,7 @@ import { findUserByEmail, findUserByPhone } from '#src/queries/user.js';
 import { passcodeTypeGuard } from '#src/routes/session/types.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types.js';
+import type { AnonymousRouterLegacy } from '../types.js';
 import {
   smsSignInAction,
   emailSignInAction,
@@ -26,7 +26,7 @@ import {
 export const registerRoute = getRoutePrefix('register', 'passwordless');
 export const signInRoute = getRoutePrefix('sign-in', 'passwordless');
 
-export default function passwordlessRoutes<T extends AnonymousRouter>(
+export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
   router: T,
   provider: Provider
 ) {
