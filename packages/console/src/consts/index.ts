@@ -1,5 +1,4 @@
 export * from './applications';
-export * from './avatars';
 export * from './connectors';
 export * from './logs';
 

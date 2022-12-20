@@ -18,8 +18,8 @@ import Search from '@/components/Search';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
+import UserAvatar from '@/components/UserAvatar';
 import { generatedPasswordStorageKey } from '@/consts';
-import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
@@ -141,13 +141,7 @@ const Users = () => {
                     <ItemPreview
                       title={name ?? t('users.unnamed')}
                       subtitle={id}
-                      icon={
-                        <img
-                          alt="avatar"
-                          className={styles.avatar}
-                          src={avatar ?? generateAvatarPlaceHolderById(id)}
-                        />
-                      }
+                      icon={<UserAvatar className={styles.avatar} url={avatar} />}
                       to={`/users/${id}`}
                       size="compact"
                     />

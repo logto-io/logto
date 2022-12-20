@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import SignOut from '@/assets/images/sign-out.svg';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import { Ring as Spinner } from '@/components/Spinner';
-import { generateAvatarPlaceHolderById } from '@/consts/avatars';
+import UserAvatar from '@/components/UserAvatar';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import UserInfoSkeleton from '../UserInfoSkeleton';
@@ -35,7 +35,7 @@ const UserInfo = () => {
     return <UserInfoSkeleton />;
   }
 
-  const { sub: id, username, picture } = user;
+  const { username, picture } = user;
 
   return (
     <>
@@ -51,7 +51,7 @@ const UserInfo = () => {
           setShowDropdown(true);
         }}
       >
-        <img src={picture ?? generateAvatarPlaceHolderById(id)} alt="avatar" />
+        <UserAvatar className={styles.avatar} url={picture} />
         <div className={styles.wrapper}>
           <div className={styles.name}>{username}</div>
         </div>
