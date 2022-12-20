@@ -1,9 +1,10 @@
 import type { ConnectorResponse } from '@logto/schemas';
-import { AppearanceMode, ConnectorType } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import Button from '@/components/Button';
+import ConnectorLogo from '@/components/ConnectorLogo';
 import ItemPreview from '@/components/ItemPreview';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import {
@@ -73,15 +74,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
         }
         icon={
           <div className={styles.logoContainer}>
-            <img
-              className={styles.logo}
-              alt="logo"
-              src={
-                theme === AppearanceMode.DarkMode && connector.logoDark
-                  ? connector.logoDark
-                  : connector.logo
-              }
-            />
+            <ConnectorLogo className={styles.logo} data={connector} />
           </div>
         }
       />
