@@ -1,10 +1,9 @@
 import type { User } from '@logto/schemas';
 import { conditional, conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
@@ -32,10 +31,16 @@ const pageSize = 20;
 
 const userTableColumn = 3;
 
+const usersPathname = '/users';
+const createUserPathname = `${usersPathname}/create`;
+const buildDetailsPathname = (id: string) => `${usersPathname}/id`;
+
 const Users = () => {
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const { pathname } = useLocation();
+  const isCreateNew = pathname === createUserPathname;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
+  const search = query.toString();
   const pageIndex = Number(query.get('page') ?? '1');
   const keyword = query.get('search') ?? '';
   const { data, error, mutate } = useSWR<[User[], number], RequestError>(
@@ -57,26 +62,37 @@ const Users = () => {
           type="primary"
           icon={<Plus />}
           onClick={() => {
-            setIsCreateFormOpen(true);
+            navigate({
+              pathname: createUserPathname,
+              search,
+            });
           }}
         />
         <Modal
           shouldCloseOnEsc
-          isOpen={isCreateFormOpen}
+          isOpen={isCreateNew}
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
           onRequestClose={() => {
-            setIsCreateFormOpen(false);
+            navigate({
+              pathname: usersPathname,
+              search,
+            });
           }}
         >
           <CreateForm
             onClose={(createdUser, password) => {
-              setIsCreateFormOpen(false);
-
               if (createdUser && password) {
                 sessionStorage.setItem(generatedPasswordStorageKey, password);
-                navigate(`/users/${createdUser.id}`);
+                navigate(buildDetailsPathname(createdUser.id), { replace: true });
+
+                return;
               }
+
+              navigate({
+                pathname: usersPathname,
+                search,
+              });
             }}
           />
         </Modal>
@@ -124,7 +140,10 @@ const Users = () => {
                     title="users.create"
                     type="outline"
                     onClick={() => {
-                      setIsCreateFormOpen(true);
+                      navigate({
+                        pathname: createUserPathname,
+                        search,
+                      });
                     }}
                   />
                 </TableEmpty>
@@ -134,7 +153,7 @@ const Users = () => {
                   key={id}
                   className={tableStyles.clickable}
                   onClick={() => {
-                    navigate(`/users/${id}`);
+                    navigate(buildDetailsPathname(id));
                   }}
                 >
                   <td>
@@ -142,7 +161,7 @@ const Users = () => {
                       title={name ?? t('users.unnamed')}
                       subtitle={id}
                       icon={<UserAvatar className={styles.avatar} url={avatar} />}
-                      to={`/users/${id}`}
+                      to={buildDetailsPathname(id)}
                       size="compact"
                     />
                   </td>

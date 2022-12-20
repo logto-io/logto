@@ -1,11 +1,10 @@
 import type { Resource } from '@logto/schemas';
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
@@ -28,14 +27,18 @@ import * as tableStyles from '@/scss/table.module.scss';
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
-const buildDetailsLink = (id: string) => `/api-resources/${id}`;
+const apiResourcesPathname = '/api-resources';
+const createApiResourcePathname = `${apiResourcesPathname}/create`;
+const buildDetailsPathname = (id: string) => `${apiResourcesPathname}/${id}`;
 
 const pageSize = 20;
 
 const ApiResources = () => {
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const { pathname } = useLocation();
+  const isCreateNew = pathname.endsWith('/create');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
+  const search = query.toString();
   const pageIndex = Number(query.get('page') ?? '1');
   const { data, error, mutate } = useSWR<[Resource[], number], RequestError>(
     `/api/resources?page=${pageIndex}&page_size=${pageSize}`
@@ -55,28 +58,38 @@ const ApiResources = () => {
           size="large"
           icon={<Plus />}
           onClick={() => {
-            setIsCreateFormOpen(true);
+            navigate({
+              pathname: createApiResourcePathname,
+              search,
+            });
           }}
         />
         <Modal
           shouldCloseOnEsc
-          isOpen={isCreateFormOpen}
+          isOpen={isCreateNew}
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
           onRequestClose={() => {
-            setIsCreateFormOpen(false);
+            navigate({
+              pathname: apiResourcesPathname,
+              search,
+            });
           }}
         >
           <CreateForm
             onClose={(createdApiResource) => {
-              setIsCreateFormOpen(false);
-
               if (createdApiResource) {
                 toast.success(
                   t('api_resources.api_resource_created', { name: createdApiResource.name })
                 );
-                navigate(buildDetailsLink(createdApiResource.id));
+                navigate(buildDetailsPathname(createdApiResource.id), { replace: true });
+
+                return;
               }
+              navigate({
+                pathname: apiResourcesPathname,
+                search,
+              });
             }}
           />
         </Modal>
@@ -109,7 +122,10 @@ const ApiResources = () => {
                     title="api_resources.create"
                     type="outline"
                     onClick={() => {
-                      setIsCreateFormOpen(true);
+                      navigate({
+                        pathname: createApiResourcePathname,
+                        search,
+                      });
                     }}
                   />
                 </TableEmpty>
@@ -123,14 +139,14 @@ const ApiResources = () => {
                     key={id}
                     className={tableStyles.clickable}
                     onClick={() => {
-                      navigate(buildDetailsLink(id));
+                      navigate(buildDetailsPathname(id));
                     }}
                   >
                     <td>
                       <ItemPreview
                         title={name}
                         icon={<ResourceIcon className={styles.icon} />}
-                        to={buildDetailsLink(id)}
+                        to={buildDetailsPathname(id)}
                       />
                     </td>
                     <td>

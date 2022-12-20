@@ -27,12 +27,17 @@ import * as styles from './index.module.scss';
 
 const pageSize = 20;
 
+const applicationsPathname = '/applications';
+const createApplicationPathname = `${applicationsPathname}/create`;
+const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
+
 const Applications = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const isCreateNew = location.pathname.endsWith('/create');
+  const { pathname } = useLocation();
+  const isCreateNew = pathname === createApplicationPathname;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
+  const search = query.toString();
   const pageIndex = Number(query.get('page') ?? '1');
   const { data, error, mutate } = useSWR<[Application[], number], RequestError>(
     `/api/applications?page=${pageIndex}&page_size=${pageSize}`
@@ -50,7 +55,10 @@ const Applications = () => {
           type="primary"
           size="large"
           onClick={() => {
-            navigate('/applications/create');
+            navigate({
+              pathname: createApplicationPathname,
+              search,
+            });
           }}
         />
         <Modal
@@ -59,18 +67,24 @@ const Applications = () => {
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
           onRequestClose={() => {
-            navigate('/applications');
+            navigate({
+              pathname: applicationsPathname,
+              search,
+            });
           }}
         >
           <CreateForm
             onClose={(createdApp) => {
               if (createdApp) {
                 toast.success(t('applications.application_created', { name: createdApp.name }));
-                navigate(`/applications/${createdApp.id}`);
+                navigate(buildDetailsPathname(createdApp.id), { replace: true });
 
                 return;
               }
-              navigate('/applications');
+              navigate({
+                pathname: applicationsPathname,
+                search,
+              });
             }}
           />
         </Modal>
@@ -105,7 +119,10 @@ const Applications = () => {
                     title="applications.create"
                     type="outline"
                     onClick={() => {
-                      navigate('/applications/create');
+                      navigate({
+                        pathname: createApplicationPathname,
+                        search,
+                      });
                     }}
                   />
                 </TableEmpty>
@@ -115,7 +132,7 @@ const Applications = () => {
                   key={id}
                   className={tableStyles.clickable}
                   onClick={() => {
-                    navigate(`/applications/${id}`);
+                    navigate(buildDetailsPathname(id));
                   }}
                 >
                   <td>
@@ -123,7 +140,7 @@ const Applications = () => {
                       title={name}
                       subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
                       icon={<ApplicationIcon className={styles.icon} type={type} />}
-                      to={`/applications/${id}`}
+                      to={buildDetailsPathname(id)}
                     />
                   </td>
                   <td>

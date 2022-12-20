@@ -53,13 +53,11 @@ const Main = () => {
               <Route path="applications">
                 <Route index element={<Applications />} />
                 <Route path="create" element={<Applications />} />
-                <Route path=":id">
-                  <Route index element={<Navigate replace to="settings" />} />
-                  <Route path="settings" element={<ApplicationDetails />} />
-                </Route>
+                <Route path=":id" element={<ApplicationDetails />} />
               </Route>
               <Route path="api-resources">
                 <Route index element={<ApiResources />} />
+                <Route path="create" element={<ApiResources />} />
                 <Route path=":id" element={<ApiResourceDetails />} />
               </Route>
               <Route path="connectors">
@@ -69,6 +67,7 @@ const Main = () => {
               </Route>
               <Route path="users">
                 <Route index element={<Users />} />
+                <Route path="create" element={<Users />} />
                 <Route path=":userId" element={<UserDetails />} />
                 <Route path=":userId/logs" element={<UserDetails />} />
                 <Route path=":userId/logs/:logId" element={<AuditLogDetails />} />
