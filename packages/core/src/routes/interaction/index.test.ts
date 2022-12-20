@@ -2,7 +2,6 @@ import { ConnectorType } from '@logto/connector-kit';
 import { Event, demoAppApplicationId } from '@logto/schemas';
 import { mockEsmWithActual, mockEsmDefault, mockEsm } from '@logto/shared/esm';
 
-import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type koaAuditLog from '#src/middleware/koa-audit-log.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
