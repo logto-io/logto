@@ -111,7 +111,7 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
   const cwd = getConnectorDirectory(instancePath);
 
   if (!existsSync(cwd)) {
-    await fs.mkdir(cwd);
+    await fs.mkdir(cwd, { recursive: true });
   }
 
   log.info('Fetch connector metadata');
@@ -135,7 +135,7 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
           const tarPath = path.join(cwd, escapedFilename);
           const packageDirectory = path.join(cwd, name.replace(/\//g, '-'));
 
-          await fs.rm(packageDirectory);
+          await fs.rm(packageDirectory, { force: true, recursive: true });
           await fs.mkdir(packageDirectory, { recursive: true });
           await tar.extract({ cwd: packageDirectory, file: tarPath, strip: 1 });
           await fs.unlink(tarPath);

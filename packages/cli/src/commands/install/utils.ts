@@ -139,7 +139,7 @@ export const seedDatabase = async (instancePath: string) => {
   } catch (error: unknown) {
     console.error(error);
 
-    await oraPromise(fs.rm(instancePath), {
+    await oraPromise(fs.rm(instancePath, { force: true, recursive: true }), {
       text: 'Clean up',
       prefixText: chalk.blue('[info]'),
     });

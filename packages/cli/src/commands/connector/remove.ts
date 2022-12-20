@@ -40,7 +40,7 @@ const remove: CommandModule<{ path?: string }, { path?: string; packages?: strin
         const packageInfo = existingPackages.find(({ name }) => name === current);
 
         try {
-          await fs.rm(packageInfo?.path ?? '');
+          await fs.rm(packageInfo?.path ?? '', { force: true, recursive: true });
 
           return okSymbol;
         } catch (error: unknown) {
