@@ -1,6 +1,6 @@
 import { sql } from 'slonik';
 
-import type { AlterationScript } from '../src/types/alteration.js';
+import type { AlterationScript } from '../lib/types/alteration.js';
 
 enum SignInMethodState {
   Primary = 'primary',

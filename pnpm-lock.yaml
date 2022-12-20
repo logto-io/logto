@@ -482,7 +482,7 @@ importers:
       '@types/jest': ^29.1.2
       '@types/jest-environment-puppeteer': ^5.0.2
       '@types/node': ^16.0.0
-      '@withtyped/server': ^0.3.0
+      '@withtyped/server': ^0.3.1
       dotenv: ^16.0.0
       eslint: ^8.21.0
       got: ^12.5.3
@@ -496,7 +496,7 @@ importers:
       text-encoder: ^0.0.4
       typescript: ^4.9.4
     dependencies:
-      '@withtyped/server': 0.3.0
+      '@withtyped/server': 0.3.1
     devDependencies:
       '@jest/types': 29.1.2
       '@logto/js': 1.0.0-beta.14
@@ -4671,12 +4671,6 @@ packages:
       pg: 8.8.0
     transitivePeerDependencies:
       - pg-native
-    dev: false
-
-  /@withtyped/server/0.3.0:
-    resolution: {integrity: sha512-fvKf3JryFKIOgGp2z2YBbjiJrSKznuUUlH7Kv9v1gcQxkJXYjSbb0tDY4ObJjKGIrhqIJLWV4Gx40ANJMBDqww==}
-    dependencies:
-      '@withtyped/shared': 0.2.0
     dev: false
 
   /@withtyped/server/0.3.1:
