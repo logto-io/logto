@@ -1,6 +1,5 @@
 import type { CreateApplication, OidcClientMetadata } from '@logto/schemas';
-import { ApplicationType } from '@logto/schemas';
-import { adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas';
+import { ApplicationType, adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
 import { deduplicate } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';

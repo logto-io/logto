@@ -1,5 +1,4 @@
-import { ApplicationType } from '@logto/schemas';
-import { demoAppApplicationId } from '@logto/schemas';
+import { ApplicationType, demoAppApplicationId } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import {

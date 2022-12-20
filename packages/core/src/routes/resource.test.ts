@@ -21,7 +21,8 @@ mockEsm('#src/queries/resource.js', () => ({
   deleteResourceById: jest.fn(),
 }));
 
-mockEsm('@logto/shared', () => ({
+// Cannot use `mockEsm()` here, pending investigation.
+jest.unstable_mockModule('@logto/core-kit', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => 'randomId',
 }));

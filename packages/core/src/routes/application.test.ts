@@ -29,10 +29,11 @@ const { findApplicationById } = mockEsm('#src/queries/application.js', () => ({
   ),
 }));
 
-mockEsm('@logto/core-kit', () => ({
+// Cannot use `mockEsm()` here, pending investigation.
+jest.unstable_mockModule('@logto/core-kit', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
-  buildIdGenerator: jest.fn(() => () => 'randomId'),
-  generateStandardId: jest.fn(() => 'randomId'),
+  buildIdGenerator: () => () => 'randomId',
+  generateStandardId: () => 'randomId',
 }));
 
 const { createRequester } = await import('#src/utils/test-utils.js');

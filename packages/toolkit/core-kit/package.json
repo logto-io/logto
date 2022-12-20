@@ -39,7 +39,7 @@
     "node": "^16.13.0 || ^18.12.0"
   },
   "dependencies": {
-    "@logto/language-kit": "^1.0.0-beta.29",
+    "@logto/language-kit": "workspace:*",
     "color": "^4.2.3",
     "nanoid": "^4.0.0"
   },

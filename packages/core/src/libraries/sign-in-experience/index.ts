@@ -1,7 +1,9 @@
 import { builtInLanguages } from '@logto/phrases-ui';
 import type { Branding, LanguageInfo, SignInExperience } from '@logto/schemas';
-import { SignInMode, ConnectorType, BrandingStyle } from '@logto/schemas';
 import {
+  SignInMode,
+  ConnectorType,
+  BrandingStyle,
   adminConsoleApplicationId,
   adminConsoleSignInExperience,
   demoAppApplicationId,

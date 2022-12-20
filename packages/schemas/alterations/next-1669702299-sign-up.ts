@@ -2,7 +2,7 @@ import { isSameArray } from '@silverhand/essentials';
 import type { DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
 
-import type { AlterationScript } from '../lib/src/types/alteration.js';
+import type { AlterationScript } from '../src/types/alteration.js';
 
 enum DeprecatedSignUpIdentifier {
   Email = 'email',

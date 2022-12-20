@@ -10,11 +10,11 @@
     "alterations-js",
     "tables"
   ],
-  "main": "./lib/src/index.js",
+  "main": "./lib/index.js",
   "exports": {
-    ".": "./lib/src/index.js",
-    "./lib/*": "./lib/src/*",
-    "./models": "./lib/src-models/index.js",
+    ".": "./lib/index.js",
+    "./lib/*": "./lib/*",
+    "./models": "./lib/models/index.js",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -82,8 +82,6 @@
     "@logto/language-kit": "workspace:*",
     "@logto/phrases": "workspace:*",
     "@logto/phrases-ui": "workspace:*",
-    "@withtyped/server": "^0.3.0",
-    "nanoid": "^4.0.0",
     "zod": "^3.20.2"
   }
 }

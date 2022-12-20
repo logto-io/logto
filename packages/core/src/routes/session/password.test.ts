@@ -1,13 +1,11 @@
 import type { User } from '@logto/schemas';
-import { UserRole, SignInIdentifier } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas';
+import { UserRole, SignInIdentifier, adminConsoleApplicationId } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
+import { mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 import passwordRoutes, { registerRoute, signInRoute } from './password.js';
-
-import { mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => mockUser);
 const hasUser = jest.fn(async (username: string) => username === 'username1');

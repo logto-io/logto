@@ -1,8 +1,7 @@
 import path from 'path';
 
 import type { LogtoErrorCode } from '@logto/phrases';
-import { UserRole } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas';
+import { UserRole, adminConsoleApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
