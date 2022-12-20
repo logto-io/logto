@@ -1,42 +1,52 @@
 import type { Identifier } from '../types/index.js';
-import { mergeIdentifiers } from './interaction.js';
+import { mergeIdentifiers, categorizeIdentifiers } from './interaction.js';
 
 describe('interaction utils', () => {
   const usernameIdentifier: Identifier = { key: 'accountId', value: 'foo' };
   const emailIdentifier: Identifier = { key: 'emailVerified', value: 'foo@logto.io' };
   const phoneIdentifier: Identifier = { key: 'phoneVerified', value: '12346' };
+  const socialIdentifier: Identifier = {
+    key: 'social',
+    connectorId: 'foo_connector',
+    userInfo: { id: 'foo' },
+  };
 
   describe('mergeIdentifiers', () => {
     it('new identifiers only ', () => {
-      expect(mergeIdentifiers([usernameIdentifier])).toEqual([usernameIdentifier]);
+      expect(mergeIdentifiers(usernameIdentifier)).toEqual([usernameIdentifier]);
     });
 
     it('same identifiers should replace', () => {
-      expect(mergeIdentifiers([usernameIdentifier], [{ key: 'accountId', value: 'foo2' }])).toEqual(
-        [usernameIdentifier]
-      );
+      expect(mergeIdentifiers(usernameIdentifier, [{ key: 'accountId', value: 'foo2' }])).toEqual([
+        usernameIdentifier,
+      ]);
     });
 
     it('different identifiers should merge', () => {
-      expect(mergeIdentifiers([emailIdentifier], [usernameIdentifier])).toEqual([
+      expect(mergeIdentifiers(emailIdentifier, [usernameIdentifier])).toEqual([
         usernameIdentifier,
         emailIdentifier,
       ]);
 
-      expect(mergeIdentifiers([usernameIdentifier], [emailIdentifier, phoneIdentifier])).toEqual([
+      expect(mergeIdentifiers(usernameIdentifier, [emailIdentifier, phoneIdentifier])).toEqual([
         emailIdentifier,
         phoneIdentifier,
         usernameIdentifier,
       ]);
     });
+  });
 
-    it('mixed identifiers should replace and merge', () => {
+  describe('categorizeIdentifiers', () => {
+    it('should categorize identifiers', () => {
       expect(
-        mergeIdentifiers(
-          [phoneIdentifier, usernameIdentifier],
-          [emailIdentifier, { key: 'phoneVerified', value: '465789' }]
+        categorizeIdentifiers(
+          [usernameIdentifier, emailIdentifier, phoneIdentifier, socialIdentifier],
+          { email: 'foo@logto.io', connectorId: 'foo_connector' }
         )
-      ).toEqual([emailIdentifier, phoneIdentifier, usernameIdentifier]);
+      ).toEqual({
+        userAccountIdentifiers: [usernameIdentifier, phoneIdentifier],
+        profileIdentifiers: [emailIdentifier, socialIdentifier],
+      });
     });
   });
 });

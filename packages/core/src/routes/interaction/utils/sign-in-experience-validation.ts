@@ -1,7 +1,10 @@
 import type { SignInExperience, Profile, IdentifierPayload } from '@logto/schemas';
 import { SignInMode, SignInIdentifier, Event } from '@logto/schemas';
+import type { Context } from 'koa';
+import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 const forbiddenEventError = new RequestError({ code: 'auth.forbidden', status: 403 });
@@ -11,7 +14,7 @@ const forbiddenIdentifierError = new RequestError({
   status: 422,
 });
 
-export const signInModeValidation = (event: Event, { signInMode }: SignInExperience) => {
+export const verifySignInModeSettings = (event: Event, { signInMode }: SignInExperience) => {
   if (event === Event.SignIn) {
     assertThat(signInMode !== SignInMode.Register, forbiddenEventError);
   }
@@ -21,7 +24,7 @@ export const signInModeValidation = (event: Event, { signInMode }: SignInExperie
   }
 };
 
-export const identifierValidation = (
+export const verifyIdentifierSettings = (
   identifier: IdentifierPayload,
   signInExperience: SignInExperience
 ) => {
@@ -102,7 +105,7 @@ export const identifierValidation = (
   // Social Identifier  TODO: @darcy, @sijie
 };
 
-export const profileValidation = (profile: Profile, { signUp }: SignInExperience) => {
+export const verifyProfileSettings = (profile: Profile, { signUp }: SignInExperience) => {
   if (profile.phone) {
     assertThat(signUp.identifiers.includes(SignInIdentifier.Sms), forbiddenIdentifierError);
   }
@@ -118,4 +121,12 @@ export const profileValidation = (profile: Profile, { signUp }: SignInExperience
   if (profile.password) {
     assertThat(signUp.password, forbiddenIdentifierError);
   }
+};
+
+export const getSignInExperience = async (ctx: Context, provider: Provider) => {
+  const interaction = await provider.interactionDetails(ctx.req, ctx.res);
+
+  return getSignInExperienceForApplication(
+    typeof interaction.params.client_id === 'string' ? interaction.params.client_id : undefined
+  );
 };

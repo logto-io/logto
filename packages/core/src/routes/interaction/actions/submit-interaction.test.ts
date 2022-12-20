@@ -8,7 +8,6 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import type {
   Identifier,
   VerifiedRegisterInteractionResult,
-  InteractionContext,
   VerifiedSignInInteractionResult,
   VerifiedForgotPasswordInteractionResult,
 } from '../types/index.js';
@@ -52,10 +51,9 @@ jest.useFakeTimers().setSystemTime(now);
 
 describe('submit action', () => {
   const provider = createMockProvider();
-  const ctx: InteractionContext = {
+  const ctx = {
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
-    interactionPayload: { event: Event.SignIn },
   };
   const profile = {
     username: 'username',
@@ -66,6 +64,7 @@ describe('submit action', () => {
   };
 
   const userInfo = { id: 'foo', name: 'foo_social', avatar: 'avatar' };
+
   const identifiers: Identifier[] = [
     {
       key: 'social',
@@ -148,11 +147,14 @@ describe('submit action', () => {
       profile: { password: 'password' },
     };
     await submitInteraction(interaction, ctx, provider);
+
     expect(encryptUserPassword).toBeCalledWith('password');
+
     expect(updateUserById).toBeCalledWith('foo', {
       passwordEncrypted: 'passwordEncrypted',
       passwordEncryptionMethod: 'plain',
     });
+
     expect(assignInteractionResults).not.toBeCalled();
   });
 });

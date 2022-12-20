@@ -32,12 +32,6 @@ const signInInteractionPayloadGuard = z.object({
   profile: profileGuard.optional(),
 });
 
-export const interactionPayloadGuard = z.discriminatedUnion('event', [
-  signInInteractionPayloadGuard,
-  registerInteractionPayloadGuard,
-  forgotPasswordInteractionPayloadGuard,
-]);
-
 // Passcode Send Route Payload Guard
 export const sendPasscodePayloadGuard = z.union([
   z.object({
@@ -51,7 +45,7 @@ export const sendPasscodePayloadGuard = z.union([
 ]);
 
 // Social Authorization Uri Route Payload Guard
-export const getSocialAuthorizationUrlPayloadGuard = z.object({
+export const socialAuthorizationUrlPayloadGuard = z.object({
   connectorId: z.string(),
   state: z.string(),
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
