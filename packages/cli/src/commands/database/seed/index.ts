@@ -11,6 +11,7 @@ import {
   createDemoAppApplication,
   defaultRole,
 } from '@logto/schemas';
+import { Hooks } from '@logto/schemas/models';
 import chalk from 'chalk';
 import type { DatabasePool, DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
@@ -44,6 +45,11 @@ const createTables = async (connection: DatabaseTransactionConnection) => {
   for (const [, query] of queries) {
     // eslint-disable-next-line no-await-in-loop
     await connection.query(sql`${raw(query)}`);
+  }
+
+  for (const table of [Hooks]) {
+    // eslint-disable-next-line no-await-in-loop
+    await connection.query(sql`${raw(table.raw)}`);
   }
 };
 
