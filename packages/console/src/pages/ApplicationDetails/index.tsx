@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Back from '@/assets/images/back.svg';
@@ -25,6 +25,7 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import useModalControl from '@/hooks/use-modal-control';
 import * as detailsStyles from '@/scss/details.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
@@ -41,7 +42,6 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
 
 const ApplicationDetails = () => {
   const { id } = useParams();
-  const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Application, RequestError>(
     id && `/api/applications/${id}`
@@ -52,9 +52,8 @@ const ApplicationDetails = () => {
   >('/oidc/.well-known/openid-configuration');
   const isLoading = (!data && !error) || (!oidcConfig && !fetchOidcConfigError);
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
-  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
+  const { open, isOpen } = useModalControl('delete_application');
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const api = useApi();
   const navigate = useNavigate();
   const formMethods = useForm<Application>();
@@ -104,19 +103,17 @@ const ApplicationDetails = () => {
   });
 
   const onDelete = async () => {
-    if (!data || isDeleting) {
+    if (!data || isDeleteLoading) {
       return;
     }
 
     try {
       await api.delete(`/api/applications/${data.id}`);
-      setIsDeleted(true);
-      setIsDeleting(false);
-      setIsDeleteFormOpen(false);
+      setIsDeleteLoading(false);
       toast.success(t('application_details.application_deleted', { name: data.name }));
-      navigate(`/applications`);
+      navigate(`/applications`, { replace: true });
     } catch {
-      setIsDeleting(false);
+      setIsDeleteLoading(false);
     }
   };
 
@@ -171,20 +168,20 @@ const ApplicationDetails = () => {
                   icon={<Delete />}
                   type="danger"
                   onClick={() => {
-                    setIsDeleteFormOpen(true);
+                    open();
                   }}
                 >
                   {t('general.delete')}
                 </ActionMenuItem>
               </ActionMenu>
               <DeleteConfirmModal
-                isOpen={isDeleteFormOpen}
-                isLoading={isDeleting}
+                isOpen={isOpen}
+                isLoading={isDeleteLoading}
                 expectedInput={data.name}
                 inputPlaceholder={t('application_details.enter_your_application_name')}
                 className={styles.deleteConfirm}
                 onCancel={() => {
-                  setIsDeleteFormOpen(false);
+                  navigate(-1);
                 }}
                 onConfirm={onDelete}
               >
@@ -197,9 +194,7 @@ const ApplicationDetails = () => {
             </div>
           </Card>
           <TabNav>
-            <TabNavItem href={`/applications/${data.id}/settings`}>
-              {t('general.settings_nav')}
-            </TabNavItem>
+            <TabNavItem href={`/applications/${data.id}`}>{t('general.settings_nav')}</TabNavItem>
           </TabNav>
           <FormProvider {...formMethods}>
             <DetailsForm
@@ -214,7 +209,7 @@ const ApplicationDetails = () => {
           </FormProvider>
         </>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isOpen && isDirty} />
     </div>
   );
 };

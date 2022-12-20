@@ -1,11 +1,12 @@
 import type { Optional } from '@silverhand/essentials';
-import type { FC, ReactNode } from 'react';
+import type { FC } from 'react';
 import type { TFuncKey } from 'react-i18next';
 
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 import Contact from './components/Contact';
+import type { Props as ModalItemProps } from './components/Item/ModalItem';
 import BarGraph from './icons/BarGraph';
 import Bolt from './icons/Bolt';
 import Box from './icons/Box';
@@ -21,7 +22,7 @@ type SidebarItem = {
   Icon: FC;
   title: TFuncKey<'translation', 'admin_console.tabs'>;
   isHidden?: boolean;
-  modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
+  modal?: Omit<ModalItemProps, 'content'>;
   externalLink?: string;
 };
 
@@ -104,7 +105,10 @@ export const useSidebarMenuItems = (): {
         {
           Icon: ContactIcon,
           title: 'contact_us',
-          modal: (isOpen, onCancel) => <Contact isOpen={isOpen} onCancel={onCancel} />,
+          modal: {
+            name: 'contact_us',
+            modal: (isOpen, onCancel) => <Contact isOpen={isOpen} onCancel={onCancel} />,
+          },
         },
         {
           Icon: Document,

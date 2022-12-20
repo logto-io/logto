@@ -1,8 +1,8 @@
 import { AppearanceMode, ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Plus from '@/assets/images/plus.svg';
 import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
@@ -14,6 +14,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import useConnectorGroups from '@/hooks/use-connector-groups';
+import useModalControl from '@/hooks/use-modal-control';
 import { useTheme } from '@/hooks/use-theme';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
@@ -24,11 +25,19 @@ import CreateForm from './components/CreateForm';
 import SignInExperienceSetupNotice from './components/SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
 
+const isConnectorType = (value?: string): value is ConnectorType =>
+  Boolean(value && Object.values<string>(ConnectorType).includes(value));
+
+const parseToConnectorType = (value?: string): ConnectorType | undefined =>
+  isConnectorType(value) ? value : undefined;
+
 const Connectors = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isSocial = location.pathname === '/connectors/social';
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [createType, setCreateType] = useState<ConnectorType>();
+  const { open, isOpen, getOpenData } = useModalControl('create_connector');
+  const createConnectorType = parseToConnectorType(getOpenData());
   const { data, error, mutate } = useConnectorGroups();
   const isLoading = !data && !error;
   const theme = useTheme();
@@ -66,7 +75,7 @@ const Connectors = () => {
               size="large"
               icon={<Plus />}
               onClick={() => {
-                setCreateType(ConnectorType.Social);
+                open(ConnectorType.Social);
               }}
             />
           )}
@@ -113,7 +122,7 @@ const Connectors = () => {
                       title="connectors.create"
                       type="outline"
                       onClick={() => {
-                        setCreateType(ConnectorType.Social);
+                        open(ConnectorType.Social);
                       }}
                     />
                   </TableEmpty>
@@ -123,7 +132,7 @@ const Connectors = () => {
                     connectors={smsConnector ? [smsConnector] : []}
                     type={ConnectorType.Sms}
                     onClickSetup={() => {
-                      setCreateType(ConnectorType.Sms);
+                      open(ConnectorType.Sms);
                     }}
                   />
                 )}
@@ -132,7 +141,7 @@ const Connectors = () => {
                     connectors={emailConnector ? [emailConnector] : []}
                     type={ConnectorType.Email}
                     onClickSetup={() => {
-                      setCreateType(ConnectorType.Email);
+                      open(ConnectorType.Email);
                     }}
                   />
                 )}
@@ -145,11 +154,15 @@ const Connectors = () => {
         </div>
       </div>
       <CreateForm
-        isOpen={Boolean(createType)}
-        type={createType}
-        onClose={() => {
-          setCreateType(undefined);
-          void mutate();
+        isOpen={isOpen}
+        type={createConnectorType}
+        onClose={(connectorId) => {
+          if (connectorId) {
+            void mutate();
+
+            return;
+          }
+          navigate(-1);
         }}
       />
     </>

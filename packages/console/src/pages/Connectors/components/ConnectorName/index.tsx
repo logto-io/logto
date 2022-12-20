@@ -1,7 +1,6 @@
 import type { ConnectorResponse } from '@logto/schemas';
 import { AppearanceMode, ConnectorType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import ItemPreview from '@/components/ItemPreview';
@@ -50,42 +49,41 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
   }
 
   return (
-    <Link to={`/connectors/${connector.id}`} className={styles.link}>
-      <ItemPreview
-        title={<UnnamedTrans resource={connector.name} />}
-        subtitle={
-          <>
-            {type !== ConnectorType.Social && connector.id}
-            {type === ConnectorType.Social && connectors.length > 1 && (
-              <div className={styles.platforms}>
-                {connectors.map(
-                  ({ id, platform }) =>
-                    platform && (
-                      <div key={id} className={styles.platform}>
-                        <ConnectorPlatformIcon platform={platform} />
-                        {t(`${connectorPlatformLabel[platform]}`)}
-                      </div>
-                    )
-                )}
-              </div>
-            )}
-          </>
-        }
-        icon={
-          <div className={styles.logoContainer}>
-            <img
-              className={styles.logo}
-              alt="logo"
-              src={
-                theme === AppearanceMode.DarkMode && connector.logoDark
-                  ? connector.logoDark
-                  : connector.logo
-              }
-            />
-          </div>
-        }
-      />
-    </Link>
+    <ItemPreview
+      title={<UnnamedTrans resource={connector.name} />}
+      subtitle={
+        <>
+          {type !== ConnectorType.Social && connector.id}
+          {type === ConnectorType.Social && connectors.length > 1 && (
+            <div className={styles.platforms}>
+              {connectors.map(
+                ({ id, platform }) =>
+                  platform && (
+                    <div key={id} className={styles.platform}>
+                      <ConnectorPlatformIcon platform={platform} />
+                      {t(`${connectorPlatformLabel[platform]}`)}
+                    </div>
+                  )
+              )}
+            </div>
+          )}
+        </>
+      }
+      icon={
+        <div className={styles.logoContainer}>
+          <img
+            className={styles.logo}
+            alt="logo"
+            src={
+              theme === AppearanceMode.DarkMode && connector.logoDark
+                ? connector.logoDark
+                : connector.logo
+            }
+          />
+        </div>
+      }
+      to={`/connectors/${connector.id}`}
+    />
   );
 };
 

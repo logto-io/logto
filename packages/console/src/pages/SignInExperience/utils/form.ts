@@ -67,12 +67,9 @@ export const hasSignUpAndSignInConfigChanged = (
   after: SignInExperience
 ): boolean => {
   return (
-    !hasSignUpSettingsChanged(before.signUp, after.signUp) &&
-    !hasSignInMethodsChanged(before.signIn.methods, after.signIn.methods) &&
-    !hasSocialTargetsChanged(
-      before.socialSignInConnectorTargets,
-      after.socialSignInConnectorTargets
-    )
+    hasSignUpSettingsChanged(before.signUp, after.signUp) ||
+    hasSignInMethodsChanged(before.signIn.methods, after.signIn.methods) ||
+    hasSocialTargetsChanged(before.socialSignInConnectorTargets, after.socialSignInConnectorTargets)
   );
 };
 

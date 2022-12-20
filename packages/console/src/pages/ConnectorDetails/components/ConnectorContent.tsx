@@ -18,12 +18,12 @@ import * as styles from '../index.module.scss';
 import SenderTester from './SenderTester';
 
 type Props = {
-  isDeleted: boolean;
+  hasOpenedModal: boolean;
   connectorData: ConnectorResponse;
   onConnectorUpdated: (connector: ConnectorResponse) => void;
 };
 
-const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
+const ConnectorContent = ({ hasOpenedModal, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
   const methods = useForm<ConnectorFormType>({
@@ -114,7 +114,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
           )}
         </FormCard>
       </DetailsForm>
-      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!hasOpenedModal && isDirty} />
     </FormProvider>
   );
 };

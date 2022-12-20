@@ -1,7 +1,6 @@
 import type { Resource } from '@logto/schemas';
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -20,6 +19,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import type { RequestError } from '@/hooks/use-api';
+import useModalControl from '@/hooks/use-modal-control';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
@@ -33,7 +33,7 @@ const buildDetailsLink = (id: string) => `/api-resources/${id}`;
 const pageSize = 20;
 
 const ApiResources = () => {
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const { open, isOpen } = useModalControl('create_application');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
@@ -55,28 +55,29 @@ const ApiResources = () => {
           size="large"
           icon={<Plus />}
           onClick={() => {
-            setIsCreateFormOpen(true);
+            open();
           }}
         />
         <Modal
           shouldCloseOnEsc
-          isOpen={isCreateFormOpen}
+          isOpen={isOpen}
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
           onRequestClose={() => {
-            setIsCreateFormOpen(false);
+            navigate(-1);
           }}
         >
           <CreateForm
             onClose={(createdApiResource) => {
-              setIsCreateFormOpen(false);
-
               if (createdApiResource) {
                 toast.success(
                   t('api_resources.api_resource_created', { name: createdApiResource.name })
                 );
-                navigate(buildDetailsLink(createdApiResource.id));
+                navigate(buildDetailsLink(createdApiResource.id), { replace: true });
+
+                return;
               }
+              navigate(-1);
             }}
           />
         </Modal>
@@ -109,7 +110,7 @@ const ApiResources = () => {
                     title="api_resources.create"
                     type="outline"
                     onClick={() => {
-                      setIsCreateFormOpen(true);
+                      open();
                     }}
                   />
                 </TableEmpty>

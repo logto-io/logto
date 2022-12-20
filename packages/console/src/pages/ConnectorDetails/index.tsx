@@ -25,6 +25,7 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
+import useModalControl from '@/hooks/use-modal-control';
 import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
 
@@ -37,9 +38,11 @@ import * as styles from './index.module.scss';
 const ConnectorDetails = () => {
   const { connectorId } = useParams();
   const { mutate: mutateGlobal } = useSWRConfig();
-  const [isDeleted, setIsDeleted] = useState(false);
   const [isReadMeOpen, setIsReadMeOpen] = useState(false);
-  const [isSetupOpen, setIsSetupOpen] = useState(false);
+  const { open: openDeleteModal, isOpen: isDeleteModalOpen } = useModalControl('delete_connector');
+  const { open: openChangeConnectorModal, isOpen: isChangeConnectorOpen } =
+    useModalControl('change_connector');
+  const hasOpenedModal = isDeleteModalOpen || isChangeConnectorOpen;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<ConnectorResponse, RequestError>(
     connectorId && `/api/connectors/${connectorId}`
@@ -50,7 +53,6 @@ const ConnectorDetails = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isSocial = data?.type === ConnectorType.Social;
-  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
 
   const onDeleteClick = async () => {
     if (!isSocial || !inUse) {
@@ -59,7 +61,7 @@ const ConnectorDetails = () => {
       return;
     }
 
-    setIsDeleteAlertOpen(true);
+    openDeleteModal();
   };
 
   const handleDelete = async () => {
@@ -68,8 +70,6 @@ const ConnectorDetails = () => {
     }
 
     await api.delete(`/api/connectors/${connectorId}`).json<ConnectorResponse>();
-
-    setIsDeleted(true);
 
     toast.success(t('connector_details.connector_deleted'));
     await mutateGlobal('/api/connectors');
@@ -150,7 +150,7 @@ const ConnectorDetails = () => {
                   icon={<Reset />}
                   iconClassName={styles.resetIcon}
                   onClick={() => {
-                    setIsSetupOpen(true);
+                    openChangeConnectorModal();
                   }}
                 >
                   {t(
@@ -165,11 +165,14 @@ const ConnectorDetails = () => {
               </ActionMenuItem>
             </ActionMenu>
             <CreateForm
-              isOpen={isSetupOpen}
+              isOpen={isChangeConnectorOpen}
               type={data.type}
               onClose={(connectorId?: string) => {
-                setIsSetupOpen(false);
-                navigate(`/connectors/${connectorId ?? ''}`);
+                navigate(-1);
+
+                if (connectorId) {
+                  navigate(`/connectors/${connectorId}`, { replace: true });
+                }
               }}
             />
           </div>
@@ -182,7 +185,7 @@ const ConnectorDetails = () => {
       </TabNav>
       {data && (
         <ConnectorContent
-          isDeleted={isDeleted}
+          hasOpenedModal={hasOpenedModal}
           connectorData={data}
           onConnectorUpdated={(connector) => {
             void mutate(connector);
@@ -191,10 +194,10 @@ const ConnectorDetails = () => {
       )}
       {data && (
         <ConfirmModal
-          isOpen={isDeleteAlertOpen}
+          isOpen={isDeleteModalOpen}
           confirmButtonText="general.delete"
           onCancel={() => {
-            setIsDeleteAlertOpen(false);
+            navigate(-1);
           }}
           onConfirm={handleDelete}
         >

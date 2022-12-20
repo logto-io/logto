@@ -22,10 +22,10 @@ type Props = {
   userData: User;
   userFormData: UserDetailsForm;
   onUserUpdated: (user?: User) => void;
-  isDeleted: boolean;
+  hasDeleteModalOpened: boolean;
 };
 
-const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Props) => {
+const UserSettings = ({ userData, userFormData, hasDeleteModalOpened, onUserUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -144,7 +144,7 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
           </FormField>
         </FormCard>
       </DetailsForm>
-      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!hasDeleteModalOpened && isDirty} />
     </>
   );
 };

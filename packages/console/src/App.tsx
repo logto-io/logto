@@ -53,10 +53,7 @@ const Main = () => {
               <Route path="applications">
                 <Route index element={<Applications />} />
                 <Route path="create" element={<Applications />} />
-                <Route path=":id">
-                  <Route index element={<Navigate replace to="settings" />} />
-                  <Route path="settings" element={<ApplicationDetails />} />
-                </Route>
+                <Route path=":id" element={<ApplicationDetails />} />
               </Route>
               <Route path="api-resources">
                 <Route index element={<ApiResources />} />

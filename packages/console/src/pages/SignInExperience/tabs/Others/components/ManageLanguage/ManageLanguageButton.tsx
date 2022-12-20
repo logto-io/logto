@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Button from '@/components/Button';
+import useModalControl from '@/hooks/use-modal-control';
 
 import LanguageEditor from './LanguageEditor';
 
@@ -9,7 +10,8 @@ type Props = {
 };
 
 const ManageLanguageButton = ({ className }: Props) => {
-  const [isLanguageEditorOpen, setIsLanguageEditorOpen] = useState(false);
+  const { open, isOpen } = useModalControl('manage_language');
+  const navigate = useNavigate();
 
   return (
     <>
@@ -19,13 +21,13 @@ const ManageLanguageButton = ({ className }: Props) => {
         title="sign_in_exp.others.languages.manage_language"
         className={className}
         onClick={() => {
-          setIsLanguageEditorOpen(true);
+          open();
         }}
       />
       <LanguageEditor
-        isOpen={isLanguageEditorOpen}
+        isOpen={isOpen}
         onClose={() => {
-          setIsLanguageEditorOpen(false);
+          navigate(-1);
         }}
       />
     </>

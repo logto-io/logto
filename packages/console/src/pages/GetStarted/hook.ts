@@ -78,7 +78,7 @@ const useGetStartedMetadata = () => {
         buttonText: 'general.create',
         isComplete: settings?.applicationCreated,
         onClick: () => {
-          navigate('/applications/create');
+          navigate('/applications?m_create_application=true');
         },
       },
       {

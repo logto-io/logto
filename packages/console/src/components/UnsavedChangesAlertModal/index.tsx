@@ -50,14 +50,20 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges, parentPath }: Props) => {
         location: { pathname: targetPathname },
       } = transition;
 
+      const executeTransition = () => {
+        unblock();
+        transition.retry();
+      };
+
       // Note: We don't want to show the alert if the user is navigating to the same page.
       if (targetPathname === pathname) {
+        executeTransition();
+
         return;
       }
 
       if (parentPath && targetPathname.startsWith(parentPath)) {
-        unblock();
-        transition.retry();
+        executeTransition();
 
         return;
       }
@@ -67,8 +73,7 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges, parentPath }: Props) => {
       setTransition({
         ...transition,
         retry() {
-          unblock();
-          transition.retry();
+          executeTransition();
         },
       });
     });

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
@@ -17,6 +17,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import type { RequestError } from '@/hooks/use-api';
+import useModalControl from '@/hooks/use-modal-control';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
@@ -29,8 +30,7 @@ const pageSize = 20;
 
 const Applications = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const isCreateNew = location.pathname.endsWith('/create');
+  const { open, isOpen } = useModalControl('create_application');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
@@ -50,27 +50,27 @@ const Applications = () => {
           type="primary"
           size="large"
           onClick={() => {
-            navigate('/applications/create');
+            open();
           }}
         />
         <Modal
           shouldCloseOnEsc
-          isOpen={isCreateNew}
+          isOpen={isOpen}
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
           onRequestClose={() => {
-            navigate('/applications');
+            navigate(-1);
           }}
         >
           <CreateForm
             onClose={(createdApp) => {
               if (createdApp) {
                 toast.success(t('applications.application_created', { name: createdApp.name }));
-                navigate(`/applications/${createdApp.id}`);
+                navigate(`/applications/${createdApp.id}`, { replace: true });
 
                 return;
               }
-              navigate('/applications');
+              navigate(-1);
             }}
           />
         </Modal>
@@ -105,7 +105,7 @@ const Applications = () => {
                     title="applications.create"
                     type="outline"
                     onClick={() => {
-                      navigate('/applications/create');
+                      open();
                     }}
                   />
                 </TableEmpty>

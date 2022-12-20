@@ -22,6 +22,7 @@ import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useModalControl from '@/hooks/use-modal-control';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -37,10 +38,10 @@ const UserDetails = () => {
   const isLogs = location.pathname.endsWith('/logs');
   const { userId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
+  const { open: openDeleteModal, isOpen: isDeleteModalOpen } = useModalControl('delete_user');
+  const { open: openResetPasswordModal, isOpen: isResetPasswordModalOpen } =
+    useModalControl('reset_user_password');
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
-  const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
   const [resetResult, setResetResult] = useState<string>();
   const [password, setPassword] = useState(sessionStorage.getItem(generatedPasswordStorageKey));
 
@@ -66,11 +67,9 @@ const UserDetails = () => {
 
     try {
       await api.delete(`/api/users/${data.id}`);
-      setIsDeleted(true);
       setIsDeleting(false);
-      setIsDeleteFormOpen(false);
       toast.success(t('user_details.deleted', { name: data.name }));
-      navigate('/users');
+      navigate('/users', { replace: true });
     } catch {
       setIsDeleting(false);
     }
@@ -122,7 +121,7 @@ const UserDetails = () => {
                   icon={<Reset />}
                   iconClassName={styles.resetIcon}
                   onClick={() => {
-                    setIsResetPasswordFormOpen(true);
+                    openResetPasswordModal();
                   }}
                 >
                   {t('user_details.reset_password.reset_password')}
@@ -131,7 +130,7 @@ const UserDetails = () => {
                   icon={<Delete />}
                   type="danger"
                   onClick={() => {
-                    setIsDeleteFormOpen(true);
+                    openDeleteModal();
                   }}
                 >
                   {t('general.delete')}
@@ -139,29 +138,28 @@ const UserDetails = () => {
               </ActionMenu>
               <ReactModal
                 shouldCloseOnEsc
-                isOpen={isResetPasswordFormOpen}
+                isOpen={isResetPasswordModalOpen}
                 className={modalStyles.content}
                 overlayClassName={modalStyles.overlay}
                 onRequestClose={() => {
-                  setIsResetPasswordFormOpen(false);
+                  navigate(-1);
                 }}
               >
                 <ResetPasswordForm
                   userId={data.id}
                   onClose={(password) => {
-                    setIsResetPasswordFormOpen(false);
-
                     if (password) {
                       setResetResult(password);
                     }
+                    navigate(-1);
                   }}
                 />
               </ReactModal>
               <DeleteConfirmModal
-                isOpen={isDeleteFormOpen}
+                isOpen={isDeleteModalOpen}
                 isLoading={isDeleting}
                 onCancel={() => {
-                  setIsDeleteFormOpen(false);
+                  navigate(-1);
                 }}
                 onConfirm={onDelete}
               >
@@ -178,7 +176,7 @@ const UserDetails = () => {
             <UserSettings
               userData={data}
               userFormData={userFormData}
-              isDeleted={isDeleted}
+              hasDeleteModalOpened={isDeleteModalOpen}
               onUserUpdated={(user) => {
                 void mutate(user);
               }}

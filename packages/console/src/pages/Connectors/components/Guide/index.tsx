@@ -95,7 +95,7 @@ const Guide = ({ connector, onClose }: Props) => {
 
     onClose();
     toast.success(t('general.saved'));
-    navigate(`/connectors/${createdConnector.id}`);
+    navigate(`/connectors/${createdConnector.id}`, { replace: true });
   });
 
   return (

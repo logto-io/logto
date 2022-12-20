@@ -27,6 +27,7 @@ import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useModalControl from '@/hooks/use-modal-control';
 import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
 
@@ -49,8 +50,8 @@ const ApiResourceDetails = () => {
 
   const isLogtoManagementApiResource = data?.id === managementResource.id;
 
+  const { open, isOpen } = useModalControl('delete_api_resource');
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
 
   const {
     handleSubmit,
@@ -62,8 +63,6 @@ const ApiResourceDetails = () => {
   });
 
   const api = useApi();
-
-  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
 
   useEffect(() => {
     if (!data) {
@@ -93,11 +92,9 @@ const ApiResourceDetails = () => {
 
     try {
       await api.delete(`/api/resources/${data.id}`);
-      setIsDeleted(true);
       setIsDeleting(false);
-      setIsDeleteFormOpen(false);
       toast.success(t('api_resource_details.api_resource_deleted', { name: data.name }));
-      navigate(`/api-resources`);
+      navigate(`/api-resources`, { replace: true });
     } catch {
       setIsDeleting(false);
     }
@@ -130,20 +127,20 @@ const ApiResourceDetails = () => {
                     icon={<Delete />}
                     type="danger"
                     onClick={() => {
-                      setIsDeleteFormOpen(true);
+                      open();
                     }}
                   >
                     {t('general.delete')}
                   </ActionMenuItem>
                 </ActionMenu>
                 <DeleteConfirmModal
-                  isOpen={isDeleteFormOpen}
+                  isOpen={isOpen}
                   isLoading={isDeleting}
                   expectedInput={data.name}
                   className={styles.deleteConfirm}
                   inputPlaceholder={t('api_resource_details.enter_your_api_resource_name')}
                   onCancel={() => {
-                    setIsDeleteFormOpen(false);
+                    navigate(-1);
                   }}
                   onConfirm={onDelete}
                 >
@@ -191,7 +188,7 @@ const ApiResourceDetails = () => {
           </DetailsForm>
         </>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isOpen && isDirty} />
     </div>
   );
 };

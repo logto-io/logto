@@ -1,18 +1,20 @@
 import classNames from 'classnames';
-import type { ReactChild, ReactNode } from 'react';
-import { useMemo, useState } from 'react';
+import type { ReactChild } from 'react';
+import { useMemo } from 'react';
 import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { getPath } from '../../utils';
+import ModalItem from './ModalItem';
+import type { Props as ModalItemProps } from './ModalItem';
 import * as styles from './index.module.scss';
 
 type Props = {
   icon?: ReactChild;
   titleKey: TFuncKey<'translation', 'admin_console.tabs'>;
   isActive?: boolean;
-  modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
+  modal?: Omit<ModalItemProps, 'content'>;
   externalLink?: string;
 };
 
@@ -20,7 +22,6 @@ const Item = ({ icon, titleKey, modal, externalLink, isActive = false }: Props) 
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tabs',
   });
-  const [isOpen, setIsOpen] = useState(false);
 
   const content = useMemo(
     () => (
@@ -33,21 +34,7 @@ const Item = ({ icon, titleKey, modal, externalLink, isActive = false }: Props) 
   );
 
   if (modal) {
-    return (
-      <>
-        <button
-          className={styles.row}
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          {content}
-        </button>
-        {modal(isOpen, () => {
-          setIsOpen(false);
-        })}
-      </>
-    );
+    return <ModalItem {...modal} content={content} />;
   }
 
   if (externalLink) {
