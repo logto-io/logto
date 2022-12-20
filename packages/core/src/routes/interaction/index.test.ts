@@ -1,6 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { Event } from '@logto/schemas';
-import { demoAppApplicationId } from '@logto/schemas/lib/seeds/application.js';
+import { Event, demoAppApplicationId } from '@logto/schemas';
 import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';

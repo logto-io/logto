@@ -23,6 +23,7 @@ importers:
 
   packages/cli:
     specifiers:
+      '@logto/core-kit': workspace:*
       '@logto/schemas': workspace:*
       '@logto/shared': workspace:*
       '@silverhand/eslint-config': 1.3.0
@@ -62,6 +63,7 @@ importers:
       yargs: ^17.6.0
       zod: ^3.20.2
     dependencies:
+      '@logto/core-kit': link:../toolkit/core-kit
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.3.0
@@ -682,7 +684,7 @@ importers:
   packages/toolkit/core-kit:
     specifiers:
       '@jest/types': ^29.0.3
-      '@logto/language-kit': ^1.0.0-beta.29
+      '@logto/language-kit': workspace:*
       '@rollup/plugin-typescript': ^10.0.1
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/eslint-config-react': 1.3.0

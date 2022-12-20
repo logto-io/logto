@@ -1,8 +1,8 @@
-import { SignInMode } from '@logto/schemas';
 import {
+  SignInMode,
   adminConsoleApplicationId,
   adminConsoleSignInExperience,
-} from '@logto/schemas/lib/seeds/index.js';
+} from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import {

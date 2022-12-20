@@ -1,6 +1,6 @@
 import type { IdTokenClaims } from '@logto/react';
 import { LogtoProvider, useLogto, Prompt } from '@logto/react';
-import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
+import { demoAppApplicationId } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

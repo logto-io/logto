@@ -1,7 +1,7 @@
 import path from 'path';
 
 import { fetchTokenByRefreshToken } from '@logto/js';
-import { managementResource } from '@logto/schemas/lib/seeds';
+import { managementResource } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import fetch from 'node-fetch';
 

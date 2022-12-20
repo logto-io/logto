@@ -1,9 +1,6 @@
 import zhCN from '@logto/phrases-ui/lib/locales/zh-cn.js';
 import type { SignInExperience } from '@logto/schemas';
-import {
-  adminConsoleApplicationId,
-  adminConsoleSignInExperience,
-} from '@logto/schemas/lib/seeds/index.js';
+import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';

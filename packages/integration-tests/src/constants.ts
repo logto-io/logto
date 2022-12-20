@@ -1,5 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
-import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
+import { SignInIdentifier, demoAppApplicationId } from '@logto/schemas';
 import { assertEnv } from '@silverhand/essentials';
 
 export const logtoUrl = assertEnv('INTEGRATION_TESTS_LOGTO_URL');

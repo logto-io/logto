@@ -1,5 +1,5 @@
+import { buildIdGenerator } from '@logto/core-kit';
 import { Resources } from '@logto/schemas';
-import { buildIdGenerator } from '@logto/shared';
 import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';

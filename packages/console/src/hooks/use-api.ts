@@ -1,6 +1,6 @@
 import { useLogto } from '@logto/react';
 import type { RequestErrorBody } from '@logto/schemas';
-import { managementResource } from '@logto/schemas/lib/seeds';
+import { managementResource } from '@logto/schemas';
 import ky from 'ky';
 import { useCallback, useMemo } from 'react';
 import { toast } from 'react-hot-toast';

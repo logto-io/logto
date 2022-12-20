@@ -1,6 +1,6 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds/index.js';
+import { adminConsoleApplicationId } from '@logto/schemas';
 import etag from 'etag';
 import type { Provider } from 'oidc-provider';
 

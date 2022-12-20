@@ -1,8 +1,5 @@
 import { isBuiltInLanguageTag } from '@logto/phrases-ui';
-import {
-  adminConsoleApplicationId,
-  adminConsoleSignInExperience,
-} from '@logto/schemas/lib/seeds/index.js';
+import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 
 import detectLanguage from '#src/i18n/detect-language.js';

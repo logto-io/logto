@@ -1,8 +1,7 @@
 import { MessageTypes } from '@logto/connector-kit';
-import { emailRegEx, phoneRegEx } from '@logto/core-kit';
+import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
-import { buildIdGenerator } from '@logto/shared';
 import cleanDeep from 'clean-deep';
 import { object, string } from 'zod';
 

@@ -1,6 +1,6 @@
+import { buildIdGenerator } from '@logto/core-kit';
 import type { User, CreateUser } from '@logto/schemas';
 import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { buildIdGenerator } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';
 import { argon2Verify } from 'hash-wasm';

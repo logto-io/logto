@@ -1,7 +1,6 @@
 {
   "name": "@logto/schemas",
   "version": "1.0.0-beta.16",
-  "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "type": "module",
@@ -11,6 +10,13 @@
     "alterations-js",
     "tables"
   ],
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./lib/*": "./lib/*",
+    "./models": "./lib/models/index.js",
+    "./package.json": "./package.json"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -55,7 +61,9 @@
     "rules": {
       "@typescript-eslint/ban-types": "off"
     },
-    "ignorePatterns": ["src/db-entries/"],
+    "ignorePatterns": [
+      "src/db-entries/"
+    ],
     "overrides": [
       {
         "files": [
