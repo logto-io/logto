@@ -1,24 +1,33 @@
 import { Event } from '@logto/schemas';
+import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 
 import type {
-  InteractionContext,
-  AnonymousInteractionResult,
-  IdentifierVerifiedInteractionResult,
+  RegisterInteractionResult,
+  SignInInteractionResult,
+  ForgotPasswordInteractionResult,
+  AccountVerifiedInteractionResult,
 } from '../types/index.js';
-import identifierPayloadVerification from './identifier-payload-verification.js';
-import userAccountVerification from './user-identity-verification.js';
+import { storeInteractionResult } from '../utils/interaction.js';
+import verifyUserAccount from './user-identity-verification.js';
+
+type InteractionResult =
+  | RegisterInteractionResult
+  | SignInInteractionResult
+  | ForgotPasswordInteractionResult;
 
 export default async function verifyIdentifier(
-  ctx: InteractionContext,
+  ctx: Context,
   provider: Provider,
-  interactionRecord?: AnonymousInteractionResult
-): Promise<IdentifierVerifiedInteractionResult> {
-  const verifiedInteraction = await identifierPayloadVerification(ctx, provider, interactionRecord);
-
-  if (verifiedInteraction.event === Event.Register) {
-    return verifiedInteraction;
+  interactionRecord: InteractionResult
+): Promise<RegisterInteractionResult | AccountVerifiedInteractionResult> {
+  if (interactionRecord.event === Event.Register) {
+    return interactionRecord;
   }
 
-  return userAccountVerification(verifiedInteraction, ctx, provider);
+  // Verify the user account and assign the verified result to the interaction record
+  const accountVerifiedInteractionResult = await verifyUserAccount(interactionRecord);
+  await storeInteractionResult(accountVerifiedInteractionResult, ctx, provider);
+
+  return accountVerifiedInteractionResult;
 }

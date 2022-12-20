@@ -6,7 +6,7 @@ import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import type { AnonymousInteractionResult, VerifiedPhoneIdentifier } from '../types/index.js';
+import type { AnonymousInteractionResult } from '../types/index.js';
 
 const { jest } = import.meta;
 
@@ -36,6 +36,7 @@ const logContext = createMockLogContext();
 
 describe('identifier verification', () => {
   const baseCtx = { ...createContextWithRouteParameters(), ...logContext };
+  const interactionStorage = { event: Event.SignIn };
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -49,15 +50,9 @@ describe('identifier verification', () => {
       password: 'password',
     };
 
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier,
-      }),
-    };
-
-    await expect(identifierPayloadVerification(ctx, createMockProvider())).rejects.toThrow();
+    await expect(
+      identifierPayloadVerification(baseCtx, createMockProvider(), identifier, interactionStorage)
+    ).rejects.toThrow();
     expect(findUserByIdentifier).toBeCalledWith({ username: 'username' });
     expect(verifyUserPassword).toBeCalledWith(null, 'password');
   });
@@ -65,22 +60,15 @@ describe('identifier verification', () => {
   it('username password user is suspended', async () => {
     findUserByIdentifier.mockResolvedValueOnce({ id: 'foo' });
     verifyUserPassword.mockResolvedValueOnce({ id: 'foo', isSuspended: true });
+
     const identifier = {
       username: 'username',
       password: 'password',
     };
 
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier,
-      }),
-    };
-
-    await expect(identifierPayloadVerification(ctx, createMockProvider())).rejects.toMatchError(
-      new RequestError({ code: 'user.suspended', status: 401 })
-    );
+    await expect(
+      identifierPayloadVerification(baseCtx, createMockProvider(), identifier, interactionStorage)
+    ).rejects.toMatchError(new RequestError({ code: 'user.suspended', status: 401 }));
 
     expect(findUserByIdentifier).toBeCalledWith({ username: 'username' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
@@ -95,21 +83,15 @@ describe('identifier verification', () => {
       password: 'password',
     };
 
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier,
-      }),
-    };
-
-    const result = await identifierPayloadVerification(ctx, createMockProvider());
+    const result = await identifierPayloadVerification(
+      baseCtx,
+      createMockProvider(),
+      identifier,
+      interactionStorage
+    );
     expect(findUserByIdentifier).toBeCalledWith({ email: 'email' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
-    expect(result).toEqual({
-      event: Event.SignIn,
-      identifiers: [{ key: 'accountId', value: 'foo' }],
-    });
+    expect(result).toEqual({ key: 'accountId', value: 'foo' });
   });
 
   it('phone password', async () => {
@@ -121,83 +103,63 @@ describe('identifier verification', () => {
       password: 'password',
     };
 
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier,
-      }),
-    };
-
-    const result = await identifierPayloadVerification(ctx, createMockProvider());
+    const result = await identifierPayloadVerification(
+      baseCtx,
+      createMockProvider(),
+      identifier,
+      interactionStorage
+    );
     expect(findUserByIdentifier).toBeCalledWith({ phone: 'phone' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
-    expect(result).toEqual({
-      event: Event.SignIn,
-      identifiers: [{ key: 'accountId', value: 'foo' }],
-    });
+    expect(result).toEqual({ key: 'accountId', value: 'foo' });
   });
 
   it('email passcode', async () => {
     const identifier = { email: 'email', passcode: 'passcode' };
 
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier,
-      }),
-    };
-
-    const result = await identifierPayloadVerification(ctx, createMockProvider());
+    const result = await identifierPayloadVerification(
+      baseCtx,
+      createMockProvider(),
+      identifier,
+      interactionStorage
+    );
     expect(verifyIdentifierByPasscode).toBeCalledWith(
-      { ...identifier, event: Event.SignIn },
+      { ...identifier, event: interactionStorage.event },
       'jti',
       logContext.createLog
     );
 
-    expect(result).toEqual({
-      event: Event.SignIn,
-      identifiers: [{ key: 'emailVerified', value: identifier.email }],
-    });
+    expect(result).toEqual({ key: 'emailVerified', value: identifier.email });
   });
 
   it('phone passcode', async () => {
     const identifier = { phone: 'phone', passcode: 'passcode' };
 
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier,
-      }),
-    };
+    const result = await identifierPayloadVerification(
+      baseCtx,
+      createMockProvider(),
+      identifier,
+      interactionStorage
+    );
 
-    const result = await identifierPayloadVerification(ctx, createMockProvider());
     expect(verifyIdentifierByPasscode).toBeCalledWith(
-      { ...identifier, event: Event.SignIn },
+      { ...identifier, event: interactionStorage.event },
       'jti',
       logContext.createLog
     );
 
-    expect(result).toEqual({
-      event: Event.SignIn,
-      identifiers: [{ key: 'phoneVerified', value: identifier.phone }],
-    });
+    expect(result).toEqual({ key: 'phoneVerified', value: identifier.phone });
   });
 
   it('social', async () => {
     const identifier = { connectorId: 'logto', connectorData: {} };
 
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier,
-      }),
-    };
-
-    const result = await identifierPayloadVerification(ctx, createMockProvider());
+    const result = await identifierPayloadVerification(
+      baseCtx,
+      createMockProvider(),
+      identifier,
+      interactionStorage
+    );
 
     expect(verifySocialIdentity).toBeCalledWith(
       identifier,
@@ -207,10 +169,9 @@ describe('identifier verification', () => {
     expect(findUserByIdentifier).not.toBeCalled();
 
     expect(result).toEqual({
-      event: Event.SignIn,
-      identifiers: [
-        { key: 'social', connectorId: identifier.connectorId, userInfo: { id: 'foo' } },
-      ],
+      key: 'social',
+      connectorId: identifier.connectorId,
+      userInfo: { id: 'foo' },
     });
   });
 
@@ -231,52 +192,29 @@ describe('identifier verification', () => {
 
     const identifierPayload = { connectorId: 'logto', identityType: 'email' };
 
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier: identifierPayload,
-      }),
-    };
-
     const result = await identifierPayloadVerification(
-      ctx,
+      baseCtx,
       createMockProvider(),
+      identifierPayload,
       interactionRecord
     );
     expect(result).toEqual({
-      event: Event.SignIn,
-      identifiers: [
-        {
-          key: 'social',
-          connectorId: 'logto',
-          userInfo: {
-            id: 'foo',
-            email: 'email@logto.io',
-          },
-        },
-        {
-          key: 'emailVerified',
-          value: 'email@logto.io',
-        },
-      ],
+      key: 'emailVerified',
+      value: 'email@logto.io',
     });
   });
 
   it('verified social email should throw if social session not found', async () => {
     const identifierPayload = { connectorId: 'logto', identityType: 'email' };
 
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier: identifierPayload,
-      }),
-    };
-
-    await expect(identifierPayloadVerification(ctx, createMockProvider())).rejects.toMatchError(
-      new RequestError('session.connector_session_not_found')
-    );
+    await expect(
+      identifierPayloadVerification(
+        baseCtx,
+        createMockProvider(),
+        identifierPayload,
+        interactionStorage
+      )
+    ).rejects.toMatchError(new RequestError('session.connector_session_not_found'));
   });
 
   it('verified social email should throw if social identity not found', async () => {
@@ -295,45 +233,13 @@ describe('identifier verification', () => {
 
     const identifierPayload = { connectorId: 'logto', identityType: 'email' };
 
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier: identifierPayload,
-      }),
-    };
-
     await expect(
-      identifierPayloadVerification(ctx, createMockProvider(), interactionRecord)
+      identifierPayloadVerification(
+        baseCtx,
+        createMockProvider(),
+        identifierPayload,
+        interactionRecord
+      )
     ).rejects.toMatchError(new RequestError('session.connector_session_not_found'));
-  });
-
-  it('should merge identifier if exist', async () => {
-    const identifier = { email: 'email', passcode: 'passcode' };
-    const oldIdentifier: VerifiedPhoneIdentifier = { key: 'phoneVerified', value: '123456' };
-
-    const ctx = {
-      ...baseCtx,
-      interactionPayload: Object.freeze({
-        event: Event.SignIn,
-        identifier,
-      }),
-    };
-
-    const result = await identifierPayloadVerification(ctx, createMockProvider(), {
-      event: Event.Register,
-      identifiers: [oldIdentifier],
-    });
-
-    expect(verifyIdentifierByPasscode).toBeCalledWith(
-      { ...identifier, event: Event.SignIn },
-      'jti',
-      logContext.createLog
-    );
-
-    expect(result).toEqual({
-      event: Event.SignIn,
-      identifiers: [oldIdentifier, { key: 'emailVerified', value: identifier.email }],
-    });
   });
 });

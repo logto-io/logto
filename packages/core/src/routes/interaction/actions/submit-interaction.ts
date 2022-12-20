@@ -1,6 +1,7 @@
 import type { User } from '@logto/schemas';
 import { Event } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
@@ -9,7 +10,6 @@ import { encryptUserPassword, generateUserId, insertUser } from '#src/libraries/
 import { findUserById, updateUserById } from '#src/queries/user.js';
 
 import type {
-  InteractionContext,
   Identifier,
   VerifiedInteractionResult,
   SocialIdentifier,
@@ -86,7 +86,7 @@ const parseUserProfile = async (
 
 export default async function submitInteraction(
   interaction: VerifiedInteractionResult,
-  ctx: InteractionContext,
+  ctx: Context,
   provider: Provider
 ) {
   const { event, profile } = interaction;
