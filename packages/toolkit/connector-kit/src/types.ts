@@ -104,6 +104,17 @@ export type ConnectorMetadata = z.infer<typeof connectorMetadataGuard>;
 
 export type ConfigurableConnectorMetadata = z.infer<typeof configurableConnectorMetadataGuard>;
 
+export const connectorSessionGuard = z.object({
+  nonce: z.string().optional(),
+  redirectUri: z.string().optional(),
+});
+
+export type ConnectorSession = z.infer<typeof connectorSessionGuard>;
+
+export type GetSession = () => Promise<ConnectorSession>;
+
+export type SetSession = (storage: ConnectorSession) => Promise<void>;
+
 export type BaseConnector<Type extends ConnectorType> = {
   type: Type;
   metadata: ConnectorMetadata;
@@ -138,11 +149,15 @@ export type SocialConnector = BaseConnector<ConnectorType.Social> & {
   getUserInfo: GetUserInfo;
 };
 
-export type GetAuthorizationUri = (payload: {
-  state: string;
-  redirectUri: string;
-}) => Promise<string>;
+export type GetAuthorizationUri = (
+  payload: {
+    state: string;
+    redirectUri: string;
+  },
+  setSession?: SetSession
+) => Promise<string>;
 
 export type GetUserInfo = (
-  data: unknown
+  data: unknown,
+  getSession?: GetSession
 ) => Promise<{ id: string } & Record<string, string | boolean | number | undefined>>;

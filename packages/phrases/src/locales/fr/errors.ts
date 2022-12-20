@@ -90,6 +90,8 @@ const errors = {
     forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
     verification_failed:
       'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
+    connector_validation_session_not_found:
+      'The connector session for token validation is not found.', // UNTRANSLATED
   },
   connector: {
     general: "Une erreur inattendue s'est produite dans le connecteur. {{errorDescription}}",

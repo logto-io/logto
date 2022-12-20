@@ -1,3 +1,4 @@
+import type { ConnectorSession } from '@logto/connector-kit';
 import type { LogtoErrorCode } from '@logto/phrases';
 import { Event } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -7,6 +8,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { assignConnectorSessionResult } from '#src/routes/session/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouter } from '../types.js';
@@ -121,7 +123,11 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       // Check interaction session
       await provider.interactionDetails(ctx.req, ctx.res);
 
-      const redirectTo = await createSocialAuthorizationUrl(ctx.guard.body);
+      const redirectTo = await createSocialAuthorizationUrl(
+        ctx.guard.body,
+        async (connectorStorage: ConnectorSession) =>
+          assignConnectorSessionResult(ctx, provider, connectorStorage)
+      );
 
       ctx.body = { redirectTo };
 
