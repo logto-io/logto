@@ -42,6 +42,8 @@ const connectors = {
     logo_dark_show: '显示「深色模式图标」',
     target: '连接器 target',
     target_tip: '连接器标识符',
+    target_tootip:
+      '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>', // UNTRANSLATED
     config: '请在此输入你的 JSON 配置',
     sync_profile: '从社交服务商同步用户数据',
     sync_profile_only_at_register: '仅在注册时同步',

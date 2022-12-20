@@ -2,7 +2,7 @@ import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import CaretDown from '@/assets/images/caret-down.svg';
 import CaretUp from '@/assets/images/caret-up.svg';
@@ -11,6 +11,7 @@ import CodeEditor from '@/components/CodeEditor';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TextInput from '@/components/TextInput';
+import TextLink from '@/components/TextLink';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
@@ -82,7 +83,25 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
             trailingIcon={darkVisible ? <CaretUp /> : <CaretDown />}
             onClick={toggleDarkVisible}
           />
-          <FormField isRequired title="connectors.guide.target">
+          <FormField
+            isRequired
+            title="connectors.guide.target"
+            tip={(closeTipHandler) => (
+              <Trans
+                components={{
+                  a: (
+                    <TextLink
+                      href="https://docs.logto.io/docs/references/connectors/#target"
+                      target="_blank"
+                      onClick={closeTipHandler}
+                    />
+                  ),
+                }}
+              >
+                {t('connectors.guide.target_tootip')}
+              </Trans>
+            )}
+          >
             <TextInput
               hasError={Boolean(errors.target)}
               disabled={!isAllowEditTarget}

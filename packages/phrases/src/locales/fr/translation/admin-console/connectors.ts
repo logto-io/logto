@@ -45,6 +45,8 @@ const connectors = {
     logo_dark_show: 'Show "Logo for dark mode"', // UNTRANSLATED
     target: 'Connector identity target', // UNTRANSLATED
     target_tip: 'A unique identifier for the connector.', // UNTRANSLATED
+    target_tootip:
+      '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>', // UNTRANSLATED
     config: 'Enter your JSON here', // UNTRANSLATED
     sync_profile: 'Sync profile information from the social provider', // UNTRANSLATED
     sync_profile_only_at_register: 'Only sync at register', // UNTRANSLATED
