@@ -19,7 +19,6 @@ import DetailsSkeleton from '@/components/DetailsSkeleton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UserAvatar from '@/components/UserAvatar';
-import { generatedPasswordStorageKey } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -30,11 +29,11 @@ import ResetPasswordForm from './components/ResetPasswordForm';
 import UserLogs from './components/UserLogs';
 import UserSettings from './components/UserSettings';
 import * as styles from './index.module.scss';
-import { userDetailsParser } from './utils';
+import { isUserDetailsPageState, userDetailsParser } from './utils';
 
 const UserDetails = () => {
-  const location = useLocation();
-  const isLogs = location.pathname.endsWith('/logs');
+  const { pathname, state } = useLocation();
+  const isLogs = pathname.endsWith('/logs');
   const { userId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
@@ -42,7 +41,8 @@ const UserDetails = () => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
   const [resetResult, setResetResult] = useState<string>();
-  const [password, setPassword] = useState(sessionStorage.getItem(generatedPasswordStorageKey));
+
+  const [password, setPassword] = useState(isUserDetailsPageState(state) ? state.password : '');
 
   const { data, error, mutate } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
   const isLoading = !data && !error;
@@ -182,8 +182,9 @@ const UserDetails = () => {
           username={data.username ?? '-'}
           password={password}
           onClose={() => {
-            setPassword(null);
-            sessionStorage.removeItem(generatedPasswordStorageKey);
+            setPassword('');
+            // Note: reload to remove the password state form the location.state
+            navigate('', { replace: true });
           }}
         />
       )}

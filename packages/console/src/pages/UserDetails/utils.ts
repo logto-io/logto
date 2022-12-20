@@ -1,4 +1,5 @@
 import type { User } from '@logto/schemas';
+import { z } from 'zod';
 
 import type { UserDetailsForm } from './types';
 
@@ -16,4 +17,16 @@ export const userDetailsParser = {
       customData: JSON.stringify(customData, null, 2),
     };
   },
+};
+
+const userDetailsPageStateGuard = z.object({
+  password: z.string(),
+});
+
+export type UserDetailsPageState = z.infer<typeof userDetailsPageStateGuard>;
+
+export const isUserDetailsPageState = (value: unknown): value is UserDetailsPageState => {
+  const { success } = userDetailsPageStateGuard.safeParse(value);
+
+  return success;
 };

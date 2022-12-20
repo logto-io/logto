@@ -19,12 +19,12 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import UserAvatar from '@/components/UserAvatar';
-import { generatedPasswordStorageKey } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
+import type { UserDetailsPageState } from '../UserDetails/utils';
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
@@ -74,8 +74,8 @@ const Users = () => {
               setIsCreateFormOpen(false);
 
               if (createdUser && password) {
-                sessionStorage.setItem(generatedPasswordStorageKey, password);
-                navigate(`/users/${createdUser.id}`);
+                const state: UserDetailsPageState = { password };
+                navigate(`/users/${createdUser.id}`, { state });
               }
             }}
           />
