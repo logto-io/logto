@@ -57,11 +57,11 @@ const AuditLogDetails = () => {
           <Card className={styles.header}>
             <EventIcon isSuccess={data.payload.result === 'Success'} />
             <div className={styles.content}>
-              <div className={styles.eventName}>{logEventTitle[data.type]}</div>
+              <div className={styles.eventName}>{logEventTitle[data.key]}</div>
               <div className={styles.basicInfo}>
                 <div className={styles.infoItem}>
-                  <div className={styles.label}>{t('log_details.event_type')}</div>
-                  <div>{data.type}</div>
+                  <div className={styles.label}>{t('log_details.event_key')}</div>
+                  <div>{data.key}</div>
                 </div>
                 <div className={styles.infoItem}>
                   <div className={styles.label}>{t('log_details.application')}</div>

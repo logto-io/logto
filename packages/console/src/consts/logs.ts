@@ -1,6 +1,9 @@
+import type { LogKey } from '@logto/schemas';
+
 type LogEventTitle = Record<string, string>;
 
-export const logEventTitle: LogEventTitle = Object.freeze({
+/** @deprecated Don't use or update. */
+const logEventTitleLegacy: LogEventTitle = Object.freeze({
   RegisterUsernamePassword: 'Register with username and password',
   RegisterEmailSendPasscode: 'Register with email (send passcode)',
   RegisterEmail: 'Register with email',
@@ -19,3 +22,12 @@ export const logEventTitle: LogEventTitle = Object.freeze({
   RefreshTokenExchangeToken: 'Exchange token by refresh token',
   RevokeToken: 'Revoke token',
 });
+
+export const logEventTitle: Record<string, string | undefined> & Partial<Record<LogKey, string>> =
+  Object.freeze({
+    ...logEventTitleLegacy,
+    'ExchangeTokenBy.AuthorizationCode': 'Exchange token by auth code',
+    'ExchangeTokenBy.RefreshToken': 'Exchange token by refresh token',
+    'Interaction.Create': 'Interaction started',
+    'Interaction.End': 'Interaction ended',
+  });
