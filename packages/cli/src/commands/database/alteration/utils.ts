@@ -1,15 +1,15 @@
+import { existsSync } from 'fs';
+import fs from 'fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'path';
 
 import { findPackage } from '@logto/shared';
-import fsExtra from 'fs-extra';
 
 import { getPathInModule } from '../../../utilities.js';
 import { metaUrl } from './meta-url.js';
 import type { AlterationFile } from './type.js';
 
 const currentDirname = path.dirname(fileURLToPath(metaUrl));
-const { copy, existsSync, remove, readdir } = fsExtra;
 const alterationFilenameRegex = /-(\d+)-?.*\.js$/;
 
 export const getTimestampFromFilename = (filename: string) => {
@@ -42,10 +42,10 @@ export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
   }
 
   // We need to copy alteration files to execute in the CLI context to make `slonik` available
-  await remove(localAlterationDirectory);
-  await copy(alterationDirectory, localAlterationDirectory);
+  await fs.rm(localAlterationDirectory);
+  await fs.cp(alterationDirectory, localAlterationDirectory);
 
-  const directory = await readdir(localAlterationDirectory);
+  const directory = await fs.readdir(localAlterationDirectory);
   const files = directory.filter((file) => alterationFilenameRegex.test(file));
 
   return files

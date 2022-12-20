@@ -1,12 +1,11 @@
 import { exec } from 'child_process';
 import { existsSync } from 'fs';
-import { readFile, mkdir, unlink } from 'fs/promises';
+import fs from 'fs/promises';
 import path from 'path';
 import { promisify } from 'util';
 
 import { assert, conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
-import fsExtra from 'fs-extra';
 import inquirer from 'inquirer';
 import pRetry from 'p-retry';
 import tar from 'tar';
@@ -36,7 +35,7 @@ const validatePath = async (value: string) => {
     return buildPathErrorMessage(value);
   }
 
-  const packageJson = await readFile(corePackageJsonPath, { encoding: 'utf8' });
+  const packageJson = await fs.readFile(corePackageJsonPath, { encoding: 'utf8' });
   const packageName = await z
     .object({ name: z.string() })
     .parseAsync(JSON.parse(packageJson))
@@ -112,7 +111,7 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
   const cwd = getConnectorDirectory(instancePath);
 
   if (!existsSync(cwd)) {
-    await mkdir(cwd);
+    await fs.mkdir(cwd);
   }
 
   log.info('Fetch connector metadata');
@@ -136,10 +135,10 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
           const tarPath = path.join(cwd, escapedFilename);
           const packageDirectory = path.join(cwd, name.replace(/\//g, '-'));
 
-          await fsExtra.remove(packageDirectory);
-          await fsExtra.ensureDir(packageDirectory);
+          await fs.rm(packageDirectory);
+          await fs.mkdir(packageDirectory, { recursive: true });
           await tar.extract({ cwd: packageDirectory, file: tarPath, strip: 1 });
-          await unlink(tarPath);
+          await fs.unlink(tarPath);
 
           log.succeed(`Added ${chalk.green(name)}`);
         };

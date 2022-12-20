@@ -1,12 +1,11 @@
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
-import { mkdir } from 'fs/promises';
+import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
 
 import { assert } from '@silverhand/essentials';
 import chalk from 'chalk';
-import fsExtra from 'fs-extra';
 import inquirer from 'inquirer';
 import * as semver from 'semver';
 import tar from 'tar';
@@ -115,7 +114,7 @@ export const downloadRelease = async (url?: string) => {
 export const decompress = async (toPath: string, tarPath: string) => {
   const run = async () => {
     try {
-      await mkdir(toPath);
+      await fs.mkdir(toPath);
       await tar.extract({ file: tarPath, cwd: toPath, strip: 1 });
     } catch (error: unknown) {
       log.error(error);
@@ -140,7 +139,7 @@ export const seedDatabase = async (instancePath: string) => {
   } catch (error: unknown) {
     console.error(error);
 
-    await oraPromise(fsExtra.remove(instancePath), {
+    await oraPromise(fs.rm(instancePath), {
       text: 'Clean up',
       prefixText: chalk.blue('[info]'),
     });
@@ -156,9 +155,7 @@ export const seedDatabase = async (instancePath: string) => {
 
 export const createEnv = async (instancePath: string, databaseUrl: string) => {
   const dotEnvPath = path.resolve(instancePath, '.env');
-  await fsExtra.writeFile(dotEnvPath, `DB_URL=${databaseUrl}`, {
-    encoding: 'utf8',
-  });
+  await fs.writeFile(dotEnvPath, `DB_URL=${databaseUrl}`, 'utf8');
   log.info(`Saved database URL to ${chalk.blue(dotEnvPath)}`);
 };
 
