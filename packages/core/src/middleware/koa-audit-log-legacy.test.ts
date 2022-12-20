@@ -58,7 +58,7 @@ describe('koaLog middleware', () => {
 
     expect(insertLog).toBeCalledWith({
       id: nanoIdMock,
-      type,
+      key: type,
       payload: {
         ...mockPayload,
         ...additionalMockPayload,
@@ -105,7 +105,7 @@ describe('koaLog middleware', () => {
 
       expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
-        type,
+        key: type,
         payload: {
           ...mockPayload,
           result: LogResult.Error,
@@ -139,7 +139,7 @@ describe('koaLog middleware', () => {
 
       expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
-        type,
+        key: type,
         payload: {
           ...mockPayload,
           result: LogResult.Error,

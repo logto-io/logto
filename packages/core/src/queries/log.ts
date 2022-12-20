@@ -12,15 +12,15 @@ const { table, fields } = convertToIdentifiers(Logs);
 export const insertLog = buildInsertInto<CreateLog>(Logs);
 
 export type LogCondition = {
-  logType?: string;
+  logKey?: string;
   applicationId?: string;
   userId?: string;
 };
 
 const buildLogConditionSql = (logCondition: LogCondition) =>
-  conditionalSql(logCondition, ({ logType, applicationId, userId }) => {
+  conditionalSql(logCondition, ({ logKey, applicationId, userId }) => {
     const subConditions = [
-      conditionalSql(logType, (logType) => sql`${fields.key}=${logType}`),
+      conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
       conditionalSql(userId, (userId) => sql`${fields.payload}->>'userId'=${userId}`),
       conditionalSql(
         applicationId,

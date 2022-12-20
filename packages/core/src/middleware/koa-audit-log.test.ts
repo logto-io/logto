@@ -54,7 +54,7 @@ describe('koaAuditLog middleware', () => {
 
     expect(insertLog).toBeCalledWith({
       id: nanoIdMock,
-      type: logKey,
+      key: logKey,
       payload: {
         ...mockPayload,
         ...additionalMockPayload,
@@ -93,12 +93,12 @@ describe('koaAuditLog middleware', () => {
 
     expect(insertLog).toHaveBeenCalledWith({
       id: nanoIdMock,
-      type: logKey,
+      key: logKey,
       payload: basePayload,
     });
     expect(insertLog).toHaveBeenCalledWith({
       id: nanoIdMock,
-      type: logKey,
+      key: logKey,
       payload: {
         ...basePayload,
         ...additionalMockPayload,
@@ -139,7 +139,7 @@ describe('koaAuditLog middleware', () => {
 
       expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
-        type: logKey,
+        key: logKey,
         payload: {
           ...mockPayload,
           key: logKey,
@@ -176,7 +176,7 @@ describe('koaAuditLog middleware', () => {
       expect(insertLog).toHaveBeenCalledTimes(2);
       expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
-        type: logKey,
+        key: logKey,
         payload: {
           ...mockPayload,
           key: logKey,
