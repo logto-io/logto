@@ -1,5 +1,7 @@
 import type { Optional } from '@silverhand/essentials';
 import { getEnv, getEnvAsStringArray } from '@silverhand/essentials';
+import type { PostgreSql } from '@withtyped/postgres';
+import type { QueryClient } from '@withtyped/server';
 import type { DatabasePool } from 'slonik';
 
 import { getOidcConfigs } from '#src/libraries/logto-config.js';
@@ -7,6 +9,7 @@ import { appendPath } from '#src/utils/url.js';
 
 import { checkAlterationState } from './check-alteration-state.js';
 import createPoolByEnv from './create-pool-by-env.js';
+import createQueryClientByEnv from './create-query-client-by-env.js';
 import loadOidcValues from './oidc.js';
 import { isTrue } from './parameters.js';
 
@@ -54,6 +57,9 @@ const throwNotLoadedError = () => {
 function createEnvSet() {
   let values: Optional<Awaited<ReturnType<typeof loadEnvValues>>>;
   let pool: Optional<DatabasePool>;
+  // Use another pool for `withtyped` while adopting the new model,
+  // as we cannot extract the original PgPool from slonik
+  let queryClient: Optional<QueryClient<PostgreSql>>;
   let oidc: Optional<Awaited<ReturnType<typeof loadOidcValues>>>;
 
   return {
@@ -74,6 +80,13 @@ function createEnvSet() {
     get poolSafe() {
       return pool;
     },
+    get queryClient() {
+      if (!queryClient) {
+        return throwNotLoadedError();
+      }
+
+      return queryClient;
+    },
     get oidc() {
       if (!oidc) {
         return throwNotLoadedError();
@@ -84,6 +97,7 @@ function createEnvSet() {
     load: async () => {
       values = await loadEnvValues();
       pool = await createPoolByEnv(values.isTest);
+      queryClient = createQueryClientByEnv(values.isTest);
 
       const [, oidcConfigs] = await Promise.all([checkAlterationState(pool), getOidcConfigs(pool)]);
       oidc = await loadOidcValues(appendPath(values.endpoint, '/oidc').toString(), oidcConfigs);

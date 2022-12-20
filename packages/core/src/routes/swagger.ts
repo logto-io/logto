@@ -131,24 +131,27 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     ) as OpenAPIV3.Document;
 
     const routes = allRouters.flatMap<RouteObject>((router) =>
-      router.stack.flatMap<RouteObject>(({ path: routerPath, stack, methods }) =>
-        methods
-          .map((method) => method.toLowerCase())
-          // There is no need to show the HEAD method.
-          .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
-          .map((httpMethod) => {
-            const path = `/api${routerPath}`;
+      router.stack
+        // Filter out universal routes (mostly like a proxy route to withtyped)
+        .filter(({ path }) => !path.includes('.*'))
+        .flatMap<RouteObject>(({ path: routerPath, stack, methods }) =>
+          methods
+            .map((method) => method.toLowerCase())
+            // There is no need to show the HEAD method.
+            .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
+            .map((httpMethod) => {
+              const path = `/api${routerPath}`;
 
-            const additionalPathItem = additionalSwagger.paths[path] ?? {};
-            const additionalResponses = additionalPathItem[httpMethod]?.responses;
+              const additionalPathItem = additionalSwagger.paths[path] ?? {};
+              const additionalResponses = additionalPathItem[httpMethod]?.responses;
 
-            return {
-              path,
-              method: httpMethod,
-              operation: buildOperation(stack, routerPath, additionalResponses),
-            };
-          })
-      )
+              return {
+                path,
+                method: httpMethod,
+                operation: buildOperation(stack, routerPath, additionalResponses),
+              };
+            })
+        )
     );
 
     const pathMap = new Map<string, MethodMap>();

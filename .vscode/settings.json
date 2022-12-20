@@ -36,6 +36,7 @@
     "slonik",
     "stylelint",
     "topbar",
-    "hasura"
+    "hasura",
+    "withtyped"
   ]
 }

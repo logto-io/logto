@@ -82,6 +82,7 @@
     "@logto/language-kit": "workspace:*",
     "@logto/phrases": "workspace:*",
     "@logto/phrases-ui": "workspace:*",
+    "@withtyped/server": "^0.3.0",
     "zod": "^3.20.2"
   }
 }
