@@ -45,6 +45,8 @@ const connectors = {
     logo_dark_show: 'Mostrar "Logo para modo escuro"',
     target: 'Destino da identidade do conector',
     target_tip: 'Um identificador exclusivo para o conector.',
+    target_tootip:
+      '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>', // UNTRANSLATED
     config: 'Digite seu JSON aqui',
     sync_profile: 'Sincronizar informações de perfil do provedor social',
     sync_profile_only_at_register: 'Sincronizar apenas no registro',
