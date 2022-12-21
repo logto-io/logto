@@ -1,5 +1,5 @@
 import type { ConnectorResponse } from '@logto/schemas';
-import { AppearanceMode, ConnectorType } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';
+import ConnectorLogo from '@/components/ConnectorLogo';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
@@ -96,11 +97,7 @@ const ConnectorDetails = () => {
       {data && (
         <Card className={styles.header}>
           <div className={styles.logoContainer}>
-            <img
-              src={theme === AppearanceMode.DarkMode && data.logoDark ? data.logoDark : data.logo}
-              alt="logo"
-              className={styles.logo}
-            />
+            <ConnectorLogo data={data} className={styles.logo} />
           </div>
           <div className={styles.metadata}>
             <div>

@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
+import ConnectorLogo from '@/components/ConnectorLogo';
 import ModalLayout from '@/components/ModalLayout';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import UnnamedTrans from '@/components/UnnamedTrans';
@@ -157,11 +158,11 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
           className={classNames(styles.connectorGroup, styles[modalSize])}
           onChange={handleGroupChange}
         >
-          {groups.map(({ id, name, logo, description }) => (
+          {groups.map(({ id, name, logo, logoDark, description }) => (
             <Radio key={id} value={id}>
               <div className={styles.connector}>
                 <div className={styles.logo}>
-                  <img src={logo} alt="logo" />
+                  <ConnectorLogo data={{ logo, logoDark }} />
                 </div>
                 <div className={styles.content}>
                   <div className={classNames(styles.name)}>

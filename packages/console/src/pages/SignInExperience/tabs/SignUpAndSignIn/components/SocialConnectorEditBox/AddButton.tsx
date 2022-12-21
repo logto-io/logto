@@ -4,6 +4,7 @@ import CirclePlus from '@/assets/images/circle-plus.svg';
 import Plus from '@/assets/images/plus.svg';
 import ActionMenu from '@/components/ActionMenu';
 import type { Props as ButtonProps } from '@/components/Button';
+import ConnectorLogo from '@/components/ConnectorLogo';
 import { DropdownItem } from '@/components/Dropdown';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
@@ -45,7 +46,7 @@ const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
       )}
       isDropdownFullWidth={!hasSelectedConnectors}
     >
-      {options.map(({ target, logo, name, connectors }) => (
+      {options.map(({ target, logo, logoDark, name, connectors }) => (
         <DropdownItem
           key={target}
           onClick={() => {
@@ -53,7 +54,7 @@ const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
           }}
         >
           <div className={styles.title}>
-            <img src={logo} alt={target} className={styles.logo} />
+            <ConnectorLogo data={{ logo, logoDark }} className={styles.logo} />
             <UnnamedTrans resource={name} className={styles.name} />
             {connectors.length > 1 &&
               connectors.map(({ platform }) => (

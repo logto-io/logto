@@ -1,5 +1,6 @@
 import Draggable from '@/assets/images/draggable.svg';
 import Minus from '@/assets/images/minus.svg';
+import ConnectorLogo from '@/components/ConnectorLogo';
 import IconButton from '@/components/IconButton';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
@@ -12,12 +13,15 @@ type Props = {
   onDelete: (connectorTarget: string) => void;
 };
 
-const SelectedConnectorItem = ({ data: { logo, target, name, connectors }, onDelete }: Props) => {
+const SelectedConnectorItem = ({
+  data: { logo, logoDark, target, name, connectors },
+  onDelete,
+}: Props) => {
   return (
     <div className={styles.item}>
       <div className={styles.info}>
         <Draggable className={styles.draggableIcon} />
-        <img src={logo} alt={target} className={styles.logo} />
+        <ConnectorLogo data={{ logo, logoDark }} className={styles.logo} />
         <UnnamedTrans resource={name} className={styles.name} />
         {connectors.length > 1 &&
           connectors.map(({ platform }) => (
