@@ -11,12 +11,15 @@ import { logtoUrl } from '#src/constants.js';
 import { createUserByAdmin } from '#src/helpers.js';
 import { generateUsername, generatePassword } from '#src/utils.js';
 
+import { enableAllPasswordSignInMethods } from './interaction/utils/sign-in-experience.js';
+
 describe('get access token', () => {
   const username = generateUsername();
   const password = generatePassword();
 
   beforeAll(async () => {
     await createUserByAdmin(username, password);
+    await enableAllPasswordSignInMethods();
   });
 
   it('sign-in and getAccessToken', async () => {
