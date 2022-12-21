@@ -33,7 +33,7 @@ const userTableColumn = 3;
 
 const usersPathname = '/users';
 const createUserPathname = `${usersPathname}/create`;
-const buildDetailsPathname = (id: string) => `${usersPathname}/id`;
+const buildDetailsPathname = (id: string) => `${usersPathname}/${id}`;
 
 const Users = () => {
   const { pathname } = useLocation();
