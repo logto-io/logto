@@ -60,15 +60,41 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     }
   });
 
-  // Create a new interaction with interaction event
+  // Create a new interaction
   router.put(
     interactionPrefix,
-    koaGuard({ body: z.object({ event: eventGuard }) }),
+    koaGuard({
+      body: z.object({
+        event: eventGuard,
+        identifier: identifierPayloadGuard.optional(),
+        profile: profileGuard.optional(),
+      }),
+    }),
     async (ctx, next) => {
-      const { event } = ctx.guard.body;
-      verifySignInModeSettings(event, await getSignInExperience(ctx, provider));
+      const { event, identifier, profile } = ctx.guard.body;
+      const experience = await getSignInExperience(ctx, provider);
 
-      await storeInteractionResult({ event }, ctx, provider);
+      verifySignInModeSettings(event, experience);
+
+      if (identifier) {
+        verifyIdentifierSettings(identifier, experience);
+      }
+
+      if (profile) {
+        verifyProfileSettings(profile, experience);
+      }
+
+      const verifiedIdentifier = identifier && [
+        await verifyIdentifierPayload(ctx, provider, identifier, {
+          event,
+        }),
+      ];
+
+      await storeInteractionResult(
+        { event, identifiers: verifiedIdentifier, profile },
+        ctx,
+        provider
+      );
 
       ctx.status = 204;
 
