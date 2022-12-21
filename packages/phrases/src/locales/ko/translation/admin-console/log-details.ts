@@ -3,7 +3,7 @@ const log_details = {
   back_to_user: '{{name}}으로 돌아가기',
   success: '성공',
   failed: '실패',
-  event_type: '활동 종류',
+  event_key: 'Event Key', // UNTRANSLATED
   application: '어플리케이션',
   ip_address: 'IP 주소',
   user: '사용자',

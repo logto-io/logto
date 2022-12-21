@@ -3,7 +3,7 @@ const log_details = {
   back_to_user: 'Zurück zu {{name}}',
   success: 'Erfolgreich',
   failed: 'Fehlgeschlagen',
-  event_type: 'Event Typ',
+  event_key: 'Event Key', // UNTRANSLATED
   application: 'Anwendung',
   ip_address: 'IP Adresse',
   user: 'Benutzer',

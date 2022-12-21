@@ -15,19 +15,19 @@ export default function logRoutes<T extends AuthedRouter>(router: T) {
       query: object({
         userId: string().optional(),
         applicationId: string().optional(),
-        logType: string().optional(),
+        logKey: string().optional(),
       }),
     }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
       const {
-        query: { userId, applicationId, logType },
+        query: { userId, applicationId, logKey },
       } = ctx.guard;
 
       // TODO: @Gao refactor like user search
       const [{ count }, logs] = await Promise.all([
-        countLogs({ logType, applicationId, userId }),
-        findLogs(limit, offset, { logType, userId, applicationId }),
+        countLogs({ logKey, applicationId, userId }),
+        findLogs(limit, offset, { logKey, userId, applicationId }),
       ]);
 
       // Return totalCount to pagination middleware

@@ -115,7 +115,7 @@ const AuditLogTable = ({ userId }: Props) => {
               )}
               {isLoading && <TableLoading columns={tableColumnCount} />}
               {logs?.length === 0 && <TableEmpty columns={tableColumnCount} />}
-              {logs?.map(({ type, payload, createdAt, id }) => (
+              {logs?.map(({ key, payload, createdAt, id }) => (
                 <tr
                   key={id}
                   className={tableStyles.clickable}
@@ -124,7 +124,7 @@ const AuditLogTable = ({ userId }: Props) => {
                   }}
                 >
                   <td>
-                    <EventName type={type} isSuccess={payload.result === LogResult.Success} />
+                    <EventName eventKey={key} isSuccess={payload.result === LogResult.Success} />
                   </td>
                   {showUserColumn && (
                     <td>{payload.userId ? <UserName userId={payload.userId} /> : '-'}</td>

@@ -12,15 +12,15 @@ const { table, fields } = convertToIdentifiers(Logs);
 export const insertLog = buildInsertInto<CreateLog>(Logs);
 
 export type LogCondition = {
-  logType?: string;
+  logKey?: string;
   applicationId?: string;
   userId?: string;
 };
 
 const buildLogConditionSql = (logCondition: LogCondition) =>
-  conditionalSql(logCondition, ({ logType, applicationId, userId }) => {
+  conditionalSql(logCondition, ({ logKey, applicationId, userId }) => {
     const subConditions = [
-      conditionalSql(logType, (logType) => sql`${fields.type}=${logType}`),
+      conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
       conditionalSql(userId, (userId) => sql`${fields.payload}->>'userId'=${userId}`),
       conditionalSql(
         applicationId,
@@ -59,7 +59,7 @@ export const getDailyActiveUserCountsByTimeInterval = async (
     from ${table}
     where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
     and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
-    and ${fields.type} like ${`${token.Flow.ExchangeTokenBy}.%`}
+    and ${fields.key} like ${`${token.Flow.ExchangeTokenBy}.%`}
     and ${fields.payload}->>'result' = 'Success'
     group by date(${fields.createdAt})
   `);
@@ -73,6 +73,6 @@ export const countActiveUsersByTimeInterval = async (
     from ${table}
     where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
     and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
-    and ${fields.type} like ${`${token.Flow.ExchangeTokenBy}.%`}
+    and ${fields.key} like ${`${token.Flow.ExchangeTokenBy}.%`}
     and ${fields.payload}->>'result' = 'Success'
   `);

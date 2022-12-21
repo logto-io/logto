@@ -8,13 +8,13 @@ import { logEventTitle } from '@/consts/logs';
 import * as styles from './index.module.scss';
 
 type Props = {
-  type: string;
+  eventKey: string;
   isSuccess: boolean;
   to?: string;
 };
 
-const EventName = ({ type, isSuccess, to }: Props) => {
-  const title = logEventTitle[type] ?? type;
+const EventName = ({ eventKey, isSuccess, to }: Props) => {
+  const title = logEventTitle[eventKey] ?? eventKey;
 
   return (
     <div className={styles.eventName}>

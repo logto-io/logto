@@ -139,7 +139,7 @@ export default function koaAuditLog<
         entries.map(async ({ payload }) => {
           return insertLog({
             id: nanoid(),
-            type: payload.key,
+            key: payload.key,
             payload: { ip, userAgent, ...payload },
           });
         })

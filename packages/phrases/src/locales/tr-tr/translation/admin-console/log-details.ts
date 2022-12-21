@@ -3,7 +3,7 @@ const log_details = {
   back_to_user: '{{name}}e geri dön',
   success: 'Başarılı',
   failed: 'Başarısız',
-  event_type: 'Etkinlik tipi',
+  event_key: 'Event Key', // UNTRANSLATED
   application: 'Uygulama',
   ip_address: 'IP adresi',
   user: 'Kullanıcı',

@@ -4,7 +4,7 @@ import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-const mockBody = { type: 'a', payload: {}, createdAt: 123 };
+const mockBody = { key: 'a', payload: {}, createdAt: 123 };
 const mockLog = { id: '1', ...mockBody };
 const mockLogs = [mockLog, { id: '2', ...mockBody }];
 
@@ -28,15 +28,15 @@ describe('logRoutes', () => {
     it('should call countLogs and findLogs with correct parameters', async () => {
       const userId = 'userIdValue';
       const applicationId = 'foo';
-      const logType = 'SignInUsernamePassword';
+      const logKey = 'SignInUsernamePassword';
       const page = 1;
       const pageSize = 5;
 
       await logRequest.get(
-        `/logs?userId=${userId}&applicationId=${applicationId}&logType=${logType}&page=${page}&page_size=${pageSize}`
+        `/logs?userId=${userId}&applicationId=${applicationId}&logKey=${logKey}&page=${page}&page_size=${pageSize}`
       );
-      expect(countLogs).toHaveBeenCalledWith({ userId, applicationId, logType });
-      expect(findLogs).toHaveBeenCalledWith(5, 0, { userId, applicationId, logType });
+      expect(countLogs).toHaveBeenCalledWith({ userId, applicationId, logKey });
+      expect(findLogs).toHaveBeenCalledWith(5, 0, { userId, applicationId, logKey });
     });
 
     it('should return correct response', async () => {

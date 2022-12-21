@@ -71,7 +71,7 @@ const initLogger = (basePayload?: Readonly<BaseLogPayload>) => {
 
       await insertLog({
         id: nanoid(),
-        type: logger.type,
+        key: logger.type,
         payload: {
           ...logger.basePayload,
           ...logger.payload,
