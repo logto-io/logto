@@ -87,7 +87,7 @@ describe('session -> interactionRoutes', () => {
         })
       ),
     });
-    const path = `${interactionPrefix}/${verificationPrefix}/passcode`;
+    const path = `${interactionPrefix}${verificationPrefix}/passcode`;
     it('should call send passcode properly', async () => {
       const body = {
         event: Event.SignIn,
@@ -112,7 +112,7 @@ describe('session -> interactionRoutes', () => {
         })
       ),
     });
-    const path = `${interactionPrefix}/${verificationPrefix}/social-authorization-uri`;
+    const path = `${interactionPrefix}${verificationPrefix}/social-authorization-uri`;
 
     it('should throw when redirectURI is invalid', async () => {
       const response = await sessionRequest.post(path).send({
