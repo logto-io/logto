@@ -2,7 +2,6 @@ import type { User } from '@logto/schemas';
 import { conditional, conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import Modal from 'react-modal';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -18,9 +17,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import UserAvatar from '@/components/UserAvatar';
-import { generatedPasswordStorageKey } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
-import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
@@ -68,36 +65,17 @@ const Users = () => {
             });
           }}
         />
-        <Modal
-          shouldCloseOnEsc
-          isOpen={isCreateNew}
-          className={modalStyles.content}
-          overlayClassName={modalStyles.overlay}
-          onRequestClose={() => {
-            navigate({
-              pathname: usersPathname,
-              search,
-            });
-          }}
-        >
+        {isCreateNew && (
           <CreateForm
-            onClose={(createdUser, password) => {
-              if (createdUser && password) {
-                sessionStorage.setItem(generatedPasswordStorageKey, password);
-                navigate(buildDetailsPathname(createdUser.id), { replace: true });
-
-                return;
-              }
-
+            onClose={() => {
               navigate({
                 pathname: usersPathname,
                 search,
               });
             }}
           />
-        </Modal>
+        )}
       </div>
-
       <div className={classNames(resourcesStyles.table, styles.tableLayout)}>
         <div className={styles.filter}>
           <Search
