@@ -4,8 +4,11 @@ import { assert } from '@silverhand/essentials';
 import {
   sendVerificationPasscode,
   putInteraction,
-  patchInteraction,
   deleteUser,
+  patchInteractionIdentifiers,
+  patchInteractionProfile,
+  deleteInteractionProfile,
+  putInteractionEvent,
 } from '#src/api/index.js';
 import { readPasscode, expectRejects } from '#src/helpers.js';
 
@@ -27,18 +30,16 @@ describe('Register with username and password', () => {
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await putInteraction(
-      {
-        event: Event.Register,
-        profile: {
-          username,
-          password,
-        },
+    await client.send(putInteraction, {
+      event: Event.Register,
+      profile: {
+        username,
+        password,
       },
-      client.interactionCookie
-    );
+    });
+
+    const { redirectTo } = await client.submitInteraction();
 
     const id = await processSession(client, redirectTo);
     await logoutClient(client);
@@ -65,17 +66,15 @@ describe('Register with passwordless identifier', () => {
 
     const { primaryEmail } = generateNewUserProfile({ primaryEmail: true });
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    await expect(
-      sendVerificationPasscode(
-        {
-          event: Event.Register,
-          email: primaryEmail,
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(putInteraction, {
+      event: Event.Register,
+    });
+
+    await client.successSend(sendVerificationPasscode, {
+      event: Event.Register,
+      email: primaryEmail,
+    });
 
     const passcodeRecord = await readPasscode();
 
@@ -86,19 +85,16 @@ describe('Register with passwordless identifier', () => {
 
     const { code } = passcodeRecord;
 
-    const { redirectTo } = await putInteraction(
-      {
-        event: Event.Register,
-        identifier: {
-          email: primaryEmail,
-          passcode: code,
-        },
-        profile: {
-          email: primaryEmail,
-        },
-      },
-      client.interactionCookie
-    );
+    await client.successSend(patchInteractionIdentifiers, {
+      email: primaryEmail,
+      passcode: code,
+    });
+
+    await client.successSend(patchInteractionProfile, {
+      email: primaryEmail,
+    });
+
+    const { redirectTo } = await client.submitInteraction();
 
     const id = await processSession(client, redirectTo);
     await logoutClient(client);
@@ -114,17 +110,15 @@ describe('Register with passwordless identifier', () => {
 
     const { primaryPhone } = generateNewUserProfile({ primaryPhone: true });
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    await expect(
-      sendVerificationPasscode(
-        {
-          event: Event.Register,
-          phone: primaryPhone,
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(putInteraction, {
+      event: Event.Register,
+    });
+
+    await client.successSend(sendVerificationPasscode, {
+      event: Event.Register,
+      phone: primaryPhone,
+    });
 
     const passcodeRecord = await readPasscode();
 
@@ -135,19 +129,16 @@ describe('Register with passwordless identifier', () => {
 
     const { code } = passcodeRecord;
 
-    const { redirectTo } = await putInteraction(
-      {
-        event: Event.Register,
-        identifier: {
-          phone: primaryPhone,
-          passcode: code,
-        },
-        profile: {
-          phone: primaryPhone,
-        },
-      },
-      client.interactionCookie
-    );
+    await client.successSend(patchInteractionIdentifiers, {
+      phone: primaryPhone,
+      passcode: code,
+    });
+
+    await client.successSend(patchInteractionProfile, {
+      phone: primaryPhone,
+    });
+
+    const { redirectTo } = await client.submitInteraction();
 
     const id = await processSession(client, redirectTo);
     await logoutClient(client);
@@ -167,17 +158,15 @@ describe('Register with passwordless identifier', () => {
     });
 
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    await expect(
-      sendVerificationPasscode(
-        {
-          event: Event.Register,
-          email: primaryEmail,
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(putInteraction, {
+      event: Event.Register,
+    });
+
+    await client.successSend(sendVerificationPasscode, {
+      event: Event.Register,
+      email: primaryEmail,
+    });
 
     const passcodeRecord = await readPasscode();
 
@@ -188,29 +177,21 @@ describe('Register with passwordless identifier', () => {
 
     const { code } = passcodeRecord;
 
-    await expectRejects(
-      putInteraction(
-        {
-          event: Event.Register,
-          identifier: {
-            email: primaryEmail,
-            passcode: code,
-          },
-          profile: {
-            email: primaryEmail,
-          },
-        },
-        client.interactionCookie
-      ),
-      'user.email_already_in_use'
-    );
+    await client.successSend(patchInteractionIdentifiers, {
+      email: primaryEmail,
+      passcode: code,
+    });
 
-    const { redirectTo } = await patchInteraction(
-      {
-        event: Event.SignIn,
-      },
-      client.interactionCookie
-    );
+    await client.successSend(patchInteractionProfile, {
+      email: primaryEmail,
+    });
+
+    await expectRejects(client.submitInteraction(), 'user.email_already_in_use');
+
+    await client.successSend(deleteInteractionProfile);
+    await client.successSend(putInteractionEvent, { event: Event.SignIn });
+
+    const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     await logoutClient(client);
     await deleteUser(user.id);
@@ -231,15 +212,14 @@ describe('Register with passwordless identifier', () => {
     const client = await initClient();
     assert(client.interactionCookie, new Error('Session not found'));
 
-    await expect(
-      sendVerificationPasscode(
-        {
-          event: Event.Register,
-          phone: primaryPhone,
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(putInteraction, {
+      event: Event.Register,
+    });
+
+    await client.successSend(sendVerificationPasscode, {
+      event: Event.Register,
+      phone: primaryPhone,
+    });
 
     const passcodeRecord = await readPasscode();
 
@@ -250,29 +230,21 @@ describe('Register with passwordless identifier', () => {
 
     const { code } = passcodeRecord;
 
-    await expectRejects(
-      putInteraction(
-        {
-          event: Event.Register,
-          identifier: {
-            phone: primaryPhone,
-            passcode: code,
-          },
-          profile: {
-            phone: primaryPhone,
-          },
-        },
-        client.interactionCookie
-      ),
-      'user.phone_already_in_use'
-    );
+    await client.successSend(patchInteractionIdentifiers, {
+      phone: primaryPhone,
+      passcode: code,
+    });
 
-    const { redirectTo } = await patchInteraction(
-      {
-        event: Event.SignIn,
-      },
-      client.interactionCookie
-    );
+    await client.successSend(patchInteractionProfile, {
+      phone: primaryPhone,
+    });
+
+    await expectRejects(client.submitInteraction(), 'user.phone_already_in_use');
+
+    await client.successSend(deleteInteractionProfile);
+    await client.successSend(putInteractionEvent, { event: Event.SignIn });
+
+    const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     await logoutClient(client);
     await deleteUser(user.id);

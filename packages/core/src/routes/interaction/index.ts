@@ -230,7 +230,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
   // Create social authorization url interaction verification
   router.post(
-    `${interactionPrefix}/${verificationPrefix}/social-authorization-uri`,
+    `${interactionPrefix}${verificationPrefix}/social-authorization-uri`,
     koaGuard({ body: socialAuthorizationUrlPayloadGuard }),
     async (ctx, next) => {
       // Check interaction exists
@@ -250,7 +250,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
   // Create passwordless interaction passcode
   router.post(
-    `${interactionPrefix}/${verificationPrefix}/passcode`,
+    `${interactionPrefix}${verificationPrefix}/passcode`,
     koaGuard({
       body: sendPasscodePayloadGuard,
     }),

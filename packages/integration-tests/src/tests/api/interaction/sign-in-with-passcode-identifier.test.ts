@@ -1,10 +1,11 @@
 import { ConnectorType, Event, SignInIdentifier } from '@logto/schemas';
-import { assert } from '@silverhand/essentials';
 
 import {
   sendVerificationPasscode,
   putInteraction,
-  patchInteraction,
+  putInteractionEvent,
+  patchInteractionProfile,
+  patchInteractionIdentifiers,
   deleteUser,
   updateSignInExperience,
 } from '#src/api/index.js';
@@ -30,17 +31,15 @@ describe('Sign-In flow using passcode identifiers', () => {
   it('sign-in with email and passcode', async () => {
     const { userProfile, user } = await generateNewUser({ primaryEmail: true });
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    await expect(
-      sendVerificationPasscode(
-        {
-          event: Event.SignIn,
-          email: userProfile.primaryEmail,
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(putInteraction, {
+      event: Event.SignIn,
+    });
+
+    await client.successSend(sendVerificationPasscode, {
+      event: Event.SignIn,
+      email: userProfile.primaryEmail,
+    });
 
     const passcodeRecord = await readPasscode();
 
@@ -51,16 +50,12 @@ describe('Sign-In flow using passcode identifiers', () => {
 
     const { code } = passcodeRecord;
 
-    const { redirectTo } = await putInteraction(
-      {
-        event: Event.SignIn,
-        identifier: {
-          email: userProfile.primaryEmail,
-          passcode: code,
-        },
-      },
-      client.interactionCookie
-    );
+    await client.successSend(patchInteractionIdentifiers, {
+      email: userProfile.primaryEmail,
+      passcode: code,
+    });
+
+    const { redirectTo } = await client.submitInteraction();
 
     await processSession(client, redirectTo);
     await logoutClient(client);
@@ -70,17 +65,15 @@ describe('Sign-In flow using passcode identifiers', () => {
   it('sign-in with phone and passcode', async () => {
     const { userProfile, user } = await generateNewUser({ primaryPhone: true });
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    await expect(
-      sendVerificationPasscode(
-        {
-          event: Event.SignIn,
-          phone: userProfile.primaryPhone,
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(putInteraction, {
+      event: Event.SignIn,
+    });
+
+    await client.successSend(sendVerificationPasscode, {
+      event: Event.SignIn,
+      phone: userProfile.primaryPhone,
+    });
 
     const passcodeRecord = await readPasscode();
 
@@ -91,16 +84,12 @@ describe('Sign-In flow using passcode identifiers', () => {
 
     const { code } = passcodeRecord;
 
-    const { redirectTo } = await putInteraction(
-      {
-        event: Event.SignIn,
-        identifier: {
-          phone: userProfile.primaryPhone,
-          passcode: code,
-        },
-      },
-      client.interactionCookie
-    );
+    await client.successSend(patchInteractionIdentifiers, {
+      phone: userProfile.primaryPhone,
+      passcode: code,
+    });
+
+    const { redirectTo } = await client.submitInteraction();
 
     await processSession(client, redirectTo);
     await logoutClient(client);
@@ -116,45 +105,31 @@ describe('Sign-In flow using passcode identifiers', () => {
     });
 
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    await expect(
-      sendVerificationPasscode(
-        {
-          event: Event.SignIn,
-          email: newEmail,
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(putInteraction, {
+      event: Event.SignIn,
+    });
+
+    await client.successSend(sendVerificationPasscode, {
+      event: Event.SignIn,
+      email: newEmail,
+    });
 
     const passcodeRecord = await readPasscode();
 
     const { code } = passcodeRecord;
 
-    await expectRejects(
-      putInteraction(
-        {
-          event: Event.SignIn,
-          identifier: {
-            email: newEmail,
-            passcode: code,
-          },
-        },
-        client.interactionCookie
-      ),
-      'user.user_not_exist'
-    );
+    await client.successSend(patchInteractionIdentifiers, {
+      email: newEmail,
+      passcode: code,
+    });
 
-    const { redirectTo } = await patchInteraction(
-      {
-        event: Event.Register,
-        profile: {
-          email: newEmail,
-        },
-      },
-      client.interactionCookie
-    );
+    await expectRejects(client.submitInteraction(), 'user.user_not_exist');
+
+    await client.successSend(putInteractionEvent, { event: Event.Register });
+    await client.successSend(patchInteractionProfile, { email: newEmail });
+
+    const { redirectTo } = await client.submitInteraction();
 
     const id = await processSession(client, redirectTo);
     await logoutClient(client);
@@ -170,45 +145,31 @@ describe('Sign-In flow using passcode identifiers', () => {
     });
 
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    await expect(
-      sendVerificationPasscode(
-        {
-          event: Event.SignIn,
-          phone: newPhone,
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(putInteraction, {
+      event: Event.SignIn,
+    });
+
+    await client.successSend(sendVerificationPasscode, {
+      event: Event.SignIn,
+      phone: newPhone,
+    });
 
     const passcodeRecord = await readPasscode();
 
     const { code } = passcodeRecord;
 
-    await expectRejects(
-      putInteraction(
-        {
-          event: Event.SignIn,
-          identifier: {
-            phone: newPhone,
-            passcode: code,
-          },
-        },
-        client.interactionCookie
-      ),
-      'user.user_not_exist'
-    );
+    await client.successSend(patchInteractionIdentifiers, {
+      phone: newPhone,
+      passcode: code,
+    });
 
-    const { redirectTo } = await patchInteraction(
-      {
-        event: Event.Register,
-        profile: {
-          phone: newPhone,
-        },
-      },
-      client.interactionCookie
-    );
+    await expectRejects(client.submitInteraction(), 'user.user_not_exist');
+
+    await client.successSend(putInteractionEvent, { event: Event.Register });
+    await client.successSend(patchInteractionProfile, { phone: newPhone });
+
+    const { redirectTo } = await client.submitInteraction();
 
     const id = await processSession(client, redirectTo);
     await logoutClient(client);

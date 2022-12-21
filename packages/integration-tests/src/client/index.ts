@@ -6,6 +6,7 @@ import { assert } from '@silverhand/essentials';
 import { got } from 'got';
 
 import { consent } from '#src/api/index.js';
+import { submitInteraction } from '#src/api/interaction.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
 
 import { MemoryStorage } from './storage.js';
@@ -15,7 +16,6 @@ export const defaultConfig = {
   appId: demoAppApplicationId,
   persistAccessToken: false,
 };
-
 export default class MockClient {
   public rawCookies: string[] = [];
 
@@ -133,6 +133,24 @@ export default class MockClient {
 
   public assignCookie(cookie: string) {
     this.rawCookies = cookie.split(';').map((value) => value.trim());
+  }
+
+  public async send<Args extends unknown[], T>(
+    api: (cookie: string, ...args: Args) => Promise<T>,
+    ...payload: Args
+  ) {
+    return api(this.interactionCookie, ...payload);
+  }
+
+  public async successSend<Args extends unknown[], T>(
+    api: (cookie: string, ...args: Args) => Promise<T>,
+    ...payload: Args
+  ) {
+    return expect(api(this.interactionCookie, ...payload)).resolves.not.toThrow();
+  }
+
+  public async submitInteraction() {
+    return submitInteraction(this.interactionCookie);
   }
 
   private readonly consent = async () => {
