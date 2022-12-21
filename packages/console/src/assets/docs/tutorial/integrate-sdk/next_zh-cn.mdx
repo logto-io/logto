@@ -3,7 +3,7 @@ import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import Alert from '@/components/Alert';
-import { generateRandomString } from '@logto/core-kit';
+import { buildIdGenerator } from '@logto/core-kit';
 
 <Step
   title="将 Logto SDK 添加至依赖"
@@ -61,7 +61,7 @@ export const logtoClient = new LogtoClient({
   appId: '${props.appId}',
   appSecret: '${props.appSecret}',
   baseUrl: 'http://localhost:3000', // 你可以修改为自己真实的 URL
-  cookieSecret: '${generateRandomString(32)}', // Logto 自动帮你生成的 32 位密钥
+  cookieSecret: '${buildIdGenerator(32)()}', // Logto 自动帮你生成的 32 位密钥
   cookieSecure: process.env.NODE_ENV === 'production',
 });`}
 </code>

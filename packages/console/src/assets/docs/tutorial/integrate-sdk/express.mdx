@@ -3,7 +3,7 @@ import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import Alert from '@/components/Alert';
-import { generateRandomString } from '@logto/core-kit';
+import { buildIdGenerator } from '@logto/core-kit';
 
 <Step
   title="Add dependencies"
@@ -83,7 +83,7 @@ The SDK requires [express-session](https://www.npmjs.com/package/express-session
 import session from 'express-session';
 
 app.use(cookieParser());
-app.use(session({ secret: '${generateRandomString(32)}', cookie: { maxAge: 14 * 24 * 60 * 60 } }));`}
+app.use(session({ secret: '${buildIdGenerator(32)()}', cookie: { maxAge: 14 * 24 * 60 * 60 } }));`}
 </code>
 </pre>
 

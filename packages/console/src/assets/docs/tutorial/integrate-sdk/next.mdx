@@ -3,7 +3,7 @@ import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import Alert from '@/components/Alert';
-import { generateRandomString } from '@logto/core-kit';
+import { buildIdGenerator } from '@logto/core-kit';
 
 <Step
   title="Add Logto SDK as a dependency"
@@ -61,7 +61,7 @@ export const logtoClient = new LogtoClient({
   appId: '${props.appId}',
   appSecret: '${props.appSecret}',
   baseUrl: 'http://localhost:3000', // Change to your own base URL
-  cookieSecret: '${generateRandomString(32)}', // Auto-generated 32 digit secret
+  cookieSecret: '${buildIdGenerator(32)()}', // Auto-generated 32 digit secret
   cookieSecure: process.env.NODE_ENV === 'production',
 });`}
 </code>
