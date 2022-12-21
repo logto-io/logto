@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Back from '@/assets/images/back.svg';
@@ -41,7 +41,6 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
 
 const ApplicationDetails = () => {
   const { id } = useParams();
-  const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Application, RequestError>(
     id && `/api/applications/${id}`
@@ -197,9 +196,7 @@ const ApplicationDetails = () => {
             </div>
           </Card>
           <TabNav>
-            <TabNavItem href={`/applications/${data.id}/settings`}>
-              {t('general.settings_nav')}
-            </TabNavItem>
+            <TabNavItem href={`/applications/${data.id}`}>{t('general.settings_nav')}</TabNavItem>
           </TabNav>
           <FormProvider {...formMethods}>
             <DetailsForm
