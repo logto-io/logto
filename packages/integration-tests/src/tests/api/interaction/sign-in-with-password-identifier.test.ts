@@ -1,5 +1,4 @@
 import { Event } from '@logto/schemas';
-import { assert } from '@silverhand/essentials';
 
 import { putInteraction, deleteUser } from '#src/api/index.js';
 
@@ -15,18 +14,16 @@ describe('Sign-In flow using password identifiers', () => {
   it('sign-in with username and password', async () => {
     const { userProfile, user } = await generateNewUser({ username: true, password: true });
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await putInteraction(
-      {
-        event: Event.SignIn,
-        identifier: {
-          username: userProfile.username,
-          password: userProfile.password,
-        },
+    await client.successSend(putInteraction, {
+      event: Event.SignIn,
+      identifier: {
+        username: userProfile.username,
+        password: userProfile.password,
       },
-      client.interactionCookie
-    );
+    });
+
+    const { redirectTo } = await client.submitInteraction();
 
     await processSession(client, redirectTo);
     await logoutClient(client);
@@ -37,18 +34,16 @@ describe('Sign-In flow using password identifiers', () => {
   it('sign-in with email and password', async () => {
     const { userProfile, user } = await generateNewUser({ primaryEmail: true, password: true });
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await putInteraction(
-      {
-        event: Event.SignIn,
-        identifier: {
-          email: userProfile.primaryEmail,
-          password: userProfile.password,
-        },
+    await client.successSend(putInteraction, {
+      event: Event.SignIn,
+      identifier: {
+        email: userProfile.primaryEmail,
+        password: userProfile.password,
       },
-      client.interactionCookie
-    );
+    });
+
+    const { redirectTo } = await client.submitInteraction();
 
     await processSession(client, redirectTo);
     await logoutClient(client);
@@ -59,18 +54,16 @@ describe('Sign-In flow using password identifiers', () => {
   it('sign-in with phone and password', async () => {
     const { userProfile, user } = await generateNewUser({ primaryPhone: true, password: true });
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await putInteraction(
-      {
-        event: Event.SignIn,
-        identifier: {
-          phone: userProfile.primaryPhone,
-          password: userProfile.password,
-        },
+    await client.successSend(putInteraction, {
+      event: Event.SignIn,
+      identifier: {
+        phone: userProfile.primaryPhone,
+        password: userProfile.password,
       },
-      client.interactionCookie
-    );
+    });
+
+    const { redirectTo } = await client.submitInteraction();
 
     await processSession(client, redirectTo);
     await logoutClient(client);
