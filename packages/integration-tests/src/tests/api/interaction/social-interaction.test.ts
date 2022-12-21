@@ -1,12 +1,13 @@
 import { ConnectorType, Event } from '@logto/schemas';
-import { assert } from '@silverhand/essentials';
 
 import { mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
 import {
   createSocialAuthorizationUri,
   putInteraction,
-  patchInteraction,
   deleteUser,
+  putInteractionEvent,
+  patchInteractionIdentifiers,
+  patchInteractionProfile,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers.js';
 import { generateUserId } from '#src/utils.js';
@@ -28,6 +29,7 @@ describe('Social Identifier Interactions', () => {
   const connectorIdMap = new Map<string, string>();
 
   beforeAll(async () => {
+    await enableAllPasswordSignInMethods();
     await clearConnectorsByTypes([ConnectorType.Social]);
     const { id } = await setSocialConnector();
     connectorIdMap.set(mockSocialConnectorId, id);
@@ -39,38 +41,29 @@ describe('Social Identifier Interactions', () => {
 
   describe('register new and sign-in', () => {
     const socialUserId = generateUserId();
+
     it('register with social', async () => {
       const client = await initClient();
-      assert(client.interactionCookie, new Error('Session not found'));
+
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
 
-      await expect(
-        createSocialAuthorizationUri({ state, redirectUri, connectorId }, client.interactionCookie)
-      ).resolves.toBeTruthy();
+      await client.successSend(putInteraction, {
+        event: Event.SignIn,
+      });
 
-      await expectRejects(
-        putInteraction(
-          {
-            event: Event.SignIn,
-            identifier: {
-              connectorId,
-              connectorData: { state, redirectUri, code, userId: socialUserId },
-            },
-          },
-          client.interactionCookie
-        ),
-        'user.identity_not_exist'
-      );
+      await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
 
-      const { redirectTo } = await patchInteraction(
-        {
-          event: Event.Register,
-          profile: {
-            connectorId,
-          },
-        },
-        client.interactionCookie
-      );
+      await client.successSend(patchInteractionIdentifiers, {
+        connectorId,
+        connectorData: { state, redirectUri, code, userId: socialUserId },
+      });
+
+      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+
+      await client.successSend(putInteractionEvent, { event: Event.Register });
+      await client.successSend(patchInteractionProfile, { connectorId });
+
+      const { redirectTo } = await client.submitInteraction();
 
       await processSession(client, redirectTo);
       await logoutClient(client);
@@ -82,23 +75,20 @@ describe('Social Identifier Interactions', () => {
      */
     it('sign in with social', async () => {
       const client = await initClient();
-      assert(client.interactionCookie, new Error('Session not found'));
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
 
-      await expect(
-        createSocialAuthorizationUri({ state, redirectUri, connectorId }, client.interactionCookie)
-      ).resolves.toBeTruthy();
+      await client.successSend(putInteraction, {
+        event: Event.SignIn,
+      });
 
-      const { redirectTo } = await putInteraction(
-        {
-          event: Event.SignIn,
-          identifier: {
-            connectorId,
-            connectorData: { state, redirectUri, code, userId: socialUserId },
-          },
-        },
-        client.interactionCookie
-      );
+      await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
+
+      await client.successSend(patchInteractionIdentifiers, {
+        connectorId,
+        connectorData: { state, redirectUri, code, userId: socialUserId },
+      });
+
+      const { redirectTo } = await client.submitInteraction();
       const id = await processSession(client, redirectTo);
       await logoutClient(client);
       await deleteUser(id);
@@ -108,49 +98,31 @@ describe('Social Identifier Interactions', () => {
   describe('bind to existing account and sign-in', () => {
     const socialUserId = generateUserId();
 
-    beforeAll(async () => {
-      await enableAllPasswordSignInMethods();
-    });
-
     it('bind new social to a existing account', async () => {
       const {
         userProfile: { username, password },
       } = await generateNewUser({ username: true, password: true });
       const client = await initClient();
-      assert(client.interactionCookie, new Error('Session not found'));
+
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
 
-      await expect(
-        createSocialAuthorizationUri({ state, redirectUri, connectorId }, client.interactionCookie)
-      ).resolves.toBeTruthy();
+      await client.successSend(putInteraction, {
+        event: Event.SignIn,
+      });
 
-      await expectRejects(
-        putInteraction(
-          {
-            event: Event.SignIn,
-            identifier: {
-              connectorId,
-              connectorData: { state, redirectUri, code, userId: socialUserId },
-            },
-          },
-          client.interactionCookie
-        ),
-        'user.identity_not_exist'
-      );
+      await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
 
-      const { redirectTo } = await patchInteraction(
-        {
-          event: Event.SignIn,
-          identifier: {
-            username,
-            password,
-          },
-          profile: {
-            connectorId,
-          },
-        },
-        client.interactionCookie
-      );
+      await client.successSend(patchInteractionIdentifiers, {
+        connectorId,
+        connectorData: { state, redirectUri, code, userId: socialUserId },
+      });
+
+      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+
+      await client.successSend(patchInteractionIdentifiers, { username, password });
+      await client.successSend(patchInteractionProfile, { connectorId });
+
+      const { redirectTo } = await client.submitInteraction();
 
       await processSession(client, redirectTo);
       await logoutClient(client);
@@ -158,23 +130,79 @@ describe('Social Identifier Interactions', () => {
 
     it('sign in with social', async () => {
       const client = await initClient();
-      assert(client.interactionCookie, new Error('Session not found'));
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
 
-      await expect(
-        createSocialAuthorizationUri({ state, redirectUri, connectorId }, client.interactionCookie)
-      ).resolves.toBeTruthy();
+      await client.successSend(putInteraction, {
+        event: Event.SignIn,
+      });
 
-      const { redirectTo } = await putInteraction(
-        {
-          event: Event.SignIn,
-          identifier: {
-            connectorId,
-            connectorData: { state, redirectUri, code, userId: socialUserId },
-          },
+      await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
+
+      await client.successSend(patchInteractionIdentifiers, {
+        connectorId,
+        connectorData: { state, redirectUri, code, userId: socialUserId },
+      });
+
+      const { redirectTo } = await client.submitInteraction();
+      const id = await processSession(client, redirectTo);
+      await logoutClient(client);
+      await deleteUser(id);
+    });
+  });
+
+  describe('bind with existing email account', () => {
+    const socialUserId = generateUserId();
+
+    it('bind new social to a existing account', async () => {
+      const { userProfile, user } = await generateNewUser({ primaryEmail: true });
+      const client = await initClient();
+
+      const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
+
+      await client.successSend(putInteraction, {
+        event: Event.SignIn,
+      });
+
+      await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
+
+      await client.successSend(patchInteractionIdentifiers, {
+        connectorId,
+        connectorData: {
+          state,
+          redirectUri,
+          code,
+          userId: socialUserId,
+          email: userProfile.primaryEmail,
         },
-        client.interactionCookie
-      );
+      });
+
+      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+
+      await client.successSend(patchInteractionIdentifiers, { connectorId, identityType: 'email' });
+      await client.successSend(patchInteractionProfile, { connectorId });
+
+      const { redirectTo } = await client.submitInteraction();
+
+      await processSession(client, redirectTo);
+      await logoutClient(client);
+    });
+
+    it('sign in with social', async () => {
+      const client = await initClient();
+      const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
+
+      await client.successSend(putInteraction, {
+        event: Event.SignIn,
+      });
+
+      await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
+
+      await client.successSend(patchInteractionIdentifiers, {
+        connectorId,
+        connectorData: { state, redirectUri, code, userId: socialUserId },
+      });
+
+      const { redirectTo } = await client.submitInteraction();
       const id = await processSession(client, redirectTo);
       await logoutClient(client);
       await deleteUser(id);

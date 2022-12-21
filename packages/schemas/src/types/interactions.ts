@@ -37,7 +37,7 @@ export type PhonePasscodePayload = z.infer<typeof phonePasscodePayloadGuard>;
 
 export const socialConnectorPayloadGuard = z.object({
   connectorId: z.string(),
-  connectorData: z.unknown(),
+  connectorData: z.record(z.unknown()),
 });
 export type SocialConnectorPayload = z.infer<typeof socialConnectorPayloadGuard>;
 

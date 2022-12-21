@@ -81,10 +81,10 @@ export type SocialAuthorizationUriPayload = {
 };
 
 export const createSocialAuthorizationUri = async (
-  payload: SocialAuthorizationUriPayload,
-  cookie: string
+  cookie: string,
+  payload: SocialAuthorizationUriPayload
 ) =>
-  api.post('verification/social/authorization-uri', {
+  api.post('interaction/verification/social-authorization-uri', {
     headers: { cookie },
     json: payload,
     followRedirect: false,
