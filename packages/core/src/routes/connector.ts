@@ -159,7 +159,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       }
 
       const insertConnectorId = generateConnectorId();
-      ctx.body = await insertConnector({
+      await insertConnector({
         id: insertConnectorId,
         connectorId,
         ...cleanDeep({ syncProfile, config, metadata }),
@@ -185,6 +185,9 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
           await deleteConnectorByIds(conflictingConnectorIds);
         }
       }
+
+      const connector = await getLogtoConnectorById(insertConnectorId);
+      ctx.body = transpileLogtoConnector(connector);
 
       return next();
     }
