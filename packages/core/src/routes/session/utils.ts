@@ -181,7 +181,12 @@ export const getConnectorSessionResult = async (
     })
     .safeParse(result);
 
-  assertThat(signInResult.success, 'session.connector_validation_session_not_found');
+  assertThat(result && signInResult.success, 'session.connector_validation_session_not_found');
+
+  const { connectorSession, ...rest } = result;
+  await provider.interactionResult(ctx.req, ctx.res, {
+    ...rest,
+  });
 
   return signInResult.data.connectorSession;
 };
