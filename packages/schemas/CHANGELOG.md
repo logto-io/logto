@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.0.0-beta.17
+
+### Patch Changes
+
+- Updated dependencies [c2d36b1c]
+  - @logto/connector-kit@1.0.0-beta.30
+
 ## 1.0.0-beta.16
 
 ### Patch Changes

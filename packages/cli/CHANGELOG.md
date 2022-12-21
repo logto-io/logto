@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.0.0-beta.17
+
+### Patch Changes
+
+- @logto/schemas@1.0.0-beta.17
+- @logto/shared@1.0.0-beta.17
+
 ## 1.0.0-beta.16
 
 ### Patch Changes
