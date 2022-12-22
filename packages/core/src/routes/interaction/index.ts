@@ -1,4 +1,3 @@
-import type { ConnectorSession } from '@logto/connector-kit';
 import type { LogtoErrorCode } from '@logto/phrases';
 import { Event, eventGuard, identifierPayloadGuard, profileGuard } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -15,7 +14,6 @@ import type { AnonymousRouter } from '../types.js';
 import submitInteraction from './actions/submit-interaction.js';
 import { sendPasscodePayloadGuard, socialAuthorizationUrlPayloadGuard } from './types/guard.js';
 import {
-  assignConnectorSessionResult,
   getInteractionStorage,
   storeInteractionResult,
   mergeIdentifiers,
@@ -236,11 +234,9 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       // Check interaction exists
       await getInteractionStorage(ctx, provider);
 
-      const redirectTo = await createSocialAuthorizationUrl(
-        ctx.guard.body,
-        async (connectorStorage: ConnectorSession) =>
-          assignConnectorSessionResult(ctx, provider, connectorStorage)
-      );
+      const { body: payload } = ctx.guard;
+
+      const redirectTo = await createSocialAuthorizationUrl(ctx, provider, payload);
 
       ctx.body = { redirectTo };
 
