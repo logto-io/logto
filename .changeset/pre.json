@@ -12,7 +12,10 @@
     "@logto/phrases-ui": "1.0.0-beta.12",
     "@logto/schemas": "1.0.0-beta.12",
     "@logto/shared": "1.0.0-beta.12",
-    "@logto/ui": "1.0.0-beta.12"
+    "@logto/ui": "1.0.0-beta.12",
+    "@logto/connector-kit": "1.0.0-beta.29",
+    "@logto/core-kit": "1.0.0-beta.29",
+    "@logto/language-kit": "1.0.0-beta.29"
   },
   "changesets": [
     "clever-panthers-lay",
@@ -21,6 +24,7 @@
     "grumpy-clocks-refuse",
     "neat-snakes-smash",
     "quick-turtles-joke",
+    "silly-rules-laugh",
     "thin-oranges-act",
     "tricky-mirrors-act",
     "unlucky-lizards-agree"
