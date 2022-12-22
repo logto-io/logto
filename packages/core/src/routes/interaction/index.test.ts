@@ -124,7 +124,7 @@ describe('session -> interactionRoutes', () => {
   });
 
   describe('PUT /interaction', () => {
-    const path = `${interactionPrefix}`;
+    const path = interactionPrefix;
 
     it('should call validations properly', async () => {
       const body = {
@@ -144,7 +144,7 @@ describe('session -> interactionRoutes', () => {
   });
 
   describe('DELETE /interaction', () => {
-    it('should call assignInteraction Result properly', async () => {
+    it('should call assignInteractionResult properly', async () => {
       await sessionRequest.delete(`${interactionPrefix}`);
       expect(assignInteractionResults).toBeCalled();
     });
