@@ -26,16 +26,15 @@ import {
   updateUserById,
   findUserByIdentity,
 } from '#src/queries/user.js';
+import {
+  assignConnectorSessionResult,
+  getConnectorSessionResult,
+} from '#src/routes/interaction/utils/interaction.js';
 import assertThat from '#src/utils/assert-that.js';
 import { maskUserInfo } from '#src/utils/format.js';
 
 import type { AnonymousRouterLegacy } from '../types.js';
-import {
-  checkRequiredProfile,
-  getRoutePrefix,
-  assignConnectorSessionResult,
-  getConnectorSessionResult,
-} from './utils.js';
+import { checkRequiredProfile, getRoutePrefix } from './utils.js';
 
 export const registerRoute = getRoutePrefix('register', 'social');
 export const signInRoute = getRoutePrefix('sign-in', 'social');

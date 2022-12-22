@@ -1,6 +1,9 @@
+import type { ConnectorSession } from '@logto/connector-kit';
+import { connectorSessionGuard } from '@logto/connector-kit';
 import type { Event, Profile } from '@logto/schemas';
 import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -125,4 +128,38 @@ export const clearInteractionStorage = async (ctx: Context, provider: Provider) 
   if (result) {
     await provider.interactionResult(ctx.req, ctx.res, {});
   }
+};
+
+export const assignConnectorSessionResult = async (
+  ctx: Context,
+  provider: Provider,
+  connectorSession: ConnectorSession
+) => {
+  const details = await provider.interactionDetails(ctx.req, ctx.res);
+  await provider.interactionResult(ctx.req, ctx.res, {
+    ...details.result,
+    connectorSession,
+  });
+};
+
+export const getConnectorSessionResult = async (
+  ctx: Context,
+  provider: Provider
+): Promise<ConnectorSession> => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  const signInResult = z
+    .object({
+      connectorSession: connectorSessionGuard,
+    })
+    .safeParse(result);
+
+  assertThat(result && signInResult.success, 'session.connector_validation_session_not_found');
+
+  const { connectorSession, ...rest } = result;
+  await provider.interactionResult(ctx.req, ctx.res, {
+    ...rest,
+  });
+
+  return signInResult.data.connectorSession;
 };
