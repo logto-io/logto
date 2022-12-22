@@ -1,5 +1,4 @@
 import type { Application } from '@logto/schemas';
-import classNames from 'classnames';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -13,6 +12,7 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
+import StickyHeaderTable from '@/components/Table/StickyHeaderTable';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
@@ -88,70 +88,70 @@ const Applications = () => {
             }}
           />
         </Modal>
-      </div>{' '}
-      <div className={resourcesStyles.table}>
-        <div className={tableStyles.scrollable}>
-          <table className={classNames(!data && tableStyles.empty)}>
-            <colgroup>
-              <col className={styles.applicationName} />
-              <col />
-            </colgroup>
-
-            <thead>
-              <tr>
-                <th>{t('applications.application_name')}</th>
-                <th>{t('applications.app_id')}</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {!data && error && (
-                <TableError
-                  columns={2}
-                  content={error.body?.message ?? error.message}
-                  onRetry={async () => mutate(undefined, true)}
-                />
-              )}
-              {isLoading && <TableLoading columns={2} />}
-              {applications?.length === 0 && (
-                <TableEmpty columns={2}>
-                  <Button
-                    title="applications.create"
-                    type="outline"
-                    onClick={() => {
-                      navigate({
-                        pathname: createApplicationPathname,
-                        search,
-                      });
-                    }}
-                  />
-                </TableEmpty>
-              )}
-              {applications?.map(({ id, name, type }) => (
-                <tr
-                  key={id}
-                  className={tableStyles.clickable}
-                  onClick={() => {
-                    navigate(buildDetailsPathname(id));
-                  }}
-                >
-                  <td>
-                    <ItemPreview
-                      title={name}
-                      subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
-                      icon={<ApplicationIcon className={styles.icon} type={type} />}
-                      to={buildDetailsPathname(id)}
-                    />
-                  </td>
-                  <td>
-                    <CopyToClipboard value={id} variant="text" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </div>
+      <StickyHeaderTable
+        className={resourcesStyles.table}
+        header={
+          <thead>
+            <tr>
+              <th>{t('applications.application_name')}</th>
+              <th>{t('applications.app_id')}</th>
+            </tr>
+          </thead>
+        }
+        colGroup={
+          <colgroup>
+            <col className={styles.applicationName} />
+            <col />
+          </colgroup>
+        }
+      >
+        <tbody>
+          {!data && error && (
+            <TableError
+              columns={2}
+              content={error.body?.message ?? error.message}
+              onRetry={async () => mutate(undefined, true)}
+            />
+          )}
+          {isLoading && <TableLoading columns={2} />}
+          {applications?.length === 0 && (
+            <TableEmpty columns={2}>
+              <Button
+                title="applications.create"
+                type="outline"
+                onClick={() => {
+                  navigate({
+                    pathname: createApplicationPathname,
+                    search,
+                  });
+                }}
+              />
+            </TableEmpty>
+          )}
+          {applications?.map(({ id, name, type }) => (
+            <tr
+              key={id}
+              className={tableStyles.clickable}
+              onClick={() => {
+                navigate(buildDetailsPathname(id));
+              }}
+            >
+              <td>
+                <ItemPreview
+                  title={name}
+                  subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
+                  icon={<ApplicationIcon className={styles.icon} type={type} />}
+                  to={buildDetailsPathname(id)}
+                />
+              </td>
+              <td>
+                <CopyToClipboard value={id} variant="text" />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </StickyHeaderTable>
       <Pagination
         pageIndex={pageIndex}
         totalCount={totalCount}
