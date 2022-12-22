@@ -25,7 +25,7 @@
     "@logto/phrases-ui": "workspace:*",
     "@logto/react": "1.0.0-beta.14",
     "@logto/schemas": "workspace:*",
-    "@mdx-js/react": "^1.6.22",
+    "@mdx-js/react": "^2.0.0",
     "@parcel/core": "2.8.2",
     "@parcel/transformer-mdx": "2.8.2",
     "@parcel/transformer-sass": "2.8.2",
