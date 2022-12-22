@@ -1,6 +1,8 @@
 import { emailRegEx, phoneRegEx, usernameRegEx, passwordRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
+import { arbitraryObjectGuard } from '../foundations/index.js';
+
 /**
  * Detailed Identifier Methods guard
  */
@@ -37,7 +39,7 @@ export type PhonePasscodePayload = z.infer<typeof phonePasscodePayloadGuard>;
 
 export const socialConnectorPayloadGuard = z.object({
   connectorId: z.string(),
-  connectorData: z.record(z.unknown()),
+  connectorData: arbitraryObjectGuard,
 });
 export type SocialConnectorPayload = z.infer<typeof socialConnectorPayloadGuard>;
 

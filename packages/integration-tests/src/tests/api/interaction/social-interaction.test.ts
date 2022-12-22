@@ -154,7 +154,7 @@ describe('Social Identifier Interactions', () => {
     const socialUserId = generateUserId();
 
     it('bind new social to a existing account', async () => {
-      const { userProfile, user } = await generateNewUser({ primaryEmail: true });
+      const { userProfile } = await generateNewUser({ primaryEmail: true });
       const client = await initClient();
 
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
