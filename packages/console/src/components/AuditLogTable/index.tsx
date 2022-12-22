@@ -1,7 +1,6 @@
 import { LogResult } from '@logto/schemas';
 import type { LogDto } from '@logto/schemas/lib/types/log-legacy';
-import { conditional, conditionalString } from '@silverhand/essentials';
-import classNames from 'classnames';
+import { conditionalString } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -13,8 +12,8 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import UserName from '@/components/UserName';
 import type { RequestError } from '@/hooks/use-api';
-import * as tableStyles from '@/scss/table.module.scss';
 
+import StickyHeaderTable from '../Table/StickyHeaderTable';
 import ApplicationSelector from './components/ApplicationSelector';
 import EventName from './components/EventName';
 import EventSelector from './components/EventSelector';
@@ -69,80 +68,83 @@ const AuditLogTable = ({ userId }: Props) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.tableLayout}>
-        <div className={styles.filter}>
-          <div className={styles.title}>{t('logs.filter_by')}</div>
-          <div className={styles.eventSelector}>
-            <EventSelector
-              value={event ?? undefined}
-              onChange={(value) => {
-                updateQuery('event', value ?? '');
-              }}
-            />
+      <StickyHeaderTable
+        filter={
+          <div className={styles.filter}>
+            <div className={styles.title}>{t('logs.filter_by')}</div>
+            <div className={styles.eventSelector}>
+              <EventSelector
+                value={event ?? undefined}
+                onChange={(value) => {
+                  updateQuery('event', value ?? '');
+                }}
+              />
+            </div>
+            <div className={styles.applicationSelector}>
+              <ApplicationSelector
+                value={applicationId ?? undefined}
+                onChange={(value) => {
+                  updateQuery('applicationId', value ?? '');
+                }}
+              />
+            </div>
           </div>
-          <div className={styles.applicationSelector}>
-            <ApplicationSelector
-              value={applicationId ?? undefined}
-              onChange={(value) => {
-                updateQuery('applicationId', value ?? '');
-              }}
+        }
+        header={
+          <thead>
+            <tr>
+              <th>{t('logs.event')}</th>
+              {showUserColumn && <th>{t('logs.user')}</th>}
+              <th>{t('logs.application')}</th>
+              <th>{t('logs.time')}</th>
+            </tr>
+          </thead>
+        }
+        colGroup={
+          <colgroup>
+            <col className={styles.eventName} />
+            {showUserColumn && <col />}
+            <col />
+            <col />
+          </colgroup>
+        }
+      >
+        <tbody>
+          {!data && error && (
+            <TableError
+              columns={tableColumnCount}
+              content={error.body?.message ?? error.message}
+              onRetry={async () => mutate(undefined, true)}
             />
-          </div>
-        </div>
-        <div className={classNames(tableStyles.scrollable, styles.tableContainer)}>
-          <table className={conditional(logs?.length === 0 && tableStyles.empty)}>
-            <colgroup>
-              <col className={styles.eventName} />
-              {showUserColumn && <col />}
-              <col />
-              <col />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>{t('logs.event')}</th>
-                {showUserColumn && <th>{t('logs.user')}</th>}
-                <th>{t('logs.application')}</th>
-                <th>{t('logs.time')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!data && error && (
-                <TableError
-                  columns={tableColumnCount}
-                  content={error.body?.message ?? error.message}
-                  onRetry={async () => mutate(undefined, true)}
-                />
+          )}
+          {isLoading && <TableLoading columns={tableColumnCount} />}
+          {logs?.length === 0 && <TableEmpty columns={tableColumnCount} />}
+          {logs?.map(({ key, payload, createdAt, id }) => (
+            <tr
+              key={id}
+              className={styles.clickable}
+              onClick={() => {
+                navigate(`${pathname}/${id}`);
+              }}
+            >
+              <td>
+                <EventName eventKey={key} isSuccess={payload.result === LogResult.Success} />
+              </td>
+              {showUserColumn && (
+                <td>{payload.userId ? <UserName userId={payload.userId} /> : '-'}</td>
               )}
-              {isLoading && <TableLoading columns={tableColumnCount} />}
-              {logs?.length === 0 && <TableEmpty columns={tableColumnCount} />}
-              {logs?.map(({ key, payload, createdAt, id }) => (
-                <tr
-                  key={id}
-                  className={tableStyles.clickable}
-                  onClick={() => {
-                    navigate(`${pathname}/${id}`);
-                  }}
-                >
-                  <td>
-                    <EventName eventKey={key} isSuccess={payload.result === LogResult.Success} />
-                  </td>
-                  {showUserColumn && (
-                    <td>{payload.userId ? <UserName userId={payload.userId} /> : '-'}</td>
-                  )}
-                  <td>
-                    {payload.applicationId ? (
-                      <ApplicationName applicationId={payload.applicationId} />
-                    ) : (
-                      '-'
-                    )}
-                  </td>
-                  <td>{new Date(createdAt).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+              <td>
+                {payload.applicationId ? (
+                  <ApplicationName applicationId={payload.applicationId} />
+                ) : (
+                  '-'
+                )}
+              </td>
+              <td>{new Date(createdAt).toLocaleString()}</td>
+            </tr>
+          ))}
+        </tbody>
+      </StickyHeaderTable>
       <Pagination
         pageIndex={pageIndex}
         totalCount={totalCount}

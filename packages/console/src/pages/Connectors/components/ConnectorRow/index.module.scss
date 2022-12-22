@@ -1,0 +1,5 @@
+@use '@/scss/underscore' as _;
+
+.clickable {
+  @include _.clickable-tr;
+}

@@ -1,6 +1,5 @@
 import type { Resource } from '@logto/schemas';
 import { AppearanceMode } from '@logto/schemas';
-import classNames from 'classnames';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -15,6 +14,7 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
+import StickyHeaderTable from '@/components/Table/StickyHeaderTable';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
@@ -22,7 +22,6 @@ import type { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import * as tableStyles from '@/scss/table.module.scss';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -94,71 +93,72 @@ const ApiResources = () => {
           />
         </Modal>
       </div>
-      <div className={resourcesStyles.table}>
-        <div className={tableStyles.scrollable}>
-          <table className={classNames(!data && tableStyles.empty)}>
-            <colgroup>
-              <col className={styles.apiResourceName} />
-              <col />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>{t('api_resources.api_name')}</th>
-                <th>{t('api_resources.api_identifier')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!data && error && (
-                <TableError
-                  columns={2}
-                  content={error.body?.message ?? error.message}
-                  onRetry={async () => mutate(undefined, true)}
-                />
-              )}
-              {isLoading && <TableLoading columns={2} />}
-              {apiResources?.length === 0 && (
-                <TableEmpty columns={2}>
-                  <Button
-                    title="api_resources.create"
-                    type="outline"
-                    onClick={() => {
-                      navigate({
-                        pathname: createApiResourcePathname,
-                        search,
-                      });
-                    }}
-                  />
-                </TableEmpty>
-              )}
-              {apiResources?.map(({ id, name, indicator }) => {
-                const ResourceIcon =
-                  theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
+      <StickyHeaderTable
+        header={
+          <thead>
+            <tr>
+              <th>{t('api_resources.api_name')}</th>
+              <th>{t('api_resources.api_identifier')}</th>
+            </tr>
+          </thead>
+        }
+        colGroup={
+          <colgroup>
+            <col className={styles.apiResourceName} />
+            <col />
+          </colgroup>
+        }
+        className={resourcesStyles.table}
+      >
+        <tbody>
+          {!data && error && (
+            <TableError
+              columns={2}
+              content={error.body?.message ?? error.message}
+              onRetry={async () => mutate(undefined, true)}
+            />
+          )}
+          {isLoading && <TableLoading columns={2} />}
+          {apiResources?.length === 0 && (
+            <TableEmpty columns={2}>
+              <Button
+                title="api_resources.create"
+                type="outline"
+                onClick={() => {
+                  navigate({
+                    pathname: createApiResourcePathname,
+                    search,
+                  });
+                }}
+              />
+            </TableEmpty>
+          )}
+          {apiResources?.map(({ id, name, indicator }) => {
+            const ResourceIcon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
 
-                return (
-                  <tr
-                    key={id}
-                    className={tableStyles.clickable}
-                    onClick={() => {
-                      navigate(buildDetailsPathname(id));
-                    }}
-                  >
-                    <td>
-                      <ItemPreview
-                        title={name}
-                        icon={<ResourceIcon className={styles.icon} />}
-                        to={buildDetailsPathname(id)}
-                      />
-                    </td>
-                    <td>
-                      <CopyToClipboard value={indicator} variant="text" />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+            return (
+              <tr
+                key={id}
+                className={styles.clickable}
+                onClick={() => {
+                  navigate(buildDetailsPathname(id));
+                }}
+              >
+                <td>
+                  <ItemPreview
+                    title={name}
+                    icon={<ResourceIcon className={styles.icon} />}
+                    to={buildDetailsPathname(id)}
+                  />
+                </td>
+                <td>
+                  <CopyToClipboard value={indicator} variant="text" />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </StickyHeaderTable>
       <Pagination
         pageIndex={pageIndex}
         totalCount={totalCount}

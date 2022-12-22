@@ -4,6 +4,10 @@
   flex-shrink: 0;
 }
 
+.clickable {
+  @include _.clickable-tr;
+}
+
 .pagination {
   margin-top: _.unit(4);
 }

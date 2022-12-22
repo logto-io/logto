@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import Status from '@/components/Status';
 import { connectorTitlePlaceHolder } from '@/consts/connectors';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
-import * as tableStyles from '@/scss/table.module.scss';
 
 import ConnectorName from '../ConnectorName';
+import * as styles from './index.module.scss';
 
 type Props = {
   type: ConnectorType;
@@ -33,7 +33,7 @@ const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
   };
 
   return (
-    <tr className={conditional(!showSetupButton && tableStyles.clickable)} onClick={handleClickRow}>
+    <tr className={conditional(!showSetupButton && styles.clickable)} onClick={handleClickRow}>
       <td>
         <ConnectorName type={type} connectors={connectors} onClickSetup={onClickSetup} />
       </td>

@@ -44,6 +44,14 @@
   font: var(--font-subhead-cap-small);
 }
 
+@mixin clickable-tr {
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-hover);
+  }
+}
+
 @mixin rotating-animation {
   animation: rotating 1s ease-in-out infinite;
 }

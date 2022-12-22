@@ -1,6 +1,5 @@
 import type { User } from '@logto/schemas';
 import { conditional, conditionalString } from '@silverhand/essentials';
-import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -13,13 +12,13 @@ import DateTime from '@/components/DateTime';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import Search from '@/components/Search';
+import StickyHeaderTable from '@/components/Table/StickyHeaderTable';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import UserAvatar from '@/components/UserAvatar';
 import type { RequestError } from '@/hooks/use-api';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import * as tableStyles from '@/scss/table.module.scss';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -76,8 +75,9 @@ const Users = () => {
           />
         )}
       </div>
-      <div className={classNames(resourcesStyles.table, styles.tableLayout)}>
-        <div className={styles.filter}>
+      <StickyHeaderTable
+        className={resourcesStyles.table}
+        filter={
           <Search
             defaultValue={keyword}
             isClearable={Boolean(keyword)}
@@ -88,71 +88,72 @@ const Users = () => {
               setQuery({});
             }}
           />
-        </div>
-        <div className={classNames(tableStyles.scrollable, styles.tableContainer)}>
-          <table className={conditional(!data && tableStyles.empty)}>
-            <colgroup>
-              <col className={styles.userName} />
-              <col />
-              <col />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>{t('users.user_name')}</th>
-                <th>{t('users.application_name')}</th>
-                <th>{t('users.latest_sign_in')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!data && error && (
-                <TableError
-                  columns={userTableColumn}
-                  content={error.body?.message ?? error.message}
-                  onRetry={async () => mutate(undefined, true)}
+        }
+        header={
+          <thead>
+            <tr>
+              <th>{t('users.user_name')}</th>
+              <th>{t('users.application_name')}</th>
+              <th>{t('users.latest_sign_in')}</th>
+            </tr>
+          </thead>
+        }
+        colGroup={
+          <colgroup>
+            <col className={styles.userName} />
+            <col />
+            <col />
+          </colgroup>
+        }
+      >
+        <tbody>
+          {!data && error && (
+            <TableError
+              columns={userTableColumn}
+              content={error.body?.message ?? error.message}
+              onRetry={async () => mutate(undefined, true)}
+            />
+          )}
+          {isLoading && <TableLoading columns={userTableColumn} />}
+          {users?.length === 0 && (
+            <TableEmpty columns={userTableColumn}>
+              <Button
+                title="users.create"
+                type="outline"
+                onClick={() => {
+                  navigate({
+                    pathname: createUserPathname,
+                    search,
+                  });
+                }}
+              />
+            </TableEmpty>
+          )}
+          {users?.map(({ id, name, avatar, lastSignInAt, applicationId }) => (
+            <tr
+              key={id}
+              className={styles.clickable}
+              onClick={() => {
+                navigate(buildDetailsPathname(id));
+              }}
+            >
+              <td>
+                <ItemPreview
+                  title={name ?? t('users.unnamed')}
+                  subtitle={id}
+                  icon={<UserAvatar className={styles.avatar} url={avatar} />}
+                  to={buildDetailsPathname(id)}
+                  size="compact"
                 />
-              )}
-              {isLoading && <TableLoading columns={userTableColumn} />}
-              {users?.length === 0 && (
-                <TableEmpty columns={userTableColumn}>
-                  <Button
-                    title="users.create"
-                    type="outline"
-                    onClick={() => {
-                      navigate({
-                        pathname: createUserPathname,
-                        search,
-                      });
-                    }}
-                  />
-                </TableEmpty>
-              )}
-              {users?.map(({ id, name, avatar, lastSignInAt, applicationId }) => (
-                <tr
-                  key={id}
-                  className={tableStyles.clickable}
-                  onClick={() => {
-                    navigate(buildDetailsPathname(id));
-                  }}
-                >
-                  <td>
-                    <ItemPreview
-                      title={name ?? t('users.unnamed')}
-                      subtitle={id}
-                      icon={<UserAvatar className={styles.avatar} url={avatar} />}
-                      to={buildDetailsPathname(id)}
-                      size="compact"
-                    />
-                  </td>
-                  <td>{applicationId ? <ApplicationName applicationId={applicationId} /> : '-'}</td>
-                  <td>
-                    <DateTime>{lastSignInAt}</DateTime>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+              </td>
+              <td>{applicationId ? <ApplicationName applicationId={applicationId} /> : '-'}</td>
+              <td>
+                <DateTime>{lastSignInAt}</DateTime>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </StickyHeaderTable>
       <Pagination
         pageIndex={pageIndex}
         totalCount={totalCount}

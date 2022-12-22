@@ -19,7 +19,6 @@ import TableLoading from '@/components/Table/TableLoading';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import * as tableStyles from '@/scss/table.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import CreateForm from './components/CreateForm';
@@ -132,7 +131,7 @@ const Applications = () => {
           {applications?.map(({ id, name, type }) => (
             <tr
               key={id}
-              className={tableStyles.clickable}
+              className={styles.clickable}
               onClick={() => {
                 navigate(buildDetailsPathname(id));
               }}

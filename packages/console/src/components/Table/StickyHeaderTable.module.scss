@@ -1,8 +1,6 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  background-color: var(--color-layer-1);
-  border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -11,10 +9,27 @@
     border: none;
   }
 
+  .filter {
+    border-bottom: 1px solid var(--color-divider);
+    background-color: var(--color-layer-1);
+    border-radius: 12px 12px 0 0;
+    padding: _.unit(3);
+  }
+
+  .headerTable {
+    background-color: var(--color-layer-1);
+    border-radius: 12px 12px 0 0;
+
+    &.hideTopBorderRadius {
+      border-radius: 0;
+    }
+  }
+
   .bodyTable {
-    flex: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-bottom: _.unit(2);
+    background-color: var(--color-layer-1);
+    border-radius: 0 0 12px 12px;
 
     tr {
       &:last-child {
