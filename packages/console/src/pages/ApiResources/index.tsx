@@ -94,6 +94,7 @@ const ApiResources = () => {
         </Modal>
       </div>
       <StickyHeaderTable
+        className={resourcesStyles.table}
         header={
           <thead>
             <tr>
@@ -108,7 +109,6 @@ const ApiResources = () => {
             <col />
           </colgroup>
         }
-        className={resourcesStyles.table}
       >
         <tbody>
           {!data && error && (

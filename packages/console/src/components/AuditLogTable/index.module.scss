@@ -6,6 +6,10 @@
   height: 100%;
 }
 
+.table {
+  flex: 1;
+}
+
 .clickable {
   @include _.clickable-tr;
 }
