@@ -13,7 +13,6 @@ export const createMockLogContext = (): LogContext & { mockAppend: jest.Mock } =
   return {
     createLog: jest.fn(() => mockLogEntry),
     prependAllLogEntries: jest.fn(),
-    getLogs: jest.fn(),
     mockAppend: mockLogEntry.append,
   };
 };

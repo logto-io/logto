@@ -42,7 +42,6 @@ export type LogPayload = Partial<LogContextPayload> & Record<string, unknown>;
 
 export type LogContext = {
   createLog: (key: LogKey) => LogEntry;
-  getLogs: () => readonly LogEntry[];
   prependAllLogEntries: (payload: LogPayload) => void;
 };
 
@@ -109,8 +108,6 @@ export default function koaAuditLog<
 
       return entry;
     };
-
-    ctx.getLogs = () => Object.freeze(entries);
 
     ctx.prependAllLogEntries = (payload) => {
       for (const entry of entries) {

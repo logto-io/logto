@@ -1,6 +1,5 @@
 import { getUnixTime } from 'date-fns';
 import type { Context } from 'koa';
-import type { IRouterParamContext } from 'koa-router';
 import type { InteractionResults, Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
@@ -36,7 +35,7 @@ export const assignInteractionResults = async (
 };
 
 export const checkSessionHealth = async (
-  ctx: IRouterParamContext & Context,
+  ctx: Context,
   provider: Provider,
   tolerance = 10 * 60 // 10 mins
 ) => {
