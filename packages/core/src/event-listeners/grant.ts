@@ -18,7 +18,7 @@ export const grantListener = (
   const { params } = ctx.oidc;
 
   const log = ctx.createLog(
-    `${token.Flow.ExchangeTokenBy}.${getExchangeByType(params?.grant_type)}`
+    `${token.Type.ExchangeTokenBy}.${getExchangeByType(params?.grant_type)}`
   );
 
   const { access_token, refresh_token, id_token, scope } = ctx.body;

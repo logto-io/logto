@@ -5,7 +5,7 @@ import { z } from 'zod';
 export enum HookEvent {
   PostRegister = 'PostRegister',
   PostSignIn = 'PostSignIn',
-  PostForgotPassword = 'PostForgotPassword',
+  PostResetPassword = 'PostResetPassword',
 }
 
 export type HookConfig = {

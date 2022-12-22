@@ -14,3 +14,11 @@ export const tryThat = async <T, E extends Error>(
     return onError(error);
   }
 };
+
+export const trySafe = async <T>(exec: Promise<T> | (() => Promise<T>)): Promise<T | undefined> => {
+  try {
+    return await (typeof exec === 'function' ? exec() : exec);
+  } catch (error: unknown) {
+    console.error('trySafe() caught error', error);
+  }
+};

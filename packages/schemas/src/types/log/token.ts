@@ -1,5 +1,5 @@
-/** The type of a token flow. */
-export enum Flow {
+/** The type of a token event. */
+export enum Type {
   ExchangeTokenBy = 'ExchangeTokenBy',
   RevokeToken = 'RevokeToken',
 }
@@ -22,4 +22,4 @@ export enum ExchangeByType {
   ClientCredentials = 'ClientCredentials',
 }
 
-export type LogKey = `${Flow.ExchangeTokenBy}.${ExchangeByType}` | `${Flow.RevokeToken}`;
+export type LogKey = `${Type.ExchangeTokenBy}.${ExchangeByType}` | `${Type.RevokeToken}`;
