@@ -1,4 +1,3 @@
-import type { GetSession } from '@logto/connector-kit';
 import type {
   Event,
   IdentifierPayload,
@@ -10,7 +9,6 @@ import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { verifyUserPassword } from '#src/libraries/user.js';
-import { getConnectorSessionResult } from '#src/routes/interaction/utils/interaction.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type {
@@ -60,9 +58,9 @@ const verifyPasscodeIdentifier = async (
 const verifySocialIdentifier = async (
   identifier: SocialConnectorPayload,
   ctx: Context,
-  getSession?: GetSession
+  provider: Provider
 ): Promise<SocialIdentifier> => {
-  const userInfo = await verifySocialIdentity(identifier, ctx.createLog, getSession);
+  const userInfo = await verifySocialIdentity(identifier, ctx, provider);
 
   return { key: 'social', connectorId: identifier.connectorId, userInfo };
 };
@@ -104,9 +102,7 @@ export default async function identifierPayloadVerification(
   }
 
   if (isSocialIdentifier(identifierPayload)) {
-    return verifySocialIdentifier(identifierPayload, ctx, async () =>
-      getConnectorSessionResult(ctx, provider)
-    );
+    return verifySocialIdentifier(identifierPayload, ctx, provider);
   }
 
   // Sign-In with social verified email or phone

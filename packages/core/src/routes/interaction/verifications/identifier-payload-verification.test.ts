@@ -154,18 +154,15 @@ describe('identifier verification', () => {
   it('social', async () => {
     const identifier = { connectorId: 'logto', connectorData: {} };
 
+    const provider = createMockProvider();
     const result = await identifierPayloadVerification(
       baseCtx,
-      createMockProvider(),
+      provider,
       identifier,
       interactionStorage
     );
 
-    expect(verifySocialIdentity).toBeCalledWith(
-      identifier,
-      logContext.createLog,
-      expect.anything()
-    );
+    expect(verifySocialIdentity).toBeCalledWith(identifier, baseCtx, provider);
     expect(findUserByIdentifier).not.toBeCalled();
 
     expect(result).toEqual({

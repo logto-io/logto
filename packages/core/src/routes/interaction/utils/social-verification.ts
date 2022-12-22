@@ -1,4 +1,4 @@
-import type { ConnectorSession, GetSession } from '@logto/connector-kit';
+import type { ConnectorSession } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import type { Context } from 'koa';
@@ -8,7 +8,10 @@ import { getLogtoConnectorById } from '#src/connectors/index.js';
 import type { SocialUserInfo } from '#src/connectors/types.js';
 import { getUserInfoByAuthCode } from '#src/libraries/social.js';
 import type { LogContext } from '#src/middleware/koa-audit-log.js';
-import { assignConnectorSessionResult } from '#src/routes/interaction/utils/interaction.js';
+import {
+  getConnectorSessionResult,
+  assignConnectorSessionResult,
+} from '#src/routes/interaction/utils/interaction.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { SocialAuthorizationUrlPayload } from '../types/index.js';
@@ -34,13 +37,17 @@ export const createSocialAuthorizationUrl = async (
 
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
-  createLog: LogContext['createLog'],
-  getSession?: GetSession
+  ctx: Context,
+  provider: Provider
 ): Promise<SocialUserInfo> => {
+  // eslint-disable-next-line prefer-destructuring, @typescript-eslint/no-unsafe-assignment
+  const createLog: LogContext['createLog'] = ctx.createLog;
   const log = createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 
-  const userInfo = await getUserInfoByAuthCode(connectorId, connectorData, getSession);
+  const userInfo = await getUserInfoByAuthCode(connectorId, connectorData, async () =>
+    getConnectorSessionResult(ctx, provider)
+  );
 
   log.append(userInfo);
 
