@@ -2,11 +2,28 @@ import { generateStandardId } from '@logto/core-kit';
 import { createModel } from '@withtyped/server';
 import { z } from 'zod';
 
+import type { Application, Connector, User } from '../db-entries/index.js';
+import type { userInfoSelectFields } from '../types/index.js';
+
 export enum HookEvent {
   PostRegister = 'PostRegister',
   PostSignIn = 'PostSignIn',
   PostResetPassword = 'PostResetPassword',
 }
+
+export type HookEventPayload = {
+  hookId: string;
+  event: HookEvent;
+  createdAt: string;
+  sessionId?: string;
+  userAgent?: string;
+  userId?: string;
+  user?: Pick<User, typeof userInfoSelectFields[number]>;
+  application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
+  connectors?: Array<
+    Pick<Connector, 'id'> & Pick<Connector['metadata'], 'name'> & Record<string, unknown>
+  >;
+} & Record<string, unknown>;
 
 export type HookConfig = {
   /** We don't need `type` since v1 only has web hook */

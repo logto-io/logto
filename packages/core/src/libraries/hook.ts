@@ -1,5 +1,5 @@
 import { Event, userInfoSelectFields } from '@logto/schemas';
-import { HookEvent } from '@logto/schemas/models';
+import { HookEventPayload, HookEvent } from '@logto/schemas/models';
 import { trySafe } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { got } from 'got';
@@ -17,19 +17,6 @@ const eventToHook: Record<Event, HookEvent> = {
   [Event.ForgotPassword]: HookEvent.PostResetPassword,
 };
 
-export type HookEventPayload = {
-  hookId: string;
-  event: HookEvent;
-  Event: Event;
-  createdAt: string;
-  sessionId?: string;
-  userAgent?: string;
-  userId?: string;
-  user?: Record<string, unknown>;
-  application?: Record<string, unknown>;
-  connectors?: Array<Record<string, unknown>>;
-};
-
 // TODO: replace `lodash.pick`
 const pick = <T, Keys extends Array<keyof T>>(
   object: T,
@@ -41,9 +28,11 @@ const pick = <T, Keys extends Array<keyof T>>(
   };
 };
 
+export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
+
 export const triggerInteractionHooksIfNeeded = async (
   interactionPayload: InteractionPayload,
-  details?: Awaited<ReturnType<Provider['interactionDetails']>>,
+  details?: Interaction,
   userAgent?: string
 ) => {
   const userId = details?.result?.login?.accountId;
@@ -70,9 +59,9 @@ export const triggerInteractionHooksIfNeeded = async (
       )
     ),
   ]);
-  const payload: Omit<HookEventPayload, 'hookId'> = {
+  const payload = {
     event: hookEvent,
-    Event: event,
+    interactionEvent: event,
     createdAt: new Date().toISOString(),
     sessionId,
     userAgent,
@@ -82,7 +71,7 @@ export const triggerInteractionHooksIfNeeded = async (
     connectors: connector && [
       pick(connector.metadata, 'id', 'name', 'description', 'platform', 'target', 'isStandard'),
     ],
-  };
+  } satisfies Omit<HookEventPayload, 'hookId'>;
 
   await Promise.all(
     rows
