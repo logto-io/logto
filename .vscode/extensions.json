@@ -4,6 +4,7 @@
     "dbaeumer.vscode-eslint",
     "stylelint.vscode-stylelint",
     "clinyong.vscode-css-modules",
-    "vunguyentuan.vscode-css-variables"
+    "vunguyentuan.vscode-css-variables",
+    "frigus02.vscode-sql-tagged-template-literals-syntax-only"
   ]
 }

@@ -14,6 +14,7 @@ import authnRoutes from './authn.js';
 import connectorRoutes from './connector.js';
 import customPhraseRoutes from './custom-phrase.js';
 import dashboardRoutes from './dashboard.js';
+import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
 import phraseRoutes from './phrase.js';
@@ -48,6 +49,7 @@ const createRouters = (provider: Provider) => {
   roleRoutes(managementRouter);
   dashboardRoutes(managementRouter);
   customPhraseRoutes(managementRouter);
+  hookRoutes(managementRouter);
 
   const profileRouter: AnonymousRouter = new Router();
   profileRoutes(profileRouter, provider);
