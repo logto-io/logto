@@ -36,7 +36,7 @@ import {
 } from './verifications/index.js';
 
 export const interactionPrefix = '/interaction';
-export const verificationPrefix = '/verification';
+export const verificationPath = 'verification';
 
 export default function interactionRoutes<T extends AnonymousRouter>(
   router: T,
@@ -228,7 +228,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
   // Create social authorization url interaction verification
   router.post(
-    `${interactionPrefix}${verificationPrefix}/social-authorization-uri`,
+    `${interactionPrefix}/${verificationPath}/social-authorization-uri`,
     koaGuard({ body: socialAuthorizationUrlPayloadGuard }),
     async (ctx, next) => {
       // Check interaction exists
@@ -248,7 +248,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
   // Create passwordless interaction passcode
   router.post(
-    `${interactionPrefix}${verificationPrefix}/passcode`,
+    `${interactionPrefix}/${verificationPath}/passcode`,
     koaGuard({
       body: sendPasscodePayloadGuard,
     }),
