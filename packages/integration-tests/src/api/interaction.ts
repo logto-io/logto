@@ -73,3 +73,19 @@ export const sendVerificationPasscode = async (
     json: payload,
     followRedirect: false,
   });
+
+export type SocialAuthorizationUriPayload = {
+  connectorId: string;
+  state: string;
+  redirectUri: string;
+};
+
+export const createSocialAuthorizationUri = async (
+  cookie: string,
+  payload: SocialAuthorizationUriPayload
+) =>
+  api.post('interaction/verification/social-authorization-uri', {
+    headers: { cookie },
+    json: payload,
+    followRedirect: false,
+  });
