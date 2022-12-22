@@ -113,7 +113,7 @@ export const getInteractionStorage = async (
 
   assertThat(
     parseResult.success,
-    new RequestError({ code: 'session.verification_session_not_found' })
+    new RequestError({ code: 'session.verification_session_not_found', status: 404 })
   );
 
   return parseResult.data;

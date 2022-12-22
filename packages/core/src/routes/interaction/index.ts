@@ -126,10 +126,12 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         event === Event.ForgotPassword
           ? interactionStorage.event === Event.ForgotPassword
           : interactionStorage.event !== Event.ForgotPassword,
-        new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+        new RequestError({ code: 'session.interaction_not_found', status: 404 })
       );
 
-      await storeInteractionResult({ event }, ctx, provider, true);
+      if (event !== interactionStorage.event) {
+        await storeInteractionResult({ event }, ctx, provider, true);
+      }
 
       ctx.status = 204;
 

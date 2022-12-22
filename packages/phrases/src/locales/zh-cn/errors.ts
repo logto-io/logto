@@ -81,6 +81,9 @@ const errors = {
     forgot_password_not_enabled: '忘记密码功能没有开启。',
     verification_failed: '验证失败，请重新验证。',
     connector_validation_session_not_found: '找不到连接器用于验证 token 的信息。',
+    identifier_not_found: 'User identifier not found. Please go back and sign in again.', // UNTRANSLATED
+    interaction_not_found:
+      'Interaction session not found. Please go back and start the session again.', // UNTRANSLATED
   },
   connector: {
     general: '连接器发生未知错误{{errorDescription}}',

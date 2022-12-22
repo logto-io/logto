@@ -92,7 +92,7 @@ export default async function verifyUserAccount(
   assertThat(
     userAccountIdentifiers.length > 0,
     new RequestError({
-      code: 'session.verification_session_not_found',
+      code: 'session.identifier_not_found',
       status: 404,
     })
   );

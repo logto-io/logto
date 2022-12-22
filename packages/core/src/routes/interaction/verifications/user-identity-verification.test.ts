@@ -39,7 +39,7 @@ describe('verifyUserAccount', () => {
     };
 
     await expect(verifyUserAccount(interaction)).rejects.toMatchError(
-      new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+      new RequestError({ code: 'session.identifier_not_found', status: 404 })
     );
   });
 
