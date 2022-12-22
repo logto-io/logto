@@ -38,9 +38,6 @@ import { generateUsername, generatePassword, generateEmail, generatePhone } from
 const connectorIdMap = new Map();
 
 describe('username and password flow', () => {
-  const username = generateUsername();
-  const password = generatePassword();
-
   beforeAll(async () => {
     await setSignUpIdentifier(signUpIdentifiers.username, true);
     await setSignInMethod([
@@ -54,6 +51,8 @@ describe('username and password flow', () => {
   });
 
   it('register and sign in with username & password', async () => {
+    const username = generateUsername();
+    const password = generatePassword();
     await expect(registerNewUser(username, password)).resolves.not.toThrow();
     await expect(signIn({ username, password })).resolves.not.toThrow();
   });

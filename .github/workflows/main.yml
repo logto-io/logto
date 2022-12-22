@@ -49,17 +49,13 @@ jobs:
   main-test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node_version: [16, 18]
-
     steps:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
         with:
-          node-version: ${{ matrix.node_version }}
+          node-version: 18
 
       - name: Build for test
         run: pnpm -r build:test
