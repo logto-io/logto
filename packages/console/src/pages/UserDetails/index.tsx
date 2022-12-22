@@ -19,7 +19,6 @@ import DetailsSkeleton from '@/components/DetailsSkeleton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UserAvatar from '@/components/UserAvatar';
-import { generatedPasswordStorageKey } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -42,7 +41,6 @@ const UserDetails = () => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
   const [resetResult, setResetResult] = useState<string>();
-  const [password, setPassword] = useState(sessionStorage.getItem(generatedPasswordStorageKey));
 
   const { data, error, mutate } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
   const isLoading = !data && !error;
@@ -175,17 +173,6 @@ const UserDetails = () => {
             />
           )}
         </>
-      )}
-      {data && password && (
-        <CreateSuccess
-          title="user_details.created_title"
-          username={data.username ?? '-'}
-          password={password}
-          onClose={() => {
-            setPassword(null);
-            sessionStorage.removeItem(generatedPasswordStorageKey);
-          }}
-        />
       )}
       {data && resetResult && (
         <CreateSuccess
