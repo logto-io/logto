@@ -40,6 +40,7 @@ const {
   countConnectorByConnectorId,
   deleteConnectorById,
   deleteConnectorByIds,
+  insertConnector,
 } = await mockEsmWithActual('#src/queries/connector.js', () => ({
   findConnectorById: jest.fn(),
   countConnectorByConnectorId: jest.fn(),
@@ -165,20 +166,16 @@ describe('connector route', () => {
           ...mockLogtoConnector,
         },
       ]);
-      const response = await connectorRequest.post('/connectors').send({
+      await connectorRequest.post('/connectors').send({
         connectorId: 'connectorId',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
       });
-      expect(response.body).toMatchObject(
+      expect(insertConnector).toHaveBeenCalledWith(
         expect.objectContaining({
           connectorId: 'connectorId',
-          config: {
-            cliend_id: 'client_id',
-            client_secret: 'client_secret',
-          },
+          config: { cliend_id: 'client_id', client_secret: 'client_secret' },
         })
       );
-      expect(response).toHaveProperty('statusCode', 200);
     });
 
     it('throws when connector factory not found', async () => {
@@ -216,12 +213,12 @@ describe('connector route', () => {
           ...mockLogtoConnector,
         },
       ]);
-      const response = await connectorRequest.post('/connectors').send({
+      await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
         metadata: { target: 'new_target' },
       });
-      expect(response.body).toMatchObject(
+      expect(insertConnector).toHaveBeenCalledWith(
         expect.objectContaining({
           connectorId: 'id0',
           config: {
@@ -231,7 +228,6 @@ describe('connector route', () => {
           metadata: { target: 'new_target' },
         })
       );
-      expect(response).toHaveProperty('statusCode', 200);
     });
 
     it('throws when add more than 1 instance with non-connector factory', async () => {
@@ -266,12 +262,11 @@ describe('connector route', () => {
         },
       ]);
       countConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
-      const response = await connectorRequest.post('/connectors').send({
+      await connectorRequest.post('/connectors').send({
         connectorId: 'id1',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
       });
-      expect(response).toHaveProperty('statusCode', 200);
-      expect(response.body).toMatchObject(
+      expect(insertConnector).toHaveBeenCalledWith(
         expect.objectContaining({
           connectorId: 'id1',
           config: {
