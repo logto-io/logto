@@ -62,7 +62,7 @@
     "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^13.0.0",
     "postcss": "^8.4.6",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.1",
     "rollup": "^3.6.0",
     "stylelint": "^14.9.1",
     "tslib": "^2.4.1",
