@@ -1,8 +1,7 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
-import { has } from '@silverhand/essentials';
+import { has, pick } from '@silverhand/essentials';
 import { argon2Verify } from 'hash-wasm';
-import pick from 'lodash.pick';
 import type { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';
 

@@ -54,7 +54,7 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "@logto/schemas": "workspace:*",
-    "@silverhand/essentials": "^1.3.0",
+    "@silverhand/essentials": "2.0.0-rc.2",
     "find-up": "^6.3.0",
     "nanoid": "^4.0.0",
     "slonik": "^30.0.0"

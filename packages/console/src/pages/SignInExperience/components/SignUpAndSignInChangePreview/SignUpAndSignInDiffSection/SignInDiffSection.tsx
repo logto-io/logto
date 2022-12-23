@@ -1,6 +1,6 @@
 import type { SignInIdentifier } from '@logto/schemas';
+import { get } from '@silverhand/essentials';
 import { detailedDiff } from 'deep-object-diff';
-import get from 'lodash.get';
 import { useTranslation } from 'react-i18next';
 
 import type { SignInMethod, SignInMethodsObject } from '@/pages/SignInExperience/types';

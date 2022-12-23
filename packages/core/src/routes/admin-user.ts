@@ -1,8 +1,7 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, userInfoSelectFields, UserRole } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
-import { conditional, has } from '@silverhand/essentials';
-import pick from 'lodash.pick';
+import { conditional, has, pick } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
 
 import { isTrue } from '#src/env-set/parameters.js';

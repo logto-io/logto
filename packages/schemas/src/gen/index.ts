@@ -5,9 +5,8 @@ import assert from 'assert';
 import fs from 'fs/promises';
 import path from 'path';
 
-import { conditionalString } from '@silverhand/essentials';
+import { conditionalString, deduplicate } from '@silverhand/essentials';
 import camelcase from 'camelcase';
-import uniq from 'lodash.uniq';
 import pluralize from 'pluralize';
 
 import { generateSchema } from './schema.js';
@@ -164,7 +163,7 @@ const generate = async () => {
         tsTypes.length > 0 &&
           [
             'import {',
-            uniq(tsTypes)
+            deduplicate(tsTypes)
               .map((value) => `  ${value}`)
               .join(',\n'),
             `} from'./${tsTypesFilename}.js';`,
@@ -175,7 +174,7 @@ const generate = async () => {
         customTypes.length > 0 &&
           [
             'import {',
-            uniq(customTypes)
+            deduplicate(customTypes)
               .map((value) => `  ${value}`)
               .join(',\n'),
             `} from'./${generatedTypesFilename}.js';`,

@@ -5,10 +5,10 @@ import type {
   LogPayloads,
   LogType,
 } from '@logto/schemas/lib/types/log-legacy.js';
+import { pick } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
-import pick from 'lodash.pick';
 import { nanoid } from 'nanoid';
 
 import RequestError from '#src/errors/RequestError/index.js';

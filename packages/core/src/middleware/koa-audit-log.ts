@@ -1,8 +1,8 @@
 import type { LogContextPayload, LogKey } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
+import { pick } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
-import pick from 'lodash.pick';
 import { nanoid } from 'nanoid';
 
 import RequestError from '#src/errors/RequestError/index.js';
