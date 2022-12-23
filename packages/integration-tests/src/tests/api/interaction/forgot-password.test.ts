@@ -1,18 +1,18 @@
-import { Event, ConnectorType } from '@logto/schemas';
-import { assert } from '@silverhand/essentials';
+import { Event, ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import {
   putInteraction,
   sendVerificationPasscode,
   deleteUser,
-  patchInteraction,
+  patchInteractionIdentifiers,
+  patchInteractionProfile,
 } from '#src/api/index.js';
 import { expectRejects, readPasscode } from '#src/helpers.js';
 import { generatePassword } from '#src/utils.js';
 
 import { initClient, processSession, logoutClient } from './utils/client.js';
 import { clearConnectorsByTypes, setEmailConnector, setSmsConnector } from './utils/connector.js';
-import { enableAllPasswordSignInMethods } from './utils/sign-in-experience.js';
+import { enableAllPasscodeSignInMethods } from './utils/sign-in-experience.js';
 import { generateNewUser } from './utils/user.js';
 
 describe('reset password', () => {
@@ -20,11 +20,17 @@ describe('reset password', () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
     await setSmsConnector();
-    await enableAllPasswordSignInMethods();
+    await enableAllPasscodeSignInMethods({
+      identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+      password: true,
+      verify: true,
+    });
   });
+
   afterAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });
+
   it('reset password with email', async () => {
     const { user, userProfile } = await generateNewUser({
       primaryEmail: true,
@@ -32,17 +38,12 @@ describe('reset password', () => {
     });
 
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    await expect(
-      sendVerificationPasscode(
-        {
-          event: Event.ForgotPassword,
-          email: userProfile.primaryEmail,
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(putInteraction, { event: Event.ForgotPassword });
+    await client.successSend(sendVerificationPasscode, {
+      event: Event.ForgotPassword,
+      email: userProfile.primaryEmail,
+    });
 
     const passcodeRecord = await readPasscode();
 
@@ -53,57 +54,32 @@ describe('reset password', () => {
 
     const { code } = passcodeRecord;
 
-    await expectRejects(
-      putInteraction(
-        {
-          event: Event.ForgotPassword,
-          identifier: {
-            email: userProfile.primaryEmail,
-            passcode: code,
-          },
-        },
-        client.interactionCookie
-      ),
-      'user.new_password_required_in_profile'
-    );
+    await client.successSend(patchInteractionIdentifiers, {
+      email: userProfile.primaryEmail,
+      passcode: code,
+    });
 
-    await expectRejects(
-      patchInteraction(
-        {
-          event: Event.ForgotPassword,
-          profile: {
-            password: userProfile.password,
-          },
-        },
-        client.interactionCookie
-      ),
-      'user.same_password'
-    );
+    await expectRejects(client.submitInteraction(), 'user.new_password_required_in_profile');
+
+    await client.successSend(patchInteractionProfile, { password: userProfile.password });
+
+    await expectRejects(client.submitInteraction(), 'user.same_password');
 
     const newPasscodeRecord = generatePassword();
 
-    await expect(
-      patchInteraction(
-        {
-          event: Event.ForgotPassword,
-          profile: {
-            password: newPasscodeRecord,
-          },
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(patchInteractionProfile, { password: newPasscodeRecord });
 
-    const { redirectTo } = await putInteraction(
-      {
-        event: Event.SignIn,
-        identifier: {
-          email: userProfile.primaryEmail,
-          password: newPasscodeRecord,
-        },
+    await client.submitInteraction();
+
+    await client.successSend(putInteraction, {
+      event: Event.SignIn,
+      identifier: {
+        email: userProfile.primaryEmail,
+        password: newPasscodeRecord,
       },
-      client.interactionCookie
-    );
+    });
+
+    const { redirectTo } = await client.submitInteraction();
 
     await processSession(client, redirectTo);
     await logoutClient(client);
@@ -116,17 +92,12 @@ describe('reset password', () => {
     });
 
     const client = await initClient();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    await expect(
-      sendVerificationPasscode(
-        {
-          event: Event.ForgotPassword,
-          phone: userProfile.primaryPhone,
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(putInteraction, { event: Event.ForgotPassword });
+    await client.successSend(sendVerificationPasscode, {
+      event: Event.ForgotPassword,
+      phone: userProfile.primaryPhone,
+    });
 
     const passcodeRecord = await readPasscode();
 
@@ -137,57 +108,32 @@ describe('reset password', () => {
 
     const { code } = passcodeRecord;
 
-    await expectRejects(
-      putInteraction(
-        {
-          event: Event.ForgotPassword,
-          identifier: {
-            phone: userProfile.primaryPhone,
-            passcode: code,
-          },
-        },
-        client.interactionCookie
-      ),
-      'user.new_password_required_in_profile'
-    );
+    await client.successSend(patchInteractionIdentifiers, {
+      phone: userProfile.primaryPhone,
+      passcode: code,
+    });
 
-    await expectRejects(
-      patchInteraction(
-        {
-          event: Event.ForgotPassword,
-          profile: {
-            password: userProfile.password,
-          },
-        },
-        client.interactionCookie
-      ),
-      'user.same_password'
-    );
+    await expectRejects(client.submitInteraction(), 'user.new_password_required_in_profile');
+
+    await client.successSend(patchInteractionProfile, { password: userProfile.password });
+
+    await expectRejects(client.submitInteraction(), 'user.same_password');
 
     const newPasscodeRecord = generatePassword();
 
-    await expect(
-      patchInteraction(
-        {
-          event: Event.ForgotPassword,
-          profile: {
-            password: newPasscodeRecord,
-          },
-        },
-        client.interactionCookie
-      )
-    ).resolves.not.toThrow();
+    await client.successSend(patchInteractionProfile, { password: newPasscodeRecord });
 
-    const { redirectTo } = await putInteraction(
-      {
-        event: Event.SignIn,
-        identifier: {
-          phone: userProfile.primaryPhone,
-          password: newPasscodeRecord,
-        },
+    await client.submitInteraction();
+
+    await client.successSend(putInteraction, {
+      event: Event.SignIn,
+      identifier: {
+        phone: userProfile.primaryPhone,
+        password: newPasscodeRecord,
       },
-      client.interactionCookie
-    );
+    });
+
+    const { redirectTo } = await client.submitInteraction();
 
     await processSession(client, redirectTo);
     await logoutClient(client);

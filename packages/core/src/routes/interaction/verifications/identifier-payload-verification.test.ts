@@ -190,7 +190,7 @@ describe('identifier verification', () => {
       ],
     };
 
-    const identifierPayload = { connectorId: 'logto', identityType: 'email' };
+    const identifierPayload = Object.freeze({ connectorId: 'logto', identityType: 'email' });
 
     const result = await identifierPayloadVerification(
       baseCtx,
@@ -205,7 +205,7 @@ describe('identifier verification', () => {
   });
 
   it('verified social email should throw if social session not found', async () => {
-    const identifierPayload = { connectorId: 'logto', identityType: 'email' };
+    const identifierPayload = Object.freeze({ connectorId: 'logto', identityType: 'email' });
 
     await expect(
       identifierPayloadVerification(
@@ -231,7 +231,7 @@ describe('identifier verification', () => {
       ],
     };
 
-    const identifierPayload = { connectorId: 'logto', identityType: 'email' };
+    const identifierPayload = Object.freeze({ connectorId: 'logto', identityType: 'email' });
 
     await expect(
       identifierPayloadVerification(

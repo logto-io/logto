@@ -12,22 +12,49 @@ export type interactionPayload = {
   profile?: Profile;
 };
 
-export const putInteraction = async (payload: interactionPayload, cookie: string) =>
+export const putInteraction = async (cookie: string, payload: interactionPayload) =>
   api
     .put('interaction', {
       headers: { cookie },
       json: payload,
       followRedirect: false,
     })
-    .json<RedirectResponse>();
+    .json();
 
-export const patchInteraction = async (payload: interactionPayload, cookie: string) =>
+export const putInteractionEvent = async (cookie: string, payload: { event: Event }) =>
   api
-    .patch('interaction', {
+    .put('interaction/event', { headers: { cookie }, json: payload, followRedirect: false })
+    .json();
+
+export const patchInteractionIdentifiers = async (cookie: string, payload: IdentifierPayload) =>
+  api
+    .patch('interaction/identifiers', {
       headers: { cookie },
       json: payload,
       followRedirect: false,
     })
+    .json();
+
+export const patchInteractionProfile = async (cookie: string, payload: Profile) =>
+  api
+    .patch('interaction/profile', {
+      headers: { cookie },
+      json: payload,
+      followRedirect: false,
+    })
+    .json();
+
+export const deleteInteractionProfile = async (cookie: string) =>
+  api
+    .delete('interaction/profile', {
+      headers: { cookie },
+      followRedirect: false,
+    })
+    .json();
+
+export const submitInteraction = async (cookie: string) =>
+  api
+    .post('interaction/submit', { headers: { cookie }, followRedirect: false })
     .json<RedirectResponse>();
 
 export type VerificationPasscodePayload =
@@ -38,10 +65,26 @@ export type VerificationPasscodePayload =
   | { event: Event; phone: string };
 
 export const sendVerificationPasscode = async (
-  payload: VerificationPasscodePayload,
-  cookie: string
+  cookie: string,
+  payload: VerificationPasscodePayload
 ) =>
-  api.post('verification/passcode', {
+  api.post('interaction/verification/passcode', {
+    headers: { cookie },
+    json: payload,
+    followRedirect: false,
+  });
+
+export type SocialAuthorizationUriPayload = {
+  connectorId: string;
+  state: string;
+  redirectUri: string;
+};
+
+export const createSocialAuthorizationUri = async (
+  cookie: string,
+  payload: SocialAuthorizationUriPayload
+) =>
+  api.post('interaction/verification/social-authorization-uri', {
     headers: { cookie },
     json: payload,
     followRedirect: false,

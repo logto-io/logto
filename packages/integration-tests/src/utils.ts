@@ -1,4 +1,5 @@
 export const generateName = () => crypto.randomUUID();
+export const generateUserId = () => crypto.randomUUID();
 export const generateUsername = () => `usr_${crypto.randomUUID().replaceAll('-', '_')}`;
 export const generatePassword = () => `pwd_${crypto.randomUUID()}`;
 
