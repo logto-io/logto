@@ -5,11 +5,10 @@ import { conditional } from '@silverhand/essentials';
 import { got } from 'got';
 import type { Provider } from 'oidc-provider';
 
-import { getLogtoConnectorById } from '#src/connectors/index.js';
 import modelRouters from '#src/model-routers/index.js';
 import { findApplicationById } from '#src/queries/application.js';
 import { findUserById } from '#src/queries/user.js';
-import type { InteractionPayload } from '#src/routes/interaction/types/index.js';
+import { getInteractionStorage } from '#src/routes/interaction/utils/interaction.js';
 
 const eventToHook: Record<Event, HookEvent> = {
   [Event.Register]: HookEvent.PostRegister,
@@ -31,7 +30,6 @@ const pick = <T, Keys extends Array<keyof T>>(
 export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
 
 export const triggerInteractionHooksIfNeeded = async (
-  interactionPayload: InteractionPayload,
   details?: Interaction,
   userAgent?: string
 ) => {
@@ -43,22 +41,19 @@ export const triggerInteractionHooksIfNeeded = async (
     return;
   }
 
-  const { event, identifier } = interactionPayload;
+  const interactionPayload = getInteractionStorage(details.result);
+  const { event } = interactionPayload;
+
   const hookEvent = eventToHook[event];
   const { rows } = await modelRouters.hook.client.readAll();
-  const [user, application, connector] = await Promise.all([
+
+  const [user, application] = await Promise.all([
     trySafe(findUserById(userId)),
     trySafe(async () =>
       conditional(typeof applicationId === 'string' && (await findApplicationById(applicationId)))
     ),
-    trySafe(async () =>
-      conditional(
-        identifier &&
-          'connectorId' in identifier &&
-          (await getLogtoConnectorById(identifier.connectorId))
-      )
-    ),
   ]);
+
   const payload = {
     event: hookEvent,
     interactionEvent: event,
@@ -68,9 +63,6 @@ export const triggerInteractionHooksIfNeeded = async (
     userId,
     user: user && pick(user, ...userInfoSelectFields),
     application: application && pick(application, 'id', 'type', 'name', 'description'),
-    connectors: connector && [
-      pick(connector.metadata, 'id', 'name', 'description', 'platform', 'target', 'isStandard'),
-    ],
   } satisfies Omit<HookEventPayload, 'hookId'>;
 
   await Promise.all(

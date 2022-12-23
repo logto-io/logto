@@ -1,6 +1,6 @@
 import type { LogtoErrorCode } from '@logto/phrases';
 import { Event, eventGuard, identifierPayloadGuard, profileGuard } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import type Router from 'koa-router';
 import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
@@ -12,6 +12,10 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouter } from '../types.js';
 import submitInteraction from './actions/submit-interaction.js';
+import koaInteractionDetails from './middleware/koa-interaction-details.js';
+import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
+import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
+import koaInteractionSIE from './middleware/koa-interaction-sie.js';
 import { sendPasscodePayloadGuard, socialAuthorizationUrlPayloadGuard } from './types/guard.js';
 import {
   getInteractionStorage,
@@ -20,7 +24,6 @@ import {
 } from './utils/interaction.js';
 import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
 import {
-  getSignInExperience,
   verifySignInModeSettings,
   verifyIdentifierSettings,
   verifyProfileSettings,
@@ -36,27 +39,19 @@ import {
 export const interactionPrefix = '/interaction';
 export const verificationPath = 'verification';
 
+type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
+
 export default function interactionRoutes<T extends AnonymousRouter>(
-  router: T,
+  anonymousRouter: T,
   provider: Provider
 ) {
-  router.use(koaAuditLog(), async (ctx, next) => {
-    await next();
-
-    // Prepend interaction context to log entries
-    try {
-      const {
-        jti,
-        params: { client_id },
-      } = await provider.interactionDetails(ctx.req, ctx.res);
-      ctx.prependAllLogEntries({
-        sessionId: jti,
-        applicationId: conditional(typeof client_id === 'string' && client_id),
-      });
-    } catch (error: unknown) {
-      console.error(`Failed to get oidc provider interaction details`, error);
-    }
-  });
+  const router =
+    // @ts-expect-error for good koa types
+    // eslint-disable-next-line no-restricted-syntax
+    (anonymousRouter as Router<unknown, WithInteractionDetailsContext<RouterContext<T>>>).use(
+      koaAuditLog(),
+      koaInteractionDetails(provider)
+    );
 
   // Create a new interaction
   router.put(
@@ -68,18 +63,19 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         profile: profileGuard.optional(),
       }),
     }),
+    koaInteractionSIE(),
     async (ctx, next) => {
       const { event, identifier, profile } = ctx.guard.body;
-      const experience = await getSignInExperience(ctx, provider);
+      const { signInExperience } = ctx;
 
-      verifySignInModeSettings(event, experience);
+      verifySignInModeSettings(event, signInExperience);
 
       if (identifier) {
-        verifyIdentifierSettings(identifier, experience);
+        verifyIdentifierSettings(identifier, signInExperience);
       }
 
       if (profile) {
-        verifyProfileSettings(profile, experience);
+        verifyProfileSettings(profile, signInExperience);
       }
 
       const verifiedIdentifier = identifier && [
@@ -102,7 +98,6 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
   // Delete Interaction
   router.delete(interactionPrefix, async (ctx, next) => {
-    await provider.interactionDetails(ctx.req, ctx.res);
     const error: LogtoErrorCode = 'oidc.aborted';
     await assignInteractionResults(ctx, provider, { error });
 
@@ -113,11 +108,14 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   router.put(
     `${interactionPrefix}/event`,
     koaGuard({ body: z.object({ event: eventGuard }) }),
+    koaInteractionSIE(),
     async (ctx, next) => {
       const { event } = ctx.guard.body;
-      verifySignInModeSettings(event, await getSignInExperience(ctx, provider));
+      const { signInExperience, interactionDetails } = ctx;
 
-      const interactionStorage = await getInteractionStorage(ctx, provider);
+      verifySignInModeSettings(event, signInExperience);
+
+      const interactionStorage = getInteractionStorage(interactionDetails.result);
 
       // Forgot Password specific event interaction storage can't be shared with other types of interactions
       assertThat(
@@ -143,11 +141,13 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: identifierPayloadGuard,
     }),
+    koaInteractionSIE(),
     async (ctx, next) => {
       const identifierPayload = ctx.guard.body;
-      verifyIdentifierSettings(identifierPayload, await getSignInExperience(ctx, provider));
+      const { signInExperience, interactionDetails } = ctx;
+      verifyIdentifierSettings(identifierPayload, signInExperience);
 
-      const interactionStorage = await getInteractionStorage(ctx, provider);
+      const interactionStorage = getInteractionStorage(interactionDetails.result);
 
       const verifiedIdentifier = await verifyIdentifierPayload(
         ctx,
@@ -172,11 +172,13 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: profileGuard,
     }),
+    koaInteractionSIE(),
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
-      verifyProfileSettings(profilePayload, await getSignInExperience(ctx, provider));
+      const { signInExperience, interactionDetails } = ctx;
+      verifyProfileSettings(profilePayload, signInExperience);
 
-      const interactionStorage = await getInteractionStorage(ctx, provider);
+      const interactionStorage = getInteractionStorage(interactionDetails.result);
 
       await storeInteractionResult(
         {
@@ -198,7 +200,8 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
   // Delete Interaction Profile
   router.delete(`${interactionPrefix}/profile`, async (ctx, next) => {
-    const interactionStorage = await getInteractionStorage(ctx, provider);
+    const { interactionDetails } = ctx;
+    const interactionStorage = getInteractionStorage(interactionDetails.result);
     const { profile, ...rest } = interactionStorage;
     await storeInteractionResult(rest, ctx, provider);
 
@@ -208,23 +211,29 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   });
 
   // Submit Interaction
-  router.post(`${interactionPrefix}/submit`, async (ctx, next) => {
-    const interactionStorage = await getInteractionStorage(ctx, provider);
+  router.post(
+    `${interactionPrefix}/submit`,
+    koaInteractionSIE(),
+    koaInteractionHooks(),
+    async (ctx, next) => {
+      const { interactionDetails } = ctx;
+      const interactionStorage = getInteractionStorage(interactionDetails.result);
 
-    const { event } = interactionStorage;
+      const { event } = interactionStorage;
 
-    const accountVerifiedInteraction = await verifyIdentifier(ctx, provider, interactionStorage);
+      const accountVerifiedInteraction = await verifyIdentifier(ctx, provider, interactionStorage);
 
-    const verifiedInteraction = await verifyProfile(accountVerifiedInteraction);
+      const verifiedInteraction = await verifyProfile(accountVerifiedInteraction);
 
-    if (event !== Event.ForgotPassword) {
-      await validateMandatoryUserProfile(ctx, provider, verifiedInteraction);
+      if (event !== Event.ForgotPassword) {
+        await validateMandatoryUserProfile(ctx, verifiedInteraction);
+      }
+
+      await submitInteraction(verifiedInteraction, ctx, provider);
+
+      return next();
     }
-
-    await submitInteraction(verifiedInteraction, ctx, provider);
-
-    return next();
-  });
+  );
 
   // Create social authorization url interaction verification
   router.post(
@@ -232,7 +241,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({ body: socialAuthorizationUrlPayloadGuard }),
     async (ctx, next) => {
       // Check interaction exists
-      await getInteractionStorage(ctx, provider);
+      getInteractionStorage(ctx.interactionDetails.result);
 
       const { body: payload } = ctx.guard;
 
@@ -252,7 +261,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       // Check interaction exists
-      await getInteractionStorage(ctx, provider);
+      getInteractionStorage(ctx.interactionDetails.result);
 
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       await sendPasscodeToIdentifier(ctx.guard.body, jti, ctx.createLog);

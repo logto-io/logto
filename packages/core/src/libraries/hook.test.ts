@@ -34,9 +34,7 @@ mockEsm('#src/queries/user.js', () => ({
 mockEsm('#src/queries/application.js', () => ({
   findApplicationById: () => ({ id: 'app_id', extraField: 'not_ok' }),
 }));
-mockEsm('#src/connectors/index.js', () => ({
-  getLogtoConnectorById: () => ({ metadata: { id: 'connector_id', extraField: 'not_ok' } }),
-}));
+
 // eslint-disable-next-line unicorn/consistent-function-scoping
 mockEsmDefault('#src/env-set/create-query-client-by-env.js', () => () => queryClient);
 jest.spyOn(queryClient, 'query').mockImplementation(queryFunction);
@@ -49,7 +47,7 @@ describe('triggerInteractionHooksIfNeeded()', () => {
   });
 
   it('should return if no user ID found', async () => {
-    await triggerInteractionHooksIfNeeded({ event: Event.SignIn });
+    await triggerInteractionHooksIfNeeded();
 
     expect(queryFunction).not.toBeCalled();
   });
@@ -58,11 +56,14 @@ describe('triggerInteractionHooksIfNeeded()', () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
     await triggerInteractionHooksIfNeeded(
-      { event: Event.SignIn, identifier: { connectorId: 'bar' } },
       // @ts-expect-error for testing
       {
         jti: 'some_jti',
-        result: { login: { accountId: '123' } },
+        result: {
+          login: { accountId: '123' },
+          event: Event.SignIn,
+          identifier: { connectorId: 'bar' },
+        },
         params: { client_id: 'some_client' },
       } as Interaction
     );
@@ -78,7 +79,6 @@ describe('triggerInteractionHooksIfNeeded()', () => {
         userId: '123',
         user: { id: 'user_id', username: 'user' },
         application: { id: 'app_id' },
-        connectors: [{ id: 'connector_id' }],
         createdAt: new Date(100_000).toISOString(),
       },
       retry: { limit: 3 },

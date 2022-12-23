@@ -1,10 +1,7 @@
 import type { SignInExperience, Profile, IdentifierPayload } from '@logto/schemas';
 import { SignInMode, SignInIdentifier, Event } from '@logto/schemas';
-import type { Context } from 'koa';
-import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 const forbiddenEventError = new RequestError({ code: 'auth.forbidden', status: 403 });
@@ -121,12 +118,4 @@ export const verifyProfileSettings = (profile: Profile, { signUp }: SignInExperi
   if (profile.password) {
     assertThat(signUp.password, forbiddenIdentifierError);
   }
-};
-
-export const getSignInExperience = async (ctx: Context, provider: Provider) => {
-  const interaction = await provider.interactionDetails(ctx.req, ctx.res);
-
-  return getSignInExperienceForApplication(
-    typeof interaction.params.client_id === 'string' ? interaction.params.client_id : undefined
-  );
 };

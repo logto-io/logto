@@ -2,15 +2,14 @@ import type { Profile, SignInExperience, User } from '@logto/schemas';
 import { Event, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { Context } from 'koa';
-import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { findUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import type { WithInteractionSIEContext } from '../middleware/koa-interaction-sie.js';
 import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
-import { getSignInExperience } from '../utils/sign-in-experience-validation.js';
 
 // eslint-disable-next-line complexity
 const getMissingProfileBySignUpIdentifiers = ({
@@ -71,11 +70,10 @@ const getMissingProfileBySignUpIdentifiers = ({
 };
 
 export default async function validateMandatoryUserProfile(
-  ctx: Context,
-  provider: Provider,
+  ctx: WithInteractionSIEContext<Context>,
   interaction: IdentifierVerifiedInteractionResult
 ) {
-  const { signUp } = await getSignInExperience(ctx, provider);
+  const { signUp } = ctx.signInExperience;
   const { event, accountId, profile } = interaction;
 
   const user = event === Event.Register ? null : await findUserById(accountId);
