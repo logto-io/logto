@@ -1,5 +1,5 @@
 import type { LogtoErrorCode } from '@logto/phrases';
-import { Event, eventGuard, identifierPayloadGuard, profileGuard } from '@logto/schemas';
+import { InteractionEvent, eventGuard, identifierPayloadGuard, profileGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
@@ -119,9 +119,9 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       // Forgot Password specific event interaction storage can't be shared with other types of interactions
       assertThat(
-        event === Event.ForgotPassword
-          ? interactionStorage.event === Event.ForgotPassword
-          : interactionStorage.event !== Event.ForgotPassword,
+        event === InteractionEvent.ForgotPassword
+          ? interactionStorage.event === InteractionEvent.ForgotPassword
+          : interactionStorage.event !== InteractionEvent.ForgotPassword,
         new RequestError({ code: 'session.interaction_not_found', status: 404 })
       );
 
@@ -225,7 +225,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       const verifiedInteraction = await verifyProfile(accountVerifiedInteraction);
 
-      if (event !== Event.ForgotPassword) {
+      if (event !== InteractionEvent.ForgotPassword) {
         await validateMandatoryUserProfile(ctx, verifiedInteraction);
       }
 

@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { Event, demoAppApplicationId } from '@logto/schemas';
+import { InteractionEvent, demoAppApplicationId } from '@logto/schemas';
 import { mockEsmWithActual, mockEsmDefault, mockEsm } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
@@ -78,7 +78,7 @@ const { storeInteractionResult, mergeIdentifiers, getInteractionStorage } = awai
     mergeIdentifiers: jest.fn(),
     storeInteractionResult: jest.fn(),
     getInteractionStorage: jest.fn().mockResolvedValue({
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
     }),
   })
 );
@@ -129,7 +129,7 @@ describe('session -> interactionRoutes', () => {
 
     it('should call validations properly', async () => {
       const body = {
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
         identifier: { email: 'email@logto.io', password: 'password' },
         profile: { phone: '1234567890' },
       };
@@ -155,10 +155,10 @@ describe('session -> interactionRoutes', () => {
 
     it('should call verifySignInModeSettings properly', async () => {
       getInteractionStorage.mockReturnValueOnce({
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
       });
       const body = {
-        event: Event.Register,
+        event: InteractionEvent.Register,
       };
 
       const response = await sessionRequest.put(path).send(body);
@@ -170,11 +170,11 @@ describe('session -> interactionRoutes', () => {
 
     it('should reject if switch sign-in event to forgot-password directly', async () => {
       getInteractionStorage.mockReturnValueOnce({
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
       });
 
       const body = {
-        event: Event.ForgotPassword,
+        event: InteractionEvent.ForgotPassword,
       };
 
       const response = await sessionRequest.put(`${interactionPrefix}/event`).send(body);
@@ -185,11 +185,11 @@ describe('session -> interactionRoutes', () => {
 
     it('should reject if switch forgot-password to sign-in directly', async () => {
       getInteractionStorage.mockReturnValueOnce({
-        event: Event.ForgotPassword,
+        event: InteractionEvent.ForgotPassword,
       });
 
       const body = {
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
       };
 
       const response = await sessionRequest.put(`${interactionPrefix}/event`).send(body);
@@ -248,7 +248,7 @@ describe('session -> interactionRoutes', () => {
 
     it('should call send passcode properly', async () => {
       const body = {
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
         email: 'email@logto.io',
       };
 
@@ -273,7 +273,7 @@ describe('session -> interactionRoutes', () => {
 
     it('should not call validateMandatoryUserProfile for forgot password request', async () => {
       getInteractionStorage.mockReturnValueOnce({
-        event: Event.ForgotPassword,
+        event: InteractionEvent.ForgotPassword,
       });
 
       await sessionRequest.post(path).send();

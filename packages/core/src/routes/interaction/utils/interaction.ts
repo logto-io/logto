@@ -1,6 +1,6 @@
 import type { ConnectorSession } from '@logto/connector-kit';
 import { connectorSessionGuard } from '@logto/connector-kit';
-import type { Event, Profile } from '@logto/schemas';
+import type { Profile, InteractionEvent } from '@logto/schemas';
 import type { Context } from 'koa';
 import type { Provider, InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
@@ -84,7 +84,7 @@ export const isAccountVerifiedInteractionResult = (
 ): interaction is AccountVerifiedInteractionResult => Boolean(interaction.accountId);
 
 export const storeInteractionResult = async (
-  interaction: Omit<AnonymousInteractionResult, 'event'> & { event?: Event },
+  interaction: Omit<AnonymousInteractionResult, 'event'> & { event?: InteractionEvent },
   ctx: Context,
   provider: Provider,
   merge = false

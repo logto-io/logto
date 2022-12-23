@@ -52,13 +52,13 @@ export type SocialIdentityPayload = z.infer<typeof socialIdentityPayloadGuard>;
 // Interaction Payload Guard
 
 /** Interaction flow (main flow) types. */
-export enum Event {
+export enum InteractionEvent {
   SignIn = 'SignIn',
   Register = 'Register',
   ForgotPassword = 'ForgotPassword',
 }
 
-export const eventGuard = z.nativeEnum(Event);
+export const eventGuard = z.nativeEnum(InteractionEvent);
 
 export const identifierPayloadGuard = z.union([
   usernamePasswordPayloadGuard,

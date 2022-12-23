@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -36,7 +36,7 @@ const logContext = createMockLogContext();
 
 describe('identifier verification', () => {
   const baseCtx = { ...createContextWithRouteParameters(), ...logContext };
-  const interactionStorage = { event: Event.SignIn };
+  const interactionStorage = { event: InteractionEvent.SignIn };
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -174,7 +174,7 @@ describe('identifier verification', () => {
 
   it('verified social email', async () => {
     const interactionRecord: AnonymousInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [
         {
           key: 'social',
@@ -216,7 +216,7 @@ describe('identifier verification', () => {
 
   it('verified social email should throw if social identity not found', async () => {
     const interactionRecord: AnonymousInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [
         {
           key: 'social',

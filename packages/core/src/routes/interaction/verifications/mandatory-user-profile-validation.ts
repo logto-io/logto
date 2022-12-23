@@ -1,5 +1,5 @@
 import type { Profile, SignInExperience, User } from '@logto/schemas';
-import { Event, MissingProfile, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { Context } from 'koa';
 
@@ -76,7 +76,7 @@ export default async function validateMandatoryUserProfile(
   const { signUp } = ctx.signInExperience;
   const { event, accountId, profile } = interaction;
 
-  const user = event === Event.Register ? null : await findUserById(accountId);
+  const user = event === InteractionEvent.Register ? null : await findUserById(accountId);
   const missingProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
 
   assertThat(

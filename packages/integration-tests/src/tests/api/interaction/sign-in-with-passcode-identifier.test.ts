@@ -1,4 +1,4 @@
-import { ConnectorType, Event, SignInIdentifier } from '@logto/schemas';
+import { ConnectorType, InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import {
   sendVerificationPasscode,
@@ -33,11 +33,11 @@ describe('Sign-In flow using passcode identifiers', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       email: userProfile.primaryEmail,
     });
 
@@ -45,7 +45,7 @@ describe('Sign-In flow using passcode identifiers', () => {
 
     expect(passcodeRecord).toMatchObject({
       address: userProfile.primaryEmail,
-      type: Event.SignIn,
+      type: InteractionEvent.SignIn,
     });
 
     const { code } = passcodeRecord;
@@ -67,11 +67,11 @@ describe('Sign-In flow using passcode identifiers', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       phone: userProfile.primaryPhone,
     });
 
@@ -79,7 +79,7 @@ describe('Sign-In flow using passcode identifiers', () => {
 
     expect(passcodeRecord).toMatchObject({
       phone: userProfile.primaryPhone,
-      type: Event.SignIn,
+      type: InteractionEvent.SignIn,
     });
 
     const { code } = passcodeRecord;
@@ -107,11 +107,11 @@ describe('Sign-In flow using passcode identifiers', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       email: newEmail,
     });
 
@@ -126,7 +126,7 @@ describe('Sign-In flow using passcode identifiers', () => {
 
     await expectRejects(client.submitInteraction(), 'user.user_not_exist');
 
-    await client.successSend(putInteractionEvent, { event: Event.Register });
+    await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
     await client.successSend(patchInteractionProfile, { email: newEmail });
 
     const { redirectTo } = await client.submitInteraction();
@@ -147,11 +147,11 @@ describe('Sign-In flow using passcode identifiers', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       phone: newPhone,
     });
 
@@ -166,7 +166,7 @@ describe('Sign-In flow using passcode identifiers', () => {
 
     await expectRejects(client.submitInteraction(), 'user.user_not_exist');
 
-    await client.successSend(putInteractionEvent, { event: Event.Register });
+    await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
     await client.successSend(patchInteractionProfile, { phone: newPhone });
 
     const { redirectTo } = await client.submitInteraction();

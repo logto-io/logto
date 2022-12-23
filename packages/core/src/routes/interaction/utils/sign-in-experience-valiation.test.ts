@@ -1,5 +1,5 @@
 import type { SignInExperience } from '@logto/schemas';
-import { SignInIdentifier, SignInMode, Event } from '@logto/schemas';
+import { SignInIdentifier, SignInMode, InteractionEvent } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 
@@ -10,19 +10,19 @@ import {
 } from './sign-in-experience-validation.js';
 
 describe('verifySignInModeSettings', () => {
-  it(Event.Register, () => {
+  it(InteractionEvent.Register, () => {
     expect(() => {
-      verifySignInModeSettings(Event.Register, {
+      verifySignInModeSettings(InteractionEvent.Register, {
         signInMode: SignInMode.SignIn,
       } as SignInExperience);
     }).toThrow();
     expect(() => {
-      verifySignInModeSettings(Event.Register, {
+      verifySignInModeSettings(InteractionEvent.Register, {
         signInMode: SignInMode.Register,
       } as SignInExperience);
     }).not.toThrow();
     expect(() => {
-      verifySignInModeSettings(Event.Register, {
+      verifySignInModeSettings(InteractionEvent.Register, {
         signInMode: SignInMode.SignInAndRegister,
       } as SignInExperience);
     }).not.toThrow();
@@ -30,33 +30,35 @@ describe('verifySignInModeSettings', () => {
 
   it('SignIn', () => {
     expect(() => {
-      verifySignInModeSettings(Event.SignIn, { signInMode: SignInMode.SignIn } as SignInExperience);
+      verifySignInModeSettings(InteractionEvent.SignIn, {
+        signInMode: SignInMode.SignIn,
+      } as SignInExperience);
     }).not.toThrow();
     expect(() => {
-      verifySignInModeSettings(Event.SignIn, {
+      verifySignInModeSettings(InteractionEvent.SignIn, {
         signInMode: SignInMode.Register,
       } as SignInExperience);
     }).toThrow();
     expect(() => {
-      verifySignInModeSettings(Event.SignIn, {
+      verifySignInModeSettings(InteractionEvent.SignIn, {
         signInMode: SignInMode.SignInAndRegister,
       } as SignInExperience);
     }).not.toThrow();
   });
 
-  it(Event.ForgotPassword, () => {
+  it(InteractionEvent.ForgotPassword, () => {
     expect(() => {
-      verifySignInModeSettings(Event.ForgotPassword, {
+      verifySignInModeSettings(InteractionEvent.ForgotPassword, {
         signInMode: SignInMode.SignIn,
       } as SignInExperience);
     }).not.toThrow();
     expect(() => {
-      verifySignInModeSettings(Event.ForgotPassword, {
+      verifySignInModeSettings(InteractionEvent.ForgotPassword, {
         signInMode: SignInMode.Register,
       } as SignInExperience);
     }).not.toThrow();
     expect(() => {
-      verifySignInModeSettings(Event.ForgotPassword, {
+      verifySignInModeSettings(InteractionEvent.ForgotPassword, {
         signInMode: SignInMode.SignInAndRegister,
       } as SignInExperience);
     }).not.toThrow();

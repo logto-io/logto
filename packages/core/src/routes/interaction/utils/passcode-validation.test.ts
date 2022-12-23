@@ -1,4 +1,4 @@
-import { PasscodeType, Event } from '@logto/schemas';
+import { PasscodeType, InteractionEvent } from '@logto/schemas';
 import { mockEsmWithActual } from '@logto/shared/esm';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -17,27 +17,27 @@ const { sendPasscodeToIdentifier } = await import('./passcode-validation.js');
 
 const sendPasscodeTestCase = [
   {
-    payload: { email: 'email', event: Event.SignIn },
+    payload: { email: 'email', event: InteractionEvent.SignIn },
     createPasscodeParams: [PasscodeType.SignIn, { email: 'email' }],
   },
   {
-    payload: { email: 'email', event: Event.Register },
+    payload: { email: 'email', event: InteractionEvent.Register },
     createPasscodeParams: [PasscodeType.Register, { email: 'email' }],
   },
   {
-    payload: { email: 'email', event: Event.ForgotPassword },
+    payload: { email: 'email', event: InteractionEvent.ForgotPassword },
     createPasscodeParams: [PasscodeType.ForgotPassword, { email: 'email' }],
   },
   {
-    payload: { phone: 'phone', event: Event.SignIn },
+    payload: { phone: 'phone', event: InteractionEvent.SignIn },
     createPasscodeParams: [PasscodeType.SignIn, { phone: 'phone' }],
   },
   {
-    payload: { phone: 'phone', event: Event.Register },
+    payload: { phone: 'phone', event: InteractionEvent.Register },
     createPasscodeParams: [PasscodeType.Register, { phone: 'phone' }],
   },
   {
-    payload: { phone: 'phone', event: Event.ForgotPassword },
+    payload: { phone: 'phone', event: InteractionEvent.ForgotPassword },
     createPasscodeParams: [PasscodeType.ForgotPassword, { phone: 'phone' }],
   },
 ];

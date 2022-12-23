@@ -4,7 +4,7 @@ import type {
   EmailPasscodePayload,
   PhonePasswordPayload,
   PhonePasscodePayload,
-  Event,
+  InteractionEvent,
 } from '@logto/schemas';
 import type { z } from 'zod';
 
@@ -59,15 +59,15 @@ export type ForgotPasswordProfile = z.infer<typeof forgotPasswordProfileGuard>;
 export type AnonymousInteractionResult = z.infer<typeof anonymousInteractionResultGuard>;
 
 export type RegisterInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
-  event: Event.Register;
+  event: InteractionEvent.Register;
 };
 
 export type SignInInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
-  event: Event.SignIn;
+  event: InteractionEvent.SignIn;
 };
 
 export type ForgotPasswordInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
-  event: Event.ForgotPassword;
+  event: InteractionEvent.ForgotPassword;
 };
 
 export type AccountVerifiedInteractionResult =

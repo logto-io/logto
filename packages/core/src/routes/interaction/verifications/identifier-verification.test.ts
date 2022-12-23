@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { mockEsmWithActual, mockEsmDefault, pickDefault } from '@logto/shared/esm';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -29,7 +29,7 @@ describe('verifyIdentifier', () => {
 
   it('should return the interaction record if the event is register', async () => {
     const interactionRecord = {
-      event: Event.Register,
+      event: InteractionEvent.Register,
     };
 
     const result = await verifyIdentifier(ctx, provider, interactionRecord);
@@ -41,7 +41,7 @@ describe('verifyIdentifier', () => {
 
   it('should return and assign the verified result to the interaction record if the event is sign in', async () => {
     const interactionRecord: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [{ key: 'emailVerified', value: 'email@logto.io' }],
     };
 

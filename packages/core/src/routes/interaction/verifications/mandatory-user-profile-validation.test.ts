@@ -1,4 +1,4 @@
-import { Event, MissingProfile, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 import type { Provider } from 'oidc-provider';
 
@@ -32,7 +32,7 @@ describe('validateMandatoryUserProfile', () => {
     signInExperience: mockSignInExperience,
   };
   const interaction: IdentifierVerifiedInteractionResult = {
-    event: Event.SignIn,
+    event: InteractionEvent.SignIn,
     accountId: 'foo',
   };
 

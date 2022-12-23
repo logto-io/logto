@@ -1,4 +1,4 @@
-import { Event, ConnectorType, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import {
   putInteraction,
@@ -39,9 +39,9 @@ describe('reset password', () => {
 
     const client = await initClient();
 
-    await client.successSend(putInteraction, { event: Event.ForgotPassword });
+    await client.successSend(putInteraction, { event: InteractionEvent.ForgotPassword });
     await client.successSend(sendVerificationPasscode, {
-      event: Event.ForgotPassword,
+      event: InteractionEvent.ForgotPassword,
       email: userProfile.primaryEmail,
     });
 
@@ -49,7 +49,7 @@ describe('reset password', () => {
 
     expect(passcodeRecord).toMatchObject({
       address: userProfile.primaryEmail,
-      type: Event.ForgotPassword,
+      type: InteractionEvent.ForgotPassword,
     });
 
     const { code } = passcodeRecord;
@@ -72,7 +72,7 @@ describe('reset password', () => {
     await client.submitInteraction();
 
     await client.successSend(putInteraction, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifier: {
         email: userProfile.primaryEmail,
         password: newPasscodeRecord,
@@ -93,9 +93,9 @@ describe('reset password', () => {
 
     const client = await initClient();
 
-    await client.successSend(putInteraction, { event: Event.ForgotPassword });
+    await client.successSend(putInteraction, { event: InteractionEvent.ForgotPassword });
     await client.successSend(sendVerificationPasscode, {
-      event: Event.ForgotPassword,
+      event: InteractionEvent.ForgotPassword,
       phone: userProfile.primaryPhone,
     });
 
@@ -103,7 +103,7 @@ describe('reset password', () => {
 
     expect(passcodeRecord).toMatchObject({
       phone: userProfile.primaryPhone,
-      type: Event.ForgotPassword,
+      type: InteractionEvent.ForgotPassword,
     });
 
     const { code } = passcodeRecord;
@@ -126,7 +126,7 @@ describe('reset password', () => {
     await client.submitInteraction();
 
     await client.successSend(putInteraction, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifier: {
         phone: userProfile.primaryPhone,
         password: newPasscodeRecord,

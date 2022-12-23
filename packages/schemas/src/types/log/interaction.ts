@@ -1,4 +1,4 @@
-import type { Event } from '../interactions.js';
+import type { InteractionEvent } from '../interactions.js';
 
 export type Prefix = 'Interaction';
 
@@ -42,24 +42,24 @@ export enum Action {
  * - Indicates an interaction is started or ended. Normally it is performed by OIDC Provider.
  *
  * ```ts
- * `Interaction.${Event}.${Action.Update | Action.Submit}`
+ * `Interaction.${InteractionEvent}.${Action.Update | Action.Submit}`
  * ```
  *
- * Since {@link Event} is the primary identifier of interaction type, most of log keys include this info for better query experience.
+ * Since {@link InteractionEvent} is the primary identifier of interaction type, most of log keys include this info for better query experience.
  * The only exception is the initial creation of an interaction, which has a key of `Interaction.Create`,
  * since we cannot know the type at that time.
  *
- * - When {@link Action} is `Update`, it indicates the type of interaction is updating to {@link Event}.
+ * - When {@link Action} is `Update`, it indicates the type of interaction is updating to {@link InteractionEvent}.
  * - When {@link Action} is `Submit`, it indicates the whole interaction is being submitted.
  *
  * ```ts
- * `Interaction.${Event}.${Field.Profile}.${Action.Update}`
+ * `Interaction.${InteractionEvent}.${Field.Profile}.${Action.Update}`
  * ```
  *
  * - Indicates the profile of an interaction is being updated. It may add or remove profile data.
  *
  * ```ts
- * `Interaction.${Event}.${Field.Identifier}.${Method}.${Action}`
+ * `Interaction.${InteractionEvent}.${Field.Identifier}.${Method}.${Action}`
  * ```
  *
  * - Indicates an identifier method is being created or submitted to an interaction.
@@ -68,12 +68,12 @@ export enum Action {
  */
 export type LogKey =
   | `${Prefix}.${Action.Create | Action.End}`
-  | `${Prefix}.${Event}.${Action.Update | Action.Submit}`
-  | `${Prefix}.${Event}.${Field.Profile}.${Action.Update}`
-  | `${Prefix}.${Event}.${Field.Identifier}.${Method.VerificationCode}.${
+  | `${Prefix}.${InteractionEvent}.${Action.Update | Action.Submit}`
+  | `${Prefix}.${InteractionEvent}.${Field.Profile}.${Action.Update}`
+  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Method.VerificationCode}.${
       | Action.Create
       | Action.Submit}`
-  | `${Prefix}.${Event}.${Field.Identifier}.${Exclude<
+  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Exclude<
       Method,
       Method.VerificationCode
     >}.${Action.Submit}`;

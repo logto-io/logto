@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -32,7 +32,7 @@ const identifiers: Identifier[] = [
 ];
 
 const baseInteraction: IdentifierVerifiedInteractionResult = {
-  event: Event.Register,
+  event: InteractionEvent.Register,
   identifiers,
 };
 

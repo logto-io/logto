@@ -1,5 +1,5 @@
 import type { SignInExperience, Profile, IdentifierPayload } from '@logto/schemas';
-import { SignInMode, SignInIdentifier, Event } from '@logto/schemas';
+import { SignInMode, SignInIdentifier, InteractionEvent } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -11,12 +11,15 @@ const forbiddenIdentifierError = new RequestError({
   status: 422,
 });
 
-export const verifySignInModeSettings = (event: Event, { signInMode }: SignInExperience) => {
-  if (event === Event.SignIn) {
+export const verifySignInModeSettings = (
+  event: InteractionEvent,
+  { signInMode }: SignInExperience
+) => {
+  if (event === InteractionEvent.SignIn) {
     assertThat(signInMode !== SignInMode.Register, forbiddenEventError);
   }
 
-  if (event === Event.Register) {
+  if (event === InteractionEvent.Register) {
     assertThat(signInMode !== SignInMode.SignIn, forbiddenEventError);
   }
 };

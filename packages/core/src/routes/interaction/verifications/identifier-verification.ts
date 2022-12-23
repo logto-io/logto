@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 
@@ -21,7 +21,7 @@ export default async function verifyIdentifier(
   provider: Provider,
   interactionRecord: InteractionResult
 ): Promise<RegisterInteractionResult | AccountVerifiedInteractionResult> {
-  if (interactionRecord.event === Event.Register) {
+  if (interactionRecord.event === InteractionEvent.Register) {
     return interactionRecord;
   }
 
