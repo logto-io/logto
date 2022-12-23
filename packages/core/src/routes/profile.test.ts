@@ -1,3 +1,4 @@
+import type { SocialUserInfo } from '@logto/connector-kit';
 import type { CreateUser, User } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
@@ -9,7 +10,6 @@ import {
   mockUser,
   mockUserResponse,
 } from '#src/__mocks__/index.js';
-import type { SocialUserInfo } from '#src/connectors/types.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 

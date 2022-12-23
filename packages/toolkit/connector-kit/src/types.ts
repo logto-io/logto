@@ -171,7 +171,17 @@ export type GetAuthorizationUri = (
   setSession?: SetSession
 ) => Promise<string>;
 
+export const socialUserInfoGuard = z.object({
+  id: z.string(),
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  name: z.string().optional(),
+  avatar: z.string().optional(),
+});
+
+export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
+
 export type GetUserInfo = (
   data: unknown,
   getSession?: GetSession
-) => Promise<{ id: string } & Record<string, string | boolean | number | undefined>>;
+) => Promise<SocialUserInfo & Record<string, string | boolean | number | undefined>>;

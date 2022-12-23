@@ -1,20 +1,9 @@
 import type { AllConnector, CreateConnector, VerificationCodeType } from '@logto/connector-kit';
 import type { Connector } from '@logto/schemas';
-import { z } from 'zod';
 
 export { ConnectorType } from '@logto/schemas';
 
 export type TemplateType = VerificationCodeType;
-
-export const socialUserInfoGuard = z.object({
-  id: z.string(),
-  email: z.string().optional(),
-  phone: z.string().optional(),
-  name: z.string().optional(),
-  avatar: z.string().optional(),
-});
-
-export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
 
 /**
  * Dynamic loaded connector type.
