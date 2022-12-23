@@ -88,6 +88,9 @@ const errors = {
       'Die Verifizierung war nicht erfolgreich. Starte die Verifizierung neu und versuche es erneut.',
     connector_validation_session_not_found:
       'The connector session for token validation is not found.', // UNTRANSLATED
+    identifier_not_found: 'User identifier not found. Please go back and sign in again.', // UNTRANSLATED
+    interaction_not_found:
+      'Interaction session not found. Please go back and start the session again.', // UNTRANSLATED
   },
   connector: {
     // UNTRANSLATED

@@ -34,13 +34,13 @@ describe('audit logs for interaction', () => {
 
     // Process interaction with minimum effort
     const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const response = await putInteraction(
-      {
-        event: Event.Register,
-        profile: { username, password },
-      },
-      client.interactionCookie
-    );
+
+    await client.send(putInteraction, {
+      event: Event.Register,
+      profile: { username, password },
+    });
+
+    const response = await client.submitInteraction();
     await client.processSession(response.redirectTo);
 
     // Expect interaction end log

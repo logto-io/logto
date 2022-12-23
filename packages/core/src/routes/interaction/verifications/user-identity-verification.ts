@@ -1,5 +1,4 @@
 import { deduplicate } from '@silverhand/essentials';
-import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { findSocialRelatedUser } from '#src/libraries/social.js';
@@ -10,17 +9,13 @@ import type {
   SocialIdentifier,
   VerifiedEmailIdentifier,
   VerifiedPhoneIdentifier,
-  PreAccountVerifiedInteractionResult,
+  SignInInteractionResult,
+  ForgotPasswordInteractionResult,
   AccountVerifiedInteractionResult,
   Identifier,
-  InteractionContext,
 } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
-import {
-  storeInteractionResult,
-  isAccountVerifiedInteractionResult,
-  categorizeIdentifiers,
-} from '../utils/interaction.js';
+import { isAccountVerifiedInteractionResult, categorizeIdentifiers } from '../utils/interaction.js';
 
 const identifyUserByVerifiedEmailOrPhone = async (
   identifier: VerifiedEmailIdentifier | VerifiedPhoneIdentifier
@@ -77,17 +72,14 @@ const identifyUser = async (identifier: Identifier) => {
   return identifyUserByVerifiedEmailOrPhone(identifier);
 };
 
-export default async function userAccountVerification(
-  interaction: PreAccountVerifiedInteractionResult,
-  ctx: InteractionContext,
-  provider: Provider
+export default async function verifyUserAccount(
+  interaction: SignInInteractionResult | ForgotPasswordInteractionResult
 ): Promise<AccountVerifiedInteractionResult> {
   const { identifiers = [], accountId, profile } = interaction;
 
   const { userAccountIdentifiers, profileIdentifiers } = categorizeIdentifiers(
     identifiers,
-    // Need to merge the profile in payload
-    { ...profile, ...ctx.interactionPayload.profile }
+    profile
   );
 
   // Return the interaction directly if it is accountVerified and has no unverified userAccountIdentifiers
@@ -100,7 +92,7 @@ export default async function userAccountVerification(
   assertThat(
     userAccountIdentifiers.length > 0,
     new RequestError({
-      code: 'session.verification_session_not_found',
+      code: 'session.identifier_not_found',
       status: 404,
     })
   );
@@ -120,14 +112,10 @@ export default async function userAccountVerification(
     new RequestError('session.verification_failed')
   );
 
-  // Assign the verification result and store the profile identifiers left
-  const verifiedInteraction: AccountVerifiedInteractionResult = {
+  // Return the verified interaction and remove the consumed userAccountIdentifiers
+  return {
     ...interaction,
     identifiers: profileIdentifiers,
     accountId: deduplicateAccountIds[0],
   };
-
-  await storeInteractionResult(verifiedInteraction, ctx, provider);
-
-  return verifiedInteraction;
 }

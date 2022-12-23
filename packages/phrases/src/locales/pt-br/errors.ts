@@ -89,6 +89,9 @@ const errors = {
       'A verificação não foi bem-sucedida. Reinicie o fluxo de verificação e tente novamente.',
     connector_validation_session_not_found:
       'The connector session for token validation is not found.', // UNTRANSLATED
+    identifier_not_found: 'User identifier not found. Please go back and sign in again.', // UNTRANSLATED
+    interaction_not_found:
+      'Interaction session not found. Please go back and start the session again.', // UNTRANSLATED
   },
   connector: {
     general: 'Ocorreu um erro inesperado no conector.{{errorDescription}}',

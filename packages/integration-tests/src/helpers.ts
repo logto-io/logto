@@ -17,6 +17,8 @@ import {
 import MockClient from '#src/client/index.js';
 import { generateUsername, generatePassword } from '#src/utils.js';
 
+import { enableAllPasswordSignInMethods } from './tests/api/interaction/utils/sign-in-experience.js';
+
 export const createUserByAdmin = (
   username?: string,
   password?: string,
@@ -112,6 +114,7 @@ export const bindSocialToNewCreatedUser = async (connectorId: string) => {
   const username = generateUsername();
   const password = generatePassword();
 
+  await enableAllPasswordSignInMethods();
   await createUserByAdmin(username, password);
 
   const state = 'mock_state';

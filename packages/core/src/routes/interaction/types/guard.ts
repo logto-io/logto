@@ -6,37 +6,11 @@ import {
   socialConnectorPayloadGuard,
   eventGuard,
   profileGuard,
-  identifierPayloadGuard,
   Event,
 } from '@logto/schemas';
 import { z } from 'zod';
 
 import { socialUserInfoGuard } from '#src/connectors/types.js';
-
-// Interaction Payload Guard
-const forgotPasswordInteractionPayloadGuard = z.object({
-  event: z.literal(Event.ForgotPassword),
-  identifier: z.union([emailPasscodePayloadGuard, phonePasscodePayloadGuard]).optional(),
-  profile: z.object({ password: z.string() }).optional(),
-});
-
-const registerInteractionPayloadGuard = z.object({
-  event: z.literal(Event.Register),
-  identifier: z.union([emailPasscodePayloadGuard, phonePasscodePayloadGuard]).optional(),
-  profile: profileGuard,
-});
-
-const signInInteractionPayloadGuard = z.object({
-  event: z.literal(Event.SignIn),
-  identifier: identifierPayloadGuard.optional(),
-  profile: profileGuard.optional(),
-});
-
-export const interactionPayloadGuard = z.discriminatedUnion('event', [
-  signInInteractionPayloadGuard,
-  registerInteractionPayloadGuard,
-  forgotPasswordInteractionPayloadGuard,
-]);
 
 // Passcode Send Route Payload Guard
 export const sendPasscodePayloadGuard = z.union([
@@ -51,7 +25,7 @@ export const sendPasscodePayloadGuard = z.union([
 ]);
 
 // Social Authorization Uri Route Payload Guard
-export const getSocialAuthorizationUrlPayloadGuard = z.object({
+export const socialAuthorizationUrlPayloadGuard = z.object({
   connectorId: z.string(),
   state: z.string(),
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),

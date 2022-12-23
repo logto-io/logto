@@ -1,8 +1,9 @@
 import type { ConnectorSession } from '@logto/connector-kit';
 import type { LogtoErrorCode } from '@logto/phrases';
-import { Event } from '@logto/schemas';
+import { Event, eventGuard, identifierPayloadGuard, profileGuard } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
@@ -13,20 +14,29 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouter } from '../types.js';
 import submitInteraction from './actions/submit-interaction.js';
-import koaInteractionBodyGuard from './middleware/koa-interaction-body-guard.js';
-import koaSessionSignInExperienceGuard from './middleware/koa-session-sign-in-experience-guard.js';
-import { sendPasscodePayloadGuard, getSocialAuthorizationUrlPayloadGuard } from './types/guard.js';
-import { getInteractionStorage } from './utils/interaction.js';
+import { sendPasscodePayloadGuard, socialAuthorizationUrlPayloadGuard } from './types/guard.js';
+import {
+  getInteractionStorage,
+  storeInteractionResult,
+  mergeIdentifiers,
+} from './utils/interaction.js';
 import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
+import {
+  getSignInExperience,
+  verifySignInModeSettings,
+  verifyIdentifierSettings,
+  verifyProfileSettings,
+} from './utils/sign-in-experience-validation.js';
 import { createSocialAuthorizationUrl } from './utils/social-verification.js';
 import {
+  verifyIdentifierPayload,
   verifyIdentifier,
   verifyProfile,
   validateMandatoryUserProfile,
 } from './verifications/index.js';
 
 export const interactionPrefix = '/interaction';
-export const verificationPrefix = '/verification';
+export const verificationPath = 'verification';
 
 export default function interactionRoutes<T extends AnonymousRouter>(
   router: T,
@@ -50,64 +60,49 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     }
   });
 
+  // Create a new interaction
   router.put(
     interactionPrefix,
-    koaInteractionBodyGuard(),
-    koaSessionSignInExperienceGuard(provider),
+    koaGuard({
+      body: z.object({
+        event: eventGuard,
+        identifier: identifierPayloadGuard.optional(),
+        profile: profileGuard.optional(),
+      }),
+    }),
     async (ctx, next) => {
-      const { event } = ctx.interactionPayload;
+      const { event, identifier, profile } = ctx.guard.body;
+      const experience = await getSignInExperience(ctx, provider);
 
-      // Check interaction session
-      await provider.interactionDetails(ctx.req, ctx.res);
+      verifySignInModeSettings(event, experience);
 
-      const identifierVerifiedInteraction = await verifyIdentifier(ctx, provider);
-
-      const interaction = await verifyProfile(ctx, provider, identifierVerifiedInteraction);
-
-      if (event !== Event.ForgotPassword) {
-        await validateMandatoryUserProfile(ctx, interaction);
+      if (identifier) {
+        verifyIdentifierSettings(identifier, experience);
       }
 
-      await submitInteraction(interaction, ctx, provider);
+      if (profile) {
+        verifyProfileSettings(profile, experience);
+      }
 
-      return next();
-    }
-  );
+      const verifiedIdentifier = identifier && [
+        await verifyIdentifierPayload(ctx, provider, identifier, {
+          event,
+        }),
+      ];
 
-  router.patch(
-    interactionPrefix,
-    koaInteractionBodyGuard(),
-    koaSessionSignInExperienceGuard(provider),
-    async (ctx, next) => {
-      const { event } = ctx.interactionPayload;
-      const interactionStorage = await getInteractionStorage(ctx, provider);
-
-      // Forgot Password specific event interaction can't be shared with other types of interactions
-      assertThat(
-        event === Event.ForgotPassword
-          ? interactionStorage.event === Event.ForgotPassword
-          : interactionStorage.event !== Event.ForgotPassword,
-        new RequestError({ code: 'session.verification_session_not_found', status: 404 })
-      );
-
-      const identifierVerifiedInteraction = await verifyIdentifier(
+      await storeInteractionResult(
+        { event, identifiers: verifiedIdentifier, profile },
         ctx,
-        provider,
-        interactionStorage
+        provider
       );
 
-      const interaction = await verifyProfile(ctx, provider, identifierVerifiedInteraction);
-
-      if (event !== Event.ForgotPassword) {
-        await validateMandatoryUserProfile(ctx, interaction);
-      }
-
-      await submitInteraction(interaction, ctx, provider);
+      ctx.status = 204;
 
       return next();
     }
   );
 
+  // Delete Interaction
   router.delete(interactionPrefix, async (ctx, next) => {
     await provider.interactionDetails(ctx.req, ctx.res);
     const error: LogtoErrorCode = 'oidc.aborted';
@@ -116,12 +111,130 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     return next();
   });
 
-  router.post(
-    `${verificationPrefix}/social/authorization-uri`,
-    koaGuard({ body: getSocialAuthorizationUrlPayloadGuard }),
+  // Update Interaction Event
+  router.put(
+    `${interactionPrefix}/event`,
+    koaGuard({ body: z.object({ event: eventGuard }) }),
     async (ctx, next) => {
-      // Check interaction session
-      await provider.interactionDetails(ctx.req, ctx.res);
+      const { event } = ctx.guard.body;
+      verifySignInModeSettings(event, await getSignInExperience(ctx, provider));
+
+      const interactionStorage = await getInteractionStorage(ctx, provider);
+
+      // Forgot Password specific event interaction storage can't be shared with other types of interactions
+      assertThat(
+        event === Event.ForgotPassword
+          ? interactionStorage.event === Event.ForgotPassword
+          : interactionStorage.event !== Event.ForgotPassword,
+        new RequestError({ code: 'session.interaction_not_found', status: 404 })
+      );
+
+      if (event !== interactionStorage.event) {
+        await storeInteractionResult({ event }, ctx, provider, true);
+      }
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  // Update Interaction Identifier
+  router.patch(
+    `${interactionPrefix}/identifiers`,
+    koaGuard({
+      body: identifierPayloadGuard,
+    }),
+    async (ctx, next) => {
+      const identifierPayload = ctx.guard.body;
+      verifyIdentifierSettings(identifierPayload, await getSignInExperience(ctx, provider));
+
+      const interactionStorage = await getInteractionStorage(ctx, provider);
+
+      const verifiedIdentifier = await verifyIdentifierPayload(
+        ctx,
+        provider,
+        identifierPayload,
+        interactionStorage
+      );
+
+      const identifiers = mergeIdentifiers(verifiedIdentifier, interactionStorage.identifiers);
+
+      await storeInteractionResult({ identifiers }, ctx, provider, true);
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  // Update Interaction Profile
+  router.patch(
+    `${interactionPrefix}/profile`,
+    koaGuard({
+      body: profileGuard,
+    }),
+    async (ctx, next) => {
+      const profilePayload = ctx.guard.body;
+      verifyProfileSettings(profilePayload, await getSignInExperience(ctx, provider));
+
+      const interactionStorage = await getInteractionStorage(ctx, provider);
+
+      await storeInteractionResult(
+        {
+          profile: {
+            ...interactionStorage.profile,
+            ...profilePayload,
+          },
+        },
+        ctx,
+        provider,
+        true
+      );
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  // Delete Interaction Profile
+  router.delete(`${interactionPrefix}/profile`, async (ctx, next) => {
+    const interactionStorage = await getInteractionStorage(ctx, provider);
+    const { profile, ...rest } = interactionStorage;
+    await storeInteractionResult(rest, ctx, provider);
+
+    ctx.status = 204;
+
+    return next();
+  });
+
+  // Submit Interaction
+  router.post(`${interactionPrefix}/submit`, async (ctx, next) => {
+    const interactionStorage = await getInteractionStorage(ctx, provider);
+
+    const { event } = interactionStorage;
+
+    const accountVerifiedInteraction = await verifyIdentifier(ctx, provider, interactionStorage);
+
+    const verifiedInteraction = await verifyProfile(accountVerifiedInteraction);
+
+    if (event !== Event.ForgotPassword) {
+      await validateMandatoryUserProfile(ctx, provider, verifiedInteraction);
+    }
+
+    await submitInteraction(verifiedInteraction, ctx, provider);
+
+    return next();
+  });
+
+  // Create social authorization url interaction verification
+  router.post(
+    `${interactionPrefix}/${verificationPath}/social-authorization-uri`,
+    koaGuard({ body: socialAuthorizationUrlPayloadGuard }),
+    async (ctx, next) => {
+      // Check interaction exists
+      await getInteractionStorage(ctx, provider);
 
       const redirectTo = await createSocialAuthorizationUrl(
         ctx.guard.body,
@@ -135,13 +248,16 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     }
   );
 
+  // Create passwordless interaction passcode
   router.post(
-    `${verificationPrefix}/passcode`,
+    `${interactionPrefix}/${verificationPath}/passcode`,
     koaGuard({
       body: sendPasscodePayloadGuard,
     }),
     async (ctx, next) => {
-      // Check interaction session
+      // Check interaction exists
+      await getInteractionStorage(ctx, provider);
+
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       await sendPasscodeToIdentifier(ctx.guard.body, jti, ctx.createLog);
 

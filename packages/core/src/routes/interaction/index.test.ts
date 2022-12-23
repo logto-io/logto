@@ -1,6 +1,6 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { Event, demoAppApplicationId } from '@logto/schemas';
-import { mockEsm, mockEsmDefault, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { mockEsmWithActual, mockEsmDefault, mockEsm } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -8,8 +8,6 @@ import type koaAuditLog from '#src/middleware/koa-audit-log.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
-
-import type { InteractionContext } from './types/index.js';
 
 const { jest } = import.meta;
 
@@ -47,6 +45,43 @@ await mockEsmWithActual('#src/connectors/index.js', () => ({
   }),
 }));
 
+const { assignInteractionResults } = await mockEsmWithActual('#src/libraries/session.js', () => ({
+  assignInteractionResults: jest.fn(),
+}));
+
+const {
+  getSignInExperience,
+  verifySignInModeSettings,
+  verifyIdentifierSettings,
+  verifyProfileSettings,
+} = mockEsm('./utils/sign-in-experience-validation.js', () => ({
+  getSignInExperience: jest.fn(async () => mockSignInExperience),
+  verifySignInModeSettings: jest.fn(),
+  verifyIdentifierSettings: jest.fn(),
+  verifyProfileSettings: jest.fn(),
+}));
+
+const submitInteraction = mockEsmDefault('./actions/submit-interaction.js', () => jest.fn());
+
+const { verifyIdentifierPayload, verifyIdentifier, verifyProfile, validateMandatoryUserProfile } =
+  await mockEsmWithActual('./verifications/index.js', () => ({
+    verifyIdentifierPayload: jest.fn(),
+    verifyIdentifier: jest.fn(),
+    verifyProfile: jest.fn(),
+    validateMandatoryUserProfile: jest.fn(),
+  }));
+
+const { storeInteractionResult, mergeIdentifiers, getInteractionStorage } = await mockEsmWithActual(
+  './utils/interaction.js',
+  () => ({
+    mergeIdentifiers: jest.fn(),
+    storeInteractionResult: jest.fn(),
+    getInteractionStorage: jest.fn().mockResolvedValue({
+      event: Event.SignIn,
+    }),
+  })
+);
+
 const { sendPasscodeToIdentifier } = await mockEsmWithActual(
   './utils/passcode-validation.js',
   () => ({
@@ -54,30 +89,8 @@ const { sendPasscodeToIdentifier } = await mockEsmWithActual(
   })
 );
 
-mockEsm('#src/libraries/sign-in-experience/index.js', () => ({
-  getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
-}));
-
-const { verifyIdentifier, verifyProfile, validateMandatoryUserProfile } = mockEsm(
-  './verifications/index.js',
-  () => ({
-    verifyIdentifier: jest.fn(),
-    verifyProfile: jest.fn(),
-    validateMandatoryUserProfile: jest.fn(),
-  })
-);
-
-const { default: submitInteraction } = mockEsm('./actions/submit-interaction.js', () => ({
-  default: jest.fn((_interaction, ctx: InteractionContext) => {
-    ctx.body = { redirectUri: 'logto.io' };
-  }),
-}));
-
-const { getInteractionStorage } = mockEsm('./utils/interaction.js', () => ({
-  getInteractionStorage: jest.fn(),
-}));
-
 const { createLog, prependAllLogEntries } = createMockLogContext();
+
 mockEsmDefault(
   '#src/middleware/koa-audit-log.js',
   // eslint-disable-next-line unicorn/consistent-function-scoping
@@ -89,35 +102,21 @@ mockEsmDefault(
   }
 );
 
-const koaInteractionBodyGuard = await pickDefault(
-  import('./middleware/koa-interaction-body-guard.js')
-);
-const koaSessionSignInExperienceGuard = await pickDefault(
-  import('./middleware/koa-session-sign-in-experience-guard.js')
-);
-
-const koaInteractionBodyGuardSpy = mockEsmDefault(
-  './middleware/koa-interaction-body-guard.js',
-  () => jest.fn(koaInteractionBodyGuard)
-);
-
-const koaSessionSignInExperienceGuardSpy = mockEsmDefault(
-  './middleware/koa-session-sign-in-experience-guard.js',
-  () => jest.fn(koaSessionSignInExperienceGuard)
-);
-
 const {
   default: interactionRoutes,
-  verificationPrefix,
+  verificationPath,
   interactionPrefix,
 } = await import('./index.js');
 
 describe('session -> interactionRoutes', () => {
+  const baseProviderMock = {
+    params: {},
+    jti: 'jti',
+    client_id: demoAppApplicationId,
+  };
   const sessionRequest = createRequester({
     anonymousRoutes: interactionRoutes,
-    provider: createMockProvider(
-      jest.fn().mockResolvedValue({ params: {}, jti: 'jti', client_id: demoAppApplicationId })
-    ),
+    provider: createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
   });
 
   afterEach(() => {
@@ -127,119 +126,126 @@ describe('session -> interactionRoutes', () => {
   describe('PUT /interaction', () => {
     const path = interactionPrefix;
 
-    it('sign-in event should call methods properly', async () => {
+    it('should call validations properly', async () => {
       const body = {
         event: Event.SignIn,
-        identifier: {
-          username: 'username',
-          password: 'password',
-        },
+        identifier: { email: 'email@logto.io', password: 'password' },
+        profile: { phone: '1234567890' },
       };
       const response = await sessionRequest.put(path).send(body);
-      expect(koaInteractionBodyGuardSpy).toBeCalled();
-      expect(koaSessionSignInExperienceGuardSpy).toBeCalled();
-      expect(verifyIdentifier).toBeCalled();
-      expect(verifyProfile).toBeCalled();
-      expect(validateMandatoryUserProfile).toBeCalled();
-      expect(submitInteraction).toBeCalled();
-      expect(response.status).toEqual(200);
-      expect(response.body).toEqual({ redirectUri: 'logto.io' });
-    });
-
-    it('forgot password event should not call UserProfile validation', async () => {
-      const body = {
-        event: Event.ForgotPassword,
-        identifier: {
-          email: 'email@logto.io',
-          passcode: 'passcode',
-        },
-        profile: {
-          password: 'password',
-        },
-      };
-
-      const response = await sessionRequest.put(path).send(body);
-
-      expect(verifyIdentifier).toBeCalled();
-      expect(verifyProfile).toBeCalled();
-      expect(validateMandatoryUserProfile).not.toBeCalled();
-      expect(submitInteraction).toBeCalled();
-      expect(response.status).toEqual(200);
+      expect(getSignInExperience).toBeCalled();
+      expect(verifySignInModeSettings).toBeCalled();
+      expect(verifyIdentifierSettings).toBeCalled();
+      expect(verifyProfileSettings).toBeCalled();
+      expect(verifyIdentifierPayload).toBeCalled();
+      expect(storeInteractionResult).toBeCalled();
+      expect(response.status).toEqual(204);
     });
   });
 
-  describe('PATCH /interaction', () => {
-    const path = interactionPrefix;
-
-    afterEach(() => {
-      jest.clearAllMocks();
+  describe('DELETE /interaction', () => {
+    it('should call assignInteractionResult properly', async () => {
+      await sessionRequest.delete(`${interactionPrefix}`);
+      expect(assignInteractionResults).toBeCalled();
     });
+  });
 
-    it('sign-in event with register event interaction session in record should call methods properly', async () => {
-      getInteractionStorage.mockResolvedValueOnce({ event: Event.Register });
+  describe('PUT /interaction/event', () => {
+    const path = `${interactionPrefix}/event`;
 
-      const body = {
+    it('should call verifySignInModeSettings properly', async () => {
+      getInteractionStorage.mockResolvedValueOnce({
         event: Event.SignIn,
+      });
+      const body = {
+        event: Event.Register,
       };
 
-      const response = await sessionRequest.patch(path).send(body);
-      expect(verifyIdentifier).toBeCalled();
-      expect(verifyProfile).toBeCalled();
-      expect(validateMandatoryUserProfile).toBeCalled();
-      expect(submitInteraction).toBeCalled();
-      expect(response.status).toEqual(200);
-      expect(response.body).toEqual({ redirectUri: 'logto.io' });
+      const response = await sessionRequest.put(path).send(body);
+      expect(getInteractionStorage).toBeCalled();
+      expect(verifySignInModeSettings).toBeCalled();
+      expect(storeInteractionResult).toBeCalled();
+      expect(response.status).toEqual(204);
     });
 
-    it('sign-in event with forgot password event interaction session in record should reject', async () => {
-      getInteractionStorage.mockResolvedValueOnce({ event: Event.ForgotPassword });
+    it('should reject if switch sign-in event to forgot-password directly', async () => {
+      getInteractionStorage.mockResolvedValueOnce({
+        event: Event.SignIn,
+      });
 
       const body = {
-        event: Event.SignIn,
+        event: Event.ForgotPassword,
       };
 
-      const response = await sessionRequest.patch(path).send(body);
-      expect(verifyIdentifier).not.toBeCalled();
-      expect(verifyProfile).not.toBeCalled();
-      expect(validateMandatoryUserProfile).not.toBeCalled();
-      expect(submitInteraction).not.toBeCalled();
+      const response = await sessionRequest.put(`${interactionPrefix}/event`).send(body);
+      expect(verifySignInModeSettings).toBeCalled();
+      expect(storeInteractionResult).not.toBeCalled();
       expect(response.status).toEqual(404);
     });
 
-    it('Forgot event with forgot password event interaction session in record should call methods properly', async () => {
-      getInteractionStorage.mockResolvedValueOnce({ event: Event.ForgotPassword });
+    it('should reject if switch forgot-password to sign-in directly', async () => {
+      getInteractionStorage.mockResolvedValueOnce({
+        event: Event.ForgotPassword,
+      });
 
       const body = {
-        event: Event.ForgotPassword,
+        event: Event.SignIn,
       };
 
-      const response = await sessionRequest.patch(path).send(body);
-      expect(verifyIdentifier).toBeCalled();
-      expect(verifyProfile).toBeCalled();
-      expect(validateMandatoryUserProfile).not.toBeCalled();
-      expect(submitInteraction).toBeCalled();
-      expect(response.status).toEqual(200);
-      expect(response.body).toEqual({ redirectUri: 'logto.io' });
-    });
-
-    it('Forgot event with sign-in event interaction session in record should call methods properly', async () => {
-      getInteractionStorage.mockResolvedValueOnce({ event: Event.SignIn });
-
-      const body = {
-        event: Event.ForgotPassword,
-      };
-
-      const response = await sessionRequest.patch(path).send(body);
-      expect(verifyIdentifier).not.toBeCalled();
-      expect(verifyProfile).not.toBeCalled();
-      expect(validateMandatoryUserProfile).not.toBeCalled();
-      expect(submitInteraction).not.toBeCalled();
+      const response = await sessionRequest.put(`${interactionPrefix}/event`).send(body);
+      expect(verifySignInModeSettings).toBeCalled();
+      expect(storeInteractionResult).not.toBeCalled();
       expect(response.status).toEqual(404);
     });
   });
 
-  describe('POST /verification/passcode', () => {
-    const path = `${verificationPrefix}/passcode`;
+  describe('PATCH /interaction/identifiers', () => {
+    const path = `${interactionPrefix}/identifiers`;
+
+    it('should update identifiers properly', async () => {
+      const body = {
+        email: 'email@logto.io',
+        passcode: 'passcode',
+      };
+      const response = await sessionRequest.patch(path).send(body);
+      expect(getInteractionStorage).toBeCalled();
+      expect(verifyIdentifierPayload).toBeCalled();
+      expect(mergeIdentifiers).toBeCalled();
+      expect(storeInteractionResult).toBeCalled();
+      // Supertest does not return the error body
+      expect(response.status).toEqual(204);
+    });
+  });
+
+  describe('/interaction/profile', () => {
+    const path = `${interactionPrefix}/profile`;
+    const sessionRequest = createRequester({
+      anonymousRoutes: interactionRoutes,
+      provider: createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
+    });
+
+    it('PATCH /interaction/profile', async () => {
+      const body = {
+        email: 'email@logto.io',
+      };
+      const response = await sessionRequest.patch(path).send(body);
+      expect(verifyProfileSettings).toBeCalled();
+      expect(getInteractionStorage).toBeCalled();
+      expect(storeInteractionResult).toBeCalled();
+      expect(response.status).toEqual(204);
+    });
+
+    it('DELETE /interaction/profile', async () => {
+      const response = await sessionRequest.delete(path);
+      expect(getInteractionStorage).toBeCalled();
+      expect(storeInteractionResult).toBeCalled();
+      expect(response.status).toEqual(204);
+    });
+  });
+
+  describe('POST /interaction/verification/passcode', () => {
+    const path = `${interactionPrefix}/${verificationPath}/passcode`;
+
     it('should call send passcode properly', async () => {
       const body = {
         event: Event.SignIn,
@@ -247,13 +253,40 @@ describe('session -> interactionRoutes', () => {
       };
 
       const response = await sessionRequest.post(path).send(body);
+      expect(getInteractionStorage).toBeCalled();
       expect(sendPasscodeToIdentifier).toBeCalledWith(body, 'jti', createLog);
       expect(response.status).toEqual(204);
     });
   });
 
+  describe('submit interaction', () => {
+    const path = `${interactionPrefix}/submit`;
+
+    it('should call identifier and profile verification properly', async () => {
+      await sessionRequest.post(path).send();
+      expect(getInteractionStorage).toBeCalled();
+      expect(verifyIdentifier).toBeCalled();
+      expect(verifyProfile).toBeCalled();
+      expect(validateMandatoryUserProfile).toBeCalled();
+      expect(submitInteraction).toBeCalled();
+    });
+
+    it('should not call validateMandatoryUserProfile for forgot password request', async () => {
+      getInteractionStorage.mockResolvedValueOnce({
+        event: Event.ForgotPassword,
+      });
+
+      await sessionRequest.post(path).send();
+      expect(getInteractionStorage).toBeCalled();
+      expect(verifyIdentifier).toBeCalled();
+      expect(verifyProfile).toBeCalled();
+      expect(validateMandatoryUserProfile).not.toBeCalled();
+      expect(submitInteraction).toBeCalled();
+    });
+  });
+
   describe('POST /verification/social/authorization-uri', () => {
-    const path = `${verificationPrefix}/social/authorization-uri`;
+    const path = `${interactionPrefix}/${verificationPath}/social-authorization-uri`;
 
     it('should throw when redirectURI is invalid', async () => {
       const response = await sessionRequest.post(path).send({

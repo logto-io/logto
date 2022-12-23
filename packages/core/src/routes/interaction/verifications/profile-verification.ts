@@ -1,7 +1,6 @@
 import type { Profile, User } from '@logto/schemas';
 import { Event } from '@logto/schemas';
 import { argon2Verify } from 'hash-wasm';
-import type { Provider } from 'oidc-provider';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -16,18 +15,15 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { registerProfileSafeGuard, forgotPasswordProfileGuard } from '../types/guard.js';
 import type {
-  InteractionContext,
   Identifier,
   SocialIdentifier,
   IdentifierVerifiedInteractionResult,
   VerifiedInteractionResult,
-  VerifiedRegisterInteractionResult,
-  RegisterSafeProfile,
-  VerifiedSignInInteractionResult,
   VerifiedForgotPasswordInteractionResult,
+  RegisterInteractionResult,
+  VerifiedRegisterInteractionResult,
 } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
-import { storeInteractionResult } from '../utils/interaction.js';
 
 const verifyProfileIdentifiers = (
   { email, phone, connectorId }: Profile,
@@ -169,29 +165,27 @@ const verifyProfileNotExistInCurrentUserAccount = async (
   }
 };
 
-const isValidRegisterProfile = (profile: Profile): profile is RegisterSafeProfile =>
-  registerProfileSafeGuard.safeParse(profile).success;
+const isValidRegisterInteractionResult = (
+  interaction: RegisterInteractionResult
+): interaction is VerifiedRegisterInteractionResult =>
+  registerProfileSafeGuard.safeParse(interaction.profile).success;
 
 export default async function verifyProfile(
-  ctx: InteractionContext,
-  provider: Provider,
   interaction: IdentifierVerifiedInteractionResult
 ): Promise<VerifiedInteractionResult> {
-  const profile = { ...interaction.profile, ...ctx.interactionPayload.profile };
-
-  const { event, identifiers, accountId } = interaction;
+  const { event, identifiers, accountId, profile = {} } = interaction;
 
   if (event === Event.Register) {
     // Verify the profile includes sufficient identifiers to register a new account
-    assertThat(isValidRegisterProfile(profile), new RequestError({ code: 'guard.invalid_input' }));
+    assertThat(
+      isValidRegisterInteractionResult(interaction),
+      new RequestError({ code: 'guard.invalid_input' })
+    );
 
     verifyProfileIdentifiers(profile, identifiers);
     await verifyProfileNotRegisteredByOtherUserAccount(profile, identifiers);
 
-    const interactionWithProfile: VerifiedRegisterInteractionResult = { ...interaction, profile };
-    await storeInteractionResult(interactionWithProfile, ctx, provider);
-
-    return interactionWithProfile;
+    return interaction;
   }
 
   if (event === Event.SignIn) {
@@ -201,10 +195,7 @@ export default async function verifyProfile(
     await verifyProfileNotExistInCurrentUserAccount(profile, user);
     await verifyProfileNotRegisteredByOtherUserAccount(profile, identifiers);
 
-    const interactionWithProfile: VerifiedSignInInteractionResult = { ...interaction, profile };
-    await storeInteractionResult(interactionWithProfile, ctx, provider);
-
-    return interactionWithProfile;
+    return interaction;
   }
 
   // Forgot Password
@@ -228,7 +219,6 @@ export default async function verifyProfile(
     ...interaction,
     profile: passwordProfile,
   };
-  await storeInteractionResult(interactionWithProfile, ctx, provider);
 
   return interactionWithProfile;
 }

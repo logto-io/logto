@@ -29,17 +29,17 @@ const isProfileIdentifier = (identifier: Identifier, profile?: Profile) => {
 };
 
 // Unique identifier type is required
-export const mergeIdentifiers = (newIdentifiers: Identifier[], oldIdentifiers?: Identifier[]) => {
+export const mergeIdentifiers = (newIdentifier: Identifier, oldIdentifiers?: Identifier[]) => {
   if (!oldIdentifiers) {
-    return newIdentifiers;
+    return [newIdentifier];
   }
 
   // Filter out identifiers with the same key in the oldIdentifiers and replaced with new ones
-  const leftOvers = oldIdentifiers.filter((oldIdentifier) => {
-    return !newIdentifiers.some((newIdentifier) => newIdentifier.key === oldIdentifier.key);
-  });
+  const leftOvers = oldIdentifiers.filter(
+    (oldIdentifier) => newIdentifier.key !== oldIdentifier.key
+  );
 
-  return [...leftOvers, ...newIdentifiers];
+  return [...leftOvers, newIdentifier];
 };
 
 /**
@@ -80,32 +80,40 @@ export const isAccountVerifiedInteractionResult = (
   interaction: AnonymousInteractionResult
 ): interaction is AccountVerifiedInteractionResult => Boolean(interaction.accountId);
 
+type Options = {
+  merge?: boolean;
+};
+
 export const storeInteractionResult = async (
   interaction: Omit<AnonymousInteractionResult, 'event'> & { event?: Event },
   ctx: Context,
-  provider: Provider
+  provider: Provider,
+  merge = false
 ) => {
   // The "mergeWithLastSubmission" will only merge current request's interaction results,
   // manually merge with previous interaction results
   // refer to: https://github.com/panva/node-oidc-provider/blob/c243bf6b6663c41ff3e75c09b95fb978eba87381/lib/actions/authorization/interactions.js#L106
 
-  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+  const details = merge ? await provider.interactionDetails(ctx.req, ctx.res) : undefined;
 
   await provider.interactionResult(
     ctx.req,
     ctx.res,
-    { ...result, ...interaction },
-    { mergeWithLastSubmission: true }
+    { ...details?.result, ...interaction },
+    { mergeWithLastSubmission: merge }
   );
 };
 
-export const getInteractionStorage = async (ctx: Context, provider: Provider) => {
+export const getInteractionStorage = async (
+  ctx: Context,
+  provider: Provider
+): Promise<AnonymousInteractionResult> => {
   const { result } = await provider.interactionDetails(ctx.req, ctx.res);
   const parseResult = anonymousInteractionResultGuard.safeParse(result);
 
   assertThat(
     parseResult.success,
-    new RequestError({ code: 'session.verification_session_not_found' })
+    new RequestError({ code: 'session.verification_session_not_found', status: 404 })
   );
 
   return parseResult.data;
@@ -115,7 +123,6 @@ export const clearInteractionStorage = async (ctx: Context, provider: Provider) 
   const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
   if (result) {
-    const { event, profile, identifier, ...rest } = result;
-    await provider.interactionResult(ctx.req, ctx.res, { ...rest });
+    await provider.interactionResult(ctx.req, ctx.res, {});
   }
 };
