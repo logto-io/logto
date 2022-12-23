@@ -98,7 +98,7 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
                   ),
                 }}
               >
-                {t('connectors.guide.target_tootip')}
+                {t('connectors.guide.target_tooltip')}
               </Trans>
             )}
           >
