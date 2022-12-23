@@ -1,7 +1,7 @@
 import type { CreateUser, Role, User } from '@logto/schemas';
 import { userInfoSelectFields } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
-import pick from 'lodash.pick';
+import { pick } from '@silverhand/essentials';
 
 import {
   mockUser,

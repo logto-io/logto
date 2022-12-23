@@ -1,6 +1,6 @@
 import type { SignUp } from '@logto/schemas';
+import { get } from '@silverhand/essentials';
 import { diff } from 'deep-object-diff';
-import get from 'lodash.get';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
 

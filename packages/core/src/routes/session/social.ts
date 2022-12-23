@@ -2,7 +2,7 @@ import type { ConnectorSession } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
 import { ConnectorType, userInfoSelectFields } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import pick from 'lodash.pick';
+import { pick } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';
 

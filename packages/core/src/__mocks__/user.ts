@@ -1,6 +1,6 @@
 import type { User } from '@logto/schemas';
 import { userInfoSelectFields, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import pick from 'lodash.pick';
+import { pick } from '@silverhand/essentials';
 
 export const mockUser: User = {
   id: 'foo',

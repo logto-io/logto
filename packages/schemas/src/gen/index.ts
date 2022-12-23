@@ -7,7 +7,6 @@ import path from 'path';
 
 import { conditionalString } from '@silverhand/essentials';
 import camelcase from 'camelcase';
-import uniq from 'lodash.uniq';
 import pluralize from 'pluralize';
 
 import { generateSchema } from './schema.js';
@@ -32,6 +31,8 @@ const constrainedKeywords = [
 ];
 
 const getOutputFileName = (file: string) => pluralize(file.slice(0, -4).replace(/_/g, '-'), 1);
+
+const unique = <T extends string | number | boolean>(values: T[]) => [...new Set(values)];
 
 const generate = async () => {
   const files = await fs.readdir(directory);
@@ -164,7 +165,7 @@ const generate = async () => {
         tsTypes.length > 0 &&
           [
             'import {',
-            uniq(tsTypes)
+            unique(tsTypes)
               .map((value) => `  ${value}`)
               .join(',\n'),
             `} from'./${tsTypesFilename}.js';`,
@@ -175,7 +176,7 @@ const generate = async () => {
         customTypes.length > 0 &&
           [
             'import {',
-            uniq(customTypes)
+            unique(customTypes)
               .map((value) => `  ${value}`)
               .join(',\n'),
             `} from'./${generatedTypesFilename}.js';`,
