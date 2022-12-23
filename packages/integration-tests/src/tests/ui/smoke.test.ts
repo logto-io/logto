@@ -5,7 +5,11 @@ describe('smoke testing', () => {
   const consoleUsername = 'admin';
   const consolePassword = generatePassword();
 
-  it('opens with app element and navigates to sign-in page', async () => {
+  beforeEach(async () => {
+    await page.waitForTimeout(1000);
+  });
+
+  it('opens with app element and navigates to welcome page', async () => {
     await page.goto(logtoUrl);
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
