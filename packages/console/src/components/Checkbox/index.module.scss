@@ -5,43 +5,61 @@
   display: flex;
   align-items: center;
 
+  input {
+    display: none;
+  }
+
   .icon {
     width: 20px;
     height: 20px;
     margin-right: _.unit(2);
 
-    > svg {
-      display: none;
-      color: var(--color-neutral-60);
+    .border {
+      fill: var(--color-text-secondary);
+    }
 
-      &:first-child {
-        color: var(--color-primary);
+    .background {
+      fill: var(--color-layer-1);
+    }
+
+    &.checked {
+      .background {
+        fill: var(--color-primary);
+      }
+    }
+
+    &.disabled {
+      .background {
+        fill: var(--color-checkbox-disabled-background);
+      }
+
+      .border {
+        fill: var(--color-border);
+      }
+    }
+
+    &.checked.disabled {
+      .background {
+        fill: var(--color-checkbox-checked-disabled-background);
       }
     }
   }
 
-  input,
-  .disabledMask {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    // Note: add a left value to make the input element align with the icon
-    left: _.unit(0.5);
-    top: 0;
-    margin: 0;
-    opacity: 0%;
-    cursor: default;
+  .wrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
   }
 
-  input:checked:not(:disabled) ~ .icon > svg:nth-child(1),
-  input:not(:checked):not(:disabled) ~ .icon > svg:nth-child(2),
-  input:checked:disabled ~ .icon > svg:nth-child(3),
-  input:not(:checked):disabled ~ .icon > svg:nth-child(4) {
-    display: block;
-  }
-
-  label {
+  .label {
     font: var(--font-body-medium);
     color: var(--color-text);
+    cursor: inherit;
+  }
+
+  &.disabled {
+    .wrapper {
+      cursor: not-allowed;
+    }
   }
 }
