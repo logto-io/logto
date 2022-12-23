@@ -298,6 +298,48 @@ describe('profile validation', () => {
           signUp: { identifiers: [SignInIdentifier.Sms], password: false, verify: true },
         }
       );
-    });
+    }).not.toThrow();
+
+    expect(() => {
+      verifyProfileSettings(
+        { phone: '123456' },
+        {
+          ...mockSignInExperience,
+          signUp: {
+            identifiers: [SignInIdentifier.Sms, SignInIdentifier.Email],
+            password: false,
+            verify: true,
+          },
+        }
+      );
+    }).not.toThrow();
+
+    expect(() => {
+      verifyProfileSettings(
+        { email: 'email@logto.io' },
+        {
+          ...mockSignInExperience,
+          signUp: {
+            identifiers: [SignInIdentifier.Sms, SignInIdentifier.Email],
+            password: false,
+            verify: true,
+          },
+        }
+      );
+    }).not.toThrow();
+
+    expect(() => {
+      verifyProfileSettings(
+        { username: 'foo' },
+        {
+          ...mockSignInExperience,
+          signUp: {
+            identifiers: [SignInIdentifier.Sms, SignInIdentifier.Email],
+            password: false,
+            verify: true,
+          },
+        }
+      );
+    }).toThrow();
   });
 });

@@ -16,8 +16,6 @@ const verifyUserAccount = mockEsmDefault('./user-identity-verification.js', () =
 
 const verifyIdentifier = await pickDefault(import('./identifier-verification.js'));
 
-const verifyUserAccountMock = verifyUserAccount;
-
 describe('verifyIdentifier', () => {
   const ctx = {
     ...createContextWithRouteParameters(),
@@ -37,7 +35,7 @@ describe('verifyIdentifier', () => {
     const result = await verifyIdentifier(ctx, provider, interactionRecord);
 
     expect(result).toBe(interactionRecord);
-    expect(verifyUserAccountMock).not.toBeCalled();
+    expect(verifyUserAccount).not.toBeCalled();
     expect(storeInteractionResult).not.toBeCalled();
   });
 
@@ -52,12 +50,12 @@ describe('verifyIdentifier', () => {
       accountId: 'foo',
     };
 
-    verifyUserAccountMock.mockResolvedValue(verifiedRecord);
+    verifyUserAccount.mockResolvedValue(verifiedRecord);
 
     const result = await verifyIdentifier(ctx, provider, interactionRecord);
 
     expect(result).toBe(verifiedRecord);
-    expect(verifyUserAccountMock).toBeCalledWith(interactionRecord);
+    expect(verifyUserAccount).toBeCalledWith(interactionRecord);
     expect(storeInteractionResult).toBeCalledWith(verifiedRecord, ctx, provider);
   });
 });
