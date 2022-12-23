@@ -1,7 +1,7 @@
 import { Event, userInfoSelectFields } from '@logto/schemas';
 import { HookEventPayload, HookEvent } from '@logto/schemas/models';
 import { trySafe } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
+import { conditional, pick } from '@silverhand/essentials';
 import { got } from 'got';
 import type { Provider } from 'oidc-provider';
 
@@ -14,17 +14,6 @@ const eventToHook: Record<Event, HookEvent> = {
   [Event.Register]: HookEvent.PostRegister,
   [Event.SignIn]: HookEvent.PostSignIn,
   [Event.ForgotPassword]: HookEvent.PostResetPassword,
-};
-
-// TODO: replace `lodash.pick`
-const pick = <T, Keys extends Array<keyof T>>(
-  object: T,
-  ...keys: Keys
-): { [key in Keys[number]]: T[key] } => {
-  // eslint-disable-next-line no-restricted-syntax
-  return Object.fromEntries(keys.map((key) => [key, object[key]])) as {
-    [key in Keys[number]]: T[key];
-  };
 };
 
 export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;

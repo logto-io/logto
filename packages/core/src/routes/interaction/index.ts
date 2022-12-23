@@ -15,7 +15,7 @@ import submitInteraction from './actions/submit-interaction.js';
 import koaInteractionDetails from './middleware/koa-interaction-details.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
-import koaInteractionSIE from './middleware/koa-interaction-sie.js';
+import koaInteractionSie from './middleware/koa-interaction-sie.js';
 import { sendPasscodePayloadGuard, socialAuthorizationUrlPayloadGuard } from './types/guard.js';
 import {
   getInteractionStorage,
@@ -63,7 +63,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         profile: profileGuard.optional(),
       }),
     }),
-    koaInteractionSIE(),
+    koaInteractionSie(),
     async (ctx, next) => {
       const { event, identifier, profile } = ctx.guard.body;
       const { signInExperience } = ctx;
@@ -108,7 +108,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   router.put(
     `${interactionPrefix}/event`,
     koaGuard({ body: z.object({ event: eventGuard }) }),
-    koaInteractionSIE(),
+    koaInteractionSie(),
     async (ctx, next) => {
       const { event } = ctx.guard.body;
       const { signInExperience, interactionDetails } = ctx;
@@ -141,7 +141,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: identifierPayloadGuard,
     }),
-    koaInteractionSIE(),
+    koaInteractionSie(),
     async (ctx, next) => {
       const identifierPayload = ctx.guard.body;
       const { signInExperience, interactionDetails } = ctx;
@@ -172,7 +172,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: profileGuard,
     }),
-    koaInteractionSIE(),
+    koaInteractionSie(),
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
       const { signInExperience, interactionDetails } = ctx;
@@ -213,7 +213,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   // Submit Interaction
   router.post(
     `${interactionPrefix}/submit`,
-    koaInteractionSIE(),
+    koaInteractionSie(),
     koaInteractionHooks(),
     async (ctx, next) => {
       const { interactionDetails } = ctx;
@@ -260,11 +260,11 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       body: sendPasscodePayloadGuard,
     }),
     async (ctx, next) => {
+      const { interactionDetails, guard, createLog } = ctx;
       // Check interaction exists
-      getInteractionStorage(ctx.interactionDetails.result);
+      getInteractionStorage(interactionDetails.result);
 
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      await sendPasscodeToIdentifier(ctx.guard.body, jti, ctx.createLog);
+      await sendPasscodeToIdentifier(guard.body, interactionDetails.jti, createLog);
 
       ctx.status = 204;
 

@@ -7,7 +7,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { findUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { WithInteractionSIEContext } from '../middleware/koa-interaction-sie.js';
+import type { WithInteractionSieContext } from '../middleware/koa-interaction-sie.js';
 import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
 
@@ -70,7 +70,7 @@ const getMissingProfileBySignUpIdentifiers = ({
 };
 
 export default async function validateMandatoryUserProfile(
-  ctx: WithInteractionSIEContext<Context>,
+  ctx: WithInteractionSieContext<Context>,
   interaction: IdentifierVerifiedInteractionResult
 ) {
   const { signUp } = ctx.signInExperience;

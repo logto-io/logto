@@ -87,6 +87,9 @@ function createEnvSet() {
 
       return queryClient;
     },
+    get queryClientSafe() {
+      return queryClient;
+    },
     get oidc() {
       if (!oidc) {
         return throwNotLoadedError();

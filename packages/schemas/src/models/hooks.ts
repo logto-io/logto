@@ -2,7 +2,7 @@ import { generateStandardId } from '@logto/core-kit';
 import { createModel } from '@withtyped/server';
 import { z } from 'zod';
 
-import type { Application, Connector, User } from '../db-entries/index.js';
+import type { Application, User } from '../db-entries/index.js';
 import type { userInfoSelectFields } from '../types/index.js';
 
 export enum HookEvent {
@@ -20,9 +20,6 @@ export type HookEventPayload = {
   userId?: string;
   user?: Pick<User, typeof userInfoSelectFields[number]>;
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
-  connectors?: Array<
-    Pick<Connector, 'id'> & Pick<Connector['metadata'], 'name'> & Record<string, unknown>
-  >;
 } & Record<string, unknown>;
 
 export type HookConfig = {
