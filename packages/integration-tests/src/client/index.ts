@@ -1,7 +1,7 @@
 import type { LogtoConfig } from '@logto/node';
 import LogtoClient from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas';
-import type { Optional } from '@silverhand/essentials';
+import type { Nullable, Optional } from '@silverhand/essentials';
 import { assert } from '@silverhand/essentials';
 import { got } from 'got';
 
@@ -110,7 +110,7 @@ export default class MockClient {
     return this.logto.getAccessToken(resource);
   }
 
-  public async getRefreshToken() {
+  public async getRefreshToken(): Promise<Nullable<string>> {
     return this.logto.getRefreshToken();
   }
 

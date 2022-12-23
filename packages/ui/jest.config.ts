@@ -10,7 +10,7 @@ const config: Config.InitialOptions = {
     },
   }),
   // Will update common config soon
-  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto))/)'],
+  transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto|@silverhand))/)'],
 };
 
 export default config;
