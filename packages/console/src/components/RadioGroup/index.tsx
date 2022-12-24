@@ -1,14 +1,23 @@
+import type { Falsy, Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import type { LegacyRef, ReactNode } from 'react';
+import type { JSXElementConstructor, Key, Ref } from 'react';
 import { Children, cloneElement, forwardRef, isValidElement } from 'react';
 
 import type { Props as RadioProps } from './Radio';
 import Radio from './Radio';
 import * as styles from './index.module.scss';
 
+type RadioElement =
+  | {
+      type: JSXElementConstructor<RadioProps>;
+      props: RadioProps;
+      key: Nullable<Key>;
+    }
+  | Falsy;
+
 type Props = {
   name: string;
-  children: ReactNode;
+  children: RadioElement | RadioElement[];
   value?: string;
   type?: 'card' | 'plain';
   className?: string;
@@ -17,17 +26,24 @@ type Props = {
 
 const RadioGroup = (
   { name, children, value, className, onChange, type = 'plain' }: Props,
-  reference?: LegacyRef<HTMLDivElement>
+  ref?: Ref<HTMLDivElement>
 ) => {
   return (
-    <div ref={reference} className={classNames(styles.radioGroup, styles[type], className)}>
+    <div ref={ref} className={classNames(styles.radioGroup, styles[type], className)}>
       {Children.map(children, (child) => {
-        if (!isValidElement(child) || child.type !== Radio) {
-          return child;
+        if (!child || !isValidElement(child) || child.type !== Radio) {
+          // As typescript still cannot restrict React children to specific component types, we need to alert the error in runtime.
+          // Reference: https://github.com/microsoft/TypeScript/issues/21699
+          console.error(
+            'Invalid child type for RadioGroup:',
+            child ? child.type : child,
+            '. Expecting Radio components.'
+          );
+
+          // Do not render child if not a valid Radio component
+          return null;
         }
 
-        // FIXME: @Charles
-        // @ts-expect-error to be fixed
         return cloneElement<RadioProps>(child, {
           name,
           isChecked: value === child.props.value,
