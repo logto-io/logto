@@ -28,7 +28,7 @@ describe('audit logs for interaction', () => {
 
     // Expect interaction create log
     const createLogs = await getLogs(
-      new URLSearchParams({ logType: `${interaction.prefix}.${interaction.Action.Create}` })
+      new URLSearchParams({ logKey: `${interaction.prefix}.${interaction.Action.Create}` })
     );
     expect(createLogs.some((value) => value.payload.interactionId === interactionId)).toBeTruthy();
 
@@ -45,7 +45,7 @@ describe('audit logs for interaction', () => {
 
     // Expect interaction end log
     const endLogs = await getLogs(
-      new URLSearchParams({ logType: `${interaction.prefix}.${interaction.Action.End}` })
+      new URLSearchParams({ logKey: `${interaction.prefix}.${interaction.Action.End}` })
     );
     expect(endLogs.some((value) => value.payload.interactionId === interactionId)).toBeTruthy();
 

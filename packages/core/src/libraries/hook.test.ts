@@ -1,4 +1,3 @@
-import { InteractionEvent } from '@logto/schemas';
 import { HookEvent } from '@logto/schemas/lib/models/hooks.js';
 import { mockEsm, mockEsmDefault } from '@logto/shared/esm';
 import type { InferModelType } from '@withtyped/server';
@@ -47,7 +46,7 @@ describe('triggerInteractionHooksIfNeeded()', () => {
   });
 
   it('should return if no user ID found', async () => {
-    await triggerInteractionHooksIfNeeded();
+    await triggerInteractionHooksIfNeeded(Event.SignIn);
 
     expect(queryFunction).not.toBeCalled();
   });
@@ -56,14 +55,11 @@ describe('triggerInteractionHooksIfNeeded()', () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
     await triggerInteractionHooksIfNeeded(
+      Event.SignIn,
       // @ts-expect-error for testing
       {
         jti: 'some_jti',
-        result: {
-          login: { accountId: '123' },
-          event: InteractionEvent.SignIn,
-          identifier: { connectorId: 'bar' },
-        },
+        result: { login: { accountId: '123' } },
         params: { client_id: 'some_client' },
       } as Interaction
     );
