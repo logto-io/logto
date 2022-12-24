@@ -22,8 +22,10 @@ export const getTimestampFromFilename = (filename: string) => {
   return Number(match[1]);
 };
 
+export const getAlterationDirectory = () => getPathInModule('@logto/schemas', 'alterations-js');
+
 export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
-  const alterationDirectory = getPathInModule('@logto/schemas', 'alterations-js');
+  const alterationDirectory = getAlterationDirectory();
 
   /**
    * We copy all alteration scripts to the CLI package root directory,

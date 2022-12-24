@@ -28,6 +28,7 @@ import {
 } from '../../../queries/logto-config.js';
 import { getPathInModule, log, oraPromise } from '../../../utilities.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
+import { getAlterationDirectory } from '../alteration/utils.js';
 import { oidcConfigReaders } from './oidc-config.js';
 
 const createTables = async (connection: DatabaseTransactionConnection) => {
@@ -53,14 +54,14 @@ const createTables = async (connection: DatabaseTransactionConnection) => {
   }
 };
 
-const seedTables = async (connection: DatabaseTransactionConnection) => {
+const seedTables = async (connection: DatabaseTransactionConnection, latestTimestamp: number) => {
   await Promise.all([
     connection.query(insertInto(managementResource, 'resources')),
     connection.query(insertInto(createDefaultSetting(), 'settings')),
     connection.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
     connection.query(insertInto(createDemoAppApplication(generateStandardId()), 'applications')),
     connection.query(insertInto(defaultRole, 'roles')),
-    updateDatabaseTimestamp(connection, await getLatestAlterationTimestamp()),
+    updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
 };
 
@@ -118,11 +119,21 @@ type SeedChoice = typeof seedChoices[number];
 export const seedByPool = async (pool: DatabasePool, type: SeedChoice) => {
   await pool.transaction(async (connection) => {
     if (type !== 'oidc') {
+      // Check alteration scripts available in order to insert correct timestamp
+      const latestTimestamp = await getLatestAlterationTimestamp();
+
+      if (latestTimestamp < 1) {
+        throw new Error(
+          `No alteration script found when seeding the database.\n` +
+            `Please check \`${getAlterationDirectory()}\` to see if there are alteration scripts available.\n`
+        );
+      }
+
       await oraPromise(createTables(connection), {
         text: 'Create tables',
         prefixText: chalk.blue('[info]'),
       });
-      await oraPromise(seedTables(connection), {
+      await oraPromise(seedTables(connection, latestTimestamp), {
         text: 'Seed data',
         prefixText: chalk.blue('[info]'),
       });
