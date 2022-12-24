@@ -33,7 +33,7 @@
     "@logto/phrases-ui": "workspace:*",
     "@logto/schemas": "workspace:*",
     "@logto/shared": "workspace:*",
-    "@silverhand/essentials": "2.0.0-rc.2",
+    "@silverhand/essentials": "2.0.0",
     "@withtyped/postgres": "^0.3.1",
     "@withtyped/server": "^0.3.1",
     "chalk": "^5.0.0",
