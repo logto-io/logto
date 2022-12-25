@@ -1,7 +1,7 @@
 const errors = {
   request: {
-    invalid_input: 'Input is invalid. {{details}}', // UNTRANSLATED
-    general: 'Request error occurred.', // UNTRANSLATED
+    invalid_input: '입력된 값이 유효하지 않아요. {{details}}',
+    general: '요청 중에 오류가 발생했어요.',
   },
   auth: {
     authorization_header_missing: '인증 헤더가 존재하지 않아요.',
@@ -35,9 +35,9 @@ const errors = {
     provider_error: 'OIDC 내부 오류: {{message}}.',
   },
   user: {
-    username_already_in_use: 'This username is already in use.', // UNTRANSLATED
-    email_already_in_use: 'This email is associated with an existing account.', // UNTRANSLATED
-    phone_already_in_use: 'This phone number is associated with an existing account.', // UNTRANSLATED
+    username_already_in_use: '이 사용자 이름은 다른 사람이 이미 사용 중이에요.',
+    email_already_in_use: '이 이메일은 다른 계정에서 이미 사용 중이에요.',
+    phone_already_in_use: '이 휴대전화번호는 다른 계정에서 이미 사용 중이에요.',
     invalid_email: '유효하지 않은 이메일이예요.',
     invalid_phone: '유효하지 않은 휴대전화번호에요',
     email_not_exist: '이메일 주소가 아직 등록되지 않았어요.',
@@ -83,7 +83,7 @@ const errors = {
     unsupported_prompt_name: '지원하지 않는 Prompt 이름이예요.',
     forgot_password_not_enabled: '비밀번호 찾기가 활성화 되어있지 않아요.',
     verification_failed:
-      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
+      '인증이 성공적으로 완료되지 않았어요. 처음부터 다시 인증 과정을 거쳐주세요.',
     connector_validation_session_not_found:
       'The connector session for token validation is not found.', // UNTRANSLATED
     identifier_not_found: 'User identifier not found. Please go back and sign in again.', // UNTRANSLATED
@@ -114,12 +114,11 @@ const errors = {
     not_found_with_connector_id: '주어진 연동 ID로 연동 설정을 찾을 수 없어요.',
     multiple_instances_not_supported: '선택된 연동 기준으로 여러 인스턴스를 생성할 수 없어요.',
     invalid_type_for_syncing_profile: '소셜 연동만 사용자 프로파일을 동기화 할 수 있어요.',
-    can_not_modify_target: 'The connector target can not be modified.', // UNTRANSLATED
-    should_specify_target: "You should specify 'target'.", // UNTRANSLATED
-    multiple_target_with_same_platform:
-      'You can not have multiple social connectors that have same target and platform.', // UNTRANSLATED
+    can_not_modify_target: '연동 목표를 수정할 수 없어요.',
+    should_specify_target: "'목표'를 반드시 지정해야해요.",
+    multiple_target_with_same_platform: '같은 목표와 플랫폼에 여러 소셜 연동을 가질 수 없어요.',
     cannot_overwrite_metadata_for_non_standard_connector:
-      "This connector's 'metadata' cannot be overwritten.", // UNTRANSLATED
+      '이 연동의 메타데이터를 덮어쓸 수 없어요.',
   },
   passcode: {
     phone_email_empty: '휴대전화번호 그리고 이메일이 비어있어요.',

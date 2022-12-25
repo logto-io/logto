@@ -48,8 +48,8 @@ const connectors = {
       'Logto의 소셜 연동에서의 "목표"는 소셜 정보의 원천을 뜻해요. Logto의 디자인은 충돌을 피하기 위해서 같은 "목표"를 허용하지 않아요. 연동을 추가한 후에는 값을 변경할 수 없으므로 주의해주세요. <a>자세히 알아보기</a>',
     config: '여기에 JSON을 입력',
     sync_profile: '소셜 정보로부터 프로필 정보 동기화하기',
-    sync_profile_only_at_register: 'Only sync at register', // UNTRANSLATED
-    sync_profile_each_sign_in: 'Always sync at each sign-in', // UNTRANSLATED
+    sync_profile_only_at_register: '회원가입때 동기화',
+    sync_profile_each_sign_in: '로그인 할때 마다 동기화',
   },
   platform: {
     universal: 'Universal',
