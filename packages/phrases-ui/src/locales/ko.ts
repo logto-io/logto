@@ -10,7 +10,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: '{{methods, list(type: disjunction;)}} 로그인',
-    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
+    register_with: '{{methods, list(type: disjunction;)}} 회원가입',
     social_bind_with:
       '이미 계정이 있으신가요? {{methods, list(type: disjunction;)}}로 로그인 해보세요!',
   },
@@ -22,7 +22,7 @@ const translation = {
     enter_passcode: '비밀번호 입력',
     confirm: '확인',
     cancel: '취소',
-    save_password: 'Save', // UNTRANSLATED
+    save_password: '저장',
     bind: '{{address}}로 연동',
     back: '뒤로 가기',
     nav_back: '뒤로',
@@ -30,9 +30,9 @@ const translation = {
     got_it: '알겠습니다',
     sign_in_with: '{{name}} 계속',
     forgot_password: '비밀번호를 잊어버리셨나요?',
-    switch_to: 'Switch to {{method}}', // UNTRANSLATED
-    sign_in_via_passcode: 'Sign in with verification code', // UNTRANSLATED
-    sign_in_via_password: 'Sign in with password', // UNTRANSLATED
+    switch_to: '{{method}}로 전환',
+    sign_in_via_passcode: '인증번호로 로그인',
+    sign_in_via_password: '비밀번호로 로그인',
   },
   description: {
     email: '이메일',
@@ -51,8 +51,8 @@ const translation = {
     continue_with: '계속하기',
     create_account_id_exists: '{{type}} {{value}} 계정이 이미 존재해요. 로그인하시겠어요?',
     sign_in_id_does_not_exist: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
-    sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
-    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
+    sign_in_id_does_not_exist_alert: '{{type}} {{value}} 계정이 존재하지 않아요.',
+    create_account_id_exists_alert: '{{type}} {{value}} 이미 존재해요.',
     bind_account_title: '계정 연동',
     social_create_account: '계정이 없으신가요? 새로운 계정을 만들고 연동해보세요.',
     social_bind_account: '계정이 이미 있으신가요? 로그인하여 다른 계정과 연동해보세요.',
@@ -63,23 +63,22 @@ const translation = {
     reset_password_description_sms:
       '계정과 연결된 전화번호를 입력하면 비밀번호 재설정을 위한 인증 코드를 문자로 보내드립니다.',
     new_password: '새 비밀번호',
-    set_password: 'Set password', // UNTRANSLATED
-    password_changed: 'Password Changed', // UNTRANSLATED
-    no_account: 'No account yet? ', // UNTRANSLATED
-    have_account: 'Already had an account?', // UNTRANSLATED
-    enter_password: 'Enter Password', // UNTRANSLATED
-    enter_password_for: 'Sign in with the password to {{method}} {{value}}', // UNTRANSLATED
-    enter_username: 'Enter username', // UNTRANSLATED
+    set_password: '비밀번호 설정',
+    password_changed: '비밀번호 변경됨',
+    no_account: '계정이 없나요?',
+    have_account: '이미 계정이 있나요?',
+    enter_password: '비밀번호 입력',
+    enter_password_for: '{{method}} {{value}} 비밀번호 로그인',
+    enter_username: '사용자 이름 입력',
     enter_username_description:
-      'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.', // UNTRANSLATED
-    link_email: 'Link email', // UNTRANSLATED
-    link_phone: 'Link phone', // UNTRANSLATED
-    link_email_or_phone: 'Link email or phone', // UNTRANSLATED
-    link_email_description: 'For added security, please link your email with the account.', // UNTRANSLATED
-    link_phone_description: 'For added security, please link your phone with the account.', // UNTRANSLATED
-    link_email_or_phone_description:
-      'For added security, please link your email or phone with the account.', // UNTRANSLATED
-    continue_with_more_information: 'For added security, please complete below account details.', // UNTRANSLATED
+      '사용자 이름은 로그인을 할 때 사용되요. 사용자 이름에는 문자, 숫자 및 밑줄만 포함되어야 해요.',
+    link_email: '이메일 연동',
+    link_phone: '휴대전화번호 연동',
+    link_email_or_phone: '이메일 또는 휴대전화번호 연동',
+    link_email_description: '더 나은 보안을 위해 이메일을 연동해주세요.',
+    link_phone_description: '더 나은 보안을 위해 휴대전화번호를 연동해주세요.',
+    link_email_or_phone_description: '더 나은 보안을 위해 이메일 또는 휴대전화번호를 연동해주세요.',
+    continue_with_more_information: '더 나은 보안을 위해 아래 자세한 내용을 따라주세요.',
   },
   profile: {
     title: 'Account Settings', // UNTRANSLATED

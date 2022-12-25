@@ -8,7 +8,7 @@ const demo_app = {
   continue_explore: '또는 계속해서 살펴보기',
   customize_sign_in_experience: '로그인 경험 커스터마이징',
   enable_passwordless: 'Passwordless 활성화',
-  add_social_connector: '소셜 Connector 추가',
+  add_social_connector: '소셜 연동 추가',
 };
 
 export default demo_app;

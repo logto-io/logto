@@ -1,9 +1,9 @@
 const connector_details = {
   back_to_connectors: '연동으로 돌아가기',
   check_readme: 'README 확인',
-  settings: 'Settings', // UNTRANSLATED
+  settings: '설정',
   settings_description:
-    'Connectors play a critical role in Logto. With their help, Logto enables end-users to use passwordless registration or sign-in and the capabilities of signing in with social accounts.', // UNTRANSLATED
+    'Logto에서 연동은 중요한 역할을 해요. 연동 시스템을 통하여, 사용자들에게 비밀번호가 없이 회원 가입을 하고 로그인을 할 수 있게 하거나, 소셜 계정을 통하여 로그인을 할 수 있게 도와줘요.',
   save_error_empty_config: '설정을 입력해주세요.',
   send: '보내기',
   send_error_invalid_format: '유효하지 않은 입력',
@@ -21,7 +21,7 @@ const connector_details = {
   type_sms: 'SMS 연동',
   type_social: '소셜 연동',
   in_use_deletion_description:
-    'This connector is in use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.', // UNTRANSLATED
+    '이 연동은 로그인 환경에서 사용 중이에요. 삭제 시 로그인 경험 설정에서 <name/> 로그인 경험이 삭제되요.',
 };
 
 export default connector_details;
