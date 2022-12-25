@@ -1,8 +1,10 @@
 import type { Setting, CreateSetting } from '@logto/schemas';
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockSetting } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
+
+const { mockEsm } = createMockUtils(import.meta.jest);
 
 mockEsm('#src/queries/setting.js', () => ({
   getSetting: async (): Promise<Setting> => mockSetting,

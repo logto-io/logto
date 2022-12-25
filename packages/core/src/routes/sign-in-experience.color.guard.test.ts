@@ -1,8 +1,10 @@
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
-import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockColor, mockSignInExperience } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
+
+const { mockEsm, mockEsmWithActual } = createMockUtils(import.meta.jest);
 
 await mockEsmWithActual('#src/queries/sign-in-experience.js', () => ({
   updateDefaultSignInExperience: async (

@@ -1,8 +1,31 @@
 import path from 'path';
 
-const { jest } = import.meta;
+export type WithEsmMock = {
+  // Copied from `@jest/globals`
+  /**
+   * Mocks a module with the provided module factory when it is being imported.
+   */
+  unstable_mockModule<T = unknown>(
+    moduleName: string,
+    moduleFactory: () => T | Promise<T>,
+    options?: {
+      virtual?: boolean;
+    }
+    // This should be a global jest type, but hard to align with the global type from the caller.
+    // We met several issues while using generic / global override.
+    // Move forward with `unknown` since it doesn't matter here.
+  ): unknown;
+};
 
-type MockParameters<T> = Parameters<(moduleName: string, factory: () => T) => void>;
+export type MockParameters<T> = Parameters<(moduleName: string, factory: () => T) => void>;
+
+export const pickDefault = async <T extends Record<'default', unknown>>(
+  promise: Promise<T>
+): Promise<T['default']> => {
+  const awaited = await promise;
+
+  return awaited.default;
+};
 
 // See https://github.com/sindresorhus/callsites
 /* eslint-disable @silverhand/fp/no-mutation */
@@ -17,56 +40,39 @@ const callSites = (): NodeJS.CallSite[] => {
 };
 /* eslint-enable @silverhand/fp/no-mutation */
 
-// Depth default is 2 since it'll be called by `mockEsmXyz()` in this module.
-// Need to trace one level deeper for the original caller.
-const resolvePath = (pathOrModule: string, depth = 2): string => {
-  if (pathOrModule === '@logto/shared') {
-    return new URL('../../', import.meta.url).pathname;
-  }
+export const createMockUtils = (jestInstance: WithEsmMock) => {
+  const mockEsm = <T>(...[moduleName, factory]: MockParameters<T>) => {
+    const mocked = factory();
 
-  if (!pathOrModule.startsWith('.')) {
-    return pathOrModule;
-  }
+    jestInstance.unstable_mockModule(moduleName, () => mocked);
 
-  return path.join(path.dirname(callSites()[depth]?.getFileName() ?? ''), pathOrModule);
-};
+    return mocked;
+  };
 
-export const mockEsmWithActual: <T>(...args: MockParameters<T>) => Promise<T> = async (
-  moduleName,
-  factory
-) => {
-  const resolvedModule = resolvePath(moduleName);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const actual = await import(resolvedModule);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  jest.unstable_mockModule(resolvedModule, () => ({
-    ...actual,
-    ...factory(),
-  }));
+  const mockEsmDefault = <T>(...[moduleName, factory]: MockParameters<T>) => {
+    const mocked = factory();
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return import(resolvedModule);
-};
+    jestInstance.unstable_mockModule(moduleName, () => ({ default: mocked }));
 
-export const mockEsm = <T>(...args: MockParameters<T>) => {
-  const mocked = args[1]();
-  jest.unstable_mockModule(resolvePath(args[0]), () => mocked);
+    return mocked;
+  };
 
-  return mocked;
-};
+  const mockEsmWithActual = async <T>(...[moduleName, factory]: MockParameters<T>): Promise<T> => {
+    const resolved = moduleName.startsWith('.')
+      ? path.join(path.dirname(callSites()[1]?.getFileName() ?? ''), moduleName)
+      : moduleName;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const actual = await import(resolved);
 
-export const mockEsmDefault = <T>(...args: MockParameters<T>) => {
-  const mocked = args[1]();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    mockEsm(resolved, () => ({
+      ...actual,
+      ...factory(),
+    }));
 
-  jest.unstable_mockModule(resolvePath(args[0]), () => ({ default: mocked }));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return import(resolved);
+  };
 
-  return mocked;
-};
-
-export const pickDefault = async <T extends Record<'default', unknown>>(
-  promise: Promise<T>
-): Promise<T['default']> => {
-  const awaited = await promise;
-
-  return awaited.default;
+  return { mockEsm, mockEsmDefault, mockEsmWithActual };
 };

@@ -1,6 +1,6 @@
 import type { LogKey } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import i18next from 'i18next';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -10,13 +10,14 @@ import type { WithLogContext, LogPayload } from './koa-audit-log.js';
 
 const { jest } = import.meta;
 
+const { mockEsm } = createMockUtils(jest);
+
 const { insertLog } = mockEsm('#src/queries/log.js', () => ({
   insertLog: jest.fn(),
 }));
 
-// TODO: @Gao fix `mockEsm()` import issue
 const nanoIdMock = 'mockId';
-jest.unstable_mockModule('@logto/core-kit', () => ({
+mockEsm('@logto/core-kit', () => ({
   generateStandardId: () => nanoIdMock,
 }));
 

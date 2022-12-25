@@ -1,5 +1,5 @@
 import { InteractionEvent } from '@logto/schemas';
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
@@ -13,6 +13,7 @@ import type {
 } from '../types/index.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const { getLogtoConnectorById } = mockEsm('#src/connectors/index.js', () => ({
   getLogtoConnectorById: jest

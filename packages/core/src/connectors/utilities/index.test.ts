@@ -1,9 +1,10 @@
 import type { Connector } from '@logto/schemas';
-import { mockEsmWithActual } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
 const { jest } = import.meta;
+const { mockEsmWithActual } = createMockUtils(jest);
 
 const connectors: Connector[] = [
   {

@@ -1,6 +1,6 @@
 import type { CreateUser, User } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { mockEsm, mockEsmWithActual } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import { getUnixTime } from 'date-fns';
 
 import {
@@ -14,6 +14,8 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const mockUserProfileResponse = { ...mockUserResponse, hasPasswordSet: true };
 const getLogtoConnectorById = jest.fn(async () => ({

@@ -1,9 +1,10 @@
-import { mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsmWithActual } = createMockUtils(jest);
 
 const { verifyBearerTokenFromRequest } = await mockEsmWithActual(
   '#src/middleware/koa-auth.js',

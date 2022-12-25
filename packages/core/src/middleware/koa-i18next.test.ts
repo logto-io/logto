@@ -1,9 +1,11 @@
-import { mockEsmDefault, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import i18next from 'i18next';
 
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsmDefault } = createMockUtils(jest);
+
 const mockLanguage = () => ['zh-cn'];
 mockEsmDefault('#src/i18n/detect-language.js', () => mockLanguage);
 

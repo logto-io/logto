@@ -1,5 +1,5 @@
 import type { Application } from '@logto/schemas';
-import { mockEsm } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import snakecaseKeys from 'snakecase-keys';
 
 import { mockApplication } from '#src/__mocks__/index.js';
@@ -7,6 +7,8 @@ import { mockApplication } from '#src/__mocks__/index.js';
 import { getConstantClientMetadata } from './utils.js';
 
 const { jest } = import.meta;
+
+const { mockEsm } = createMockUtils(jest);
 
 mockEsm('#src/queries/application.js', () => ({
   findApplicationById: jest.fn(async (): Promise<Application> => mockApplication),

@@ -1,5 +1,5 @@
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
-import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import {
   mockAliyunDmConnector,
@@ -12,6 +12,7 @@ import {
 } from '#src/__mocks__/index.js';
 
 const { jest } = import.meta;
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 mockEsm('#src/connectors.js', () => ({
   getLogtoConnectors: jest.fn(async () => [

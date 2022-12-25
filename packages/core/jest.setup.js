@@ -2,10 +2,11 @@
  * Setup environment variables for unit test
  */
 
-import { mockEsm } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import { createMockQueryResult, createMockPool } from 'slonik';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 mockEsm('#src/env-set/index.js', () => ({
   MountedApps: {

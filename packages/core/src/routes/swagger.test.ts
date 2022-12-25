@@ -1,4 +1,4 @@
-import { mockEsm } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import Koa from 'koa';
 import Router from 'koa-router';
 import request from 'supertest';
@@ -9,6 +9,7 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import type { AnonymousRouter } from '#src/routes/types.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const { load } = mockEsm('js-yaml', () => ({
   load: jest.fn().mockReturnValue({ paths: {} }),

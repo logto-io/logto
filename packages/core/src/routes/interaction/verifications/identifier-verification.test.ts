@@ -1,5 +1,5 @@
 import { InteractionEvent } from '@logto/schemas';
-import { mockEsmWithActual, mockEsmDefault, pickDefault } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
@@ -8,6 +8,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import type { SignInInteractionResult } from '../types/index.js';
 
 const { jest } = import.meta;
+const { mockEsmDefault, mockEsmWithActual } = createMockUtils(jest);
 
 const { storeInteractionResult } = await mockEsmWithActual('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),

@@ -1,9 +1,10 @@
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import envSet, { MountedApps } from '#src/env-set/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const { hasActiveUsers } = mockEsm('#src/queries/user.js', () => ({
   hasActiveUsers: jest.fn(),

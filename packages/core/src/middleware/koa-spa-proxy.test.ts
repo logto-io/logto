@@ -1,9 +1,11 @@
-import { mockEsmDefault, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import envSet, { MountedApps } from '#src/env-set/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+const { mockEsmDefault } = createMockUtils(jest);
 
 const mockProxyMiddleware = jest.fn();
 const mockStaticMiddleware = jest.fn();

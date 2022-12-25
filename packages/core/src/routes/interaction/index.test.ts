@@ -1,6 +1,6 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { InteractionEvent, demoAppApplicationId } from '@logto/schemas';
-import { mockEsmWithActual, mockEsmDefault, mockEsm } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -10,6 +10,7 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsm, mockEsmDefault, mockEsmWithActual } = createMockUtils(jest);
 
 // FIXME @Darcy: no more `enabled` for `connectors` table
 const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {

@@ -4,6 +4,7 @@ import type { Context } from 'koa';
 
 const { jest } = import.meta;
 
+
 export type Cookies = Context['cookies'];
 
 export type Dictionary<T> = Record<string, T>;

@@ -1,5 +1,5 @@
 import en from '@logto/phrases-ui/lib/locales/en.js';
-import { mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { trTrTag, zhCnTag, zhHkTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
@@ -7,6 +7,7 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsmWithActual } = createMockUtils(jest);
 
 const fallbackLanguage = trTrTag;
 const unsupportedLanguageX = 'xx-XX';

@@ -1,10 +1,11 @@
-import { mockEsmWithActual } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import Sinon from 'sinon';
 import { createMockPool } from 'slonik';
 
 import { chooseAlterationsByVersion } from './version.js';
 
 const { jest } = import.meta;
+const { mockEsmWithActual } = createMockUtils(jest);
 
 const pool = createMockPool({
   query: jest.fn(),

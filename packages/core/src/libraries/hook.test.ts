@@ -1,6 +1,6 @@
 import { InteractionEvent, LogResult } from '@logto/schemas';
 import { HookEvent } from '@logto/schemas/lib/models/hooks.js';
-import { mockEsm, mockEsmDefault } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import type { InferModelType } from '@withtyped/server';
 import { got } from 'got';
 
@@ -10,6 +10,7 @@ import { MockQueryClient } from '#src/test-utils/query-client.js';
 import type { Interaction } from './hook.js';
 
 const { jest } = import.meta;
+const { mockEsm, mockEsmDefault } = createMockUtils(jest);
 
 const queryClient = new MockQueryClient();
 const queryFunction = jest.fn();
@@ -30,9 +31,8 @@ const post = jest
   // @ts-expect-error for testing
   .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
 
-// TODO: @Gao fix `mockEsm()` import issue
 const nanoIdMock = 'mockId';
-jest.unstable_mockModule('@logto/core-kit', () => ({
+mockEsm('@logto/core-kit', () => ({
   generateStandardId: () => nanoIdMock,
 }));
 

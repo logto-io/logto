@@ -1,10 +1,12 @@
 import type { Resource, CreateResource } from '@logto/schemas';
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockResource } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+const { mockEsm } = createMockUtils(jest);
 
 mockEsm('#src/queries/resource.js', () => ({
   findTotalNumberOfResources: async () => ({ count: 10 }),
@@ -21,8 +23,7 @@ mockEsm('#src/queries/resource.js', () => ({
   deleteResourceById: jest.fn(),
 }));
 
-// Cannot use `mockEsm()` here, pending investigation.
-jest.unstable_mockModule('@logto/core-kit', () => ({
+mockEsm('@logto/core-kit', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => 'randomId',
 }));

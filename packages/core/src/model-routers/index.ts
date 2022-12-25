@@ -1,4 +1,4 @@
-import { Hooks } from '@logto/schemas/lib/models/hooks.js';
+import { Hooks } from '@logto/schemas/models';
 import { createModelRouter } from '@withtyped/postgres';
 
 import envSet from '#src/env-set/index.js';

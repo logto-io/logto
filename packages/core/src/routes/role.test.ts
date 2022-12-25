@@ -1,10 +1,12 @@
 import type { Role } from '@logto/schemas';
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockRole } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+const { mockEsm } = createMockUtils(jest);
 
 mockEsm('#src/queries/roles.js', () => ({
   findAllRoles: jest.fn(async (): Promise<Role[]> => [mockRole]),
