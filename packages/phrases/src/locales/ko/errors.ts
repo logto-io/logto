@@ -84,11 +84,9 @@ const errors = {
     forgot_password_not_enabled: '비밀번호 찾기가 활성화 되어있지 않아요.',
     verification_failed:
       '인증이 성공적으로 완료되지 않았어요. 처음부터 다시 인증 과정을 거쳐주세요.',
-    connector_validation_session_not_found:
-      'The connector session for token validation is not found.', // UNTRANSLATED
-    identifier_not_found: 'User identifier not found. Please go back and sign in again.', // UNTRANSLATED
-    interaction_not_found:
-      'Interaction session not found. Please go back and start the session again.', // UNTRANSLATED
+    connector_validation_session_not_found: '연동 세션 유효성 검증을 위한 토큰을 찾을 수 없어요.',
+    identifier_not_found: '사용자 식별자를 찾을 수 없어요. 처음부터 다시 로그인을 시도해주세요.',
+    interaction_not_found: '인터렉션 세션을 찾을 수 없어요. 처음부터 다시 세션을 시작해주세요.',
   },
   connector: {
     general: '연동 중에 알 수 없는 오류가 발생했어요. {{errorDescription}}',
