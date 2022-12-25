@@ -1,3 +1,4 @@
+import { conditional } from '@silverhand/essentials';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
@@ -39,6 +40,8 @@ const SignUpForm = () => {
   if (!signUpIdentifier) {
     return null;
   }
+
+  const isUsernamePasswordSignUp = signUpIdentifier === SignUpIdentifier.Username;
 
   const postSignUpIdentifierChange = (signUpIdentifier: SignUpIdentifier) => {
     if (signUpIdentifier === SignUpIdentifier.Username) {
@@ -172,9 +175,12 @@ const SignUpForm = () => {
               render={({ field: { value, onChange } }) => (
                 <Checkbox
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
-                  disabled={signUpIdentifier === SignUpIdentifier.Username}
-                  value={value}
-                  disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.set_a_password')}
+                  disabled={isUsernamePasswordSignUp}
+                  checked={value}
+                  tooltip={conditional(
+                    isUsernamePasswordSignUp &&
+                      t('sign_in_exp.sign_up_and_sign_in.tip.set_a_password')
+                  )}
                   onChange={(value) => {
                     onChange(value);
                     refreshSignInMethods();
@@ -182,16 +188,16 @@ const SignUpForm = () => {
                 />
               )}
             />
-            {signUpIdentifier !== SignUpIdentifier.Username && (
+            {isVerificationRequiredSignUpIdentifiers(signUpIdentifier) && (
               <Controller
                 name="signUp.verify"
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <Checkbox
+                    disabled
                     label={t('sign_in_exp.sign_up_and_sign_in.sign_up.verify_at_sign_up_option')}
-                    value={value}
-                    disabled={isVerificationRequiredSignUpIdentifiers(signUpIdentifier)}
-                    disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.verify_at_sign_up')}
+                    checked={value}
+                    tooltip={t('sign_in_exp.sign_up_and_sign_in.tip.verify_at_sign_up')}
                     onChange={(value) => {
                       onChange(value);
                       refreshSignInMethods();

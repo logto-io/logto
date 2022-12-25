@@ -65,9 +65,11 @@ const SignInMethodItem = ({
             <Checkbox
               className={styles.checkBox}
               label={t('sign_in_exp.sign_up_and_sign_in.sign_in.password_auth')}
-              value={password}
+              checked={password}
               disabled={!isPasswordCheckable}
-              disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.password_auth')}
+              tooltip={conditional(
+                !isPasswordCheckable && t('sign_in_exp.sign_up_and_sign_in.tip.password_auth')
+              )}
               onChange={(checked) => {
                 onVerificationStateChange('password', checked);
               }}
@@ -85,9 +87,12 @@ const SignInMethodItem = ({
                 <Checkbox
                   className={styles.checkBox}
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
-                  value={verificationCode}
+                  checked={verificationCode}
                   disabled={!isVerificationCodeCheckable}
-                  disabledTooltip={t('sign_in_exp.sign_up_and_sign_in.tip.verification_code_auth')}
+                  tooltip={conditional(
+                    !isVerificationCodeCheckable &&
+                      t('sign_in_exp.sign_up_and_sign_in.tip.verification_code_auth')
+                  )}
                   onChange={(checked) => {
                     onVerificationStateChange('verificationCode', checked);
                   }}

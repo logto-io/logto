@@ -157,6 +157,8 @@
   --shadow-3: 0 4px 16px rgba(0, 0, 0, 20%);
 
   // Client specific variables (not available in design system)
+  --color-checkbox-disabled-background: var(--color-neutral-95);
+  --color-checkbox-checked-disabled-background: var(--color-primary-80);
   --color-danger-toast-background: var(--color-error-95);
   --color-danger-focused: rgba(186, 27, 27, 16%); // 16% Error-40
   --color-tooltip-background: #34353f; // dark theme Surface-4
@@ -327,6 +329,8 @@
   --shadow-3: 0 4px 16px rgba(0, 0, 0, 20%);
 
   // Client specific variables (not available in design system)
+  --color-checkbox-disabled-background: rgba(247, 248, 248, 8%);
+  --color-checkbox-checked-disabled-background: var(--color-primary-40);
   --color-danger-toast-background: var(--color-error-99);
   --color-danger-focused: rgba(255, 180, 169, 16%); // 16% Error-40
   --color-tooltip-background: var(--color-surface-4);
