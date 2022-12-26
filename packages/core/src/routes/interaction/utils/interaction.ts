@@ -2,7 +2,7 @@ import type { ConnectorSession } from '@logto/connector-kit';
 import { connectorSessionGuard } from '@logto/connector-kit';
 import type { Event, Profile } from '@logto/schemas';
 import type { Context } from 'koa';
-import type { Provider } from 'oidc-provider';
+import type { Provider, InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -83,10 +83,6 @@ export const isAccountVerifiedInteractionResult = (
   interaction: AnonymousInteractionResult
 ): interaction is AccountVerifiedInteractionResult => Boolean(interaction.accountId);
 
-type Options = {
-  merge?: boolean;
-};
-
 export const storeInteractionResult = async (
   interaction: Omit<AnonymousInteractionResult, 'event'> & { event?: Event },
   ctx: Context,
@@ -107,12 +103,10 @@ export const storeInteractionResult = async (
   );
 };
 
-export const getInteractionStorage = async (
-  ctx: Context,
-  provider: Provider
-): Promise<AnonymousInteractionResult> => {
-  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-  const parseResult = anonymousInteractionResultGuard.safeParse(result);
+export const getInteractionStorage = (
+  interaction?: InteractionResults
+): AnonymousInteractionResult => {
+  const parseResult = anonymousInteractionResultGuard.safeParse(interaction);
 
   assertThat(
     parseResult.success,

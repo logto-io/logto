@@ -45,21 +45,22 @@ await mockEsmWithActual('#src/connectors/index.js', () => ({
   }),
 }));
 
+await mockEsmWithActual('#src/libraries/sign-in-experience/index.js', () => ({
+  getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
+}));
+
 const { assignInteractionResults } = await mockEsmWithActual('#src/libraries/session.js', () => ({
   assignInteractionResults: jest.fn(),
 }));
 
-const {
-  getSignInExperience,
-  verifySignInModeSettings,
-  verifyIdentifierSettings,
-  verifyProfileSettings,
-} = mockEsm('./utils/sign-in-experience-validation.js', () => ({
-  getSignInExperience: jest.fn(async () => mockSignInExperience),
-  verifySignInModeSettings: jest.fn(),
-  verifyIdentifierSettings: jest.fn(),
-  verifyProfileSettings: jest.fn(),
-}));
+const { verifySignInModeSettings, verifyIdentifierSettings, verifyProfileSettings } = mockEsm(
+  './utils/sign-in-experience-validation.js',
+  () => ({
+    verifySignInModeSettings: jest.fn(),
+    verifyIdentifierSettings: jest.fn(),
+    verifyProfileSettings: jest.fn(),
+  })
+);
 
 const submitInteraction = mockEsmDefault('./actions/submit-interaction.js', () => jest.fn());
 
@@ -133,7 +134,6 @@ describe('session -> interactionRoutes', () => {
         profile: { phone: '1234567890' },
       };
       const response = await sessionRequest.put(path).send(body);
-      expect(getSignInExperience).toBeCalled();
       expect(verifySignInModeSettings).toBeCalled();
       expect(verifyIdentifierSettings).toBeCalled();
       expect(verifyProfileSettings).toBeCalled();
@@ -154,7 +154,7 @@ describe('session -> interactionRoutes', () => {
     const path = `${interactionPrefix}/event`;
 
     it('should call verifySignInModeSettings properly', async () => {
-      getInteractionStorage.mockResolvedValueOnce({
+      getInteractionStorage.mockReturnValueOnce({
         event: Event.SignIn,
       });
       const body = {
@@ -169,7 +169,7 @@ describe('session -> interactionRoutes', () => {
     });
 
     it('should reject if switch sign-in event to forgot-password directly', async () => {
-      getInteractionStorage.mockResolvedValueOnce({
+      getInteractionStorage.mockReturnValueOnce({
         event: Event.SignIn,
       });
 
@@ -184,7 +184,7 @@ describe('session -> interactionRoutes', () => {
     });
 
     it('should reject if switch forgot-password to sign-in directly', async () => {
-      getInteractionStorage.mockResolvedValueOnce({
+      getInteractionStorage.mockReturnValueOnce({
         event: Event.ForgotPassword,
       });
 
@@ -272,7 +272,7 @@ describe('session -> interactionRoutes', () => {
     });
 
     it('should not call validateMandatoryUserProfile for forgot password request', async () => {
-      getInteractionStorage.mockResolvedValueOnce({
+      getInteractionStorage.mockReturnValueOnce({
         event: Event.ForgotPassword,
       });
 

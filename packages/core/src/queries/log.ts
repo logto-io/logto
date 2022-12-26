@@ -59,7 +59,7 @@ export const getDailyActiveUserCountsByTimeInterval = async (
     from ${table}
     where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
     and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
-    and ${fields.key} like ${`${token.Flow.ExchangeTokenBy}.%`}
+    and ${fields.key} like ${`${token.Type.ExchangeTokenBy}.%`}
     and ${fields.payload}->>'result' = 'Success'
     group by date(${fields.createdAt})
   `);
@@ -73,6 +73,6 @@ export const countActiveUsersByTimeInterval = async (
     from ${table}
     where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
     and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
-    and ${fields.key} like ${`${token.Flow.ExchangeTokenBy}.%`}
+    and ${fields.key} like ${`${token.Type.ExchangeTokenBy}.%`}
     and ${fields.payload}->>'result' = 'Success'
   `);
