@@ -59,6 +59,7 @@
   .label {
     font: var(--font-body-medium);
     color: var(--color-text);
+    white-space: nowrap;
     cursor: inherit;
   }
 
