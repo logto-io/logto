@@ -1,4 +1,4 @@
-import { Event, interaction, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, interaction, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import { deleteUser } from '#src/api/admin-user.js';
@@ -36,7 +36,7 @@ describe('audit logs for interaction', () => {
     const { username, password } = generateNewUserProfile({ username: true, password: true });
 
     await client.send(putInteraction, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
       profile: { username, password },
     });
 

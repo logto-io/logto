@@ -1,4 +1,4 @@
-import { ConnectorType, Event } from '@logto/schemas';
+import { ConnectorType, InteractionEvent } from '@logto/schemas';
 
 import { mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
 import {
@@ -48,7 +48,7 @@ describe('Social Identifier Interactions', () => {
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
 
       await client.successSend(putInteraction, {
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
       });
 
       await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
@@ -60,7 +60,7 @@ describe('Social Identifier Interactions', () => {
 
       await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
 
-      await client.successSend(putInteractionEvent, { event: Event.Register });
+      await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
       await client.successSend(patchInteractionProfile, { connectorId });
 
       const { redirectTo } = await client.submitInteraction();
@@ -78,7 +78,7 @@ describe('Social Identifier Interactions', () => {
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
 
       await client.successSend(putInteraction, {
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
       });
 
       await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
@@ -107,7 +107,7 @@ describe('Social Identifier Interactions', () => {
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
 
       await client.successSend(putInteraction, {
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
       });
 
       await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
@@ -133,7 +133,7 @@ describe('Social Identifier Interactions', () => {
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
 
       await client.successSend(putInteraction, {
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
       });
 
       await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
@@ -160,7 +160,7 @@ describe('Social Identifier Interactions', () => {
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
 
       await client.successSend(putInteraction, {
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
       });
 
       await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
@@ -192,7 +192,7 @@ describe('Social Identifier Interactions', () => {
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
 
       await client.successSend(putInteraction, {
-        event: Event.SignIn,
+        event: InteractionEvent.SignIn,
       });
 
       await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });

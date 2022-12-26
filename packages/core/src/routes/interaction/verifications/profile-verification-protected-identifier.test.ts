@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -23,7 +23,7 @@ mockEsm('#src/connectors/index.js', () => ({
 const verifyProfile = await pickDefault(import('./profile-verification.js'));
 
 describe('profile protected identifier verification', () => {
-  const baseInteraction = { event: Event.SignIn, accountId: 'foo' };
+  const baseInteraction = { event: InteractionEvent.SignIn, accountId: 'foo' };
 
   afterEach(() => {
     jest.clearAllMocks();

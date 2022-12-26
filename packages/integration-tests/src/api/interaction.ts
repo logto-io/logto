@@ -1,4 +1,4 @@
-import type { Event, IdentifierPayload, Profile } from '@logto/schemas';
+import type { InteractionEvent, IdentifierPayload, Profile } from '@logto/schemas';
 
 import api from './api.js';
 
@@ -7,7 +7,7 @@ export type RedirectResponse = {
 };
 
 export type interactionPayload = {
-  event: Event;
+  event: InteractionEvent;
   identifier?: IdentifierPayload;
   profile?: Profile;
 };
@@ -21,7 +21,7 @@ export const putInteraction = async (cookie: string, payload: interactionPayload
     })
     .json();
 
-export const putInteractionEvent = async (cookie: string, payload: { event: Event }) =>
+export const putInteractionEvent = async (cookie: string, payload: { event: InteractionEvent }) =>
   api
     .put('interaction/event', { headers: { cookie }, json: payload, followRedirect: false })
     .json();
@@ -59,10 +59,10 @@ export const submitInteraction = async (cookie: string) =>
 
 export type VerificationPasscodePayload =
   | {
-      event: Event;
+      event: InteractionEvent;
       email: string;
     }
-  | { event: Event; phone: string };
+  | { event: InteractionEvent; phone: string };
 
 export const sendVerificationPasscode = async (
   cookie: string,

@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 
 import { putInteraction, deleteUser } from '#src/api/index.js';
 
@@ -16,7 +16,7 @@ describe('Sign-In flow using password identifiers', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifier: {
         username: userProfile.username,
         password: userProfile.password,
@@ -36,7 +36,7 @@ describe('Sign-In flow using password identifiers', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifier: {
         email: userProfile.primaryEmail,
         password: userProfile.password,
@@ -56,7 +56,7 @@ describe('Sign-In flow using password identifiers', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifier: {
         phone: userProfile.primaryPhone,
         password: userProfile.password,

@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -17,7 +17,7 @@ const verifyProfile = await pickDefault(import('./profile-verification.js'));
 
 describe('forgot password interaction profile verification', () => {
   const baseInteraction = {
-    event: Event.ForgotPassword,
+    event: InteractionEvent.ForgotPassword,
     accountId: 'foo',
   };
 

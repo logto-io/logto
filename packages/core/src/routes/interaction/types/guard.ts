@@ -6,7 +6,7 @@ import {
   socialConnectorPayloadGuard,
   eventGuard,
   profileGuard,
-  Event,
+  InteractionEvent,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -80,13 +80,13 @@ export const anonymousInteractionResultGuard = z.object({
 });
 
 export const verifiedRegisterInteractionResultGuard = z.object({
-  event: z.literal(Event.Register),
+  event: z.literal(InteractionEvent.Register),
   profile: registerProfileSafeGuard,
   identifiers: z.array(identifierGuard).optional(),
 });
 
 export const verifiedSignInteractionResultGuard = z.object({
-  event: z.literal(Event.SignIn),
+  event: z.literal(InteractionEvent.SignIn),
   accountId: z.string(),
   profile: profileGuard.optional(),
   identifiers: z.array(identifierGuard).optional(),
@@ -97,7 +97,7 @@ export const forgotPasswordProfileGuard = z.object({
 });
 
 export const verifiedForgotPasswordInteractionResultGuard = z.object({
-  event: z.literal(Event.ForgotPassword),
+  event: z.literal(InteractionEvent.ForgotPassword),
   accountId: z.string(),
   profile: forgotPasswordProfileGuard,
 });

@@ -1,4 +1,4 @@
-import { ConnectorType, Event, SignInIdentifier } from '@logto/schemas';
+import { ConnectorType, InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import {
@@ -32,7 +32,7 @@ describe('Register with username and password', () => {
     const client = await initClient();
 
     await client.send(putInteraction, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
       profile: {
         username,
         password,
@@ -68,11 +68,11 @@ describe('Register with passwordless identifier', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
       email: primaryEmail,
     });
 
@@ -80,7 +80,7 @@ describe('Register with passwordless identifier', () => {
 
     expect(passcodeRecord).toMatchObject({
       address: primaryEmail,
-      type: Event.Register,
+      type: InteractionEvent.Register,
     });
 
     const { code } = passcodeRecord;
@@ -112,11 +112,11 @@ describe('Register with passwordless identifier', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
       phone: primaryPhone,
     });
 
@@ -124,7 +124,7 @@ describe('Register with passwordless identifier', () => {
 
     expect(passcodeRecord).toMatchObject({
       phone: primaryPhone,
-      type: Event.Register,
+      type: InteractionEvent.Register,
     });
 
     const { code } = passcodeRecord;
@@ -160,11 +160,11 @@ describe('Register with passwordless identifier', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
       email: primaryEmail,
     });
 
@@ -172,7 +172,7 @@ describe('Register with passwordless identifier', () => {
 
     expect(passcodeRecord).toMatchObject({
       address: primaryEmail,
-      type: Event.Register,
+      type: InteractionEvent.Register,
     });
 
     const { code } = passcodeRecord;
@@ -189,7 +189,7 @@ describe('Register with passwordless identifier', () => {
     await expectRejects(client.submitInteraction(), 'user.email_already_in_use');
 
     await client.successSend(deleteInteractionProfile);
-    await client.successSend(putInteractionEvent, { event: Event.SignIn });
+    await client.successSend(putInteractionEvent, { event: InteractionEvent.SignIn });
 
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
@@ -213,11 +213,11 @@ describe('Register with passwordless identifier', () => {
     assert(client.interactionCookie, new Error('Session not found'));
 
     await client.successSend(putInteraction, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
       phone: primaryPhone,
     });
 
@@ -225,7 +225,7 @@ describe('Register with passwordless identifier', () => {
 
     expect(passcodeRecord).toMatchObject({
       phone: primaryPhone,
-      type: Event.Register,
+      type: InteractionEvent.Register,
     });
 
     const { code } = passcodeRecord;
@@ -242,7 +242,7 @@ describe('Register with passwordless identifier', () => {
     await expectRejects(client.submitInteraction(), 'user.phone_already_in_use');
 
     await client.successSend(deleteInteractionProfile);
-    await client.successSend(putInteractionEvent, { event: Event.SignIn });
+    await client.successSend(putInteractionEvent, { event: InteractionEvent.SignIn });
 
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);

@@ -1,4 +1,4 @@
-import { Event, userInfoSelectFields } from '@logto/schemas';
+import { InteractionEvent, userInfoSelectFields } from '@logto/schemas';
 import { HookEventPayload, HookEvent } from '@logto/schemas/models';
 import { trySafe } from '@logto/shared';
 import { conditional, pick } from '@silverhand/essentials';
@@ -10,10 +10,10 @@ import { findApplicationById } from '#src/queries/application.js';
 import { findUserById } from '#src/queries/user.js';
 import { getInteractionStorage } from '#src/routes/interaction/utils/interaction.js';
 
-const eventToHook: Record<Event, HookEvent> = {
-  [Event.Register]: HookEvent.PostRegister,
-  [Event.SignIn]: HookEvent.PostSignIn,
-  [Event.ForgotPassword]: HookEvent.PostResetPassword,
+const eventToHook: Record<InteractionEvent, HookEvent> = {
+  [InteractionEvent.Register]: HookEvent.PostRegister,
+  [InteractionEvent.SignIn]: HookEvent.PostSignIn,
+  [InteractionEvent.ForgotPassword]: HookEvent.PostResetPassword,
 };
 
 export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;

@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { mockEsm, mockEsmDefault, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -24,7 +24,7 @@ describe('verifyUserAccount', () => {
 
   it('empty identifiers with accountId', async () => {
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       accountId: 'foo',
     };
 
@@ -35,7 +35,7 @@ describe('verifyUserAccount', () => {
 
   it('empty identifiers withOut accountId should throw', async () => {
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
     };
 
     await expect(verifyUserAccount(interaction)).rejects.toMatchError(
@@ -45,48 +45,48 @@ describe('verifyUserAccount', () => {
 
   it('verify accountId identifier', async () => {
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [{ key: 'accountId', value: 'foo' }],
     };
 
     const result = await verifyUserAccount(interaction);
 
-    expect(result).toEqual({ event: Event.SignIn, accountId: 'foo', identifiers: [] });
+    expect(result).toEqual({ event: InteractionEvent.SignIn, accountId: 'foo', identifiers: [] });
   });
 
   it('verify emailVerified identifier', async () => {
     findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
 
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [{ key: 'emailVerified', value: 'email' }],
     };
 
     const result = await verifyUserAccount(interaction);
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
 
-    expect(result).toEqual({ event: Event.SignIn, accountId: 'foo', identifiers: [] });
+    expect(result).toEqual({ event: InteractionEvent.SignIn, accountId: 'foo', identifiers: [] });
   });
 
   it('verify phoneVerified identifier', async () => {
     findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
 
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [{ key: 'phoneVerified', value: '123456' }],
     };
 
     const result = await verifyUserAccount(interaction);
     expect(findUserByIdentifierMock).toBeCalledWith({ phone: '123456' });
 
-    expect(result).toEqual({ event: Event.SignIn, accountId: 'foo', identifiers: [] });
+    expect(result).toEqual({ event: InteractionEvent.SignIn, accountId: 'foo', identifiers: [] });
   });
 
   it('verify social identifier', async () => {
     findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
 
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [{ key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } }],
     };
 
@@ -96,14 +96,14 @@ describe('verifyUserAccount', () => {
       userInfo: { id: 'foo' },
     });
 
-    expect(result).toEqual({ event: Event.SignIn, accountId: 'foo', identifiers: [] });
+    expect(result).toEqual({ event: InteractionEvent.SignIn, accountId: 'foo', identifiers: [] });
   });
 
   it('verify social identifier user identity not exist', async () => {
     findUserByIdentifierMock.mockResolvedValueOnce(null);
 
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [{ key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } }],
     };
 
@@ -127,7 +127,7 @@ describe('verifyUserAccount', () => {
     findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
 
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [
         { key: 'accountId', value: 'foo' },
         { key: 'emailVerified', value: 'email' },
@@ -137,14 +137,14 @@ describe('verifyUserAccount', () => {
     const result = await verifyUserAccount(interaction);
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
 
-    expect(result).toEqual({ event: Event.SignIn, accountId: 'foo', identifiers: [] });
+    expect(result).toEqual({ event: InteractionEvent.SignIn, accountId: 'foo', identifiers: [] });
   });
 
   it('verify accountId and emailVerified identifier with email user not exist', async () => {
     findUserByIdentifierMock.mockResolvedValueOnce(null);
 
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [
         { key: 'accountId', value: 'foo' },
         { key: 'emailVerified', value: 'email' },
@@ -164,7 +164,7 @@ describe('verifyUserAccount', () => {
       .mockResolvedValueOnce({ id: 'foo2', isSuspended: true });
 
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [
         { key: 'emailVerified', value: 'email' },
         { key: 'phoneVerified', value: '123456' },
@@ -185,7 +185,7 @@ describe('verifyUserAccount', () => {
       .mockResolvedValueOnce({ id: 'foo2' });
 
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [
         { key: 'emailVerified', value: 'email' },
         { key: 'phoneVerified', value: '123456' },
@@ -203,7 +203,7 @@ describe('verifyUserAccount', () => {
     findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
 
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       accountId: 'foo2',
       identifiers: [{ key: 'emailVerified', value: 'email' }],
     };
@@ -218,7 +218,7 @@ describe('verifyUserAccount', () => {
     findUserByIdentifierMock.mockResolvedValueOnce({ id: 'foo' });
 
     const interaction: SignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifiers: [
         { key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } },
         { key: 'emailVerified', value: 'email' },
@@ -234,7 +234,7 @@ describe('verifyUserAccount', () => {
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
 
     expect(result).toEqual({
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       accountId: 'foo',
       identifiers: [
         { key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } },

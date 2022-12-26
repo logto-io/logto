@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
@@ -91,7 +91,7 @@ export default async function submitInteraction(
 ) {
   const { event, profile } = interaction;
 
-  if (event === Event.Register) {
+  if (event === InteractionEvent.Register) {
     const id = await generateUserId();
     const upsertProfile = await parseUserProfile(interaction);
 
@@ -107,7 +107,7 @@ export default async function submitInteraction(
 
   const { accountId } = interaction;
 
-  if (event === Event.SignIn) {
+  if (event === InteractionEvent.SignIn) {
     const user = await findUserById(accountId);
     const upsertProfile = await parseUserProfile(interaction, user);
 

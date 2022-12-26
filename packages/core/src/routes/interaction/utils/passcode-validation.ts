@@ -1,4 +1,4 @@
-import type { Event } from '@logto/schemas';
+import type { InteractionEvent } from '@logto/schemas';
 import { PasscodeType } from '@logto/schemas';
 
 import { createPasscode, sendPasscode, verifyPasscode } from '#src/libraries/passcode.js';
@@ -10,13 +10,14 @@ import type { SendPasscodePayload, PasscodeIdentifierPayload } from '../types/in
  * Refactor Needed:
  * This is a work around to map the latest interaction event type to old PasscodeType
  *  */
-const eventToPasscodeTypeMap: Record<Event, PasscodeType> = {
+const eventToPasscodeTypeMap: Record<InteractionEvent, PasscodeType> = {
   SignIn: PasscodeType.SignIn,
   Register: PasscodeType.Register,
   ForgotPassword: PasscodeType.ForgotPassword,
 };
 
-const getPasscodeTypeByEvent = (event: Event): PasscodeType => eventToPasscodeTypeMap[event];
+const getPasscodeTypeByEvent = (event: InteractionEvent): PasscodeType =>
+  eventToPasscodeTypeMap[event];
 
 export const sendPasscodeToIdentifier = async (
   payload: SendPasscodePayload,
@@ -36,7 +37,7 @@ export const sendPasscodeToIdentifier = async (
 };
 
 export const verifyIdentifierByPasscode = async (
-  payload: PasscodeIdentifierPayload & { event: Event },
+  payload: PasscodeIdentifierPayload & { event: InteractionEvent },
   jti: string,
   createLog: LogContext['createLog']
 ) => {

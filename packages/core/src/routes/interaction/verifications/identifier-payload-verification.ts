@@ -1,5 +1,5 @@
 import type {
-  Event,
+  InteractionEvent,
   IdentifierPayload,
   SocialConnectorPayload,
   SocialIdentityPayload,
@@ -41,7 +41,7 @@ const verifyPasswordIdentifier = async (
 };
 
 const verifyPasscodeIdentifier = async (
-  event: Event,
+  event: InteractionEvent,
   identifier: PasscodeIdentifierPayload,
   ctx: Context,
   provider: Provider

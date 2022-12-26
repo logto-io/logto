@@ -1,5 +1,5 @@
 import type { Profile, User } from '@logto/schemas';
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { argon2Verify } from 'hash-wasm';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
@@ -175,7 +175,7 @@ export default async function verifyProfile(
 ): Promise<VerifiedInteractionResult> {
   const { event, identifiers, accountId, profile = {} } = interaction;
 
-  if (event === Event.Register) {
+  if (event === InteractionEvent.Register) {
     // Verify the profile includes sufficient identifiers to register a new account
     assertThat(
       isValidRegisterInteractionResult(interaction),
@@ -188,7 +188,7 @@ export default async function verifyProfile(
     return interaction;
   }
 
-  if (event === Event.SignIn) {
+  if (event === InteractionEvent.SignIn) {
     verifyProfileIdentifiers(profile, identifiers);
     // Find existing account
     const user = await findUserById(accountId);

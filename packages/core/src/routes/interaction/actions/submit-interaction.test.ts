@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { mockEsm, pickDefault } from '@logto/shared/esm';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -93,7 +93,7 @@ describe('submit action', () => {
 
   it('register', async () => {
     const interaction: VerifiedRegisterInteractionResult = {
-      event: Event.Register,
+      event: InteractionEvent.Register,
       profile,
       identifiers,
     };
@@ -117,7 +117,7 @@ describe('submit action', () => {
       dbEntry: { syncProfile: false },
     });
     const interaction: VerifiedSignInInteractionResult = {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       accountId: 'foo',
       profile: { connectorId: 'logto', password: 'password' },
       identifiers,
@@ -142,7 +142,7 @@ describe('submit action', () => {
 
   it('reset password', async () => {
     const interaction: VerifiedForgotPasswordInteractionResult = {
-      event: Event.ForgotPassword,
+      event: InteractionEvent.ForgotPassword,
       accountId: 'foo',
       profile: { password: 'password' },
     };

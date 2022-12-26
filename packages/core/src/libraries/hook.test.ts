@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { HookEvent } from '@logto/schemas/lib/models/hooks.js';
 import { mockEsm, mockEsmDefault } from '@logto/shared/esm';
 import type { InferModelType } from '@withtyped/server';
@@ -61,7 +61,7 @@ describe('triggerInteractionHooksIfNeeded()', () => {
         jti: 'some_jti',
         result: {
           login: { accountId: '123' },
-          event: Event.SignIn,
+          event: InteractionEvent.SignIn,
           identifier: { connectorId: 'bar' },
         },
         params: { client_id: 'some_client' },

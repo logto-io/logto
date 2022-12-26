@@ -1,4 +1,4 @@
-import { Event } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -28,7 +28,7 @@ describe('Should throw when providing existing identifiers in profile', () => {
     { key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } },
   ];
   const baseInteraction: IdentifierVerifiedInteractionResult = {
-    event: Event.SignIn,
+    event: InteractionEvent.SignIn,
     accountId: 'foo',
     identifiers,
   };
