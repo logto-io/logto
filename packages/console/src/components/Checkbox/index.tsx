@@ -51,16 +51,16 @@ const Checkbox = ({
 
   return (
     <div className={classNames(styles.checkbox, disabled && styles.disabled, className)}>
-      <Tooltip horizontalAlign="start" content={tooltip}>
-        <div
-          aria-checked={checked}
-          className={styles.wrapper}
-          role="checkbox"
-          tabIndex={0}
-          onClick={handleChange}
-          onKeyDown={onKeyDownHandler(handleChange)}
-        >
-          <input type="checkbox" checked={checked} disabled={disabled} name={name} />
+      <div
+        aria-checked={checked}
+        className={styles.wrapper}
+        role="checkbox"
+        tabIndex={0}
+        onClick={handleChange}
+        onKeyDown={onKeyDownHandler(handleChange)}
+      >
+        <input type="checkbox" checked={checked} disabled={disabled} name={name} />
+        <Tooltip horizontalAlign="start" content={tooltip} anchorClassName={styles.tooltipAnchor}>
           <svg
             className={classNames(
               styles.icon,
@@ -104,9 +104,9 @@ const Checkbox = ({
               />
             )}
           </svg>
-          {label && <span className={styles.label}>{label}</span>}
-        </div>
-      </Tooltip>
+        </Tooltip>
+        {label && <span className={styles.label}>{label}</span>}
+      </div>
     </div>
   );
 };

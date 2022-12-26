@@ -12,7 +12,6 @@
   .icon {
     width: 20px;
     height: 20px;
-    margin-right: _.unit(2);
 
     .border {
       fill: var(--color-text-secondary);
@@ -49,6 +48,12 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+  }
+
+  .tooltipAnchor {
+    display: flex;
+    align-items: center;
+    margin-right: _.unit(2);
   }
 
   .label {
