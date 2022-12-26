@@ -10,7 +10,7 @@ import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { verifyUserPassword } from '#src/libraries/user.js';
-import { getConnectorSessionResult } from '#src/routes/session/utils.js';
+import { getConnectorSessionResult } from '#src/routes/interaction/utils/interaction.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type {
