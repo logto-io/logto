@@ -1,4 +1,4 @@
-import { mockEsmDefault, pickDefault } from '@logto/shared/esm';
+import { mockEsm, pickDefault } from '@logto/shared/esm';
 import Koa from 'koa';
 
 import { emptyMiddleware } from '#src/utils/test-utils.js';
@@ -14,7 +14,10 @@ const middlewareList = [
   'spa-proxy',
 ].map((name) => {
   const mock = jest.fn(() => emptyMiddleware);
-  mockEsmDefault(`#src/middleware/koa-${name}.js`, () => mock);
+  mockEsm(`#src/middleware/koa-${name}.js`, () => ({
+    default: mock,
+    ...(name === 'audit-log' && { LogEntry: jest.fn() }),
+  }));
 
   return mock;
 });

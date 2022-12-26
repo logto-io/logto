@@ -214,11 +214,10 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   router.post(
     `${interactionPrefix}/submit`,
     koaInteractionSie(),
-    koaInteractionHooks(),
+    koaInteractionHooks(provider),
     async (ctx, next) => {
       const { interactionDetails } = ctx;
       const interactionStorage = getInteractionStorage(interactionDetails.result);
-
       const { event } = interactionStorage;
 
       const accountVerifiedInteraction = await verifyIdentifier(ctx, provider, interactionStorage);

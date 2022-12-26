@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import { createServer } from 'http';
 import path from 'path';
 
 import type { User, SignIn, SignInIdentifier } from '@logto/schemas';
@@ -187,4 +188,27 @@ export const expectRequestError = (error: unknown, code: string, messageIncludes
   if (messageIncludes) {
     expect(body.message.includes(messageIncludes)).toBeTruthy();
   }
+};
+
+export const createMockServer = (port: number) => {
+  const server = createServer((request, response) => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    response.statusCode = 204;
+    response.end();
+  });
+
+  return {
+    listen: async () =>
+      new Promise((resolve) => {
+        server.listen(port, () => {
+          resolve(true);
+        });
+      }),
+    close: async () =>
+      new Promise((resolve) => {
+        server.close(() => {
+          resolve(true);
+        });
+      }),
+  };
 };
