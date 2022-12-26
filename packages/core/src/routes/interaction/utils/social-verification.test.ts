@@ -1,7 +1,9 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { mockEsm } from '@logto/shared/esm';
 
+import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 
 const { jest } = import.meta;
 
@@ -24,16 +26,13 @@ const log = createMockLogContext();
 
 describe('social-verification', () => {
   it('verifySocialIdentity', async () => {
-    const getSession = jest.fn();
+    const provider = createMockProvider();
+    const ctx = { ...createMockContext(), ...log };
     const connectorId = 'connector';
     const connectorData = { authCode: 'code' };
-    const userInfo = await verifySocialIdentity(
-      { connectorId, connectorData },
-      log.createLog,
-      getSession
-    );
+    const userInfo = await verifySocialIdentity({ connectorId, connectorData }, ctx, provider);
 
-    expect(getUserInfoByAuthCode).toBeCalledWith(connectorId, connectorData, getSession);
+    expect(getUserInfoByAuthCode).toBeCalledWith(connectorId, connectorData, expect.anything());
     expect(userInfo).toEqual({ id: 'foo' });
   });
 });
