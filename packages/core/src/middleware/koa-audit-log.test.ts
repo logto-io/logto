@@ -10,14 +10,14 @@ import type { WithLogContext, LogPayload } from './koa-audit-log.js';
 
 const { jest } = import.meta;
 
-const nanoIdMock = 'mockId';
-
 const { insertLog } = mockEsm('#src/queries/log.js', () => ({
   insertLog: jest.fn(),
 }));
 
-mockEsm('nanoid', () => ({
-  nanoid: () => nanoIdMock,
+// TODO: @Gao fix `mockEsm()` import issue
+const nanoIdMock = 'mockId';
+jest.unstable_mockModule('@logto/core-kit', () => ({
+  generateStandardId: () => nanoIdMock,
 }));
 
 const koaLog = await pickDefault(import('./koa-audit-log.js'));

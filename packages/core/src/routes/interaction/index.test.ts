@@ -92,15 +92,17 @@ const { sendPasscodeToIdentifier } = await mockEsmWithActual(
 
 const { createLog, prependAllLogEntries } = createMockLogContext();
 
-mockEsmDefault(
+await mockEsmWithActual(
   '#src/middleware/koa-audit-log.js',
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  (): typeof koaAuditLog => () => async (ctx, next) => {
-    ctx.createLog = createLog;
-    ctx.prependAllLogEntries = prependAllLogEntries;
+  (): { default: typeof koaAuditLog } => ({
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    default: () => async (ctx, next) => {
+      ctx.createLog = createLog;
+      ctx.prependAllLogEntries = prependAllLogEntries;
 
-    return next();
-  }
+      return next();
+    },
+  })
 );
 
 const {
@@ -272,7 +274,7 @@ describe('session -> interactionRoutes', () => {
     });
 
     it('should not call validateMandatoryUserProfile for forgot password request', async () => {
-      getInteractionStorage.mockReturnValueOnce({
+      getInteractionStorage.mockReturnValue({
         event: InteractionEvent.ForgotPassword,
       });
 

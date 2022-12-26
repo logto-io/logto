@@ -218,7 +218,6 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { interactionDetails } = ctx;
       const interactionStorage = getInteractionStorage(interactionDetails.result);
-
       const { event } = interactionStorage;
 
       const accountVerifiedInteraction = await verifyIdentifier(ctx, provider, interactionStorage);

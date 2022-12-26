@@ -28,7 +28,7 @@ const eventToHook: Record<InteractionEvent, HookEvent> = {
 export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
 
 export const triggerInteractionHooksIfNeeded = async (
-  event: Event,
+  event: InteractionEvent,
   details?: Interaction,
   userAgent?: string
 ) => {
@@ -87,7 +87,8 @@ export const triggerInteractionHooksIfNeeded = async (
           .catch(async (error) => {
             logEntry.append({
               result: LogResult.Error,
-              response: error instanceof HTTPError ? parseResponse(error.response) : String(error),
+              response: conditional(error instanceof HTTPError && parseResponse(error.response)),
+              error: conditional(error instanceof Error && String(error)),
             });
           });
 

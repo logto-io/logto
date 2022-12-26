@@ -1,3 +1,4 @@
+import { InteractionEvent, LogResult } from '@logto/schemas';
 import { HookEvent } from '@logto/schemas/lib/models/hooks.js';
 import { mockEsm, mockEsmDefault } from '@logto/shared/esm';
 import type { InferModelType } from '@withtyped/server';
@@ -24,8 +25,20 @@ const readAll = jest
   .spyOn(modelRouters.hook.client, 'readAll')
   .mockResolvedValue({ rows: [hook], rowCount: 1 });
 
-// @ts-expect-error for testing
-const post = jest.spyOn(got, 'post').mockImplementation(jest.fn(() => ({ json: jest.fn() })));
+const post = jest
+  .spyOn(got, 'post')
+  // @ts-expect-error for testing
+  .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
+
+// TODO: @Gao fix `mockEsm()` import issue
+const nanoIdMock = 'mockId';
+jest.unstable_mockModule('@logto/core-kit', () => ({
+  generateStandardId: () => nanoIdMock,
+}));
+
+const { insertLog } = mockEsm('#src/queries/log.js', () => ({
+  insertLog: jest.fn(),
+}));
 
 mockEsm('#src/queries/user.js', () => ({
   findUserById: () => ({ id: 'user_id', username: 'user', extraField: 'not_ok' }),
@@ -46,7 +59,7 @@ describe('triggerInteractionHooksIfNeeded()', () => {
   });
 
   it('should return if no user ID found', async () => {
-    await triggerInteractionHooksIfNeeded(Event.SignIn);
+    await triggerInteractionHooksIfNeeded(InteractionEvent.SignIn);
 
     expect(queryFunction).not.toBeCalled();
   });
@@ -55,7 +68,7 @@ describe('triggerInteractionHooksIfNeeded()', () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
     await triggerInteractionHooksIfNeeded(
-      Event.SignIn,
+      InteractionEvent.SignIn,
       // @ts-expect-error for testing
       {
         jti: 'some_jti',
@@ -80,6 +93,18 @@ describe('triggerInteractionHooksIfNeeded()', () => {
       retry: { limit: 3 },
       timeout: { request: 10_000 },
     });
+
+    const calledPayload: unknown = insertLog.mock.calls[0][0];
+    expect(calledPayload).toHaveProperty('id', nanoIdMock);
+    expect(calledPayload).toHaveProperty('key', 'TriggerHook.' + HookEvent.PostSignIn);
+    expect(calledPayload).toHaveProperty('payload.result', LogResult.Success);
+    expect(calledPayload).toHaveProperty('payload.hookId', 'foo');
+    expect(calledPayload).toHaveProperty('payload.json.event', HookEvent.PostSignIn);
+    expect(calledPayload).toHaveProperty('payload.json.interactionEvent', InteractionEvent.SignIn);
+    expect(calledPayload).toHaveProperty('payload.json.hookId', 'foo');
+    expect(calledPayload).toHaveProperty('payload.json.userId', '123');
+    expect(calledPayload).toHaveProperty('payload.response.statusCode', 200);
+    expect(calledPayload).toHaveProperty('payload.response.body.message', 'ok');
     jest.useRealTimers();
   });
 });

@@ -1,13 +1,15 @@
 import type { LogKey } from '@logto/schemas';
-import { LogResult, Event } from '@logto/schemas';
+import { SignInIdentifier, LogResult, InteractionEvent } from '@logto/schemas';
 import type { Hooks } from '@logto/schemas/models';
 import { HookEvent } from '@logto/schemas/models';
 import type { InferModelType } from '@withtyped/server';
 
 import { authedAdminApi, deleteUser, getLogs, putInteraction } from '#src/api/index.js';
 import { createMockServer } from '#src/helpers.js';
+import { waitFor } from '#src/utils.js';
 
 import { initClient, processSession } from './interaction/utils/client.js';
+import { enableAllPasswordSignInMethods } from './interaction/utils/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from './interaction/utils/user.js';
 
 type Hook = InferModelType<typeof Hooks>;
@@ -22,6 +24,21 @@ const createPayload = (event: HookEvent, url = 'not_work_url'): Partial<Hook> =>
 });
 
 describe('hooks', () => {
+  const { listen, close } = createMockServer(9999);
+
+  beforeAll(async () => {
+    await enableAllPasswordSignInMethods({
+      identifiers: [SignInIdentifier.Username],
+      password: true,
+      verify: false,
+    });
+    await listen();
+  });
+
+  afterAll(async () => {
+    await close();
+  });
+
   it('should be able to create, query, and delete a hook', async () => {
     const payload = createPayload(HookEvent.PostRegister);
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
@@ -51,19 +68,23 @@ describe('hooks', () => {
     } = await generateNewUser({ username: true, password: true });
     const client = await initClient();
     await client.successSend(putInteraction, {
-      event: Event.SignIn,
+      event: InteractionEvent.SignIn,
       identifier: {
         username,
         password,
       },
     });
     await client.submitInteraction();
+    await waitFor(500); // Wait for hooks execution
 
     // Check hook trigger log
     const logs = await getLogs(new URLSearchParams({ logKey, page_size: '100' }));
     expect(
       logs.some(
-        ({ payload: { hookId, result } }) => hookId === createdHook.id && result === LogResult.Error
+        ({ payload: { hookId, result, error } }) =>
+          hookId === createdHook.id &&
+          result === LogResult.Error &&
+          error === 'RequestError: Invalid URL'
       )
     ).toBeTruthy();
 
@@ -80,14 +101,12 @@ describe('hooks', () => {
         .json<Hook>(),
     ]);
     const logKey: LogKey = 'TriggerHook.PostRegister';
-    const { listen, close } = createMockServer(9999);
-    await listen(); // Start mock server
 
     // Init session and submit
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const client = await initClient();
     await client.send(putInteraction, {
-      event: Event.Register,
+      event: InteractionEvent.Register,
       profile: {
         username,
         password,
@@ -95,13 +114,14 @@ describe('hooks', () => {
     });
     const { redirectTo } = await client.submitInteraction();
     const id = await processSession(client, redirectTo);
-    await close(); // Stop mock server early
+    await waitFor(500); // Wait for hooks execution
 
     // Check hook trigger log
     const logs = await getLogs(new URLSearchParams({ logKey, page_size: '100' }));
     expect(
       logs.some(
-        ({ payload: { hookId, result } }) => hookId === hook1.id && result === LogResult.Error
+        ({ payload: { hookId, result, error } }) =>
+          hookId === hook1.id && result === LogResult.Error && error === 'RequestError: Invalid URL'
       )
     ).toBeTruthy();
     expect(
