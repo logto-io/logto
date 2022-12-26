@@ -1,8 +1,9 @@
 import { AppearanceMode, ConnectorType } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Plus from '@/assets/images/plus.svg';
 import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
@@ -13,6 +14,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
+import { ConnectorsTabs } from '@/consts/page-tabs';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import { useTheme } from '@/hooks/use-theme';
 import * as resourcesStyles from '@/scss/resources.module.scss';
@@ -24,11 +26,28 @@ import CreateForm from './components/CreateForm';
 import SignInExperienceSetupNotice from './components/SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
 
+const basePathname = '/connectors';
+const passwordlessPathname = `${basePathname}/${ConnectorsTabs.Passwordless}`;
+const socialPathname = `${basePathname}/${ConnectorsTabs.Social}`;
+
+const buildCreatePathname = (connectorType: ConnectorType) => {
+  const pathname = connectorType === ConnectorType.Social ? socialPathname : passwordlessPathname;
+
+  return `${pathname}/create/${connectorType}`;
+};
+
+const isConnectorType = (value: string): value is ConnectorType =>
+  Object.values<string>(ConnectorType).includes(value);
+
+const parseToConnectorType = (value?: string): ConnectorType | undefined =>
+  conditional(value && isConnectorType(value) && value);
+
 const Connectors = () => {
-  const location = useLocation();
-  const isSocial = location.pathname === '/connectors/social';
+  const { tab = ConnectorsTabs.Passwordless, createType } = useParams();
+  const createConnectorType = parseToConnectorType(createType);
+  const navigate = useNavigate();
+  const isSocial = tab === ConnectorsTabs.Social;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [createType, setCreateType] = useState<ConnectorType>();
   const { data, error, mutate } = useConnectorGroups();
   const isLoading = !data && !error;
   const theme = useTheme();
@@ -66,15 +85,15 @@ const Connectors = () => {
               size="large"
               icon={<Plus />}
               onClick={() => {
-                setCreateType(ConnectorType.Social);
+                navigate(buildCreatePathname(ConnectorType.Social));
               }}
             />
           )}
         </div>
         <SignInExperienceSetupNotice />
         <TabNav className={styles.tabs}>
-          <TabNavItem href="/connectors">{t('connectors.tab_email_sms')}</TabNavItem>
-          <TabNavItem href="/connectors/social">{t('connectors.tab_social')}</TabNavItem>
+          <TabNavItem href={passwordlessPathname}>{t('connectors.tab_email_sms')}</TabNavItem>
+          <TabNavItem href={socialPathname}>{t('connectors.tab_social')}</TabNavItem>
         </TabNav>
         <div className={resourcesStyles.table}>
           <div className={tableStyles.scrollable}>
@@ -113,7 +132,7 @@ const Connectors = () => {
                       title="connectors.create"
                       type="outline"
                       onClick={() => {
-                        setCreateType(ConnectorType.Social);
+                        navigate(buildCreatePathname(ConnectorType.Social));
                       }}
                     />
                   </TableEmpty>
@@ -123,7 +142,7 @@ const Connectors = () => {
                     connectors={smsConnector ? [smsConnector] : []}
                     type={ConnectorType.Sms}
                     onClickSetup={() => {
-                      setCreateType(ConnectorType.Sms);
+                      navigate(buildCreatePathname(ConnectorType.Sms));
                     }}
                   />
                 )}
@@ -132,7 +151,7 @@ const Connectors = () => {
                     connectors={emailConnector ? [emailConnector] : []}
                     type={ConnectorType.Email}
                     onClickSetup={() => {
-                      setCreateType(ConnectorType.Email);
+                      navigate(buildCreatePathname(ConnectorType.Email));
                     }}
                   />
                 )}
@@ -145,10 +164,10 @@ const Connectors = () => {
         </div>
       </div>
       <CreateForm
-        isOpen={Boolean(createType)}
-        type={createType}
+        isOpen={Boolean(createConnectorType)}
+        type={createConnectorType}
         onClose={() => {
-          setCreateType(undefined);
+          navigate(`${basePathname}/${tab}`);
           void mutate();
         }}
       />

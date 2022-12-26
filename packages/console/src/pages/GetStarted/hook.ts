@@ -17,6 +17,7 @@ import PasswordlessDark from '@/assets/images/passwordless-dark.svg';
 import Passwordless from '@/assets/images/passwordless.svg';
 import SocialDark from '@/assets/images/social-dark.svg';
 import Social from '@/assets/images/social.svg';
+import { ConnectorsTabs } from '@/consts/page-tabs';
 import { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSettings from '@/hooks/use-settings';
@@ -99,7 +100,7 @@ const useGetStartedMetadata = () => {
         buttonText: 'general.set_up',
         isComplete: settings?.passwordlessConfigured,
         onClick: () => {
-          navigate('/connectors');
+          navigate(`/connectors/${ConnectorsTabs.Passwordless}`);
         },
       },
       {
@@ -110,7 +111,7 @@ const useGetStartedMetadata = () => {
         buttonText: 'general.add',
         isComplete: settings?.socialSignInConfigured,
         onClick: () => {
-          navigate('/connectors/social');
+          navigate(`/connectors/${ConnectorsTabs.Social}`);
         },
       },
       {
