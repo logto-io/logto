@@ -46,7 +46,7 @@
     "@logto/core-kit": "workspace:*",
     "@logto/schemas": "workspace:*",
     "@logto/shared": "workspace:*",
-    "@silverhand/essentials": "2.0.0",
+    "@silverhand/essentials": "2.1.0",
     "chalk": "^5.0.0",
     "decamelize": "^6.0.0",
     "dotenv": "^16.0.0",
