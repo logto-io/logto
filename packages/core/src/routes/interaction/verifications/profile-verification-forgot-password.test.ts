@@ -1,9 +1,10 @@
 import { InteractionEvent } from '@logto/schemas';
-import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
 const { jest } = import.meta;
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const { findUserById } = await mockEsmWithActual('#src/queries/user.js', () => ({
   findUserById: jest.fn().mockResolvedValue({ id: 'foo', passwordEncrypted: 'passwordHash' }),

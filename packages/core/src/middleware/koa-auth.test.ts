@@ -1,5 +1,5 @@
 import { UserRole } from '@logto/schemas';
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
@@ -10,6 +10,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import type { WithAuthContext } from './koa-auth.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const { jwtVerify } = mockEsm('jose', () => ({
   jwtVerify: jest.fn().mockReturnValue({ payload: { sub: 'fooUser', role_names: ['admin'] } }),

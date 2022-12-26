@@ -10,6 +10,7 @@ import { createTestPool } from '#src/utils/test-utils.js';
 import { buildInsertInto } from './insert-into.js';
 
 const { jest } = import.meta;
+
 const poolSpy = jest.spyOn(envSet, 'pool', 'get');
 
 const buildExpectedInsertIntoSql = (keys: string[]) => [

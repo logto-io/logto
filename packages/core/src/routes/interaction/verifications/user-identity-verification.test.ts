@@ -1,11 +1,12 @@
 import { InteractionEvent } from '@logto/schemas';
-import { mockEsm, mockEsmDefault, pickDefault } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
 import type { SignInInteractionResult } from '../types/index.js';
 
 const { jest } = import.meta;
+const { mockEsm, mockEsmDefault } = createMockUtils(jest);
 
 const findUserByIdentifier = mockEsmDefault('../utils/find-user-by-identifier.js', () => jest.fn());
 

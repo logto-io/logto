@@ -1,10 +1,12 @@
-import { mockEsmWithActual } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import { Provider } from 'oidc-provider';
 
 import { MountedApps } from '#src/env-set/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+const { mockEsmWithActual } = createMockUtils(jest);
 
 await mockEsmWithActual('fs/promises', () => ({
   readdir: jest.fn().mockResolvedValue(['index.js']),

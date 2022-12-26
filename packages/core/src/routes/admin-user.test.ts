@@ -1,6 +1,6 @@
 import type { CreateUser, Role, User } from '@logto/schemas';
 import { userInfoSelectFields } from '@logto/schemas';
-import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { pick } from '@silverhand/essentials';
 
 import {
@@ -12,6 +12,8 @@ import {
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+
 const filterUsersWithSearch = (users: User[], search: string) =>
   users.filter((user) =>
     [user.username, user.primaryEmail, user.primaryPhone, user.name].some((value) =>

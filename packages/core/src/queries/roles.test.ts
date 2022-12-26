@@ -10,6 +10,7 @@ import { expectSqlAssert } from '#src/utils/test-utils.js';
 import { findAllRoles, findRolesByRoleNames } from './roles.js';
 
 const { jest } = import.meta;
+
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
 jest.spyOn(envSet, 'pool', 'get').mockReturnValue(

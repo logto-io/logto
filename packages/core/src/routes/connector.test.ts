@@ -2,7 +2,7 @@
 import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
 import { ConnectorPlatform, MessageTypes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
-import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { any } from 'zod';
 
 import {
@@ -23,6 +23,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 mockEsm('#src/libraries/connector.js', () => ({
   checkSocialConnectorTargetAndPlatformUniqueness: jest.fn(),

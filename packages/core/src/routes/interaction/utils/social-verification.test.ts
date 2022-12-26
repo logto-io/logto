@@ -1,11 +1,12 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { mockEsm } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const { getUserInfoByAuthCode } = mockEsm('#src/libraries/social.js', () => ({
   getUserInfoByAuthCode: jest.fn().mockResolvedValue({ id: 'foo' }),

@@ -1,5 +1,5 @@
 import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
-import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type { Provider } from 'oidc-provider';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
@@ -10,6 +10,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
 
 const { jest } = import.meta;
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const { findUserById } = await mockEsmWithActual('#src/queries/user.js', () => ({
   findUserById: jest.fn(),

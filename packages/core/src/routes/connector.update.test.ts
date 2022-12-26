@@ -1,6 +1,6 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
-import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import {
   mockMetadata,
@@ -14,6 +14,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const getLogtoConnectors = jest.fn() as jest.MockedFunction<() => Promise<LogtoConnector[]>>;
 const getLogtoConnectorById = jest.fn(async (connectorId: string) => {

@@ -1,8 +1,9 @@
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const mockBody = { key: 'a', payload: {}, createdAt: 123 };
 const mockLog = { id: '1', ...mockBody };

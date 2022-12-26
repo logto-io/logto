@@ -13,6 +13,7 @@ import createMockCookies from './create-mock-cookies.js';
 
 const { jest } = import.meta;
 
+
 export type Dictionary<T> = Record<string, T>;
 
 export type MockContext = {

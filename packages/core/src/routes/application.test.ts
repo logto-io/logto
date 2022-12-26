@@ -1,10 +1,11 @@
 import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockApplication } from '#src/__mocks__/index.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const { findApplicationById } = mockEsm('#src/queries/application.js', () => ({
   findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
@@ -29,8 +30,7 @@ const { findApplicationById } = mockEsm('#src/queries/application.js', () => ({
   ),
 }));
 
-// Cannot use `mockEsm()` here, pending investigation.
-jest.unstable_mockModule('@logto/core-kit', () => ({
+mockEsm('@logto/core-kit', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => 'randomId',
   generateStandardId: () => 'randomId',

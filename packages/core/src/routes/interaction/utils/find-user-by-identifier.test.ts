@@ -1,6 +1,7 @@
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const queries = {
   findUserByEmail: jest.fn(),

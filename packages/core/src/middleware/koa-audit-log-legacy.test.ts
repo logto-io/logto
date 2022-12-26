@@ -1,6 +1,6 @@
 import { LogResult } from '@logto/schemas';
 import type { LogPayload } from '@logto/schemas/lib/types/log-legacy.js';
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import i18next from 'i18next';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -9,6 +9,8 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import type { WithLogContextLegacy } from './koa-audit-log-legacy.js';
 
 const { jest } = import.meta;
+
+const { mockEsm } = createMockUtils(jest);
 
 const nanoIdMock = 'mockId';
 

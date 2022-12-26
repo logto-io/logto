@@ -7,6 +7,7 @@ import { expectSqlAssert } from '../test-utilities.js';
 import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './logto-config.js';
 
 const { jest } = import.meta;
+
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
 const pool = createMockPool({

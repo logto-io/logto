@@ -1,11 +1,13 @@
 import { PasscodeType, InteractionEvent } from '@logto/schemas';
-import { mockEsmWithActual } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 
 import type { SendPasscodePayload } from '../types/index.js';
 
 const { jest } = import.meta;
+const { mockEsmWithActual } = createMockUtils(jest);
+
 const passcode = {
   createPasscode: jest.fn(() => ({})),
   sendPasscode: jest.fn().mockResolvedValue({ dbEntry: { id: 'foo' } }),

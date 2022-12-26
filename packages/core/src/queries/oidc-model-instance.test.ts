@@ -1,7 +1,7 @@
 import type { CreateOidcModelInstance } from '@logto/schemas';
 import { OidcModelInstances } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
-import { mockEsmWithActual } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import envSet from '#src/env-set/index.js';
@@ -9,6 +9,9 @@ import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+const { mockEsmWithActual } = createMockUtils(jest);
+
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
 jest.spyOn(envSet, 'pool', 'get').mockReturnValue(

@@ -2,7 +2,7 @@ import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-ui';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 import { BrandingStyle } from '@logto/schemas';
-import { mockEsm } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 
 import {
   socialTarget01,
@@ -14,6 +14,8 @@ import {
 import RequestError from '#src/errors/RequestError/index.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
+
 const allCustomLanguageTags: LanguageTag[] = [];
 
 const { findAllCustomLanguageTags } = mockEsm('#src/queries/custom-phrase.js', () => ({

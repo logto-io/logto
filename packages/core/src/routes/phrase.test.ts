@@ -1,13 +1,15 @@
 import zhCN from '@logto/phrases-ui/lib/locales/zh-cn.js';
 import type { SignInExperience } from '@logto/schemas';
 import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas';
-import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 
 const { jest } = import.meta;
+
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const customizedLanguage = zhCnTag;
 

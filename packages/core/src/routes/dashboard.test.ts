@@ -1,6 +1,7 @@
 // The FP version works better for `format()`
 /* eslint-disable import/no-duplicates */
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import { endOfDay, subDays } from 'date-fns';
 import { format } from 'date-fns/fp';
 
@@ -8,6 +9,7 @@ import { createRequester } from '#src/utils/test-utils.js';
 /* eslint-enable import/no-duplicates */
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const totalUserCount = 1000;
 const formatToQueryDate = format('yyyy-MM-dd');

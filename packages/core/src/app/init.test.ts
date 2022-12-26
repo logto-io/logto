@@ -1,9 +1,10 @@
-import { mockEsm, pickDefault } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import Koa from 'koa';
 
 import { emptyMiddleware } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const middlewareList = [
   'error-handler',

@@ -1,11 +1,12 @@
 import { InteractionEvent } from '@logto/schemas';
-import { mockEsm, mockEsmWithActual, pickDefault } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
 import type { Identifier, IdentifierVerifiedInteractionResult } from '../types/index.js';
 
 const { jest } = import.meta;
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const { hasUser, hasUserWithEmail, hasUserWithPhone, hasUserWithIdentity } =
   await mockEsmWithActual('#src/queries/user.js', () => ({

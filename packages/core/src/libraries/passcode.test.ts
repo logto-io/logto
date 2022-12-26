@@ -1,7 +1,7 @@
 import { ConnectorType } from '@logto/connector-kit';
 import type { Passcode } from '@logto/schemas';
 import { PasscodeType } from '@logto/schemas';
-import { mockEsm } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import { any } from 'zod';
 
 import { mockConnector, mockMetadata } from '#src/__mocks__/index.js';
@@ -9,6 +9,7 @@ import { defaultConnectorMethods } from '#src/connectors/consts.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
 
 const {
   findUnconsumedPasscodeByJtiAndType,
