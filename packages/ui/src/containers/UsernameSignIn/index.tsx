@@ -36,9 +36,7 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
   const { isForgotPasswordEnabled, email } = useForgotPasswordSettings();
-  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(
-    SignInIdentifier.Username
-  );
+  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
 
   const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
 
@@ -56,16 +54,9 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
         return;
       }
 
-      void onSubmit(fieldValue.username, fieldValue.password);
+      void onSubmit(fieldValue);
     },
-    [
-      clearErrorMessage,
-      validateForm,
-      termsValidation,
-      onSubmit,
-      fieldValue.username,
-      fieldValue.password,
-    ]
+    [clearErrorMessage, validateForm, termsValidation, onSubmit, fieldValue]
   );
 
   return (

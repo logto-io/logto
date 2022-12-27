@@ -40,10 +40,8 @@ const PasswordSignInForm = ({
   value,
 }: Props) => {
   const { t } = useTranslation();
-  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(method);
-
+  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
   const { fieldValue, register, validateForm } = useForm(defaultState);
-
   const { isForgotPasswordEnabled, sms, email } = useForgotPasswordSettings();
 
   const onSubmitHandler = useCallback(
@@ -56,9 +54,14 @@ const PasswordSignInForm = ({
         return;
       }
 
-      void onSubmit(value, fieldValue.password);
+      const payload =
+        method === SignInIdentifier.Email
+          ? { email: value, password: fieldValue.password }
+          : { phone: value, password: fieldValue.password };
+
+      void onSubmit(payload);
     },
-    [clearErrorMessage, validateForm, onSubmit, value, fieldValue.password]
+    [clearErrorMessage, validateForm, onSubmit, method, value, fieldValue.password]
   );
 
   return (

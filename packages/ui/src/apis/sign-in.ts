@@ -9,69 +9,6 @@ type Response = {
   redirectTo: string;
 };
 
-export const signInWithUsername = async (
-  username: string,
-  password: string,
-  socialToBind?: string
-) => {
-  const result = await api
-    .post(`${apiPrefix}/sign-in/password/username`, {
-      json: {
-        username,
-        password,
-      },
-    })
-    .json<Response>();
-
-  if (result.redirectTo && socialToBind) {
-    await bindSocialAccount(socialToBind);
-  }
-
-  return result;
-};
-
-export const signInWithEmailPassword = async (
-  email: string,
-  password: string,
-  socialToBind?: string
-) => {
-  const result = await api
-    .post(`${apiPrefix}/sign-in/password/email`, {
-      json: {
-        email,
-        password,
-      },
-    })
-    .json<Response>();
-
-  if (result.redirectTo && socialToBind) {
-    await bindSocialAccount(socialToBind);
-  }
-
-  return result;
-};
-
-export const signInWithPhonePassword = async (
-  phone: string,
-  password: string,
-  socialToBind?: string
-) => {
-  const result = await api
-    .post(`${apiPrefix}/sign-in/password/sms`, {
-      json: {
-        phone,
-        password,
-      },
-    })
-    .json<Response>();
-
-  if (result.redirectTo && socialToBind) {
-    await bindSocialAccount(socialToBind);
-  }
-
-  return result;
-};
-
 export const signInWithSms = async (socialToBind?: string) => {
   const result = await api.post(`${apiPrefix}/sign-in/passwordless/sms`).json<Response>();
 

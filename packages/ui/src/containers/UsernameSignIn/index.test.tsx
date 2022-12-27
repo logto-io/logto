@@ -5,12 +5,12 @@ import { MemoryRouter } from 'react-router-dom';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
-import { signInWithUsername } from '@/apis/sign-in';
+import { signInWithPasswordIdentifier } from '@/apis/interaction';
 import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
 
 import UsernameSignIn from '.';
 
-jest.mock('@/apis/sign-in', () => ({ signInWithUsername: jest.fn(async () => 0) }));
+jest.mock('@/apis/interaction', () => ({ signInWithPasswordIdentifier: jest.fn(async () => 0) }));
 jest.mock('react-device-detect', () => ({
   isMobile: true,
 }));
@@ -190,7 +190,13 @@ describe('<UsernameSignIn>', () => {
 
     act(() => {
       void waitFor(() => {
-        expect(signInWithUsername).toBeCalledWith('username', 'password', undefined);
+        expect(signInWithPasswordIdentifier).toBeCalledWith(
+          {
+            username: 'username',
+            password: 'password',
+          },
+          undefined
+        );
       });
     });
   });

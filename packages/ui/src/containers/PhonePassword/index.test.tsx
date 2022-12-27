@@ -4,12 +4,14 @@ import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { signInWithPhonePassword } from '@/apis/sign-in';
+import { signInWithPasswordIdentifier } from '@/apis/interaction';
 import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
 
 import PhonePassword from '.';
 
-jest.mock('@/apis/sign-in', () => ({ signInWithPhonePassword: jest.fn(async () => 0) }));
+jest.mock('@/apis/interaction', () => ({
+  signInWithPasswordIdentifier: jest.fn(async () => ({ redirectTo: '/' })),
+}));
 // Terms Iframe Modal only shown on mobile device
 jest.mock('react-device-detect', () => ({
   isMobile: true,
@@ -185,7 +187,13 @@ describe('<PhonePassword>', () => {
 
     act(() => {
       void waitFor(() => {
-        expect(signInWithPhonePassword).toBeCalledWith('phone', 'password', undefined);
+        expect(signInWithPasswordIdentifier).toBeCalledWith(
+          {
+            phone: 'phone',
+            password: 'password',
+          },
+          undefined
+        );
       });
     });
   });
