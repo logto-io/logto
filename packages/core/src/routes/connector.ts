@@ -127,7 +127,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       }
 
       assertThat(
-        connectorFactory.metadata.isStandard !== true || metadata?.target,
+        connectorFactory.metadata.isStandard !== true || Boolean(metadata?.target),
         'connector.should_specify_target'
       );
       assertThat(
@@ -151,7 +151,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
             .filter(({ type }) => type === ConnectorType.Social)
             .some(
               ({ metadata: { target, platform } }) =>
-                target === cleanDeep(metadata)?.target &&
+                target ===
+                  (metadata ? cleanDeep(metadata).target : connectorFactory.metadata.target) &&
                 platform === connectorFactory.metadata.platform
             ),
           new RequestError({ code: 'connector.multiple_target_with_same_platform', status: 422 })
