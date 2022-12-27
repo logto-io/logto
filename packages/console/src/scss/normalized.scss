@@ -33,11 +33,6 @@ table {
       padding: _.unit(3);
       border-bottom: 1px solid var(--color-divider);
       text-align: left;
-
-      &:first-child,
-      &:last-child {
-        padding: _.unit(3) _.unit(8);
-      }
     }
   }
 
@@ -45,12 +40,7 @@ table {
     td {
       font: var(--font-body-medium);
       border-bottom: 1px solid var(--color-divider);
-      padding: _.unit(3) _.unit(2);
-
-      &:first-child,
-      &:last-child {
-        padding: _.unit(3) _.unit(8);
-      }
+      padding: _.unit(3);
     }
   }
 }

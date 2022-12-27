@@ -33,16 +33,19 @@
     }
   }
 
-  .form {
+  .container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    border-top: 1px solid var(--color-divider);
+    overflow: hidden;
+
+    .tableWrapper {
+      padding: 0;
+    }
 
     .content {
       flex: 1;
-      border-top: 1px solid var(--color-divider);
-      overflow-y: auto;
 
       .customValuesColumn {
         display: flex;
@@ -58,32 +61,9 @@
         height: 16px;
       }
 
-      > table {
-        border: none;
-
-        > thead {
-          position: sticky;
-          top: 0;
-          // Note: cells with `position: relative` style will overlap this sticky header, add a z-index to fix it.
-          z-index: 1;
-
-          tr > th {
-            padding: _.unit(1) _.unit(5);
-            font: var(--font-label-large);
-            color: var(--color-text);
-            background-color: var(--color-layer-1);
-          }
-        }
-
-        > tbody > tr > td {
-          padding: _.unit(2) _.unit(5);
-          border: none;
-          word-wrap: break-word;
-        }
-      }
-
       .sectionTitle {
-        @include _.subhead-cap;
+        @include _.subhead-cap-small;
+        color: var(--color-neutral-variant-60);
         background-color: var(--color-layer-light);
       }
 
@@ -94,7 +74,44 @@
       }
 
       .sectionBuiltInText {
-        padding: _.unit(2) 0;
+        padding: _.unit(2) _.unit(3);
+        border-radius: 6px;
+        border: 1px solid var(--color-border);
+        color: var(--color-text);
+        background: var(--color-layer-2);
+      }
+
+      .inputCell {
+        position: relative;
+      }
+
+      .sectionInputArea {
+        position: absolute;
+        inset: _.unit(2) _.unit(5);
+      }
+
+      table {
+        border: none;
+
+        thead {
+          tr > th {
+            padding: _.unit(1) _.unit(5);
+            font: var(--font-label-large);
+            color: var(--color-text);
+            background-color: var(--color-layer-1);
+            border-bottom: 1px solid var(--color-divider);
+          }
+        }
+
+        tbody {
+          tr {
+            td {
+              padding: _.unit(2) _.unit(5);
+              border: none;
+              word-wrap: break-word;
+            }
+          }
+        }
       }
     }
 
