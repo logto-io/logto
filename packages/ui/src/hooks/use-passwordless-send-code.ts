@@ -7,9 +7,9 @@ import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import type { UserFlow } from '@/types';
 
-const usePasswordlessSendCode = (
+const usePasswordlessSendCode = <T extends SignInIdentifier.Email | SignInIdentifier.Sms>(
   flow: UserFlow,
-  method: SignInIdentifier.Email | SignInIdentifier.Sms,
+  method: T,
   replaceCurrentPage?: boolean
 ) => {
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -28,13 +28,15 @@ const usePasswordlessSendCode = (
     setErrorMessage('');
   }, []);
 
-  const api = getSendPasscodeApi(flow, method);
+  const api = getSendPasscodeApi(flow);
 
   const { run: asyncSendPasscode } = useApi(api, errorHandlers);
 
+  type Payload = T extends SignInIdentifier.Email ? { email: string } : { phone: string };
+
   const onSubmit = useCallback(
-    async (value: string) => {
-      const result = await asyncSendPasscode(value);
+    async (payload: Payload) => {
+      const result = await asyncSendPasscode(payload);
 
       if (!result) {
         return;
@@ -46,7 +48,7 @@ const usePasswordlessSendCode = (
           search: location.search,
         },
         {
-          state: method === SignInIdentifier.Email ? { email: value } : { phone: value },
+          state: payload,
           replace: replaceCurrentPage,
         }
       );

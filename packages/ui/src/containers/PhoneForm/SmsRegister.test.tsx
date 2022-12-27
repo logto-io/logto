@@ -1,8 +1,9 @@
+import { InteractionEvent } from '@logto/schemas';
 import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { sendRegisterSmsPasscode } from '@/apis/register';
+import { putInteraction, sendPasscode } from '@/apis/interaction';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import SmsRegister from './SmsRegister';
@@ -14,8 +15,9 @@ jest.mock('i18next', () => ({
   language: 'en',
 }));
 
-jest.mock('@/apis/register', () => ({
-  sendRegisterSmsPasscode: jest.fn(() => ({ success: true })),
+jest.mock('@/apis/interaction', () => ({
+  sendPasscode: jest.fn(() => ({ success: true })),
+  putInteraction: jest.fn(() => ({ success: true })),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -47,7 +49,8 @@ describe('SmsRegister', () => {
     });
 
     await waitFor(() => {
-      expect(sendRegisterSmsPasscode).toBeCalledWith(fullPhoneNumber);
+      expect(putInteraction).toBeCalledWith(InteractionEvent.Register);
+      expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/register/sms/passcode-validation', search: '' },
         { state: { phone: fullPhoneNumber } }

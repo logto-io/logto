@@ -2,7 +2,7 @@ import { useMemo, useState, useContext, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { resetPassword } from '@/apis/forgot-password';
+import { setUserPassword } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -24,11 +24,7 @@ const useResetPassword = () => {
     () => ({
       'session.verification_session_not_found': async (error) => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
-        navigate(-1);
-      },
-      'session.verification_expired': async (error) => {
-        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
-        navigate(-1);
+        navigate(-2);
       },
       'user.same_password': (error) => {
         setErrorMessage(error.message);
@@ -37,7 +33,7 @@ const useResetPassword = () => {
     [navigate, setErrorMessage, show]
   );
 
-  const { result, run: asyncResetPassword } = useApi(resetPassword, resetPasswordErrorHandlers);
+  const { result, run: asyncResetPassword } = useApi(setUserPassword, resetPasswordErrorHandlers);
 
   useEffect(() => {
     if (result) {

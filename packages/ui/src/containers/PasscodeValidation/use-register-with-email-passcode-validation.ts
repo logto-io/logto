@@ -3,8 +3,7 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { verifyRegisterEmailPasscode } from '@/apis/register';
-import { signInWithEmail } from '@/apis/sign-in';
+import { addProfileWithPasscodeIdentifier, signInWithVerifierIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -25,7 +24,10 @@ const useRegisterWithEmailPasscodeValidation = (email: string, errorCallback?: (
 
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
-  const { run: signInWithEmailAsync } = useApi(signInWithEmail, requiredProfileErrorHandlers);
+  const { run: signInWithEmailAsync } = useApi(
+    signInWithVerifierIdentifier,
+    requiredProfileErrorHandlers
+  );
 
   const identifierExistErrorHandler = useIdentifierErrorAlert(
     UserFlow.register,
@@ -75,11 +77,11 @@ const useRegisterWithEmailPasscodeValidation = (email: string, errorCallback?: (
     ]
   );
 
-  const { result, run: verifyPasscode } = useApi(verifyRegisterEmailPasscode, errorHandlers);
+  const { result, run: verifyPasscode } = useApi(addProfileWithPasscodeIdentifier, errorHandlers);
 
   const onSubmit = useCallback(
-    async (code: string) => {
-      return verifyPasscode(email, code);
+    async (passcode: string) => {
+      return verifyPasscode({ email, passcode });
     },
     [email, verifyPasscode]
   );

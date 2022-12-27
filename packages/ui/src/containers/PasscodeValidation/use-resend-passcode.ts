@@ -1,4 +1,4 @@
-import type { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 import { t } from 'i18next';
 import { useCallback, useContext } from 'react';
 import { useTimer } from 'react-timer-hook';
@@ -29,16 +29,17 @@ const useResendPasscode = (
     expiryTimestamp: getTimeout(),
   });
 
-  const { run: sendPassCode } = useApi(getSendPasscodeApi(type, method));
+  const { run: sendPassCode } = useApi(getSendPasscodeApi(type));
 
   const onResendPasscode = useCallback(async () => {
-    const result = await sendPassCode(target);
+    const payload = method === SignInIdentifier.Email ? { email: target } : { phone: target };
+    const result = await sendPassCode(payload);
 
     if (result) {
       setToast(t('description.passcode_sent'));
       restart(getTimeout(), true);
     }
-  }, [restart, sendPassCode, setToast, target]);
+  }, [method, restart, sendPassCode, setToast, target]);
 
   return {
     seconds,

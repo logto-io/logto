@@ -1,9 +1,9 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, InteractionEvent } from '@logto/schemas';
 import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { sendSignInSmsPasscode } from '@/apis/sign-in';
+import { sendPasscode, putInteraction } from '@/apis/interaction';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import SmsSignIn from './SmsSignIn';
@@ -15,8 +15,9 @@ jest.mock('i18next', () => ({
   language: 'en',
 }));
 
-jest.mock('@/apis/sign-in', () => ({
-  sendSignInSmsPasscode: jest.fn(() => ({ success: true })),
+jest.mock('@/apis/interaction', () => ({
+  sendPasscode: jest.fn(() => ({ success: true })),
+  putInteraction: jest.fn(() => ({ success: true })),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -59,7 +60,8 @@ describe('SmsSignIn', () => {
     });
 
     await waitFor(() => {
-      expect(sendSignInSmsPasscode).not.toBeCalled();
+      expect(putInteraction).not.toBeCalled();
+      expect(sendPasscode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/sms/password', search: '' },
         { state: { phone: fullPhoneNumber } }
@@ -93,7 +95,8 @@ describe('SmsSignIn', () => {
     });
 
     await waitFor(() => {
-      expect(sendSignInSmsPasscode).not.toBeCalled();
+      expect(putInteraction).not.toBeCalled();
+      expect(sendPasscode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/sms/password', search: '' },
         { state: { phone: fullPhoneNumber } }
@@ -128,7 +131,8 @@ describe('SmsSignIn', () => {
     });
 
     await waitFor(() => {
-      expect(sendSignInSmsPasscode).toBeCalledWith(fullPhoneNumber);
+      expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
+      expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/sms/passcode-validation', search: '' },
         { state: { phone: fullPhoneNumber } }
@@ -163,7 +167,8 @@ describe('SmsSignIn', () => {
     });
 
     await waitFor(() => {
-      expect(sendSignInSmsPasscode).toBeCalledWith(fullPhoneNumber);
+      expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
+      expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/sms/passcode-validation', search: '' },
         { state: { phone: fullPhoneNumber } }

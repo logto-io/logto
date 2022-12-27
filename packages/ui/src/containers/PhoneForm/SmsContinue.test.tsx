@@ -2,7 +2,7 @@ import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { sendContinueSetPhonePasscode } from '@/apis/continue';
+import { putInteraction, sendPasscode } from '@/apis/interaction';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import SmsContinue from './SmsContinue';
@@ -14,8 +14,9 @@ jest.mock('i18next', () => ({
   language: 'en',
 }));
 
-jest.mock('@/apis/continue', () => ({
-  sendContinueSetPhonePasscode: jest.fn(() => ({ success: true })),
+jest.mock('@/apis/interaction', () => ({
+  sendPasscode: jest.fn(() => ({ success: true })),
+  putInteraction: jest.fn(() => ({ success: true })),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -47,7 +48,8 @@ describe('SmsContinue', () => {
     });
 
     await waitFor(() => {
-      expect(sendContinueSetPhonePasscode).toBeCalledWith(fullPhoneNumber);
+      expect(putInteraction).not.toBeCalled();
+      expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/continue/sms/passcode-validation', search: '' },
         { state: { phone: fullPhoneNumber } }
