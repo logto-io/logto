@@ -45,7 +45,7 @@ export const sendPasscode = async (passcode: Passcode) => {
   const emailOrPhone = passcode.email ?? passcode.phone;
 
   if (!emailOrPhone) {
-    throw new RequestError('passcode.phone_email_empty');
+    throw new RequestError('verification_code.phone_email_empty');
   }
 
   const expectType = passcode.phone ? ConnectorType.Sms : ConnectorType.Email;
@@ -95,28 +95,28 @@ export const verifyPasscode = async (
   const passcode = await findUnconsumedPasscodeByJtiAndType(sessionId, type);
 
   if (!passcode) {
-    throw new RequestError('passcode.not_found');
+    throw new RequestError('verification_code.not_found');
   }
 
   if ('phone' in payload && passcode.phone !== payload.phone) {
-    throw new RequestError('passcode.phone_mismatch');
+    throw new RequestError('verification_code.phone_mismatch');
   }
 
   if ('email' in payload && passcode.email !== payload.email) {
-    throw new RequestError('passcode.email_mismatch');
+    throw new RequestError('verification_code.email_mismatch');
   }
 
   if (passcode.createdAt + passcodeExpiration < Date.now()) {
-    throw new RequestError('passcode.expired');
+    throw new RequestError('verification_code.expired');
   }
 
   if (passcode.tryCount >= passcodeMaxTryCount) {
-    throw new RequestError('passcode.exceed_max_try');
+    throw new RequestError('verification_code.exceed_max_try');
   }
 
   if (code !== passcode.code) {
     await increasePasscodeTryCount(passcode.id);
-    throw new RequestError('passcode.code_mismatch');
+    throw new RequestError('verification_code.code_mismatch');
   }
 
   await consumePasscode(passcode.id);

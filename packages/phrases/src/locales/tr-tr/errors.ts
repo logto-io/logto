@@ -125,14 +125,15 @@ const errors = {
     cannot_overwrite_metadata_for_non_standard_connector:
       "This connector's 'metadata' cannot be overwritten.", // UNTRANSLATED
   },
-  passcode: {
-    phone_email_empty: 'Hem telefon hem de e-posta adresi yok.',
-    not_found: 'Kod bulunamadı. Lütfen önce kodu gönderiniz.',
-    phone_mismatch: 'Telefon numarası eşleşmedi. Lütfen yeni bir kod isteyiniz.',
-    email_mismatch: 'E-posta adresi eşleşmedi. Lütfen yeni bir kod isteyiniz.',
-    code_mismatch: 'Geçersiz kod.',
-    expired: 'Kodun Süresi doldu. Lütfen yeni bir kod isteyiniz.',
-    exceed_max_try: 'Kod doğrulama sınırı aşıldı. Lütfen yeni bir kod isteyiniz.',
+  verification_code: {
+    phone_email_empty: 'Both phone and email are empty.', // UNTRANSLATED
+    not_found: 'Verification code not found. Please send verification code first.', // UNTRANSLATED
+    phone_mismatch: 'Phone mismatch. Please request a new verification code.', // UNTRANSLATED
+    email_mismatch: 'Email mismatch. Please request a new verification code.', // UNTRANSLATED
+    code_mismatch: 'Invalid verification code.', // UNTRANSLATED
+    expired: 'Verification code has expired. Please request a new verification code.', // UNTRANSLATED
+    exceed_max_try:
+      'Verification code retries limitation exceeded. Please request a new verification code.', // UNTRANSLATED
   },
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:

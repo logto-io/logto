@@ -118,14 +118,15 @@ const errors = {
     cannot_overwrite_metadata_for_non_standard_connector:
       '이 연동의 메타데이터를 덮어쓸 수 없어요.',
   },
-  passcode: {
-    phone_email_empty: '휴대전화번호 그리고 이메일이 비어있어요.',
-    not_found: '비밀번호를 찾을 수 없어요. 비밀번호를 먼저 보내주세요.',
-    phone_mismatch: '휴대전화번호가 일치하지 않아요. 새로운 비밀번호를 요청해주세요.',
-    email_mismatch: '이메일이 일치하지 않아요. 새로운 비밀번호를 요청해주세요.',
-    code_mismatch: '비밀번호가 유효하지 않아요.',
-    expired: '비밀번호가 만료되었어요. 새로운 비밀번호를 요청해주세요.',
-    exceed_max_try: '해당 비밀번호는 인증 횟수를 초과하였어요. 새로운 비밀번호를 요청해주세요.',
+  verification_code: {
+    phone_email_empty: 'Both phone and email are empty.', // UNTRANSLATED
+    not_found: 'Verification code not found. Please send verification code first.', // UNTRANSLATED
+    phone_mismatch: 'Phone mismatch. Please request a new verification code.', // UNTRANSLATED
+    email_mismatch: 'Email mismatch. Please request a new verification code.', // UNTRANSLATED
+    code_mismatch: 'Invalid verification code.', // UNTRANSLATED
+    expired: 'Verification code has expired. Please request a new verification code.', // UNTRANSLATED
+    exceed_max_try:
+      'Verification code retries limitation exceeded. Please request a new verification code.', // UNTRANSLATED
   },
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:

@@ -64,7 +64,7 @@ jest.mock('#src/libraries/passcode.js', () => ({
   sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {
     if (code !== '1234') {
-      throw new RequestError('passcode.code_mismatch');
+      throw new RequestError('verification_code.code_mismatch');
     }
   },
 }));

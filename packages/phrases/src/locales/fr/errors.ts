@@ -131,15 +131,15 @@ const errors = {
     cannot_overwrite_metadata_for_non_standard_connector:
       "This connector's 'metadata' cannot be overwritten.", // UNTRANSLATED
   },
-  passcode: {
-    phone_email_empty: "Le téléphone et l'email sont vides.",
-    not_found: "Le code d'accès n'a pas été trouvé. Veuillez envoyer le code d'accès en premier.",
-    phone_mismatch: "Le téléphone ne correspond pas. Veuillez demander un nouveau code d'accès.",
-    email_mismatch: "Erreur d'email. Veuillez demander un nouveau code d'accès.",
-    code_mismatch: "Code d'accès invalide.",
-    expired: "Le code d'accès a expiré. Veuillez demander un nouveau code d'accès.",
+  verification_code: {
+    phone_email_empty: 'Both phone and email are empty.', // UNTRANSLATED
+    not_found: 'Verification code not found. Please send verification code first.', // UNTRANSLATED
+    phone_mismatch: 'Phone mismatch. Please request a new verification code.', // UNTRANSLATED
+    email_mismatch: 'Email mismatch. Please request a new verification code.', // UNTRANSLATED
+    code_mismatch: 'Invalid verification code.', // UNTRANSLATED
+    expired: 'Verification code has expired. Please request a new verification code.', // UNTRANSLATED
     exceed_max_try:
-      "La limite de vérification du code d'accès est dépassée. Veuillez demander un nouveau code d'accès.",
+      'Verification code retries limitation exceeded. Please request a new verification code.', // UNTRANSLATED
   },
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:

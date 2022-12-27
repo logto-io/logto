@@ -114,7 +114,7 @@ const errors = {
     multiple_target_with_same_platform: '不能同时存在多个有相同 target 和平台类型的社交连接器。',
     cannot_overwrite_metadata_for_non_standard_connector: '不可覆盖该连接器的 metadata 参数。',
   },
-  passcode: {
+  verification_code: {
     phone_email_empty: '手机号与邮箱地址均为空',
     not_found: '验证码不存在，请先请求发送验证码',
     phone_mismatch: '手机号码不匹配，请尝试请求新的验证码。',
