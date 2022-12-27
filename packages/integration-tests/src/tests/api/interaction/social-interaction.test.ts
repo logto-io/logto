@@ -7,7 +7,7 @@ import {
   deleteUser,
   putInteractionEvent,
   patchInteractionIdentifiers,
-  patchInteractionProfile,
+  putInteractionProfile,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers.js';
 import { generateUserId } from '#src/utils.js';
@@ -61,7 +61,7 @@ describe('Social Identifier Interactions', () => {
       await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
-      await client.successSend(patchInteractionProfile, { connectorId });
+      await client.successSend(putInteractionProfile, { connectorId });
 
       const { redirectTo } = await client.submitInteraction();
 
@@ -120,7 +120,7 @@ describe('Social Identifier Interactions', () => {
       await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
 
       await client.successSend(patchInteractionIdentifiers, { username, password });
-      await client.successSend(patchInteractionProfile, { connectorId });
+      await client.successSend(putInteractionProfile, { connectorId });
 
       const { redirectTo } = await client.submitInteraction();
 
@@ -179,7 +179,7 @@ describe('Social Identifier Interactions', () => {
       await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
 
       await client.successSend(patchInteractionIdentifiers, { connectorId, identityType: 'email' });
-      await client.successSend(patchInteractionProfile, { connectorId });
+      await client.successSend(putInteractionProfile, { connectorId });
 
       const { redirectTo } = await client.submitInteraction();
 

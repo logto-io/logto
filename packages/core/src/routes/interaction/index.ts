@@ -166,6 +166,37 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     }
   );
 
+  // Replace Interaction Profile
+  router.put(
+    `${interactionPrefix}/profile`,
+    koaGuard({
+      body: profileGuard,
+    }),
+    koaInteractionSie(),
+    async (ctx, next) => {
+      const profilePayload = ctx.guard.body;
+
+      const { signInExperience, interactionDetails } = ctx;
+      verifyProfileSettings(profilePayload, signInExperience);
+
+      // Check interaction exists
+      getInteractionStorage(interactionDetails.result);
+
+      await storeInteractionResult(
+        {
+          profile: profilePayload,
+        },
+        ctx,
+        provider,
+        true
+      );
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
   // Update Interaction Profile
   router.patch(
     `${interactionPrefix}/profile`,

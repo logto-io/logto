@@ -5,6 +5,7 @@ import {
   sendVerificationPasscode,
   deleteUser,
   patchInteractionIdentifiers,
+  putInteractionProfile,
   patchInteractionProfile,
 } from '#src/api/index.js';
 import { expectRejects, readPasscode } from '#src/helpers.js';
@@ -61,7 +62,7 @@ describe('reset password', () => {
 
     await expectRejects(client.submitInteraction(), 'user.new_password_required_in_profile');
 
-    await client.successSend(patchInteractionProfile, { password: userProfile.password });
+    await client.successSend(putInteractionProfile, { password: userProfile.password });
 
     await expectRejects(client.submitInteraction(), 'user.same_password');
 
@@ -115,7 +116,7 @@ describe('reset password', () => {
 
     await expectRejects(client.submitInteraction(), 'user.new_password_required_in_profile');
 
-    await client.successSend(patchInteractionProfile, { password: userProfile.password });
+    await client.successSend(putInteractionProfile, { password: userProfile.password });
 
     await expectRejects(client.submitInteraction(), 'user.same_password');
 

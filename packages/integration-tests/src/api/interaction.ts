@@ -44,6 +44,15 @@ export const patchInteractionProfile = async (cookie: string, payload: Profile) 
     })
     .json();
 
+export const putInteractionProfile = async (cookie: string, payload: Profile) =>
+  api
+    .put('interaction/profile', {
+      headers: { cookie },
+      json: payload,
+      followRedirect: false,
+    })
+    .json();
+
 export const deleteInteractionProfile = async (cookie: string) =>
   api
     .delete('interaction/profile', {

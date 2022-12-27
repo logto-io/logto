@@ -35,7 +35,7 @@ const defaultPasscodeSignInMethods = [
     identifier: SignInIdentifier.Username,
     password: true,
     verificationCode: false,
-    isPasswordPrimary: false,
+    isPasswordPrimary: true,
   },
   {
     identifier: SignInIdentifier.Email,

@@ -227,6 +227,17 @@ describe('session -> interactionRoutes', () => {
       provider: createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
     });
 
+    it('PUT /interaction/profile', async () => {
+      const body = {
+        email: 'email@logto.io',
+      };
+      const response = await sessionRequest.put(path).send(body);
+      expect(verifyProfileSettings).toBeCalled();
+      expect(getInteractionStorage).toBeCalled();
+      expect(storeInteractionResult).toBeCalled();
+      expect(response.status).toEqual(204);
+    });
+
     it('PATCH /interaction/profile', async () => {
       const body = {
         email: 'email@logto.io',

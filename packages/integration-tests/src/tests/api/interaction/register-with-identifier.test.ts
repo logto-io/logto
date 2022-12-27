@@ -6,6 +6,7 @@ import {
   putInteraction,
   deleteUser,
   patchInteractionIdentifiers,
+  putInteractionProfile,
   patchInteractionProfile,
   deleteInteractionProfile,
   putInteractionEvent,
@@ -90,7 +91,7 @@ describe('Register with passwordless identifier', () => {
       passcode: code,
     });
 
-    await client.successSend(patchInteractionProfile, {
+    await client.successSend(putInteractionProfile, {
       email: primaryEmail,
     });
 
@@ -98,6 +99,68 @@ describe('Register with passwordless identifier', () => {
 
     const id = await processSession(client, redirectTo);
     await logoutClient(client);
+    await deleteUser(id);
+  });
+
+  it('register with email and fulfill password', async () => {
+    await enableAllPasscodeSignInMethods({
+      identifiers: [SignInIdentifier.Email],
+      password: true,
+      verify: true,
+    });
+
+    const { primaryEmail, password } = generateNewUserProfile({
+      primaryEmail: true,
+      password: true,
+    });
+    const client = await initClient();
+
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.Register,
+    });
+
+    await client.successSend(sendVerificationPasscode, {
+      event: InteractionEvent.Register,
+      email: primaryEmail,
+    });
+
+    const passcodeRecord = await readPasscode();
+
+    const { code } = passcodeRecord;
+
+    await client.successSend(patchInteractionIdentifiers, {
+      email: primaryEmail,
+      passcode: code,
+    });
+
+    await client.successSend(putInteractionProfile, {
+      email: primaryEmail,
+    });
+
+    await expectRejects(client.submitInteraction(), 'user.missing_profile');
+
+    await client.successSend(patchInteractionProfile, {
+      password,
+    });
+
+    const { redirectTo } = await client.submitInteraction();
+    await processSession(client, redirectTo);
+    await logoutClient(client);
+
+    // SignIn with email and password
+    await client.initSession();
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        email: primaryEmail,
+        password,
+      },
+    });
+
+    const { redirectTo: redirectTo2 } = await client.submitInteraction();
+    const id = await processSession(client, redirectTo2);
+    await logoutClient(client);
+
     await deleteUser(id);
   });
 
@@ -134,7 +197,7 @@ describe('Register with passwordless identifier', () => {
       passcode: code,
     });
 
-    await client.successSend(patchInteractionProfile, {
+    await client.successSend(putInteractionProfile, {
       phone: primaryPhone,
     });
 
@@ -142,6 +205,67 @@ describe('Register with passwordless identifier', () => {
 
     const id = await processSession(client, redirectTo);
     await logoutClient(client);
+    await deleteUser(id);
+  });
+
+  it('register with phone and fulfill password', async () => {
+    await enableAllPasscodeSignInMethods({
+      identifiers: [SignInIdentifier.Sms],
+      password: true,
+      verify: true,
+    });
+
+    const { primaryPhone, password } = generateNewUserProfile({
+      primaryPhone: true,
+      password: true,
+    });
+    const client = await initClient();
+
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.Register,
+    });
+
+    await client.successSend(sendVerificationPasscode, {
+      event: InteractionEvent.Register,
+      phone: primaryPhone,
+    });
+
+    const { code } = await readPasscode();
+
+    await client.successSend(patchInteractionIdentifiers, {
+      phone: primaryPhone,
+      passcode: code,
+    });
+
+    await client.successSend(putInteractionProfile, {
+      phone: primaryPhone,
+    });
+
+    await expectRejects(client.submitInteraction(), 'user.missing_profile');
+
+    await client.successSend(patchInteractionProfile, {
+      password,
+    });
+
+    const { redirectTo } = await client.submitInteraction();
+
+    await processSession(client, redirectTo);
+    await logoutClient(client);
+
+    // SignIn with phone and password
+    await client.initSession();
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        phone: primaryPhone,
+        password,
+      },
+    });
+
+    const { redirectTo: redirectTo2 } = await client.submitInteraction();
+    const id = await processSession(client, redirectTo2);
+    await logoutClient(client);
+
     await deleteUser(id);
   });
 
@@ -182,7 +306,7 @@ describe('Register with passwordless identifier', () => {
       passcode: code,
     });
 
-    await client.successSend(patchInteractionProfile, {
+    await client.successSend(putInteractionProfile, {
       email: primaryEmail,
     });
 
@@ -235,7 +359,7 @@ describe('Register with passwordless identifier', () => {
       passcode: code,
     });
 
-    await client.successSend(patchInteractionProfile, {
+    await client.successSend(putInteractionProfile, {
       phone: primaryPhone,
     });
 
