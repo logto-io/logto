@@ -1,4 +1,4 @@
-import { PasscodeType } from '@logto/schemas';
+import { MessageTypes } from '@logto/connector-kit';
 
 import api from './api';
 
@@ -30,7 +30,7 @@ export const sendRegisterSmsPasscode = async (phone: string) => {
     .post(`${apiPrefix}/passwordless/sms/send`, {
       json: {
         phone,
-        flow: PasscodeType.Register,
+        flow: MessageTypes.Register,
       },
     })
     .json();
@@ -44,7 +44,7 @@ export const verifyRegisterSmsPasscode = async (phone: string, code: string) =>
       json: {
         phone,
         code,
-        flow: PasscodeType.Register,
+        flow: MessageTypes.Register,
       },
     })
     .json<Response>();
@@ -54,7 +54,7 @@ export const sendRegisterEmailPasscode = async (email: string) => {
     .post(`${apiPrefix}/passwordless/email/send`, {
       json: {
         email,
-        flow: PasscodeType.Register,
+        flow: MessageTypes.Register,
       },
     })
     .json();
@@ -68,7 +68,7 @@ export const verifyRegisterEmailPasscode = async (email: string, code: string) =
       json: {
         email,
         code,
-        flow: PasscodeType.Register,
+        flow: MessageTypes.Register,
       },
     })
     .json<Response>();

@@ -1,4 +1,4 @@
-import { PasscodeType } from '@logto/schemas';
+import { MessageTypes } from '@logto/connector-kit';
 
 import api from './api';
 
@@ -13,7 +13,7 @@ export const sendForgotPasswordSmsPasscode = async (phone: string) => {
     .post('/api/session/passwordless/sms/send', {
       json: {
         phone,
-        flow: PasscodeType.ForgotPassword,
+        flow: MessageTypes.ForgotPassword,
       },
     })
     .json();
@@ -27,7 +27,7 @@ export const verifyForgotPasswordSmsPasscode = async (phone: string, code: strin
       json: {
         phone,
         code,
-        flow: PasscodeType.ForgotPassword,
+        flow: MessageTypes.ForgotPassword,
       },
     })
     .json();
@@ -40,7 +40,7 @@ export const sendForgotPasswordEmailPasscode = async (email: string) => {
     .post('/api/session/passwordless/email/send', {
       json: {
         email,
-        flow: PasscodeType.ForgotPassword,
+        flow: MessageTypes.ForgotPassword,
       },
     })
     .json();
@@ -54,7 +54,7 @@ export const verifyForgotPasswordEmailPasscode = async (email: string, code: str
       json: {
         email,
         code,
-        flow: PasscodeType.ForgotPassword,
+        flow: MessageTypes.ForgotPassword,
       },
     })
     .json();

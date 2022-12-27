@@ -1,6 +1,6 @@
-import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
+import type { EmailConnector, MessageTypes, SmsConnector } from '@logto/connector-kit';
 import { messageTypesGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import type { Passcode, PasscodeType } from '@logto/schemas';
+import type { Passcode } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
 import { getLogtoConnectors } from '#src/connectors/index.js';
@@ -22,7 +22,7 @@ const randomCode = customAlphabet('1234567890', passcodeLength);
 
 export const createPasscode = async (
   jti: string,
-  type: PasscodeType,
+  type: MessageTypes,
   payload: { phone: string } | { email: string }
 ) => {
   // Disable existing passcodes.
@@ -88,7 +88,7 @@ export const passcodeMaxTryCount = 10;
 
 export const verifyPasscode = async (
   sessionId: string,
-  type: PasscodeType,
+  type: MessageTypes,
   code: string,
   payload: { phone: string } | { email: string }
 ): Promise<void> => {

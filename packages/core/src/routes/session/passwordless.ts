@@ -1,5 +1,5 @@
+import { MessageTypes } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
-import { PasscodeType } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
@@ -7,7 +7,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { createPasscode, sendPasscode, verifyPasscode } from '#src/libraries/passcode.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { findUserByEmail, findUserByPhone } from '#src/queries/user.js';
-import { passcodeTypeGuard } from '#src/routes/session/types.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouterLegacy } from '../types.js';
@@ -17,6 +16,7 @@ import {
   smsRegisterAction,
   emailRegisterAction,
 } from './middleware/passwordless-action.js';
+import { flowTypeGuard } from './types.js';
 import {
   assignVerificationResult,
   getPasswordlessRelatedLogType,
@@ -35,7 +35,7 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
     koaGuard({
       body: object({
         phone: string().regex(phoneRegEx),
-        flow: passcodeTypeGuard,
+        flow: flowTypeGuard,
       }),
     }),
     async (ctx, next) => {
@@ -61,7 +61,7 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
     koaGuard({
       body: object({
         email: string().regex(emailRegEx),
-        flow: passcodeTypeGuard,
+        flow: flowTypeGuard,
       }),
     }),
     async (ctx, next) => {
@@ -88,7 +88,7 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
       body: object({
         phone: string().regex(phoneRegEx),
         code: string(),
-        flow: passcodeTypeGuard,
+        flow: flowTypeGuard,
       }),
     }),
     async (ctx, next) => {
@@ -103,7 +103,7 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
 
       await verifyPasscode(jti, flow, code, { phone });
 
-      if (flow === PasscodeType.ForgotPassword) {
+      if (flow === MessageTypes.ForgotPassword) {
         const user = await findUserByPhone(phone);
         assertThat(user, new RequestError({ code: 'user.phone_not_exist', status: 404 }));
 
@@ -113,13 +113,13 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
         return next();
       }
 
-      if (flow === PasscodeType.SignIn) {
+      if (flow === MessageTypes.SignIn) {
         await assignVerificationResult(ctx, provider, { flow, phone });
 
         return smsSignInAction(provider)(ctx, next);
       }
 
-      if (flow === PasscodeType.Register) {
+      if (flow === MessageTypes.Register) {
         await assignVerificationResult(ctx, provider, { flow, phone });
 
         return smsRegisterAction(provider)(ctx, next);
@@ -138,7 +138,7 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
       body: object({
         email: string().regex(emailRegEx),
         code: string(),
-        flow: passcodeTypeGuard,
+        flow: flowTypeGuard,
       }),
     }),
     async (ctx, next) => {
@@ -152,7 +152,7 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
 
       await verifyPasscode(jti, flow, code, { email });
 
-      if (flow === PasscodeType.ForgotPassword) {
+      if (flow === MessageTypes.ForgotPassword) {
         const user = await findUserByEmail(email);
 
         assertThat(user, new RequestError({ code: 'user.email_not_exist', status: 404 }));
@@ -163,13 +163,13 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
         return next();
       }
 
-      if (flow === PasscodeType.SignIn) {
+      if (flow === MessageTypes.SignIn) {
         await assignVerificationResult(ctx, provider, { flow, email });
 
         return emailSignInAction(provider)(ctx, next);
       }
 
-      if (flow === PasscodeType.Register) {
+      if (flow === MessageTypes.Register) {
         await assignVerificationResult(ctx, provider, { flow, email });
 
         return emailRegisterAction(provider)(ctx, next);

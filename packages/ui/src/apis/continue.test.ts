@@ -1,4 +1,4 @@
-import { PasscodeType } from '@logto/schemas';
+import { MessageTypes } from '@logto/connector-kit';
 import ky from 'ky';
 
 import {
@@ -75,7 +75,7 @@ describe('continue API', () => {
     expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
       json: {
         email: 'email',
-        flow: PasscodeType.Continue,
+        flow: MessageTypes.Continue,
       },
     });
   });
@@ -86,7 +86,7 @@ describe('continue API', () => {
     expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
       json: {
         phone: '111111',
-        flow: PasscodeType.Continue,
+        flow: MessageTypes.Continue,
       },
     });
   });
@@ -98,7 +98,7 @@ describe('continue API', () => {
       json: {
         email: 'email',
         code: 'passcode',
-        flow: PasscodeType.Continue,
+        flow: MessageTypes.Continue,
       },
     });
   });
@@ -110,7 +110,7 @@ describe('continue API', () => {
       json: {
         phone: 'phone',
         code: 'passcode',
-        flow: PasscodeType.Continue,
+        flow: MessageTypes.Continue,
       },
     });
   });

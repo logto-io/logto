@@ -1,4 +1,4 @@
-import { PasscodeType } from '@logto/schemas';
+import { MessageTypes } from '@logto/connector-kit';
 import { addDays, subSeconds } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
@@ -140,7 +140,7 @@ describe('session -> continueRoutes', () => {
           continueSignIn: {
             userId: mockUser.id,
             expiresAt: getTomorrowIsoString(),
-            type: PasscodeType.Continue,
+            type: MessageTypes.Continue,
           },
         },
       });
@@ -172,7 +172,7 @@ describe('session -> continueRoutes', () => {
           continueSignIn: {
             userId: mockUser.id,
             expiresAt: getTomorrowIsoString(),
-            type: PasscodeType.Continue,
+            type: MessageTypes.Continue,
           },
         },
       });

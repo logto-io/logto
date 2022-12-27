@@ -1,4 +1,4 @@
-import { PasscodeType } from '@logto/schemas';
+import { MessageTypes } from '@logto/connector-kit';
 import ky from 'ky';
 
 import { consent } from './consent';
@@ -188,7 +188,7 @@ describe('api', () => {
     expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
       json: {
         phone,
-        flow: PasscodeType.SignIn,
+        flow: MessageTypes.SignIn,
       },
     });
   });
@@ -206,7 +206,7 @@ describe('api', () => {
       json: {
         phone,
         code,
-        flow: PasscodeType.SignIn,
+        flow: MessageTypes.SignIn,
       },
     });
   });
@@ -216,7 +216,7 @@ describe('api', () => {
     expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
       json: {
         email,
-        flow: PasscodeType.SignIn,
+        flow: MessageTypes.SignIn,
       },
     });
   });
@@ -234,7 +234,7 @@ describe('api', () => {
       json: {
         email,
         code,
-        flow: PasscodeType.SignIn,
+        flow: MessageTypes.SignIn,
       },
     });
   });
@@ -278,7 +278,7 @@ describe('api', () => {
     expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
       json: {
         phone,
-        flow: PasscodeType.Register,
+        flow: MessageTypes.Register,
       },
     });
   });
@@ -289,7 +289,7 @@ describe('api', () => {
       json: {
         phone,
         code,
-        flow: PasscodeType.Register,
+        flow: MessageTypes.Register,
       },
     });
   });
@@ -299,7 +299,7 @@ describe('api', () => {
     expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
       json: {
         email,
-        flow: PasscodeType.Register,
+        flow: MessageTypes.Register,
       },
     });
   });
@@ -310,7 +310,7 @@ describe('api', () => {
       json: {
         email,
         code,
-        flow: PasscodeType.Register,
+        flow: MessageTypes.Register,
       },
     });
   });
@@ -320,7 +320,7 @@ describe('api', () => {
     expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
       json: {
         phone,
-        flow: PasscodeType.ForgotPassword,
+        flow: MessageTypes.ForgotPassword,
       },
     });
   });
@@ -331,7 +331,7 @@ describe('api', () => {
       json: {
         phone,
         code,
-        flow: PasscodeType.ForgotPassword,
+        flow: MessageTypes.ForgotPassword,
       },
     });
   });
@@ -341,7 +341,7 @@ describe('api', () => {
     expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
       json: {
         email,
-        flow: PasscodeType.ForgotPassword,
+        flow: MessageTypes.ForgotPassword,
       },
     });
   });
@@ -352,7 +352,7 @@ describe('api', () => {
       json: {
         email,
         code,
-        flow: PasscodeType.ForgotPassword,
+        flow: MessageTypes.ForgotPassword,
       },
     });
   });

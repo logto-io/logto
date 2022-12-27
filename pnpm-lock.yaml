@@ -460,6 +460,7 @@ importers:
   packages/integration-tests:
     specifiers:
       '@jest/types': ^29.1.2
+      '@logto/connector-kit': workspace:1.0.0-beta.30
       '@logto/js': 1.0.0-beta.14
       '@logto/node': 1.0.0-beta.14
       '@logto/schemas': workspace:*
@@ -487,6 +488,7 @@ importers:
       '@withtyped/server': 0.3.1
     devDependencies:
       '@jest/types': 29.1.2
+      '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/js': 1.0.0-beta.14
       '@logto/node': 1.0.0-beta.14
       '@logto/schemas': link:../schemas
@@ -763,6 +765,7 @@ importers:
 
   packages/ui:
     specifiers:
+      '@logto/connector-kit': workspace:*
       '@logto/core-kit': workspace:*
       '@logto/language-kit': workspace:*
       '@logto/phrases': workspace:*
@@ -817,6 +820,7 @@ importers:
       use-debounced-loader: ^0.1.1
       zod: ^3.20.2
     devDependencies:
+      '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/language-kit': link:../toolkit/language-kit
       '@logto/phrases': link:../phrases

@@ -1,4 +1,4 @@
-import { PasscodeType } from '@logto/schemas';
+import { MessageTypes } from '@logto/connector-kit';
 
 import api from './api';
 import { bindSocialAccount } from './social';
@@ -31,7 +31,7 @@ export const sendContinueSetEmailPasscode = async (email: string) => {
     .post(`${passwordlessApiPrefix}/email/send`, {
       json: {
         email,
-        flow: PasscodeType.Continue,
+        flow: MessageTypes.Continue,
       },
     })
     .json();
@@ -44,7 +44,7 @@ export const sendContinueSetPhonePasscode = async (phone: string) => {
     .post(`${passwordlessApiPrefix}/sms/send`, {
       json: {
         phone,
-        flow: PasscodeType.Continue,
+        flow: MessageTypes.Continue,
       },
     })
     .json();
@@ -55,7 +55,7 @@ export const sendContinueSetPhonePasscode = async (phone: string) => {
 export const verifyContinueSetEmailPasscode = async (email: string, code: string) => {
   await api
     .post(`${passwordlessApiPrefix}/email/verify`, {
-      json: { email, code, flow: PasscodeType.Continue },
+      json: { email, code, flow: MessageTypes.Continue },
     })
     .json();
 
@@ -65,7 +65,7 @@ export const verifyContinueSetEmailPasscode = async (email: string, code: string
 export const verifyContinueSetSmsPasscode = async (phone: string, code: string) => {
   await api
     .post(`${passwordlessApiPrefix}/sms/verify`, {
-      json: { phone, code, flow: PasscodeType.Continue },
+      json: { phone, code, flow: MessageTypes.Continue },
     })
     .json();
 
