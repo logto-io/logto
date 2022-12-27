@@ -193,7 +193,7 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 422);
     });
 
-    it('should post a new record when add more than 1 instance with connector factory', async () => {
+    it('should post a new record when add more than 1 instance with standard connector factory', async () => {
       loadConnectorFactories.mockResolvedValueOnce([
         {
           ...mockConnectorFactory,
@@ -231,7 +231,26 @@ describe('connector route', () => {
       );
     });
 
-    it('throws when add more than 1 instance with non-connector factory', async () => {
+    it('throws when add more than 1 instance with target is an empty string with standard connector factory', async () => {
+      loadConnectorFactories.mockResolvedValueOnce([
+        {
+          ...mockConnectorFactory,
+          metadata: {
+            ...mockMetadata,
+            id: 'id0',
+            isStandard: true,
+            platform: ConnectorPlatform.Universal,
+          },
+        },
+      ]);
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'id0',
+        metadata: { target: '' },
+      });
+      expect(response).toHaveProperty('statusCode', 400);
+    });
+
+    it('throws when add more than 1 instance with non-standard connector factory', async () => {
       loadConnectorFactories.mockResolvedValueOnce([
         {
           ...mockConnectorFactory,
@@ -321,7 +340,6 @@ describe('connector route', () => {
             id: 'id0',
             platform: ConnectorPlatform.Universal,
             target: 'target',
-            isStandard: true,
           },
         },
       ]);
@@ -341,7 +359,6 @@ describe('connector route', () => {
       ]);
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
-        metadata: { target: 'target' },
       });
       expect(response).toHaveProperty('statusCode', 422);
     });
