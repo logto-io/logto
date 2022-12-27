@@ -1,5 +1,5 @@
 import type { SignUp } from '@logto/schemas';
-import { get } from '@silverhand/essentials';
+import { getSafe } from '@silverhand/essentials';
 import { diff } from 'deep-object-diff';
 import { useTranslation } from 'react-i18next';
 import { snakeCase } from 'snake-case';
@@ -22,7 +22,7 @@ const SignUpDiffSection = ({ before, after, isAfter = false }: Props) => {
   const parsedAfter = signInExperienceParser.toLocalSignUp(after);
   const signUpDiff = isAfter ? diff(parsedBefore, parsedAfter) : diff(parsedAfter, parsedBefore);
   const signUp = isAfter ? parsedAfter : parsedBefore;
-  const hasChanged = (path: keyof SignUpForm) => get(signUpDiff, path) !== undefined;
+  const hasChanged = (path: keyof SignUpForm) => getSafe(signUpDiff, path) !== undefined;
 
   const { identifier, password, verify } = signUp;
   const hasAuthentication = password || verify;

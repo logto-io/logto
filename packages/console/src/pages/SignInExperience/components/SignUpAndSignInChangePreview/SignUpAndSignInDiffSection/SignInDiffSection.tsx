@@ -1,5 +1,5 @@
 import type { SignInIdentifier } from '@logto/schemas';
-import { get } from '@silverhand/essentials';
+import { getSafe } from '@silverhand/essentials';
 import { detailedDiff } from 'deep-object-diff';
 import { useTranslation } from 'react-i18next';
 
@@ -28,13 +28,13 @@ const SignInDiffSection = ({ before, after, isAfter = false }: Props) => {
   const displaySignInMethodsObject = isAfter ? afterSignInMethodsObject : beforeSignInMethodsObject;
 
   const hasIdentifierChanged = (identifierKey: SignInIdentifier) =>
-    get(signInDiff, `added.${identifierKey.toLocaleLowerCase()}`) !== undefined;
+    getSafe(signInDiff, `added.${identifierKey.toLocaleLowerCase()}`) !== undefined;
 
   const hasAuthenticationChanged = (
     identifierKey: SignInIdentifier,
     authenticationKey: keyof SignInMethodsObject[SignInIdentifier]
   ) =>
-    get(signInDiff, `updated.${identifierKey.toLocaleLowerCase()}.${authenticationKey}`) !==
+    getSafe(signInDiff, `updated.${identifierKey.toLocaleLowerCase()}.${authenticationKey}`) !==
     undefined;
 
   // eslint-disable-next-line no-restricted-syntax
