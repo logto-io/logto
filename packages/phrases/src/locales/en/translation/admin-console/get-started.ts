@@ -3,7 +3,7 @@ const get_started = {
   progress_dropdown_title: 'A few things you can do...',
   title: 'How do you want to get started with Logto?',
   subtitle_part1: 'A few things you can do to quickly get value of Logto',
-  subtitle_part2: 'I’m done with this set up. ',
+  subtitle_part2: 'I’m a pro and have completed all steps. ',
   hide_this: 'Hide this',
   confirm_message: 'Are you sure you want to hide this page? This action cannot be undone.',
   card1_title: 'Check out the demo',
