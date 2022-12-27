@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
-import { register } from '@/apis/register';
+import { setUserPassword } from '@/apis/interaction';
 
 import PasswordRegisterWithUsername from '.';
 
@@ -17,8 +17,8 @@ jest.mock('react-router-dom', () => ({
   useLocation: jest.fn(() => ({ state: { username: 'username' } })),
 }));
 
-jest.mock('@/apis/register', () => ({
-  register: jest.fn(async () => ({ redirectTo: '/' })),
+jest.mock('@/apis/interaction', () => ({
+  setUserPassword: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 const useLocationMock = useLocation as jest.Mock;
@@ -39,19 +39,6 @@ describe('<PasswordRegisterWithUsername />', () => {
     expect(container.querySelector('input[name="new-password"]')).not.toBeNull();
     expect(container.querySelector('input[name="confirm-new-password"]')).not.toBeNull();
     expect(queryByText('action.save_password')).not.toBeNull();
-  });
-
-  it('render without username state should return error', () => {
-    useLocationMock.mockImplementation(() => ({}));
-
-    const { queryByText, container } = renderWithPageContext(
-      <SettingsProvider>
-        <PasswordRegisterWithUsername />
-      </SettingsProvider>
-    );
-
-    expect(container.querySelector('input[name="new-password"]')).toBeNull();
-    expect(queryByText('description.not_found')).not.toBeNull();
   });
 
   it('render without username signUp method should return error', () => {
@@ -97,7 +84,7 @@ describe('<PasswordRegisterWithUsername />', () => {
     });
 
     await waitFor(() => {
-      expect(register).toBeCalledWith('username', '123456');
+      expect(setUserPassword).toBeCalledWith('123456');
     });
   });
 });

@@ -10,8 +10,6 @@ import {
   resetPassword,
 } from './forgot-password';
 import {
-  register,
-  checkUsername,
   registerWithSms,
   registerWithEmail,
   sendRegisterEmailPasscode,
@@ -134,25 +132,6 @@ describe('api', () => {
   it('consent', async () => {
     await consent();
     expect(ky.post).toBeCalledWith('/api/session/consent');
-  });
-
-  it('register', async () => {
-    await register(username, password);
-    expect(ky.post).toBeCalledWith('/api/session/register/password/username', {
-      json: {
-        username,
-        password,
-      },
-    });
-  });
-
-  it('checkUsername', async () => {
-    await checkUsername(username);
-    expect(ky.post).toBeCalledWith('/api/session/register/password/check-username', {
-      json: {
-        username,
-      },
-    });
   });
 
   it('registerWithSms', async () => {

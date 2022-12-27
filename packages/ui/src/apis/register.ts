@@ -8,17 +8,6 @@ type Response = {
   redirectTo: string;
 };
 
-export const register = async (username: string, password: string) => {
-  return api
-    .post(`${apiPrefix}/register/password/username`, {
-      json: {
-        username,
-        password,
-      },
-    })
-    .json<Response>();
-};
-
 export const registerWithSms = async () =>
   api.post(`${apiPrefix}/register/passwordless/sms`).json<Response>();
 
@@ -72,15 +61,3 @@ export const verifyRegisterEmailPasscode = async (email: string, code: string) =
       },
     })
     .json<Response>();
-
-export const checkUsername = async (username: string) => {
-  await api
-    .post(`${apiPrefix}/register/password/check-username`, {
-      json: {
-        username,
-      },
-    })
-    .json();
-
-  return { success: true };
-};

@@ -1,13 +1,5 @@
 import { emailRegEx, phoneRegEx, validateRedirectUrl } from '@logto/core-kit';
-import {
-  usernamePasswordPayloadGuard,
-  emailPasscodePayloadGuard,
-  phonePasscodePayloadGuard,
-  socialConnectorPayloadGuard,
-  eventGuard,
-  profileGuard,
-  InteractionEvent,
-} from '@logto/schemas';
+import { eventGuard, profileGuard, InteractionEvent } from '@logto/schemas';
 import { z } from 'zod';
 
 import { socialUserInfoGuard } from '#src/connectors/types.js';
@@ -30,18 +22,6 @@ export const socialAuthorizationUrlPayloadGuard = z.object({
   state: z.string(),
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
 });
-
-// Register Profile Guard
-const emailProfileGuard = emailPasscodePayloadGuard.pick({ email: true });
-const phoneProfileGuard = phonePasscodePayloadGuard.pick({ phone: true });
-const socialProfileGuard = socialConnectorPayloadGuard.pick({ connectorId: true });
-
-export const registerProfileSafeGuard = z.union([
-  usernamePasswordPayloadGuard.merge(profileGuard.omit({ username: true, password: true })),
-  emailProfileGuard.merge(profileGuard.omit({ email: true })),
-  phoneProfileGuard.merge(profileGuard.omit({ phone: true })),
-  socialProfileGuard.merge(profileGuard.omit({ connectorId: true })),
-]);
 
 // Identifier Guard
 export const accountIdIdentifierGuard = z.object({
@@ -81,7 +61,7 @@ export const anonymousInteractionResultGuard = z.object({
 
 export const verifiedRegisterInteractionResultGuard = z.object({
   event: z.literal(InteractionEvent.Register),
-  profile: registerProfileSafeGuard,
+  profile: profileGuard.optional(),
   identifiers: z.array(identifierGuard).optional(),
 });
 

@@ -2,7 +2,7 @@ import { fireEvent, act, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { checkUsername } from '@/apis/register';
+import { registerWithUsernamePassword } from '@/apis/interaction';
 
 import UsernameRegister from '.';
 
@@ -13,8 +13,8 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-jest.mock('@/apis/register', () => ({
-  checkUsername: jest.fn(async () => ({})),
+jest.mock('@/apis/interaction', () => ({
+  registerWithUsernamePassword: jest.fn(async () => ({})),
 }));
 
 describe('<UsernameRegister />', () => {
@@ -45,7 +45,7 @@ describe('<UsernameRegister />', () => {
     });
 
     await waitFor(() => {
-      expect(checkUsername).toBeCalledWith('username');
+      expect(registerWithUsernamePassword).toBeCalledWith('username');
     });
   });
 });

@@ -22,7 +22,6 @@ import type {
   verifiedRegisterInteractionResultGuard,
   verifiedSignInteractionResultGuard,
   verifiedForgotPasswordInteractionResultGuard,
-  registerProfileSafeGuard,
   forgotPasswordProfileGuard,
 } from './guard.js';
 
@@ -51,8 +50,6 @@ export type SocialIdentifier = z.infer<typeof socialIdentifierGuard>;
 export type Identifier = z.infer<typeof identifierGuard>;
 
 // Profile
-export type RegisterSafeProfile = z.infer<typeof registerProfileSafeGuard>;
-
 export type ForgotPasswordProfile = z.infer<typeof forgotPasswordProfileGuard>;
 
 // Interaction

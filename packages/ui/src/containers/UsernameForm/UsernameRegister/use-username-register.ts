@@ -2,9 +2,9 @@ import { SignInIdentifier } from '@logto/schemas';
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { checkUsername } from '@/apis/register';
-import useApi from '@/hooks/use-api';
+import { registerWithUsernamePassword } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import { UserFlow } from '@/types';
 
 const useUsernameRegister = () => {
@@ -20,23 +20,20 @@ const useUsernameRegister = () => {
       'user.username_already_in_use': (error) => {
         setErrorMessage(error.message);
       },
+      'user.missing_profile': () => {
+        navigate(`/${UserFlow.register}/${SignInIdentifier.Username}/password`);
+      },
     }),
-    []
+    [navigate]
   );
 
-  const { run: asyncCheckUsername } = useApi(checkUsername, errorHandlers);
+  const { run: asyncRegister } = useApi(registerWithUsernamePassword, errorHandlers);
 
   const onSubmit = useCallback(
     async (username: string) => {
-      const result = await asyncCheckUsername(username);
-
-      if (result) {
-        navigate(`/${UserFlow.register}/${SignInIdentifier.Username}/password`, {
-          state: { username },
-        });
-      }
+      await asyncRegister(username);
     },
-    [asyncCheckUsername, navigate]
+    [asyncRegister]
   );
 
   return { errorMessage, clearErrorMessage, onSubmit };
