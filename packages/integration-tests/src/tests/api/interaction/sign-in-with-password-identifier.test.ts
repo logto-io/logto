@@ -112,7 +112,6 @@ describe('Sign-In flow using password identifiers', () => {
     await expectRejects(client.submitInteraction(), 'user.missing_profile');
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.SignIn,
       email: primaryEmail,
     });
 
@@ -172,7 +171,6 @@ describe('Sign-In flow using password identifiers', () => {
     await expectRejects(client.submitInteraction(), 'user.missing_profile');
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.SignIn,
       phone: primaryPhone,
     });
 

@@ -20,7 +20,7 @@ const getMessageTypesByEvent = (event: InteractionEvent): MessageTypes =>
   eventToMessageTypesMap[event];
 
 export const sendPasscodeToIdentifier = async (
-  payload: SendPasscodePayload,
+  payload: SendPasscodePayload & { event: InteractionEvent },
   jti: string,
   createLog: LogContext['createLog']
 ) => {

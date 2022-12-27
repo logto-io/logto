@@ -7,11 +7,9 @@ import { socialUserInfoGuard } from '#src/connectors/types.js';
 // Passcode Send Route Payload Guard
 export const sendPasscodePayloadGuard = z.union([
   z.object({
-    event: eventGuard,
     email: z.string().regex(emailRegEx),
   }),
   z.object({
-    event: eventGuard,
     phone: z.string().regex(phoneRegEx),
   }),
 ]);

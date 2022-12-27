@@ -292,9 +292,9 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { interactionDetails, guard, createLog } = ctx;
       // Check interaction exists
-      getInteractionStorage(interactionDetails.result);
+      const { event } = getInteractionStorage(interactionDetails.result);
 
-      await sendPasscodeToIdentifier(guard.body, interactionDetails.jti, createLog);
+      await sendPasscodeToIdentifier({ event, ...guard.body }, interactionDetails.jti, createLog);
 
       ctx.status = 204;
 
