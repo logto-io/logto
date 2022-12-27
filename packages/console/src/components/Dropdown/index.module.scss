@@ -33,4 +33,9 @@
 .list {
   margin: 0;
   overflow-y: auto;
+
+  ul {
+    margin: 0;
+    padding-inline-start: unset;
+  }
 }

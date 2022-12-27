@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import type { ReactNode, RefObject } from 'react';
 import { useRef } from 'react';
 import ReactModal from 'react-modal';
+import SimpleBar from 'simplebar-react';
 
 import usePosition from '@/hooks/use-position';
 import type { HorizontalAlignment } from '@/types/positioning';
@@ -65,15 +66,16 @@ const Dropdown = ({
     >
       <div ref={overlayRef} className={styles.dropdownContainer}>
         {title && <div className={classNames(styles.title, titleClassName)}>{title}</div>}
-        <ul
-          className={classNames(styles.list, className)}
-          role="menu"
-          tabIndex={0}
-          onClick={onClose}
-          onKeyDown={onKeyDownHandler({ Enter: onClose, Esc: onClose })}
-        >
-          {children}
-        </ul>
+        <SimpleBar className={classNames(styles.list, className)}>
+          <ul
+            role="menu"
+            tabIndex={0}
+            onClick={onClose}
+            onKeyDown={onKeyDownHandler({ Enter: onClose, Esc: onClose })}
+          >
+            {children}
+          </ul>
+        </SimpleBar>
       </div>
     </ReactModal>
   );

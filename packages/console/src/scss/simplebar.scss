@@ -1,0 +1,25 @@
+/* stylelint-disable selector-class-pattern */
+.simplebar-scrollbar {
+  min-height: 40px;
+}
+
+.simplebar-scrollbar::before {
+  background: var(--color-neutral-variant-80);
+  left: 0;
+  right: 0;
+  border-radius: 8px;
+}
+
+.simplebar-track.simplebar-vertical {
+  width: 8px;
+}
+
+.simplebar-scrollbar.simplebar-visible::before {
+  opacity: 100%;
+}
+
+.simplebar-track.simplebar-vertical .simplebar-scrollbar::before {
+  top: 0;
+  bottom: 0;
+}
+/* stylelint-enable selector-class-pattern */

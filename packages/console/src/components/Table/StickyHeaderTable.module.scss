@@ -13,7 +13,8 @@
 
   .bodyTable {
     flex: 1;
-    overflow-y: scroll;
+    overflow: auto;
+    max-height: 100%;
     padding-bottom: _.unit(2);
 
     tr {

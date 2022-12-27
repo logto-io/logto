@@ -4,7 +4,10 @@ import { adminConsoleApplicationId, managementResource } from '@logto/schemas';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
+import 'simplebar-react/dist/simplebar.min.css';
 import './scss/normalized.scss';
+import './scss/simplebar.scss';
+
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
 import AppBoundary from '@/components/AppBoundary';

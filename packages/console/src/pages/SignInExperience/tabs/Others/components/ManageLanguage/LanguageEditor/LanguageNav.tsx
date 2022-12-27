@@ -1,6 +1,7 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { isLanguageTag, languages as uiLanguageNameMapping } from '@logto/language-kit';
 import { useContext } from 'react';
+import SimpleBar from 'simplebar-react';
 
 import useUiLanguages from '@/hooks/use-ui-languages';
 
@@ -52,7 +53,7 @@ const LanguageNav = () => {
   return (
     <div className={style.languageNav}>
       <AddLanguageSelector options={languageOptions} onSelect={onAddLanguage} />
-      <div className={style.languageItemList}>
+      <SimpleBar className={style.languageItemList}>
         {languages.map((languageTag) => (
           <LanguageItem
             key={languageTag}
@@ -63,7 +64,7 @@ const LanguageNav = () => {
             }}
           />
         ))}
-      </div>
+      </SimpleBar>
     </div>
   );
 };

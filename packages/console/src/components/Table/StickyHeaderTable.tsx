@@ -1,6 +1,7 @@
 import { assert } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ReactElement } from 'react';
+import SimpleBar from 'simplebar-react';
 
 import * as styles from './StickyHeaderTable.module.scss';
 
@@ -27,12 +28,12 @@ const StickyHeaderTable = ({ header, colGroup, className, children: body }: Prop
         {colGroup}
         {header}
       </table>
-      <div className={styles.bodyTable}>
+      <SimpleBar className={styles.bodyTable}>
         <table>
           {colGroup}
           {body}
         </table>
-      </div>
+      </SimpleBar>
     </div>
   );
 };

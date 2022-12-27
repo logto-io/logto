@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import SimpleBar from 'simplebar-react';
 
 import Item from './components/Item';
 import Section from './components/Section';
@@ -16,7 +17,7 @@ const Sidebar = () => {
   const { sections } = useSidebarMenuItems();
 
   return (
-    <div className={styles.sidebar}>
+    <SimpleBar className={styles.sidebar}>
       {sections.map(({ title, items }) => (
         <Section key={title} title={t(title)}>
           {items.map(
@@ -40,7 +41,7 @@ const Sidebar = () => {
         icon={<Gear />}
         isActive={location.pathname.startsWith(getPath('settings'))}
       />
-    </div>
+    </SimpleBar>
   );
 };
 
