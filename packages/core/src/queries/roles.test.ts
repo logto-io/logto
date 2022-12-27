@@ -1,17 +1,23 @@
 import { Roles } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
+import { convertToIdentifiers, convertToPrimitiveOrSql, excludeAutoSetFields } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockRole } from '#src/__mocks__/index.js';
 import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
 import {
+  deleteRoleById,
   findAllRoles,
+  findRoleById,
   findRoleByRoleName,
   findRolesByRoleIds,
   findRolesByRoleNames,
+  insertRole,
+  insertRoles,
+  updateRoleById,
 } from './roles.js';
 
 const { jest } = import.meta;
@@ -80,6 +86,24 @@ describe('roles query', () => {
     await expect(findRoleByRoleName(mockRole.name)).resolves.toEqual(mockRole);
   });
 
+  it('findRoleByRoleName with excludeRoleId', async () => {
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.name} = ${mockRole.name}
+      and ${fields.id}<>${mockRole.id}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([mockRole.name, mockRole.id]);
+
+      return createMockQueryResult([mockRole]);
+    });
+
+    await expect(findRoleByRoleName(mockRole.name, mockRole.id)).resolves.toEqual(mockRole);
+  });
+
   it('findRolesByRoleNames', async () => {
     const roleNames = ['foo'];
 
@@ -97,5 +121,106 @@ describe('roles query', () => {
     });
 
     await expect(findRolesByRoleNames(roleNames)).resolves.toEqual([mockRole]);
+  });
+
+  it('insertRoles', async () => {
+    const expectSql = sql`
+      insert into ${table} (${fields.id}, ${fields.name}, ${fields.description}) values
+      ($1, $2, $3)
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+
+      expect(values).toEqual([mockRole.id, mockRole.name, mockRole.description]);
+
+      return createMockQueryResult([mockRole]);
+    });
+
+    await insertRoles([mockRole]);
+  });
+
+  it('insertRole', async () => {
+    const keys = excludeAutoSetFields(Roles.fieldKeys);
+
+    const expectSql = `
+      insert into "roles" ("id", "name", "description")
+      values (${keys.map((_, index) => `$${index + 1}`).join(', ')})
+      returning *
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      const rowData = { id: 'foo' };
+      expectSqlAssert(sql, expectSql);
+
+      expect(values).toEqual(keys.map((k) => convertToPrimitiveOrSql(k, mockRole[k])));
+
+      return createMockQueryResult([rowData]);
+    });
+
+    await insertRole(mockRole);
+  });
+
+  it('findRoleById', async () => {
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.id}=$1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([mockRole.id]);
+
+      return createMockQueryResult([mockRole]);
+    });
+
+    await findRoleById(mockRole.id);
+  });
+
+  it('updateRoleById', async () => {
+    const { id, description } = mockRole;
+
+    const expectSql = sql`
+      update ${table}
+      set ${fields.description}=$1
+      where ${fields.id}=$2
+      returning *
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([description, id]);
+
+      return createMockQueryResult([{ id, description }]);
+    });
+
+    await updateRoleById(id, { description });
+  });
+
+  it('deleteRoleById', async () => {
+    const expectSql = sql`
+      delete from ${table}
+      where ${fields.id}=$1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([mockRole.id]);
+
+      return createMockQueryResult([mockRole]);
+    });
+
+    await deleteRoleById(mockRole.id);
+  });
+
+  it('deleteRoleById throw error if return row count is 0', async () => {
+    const { id } = mockRole;
+
+    mockQuery.mockImplementationOnce(async () => {
+      return createMockQueryResult([]);
+    });
+
+    await expect(deleteRoleById(id)).rejects.toMatchError(new DeletionError(Roles.table, id));
   });
 });

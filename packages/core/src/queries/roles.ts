@@ -1,9 +1,14 @@
-import type { Role } from '@logto/schemas';
+import type { CreateRole, Role } from '@logto/schemas';
 import { Roles } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
+import type { OmitAutoSetFields } from '@logto/shared';
+import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 
+import { buildFindEntityById } from '#src/database/find-entity-by-id.js';
+import { buildInsertInto } from '#src/database/insert-into.js';
+import { buildUpdateWhere } from '#src/database/update-where.js';
 import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Roles);
 
@@ -28,11 +33,12 @@ export const findRolesByRoleNames = async (roleNames: string[]) =>
     where ${fields.name} in (${sql.join(roleNames, sql`, `)})
   `);
 
-export const findRoleByRoleName = async (roleName: string) =>
+export const findRoleByRoleName = async (roleName: string, excludeRoleId?: string) =>
   envSet.pool.maybeOne<Role>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.name} = ${roleName}
+    ${conditionalSql(excludeRoleId, (id) => sql`and ${fields.id}<>${id}`)}
   `);
 
 export const insertRoles = async (roles: Role[]) =>
@@ -43,3 +49,25 @@ export const insertRoles = async (roles: Role[]) =>
       sql`, `
     )}
   `);
+
+export const insertRole = buildInsertInto<CreateRole, Role>(Roles, {
+  returning: true,
+});
+
+export const findRoleById = buildFindEntityById<CreateRole, Role>(Roles);
+
+const updateRole = buildUpdateWhere<CreateRole, Role>(Roles, true);
+
+export const updateRoleById = async (id: string, set: Partial<OmitAutoSetFields<CreateRole>>) =>
+  updateRole({ set, where: { id }, jsonbMode: 'merge' });
+
+export const deleteRoleById = async (id: string) => {
+  const { rowCount } = await envSet.pool.query(sql`
+    delete from ${table}
+    where ${fields.id}=${id}
+  `);
+
+  if (rowCount < 1) {
+    throw new DeletionError(Roles.table, id);
+  }
+};

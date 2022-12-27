@@ -157,6 +157,9 @@ const errors = {
   log: {
     invalid_type: 'The log type is invalid.', // UNTRANSLATED
   },
+  role: {
+    name_in_use: 'This role name isalready in use', // UNTRANSLATED
+  },
 };
 
 export default errors;
