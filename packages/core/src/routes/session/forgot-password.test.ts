@@ -1,5 +1,5 @@
+import { MessageTypes } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
-import { PasscodeType } from '@logto/schemas';
 import { addDays, subDays } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
@@ -97,7 +97,7 @@ describe('session -> forgotPasswordRoutes', () => {
           verification: {
             userId: 'id',
             expiresAt: getTomorrowDate().toISOString(),
-            flow: PasscodeType.ForgotPassword,
+            flow: MessageTypes.ForgotPassword,
           },
         },
       });
@@ -118,7 +118,7 @@ describe('session -> forgotPasswordRoutes', () => {
         result: {
           verification: {
             expiresAt: getTomorrowDate().toISOString(),
-            flow: PasscodeType.ForgotPassword,
+            flow: MessageTypes.ForgotPassword,
           },
         },
       });
@@ -134,7 +134,7 @@ describe('session -> forgotPasswordRoutes', () => {
           verification: {
             userId: 'id',
             expiresAt: getTomorrowDate().toISOString(),
-            flow: PasscodeType.SignIn,
+            flow: MessageTypes.SignIn,
           },
         },
       });
@@ -147,7 +147,7 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should throw when `verification.expiresAt` is not string', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          verification: { userId: 'id', expiresAt: 0, flow: PasscodeType.ForgotPassword },
+          verification: { userId: 'id', expiresAt: 0, flow: MessageTypes.ForgotPassword },
         },
       });
       const response = await sessionRequest
@@ -162,7 +162,7 @@ describe('session -> forgotPasswordRoutes', () => {
           verification: {
             userId: 'id',
             expiresAt: 'invalid date string',
-            flow: PasscodeType.ForgotPassword,
+            flow: MessageTypes.ForgotPassword,
           },
         },
       });
@@ -178,7 +178,7 @@ describe('session -> forgotPasswordRoutes', () => {
           verification: {
             userId: 'id',
             expiresAt: getYesterdayDate().toISOString(),
-            flow: PasscodeType.ForgotPassword,
+            flow: MessageTypes.ForgotPassword,
           },
         },
       });
@@ -194,7 +194,7 @@ describe('session -> forgotPasswordRoutes', () => {
           verification: {
             userId: 'id',
             expiresAt: getTomorrowDate().toISOString(),
-            flow: PasscodeType.ForgotPassword,
+            flow: MessageTypes.ForgotPassword,
           },
         },
       });
@@ -211,7 +211,7 @@ describe('session -> forgotPasswordRoutes', () => {
           verification: {
             userId: 'id',
             expiresAt: getTomorrowDate().toISOString(),
-            flow: PasscodeType.ForgotPassword,
+            flow: MessageTypes.ForgotPassword,
           },
         },
       });

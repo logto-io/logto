@@ -1,7 +1,10 @@
-import { PasscodeType } from '@logto/schemas';
+import { MessageTypes } from '@logto/connector-kit';
+import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-export const passcodeTypeGuard = z.nativeEnum(PasscodeType);
+export const flowTypeGuard = z.nativeEnum(
+  pick(MessageTypes, 'Continue', 'ForgotPassword', 'Register', 'SignIn')
+);
 
 export const methodGuard = z.enum(['email', 'sms']);
 
@@ -12,7 +15,7 @@ export const operationGuard = z.enum(['send', 'verify']);
 export type Operation = z.infer<typeof operationGuard>;
 
 const smsSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.SignIn).or(z.literal(PasscodeType.Register)),
+  flow: z.literal(MessageTypes.SignIn).or(z.literal(MessageTypes.Register)),
   expiresAt: z.string(),
   phone: z.string(),
 });
@@ -22,7 +25,7 @@ export type SmsSessionStorage = z.infer<typeof smsSessionStorageGuard>;
 export const smsSessionResultGuard = z.object({ verification: smsSessionStorageGuard });
 
 const emailSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.SignIn).or(z.literal(PasscodeType.Register)),
+  flow: z.literal(MessageTypes.SignIn).or(z.literal(MessageTypes.Register)),
   expiresAt: z.string(),
   email: z.string(),
 });
@@ -34,7 +37,7 @@ export const emailSessionResultGuard = z.object({
 });
 
 const forgotPasswordSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.ForgotPassword),
+  flow: z.literal(MessageTypes.ForgotPassword),
   expiresAt: z.string(),
   userId: z.string(),
 });
@@ -46,7 +49,7 @@ export const forgotPasswordSessionResultGuard = z.object({
 });
 
 const continueEmailSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.Continue),
+  flow: z.literal(MessageTypes.Continue),
   expiresAt: z.string(),
   email: z.string(),
 });
@@ -58,7 +61,7 @@ export const continueEmailSessionResultGuard = z.object({
 });
 
 const continueSmsSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.Continue),
+  flow: z.literal(MessageTypes.Continue),
   expiresAt: z.string(),
   phone: z.string(),
 });

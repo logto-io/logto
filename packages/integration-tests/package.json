@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@jest/types": "^29.1.2",
+    "@logto/connector-kit": "workspace:1.0.0-beta.30",
     "@logto/js": "1.0.0-beta.14",
     "@logto/node": "1.0.0-beta.14",
     "@logto/schemas": "workspace:*",

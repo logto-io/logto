@@ -1,6 +1,5 @@
-import { ConnectorType } from '@logto/connector-kit';
-import type { Passcode } from '@logto/schemas';
-import { PasscodeType } from '@logto/schemas';
+import { ConnectorType, MessageTypes } from '@logto/connector-kit';
+import { Passcode } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import { any } from 'zod';
 
@@ -61,7 +60,7 @@ afterEach(() => {
 describe('createPasscode', () => {
   it('should generate `passcodeLength` digits code for phone and insert to database', async () => {
     const phone = '13000000000';
-    const passcode = await createPasscode('jti', PasscodeType.SignIn, {
+    const passcode = await createPasscode('jti', MessageTypes.SignIn, {
       phone,
     });
     expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
@@ -70,7 +69,7 @@ describe('createPasscode', () => {
 
   it('should generate `passcodeLength` digits code for email and insert to database', async () => {
     const email = 'jony@example.com';
-    const passcode = await createPasscode('jti', PasscodeType.SignIn, {
+    const passcode = await createPasscode('jti', MessageTypes.SignIn, {
       email,
     });
     expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
@@ -85,7 +84,7 @@ describe('createPasscode', () => {
         id: 'id',
         interactionJti: jti,
         code: '1234',
-        type: PasscodeType.SignIn,
+        type: MessageTypes.SignIn,
         createdAt: Date.now(),
         phone: '',
         email,
@@ -93,7 +92,7 @@ describe('createPasscode', () => {
         tryCount: 0,
       },
     ]);
-    await createPasscode(jti, PasscodeType.SignIn, {
+    await createPasscode(jti, MessageTypes.SignIn, {
       email,
     });
     expect(deletePasscodesByIds).toHaveBeenCalledWith(['id']);
@@ -107,7 +106,7 @@ describe('sendPasscode', () => {
       interactionJti: 'jti',
       phone: null,
       email: null,
-      type: PasscodeType.SignIn,
+      type: MessageTypes.SignIn,
       code: '1234',
       consumed: false,
       tryCount: 0,
@@ -140,7 +139,7 @@ describe('sendPasscode', () => {
       interactionJti: 'jti',
       phone: 'phone',
       email: null,
-      type: PasscodeType.SignIn,
+      type: MessageTypes.SignIn,
       code: '1234',
       consumed: false,
       tryCount: 0,
@@ -191,7 +190,7 @@ describe('sendPasscode', () => {
       interactionJti: 'jti',
       phone: 'phone',
       email: null,
-      type: PasscodeType.SignIn,
+      type: MessageTypes.SignIn,
       code: '1234',
       consumed: false,
       tryCount: 0,
@@ -209,17 +208,17 @@ describe('sendPasscode', () => {
 });
 
 describe('verifyPasscode', () => {
-  const passcode: Passcode = {
+  const passcode = {
     id: 'id',
     interactionJti: 'jti',
     phone: 'phone',
     email: null,
-    type: PasscodeType.SignIn,
+    type: MessageTypes.SignIn,
     code: '1234',
     consumed: false,
     tryCount: 0,
     createdAt: Date.now(),
-  };
+  } satisfies Passcode;
 
   it('should mark as consumed on successful verification', async () => {
     findUnconsumedPasscodeByJtiAndType.mockResolvedValue(passcode);

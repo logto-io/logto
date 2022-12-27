@@ -1,4 +1,4 @@
-import { PasscodeType } from '@logto/schemas';
+import { MessageTypes } from '@logto/connector-kit';
 
 import api from './api.js';
 
@@ -69,7 +69,7 @@ export const sendRegisterUserWithEmailPasscode = (email: string, interactionCook
     },
     json: {
       email,
-      flow: PasscodeType.Register,
+      flow: MessageTypes.Register,
     },
   });
 
@@ -86,7 +86,7 @@ export const verifyRegisterUserWithEmailPasscode = (
       json: {
         email,
         code,
-        flow: PasscodeType.Register,
+        flow: MessageTypes.Register,
       },
     })
     .json<RedirectResponse>();
@@ -107,7 +107,7 @@ export const sendSignInUserWithEmailPasscode = (email: string, interactionCookie
     },
     json: {
       email,
-      flow: PasscodeType.SignIn,
+      flow: MessageTypes.SignIn,
     },
   });
 
@@ -124,7 +124,7 @@ export const verifySignInUserWithEmailPasscode = (
       json: {
         email,
         code,
-        flow: PasscodeType.SignIn,
+        flow: MessageTypes.SignIn,
       },
     })
     .json<RedirectResponse>();
@@ -145,7 +145,7 @@ export const sendRegisterUserWithSmsPasscode = (phone: string, interactionCookie
     },
     json: {
       phone,
-      flow: PasscodeType.Register,
+      flow: MessageTypes.Register,
     },
   });
 
@@ -162,7 +162,7 @@ export const verifyRegisterUserWithSmsPasscode = (
       json: {
         phone,
         code,
-        flow: PasscodeType.Register,
+        flow: MessageTypes.Register,
       },
     })
     .json<RedirectResponse>();
@@ -183,7 +183,7 @@ export const sendSignInUserWithSmsPasscode = (phone: string, interactionCookie: 
     },
     json: {
       phone,
-      flow: PasscodeType.SignIn,
+      flow: MessageTypes.SignIn,
     },
   });
 
@@ -200,7 +200,7 @@ export const verifySignInUserWithSmsPasscode = (
       json: {
         phone,
         code,
-        flow: PasscodeType.SignIn,
+        flow: MessageTypes.SignIn,
       },
     })
     .json<RedirectResponse>();
