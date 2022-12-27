@@ -24,9 +24,12 @@ const FormCard = ({ title, description, learnMoreLink, children }: Props) => {
           <div className={styles.description}>
             {t(description)}
             {learnMoreLink && (
-              <TextLink href={learnMoreLink} target="_blank" rel="noopener" className={styles.link}>
-                {t('general.learn_more')}
-              </TextLink>
+              <>
+                {' '}
+                <TextLink href={learnMoreLink} target="_blank" rel="noopener">
+                  {t('general.learn_more')}
+                </TextLink>
+              </>
             )}
           </div>
         )}
