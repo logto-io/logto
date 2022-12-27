@@ -23,10 +23,10 @@ import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import { ConnectorsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
-import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import CreateForm from '../Connectors/components/CreateForm';
@@ -34,6 +34,9 @@ import ConnectorContent from './components/ConnectorContent';
 import ConnectorTabs from './components/ConnectorTabs';
 import ConnectorTypeName from './components/ConnectorTypeName';
 import * as styles from './index.module.scss';
+
+const getConnectorsPathname = (isSocial: boolean) =>
+  `/connectors/${isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless}`;
 
 const ConnectorDetails = () => {
   const { connectorId } = useParams();
@@ -49,7 +52,6 @@ const ConnectorDetails = () => {
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
-  const theme = useTheme();
   const isSocial = data?.type === ConnectorType.Social;
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
 
@@ -75,20 +77,18 @@ const ConnectorDetails = () => {
     toast.success(t('connector_details.connector_deleted'));
     await mutateGlobal('/api/connectors');
 
-    if (isSocial) {
-      navigate(`/connectors/social`, { replace: true });
-    } else {
-      navigate(`/connectors`, { replace: true });
-    }
+    navigate(getConnectorsPathname(isSocial), {
+      replace: true,
+    });
   };
+
+  if (!connectorId) {
+    return null;
+  }
 
   return (
     <div className={detailsStyles.container}>
-      <TextLink
-        to={isSocial ? '/connectors/social' : '/connectors'}
-        icon={<Back />}
-        className={styles.backLink}
-      >
+      <TextLink to={getConnectorsPathname(isSocial)} icon={<Back />} className={styles.backLink}>
         {t('connector_details.back_to_connectors')}
       </TextLink>
       {isLoading && <DetailsSkeleton />}
@@ -166,14 +166,17 @@ const ConnectorDetails = () => {
               type={data.type}
               onClose={(connectorId?: string) => {
                 setIsSetupOpen(false);
-                navigate(`/connectors/${connectorId ?? ''}`);
+
+                if (connectorId) {
+                  navigate(`${getConnectorsPathname(isSocial)}/${connectorId}`);
+                }
               }}
             />
           </div>
         </Card>
       )}
       <TabNav>
-        <TabNavItem href={`/connectors/${connectorId ?? ''}`}>
+        <TabNavItem href={`${getConnectorsPathname(isSocial)}/${connectorId}`}>
           {t('general.settings_nav')}
         </TabNavItem>
       </TabNav>
