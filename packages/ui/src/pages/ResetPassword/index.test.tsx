@@ -2,7 +2,7 @@ import { act, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { resetPassword } from '@/apis/forgot-password';
+import { setUserPassword } from '@/apis/interaction';
 
 import ResetPassword from '.';
 
@@ -13,8 +13,8 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-jest.mock('@/apis/forgot-password', () => ({
-  resetPassword: jest.fn(async () => ({ redirectTo: '/' })),
+jest.mock('@/apis/interaction', () => ({
+  setUserPassword: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('ForgotPassword', () => {
@@ -51,7 +51,7 @@ describe('ForgotPassword', () => {
     });
 
     await waitFor(() => {
-      expect(resetPassword).toBeCalledWith('123456');
+      expect(setUserPassword).toBeCalledWith('123456');
     });
   });
 });

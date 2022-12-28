@@ -23,7 +23,7 @@ type Props = {
   errorMessage?: string;
   submitButtonText?: TFuncKey;
   clearErrorMessage?: () => void;
-  onSubmit: (phone: string) => Promise<void> | void;
+  onSubmit: (payload: { phone: string }) => Promise<void> | void;
 };
 
 type FieldState = {
@@ -79,9 +79,9 @@ const PhoneForm = ({
         return;
       }
 
-      await onSubmit(fieldValue.phone);
+      await onSubmit(fieldValue);
     },
-    [validateForm, hasTerms, termsValidation, onSubmit, fieldValue.phone]
+    [validateForm, hasTerms, termsValidation, onSubmit, fieldValue]
   );
 
   return (

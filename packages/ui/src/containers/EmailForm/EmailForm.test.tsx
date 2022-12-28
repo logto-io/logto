@@ -138,7 +138,7 @@ describe('<EmailForm/>', () => {
     });
 
     await waitFor(() => {
-      expect(onSubmit).toBeCalledWith('foo@logto.io');
+      expect(onSubmit).toBeCalledWith({ email: 'foo@logto.io' });
     });
   });
 
@@ -166,7 +166,7 @@ describe('<EmailForm/>', () => {
     });
 
     await waitFor(() => {
-      expect(onSubmit).toBeCalledWith('foo@logto.io');
+      expect(onSubmit).toBeCalledWith({ email: 'foo@logto.io' });
     });
   });
 });

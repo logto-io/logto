@@ -1,4 +1,4 @@
-import type { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 
 import TextLink from '@/components/TextLink';
@@ -33,7 +33,7 @@ const PasswordlessSignInLink = ({ className, method, value }: Props) => {
       text="action.sign_in_via_passcode"
       onClick={() => {
         clearErrorMessage();
-        void onSubmit(value);
+        void onSubmit(method === SignInIdentifier.Email ? { email: value } : { phone: value });
       }}
     />
   );

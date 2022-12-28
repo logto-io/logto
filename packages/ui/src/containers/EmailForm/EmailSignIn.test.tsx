@@ -1,16 +1,17 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { sendSignInEmailPasscode } from '@/apis/sign-in';
+import { sendPasscode, putInteraction } from '@/apis/interaction';
 
 import EmailSignIn from './EmailSignIn';
 
 const mockedNavigate = jest.fn();
 
-jest.mock('@/apis/sign-in', () => ({
-  sendSignInEmailPasscode: jest.fn(() => ({ success: true })),
+jest.mock('@/apis/interaction', () => ({
+  sendPasscode: jest.fn(() => ({ success: true })),
+  putInteraction: jest.fn(() => ({ success: true })),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -51,7 +52,8 @@ describe('EmailSignIn', () => {
     });
 
     await waitFor(() => {
-      expect(sendSignInEmailPasscode).not.toBeCalled();
+      expect(putInteraction).not.toBeCalled();
+      expect(sendPasscode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/email/password', search: '' },
         { state: { email } }
@@ -59,7 +61,7 @@ describe('EmailSignIn', () => {
     });
   });
 
-  test('EmailSignIn form with password true but not primary verification code false', async () => {
+  test('EmailSignIn form with password true but verification code false', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailSignIn
@@ -85,7 +87,8 @@ describe('EmailSignIn', () => {
     });
 
     await waitFor(() => {
-      expect(sendSignInEmailPasscode).not.toBeCalled();
+      expect(putInteraction).not.toBeCalled();
+      expect(sendPasscode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/email/password', search: '' },
         { state: { email } }
@@ -93,7 +96,7 @@ describe('EmailSignIn', () => {
     });
   });
 
-  test('EmailSignIn form with password true but not primary verification code true', async () => {
+  test('EmailSignIn form with password true but not primary, verification code true', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailSignIn
@@ -120,7 +123,8 @@ describe('EmailSignIn', () => {
     });
 
     await waitFor(() => {
-      expect(sendSignInEmailPasscode).toBeCalledWith(email);
+      expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
+      expect(sendPasscode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/email/passcode-validation', search: '' },
         { state: { email } }
@@ -155,7 +159,8 @@ describe('EmailSignIn', () => {
     });
 
     await waitFor(() => {
-      expect(sendSignInEmailPasscode).toBeCalledWith(email);
+      expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
+      expect(sendPasscode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/email/passcode-validation', search: '' },
         { state: { email } }

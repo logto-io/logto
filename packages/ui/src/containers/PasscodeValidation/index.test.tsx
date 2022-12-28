@@ -3,16 +3,10 @@ import { act, fireEvent, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import {
-  verifyContinueSetEmailPasscode,
-  continueApi,
-  verifyContinueSetSmsPasscode,
-} from '@/apis/continue';
-import {
-  verifyForgotPasswordEmailPasscode,
-  verifyForgotPasswordSmsPasscode,
-} from '@/apis/forgot-password';
-import { verifyRegisterEmailPasscode, verifyRegisterSmsPasscode } from '@/apis/register';
-import { verifySignInEmailPasscode, verifySignInSmsPasscode } from '@/apis/sign-in';
+  verifyForgotPasswordPasscodeIdentifier,
+  signInWithPasscodeIdentifier,
+  addProfileWithPasscodeIdentifier,
+} from '@/apis/interaction';
 import { UserFlow } from '@/types';
 
 import PasscodeValidation from '.';
@@ -32,25 +26,10 @@ jest.mock('@/apis/utils', () => ({
   getSendPasscodeApi: () => sendPasscodeApi,
 }));
 
-jest.mock('@/apis/sign-in', () => ({
-  verifySignInEmailPasscode: jest.fn(),
-  verifySignInSmsPasscode: jest.fn(),
-}));
-
-jest.mock('@/apis/register', () => ({
-  verifyRegisterEmailPasscode: jest.fn(),
-  verifyRegisterSmsPasscode: jest.fn(),
-}));
-
-jest.mock('@/apis/forgot-password', () => ({
-  verifyForgotPasswordEmailPasscode: jest.fn(),
-  verifyForgotPasswordSmsPasscode: jest.fn(),
-}));
-
-jest.mock('@/apis/continue', () => ({
-  verifyContinueSetEmailPasscode: jest.fn(),
-  verifyContinueSetSmsPasscode: jest.fn(),
-  continueApi: jest.fn(),
+jest.mock('@/apis/interaction', () => ({
+  verifyForgotPasswordPasscodeIdentifier: jest.fn(),
+  signInWithPasscodeIdentifier: jest.fn(),
+  addProfileWithPasscodeIdentifier: jest.fn(),
 }));
 
 describe('<PasscodeValidation />', () => {
@@ -103,12 +82,12 @@ describe('<PasscodeValidation />', () => {
       fireEvent.click(resendButton);
     });
 
-    expect(sendPasscodeApi).toBeCalledWith(email);
+    expect(sendPasscodeApi).toBeCalledWith({ email });
   });
 
   describe('sign-in', () => {
     it('fire email sign-in validate passcode event', async () => {
-      (verifySignInEmailPasscode as jest.Mock).mockImplementationOnce(() => ({
+      (signInWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: 'foo.com',
       }));
 
@@ -124,7 +103,10 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(verifySignInEmailPasscode).toBeCalledWith(email, '111111', undefined);
+        expect(signInWithPasscodeIdentifier).toBeCalledWith(
+          { email, passcode: '111111' },
+          undefined
+        );
       });
 
       await waitFor(() => {
@@ -133,7 +115,7 @@ describe('<PasscodeValidation />', () => {
     });
 
     it('fire sms sign-in validate passcode event', async () => {
-      (verifySignInSmsPasscode as jest.Mock).mockImplementationOnce(() => ({
+      (signInWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: 'foo.com',
       }));
 
@@ -149,7 +131,13 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(verifySignInSmsPasscode).toBeCalledWith(phone, '111111', undefined);
+        expect(signInWithPasscodeIdentifier).toBeCalledWith(
+          {
+            phone,
+            passcode: '111111',
+          },
+          undefined
+        );
       });
 
       await waitFor(() => {
@@ -160,7 +148,7 @@ describe('<PasscodeValidation />', () => {
 
   describe('register', () => {
     it('fire email register validate passcode event', async () => {
-      (verifyRegisterEmailPasscode as jest.Mock).mockImplementationOnce(() => ({
+      (addProfileWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: 'foo.com',
       }));
 
@@ -180,7 +168,10 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(verifyRegisterEmailPasscode).toBeCalledWith(email, '111111');
+        expect(addProfileWithPasscodeIdentifier).toBeCalledWith({
+          email,
+          passcode: '111111',
+        });
       });
 
       await waitFor(() => {
@@ -189,7 +180,7 @@ describe('<PasscodeValidation />', () => {
     });
 
     it('fire sms register validate passcode event', async () => {
-      (verifyRegisterSmsPasscode as jest.Mock).mockImplementationOnce(() => ({
+      (addProfileWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: 'foo.com',
       }));
 
@@ -205,7 +196,7 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(verifyRegisterSmsPasscode).toBeCalledWith(phone, '111111');
+        expect(addProfileWithPasscodeIdentifier).toBeCalledWith({ phone, passcode: '111111' });
       });
 
       await waitFor(() => {
@@ -216,7 +207,7 @@ describe('<PasscodeValidation />', () => {
 
   describe('forgot password', () => {
     it('fire email forgot-password validate passcode event', async () => {
-      (verifyForgotPasswordEmailPasscode as jest.Mock).mockImplementationOnce(() => ({
+      (verifyForgotPasswordPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         success: true,
       }));
 
@@ -237,17 +228,17 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(verifyForgotPasswordEmailPasscode).toBeCalledWith(email, '111111');
+        expect(verifyForgotPasswordPasscodeIdentifier).toBeCalledWith({
+          email,
+          passcode: '111111',
+        });
       });
 
-      await waitFor(() => {
-        expect(window.location.replace).not.toBeCalled();
-        expect(mockedNavigate).toBeCalledWith('/forgot-password/reset', { replace: true });
-      });
+      // TODO: @simeng test exception flow to fulfill the password
     });
 
     it('fire sms forgot-password validate passcode event', async () => {
-      (verifyForgotPasswordSmsPasscode as jest.Mock).mockImplementationOnce(() => ({
+      (verifyForgotPasswordPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         success: true,
       }));
 
@@ -268,22 +259,21 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(verifyForgotPasswordSmsPasscode).toBeCalledWith(phone, '111111');
+        expect(verifyForgotPasswordPasscodeIdentifier).toBeCalledWith({
+          phone,
+          passcode: '111111',
+        });
       });
 
-      await waitFor(() => {
-        expect(window.location.replace).not.toBeCalled();
-        expect(mockedNavigate).toBeCalledWith('/forgot-password/reset', { replace: true });
-      });
+      // TODO: @simeng test exception flow to fulfill the password
     });
   });
 
   describe('continue flow', () => {
     it('set email', async () => {
-      (verifyContinueSetEmailPasscode as jest.Mock).mockImplementationOnce(() => ({
-        success: true,
+      (addProfileWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
+        redirectTo: '/redirect',
       }));
-      (continueApi as jest.Mock).mockImplementationOnce(() => ({ redirectTo: '/redirect' }));
 
       const { container } = renderWithPageContext(
         <PasscodeValidation
@@ -302,20 +292,24 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(verifyContinueSetEmailPasscode).toBeCalledWith(email, '111111');
+        expect(addProfileWithPasscodeIdentifier).toBeCalledWith(
+          {
+            email,
+            passcode: '111111',
+          },
+          undefined
+        );
       });
 
       await waitFor(() => {
-        expect(continueApi).toBeCalledWith('email', email, undefined);
         expect(window.location.replace).toBeCalledWith('/redirect');
       });
     });
 
     it('set Phone', async () => {
-      (verifyContinueSetSmsPasscode as jest.Mock).mockImplementationOnce(() => ({
-        success: true,
+      (addProfileWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
+        redirectTo: '/redirect',
       }));
-      (continueApi as jest.Mock).mockImplementationOnce(() => ({ redirectTo: '/redirect' }));
 
       const { container } = renderWithPageContext(
         <PasscodeValidation type={UserFlow.continue} method={SignInIdentifier.Sms} target={phone} />
@@ -330,11 +324,16 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(verifyContinueSetSmsPasscode).toBeCalledWith(phone, '111111');
+        expect(addProfileWithPasscodeIdentifier).toBeCalledWith(
+          {
+            phone,
+            passcode: '111111',
+          },
+          undefined
+        );
       });
 
       await waitFor(() => {
-        expect(continueApi).toBeCalledWith('phone', phone, undefined);
         expect(window.location.replace).toBeCalledWith('/redirect');
       });
     });

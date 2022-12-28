@@ -145,7 +145,7 @@ describe('<PhonePasswordless/>', () => {
     });
 
     await waitFor(() => {
-      expect(onSubmit).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+      expect(onSubmit).toBeCalledWith({ phone: `${defaultCountryCallingCode}${phoneNumber}` });
     });
   });
 
@@ -173,7 +173,7 @@ describe('<PhonePasswordless/>', () => {
     });
 
     await waitFor(() => {
-      expect(onSubmit).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+      expect(onSubmit).toBeCalledWith({ phone: `${defaultCountryCallingCode}${phoneNumber}` });
     });
   });
 });

@@ -1,20 +1,16 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { fireEvent, waitFor, act } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { signInWithPasswordIdentifier } from '@/apis/interaction';
-import { sendSignInEmailPasscode, sendSignInSmsPasscode } from '@/apis/sign-in';
+import { signInWithPasswordIdentifier, putInteraction, sendPasscode } from '@/apis/interaction';
 import { UserFlow } from '@/types';
 
 import PasswordSignInForm from '.';
 
-jest.mock('@/apis/sign-in', () => ({
-  sendSignInEmailPasscode: jest.fn(() => ({ success: true })),
-  sendSignInSmsPasscode: jest.fn(() => ({ success: true })),
-}));
-
 jest.mock('@/apis/interaction', () => ({
   signInWithPasswordIdentifier: jest.fn(() => ({ redirectTo: '/' })),
+  sendPasscode: jest.fn(() => ({ success: true })),
+  putInteraction: jest.fn(() => ({ success: true })),
 }));
 
 const mockedNavigate = jest.fn();
@@ -80,7 +76,8 @@ describe('PasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(sendSignInEmailPasscode).toBeCalledWith(email);
+      expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
+      expect(sendPasscode).toBeCalledWith({ email });
     });
 
     expect(mockedNavigate).toBeCalledWith(
@@ -125,7 +122,8 @@ describe('PasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(sendSignInSmsPasscode).toBeCalledWith(phone);
+      expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
+      expect(sendPasscode).toBeCalledWith({ phone });
     });
 
     expect(mockedNavigate).toBeCalledWith(

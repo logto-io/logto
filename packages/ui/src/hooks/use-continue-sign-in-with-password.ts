@@ -1,18 +1,22 @@
-import { SignInIdentifier } from '@logto/schemas';
+import type { SignInIdentifier } from '@logto/schemas';
 import { useNavigate } from 'react-router-dom';
 
 import { UserFlow } from '@/types';
 
-const useContinueSignInWithPassword = (method: SignInIdentifier.Email | SignInIdentifier.Sms) => {
+const useContinueSignInWithPassword = <T extends SignInIdentifier.Email | SignInIdentifier.Sms>(
+  method: T
+) => {
   const navigate = useNavigate();
 
-  return (value: string) => {
+  type Payload = T extends SignInIdentifier.Email ? { email: string } : { phone: string };
+
+  return (payload: Payload) => {
     navigate(
       {
         pathname: `/${UserFlow.signIn}/${method}/password`,
         search: location.search,
       },
-      { state: method === SignInIdentifier.Email ? { email: value } : { phone: value } }
+      { state: payload }
     );
   };
 };

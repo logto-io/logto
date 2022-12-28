@@ -153,7 +153,7 @@ describe('verifyUserAccount', () => {
     };
 
     await expect(verifyUserAccount(interaction)).rejects.toMatchError(
-      new RequestError({ code: 'user.user_not_exist', status: 404 }, { identifier: 'email' })
+      new RequestError({ code: 'user.user_not_exist', status: 404 }, { identity: 'email' })
     );
 
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });

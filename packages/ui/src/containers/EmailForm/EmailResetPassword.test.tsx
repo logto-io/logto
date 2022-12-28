@@ -1,17 +1,18 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { sendForgotPasswordEmailPasscode } from '@/apis/forgot-password';
+import { putInteraction, sendPasscode } from '@/apis/interaction';
 import { UserFlow } from '@/types';
 
 import EmailResetPassword from './EmailResetPassword';
 
 const mockedNavigate = jest.fn();
 
-jest.mock('@/apis/forgot-password', () => ({
-  sendForgotPasswordEmailPasscode: jest.fn(() => ({ success: true })),
+jest.mock('@/apis/interaction', () => ({
+  sendPasscode: jest.fn(() => ({ success: true })),
+  putInteraction: jest.fn(() => ({ success: true })),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -41,7 +42,8 @@ describe('EmailRegister', () => {
     });
 
     await waitFor(() => {
-      expect(sendForgotPasswordEmailPasscode).toBeCalledWith(email);
+      expect(putInteraction).toBeCalledWith(InteractionEvent.ForgotPassword);
+      expect(sendPasscode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
         {
           pathname: `/${UserFlow.forgotPassword}/${SignInIdentifier.Email}/passcode-validation`,

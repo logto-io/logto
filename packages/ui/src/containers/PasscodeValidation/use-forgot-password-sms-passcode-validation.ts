@@ -2,7 +2,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import { useMemo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { verifyForgotPasswordSmsPasscode } from '@/apis/forgot-password';
+import { verifyForgotPasswordPasscodeIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { UserFlow } from '@/types';
@@ -13,6 +13,7 @@ import useSharedErrorHandler from './use-shared-error-handler';
 const useForgotPasswordSmsPasscodeValidation = (phone: string, errorCallback?: () => void) => {
   const navigate = useNavigate();
   const { sharedErrorHandlers, errorMessage, clearErrorMessage } = useSharedErrorHandler();
+
   const identifierNotExistErrorHandler = useIdentifierErrorAlert(
     UserFlow.forgotPassword,
     SignInIdentifier.Sms,
@@ -22,24 +23,30 @@ const useForgotPasswordSmsPasscodeValidation = (phone: string, errorCallback?: (
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.phone_not_exist': identifierNotExistErrorHandler,
+      'user.new_password_required_in_profile': () => {
+        navigate(`/${UserFlow.forgotPassword}/reset`, { replace: true });
+      },
       ...sharedErrorHandlers,
       callback: errorCallback,
     }),
-    [sharedErrorHandlers, errorCallback, identifierNotExistErrorHandler]
+    [identifierNotExistErrorHandler, sharedErrorHandlers, errorCallback, navigate]
   );
 
-  const { result, run: verifyPasscode } = useApi(verifyForgotPasswordSmsPasscode, errorHandlers);
+  const { result, run: verifyPasscode } = useApi(
+    verifyForgotPasswordPasscodeIdentifier,
+    errorHandlers
+  );
 
   const onSubmit = useCallback(
-    async (code: string) => {
-      return verifyPasscode(phone, code);
+    async (passcode: string) => {
+      return verifyPasscode({ phone, passcode });
     },
     [phone, verifyPasscode]
   );
 
   useEffect(() => {
     if (result) {
-      navigate(`/${UserFlow.forgotPassword}/reset`, { replace: true });
+      navigate(`/${UserFlow.signIn}`, { replace: true });
     }
   }, [navigate, result]);
 

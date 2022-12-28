@@ -1,9 +1,9 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, InteractionEvent } from '@logto/schemas';
 import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { sendForgotPasswordSmsPasscode } from '@/apis/forgot-password';
+import { putInteraction, sendPasscode } from '@/apis/interaction';
 import { UserFlow } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -16,8 +16,9 @@ jest.mock('i18next', () => ({
   language: 'en',
 }));
 
-jest.mock('@/apis/forgot-password', () => ({
-  sendForgotPasswordSmsPasscode: jest.fn(() => ({ success: true })),
+jest.mock('@/apis/interaction', () => ({
+  sendPasscode: jest.fn(() => ({ success: true })),
+  putInteraction: jest.fn(() => ({ success: true })),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -49,7 +50,8 @@ describe('SmsRegister', () => {
     });
 
     await waitFor(() => {
-      expect(sendForgotPasswordSmsPasscode).toBeCalledWith(fullPhoneNumber);
+      expect(putInteraction).toBeCalledWith(InteractionEvent.ForgotPassword);
+      expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
         {
           pathname: `/${UserFlow.forgotPassword}/${SignInIdentifier.Sms}/passcode-validation`,
