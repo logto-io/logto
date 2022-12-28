@@ -147,7 +147,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       const { signInExperience, interactionDetails } = ctx;
       const interactionStorage = getInteractionStorage(interactionDetails.result);
 
-      if (interactionStorage.event === InteractionEvent.ForgotPassword) {
+      if (interactionStorage.event !== InteractionEvent.ForgotPassword) {
         verifyIdentifierSettings(identifierPayload, signInExperience);
       }
 

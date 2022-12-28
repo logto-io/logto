@@ -31,7 +31,7 @@ const Passcode = () => {
   // SignIn Method not enabled
   const methodSettings = signInMethods.find(({ identifier }) => identifier === method);
 
-  if (!methodSettings) {
+  if (!methodSettings && type !== UserFlow.forgotPassword) {
     return <ErrorPage />;
   }
 
