@@ -7,6 +7,8 @@ import type {
   PhonePasswordPayload,
   EmailPasscodePayload,
   PhonePasscodePayload,
+  SocialConnectorPayload,
+  SocialIdentityPayload,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -28,15 +30,20 @@ export const signInWithPasswordIdentifier = async (
   payload: PasswordSignInPayload,
   socialToBind?: string
 ) => {
-  await api.put(`${interactionPrefix}`, {
-    json: {
-      event: InteractionEvent.SignIn,
-      identifier: payload,
-    },
-  });
-
   if (socialToBind) {
-    // TODO: bind social account
+    await api.patch(`${interactionPrefix}/identifiers`, {
+      json: payload,
+    });
+    await api.patch(`${interactionPrefix}/profile`, {
+      json: { connectorId: socialToBind },
+    });
+  } else {
+    await api.put(`${interactionPrefix}`, {
+      json: {
+        event: InteractionEvent.SignIn,
+        identifier: payload,
+      },
+    });
   }
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
@@ -89,9 +96,9 @@ export const signInWithPasscodeIdentifier = async (
     json: payload,
   });
 
-  if (socialToBind) {
-    // TODO: bind social account
-  }
+  await api.patch(`${interactionPrefix}/profile`, {
+    json: { connectorId: socialToBind },
+  });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
@@ -110,9 +117,9 @@ export const addProfileWithPasscodeIdentifier = async (
     json: identifier,
   });
 
-  if (socialToBind) {
-    // TODO: bind social account
-  }
+  await api.patch(`${interactionPrefix}/profile`, {
+    json: { connectorId: socialToBind },
+  });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
@@ -159,9 +166,65 @@ export const addProfile = async (
 ) => {
   await api.patch(`${interactionPrefix}/profile`, { json: payload });
 
-  if (socialToBind) {
-    // TODO: bind social account
-  }
+  await api.patch(`${interactionPrefix}/profile`, {
+    json: { connectorId: socialToBind },
+  });
+
+  return api.post(`${interactionPrefix}/submit`).json<Response>();
+};
+
+export const getSocialAuthorizationUrl = async (
+  connectorId: string,
+  state: string,
+  redirectUri: string
+) => {
+  await api.put(`${interactionPrefix}`, { json: { event: InteractionEvent.SignIn } });
+
+  return api
+    .post(`${interactionPrefix}/${verificationPath}/social-authorization-uri`, {
+      json: {
+        connectorId,
+        state,
+        redirectUri,
+      },
+    })
+    .json<Response>();
+};
+
+export const signInWithSocial = async (payload: SocialConnectorPayload) => {
+  await api.patch(`${interactionPrefix}/identifiers`, {
+    json: payload,
+  });
+
+  return api.post(`${interactionPrefix}/submit`).json<Response>();
+};
+
+export const registerWithVerifiedSocial = async (connectorId: string) => {
+  await api.put(`${interactionPrefix}/event`, {
+    json: {
+      event: InteractionEvent.Register,
+    },
+  });
+
+  await api.patch(`${interactionPrefix}/profile`, {
+    json: {
+      connectorId,
+    },
+  });
+
+  return api.post(`${interactionPrefix}/submit`).json<Response>();
+};
+
+export const bindSocialRelatedUser = async (payload: SocialIdentityPayload) => {
+  await api.patch(`${interactionPrefix}/identifiers`, {
+    json: payload,
+  });
+
+  await api.patch(`${interactionPrefix}/profile`, {
+    json: {
+      connectorId: payload.connectorId,
+    },
+  });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };

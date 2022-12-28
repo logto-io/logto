@@ -2,7 +2,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { registerWithSocial, bindSocialRelatedUser } from '@/apis/social';
+import { registerWithVerifiedSocial, bindSocialRelatedUser } from '@/apis/interaction';
 
 import SocialCreateAccount from '.';
 
@@ -11,12 +11,12 @@ const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
-  useLocation: () => ({ state: { relatedUser: 'foo@logto.io' } }),
+  useLocation: () => ({ state: { relatedUser: { type: 'email', value: 'foo@logto.io' } } }),
 }));
 
-jest.mock('@/apis/social', () => ({
-  registerWithSocial: jest.fn(async () => 0),
-  bindSocialRelatedUser: jest.fn(async () => 0),
+jest.mock('@/apis/interaction', () => ({
+  registerWithVerifiedSocial: jest.fn(async () => ({ redirectTo: '/' })),
+  bindSocialRelatedUser: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('SocialCreateAccount', () => {
@@ -31,7 +31,7 @@ describe('SocialCreateAccount', () => {
     expect(queryByText('secondary.social_bind_with')).not.toBeNull();
   });
 
-  it('should call registerWithSocial when click create button', async () => {
+  it('should call registerWithVerifiedSocial when click create button', async () => {
     const { getByText } = renderWithPageContext(<SocialCreateAccount connectorId="github" />);
     const createButton = getByText('action.create');
 
@@ -39,7 +39,7 @@ describe('SocialCreateAccount', () => {
       fireEvent.click(createButton);
     });
 
-    expect(registerWithSocial).toBeCalledWith('github');
+    expect(registerWithVerifiedSocial).toBeCalledWith('github');
   });
 
   it('should render bindUser Button when relatedUserInfo found', async () => {
@@ -48,6 +48,6 @@ describe('SocialCreateAccount', () => {
     await waitFor(() => {
       fireEvent.click(bindButton);
     });
-    expect(bindSocialRelatedUser).toBeCalledWith('github');
+    expect(bindSocialRelatedUser).toBeCalledWith({ connectorId: 'github', identityType: 'email' });
   });
 });

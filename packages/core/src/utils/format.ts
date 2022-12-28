@@ -1,17 +1,26 @@
-export const maskUserInfo = ({ type, value }: { type: 'email' | 'phone'; value: string }) => {
+export const maskUserInfo = (info: { type: 'email' | 'phone'; value: string }) => {
+  const { type, value } = info;
+
   if (!value) {
-    return value;
+    return info;
   }
 
   if (type === 'phone') {
-    return `****${value.slice(-4)}`;
+    return {
+      type,
+      value: `****${value.slice(-4)}`,
+    };
   }
 
+  // Email
   const [name = '', domain = ''] = value.split('@');
 
   const preview = name.length > 4 ? `${name.slice(0, 4)}` : '';
 
-  return `${preview}****@${domain}`;
+  return {
+    type,
+    value: `${preview}****@${domain}`,
+  };
 };
 
 export const stringifyError = (error: Error) =>

@@ -27,9 +27,9 @@ const SocialCreateAccount = ({ connectorId, className }: Props) => {
           <div className={styles.desc}>{t('description.social_bind_with_existing')}</div>
           <Button
             title="action.bind"
-            i18nProps={{ address: relatedUser }}
+            i18nProps={{ address: relatedUser.value }}
             onClick={() => {
-              bindSocialRelatedUser(connectorId);
+              bindSocialRelatedUser({ connectorId, identityType: relatedUser.type });
             }}
           />
         </>

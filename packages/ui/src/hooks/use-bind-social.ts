@@ -1,9 +1,10 @@
+import type { SocialIdentityPayload } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
 
-import { registerWithSocial, bindSocialRelatedUser } from '@/apis/social';
+import { registerWithVerifiedSocial, bindSocialRelatedUser } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import { bindSocialStateGuard } from '@/types/guard';
 
@@ -14,7 +15,7 @@ const useBindSocial = () => {
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler();
 
   const { result: registerResult, run: asyncRegisterWithSocial } = useApi(
-    registerWithSocial,
+    registerWithVerifiedSocial,
     requiredProfileErrorHandlers
   );
   const { result: bindUserResult, run: asyncBindSocialRelatedUser } = useApi(
@@ -30,8 +31,8 @@ const useBindSocial = () => {
   );
 
   const bindRelatedUserHandler = useCallback(
-    (connectorId: string) => {
-      void asyncBindSocialRelatedUser(connectorId);
+    (payload: SocialIdentityPayload) => {
+      void asyncBindSocialRelatedUser(payload);
     },
     [asyncBindSocialRelatedUser]
   );
