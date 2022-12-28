@@ -5,13 +5,10 @@ describe('smoke testing', () => {
   const consoleUsername = 'admin';
   const consolePassword = generatePassword();
 
-  beforeEach(async () => {
-    await page.waitForTimeout(1000);
-  });
-
   it('opens with app element and navigates to welcome page', async () => {
+    const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
     await page.goto(logtoUrl);
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await navigation;
 
     await expect(page.waitForSelector('#app')).resolves.not.toBeNull();
     expect(page.url()).toBe(new URL('console/welcome', logtoUrl).href);
@@ -20,16 +17,22 @@ describe('smoke testing', () => {
   it('registers a new admin account and automatically signs in', async () => {
     const createAccountButton = await page.waitForSelector('button');
     expect(createAccountButton).not.toBeNull();
+
+    const navigateToRegister = page.waitForNavigation({ waitUntil: 'networkidle0' });
     await createAccountButton.click();
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await navigateToRegister;
+
     expect(page.url()).toBe(new URL('register', logtoUrl).href);
 
     const usernameField = await page.waitForSelector('input[name=new-username]');
     const submitButton = await page.waitForSelector('button');
 
     await usernameField.type(consoleUsername);
+
+    const navigateToSignIn = page.waitForNavigation({ waitUntil: 'networkidle0' });
     await submitButton.click();
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await navigateToSignIn;
+
     expect(page.url()).toBe(new URL('register/username/password', logtoUrl).href);
 
     const passwordField = await page.waitForSelector('input[name=new-password]');
@@ -37,8 +40,10 @@ describe('smoke testing', () => {
     const saveButton = await page.waitForSelector('button');
     await passwordField.type(consolePassword);
     await confirmPasswordField.type(consolePassword);
+
+    const navigateToGetStarted = page.waitForNavigation({ waitUntil: 'networkidle0' });
     await saveButton.click();
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await navigateToGetStarted;
 
     expect(page.url()).toBe(new URL('console/get-started', logtoUrl).href);
   });
@@ -46,10 +51,15 @@ describe('smoke testing', () => {
   it('signs out of admin console', async () => {
     const userElement = await page.waitForSelector('div[class$=topbar] > div[class$=container]');
     await userElement.click();
-    const signOutButton = await page.waitForSelector('.ReactModalPortal ul li');
-    await signOutButton.click();
 
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    // Try awaiting for 500ms before clicking sign-out button
+    await page.waitForTimeout(500);
+
+    const signOutButton = await page.waitForSelector('.ReactModalPortal ul li');
+    const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await signOutButton.click();
+    await navigation;
+
     expect(page.url()).toBe(new URL('sign-in', logtoUrl).href);
   });
 
@@ -60,9 +70,11 @@ describe('smoke testing', () => {
 
     await usernameField.type(consoleUsername);
     await passwordField.type(consolePassword);
-    await submitButton.click();
 
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await submitButton.click();
+    await navigation;
+
     expect(page.url()).toBe(new URL('console/get-started', logtoUrl).href);
 
     const userElement = await page.waitForSelector('div[class$=topbar] > div:last-child');
