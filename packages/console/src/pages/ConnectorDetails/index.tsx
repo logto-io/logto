@@ -1,6 +1,6 @@
 import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -54,6 +54,10 @@ const ConnectorDetails = () => {
   const navigate = useNavigate();
   const isSocial = data?.type === ConnectorType.Social;
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+
+  useEffect(() => {
+    setIsDeleteAlertOpen(false);
+  }, [connectorId]);
 
   const onDeleteClick = async () => {
     if (!isSocial || !inUse) {
