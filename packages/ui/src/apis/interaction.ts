@@ -63,7 +63,11 @@ export const setUserPassword = async (password: string) => {
     },
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  const result = await api.post(`${interactionPrefix}/submit`).json<Response | undefined>();
+
+  // Reset password does not have any response body
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  return result || { success: true };
 };
 
 export type SendPasscodePayload = { email: string } | { phone: string };
@@ -82,9 +86,7 @@ export const signInWithPasscodeIdentifier = async (
   socialToBind?: string
 ) => {
   await api.patch(`${interactionPrefix}/identifiers`, {
-    json: {
-      identifier: payload,
-    },
+    json: payload,
   });
 
   if (socialToBind) {
@@ -99,9 +101,7 @@ export const addProfileWithPasscodeIdentifier = async (
   socialToBind?: string
 ) => {
   await api.patch(`${interactionPrefix}/identifiers`, {
-    json: {
-      identifier: payload,
-    },
+    json: payload,
   });
 
   const { passcode, ...identifier } = payload;
@@ -121,9 +121,7 @@ export const verifyForgotPasswordPasscodeIdentifier = async (
   payload: EmailPasscodePayload | PhonePasscodePayload
 ) => {
   await api.patch(`${interactionPrefix}/identifiers`, {
-    json: {
-      identifier: payload,
-    },
+    json: payload,
   });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();

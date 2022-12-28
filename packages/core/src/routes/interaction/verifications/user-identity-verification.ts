@@ -26,7 +26,7 @@ const identifyUserByVerifiedEmailOrPhone = async (
 
   assertThat(
     user,
-    new RequestError({ code: 'user.user_not_exist', status: 404 }, { identifier: identifier.value })
+    new RequestError({ code: 'user.user_not_exist', status: 404 }, { identity: identifier.value })
   );
 
   const { id, isSuspended } = user;
