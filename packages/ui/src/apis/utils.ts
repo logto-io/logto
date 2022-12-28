@@ -1,6 +1,7 @@
 import { InteractionEvent } from '@logto/schemas';
 
-import { UserFlow } from '@/types';
+import { UserFlow, SearchParameters } from '@/types';
+import { getSearchParameters } from '@/utils';
 
 import type { SendPasscodePayload } from './interaction';
 import { putInteraction, sendPasscode } from './interaction';
@@ -10,7 +11,10 @@ export const getSendPasscodeApi = (type: UserFlow) => async (payload: SendPassco
     await putInteraction(InteractionEvent.ForgotPassword);
   }
 
-  if (type === UserFlow.signIn) {
+  const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
+
+  // Init a new interaction only if the user is not binding with a social
+  if (type === UserFlow.signIn && !socialToBind) {
     await putInteraction(InteractionEvent.SignIn);
   }
 

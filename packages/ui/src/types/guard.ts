@@ -2,7 +2,10 @@ import { SignInIdentifier, MissingProfile } from '@logto/schemas';
 import * as s from 'superstruct';
 
 export const bindSocialStateGuard = s.object({
-  relatedUser: s.optional(s.string()),
+  relatedUser: s.object({
+    type: s.union([s.literal('email'), s.literal('phone')]),
+    value: s.string(),
+  }),
 });
 
 export const passcodeStateGuard = s.object({

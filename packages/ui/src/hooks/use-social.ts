@@ -1,7 +1,7 @@
 import type { ConnectorMetadata } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
-import { invokeSocialSignIn } from '@/apis/social';
+import { getSocialAuthorizationUrl } from '@/apis/interaction';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 import { generateState, storeState, buildSocialLandingUri } from '@/utils/social-connectors';
 
@@ -13,7 +13,7 @@ const useSocial = () => {
   const { experienceSettings, theme } = useContext(PageContext);
   const { termsValidation } = useTerms();
 
-  const { run: asyncInvokeSocialSignIn } = useApi(invokeSocialSignIn);
+  const { run: asyncInvokeSocialSignIn } = useApi(getSocialAuthorizationUrl);
 
   const nativeSignInHandler = useCallback((redirectTo: string, connector: ConnectorMetadata) => {
     const { id: connectorId, platform } = connector;

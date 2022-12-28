@@ -3,7 +3,7 @@ import { useEffect, useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { signInWithSocial } from '@/apis/social';
+import { signInWithSocial } from '@/apis/interaction';
 import { parseQueryParameters } from '@/utils';
 import { stateValidation } from '@/utils/social-connectors';
 
@@ -57,7 +57,7 @@ const useSocialSignInListener = () => {
     async (connectorId: string, data: Record<string, unknown>) => {
       void asyncSignInWithSocial({
         connectorId,
-        data: {
+        connectorData: {
           redirectUri: `${window.location.origin}/callback/${connectorId}`, // For validation use only
           ...data,
         },

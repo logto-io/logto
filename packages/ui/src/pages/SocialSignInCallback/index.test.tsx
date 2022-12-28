@@ -3,18 +3,18 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import * as socialSignInApi from '@/apis/social';
+import { signInWithSocial } from '@/apis/interaction';
 import { generateState, storeState } from '@/utils/social-connectors';
 
 import SocialCallback from '.';
 
 const origin = 'http://localhost:3000';
 
-describe('SocialCallbackPage with code', () => {
-  const signInWithSocialSpy = jest
-    .spyOn(socialSignInApi, 'signInWithSocial')
-    .mockResolvedValue({ redirectTo: `/sign-in` });
+jest.mock('@/apis/interaction', () => ({
+  signInWithSocial: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
+}));
 
+describe('SocialCallbackPage with code', () => {
   it('callback validation and signIn with social', async () => {
     const state = generateState();
     storeState(state, 'github');
@@ -43,7 +43,7 @@ describe('SocialCallbackPage with code', () => {
 
     await act(async () => {
       await waitFor(() => {
-        expect(signInWithSocialSpy).toBeCalled();
+        expect(signInWithSocial).toBeCalled();
       });
     });
   });
