@@ -1,22 +1,17 @@
 /**
  * This script runs the following tasks:
  * 
- * 1. Tag main packages defined in `.changeset/config.json` if they are not tagged with the current version in `package.json`;
+ * 1. Tag the first package of fixed version groups defined in `.changeset/config.json` and other single packages if they are not tagged with the current version in `package.json`;
  * 2. If no new git tag added, exit;
  * 3. If at least one new git tag found, run `pnpm -r publish` and `git push --tags`.
  * 
  * The subsequential release tasks, such as create GitHub release and build Docker image, will be took over by GitHub workflows.
  */
 
-const { execSync } = require('child_process');
-const changesetConfig = require('../.changeset/config.json');
+import { execSync } from 'child_process';
+import { mainPackages, allPackages, singlePackages, corePackageName } from './packages-meta.js';
 
-const corePackageName = '@logto/core';
-/** @type {Array<{ name: string; version?: string; path: string; private: boolean; }>} */
-const allPackages = JSON.parse(execSync('pnpm recursive list --depth=-1 --json', { encoding: 'utf8' }));
-const mainPackages = [...changesetConfig.fixed, ...changesetConfig.linked].map(([first]) => first);
-
-const taggedPackages = mainPackages
+const taggedPackages = [...mainPackages, ...singlePackages]
   .map((packageName) => {
     const packageInfo = allPackages.find(({ name }) => name === packageName);
 

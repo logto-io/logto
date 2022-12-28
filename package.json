@@ -2,6 +2,7 @@
   "name": "@logto/root",
   "private": true,
   "license": "MPL-2.0",
+  "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
