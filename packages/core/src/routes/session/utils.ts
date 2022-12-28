@@ -1,4 +1,4 @@
-import type { MessageTypes } from '@logto/connector-kit';
+import type { VerificationCodeType } from '@logto/connector-kit';
 import type { SignInExperience, User } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import type { LogPayload, LogType } from '@logto/schemas/lib/types/log-legacy.js';
@@ -37,7 +37,7 @@ export const getRoutePrefix = (
 };
 
 export const getPasswordlessRelatedLogType = (
-  flow: MessageTypes,
+  flow: VerificationCodeType,
   method: Method,
   operation?: Operation
 ): LogType => {

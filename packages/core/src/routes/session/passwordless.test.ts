@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { MessageTypes } from '@logto/connector-kit';
+import { VerificationCodeType } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
@@ -108,9 +108,9 @@ describe('session -> passwordlessRoutes', () => {
     it('should call sendPasscode (with flow `sign-in`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/send')
-        .send({ phone: '13000000000', flow: MessageTypes.SignIn });
+        .send({ phone: '13000000000', flow: VerificationCodeType.SignIn });
       expect(response.statusCode).toEqual(204);
-      expect(createPasscode).toHaveBeenCalledWith('jti', MessageTypes.SignIn, {
+      expect(createPasscode).toHaveBeenCalledWith('jti', VerificationCodeType.SignIn, {
         phone: '13000000000',
       });
       expect(sendPasscode).toHaveBeenCalled();
@@ -118,9 +118,9 @@ describe('session -> passwordlessRoutes', () => {
     it('should call sendPasscode (with flow `register`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/send')
-        .send({ phone: '13000000000', flow: MessageTypes.Register });
+        .send({ phone: '13000000000', flow: VerificationCodeType.Register });
       expect(response.statusCode).toEqual(204);
-      expect(createPasscode).toHaveBeenCalledWith('jti', MessageTypes.Register, {
+      expect(createPasscode).toHaveBeenCalledWith('jti', VerificationCodeType.Register, {
         phone: '13000000000',
       });
       expect(sendPasscode).toHaveBeenCalled();
@@ -128,9 +128,9 @@ describe('session -> passwordlessRoutes', () => {
     it('should call sendPasscode (with flow `forgot-password`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/send')
-        .send({ phone: '13000000000', flow: MessageTypes.ForgotPassword });
+        .send({ phone: '13000000000', flow: VerificationCodeType.ForgotPassword });
       expect(response.statusCode).toEqual(204);
-      expect(createPasscode).toHaveBeenCalledWith('jti', MessageTypes.ForgotPassword, {
+      expect(createPasscode).toHaveBeenCalledWith('jti', VerificationCodeType.ForgotPassword, {
         phone: '13000000000',
       });
       expect(sendPasscode).toHaveBeenCalled();
@@ -138,7 +138,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when phone not given in input params', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/send')
-        .send({ flow: MessageTypes.Register });
+        .send({ flow: VerificationCodeType.Register });
       expect(response.statusCode).toEqual(400);
     });
   });
@@ -152,9 +152,9 @@ describe('session -> passwordlessRoutes', () => {
     it('should call sendPasscode (with flow `sign-in`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/send')
-        .send({ email: 'a@a.com', flow: MessageTypes.SignIn });
+        .send({ email: 'a@a.com', flow: VerificationCodeType.SignIn });
       expect(response.statusCode).toEqual(204);
-      expect(createPasscode).toHaveBeenCalledWith('jti', MessageTypes.SignIn, {
+      expect(createPasscode).toHaveBeenCalledWith('jti', VerificationCodeType.SignIn, {
         email: 'a@a.com',
       });
       expect(sendPasscode).toHaveBeenCalled();
@@ -162,9 +162,9 @@ describe('session -> passwordlessRoutes', () => {
     it('should call sendPasscode (with flow `register`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/send')
-        .send({ email: 'a@a.com', flow: MessageTypes.Register });
+        .send({ email: 'a@a.com', flow: VerificationCodeType.Register });
       expect(response.statusCode).toEqual(204);
-      expect(createPasscode).toHaveBeenCalledWith('jti', MessageTypes.Register, {
+      expect(createPasscode).toHaveBeenCalledWith('jti', VerificationCodeType.Register, {
         email: 'a@a.com',
       });
       expect(sendPasscode).toHaveBeenCalled();
@@ -172,9 +172,9 @@ describe('session -> passwordlessRoutes', () => {
     it('should call sendPasscode (with flow `forgot-password`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/send')
-        .send({ email: 'a@a.com', flow: MessageTypes.ForgotPassword });
+        .send({ email: 'a@a.com', flow: VerificationCodeType.ForgotPassword });
       expect(response.statusCode).toEqual(204);
-      expect(createPasscode).toHaveBeenCalledWith('jti', MessageTypes.ForgotPassword, {
+      expect(createPasscode).toHaveBeenCalledWith('jti', VerificationCodeType.ForgotPassword, {
         email: 'a@a.com',
       });
       expect(sendPasscode).toHaveBeenCalled();
@@ -182,7 +182,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when email not given in input params', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/send')
-        .send({ flow: MessageTypes.Register });
+        .send({ flow: VerificationCodeType.Register });
       expect(response.statusCode).toEqual(400);
     });
   });
@@ -204,14 +204,14 @@ describe('session -> passwordlessRoutes', () => {
 
       await sessionRequest
         .post('/session/passwordless/sms/verify')
-        .send({ phone: '13000000000', code: '1234', flow: MessageTypes.SignIn });
+        .send({ phone: '13000000000', code: '1234', flow: VerificationCodeType.SignIn });
 
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
           verification: {
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             phone: '13000000000',
             expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
           },
@@ -228,14 +228,14 @@ describe('session -> passwordlessRoutes', () => {
 
       await sessionRequest
         .post('/session/passwordless/sms/verify')
-        .send({ phone: '13000000000', code: '1234', flow: MessageTypes.Register });
+        .send({ phone: '13000000000', code: '1234', flow: VerificationCodeType.Register });
 
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
           verification: {
-            flow: MessageTypes.Register,
+            flow: VerificationCodeType.Register,
             phone: '13000000000',
             expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
           },
@@ -251,7 +251,7 @@ describe('session -> passwordlessRoutes', () => {
 
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
-        .send({ phone: '13000000000', code: '1234', flow: MessageTypes.ForgotPassword });
+        .send({ phone: '13000000000', code: '1234', flow: VerificationCodeType.ForgotPassword });
 
       expect(response.statusCode).toEqual(204);
 
@@ -262,7 +262,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             userId: mockUser.id,
             expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
-            flow: MessageTypes.ForgotPassword,
+            flow: VerificationCodeType.ForgotPassword,
           },
         })
       );
@@ -272,7 +272,7 @@ describe('session -> passwordlessRoutes', () => {
       findUserByPhone.mockResolvedValueOnce(null);
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
-        .send({ phone: '13000000001', code: '1234', flow: MessageTypes.ForgotPassword });
+        .send({ phone: '13000000001', code: '1234', flow: VerificationCodeType.ForgotPassword });
       expect(response.statusCode).toEqual(404);
       expect(interactionResult).toHaveBeenCalledTimes(0);
     });
@@ -280,7 +280,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when code is wrong', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
-        .send({ phone: '13000000000', code: '1231', flow: MessageTypes.SignIn });
+        .send({ phone: '13000000000', code: '1231', flow: VerificationCodeType.SignIn });
       expect(response.statusCode).toEqual(400);
     });
   });
@@ -302,14 +302,14 @@ describe('session -> passwordlessRoutes', () => {
 
       await sessionRequest
         .post('/session/passwordless/email/verify')
-        .send({ email: 'a@a.com', code: '1234', flow: MessageTypes.SignIn });
+        .send({ email: 'a@a.com', code: '1234', flow: VerificationCodeType.SignIn });
 
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
           verification: {
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             email: 'a@a.com',
             expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
           },
@@ -325,14 +325,14 @@ describe('session -> passwordlessRoutes', () => {
 
       await sessionRequest
         .post('/session/passwordless/email/verify')
-        .send({ email: 'a@a.com', code: '1234', flow: MessageTypes.Register });
+        .send({ email: 'a@a.com', code: '1234', flow: VerificationCodeType.Register });
 
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
           verification: {
-            flow: MessageTypes.Register,
+            flow: VerificationCodeType.Register,
             email: 'a@a.com',
             expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
           },
@@ -348,7 +348,7 @@ describe('session -> passwordlessRoutes', () => {
 
       const response = await sessionRequest
         .post('/session/passwordless/email/verify')
-        .send({ email: 'a@a.com', code: '1234', flow: MessageTypes.ForgotPassword });
+        .send({ email: 'a@a.com', code: '1234', flow: VerificationCodeType.ForgotPassword });
 
       expect(response.statusCode).toEqual(204);
 
@@ -359,7 +359,7 @@ describe('session -> passwordlessRoutes', () => {
           verification: {
             userId: mockUser.id,
             expiresAt: addSeconds(fakeTime, verificationTimeout).toISOString(),
-            flow: MessageTypes.ForgotPassword,
+            flow: VerificationCodeType.ForgotPassword,
           },
         })
       );
@@ -371,7 +371,7 @@ describe('session -> passwordlessRoutes', () => {
       findUserByEmail.mockResolvedValueOnce(null);
       const response = await sessionRequest
         .post('/session/passwordless/email/verify')
-        .send({ email: 'b@a.com', code: '1234', flow: MessageTypes.ForgotPassword });
+        .send({ email: 'b@a.com', code: '1234', flow: VerificationCodeType.ForgotPassword });
       expect(response.statusCode).toEqual(404);
       expect(interactionResult).toHaveBeenCalledTimes(0);
     });
@@ -379,7 +379,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when code is wrong', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/verify')
-        .send({ email: 'a@a.com', code: '1231', flow: MessageTypes.SignIn });
+        .send({ email: 'a@a.com', code: '1231', flow: VerificationCodeType.SignIn });
       expect(response.statusCode).toEqual(400);
     });
   });
@@ -390,7 +390,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000000',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -414,7 +414,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000000',
-            flow: MessageTypes.Register,
+            flow: VerificationCodeType.Register,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -449,7 +449,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000000',
-            flow: MessageTypes.ForgotPassword,
+            flow: VerificationCodeType.ForgotPassword,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -463,7 +463,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000000',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: 'invalid date string',
           },
         },
@@ -477,7 +477,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000000',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: subDays(Date.now(), 1).toISOString(),
           },
         },
@@ -491,7 +491,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'XX@foo',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -505,7 +505,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000001',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -524,7 +524,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000000',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -572,7 +572,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'a@a.com',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -596,7 +596,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'a@a.com',
-            flow: MessageTypes.Register,
+            flow: VerificationCodeType.Register,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -633,7 +633,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'a@a.com',
-            flow: MessageTypes.ForgotPassword,
+            flow: VerificationCodeType.ForgotPassword,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -646,7 +646,7 @@ describe('session -> passwordlessRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -660,7 +660,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'b@a.com',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -679,7 +679,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'a@a.com',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -726,7 +726,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000001',
-            flow: MessageTypes.Register,
+            flow: VerificationCodeType.Register,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -748,7 +748,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000001',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -783,7 +783,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000001',
-            flow: MessageTypes.ForgotPassword,
+            flow: VerificationCodeType.ForgotPassword,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -796,7 +796,7 @@ describe('session -> passwordlessRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
-            flow: MessageTypes.Register,
+            flow: VerificationCodeType.Register,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -810,7 +810,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             phone: '13000000000',
-            flow: MessageTypes.Register,
+            flow: VerificationCodeType.Register,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -854,7 +854,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'b@a.com',
-            flow: MessageTypes.Register,
+            flow: VerificationCodeType.Register,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -876,7 +876,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'b@a.com',
-            flow: MessageTypes.SignIn,
+            flow: VerificationCodeType.SignIn,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -911,7 +911,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'b@a.com',
-            flow: MessageTypes.ForgotPassword,
+            flow: VerificationCodeType.ForgotPassword,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -924,7 +924,7 @@ describe('session -> passwordlessRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
-            flow: MessageTypes.Register,
+            flow: VerificationCodeType.Register,
             expiresAt: getTomorrowIsoString(),
           },
         },
@@ -938,7 +938,7 @@ describe('session -> passwordlessRoutes', () => {
         result: {
           verification: {
             email: 'a@a.com',
-            flow: MessageTypes.Register,
+            flow: VerificationCodeType.Register,
             expiresAt: getTomorrowIsoString(),
           },
         },

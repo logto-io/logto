@@ -1,5 +1,9 @@
-import type { EmailConnector, MessageTypes, SmsConnector } from '@logto/connector-kit';
-import { messageTypesGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
+import type { EmailConnector, VerificationCodeType, SmsConnector } from '@logto/connector-kit';
+import {
+  verificationCodeTypeGuard,
+  ConnectorError,
+  ConnectorErrorCodes,
+} from '@logto/connector-kit';
 import type { Passcode } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
@@ -22,7 +26,7 @@ const randomCode = customAlphabet('1234567890', passcodeLength);
 
 export const createPasscode = async (
   jti: string,
-  type: MessageTypes,
+  type: VerificationCodeType,
   payload: { phone: string } | { email: string }
 ) => {
   // Disable existing passcodes.
@@ -66,7 +70,7 @@ export const sendPasscode = async (passcode: Passcode) => {
 
   const { dbEntry, metadata, sendMessage } = connector;
 
-  const messageTypeResult = messageTypesGuard.safeParse(passcode.type);
+  const messageTypeResult = verificationCodeTypeGuard.safeParse(passcode.type);
 
   if (!messageTypeResult.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
@@ -88,7 +92,7 @@ export const passcodeMaxTryCount = 10;
 
 export const verifyPasscode = async (
   sessionId: string,
-  type: MessageTypes,
+  type: VerificationCodeType,
   code: string,
   payload: { phone: string } | { email: string }
 ): Promise<void> => {

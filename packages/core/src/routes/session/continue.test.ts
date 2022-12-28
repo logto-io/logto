@@ -1,4 +1,4 @@
-import { MessageTypes } from '@logto/connector-kit';
+import { VerificationCodeType } from '@logto/connector-kit';
 import { addDays, subSeconds } from 'date-fns';
 import { Provider } from 'oidc-provider';
 
@@ -140,7 +140,7 @@ describe('session -> continueRoutes', () => {
           continueSignIn: {
             userId: mockUser.id,
             expiresAt: getTomorrowIsoString(),
-            type: MessageTypes.Continue,
+            type: VerificationCodeType.Continue,
           },
         },
       });
@@ -172,7 +172,7 @@ describe('session -> continueRoutes', () => {
           continueSignIn: {
             userId: mockUser.id,
             expiresAt: getTomorrowIsoString(),
-            type: MessageTypes.Continue,
+            type: VerificationCodeType.Continue,
           },
         },
       });

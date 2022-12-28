@@ -1,4 +1,4 @@
-import { MessageTypes } from '@logto/connector-kit';
+import { VerificationCodeType } from '@logto/connector-kit';
 import type { InteractionEvent } from '@logto/schemas';
 
 import { createPasscode, sendPasscode, verifyPasscode } from '#src/libraries/passcode.js';
@@ -8,16 +8,16 @@ import type { SendPasscodePayload, PasscodeIdentifierPayload } from '../types/in
 
 /**
  * Refactor Needed:
- * This is a work around to map the latest interaction event type to old MessageTypes
+ * This is a work around to map the latest interaction event type to old VerificationCodeType
  *  */
-const eventToMessageTypesMap: Record<InteractionEvent, MessageTypes> = {
-  SignIn: MessageTypes.SignIn,
-  Register: MessageTypes.Register,
-  ForgotPassword: MessageTypes.ForgotPassword,
+const eventToVerificationCodeTypeMap: Record<InteractionEvent, VerificationCodeType> = {
+  SignIn: VerificationCodeType.SignIn,
+  Register: VerificationCodeType.Register,
+  ForgotPassword: VerificationCodeType.ForgotPassword,
 };
 
-const getMessageTypesByEvent = (event: InteractionEvent): MessageTypes =>
-  eventToMessageTypesMap[event];
+const getVerificationCodeTypeByEvent = (event: InteractionEvent): VerificationCodeType =>
+  eventToVerificationCodeTypeMap[event];
 
 export const sendPasscodeToIdentifier = async (
   payload: SendPasscodePayload & { event: InteractionEvent },
@@ -25,7 +25,7 @@ export const sendPasscodeToIdentifier = async (
   createLog: LogContext['createLog']
 ) => {
   const { event, ...identifier } = payload;
-  const messageType = getMessageTypesByEvent(event);
+  const messageType = getVerificationCodeTypeByEvent(event);
 
   const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Create`);
   log.append(identifier);
@@ -42,7 +42,7 @@ export const verifyIdentifierByPasscode = async (
   createLog: LogContext['createLog']
 ) => {
   const { event, passcode, ...identifier } = payload;
-  const messageType = getMessageTypesByEvent(event);
+  const messageType = getVerificationCodeTypeByEvent(event);
 
   // TODO: @Simeng maybe we should just log all interaction payload in every request?
   const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Submit`);

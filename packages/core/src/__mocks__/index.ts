@@ -1,4 +1,4 @@
-import { MessageTypes } from '@logto/connector-kit';
+import { VerificationCodeType } from '@logto/connector-kit';
 import type { Application, Passcode, Resource, Role, Setting } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 
@@ -55,7 +55,7 @@ export const mockPasscode: Passcode = {
   interactionJti: 'jti',
   phone: '888 888 8888',
   email: 'foo@logto.io',
-  type: MessageTypes.SignIn,
+  type: VerificationCodeType.SignIn,
   code: 'asdfghjkl',
   consumed: false,
   tryCount: 2,

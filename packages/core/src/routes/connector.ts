@@ -1,4 +1,4 @@
-import { MessageTypes } from '@logto/connector-kit';
+import { VerificationCodeType } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
@@ -282,7 +282,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       await sendMessage(
         {
           to: subject,
-          type: MessageTypes.Test,
+          type: VerificationCodeType.Test,
           payload: {
             code: phone ? '123456' : 'email-test',
           },
