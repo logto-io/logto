@@ -1,18 +1,6 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  >:not(:first-child) {
-    margin-top: _.unit(4);
-  }
-
-  .cardTitle {
-    flex-shrink: 0;
-  }
-
   .tabBar {
     width: 100%;
     height: 28px;
@@ -20,37 +8,29 @@
   }
 
   .content {
-    width: 100%;
-    display: flex;
+    .card {
+      background-color: var(--color-layer-1);
+      border-radius: 16px;
+      padding: _.unit(6);
 
-    .setup {
-      flex: 1;
-      margin-right: _.unit(3);
-
-      > :not(:first-child) {
-        margin-top: _.unit(3);
+      >:not(:first-child) {
+        margin-top: _.unit(6);
       }
 
-      .card {
-        background-color: var(--color-layer-1);
-        border-radius: 16px;
-        padding: _.unit(6);
+      .title {
+        @include _.shimmering-animation;
+        width: 80px;
+        height: 16px;
+      }
 
-        >:not(:first-child) {
-          margin-top: _.unit(6);
-        }
+      .field {
+        @include _.shimmering-animation;
+        width: 100%;
+        height: 44px;
+      }
 
-        .title {
-          @include _.shimmering-animation;
-          width: 80px;
-          height: 16px;
-        }
-
-        .field {
-          @include _.shimmering-animation;
-          width: 100%;
-          height: 44px;
-        }
+      &:not(:first-child) {
+        margin-top: _.unit(3);
       }
     }
 
