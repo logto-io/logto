@@ -1,146 +1,127 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  display: flex;
-  align-items: stretch;
-  min-width: 950px;
-  height: 100%;
-
-  > * {
-    display: flex;
-    flex-direction: column;
-    background: var(--color-layer-1);
-    border-radius: 16px;
+  .tabBar {
+    width: 100%;
+    height: 28px;
+    @include _.shimmering-animation;
   }
 
-  .setup {
-    flex: 1;
-    margin-right: _.unit(3);
-    height: 100%;
-    padding: _.unit(6);
-
-    .title {
-      width: 113px;
-      height: 20px;
-      @include _.shimmering-animation;
-    }
-
-    .subtitle {
-      width: 177px;
-      height: 16px;
-      margin-top: _.unit(4);
-      @include _.shimmering-animation;
-    }
-
-    .tabs {
-      width: 498px;
-      height: 25px;
-      margin: _.unit(6) 0 _.unit(15.5);
-      @include _.shimmering-animation;
-    }
-
-    .field {
-      width: 100%;
-      height: 44px;
-      margin-top: _.unit(6);
-      @include _.shimmering-animation;
-    }
-
-    .footer {
-      display: flex;
-      width: 100%;
-      justify-content: right;
-
-      .button {
-        width: 194px;
-        height: 44px;
-        @include _.shimmering-animation;
-      }
-    }
-  }
-
-  .preview {
-    width: 480px;
-    overflow: hidden;
-
-    .header {
-      display: flex;
-      width: 100%;
-      height: 103px;
+  .content {
+    .card {
+      background-color: var(--color-layer-1);
+      border-radius: 16px;
       padding: _.unit(6);
 
-      .info {
-        .title {
-          width: 113px;
-          height: 20px;
-          @include _.shimmering-animation;
-        }
-
-        .subtitle {
-          width: 177px;
-          height: 16px;
-          margin-top: _.unit(4);
-          @include _.shimmering-animation;
-        }
+      >:not(:first-child) {
+        margin-top: _.unit(6);
       }
 
-      .button {
-        width: 104px;
-        height: 30px;
-        margin-left: _.unit(2.5);
+      .title {
         @include _.shimmering-animation;
+        width: 80px;
+        height: 16px;
+      }
+
+      .field {
+        @include _.shimmering-animation;
+        width: 100%;
+        height: 44px;
+      }
+
+      &:not(:first-child) {
+        margin-top: _.unit(3);
       }
     }
 
-    .content {
-      background: var(--color-surface-variant);
+    .preview {
+      flex: 1;
 
-      .mobile {
+      .header {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 300px;
-        height: 649px;
-        background: var(--color-surface);
-        margin: _.unit(10) auto 0;
+        width: 100%;
+        height: 103px;
         padding: _.unit(6);
-        border-radius: 16px;
-        transform: scale(0.65);
-        transform-origin: top;
+        background-color: var(--color-layer-1);
+        border-radius: 16px 16px 0 0;
 
-        .logo {
-          width: 64px;
-          height: 64px;
-          margin-top: _.unit(16);
-          @include _.shimmering-animation;
-        }
+        .info {
+          .title {
+            width: 113px;
+            height: 20px;
+            @include _.shimmering-animation;
+          }
 
-        .slogan {
-          width: 177px;
-          height: 16px;
-          margin: _.unit(3) 0 _.unit(10);
-          @include _.shimmering-animation;
-        }
-
-        .field {
-          width: 100%;
-          height: 36px;
-          margin-top: _.unit(3);
-          @include _.shimmering-animation;
+          .subtitle {
+            width: 177px;
+            height: 16px;
+            margin-top: _.unit(4);
+            @include _.shimmering-animation;
+          }
         }
 
         .button {
-          width: 100%;
-          height: 36px;
-          margin-top: _.unit(10);
+          width: 104px;
+          height: 30px;
+          margin-left: _.unit(2.5);
           @include _.shimmering-animation;
         }
+      }
 
-        .social {
-          width: 180px;
-          height: 24px;
-          margin-top: _.unit(3);
-          @include _.shimmering-animation;
+      .previewContent {
+        background: var(--color-surface-variant);
+        padding: _.unit(6);
+        border-radius: 0 0 16px 16px;
+        height: 450px;
+        overflow: hidden;
+
+        .mobile {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 375px;
+          height: 667px;
+          background: var(--color-surface);
+          margin: 0 auto;
+          padding: _.unit(6);
+          border-radius: 16px;
+          transform: scale(0.6);
+          transform-origin: top;
+
+          .logo {
+            width: 64px;
+            height: 64px;
+            margin-top: _.unit(16);
+            @include _.shimmering-animation;
+          }
+
+          .slogan {
+            width: 177px;
+            height: 16px;
+            margin: _.unit(3) 0 _.unit(10);
+            @include _.shimmering-animation;
+          }
+
+          .field {
+            width: 100%;
+            height: 36px;
+            margin-top: _.unit(3);
+            @include _.shimmering-animation;
+          }
+
+          .button {
+            width: 100%;
+            height: 36px;
+            margin-top: _.unit(10);
+            @include _.shimmering-animation;
+          }
+
+          .social {
+            width: 180px;
+            height: 24px;
+            margin-top: _.unit(3);
+            @include _.shimmering-animation;
+          }
         }
       }
     }
