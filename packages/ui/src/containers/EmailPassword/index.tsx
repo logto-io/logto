@@ -35,7 +35,7 @@ const defaultState: FieldState = {
 const EmailPassword = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
-  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(SignInIdentifier.Email);
+  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
   const { isForgotPasswordEnabled, email } = useForgotPasswordSettings();
 
   const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
@@ -54,16 +54,9 @@ const EmailPassword = ({ className, autoFocus }: Props) => {
         return;
       }
 
-      void onSubmit(fieldValue.email, fieldValue.password);
+      void onSubmit(fieldValue);
     },
-    [
-      clearErrorMessage,
-      validateForm,
-      termsValidation,
-      onSubmit,
-      fieldValue.email,
-      fieldValue.password,
-    ]
+    [clearErrorMessage, validateForm, termsValidation, onSubmit, fieldValue]
   );
 
   return (

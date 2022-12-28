@@ -2,21 +2,19 @@ import { SignInIdentifier } from '@logto/schemas';
 import { fireEvent, waitFor, act } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import {
-  signInWithEmailPassword,
-  signInWithPhonePassword,
-  sendSignInEmailPasscode,
-  sendSignInSmsPasscode,
-} from '@/apis/sign-in';
+import { signInWithPasswordIdentifier } from '@/apis/interaction';
+import { sendSignInEmailPasscode, sendSignInSmsPasscode } from '@/apis/sign-in';
 import { UserFlow } from '@/types';
 
 import PasswordSignInForm from '.';
 
 jest.mock('@/apis/sign-in', () => ({
-  signInWithEmailPassword: jest.fn(() => ({ redirectTo: '/' })),
-  signInWithPhonePassword: jest.fn(() => ({ redirectTo: '/' })),
   sendSignInEmailPasscode: jest.fn(() => ({ success: true })),
   sendSignInSmsPasscode: jest.fn(() => ({ success: true })),
+}));
+
+jest.mock('@/apis/interaction', () => ({
+  signInWithPasswordIdentifier: jest.fn(() => ({ redirectTo: '/' })),
 }));
 
 const mockedNavigate = jest.fn();
@@ -47,7 +45,7 @@ describe('PasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(signInWithEmailPassword).not.toBeCalled();
+      expect(signInWithPasswordIdentifier).not.toBeCalled();
       expect(queryByText('password_required')).not.toBeNull();
     });
   });
@@ -70,7 +68,7 @@ describe('PasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(signInWithEmailPassword).toBeCalledWith(email, password, undefined);
+      expect(signInWithPasswordIdentifier).toBeCalledWith({ email, password }, undefined);
     });
 
     const sendPasscodeLink = getByText('action.sign_in_via_passcode');
@@ -115,7 +113,7 @@ describe('PasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(signInWithPhonePassword).toBeCalledWith(phone, password, undefined);
+      expect(signInWithPasswordIdentifier).toBeCalledWith({ phone, password }, undefined);
     });
 
     const sendPasscodeLink = getByText('action.sign_in_via_passcode');

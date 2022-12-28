@@ -4,12 +4,14 @@ import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { signInWithEmailPassword } from '@/apis/sign-in';
+import { signInWithPasswordIdentifier } from '@/apis/interaction';
 import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
 
 import EmailPassword from '.';
 
-jest.mock('@/apis/sign-in', () => ({ signInWithEmailPassword: jest.fn(async () => 0) }));
+jest.mock('@/apis/interaction', () => ({
+  signInWithPasswordIdentifier: jest.fn(async () => ({ redirectTo: '/' })),
+}));
 jest.mock('react-device-detect', () => ({
   isMobile: true,
 }));
@@ -178,7 +180,13 @@ describe('<EmailPassword>', () => {
 
     act(() => {
       void waitFor(() => {
-        expect(signInWithEmailPassword).toBeCalledWith('email', 'password', undefined);
+        expect(signInWithPasswordIdentifier).toBeCalledWith(
+          {
+            email: 'email',
+            password: 'password',
+          },
+          undefined
+        );
       });
     });
   });

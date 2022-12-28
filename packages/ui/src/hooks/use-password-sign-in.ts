@@ -1,11 +1,7 @@
-import { SignInIdentifier } from '@logto/schemas';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 
-import {
-  signInWithUsername,
-  signInWithEmailPassword,
-  signInWithPhonePassword,
-} from '@/apis/sign-in';
+import type { PasswordSignInPayload } from '@/apis/interaction';
+import { signInWithPasswordIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { SearchParameters } from '@/types';
@@ -13,13 +9,7 @@ import { getSearchParameters } from '@/utils';
 
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 
-const apiMap = {
-  [SignInIdentifier.Username]: signInWithUsername,
-  [SignInIdentifier.Email]: signInWithEmailPassword,
-  [SignInIdentifier.Sms]: signInWithPhonePassword,
-};
-
-const usePasswordSignIn = (method: SignInIdentifier) => {
+const usePasswordSignIn = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const clearErrorMessage = useCallback(() => {
@@ -38,7 +28,7 @@ const usePasswordSignIn = (method: SignInIdentifier) => {
     [requiredProfileErrorHandler]
   );
 
-  const { result, run: asyncSignIn } = useApi(apiMap[method], errorHandlers);
+  const { result, run: asyncSignIn } = useApi(signInWithPasswordIdentifier, errorHandlers);
 
   useEffect(() => {
     if (result?.redirectTo) {
@@ -47,9 +37,9 @@ const usePasswordSignIn = (method: SignInIdentifier) => {
   }, [result]);
 
   const onSubmit = useCallback(
-    async (identifier: string, password: string) => {
+    async (payload: PasswordSignInPayload) => {
       const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-      await asyncSignIn(identifier, password, socialToBind);
+      await asyncSignIn(payload, socialToBind);
     },
     [asyncSignIn]
   );

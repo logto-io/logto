@@ -36,7 +36,7 @@ const defaultState: FieldState = {
 const PhonePassword = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
-  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn(SignInIdentifier.Sms);
+  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
   const { isForgotPasswordEnabled, sms } = useForgotPasswordSettings();
 
   const { countryList, phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
@@ -74,16 +74,9 @@ const PhonePassword = ({ className, autoFocus }: Props) => {
         return;
       }
 
-      void onSubmit(fieldValue.phone, fieldValue.password);
+      void onSubmit(fieldValue);
     },
-    [
-      clearErrorMessage,
-      validateForm,
-      termsValidation,
-      onSubmit,
-      fieldValue.phone,
-      fieldValue.password,
-    ]
+    [clearErrorMessage, validateForm, termsValidation, onSubmit, fieldValue]
   );
 
   return (
