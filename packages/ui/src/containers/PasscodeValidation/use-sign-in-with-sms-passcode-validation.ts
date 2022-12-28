@@ -62,7 +62,7 @@ const useSignInWithSmsPasscodeValidation = (phone: string, errorCallback?: () =>
 
   const errorHandlers = useMemo<ErrorHandlers>(
     () => ({
-      'user.phone_not_exist':
+      'user.user_not_exist':
         // Block user auto register if is bind social or sign-in only flow
         signInMode === SignInMode.SignIn || socialToBind
           ? identifierNotExistErrorHandler

@@ -59,7 +59,7 @@ const errors = {
     phone_exists_in_profile: '当前用户已绑定手机号，无需重复操作。',
     email_or_phone_required_in_profile: '请绑定邮箱地址或手机号码。',
     suspended: '账号已被禁用。',
-    user_not_exist: '未找到与 {{ identity }} 相关联的用户。',
+    user_not_exist: '未找到与 {{ identifier }} 相关联的用户。',
     missing_profile: '请于登录时提供必要的用户补充信息。',
   },
   password: {

@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { continueApi } from '@/apis/continue';
+import { addProfile } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
@@ -28,14 +28,14 @@ const useSetUsername = () => {
     [requiredProfileErrorHandler]
   );
 
-  const { result, run: setUsername } = useApi(continueApi, errorHandlers);
+  const { result, run: asyncAddProfile } = useApi(addProfile, errorHandlers);
 
   const onSubmit = useCallback(
     async (username: string) => {
       const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-      await setUsername('username', username, socialToBind);
+      await asyncAddProfile({ username }, socialToBind);
     },
-    [setUsername]
+    [asyncAddProfile]
   );
 
   useEffect(() => {

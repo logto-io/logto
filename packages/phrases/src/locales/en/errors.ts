@@ -62,7 +62,7 @@ const errors = {
     email_or_phone_required_in_profile:
       'You need to add an email address or phone number before signing-in.',
     suspended: 'This account is suspended.',
-    user_not_exist: 'User with {{ identity }} does not exist.',
+    user_not_exist: 'User with {{ identifier }} does not exist.',
     missing_profile: 'You need to provide additional info before signing-in.',
   },
   password: {

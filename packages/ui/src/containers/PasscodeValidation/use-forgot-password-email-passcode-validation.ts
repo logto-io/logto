@@ -22,7 +22,7 @@ const useForgotPasswordEmailPasscodeValidation = (email: string, errorCallback?:
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.email_not_exist': identifierNotExistErrorHandler,
+      'user.user_not_exist': identifierNotExistErrorHandler,
       'user.new_password_required_in_profile': () => {
         navigate(`/${UserFlow.forgotPassword}/reset`, { replace: true });
       },

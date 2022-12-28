@@ -16,7 +16,7 @@ const useContinueSetSmsPasscodeValidation = (phone: string, errorCallback?: () =
 
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler(true);
 
-  const identifierNotExistErrorHandler = useIdentifierErrorAlert(
+  const identifierExistErrorHandler = useIdentifierErrorAlert(
     UserFlow.continue,
     SignInIdentifier.Sms,
     phone
@@ -24,17 +24,12 @@ const useContinueSetSmsPasscodeValidation = (phone: string, errorCallback?: () =
 
   const verifyPasscodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.phone_not_exist': identifierNotExistErrorHandler,
+      'user.phone_already_in_use': identifierExistErrorHandler,
       ...requiredProfileErrorHandler,
       ...sharedErrorHandlers,
       callback: errorCallback,
     }),
-    [
-      errorCallback,
-      identifierNotExistErrorHandler,
-      requiredProfileErrorHandler,
-      sharedErrorHandlers,
-    ]
+    [errorCallback, identifierExistErrorHandler, requiredProfileErrorHandler, sharedErrorHandlers]
   );
 
   const { run: verifyPasscode } = useApi(
