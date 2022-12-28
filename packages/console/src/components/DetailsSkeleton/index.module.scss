@@ -1,4 +1,5 @@
 @use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
 
 .container {
   height: 100%;
@@ -57,22 +58,7 @@
   }
 
   .content {
-    flex: 1;
-    display: flex;
-    width: 100%;
-    border-radius: 16px;
-    background-color: var(--color-layer-1);
-    padding: _.unit(6);
-
     .introduction {
-      width: 296px;
-      padding-bottom: _.unit(6);
-      margin-right: _.unit(14);
-
-      > :not(:first-child) {
-        margin-top: _.unit(2);
-      }
-
       .title {
         @include _.shimmering-animation;
         height: 16px;
@@ -92,9 +78,7 @@
       }
     }
 
-    .fields {
-      width: 100%;
-
+    .form {
       .field {
         @include _.shimmering-animation;
         width: 100%;
@@ -103,19 +87,6 @@
 
       .field + .field {
         margin-top: _.unit(6);
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 1080px) {
-  .container {
-    .content {
-      flex-direction: column;
-
-      .introduction {
-        width: 100%;
-        margin-right: unset;
       }
     }
   }
