@@ -1,5 +1,6 @@
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, adminConsoleApplicationId, UserRole } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
+import type { Provider } from 'oidc-provider';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
@@ -37,11 +38,12 @@ const { encryptUserPassword, generateUserId, insertUser } = mockEsm(
   })
 );
 
-mockEsm('#src/queries/user.js', () => ({
+const { hasActiveUsers } = mockEsm('#src/queries/user.js', () => ({
   findUserById: jest
     .fn()
     .mockResolvedValue({ identities: { google: { userId: 'googleId', details: {} } } }),
   updateUserById: jest.fn(),
+  hasActiveUsers: jest.fn().mockResolvedValue(true),
 }));
 
 const { updateUserById } = await import('#src/queries/user.js');
@@ -55,6 +57,8 @@ describe('submit action', () => {
   const ctx = {
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    interactionDetails: { params: {} } as Awaited<ReturnType<Provider['interactionDetails']>>,
   };
   const profile = {
     username: 'username',
@@ -102,6 +106,7 @@ describe('submit action', () => {
     await submitInteraction(interaction, ctx, provider);
 
     expect(generateUserId).toBeCalled();
+    expect(hasActiveUsers).not.toBeCalled();
     expect(encryptUserPassword).toBeCalledWith('password');
     expect(getLogtoConnectorById).toBeCalledWith('logto');
 
@@ -110,6 +115,42 @@ describe('submit action', () => {
       ...upsertProfile,
     });
     expect(assignInteractionResults).toBeCalledWith(ctx, provider, { login: { accountId: 'uid' } });
+  });
+
+  it('admin user register', async () => {
+    hasActiveUsers.mockResolvedValueOnce(false);
+    const adminConsoleCtx = {
+      ...ctx,
+      // @ts-expect-error mock interaction details
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      interactionDetails: {
+        params: {
+          client_id: adminConsoleApplicationId,
+        },
+      } as Awaited<ReturnType<Provider['interactionDetails']>>,
+    };
+
+    const interaction: VerifiedRegisterInteractionResult = {
+      event: InteractionEvent.Register,
+      profile,
+      identifiers,
+    };
+
+    await submitInteraction(interaction, adminConsoleCtx, provider);
+
+    expect(generateUserId).toBeCalled();
+    expect(hasActiveUsers).toBeCalled();
+    expect(encryptUserPassword).toBeCalledWith('password');
+    expect(getLogtoConnectorById).toBeCalledWith('logto');
+
+    expect(insertUser).toBeCalledWith({
+      id: 'uid',
+      roleNames: [UserRole.Admin],
+      ...upsertProfile,
+    });
+    expect(assignInteractionResults).toBeCalledWith(adminConsoleCtx, provider, {
+      login: { accountId: 'uid' },
+    });
   });
 
   it('sign-in', async () => {

@@ -4,7 +4,6 @@ import type { Provider } from 'oidc-provider';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
@@ -25,7 +24,6 @@ const validateMandatoryUserProfile = await pickDefault(
 );
 
 describe('validateMandatoryUserProfile', () => {
-  const provider = createMockProvider();
   const baseCtx = {
     ...createContextWithRouteParameters(),
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -162,6 +160,55 @@ describe('validateMandatoryUserProfile', () => {
       validateMandatoryUserProfile(ctx, {
         ...interaction,
         profile: { phone: '123456' },
+      })
+    ).resolves.not.toThrow();
+  });
+
+  it('register fallback profile validation', async () => {
+    const ctx = {
+      ...baseCtx,
+      signInExperience: {
+        ...mockSignInExperience,
+        signUp: {
+          identifiers: [],
+          password: false,
+          verify: false,
+        },
+      },
+    };
+
+    await expect(
+      validateMandatoryUserProfile(ctx, {
+        event: InteractionEvent.Register,
+        profile: { password: 'password' },
+      })
+    ).rejects.toMatchError(new RequestError({ code: 'user.missing_profile', status: 422 }));
+
+    await expect(
+      validateMandatoryUserProfile(ctx, {
+        event: InteractionEvent.Register,
+        profile: { username: 'username' },
+      })
+    ).resolves.not.toThrow();
+
+    await expect(
+      validateMandatoryUserProfile(ctx, {
+        event: InteractionEvent.Register,
+        profile: { email: 'email' },
+      })
+    ).resolves.not.toThrow();
+
+    await expect(
+      validateMandatoryUserProfile(ctx, {
+        event: InteractionEvent.Register,
+        profile: { phone: '123456' },
+      })
+    ).resolves.not.toThrow();
+
+    await expect(
+      validateMandatoryUserProfile(ctx, {
+        event: InteractionEvent.Register,
+        profile: { connectorId: 'logto' },
       })
     ).resolves.not.toThrow();
   });

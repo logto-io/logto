@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { register } from '@/apis/register';
+import { registerWithUsernamePassword } from '@/apis/interaction';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
@@ -59,7 +59,10 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
     [setFieldErrors]
   );
 
-  const { result, run: asyncRegister } = useApi(register, registerErrorHandlers);
+  const { result, run: asyncRegister } = useApi(
+    registerWithUsernamePassword,
+    registerErrorHandlers
+  );
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {

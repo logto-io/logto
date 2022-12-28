@@ -6,6 +6,7 @@ import type {
   EmailPasswordPayload,
   PhonePasswordPayload,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 
 import api from './api';
 
@@ -34,6 +35,30 @@ export const signInWithPasswordIdentifier = async (
   if (socialToBind) {
     // TODO: bind social account
   }
+
+  return api.post(`${interactionPrefix}/submit`).json<Response>();
+};
+
+export const registerWithUsernamePassword = async (username: string, password?: string) => {
+  await api.put(`${interactionPrefix}`, {
+    json: {
+      event: InteractionEvent.Register,
+      profile: {
+        username,
+        ...conditional(password && { password }),
+      },
+    },
+  });
+
+  return api.post(`${interactionPrefix}/submit`).json<Response>();
+};
+
+export const setUserPassword = async (password: string) => {
+  await api.patch(`${interactionPrefix}/profile`, {
+    json: {
+      password,
+    },
+  });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };

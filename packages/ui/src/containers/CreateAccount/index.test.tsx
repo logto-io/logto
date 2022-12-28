@@ -2,12 +2,12 @@ import { fireEvent, waitFor, act } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { register } from '@/apis/register';
+import { registerWithUsernamePassword } from '@/apis/interaction';
 
 import CreateAccount from '.';
 
-jest.mock('@/apis/register', () => ({
-  register: jest.fn(async () => ({ redirectTo: '/' })),
+jest.mock('@/apis/interaction', () => ({
+  registerWithUsernamePassword: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('<CreateAccount/>', () => {
@@ -36,7 +36,7 @@ describe('<CreateAccount/>', () => {
     expect(queryByText('username_required')).not.toBeNull();
     expect(queryByText('password_required')).not.toBeNull();
 
-    expect(register).not.toBeCalled();
+    expect(registerWithUsernamePassword).not.toBeCalled();
   });
 
   test('username with initial numeric char should throw', () => {
@@ -53,7 +53,7 @@ describe('<CreateAccount/>', () => {
 
     expect(queryByText('username_should_not_start_with_number')).not.toBeNull();
 
-    expect(register).not.toBeCalled();
+    expect(registerWithUsernamePassword).not.toBeCalled();
 
     // Clear error
     if (usernameInput) {
@@ -76,7 +76,7 @@ describe('<CreateAccount/>', () => {
 
     expect(queryByText('username_valid_charset')).not.toBeNull();
 
-    expect(register).not.toBeCalled();
+    expect(registerWithUsernamePassword).not.toBeCalled();
 
     // Clear error
     if (usernameInput) {
@@ -99,7 +99,7 @@ describe('<CreateAccount/>', () => {
 
     expect(queryByText('password_min_length')).not.toBeNull();
 
-    expect(register).not.toBeCalled();
+    expect(registerWithUsernamePassword).not.toBeCalled();
 
     // Clear error
     if (passwordInput) {
@@ -132,7 +132,7 @@ describe('<CreateAccount/>', () => {
 
     expect(queryByText('passwords_do_not_match')).not.toBeNull();
 
-    expect(register).not.toBeCalled();
+    expect(registerWithUsernamePassword).not.toBeCalled();
 
     // Clear Error
     if (confirmPasswordInput) {
@@ -223,7 +223,7 @@ describe('<CreateAccount/>', () => {
     });
 
     await waitFor(() => {
-      expect(register).toBeCalledWith('username', '123456');
+      expect(registerWithUsernamePassword).toBeCalledWith('username', '123456');
     });
   });
 });

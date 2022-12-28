@@ -13,15 +13,13 @@ import {
 } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { registerProfileSafeGuard, forgotPasswordProfileGuard } from '../types/guard.js';
+import { forgotPasswordProfileGuard } from '../types/guard.js';
 import type {
   Identifier,
   SocialIdentifier,
   IdentifierVerifiedInteractionResult,
   VerifiedInteractionResult,
   VerifiedForgotPasswordInteractionResult,
-  RegisterInteractionResult,
-  VerifiedRegisterInteractionResult,
 } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
 
@@ -165,23 +163,12 @@ const verifyProfileNotExistInCurrentUserAccount = async (
   }
 };
 
-const isValidRegisterInteractionResult = (
-  interaction: RegisterInteractionResult
-): interaction is VerifiedRegisterInteractionResult =>
-  registerProfileSafeGuard.safeParse(interaction.profile).success;
-
 export default async function verifyProfile(
   interaction: IdentifierVerifiedInteractionResult
 ): Promise<VerifiedInteractionResult> {
   const { event, identifiers, accountId, profile = {} } = interaction;
 
   if (event === InteractionEvent.Register) {
-    // Verify the profile includes sufficient identifiers to register a new account
-    assertThat(
-      isValidRegisterInteractionResult(interaction),
-      new RequestError({ code: 'guard.invalid_input' })
-    );
-
     verifyProfileIdentifiers(profile, identifiers);
     await verifyProfileNotRegisteredByOtherUserAccount(profile, identifiers);
 

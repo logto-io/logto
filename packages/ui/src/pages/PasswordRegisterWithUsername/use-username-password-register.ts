@@ -2,9 +2,9 @@ import { useMemo, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { register } from '@/apis/register';
-import type { ErrorHandlers } from '@/hooks/use-api';
+import { setUserPassword } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import { PageContext } from '@/hooks/use-page-context';
 
@@ -24,7 +24,7 @@ const useUsernamePasswordRegister = () => {
     [navigate, show]
   );
 
-  const { result, run: asyncRegister } = useApi(register, resetPasswordErrorHandlers);
+  const { result, run: asyncSetPassword } = useApi(setUserPassword, resetPasswordErrorHandlers);
 
   useEffect(() => {
     if (result?.redirectTo) {
@@ -33,7 +33,7 @@ const useUsernamePasswordRegister = () => {
   }, [result, setToast, t]);
 
   return {
-    register: asyncRegister,
+    setPassword: asyncSetPassword,
   };
 };
 

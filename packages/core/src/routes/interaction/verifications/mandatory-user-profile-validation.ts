@@ -69,6 +69,14 @@ const getMissingProfileBySignUpIdentifiers = ({
   return missingProfile;
 };
 
+// This is a fallback logic make sure the user has a valid identifier for register should be guarded by the SIE already
+const validateRegisterMandatoryUserProfile = (profile?: Profile) => {
+  assertThat(
+    profile && (profile.username ?? profile.email ?? profile.phone ?? profile.connectorId),
+    new RequestError({ code: 'user.missing_profile', status: 422 })
+  );
+};
+
 export default async function validateMandatoryUserProfile(
   ctx: WithInteractionSieContext<Context>,
   interaction: IdentifierVerifiedInteractionResult
@@ -86,4 +94,8 @@ export default async function validateMandatoryUserProfile(
       { missingProfile: Array.from(missingProfileSet) }
     )
   );
+
+  if (event === InteractionEvent.Register) {
+    validateRegisterMandatoryUserProfile(profile);
+  }
 }

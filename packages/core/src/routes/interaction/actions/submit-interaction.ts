@@ -1,14 +1,14 @@
 import type { User } from '@logto/schemas';
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, UserRole, adminConsoleApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword, generateUserId, insertUser } from '#src/libraries/user.js';
-import { findUserById, updateUserById } from '#src/queries/user.js';
+import { hasActiveUsers, findUserById, updateUserById } from '#src/queries/user.js';
 
+import type { WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 import type {
   Identifier,
   VerifiedInteractionResult,
@@ -86,7 +86,7 @@ const parseUserProfile = async (
 
 export default async function submitInteraction(
   interaction: VerifiedInteractionResult,
-  ctx: Context,
+  ctx: WithInteractionDetailsContext,
   provider: Provider
 ) {
   const { event, profile } = interaction;
@@ -95,8 +95,15 @@ export default async function submitInteraction(
     const id = await generateUserId();
     const upsertProfile = await parseUserProfile(interaction);
 
+    const { client_id } = ctx.interactionDetails.params;
+
+    const createAdminUser =
+      String(client_id) === adminConsoleApplicationId && !(await hasActiveUsers());
+    const roleNames = createAdminUser ? [UserRole.Admin] : undefined;
+
     await insertUser({
       id,
+      ...conditional(roleNames && { roleNames }),
       ...upsertProfile,
     });
 
