@@ -152,3 +152,16 @@ export const registerWithVerifiedIdentifier = async (payload: SendPasscodePayloa
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
+
+export const addProfile = async (
+  payload: { username: string } | { password: string },
+  socialToBind?: string
+) => {
+  await api.patch(`${interactionPrefix}/profile`, { json: payload });
+
+  if (socialToBind) {
+    // TODO: bind social account
+  }
+
+  return api.post(`${interactionPrefix}/submit`).json<Response>();
+};

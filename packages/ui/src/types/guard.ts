@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, MissingProfile } from '@logto/schemas';
 import * as s from 'superstruct';
 
 export const bindSocialStateGuard = s.object({
@@ -37,4 +37,16 @@ export const continueMethodGuard = s.union([
 
 export const usernameGuard = s.object({
   username: s.string(),
+});
+
+export const missingProfileErrorDataGuard = s.object({
+  missingProfile: s.array(
+    s.union([
+      s.literal(MissingProfile.password),
+      s.literal(MissingProfile.email),
+      s.literal(MissingProfile.phone),
+      s.literal(MissingProfile.username),
+      s.literal(MissingProfile.emailOrPhone),
+    ])
+  ),
 });

@@ -1,7 +1,7 @@
 import { useMemo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { continueApi } from '@/apis/continue';
+import { addProfile } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -26,14 +26,14 @@ const useSetPassword = () => {
     [navigate, requiredProfileErrorHandler, show]
   );
 
-  const { result, run: asyncSetPassword } = useApi(continueApi, errorHandlers);
+  const { result, run: asyncAddProfile } = useApi(addProfile, errorHandlers);
 
   const setPassword = useCallback(
     async (password: string) => {
       const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-      await asyncSetPassword('password', password, socialToBind);
+      await asyncAddProfile({ password }, socialToBind);
     },
-    [asyncSetPassword]
+    [asyncAddProfile]
   );
 
   useEffect(() => {
