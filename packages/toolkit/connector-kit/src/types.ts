@@ -68,7 +68,7 @@ export class ConnectorError extends Error {
   }
 }
 
-export enum MessageTypes {
+export enum VerificationCodeType {
   SignIn = 'SignIn',
   Register = 'Register',
   ForgotPassword = 'ForgotPassword',
@@ -76,7 +76,20 @@ export enum MessageTypes {
   Test = 'Test',
 }
 
-export const messageTypesGuard = z.nativeEnum(MessageTypes);
+export const verificationCodeTypeGuard = z.nativeEnum(VerificationCodeType);
+
+// Enum is string actually, keep this exported until GA for compatibility.
+/** @deprecated Use `VerificationCodeType` instead. */
+export enum MessageType {
+  SignIn = 'SignIn',
+  Register = 'Register',
+  ForgotPassword = 'ForgotPassword',
+  Continue = 'Continue',
+  Test = 'Test',
+}
+
+/** @deprecated Use `verificationCodeTypeGuard` instead. */
+export const messageTypesGuard = verificationCodeTypeGuard;
 
 const connectorMetadataGuard = z.object({
   id: z.string(),
@@ -139,7 +152,7 @@ export type EmailConnector = BaseConnector<ConnectorType.Email> & {
 };
 
 export type SendMessageFunction = (
-  data: { to: string; type: MessageTypes; payload: { code: string } },
+  data: { to: string; type: VerificationCodeType; payload: { code: string } },
   config?: unknown
 ) => Promise<unknown>;
 

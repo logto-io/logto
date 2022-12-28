@@ -1,9 +1,9 @@
-import { MessageTypes } from '@logto/connector-kit';
+import { VerificationCodeType } from '@logto/connector-kit';
 import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
 export const flowTypeGuard = z.nativeEnum(
-  pick(MessageTypes, 'Continue', 'ForgotPassword', 'Register', 'SignIn')
+  pick(VerificationCodeType, 'Continue', 'ForgotPassword', 'Register', 'SignIn')
 );
 
 export const methodGuard = z.enum(['email', 'sms']);
@@ -15,7 +15,7 @@ export const operationGuard = z.enum(['send', 'verify']);
 export type Operation = z.infer<typeof operationGuard>;
 
 const smsSessionStorageGuard = z.object({
-  flow: z.literal(MessageTypes.SignIn).or(z.literal(MessageTypes.Register)),
+  flow: z.literal(VerificationCodeType.SignIn).or(z.literal(VerificationCodeType.Register)),
   expiresAt: z.string(),
   phone: z.string(),
 });
@@ -25,7 +25,7 @@ export type SmsSessionStorage = z.infer<typeof smsSessionStorageGuard>;
 export const smsSessionResultGuard = z.object({ verification: smsSessionStorageGuard });
 
 const emailSessionStorageGuard = z.object({
-  flow: z.literal(MessageTypes.SignIn).or(z.literal(MessageTypes.Register)),
+  flow: z.literal(VerificationCodeType.SignIn).or(z.literal(VerificationCodeType.Register)),
   expiresAt: z.string(),
   email: z.string(),
 });
@@ -37,7 +37,7 @@ export const emailSessionResultGuard = z.object({
 });
 
 const forgotPasswordSessionStorageGuard = z.object({
-  flow: z.literal(MessageTypes.ForgotPassword),
+  flow: z.literal(VerificationCodeType.ForgotPassword),
   expiresAt: z.string(),
   userId: z.string(),
 });
@@ -49,7 +49,7 @@ export const forgotPasswordSessionResultGuard = z.object({
 });
 
 const continueEmailSessionStorageGuard = z.object({
-  flow: z.literal(MessageTypes.Continue),
+  flow: z.literal(VerificationCodeType.Continue),
   expiresAt: z.string(),
   email: z.string(),
 });
@@ -61,7 +61,7 @@ export const continueEmailSessionResultGuard = z.object({
 });
 
 const continueSmsSessionStorageGuard = z.object({
-  flow: z.literal(MessageTypes.Continue),
+  flow: z.literal(VerificationCodeType.Continue),
   expiresAt: z.string(),
   phone: z.string(),
 });

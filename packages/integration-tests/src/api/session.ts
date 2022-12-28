@@ -1,4 +1,4 @@
-import { MessageTypes } from '@logto/connector-kit';
+import { VerificationCodeType } from '@logto/connector-kit';
 
 import api from './api.js';
 
@@ -69,7 +69,7 @@ export const sendRegisterUserWithEmailPasscode = (email: string, interactionCook
     },
     json: {
       email,
-      flow: MessageTypes.Register,
+      flow: VerificationCodeType.Register,
     },
   });
 
@@ -86,7 +86,7 @@ export const verifyRegisterUserWithEmailPasscode = (
       json: {
         email,
         code,
-        flow: MessageTypes.Register,
+        flow: VerificationCodeType.Register,
       },
     })
     .json<RedirectResponse>();
@@ -107,7 +107,7 @@ export const sendSignInUserWithEmailPasscode = (email: string, interactionCookie
     },
     json: {
       email,
-      flow: MessageTypes.SignIn,
+      flow: VerificationCodeType.SignIn,
     },
   });
 
@@ -124,7 +124,7 @@ export const verifySignInUserWithEmailPasscode = (
       json: {
         email,
         code,
-        flow: MessageTypes.SignIn,
+        flow: VerificationCodeType.SignIn,
       },
     })
     .json<RedirectResponse>();
@@ -145,7 +145,7 @@ export const sendRegisterUserWithSmsPasscode = (phone: string, interactionCookie
     },
     json: {
       phone,
-      flow: MessageTypes.Register,
+      flow: VerificationCodeType.Register,
     },
   });
 
@@ -162,7 +162,7 @@ export const verifyRegisterUserWithSmsPasscode = (
       json: {
         phone,
         code,
-        flow: MessageTypes.Register,
+        flow: VerificationCodeType.Register,
       },
     })
     .json<RedirectResponse>();
@@ -183,7 +183,7 @@ export const sendSignInUserWithSmsPasscode = (phone: string, interactionCookie: 
     },
     json: {
       phone,
-      flow: MessageTypes.SignIn,
+      flow: VerificationCodeType.SignIn,
     },
   });
 
@@ -200,7 +200,7 @@ export const verifySignInUserWithSmsPasscode = (
       json: {
         phone,
         code,
-        flow: MessageTypes.SignIn,
+        flow: VerificationCodeType.SignIn,
       },
     })
     .json<RedirectResponse>();

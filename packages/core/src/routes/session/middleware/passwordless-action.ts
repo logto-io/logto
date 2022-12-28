@@ -1,4 +1,4 @@
-import { MessageTypes } from '@logto/connector-kit';
+import { VerificationCodeType } from '@logto/connector-kit';
 import { SignInIdentifier } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
@@ -52,7 +52,7 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContextLegacy, R
       smsSessionResultGuard
     );
 
-    const type = getPasswordlessRelatedLogType(MessageTypes.SignIn, 'sms');
+    const type = getPasswordlessRelatedLogType(VerificationCodeType.SignIn, 'sms');
     ctx.log(type, verificationStorage);
 
     const { phone, expiresAt } = verificationStorage;
@@ -97,7 +97,7 @@ export const emailSignInAction = <StateT, ContextT extends WithLogContextLegacy,
       emailSessionResultGuard
     );
 
-    const type = getPasswordlessRelatedLogType(MessageTypes.SignIn, 'email');
+    const type = getPasswordlessRelatedLogType(VerificationCodeType.SignIn, 'email');
     ctx.log(type, verificationStorage);
 
     const { email, expiresAt } = verificationStorage;
@@ -140,7 +140,7 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContextLegacy,
       smsSessionResultGuard
     );
 
-    const type = getPasswordlessRelatedLogType(MessageTypes.Register, 'sms');
+    const type = getPasswordlessRelatedLogType(VerificationCodeType.Register, 'sms');
     ctx.log(type, verificationStorage);
 
     const { phone, expiresAt } = verificationStorage;
@@ -184,7 +184,7 @@ export const emailRegisterAction = <StateT, ContextT extends WithLogContextLegac
       emailSessionResultGuard
     );
 
-    const type = getPasswordlessRelatedLogType(MessageTypes.Register, 'email');
+    const type = getPasswordlessRelatedLogType(VerificationCodeType.Register, 'email');
     ctx.log(type, verificationStorage);
 
     const { email, expiresAt } = verificationStorage;

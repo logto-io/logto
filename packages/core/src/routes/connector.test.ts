@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
-import { ConnectorPlatform, MessageTypes } from '@logto/connector-kit';
+import { ConnectorPlatform, VerificationCodeType } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { any } from 'zod';
@@ -390,7 +390,7 @@ describe('connector route', () => {
       expect(sendMessage).toHaveBeenCalledWith(
         {
           to: '12345678901',
-          type: MessageTypes.Test,
+          type: VerificationCodeType.Test,
           payload: {
             code: '123456',
           },
@@ -418,7 +418,7 @@ describe('connector route', () => {
       expect(sendMessage).toHaveBeenCalledWith(
         {
           to: 'test@email.com',
-          type: MessageTypes.Test,
+          type: VerificationCodeType.Test,
           payload: {
             code: 'email-test',
           },

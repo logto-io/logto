@@ -1,4 +1,4 @@
-import { MessageTypes } from '@logto/connector-kit';
+import { VerificationCodeType } from '@logto/connector-kit';
 import { Passcodes } from '@logto/schemas';
 import { convertToIdentifiers, convertToPrimitiveOrSql, excludeAutoSetFields } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
@@ -35,7 +35,7 @@ describe('passcode query', () => {
 
   it('findUnconsumedPasscodeByJtiAndType', async () => {
     const jti = 'foo';
-    const type = MessageTypes.SignIn;
+    const type = VerificationCodeType.SignIn;
 
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
@@ -55,7 +55,7 @@ describe('passcode query', () => {
 
   it('findUnconsumedPasscodesByJtiAndType', async () => {
     const jti = 'foo';
-    const type = MessageTypes.SignIn;
+    const type = VerificationCodeType.SignIn;
 
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}

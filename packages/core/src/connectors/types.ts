@@ -1,10 +1,10 @@
-import type { AllConnector, CreateConnector, MessageTypes } from '@logto/connector-kit';
+import type { AllConnector, CreateConnector, VerificationCodeType } from '@logto/connector-kit';
 import type { Connector } from '@logto/schemas';
 import { z } from 'zod';
 
 export { ConnectorType } from '@logto/schemas';
 
-export type TemplateType = MessageTypes;
+export type TemplateType = VerificationCodeType;
 
 export const socialUserInfoGuard = z.object({
   id: z.string(),

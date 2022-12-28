@@ -1,4 +1,4 @@
-import { MessageTypes } from '@logto/connector-kit';
+import { VerificationCodeType } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import type { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
@@ -103,7 +103,7 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
 
       await verifyPasscode(jti, flow, code, { phone });
 
-      if (flow === MessageTypes.ForgotPassword) {
+      if (flow === VerificationCodeType.ForgotPassword) {
         const user = await findUserByPhone(phone);
         assertThat(user, new RequestError({ code: 'user.phone_not_exist', status: 404 }));
 
@@ -113,13 +113,13 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
         return next();
       }
 
-      if (flow === MessageTypes.SignIn) {
+      if (flow === VerificationCodeType.SignIn) {
         await assignVerificationResult(ctx, provider, { flow, phone });
 
         return smsSignInAction(provider)(ctx, next);
       }
 
-      if (flow === MessageTypes.Register) {
+      if (flow === VerificationCodeType.Register) {
         await assignVerificationResult(ctx, provider, { flow, phone });
 
         return smsRegisterAction(provider)(ctx, next);
@@ -152,7 +152,7 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
 
       await verifyPasscode(jti, flow, code, { email });
 
-      if (flow === MessageTypes.ForgotPassword) {
+      if (flow === VerificationCodeType.ForgotPassword) {
         const user = await findUserByEmail(email);
 
         assertThat(user, new RequestError({ code: 'user.email_not_exist', status: 404 }));
@@ -163,13 +163,13 @@ export default function passwordlessRoutes<T extends AnonymousRouterLegacy>(
         return next();
       }
 
-      if (flow === MessageTypes.SignIn) {
+      if (flow === VerificationCodeType.SignIn) {
         await assignVerificationResult(ctx, provider, { flow, email });
 
         return emailSignInAction(provider)(ctx, next);
       }
 
-      if (flow === MessageTypes.Register) {
+      if (flow === VerificationCodeType.Register) {
         await assignVerificationResult(ctx, provider, { flow, email });
 
         return emailRegisterAction(provider)(ctx, next);

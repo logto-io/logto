@@ -1,4 +1,4 @@
-import type { MessageTypes } from '@logto/connector-kit';
+import type { VerificationCodeType } from '@logto/connector-kit';
 import type { Passcode, CreatePasscode } from '@logto/schemas';
 import { Passcodes } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
@@ -10,14 +10,17 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Passcodes);
 
-export const findUnconsumedPasscodeByJtiAndType = async (jti: string, type: MessageTypes) =>
+export const findUnconsumedPasscodeByJtiAndType = async (jti: string, type: VerificationCodeType) =>
   envSet.pool.maybeOne<Passcode>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.interactionJti}=${jti} and ${fields.type}=${type} and ${fields.consumed} = false
   `);
 
-export const findUnconsumedPasscodesByJtiAndType = async (jti: string, type: MessageTypes) =>
+export const findUnconsumedPasscodesByJtiAndType = async (
+  jti: string,
+  type: VerificationCodeType
+) =>
   envSet.pool.any<Passcode>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}

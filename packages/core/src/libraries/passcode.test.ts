@@ -1,4 +1,4 @@
-import { ConnectorType, MessageTypes } from '@logto/connector-kit';
+import { ConnectorType, VerificationCodeType } from '@logto/connector-kit';
 import { Passcode } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import { any } from 'zod';
@@ -60,7 +60,7 @@ afterEach(() => {
 describe('createPasscode', () => {
   it('should generate `passcodeLength` digits code for phone and insert to database', async () => {
     const phone = '13000000000';
-    const passcode = await createPasscode('jti', MessageTypes.SignIn, {
+    const passcode = await createPasscode('jti', VerificationCodeType.SignIn, {
       phone,
     });
     expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
@@ -69,7 +69,7 @@ describe('createPasscode', () => {
 
   it('should generate `passcodeLength` digits code for email and insert to database', async () => {
     const email = 'jony@example.com';
-    const passcode = await createPasscode('jti', MessageTypes.SignIn, {
+    const passcode = await createPasscode('jti', VerificationCodeType.SignIn, {
       email,
     });
     expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
@@ -84,7 +84,7 @@ describe('createPasscode', () => {
         id: 'id',
         interactionJti: jti,
         code: '1234',
-        type: MessageTypes.SignIn,
+        type: VerificationCodeType.SignIn,
         createdAt: Date.now(),
         phone: '',
         email,
@@ -92,7 +92,7 @@ describe('createPasscode', () => {
         tryCount: 0,
       },
     ]);
-    await createPasscode(jti, MessageTypes.SignIn, {
+    await createPasscode(jti, VerificationCodeType.SignIn, {
       email,
     });
     expect(deletePasscodesByIds).toHaveBeenCalledWith(['id']);
@@ -106,7 +106,7 @@ describe('sendPasscode', () => {
       interactionJti: 'jti',
       phone: null,
       email: null,
-      type: MessageTypes.SignIn,
+      type: VerificationCodeType.SignIn,
       code: '1234',
       consumed: false,
       tryCount: 0,
@@ -139,7 +139,7 @@ describe('sendPasscode', () => {
       interactionJti: 'jti',
       phone: 'phone',
       email: null,
-      type: MessageTypes.SignIn,
+      type: VerificationCodeType.SignIn,
       code: '1234',
       consumed: false,
       tryCount: 0,
@@ -190,7 +190,7 @@ describe('sendPasscode', () => {
       interactionJti: 'jti',
       phone: 'phone',
       email: null,
-      type: MessageTypes.SignIn,
+      type: VerificationCodeType.SignIn,
       code: '1234',
       consumed: false,
       tryCount: 0,
@@ -213,7 +213,7 @@ describe('verifyPasscode', () => {
     interactionJti: 'jti',
     phone: 'phone',
     email: null,
-    type: MessageTypes.SignIn,
+    type: VerificationCodeType.SignIn,
     code: '1234',
     consumed: false,
     tryCount: 0,
