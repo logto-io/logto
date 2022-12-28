@@ -42,7 +42,6 @@ describe('reset password', () => {
 
     await client.successSend(putInteraction, { event: InteractionEvent.ForgotPassword });
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.ForgotPassword,
       email: userProfile.primaryEmail,
     });
 
@@ -96,7 +95,6 @@ describe('reset password', () => {
 
     await client.successSend(putInteraction, { event: InteractionEvent.ForgotPassword });
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.ForgotPassword,
       phone: userProfile.primaryPhone,
     });
 

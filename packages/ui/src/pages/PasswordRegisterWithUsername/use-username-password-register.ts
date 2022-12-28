@@ -27,7 +27,7 @@ const useUsernamePasswordRegister = () => {
   const { result, run: asyncSetPassword } = useApi(setUserPassword, resetPasswordErrorHandlers);
 
   useEffect(() => {
-    if (result?.redirectTo) {
+    if (result && 'redirectTo' in result) {
       window.location.replace(result.redirectTo);
     }
   }, [result, setToast, t]);

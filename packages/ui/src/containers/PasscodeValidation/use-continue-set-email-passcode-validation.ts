@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { useMemo, useCallback } from 'react';
 
-import { verifyContinueSetEmailPasscode, continueApi } from '@/apis/continue';
+import { addProfileWithPasscodeIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
@@ -24,45 +24,34 @@ const useContinueSetEmailPasscodeValidation = (email: string, errorCallback?: ()
 
   const verifyPasscodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
+      'user.email_not_exist': identifierNotExistErrorHandler,
+      ...requiredProfileErrorHandler,
       ...sharedErrorHandlers,
       callback: errorCallback,
     }),
-    [errorCallback, sharedErrorHandlers]
+    [
+      errorCallback,
+      identifierNotExistErrorHandler,
+      requiredProfileErrorHandler,
+      sharedErrorHandlers,
+    ]
   );
 
   const { run: verifyPasscode } = useApi(
-    verifyContinueSetEmailPasscode,
+    addProfileWithPasscodeIdentifier,
     verifyPasscodeErrorHandlers
   );
 
-  const setEmailErrorHandlers: ErrorHandlers = useMemo(
-    () => ({
-      'user.email_not_exist': identifierNotExistErrorHandler,
-      ...requiredProfileErrorHandler,
-      callback: errorCallback,
-    }),
-    [errorCallback, identifierNotExistErrorHandler, requiredProfileErrorHandler]
-  );
-
-  const { run: setEmail } = useApi(continueApi, setEmailErrorHandlers);
-
   const onSubmit = useCallback(
-    async (code: string) => {
-      const verified = await verifyPasscode(email, code);
-
-      if (!verified) {
-        return;
-      }
-
+    async (passcode: string) => {
       const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-
-      const result = await setEmail('email', email, socialToBind);
+      const result = await verifyPasscode({ email, passcode }, socialToBind);
 
       if (result?.redirectTo) {
         window.location.replace(result.redirectTo);
       }
     },
-    [email, setEmail, verifyPasscode]
+    [email, verifyPasscode]
   );
 
   return {

@@ -23,7 +23,7 @@ type Props = {
   errorMessage?: string;
   submitButtonText?: TFuncKey;
   clearErrorMessage?: () => void;
-  onSubmit: (email: string) => Promise<void> | void;
+  onSubmit: (payload: { email: string }) => Promise<void> | void;
 };
 
 type FieldState = {
@@ -59,9 +59,9 @@ const EmailForm = ({
         return;
       }
 
-      await onSubmit(fieldValue.email);
+      await onSubmit(fieldValue);
     },
-    [validateForm, hasTerms, termsValidation, onSubmit, fieldValue.email]
+    [validateForm, hasTerms, termsValidation, onSubmit, fieldValue]
   );
 
   const { onChange, ...rest } = register('email', emailValidation);

@@ -6,7 +6,6 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import SecondarySignIn from '@/pages/SecondarySignIn';
 
-jest.mock('@/apis/register', () => ({ register: jest.fn(async () => 0) }));
 jest.mock('i18next', () => ({
   language: 'en',
 }));

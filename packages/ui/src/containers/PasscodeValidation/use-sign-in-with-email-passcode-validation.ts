@@ -3,8 +3,7 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { registerWithEmail } from '@/apis/register';
-import { verifySignInEmailPasscode } from '@/apis/sign-in';
+import { signInWithPasscodeIdentifier, registerWithVerifiedIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -26,7 +25,10 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
 
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
-  const { run: registerWithEmailAsync } = useApi(registerWithEmail, requiredProfileErrorHandlers);
+  const { run: registerWithEmailAsync } = useApi(
+    registerWithVerifiedIdentifier,
+    requiredProfileErrorHandlers
+  );
 
   const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
 
@@ -51,7 +53,7 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
       return;
     }
 
-    const result = await registerWithEmailAsync();
+    const result = await registerWithEmailAsync({ email });
 
     if (result?.redirectTo) {
       window.location.replace(result.redirectTo);
@@ -80,7 +82,10 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
     ]
   );
 
-  const { result, run: verifyPasscode } = useApi(verifySignInEmailPasscode, errorHandlers);
+  const { result, run: asyncSignInWithPasscodeIdentifier } = useApi(
+    signInWithPasscodeIdentifier,
+    errorHandlers
+  );
 
   useEffect(() => {
     if (result?.redirectTo) {
@@ -89,10 +94,16 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
   }, [result]);
 
   const onSubmit = useCallback(
-    async (code: string) => {
-      return verifyPasscode(email, code, socialToBind);
+    async (passcode: string) => {
+      return asyncSignInWithPasscodeIdentifier(
+        {
+          email,
+          passcode,
+        },
+        socialToBind
+      );
     },
-    [email, socialToBind, verifyPasscode]
+    [asyncSignInWithPasscodeIdentifier, email, socialToBind]
   );
 
   return {

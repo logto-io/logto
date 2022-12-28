@@ -3,8 +3,7 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { verifyRegisterSmsPasscode } from '@/apis/register';
-import { signInWithSms } from '@/apis/sign-in';
+import { addProfileWithPasscodeIdentifier, signInWithVerifierIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -25,7 +24,10 @@ const useRegisterWithSmsPasscodeValidation = (phone: string, errorCallback?: () 
 
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
-  const { run: signInWithSmsAsync } = useApi(signInWithSms, requiredProfileErrorHandlers);
+  const { run: signInWithSmsAsync } = useApi(
+    signInWithVerifierIdentifier,
+    requiredProfileErrorHandlers
+  );
 
   const identifierExistErrorHandler = useIdentifierErrorAlert(
     UserFlow.register,
@@ -75,7 +77,7 @@ const useRegisterWithSmsPasscodeValidation = (phone: string, errorCallback?: () 
     ]
   );
 
-  const { result, run: verifyPasscode } = useApi(verifyRegisterSmsPasscode, errorHandlers);
+  const { result, run: verifyPasscode } = useApi(addProfileWithPasscodeIdentifier, errorHandlers);
 
   useEffect(() => {
     if (result?.redirectTo) {
@@ -84,8 +86,11 @@ const useRegisterWithSmsPasscodeValidation = (phone: string, errorCallback?: () 
   }, [result]);
 
   const onSubmit = useCallback(
-    async (code: string) => {
-      return verifyPasscode(phone, code);
+    async (passcode: string) => {
+      return verifyPasscode({
+        phone,
+        passcode,
+      });
     },
     [phone, verifyPasscode]
   );

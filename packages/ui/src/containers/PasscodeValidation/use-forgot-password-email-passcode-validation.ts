@@ -2,7 +2,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import { useMemo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { verifyForgotPasswordEmailPasscode } from '@/apis/forgot-password';
+import { verifyForgotPasswordPasscodeIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { UserFlow } from '@/types';
@@ -23,24 +23,30 @@ const useForgotPasswordEmailPasscodeValidation = (email: string, errorCallback?:
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.email_not_exist': identifierNotExistErrorHandler,
+      'user.new_password_required_in_profile': () => {
+        navigate(`/${UserFlow.forgotPassword}/reset`, { replace: true });
+      },
       ...sharedErrorHandlers,
       callback: errorCallback,
     }),
-    [identifierNotExistErrorHandler, sharedErrorHandlers, errorCallback]
+    [identifierNotExistErrorHandler, sharedErrorHandlers, errorCallback, navigate]
   );
 
-  const { result, run: verifyPasscode } = useApi(verifyForgotPasswordEmailPasscode, errorHandlers);
+  const { result, run: verifyPasscode } = useApi(
+    verifyForgotPasswordPasscodeIdentifier,
+    errorHandlers
+  );
 
   const onSubmit = useCallback(
-    async (code: string) => {
-      return verifyPasscode(email, code);
+    async (passcode: string) => {
+      return verifyPasscode({ email, passcode });
     },
     [email, verifyPasscode]
   );
 
   useEffect(() => {
     if (result) {
-      navigate(`/${UserFlow.forgotPassword}/reset`, { replace: true });
+      navigate(`/${UserFlow.signIn}`, { replace: true });
     }
   }, [navigate, result]);
 

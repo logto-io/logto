@@ -70,11 +70,11 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       verifySignInModeSettings(event, signInExperience);
 
-      if (identifier) {
+      if (identifier && event !== InteractionEvent.ForgotPassword) {
         verifyIdentifierSettings(identifier, signInExperience);
       }
 
-      if (profile) {
+      if (profile && event !== InteractionEvent.ForgotPassword) {
         verifyProfileSettings(profile, signInExperience);
       }
 
@@ -145,9 +145,11 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const identifierPayload = ctx.guard.body;
       const { signInExperience, interactionDetails } = ctx;
-      verifyIdentifierSettings(identifierPayload, signInExperience);
-
       const interactionStorage = getInteractionStorage(interactionDetails.result);
+
+      if (interactionStorage.event === InteractionEvent.ForgotPassword) {
+        verifyIdentifierSettings(identifierPayload, signInExperience);
+      }
 
       const verifiedIdentifier = await verifyIdentifierPayload(
         ctx,
@@ -175,12 +177,14 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaInteractionSie(),
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
-
       const { signInExperience, interactionDetails } = ctx;
-      verifyProfileSettings(profilePayload, signInExperience);
 
       // Check interaction exists
-      getInteractionStorage(interactionDetails.result);
+      const { event } = getInteractionStorage(interactionDetails.result);
+
+      if (event !== InteractionEvent.ForgotPassword) {
+        verifyProfileSettings(profilePayload, signInExperience);
+      }
 
       await storeInteractionResult(
         {
@@ -207,9 +211,12 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
       const { signInExperience, interactionDetails } = ctx;
-      verifyProfileSettings(profilePayload, signInExperience);
 
       const interactionStorage = getInteractionStorage(interactionDetails.result);
+
+      if (interactionStorage.event !== InteractionEvent.ForgotPassword) {
+        verifyProfileSettings(profilePayload, signInExperience);
+      }
 
       await storeInteractionResult(
         {
@@ -292,9 +299,9 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { interactionDetails, guard, createLog } = ctx;
       // Check interaction exists
-      getInteractionStorage(interactionDetails.result);
+      const { event } = getInteractionStorage(interactionDetails.result);
 
-      await sendPasscodeToIdentifier(guard.body, interactionDetails.jti, createLog);
+      await sendPasscodeToIdentifier({ event, ...guard.body }, interactionDetails.jti, createLog);
 
       ctx.status = 204;
 

@@ -78,7 +78,7 @@ const { storeInteractionResult, mergeIdentifiers, getInteractionStorage } = awai
   () => ({
     mergeIdentifiers: jest.fn(),
     storeInteractionResult: jest.fn(),
-    getInteractionStorage: jest.fn().mockResolvedValue({
+    getInteractionStorage: jest.fn().mockReturnValue({
       event: InteractionEvent.SignIn,
     }),
   })
@@ -262,13 +262,19 @@ describe('session -> interactionRoutes', () => {
 
     it('should call send passcode properly', async () => {
       const body = {
-        event: InteractionEvent.SignIn,
         email: 'email@logto.io',
       };
 
       const response = await sessionRequest.post(path).send(body);
       expect(getInteractionStorage).toBeCalled();
-      expect(sendPasscodeToIdentifier).toBeCalledWith(body, 'jti', createLog);
+      expect(sendPasscodeToIdentifier).toBeCalledWith(
+        {
+          event: InteractionEvent.SignIn,
+          ...body,
+        },
+        'jti',
+        createLog
+      );
       expect(response.status).toEqual(204);
     });
   });

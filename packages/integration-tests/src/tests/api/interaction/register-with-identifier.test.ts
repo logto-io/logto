@@ -73,7 +73,6 @@ describe('Register with passwordless identifier', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.Register,
       email: primaryEmail,
     });
 
@@ -120,7 +119,6 @@ describe('Register with passwordless identifier', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.Register,
       email: primaryEmail,
     });
 
@@ -179,7 +177,6 @@ describe('Register with passwordless identifier', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.Register,
       phone: primaryPhone,
     });
 
@@ -226,7 +223,6 @@ describe('Register with passwordless identifier', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.Register,
       phone: primaryPhone,
     });
 
@@ -288,7 +284,6 @@ describe('Register with passwordless identifier', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.Register,
       email: primaryEmail,
     });
 
@@ -341,7 +336,6 @@ describe('Register with passwordless identifier', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.Register,
       phone: primaryPhone,
     });
 

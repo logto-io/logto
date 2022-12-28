@@ -68,10 +68,9 @@ export const submitInteraction = async (cookie: string) =>
 
 export type VerificationPasscodePayload =
   | {
-      event: InteractionEvent;
       email: string;
     }
-  | { event: InteractionEvent; phone: string };
+  | { phone: string };
 
 export const sendVerificationPasscode = async (
   cookie: string,

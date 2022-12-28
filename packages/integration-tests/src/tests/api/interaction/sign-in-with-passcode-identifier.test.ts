@@ -37,7 +37,6 @@ describe('Sign-In flow using passcode identifiers', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.SignIn,
       email: userProfile.primaryEmail,
     });
 
@@ -71,7 +70,6 @@ describe('Sign-In flow using passcode identifiers', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.SignIn,
       phone: userProfile.primaryPhone,
     });
 
@@ -111,7 +109,6 @@ describe('Sign-In flow using passcode identifiers', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.SignIn,
       email: newEmail,
     });
 
@@ -151,7 +148,6 @@ describe('Sign-In flow using passcode identifiers', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.SignIn,
       phone: newPhone,
     });
 
@@ -197,7 +193,6 @@ describe('Sign-In flow using passcode identifiers', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.SignIn,
       email: userProfile.primaryEmail,
     });
     const { code } = await readPasscode();
@@ -257,7 +252,6 @@ describe('Sign-In flow using passcode identifiers', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.SignIn,
       email: userProfile.primaryEmail,
     });
     const { code } = await readPasscode();
@@ -309,7 +303,6 @@ describe('Sign-In flow using passcode identifiers', () => {
     });
 
     await client.successSend(sendVerificationPasscode, {
-      event: InteractionEvent.SignIn,
       email: userProfile.primaryEmail,
     });
     const { code } = await readPasscode();
