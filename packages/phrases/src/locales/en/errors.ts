@@ -124,14 +124,15 @@ const errors = {
     cannot_overwrite_metadata_for_non_standard_connector:
       "This connector's 'metadata' cannot be overwritten.",
   },
-  passcode: {
+  verification_code: {
     phone_email_empty: 'Both phone and email are empty.',
-    not_found: 'Passcode not found. Please send passcode first.',
-    phone_mismatch: 'Phone mismatch. Please request a new passcode.',
-    email_mismatch: 'Email mismatch. Please request a new passcode.',
-    code_mismatch: 'Invalid passcode.',
-    expired: 'Passcode has expired. Please request a new passcode.',
-    exceed_max_try: 'Passcode verification limitation exceeded. Please request a new passcode.',
+    not_found: 'Verification code not found. Please send verification code first.',
+    phone_mismatch: 'Phone mismatch. Please request a new verification code.',
+    email_mismatch: 'Email mismatch. Please request a new verification code.',
+    code_mismatch: 'Invalid verification code.',
+    expired: 'Verification code has expired. Please request a new verification code.',
+    exceed_max_try:
+      'Verification code retries limitation exceeded. Please request a new verification code.',
   },
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:

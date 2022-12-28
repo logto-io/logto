@@ -113,7 +113,7 @@ describe('sendPasscode', () => {
       createdAt: Date.now(),
     };
     await expect(sendPasscode(passcode)).rejects.toThrowError(
-      new RequestError('passcode.phone_email_empty')
+      new RequestError('verification_code.phone_email_empty')
     );
   });
 
@@ -230,7 +230,7 @@ describe('verifyPasscode', () => {
     findUnconsumedPasscodeByJtiAndType.mockResolvedValue(null);
     await expect(
       verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' })
-    ).rejects.toThrow(new RequestError('passcode.not_found'));
+    ).rejects.toThrow(new RequestError('verification_code.not_found'));
   });
 
   it('should fail when phone mismatch', async () => {
@@ -239,7 +239,7 @@ describe('verifyPasscode', () => {
       verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, {
         phone: 'invalid_phone',
       })
-    ).rejects.toThrow(new RequestError('passcode.phone_mismatch'));
+    ).rejects.toThrow(new RequestError('verification_code.phone_mismatch'));
   });
 
   it('should fail when email mismatch', async () => {
@@ -252,7 +252,7 @@ describe('verifyPasscode', () => {
       verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, {
         email: 'invalid_email',
       })
-    ).rejects.toThrow(new RequestError('passcode.email_mismatch'));
+    ).rejects.toThrow(new RequestError('verification_code.email_mismatch'));
   });
 
   it('should fail when expired', async () => {
@@ -262,7 +262,7 @@ describe('verifyPasscode', () => {
     });
     await expect(
       verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' })
-    ).rejects.toThrow(new RequestError('passcode.expired'));
+    ).rejects.toThrow(new RequestError('verification_code.expired'));
   });
 
   it('should fail when exceed max count', async () => {
@@ -272,14 +272,14 @@ describe('verifyPasscode', () => {
     });
     await expect(
       verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' })
-    ).rejects.toThrow(new RequestError('passcode.exceed_max_try'));
+    ).rejects.toThrow(new RequestError('verification_code.exceed_max_try'));
   });
 
   it('should fail when invalid code, and should increase try_count', async () => {
     findUnconsumedPasscodeByJtiAndType.mockResolvedValue(passcode);
     await expect(
       verifyPasscode(passcode.interactionJti, passcode.type, 'invalid', { phone: 'phone' })
-    ).rejects.toThrow(new RequestError('passcode.code_mismatch'));
+    ).rejects.toThrow(new RequestError('verification_code.code_mismatch'));
     expect(increasePasscodeTryCount).toHaveBeenCalledWith(passcode.id);
   });
 });
