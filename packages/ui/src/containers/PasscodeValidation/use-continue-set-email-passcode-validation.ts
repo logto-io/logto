@@ -24,7 +24,7 @@ const useContinueSetEmailPasscodeValidation = (email: string, errorCallback?: ()
 
   const verifyPasscodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.user_not_exist': identifierNotExistErrorHandler,
+      'user.email_already_in_use': identifierNotExistErrorHandler,
       ...requiredProfileErrorHandler,
       ...sharedErrorHandlers,
       callback: errorCallback,

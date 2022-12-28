@@ -20,7 +20,7 @@ const useIdentifierErrorAlert = (
     await show({
       type: 'alert',
       ModalContent: t(
-        flow === UserFlow.register
+        flow === UserFlow.register || flow === UserFlow.continue
           ? 'description.create_account_id_exists_alert'
           : 'description.sign_in_id_does_not_exist_alert',
         {
