@@ -54,7 +54,7 @@ const Passcode = () => {
         type={type}
         method={method}
         target={target}
-        hasPasswordButton={type === UserFlow.signIn && methodSettings.password}
+        hasPasswordButton={type === UserFlow.signIn && methodSettings?.password}
       />
     </SecondaryPageWrapper>
   );
