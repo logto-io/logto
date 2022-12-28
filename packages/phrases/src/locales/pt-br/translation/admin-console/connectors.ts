@@ -40,15 +40,15 @@ const connectors = {
     logo_dark: 'URL do logotipo do conector (modo escuro)',
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
     logo_dark_tip:
-      'Isso será usado ao abrir "Ativar modo escuro" na configuração da experiência de login.',
+      'Set your connector’s logo for dark mode after enabling it in the Sign-in Experience of Admin Console.', // UNTRANSLATED
     logo_dark_collapse: 'Collapse',
-    logo_dark_show: 'Mostrar "Logo para modo escuro"',
+    logo_dark_show: 'Show logo setting for dark mode', // UNTRANSLATED
     target: 'Destino da identidade do conector',
     target_tip: 'Um identificador exclusivo para o conector.',
     target_tooltip:
       '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>', // UNTRANSLATED
     config: 'Digite seu JSON aqui',
-    sync_profile: 'Sincronizar informações de perfil do provedor social',
+    sync_profile: 'Sincronizar informações de perfil',
     sync_profile_only_at_register: 'Sincronizar apenas no registro',
     sync_profile_each_sign_in: 'Sempre sincronizar a cada login',
   },

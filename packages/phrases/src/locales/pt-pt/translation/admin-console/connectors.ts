@@ -32,24 +32,27 @@ const connectors = {
     subtitle: 'Um guia passo a passo para configurar o conector',
     connector_setting: 'Connector setting', // UNTRANSLATED
     name: 'Connector name', // UNTRANSLATED
-    name_tip: 'Connector button’s name will display as "Continue with {{Connector Name}}".', // UNTRANSLATED
-    logo: 'Connector logo URL', // UNTRANSLATED
+    name_tip:
+      'The name of the connector button will be displayed as "Continue with {{social_connector}}." Be mindful of the length of the naming in case it gets too long.', // UNTRANSLATED
+    logo: 'Logo image URL', // UNTRANSLATED
     logo_placeholder: 'https://your.cdn.domain/logo.png', // UNTRANSLATED
-    logo_tip: 'The logo image will also display on the connector button.', // UNTRANSLATED
-    logo_dark: 'Connector logo URL (Dark mode)', // UNTRANSLATED
+    logo_tip:
+      'Logo image will show on the connector. Get a publicly accessible image link and insert the link here.', // UNTRANSLATED
+    logo_dark: 'Connector logo URL for dark mode', // UNTRANSLATED
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png', // UNTRANSLATED
     logo_dark_tip:
-      'This will be used when opening “Enable dark mode” in the setting of sign in experience.', // UNTRANSLATED
+      'Set your connector’s logo for dark mode after enabling it in the Sign-in Experience of Admin Console.', // UNTRANSLATED
     logo_dark_collapse: 'Collapse', // UNTRANSLATED
-    logo_dark_show: 'Show "Logo for dark mode"', // UNTRANSLATED
+    logo_dark_show: 'Show logo setting for dark mode', // UNTRANSLATED
     target: 'Connector identity target', // UNTRANSLATED
-    target_tip: 'A unique identifier for the connector.', // UNTRANSLATED
+    target_tip:
+      'If the connector is successfully built, the connector “Target” cannot be modified.', // UNTRANSLATED
     target_tooltip:
       '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>', // UNTRANSLATED
-    config: 'Enter your JSON here', // UNTRANSLATED
-    sync_profile: 'Sync profile information from the social provider', // UNTRANSLATED
-    sync_profile_only_at_register: 'Only sync at register', // UNTRANSLATED
-    sync_profile_each_sign_in: 'Always sync at each sign-in', // UNTRANSLATED
+    config: 'Enter your config JSON', // UNTRANSLATED
+    sync_profile: 'Sync profile information', // UNTRANSLATED
+    sync_profile_only_at_register: 'Only sync at sign-up', // UNTRANSLATED
+    sync_profile_each_sign_in: 'Always do a sync at each sign-in', // UNTRANSLATED
   },
   platform: {
     universal: 'Universal',

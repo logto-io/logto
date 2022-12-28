@@ -39,15 +39,16 @@ const connectors = {
     logo_tip: '이 이미지는 연동 버튼에 보여질거에요.',
     logo_dark: '연동 로고 URL (다크 모드)',
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_dark_tip: '이 이미지는 다크 모드를 설정할 때 보여질거에요.',
+    logo_dark_tip:
+      'Set your connector’s logo for dark mode after enabling it in the Sign-in Experience of Admin Console.', // UNTRANSLATED
     logo_dark_collapse: '최소화',
-    logo_dark_show: '"다크 모드 로고" 보기',
+    logo_dark_show: 'Show logo setting for dark mode', // UNTRANSLATED
     target: '연동 ID 대상',
     target_tip: '연동의 고유 식별자.',
     target_tooltip:
       'Logto의 소셜 연동에서의 "목표"는 소셜 정보의 원천을 뜻해요. Logto의 디자인은 충돌을 피하기 위해서 같은 "목표"를 허용하지 않아요. 연동을 추가한 후에는 값을 변경할 수 없으므로 주의해주세요. <a>자세히 알아보기</a>',
     config: '여기에 JSON을 입력',
-    sync_profile: '소셜 정보로부터 프로필 정보 동기화하기',
+    sync_profile: 'Sync profile information', // UNTRANSLATED
     sync_profile_only_at_register: '회원가입때 동기화',
     sync_profile_each_sign_in: '로그인 할때 마다 동기화',
   },
