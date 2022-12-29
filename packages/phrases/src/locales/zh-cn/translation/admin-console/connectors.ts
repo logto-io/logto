@@ -47,7 +47,7 @@ const connectors = {
       'Logto 社交连接器的「target」指的是社交身份的「来源」。在 Logto 的设计里，我们不允许某一平台的连接器中有相同的「target」以避免身份的冲突。在添加连接器时，你需要格外小心，我们「不允许」用户在创建之后更改「target」的值。 <a>了解更多</a>',
     config: '粘贴你的 JSON 代码',
     sync_profile: '开启用户资料同步',
-    sync_profile_only_at_register: '首次注册时同步',
+    sync_profile_only_at_sign_up: '首次注册时同步',
     sync_profile_each_sign_in: '每次登录时同步',
   },
   platform: {

@@ -39,7 +39,7 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
   const syncProfileOptions = [
     {
       value: SyncProfileMode.OnlyAtRegister,
-      title: t('connectors.guide.sync_profile_only_at_register'),
+      title: t('connectors.guide.sync_profile_only_at_sign_up'),
     },
     {
       value: SyncProfileMode.EachSignIn,
