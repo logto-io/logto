@@ -58,7 +58,7 @@ const UserDetails = () => {
   useEffect(() => {
     setIsDeleteFormOpen(false);
     setIsResetPasswordFormOpen(false);
-  }, [isLogs]);
+  }, [pathname]);
 
   const onDelete = async () => {
     if (!data || isDeleting) {
