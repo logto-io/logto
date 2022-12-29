@@ -6,7 +6,7 @@ import type { SignInExperience, Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import deepmerge from 'deepmerge';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR, { useSWRConfig } from 'swr';
@@ -16,6 +16,8 @@ import Delete from '@/assets/images/delete.svg';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import IconButton from '@/components/IconButton';
+import Table from '@/components/Table';
+import Textarea from '@/components/Textarea';
 import { Tooltip } from '@/components/Tip';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
@@ -25,8 +27,7 @@ import {
 } from '@/pages/SignInExperience/utils/language';
 import type { CustomPhraseResponse } from '@/types/custom-phrase';
 
-import EditSection from './EditSection';
-import * as style from './LanguageDetails.module.scss';
+import * as styles from './LanguageDetails.module.scss';
 import { LanguageEditorContext } from './use-language-editor-context';
 
 const emptyUiTranslation = createEmptyUiTranslation();
@@ -69,16 +70,15 @@ const LanguageDetails = () => {
     [customPhrase]
   );
 
-  const formMethods = useForm<Translation>({
-    defaultValues: defaultFormValues,
-  });
-
   const {
     handleSubmit,
     reset,
     setValue,
+    register,
     formState: { isSubmitting, isDirty, dirtyFields },
-  } = formMethods;
+  } = useForm<Translation>({
+    defaultValues: defaultFormValues,
+  });
 
   useEffect(() => {
     /**
@@ -133,6 +133,7 @@ const LanguageDetails = () => {
   }, [api, globalMutate, isDefaultLanguage, languages, selectedLanguage, setSelectedLanguage]);
 
   const onSubmit = handleSubmit(async (formData: Translation) => {
+    console.log(formData);
     const updatedCustomPhrase = await upsertCustomPhrase(selectedLanguage, formData);
     void mutate(updatedCustomPhrase);
     toast.success(t('general.saved'));
@@ -151,13 +152,13 @@ const LanguageDetails = () => {
   ]);
 
   return (
-    <div className={style.languageDetails}>
-      <div className={style.title}>
-        <div className={style.languageInfo}>
+    <div className={styles.languageDetails}>
+      <div className={styles.title}>
+        <div className={styles.languageInfo}>
           {uiLanguageNameMapping[selectedLanguage]}
           <span>{selectedLanguage}</span>
           {isBuiltIn && (
-            <span className={style.builtInFlag}>
+            <span className={styles.builtInFlag}>
               {t('sign_in_exp.others.manage_language.logto_provided')}
             </span>
           )}
@@ -174,64 +175,77 @@ const LanguageDetails = () => {
           </Tooltip>
         )}
       </div>
-      <form
-        className={style.form}
-        onSubmit={async (event) => {
-          // Note: Avoid propagating the 'submit' event to the outer sign-in-experience form.
-          event.stopPropagation();
-
-          return onSubmit(event);
-        }}
-      >
-        <div className={style.content}>
-          <table>
-            <thead>
-              <tr>
-                <th>{t('sign_in_exp.others.manage_language.key')}</th>
-                <th>{t('sign_in_exp.others.manage_language.logto_source_values')}</th>
-                <th>
-                  <span className={style.customValuesColumn}>
-                    {t('sign_in_exp.others.manage_language.custom_values')}
-                    <Tooltip
-                      anchorClassName={style.clearButton}
-                      content={t('sign_in_exp.others.manage_language.clear_all_tip')}
+      <div className={styles.container}>
+        <Table
+          className={styles.content}
+          headerClassName={styles.tableWrapper}
+          bodyClassName={styles.tableWrapper}
+          rowIndexKey="phraseKey"
+          rowGroups={translationEntries.map(([groupKey, value]) => ({
+            key: groupKey,
+            label: groupKey,
+            labelClassName: styles.sectionTitle,
+            data: Object.entries(flattenTranslation(value)).map(([phraseKey, value]) => ({
+              phraseKey,
+              sourceValue: value,
+              fieldKey: `${groupKey}.${phraseKey}`,
+            })),
+          }))}
+          columns={[
+            {
+              title: t('sign_in_exp.others.manage_language.key'),
+              dataIndex: 'phraseKey',
+              render: (phraseKey) => phraseKey,
+              className: styles.sectionDataKey,
+            },
+            {
+              title: t('sign_in_exp.others.manage_language.logto_source_values'),
+              dataIndex: 'sourceValue',
+              render: (sourceValue) => (
+                <div className={styles.sectionBuiltInText}>{sourceValue}</div>
+              ),
+            },
+            {
+              title: (
+                <span className={styles.customValuesColumn}>
+                  {t('sign_in_exp.others.manage_language.custom_values')}
+                  <Tooltip
+                    anchorClassName={styles.clearButton}
+                    content={t('sign_in_exp.others.manage_language.clear_all_tip')}
+                  >
+                    <IconButton
+                      size="small"
+                      onClick={() => {
+                        for (const [key, value] of Object.entries(
+                          flattenTranslation(emptyUiTranslation)
+                        )) {
+                          setValue(key, value, { shouldDirty: true });
+                        }
+                      }}
                     >
-                      <IconButton
-                        size="small"
-                        onClick={() => {
-                          for (const [key, value] of Object.entries(
-                            flattenTranslation(emptyUiTranslation)
-                          )) {
-                            setValue(key, value, { shouldDirty: true });
-                          }
-                        }}
-                      >
-                        <Clear className={style.clearIcon} />
-                      </IconButton>
-                    </Tooltip>
-                  </span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <FormProvider {...formMethods}>
-                {translationEntries.map(([key, value]) => (
-                  <EditSection key={key} dataKey={key} data={flattenTranslation(value)} />
-                ))}
-              </FormProvider>
-            </tbody>
-          </table>
-        </div>
-        <div className={style.footer}>
+                      <Clear className={styles.clearIcon} />
+                    </IconButton>
+                  </Tooltip>
+                </span>
+              ),
+              dataIndex: 'fieldKey',
+              render: (fieldKey) => (
+                <Textarea className={styles.sectionInputArea} {...register(fieldKey)} />
+              ),
+              className: styles.inputCell,
+            },
+          ]}
+        />
+        <div className={styles.footer}>
           <Button
             isLoading={isSubmitting}
-            htmlType="submit"
             type="primary"
             size="large"
             title="general.save"
+            onClick={async () => onSubmit()}
           />
         </div>
-      </form>
+      </div>
       <ConfirmModal
         isOpen={isDeletionAlertOpen}
         title={

@@ -1,0 +1,75 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  table {
+    border: none;
+  }
+
+  .headerTable {
+    background-color: var(--color-layer-1);
+    border-radius: 12px 12px 0 0;
+    padding: 0 _.unit(3);
+
+    thead {
+      tr {
+        th {
+          font: var(--font-subhead-2);
+          color: var(--color-text);
+          border-bottom: unset;
+          padding: _.unit(3);
+          text-align: left;
+        }
+      }
+    }
+  }
+
+  .bodyTable {
+    overflow-y: auto;
+    padding: 0 _.unit(3) _.unit(3);
+    background-color: var(--color-layer-1);
+    border-radius: 0 0 12px 12px;
+
+    table {
+      tbody {
+        tr {
+          td {
+            font: var(--font-body-medium);
+            border-top: 1px solid var(--color-divider);
+            border-bottom: unset;
+            padding: _.unit(3);
+          }
+
+          &.clickable {
+            cursor: pointer;
+
+            &:hover {
+              background: var(--color-hover);
+
+              td {
+                border-top: 1px solid transparent;
+              }
+
+              + tr {
+                td {
+                  border-top: 1px solid transparent;
+                }
+              }
+
+              td:first-child {
+                border-radius: 8px 0 0 8px;
+              }
+
+              td:last-child {
+                border-radius: 0 8px 8px 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

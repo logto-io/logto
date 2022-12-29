@@ -12,14 +12,10 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
-import StickyHeaderTable from '@/components/Table/StickyHeaderTable';
-import TableEmpty from '@/components/Table/TableEmpty';
-import TableError from '@/components/Table/TableError';
-import TableLoading from '@/components/Table/TableLoading';
+import Table from '@/components/Table';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import * as tableStyles from '@/scss/table.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import CreateForm from './components/CreateForm';
@@ -89,69 +85,50 @@ const Applications = () => {
           />
         </Modal>
       </div>
-      <StickyHeaderTable
+      <Table
         className={resourcesStyles.table}
-        header={
-          <thead>
-            <tr>
-              <th>{t('applications.application_name')}</th>
-              <th>{t('applications.app_id')}</th>
-            </tr>
-          </thead>
-        }
-        colGroup={
-          <colgroup>
-            <col className={styles.applicationName} />
-            <col />
-          </colgroup>
-        }
-      >
-        <tbody>
-          {!data && error && (
-            <TableError
-              columns={2}
-              content={error.body?.message ?? error.message}
-              onRetry={async () => mutate(undefined, true)}
-            />
-          )}
-          {isLoading && <TableLoading columns={2} />}
-          {applications?.length === 0 && (
-            <TableEmpty columns={2}>
-              <Button
-                title="applications.create"
-                type="outline"
-                onClick={() => {
-                  navigate({
-                    pathname: createApplicationPathname,
-                    search,
-                  });
-                }}
+        rowGroups={[{ key: 'applications', data: applications }]}
+        rowIndexKey="id"
+        isLoading={isLoading}
+        errorMessage={error?.body?.message ?? error?.message}
+        columns={[
+          {
+            title: t('applications.application_name'),
+            dataIndex: 'name',
+            colSpan: 6,
+            render: (name, { type, id }) => (
+              <ItemPreview
+                title={name}
+                subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
+                icon={<ApplicationIcon className={styles.icon} type={type} />}
+                to={buildDetailsPathname(id)}
               />
-            </TableEmpty>
-          )}
-          {applications?.map(({ id, name, type }) => (
-            <tr
-              key={id}
-              className={tableStyles.clickable}
-              onClick={() => {
-                navigate(buildDetailsPathname(id));
-              }}
-            >
-              <td>
-                <ItemPreview
-                  title={name}
-                  subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
-                  icon={<ApplicationIcon className={styles.icon} type={type} />}
-                  to={buildDetailsPathname(id)}
-                />
-              </td>
-              <td>
-                <CopyToClipboard value={id} variant="text" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </StickyHeaderTable>
+            ),
+          },
+          {
+            title: t('applications.app_id'),
+            dataIndex: 'id',
+            colSpan: 10,
+            render: (id) => <CopyToClipboard value={id} variant="text" />,
+          },
+        ]}
+        placeholder={
+          <Button
+            title="applications.create"
+            type="outline"
+            onClick={() => {
+              navigate({
+                pathname: createApplicationPathname,
+                search,
+              });
+            }}
+          />
+        }
+        onClickRow={({ id }) => {
+          navigate(buildDetailsPathname(id));
+        }}
+        onRetry={async () => mutate(undefined, true)}
+      />
       <Pagination
         pageIndex={pageIndex}
         totalCount={totalCount}
