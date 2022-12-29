@@ -1,6 +1,5 @@
 import type { Resource } from '@logto/schemas';
 import { AppearanceMode } from '@logto/schemas';
-import classNames from 'classnames';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -15,14 +14,11 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
-import TableEmpty from '@/components/Table/TableEmpty';
-import TableError from '@/components/Table/TableError';
-import TableLoading from '@/components/Table/TableLoading';
+import Table from '@/components/Table';
 import type { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import * as tableStyles from '@/scss/table.module.scss';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -47,6 +43,8 @@ const ApiResources = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [apiResources, totalCount] = data ?? [];
+
+  const ResourceIcon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
 
   return (
     <div className={resourcesStyles.container}>
@@ -94,71 +92,49 @@ const ApiResources = () => {
           />
         </Modal>
       </div>
-      <div className={resourcesStyles.table}>
-        <div className={tableStyles.scrollable}>
-          <table className={classNames(!data && tableStyles.empty)}>
-            <colgroup>
-              <col className={styles.apiResourceName} />
-              <col />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>{t('api_resources.api_name')}</th>
-                <th>{t('api_resources.api_identifier')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!data && error && (
-                <TableError
-                  columns={2}
-                  content={error.body?.message ?? error.message}
-                  onRetry={async () => mutate(undefined, true)}
-                />
-              )}
-              {isLoading && <TableLoading columns={2} />}
-              {apiResources?.length === 0 && (
-                <TableEmpty columns={2}>
-                  <Button
-                    title="api_resources.create"
-                    type="outline"
-                    onClick={() => {
-                      navigate({
-                        pathname: createApiResourcePathname,
-                        search,
-                      });
-                    }}
-                  />
-                </TableEmpty>
-              )}
-              {apiResources?.map(({ id, name, indicator }) => {
-                const ResourceIcon =
-                  theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
-
-                return (
-                  <tr
-                    key={id}
-                    className={tableStyles.clickable}
-                    onClick={() => {
-                      navigate(buildDetailsPathname(id));
-                    }}
-                  >
-                    <td>
-                      <ItemPreview
-                        title={name}
-                        icon={<ResourceIcon className={styles.icon} />}
-                        to={buildDetailsPathname(id)}
-                      />
-                    </td>
-                    <td>
-                      <CopyToClipboard value={indicator} variant="text" />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <Table
+        className={resourcesStyles.table}
+        rowGroups={[{ key: 'apiResources', data: apiResources }]}
+        rowIndexKey="id"
+        isLoading={isLoading}
+        errorMessage={error?.body?.message ?? error?.message}
+        columns={[
+          {
+            title: t('api_resources.api_name'),
+            dataIndex: 'name',
+            colSpan: 6,
+            render: (name, { id }) => (
+              <ItemPreview
+                title={name}
+                icon={<ResourceIcon className={styles.icon} />}
+                to={buildDetailsPathname(id)}
+              />
+            ),
+          },
+          {
+            title: t('api_resources.api_identifier'),
+            dataIndex: 'indicator',
+            colSpan: 10,
+            render: (indicator) => <CopyToClipboard value={indicator} variant="text" />,
+          },
+        ]}
+        placeholder={
+          <Button
+            title="api_resources.create"
+            type="outline"
+            onClick={() => {
+              navigate({
+                pathname: createApiResourcePathname,
+                search,
+              });
+            }}
+          />
+        }
+        onClickRow={({ id }) => {
+          navigate(buildDetailsPathname(id));
+        }}
+        onRetry={async () => mutate(undefined, true)}
+      />
       <Pagination
         pageIndex={pageIndex}
         totalCount={totalCount}
