@@ -22,8 +22,6 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
-        with:
-          node: 18
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v5
