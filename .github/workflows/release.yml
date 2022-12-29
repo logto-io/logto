@@ -110,7 +110,7 @@ jobs:
           git config --global user.name silverhand-bot
 
       - name: Publish
-        run: node .script/publish.js
+        run: node .scripts/publish.js
 
   create-github-release:
     environment: release
