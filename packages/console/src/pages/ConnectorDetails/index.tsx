@@ -1,9 +1,9 @@
 import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Back from '@/assets/images/back.svg';
@@ -39,6 +39,7 @@ const getConnectorsPathname = (isSocial: boolean) =>
   `/connectors/${isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless}`;
 
 const ConnectorDetails = () => {
+  const { pathname } = useLocation();
   const { connectorId } = useParams();
   const { mutate: mutateGlobal } = useSWRConfig();
   const [isDeleted, setIsDeleted] = useState(false);
@@ -54,6 +55,10 @@ const ConnectorDetails = () => {
   const navigate = useNavigate();
   const isSocial = data?.type === ConnectorType.Social;
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+
+  useEffect(() => {
+    setIsDeleteAlertOpen(false);
+  }, [pathname]);
 
   const onDeleteClick = async () => {
     if (!isSocial || !inUse) {
