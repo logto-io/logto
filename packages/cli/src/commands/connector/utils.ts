@@ -6,7 +6,9 @@ import { promisify } from 'util';
 
 import { assert, conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
+import { got } from 'got';
 import inquirer from 'inquirer';
+import pLimit from 'p-limit';
 import pRetry from 'p-retry';
 import tar from 'tar';
 import { z } from 'zod';
@@ -116,6 +118,7 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
 
   log.info('Fetch connector metadata');
 
+  const limit = pLimit(10);
   const results = await Promise.all(
     packageNames
       .map((name) => normalizePackageName(name))
@@ -130,7 +133,7 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
             );
           }
 
-          const { filename, name } = result[0];
+          const { filename, name, version } = result[0];
           const escapedFilename = filename.replace(/\//g, '-').replace(/@/g, '');
           const tarPath = path.join(cwd, escapedFilename);
           const packageDirectory = path.join(cwd, name.replace(/\//g, '-'));
@@ -140,16 +143,18 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
           await tar.extract({ cwd: packageDirectory, file: tarPath, strip: 1 });
           await fs.unlink(tarPath);
 
-          log.succeed(`Added ${chalk.green(name)}`);
+          log.succeed(`Added ${chalk.green(name)} v${version}`);
         };
 
-        try {
-          await pRetry(run, { retries: 2 });
-        } catch (error: unknown) {
-          console.warn(`[${packageName}]`, error);
+        return limit(async () => {
+          try {
+            await pRetry(run, { retries: 2 });
+          } catch (error: unknown) {
+            console.warn(`[${packageName}]`, error);
 
-          return packageName;
-        }
+            return packageName;
+          }
+        });
       })
   );
 
@@ -169,19 +174,57 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
 
 const officialConnectorPrefix = '@logto/connector-';
 
-const fetchOfficialConnectorList = async () => {
-  const { stdout } = await execPromise(`npm search ${officialConnectorPrefix} --json`);
-  const packages = z
-    .object({ name: z.string() })
-    .transform(({ name }) => name)
-    .array()
-    .parse(JSON.parse(stdout));
+type PackageMeta = { name: string; scope: string; version: string };
 
-  return packages.filter((name) =>
-    ['mock', 'kit'].every(
-      (excluded) => !name.slice(officialConnectorPrefix.length).startsWith(excluded)
-    )
-  );
+const fetchOfficialConnectorList = async () => {
+  // See https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#get-v1search
+  type FetchResult = {
+    objects: Array<{
+      package: PackageMeta;
+      flags?: { unstable?: boolean };
+    }>;
+    total: number;
+  };
+
+  const fetchList = async (from = 0, size = 20) => {
+    const parameters = new URLSearchParams({
+      text: officialConnectorPrefix,
+      from: String(from),
+      size: String(size),
+    });
+
+    return got(
+      `https://registry.npmjs.org/-/v1/search?${parameters.toString()}`
+    ).json<FetchResult>();
+  };
+
+  const packages: PackageMeta[] = [];
+
+  // Disable lint rules for business need
+  // eslint-disable-next-line @silverhand/fp/no-let, @silverhand/fp/no-mutation
+  for (let page = 0; ; ++page) {
+    // eslint-disable-next-line no-await-in-loop
+    const { objects } = await fetchList(page * 20, 20);
+
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    packages.push(
+      ...objects
+        .filter(
+          ({ package: { name, scope } }) =>
+            scope === 'logto' &&
+            ['mock', 'kit'].every(
+              (excluded) => !name.slice(officialConnectorPrefix.length).startsWith(excluded)
+            )
+        )
+        .map(({ package: data }) => data)
+    );
+
+    if (objects.length < 20) {
+      break;
+    }
+  }
+
+  return packages;
 };
 
 export const addOfficialConnectors = async (instancePath: string) => {
@@ -189,5 +232,11 @@ export const addOfficialConnectors = async (instancePath: string) => {
     text: 'Fetch official connector list',
     prefixText: chalk.blue('[info]'),
   });
-  await addConnectors(instancePath, packages);
+
+  log.info(`Found ${packages.length} official connectors`);
+
+  await addConnectors(
+    instancePath,
+    packages.map(({ name }) => name)
+  );
 };
