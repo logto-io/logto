@@ -78,19 +78,15 @@ jobs:
           app-name: logto-dev
           images: svhd/logto:edge
 
-  release-changesets:
+  # Publish packages and create git tags if needed
+  publish-and-tag:
     runs-on: ubuntu-latest
     env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTOMATION_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTOMATION_TOKEN }}
 
     if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # Set Git operations with the bot PAT since we have tag protection rule
-          token: ${{ secrets.BOT_PAT }}
-          fetch-depth: 0
 
+    steps:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
@@ -103,25 +99,8 @@ jobs:
           git_commit_gpgsign: true
           git_tag_gpgsign: true
 
-      - name: Configure Git user
-        run: |
-          git config --global user.email bot@silverhand.io
-          git config --global user.name silverhand-bot
-
-      - name: Create release pull request
-        uses: changesets/action@v1
-        with:
-          # Use our customized publish flow. See https://github.com/changesets/changesets/issues/833 for the limit of changesets.
-          publish: node .scripts/publish.js
-          # `changeset version` won't run version lifecycle scripts, see https://github.com/changesets/changesets/issues/860
-          version: pnpm ci:version
-          commit: 'release: version packages'
-          title: 'release: version packages'
-          # Create by our rules defined in `/.changeset/README.md`.
-          createGithubReleases: false
-          setupGitUser: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
+      - name: Publish
+        run: node .script/publish.js
 
   create-github-release:
     environment: release

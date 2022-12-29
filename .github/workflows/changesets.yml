@@ -1,0 +1,59 @@
+name: Changesets
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  changesets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Set Git operations with the bot PAT since we have tag protection rule
+          token: ${{ secrets.BOT_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        with:
+          node: 18
+
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.BOT_GPG_KEY }}
+          passphrase: ${{ secrets.BOT_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          git_tag_gpgsign: true
+
+      - name: Configure Git user
+        run: |
+          git config --global user.email bot@silverhand.io
+          git config --global user.name silverhand-bot
+
+      - name: Version packages
+        run: |
+          pnpm changeset version
+          pnpm i --no-frozen-lockfile
+          git status
+
+      - name: Create pull request
+        if: github.event_name == 'push'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.BOT_PAT }}
+          commit-message: 'release: version packages'
+          committer: silverhand-bot <bot@silverhand.io>
+          author: silverhand-bot <bot@silverhand.io>
+          base: master
+          branch: release/version-packages
+          title: 'release: version packages'
+          body: 'This is an automatic pull request from the result of `pnpm changeset version` command. Merge it will trigger the publish flow for versioned packages.'
