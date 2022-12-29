@@ -48,7 +48,6 @@ const translation = {
     passcode_sent: 'Le code a été renvoyé',
     resend_after_seconds: 'Renvoyer après <span>{{seconds}}</span> secondes',
     resend_passcode: 'Renvoyer le code',
-    continue_with: 'Continuer avec',
     create_account_id_exists:
       'Le compte avec {{type}} {{value}} existe déjà, voulez-vous vous connecter ?',
     sign_in_id_does_not_exist:
@@ -73,7 +72,7 @@ const translation = {
     have_account: 'Already had an account?', // UNTRANSLATED
     enter_password: 'Enter Password', // UNTRANSLATED
     enter_password_for: 'Sign in with the password to {{method}} {{value}}', // UNTRANSLATED
-    enter_username: 'Enter username', // UNTRANSLATED
+    enter_username: 'Set username', // UNTRANSLATED
     enter_username_description:
       'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.', // UNTRANSLATED
     link_email: 'Link email', // UNTRANSLATED

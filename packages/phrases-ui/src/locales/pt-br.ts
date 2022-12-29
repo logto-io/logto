@@ -48,7 +48,6 @@ const translation = {
     passcode_sent: 'O código de verificação foi reenviado',
     resend_after_seconds: 'Reenviar depois <span>{{seconds}}</span> segundos',
     resend_passcode: 'Reenviar código de verificação',
-    continue_with: 'Continue com',
     create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de entrar?',
     sign_in_id_does_not_exist:
       'A conta com {{type}} {{value}} não existe, gostaria de criar uma nova conta?',

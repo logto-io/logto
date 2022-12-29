@@ -48,7 +48,6 @@ const translation = {
     passcode_sent: '비밀번호가 재전송 되었습니다.',
     resend_after_seconds: '<span>{{seconds}}</span> 초 후에 재전송',
     resend_passcode: '비밀번호 재전송',
-    continue_with: '계속하기',
     create_account_id_exists: '{{type}} {{value}} 계정이 이미 존재해요. 로그인하시겠어요?',
     sign_in_id_does_not_exist: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
     sign_in_id_does_not_exist_alert: '{{type}} {{value}} 계정이 존재하지 않아요.',
