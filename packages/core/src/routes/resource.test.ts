@@ -1,17 +1,17 @@
 import type { Resource, CreateResource } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
-import { mockResource } from '#src/__mocks__/index.js';
+import { mockResource, mockScope } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
 const { mockEsm } = createMockUtils(jest);
 
-mockEsm('#src/queries/resource.js', () => ({
+const { findResourceById } = mockEsm('#src/queries/resource.js', () => ({
   findTotalNumberOfResources: async () => ({ count: 10 }),
   findAllResources: async (): Promise<Resource[]> => [mockResource],
-  findResourceById: async (): Promise<Resource> => mockResource,
+  findResourceById: jest.fn(async (): Promise<Resource> => mockResource),
   insertResource: async (body: CreateResource): Promise<Resource> => ({
     ...mockResource,
     ...body,
@@ -21,6 +21,15 @@ mockEsm('#src/queries/resource.js', () => ({
     ...data,
   }),
   deleteResourceById: jest.fn(),
+  findScopesByResourceId: async () => [mockScope],
+}));
+
+const { insertScope, updateScopeById } = mockEsm('#src/queries/scope.js', () => ({
+  findScopesByResourceId: async () => [mockScope],
+  insertScope: jest.fn(async () => mockScope),
+  findScopeById: jest.fn(),
+  updateScopeById: jest.fn(async () => mockScope),
+  deleteScopeById: jest.fn(),
 }));
 
 mockEsm('@logto/core-kit', () => ({
@@ -108,5 +117,53 @@ describe('resource routes', () => {
 
   it('DELETE /resources/:id', async () => {
     await expect(resourceRequest.delete('/resources/foo')).resolves.toHaveProperty('status', 204);
+  });
+
+  it('GET /resources/:id/scopes', async () => {
+    const response = await resourceRequest.get('/resources/foo/scopes');
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual([mockScope]);
+    expect(findResourceById).toHaveBeenCalledWith('foo');
+  });
+
+  it('POST /resources/:id/scopes', async () => {
+    const name = 'write:users';
+    const description = 'description';
+
+    const response = await resourceRequest
+      .post('/resources/foo/scopes')
+      .send({ name, description });
+
+    expect(response.status).toEqual(200);
+    expect(findResourceById).toHaveBeenCalledWith('foo');
+    expect(insertScope).toHaveBeenCalledWith({
+      id: 'randomId',
+      name,
+      description,
+      resourceId: 'foo',
+    });
+  });
+
+  it('PATCH /resources/:id/scopes/:scopeId', async () => {
+    const name = 'write:users';
+    const description = 'description';
+
+    const response = await resourceRequest
+      .patch('/resources/foo/scopes/foz')
+      .send({ name, description });
+
+    expect(response.status).toEqual(200);
+    expect(findResourceById).toHaveBeenCalledWith('foo');
+    expect(updateScopeById).toHaveBeenCalledWith('foz', {
+      name,
+      description,
+    });
+  });
+
+  it('DELETE /resources/:id/scopes/:scopeId', async () => {
+    await expect(resourceRequest.delete('/resources/foo/scopes/foz')).resolves.toHaveProperty(
+      'status',
+      204
+    );
   });
 });
