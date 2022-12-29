@@ -81,9 +81,10 @@ jobs:
         run: |
           npm run cli init -- -p ../logto --db postgres://postgres:postgres@localhost:5432/postgres --no-oc --du ../logto.tar.gz
       
-      - name: Add mock connectors
+      - name: Check and add mock connectors
         working-directory: tests
         run: |
+          npm run cli connector list -- -p ../logto | grep OFFICIAL
           npm run cli connector add @logto/connector-mock-sms @logto/connector-mock-email @logto/connector-mock-standard-email @logto/connector-mock-social -- -p ../logto
 
       - name: Run Logto
