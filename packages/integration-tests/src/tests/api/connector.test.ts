@@ -72,10 +72,8 @@ test('connector set-up flow', async () => {
   /*
    * Change to another SMS/Email connector
    */
-  // @darcy FIXME: should call post method directly
   const { id } = await postConnector({
     connectorId: mockStandardEmailConnectorId,
-    metadata: { target: 'mock-standard-mail' },
   });
   await updateConnectorConfig(id, mockStandardEmailConnectorConfig);
   connectorIdMap.set(mockStandardEmailConnectorId, id);

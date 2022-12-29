@@ -150,7 +150,7 @@ export const mockEmailConnectorConfig = {
   ],
 };
 
-export const mockStandardEmailConnectorId = 'mock-standard-email-service';
+export const mockStandardEmailConnectorId = 'mock-email-service-alternative';
 export const mockStandardEmailConnectorConfig = {
   apiKey: 'api-key-value',
   fromEmail: 'noreply@logto.test.io',
