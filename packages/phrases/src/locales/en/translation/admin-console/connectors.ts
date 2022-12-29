@@ -32,24 +32,27 @@ const connectors = {
     subtitle: 'A step by step guide to configure your connector',
     connector_setting: 'Connector setting',
     name: 'Connector name',
-    name_tip: 'Connector button’s name will display as "Continue with {{Connector Name}}".',
-    logo: 'Connector logo URL',
+    name_tip:
+      'The name of the connector button will be displayed as "Continue with {{social_connector}}." Be mindful of the length of the naming in case it gets too long.',
+    logo: 'Logo image URL',
     logo_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_tip: 'The logo image will also display on the connector button.',
-    logo_dark: 'Connector logo URL (Dark mode)',
+    logo_tip:
+      'Logo image will show on the connector. Get a publicly accessible image link and insert the link here.',
+    logo_dark: 'Connector logo URL for dark mode',
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
     logo_dark_tip:
-      'This will be used when opening “Enable dark mode” in the setting of sign in experience.',
+      'Set your connector’s logo for dark mode after enabling it in the Sign-in Experience of Admin Console.',
     logo_dark_collapse: 'Collapse',
-    logo_dark_show: 'Show "Logo for dark mode"',
+    logo_dark_show: 'Show logo setting for dark mode',
     target: 'Connector identity target',
-    target_tip: 'A unique identifier for the connector.',
+    target_tip:
+      'If the connector is successfully built, the connector “Target” cannot be modified.',
     target_tooltip:
       '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>',
-    config: 'Enter your JSON here',
-    sync_profile: 'Sync profile information from the social provider',
-    sync_profile_only_at_register: 'Only sync at register',
-    sync_profile_each_sign_in: 'Always sync at each sign-in',
+    config: 'Enter your config JSON',
+    sync_profile: 'Sync profile information',
+    sync_profile_only_at_sign_up: 'Only sync at sign-up',
+    sync_profile_each_sign_in: 'Always do a sync at each sign-in',
   },
   platform: {
     universal: 'Universal',
