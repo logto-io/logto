@@ -7,6 +7,7 @@ import type { FieldPath, FieldValues } from 'react-hook-form';
 import type { Props as PaginationProps } from '@/components/Pagination';
 import Pagination from '@/components/Pagination';
 
+import OverlayScrollbar from '../OverlayScrollbar';
 import TableEmpty from './TableEmpty';
 import TableError from './TableError';
 import TableLoading from './TableLoading';
@@ -94,7 +95,7 @@ const Table = <
             </tr>
           </thead>
         </table>
-        <div className={classNames(styles.bodyTable, bodyClassName)}>
+        <OverlayScrollbar className={classNames(styles.bodyTable, bodyClassName)}>
           <table>
             <tbody>
               {isLoading && (
@@ -156,7 +157,7 @@ const Table = <
                 ))}
             </tbody>
           </table>
-        </div>
+        </OverlayScrollbar>
       </div>
       {pagination && <Pagination className={styles.pagination} {...pagination} />}
     </div>
