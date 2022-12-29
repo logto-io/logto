@@ -130,7 +130,7 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
             );
           }
 
-          const { filename, name } = result[0];
+          const { filename, name, version } = result[0];
           const escapedFilename = filename.replace(/\//g, '-').replace(/@/g, '');
           const tarPath = path.join(cwd, escapedFilename);
           const packageDirectory = path.join(cwd, name.replace(/\//g, '-'));
@@ -140,7 +140,7 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
           await tar.extract({ cwd: packageDirectory, file: tarPath, strip: 1 });
           await fs.unlink(tarPath);
 
-          log.succeed(`Added ${chalk.green(name)}`);
+          log.succeed(`Added ${chalk.green(name)} v${version}`);
         };
 
         try {
