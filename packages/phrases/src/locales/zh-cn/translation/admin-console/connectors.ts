@@ -38,7 +38,7 @@ const connectors = {
     logo_tip: '该图片将用于连接器的展示。获取图片链接后粘贴在此处。',
     logo_dark: 'Logo 图片链接（深色模式）',
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_dark_tip: '在管理控制台的登录体验中启用“深色模式”后，可设置此连接器Logo用于深色模式。',
+    logo_dark_tip: '在管理控制台的登录体验中启用“深色模式”后，可设置此连接器 Logo 用于深色模式。',
     logo_dark_collapse: '收起',
     logo_dark_show: '展开深色模式 Logo 设置',
     target: '连接器身份 Target',
