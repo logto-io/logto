@@ -1,6 +1,6 @@
 import type { User } from '@logto/schemas';
 import classNames from 'classnames';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -32,8 +32,8 @@ import * as styles from './index.module.scss';
 import { userDetailsParser } from './utils';
 
 const UserDetails = () => {
-  const location = useLocation();
-  const isLogs = location.pathname.endsWith('/logs');
+  const { pathname } = useLocation();
+  const isLogs = pathname.endsWith('/logs');
   const { userId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
@@ -54,6 +54,11 @@ const UserDetails = () => {
 
     return userDetailsParser.toLocalForm(data);
   }, [data]);
+
+  useEffect(() => {
+    setIsDeleteFormOpen(false);
+    setIsResetPasswordFormOpen(false);
+  }, [pathname]);
 
   const onDelete = async () => {
     if (!data || isDeleting) {
