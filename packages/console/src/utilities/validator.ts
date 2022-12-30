@@ -16,3 +16,13 @@ export const uriOriginValidator = (value: string) => {
     return false;
   }
 };
+
+export const jsonValidator = (value: string) => {
+  try {
+    JSON.parse(value);
+  } catch {
+    return false;
+  }
+
+  return true;
+};
