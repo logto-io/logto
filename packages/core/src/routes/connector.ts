@@ -307,7 +307,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
           to: subject,
           type: VerificationCodeType.Test,
           payload: {
-            code: phone ? '123456' : 'email-test',
+            code: '000000',
           },
         },
         config
