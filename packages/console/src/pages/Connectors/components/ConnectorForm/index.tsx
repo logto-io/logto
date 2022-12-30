@@ -19,19 +19,27 @@ import { SyncProfileMode } from '../../types';
 import * as styles from './index.module.scss';
 
 type Props = {
-  connector: ConnectorFactoryResponse;
+  connectorType: ConnectorType;
+  isStandard: ConnectorFactoryResponse['isStandard'];
+  configTemplate?: ConnectorFactoryResponse['configTemplate'];
   isAllowEditTarget?: boolean;
+  isDarkDefaultVisible?: boolean;
 };
 
-const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
+const ConnectorForm = ({
+  configTemplate,
+  isStandard,
+  isAllowEditTarget,
+  isDarkDefaultVisible,
+  connectorType,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { configTemplate, isStandard, logoDark } = connector;
   const {
     control,
     register,
     formState: { errors },
   } = useFormContext<ConnectorFormType>();
-  const [darkVisible, setDarkVisible] = useState(Boolean(logoDark));
+  const [darkVisible, setDarkVisible] = useState(Boolean(isDarkDefaultVisible));
 
   const toggleDarkVisible = () => {
     setDarkVisible((previous) => !previous);
@@ -141,7 +149,7 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
           )}
         />
       </FormField>
-      {connector.type === ConnectorType.Social && (
+      {connectorType === ConnectorType.Social && (
         <FormField title="connectors.guide.sync_profile">
           <Controller
             name="syncProfile"

@@ -122,7 +122,12 @@ const Guide = ({ connector, onClose }: Props) => {
           <div className={styles.title}>{t('connectors.guide.connector_setting')}</div>
           <FormProvider {...methods}>
             <form onSubmit={onSubmit}>
-              <ConnectorForm isAllowEditTarget connector={connector} />
+              <ConnectorForm
+                isAllowEditTarget
+                connectorType={connector.type}
+                configTemplate={connector.configTemplate}
+                isStandard={connector.isStandard}
+              />
               {!isSocialConnector && (
                 <SenderTester
                   className={styles.tester}
