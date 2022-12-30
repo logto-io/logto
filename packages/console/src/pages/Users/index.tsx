@@ -42,7 +42,7 @@ const Users = () => {
   const keyword = query.get('search') ?? '';
   const { data, error, mutate } = useSWR<[User[], number], RequestError>(
     `/api/users?page=${pageIndex}&page_size=${pageSize}&hideAdminUser=true${conditionalString(
-      keyword && `&search=%${keyword}%`
+      keyword && `&search=${encodeURIComponent(`%${keyword}%`)}`
     )}`
   );
   const isLoading = !data && !error;
