@@ -34,7 +34,7 @@ const connectors = {
     connector_setting: 'Connector setting', // UNTRANSLATED
     name: 'Connector name', // UNTRANSLATED
     name_tip:
-      'The name of the connector button will be displayed as "Continue with {{social_connector}}." Be mindful of the length of the naming in case it gets too long.', // UNTRANSLATED
+      'The name of the connector button will be displayed as "Continue with {{name}}." Be mindful of the length of the naming in case it gets too long.', // UNTRANSLATED
     logo: 'Logo image URL', // UNTRANSLATED
     logo_placeholder: 'https://your.cdn.domain/logo.png', // UNTRANSLATED
     logo_tip:

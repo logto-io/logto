@@ -33,7 +33,7 @@ const connectors = {
     connector_setting: 'Connector setting',
     name: 'Connector name',
     name_tip:
-      'The name of the connector button will be displayed as "Continue with {{social_connector}}." Be mindful of the length of the naming in case it gets too long.',
+      'The name of the connector button will be displayed as "Continue with {{name}}." Be mindful of the length of the naming in case it gets too long.',
     logo: 'Logo image URL',
     logo_placeholder: 'https://your.cdn.domain/logo.png',
     logo_tip:

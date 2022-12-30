@@ -31,8 +31,7 @@ const connectors = {
     subtitle: '参考以下步骤完成你的连接器设置',
     connector_setting: '设置连接器',
     name: '连接器名称',
-    name_tip:
-      '按钮上将展示「用 {{social_connector}} 账号登录」。名字不宜过长而导致信息无法展示完整。',
+    name_tip: '按钮上将展示「通过 {{name}} 继续」。名字不宜过长而导致信息无法展示完整。',
     logo: 'Logo 图片链接',
     logo_placeholder: 'https://your.cdn.domain/logo.png',
     logo_tip: '该图片将用于连接器的展示。获取图片链接后粘贴在此处。',
