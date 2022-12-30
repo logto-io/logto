@@ -48,7 +48,6 @@ const translation = {
     passcode_sent: 'Kodunuz yeniden gönderildi.',
     resend_after_seconds: '<span>{{seconds}}</span> saniye sonra tekrar gönder',
     resend_passcode: 'Kodu Yeniden Gönder',
-    continue_with: 'İle devam et',
     create_account_id_exists: '{{type}} {{value}} ile hesap mevcut, giriş yapmak ister misiniz?',
     sign_in_id_does_not_exist:
       '{{type}} {{value}} ile hesap mevcut değil, yeni bir hesap oluşturmak ister misiniz?',
@@ -70,7 +69,7 @@ const translation = {
     have_account: 'Already had an account?', // UNTRANSLATED
     enter_password: 'Enter Password', // UNTRANSLATED
     enter_password_for: 'Sign in with the password to {{method}} {{value}}', // UNTRANSLATED
-    enter_username: 'Enter username', // UNTRANSLATED
+    enter_username: 'Set username', // UNTRANSLATED
     enter_username_description:
       'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.', // UNTRANSLATED
     link_email: 'Link email', // UNTRANSLATED

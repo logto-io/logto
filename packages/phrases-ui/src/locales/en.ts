@@ -46,7 +46,6 @@ const translation = {
     passcode_sent: 'The verification code has been resent',
     resend_after_seconds: 'Resend after <span>{{seconds}}</span> seconds',
     resend_passcode: 'Resend verification code',
-    continue_with: 'Continue with',
     create_account_id_exists:
       'The account with {{type}} {{value}} already exists, would you like to sign in?',
     sign_in_id_does_not_exist:
@@ -69,7 +68,7 @@ const translation = {
     have_account: 'Already had an account?',
     enter_password: 'Enter Password',
     enter_password_for: 'Sign in with the password to {{method}} {{value}}',
-    enter_username: 'Enter username',
+    enter_username: 'Set username',
     enter_username_description:
       'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.',
     link_email: 'Link email',

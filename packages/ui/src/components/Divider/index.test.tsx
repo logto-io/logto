@@ -4,7 +4,7 @@ import Divider from '.';
 
 describe('Divider', () => {
   it('render with content', () => {
-    const { queryByText } = render(<Divider label="description.continue_with" />);
-    expect(queryByText('description.continue_with')).not.toBeNull();
+    const { queryByText } = render(<Divider label="description.or" />);
+    expect(queryByText('description.or')).not.toBeNull();
   });
 });
