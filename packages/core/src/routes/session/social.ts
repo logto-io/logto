@@ -52,13 +52,16 @@ export default function socialRoutes<T extends AnonymousRouterLegacy>(
       }),
     }),
     async (ctx, next) => {
+      const {
+        headers: { 'user-agent': userAgent },
+      } = ctx.request;
       await provider.interactionDetails(ctx.req, ctx.res);
       const { connectorId, state, redirectUri } = ctx.guard.body;
       assertThat(state && redirectUri, 'session.insufficient_info');
       const connector = await getLogtoConnectorById(connectorId);
       assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
       const redirectTo = await connector.getAuthorizationUri(
-        { state, redirectUri },
+        { state, redirectUri, headers: { userAgent } },
         async (connectorStorage: ConnectorSession) =>
           assignConnectorSessionResult(ctx, provider, connectorStorage)
       );

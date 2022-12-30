@@ -166,6 +166,7 @@ export type GetAuthorizationUri = (
   payload: {
     state: string;
     redirectUri: string;
+    headers?: { userAgent?: string };
   },
   setSession?: SetSession
 ) => Promise<string>;
