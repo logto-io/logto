@@ -48,7 +48,7 @@ export const mergeIdentifiers = (newIdentifier: Identifier, oldIdentifiers?: Ide
 /**
  * Categorize the identifiers based on their different use cases
  * @typedef {Object} result
- * @property {Identifier[]} userAccountIdentifiers - identifiers to verify a specific user account e.g. for sign-in and reset-password
+ * @property {Identifier[]} authIdentifiers - identifiers to verify a specific user account e.g. for sign-in and reset-password
  * @property {Identifier[]} profileIdentifiers - identifiers to verify a new anonymous profile e.g. new email, new phone or new social identity
  *
  * @param {Identifier[]} identifiers
@@ -59,10 +59,10 @@ export const categorizeIdentifiers = (
   identifiers: Identifier[],
   profile?: Profile
 ): {
-  userAccountIdentifiers: Identifier[];
+  authIdentifiers: Identifier[];
   profileIdentifiers: Identifier[];
 } => {
-  const userAccountIdentifiers = new Set<Identifier>();
+  const authIdentifiers = new Set<Identifier>();
   const profileIdentifiers = new Set<Identifier>();
 
   for (const identifier of identifiers) {
@@ -70,11 +70,11 @@ export const categorizeIdentifiers = (
       profileIdentifiers.add(identifier);
       continue;
     }
-    userAccountIdentifiers.add(identifier);
+    authIdentifiers.add(identifier);
   }
 
   return {
-    userAccountIdentifiers: [...userAccountIdentifiers],
+    authIdentifiers: [...authIdentifiers],
     profileIdentifiers: [...profileIdentifiers],
   };
 };

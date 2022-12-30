@@ -44,7 +44,7 @@ describe('interaction utils', () => {
           { email: 'foo@logto.io', connectorId: 'foo_connector' }
         )
       ).toEqual({
-        userAccountIdentifiers: [usernameIdentifier, phoneIdentifier],
+        authIdentifiers: [usernameIdentifier, phoneIdentifier],
         profileIdentifiers: [emailIdentifier, socialIdentifier],
       });
     });

@@ -3,6 +3,8 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
+import type { Identifier } from '../types/index.js';
+
 const { jest } = import.meta;
 const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
@@ -19,6 +21,7 @@ const verifyProfile = await pickDefault(import('./profile-verification.js'));
 describe('forgot password interaction profile verification', () => {
   const baseInteraction = {
     event: InteractionEvent.ForgotPassword,
+    identifiers: [{ key: 'accountId', value: 'foo' }] as Identifier[],
     accountId: 'foo',
   };
 

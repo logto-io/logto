@@ -67,7 +67,7 @@ export const verifiedSignInteractionResultGuard = z.object({
   event: z.literal(InteractionEvent.SignIn),
   accountId: z.string(),
   profile: profileGuard.optional(),
-  identifiers: z.array(identifierGuard).optional(),
+  identifiers: z.array(identifierGuard),
 });
 
 export const forgotPasswordProfileGuard = z.object({
@@ -77,5 +77,6 @@ export const forgotPasswordProfileGuard = z.object({
 export const verifiedForgotPasswordInteractionResultGuard = z.object({
   event: z.literal(InteractionEvent.ForgotPassword),
   accountId: z.string(),
+  identifiers: z.array(identifierGuard),
   profile: forgotPasswordProfileGuard,
 });

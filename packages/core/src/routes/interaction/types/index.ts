@@ -68,11 +68,13 @@ export type ForgotPasswordInteractionResult = Omit<AnonymousInteractionResult, '
 };
 
 export type AccountVerifiedInteractionResult =
-  | (Omit<SignInInteractionResult, 'accountId'> & {
+  | (Omit<SignInInteractionResult, 'accountId' | 'identifiers'> & {
       accountId: string;
+      identifiers: Identifier[];
     })
-  | (Omit<ForgotPasswordInteractionResult, 'accountId'> & {
+  | (Omit<ForgotPasswordInteractionResult, 'accountId' | 'identifiers'> & {
       accountId: string;
+      identifiers: Identifier[];
     });
 
 export type IdentifierVerifiedInteractionResult =

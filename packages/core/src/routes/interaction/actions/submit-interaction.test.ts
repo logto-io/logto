@@ -186,6 +186,7 @@ describe('submit action', () => {
     const interaction: VerifiedForgotPasswordInteractionResult = {
       event: InteractionEvent.ForgotPassword,
       accountId: 'foo',
+      identifiers: [{ key: 'accountId', value: 'foo' }],
       profile: { password: 'password' },
     };
     await submitInteraction(interaction, ctx, provider);
