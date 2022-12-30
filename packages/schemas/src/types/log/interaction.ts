@@ -16,6 +16,7 @@ export enum Method {
   Password = 'Password',
   VerificationCode = 'VerificationCode',
   Social = 'Social',
+  SocialIdentity = 'SocialIdentity',
 }
 
 export enum Action {
@@ -25,6 +26,8 @@ export enum Action {
   Update = 'Update',
   /** Submit updated info to an entity, or submit to the system. (E.g. submit an interaction, submit a verification code to get verified) */
   Submit = 'Submit',
+  /** Delete a existing entity. (E.g delete profile ) */
+  Delete = 'Delete',
   /** Change an entity to the end state. (E.g. end an interaction) */
   End = 'End',
 }
@@ -68,8 +71,8 @@ export enum Action {
  */
 export type LogKey =
   | `${Prefix}.${Action.Create | Action.End}`
-  | `${Prefix}.${InteractionEvent}.${Action.Update | Action.Submit}`
-  | `${Prefix}.${InteractionEvent}.${Field.Profile}.${Action.Update}`
+  | `${Prefix}.${InteractionEvent}.${Action.Update | Action.Submit | Action.Delete}`
+  | `${Prefix}.${InteractionEvent}.${Field.Profile}.${Action.Update | Action.Delete}`
   | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Method.VerificationCode}.${
       | Action.Create
       | Action.Submit}`

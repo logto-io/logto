@@ -66,7 +66,10 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaInteractionSie(),
     async (ctx, next) => {
       const { event, identifier, profile } = ctx.guard.body;
-      const { signInExperience } = ctx;
+      const { signInExperience, createLog } = ctx;
+
+      const eventLog = createLog(`Interaction.${event}.Update`);
+      eventLog.append({ event });
 
       verifySignInModeSettings(event, signInExperience);
 
@@ -83,6 +86,8 @@ export default function interactionRoutes<T extends AnonymousRouter>(
           event,
         }),
       ];
+
+      eventLog.append({ profile, verifiedIdentifier });
 
       await storeInteractionResult(
         { event, identifiers: verifiedIdentifier, profile },
@@ -111,11 +116,16 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaInteractionSie(),
     async (ctx, next) => {
       const { event } = ctx.guard.body;
-      const { signInExperience, interactionDetails } = ctx;
+      const { signInExperience, interactionDetails, createLog } = ctx;
+
+      const eventLog = createLog(`Interaction.${event}.Update`);
+      eventLog.append({ event });
 
       verifySignInModeSettings(event, signInExperience);
 
       const interactionStorage = getInteractionStorage(interactionDetails.result);
+
+      eventLog.append({ interactionStorage });
 
       // Forgot Password specific event interaction storage can't be shared with other types of interactions
       assertThat(
@@ -144,8 +154,10 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaInteractionSie(),
     async (ctx, next) => {
       const identifierPayload = ctx.guard.body;
-      const { signInExperience, interactionDetails } = ctx;
+      const { signInExperience, interactionDetails, createLog } = ctx;
       const interactionStorage = getInteractionStorage(interactionDetails.result);
+
+      const log = createLog(`Interaction.${interactionStorage.event}.Update`);
 
       if (interactionStorage.event !== InteractionEvent.ForgotPassword) {
         verifyIdentifierSettings(identifierPayload, signInExperience);
@@ -157,6 +169,8 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         identifierPayload,
         interactionStorage
       );
+
+      log.append({ identifier: verifiedIdentifier, interactionStorage });
 
       const identifiers = mergeIdentifiers(verifiedIdentifier, interactionStorage.identifiers);
 
@@ -177,10 +191,14 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaInteractionSie(),
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
-      const { signInExperience, interactionDetails } = ctx;
+      const { signInExperience, interactionDetails, createLog } = ctx;
 
       // Check interaction exists
-      const { event } = getInteractionStorage(interactionDetails.result);
+      const interactionStorage = getInteractionStorage(interactionDetails.result);
+      const { event } = interactionStorage;
+
+      const profileLog = createLog(`Interaction.${event}.Profile.Update`);
+      profileLog.append({ profile: profilePayload, interactionStorage });
 
       if (event !== InteractionEvent.ForgotPassword) {
         verifyProfileSettings(profilePayload, signInExperience);
@@ -210,9 +228,13 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaInteractionSie(),
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
-      const { signInExperience, interactionDetails } = ctx;
+      const { signInExperience, interactionDetails, createLog } = ctx;
 
       const interactionStorage = getInteractionStorage(interactionDetails.result);
+
+      const profileLog = createLog(`Interaction.${interactionStorage.event}.Profile.Update`);
+
+      profileLog.append({ profile: profilePayload, interactionStorage });
 
       if (interactionStorage.event !== InteractionEvent.ForgotPassword) {
         verifyProfileSettings(profilePayload, signInExperience);
@@ -238,9 +260,14 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
   // Delete Interaction Profile
   router.delete(`${interactionPrefix}/profile`, async (ctx, next) => {
-    const { interactionDetails } = ctx;
+    const { interactionDetails, createLog } = ctx;
     const interactionStorage = getInteractionStorage(interactionDetails.result);
+
+    const log = createLog(`Interaction.${interactionStorage.event}.Profile.Delete`);
+    log.append({ interactionStorage });
+
     const { profile, ...rest } = interactionStorage;
+
     await storeInteractionResult(rest, ctx, provider);
 
     ctx.status = 204;
@@ -254,11 +281,18 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaInteractionSie(),
     koaInteractionHooks(provider),
     async (ctx, next) => {
-      const { interactionDetails } = ctx;
+      const { interactionDetails, createLog } = ctx;
       const interactionStorage = getInteractionStorage(interactionDetails.result);
       const { event } = interactionStorage;
 
+      const log = createLog(`Interaction.${event}.Submit`);
+      log.append({ interaction: interactionStorage });
+
       const accountVerifiedInteraction = await verifyIdentifier(ctx, provider, interactionStorage);
+
+      if (event !== InteractionEvent.Register) {
+        log.append({ accountId: accountVerifiedInteraction.accountId });
+      }
 
       const verifiedInteraction = await verifyProfile(accountVerifiedInteraction);
 
