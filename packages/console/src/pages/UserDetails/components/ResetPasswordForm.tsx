@@ -1,5 +1,6 @@
 import type { User } from '@logto/schemas';
 import { nanoid } from 'nanoid';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ConfirmModal from '@/components/ConfirmModal';
@@ -15,10 +16,13 @@ const ResetPasswordForm = ({ onClose, userId }: Props) => {
     keyPrefix: 'admin_console',
   });
   const api = useApi();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async () => {
     const password = nanoid(8);
+    setIsLoading(true);
     await api.patch(`/api/users/${userId}/password`, { json: { password } }).json<User>();
+    setIsLoading(false);
     onClose?.(password);
   };
 
@@ -26,6 +30,7 @@ const ResetPasswordForm = ({ onClose, userId }: Props) => {
     <ConfirmModal
       isOpen
       title="user_details.reset_password.title"
+      isLoading={isLoading}
       onCancel={() => {
         onClose?.();
       }}
