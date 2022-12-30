@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.0.0-beta.18
+
+### Patch Changes
+
+- Updated dependencies [738675a7]
+  - @logto/connector-kit@1.0.0-beta.31
+  - @logto/core-kit@1.0.0-beta.30
+  - @logto/language-kit@1.0.0-beta.30
+  - @logto/schemas@1.0.0-beta.17
+  - @logto/cli@1.0.0-beta.17
+  - @logto/phrases@1.0.0-beta.17
+  - @logto/phrases-ui@1.0.0-beta.17
+  - @logto/shared@1.0.0-beta.17
+
 ## 1.0.0-beta.17
 
 ## 1.0.0-beta.16

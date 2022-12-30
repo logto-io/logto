@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.0.0-beta.17
+
+### Patch Changes
+
+- Updated dependencies [738675a7]
+  - @logto/core-kit@1.0.0-beta.30
+  - @logto/language-kit@1.0.0-beta.30
+
 ## 1.0.0-beta.13
 
 ### Minor Changes
