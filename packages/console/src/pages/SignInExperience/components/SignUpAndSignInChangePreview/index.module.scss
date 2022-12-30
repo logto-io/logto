@@ -1,33 +1,30 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  min-width: 552px;
-}
+  .description {
+    font: var(--font-body-medium);
+  }
 
-.description {
-  font: var(--font-body-medium);
-}
-
-.content {
-  display: flex;
-  flex-direction: row;
-  margin-top: _.unit(3);
-  border-radius: 8px;
-  font: var(--font-body-medium);
-  justify-content: space-between;
-  align-items: stretch;
-  column-gap: _.unit(3);
-
-  .section {
-    flex: 1;
-    background: var(--color-layer-2);
+  .content {
+    display: flex;
+    margin-top: _.unit(3);
     border-radius: 8px;
-    padding: _.unit(5);
-    color: var(--color-text);
+    font: var(--font-body-medium);
+    justify-content: space-between;
+    align-items: stretch;
+    column-gap: _.unit(3);
 
-    .title {
-      font: var(--font-title-medium);
-      margin: _.unit(1) 0;
+    .section {
+      flex: 1;
+      background: var(--color-layer-2);
+      border-radius: 8px;
+      padding: _.unit(5);
+      color: var(--color-text);
+
+      .title {
+        font: var(--font-title-medium);
+        margin: _.unit(1) 0;
+      }
     }
   }
 }
