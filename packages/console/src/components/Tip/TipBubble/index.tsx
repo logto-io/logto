@@ -16,6 +16,7 @@ type Props = HTMLProps<HTMLDivElement> & {
   placement?: TipBubblePlacement;
   horizontalAlignment?: HorizontalAlignment;
   className?: string;
+  isSuccessful?: boolean;
 };
 
 const supportHorizontalAlignmentPlacements = new Set<TipBubblePlacement>(['top', 'bottom']);
@@ -28,6 +29,7 @@ const TipBubble = (
     horizontalAlignment = 'center',
     className,
     anchorRef,
+    isSuccessful,
     ...rest
   }: Props,
   reference: ForwardedRef<HTMLDivElement>
@@ -53,6 +55,7 @@ const TipBubble = (
         styles.tipBubble,
         styles[placement],
         !position && styles.invisible,
+        isSuccessful && styles.successful,
         className
       )}
       style={{ ...position }}
