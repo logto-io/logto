@@ -103,7 +103,11 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
           description="connector_details.settings_description"
           learnMoreLink="https://docs.logto.io/docs/references/connectors"
         >
-          <ConnectorForm connector={connectorData} />
+          <ConnectorForm
+            connectorType={connectorData.type}
+            isStandard={connectorData.isStandard}
+            isDarkDefaultVisible={Boolean(connectorData.metadata.logoDark)}
+          />
           {connectorData.type !== ConnectorType.Social && (
             <SenderTester
               className={styles.senderTest}
