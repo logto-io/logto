@@ -53,6 +53,7 @@ const connectors = {
     sync_profile: 'Sync profile information',
     sync_profile_only_at_sign_up: 'Only sync at sign-up',
     sync_profile_each_sign_in: 'Always do a sync at each sign-in',
+    sync_profile_tip: 'Sync basic user profile, e.g. name and avatar.',
   },
   platform: {
     universal: 'Universal',

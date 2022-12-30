@@ -49,6 +49,7 @@ const connectors = {
     sync_profile: '开启用户资料同步',
     sync_profile_only_at_sign_up: '首次注册时同步',
     sync_profile_each_sign_in: '每次登录时同步',
+    sync_profile_tip: '同步基本用户信息，如昵称，头像等',
   },
   platform: {
     universal: '通用',
