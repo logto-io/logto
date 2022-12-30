@@ -12,7 +12,7 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
-import { uriValidator } from '@/utilities/validator';
+import { uriValidator, jsonValidator } from '@/utilities/validator';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
@@ -130,9 +130,17 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
           name="config"
           control={control}
           defaultValue={configTemplate}
-          rules={{ required: true }}
+          rules={{
+            validate: (value) => jsonValidator(value) || t('errors.invalid_json_format'),
+          }}
           render={({ field: { onChange, value } }) => (
-            <CodeEditor language="json" value={value} onChange={onChange} />
+            <CodeEditor
+              hasError={Boolean(errors.config)}
+              errorMessage={errors.config?.message}
+              language="json"
+              value={value}
+              onChange={onChange}
+            />
           )}
         />
       </FormField>
