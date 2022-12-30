@@ -52,15 +52,14 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
     <div>
       {isStandard && (
         <>
-          <FormField isRequired title="connectors.guide.name">
+          <FormField isRequired title="connectors.guide.name" tip={t('connectors.guide.name_tip')}>
             <TextInput
               placeholder={t('connectors.guide.name')}
               hasError={Boolean(errors.name)}
               {...register('name', { required: true })}
             />
-            <div className={styles.tip}>{t('connectors.guide.name_tip')}</div>
           </FormField>
-          <FormField title="connectors.guide.logo">
+          <FormField title="connectors.guide.logo" tip={t('connectors.guide.logo_tip')}>
             <TextInput
               placeholder={t('connectors.guide.logo_placeholder')}
               hasError={Boolean(errors.logo)}
@@ -70,10 +69,9 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
                   !value || uriValidator(value) || t('errors.invalid_uri_format'),
               })}
             />
-            <div className={styles.tip}>{t('connectors.guide.logo_tip')}</div>
           </FormField>
           {darkVisible && (
-            <FormField title="connectors.guide.logo_dark">
+            <FormField title="connectors.guide.logo_dark" tip={t('connectors.guide.logo_dark_tip')}>
               <TextInput
                 placeholder={t('connectors.guide.logo_dark_placeholder')}
                 hasError={Boolean(errors.logoDark)}
@@ -83,7 +81,6 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
                     !value || uriValidator(value) || t('errors.invalid_uri_format'),
                 })}
               />
-              <div className={styles.tip}>{t('connectors.guide.logo_dark_tip')}</div>
             </FormField>
           )}
           <Button
