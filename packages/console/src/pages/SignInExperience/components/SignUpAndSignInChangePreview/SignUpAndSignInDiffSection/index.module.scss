@@ -6,6 +6,10 @@
 
 .list {
   padding-left: _.unit(6);
+
+  li {
+    word-break: break-word;
+  }
 }
 
 .red {
