@@ -195,13 +195,13 @@ const LanguageDetails = () => {
             {
               title: t('sign_in_exp.others.manage_language.key'),
               dataIndex: 'phraseKey',
-              render: (phraseKey) => phraseKey,
+              render: ({ phraseKey }) => phraseKey,
               className: styles.sectionDataKey,
             },
             {
               title: t('sign_in_exp.others.manage_language.logto_source_values'),
               dataIndex: 'sourceValue',
-              render: (sourceValue) => (
+              render: ({ sourceValue }) => (
                 <div className={styles.sectionBuiltInText}>{sourceValue}</div>
               ),
             },
@@ -229,7 +229,7 @@ const LanguageDetails = () => {
                 </span>
               ),
               dataIndex: 'fieldKey',
-              render: (fieldKey) => (
+              render: ({ fieldKey }) => (
                 <Textarea className={styles.sectionInputArea} {...register(fieldKey)} />
               ),
               className: styles.inputCell,

@@ -14,7 +14,7 @@ type Props<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
   rowGroups: Array<RowGroup<TFieldValues>>;
-  columns: Array<Column<TFieldValues, TName>>;
+  columns: Array<Column<TFieldValues>>;
   rowIndexKey: TName;
   onClickRow?: (row: TFieldValues) => void;
   className?: string;
@@ -90,7 +90,7 @@ const Table = <
                   >
                     {columns.map(({ dataIndex, colSpan, className, render }) => (
                       <td key={dataIndex} colSpan={colSpan} className={className}>
-                        {render(row[dataIndex], row)}
+                        {render(row)}
                       </td>
                     ))}
                   </tr>

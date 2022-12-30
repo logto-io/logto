@@ -103,7 +103,7 @@ const ApiResources = () => {
             title: t('api_resources.api_name'),
             dataIndex: 'name',
             colSpan: 6,
-            render: (name, { id }) => (
+            render: ({ id, name }) => (
               <ItemPreview
                 title={name}
                 icon={<ResourceIcon className={styles.icon} />}
@@ -115,7 +115,7 @@ const ApiResources = () => {
             title: t('api_resources.api_identifier'),
             dataIndex: 'indicator',
             colSpan: 10,
-            render: (indicator) => <CopyToClipboard value={indicator} variant="text" />,
+            render: ({ indicator }) => <CopyToClipboard value={indicator} variant="text" />,
           },
         ]}
         placeholder={
