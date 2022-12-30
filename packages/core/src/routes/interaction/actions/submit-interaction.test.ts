@@ -153,7 +153,7 @@ describe('submit action', () => {
     });
   });
 
-  it('sign-in', async () => {
+  it('sign-in with new profile', async () => {
     getLogtoConnectorById.mockResolvedValueOnce({
       metadata: { target: 'logto' },
       dbEntry: { syncProfile: false },
@@ -182,10 +182,35 @@ describe('submit action', () => {
     expect(assignInteractionResults).toBeCalledWith(ctx, provider, { login: { accountId: 'foo' } });
   });
 
+  it('sign-in and sync new Social', async () => {
+    getLogtoConnectorById.mockResolvedValueOnce({
+      metadata: { target: 'logto' },
+      dbEntry: { syncProfile: true },
+    });
+
+    const interaction: VerifiedSignInInteractionResult = {
+      event: InteractionEvent.SignIn,
+      accountId: 'foo',
+      profile: { email: 'email' },
+      identifiers,
+    };
+
+    await submitInteraction(interaction, ctx, provider);
+    expect(getLogtoConnectorById).toBeCalledWith('logto');
+    expect(updateUserById).toBeCalledWith('foo', {
+      primaryEmail: 'email',
+      name: userInfo.name,
+      avatar: userInfo.avatar,
+      lastSignInAt: now,
+    });
+    expect(assignInteractionResults).toBeCalledWith(ctx, provider, { login: { accountId: 'foo' } });
+  });
+
   it('reset password', async () => {
     const interaction: VerifiedForgotPasswordInteractionResult = {
       event: InteractionEvent.ForgotPassword,
       accountId: 'foo',
+      identifiers: [{ key: 'accountId', value: 'foo' }],
       profile: { password: 'password' },
     };
     await submitInteraction(interaction, ctx, provider);

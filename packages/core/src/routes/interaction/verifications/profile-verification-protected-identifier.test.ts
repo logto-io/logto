@@ -24,7 +24,11 @@ mockEsm('#src/connectors/index.js', () => ({
 const verifyProfile = await pickDefault(import('./profile-verification.js'));
 
 describe('profile protected identifier verification', () => {
-  const baseInteraction = { event: InteractionEvent.SignIn, accountId: 'foo' };
+  const baseInteraction = {
+    event: InteractionEvent.SignIn,
+    identifiers: [{ key: 'accountId', value: 'foo' }] as Identifier[],
+    accountId: 'foo',
+  };
 
   afterEach(() => {
     jest.clearAllMocks();

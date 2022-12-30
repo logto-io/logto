@@ -15,7 +15,7 @@ import type {
   Identifier,
 } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
-import { isAccountVerifiedInteractionResult, categorizeIdentifiers } from '../utils/interaction.js';
+import { categorizeIdentifiers } from '../utils/interaction.js';
 
 const identifyUserByVerifiedEmailOrPhone = async (
   identifier: VerifiedEmailIdentifier | VerifiedPhoneIdentifier
@@ -77,29 +77,21 @@ export default async function verifyUserAccount(
 ): Promise<AccountVerifiedInteractionResult> {
   const { identifiers = [], accountId, profile } = interaction;
 
-  const { userAccountIdentifiers, profileIdentifiers } = categorizeIdentifiers(
-    identifiers,
-    profile
-  );
+  // Only verify authIdentifiers, should ignore those profile identifiers
+  const { authIdentifiers } = categorizeIdentifiers(identifiers, profile);
 
-  // Return the interaction directly if it is accountVerified and has no unverified userAccountIdentifiers
-  // e.g. profile fulfillment request with account already verified in the interaction result
-  if (isAccountVerifiedInteractionResult(interaction) && userAccountIdentifiers.length === 0) {
-    return interaction;
-  }
-
-  // _userAccountIdentifiers is required to identify a user account
+  // _authIdentifiers is required to identify a user account
   assertThat(
-    userAccountIdentifiers.length > 0,
+    authIdentifiers.length > 0,
     new RequestError({
       code: 'session.identifier_not_found',
       status: 404,
     })
   );
 
-  // Verify userAccountIdentifiers
+  // Verify authIdentifiers
   const accountIds = await Promise.all(
-    userAccountIdentifiers.map(async (identifier) => identifyUser(identifier))
+    authIdentifiers.map(async (identifier) => identifyUser(identifier))
   );
   const deduplicateAccountIds = deduplicate(accountIds);
 
@@ -112,10 +104,9 @@ export default async function verifyUserAccount(
     new RequestError('session.verification_failed')
   );
 
-  // Return the verified interaction and remove the consumed userAccountIdentifiers
   return {
     ...interaction,
-    identifiers: profileIdentifiers,
+    identifiers,
     accountId: deduplicateAccountIds[0],
   };
 }

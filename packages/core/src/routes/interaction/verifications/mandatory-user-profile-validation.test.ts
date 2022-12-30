@@ -32,6 +32,7 @@ describe('validateMandatoryUserProfile', () => {
   };
   const interaction: IdentifierVerifiedInteractionResult = {
     event: InteractionEvent.SignIn,
+    identifiers: [{ key: 'accountId', value: 'foo' }],
     accountId: 'foo',
   };
 
