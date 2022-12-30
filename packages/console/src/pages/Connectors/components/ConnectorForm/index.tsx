@@ -25,13 +25,13 @@ type Props = {
 
 const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { configTemplate, isStandard } = connector;
+  const { configTemplate, isStandard, logoDark } = connector;
   const {
     control,
     register,
     formState: { errors },
   } = useFormContext<ConnectorFormType>();
-  const [darkVisible, setDarkVisible] = useState(false);
+  const [darkVisible, setDarkVisible] = useState(Boolean(logoDark));
 
   const toggleDarkVisible = () => {
     setDarkVisible((previous) => !previous);
