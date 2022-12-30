@@ -12,6 +12,7 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
+import { uriValidator } from '@/utilities/validator';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
@@ -60,14 +61,27 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
             <div className={styles.tip}>{t('connectors.guide.name_tip')}</div>
           </FormField>
           <FormField title="connectors.guide.logo">
-            <TextInput placeholder={t('connectors.guide.logo_placeholder')} {...register('logo')} />
+            <TextInput
+              placeholder={t('connectors.guide.logo_placeholder')}
+              hasError={Boolean(errors.logo)}
+              errorMessage={errors.logo?.message}
+              {...register('logo', {
+                validate: (value) =>
+                  !value || uriValidator(value) || t('errors.invalid_uri_format'),
+              })}
+            />
             <div className={styles.tip}>{t('connectors.guide.logo_tip')}</div>
           </FormField>
           {darkVisible && (
             <FormField title="connectors.guide.logo_dark">
               <TextInput
                 placeholder={t('connectors.guide.logo_dark_placeholder')}
-                {...register('logoDark')}
+                hasError={Boolean(errors.logoDark)}
+                errorMessage={errors.logoDark?.message}
+                {...register('logoDark', {
+                  validate: (value) =>
+                    !value || uriValidator(value) || t('errors.invalid_uri_format'),
+                })}
               />
               <div className={styles.tip}>{t('connectors.guide.logo_dark_tip')}</div>
             </FormField>
