@@ -103,8 +103,8 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
         </FormField>
         <Tooltip
           isKeepOpen
+          isSuccessful
           anchorClassName={styles.send}
-          className={styles.successfulTooltip}
           content={conditional(showTooltip && t('connector_details.test_message_sent'))}
         >
           <Button

@@ -10,6 +10,10 @@
   font: var(--font-body-medium);
   max-width: 300px;
 
+  &.successful {
+    background: var(--color-success-60);
+  }
+
   &.invisible {
     opacity: 0%;
   }

@@ -83,7 +83,7 @@ const CopyToClipboard = ({
           </IconButton>
         )}
         <Tooltip
-          className={classNames(copyState === 'copied' && styles.successfulTooltip)}
+          isSuccessful={copyState === 'copied'}
           anchorClassName={styles.copyToolTipAnchor}
           content={t(copyState)}
         >

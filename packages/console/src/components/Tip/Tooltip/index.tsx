@@ -18,6 +18,7 @@ import * as styles from './index.module.scss';
 type Props = {
   className?: string;
   isKeepOpen?: boolean;
+  isSuccessful?: boolean;
   placement?: TipBubblePlacement;
   horizontalAlign?: HorizontalAlignment;
   anchorClassName?: string;
@@ -28,6 +29,7 @@ type Props = {
 const Tooltip = ({
   className,
   isKeepOpen = false,
+  isSuccessful = false,
   placement = 'top',
   horizontalAlign = 'center',
   anchorClassName,
@@ -135,6 +137,7 @@ const Tooltip = ({
             position={position}
             placement={placement}
             horizontalAlignment={positionState.horizontalAlign}
+            isSuccessful={isSuccessful}
           >
             <div className={styles.content}>{content}</div>
           </TipBubble>,
