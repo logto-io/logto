@@ -72,7 +72,7 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
   builder: (yargs) =>
     yargs
       .positional('action', {
-        describe: 'The action to perform, now it only accepts `deploy`',
+        describe: 'The action to perform, now it only accepts `deploy` and `list`',
         type: 'string',
         demandOption: true,
       })
@@ -81,29 +81,35 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
         type: 'string',
       }),
   handler: async ({ action, target }) => {
-    if (action !== 'deploy') {
+    if (action === 'list') {
+      const files = await getAlterationFiles();
+
+      for (const file of files) {
+        console.log(file.filename);
+      }
+    } else if (action === 'deploy') {
+      const pool = await createPoolFromConfig();
+      const alterations = await chooseAlterationsByVersion(
+        await getUndeployedAlterations(pool),
+        target
+      );
+
+      log.info(
+        `Found ${alterations.length} alteration${conditionalString(
+          alterations.length > 1 && 's'
+        )} to deploy`
+      );
+
+      // The await inside the loop is intended, alterations should run in order
+      for (const alteration of alterations) {
+        // eslint-disable-next-line no-await-in-loop
+        await deployAlteration(pool, alteration);
+      }
+
+      await pool.end();
+    } else {
       log.error('Unsupported action');
     }
-
-    const pool = await createPoolFromConfig();
-    const alterations = await chooseAlterationsByVersion(
-      await getUndeployedAlterations(pool),
-      target
-    );
-
-    log.info(
-      `Found ${alterations.length} alteration${conditionalString(
-        alterations.length > 1 && 's'
-      )} to deploy`
-    );
-
-    // The await inside the loop is intended, alterations should run in order
-    for (const alteration of alterations) {
-      // eslint-disable-next-line no-await-in-loop
-      await deployAlteration(pool, alteration);
-    }
-
-    await pool.end();
   },
 };
 

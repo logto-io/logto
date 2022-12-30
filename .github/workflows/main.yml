@@ -90,3 +90,22 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
+  
+  main-alteration-sequence:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        with:
+          node-version: 18
+
+      - name: Build
+        run: pnpm prepack
+      
+      - name: Check alteration sequence
+        run: node .scripts/check-alterations-sequence.js
