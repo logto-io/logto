@@ -11,14 +11,16 @@ concurrency:
 
 jobs:
   changesets:
+    strategy:
+      matrix:
+        group: [core, toolkit]
+
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
         with:
-          # Set Git operations with the bot PAT since we have tag protection rule
           token: ${{ secrets.BOT_PAT }}
-          fetch-depth: 0
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
@@ -39,7 +41,7 @@ jobs:
 
       - name: Version packages
         run: |
-          pnpm changeset version
+          node .scripts/version.js ${{ matrix.group }}
           pnpm i --no-frozen-lockfile
           git status
 
@@ -48,10 +50,10 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.BOT_PAT }}
-          commit-message: 'release: version packages'
+          commit-message: 'release: version ${{ matrix.group }} packages'
           committer: silverhand-bot <bot@silverhand.io>
           author: silverhand-bot <bot@silverhand.io>
           base: master
-          branch: release/version-packages
-          title: 'release: version packages'
-          body: 'This is an automatic pull request from the result of `pnpm changeset version` command. Merge it will trigger the publish flow for versioned packages.'
+          branch: release/version-${{ matrix.group }}-packages
+          title: 'release: version ${{ matrix.group }} packages'
+          body: 'This is an automatic pull request from the result of `node .scripts/version.js ${{ matrix.group }}` command. Merge it will trigger the publish flow for versioned packages.'
