@@ -51,6 +51,7 @@ if (taggedPackages.length === 0) {
 }
 
 try {
+  execSync('pnpm prepack');
   execSync('pnpm -r publish');
   execSync('git push --follow-tags');
 } catch (error) {
