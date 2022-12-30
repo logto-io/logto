@@ -1,13 +1,10 @@
 import type { Key, ReactNode } from 'react';
-import type { FieldPath, FieldPathValue, FieldValues } from 'react-hook-form';
+import type { FieldValues } from 'react-hook-form';
 
-export type Column<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = {
+export type Column<TFieldValues extends FieldValues = FieldValues> = {
   title: ReactNode;
-  dataIndex: TName;
-  render: (value: FieldPathValue<TFieldValues, TName>, row: TFieldValues) => ReactNode;
+  dataIndex: string;
+  render: (row: TFieldValues) => ReactNode;
   colSpan?: number;
   className?: string;
 };

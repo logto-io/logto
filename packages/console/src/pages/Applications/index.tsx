@@ -96,7 +96,7 @@ const Applications = () => {
             title: t('applications.application_name'),
             dataIndex: 'name',
             colSpan: 6,
-            render: (name, { type, id }) => (
+            render: ({ id, name, type }) => (
               <ItemPreview
                 title={name}
                 subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
@@ -109,7 +109,7 @@ const Applications = () => {
             title: t('applications.app_id'),
             dataIndex: 'id',
             colSpan: 10,
-            render: (id) => <CopyToClipboard value={id} variant="text" />,
+            render: ({ id }) => <CopyToClipboard value={id} variant="text" />,
           },
         ]}
         placeholder={
