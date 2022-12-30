@@ -63,6 +63,18 @@ describe('validateMandatoryUserProfile', () => {
     await expect(validateMandatoryUserProfile(baseCtx, interaction)).resolves.not.toThrow();
   });
 
+  it('register user has social profile', async () => {
+    await expect(
+      validateMandatoryUserProfile(baseCtx, {
+        event: InteractionEvent.Register,
+        profile: {
+          username: 'foo',
+          connectorId: 'logto',
+        },
+      })
+    ).resolves.not.toThrow();
+  });
+
   it('email missing but required', async () => {
     const ctx = {
       ...baseCtx,
