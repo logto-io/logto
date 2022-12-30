@@ -392,7 +392,7 @@ describe('connector route', () => {
           to: '12345678901',
           type: VerificationCodeType.Test,
           payload: {
-            code: '123456',
+            code: '000000',
           },
         },
         { test: 123 }
@@ -420,7 +420,7 @@ describe('connector route', () => {
           to: 'test@email.com',
           type: VerificationCodeType.Test,
           payload: {
-            code: 'email-test',
+            code: '000000',
           },
         },
         { test: 123 }
