@@ -1,5 +1,5 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -48,6 +48,9 @@ const ConnectorDetails = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<ConnectorResponse, RequestError>(
     connectorId && `/api/connectors/${connectorId}`
+  );
+  const { data: connectorFactory } = useSWR<ConnectorFactoryResponse>(
+    data?.isStandard && `/api/connector-factories/${data.connectorId}`
   );
   const inUse = useConnectorInUse(data?.type, data?.target);
   const isLoading = !data && !error;
@@ -113,6 +116,14 @@ const ConnectorDetails = () => {
             <div>
               <ConnectorTypeName type={data.type} />
               <div className={styles.verticalBar} />
+              {connectorFactory && (
+                <>
+                  <div className={styles.factoryName}>
+                    <UnnamedTrans resource={connectorFactory.name} />
+                  </div>
+                  <div className={styles.verticalBar} />
+                </>
+              )}
               {inUse !== undefined && (
                 <Status status={inUse ? 'enabled' : 'disabled'} variant="outlined">
                   {t('connectors.connector_status', {

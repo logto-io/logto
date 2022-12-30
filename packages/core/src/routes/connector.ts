@@ -1,6 +1,6 @@
 import { VerificationCodeType } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
-import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
+import type { ConnectorResponse, ConnectorFactoryResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import { object, string } from 'zod';
@@ -84,6 +84,29 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
     return next();
   });
+
+  router.get(
+    '/connector-factories/:id',
+    koaGuard({ params: object({ id: string().min(1) }) }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+      const connectorFactories = await loadConnectorFactories();
+      const connectorFactory = connectorFactories.find((factory) => factory.metadata.id === id);
+
+      assertThat(connectorFactory, 'entity.not_found');
+
+      const { metadata, type } = connectorFactory;
+      const response: ConnectorFactoryResponse = {
+        type,
+        ...metadata,
+      };
+      ctx.body = response;
+
+      return next();
+    }
+  );
 
   router.get(
     '/connectors/:id',
