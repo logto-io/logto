@@ -163,14 +163,16 @@ const Connectors = () => {
           </div>
         </div>
       </div>
-      <CreateForm
-        isOpen={Boolean(createConnectorType)}
-        type={createConnectorType}
-        onClose={() => {
-          navigate(`${basePathname}/${tab}`);
-          void mutate();
-        }}
-      />
+      {Boolean(createConnectorType) && (
+        <CreateForm
+          isOpen
+          type={createConnectorType}
+          onClose={() => {
+            navigate(`${basePathname}/${tab}`);
+            void mutate();
+          }}
+        />
+      )}
     </>
   );
 };
