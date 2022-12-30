@@ -9,6 +9,7 @@ import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserFlow } from '@/types';
 import { passcodeStateGuard, passcodeMethodGuard, userFlowGuard } from '@/types/guard';
+import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 type Parameters = {
   type: UserFlow;
@@ -47,7 +48,7 @@ const Passcode = () => {
       description="description.enter_passcode"
       descriptionProps={{
         address: t(`description.${method === 'email' ? 'email' : 'phone_number'}`),
-        target,
+        target: method === 'email' ? target : formatPhoneNumberWithCountryCallingCode(target),
       }}
     >
       <PasscodeValidation
