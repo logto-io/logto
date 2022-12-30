@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { promisify } from 'util';
 
-import { assert, conditionalString } from '@silverhand/essentials';
+import { assert, conditionalString, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { got } from 'got';
 import inquirer from 'inquirer';
@@ -105,8 +105,13 @@ export const isOfficialConnector = (packageName: string) =>
 
 export const getConnectorPackagesFrom = async (instancePath?: string) => {
   const directory = getConnectorDirectory(await inquireInstancePath(instancePath));
+  const packages = await trySafe(getConnectorPackagesFromDirectory(directory));
 
-  return getConnectorPackagesFromDirectory(directory);
+  if (!packages || packages.length === 0) {
+    throw new Error('No connector found');
+  }
+
+  return packages;
 };
 
 export const addConnectors = async (instancePath: string, packageNames: string[]) => {

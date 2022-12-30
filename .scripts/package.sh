@@ -18,6 +18,9 @@ packages/**/*.config.js packages/**/*.config.ts packages/**/tsconfig*.json \
 ! -path '**/node_modules/**' \
 -prune -exec rm -rf {} +
 
+# Add official connectors
+pnpm cli connector add --official -p .
+
 echo Tar
 cd ..
 tar -czf /tmp/logto.tar.gz logto
