@@ -50,5 +50,10 @@ if (taggedPackages.length === 0) {
   process.exit(0);
 }
 
-execSync('pnpm -r publish');
-execSync('git push --follow-tags');
+try {
+  execSync('pnpm -r publish');
+  execSync('git push --follow-tags');
+} catch (error) {
+  console.log(String(error.stdout));
+  throw error;
+}
