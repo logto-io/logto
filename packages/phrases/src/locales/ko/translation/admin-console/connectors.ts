@@ -51,6 +51,7 @@ const connectors = {
     sync_profile: 'Sync profile information', // UNTRANSLATED
     sync_profile_only_at_sign_up: '회원가입때 동기화',
     sync_profile_each_sign_in: '로그인 할때 마다 동기화',
+    sync_profile_tip: 'Sync basic user profile, e.g. name and avatar.', // UNTRANSLATED
   },
   platform: {
     universal: 'Universal',

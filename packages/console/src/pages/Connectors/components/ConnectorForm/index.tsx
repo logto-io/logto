@@ -132,6 +132,7 @@ const ConnectorForm = ({ connector, isAllowEditTarget }: Props) => {
               <Select options={syncProfileOptions} value={value} onChange={onChange} />
             )}
           />
+          <div className={styles.tip}>{t('connectors.guide.sync_profile_tip')}</div>
         </FormField>
       )}
     </div>
