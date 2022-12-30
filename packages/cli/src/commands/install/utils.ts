@@ -11,6 +11,7 @@ import * as semver from 'semver';
 import tar from 'tar';
 
 import { createPoolAndDatabaseIfNeeded } from '../../database.js';
+import { packageJson } from '../../package-json.js';
 import {
   cliConfig,
   ConfigKey,
@@ -101,12 +102,13 @@ export const validateDatabase = async () => {
 
 export const downloadRelease = async (url?: string) => {
   const tarFilePath = path.resolve(os.tmpdir(), './logto.tar.gz');
+  const from =
+    url ??
+    `https://github.com/logto-io/logto/releases/download/v${packageJson.version}/logto.tar.gz`;
 
-  log.info(`Download Logto to ${tarFilePath}`);
-  await downloadFile(
-    url ?? 'https://github.com/logto-io/logto/releases/latest/download/logto.tar.gz',
-    tarFilePath
-  );
+  log.info(`Download Logto from ${from}`);
+  log.info(`Target ${tarFilePath}`);
+  await downloadFile(from, tarFilePath);
 
   return tarFilePath;
 };
