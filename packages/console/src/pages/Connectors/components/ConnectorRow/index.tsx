@@ -1,10 +1,13 @@
-import type { ConnectorResponse } from '@logto/schemas';
+import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import useSWR from 'swr';
 
 import Status from '@/components/Status';
+import UnnamedTrans from '@/components/UnnamedTrans';
 import { connectorTitlePlaceHolder } from '@/consts/connectors';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
@@ -25,6 +28,16 @@ const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
   const navigate = useNavigate();
   const showSetupButton = type !== ConnectorType.Social && !firstConnector;
 
+  const standardConnectors = connectors.filter(({ isStandard }) => isStandard);
+
+  if (standardConnectors.length > 1) {
+    throw new Error('More than one standard connectors with the same target is not supported.');
+  }
+  const firstStandardConnector = standardConnectors[0];
+  const { data: connectorFactory } = useSWR<ConnectorFactoryResponse>(
+    firstStandardConnector && `/api/connector-factories/${firstStandardConnector.connectorId}`
+  );
+
   const handleClickRow = () => {
     if (showSetupButton || !firstConnector) {
       return;
@@ -39,12 +52,20 @@ const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
     );
   };
 
+  const connectorTypeColumn = useMemo(() => {
+    if (!firstStandardConnector) {
+      return t(connectorTitlePlaceHolder[type]);
+    }
+
+    return connectorFactory && <UnnamedTrans resource={connectorFactory.name} />;
+  }, [type, connectorFactory, t, firstStandardConnector]);
+
   return (
     <tr className={conditional(!showSetupButton && tableStyles.clickable)} onClick={handleClickRow}>
       <td>
         <ConnectorName type={type} connectors={connectors} onClickSetup={onClickSetup} />
       </td>
-      <td>{t(connectorTitlePlaceHolder[type])}</td>
+      <td>{connectorTypeColumn}</td>
       <td>
         {inUse !== undefined && (
           <Status status={inUse ? 'enabled' : 'disabled'}>
