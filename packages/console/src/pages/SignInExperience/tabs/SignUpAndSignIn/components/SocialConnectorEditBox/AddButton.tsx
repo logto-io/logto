@@ -44,7 +44,6 @@ const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
       dropdownClassName={classNames(
         hasSelectedConnectors ? styles.addAnotherDropdown : styles.dropdown
       )}
-      isDropdownFullWidth={!hasSelectedConnectors}
     >
       {options.map(({ target, logo, logoDark, name, connectors }) => (
         <DropdownItem
