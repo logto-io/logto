@@ -166,20 +166,6 @@ export const logFinale = (instancePath: string) => {
   );
 };
 
-export const inquireOfficialConnectors = async (initialAnswer?: boolean) => {
-  const { value } = await inquirer.prompt<{ value: boolean }>(
-    {
-      name: 'value',
-      message: 'Do you want to add official connectors?',
-      type: 'confirm',
-      default: true,
-    },
-    { value: initialAnswer }
-  );
-
-  return value;
-};
-
 export const isUrl = (string: string) => {
   try {
     // On purpose to test
