@@ -28,8 +28,12 @@ export const createSocialAuthorizationUrl = async (
 
   assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
 
+  const {
+    headers: { 'user-agent': userAgent },
+  } = ctx.request;
+
   return connector.getAuthorizationUri(
-    { state, redirectUri },
+    { state, redirectUri, headers: { userAgent } },
     async (connectorStorage: ConnectorSession) =>
       assignConnectorSessionResult(ctx, provider, connectorStorage)
   );
