@@ -12,7 +12,7 @@ NODE_ENV=production pnpm i
 echo Prune files
 # Some node packages use `src` as their dist folder, so ignore them from the rm list in the end
 find \
-.git .github .husky .vscode .parcel-cache pnpm-*.yaml *.js \
+.git .changeset .devcontainer .github .husky .parcel-cache .scripts .vscode pnpm-*.yaml *.js \
 packages/**/src \
 packages/**/*.config.js packages/**/*.config.ts packages/**/tsconfig*.json \
 ! -path '**/node_modules/**' \
