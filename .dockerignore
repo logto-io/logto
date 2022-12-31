@@ -25,7 +25,14 @@ cache
 .idea/
 *.pem
 .history
-.vscode
 .git
-.github
 .gitignore
+
+.changeset
+.changeset-staged
+.devcontainer
+.github
+.husky
+.parcel-cache
+.scripts
+.vscode
