@@ -12,7 +12,8 @@ services:
     environment:
       - TRUST_PROXY_HEADER=1
       - DB_URL=postgres://postgres:p0stgr3s@postgres:5432/logto
-      - ENDPOINT # Mandatory. Mapping env to the container.
+      # Mandatory. Mapping host env to the container thus GitPod can dynamically configure the pulic URL of Logto.
+      - ENDPOINT
   postgres:
     image: postgres:14-alpine
     user: postgres
