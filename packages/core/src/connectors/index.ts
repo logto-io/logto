@@ -15,6 +15,7 @@ import { findAllConnectors } from '#src/queries/connector.js';
 import { defaultConnectorMethods } from './consts.js';
 import { metaUrl } from './meta-url.js';
 import type { ConnectorFactory, LogtoConnector } from './types.js';
+import { checkConnectorKitVersion } from './utilities/compatibility.js';
 import { getConnectorConfig, parseMetadata, validateConnectorModule } from './utilities/index.js';
 
 const currentDirname = path.dirname(fileURLToPath(metaUrl));
@@ -39,6 +40,8 @@ export const loadConnectorFactories = async () => {
   const connectorFactories = await Promise.all(
     connectorPackages.map(async ({ path: packagePath, name }) => {
       try {
+        await checkConnectorKitVersion(packagePath);
+
         // TODO: fix type and remove `/lib/index.js` suffix once we upgrade all connectors to ESM
         const {
           default: { default: createConnector },
