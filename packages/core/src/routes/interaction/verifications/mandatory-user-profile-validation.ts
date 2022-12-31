@@ -23,7 +23,13 @@ const getMissingProfileBySignUpIdentifiers = ({
 }) => {
   const missingProfile = new Set<MissingProfile>();
 
-  if (signUp.password && !(user && isUserPasswordSet(user)) && !profile?.password) {
+  if (
+    signUp.password &&
+    !(user && isUserPasswordSet(user)) &&
+    !profile?.password &&
+    // Social identities can take place the role of password
+    !profile?.connectorId
+  ) {
     missingProfile.add(MissingProfile.password);
   }
 
