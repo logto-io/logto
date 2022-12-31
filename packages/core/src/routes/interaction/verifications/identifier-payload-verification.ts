@@ -4,11 +4,11 @@ import type {
   SocialConnectorPayload,
   SocialIdentityPayload,
 } from '@logto/schemas';
-import type { Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { verifyUserPassword } from '#src/libraries/user.js';
+import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type {
@@ -27,9 +27,15 @@ import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
 import { verifySocialIdentity } from '../utils/social-verification.js';
 
 const verifyPasswordIdentifier = async (
-  identifier: PasswordIdentifierPayload
+  event: InteractionEvent,
+  identifier: PasswordIdentifierPayload,
+  ctx: WithLogContext
 ): Promise<AccountIdIdentifier> => {
   const { password, ...identity } = identifier;
+
+  const log = ctx.createLog(`Interaction.${event}.Identifier.Password.Submit`);
+  log.append({ ...identity });
+
   const user = await findUserByIdentifier(identity);
   const verifiedUser = await verifyUserPassword(user, password);
 
@@ -43,7 +49,7 @@ const verifyPasswordIdentifier = async (
 const verifyPasscodeIdentifier = async (
   event: InteractionEvent,
   identifier: PasscodeIdentifierPayload,
-  ctx: Context,
+  ctx: WithLogContext,
   provider: Provider
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
   const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
@@ -57,7 +63,7 @@ const verifyPasscodeIdentifier = async (
 
 const verifySocialIdentifier = async (
   identifier: SocialConnectorPayload,
-  ctx: Context,
+  ctx: WithLogContext,
   provider: Provider
 ): Promise<SocialIdentifier> => {
   const userInfo = await verifySocialIdentity(identifier, ctx, provider);
@@ -67,8 +73,12 @@ const verifySocialIdentifier = async (
 
 const verifySocialIdentityInInteractionRecord = async (
   { connectorId, identityType }: SocialIdentityPayload,
+  ctx: WithLogContext,
   interactionRecord?: AnonymousInteractionResult
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
+  const log = ctx.createLog(`Interaction.SignIn.Identifier.Social.Submit`);
+  log.append({ connectorId, identityType });
+
   // Sign-In with social verified email or phone requires a social identifier in the interaction result
   const socialIdentifierRecord = interactionRecord?.identifiers?.find(
     (entity): entity is SocialIdentifier =>
@@ -86,7 +96,7 @@ const verifySocialIdentityInInteractionRecord = async (
 };
 
 export default async function identifierPayloadVerification(
-  ctx: Context,
+  ctx: WithLogContext,
   provider: Provider,
   identifierPayload: IdentifierPayload,
   interactionStorage: AnonymousInteractionResult
@@ -94,7 +104,7 @@ export default async function identifierPayloadVerification(
   const { event } = interactionStorage;
 
   if (isPasswordIdentifier(identifierPayload)) {
-    return verifyPasswordIdentifier(identifierPayload);
+    return verifyPasswordIdentifier(event, identifierPayload, ctx);
   }
 
   if (isPasscodeIdentifier(identifierPayload)) {
@@ -106,5 +116,5 @@ export default async function identifierPayloadVerification(
   }
 
   // Sign-In with social verified email or phone
-  return verifySocialIdentityInInteractionRecord(identifierPayload, interactionStorage);
+  return verifySocialIdentityInInteractionRecord(identifierPayload, ctx, interactionStorage);
 }

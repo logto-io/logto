@@ -68,7 +68,7 @@ const submitInteraction = mockEsmDefault('./actions/submit-interaction.js', () =
 const { verifyIdentifierPayload, verifyIdentifier, verifyProfile, validateMandatoryUserProfile } =
   await mockEsmWithActual('./verifications/index.js', () => ({
     verifyIdentifierPayload: jest.fn(),
-    verifyIdentifier: jest.fn(),
+    verifyIdentifier: jest.fn().mockResolvedValue({}),
     verifyProfile: jest.fn(),
     validateMandatoryUserProfile: jest.fn(),
   }));
