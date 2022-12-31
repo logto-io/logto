@@ -16,7 +16,6 @@ export enum Method {
   Password = 'Password',
   VerificationCode = 'VerificationCode',
   Social = 'Social',
-  SocialIdentity = 'SocialIdentity',
 }
 
 export enum Action {

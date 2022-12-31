@@ -76,7 +76,7 @@ const verifySocialIdentityInInteractionRecord = async (
   ctx: WithLogContext,
   interactionRecord?: AnonymousInteractionResult
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
-  const log = ctx.createLog(`Interaction.SignIn.Identifier.SocialIdentity.Submit`);
+  const log = ctx.createLog(`Interaction.SignIn.Identifier.Social.Submit`);
   log.append({ connectorId, identityType });
 
   // Sign-In with social verified email or phone requires a social identifier in the interaction result

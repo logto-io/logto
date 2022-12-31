@@ -54,8 +54,6 @@ export const logEventTitle: Record<string, string | undefined> & Partial<Record<
       'Submit and verify sign-in identifier with verification code',
     'Interaction.SignIn.Identifier.Social.Create': 'Create social sign-in authorization-url',
     'Interaction.SignIn.Identifier.Social.Submit': 'Authenticate and submit social identifier',
-    'Interaction.SignIn.Identifier.SocialIdentity.Submit':
-      'Submit and verify social verified identifier (email or phone)',
     'Interaction.Register.Identifier.VerificationCode.Create':
       'Create and send register identifier with verification code',
     'Interaction.Register.Identifier.VerificationCode.Submit':
