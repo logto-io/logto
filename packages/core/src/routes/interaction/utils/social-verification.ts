@@ -43,8 +43,7 @@ export const verifySocialIdentity = async (
   ctx: WithLogContext,
   provider: Provider
 ): Promise<SocialUserInfo> => {
-  const { createLog } = ctx;
-  const log = createLog('Interaction.SignIn.Identifier.Social.Submit');
+  const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 
   const userInfo = await getUserInfoByAuthCode(connectorId, connectorData, async () =>

@@ -29,8 +29,10 @@ describe('social-verification', () => {
   it('verifySocialIdentity', async () => {
     const provider = createMockProvider();
     // @ts-expect-error test mock context
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const ctx = { ...createMockContext(), ...createMockLogContext() } as WithLogContext;
+    const ctx: WithLogContext = {
+      ...createMockContext(),
+      ...createMockLogContext(),
+    };
     const connectorId = 'connector';
     const connectorData = { authCode: 'code' };
     const userInfo = await verifySocialIdentity({ connectorId, connectorData }, ctx, provider);

@@ -197,7 +197,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       const interactionStorage = getInteractionStorage(interactionDetails.result);
       const { event } = interactionStorage;
 
-      const profileLog = createLog(`Interaction.${event}.Profile.Update`);
+      const profileLog = createLog(`Interaction.${event}.Profile.Create`);
       profileLog.append({ profile: profilePayload, interactionStorage });
 
       if (event !== InteractionEvent.ForgotPassword) {
@@ -234,7 +234,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       const profileLog = createLog(`Interaction.${interactionStorage.event}.Profile.Update`);
 
-      profileLog.append({ profile: profilePayload, interactionStorage });
+      profileLog.append({ profile: profilePayload, interactionStorage, method: 'PATCH' });
 
       if (interactionStorage.event !== InteractionEvent.ForgotPassword) {
         verifyProfileSettings(profilePayload, signInExperience);
@@ -312,9 +312,12 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({ body: socialAuthorizationUrlPayloadGuard }),
     async (ctx, next) => {
       // Check interaction exists
-      getInteractionStorage(ctx.interactionDetails.result);
+      const { event } = getInteractionStorage(ctx.interactionDetails.result);
+      const log = ctx.createLog(`Interaction.${event}.Identifier.Social.Create`);
 
       const { body: payload } = ctx.guard;
+
+      log.append(payload);
 
       const redirectTo = await createSocialAuthorizationUrl(ctx, provider, payload);
 

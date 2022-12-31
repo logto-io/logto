@@ -71,12 +71,15 @@ export enum Action {
  */
 export type LogKey =
   | `${Prefix}.${Action.Create | Action.End}`
-  | `${Prefix}.${InteractionEvent}.${Action.Update | Action.Submit | Action.Delete}`
-  | `${Prefix}.${InteractionEvent}.${Field.Profile}.${Action.Update | Action.Delete}`
-  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Method.VerificationCode}.${
+  | `${Prefix}.${InteractionEvent}.${Action.Update | Action.Submit}`
+  | `${Prefix}.${InteractionEvent}.${Field.Profile}.${
+      | Action.Update // PATCH profile
+      | Action.Create // PUT profile
+      | Action.Delete}`
+  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Method.VerificationCode | Method.Social}.${
       | Action.Create
       | Action.Submit}`
   | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Exclude<
       Method,
-      Method.VerificationCode
+      Method.VerificationCode | Method.Social
     >}.${Action.Submit}`;

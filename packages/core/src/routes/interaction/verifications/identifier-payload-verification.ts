@@ -31,10 +31,9 @@ const verifyPasswordIdentifier = async (
   identifier: PasswordIdentifierPayload,
   ctx: WithLogContext
 ): Promise<AccountIdIdentifier> => {
-  const { createLog } = ctx;
   const { password, ...identity } = identifier;
 
-  const log = createLog(`Interaction.${event}.Identifier.Password.Submit`);
+  const log = ctx.createLog(`Interaction.${event}.Identifier.Password.Submit`);
   log.append({ ...identity });
 
   const user = await findUserByIdentifier(identity);
@@ -77,15 +76,14 @@ const verifySocialIdentityInInteractionRecord = async (
   ctx: WithLogContext,
   interactionRecord?: AnonymousInteractionResult
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
-  const { createLog } = ctx;
+  const log = ctx.createLog(`Interaction.SignIn.Identifier.SocialIdentity.Submit`);
+  log.append({ connectorId, identityType });
+
   // Sign-In with social verified email or phone requires a social identifier in the interaction result
   const socialIdentifierRecord = interactionRecord?.identifiers?.find(
     (entity): entity is SocialIdentifier =>
       entity.key === 'social' && entity.connectorId === connectorId
   );
-
-  const log = createLog(`Interaction.SignIn.Identifier.SocialIdentity.Submit`);
-  log.append({ connectorId, identityType });
 
   const verifiedSocialIdentity = socialIdentifierRecord?.userInfo[identityType];
 
