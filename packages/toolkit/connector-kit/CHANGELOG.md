@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-beta.32
+
+### Minor Changes
+
+- c0526d93: Pass user agent to connector
+
 ## 1.0.0-beta.31
 
 ### Minor Changes
