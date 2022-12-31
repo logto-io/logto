@@ -3,7 +3,6 @@ import type { CommandModule } from 'yargs';
 
 import { getDatabaseUrlFromConfig } from '../../database.js';
 import { log } from '../../utilities.js';
-import { addOfficialConnectors } from '../connector/utils.js';
 import {
   validateNodeVersion,
   inquireInstancePath,
@@ -13,7 +12,6 @@ import {
   createEnv,
   logFinale,
   decompress,
-  inquireOfficialConnectors,
   isUrl,
 } from './utils.js';
 
@@ -51,16 +49,6 @@ const installLogto = async ({ path, skipSeed, officialConnectors, downloadUrl }:
 
   // Save to dot env
   await createEnv(instancePath, await getDatabaseUrlFromConfig());
-
-  // Add official connectors
-  if (await inquireOfficialConnectors(officialConnectors)) {
-    await addOfficialConnectors(instancePath);
-  } else {
-    log.info(
-      'Skipped adding official connectors.\n\n' +
-        `  You can use the ${chalk.green('connector add')} command to add connectors at any time.\n`
-    );
-  }
 
   // Finale
   logFinale(instancePath);
