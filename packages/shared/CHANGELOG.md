@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.0.0-beta.17
+
+### Major Changes
+
+- 1c916011: Packages are now ESM.
+
+### Patch Changes
+
+- Updated dependencies [1c916011]
+- Updated dependencies [1c916011]
+  - @logto/schemas@1.0.0-beta.17
+
 ## 1.0.0-beta.16
 
 ### Patch Changes

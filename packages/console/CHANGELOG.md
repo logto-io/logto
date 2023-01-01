@@ -1,5 +1,22 @@
 # Change Log
 
+## 1.0.0-beta.18
+
+### Major Changes
+
+- 1c916011: ### Features
+
+  - Enhanced user search params #2639
+  - Web hooks
+
+  ### Improvements
+
+  - Refactored Interaction APIs and Audit logs
+
+### Patch Changes
+
+- 1c916011: Various UI improvements
+
 ## 1.0.0-beta.17
 
 ## 1.0.0-beta.16

@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.0.0-beta.18
+
+### Major Changes
+
+- 1c916011: Packages are now ESM.
+
+### Patch Changes
+
+- 1c916011: - Remove official connectors inquiry
+  - Fix default download url with current package version
+- Updated dependencies [1c916011]
+- Updated dependencies [1c916011]
+  - @logto/schemas@1.0.0-beta.17
+  - @logto/shared@1.0.0-beta.17
+
 ## 1.0.0-beta.16
 
 ### Patch Changes
