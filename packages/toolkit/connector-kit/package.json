@@ -11,9 +11,12 @@
   "type": "module",
   "main": "./lib/index.cjs",
   "exports": {
-    "types": "./lib/index.d.ts",
-    "import": "./lib/index.js",
-    "require": "./lib/index.cjs"
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "types": "./lib/index.d.ts",
   "files": [
