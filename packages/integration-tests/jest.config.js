@@ -1,6 +1,8 @@
 /** @type {import('jest').Config} */
 const config = {
+  transform: {},
   testPathIgnorePatterns: ['/node_modules/'],
+  coverageProvider: 'v8',
   setupFilesAfterEnv: ['./jest.setup.js'],
   roots: ['./lib'],
   moduleNameMapper: {

@@ -1,5 +1,6 @@
 /** @type {import('jest').Config} */
 const config = {
+  transform: {},
   preset: 'jest-puppeteer',
   setupFilesAfterEnv: ['./jest.setup.js'],
   moduleNameMapper: {
