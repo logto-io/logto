@@ -1,5 +1,33 @@
 # Change Log
 
+## 1.0.0-beta.18
+
+### Major Changes
+
+- 1c916011: Packages are now ESM.
+
+### Minor Changes
+
+- 1c916011: ### Features
+
+  - Enhanced user search params #2639
+  - Web hooks
+
+  ### Improvements
+
+  - Refactored Interaction APIs and Audit logs
+
+### Patch Changes
+
+- Updated dependencies [1c916011]
+- Updated dependencies [1c916011]
+- Updated dependencies [1c916011]
+  - @logto/cli@1.0.0-beta.18
+  - @logto/phrases@1.0.0-beta.17
+  - @logto/phrases-ui@1.0.0-beta.17
+  - @logto/schemas@1.0.0-beta.17
+  - @logto/shared@1.0.0-beta.17
+
 ## 1.0.0-beta.17
 
 ## 1.0.0-beta.16
