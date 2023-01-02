@@ -652,7 +652,6 @@ importers:
     specifiers:
       '@logto/core-kit': workspace:*
       '@logto/language-kit': workspace:*
-      '@rollup/plugin-typescript': ^10.0.1
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/essentials': 2.1.0
       '@silverhand/ts-config': 1.2.1
@@ -660,7 +659,6 @@ importers:
       eslint: ^8.21.0
       lint-staged: ^13.0.0
       prettier: ^2.8.1
-      rollup: ^3.6.0
       tslib: ^2.4.1
       typescript: ^4.9.4
       zod: ^3.20.2
@@ -671,14 +669,12 @@ importers:
     optionalDependencies:
       zod: 3.20.2
     devDependencies:
-      '@rollup/plugin-typescript': 10.0.1_ksuudmkloucy44p3irodiuckje
       '@silverhand/eslint-config': 1.3.0_k3lfx77tsvurbevhk73p7ygch4
       '@silverhand/ts-config': 1.2.1_typescript@4.9.4
       '@types/node': 16.11.12
       eslint: 8.21.0
       lint-staged: 13.0.0
       prettier: 2.8.1
-      rollup: 3.7.4
       tslib: 2.4.1
       typescript: 4.9.4
 
@@ -686,7 +682,6 @@ importers:
     specifiers:
       '@jest/types': ^29.0.3
       '@logto/language-kit': workspace:*
-      '@rollup/plugin-typescript': ^10.0.1
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/eslint-config-react': 1.3.0
       '@silverhand/essentials': 2.1.0
@@ -703,7 +698,6 @@ importers:
       nanoid: ^4.0.0
       postcss: ^8.4.6
       prettier: ^2.8.1
-      rollup: ^3.6.0
       stylelint: ^14.9.1
       tslib: ^2.4.1
       typescript: ^4.9.4
@@ -716,7 +710,6 @@ importers:
       zod: 3.20.2
     devDependencies:
       '@jest/types': 29.3.1
-      '@rollup/plugin-typescript': 10.0.1_ksuudmkloucy44p3irodiuckje
       '@silverhand/eslint-config': 1.3.0_k3lfx77tsvurbevhk73p7ygch4
       '@silverhand/eslint-config-react': 1.3.0_5rwnaekeqjwkki32tn67stomfe
       '@silverhand/essentials': 2.1.0
@@ -731,7 +724,6 @@ importers:
       lint-staged: 13.0.0
       postcss: 8.4.18
       prettier: 2.8.1
-      rollup: 3.7.4
       stylelint: 14.9.1
       tslib: 2.4.1
       typescript: 4.9.4
@@ -739,7 +731,6 @@ importers:
   packages/toolkit/language-kit:
     specifiers:
       '@jest/types': ^29.0.3
-      '@rollup/plugin-typescript': ^10.0.1
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/ts-config': 1.2.1
       '@types/jest': ^29.0.3
@@ -748,7 +739,6 @@ importers:
       jest: ^29.0.3
       lint-staged: ^13.0.0
       prettier: ^2.8.1
-      rollup: ^3.6.0
       tslib: ^2.4.1
       typescript: ^4.9.4
       zod: ^3.20.2
@@ -756,7 +746,6 @@ importers:
       zod: 3.20.2
     devDependencies:
       '@jest/types': 29.3.1
-      '@rollup/plugin-typescript': 10.0.1_ksuudmkloucy44p3irodiuckje
       '@silverhand/eslint-config': 1.3.0_k3lfx77tsvurbevhk73p7ygch4
       '@silverhand/ts-config': 1.2.1_typescript@4.9.4
       '@types/jest': 29.1.2
@@ -765,7 +754,6 @@ importers:
       jest: 29.3.1_@types+node@16.11.12
       lint-staged: 13.0.0
       prettier: 2.8.1
-      rollup: 3.7.4
       tslib: 2.4.1
       typescript: 4.9.4
 
@@ -3331,41 +3319,6 @@ packages:
     resolution: {integrity: sha512-Yykovind6xzqAqd0t5umrdAGPlGLTE80cy80UkEnbt8Zv5zEYTFzJSNPQ81TY8BSpRreubu1oE54iHBv2UVnTQ==}
     dev: true
 
-  /@rollup/plugin-typescript/10.0.1_ksuudmkloucy44p3irodiuckje:
-    resolution: {integrity: sha512-wBykxRLlX7EzL8BmUqMqk5zpx2onnmRMSw/l9M1sVfkJvdwfxogZQVNUM9gVMJbjRLDR5H6U0OMOrlDGmIV45A==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^2.14.0||^3.0.0
-      tslib: '*'
-      typescript: '>=3.7.0'
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-      tslib:
-        optional: true
-    dependencies:
-      '@rollup/pluginutils': 5.0.2_rollup@3.7.4
-      resolve: 1.22.1
-      rollup: 3.7.4
-      tslib: 2.4.1
-      typescript: 4.9.4
-    dev: true
-
-  /@rollup/pluginutils/5.0.2_rollup@3.7.4:
-    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      '@types/estree': 1.0.0
-      estree-walker: 2.0.2
-      picomatch: 2.3.1
-      rollup: 3.7.4
-    dev: true
-
   /@sideway/address/4.1.4:
     resolution: {integrity: sha512-7vwq+rOHVWjyXxVlR76Agnvhy8I9rpzjosTESvmhNeXOXdZZB15Fl+TI9x1SiHZH5Jv2wTGduSxFDIaq0m3DUw==}
     dependencies:
@@ -3913,10 +3866,6 @@ packages:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
       '@types/ms': 0.7.31
-    dev: true
-
-  /@types/estree/1.0.0:
-    resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
     dev: true
 
   /@types/etag/1.8.1:
@@ -6851,10 +6800,6 @@ packages:
   /estraverse/5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
     engines: {node: '>=4.0'}
-    dev: true
-
-  /estree-walker/2.0.2:
-    resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
     dev: true
 
   /esutils/2.0.3:
@@ -13121,14 +13066,6 @@ packages:
       fast-safe-stringify: 2.1.1
       globalthis: 1.0.2
       semver-compare: 1.0.0
-
-  /rollup/3.7.4:
-    resolution: {integrity: sha512-jN9rx3k5pfg9H9al0r0y1EYKSeiRANZRYX32SuNXAnKzh6cVyf4LZVto1KAuDnbHT03E1CpsgqDKaqQ8FZtgxw==}
-    engines: {node: '>=14.18.0', npm: '>=8.0.0'}
-    hasBin: true
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: true
 
   /run-async/2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}

@@ -4,7 +4,7 @@ import path from 'path';
 
 import { connectorDirectory } from '@logto/cli/lib/constants.js';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utilities.js';
-import type { AllConnector, CreateConnector } from '@logto/connector-kit';
+import type { AllConnector } from '@logto/connector-kit';
 import { validateConfig } from '@logto/connector-kit';
 import { findPackage } from '@logto/shared';
 import chalk from 'chalk';
@@ -15,8 +15,8 @@ import { findAllConnectors } from '#src/queries/connector.js';
 import { defaultConnectorMethods } from './consts.js';
 import { metaUrl } from './meta-url.js';
 import type { ConnectorFactory, LogtoConnector } from './types.js';
-import { checkConnectorKitVersion } from './utilities/compatibility.js';
 import { getConnectorConfig, parseMetadata, validateConnectorModule } from './utilities/index.js';
+import { loadConnector } from './utilities/loader.js';
 
 const currentDirname = path.dirname(fileURLToPath(metaUrl));
 
@@ -40,17 +40,7 @@ export const loadConnectorFactories = async () => {
   const connectorFactories = await Promise.all(
     connectorPackages.map(async ({ path: packagePath, name }) => {
       try {
-        await checkConnectorKitVersion(packagePath);
-
-        // TODO: fix type and remove `/lib/index.js` suffix once we upgrade all connectors to ESM
-        const {
-          default: { default: createConnector },
-          // eslint-disable-next-line no-restricted-syntax
-        } = (await import(packagePath + '/lib/index.js')) as {
-          default: {
-            default: CreateConnector<AllConnector>;
-          };
-        };
+        const createConnector = await loadConnector(packagePath);
         const rawConnector = await createConnector({ getConfig: getConnectorConfig });
         validateConnectorModule(rawConnector);
 
