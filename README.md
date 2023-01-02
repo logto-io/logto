@@ -86,7 +86,7 @@ We have a [contributing guideline](https://github.com/logto-io/logto/blob/master
 ## Resources
 
 - [📖 Logto docs](https://docs.logto.io)
-- [✍️ Silverhand blog](https://silverhand.notion.site/Silverhand-Blog-68e122832cfb413ca8786e08152d00ac)
+- ✍️ Silverhand blog [Notion](https://silverhand.notion.site/Silverhand-Blog-68e122832cfb413ca8786e08152d00ac) [Substack](https://silverhand.substack.com/)
 
 <br/>
 
