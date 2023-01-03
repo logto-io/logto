@@ -9,11 +9,11 @@
   },
   "license": "MPL-2.0",
   "type": "module",
-  "main": "./lib/index.cjs",
+  "main": "./lib/index.js",
   "exports": {
+    "default": "./lib/index.js",
     "types": "./lib/index.d.ts",
-    "import": "./lib/index.js",
-    "require": "./lib/index.cjs"
+    "import": "./lib/index.js"
   },
   "types": "./lib/index.d.ts",
   "files": [
@@ -24,7 +24,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
-    "build": "rm -rf lib/ && rollup -c && tsc -p tsconfig.build.json",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
     "build:test": "pnpm build -p tsconfig.test.json --sourcemap",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
@@ -48,7 +48,6 @@
   },
   "devDependencies": {
     "@jest/types": "^29.0.3",
-    "@rollup/plugin-typescript": "^10.0.1",
     "@silverhand/eslint-config": "1.3.0",
     "@silverhand/eslint-config-react": "1.3.0",
     "@silverhand/essentials": "2.1.0",
@@ -63,7 +62,6 @@
     "lint-staged": "^13.0.0",
     "postcss": "^8.4.6",
     "prettier": "^2.8.1",
-    "rollup": "^3.6.0",
     "stylelint": "^14.9.1",
     "tslib": "^2.4.1",
     "typescript": "^4.9.4"
