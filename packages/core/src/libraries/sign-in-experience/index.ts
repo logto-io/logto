@@ -82,15 +82,9 @@ export const getSignInExperienceForApplication = async (
 
   // Insert Demo App Notification
   if (applicationId === demoAppApplicationId) {
-    const {
-      socialSignInConnectorTargets,
-      languageInfo: { autoDetect, fallbackLanguage },
-    } = signInExperience;
+    const { socialSignInConnectorTargets } = signInExperience;
 
-    const notification = i18next.t(
-      'demo_app.notification',
-      autoDetect ? undefined : { lng: fallbackLanguage }
-    );
+    const notification = i18next.t('demo_app.notification');
 
     return {
       ...signInExperience,
