@@ -16,27 +16,19 @@ const useConnectorInUse = () => {
 
       const { type, target } = connector;
 
-      if (type === ConnectorType.Email) {
-        return (
-          data.signIn.methods.some(
-            ({ identifier, verificationCode }) =>
-              verificationCode && identifier === SignInIdentifier.Email
-          ) ||
-          (data.signUp.identifiers.includes(SignInIdentifier.Email) && data.signUp.verify)
-        );
+      if (type === ConnectorType.Social) {
+        return data.socialSignInConnectorTargets.includes(target);
       }
 
-      if (type === ConnectorType.Sms) {
-        return (
-          data.signIn.methods.some(
-            ({ identifier, verificationCode }) =>
-              verificationCode && identifier === SignInIdentifier.Sms
-          ) ||
-          (data.signUp.identifiers.includes(SignInIdentifier.Sms) && data.signUp.verify)
-        );
-      }
+      const relatedIdentifier =
+        type === ConnectorType.Email ? SignInIdentifier.Email : SignInIdentifier.Sms;
 
-      return data.socialSignInConnectorTargets.includes(target);
+      return (
+        data.signIn.methods.some(
+          ({ identifier, verificationCode }) => verificationCode && identifier === relatedIdentifier
+        ) ||
+        (data.signUp.identifiers.includes(relatedIdentifier) && data.signUp.verify)
+      );
     },
     [data]
   );
