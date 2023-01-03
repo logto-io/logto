@@ -34,3 +34,6 @@ jobs:
           target: http://localhost:3001
           cmd_options: '-a'
           fail_action: true
+          allow_issue_writing: false
+
+      # TODO: send slack message on failure
