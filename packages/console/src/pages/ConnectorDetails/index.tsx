@@ -52,7 +52,8 @@ const ConnectorDetails = () => {
   const { data: connectorFactory } = useSWR<ConnectorFactoryResponse>(
     data?.isStandard && `/api/connector-factories/${data.connectorId}`
   );
-  const inUse = useConnectorInUse(data?.type, data?.target);
+  const { isConnectorInUse } = useConnectorInUse();
+  const inUse = isConnectorInUse(data);
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
@@ -124,13 +125,11 @@ const ConnectorDetails = () => {
                   <div className={styles.verticalBar} />
                 </>
               )}
-              {inUse !== undefined && (
-                <Status status={inUse ? 'enabled' : 'disabled'} variant="outlined">
-                  {t('connectors.connector_status', {
-                    context: inUse ? 'in_use' : 'not_in_use',
-                  })}
-                </Status>
-              )}
+              <Status status={inUse ? 'enabled' : 'disabled'} variant="outlined">
+                {t('connectors.connector_status', {
+                  context: inUse ? 'in_use' : 'not_in_use',
+                })}
+              </Status>
               <div className={styles.verticalBar} />
               <div className={styles.text}>ID</div>
               <CopyToClipboard value={data.id} />

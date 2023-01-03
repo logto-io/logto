@@ -1,41 +1,49 @@
-import type { SignInExperience } from '@logto/schemas';
+import type { ConnectorResponse, SignInExperience } from '@logto/schemas';
 import { SignInIdentifier, ConnectorType } from '@logto/schemas';
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 import type { RequestError } from './use-api';
 
-const useConnectorInUse = (type?: ConnectorType, target?: string): boolean | undefined => {
-  const { data } = useSWR<SignInExperience, RequestError>(target && type && '/api/sign-in-exp');
+const useConnectorInUse = () => {
+  const { data } = useSWR<SignInExperience, RequestError>('/api/sign-in-exp');
 
-  if (!data) {
-    return;
-  }
+  const isConnectorInUse = useCallback(
+    (connector?: ConnectorResponse) => {
+      if (!connector || !data) {
+        return false;
+      }
 
-  if (type === ConnectorType.Email) {
-    return (
-      data.signIn.methods.some(
-        ({ identifier, verificationCode }) =>
-          verificationCode && identifier === SignInIdentifier.Email
-      ) ||
-      (data.signUp.identifiers.includes(SignInIdentifier.Email) && data.signUp.verify)
-    );
-  }
+      const { type, target } = connector;
 
-  if (type === ConnectorType.Sms) {
-    return (
-      data.signIn.methods.some(
-        ({ identifier, verificationCode }) =>
-          verificationCode && identifier === SignInIdentifier.Sms
-      ) ||
-      (data.signUp.identifiers.includes(SignInIdentifier.Sms) && data.signUp.verify)
-    );
-  }
+      if (type === ConnectorType.Email) {
+        return (
+          data.signIn.methods.some(
+            ({ identifier, verificationCode }) =>
+              verificationCode && identifier === SignInIdentifier.Email
+          ) ||
+          (data.signUp.identifiers.includes(SignInIdentifier.Email) && data.signUp.verify)
+        );
+      }
 
-  if (!target) {
-    return;
-  }
+      if (type === ConnectorType.Sms) {
+        return (
+          data.signIn.methods.some(
+            ({ identifier, verificationCode }) =>
+              verificationCode && identifier === SignInIdentifier.Sms
+          ) ||
+          (data.signUp.identifiers.includes(SignInIdentifier.Sms) && data.signUp.verify)
+        );
+      }
 
-  return data.socialSignInConnectorTargets.includes(target);
+      return data.socialSignInConnectorTargets.includes(target);
+    },
+    [data]
+  );
+
+  return {
+    isConnectorInUse,
+  };
 };
 
 export default useConnectorInUse;
