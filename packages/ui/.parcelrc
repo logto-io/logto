@@ -4,5 +4,8 @@
     "**/assets/icons/*.svg": [
       "@parcel/transformer-svg-react"
     ]
+  },
+  "optimizers": {
+    "*.{jpg,jpeg,png}": []
   }
 }
