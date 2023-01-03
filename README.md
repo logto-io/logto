@@ -15,7 +15,7 @@
 [![gitpod](https://img.shields.io/badge/gitpod-available-f09439)](https://gitpod.io/#https://github.com/logto-io/demo)
 [![render](https://img.shields.io/badge/render-deploy-5364e9)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
 
-Logto[^info] helps you build the sign-in, auth, and user identity within minutes.
+Logto[^info] helps you build sign-in, auth, and user identity.
 
 🧑‍💻 **A frontend-to-backend identity solution**
 
@@ -40,7 +40,7 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 ## Get started
 
 - Visit our 🎨 [website](https://logto.io) for a brief introduction if you are new to Logto.
-- A step-by-step guide is available on 📖 [docs.logto.io](https://docs.logto.io) (also in [简体中文](https://docs.logto.io/zh-cn)).
+- A step-by-step guide is available on 📖 [docs.logto.io](https://docs.logto.io).
 
 ### Launch Logto
 
@@ -86,7 +86,7 @@ We have a [contributing guideline](https://github.com/logto-io/logto/blob/master
 ## Resources
 
 - [📖 Logto docs](https://docs.logto.io)
-- [✍️ Silverhand blog](https://silverhand.notion.site/Silverhand-Blog-68e122832cfb413ca8786e08152d00ac)
+- ✍️ Silverhand blog [Notion](https://silverhand.notion.site/Silverhand-Blog-68e122832cfb413ca8786e08152d00ac) [Substack](https://silverhand.substack.com/)
 
 <br/>
 
