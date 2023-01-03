@@ -1,6 +1,6 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import ConnectorLogo from '@/components/ConnectorLogo';
@@ -13,18 +13,19 @@ import {
 } from '@/consts/connectors';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
+import type { ConnectorGroup } from '@/types/connector';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  type: ConnectorType;
-  connectors: ConnectorResponse[];
-  onClickSetup?: () => void;
+  connectorGroup: ConnectorGroup;
 };
 
-const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
+const ConnectorName = ({ connectorGroup }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { type, connectors } = connectorGroup;
   const connector = connectors[0];
+  const navigate = useNavigate();
 
   if (!connector) {
     const PlaceholderIcon = connectorPlaceholderIcon[type];
@@ -35,7 +36,12 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
           <div className={styles.previewTitle}>
             <div>{t(connectorTitlePlaceHolder[type])}</div>
             {type !== ConnectorType.Social && (
-              <Button title="general.set_up" onClick={onClickSetup} />
+              <Button
+                title="general.set_up"
+                onClick={() => {
+                  navigate(`/connectors/${ConnectorsTabs.Passwordless}/create/${type}`);
+                }}
+              />
             )}
           </div>
         }

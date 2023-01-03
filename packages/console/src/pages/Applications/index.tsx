@@ -124,9 +124,10 @@ const Applications = () => {
             }}
           />
         }
-        onClickRow={({ id }) => {
-          navigate(buildDetailsPathname(id));
-        }}
+        clickRowHandler={({ id }) =>
+          () => {
+            navigate(buildDetailsPathname(id));
+          }}
         onRetry={async () => mutate(undefined, true)}
       />
       <Pagination

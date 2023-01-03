@@ -16,12 +16,15 @@ type Props<
   rowGroups: Array<RowGroup<TFieldValues>>;
   columns: Array<Column<TFieldValues>>;
   rowIndexKey: TName;
-  onClickRow?: (row: TFieldValues) => void;
+  clickRowHandler?: (row: TFieldValues) => (() => void) | undefined;
   className?: string;
   headerClassName?: string;
   bodyClassName?: string;
   isLoading?: boolean;
+  placeholderTitle?: string;
+  placeholderContent?: string;
   placeholder?: ReactNode;
+  placeholderImage?: ReactNode;
   errorMessage?: string;
   onRetry?: () => void;
 };
@@ -33,12 +36,15 @@ const Table = <
   rowGroups,
   columns,
   rowIndexKey,
-  onClickRow,
+  clickRowHandler,
   className,
   headerClassName,
   bodyClassName,
   isLoading,
+  placeholderTitle,
+  placeholderContent,
   placeholder,
+  placeholderImage,
   errorMessage,
   onRetry,
 }: Props<TFieldValues, TName>) => {
@@ -69,7 +75,14 @@ const Table = <
               <TableError columns={columns.length} content={errorMessage} onRetry={onRetry} />
             )}
             {!isLoading && !hasData && placeholder && (
-              <TableEmpty columns={columns.length}>{placeholder}</TableEmpty>
+              <TableEmpty
+                columns={columns.length}
+                title={placeholderTitle}
+                content={placeholderContent}
+                image={placeholderImage}
+              >
+                {placeholder}
+              </TableEmpty>
             )}
             {rowGroups.map(({ key, label, labelClassName, data }) => (
               <Fragment key={key}>
@@ -80,21 +93,25 @@ const Table = <
                     </td>
                   </tr>
                 )}
-                {data?.map((row) => (
-                  <tr
-                    key={row[rowIndexKey]}
-                    className={classNames(onClickRow && styles.clickable)}
-                    onClick={() => {
-                      onClickRow?.(row);
-                    }}
-                  >
-                    {columns.map(({ dataIndex, colSpan, className, render }) => (
-                      <td key={dataIndex} colSpan={colSpan} className={className}>
-                        {render(row)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                {data?.map((row) => {
+                  const onClickRow = clickRowHandler?.(row);
+
+                  return (
+                    <tr
+                      key={row[rowIndexKey]}
+                      className={classNames(onClickRow && styles.clickable)}
+                      onClick={() => {
+                        onClickRow?.();
+                      }}
+                    >
+                      {columns.map(({ dataIndex, colSpan, className, render }) => (
+                        <td key={dataIndex} colSpan={colSpan} className={className}>
+                          {render(row)}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
               </Fragment>
             ))}
           </tbody>
