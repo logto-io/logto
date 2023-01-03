@@ -1,9 +1,8 @@
 import { ConnectorType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
+import { DragDropProvider, DraggableItem } from '@/components/DragDrop';
 import TextLink from '@/components/TextLink';
-import DragDropProvider from '@/components/Transfer/DragDropProvider';
-import DraggableItem from '@/components/Transfer/DraggableItem';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import type { ConnectorGroup } from '@/types/connector';
 
