@@ -4,15 +4,23 @@
   display: flex;
   align-items: center;
 
-  :not(:first-child) {
-    margin-left: _.unit(2);
-  }
-
   .searchInput {
     width: 286px;
   }
 
   .searchIcon {
     color: var(--color-text-secondary);
+  }
+
+  :not(:first-child) {
+    margin-left: _.unit(2);
+  }
+
+  &.inputOnly {
+    width: 100%;
+
+    .searchInput {
+      width: 100%;
+    }
   }
 }

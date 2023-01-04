@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import type { FormEventHandler, KeyboardEventHandler } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,11 +12,22 @@ import * as styles from './index.module.scss';
 type Props = {
   defaultValue?: string;
   isClearable?: boolean;
+  isInputOnly?: boolean;
+  placeholder?: string;
+  onChange?: (value: string) => void;
   onSearch?: (value: string) => void;
   onClearSearch?: () => void;
 };
 
-const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearch }: Props) => {
+const Search = ({
+  defaultValue = '',
+  isClearable = false,
+  isInputOnly = false,
+  placeholder,
+  onChange,
+  onSearch,
+  onClearSearch,
+}: Props) => {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -25,8 +37,9 @@ const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearc
     }
   };
 
-  const handleSearchChange: FormEventHandler<HTMLInputElement> = (event) => {
-    setInputValue(event.currentTarget.value);
+  const handleSearchChange: FormEventHandler<HTMLInputElement> = ({ currentTarget: { value } }) => {
+    setInputValue(value);
+    onChange?.(value);
   };
 
   const handleClick = () => {
@@ -34,18 +47,18 @@ const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearc
   };
 
   return (
-    <div className={styles.search}>
+    <div className={classNames(styles.search, isInputOnly && styles.inputOnly)}>
       <div className={styles.searchInput}>
         <TextInput
           value={inputValue}
           icon={<SearchIcon className={styles.searchIcon} />}
-          placeholder={t('general.search_placeholder')}
+          placeholder={placeholder ?? t('general.search_placeholder')}
           onChange={handleSearchChange}
           onKeyPress={handleSearchKeyPress}
         />
       </div>
-      <Button title="general.search" onClick={handleClick} />
-      {isClearable && (
+      {!isInputOnly && <Button title="general.search" onClick={handleClick} />}
+      {!isInputOnly && isClearable && (
         <Button size="small" type="text" title="general.clear_result" onClick={onClearSearch} />
       )}
     </div>
