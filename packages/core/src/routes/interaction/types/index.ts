@@ -1,3 +1,4 @@
+import type { SocialUserInfo } from '@logto/connector-kit';
 import type {
   UsernamePasswordPayload,
   EmailPasswordPayload,
@@ -7,8 +8,6 @@ import type {
   InteractionEvent,
 } from '@logto/schemas';
 import type { z } from 'zod';
-
-import type { SocialUserInfo } from '#src/connectors/types.js';
 
 import type {
   sendPasscodePayloadGuard,

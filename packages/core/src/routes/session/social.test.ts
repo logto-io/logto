@@ -1,10 +1,10 @@
 import { ConnectorType } from '@logto/connector-kit';
+import type { SocialUserInfo } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
 import { mockLogtoConnectorList, mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
 import { getLogtoConnectorById } from '#src/connectors/index.js';
-import type { SocialUserInfo } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
