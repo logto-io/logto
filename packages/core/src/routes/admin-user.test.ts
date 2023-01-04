@@ -171,14 +171,17 @@ describe('adminUserRoutes', () => {
       .send({ username, name, avatar, primaryEmail, primaryPhone });
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      ...mockUserResponse,
-      primaryEmail,
-      primaryPhone,
-      username,
-      name,
-      avatar,
-    });
+    expect(updateUserById).toHaveBeenCalledWith(
+      'foo',
+      {
+        primaryEmail,
+        primaryPhone,
+        username,
+        name,
+        avatar,
+      },
+      expect.anything()
+    );
   });
 
   it('PATCH /users/:userId should allow empty string for clearable fields', async () => {
@@ -186,12 +189,15 @@ describe('adminUserRoutes', () => {
       .patch('/users/foo')
       .send({ name: '', avatar: '', primaryEmail: '' });
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      ...mockUserResponse,
-      name: '',
-      avatar: '',
-      primaryEmail: '',
-    });
+    expect(updateUserById).toHaveBeenCalledWith(
+      'foo',
+      {
+        name: '',
+        avatar: '',
+        primaryEmail: '',
+      },
+      expect.anything()
+    );
   });
 
   it('PATCH /users/:userId should allow null values for clearable fields', async () => {
@@ -199,12 +205,15 @@ describe('adminUserRoutes', () => {
       .patch('/users/foo')
       .send({ name: null, username: null, primaryPhone: null });
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      ...mockUserResponse,
-      name: null,
-      username: null,
-      primaryPhone: null,
-    });
+    expect(updateUserById).toHaveBeenCalledWith(
+      'foo',
+      {
+        name: null,
+        username: null,
+        primaryPhone: null,
+      },
+      expect.anything()
+    );
   });
 
   it('PATCH /users/:userId should allow partial update', async () => {
@@ -212,18 +221,24 @@ describe('adminUserRoutes', () => {
 
     const updateNameResponse = await userRequest.patch('/users/foo').send({ name });
     expect(updateNameResponse.status).toEqual(200);
-    expect(updateNameResponse.body).toEqual({
-      ...mockUserResponse,
-      name,
-    });
+    expect(updateUserById).toHaveBeenCalledWith(
+      'foo',
+      {
+        name,
+      },
+      expect.anything()
+    );
 
     const avatar = 'https://www.michael.png';
     const updateAvatarResponse = await userRequest.patch('/users/foo').send({ avatar });
     expect(updateAvatarResponse.status).toEqual(200);
-    expect(updateAvatarResponse.body).toEqual({
-      ...mockUserResponse,
-      avatar,
-    });
+    expect(updateUserById).toHaveBeenCalledWith(
+      'foo',
+      {
+        avatar,
+      },
+      expect.anything()
+    );
   });
 
   it('PATCH /users/:userId should throw when avatar URL is invalid', async () => {
@@ -289,7 +304,7 @@ describe('adminUserRoutes', () => {
       ]
     );
     await expect(
-      userRequest.patch('/users/foo').send({ roleNames: ['admin'] })
+      userRequest.patch('/users/foo').send({ roleNames: ['superadmin'] })
     ).resolves.toHaveProperty('status', 400);
     expect(findUserById).toHaveBeenCalledTimes(1);
     expect(updateUserById).not.toHaveBeenCalled();
@@ -300,10 +315,7 @@ describe('adminUserRoutes', () => {
 
     const response = await userRequest.patch('/users/foo').send({ roleNames });
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      ...mockUserResponse,
-      roleNames,
-    });
+    expect(response.body).toEqual(mockUserResponse);
   });
 
   it('PATCH /users/:userId/password', async () => {

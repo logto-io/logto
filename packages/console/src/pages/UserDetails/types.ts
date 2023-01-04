@@ -4,6 +4,5 @@ export type UserDetailsForm = {
   username: string;
   name: string;
   avatar: string;
-  roleNames: string[];
   customData: string;
 };

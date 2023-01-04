@@ -26,7 +26,9 @@ import {
   updateUserById,
   hasUserWithEmail,
   hasUserWithPhone,
+  findUsersByRoleName,
 } from '#src/queries/user.js';
+import { deleteUsersRolesByUserIdAndRoleId, insertUsersRoles } from '#src/queries/users-roles.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
@@ -42,9 +44,12 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         const search = parseSearchParamsForSearch(searchParams);
         const hideAdminUser = isTrue(searchParams.get('hideAdminUser'));
 
+        const adminUsers = hideAdminUser ? await findUsersByRoleName(UserRole.Admin) : [];
+        const excludeUserIds = adminUsers.map(({ id }) => id);
+
         const [{ count }, users] = await Promise.all([
-          countUsers(search, hideAdminUser),
-          findUsers(limit, offset, search, hideAdminUser),
+          countUsers(search, excludeUserIds),
+          findUsers(limit, offset, search, excludeUserIds),
         ]);
 
         ctx.pagination.totalCount = count;
@@ -194,31 +199,57 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      await findUserById(userId);
+      const user = await findUserById(userId);
       await checkIdentifierCollision(body, userId);
 
+      const { roleNames, ...userUpdates } = body;
+
       // Temp solution to validate the existence of input roleNames
-      if (body.roleNames?.length) {
-        const { roleNames } = body;
+      if (roleNames) {
         const roles = await findRolesByRoleNames(roleNames);
 
-        if (roles.length !== roleNames.length) {
-          const resourcesNotFound = roleNames.filter(
-            (roleName) => !roles.some(({ name }) => roleName === name)
+        // Insert new roles
+        const newRoles = roleNames.filter((roleName) => !user.roleNames.includes(roleName));
+
+        if (newRoles.length > 0) {
+          await insertUsersRoles(
+            newRoles.map((roleName) => {
+              const role = roles.find(({ name }) => name === roleName);
+
+              if (!role) {
+                throw new RequestError({
+                  status: 400,
+                  code: 'user.invalid_role_names',
+                  data: {
+                    roleNames: roleName,
+                  },
+                });
+              }
+
+              return {
+                userId: user.id,
+                roleId: role.id,
+              };
+            })
           );
-          throw new RequestError({
-            status: 400,
-            code: 'user.invalid_role_names',
-            data: {
-              roleNames: resourcesNotFound.join(','),
-            },
-          });
         }
+
+        // Remove old roles
+        const oldRoles = user.roleNames.filter((roleName) => !roleNames.includes(roleName));
+
+        await Promise.all(
+          oldRoles.map(async (roleName) => {
+            const role = roles.find(({ name }) => name === roleName);
+
+            if (role) {
+              await deleteUsersRolesByUserIdAndRoleId(user.id, role.id);
+            }
+          })
+        );
       }
 
-      const user = await updateUserById(userId, body, 'replace');
-
-      ctx.body = pick(user, ...userInfoSelectFields);
+      const updatedUser = await updateUserById(userId, userUpdates, 'replace');
+      ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
     }

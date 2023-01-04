@@ -7,7 +7,12 @@ import envSet from '#src/env-set/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import { findAllRoles, findRolesByRoleNames } from './roles.js';
+import {
+  findAllRoles,
+  findRoleByRoleName,
+  findRolesByRoleIds,
+  findRolesByRoleNames,
+} from './roles.js';
 
 const { jest } = import.meta;
 
@@ -38,6 +43,41 @@ describe('roles query', () => {
     });
 
     await expect(findAllRoles()).resolves.toEqual([mockRole]);
+  });
+
+  it('findRolesByRoleIds', async () => {
+    const roleIds = [mockRole.id];
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.id} in (${sql.join(roleIds, sql`, `)})
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([roleIds.join(', ')]);
+
+      return createMockQueryResult([mockRole]);
+    });
+
+    await expect(findRolesByRoleIds(roleIds)).resolves.toEqual([mockRole]);
+  });
+
+  it('findRoleByRoleName', async () => {
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.name} = ${mockRole.name}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([mockRole.name]);
+
+      return createMockQueryResult([mockRole]);
+    });
+
+    await expect(findRoleByRoleName(mockRole.name)).resolves.toEqual(mockRole);
   });
 
   it('findRolesByRoleNames', async () => {
