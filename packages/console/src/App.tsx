@@ -25,6 +25,7 @@ import Connectors from '@/pages/Connectors';
 import Dashboard from '@/pages/Dashboard';
 import GetStarted from '@/pages/GetStarted';
 import NotFound from '@/pages/NotFound';
+import Roles from '@/pages/Roles';
 import Settings from '@/pages/Settings';
 import SignInExperience from '@/pages/SignInExperience';
 import UserDetails from '@/pages/UserDetails';
@@ -50,6 +51,7 @@ const Main = () => {
             <Route element={<AppContent />}>
               <Route path="*" element={<NotFound />} />
               <Route path="get-started" element={<GetStarted />} />
+              <Route path="dashboard" element={<Dashboard />} />
               <Route path="applications">
                 <Route index element={<Applications />} />
                 <Route path="create" element={<Applications />} />
@@ -59,6 +61,10 @@ const Main = () => {
                 <Route index element={<ApiResources />} />
                 <Route path="create" element={<ApiResources />} />
                 <Route path=":id" element={<ApiResourceDetails />} />
+              </Route>
+              <Route path="sign-in-experience">
+                <Route index element={<Navigate replace to={SignInExperiencePage.BrandingTab} />} />
+                <Route path=":tab" element={<SignInExperience />} />
               </Route>
               <Route path="connectors">
                 <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
@@ -73,16 +79,14 @@ const Main = () => {
                 <Route path=":userId/logs" element={<UserDetails />} />
                 <Route path=":userId/logs/:logId" element={<AuditLogDetails />} />
               </Route>
-              <Route path="sign-in-experience">
-                <Route index element={<Navigate replace to={SignInExperiencePage.BrandingTab} />} />
-                <Route path=":tab" element={<SignInExperience />} />
-              </Route>
-              <Route path="settings" element={<Settings />} />
               <Route path="audit-logs">
                 <Route index element={<AuditLogs />} />
                 <Route path=":logId" element={<AuditLogDetails />} />
               </Route>
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="roles">
+                <Route index element={<Roles />} />
+              </Route>
+              <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>
         </AppBoundary>

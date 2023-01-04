@@ -7,6 +7,7 @@ const tabs = {
   connectors: 'Connectors',
   users: 'User Management',
   audit_logs: 'Audit Logs',
+  roles: 'Roles',
   docs: 'Docs',
   contact_us: 'Contact Us',
   settings: 'Settings',

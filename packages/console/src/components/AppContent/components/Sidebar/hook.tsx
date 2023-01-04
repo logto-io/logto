@@ -2,6 +2,7 @@ import type { Optional } from '@silverhand/essentials';
 import type { FC, ReactNode } from 'react';
 import type { TFuncKey } from 'react-i18next';
 
+import Role from '@/assets/images/role.svg';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
@@ -95,6 +96,15 @@ export const useSidebarMenuItems = (): {
         {
           Icon: List,
           title: 'audit_logs',
+        },
+      ],
+    },
+    {
+      title: 'access_control',
+      items: [
+        {
+          Icon: Role,
+          title: 'roles',
         },
       ],
     },
