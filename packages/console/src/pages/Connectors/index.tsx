@@ -151,8 +151,8 @@ const Connectors = () => {
           }}
           isLoading={isLoading}
           errorMessage={error?.body?.message ?? error?.message}
+          placeholder={placeholder}
           onRetry={async () => mutate(undefined, true)}
-          {...placeholder}
         />
       </div>
       {Boolean(createConnectorType) && (
