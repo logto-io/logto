@@ -25,6 +25,7 @@ import Connectors from '@/pages/Connectors';
 import Dashboard from '@/pages/Dashboard';
 import GetStarted from '@/pages/GetStarted';
 import NotFound from '@/pages/NotFound';
+import RoleDetails from '@/pages/RoleDetails';
 import Roles from '@/pages/Roles';
 import Settings from '@/pages/Settings';
 import SignInExperience from '@/pages/SignInExperience';
@@ -85,6 +86,7 @@ const Main = () => {
               </Route>
               <Route path="roles">
                 <Route index element={<Roles />} />
+                <Route path=":id" element={<RoleDetails />} />
               </Route>
               <Route path="settings" element={<Settings />} />
             </Route>
