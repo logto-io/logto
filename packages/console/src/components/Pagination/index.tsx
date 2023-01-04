@@ -1,3 +1,4 @@
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import ReactPaginate from 'react-paginate';
@@ -15,10 +16,18 @@ type Props = {
   totalCount?: number;
   pageSize: number;
   className?: string;
+  variant?: 'default' | 'tiny';
   onChange?: (pageIndex: number) => void;
 };
 
-const Pagination = ({ pageIndex, totalCount, pageSize, className, onChange }: Props) => {
+const Pagination = ({
+  pageIndex,
+  totalCount,
+  pageSize,
+  className,
+  variant = 'default',
+  onChange,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   /**
@@ -37,8 +46,15 @@ const Pagination = ({ pageIndex, totalCount, pageSize, className, onChange }: Pr
   const min = (pageIndex - 1) * pageSize + 1;
   const max = Math.min(pageIndex * pageSize, cachedTotalCount);
 
+  const pageRangeConfig = conditional(
+    variant === 'tiny' && {
+      pageRangeDisplayed: -1,
+      marginPagesDisplayed: 0,
+    }
+  );
+
   return (
-    <div className={classNames(styles.container, className)}>
+    <div className={classNames(styles.container, styles[variant], className)}>
       <div className={styles.positionInfo}>
         {t('general.page_info', { min, max, total: cachedTotalCount })}
       </div>
@@ -63,6 +79,7 @@ const Pagination = ({ pageIndex, totalCount, pageSize, className, onChange }: Pr
         onPageChange={({ selected }) => {
           onChange?.(selected + 1);
         }}
+        {...pageRangeConfig}
       />
     </div>
   );
