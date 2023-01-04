@@ -132,10 +132,9 @@ const ApiResources = () => {
             />
           ),
         }}
-        clickRowHandler={({ id }) =>
-          () => {
-            navigate(buildDetailsPathname(id));
-          }}
+        rowClickHandler={({ id }) => {
+          navigate(buildDetailsPathname(id));
+        }}
         onRetry={async () => mutate(undefined, true)}
       />
       <Pagination

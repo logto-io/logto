@@ -1,3 +1,4 @@
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
@@ -23,7 +24,8 @@ type Props<
   rowGroups: Array<RowGroup<TFieldValues>>;
   columns: Array<Column<TFieldValues>>;
   rowIndexKey: TName;
-  clickRowHandler?: (row: TFieldValues) => (() => void) | undefined;
+  isRowClickable?: (row: TFieldValues) => boolean;
+  rowClickHandler?: (row: TFieldValues) => void | undefined;
   className?: string;
   headerClassName?: string;
   bodyClassName?: string;
@@ -40,7 +42,8 @@ const Table = <
   rowGroups,
   columns,
   rowIndexKey,
-  clickRowHandler,
+  rowClickHandler,
+  isRowClickable = () => Boolean(rowClickHandler),
   className,
   headerClassName,
   bodyClassName,
@@ -95,13 +98,21 @@ const Table = <
                   </tr>
                 )}
                 {data?.map((row) => {
-                  const onClickRow = clickRowHandler?.(row);
+                  const rowClickable = isRowClickable(row);
+
+                  const onClick = conditional(
+                    rowClickable &&
+                      rowClickHandler &&
+                      (() => {
+                        rowClickHandler(row);
+                      })
+                  );
 
                   return (
                     <tr
                       key={row[rowIndexKey]}
-                      className={classNames(onClickRow && styles.clickable)}
-                      onClick={onClickRow}
+                      className={classNames(rowClickable && styles.clickable)}
+                      onClick={onClick}
                     >
                       {columns.map(({ dataIndex, colSpan, className, render }) => (
                         <td key={dataIndex} colSpan={colSpan} className={className}>

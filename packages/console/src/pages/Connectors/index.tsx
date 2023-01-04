@@ -134,7 +134,8 @@ const Connectors = () => {
               render: (connectorGroup) => <ConnectorStatus connectorGroup={connectorGroup} />,
             },
           ]}
-          clickRowHandler={({ connectors }) => {
+          isRowClickable={({ connectors }) => Boolean(connectors[0])}
+          rowClickHandler={({ connectors }) => {
             const firstConnector = connectors[0];
 
             if (!firstConnector) {
@@ -143,11 +144,9 @@ const Connectors = () => {
 
             const { type, id } = firstConnector;
 
-            return () => {
-              navigate(
-                `${type === ConnectorType.Social ? socialPathname : passwordlessPathname}/${id}`
-              );
-            };
+            navigate(
+              `${type === ConnectorType.Social ? socialPathname : passwordlessPathname}/${id}`
+            );
           }}
           isLoading={isLoading}
           errorMessage={error?.body?.message ?? error?.message}
