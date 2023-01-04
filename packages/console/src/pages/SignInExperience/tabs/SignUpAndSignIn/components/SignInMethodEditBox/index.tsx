@@ -3,8 +3,7 @@ import { conditional } from '@silverhand/essentials';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import DragDropProvider from '@/components/Transfer/DragDropProvider';
-import DraggableItem from '@/components/Transfer/DraggableItem';
+import { DragDropProvider, DraggableItem } from '@/components/DragDrop';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import {
   identifierRequiredConnectorMapping,
