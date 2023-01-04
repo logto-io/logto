@@ -45,7 +45,7 @@ export const getConnectorGroups = <
   }, []);
 };
 
-export const getConnectorGroupPlaceholder = (type: ConnectorType): ConnectorGroup => ({
+export const getDefaultConnectorGroupValue = (type: ConnectorType): ConnectorGroup => ({
   id: nanoid(),
   connectors: [],
   type,

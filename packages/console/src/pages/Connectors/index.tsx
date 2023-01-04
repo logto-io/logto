@@ -24,7 +24,7 @@ import ConnectorTypeColumn from './components/ConnectorTypeColumn';
 import CreateForm from './components/CreateForm';
 import SignInExperienceSetupNotice from './components/SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
-import { getConnectorGroupPlaceholder } from './utils';
+import { getDefaultConnectorGroupValue } from './utils';
 
 const basePathname = '/connectors';
 const passwordlessPathname = `${basePathname}/${ConnectorsTabs.Passwordless}`;
@@ -56,11 +56,11 @@ const Connectors = () => {
   const passwordlessConnectors = useMemo(() => {
     const smsConnector =
       data?.find(({ type }) => type === ConnectorType.Sms) ??
-      getConnectorGroupPlaceholder(ConnectorType.Sms);
+      getDefaultConnectorGroupValue(ConnectorType.Sms);
 
     const emailConnector =
       data?.find(({ type }) => type === ConnectorType.Email) ??
-      getConnectorGroupPlaceholder(ConnectorType.Email);
+      getDefaultConnectorGroupValue(ConnectorType.Email);
 
     return [smsConnector, emailConnector];
   }, [data]);
@@ -71,6 +71,23 @@ const Connectors = () => {
   );
 
   const connectors = isSocial ? socialConnectors : passwordlessConnectors;
+
+  const placeholderConfig = conditional(
+    isSocial && {
+      placeholderTitle: t('connectors.type.social'),
+      placeholderContent: t('connectors.social_connector_eg'),
+      placeholderImage: isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />,
+      placeholder: (
+        <Button
+          title="connectors.create"
+          type="outline"
+          onClick={() => {
+            navigate(buildCreatePathname(ConnectorType.Social));
+          }}
+        />
+      ),
+    }
+  );
 
   return (
     <>
@@ -135,19 +152,8 @@ const Connectors = () => {
           }}
           isLoading={isLoading}
           errorMessage={error?.body?.message ?? error?.message}
-          placeholderTitle={t('connectors.type.social')}
-          placeholderContent={t('connectors.social_connector_eg')}
-          placeholderImage={isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />}
-          placeholder={
-            <Button
-              title="connectors.create"
-              type="outline"
-              onClick={() => {
-                navigate(buildCreatePathname(ConnectorType.Social));
-              }}
-            />
-          }
           onRetry={async () => mutate(undefined, true)}
+          {...placeholderConfig}
         />
       </div>
       {Boolean(createConnectorType) && (
