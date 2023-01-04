@@ -3,6 +3,7 @@ import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 
 import EmailConnector from '@/assets/images/connector-email.svg';
 import SmsConnectorIcon from '@/assets/images/connector-sms.svg';
+import type { ConnectorGroup } from '@/types/connector';
 
 type TitlePlaceHolder = {
   [key in ConnectorType]: AdminConsoleKey;
@@ -32,3 +33,25 @@ export const connectorPlaceholderIcon: ConnectorPlaceholderIcon = Object.freeze(
   [ConnectorType.Sms]: SmsConnectorIcon,
   [ConnectorType.Email]: EmailConnector,
 } as const);
+
+export const defaultSmsConnectorGroup: ConnectorGroup = {
+  id: 'default-sms-connector',
+  type: ConnectorType.Sms,
+  connectors: [],
+  name: { en: '' },
+  description: { en: '' },
+  logo: '',
+  logoDark: null,
+  target: '',
+};
+
+export const defaultEmailConnectorGroup: ConnectorGroup = {
+  id: 'default-email-connector',
+  type: ConnectorType.Email,
+  connectors: [],
+  name: { en: '' },
+  description: { en: '' },
+  logo: '',
+  logoDark: null,
+  target: '',
+};

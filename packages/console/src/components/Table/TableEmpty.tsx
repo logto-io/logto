@@ -10,13 +10,13 @@ import * as styles from './TableEmpty.module.scss';
 
 type Props = {
   title?: string;
-  content?: string;
+  description?: string;
   image?: ReactNode;
   children?: ReactNode;
   columns: number;
 };
 
-const TableEmpty = ({ title, content, image, children, columns }: Props) => {
+const TableEmpty = ({ title, description, image, children, columns }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
 
@@ -26,7 +26,7 @@ const TableEmpty = ({ title, content, image, children, columns }: Props) => {
         <div className={styles.tableEmpty}>
           {image ?? (theme === AppearanceMode.LightMode ? <Empty /> : <EmptyDark />)}
           <div className={styles.title}>{title ?? t('errors.empty')}</div>
-          {content && <div className={styles.content}>{content}</div>}
+          {description && <div className={styles.description}>{description}</div>}
           {children}
         </div>
       </td>

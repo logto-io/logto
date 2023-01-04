@@ -23,12 +23,14 @@ const useConnectorInUse = () => {
       const relatedIdentifier =
         type === ConnectorType.Email ? SignInIdentifier.Email : SignInIdentifier.Sms;
 
-      return (
-        data.signIn.methods.some(
-          ({ identifier, verificationCode }) => verificationCode && identifier === relatedIdentifier
-        ) ||
-        (data.signUp.identifiers.includes(relatedIdentifier) && data.signUp.verify)
+      const usedInSignUp =
+        data.signUp.identifiers.includes(relatedIdentifier) && data.signUp.verify;
+
+      const usedInSignIn = data.signIn.methods.some(
+        ({ identifier, verificationCode }) => verificationCode && identifier === relatedIdentifier
       );
+
+      return usedInSignUp || usedInSignIn;
     },
     [data]
   );

@@ -1,3 +1,4 @@
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
@@ -9,6 +10,13 @@ import TableLoading from './TableLoading';
 import * as styles from './index.module.scss';
 import type { Column, RowGroup } from './types';
 
+export type TablePlaceholder = {
+  title?: string;
+  description?: string;
+  image?: ReactNode;
+  content?: ReactNode;
+};
+
 type Props<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
@@ -16,12 +24,13 @@ type Props<
   rowGroups: Array<RowGroup<TFieldValues>>;
   columns: Array<Column<TFieldValues>>;
   rowIndexKey: TName;
-  onClickRow?: (row: TFieldValues) => void;
+  isRowClickable?: (row: TFieldValues) => boolean;
+  rowClickHandler?: (row: TFieldValues) => void;
   className?: string;
   headerClassName?: string;
   bodyClassName?: string;
   isLoading?: boolean;
-  placeholder?: ReactNode;
+  placeholder?: TablePlaceholder;
   errorMessage?: string;
   onRetry?: () => void;
 };
@@ -33,7 +42,8 @@ const Table = <
   rowGroups,
   columns,
   rowIndexKey,
-  onClickRow,
+  rowClickHandler,
+  isRowClickable = () => Boolean(rowClickHandler),
   className,
   headerClassName,
   bodyClassName,
@@ -69,7 +79,14 @@ const Table = <
               <TableError columns={columns.length} content={errorMessage} onRetry={onRetry} />
             )}
             {!isLoading && !hasData && placeholder && (
-              <TableEmpty columns={columns.length}>{placeholder}</TableEmpty>
+              <TableEmpty
+                columns={columns.length}
+                title={placeholder.title}
+                description={placeholder.description}
+                image={placeholder.image}
+              >
+                {placeholder.content}
+              </TableEmpty>
             )}
             {rowGroups.map(({ key, label, labelClassName, data }) => (
               <Fragment key={key}>
@@ -80,21 +97,31 @@ const Table = <
                     </td>
                   </tr>
                 )}
-                {data?.map((row) => (
-                  <tr
-                    key={row[rowIndexKey]}
-                    className={classNames(onClickRow && styles.clickable)}
-                    onClick={() => {
-                      onClickRow?.(row);
-                    }}
-                  >
-                    {columns.map(({ dataIndex, colSpan, className, render }) => (
-                      <td key={dataIndex} colSpan={colSpan} className={className}>
-                        {render(row)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                {data?.map((row) => {
+                  const rowClickable = isRowClickable(row);
+
+                  const onClick = conditional(
+                    rowClickable &&
+                      rowClickHandler &&
+                      (() => {
+                        rowClickHandler(row);
+                      })
+                  );
+
+                  return (
+                    <tr
+                      key={row[rowIndexKey]}
+                      className={classNames(rowClickable && styles.clickable)}
+                      onClick={onClick}
+                    >
+                      {columns.map(({ dataIndex, colSpan, className, render }) => (
+                        <td key={dataIndex} colSpan={colSpan} className={className}>
+                          {render(row)}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
               </Fragment>
             ))}
           </tbody>

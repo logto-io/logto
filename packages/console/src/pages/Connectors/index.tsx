@@ -11,17 +11,18 @@ import SocialConnectorEmpty from '@/assets/images/social-connector-empty.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import TableEmpty from '@/components/Table/TableEmpty';
-import TableError from '@/components/Table/TableError';
-import TableLoading from '@/components/Table/TableLoading';
+import type { TablePlaceholder } from '@/components/Table';
+import Table from '@/components/Table';
+import { defaultEmailConnectorGroup, defaultSmsConnectorGroup } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import { useTheme } from '@/hooks/use-theme';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import * as tableStyles from '@/scss/table.module.scss';
 
-import ConnectorRow from './components/ConnectorRow';
+import ConnectorName from './components/ConnectorName';
+import ConnectorStatus from './components/ConnectorStatus';
 import ConnectorStatusField from './components/ConnectorStatusField';
+import ConnectorTypeColumn from './components/ConnectorTypeColumn';
 import CreateForm from './components/CreateForm';
 import SignInExperienceSetupNotice from './components/SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
@@ -53,25 +54,39 @@ const Connectors = () => {
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
 
-  const emailConnector = useMemo(() => {
-    const emailConnectorGroup = data?.find(({ type }) => type === ConnectorType.Email);
+  const passwordlessConnectors = useMemo(() => {
+    const smsConnector =
+      data?.find(({ type }) => type === ConnectorType.Sms) ?? defaultSmsConnectorGroup;
 
-    return emailConnectorGroup?.connectors[0];
+    const emailConnector =
+      data?.find(({ type }) => type === ConnectorType.Email) ?? defaultEmailConnectorGroup;
+
+    return [smsConnector, emailConnector];
   }, [data]);
 
-  const smsConnector = useMemo(() => {
-    const smsConnectorGroup = data?.find(({ type }) => type === ConnectorType.Sms);
+  const socialConnectors = useMemo(
+    () => data?.filter(({ type }) => type === ConnectorType.Social),
+    [data]
+  );
 
-    return smsConnectorGroup?.connectors[0];
-  }, [data]);
+  const connectors = isSocial ? socialConnectors : passwordlessConnectors;
 
-  const socialConnectorGroups = useMemo(() => {
-    if (!isSocial) {
-      return;
+  const placeholder: TablePlaceholder | undefined = conditional(
+    isSocial && {
+      title: t('connectors.type.social'),
+      description: t('connectors.social_connector_eg'),
+      image: isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />,
+      content: (
+        <Button
+          title="connectors.create"
+          type="outline"
+          onClick={() => {
+            navigate(buildCreatePathname(ConnectorType.Social));
+          }}
+        />
+      ),
     }
-
-    return data?.filter(({ type }) => type === ConnectorType.Social);
-  }, [data, isSocial]);
+  );
 
   return (
     <>
@@ -95,73 +110,49 @@ const Connectors = () => {
           <TabNavItem href={passwordlessPathname}>{t('connectors.tab_email_sms')}</TabNavItem>
           <TabNavItem href={socialPathname}>{t('connectors.tab_social')}</TabNavItem>
         </TabNav>
-        <div className={resourcesStyles.table}>
-          <div className={tableStyles.scrollable}>
-            <table className={classNames(!data && tableStyles.empty)}>
-              <colgroup>
-                <col className={styles.connectorName} />
-                <col />
-                <col />
-              </colgroup>
-              <thead>
-                <tr>
-                  <th>{t('connectors.connector_name')}</th>
-                  <th>{t('connectors.connector_type')}</th>
-                  <th>
-                    <ConnectorStatusField />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {!data && error && (
-                  <TableError
-                    columns={3}
-                    content={error.body?.message ?? error.message}
-                    onRetry={async () => mutate(undefined, true)}
-                  />
-                )}
-                {isLoading && <TableLoading columns={3} />}
-                {socialConnectorGroups?.length === 0 && (
-                  <TableEmpty
-                    columns={3}
-                    title={t('connectors.type.social')}
-                    content={t('connectors.social_connector_eg')}
-                    image={isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />}
-                  >
-                    <Button
-                      title="connectors.create"
-                      type="outline"
-                      onClick={() => {
-                        navigate(buildCreatePathname(ConnectorType.Social));
-                      }}
-                    />
-                  </TableEmpty>
-                )}
-                {!isLoading && !isSocial && (
-                  <ConnectorRow
-                    connectors={smsConnector ? [smsConnector] : []}
-                    type={ConnectorType.Sms}
-                    onClickSetup={() => {
-                      navigate(buildCreatePathname(ConnectorType.Sms));
-                    }}
-                  />
-                )}
-                {!isLoading && !isSocial && (
-                  <ConnectorRow
-                    connectors={emailConnector ? [emailConnector] : []}
-                    type={ConnectorType.Email}
-                    onClickSetup={() => {
-                      navigate(buildCreatePathname(ConnectorType.Email));
-                    }}
-                  />
-                )}
-                {socialConnectorGroups?.map(({ connectors, id }) => (
-                  <ConnectorRow key={id} connectors={connectors} type={ConnectorType.Social} />
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <Table
+          className={resourcesStyles.table}
+          rowIndexKey="id"
+          rowGroups={[{ key: 'connectors', data: connectors }]}
+          columns={[
+            {
+              title: t('connectors.connector_name'),
+              dataIndex: 'name',
+              colSpan: 6,
+              render: (connectorGroup) => <ConnectorName connectorGroup={connectorGroup} />,
+            },
+            {
+              title: t('connectors.connector_type'),
+              dataIndex: 'type',
+              colSpan: 5,
+              render: (connectorGroup) => <ConnectorTypeColumn connectorGroup={connectorGroup} />,
+            },
+            {
+              title: <ConnectorStatusField />,
+              dataIndex: 'status',
+              colSpan: 5,
+              render: (connectorGroup) => <ConnectorStatus connectorGroup={connectorGroup} />,
+            },
+          ]}
+          isRowClickable={({ connectors }) => Boolean(connectors[0])}
+          rowClickHandler={({ connectors }) => {
+            const firstConnector = connectors[0];
+
+            if (!firstConnector) {
+              return;
+            }
+
+            const { type, id } = firstConnector;
+
+            navigate(
+              `${type === ConnectorType.Social ? socialPathname : passwordlessPathname}/${id}`
+            );
+          }}
+          isLoading={isLoading}
+          errorMessage={error?.body?.message ?? error?.message}
+          placeholder={placeholder}
+          onRetry={async () => mutate(undefined, true)}
+        />
       </div>
       {Boolean(createConnectorType) && (
         <CreateForm
