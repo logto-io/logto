@@ -69,7 +69,7 @@ jobs:
 
       # Setup environment
       - name: Setup Postgres
-        uses: ikalnytskyi/action-setup-postgres@v3
+        uses: ikalnytskyi/action-setup-postgres@v4
 
       - uses: actions/download-artifact@v3
         with:
