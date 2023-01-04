@@ -118,18 +118,20 @@ const ApiResources = () => {
             render: ({ indicator }) => <CopyToClipboard value={indicator} variant="text" />,
           },
         ]}
-        placeholder={
-          <Button
-            title="api_resources.create"
-            type="outline"
-            onClick={() => {
-              navigate({
-                pathname: createApiResourcePathname,
-                search,
-              });
-            }}
-          />
-        }
+        placeholder={{
+          content: (
+            <Button
+              title="api_resources.create"
+              type="outline"
+              onClick={() => {
+                navigate({
+                  pathname: createApiResourcePathname,
+                  search,
+                });
+              }}
+            />
+          ),
+        }}
         clickRowHandler={({ id }) =>
           () => {
             navigate(buildDetailsPathname(id));

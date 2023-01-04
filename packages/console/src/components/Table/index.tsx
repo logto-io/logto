@@ -9,6 +9,13 @@ import TableLoading from './TableLoading';
 import * as styles from './index.module.scss';
 import type { Column, RowGroup } from './types';
 
+export type TablePlaceholder = {
+  title?: string;
+  description?: string;
+  image?: ReactNode;
+  content?: ReactNode;
+};
+
 type Props<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
@@ -21,10 +28,7 @@ type Props<
   headerClassName?: string;
   bodyClassName?: string;
   isLoading?: boolean;
-  placeholderTitle?: string;
-  placeholderContent?: string;
-  placeholder?: ReactNode;
-  placeholderImage?: ReactNode;
+  placeholder?: TablePlaceholder;
   errorMessage?: string;
   onRetry?: () => void;
 };
@@ -41,10 +45,7 @@ const Table = <
   headerClassName,
   bodyClassName,
   isLoading,
-  placeholderTitle,
-  placeholderContent,
   placeholder,
-  placeholderImage,
   errorMessage,
   onRetry,
 }: Props<TFieldValues, TName>) => {
@@ -77,11 +78,11 @@ const Table = <
             {!isLoading && !hasData && placeholder && (
               <TableEmpty
                 columns={columns.length}
-                title={placeholderTitle}
-                content={placeholderContent}
-                image={placeholderImage}
+                title={placeholder.title}
+                description={placeholder.description}
+                image={placeholder.image}
               >
-                {placeholder}
+                {placeholder.content}
               </TableEmpty>
             )}
             {rowGroups.map(({ key, label, labelClassName, data }) => (

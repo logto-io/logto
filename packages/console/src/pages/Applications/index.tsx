@@ -112,18 +112,20 @@ const Applications = () => {
             render: ({ id }) => <CopyToClipboard value={id} variant="text" />,
           },
         ]}
-        placeholder={
-          <Button
-            title="applications.create"
-            type="outline"
-            onClick={() => {
-              navigate({
-                pathname: createApplicationPathname,
-                search,
-              });
-            }}
-          />
-        }
+        placeholder={{
+          content: (
+            <Button
+              title="applications.create"
+              type="outline"
+              onClick={() => {
+                navigate({
+                  pathname: createApplicationPathname,
+                  search,
+                });
+              }}
+            />
+          ),
+        }}
         clickRowHandler={({ id }) =>
           () => {
             navigate(buildDetailsPathname(id));

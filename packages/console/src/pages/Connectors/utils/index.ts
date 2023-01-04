@@ -1,6 +1,5 @@
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { nanoid } from 'nanoid';
 
 import type { ConnectorGroup } from '@/types/connector';
 
@@ -44,14 +43,3 @@ export const getConnectorGroups = <
     });
   }, []);
 };
-
-export const getDefaultConnectorGroupValue = (type: ConnectorType): ConnectorGroup => ({
-  id: nanoid(),
-  connectors: [],
-  type,
-  name: { en: '' },
-  description: { en: '' },
-  logo: '',
-  logoDark: null,
-  target: '',
-});

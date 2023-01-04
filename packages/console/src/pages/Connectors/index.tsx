@@ -11,7 +11,9 @@ import SocialConnectorEmpty from '@/assets/images/social-connector-empty.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import type { TablePlaceholder } from '@/components/Table';
 import Table from '@/components/Table';
+import { defaultEmailConnectorGroup, defaultSmsConnectorGroup } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import { useTheme } from '@/hooks/use-theme';
@@ -24,7 +26,6 @@ import ConnectorTypeColumn from './components/ConnectorTypeColumn';
 import CreateForm from './components/CreateForm';
 import SignInExperienceSetupNotice from './components/SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
-import { getDefaultConnectorGroupValue } from './utils';
 
 const basePathname = '/connectors';
 const passwordlessPathname = `${basePathname}/${ConnectorsTabs.Passwordless}`;
@@ -55,12 +56,10 @@ const Connectors = () => {
 
   const passwordlessConnectors = useMemo(() => {
     const smsConnector =
-      data?.find(({ type }) => type === ConnectorType.Sms) ??
-      getDefaultConnectorGroupValue(ConnectorType.Sms);
+      data?.find(({ type }) => type === ConnectorType.Sms) ?? defaultSmsConnectorGroup;
 
     const emailConnector =
-      data?.find(({ type }) => type === ConnectorType.Email) ??
-      getDefaultConnectorGroupValue(ConnectorType.Email);
+      data?.find(({ type }) => type === ConnectorType.Email) ?? defaultEmailConnectorGroup;
 
     return [smsConnector, emailConnector];
   }, [data]);
@@ -72,12 +71,12 @@ const Connectors = () => {
 
   const connectors = isSocial ? socialConnectors : passwordlessConnectors;
 
-  const placeholderConfig = conditional(
+  const placeholder: TablePlaceholder | undefined = conditional(
     isSocial && {
-      placeholderTitle: t('connectors.type.social'),
-      placeholderContent: t('connectors.social_connector_eg'),
-      placeholderImage: isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />,
-      placeholder: (
+      title: t('connectors.type.social'),
+      description: t('connectors.social_connector_eg'),
+      image: isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />,
+      content: (
         <Button
           title="connectors.create"
           type="outline"
@@ -153,7 +152,7 @@ const Connectors = () => {
           isLoading={isLoading}
           errorMessage={error?.body?.message ?? error?.message}
           onRetry={async () => mutate(undefined, true)}
-          {...placeholderConfig}
+          {...placeholder}
         />
       </div>
       {Boolean(createConnectorType) && (
