@@ -25,7 +25,7 @@ type Props<
   columns: Array<Column<TFieldValues>>;
   rowIndexKey: TName;
   isRowClickable?: (row: TFieldValues) => boolean;
-  rowClickHandler?: (row: TFieldValues) => void | undefined;
+  rowClickHandler?: (row: TFieldValues) => void;
   className?: string;
   headerClassName?: string;
   bodyClassName?: string;
