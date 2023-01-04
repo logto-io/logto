@@ -1,4 +1,3 @@
-import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
@@ -102,12 +101,7 @@ const Table = <
                     <tr
                       key={row[rowIndexKey]}
                       className={classNames(onClickRow && styles.clickable)}
-                      onClick={conditional(
-                        onClickRow &&
-                          (() => {
-                            onClickRow();
-                          })
-                      )}
+                      onClick={onClickRow}
                     >
                       {columns.map(({ dataIndex, colSpan, className, render }) => (
                         <td key={dataIndex} colSpan={colSpan} className={className}>
