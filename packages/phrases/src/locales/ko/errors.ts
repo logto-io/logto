@@ -168,6 +168,9 @@ const errors = {
   log: {
     invalid_type: '로그 종류가 유효하지 않아요.',
   },
+  role: {
+    name_in_use: 'This role name isalready in use', // UNTRANSLATED
+  },
 };
 
 export default errors;

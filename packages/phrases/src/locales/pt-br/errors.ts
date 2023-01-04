@@ -182,6 +182,9 @@ const errors = {
   log: {
     invalid_type: 'O tipo de registro é inválido.',
   },
+  role: {
+    name_in_use: 'This role name isalready in use', // UNTRANSLATED
+  },
 };
 
 export default errors;
