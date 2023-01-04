@@ -1,7 +1,5 @@
 .dragging {
-  .item {
-    &:hover {
-      background: initial;
-    }
+  .item:hover {
+    background: initial;
   }
 }
