@@ -11,6 +11,7 @@ import general from './general.js';
 import get_started from './get-started.js';
 import log_details from './log-details.js';
 import logs from './logs.js';
+import roles from './roles.js';
 import session_expired from './session-expired.js';
 import settings from './settings.js';
 import sign_in_exp from './sign-in-exp.js';
@@ -47,6 +48,7 @@ const admin_console = {
   log_details,
   session_expired,
   welcome,
+  roles,
 };
 
 export default admin_console;

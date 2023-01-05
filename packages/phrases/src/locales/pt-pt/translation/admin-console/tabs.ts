@@ -7,6 +7,7 @@ const tabs = {
   connectors: 'Conectores',
   users: 'Gestão de utilizadores',
   audit_logs: 'Registos de auditoria',
+  roles: 'Roles', // UNTRANSLATED
   docs: 'Documentação',
   contact_us: 'Contate-nos',
   settings: 'Definições',
