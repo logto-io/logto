@@ -1,6 +1,8 @@
 const role_details = {
   back_to_roles: 'Back to Roles', // UNTRANSLATED
   identifier: 'Identifier', // UNTRANSLATED
+  delete_description: 'This action cannot be undone. It will permanently delete the role.', // UNTRANSLATED
+  role_deleted: 'The role {{name}} has been successfully deleted', // UNTRANSLATED
   settings_tab: 'Settings', // UNTRANSLATED
   users_tab: 'Users', // UNTRANSLATED
   permissions_tab: 'Permissions', // UNTRANSLATED

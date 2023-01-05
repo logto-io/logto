@@ -12,10 +12,11 @@ import useApi from '@/hooks/use-api';
 
 type Props = {
   data: Role;
+  isDeleting: boolean;
   onRoleUpdated: (data: Role) => void;
 };
 
-const RoleSettings = ({ data, onRoleUpdated }: Props) => {
+const RoleSettings = ({ data, isDeleting, onRoleUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     handleSubmit,
@@ -56,7 +57,7 @@ const RoleSettings = ({ data, onRoleUpdated }: Props) => {
           </FormField>
         </FormCard>
       </DetailsForm>
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </>
   );
 };
