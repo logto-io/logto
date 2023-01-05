@@ -5,3 +5,4 @@ export * from './user.js';
 export * from './logto-config.js';
 export * from './interactions.js';
 export * from './search.js';
+export * from './resource.js';

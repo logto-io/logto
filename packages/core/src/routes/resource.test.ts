@@ -6,7 +6,15 @@ import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-const { mockEsm } = createMockUtils(jest);
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+
+await mockEsmWithActual('#src/libraries/resource.js', () => ({
+  attachScopesToResources: async (resources: Resource[]) =>
+    resources.map((resource) => ({
+      ...resource,
+      scopes: [],
+    })),
+}));
 
 const { findResourceById } = mockEsm('#src/queries/resource.js', () => ({
   findTotalNumberOfResources: async () => ({ count: 10 }),
@@ -46,6 +54,13 @@ describe('resource routes', () => {
     const response = await resourceRequest.get('/resources');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([mockResource]);
+    expect(response.header).toHaveProperty('total-number', '10');
+  });
+
+  it('GET /resources?includeScopes=true', async () => {
+    const response = await resourceRequest.get('/resources?includeScopes=true');
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual([{ ...mockResource, scopes: [] }]);
     expect(response.header).toHaveProperty('total-number', '10');
   });
 
