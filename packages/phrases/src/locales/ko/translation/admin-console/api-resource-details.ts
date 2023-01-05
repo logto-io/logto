@@ -1,5 +1,7 @@
 const api_resource_details = {
   back_to_api_resources: 'API 리소스로 돌아가기',
+  settings_tab: 'Settings', // UNTRANSLATED
+  permission_tab: 'Permission', // UNTRANSLATED
   settings: '설정',
   settings_description:
     'API 리소스(리소스 표시기) - 요청할 대상 서비스 또는 리소스(일반적으로 리소스의 ID를 나타내는 URI 형식 변수)를 나타냅니다.',

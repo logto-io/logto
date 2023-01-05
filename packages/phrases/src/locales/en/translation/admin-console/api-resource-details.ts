@@ -1,5 +1,7 @@
 const api_resource_details = {
   back_to_api_resources: 'Back to API resources',
+  settings_tab: 'Settings',
+  permission_tab: 'Permission',
   settings: 'Settings',
   settings_description:
     'API resources, a.k.a. Resource Indicators, indicate the target services or resources to be requested, usually, a URI format variable representing the resource‘s identity.',

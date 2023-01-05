@@ -1,6 +1,5 @@
 export enum ApiResourceTabs {
-  Settings = 'settings',
-  Permission = 'permission',
+  Permissions = 'permissions',
 }
 
 export enum ConnectorsTabs {

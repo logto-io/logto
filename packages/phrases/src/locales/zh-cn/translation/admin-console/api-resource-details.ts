@@ -1,5 +1,7 @@
 const api_resource_details = {
   back_to_api_resources: '返回 API 资源',
+  settings_tab: 'Settings', // UNTRANSLATED
+  permission_tab: 'Permission', // UNTRANSLATED
   settings: '设置',
   settings_description:
     'API resources, a.k.a. Resource Indicators, indicate the target services or resources to be requested, usually, a URI format variable representing the resource‘s identity.', // UNTRANSLATED

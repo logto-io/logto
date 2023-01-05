@@ -1,5 +1,7 @@
 const api_resource_details = {
   back_to_api_resources: 'Voltar para os recursos da API',
+  settings_tab: 'Settings', // UNTRANSLATED
+  permission_tab: 'Permission', // UNTRANSLATED
   settings: 'Configurações',
   settings_description:
     'Os recursos da API, também conhecidos como Indicadores de recursos, indicam os serviços ou recursos de destino a serem solicitados, geralmente uma variável de formato de URI que representa a identidade do recurso.',

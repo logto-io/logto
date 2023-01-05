@@ -33,7 +33,7 @@ import UserDetails from '@/pages/UserDetails';
 import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
-import { ConnectorsTabs, SignInExperiencePage } from './consts/page-tabs';
+import { ApiResourceTabs, ConnectorsTabs, SignInExperiencePage } from './consts/page-tabs';
 import { getBasename } from './utilities/router';
 
 void initI18n();
@@ -62,6 +62,10 @@ const Main = () => {
                 <Route index element={<ApiResources />} />
                 <Route path="create" element={<ApiResources />} />
                 <Route path=":id" element={<ApiResourceDetails />} />
+                <Route
+                  path={`:id/${ApiResourceTabs.Permissions}`}
+                  element={<ApiResourceDetails />}
+                />
               </Route>
               <Route path="sign-in-experience">
                 <Route index element={<Navigate replace to={SignInExperiencePage.BrandingTab} />} />

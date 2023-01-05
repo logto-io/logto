@@ -1,5 +1,6 @@
 import type { Resource } from '@logto/schemas';
 import { AppearanceMode, managementResource } from '@logto/schemas';
+import classNames from 'classnames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -18,16 +19,18 @@ import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
+import { ApiResourceTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
 
+import ApiResourcePermissions from './ApiResourcePermissions';
 import ApiResourceSettings from './ApiResourceSettings';
 import * as styles from './index.module.scss';
 
 const ApiResourceDetails = () => {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
@@ -36,6 +39,7 @@ const ApiResourceDetails = () => {
   const theme = useTheme();
   const Icon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
 
+  const isOnPermissionTab = pathname.endsWith(ApiResourceTabs.Permissions);
   const isLogtoManagementApiResource = data?.id === managementResource.id;
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
@@ -60,7 +64,9 @@ const ApiResourceDetails = () => {
   };
 
   return (
-    <div className={detailsStyles.container}>
+    <div
+      className={classNames(detailsStyles.container, isOnPermissionTab && styles.permissionPage)}
+    >
       <TextLink to="/api-resources" icon={<Back />} className={styles.backLink}>
         {t('api_resource_details.back_to_api_resources')}
       </TextLink>
@@ -113,16 +119,25 @@ const ApiResourceDetails = () => {
             )}
           </Card>
           <TabNav>
-            <TabNavItem href={location.pathname}>{t('general.settings_nav')}</TabNavItem>
+            <TabNavItem href={`/api-resources/${data.id}`}>
+              {t('api_resource_details.settings_tab')}
+            </TabNavItem>
+            <TabNavItem href={`/api-resources/${data.id}/${ApiResourceTabs.Permissions}`}>
+              {t('api_resource_details.permission_tab')}
+            </TabNavItem>
           </TabNav>
-          <ApiResourceSettings
-            data={data}
-            isDeleting={isDeleting}
-            isLogtoManagementApiResource={isLogtoManagementApiResource}
-            onResourceUpdated={(resource) => {
-              void mutate(resource);
-            }}
-          />
+          {isOnPermissionTab ? (
+            <ApiResourcePermissions resourceId={data.id} />
+          ) : (
+            <ApiResourceSettings
+              data={data}
+              isDeleting={isDeleting}
+              isLogtoManagementApiResource={isLogtoManagementApiResource}
+              onResourceUpdated={(resource) => {
+                void mutate(resource);
+              }}
+            />
+          )}
         </>
       )}
     </div>
