@@ -175,7 +175,8 @@ const errors = {
     invalid_type: 'The log type is invalid.',
   },
   role: {
-    name_in_use: 'This role name isalready in use',
+    name_in_use: 'This role name {{name}} is already in use',
+    scope_exists: 'The scope id {{scopeId}} has already been added to this role',
   },
 };
 

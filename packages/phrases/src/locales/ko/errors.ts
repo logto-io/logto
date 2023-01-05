@@ -169,7 +169,8 @@ const errors = {
     invalid_type: '로그 종류가 유효하지 않아요.',
   },
   role: {
-    name_in_use: 'This role name isalready in use', // UNTRANSLATED
+    name_in_use: 'This role name {{name}} is already in use', // UNTRANSLATED
+    scope_exists: 'The scope id {{scopeId}} has already been added to this role', // UNTRANSLATED
   },
 };
 
