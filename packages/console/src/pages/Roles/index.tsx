@@ -1,6 +1,6 @@
 import type { Role } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
@@ -11,13 +11,17 @@ import Table from '@/components/Table';
 import type { RequestError } from '@/hooks/use-api';
 import * as pageStyles from '@/scss/resources.module.scss';
 
+import CreateRoleModal from './components/CreateRoleModal';
+
 const rolesPathname = '/roles';
 const createRolePathname = `${rolesPathname}/create`;
 const buildDetailsPathname = (id: string) => `${rolesPathname}/${id}`;
 
 const Roles = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { pathname } = useLocation();
   const navigate = useNavigate();
+  const isOnCreatePage = pathname === createRolePathname;
   const { data: roles, error, mutate } = useSWR<Role[], RequestError>(`/api/roles`);
   const isLoading = !roles && !error;
 
@@ -71,6 +75,13 @@ const Roles = () => {
         }}
         onRetry={async () => mutate(undefined, true)}
       />
+      {isOnCreatePage && (
+        <CreateRoleModal
+          onClose={() => {
+            navigate(rolesPathname);
+          }}
+        />
+      )}
     </div>
   );
 };

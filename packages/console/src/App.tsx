@@ -86,6 +86,7 @@ const Main = () => {
               </Route>
               <Route path="roles">
                 <Route index element={<Roles />} />
+                <Route path="create" element={<Roles />} />
                 <Route path=":id" element={<RoleDetails />} />
               </Route>
               <Route path="settings" element={<Settings />} />
