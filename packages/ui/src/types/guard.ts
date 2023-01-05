@@ -15,12 +15,12 @@ export const passcodeStateGuard = s.object({
 
 export const passcodeMethodGuard = s.union([
   s.literal(SignInIdentifier.Email),
-  s.literal(SignInIdentifier.Sms),
+  s.literal(SignInIdentifier.Phone),
 ]);
 
 export const SignInMethodGuard = s.union([
   s.literal(SignInIdentifier.Email),
-  s.literal(SignInIdentifier.Sms),
+  s.literal(SignInIdentifier.Phone),
   s.literal(SignInIdentifier.Username),
 ]);
 
@@ -35,7 +35,7 @@ export const continueMethodGuard = s.union([
   s.literal('password'),
   s.literal('username'),
   s.literal(SignInIdentifier.Email),
-  s.literal(SignInIdentifier.Sms),
+  s.literal(SignInIdentifier.Phone),
 ]);
 
 export const usernameGuard = s.object({

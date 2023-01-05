@@ -22,7 +22,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
       ]);
 
       const forgotPassword = {
-        sms: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
+        phone: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
         email: logtoConnectors.some(({ type }) => type === ConnectorType.Email),
       };
 

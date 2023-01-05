@@ -6,7 +6,7 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import {
   mockSignInExperienceSettings,
   emailSignInMethod,
-  smsSignInMethod,
+  phoneSignInMethod,
 } from '@/__mocks__/logto';
 import { defaultSize } from '@/containers/SocialSignIn/SocialSignInList';
 import SignIn from '@/pages/SignIn';
@@ -78,10 +78,10 @@ describe('<SignIn />', () => {
     expect(queryByText('action.sign_in')).not.toBeNull();
   });
 
-  test('renders with sms passwordless as primary', async () => {
+  test('renders with phone passwordless as primary', async () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider
-        settings={{ ...mockSignInExperienceSettings, signIn: { methods: [smsSignInMethod] } }}
+        settings={{ ...mockSignInExperienceSettings, signIn: { methods: [phoneSignInMethod] } }}
       >
         <MemoryRouter>
           <SignIn />
@@ -100,7 +100,7 @@ describe('<SignIn />', () => {
           signIn: {
             methods: [
               {
-                ...smsSignInMethod,
+                ...phoneSignInMethod,
                 verificationCode: false,
                 password: true,
               },

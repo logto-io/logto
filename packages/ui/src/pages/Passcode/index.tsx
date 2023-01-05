@@ -1,4 +1,3 @@
-import { SignInIdentifier } from '@logto/schemas';
 import { t } from 'i18next';
 import { useParams, useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
@@ -36,7 +35,7 @@ const Passcode = () => {
     return <ErrorPage />;
   }
 
-  const target = !invalidState && state[method === SignInIdentifier.Email ? 'email' : 'phone'];
+  const target = !invalidState && state[method];
 
   if (!target) {
     return <ErrorPage title={method === 'email' ? 'error.invalid_email' : 'error.invalid_phone'} />;

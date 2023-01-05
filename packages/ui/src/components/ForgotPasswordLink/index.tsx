@@ -4,7 +4,7 @@ import TextLink from '@/components/TextLink';
 import { UserFlow } from '@/types';
 
 type Props = {
-  method: SignInIdentifier.Email | SignInIdentifier.Sms;
+  method: SignInIdentifier.Email | SignInIdentifier.Phone;
   className?: string;
 };
 

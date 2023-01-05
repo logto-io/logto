@@ -11,7 +11,7 @@ jest.mock('i18next', () => ({
 }));
 
 describe('ForgotPassword', () => {
-  it('render email forgot password properly with sms enabled as well', () => {
+  it('render email forgot password properly with phone enabled as well', () => {
     const { queryByText, container } = renderWithPageContext(
       <MemoryRouter initialEntries={['/forgot-password/email']}>
         <Routes>
@@ -33,9 +33,9 @@ describe('ForgotPassword', () => {
     expect(queryByText('action.switch_to')).not.toBeNull();
   });
 
-  it('render sms forgot password properly with email disabled', () => {
+  it('render phone forgot password properly with email disabled', () => {
     const { queryByText, container } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/forgot-password/sms']}>
+      <MemoryRouter initialEntries={['/forgot-password/phone']}>
         <Routes>
           <Route
             path="/forgot-password/:method"
@@ -43,7 +43,7 @@ describe('ForgotPassword', () => {
               <SettingsProvider
                 settings={{
                   ...mockSignInExperienceSettings,
-                  forgotPassword: { email: false, sms: true },
+                  forgotPassword: { email: false, phone: true },
                 }}
               >
                 <ForgotPassword />
@@ -55,14 +55,14 @@ describe('ForgotPassword', () => {
     );
 
     expect(queryByText('description.reset_password')).not.toBeNull();
-    expect(queryByText('description.reset_password_description_sms')).not.toBeNull();
+    expect(queryByText('description.reset_password_description_phone')).not.toBeNull();
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
     expect(queryByText('action.switch_to')).toBeNull();
   });
 
   it('should return error page if forgot password is not enabled', () => {
     const { queryByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/forgot-password/sms']}>
+      <MemoryRouter initialEntries={['/forgot-password/phone']}>
         <Routes>
           <Route
             path="/forgot-password/:method"
@@ -70,7 +70,7 @@ describe('ForgotPassword', () => {
               <SettingsProvider
                 settings={{
                   ...mockSignInExperienceSettings,
-                  forgotPassword: { email: true, sms: false },
+                  forgotPassword: { email: true, phone: false },
                 }}
               >
                 <ForgotPassword />
@@ -82,7 +82,7 @@ describe('ForgotPassword', () => {
     );
 
     expect(queryByText('description.reset_password')).toBeNull();
-    expect(queryByText('description.reset_password_description_sms')).toBeNull();
+    expect(queryByText('description.reset_password_description_phone')).toBeNull();
     expect(queryByText('description.not_found')).not.toBeNull();
   });
 });

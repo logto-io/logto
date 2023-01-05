@@ -1,3 +1,4 @@
+import { InteractionEvent } from '@logto/schemas';
 import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -5,7 +6,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { putInteraction, sendPasscode } from '@/apis/interaction';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
-import SmsContinue from './SmsContinue';
+import PhoneRegister from './PhoneRegister';
 
 const mockedNavigate = jest.fn();
 
@@ -24,7 +25,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-describe('SmsContinue', () => {
+describe('PhoneRegister', () => {
   const phone = '8573333333';
   const defaultCountryCallingCode = getDefaultCountryCallingCode();
   const fullPhoneNumber = `${defaultCountryCallingCode}${phone}`;
@@ -32,7 +33,7 @@ describe('SmsContinue', () => {
   test('register form submit', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <SmsContinue />
+        <PhoneRegister />
       </MemoryRouter>
     );
     const phoneInput = container.querySelector('input[name="phone"]');
@@ -41,17 +42,17 @@ describe('SmsContinue', () => {
       fireEvent.change(phoneInput, { target: { value: phone } });
     }
 
-    const submitButton = getByText('action.continue');
+    const submitButton = getByText('action.create_account');
 
     act(() => {
       fireEvent.click(submitButton);
     });
 
     await waitFor(() => {
-      expect(putInteraction).not.toBeCalled();
+      expect(putInteraction).toBeCalledWith(InteractionEvent.Register);
       expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/continue/sms/passcode-validation', search: '' },
+        { pathname: '/register/phone/passcode-validation', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });

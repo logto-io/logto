@@ -59,7 +59,7 @@ const translation = {
     reset_password: '암호를 재설정',
     reset_password_description_email:
       '계정과 연결된 이메일 주소를 입력하면 비밀번호 재설정을 위한 인증 코드를 이메일로 보내드립니다.',
-    reset_password_description_sms:
+    reset_password_description_phone:
       '계정과 연결된 전화번호를 입력하면 비밀번호 재설정을 위한 인증 코드를 문자로 보내드립니다.',
     new_password: '새 비밀번호',
     set_password: '비밀번호 설정',

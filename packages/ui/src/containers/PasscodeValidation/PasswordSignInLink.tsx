@@ -1,11 +1,11 @@
-import { SignInIdentifier } from '@logto/schemas';
+import type { SignInIdentifier } from '@logto/schemas';
 
 import TextLink from '@/components/TextLink';
 import { UserFlow } from '@/types';
 
 type Props = {
   className?: string;
-  method: SignInIdentifier.Email | SignInIdentifier.Sms;
+  method: SignInIdentifier.Email | SignInIdentifier.Phone;
   target: string;
 };
 
@@ -16,7 +16,7 @@ const PasswordSignInLink = ({ className, method, target }: Props) => {
       className={className}
       text="action.sign_in_via_password"
       to={`/${UserFlow.signIn}/${method}/password`}
-      state={method === SignInIdentifier.Email ? { email: target } : { phone: target }}
+      state={{ [method]: target }}
     />
   );
 };

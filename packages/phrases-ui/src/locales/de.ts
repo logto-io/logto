@@ -63,7 +63,7 @@ const translation = {
     reset_password: 'Passwort zurücksetzen',
     reset_password_description_email:
       'Gib die Email Adresse deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
-    reset_password_description_sms:
+    reset_password_description_phone:
       'Gib die Telefonnummer deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
     new_password: 'Neues Passwort',
     set_password: 'Set password', // UNTRANSLATED

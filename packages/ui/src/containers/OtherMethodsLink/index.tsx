@@ -25,7 +25,7 @@ const SignInMethodsKeyMap: {
 } = {
   [SignInIdentifier.Username]: 'username',
   [SignInIdentifier.Email]: 'email',
-  [SignInIdentifier.Sms]: 'phone_number',
+  [SignInIdentifier.Phone]: 'phone_number',
 };
 
 const OtherMethodsLink = ({ methods, template, search, flow, className }: Props) => {

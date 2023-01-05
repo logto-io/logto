@@ -31,7 +31,7 @@ describe('<SecondarySignIn />', () => {
 
   test('renders phone', async () => {
     const { queryAllByText, container } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/sms']}>
+      <MemoryRouter initialEntries={['/sign-in/phone']}>
         <Routes>
           <Route
             path="/sign-in/:method"

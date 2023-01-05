@@ -188,7 +188,7 @@ describe('identifier validation', () => {
         ...mockSignInExperience,
         signIn: {
           methods: mockSignInExperience.signIn.methods.filter(
-            ({ identifier }) => identifier !== SignInIdentifier.Sms
+            ({ identifier }) => identifier !== SignInIdentifier.Phone
           ),
         },
       });
@@ -200,7 +200,7 @@ describe('identifier validation', () => {
         signIn: {
           methods: [
             {
-              identifier: SignInIdentifier.Sms,
+              identifier: SignInIdentifier.Phone,
               password: false,
               verificationCode: true,
               isPasswordPrimary: true,
@@ -223,7 +223,7 @@ describe('identifier validation', () => {
         ...mockSignInExperience,
         signIn: {
           methods: mockSignInExperience.signIn.methods.filter(
-            ({ identifier }) => identifier !== SignInIdentifier.Sms
+            ({ identifier }) => identifier !== SignInIdentifier.Phone
           ),
         },
       });
@@ -235,7 +235,7 @@ describe('identifier validation', () => {
         signIn: {
           methods: [
             {
-              identifier: SignInIdentifier.Sms,
+              identifier: SignInIdentifier.Phone,
               password: true,
               verificationCode: false,
               isPasswordPrimary: true,
@@ -249,14 +249,14 @@ describe('identifier validation', () => {
       verifyIdentifierSettings(identifier, {
         ...mockSignInExperience,
         signUp: {
-          identifiers: [SignInIdentifier.Sms],
+          identifiers: [SignInIdentifier.Phone],
           password: false,
           verify: true,
         },
         signIn: {
           methods: [
             {
-              identifier: SignInIdentifier.Sms,
+              identifier: SignInIdentifier.Phone,
               password: true,
               verificationCode: false,
               isPasswordPrimary: true,
@@ -297,7 +297,7 @@ describe('profile validation', () => {
         { phone: '123456' },
         {
           ...mockSignInExperience,
-          signUp: { identifiers: [SignInIdentifier.Sms], password: false, verify: true },
+          signUp: { identifiers: [SignInIdentifier.Phone], password: false, verify: true },
         }
       );
     }).not.toThrow();
@@ -308,7 +308,7 @@ describe('profile validation', () => {
         {
           ...mockSignInExperience,
           signUp: {
-            identifiers: [SignInIdentifier.Sms, SignInIdentifier.Email],
+            identifiers: [SignInIdentifier.Phone, SignInIdentifier.Email],
             password: false,
             verify: true,
           },
@@ -322,7 +322,7 @@ describe('profile validation', () => {
         {
           ...mockSignInExperience,
           signUp: {
-            identifiers: [SignInIdentifier.Sms, SignInIdentifier.Email],
+            identifiers: [SignInIdentifier.Phone, SignInIdentifier.Email],
             password: false,
             verify: true,
           },
@@ -336,7 +336,7 @@ describe('profile validation', () => {
         {
           ...mockSignInExperience,
           signUp: {
-            identifiers: [SignInIdentifier.Sms, SignInIdentifier.Email],
+            identifiers: [SignInIdentifier.Phone, SignInIdentifier.Email],
             password: false,
             verify: true,
           },

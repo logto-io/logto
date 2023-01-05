@@ -215,7 +215,7 @@ describe('sms passwordless flow', () => {
         isPasswordPrimary: true,
       },
       {
-        identifier: SignInIdentifier.Sms,
+        identifier: SignInIdentifier.Phone,
         password: false,
         verificationCode: true,
         isPasswordPrimary: false,

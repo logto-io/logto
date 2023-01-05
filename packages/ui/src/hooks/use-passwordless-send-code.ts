@@ -7,7 +7,7 @@ import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import type { UserFlow } from '@/types';
 
-const usePasswordlessSendCode = <T extends SignInIdentifier.Email | SignInIdentifier.Sms>(
+const usePasswordlessSendCode = <T extends SignInIdentifier.Email | SignInIdentifier.Phone>(
   flow: UserFlow,
   method: T,
   replaceCurrentPage?: boolean

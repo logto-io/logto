@@ -12,10 +12,10 @@ type Props = {
   hasSwitch?: boolean;
 };
 
-const SmsResetPassword = (props: Props) => {
+const PhoneResetPassword = (props: Props) => {
   const { onSubmit, errorMessage, clearErrorMessage } = usePasswordlessSendCode(
     UserFlow.forgotPassword,
-    SignInIdentifier.Sms
+    SignInIdentifier.Phone
   );
 
   return (
@@ -30,4 +30,4 @@ const SmsResetPassword = (props: Props) => {
   );
 };
 
-export default SmsResetPassword;
+export default PhoneResetPassword;

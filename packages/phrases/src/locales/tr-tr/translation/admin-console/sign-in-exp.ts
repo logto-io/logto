@@ -41,7 +41,7 @@ const sign_in_exp = {
   sign_up_and_sign_in: {
     identifiers: 'Sign-up identifiers', // UNTRANSLATED
     identifiers_email: 'Email address', // UNTRANSLATED
-    identifiers_sms: 'Phone number', // UNTRANSLATED
+    identifiers_phone: 'Phone number', // UNTRANSLATED
     identifiers_username: 'Username', // UNTRANSLATED
     identifiers_email_or_sms: 'Email address or phone number', // UNTRANSLATED
     identifiers_none: 'Not applicable', // UNTRANSLATED

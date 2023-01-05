@@ -8,7 +8,7 @@ import { UserFlow } from '@/types';
 
 const useIdentifierErrorAlert = (
   flow: UserFlow,
-  method: SignInIdentifier.Email | SignInIdentifier.Sms,
+  method: SignInIdentifier.Email | SignInIdentifier.Phone,
   value: string
 ) => {
   const { show } = useConfirmModal();

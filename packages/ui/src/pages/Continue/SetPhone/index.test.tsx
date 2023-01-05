@@ -26,7 +26,7 @@ describe('SetPhone', () => {
           ...mockSignInExperienceSettings,
           signUp: {
             ...mockSignInExperienceSettings.signUp,
-            identifiers: [SignInIdentifier.Sms],
+            identifiers: [SignInIdentifier.Phone],
           },
         }}
       >

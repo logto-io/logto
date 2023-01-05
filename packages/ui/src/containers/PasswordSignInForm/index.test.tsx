@@ -92,9 +92,9 @@ describe('PasswordSignInForm', () => {
     );
   });
 
-  it('SmsPasswordSignForm', async () => {
+  it('PhonePasswordSignForm', async () => {
     const { getByText, container } = renderWithPageContext(
-      <PasswordSignInForm hasPasswordlessButton method={SignInIdentifier.Sms} value={phone} />
+      <PasswordSignInForm hasPasswordlessButton method={SignInIdentifier.Phone} value={phone} />
     );
 
     const passwordInput = container.querySelector('input[name="password"]');
@@ -128,7 +128,7 @@ describe('PasswordSignInForm', () => {
 
     expect(mockedNavigate).toBeCalledWith(
       {
-        pathname: `/${UserFlow.signIn}/${SignInIdentifier.Sms}/passcode-validation`,
+        pathname: `/${UserFlow.signIn}/${SignInIdentifier.Phone}/passcode-validation`,
         search: '',
       },
       {

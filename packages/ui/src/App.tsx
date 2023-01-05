@@ -99,7 +99,7 @@ const App = () => {
 
                 {/* Continue set up missing profile */}
                 <Route
-                  path="/continue/email-or-sms/:method"
+                  path="/continue/email-or-phone/:method"
                   element={<ContinueWithEmailOrPhone />}
                 />
                 <Route path="/continue/:method" element={<Continue />} />

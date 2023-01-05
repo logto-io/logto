@@ -23,7 +23,7 @@ const defaultPasswordSignInMethods = [
     isPasswordPrimary: false,
   },
   {
-    identifier: SignInIdentifier.Sms,
+    identifier: SignInIdentifier.Phone,
     password: true,
     verificationCode: false,
     isPasswordPrimary: false,
@@ -44,7 +44,7 @@ const defaultPasscodeSignInMethods = [
     isPasswordPrimary: false,
   },
   {
-    identifier: SignInIdentifier.Sms,
+    identifier: SignInIdentifier.Phone,
     password: true,
     verificationCode: true,
     isPasswordPrimary: false,

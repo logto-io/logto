@@ -114,13 +114,13 @@ describe('<PasscodeValidation />', () => {
       });
     });
 
-    it('fire sms sign-in validate passcode event', async () => {
+    it('fire phone sign-in validate passcode event', async () => {
       (signInWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: 'foo.com',
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation type={UserFlow.signIn} method={SignInIdentifier.Sms} target={phone} />
+        <PasscodeValidation type={UserFlow.signIn} method={SignInIdentifier.Phone} target={phone} />
       );
       const inputs = container.querySelectorAll('input');
 
@@ -179,13 +179,17 @@ describe('<PasscodeValidation />', () => {
       });
     });
 
-    it('fire sms register validate passcode event', async () => {
+    it('fire phone register validate passcode event', async () => {
       (addProfileWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: 'foo.com',
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation type={UserFlow.register} method={SignInIdentifier.Sms} target={phone} />
+        <PasscodeValidation
+          type={UserFlow.register}
+          method={SignInIdentifier.Phone}
+          target={phone}
+        />
       );
       const inputs = container.querySelectorAll('input');
 
@@ -237,7 +241,7 @@ describe('<PasscodeValidation />', () => {
       // TODO: @simeng test exception flow to fulfill the password
     });
 
-    it('fire sms forgot-password validate passcode event', async () => {
+    it('fire phone forgot-password validate passcode event', async () => {
       (verifyForgotPasswordPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         success: true,
       }));
@@ -245,7 +249,7 @@ describe('<PasscodeValidation />', () => {
       const { container } = renderWithPageContext(
         <PasscodeValidation
           type={UserFlow.forgotPassword}
-          method={SignInIdentifier.Sms}
+          method={SignInIdentifier.Phone}
           target={phone}
         />
       );
@@ -312,7 +316,11 @@ describe('<PasscodeValidation />', () => {
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation type={UserFlow.continue} method={SignInIdentifier.Sms} target={phone} />
+        <PasscodeValidation
+          type={UserFlow.continue}
+          method={SignInIdentifier.Phone}
+          target={phone}
+        />
       );
 
       const inputs = container.querySelectorAll('input');

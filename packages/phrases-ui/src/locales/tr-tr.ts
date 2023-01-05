@@ -60,7 +60,7 @@ const translation = {
     reset_password: 'Şifre yenile',
     reset_password_description_email:
       'Hesabınızla ilişkili e-posta adresini girin, şifrenizi sıfırlamak için size doğrulama kodunu e-posta ile gönderelim.',
-    reset_password_description_sms:
+    reset_password_description_phone:
       'Hesabınızla ilişkili telefon numarasını girin, şifrenizi sıfırlamak için size doğrulama kodunu kısa mesajla gönderelim.',
     new_password: 'Yeni Şifre',
     set_password: 'Set password', // UNTRANSLATED

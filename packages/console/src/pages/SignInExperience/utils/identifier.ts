@@ -8,7 +8,9 @@ import type { SignUpIdentifier } from '../types';
 export const isVerificationRequiredSignUpIdentifiers = (signUpIdentifier: SignUpIdentifier) => {
   const identifiers = signUpIdentifiersMapping[signUpIdentifier];
 
-  return identifiers.includes(SignInIdentifier.Email) || identifiers.includes(SignInIdentifier.Sms);
+  return (
+    identifiers.includes(SignInIdentifier.Email) || identifiers.includes(SignInIdentifier.Phone)
+  );
 };
 
 export const mapIdentifiersToSignUpIdentifier = (

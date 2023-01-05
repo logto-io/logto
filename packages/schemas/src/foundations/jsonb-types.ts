@@ -127,7 +127,7 @@ export type LanguageInfo = z.infer<typeof languageInfoGuard>;
 export enum SignInIdentifier {
   Username = 'username',
   Email = 'email',
-  Sms = 'sms',
+  Phone = 'phone',
 }
 
 export const signUpGuard = z.object({

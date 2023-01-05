@@ -37,7 +37,7 @@ const PhonePassword = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
-  const { isForgotPasswordEnabled, sms } = useForgotPasswordSettings();
+  const { isForgotPasswordEnabled, phone } = useForgotPasswordSettings();
 
   const { countryList, phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
   const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
@@ -107,7 +107,7 @@ const PhonePassword = ({ className, autoFocus }: Props) => {
       {isForgotPasswordEnabled && (
         <ForgotPasswordLink
           className={styles.link}
-          method={sms ? SignInIdentifier.Sms : SignInIdentifier.Email}
+          method={phone ? SignInIdentifier.Phone : SignInIdentifier.Email}
         />
       )}
 

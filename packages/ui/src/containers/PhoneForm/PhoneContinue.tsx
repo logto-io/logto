@@ -3,7 +3,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import usePasswordlessSendCode from '@/hooks/use-passwordless-send-code';
 import { UserFlow } from '@/types';
 
-import SmsForm from './PhoneForm';
+import PhoneForm from './PhoneForm';
 
 type Props = {
   className?: string;
@@ -12,14 +12,14 @@ type Props = {
   hasSwitch?: boolean;
 };
 
-const SmsContinue = (props: Props) => {
+const PhoneContinue = (props: Props) => {
   const { onSubmit, errorMessage, clearErrorMessage } = usePasswordlessSendCode(
     UserFlow.continue,
-    SignInIdentifier.Sms
+    SignInIdentifier.Phone
   );
 
   return (
-    <SmsForm
+    <PhoneForm
       onSubmit={onSubmit}
       {...props}
       errorMessage={errorMessage}
@@ -29,4 +29,4 @@ const SmsContinue = (props: Props) => {
   );
 };
 
-export default SmsContinue;
+export default PhoneContinue;

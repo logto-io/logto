@@ -47,14 +47,14 @@ describe('<Register />', () => {
     expect(queryByText('action.create_account')).not.toBeNull();
   });
 
-  test('renders with sms passwordless as primary', async () => {
+  test('renders with phone passwordless as primary', async () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
           signUp: {
             ...mockSignInExperienceSettings.signUp,
-            identifiers: [SignInIdentifier.Sms],
+            identifiers: [SignInIdentifier.Phone],
           },
         }}
       >
@@ -67,14 +67,14 @@ describe('<Register />', () => {
     expect(queryByText('action.create_account')).not.toBeNull();
   });
 
-  test('render with email and sms passwordless', async () => {
+  test('render with email and phone passwordless', async () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
           signUp: {
             ...mockSignInExperienceSettings.signUp,
-            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
           },
         }}
       >

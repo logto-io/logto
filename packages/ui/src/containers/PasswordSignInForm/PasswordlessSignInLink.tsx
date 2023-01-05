@@ -8,7 +8,7 @@ import { UserFlow } from '@/types';
 
 type Props = {
   className?: string;
-  method: SignInIdentifier.Email | SignInIdentifier.Sms;
+  method: SignInIdentifier.Email | SignInIdentifier.Phone;
   value: string;
 };
 

@@ -14,7 +14,7 @@ import { getPasscodeValidationHook } from './utils';
 
 type Props = {
   type: UserFlow;
-  method: SignInIdentifier.Email | SignInIdentifier.Sms;
+  method: SignInIdentifier.Email | SignInIdentifier.Phone;
   target: string;
   hasPasswordButton?: boolean;
   className?: string;

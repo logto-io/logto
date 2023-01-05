@@ -16,7 +16,7 @@ import PasswordlessSignInLink from './PasswordlessSignInLink';
 import * as styles from './index.module.scss';
 
 type Props = {
-  method: SignInIdentifier.Email | SignInIdentifier.Sms;
+  method: SignInIdentifier.Email | SignInIdentifier.Phone;
   value: string;
   hasPasswordlessButton?: boolean;
   className?: string;
@@ -42,7 +42,7 @@ const PasswordSignInForm = ({
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
   const { fieldValue, register, validateForm } = useForm(defaultState);
-  const { isForgotPasswordEnabled, sms, email } = useForgotPasswordSettings();
+  const { isForgotPasswordEnabled, phone, email } = useForgotPasswordSettings();
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
@@ -83,9 +83,9 @@ const PasswordSignInForm = ({
             method === SignInIdentifier.Email
               ? email
                 ? SignInIdentifier.Email
-                : SignInIdentifier.Sms
-              : sms
-              ? SignInIdentifier.Sms
+                : SignInIdentifier.Phone
+              : phone
+              ? SignInIdentifier.Phone
               : SignInIdentifier.Email
           }
         />

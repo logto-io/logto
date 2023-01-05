@@ -38,7 +38,7 @@ export const smsSignInAction = <StateT, ContextT extends WithLogContextLegacy, R
     assertThat(
       signInExperience.signIn.methods.some(
         ({ identifier, verificationCode }) =>
-          identifier === SignInIdentifier.Sms && verificationCode
+          identifier === SignInIdentifier.Phone && verificationCode
       ),
       new RequestError({
         code: 'user.sign_in_method_not_enabled',
@@ -127,7 +127,7 @@ export const smsRegisterAction = <StateT, ContextT extends WithLogContextLegacy,
     );
 
     assertThat(
-      signInExperience.signUp.identifiers.includes(SignInIdentifier.Sms),
+      signInExperience.signUp.identifiers.includes(SignInIdentifier.Phone),
       new RequestError({
         code: 'user.sign_up_method_not_enabled',
         status: 422,

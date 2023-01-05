@@ -1,13 +1,11 @@
-import { SignInIdentifier, InteractionEvent } from '@logto/schemas';
 import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { putInteraction, sendPasscode } from '@/apis/interaction';
-import { UserFlow } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
-import SmsResetPassword from './SmsResetPassword';
+import PhoneContinue from './PhoneContinue';
 
 const mockedNavigate = jest.fn();
 
@@ -26,7 +24,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-describe('SmsRegister', () => {
+describe('PhoneContinue', () => {
   const phone = '8573333333';
   const defaultCountryCallingCode = getDefaultCountryCallingCode();
   const fullPhoneNumber = `${defaultCountryCallingCode}${phone}`;
@@ -34,7 +32,7 @@ describe('SmsRegister', () => {
   test('register form submit', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <SmsResetPassword />
+        <PhoneContinue />
       </MemoryRouter>
     );
     const phoneInput = container.querySelector('input[name="phone"]');
@@ -50,13 +48,10 @@ describe('SmsRegister', () => {
     });
 
     await waitFor(() => {
-      expect(putInteraction).toBeCalledWith(InteractionEvent.ForgotPassword);
+      expect(putInteraction).not.toBeCalled();
       expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        {
-          pathname: `/${UserFlow.forgotPassword}/${SignInIdentifier.Sms}/passcode-validation`,
-          search: '',
-        },
+        { pathname: '/continue/phone/passcode-validation', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });

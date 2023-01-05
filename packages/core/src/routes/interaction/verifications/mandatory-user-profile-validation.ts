@@ -49,7 +49,7 @@ const getMissingProfileBySignUpIdentifiers = ({
   // Email or phone
   if (
     signUpIdentifiersSet.has(SignInIdentifier.Email) &&
-    signUpIdentifiersSet.has(SignInIdentifier.Sms)
+    signUpIdentifiersSet.has(SignInIdentifier.Phone)
   ) {
     if (!user?.primaryPhone && !user?.primaryEmail && !profile?.phone && !profile?.email) {
       missingProfile.add(MissingProfile.emailOrPhone);
@@ -66,7 +66,7 @@ const getMissingProfileBySignUpIdentifiers = ({
   }
 
   // Phone only
-  if (signUpIdentifiersSet.has(SignInIdentifier.Sms) && !user?.primaryPhone && !profile?.phone) {
+  if (signUpIdentifiersSet.has(SignInIdentifier.Phone) && !user?.primaryPhone && !profile?.phone) {
     missingProfile.add(MissingProfile.phone);
 
     return missingProfile;

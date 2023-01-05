@@ -1,5 +1,5 @@
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
-import { SmsContinue } from '@/containers/PhoneForm';
+import { PhoneContinue } from '@/containers/PhoneForm';
 
 const SetPhone = () => {
   return (
@@ -7,7 +7,7 @@ const SetPhone = () => {
       title="description.link_phone"
       description="description.link_phone_description"
     >
-      <SmsContinue autoFocus />
+      <PhoneContinue autoFocus />
     </SecondaryPageWrapper>
   );
 };

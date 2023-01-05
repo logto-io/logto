@@ -88,7 +88,7 @@ export default function passwordRoutes<T extends AnonymousRouterLegacy>(
       const { phone, password } = ctx.guard.body;
       const type = 'SignInSmsPassword';
       await signInWithPassword(ctx, provider, {
-        identifier: SignInIdentifier.Sms,
+        identifier: SignInIdentifier.Phone,
         password,
         logType: type,
         logPayload: { phone },

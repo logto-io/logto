@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import TextLink from '@/components/TextLink';
 
 type Props = {
-  target: 'sms' | 'email';
+  target: 'phone' | 'email';
   className?: string;
 };
 

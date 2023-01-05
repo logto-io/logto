@@ -114,7 +114,7 @@ describe('validateMandatoryUserProfile', () => {
       ...baseCtx,
       signInExperience: {
         ...mockSignInExperience,
-        signUp: { identifiers: [SignInIdentifier.Sms], password: false, verify: true },
+        signUp: { identifiers: [SignInIdentifier.Phone], password: false, verify: true },
       },
     };
 
@@ -135,7 +135,7 @@ describe('validateMandatoryUserProfile', () => {
       ...baseCtx,
       signInExperience: {
         ...mockSignInExperience,
-        signUp: { identifiers: [SignInIdentifier.Sms], password: false, verify: true },
+        signUp: { identifiers: [SignInIdentifier.Phone], password: false, verify: true },
       },
     };
 
@@ -148,7 +148,7 @@ describe('validateMandatoryUserProfile', () => {
       signInExperience: {
         ...mockSignInExperience,
         signUp: {
-          identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+          identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
           password: false,
           verify: true,
         },

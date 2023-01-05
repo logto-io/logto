@@ -5,9 +5,9 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import PasswordlessSwitch from '.';
 
 describe('<PasswordlessSwitch />', () => {
-  test('render sms passwordless switch', () => {
+  test('render phone passwordless switch', () => {
     const { queryByText, container } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/forgot-password/sms']}>
+      <MemoryRouter initialEntries={['/forgot-password/phone']}>
         <PasswordlessSwitch target="email" />
       </MemoryRouter>
     );
@@ -19,11 +19,11 @@ describe('<PasswordlessSwitch />', () => {
   test('render email passwordless switch', () => {
     const { queryByText, container } = renderWithPageContext(
       <MemoryRouter initialEntries={['/forgot-password/email']}>
-        <PasswordlessSwitch target="sms" />
+        <PasswordlessSwitch target="phone" />
       </MemoryRouter>
     );
 
     expect(queryByText('action.switch_to')).not.toBeNull();
-    expect(container.querySelector('a')?.getAttribute('href')).toBe('/forgot-password/sms');
+    expect(container.querySelector('a')?.getAttribute('href')).toBe('/forgot-password/phone');
   });
 });

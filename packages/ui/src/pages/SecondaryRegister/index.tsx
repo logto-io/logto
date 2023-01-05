@@ -5,7 +5,7 @@ import { is } from 'superstruct';
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import CreateAccount from '@/containers/CreateAccount';
 import { EmailRegister } from '@/containers/EmailForm';
-import { SmsRegister } from '@/containers/PhoneForm';
+import { PhoneRegister } from '@/containers/PhoneForm';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
 import { SignInMethodGuard, passcodeMethodGuard } from '@/types/guard';
@@ -34,8 +34,8 @@ const SecondaryRegister = () => {
 
   return (
     <SecondaryPageWrapper title="action.create_account">
-      {method === SignInIdentifier.Sms ? (
-        <SmsRegister autoFocus />
+      {method === SignInIdentifier.Phone ? (
+        <PhoneRegister autoFocus />
       ) : method === SignInIdentifier.Email ? (
         <EmailRegister autoFocus />
       ) : (
