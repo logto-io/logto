@@ -1,7 +1,6 @@
 import type { Resource } from '@logto/schemas';
 import { AppearanceMode, managementResource } from '@logto/schemas';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -16,25 +15,16 @@ import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
-import DetailsForm from '@/components/DetailsForm';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
-import FormCard from '@/components/FormCard';
-import FormField from '@/components/FormField';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
-import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
 
+import ApiResourceSettings from './ApiResourceSettings';
 import * as styles from './index.module.scss';
-
-type FormData = {
-  name: string;
-  accessTokenTtl: number;
-};
 
 const ApiResourceDetails = () => {
   const location = useLocation();
@@ -48,40 +38,10 @@ const ApiResourceDetails = () => {
 
   const isLogtoManagementApiResource = data?.id === managementResource.id;
 
+  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
-
-  const {
-    handleSubmit,
-    register,
-    reset,
-    formState: { isDirty, isSubmitting, errors },
-  } = useForm<FormData>({
-    defaultValues: data,
-  });
 
   const api = useApi();
-
-  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
-
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-    reset(data);
-  }, [data, reset]);
-
-  const onSubmit = handleSubmit(async (formData) => {
-    if (!data || isSubmitting) {
-      return;
-    }
-
-    const updatedApiResource = await api
-      .patch(`/api/resources/${data.id}`, { json: formData })
-      .json<Resource>();
-    void mutate(updatedApiResource);
-    toast.success(t('general.saved'));
-  });
 
   const onDelete = async () => {
     if (!data || isDeleting) {
@@ -92,12 +52,9 @@ const ApiResourceDetails = () => {
 
     try {
       await api.delete(`/api/resources/${data.id}`);
-      setIsDeleted(true);
-      setIsDeleting(false);
-      setIsDeleteFormOpen(false);
       toast.success(t('api_resource_details.api_resource_deleted', { name: data.name }));
       navigate(`/api-resources`);
-    } catch {
+    } finally {
       setIsDeleting(false);
     }
   };
@@ -158,39 +115,16 @@ const ApiResourceDetails = () => {
           <TabNav>
             <TabNavItem href={location.pathname}>{t('general.settings_nav')}</TabNavItem>
           </TabNav>
-          <DetailsForm
-            isDirty={isDirty}
-            isSubmitting={isSubmitting}
-            onDiscard={reset}
-            onSubmit={onSubmit}
-          >
-            <FormCard
-              title="api_resource_details.settings"
-              description="api_resource_details.settings_description"
-              learnMoreLink="https://docs.logto.io/docs/recipes/protect-your-api"
-            >
-              <FormField isRequired title="api_resources.api_name">
-                <TextInput
-                  {...register('name', { required: true })}
-                  hasError={Boolean(errors.name)}
-                  readOnly={isLogtoManagementApiResource}
-                  placeholder={t('api_resources.api_name_placeholder')}
-                />
-              </FormField>
-              <FormField isRequired title="api_resource_details.token_expiration_time_in_seconds">
-                <TextInput
-                  {...register('accessTokenTtl', { required: true, valueAsNumber: true })}
-                  hasError={Boolean(errors.accessTokenTtl)}
-                  placeholder={t(
-                    'api_resource_details.token_expiration_time_in_seconds_placeholder'
-                  )}
-                />
-              </FormField>
-            </FormCard>
-          </DetailsForm>
+          <ApiResourceSettings
+            data={data}
+            isDeleting={isDeleting}
+            isLogtoManagementApiResource={isLogtoManagementApiResource}
+            onResourceUpdated={(resource) => {
+              void mutate(resource);
+            }}
+          />
         </>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </div>
   );
 };

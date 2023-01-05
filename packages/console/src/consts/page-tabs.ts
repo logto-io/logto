@@ -1,3 +1,8 @@
+export enum ApiResourceTabs {
+  Settings = 'settings',
+  Permission = 'permission',
+}
+
 export enum ConnectorsTabs {
   Passwordless = 'passwordless',
   Social = 'social',
