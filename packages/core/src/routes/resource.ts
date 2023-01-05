@@ -2,6 +2,8 @@ import { buildIdGenerator } from '@logto/core-kit';
 import { Resources, Scopes } from '@logto/schemas';
 import { object, string } from 'zod';
 
+import { isTrue } from '#src/env-set/parameters.js';
+import { attachScopesToResources } from '#src/libraries/resource.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import {
@@ -25,19 +27,31 @@ const resourceId = buildIdGenerator(21);
 const scoupeId = resourceId;
 
 export default function resourceRoutes<T extends AuthedRouter>(router: T) {
-  router.get('/resources', koaPagination(), async (ctx, next) => {
-    const { limit, offset } = ctx.pagination;
+  router.get(
+    '/resources',
+    koaPagination(),
+    koaGuard({
+      query: object({
+        includeScopes: string().optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { limit, offset } = ctx.pagination;
+      const {
+        query: { includeScopes },
+      } = ctx.guard;
 
-    const [{ count }, resources] = await Promise.all([
-      findTotalNumberOfResources(),
-      findAllResources(limit, offset),
-    ]);
+      const [{ count }, resources] = await Promise.all([
+        findTotalNumberOfResources(),
+        findAllResources(limit, offset),
+      ]);
 
-    ctx.pagination.totalCount = count;
-    ctx.body = resources;
+      ctx.pagination.totalCount = count;
+      ctx.body = isTrue(includeScopes) ? await attachScopesToResources(resources) : resources;
 
-    return next();
-  });
+      return next();
+    }
+  );
 
   router.post(
     '/resources',

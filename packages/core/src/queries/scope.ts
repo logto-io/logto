@@ -19,6 +19,13 @@ export const findScopesByResourceId = async (resourceId: string) =>
     where ${fields.resourceId}=${resourceId}
   `);
 
+export const findScopesByResourceIds = async (resourceIds: string[]) =>
+  envSet.pool.any<Scope>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+    where ${fields.resourceId} in (${sql.join(resourceIds, sql`, `)})
+  `);
+
 export const insertScope = buildInsertInto<CreateScope, Scope>(Scopes, {
   returning: true,
 });
