@@ -78,7 +78,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       const user = await findUserById(userId);
 
-      ctx.body = pick(user, ...userInfoSelectFields);
+      ctx.body = pick(user, 'roleNames', ...userInfoSelectFields);
 
       return next();
     }
