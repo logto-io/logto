@@ -1,5 +1,5 @@
 import { buildIdGenerator } from '@logto/core-kit';
-import { Resources } from '@logto/schemas';
+import { Resources, Scopes } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -12,10 +12,17 @@ import {
   updateResourceById,
   deleteResourceById,
 } from '#src/queries/resource.js';
+import {
+  deleteScopeById,
+  findScopesByResourceId,
+  insertScope,
+  updateScopeById,
+} from '#src/queries/scope.js';
 
 import type { AuthedRouter } from './types.js';
 
 const resourceId = buildIdGenerator(21);
+const scoupeId = resourceId;
 
 export default function resourceRoutes<T extends AuthedRouter>(router: T) {
   router.get('/resources', koaPagination(), async (ctx, next) => {
@@ -90,6 +97,78 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
       const { id } = ctx.guard.params;
       await findResourceById(id);
       await deleteResourceById(id);
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/resources/:resourceId/scopes',
+    koaGuard({ params: object({ resourceId: string().min(1) }) }),
+    async (ctx, next) => {
+      const {
+        params: { resourceId },
+      } = ctx.guard;
+
+      ctx.body = await findScopesByResourceId(resourceId);
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/resources/:resourceId/scopes',
+    koaGuard({
+      params: object({ resourceId: string().min(1) }),
+      body: Scopes.createGuard.pick({ name: true, description: true }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { resourceId },
+        body,
+      } = ctx.guard;
+
+      ctx.body = await insertScope({
+        ...body,
+        id: scoupeId(),
+        resourceId,
+      });
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/resources/:resourceId/scopes/:scopeId',
+    koaGuard({
+      params: object({ resourceId: string().min(1), scopeId: string().min(1) }),
+      body: Scopes.createGuard.pick({ name: true, description: true }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { scopeId },
+        body,
+      } = ctx.guard;
+
+      ctx.body = await updateScopeById(scopeId, body);
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/resources/:resourceId/scopes/:scopeId',
+    koaGuard({
+      params: object({ resourceId: string().min(1), scopeId: string().min(1) }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { resourceId, scopeId },
+      } = ctx.guard;
+
+      await deleteScopeById(scopeId);
+
       ctx.status = 204;
 
       return next();

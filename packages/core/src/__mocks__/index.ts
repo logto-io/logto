@@ -1,5 +1,5 @@
 import { VerificationCodeType } from '@logto/connector-kit';
-import type { Application, Passcode, Resource, Role, Setting } from '@logto/schemas';
+import type { Application, Passcode, Resource, Role, Scope, Setting } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 
 export * from './connector.js';
@@ -30,6 +30,14 @@ export const mockResource: Resource = {
   name: 'management api',
   indicator: 'logto.dev/api',
   accessTokenTtl: 3600,
+};
+
+export const mockScope: Scope = {
+  id: 'scope_id',
+  name: 'read:users',
+  description: 'read users',
+  resourceId: mockResource.id,
+  createdAt: 1_645_334_775_356,
 };
 
 export const mockRole: Role = {
