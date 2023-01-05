@@ -16,7 +16,7 @@ type Props = {
   totalCount?: number;
   pageSize: number;
   className?: string;
-  variant?: 'default' | 'tiny';
+  isTinyStyle?: boolean;
   onChange?: (pageIndex: number) => void;
 };
 
@@ -25,7 +25,7 @@ const Pagination = ({
   totalCount,
   pageSize,
   className,
-  variant = 'default',
+  isTinyStyle = false,
   onChange,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -47,14 +47,14 @@ const Pagination = ({
   const max = Math.min(pageIndex * pageSize, cachedTotalCount);
 
   const pageRangeConfig = conditional(
-    variant === 'tiny' && {
+    isTinyStyle && {
       pageRangeDisplayed: -1,
       marginPagesDisplayed: 0,
     }
   );
 
   return (
-    <div className={classNames(styles.container, styles[variant], className)}>
+    <div className={classNames(styles.container, isTinyStyle && styles.tiny, className)}>
       <div className={styles.positionInfo}>
         {t('general.page_info', { min, max, total: cachedTotalCount })}
       </div>
