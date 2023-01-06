@@ -1,4 +1,3 @@
-import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import ReactPaginate from 'react-paginate';
@@ -16,7 +15,7 @@ type Props = {
   totalCount?: number;
   pageSize: number;
   className?: string;
-  isTinyStyle?: boolean;
+  mode?: 'normal' | 'pico';
   onChange?: (pageIndex: number) => void;
 };
 
@@ -25,7 +24,7 @@ const Pagination = ({
   totalCount,
   pageSize,
   className,
-  isTinyStyle = false,
+  mode = 'normal',
   onChange,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -45,16 +44,10 @@ const Pagination = ({
 
   const min = (pageIndex - 1) * pageSize + 1;
   const max = Math.min(pageIndex * pageSize, cachedTotalCount);
-
-  const pageRangeConfig = conditional(
-    isTinyStyle && {
-      pageRangeDisplayed: -1,
-      marginPagesDisplayed: 0,
-    }
-  );
+  const isPicoMode = mode === 'pico';
 
   return (
-    <div className={classNames(styles.container, isTinyStyle && styles.tiny, className)}>
+    <div className={classNames(styles.container, isPicoMode && styles.pico, className)}>
       <div className={styles.positionInfo}>
         {t('general.page_info', { min, max, total: cachedTotalCount })}
       </div>
@@ -76,10 +69,11 @@ const Pagination = ({
           <Button className={styles.button} size="small" title={<DangerousRaw>...</DangerousRaw>} />
         }
         disabledClassName={styles.disabled}
+        pageRangeDisplayed={isPicoMode ? -1 : undefined}
+        marginPagesDisplayed={isPicoMode ? 0 : undefined}
         onPageChange={({ selected }) => {
           onChange?.(selected + 1);
         }}
-        {...pageRangeConfig}
       />
     </div>
   );
