@@ -73,7 +73,7 @@
     "zod": "^3.20.2"
   },
   "engines": {
-    "node": "^16.13.0 || ^18.12.0"
+    "node": "^18.12.0"
   },
   "//": "https://github.com/parcel-bundler/parcel/issues/7636",
   "targets": {
