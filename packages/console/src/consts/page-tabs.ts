@@ -1,4 +1,5 @@
 export enum ApiResourceTabs {
+  Settings = 'settings',
   Permissions = 'permissions',
 }
 

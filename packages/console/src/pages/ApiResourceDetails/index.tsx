@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
@@ -30,8 +30,7 @@ import ApiResourceSettings from './ApiResourceSettings';
 import * as styles from './index.module.scss';
 
 const ApiResourceDetails = () => {
-  const { pathname } = useLocation();
-  const { id } = useParams();
+  const { tab = ApiResourceTabs.Settings, id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
@@ -39,7 +38,6 @@ const ApiResourceDetails = () => {
   const theme = useTheme();
   const Icon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
 
-  const isOnPermissionTab = pathname.endsWith(ApiResourceTabs.Permissions);
   const isLogtoManagementApiResource = data?.id === managementResource.id;
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
@@ -65,7 +63,10 @@ const ApiResourceDetails = () => {
 
   return (
     <div
-      className={classNames(detailsStyles.container, isOnPermissionTab && styles.permissionPage)}
+      className={classNames(
+        detailsStyles.container,
+        tab === ApiResourceTabs.Permissions && styles.permissionPage
+      )}
     >
       <TextLink to="/api-resources" icon={<Back />} className={styles.backLink}>
         {t('api_resource_details.back_to_api_resources')}
@@ -119,16 +120,14 @@ const ApiResourceDetails = () => {
             )}
           </Card>
           <TabNav>
-            <TabNavItem href={`/api-resources/${data.id}`}>
+            <TabNavItem href={`/api-resources/${ApiResourceTabs.Settings}/${data.id}`}>
               {t('api_resource_details.settings_tab')}
             </TabNavItem>
-            <TabNavItem href={`/api-resources/${data.id}/${ApiResourceTabs.Permissions}`}>
+            <TabNavItem href={`/api-resources/${ApiResourceTabs.Permissions}/${data.id}`}>
               {t('api_resource_details.permission_tab')}
             </TabNavItem>
           </TabNav>
-          {isOnPermissionTab ? (
-            <ApiResourcePermissions resourceId={data.id} />
-          ) : (
+          {tab === ApiResourceTabs.Settings && (
             <ApiResourceSettings
               data={data}
               isDeleting={isDeleting}
@@ -138,6 +137,7 @@ const ApiResourceDetails = () => {
               }}
             />
           )}
+          {tab === ApiResourceTabs.Permissions && <ApiResourcePermissions resourceId={data.id} />}
         </>
       )}
     </div>

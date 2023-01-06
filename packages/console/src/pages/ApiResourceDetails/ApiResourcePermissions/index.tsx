@@ -43,7 +43,7 @@ const ApiResourcePermissions = ({ resourceId }: Props) => {
           render: ({ description }) => <div className={styles.description}>{description}</div>,
         },
         {
-          title: <div />,
+          title: null,
           dataIndex: 'delete',
           colSpan: 1,
           render: () => (
