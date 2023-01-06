@@ -113,9 +113,9 @@ describe('SignInPassword', () => {
     expect(queryByText('action.sign_in_via_passcode')).not.toBeNull();
   });
 
-  test('/sign-in/sms/password', () => {
+  test('/sign-in/phone/password', () => {
     const { queryByText, container } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/sms/password']}>
+      <MemoryRouter initialEntries={['/sign-in/phone/password']}>
         <Routes>
           <Route
             path="/sign-in/:method/password"

@@ -33,7 +33,7 @@ describe('validate sign-up', () => {
         validateSignUp(
           {
             ...mockSignUp,
-            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
           },
           []
         );
@@ -47,7 +47,7 @@ describe('validate sign-up', () => {
 
     test('should throw when there is no sms connector and identifier is phone', async () => {
       expect(() => {
-        validateSignUp({ ...mockSignUp, identifiers: [SignInIdentifier.Sms] }, []);
+        validateSignUp({ ...mockSignUp, identifiers: [SignInIdentifier.Phone] }, []);
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -62,7 +62,7 @@ describe('validate sign-up', () => {
           {
             ...mockSignUp,
             verify: true,
-            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
           },
           [mockAliyunSmsConnector]
         );
@@ -120,7 +120,7 @@ describe('validate sign-up', () => {
         validateSignUp(
           {
             ...mockSignUp,
-            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
             verify: false,
           },
           enabledConnectors

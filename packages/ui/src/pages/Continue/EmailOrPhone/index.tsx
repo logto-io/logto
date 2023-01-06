@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import { EmailContinue } from '@/containers/EmailForm';
-import { SmsContinue } from '@/containers/PhoneForm';
+import { PhoneContinue } from '@/containers/PhoneForm';
 import ErrorPage from '@/pages/ErrorPage';
 
 type Parameters = {
@@ -24,13 +24,13 @@ const EmailOrPhone = () => {
     );
   }
 
-  if (method === SignInIdentifier.Sms) {
+  if (method === SignInIdentifier.Phone) {
     return (
       <SecondaryPageWrapper
         title="description.link_email_or_phone"
         description="description.link_email_or_phone_description"
       >
-        <SmsContinue autoFocus hasSwitch />
+        <PhoneContinue autoFocus hasSwitch />
       </SecondaryPageWrapper>
     );
   }

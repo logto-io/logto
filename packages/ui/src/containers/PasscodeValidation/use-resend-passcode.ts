@@ -19,7 +19,7 @@ const getTimeout = () => {
 
 const useResendPasscode = (
   type: UserFlow,
-  method: SignInIdentifier.Email | SignInIdentifier.Sms,
+  method: SignInIdentifier.Email | SignInIdentifier.Phone,
   target: string
 ) => {
   const { setToast } = useContext(PageContext);

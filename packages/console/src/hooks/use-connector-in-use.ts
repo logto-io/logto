@@ -21,7 +21,7 @@ const useConnectorInUse = () => {
       }
 
       const relatedIdentifier =
-        type === ConnectorType.Email ? SignInIdentifier.Email : SignInIdentifier.Sms;
+        type === ConnectorType.Email ? SignInIdentifier.Email : SignInIdentifier.Phone;
 
       const usedInSignUp =
         data.signUp.identifiers.includes(relatedIdentifier) && data.signUp.verify;

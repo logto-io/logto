@@ -59,7 +59,7 @@ const translation = {
     reset_password: 'Redefinir Password',
     reset_password_description_email:
       'Digite o endereço de email associado à sua conta e enviaremos um email com o código de verificação para redefinir sua senha.',
-    reset_password_description_sms:
+    reset_password_description_phone:
       'Digite o número de telefone associado à sua conta e enviaremos uma mensagem de texto com o código de verificação para redefinir sua senha.',
     new_password: 'Nova Senha',
     set_password: 'Set password', // UNTRANSLATED

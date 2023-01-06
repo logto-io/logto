@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { UserFlow } from '@/types';
 
-const useContinueSignInWithPassword = <T extends SignInIdentifier.Email | SignInIdentifier.Sms>(
+const useContinueSignInWithPassword = <T extends SignInIdentifier.Email | SignInIdentifier.Phone>(
   method: T
 ) => {
   const navigate = useNavigate();

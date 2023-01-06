@@ -11,14 +11,14 @@ import { getSearchParameters } from '@/utils';
 import useIdentifierErrorAlert from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
-const useContinueSetSmsPasscodeValidation = (phone: string, errorCallback?: () => void) => {
+const useContinueSetPhonePasscodeValidation = (phone: string, errorCallback?: () => void) => {
   const { sharedErrorHandlers, errorMessage, clearErrorMessage } = useSharedErrorHandler();
 
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler(true);
 
   const identifierExistErrorHandler = useIdentifierErrorAlert(
     UserFlow.continue,
-    SignInIdentifier.Sms,
+    SignInIdentifier.Phone,
     phone
   );
 
@@ -56,4 +56,4 @@ const useContinueSetSmsPasscodeValidation = (phone: string, errorCallback?: () =
   };
 };
 
-export default useContinueSetSmsPasscodeValidation;
+export default useContinueSetPhonePasscodeValidation;

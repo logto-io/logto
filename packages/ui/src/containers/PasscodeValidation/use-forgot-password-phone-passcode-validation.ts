@@ -10,13 +10,13 @@ import { UserFlow } from '@/types';
 import useIdentifierErrorAlert from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
-const useForgotPasswordSmsPasscodeValidation = (phone: string, errorCallback?: () => void) => {
+const useForgotPasswordPhonePasscodeValidation = (phone: string, errorCallback?: () => void) => {
   const navigate = useNavigate();
   const { sharedErrorHandlers, errorMessage, clearErrorMessage } = useSharedErrorHandler();
 
   const identifierNotExistErrorHandler = useIdentifierErrorAlert(
     UserFlow.forgotPassword,
-    SignInIdentifier.Sms,
+    SignInIdentifier.Phone,
     phone
   );
 
@@ -57,4 +57,4 @@ const useForgotPasswordSmsPasscodeValidation = (phone: string, errorCallback?: (
   };
 };
 
-export default useForgotPasswordSmsPasscodeValidation;
+export default useForgotPasswordPhonePasscodeValidation;

@@ -216,7 +216,7 @@ describe('checkRequiredProfile', () => {
       ...mockSignInExperience,
       signUp: {
         ...mockSignInExperience.signUp,
-        identifiers: [SignInIdentifier.Sms],
+        identifiers: [SignInIdentifier.Phone],
         password: true,
         verify: true,
       },
@@ -245,7 +245,7 @@ describe('checkRequiredProfile', () => {
       ...mockSignInExperience,
       signUp: {
         ...mockSignInExperience.signUp,
-        identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+        identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
         password: true,
         verify: true,
       },
@@ -275,7 +275,7 @@ describe('checkRequiredProfile', () => {
         ...mockSignInExperience,
         signUp: {
           ...mockSignInExperience.signUp,
-          identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+          identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
           password: true,
           verify: true,
         },
@@ -357,7 +357,7 @@ describe('signInWithPassword()', () => {
         methods: [
           {
             ...mockSignInMethod,
-            identifier: SignInIdentifier.Sms,
+            identifier: SignInIdentifier.Phone,
             password: false,
           },
         ],

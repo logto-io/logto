@@ -166,8 +166,8 @@ export const emailSignInMethod = {
   isPasswordPrimary: true,
 };
 
-export const smsSignInMethod = {
-  identifier: SignInIdentifier.Sms,
+export const phoneSignInMethod = {
+  identifier: SignInIdentifier.Phone,
   password: true,
   verificationCode: true,
   isPasswordPrimary: true,
@@ -203,7 +203,7 @@ export const mockSignInExperience: SignInExperience = {
     verify: true,
   },
   signIn: {
-    methods: [usernameSignInMethod, emailSignInMethod, smsSignInMethod],
+    methods: [usernameSignInMethod, emailSignInMethod, phoneSignInMethod],
   },
   socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
   signInMode: SignInMode.SignInAndRegister,
@@ -225,6 +225,6 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   signInMode: SignInMode.SignInAndRegister,
   forgotPassword: {
     email: true,
-    sms: true,
+    phone: true,
   },
 };

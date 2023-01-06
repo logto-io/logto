@@ -38,7 +38,7 @@ const sign_in_exp = {
   sign_up_and_sign_in: {
     identifiers: '注册标识',
     identifiers_email: '邮件地址',
-    identifiers_sms: '手机号码',
+    identifiers_phone: '手机号码',
     identifiers_username: '用户名',
     identifiers_email_or_sms: '邮件地址或手机号码',
     identifiers_none: '无',

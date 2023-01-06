@@ -37,7 +37,7 @@ const sign_in_exp = {
   sign_up_and_sign_in: {
     identifiers: '회원가입 ID',
     identifiers_email: '이메일 주소',
-    identifiers_sms: '휴대전화번호',
+    identifiers_phone: '휴대전화번호',
     identifiers_username: '사용자 이름',
     identifiers_email_or_sms: '이메일 주소 또는 휴대전화번호',
     identifiers_none: '해당없음',

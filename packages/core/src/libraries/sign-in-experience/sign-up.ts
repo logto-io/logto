@@ -17,7 +17,7 @@ export const validateSignUp = (signUp: SignUp, enabledConnectors: LogtoConnector
       );
     }
 
-    if (identifier === SignInIdentifier.Sms) {
+    if (identifier === SignInIdentifier.Phone) {
       assertThat(
         enabledConnectors.some((item) => item.type === ConnectorType.Sms),
         new RequestError({
@@ -36,7 +36,7 @@ export const validateSignUp = (signUp: SignUp, enabledConnectors: LogtoConnector
       );
     }
 
-    if (identifier === SignInIdentifier.Email || identifier === SignInIdentifier.Sms) {
+    if (identifier === SignInIdentifier.Email || identifier === SignInIdentifier.Phone) {
       assertThat(
         signUp.verify,
         new RequestError({

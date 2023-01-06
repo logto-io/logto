@@ -22,7 +22,7 @@ describe('reset password', () => {
     await setEmailConnector();
     await setSmsConnector();
     await enableAllPasscodeSignInMethods({
-      identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+      identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
       password: true,
       verify: true,
     });

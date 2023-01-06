@@ -81,7 +81,7 @@ export const mockSignInExperience: SignInExperience = {
         isPasswordPrimary: true,
       },
       {
-        identifier: SignInIdentifier.Sms,
+        identifier: SignInIdentifier.Phone,
         password: true,
         verificationCode: true,
         isPasswordPrimary: true,

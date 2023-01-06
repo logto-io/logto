@@ -13,9 +13,9 @@ describe('EmailOrPhone', () => {
   it('render set phone with email alterations', () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <MemoryRouter initialEntries={['/continue/email-or-sms/sms']}>
+        <MemoryRouter initialEntries={['/continue/email-or-phone/phone']}>
           <Routes>
-            <Route path="/continue/email-or-sms/:method" element={<EmailOrPhone />} />
+            <Route path="/continue/email-or-phone/:method" element={<EmailOrPhone />} />
           </Routes>
         </MemoryRouter>
       </SettingsProvider>
@@ -31,9 +31,9 @@ describe('EmailOrPhone', () => {
   it('render set email with phone alterations', () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <MemoryRouter initialEntries={['/continue/email-or-sms/email']}>
+        <MemoryRouter initialEntries={['/continue/email-or-phone/email']}>
           <Routes>
-            <Route path="/continue/email-or-sms/:method" element={<EmailOrPhone />} />
+            <Route path="/continue/email-or-phone/:method" element={<EmailOrPhone />} />
           </Routes>
         </MemoryRouter>
       </SettingsProvider>

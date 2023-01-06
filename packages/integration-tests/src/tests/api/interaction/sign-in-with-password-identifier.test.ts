@@ -151,7 +151,7 @@ describe('Sign-In flow using password identifiers', () => {
   // Fulfill the phone number
   it('sign-in with username and password and fulfill the phone number', async () => {
     await enableAllPasscodeSignInMethods({
-      identifiers: [SignInIdentifier.Sms, SignInIdentifier.Email],
+      identifiers: [SignInIdentifier.Phone, SignInIdentifier.Email],
       password: true,
       verify: true,
     });

@@ -63,7 +63,7 @@ const translation = {
     reset_password: 'Réinitialiser le mot de passe',
     reset_password_description_email:
       "Entrez l'adresse e-mail associée à votre compte et nous vous enverrons par e-mail le code de vérification pour réinitialiser votre mot de passe.",
-    reset_password_description_sms:
+    reset_password_description_phone:
       'Entrez le numéro de téléphone associé à votre compte et nous vous enverrons le code de vérification par SMS pour réinitialiser votre mot de passe.',
     new_password: 'Nouveau mot de passe',
     set_password: 'Set password', // UNTRANSLATED

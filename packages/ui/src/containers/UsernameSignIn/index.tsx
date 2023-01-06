@@ -84,7 +84,7 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
       {isForgotPasswordEnabled && (
         <ForgotPasswordLink
           className={styles.link}
-          method={email ? SignInIdentifier.Email : SignInIdentifier.Sms}
+          method={email ? SignInIdentifier.Email : SignInIdentifier.Phone}
         />
       )}
 

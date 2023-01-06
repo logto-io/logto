@@ -190,13 +190,13 @@ export const checkRequiredProfile = async (
     throw new RequestError({ code: 'user.email_required_in_profile', status: 422 });
   }
 
-  if (isSameArray(signUp.identifiers, [SignInIdentifier.Sms]) && !primaryPhone) {
+  if (isSameArray(signUp.identifiers, [SignInIdentifier.Phone]) && !primaryPhone) {
     await assignContinueSignInResult(ctx, provider, { userId: id });
     throw new RequestError({ code: 'user.phone_required_in_profile', status: 422 });
   }
 
   if (
-    isSameArray(signUp.identifiers, [SignInIdentifier.Email, SignInIdentifier.Sms]) &&
+    isSameArray(signUp.identifiers, [SignInIdentifier.Email, SignInIdentifier.Phone]) &&
     !primaryEmail &&
     !primaryPhone
   ) {

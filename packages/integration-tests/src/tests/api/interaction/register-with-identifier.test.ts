@@ -164,7 +164,7 @@ describe('Register with passwordless identifier', () => {
 
   it('register with phone', async () => {
     await enableAllPasscodeSignInMethods({
-      identifiers: [SignInIdentifier.Sms],
+      identifiers: [SignInIdentifier.Phone],
       password: false,
       verify: true,
     });
@@ -207,7 +207,7 @@ describe('Register with passwordless identifier', () => {
 
   it('register with phone and fulfill password', async () => {
     await enableAllPasscodeSignInMethods({
-      identifiers: [SignInIdentifier.Sms],
+      identifiers: [SignInIdentifier.Phone],
       password: true,
       verify: true,
     });
@@ -323,7 +323,7 @@ describe('Register with passwordless identifier', () => {
     } = await generateNewUser({ primaryPhone: true });
 
     await enableAllPasscodeSignInMethods({
-      identifiers: [SignInIdentifier.Sms],
+      identifiers: [SignInIdentifier.Phone],
       password: false,
       verify: true,
     });

@@ -11,7 +11,7 @@ export const adminConsoleRedirectUri = `${logtoUrl}/console/callback`;
 export const signUpIdentifiers = {
   username: [SignInIdentifier.Username],
   email: [SignInIdentifier.Email],
-  sms: [SignInIdentifier.Sms],
-  emailOrSms: [SignInIdentifier.Email, SignInIdentifier.Sms],
+  sms: [SignInIdentifier.Phone],
+  emailOrSms: [SignInIdentifier.Email, SignInIdentifier.Phone],
   none: [],
 };

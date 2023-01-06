@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import { EmailSignIn } from '@/containers/EmailForm';
-import { SmsSignIn } from '@/containers/PhoneForm';
+import { PhoneSignIn } from '@/containers/PhoneForm';
 import UsernameSignIn from '@/containers/UsernameSignIn';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
@@ -27,8 +27,8 @@ const SecondarySignIn = () => {
 
   return (
     <SecondaryPageWrapper title="action.sign_in">
-      {signInMethod.identifier === SignInIdentifier.Sms ? (
-        <SmsSignIn autoFocus signInMethod={signInMethod} />
+      {signInMethod.identifier === SignInIdentifier.Phone ? (
+        <PhoneSignIn autoFocus signInMethod={signInMethod} />
       ) : signInMethod.identifier === SignInIdentifier.Email ? (
         <EmailSignIn autoFocus signInMethod={signInMethod} />
       ) : (

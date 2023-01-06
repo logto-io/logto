@@ -47,7 +47,10 @@ describe('<UsernameSignIn>', () => {
   test('render with  forgot password disabled', () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider
-        settings={{ ...mockSignInExperienceSettings, forgotPassword: { sms: false, email: false } }}
+        settings={{
+          ...mockSignInExperienceSettings,
+          forgotPassword: { phone: false, email: false },
+        }}
       >
         <UsernameSignIn />
       </SettingsProvider>

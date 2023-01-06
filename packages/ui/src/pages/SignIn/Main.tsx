@@ -3,7 +3,7 @@ import type { SignIn as SignInType, ConnectorMetadata } from '@logto/schemas';
 
 import { EmailSignIn } from '@/containers/EmailForm';
 import EmailPassword from '@/containers/EmailPassword';
-import { SmsSignIn } from '@/containers/PhoneForm';
+import { PhoneSignIn } from '@/containers/PhoneForm';
 import PhonePassword from '@/containers/PhonePassword';
 import SocialSignIn from '@/containers/SocialSignIn';
 import UsernameSignIn from '@/containers/UsernameSignIn';
@@ -26,12 +26,12 @@ const Main = ({ signInMethod, socialConnectors }: Props) => {
       return <EmailSignIn signInMethod={signInMethod} className={styles.main} />;
     }
 
-    case SignInIdentifier.Sms: {
+    case SignInIdentifier.Phone: {
       if (signInMethod.password && !signInMethod.verificationCode) {
         return <PhonePassword className={styles.main} />;
       }
 
-      return <SmsSignIn signInMethod={signInMethod} className={styles.main} />;
+      return <PhoneSignIn signInMethod={signInMethod} className={styles.main} />;
     }
 
     case SignInIdentifier.Username: {

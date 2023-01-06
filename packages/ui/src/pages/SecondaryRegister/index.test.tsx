@@ -13,7 +13,7 @@ jest.mock('i18next', () => ({
 describe('<SecondaryRegister />', () => {
   test('renders phone', async () => {
     const { queryAllByText, container } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/register/sms']}>
+      <MemoryRouter initialEntries={['/register/phone']}>
         <Routes>
           <Route
             path="/register/:method"
@@ -23,7 +23,7 @@ describe('<SecondaryRegister />', () => {
                   ...mockSignInExperienceSettings,
                   signUp: {
                     ...mockSignInExperienceSettings.signUp,
-                    identifiers: [SignInIdentifier.Sms],
+                    identifiers: [SignInIdentifier.Phone],
                   },
                 }}
               >

@@ -26,14 +26,14 @@ describe('validate sign-in', () => {
               },
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Sms,
+                identifier: SignInIdentifier.Phone,
                 verificationCode: true,
               },
             ],
           },
           {
             ...mockSignUp,
-            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
             password: false,
             verify: true,
           },
@@ -96,7 +96,7 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Sms,
+                identifier: SignInIdentifier.Phone,
                 verificationCode: true,
               },
             ],
@@ -121,7 +121,7 @@ describe('validate sign-in', () => {
             methods: [
               {
                 ...mockSignInMethod,
-                identifier: SignInIdentifier.Sms,
+                identifier: SignInIdentifier.Phone,
               },
             ],
           },
@@ -175,7 +175,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifiers: [SignInIdentifier.Sms],
+            identifiers: [SignInIdentifier.Phone],
           },
           enabledConnectors
         );
@@ -199,7 +199,7 @@ describe('validate sign-in', () => {
           },
           {
             ...mockSignUp,
-            identifiers: [SignInIdentifier.Email, SignInIdentifier.Sms],
+            identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
           },
           enabledConnectors
         );
@@ -278,7 +278,7 @@ describe('validate sign-in', () => {
             },
             {
               ...mockSignInMethod,
-              identifier: SignInIdentifier.Sms,
+              identifier: SignInIdentifier.Phone,
               verificationCode: true,
               password: false,
             },
@@ -286,7 +286,7 @@ describe('validate sign-in', () => {
         },
         {
           ...mockSignUp,
-          identifiers: [SignInIdentifier.Sms],
+          identifiers: [SignInIdentifier.Phone],
           password: false,
           verify: true,
         },

@@ -9,7 +9,7 @@ import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
 import { passcodeStateGuard } from '@/types/guard';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
-import { isEmailOrSmsMethod } from '@/utils/sign-in-experience';
+import { isEmailOrPhoneMethod } from '@/utils/sign-in-experience';
 
 type Parameters = {
   method?: string;
@@ -22,14 +22,17 @@ const SignInPassword = () => {
   const { signInMethods } = useSieMethods();
   const methodSetting = signInMethods.find(({ identifier }) => identifier === method);
 
-  // Only Email and Sms method should use this page
-  if (!methodSetting || !isEmailOrSmsMethod(methodSetting.identifier) || !methodSetting.password) {
+  // Only Email and Phone method should use this page
+  if (
+    !methodSetting ||
+    !isEmailOrPhoneMethod(methodSetting.identifier) ||
+    !methodSetting.password
+  ) {
     return <ErrorPage />;
   }
 
   const invalidState = !is(state, passcodeStateGuard);
-  const value =
-    !invalidState && state[methodSetting.identifier === SignInIdentifier.Email ? 'email' : 'phone'];
+  const value = !invalidState && state[methodSetting.identifier];
 
   if (!value) {
     return (

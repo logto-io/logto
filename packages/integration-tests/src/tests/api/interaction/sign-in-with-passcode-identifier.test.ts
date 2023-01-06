@@ -138,7 +138,7 @@ describe('Sign-In flow using passcode identifiers', () => {
 
     // Enable phone sign-up
     await updateSignInExperience({
-      signUp: { identifiers: [SignInIdentifier.Sms], password: false, verify: true },
+      signUp: { identifiers: [SignInIdentifier.Phone], password: false, verify: true },
     });
 
     const client = await initClient();

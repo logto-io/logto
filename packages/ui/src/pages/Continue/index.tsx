@@ -27,7 +27,7 @@ const Continue = () => {
     return <SetEmail />;
   }
 
-  if (method === SignInIdentifier.Sms) {
+  if (method === SignInIdentifier.Phone) {
     return <SetPhone />;
   }
 

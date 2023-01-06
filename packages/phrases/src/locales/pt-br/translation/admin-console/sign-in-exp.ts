@@ -41,7 +41,7 @@ const sign_in_exp = {
   sign_up_and_sign_in: {
     identifiers: 'Identificadores de inscrição',
     identifiers_email: 'Endereço de e-mail',
-    identifiers_sms: 'Número de telefone',
+    identifiers_phone: 'Número de telefone',
     identifiers_username: 'Nome de usuário',
     identifiers_email_or_sms: 'Endereço de e-mail ou número de telefone',
     identifiers_none: 'Não aplicável',

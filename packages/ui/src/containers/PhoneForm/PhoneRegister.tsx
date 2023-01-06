@@ -11,10 +11,10 @@ type Props = {
   autoFocus?: boolean;
 };
 
-const SmsRegister = (props: Props) => {
+const PhoneRegister = (props: Props) => {
   const { onSubmit, errorMessage, clearErrorMessage } = usePasswordlessSendCode(
     UserFlow.register,
-    SignInIdentifier.Sms
+    SignInIdentifier.Phone
   );
 
   return (
@@ -28,4 +28,4 @@ const SmsRegister = (props: Props) => {
   );
 };
 
-export default SmsRegister;
+export default PhoneRegister;

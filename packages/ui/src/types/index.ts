@@ -23,7 +23,7 @@ export type SignInExperienceResponse = Omit<SignInExperience, 'socialSignInConne
   socialConnectors: ConnectorMetadata[];
   notification?: string;
   forgotPassword: {
-    sms: boolean;
+    phone: boolean;
     email: boolean;
   };
 };

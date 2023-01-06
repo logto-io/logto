@@ -77,7 +77,7 @@ export const verifyIdentifierSettings = (
   if ('phone' in identifier) {
     assertThat(
       signIn.methods.some(({ identifier: method, password, verificationCode }) => {
-        if (method !== SignInIdentifier.Sms) {
+        if (method !== SignInIdentifier.Phone) {
           return false;
         }
 
@@ -90,7 +90,7 @@ export const verifyIdentifierSettings = (
         if (
           'passcode' in identifier &&
           !verificationCode &&
-          !signUp.identifiers.includes(SignInIdentifier.Sms) &&
+          !signUp.identifiers.includes(SignInIdentifier.Phone) &&
           !signUp.verify
         ) {
           return false;
@@ -107,7 +107,7 @@ export const verifyIdentifierSettings = (
 
 export const verifyProfileSettings = (profile: Profile, { signUp }: SignInExperience) => {
   if (profile.phone) {
-    assertThat(signUp.identifiers.includes(SignInIdentifier.Sms), forbiddenIdentifierError);
+    assertThat(signUp.identifiers.includes(SignInIdentifier.Phone), forbiddenIdentifierError);
   }
 
   if (profile.email) {

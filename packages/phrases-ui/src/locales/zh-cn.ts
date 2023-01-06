@@ -58,7 +58,7 @@ const translation = {
     social_bind_with_existing: '找到了一个匹配的帐号，你可以直接绑定。',
     reset_password: '重设密码',
     reset_password_description_email: '输入邮件地址，领取验证码以重设密码。',
-    reset_password_description_sms: '输入手机号，领取验证码以重设密码。',
+    reset_password_description_phone: '输入手机号，领取验证码以重设密码。',
     new_password: '新密码',
     set_password: '设置密码',
     password_changed: '已重置密码！',

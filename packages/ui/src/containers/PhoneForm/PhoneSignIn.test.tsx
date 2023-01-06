@@ -6,7 +6,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { sendPasscode, putInteraction } from '@/apis/interaction';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
-import SmsSignIn from './SmsSignIn';
+import PhoneSignIn from './PhoneSignIn';
 
 const mockedNavigate = jest.fn();
 
@@ -25,7 +25,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-describe('SmsSignIn', () => {
+describe('PhoneSignIn', () => {
   const phone = '8573333333';
   const defaultCountryCallingCode = getDefaultCountryCallingCode();
   const fullPhoneNumber = `${defaultCountryCallingCode}${phone}`;
@@ -34,12 +34,12 @@ describe('SmsSignIn', () => {
     jest.clearAllMocks();
   });
 
-  test('SmsSignIn form with password as primary method', async () => {
+  test('PhoneSignIn form with password as primary method', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <SmsSignIn
+        <PhoneSignIn
           signInMethod={{
-            identifier: SignInIdentifier.Sms,
+            identifier: SignInIdentifier.Phone,
             password: true,
             verificationCode: true,
             isPasswordPrimary: true,
@@ -63,18 +63,18 @@ describe('SmsSignIn', () => {
       expect(putInteraction).not.toBeCalled();
       expect(sendPasscode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/sms/password', search: '' },
+        { pathname: '/sign-in/phone/password', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });
   });
 
-  test('SmsSignIn form with password true, primary true but verification code false', async () => {
+  test('PhoneSignIn form with password true, primary true but verification code false', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <SmsSignIn
+        <PhoneSignIn
           signInMethod={{
-            identifier: SignInIdentifier.Sms,
+            identifier: SignInIdentifier.Phone,
             password: true,
             verificationCode: false,
             isPasswordPrimary: true,
@@ -98,18 +98,18 @@ describe('SmsSignIn', () => {
       expect(putInteraction).not.toBeCalled();
       expect(sendPasscode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/sms/password', search: '' },
+        { pathname: '/sign-in/phone/password', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });
   });
 
-  test('SmsSignIn form with password true but is primary false and verification code true', async () => {
+  test('PhoneSignIn form with password true but is primary false and verification code true', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <SmsSignIn
+        <PhoneSignIn
           signInMethod={{
-            identifier: SignInIdentifier.Sms,
+            identifier: SignInIdentifier.Phone,
             password: true,
             verificationCode: true,
             isPasswordPrimary: false,
@@ -134,18 +134,18 @@ describe('SmsSignIn', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
       expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/sms/passcode-validation', search: '' },
+        { pathname: '/sign-in/phone/passcode-validation', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });
   });
 
-  test('SmsSignIn form with password false but primary verification code true', async () => {
+  test('PhoneSignIn form with password false but primary verification code true', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <SmsSignIn
+        <PhoneSignIn
           signInMethod={{
-            identifier: SignInIdentifier.Sms,
+            identifier: SignInIdentifier.Phone,
             password: false,
             verificationCode: true,
             isPasswordPrimary: true,
@@ -170,7 +170,7 @@ describe('SmsSignIn', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
       expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/sms/passcode-validation', search: '' },
+        { pathname: '/sign-in/phone/passcode-validation', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });
