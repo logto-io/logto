@@ -10,7 +10,6 @@ import { expectSqlAssert } from '#src/utils/test-utils.js';
 
 import {
   deleteRoleById,
-  findAllRoles,
   findRoleById,
   findRoleByRoleName,
   findRolesByRoleIds,
@@ -34,22 +33,6 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
 
 describe('roles query', () => {
   const { table, fields } = convertToIdentifiers(Roles);
-
-  it('findAllRoles', async () => {
-    const expectSql = sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([]);
-
-      return createMockQueryResult([mockRole]);
-    });
-
-    await expect(findAllRoles()).resolves.toEqual([mockRole]);
-  });
 
   it('findRolesByRoleIds', async () => {
     const roleIds = [mockRole.id];

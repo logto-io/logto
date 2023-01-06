@@ -11,7 +11,8 @@ const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 const { findRoleByRoleName, findRoleById, deleteRoleById } = mockEsm(
   '#src/queries/roles.js',
   () => ({
-    findAllRoles: jest.fn(async (): Promise<Role[]> => [mockRole]),
+    findRoles: jest.fn(async (): Promise<Role[]> => [mockRole]),
+    countRoles: jest.fn(async () => ({ count: 10 })),
     findRoleByRoleName: jest.fn(async (): Promise<Role | undefined> => undefined),
     insertRole: jest.fn(async (data) => ({
       ...data,
