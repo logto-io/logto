@@ -15,10 +15,18 @@ type Props = {
   totalCount?: number;
   pageSize: number;
   className?: string;
+  mode?: 'normal' | 'pico';
   onChange?: (pageIndex: number) => void;
 };
 
-const Pagination = ({ pageIndex, totalCount, pageSize, className, onChange }: Props) => {
+const Pagination = ({
+  pageIndex,
+  totalCount,
+  pageSize,
+  className,
+  mode = 'normal',
+  onChange,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   /**
@@ -36,9 +44,10 @@ const Pagination = ({ pageIndex, totalCount, pageSize, className, onChange }: Pr
 
   const min = (pageIndex - 1) * pageSize + 1;
   const max = Math.min(pageIndex * pageSize, cachedTotalCount);
+  const isPicoMode = mode === 'pico';
 
   return (
-    <div className={classNames(styles.container, className)}>
+    <div className={classNames(styles.container, isPicoMode && styles.pico, className)}>
       <div className={styles.positionInfo}>
         {t('general.page_info', { min, max, total: cachedTotalCount })}
       </div>
@@ -60,6 +69,8 @@ const Pagination = ({ pageIndex, totalCount, pageSize, className, onChange }: Pr
           <Button className={styles.button} size="small" title={<DangerousRaw>...</DangerousRaw>} />
         }
         disabledClassName={styles.disabled}
+        pageRangeDisplayed={isPicoMode ? -1 : undefined}
+        marginPagesDisplayed={isPicoMode ? 0 : undefined}
         onPageChange={({ selected }) => {
           onChange?.(selected + 1);
         }}

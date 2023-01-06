@@ -4,52 +4,70 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-}
 
-.positionInfo {
-  font: var(--font-body-medium);
-  color: var(--color-text-secondary);
-}
+  .positionInfo {
+    font: var(--font-body-medium);
+    color: var(--color-text-secondary);
+  }
 
-.pagination {
-  display: flex;
-  justify-content: right;
-  margin: 0;
-  height: 28px;
-  padding-inline-start: _.unit(4);
+  .pagination {
+    display: flex;
+    justify-content: right;
+    margin: 0;
+    height: 28px;
+    padding-inline-start: _.unit(4);
 
-  li {
-    list-style: none;
+    li {
+      list-style: none;
 
-    &:not(:first-child) {
-      margin-left: _.unit(2);
-    }
-
-    .button {
-      border-radius: 6px;
-      min-width: 28px;
-      padding: 0 6px;
-      height: 28px;
-      text-overflow: unset;
-      border: 1px solid var(--color-border);
-
-      > span {
-        margin: 0 auto;
+      &:not(:first-child) {
+        margin-left: _.unit(2);
       }
 
-      &.active {
-        border-color: var(--color-text-link);
-        color: var(--color-text-link);
-      }
-    }
-
-    &.disabled {
       .button {
-        cursor: not-allowed;
-        background: var(--color-neutral-95);
+        display: block;
+        border-radius: 6px;
+        min-width: 28px;
+        padding: 0 6px;
+        height: 28px;
+        text-overflow: unset;
+        border: 1px solid var(--color-border);
 
-        &:hover {
-          background: var(--color-neutral-95);
+        > span {
+          margin: 0 auto;
+        }
+
+        &.active {
+          border-color: var(--color-text-link);
+          color: var(--color-text-link);
+        }
+      }
+    }
+  }
+
+  li.disabled {
+    .button {
+      cursor: not-allowed;
+      background: var(--color-neutral-95);
+
+      &:hover {
+        background: var(--color-neutral-95);
+      }
+    }
+  }
+
+  &.pico {
+    .pagination {
+      height: 20px;
+
+      li {
+        .button {
+          border-radius: 4px;
+          height: 20px;
+          min-width: unset;
+          border: unset;
+          background: unset;
+          padding: 0;
         }
       }
     }
