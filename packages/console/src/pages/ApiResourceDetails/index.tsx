@@ -31,7 +31,7 @@ import * as styles from './index.module.scss';
 
 const ApiResourceDetails = () => {
   const { pathname } = useLocation();
-  const { tab = ApiResourceTabs.Settings, id } = useParams();
+  const { id, tab = ApiResourceTabs.Settings } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
@@ -126,10 +126,10 @@ const ApiResourceDetails = () => {
             )}
           </Card>
           <TabNav>
-            <TabNavItem href={`/api-resources/${ApiResourceTabs.Settings}/${data.id}`}>
+            <TabNavItem href={`/api-resources/${data.id}/${ApiResourceTabs.Settings}`}>
               {t('api_resource_details.settings_tab')}
             </TabNavItem>
-            <TabNavItem href={`/api-resources/${ApiResourceTabs.Permissions}/${data.id}`}>
+            <TabNavItem href={`/api-resources/${data.id}/${ApiResourceTabs.Permissions}`}>
               {t('api_resource_details.permission_tab')}
             </TabNavItem>
           </TabNav>

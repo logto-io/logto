@@ -27,7 +27,7 @@ import * as styles from './index.module.scss';
 const apiResourcesPathname = '/api-resources';
 const createApiResourcePathname = `${apiResourcesPathname}/create`;
 const buildDetailsPathname = (id: string) =>
-  `${apiResourcesPathname}/${ApiResourceTabs.Settings}/${id}`;
+  `${apiResourcesPathname}/${id}/${ApiResourceTabs.Settings}`;
 
 const pageSize = 20;
 
