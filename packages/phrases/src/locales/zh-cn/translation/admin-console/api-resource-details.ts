@@ -11,6 +11,19 @@ const api_resource_details = {
     '本操作会永久性地删除该 API 资源，且不可撤销。输入 API 资源名称 <span>{{name}}</span> 确认。',
   enter_your_api_resource_name: '输入 API 资源名称',
   api_resource_deleted: ' API 资源 {{name}} 已删除.',
+  permission: {
+    create_button: 'Create Permission', // UNTRANSLATED
+    create_title: 'Create permission', // UNTRANSLATED
+    create_subtitle: 'Define the permissions (scopes) needed by this API.', // UNTRANSLATED
+    confirm_create: 'Create permission', // UNTRANSLATED
+    name: 'Permission name', // UNTRANSLATED
+    name_placeholder: 'Read: Resources', // UNTRANSLATED
+    description: 'Description', // UNTRANSLATED
+    description_placeholder: 'Able to read the resources', // UNTRANSLATED
+    permission_created: 'The permission {{name}} has been successfully created', // UNTRANSLATED
+    name_column: 'Permission', // UNTRANSLATED
+    description_column: 'Description', // UNTRANSLATED
+  },
 };
 
 export default api_resource_details;

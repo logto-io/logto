@@ -31,13 +31,13 @@ const ApiResourcePermissions = ({ resourceId }: Props) => {
       rowGroups={[{ key: 'scopes', data: scopes }]}
       columns={[
         {
-          title: t('api_resources.permission_column'),
+          title: t('api_resource_details.permission.name_column'),
           dataIndex: 'name',
           colSpan: 6,
           render: ({ name }) => <div className={styles.name}>{name}</div>,
         },
         {
-          title: t('api_resources.description_column'),
+          title: t('api_resource_details.permission.description_column'),
           dataIndex: 'description',
           colSpan: 9,
           render: ({ description }) => <div className={styles.description}>{description}</div>,
@@ -57,7 +57,7 @@ const ApiResourcePermissions = ({ resourceId }: Props) => {
       placeholder={{
         content: (
           <Button
-            title="api_resources.create_permission_button"
+            title="api_resource_details.permission.create_button"
             type="outline"
             onClick={() => {
               // TODO @xiaoyijun Create Permission

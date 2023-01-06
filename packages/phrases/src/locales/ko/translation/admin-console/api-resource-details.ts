@@ -11,6 +11,19 @@ const api_resource_details = {
     '이 행동은 취소될 수 없어요. 해당 API 리소스가 영원히 삭제될거예요. 삭제를 하기 위해 API 리소스 이름 "<span>{{name}}</span>"을 입력해주세요.',
   enter_your_api_resource_name: 'API 리소스 이름을 입력해주세요.',
   api_resource_deleted: '{name}} API 리소스가 성공적으로 삭제되었어요.',
+  permission: {
+    create_button: 'Create Permission', // UNTRANSLATED
+    create_title: 'Create permission', // UNTRANSLATED
+    create_subtitle: 'Define the permissions (scopes) needed by this API.', // UNTRANSLATED
+    confirm_create: 'Create permission', // UNTRANSLATED
+    name: 'Permission name', // UNTRANSLATED
+    name_placeholder: 'Read: Resources', // UNTRANSLATED
+    description: 'Description', // UNTRANSLATED
+    description_placeholder: 'Able to read the resources', // UNTRANSLATED
+    permission_created: 'The permission {{name}} has been successfully created', // UNTRANSLATED
+    name_column: 'Permission', // UNTRANSLATED
+    description_column: 'Description', // UNTRANSLATED
+  },
 };
 
 export default api_resource_details;
