@@ -23,6 +23,8 @@ const { createPasscodeQueries } = await import('./passcode.js');
 const {
   findUnconsumedPasscodeByJtiAndType,
   findUnconsumedPasscodesByJtiAndType,
+  findUnconsumedPasscodeByIdentifierAndType,
+  findUnconsumedPasscodesByIdentifierAndType,
   insertPasscode,
   deletePasscodeById,
   deletePasscodesByIds,
@@ -69,6 +71,56 @@ describe('passcode query', () => {
     });
 
     await expect(findUnconsumedPasscodesByJtiAndType(jti, type)).resolves.toEqual([mockPasscode]);
+  });
+
+  it('findUnconsumedPasscodeByIdentifierAndType', async () => {
+    const type = VerificationCodeType.Generic;
+    const phone = '1234567890';
+    const mockGenericPasscode = { ...mockPasscode, interactionJti: null, type, phone };
+
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where
+        ${fields.phone}=$1
+        and ${fields.type}=$2 and ${fields.consumed} = false
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([phone, type]);
+
+      return createMockQueryResult([mockGenericPasscode]);
+    });
+
+    await expect(findUnconsumedPasscodeByIdentifierAndType({ phone, type })).resolves.toEqual(
+      mockGenericPasscode
+    );
+  });
+
+  it('findUnconsumedPasscodesByIdentifierAndType', async () => {
+    const type = VerificationCodeType.Generic;
+    const email = 'johndoe@example.com';
+    const mockGenericPasscode = { ...mockPasscode, interactionJti: null, type, email };
+
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where
+        ${fields.email}=$1
+        and ${fields.type}=$2 and ${fields.consumed} = false
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([email, type]);
+
+      return createMockQueryResult([mockGenericPasscode]);
+    });
+
+    await expect(findUnconsumedPasscodesByIdentifierAndType({ email, type })).resolves.toEqual([
+      mockGenericPasscode,
+    ]);
   });
 
   it('insertPasscode', async () => {

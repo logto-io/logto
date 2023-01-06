@@ -27,16 +27,17 @@
     "Alipay",
     "CIAM",
     "codecov",
+    "hasura",
     "Logto",
     "oidc",
     "passcode",
+    "passcodes",
     "Passwordless",
     "pnpm",
     "silverhand",
     "slonik",
     "stylelint",
     "topbar",
-    "hasura",
     "withtyped"
   ]
 }

@@ -19,6 +19,8 @@ const { jest } = import.meta;
 const passcodeQueries = {
   findUnconsumedPasscodesByJtiAndType: jest.fn(),
   findUnconsumedPasscodeByJtiAndType: jest.fn(),
+  findUnconsumedPasscodeByIdentifierAndType: jest.fn(),
+  findUnconsumedPasscodesByIdentifierAndType: jest.fn(),
   deletePasscodesByIds: jest.fn(),
   insertPasscode: jest.fn(),
   consumePasscode: jest.fn(),
@@ -27,6 +29,8 @@ const passcodeQueries = {
 const {
   findUnconsumedPasscodeByJtiAndType,
   findUnconsumedPasscodesByJtiAndType,
+  findUnconsumedPasscodeByIdentifierAndType,
+  findUnconsumedPasscodesByIdentifierAndType,
   deletePasscodesByIds,
   increasePasscodeTryCount,
   insertPasscode,
@@ -43,6 +47,7 @@ const { createPasscode, sendPasscode, verifyPasscode } = createPasscodeLibrary(
 
 beforeAll(() => {
   findUnconsumedPasscodesByJtiAndType.mockResolvedValue([]);
+  findUnconsumedPasscodesByIdentifierAndType.mockResolvedValue([]);
   insertPasscode.mockImplementation(async (data): Promise<Passcode> => {
     return {
       phone: null,
@@ -60,7 +65,7 @@ afterEach(() => {
 });
 
 describe('createPasscode', () => {
-  it('should generate `passcodeLength` digits code for phone and insert to database', async () => {
+  it('should generate `passcodeLength` digits code for phone with valid session and insert to database', async () => {
     const phone = '13000000000';
     const passcode = await createPasscode('jti', VerificationCodeType.SignIn, {
       phone,
@@ -69,7 +74,7 @@ describe('createPasscode', () => {
     expect(passcode.phone).toEqual(phone);
   });
 
-  it('should generate `passcodeLength` digits code for email and insert to database', async () => {
+  it('should generate `passcodeLength` digits code for email with valid session and insert to database', async () => {
     const email = 'jony@example.com';
     const passcode = await createPasscode('jti', VerificationCodeType.SignIn, {
       email,
@@ -78,7 +83,25 @@ describe('createPasscode', () => {
     expect(passcode.email).toEqual(email);
   });
 
-  it('should disable existing passcode', async () => {
+  it('should generate `passcodeLength` digits code for phone and insert to database, without session', async () => {
+    const phone = '13000000000';
+    const passcode = await createPasscode(undefined, VerificationCodeType.Generic, {
+      phone,
+    });
+    expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
+    expect(passcode.phone).toEqual(phone);
+  });
+
+  it('should generate `passcodeLength` digits code for email and insert to database, without session', async () => {
+    const email = 'jony@example.com';
+    const passcode = await createPasscode(undefined, VerificationCodeType.Generic, {
+      email,
+    });
+    expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
+    expect(passcode.email).toEqual(email);
+  });
+
+  it('should remove unconsumed passcode from the same device before sending a new one', async () => {
     const email = 'jony@example.com';
     const jti = 'jti';
     findUnconsumedPasscodesByJtiAndType.mockResolvedValue([
@@ -96,6 +119,27 @@ describe('createPasscode', () => {
     ]);
     await createPasscode(jti, VerificationCodeType.SignIn, {
       email,
+    });
+    expect(deletePasscodesByIds).toHaveBeenCalledWith(['id']);
+  });
+
+  it('should remove unconsumed passcode from the same device before sending a new one, without session', async () => {
+    const phone = '1234567890';
+    findUnconsumedPasscodesByIdentifierAndType.mockResolvedValue([
+      {
+        id: 'id',
+        interactionJti: null,
+        code: '123456',
+        type: VerificationCodeType.Generic,
+        createdAt: Date.now(),
+        phone,
+        email: null,
+        consumed: false,
+        tryCount: 0,
+      },
+    ]);
+    await createPasscode(undefined, VerificationCodeType.Generic, {
+      phone,
     });
     expect(deletePasscodesByIds).toHaveBeenCalledWith(['id']);
   });
@@ -233,6 +277,19 @@ describe('verifyPasscode', () => {
     await expect(
       verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' })
     ).rejects.toThrow(new RequestError('verification_code.not_found'));
+  });
+
+  it('should mark as consumed on successful verification without jti', async () => {
+    const passcodeWithoutJti = {
+      ...passcode,
+      type: VerificationCodeType.Generic,
+      interactionJti: null,
+    };
+    findUnconsumedPasscodeByIdentifierAndType.mockResolvedValue(passcodeWithoutJti);
+    await verifyPasscode(undefined, passcodeWithoutJti.type, passcodeWithoutJti.code, {
+      phone: 'phone',
+    });
+    expect(consumePasscode).toHaveBeenCalledWith(passcodeWithoutJti.id);
   });
 
   it('should fail when phone mismatch', async () => {

@@ -3,6 +3,7 @@ import type {
   IdentifierPayload,
   SocialConnectorPayload,
   SocialIdentityPayload,
+  VerifyVerificationCodePayload,
 } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -13,7 +14,6 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type {
   PasswordIdentifierPayload,
-  VerificationCodeIdentifierPayload,
   SocialIdentifier,
   VerifiedEmailIdentifier,
   VerifiedPhoneIdentifier,
@@ -53,7 +53,7 @@ const verifyPasswordIdentifier = async (
 
 const verifyVerificationCodeIdentifier = async (
   event: InteractionEvent,
-  identifier: VerificationCodeIdentifierPayload,
+  identifier: VerifyVerificationCodePayload,
   ctx: WithLogContext,
   { provider, libraries }: TenantContext
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {

@@ -2,15 +2,12 @@ import type { SocialUserInfo } from '@logto/connector-kit';
 import type {
   UsernamePasswordPayload,
   EmailPasswordPayload,
-  EmailVerificationCodePayload,
   PhonePasswordPayload,
-  PhoneVerificationCodePayload,
   InteractionEvent,
 } from '@logto/schemas';
 import type { z } from 'zod';
 
 import type {
-  sendVerificationCodePayloadGuard,
   socialAuthorizationUrlPayloadGuard,
   accountIdIdentifierGuard,
   verifiedEmailIdentifierGuard,
@@ -29,12 +26,6 @@ export type PasswordIdentifierPayload =
   | UsernamePasswordPayload
   | EmailPasswordPayload
   | PhonePasswordPayload;
-
-export type VerificationCodeIdentifierPayload =
-  | EmailVerificationCodePayload
-  | PhoneVerificationCodePayload;
-
-export type SendVerificationCodePayload = z.infer<typeof sendVerificationCodePayloadGuard>;
 
 export type SocialAuthorizationUrlPayload = z.infer<typeof socialAuthorizationUrlPayloadGuard>;
 

@@ -1,9 +1,11 @@
-import type { SocialConnectorPayload, User, IdentifierPayload } from '@logto/schemas';
-
 import type {
-  VerificationCodeIdentifierPayload,
-  PasswordIdentifierPayload,
-} from '../types/index.js';
+  SocialConnectorPayload,
+  User,
+  IdentifierPayload,
+  VerifyVerificationCodePayload,
+} from '@logto/schemas';
+
+import type { PasswordIdentifierPayload } from '../types/index.js';
 
 export const isPasswordIdentifier = (
   identifier: IdentifierPayload
@@ -11,7 +13,7 @@ export const isPasswordIdentifier = (
 
 export const isVerificationCodeIdentifier = (
   identifier: IdentifierPayload
-): identifier is VerificationCodeIdentifierPayload => 'verificationCode' in identifier;
+): identifier is VerifyVerificationCodePayload => 'verificationCode' in identifier;
 
 export const isSocialIdentifier = (
   identifier: IdentifierPayload
