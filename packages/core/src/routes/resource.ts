@@ -24,7 +24,7 @@ import {
 import type { AuthedRouter } from './types.js';
 
 const resourceId = buildIdGenerator(21);
-const scoupeId = resourceId;
+const scopeId = resourceId;
 
 export default function resourceRoutes<T extends AuthedRouter>(router: T) {
   router.get(
@@ -145,7 +145,7 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
 
       ctx.body = await insertScope({
         ...body,
-        id: scoupeId(),
+        id: scopeId(),
         resourceId,
       });
 
