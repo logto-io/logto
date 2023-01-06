@@ -33,17 +33,24 @@ const scopeId = resourceId;
 export default function resourceRoutes<T extends AuthedRouter>(router: T) {
   router.get(
     '/resources',
-    koaPagination(),
+    koaPagination({ isOptional: true }),
     koaGuard({
       query: object({
         includeScopes: string().optional(),
       }),
     }),
     async (ctx, next) => {
-      const { limit, offset } = ctx.pagination;
+      const { limit, offset, disabled } = ctx.pagination;
       const {
         query: { includeScopes },
       } = ctx.guard;
+
+      if (disabled) {
+        const resources = await findAllResources();
+        ctx.body = isTrue(includeScopes) ? await attachScopesToResources(resources) : resources;
+
+        return next();
+      }
 
       const [{ count }, resources] = await Promise.all([
         findTotalNumberOfResources(),
