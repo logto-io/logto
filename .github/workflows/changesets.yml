@@ -1,9 +1,17 @@
 name: Changesets
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+    inputs:
+      releaseGroup:
+        description: 'The release group to bump version and create pull request'
+        required: true
+        type: choice
+        # This should be synced with `/.scripts/version.js`
+        options:
+          - core
+          - toolkit
+
   pull_request:
 
 concurrency:
@@ -13,7 +21,12 @@ jobs:
   changesets:
     strategy:
       matrix:
-        group: [core, toolkit]
+        group: |-
+          ${{
+            github.event_name == 'pull_request' &&
+            fromJSON('["core", "toolkit"]') ||
+            fromJSON(format('["{0}"]', inputs.releaseGroup))
+          }}
 
     runs-on: ubuntu-latest
 
@@ -46,7 +59,7 @@ jobs:
           git status
 
       - name: Create pull request
-        if: github.event_name == 'push'
+        if: github.event_name == 'workflow_dispatch'
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.BOT_PAT }}

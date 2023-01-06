@@ -9,6 +9,7 @@ if (process.argv.length > 3) {
 }
 
 // This is configured based on our practice. Change with care.
+// Should be synced with `/.github/workflows/changesets.yml`
 const allowedGroups = { core: 'core', toolkit: 'toolkit' };
 if (!Object.values(allowedGroups).includes(versionGroup)) {
   throw new Error('Version group is invalid. Should be one of ' + Object.values(allowedGroups).join(', ') + '.');
