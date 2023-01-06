@@ -34,7 +34,8 @@ const ignoreCmd = getIgnoreGroup()
   .join('');
 const cmd = ('pnpm changeset version' + ignoreCmd);
 
-const catchCmdError = ({ stderr, code }) => {
+const catchCmdError = ({ stderr, stdout, code }) => {
+  console.log(stdout);
   console.error(stderr);
   process.exit(code ?? 1);
 };
@@ -45,3 +46,6 @@ await execAsync(cmd).catch(catchCmdError);
 
 // Manually run lifecycle script since changesets didn't
 await execAsync('pnpm -r version').catch(catchCmdError);
+
+// Sanity check for prepublish scripts
+await execAsync('pnpm -r prepublishOnly').catch(catchCmdError);

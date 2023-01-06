@@ -21,6 +21,7 @@ jobs:
   changesets:
     strategy:
       matrix:
+        # Multiline expression https://stackoverflow.com/a/67532120/12514940
         group: |-
           ${{
             github.event_name == 'pull_request' &&
