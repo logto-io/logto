@@ -13,4 +13,7 @@ export const addOidcEventListeners = (provider: Provider) => {
   provider.addListener('grant.revoked', grantRevocationListener);
   provider.addListener('interaction.started', interactionStartedListener);
   provider.addListener('interaction.ended', interactionEndedListener);
+  provider.addListener('server_error', (_, error) => {
+    console.error('OIDC Provider server_error:', error);
+  });
 };
