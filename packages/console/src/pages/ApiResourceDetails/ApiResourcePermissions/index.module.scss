@@ -4,6 +4,11 @@
   margin-bottom: _.unit(6);
   color: var(--color-text);
 
+  .filter {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .name {
     display: inline-block;
     font: var(--font-body-medium);
