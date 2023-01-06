@@ -8,10 +8,12 @@ import useSWR from 'swr';
 import Delete from '@/assets/images/delete.svg';
 import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
+import ConfirmModal from '@/components/ConfirmModal';
 import IconButton from '@/components/IconButton';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
 import type { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 
 import type { ApiResourceDetailsOutletContext } from '../types';
 import CreatePermissionModal from './components/CreatePermissionModal';
@@ -30,7 +32,27 @@ const ApiResourcePermissions = () => {
 
   const isLoading = !scopes && !error;
 
+  const api = useApi();
+
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const [scopeToBeDeleted, setScopeToBeDeleted] = useState<Scope>();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (!scopeToBeDeleted || isDeleting) {
+      return;
+    }
+    setIsDeleting(true);
+
+    try {
+      await api.delete(`/api/resources/${resourceId}/scopes/${scopeToBeDeleted.id}`);
+      toast.success(t('api_resource_details.permission.deleted', { name: scopeToBeDeleted.name }));
+      await mutate();
+      setScopeToBeDeleted(undefined);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <>
@@ -55,8 +77,12 @@ const ApiResourcePermissions = () => {
             title: null,
             dataIndex: 'delete',
             colSpan: 1,
-            render: () => (
-              <IconButton>
+            render: (scope) => (
+              <IconButton
+                onClick={() => {
+                  setScopeToBeDeleted(scope);
+                }}
+              >
                 <Delete />
               </IconButton>
             ),
@@ -104,6 +130,19 @@ const ApiResourcePermissions = () => {
             setIsCreateFormOpen(false);
           }}
         />
+      )}
+      {scopeToBeDeleted && (
+        <ConfirmModal
+          isOpen
+          isLoading={isDeleting}
+          confirmButtonText="general.delete"
+          onCancel={() => {
+            setScopeToBeDeleted(undefined);
+          }}
+          onConfirm={handleDelete}
+        >
+          {t('api_resource_details.permission.delete_description')}
+        </ConfirmModal>
       )}
     </>
   );
