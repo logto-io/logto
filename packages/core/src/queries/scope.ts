@@ -20,11 +20,13 @@ export const findScopesByResourceId = async (resourceId: string) =>
   `);
 
 export const findScopesByResourceIds = async (resourceIds: string[]) =>
-  envSet.pool.any<Scope>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.resourceId} in (${sql.join(resourceIds, sql`, `)})
-  `);
+  resourceIds.length > 0
+    ? envSet.pool.any<Scope>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.resourceId} in (${sql.join(resourceIds, sql`, `)})
+    `)
+    : [];
 
 export const findScopesByIds = async (scopeIds: string[]) =>
   scopeIds.length > 0
