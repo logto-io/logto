@@ -72,7 +72,9 @@ export enum VerificationCodeType {
   SignIn = 'SignIn',
   Register = 'Register',
   ForgotPassword = 'ForgotPassword',
+  /** @deprecated */
   Continue = 'Continue',
+  Generic = 'Generic',
   Test = 'Test',
 }
 
