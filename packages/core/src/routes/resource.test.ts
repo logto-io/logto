@@ -32,10 +32,10 @@ const { findResourceById } = mockEsm('#src/queries/resource.js', () => ({
   findScopesByResourceId: async () => [mockScope],
 }));
 
-const { insertScope, updateScopeById } = mockEsm('#src/queries/scope.js', () => ({
+const { insertScope, updateScopeById } = await mockEsmWithActual('#src/queries/scope.js', () => ({
   findScopesByResourceId: async () => [mockScope],
+  findScopes: async () => [mockScope],
   insertScope: jest.fn(async () => mockScope),
-  findScopeById: jest.fn(),
   updateScopeById: jest.fn(async () => mockScope),
   deleteScopeById: jest.fn(),
 }));

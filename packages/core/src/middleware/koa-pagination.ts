@@ -9,6 +9,7 @@ export type Pagination = {
   offset: number;
   limit: number;
   totalCount?: number;
+  disabled?: boolean;
 };
 
 export type WithPaginationContext<ContextT> = ContextT & {
@@ -18,6 +19,7 @@ export type WithPaginationContext<ContextT> = ContextT & {
 export type PaginationConfig = {
   defaultPageSize?: number;
   maxPageSize?: number;
+  isOptional?: boolean;
 };
 
 export const isPaginationMiddleware = <Type extends IMiddleware>(
@@ -29,6 +31,7 @@ export const fallbackDefaultPageSize = 20;
 export default function koaPagination<StateT, ContextT, ResponseBodyT>({
   defaultPageSize = fallbackDefaultPageSize,
   maxPageSize = 100,
+  isOptional = false,
 }: PaginationConfig = {}): MiddlewareType<StateT, WithPaginationContext<ContextT>, ResponseBodyT> {
   // Name this anonymous function for the utility function `isPaginationMiddleware` to identify it
   const paginationMiddleware: MiddlewareType<
@@ -42,18 +45,25 @@ export default function koaPagination<StateT, ContextT, ResponseBodyT>({
           query: { page, page_size },
         },
       } = ctx;
+      // If isOptional is set to true, user can disable pagination by
+      // set both `page` and `page_size` to empty
+      const disabled = !page && !page_size && isOptional;
       // Query values are all string, need to convert to number first.
       const pageNumber = page ? number().positive().parse(Number(page)) : 1;
       const pageSize = page_size
         ? number().positive().max(maxPageSize).parse(Number(page_size))
         : defaultPageSize;
 
-      ctx.pagination = { offset: (pageNumber - 1) * pageSize, limit: pageSize };
+      ctx.pagination = { offset: (pageNumber - 1) * pageSize, limit: pageSize, disabled };
     } catch {
       throw new RequestError({ code: 'guard.invalid_pagination', status: 400 });
     }
 
     await next();
+
+    if (ctx.pagination.disabled) {
+      return;
+    }
 
     // Total count value should be returned, else return internal server-error.
     if (ctx.pagination.totalCount === undefined) {
