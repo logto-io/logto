@@ -14,7 +14,6 @@ import Continue from './pages/Continue';
 import ContinueWithEmailOrPhone from './pages/Continue/EmailOrPhone';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
-import Passcode from './pages/Passcode';
 import PasswordRegisterWithUsername from './pages/PasswordRegisterWithUsername';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
@@ -26,6 +25,7 @@ import SignInPassword from './pages/SignInPassword';
 import SocialLanding from './pages/SocialLanding';
 import SocialRegister from './pages/SocialRegister';
 import SocialSignIn from './pages/SocialSignInCallback';
+import VerificationCode from './pages/VerificationCode';
 import { getSignInExperienceSettings } from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
@@ -110,7 +110,7 @@ const App = () => {
                 <Route path="/social/landing/:connector" element={<SocialLanding />} />
 
                 {/* Always keep route path with param as the last one */}
-                <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
+                <Route path="/:type/:method/verification-code" element={<VerificationCode />} />
               </Route>
 
               <Route path="*" element={<ErrorPage />} />

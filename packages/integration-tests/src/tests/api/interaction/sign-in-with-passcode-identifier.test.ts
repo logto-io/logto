@@ -1,7 +1,7 @@
 import { ConnectorType, InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import {
-  sendVerificationPasscode,
+  sendVerificationCode,
   putInteraction,
   putInteractionEvent,
   putInteractionProfile,
@@ -14,21 +14,21 @@ import { generateEmail, generatePhone } from '#src/utils.js';
 
 import { initClient, processSession, logoutClient } from './utils/client.js';
 import { clearConnectorsByTypes, setEmailConnector, setSmsConnector } from './utils/connector.js';
-import { enableAllPasscodeSignInMethods } from './utils/sign-in-experience.js';
+import { enableAllVerificationCodeSignInMethods } from './utils/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from './utils/user.js';
 
-describe('Sign-In flow using passcode identifiers', () => {
+describe('Sign-In flow using verification-code identifiers', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
     await setSmsConnector();
-    await enableAllPasscodeSignInMethods();
+    await enableAllVerificationCodeSignInMethods();
   });
   afterAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });
 
-  it('sign-in with email and passcode', async () => {
+  it('sign-in with email and verification-code', async () => {
     const { userProfile, user } = await generateNewUser({ primaryEmail: true });
     const client = await initClient();
 
@@ -36,22 +36,22 @@ describe('Sign-In flow using passcode identifiers', () => {
       event: InteractionEvent.SignIn,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       email: userProfile.primaryEmail,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    expect(passcodeRecord).toMatchObject({
+    expect(verificationCodeRecord).toMatchObject({
       address: userProfile.primaryEmail,
       type: InteractionEvent.SignIn,
     });
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       email: userProfile.primaryEmail,
-      passcode: code,
+      verificationCode: code,
     });
 
     const { redirectTo } = await client.submitInteraction();
@@ -61,7 +61,7 @@ describe('Sign-In flow using passcode identifiers', () => {
     await deleteUser(user.id);
   });
 
-  it('sign-in with phone and passcode', async () => {
+  it('sign-in with phone and verification-code', async () => {
     const { userProfile, user } = await generateNewUser({ primaryPhone: true });
     const client = await initClient();
 
@@ -69,22 +69,22 @@ describe('Sign-In flow using passcode identifiers', () => {
       event: InteractionEvent.SignIn,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       phone: userProfile.primaryPhone,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    expect(passcodeRecord).toMatchObject({
+    expect(verificationCodeRecord).toMatchObject({
       phone: userProfile.primaryPhone,
       type: InteractionEvent.SignIn,
     });
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: userProfile.primaryPhone,
-      passcode: code,
+      verificationCode: code,
     });
 
     const { redirectTo } = await client.submitInteraction();
@@ -94,7 +94,7 @@ describe('Sign-In flow using passcode identifiers', () => {
     await deleteUser(user.id);
   });
 
-  it('sign-in with non-exist email account with passcode', async () => {
+  it('sign-in with non-exist email account with verification-code', async () => {
     const newEmail = generateEmail();
 
     // Enable email sign-up
@@ -108,17 +108,17 @@ describe('Sign-In flow using passcode identifiers', () => {
       event: InteractionEvent.SignIn,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       email: newEmail,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       email: newEmail,
-      passcode: code,
+      verificationCode: code,
     });
 
     await expectRejects(client.submitInteraction(), 'user.user_not_exist');
@@ -133,7 +133,7 @@ describe('Sign-In flow using passcode identifiers', () => {
     await deleteUser(id);
   });
 
-  it('sign-in with non-exist phone account with passcode', async () => {
+  it('sign-in with non-exist phone account with verification-code', async () => {
     const newPhone = generatePhone();
 
     // Enable phone sign-up
@@ -147,17 +147,17 @@ describe('Sign-In flow using passcode identifiers', () => {
       event: InteractionEvent.SignIn,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       phone: newPhone,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: newPhone,
-      passcode: code,
+      verificationCode: code,
     });
 
     await expectRejects(client.submitInteraction(), 'user.user_not_exist');
@@ -173,7 +173,7 @@ describe('Sign-In flow using passcode identifiers', () => {
   });
 
   // Fulfill the username and password
-  it('email passcode sign-in', async () => {
+  it('email verification-code sign-in', async () => {
     await updateSignInExperience({
       signUp: {
         identifiers: [SignInIdentifier.Username],
@@ -192,14 +192,14 @@ describe('Sign-In flow using passcode identifiers', () => {
       event: InteractionEvent.SignIn,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       email: userProfile.primaryEmail,
     });
     const { code } = await readPasscode();
 
     await client.successSend(patchInteractionIdentifiers, {
       email: userProfile.primaryEmail,
-      passcode: code,
+      verificationCode: code,
     });
 
     await expectRejects(client.submitInteraction(), 'user.missing_profile');
@@ -232,7 +232,7 @@ describe('Sign-In flow using passcode identifiers', () => {
     await deleteUser(user.id);
   });
 
-  it('email passcode sign-in with existing password', async () => {
+  it('email verification-code sign-in with existing password', async () => {
     await updateSignInExperience({
       signUp: {
         identifiers: [SignInIdentifier.Username],
@@ -251,14 +251,14 @@ describe('Sign-In flow using passcode identifiers', () => {
       event: InteractionEvent.SignIn,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       email: userProfile.primaryEmail,
     });
     const { code } = await readPasscode();
 
     await client.successSend(patchInteractionIdentifiers, {
       email: userProfile.primaryEmail,
-      passcode: code,
+      verificationCode: code,
     });
 
     await expectRejects(client.submitInteraction(), 'user.missing_profile');
@@ -282,7 +282,7 @@ describe('Sign-In flow using passcode identifiers', () => {
     await deleteUser(user.id);
   });
 
-  it('email passcode sign-in with registered username', async () => {
+  it('email verification-code sign-in with registered username', async () => {
     await updateSignInExperience({
       signUp: {
         identifiers: [SignInIdentifier.Username],
@@ -302,14 +302,14 @@ describe('Sign-In flow using passcode identifiers', () => {
       event: InteractionEvent.SignIn,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       email: userProfile.primaryEmail,
     });
     const { code } = await readPasscode();
 
     await client.successSend(patchInteractionIdentifiers, {
       email: userProfile.primaryEmail,
-      passcode: code,
+      verificationCode: code,
     });
 
     await expectRejects(client.submitInteraction(), 'user.missing_profile');

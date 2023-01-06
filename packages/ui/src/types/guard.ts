@@ -8,12 +8,12 @@ export const bindSocialStateGuard = s.object({
   }),
 });
 
-export const passcodeStateGuard = s.object({
+export const verificationCodeStateGuard = s.object({
   email: s.optional(s.string()),
   phone: s.optional(s.string()),
 });
 
-export const passcodeMethodGuard = s.union([
+export const verificationCodeMethodGuard = s.union([
   s.literal(SignInIdentifier.Email),
   s.literal(SignInIdentifier.Phone),
 ]);

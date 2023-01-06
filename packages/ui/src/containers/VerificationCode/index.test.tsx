@@ -3,17 +3,17 @@ import { act, fireEvent, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import {
-  verifyForgotPasswordPasscodeIdentifier,
-  signInWithPasscodeIdentifier,
-  addProfileWithPasscodeIdentifier,
+  verifyForgotPasswordVerificationCodeIdentifier,
+  signInWithVerificationCodeIdentifier,
+  addProfileWithVerificationCodeIdentifier,
 } from '@/apis/interaction';
 import { UserFlow } from '@/types';
 
-import PasscodeValidation from '.';
+import VerificationCode from '.';
 
 jest.useFakeTimers();
 
-const sendPasscodeApi = jest.fn();
+const sendVerificationCodeApi = jest.fn();
 
 const mockedNavigate = jest.fn();
 
@@ -23,16 +23,16 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/utils', () => ({
-  getSendPasscodeApi: () => sendPasscodeApi,
+  getSendVerificationCodeApi: () => sendVerificationCodeApi,
 }));
 
 jest.mock('@/apis/interaction', () => ({
-  verifyForgotPasswordPasscodeIdentifier: jest.fn(),
-  signInWithPasscodeIdentifier: jest.fn(),
-  addProfileWithPasscodeIdentifier: jest.fn(),
+  verifyForgotPasswordVerificationCodeIdentifier: jest.fn(),
+  signInWithVerificationCodeIdentifier: jest.fn(),
+  addProfileWithVerificationCodeIdentifier: jest.fn(),
 }));
 
-describe('<PasscodeValidation />', () => {
+describe('<VerificationCode />', () => {
   const email = 'foo@logto.io';
   const phone = '18573333333';
   const originalLocation = window.location;
@@ -57,7 +57,7 @@ describe('<PasscodeValidation />', () => {
 
   it('render counter', () => {
     const { queryByText } = renderWithPageContext(
-      <PasscodeValidation type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
+      <VerificationCode type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
     );
 
     expect(queryByText('description.resend_after_seconds')).not.toBeNull();
@@ -71,7 +71,7 @@ describe('<PasscodeValidation />', () => {
 
   it('fire resend event', async () => {
     const { getByText } = renderWithPageContext(
-      <PasscodeValidation type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
+      <VerificationCode type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
     );
     act(() => {
       jest.advanceTimersByTime(1e3 * 60);
@@ -82,17 +82,17 @@ describe('<PasscodeValidation />', () => {
       fireEvent.click(resendButton);
     });
 
-    expect(sendPasscodeApi).toBeCalledWith({ email });
+    expect(sendVerificationCodeApi).toBeCalledWith({ email });
   });
 
   describe('sign-in', () => {
-    it('fire email sign-in validate passcode event', async () => {
-      (signInWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
+    it('fire email sign-in validate verification code event', async () => {
+      (signInWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: 'foo.com',
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
+        <VerificationCode type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
       );
       const inputs = container.querySelectorAll('input');
 
@@ -103,8 +103,8 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(signInWithPasscodeIdentifier).toBeCalledWith(
-          { email, passcode: '111111' },
+        expect(signInWithVerificationCodeIdentifier).toBeCalledWith(
+          { email, verificationCode: '111111' },
           undefined
         );
       });
@@ -114,13 +114,13 @@ describe('<PasscodeValidation />', () => {
       });
     });
 
-    it('fire phone sign-in validate passcode event', async () => {
-      (signInWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
+    it('fire phone sign-in validate verification code event', async () => {
+      (signInWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: 'foo.com',
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation type={UserFlow.signIn} method={SignInIdentifier.Phone} target={phone} />
+        <VerificationCode type={UserFlow.signIn} method={SignInIdentifier.Phone} target={phone} />
       );
       const inputs = container.querySelectorAll('input');
 
@@ -131,10 +131,10 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(signInWithPasscodeIdentifier).toBeCalledWith(
+        expect(signInWithVerificationCodeIdentifier).toBeCalledWith(
           {
             phone,
-            passcode: '111111',
+            verificationCode: '111111',
           },
           undefined
         );
@@ -147,17 +147,13 @@ describe('<PasscodeValidation />', () => {
   });
 
   describe('register', () => {
-    it('fire email register validate passcode event', async () => {
-      (addProfileWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
+    it('fire email register validate verification code event', async () => {
+      (addProfileWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: 'foo.com',
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation
-          type={UserFlow.register}
-          method={SignInIdentifier.Email}
-          target={email}
-        />
+        <VerificationCode type={UserFlow.register} method={SignInIdentifier.Email} target={email} />
       );
       const inputs = container.querySelectorAll('input');
 
@@ -168,9 +164,9 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(addProfileWithPasscodeIdentifier).toBeCalledWith({
+        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith({
           email,
-          passcode: '111111',
+          verificationCode: '111111',
         });
       });
 
@@ -179,17 +175,13 @@ describe('<PasscodeValidation />', () => {
       });
     });
 
-    it('fire phone register validate passcode event', async () => {
-      (addProfileWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
+    it('fire phone register validate verification code event', async () => {
+      (addProfileWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: 'foo.com',
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation
-          type={UserFlow.register}
-          method={SignInIdentifier.Phone}
-          target={phone}
-        />
+        <VerificationCode type={UserFlow.register} method={SignInIdentifier.Phone} target={phone} />
       );
       const inputs = container.querySelectorAll('input');
 
@@ -200,7 +192,10 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(addProfileWithPasscodeIdentifier).toBeCalledWith({ phone, passcode: '111111' });
+        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith({
+          phone,
+          verificationCode: '111111',
+        });
       });
 
       await waitFor(() => {
@@ -210,13 +205,13 @@ describe('<PasscodeValidation />', () => {
   });
 
   describe('forgot password', () => {
-    it('fire email forgot-password validate passcode event', async () => {
-      (verifyForgotPasswordPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
+    it('fire email forgot-password validate verification code event', async () => {
+      (verifyForgotPasswordVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         success: true,
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation
+        <VerificationCode
           type={UserFlow.forgotPassword}
           method={SignInIdentifier.Email}
           target={email}
@@ -232,22 +227,22 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(verifyForgotPasswordPasscodeIdentifier).toBeCalledWith({
+        expect(verifyForgotPasswordVerificationCodeIdentifier).toBeCalledWith({
           email,
-          passcode: '111111',
+          verificationCode: '111111',
         });
       });
 
       // TODO: @simeng test exception flow to fulfill the password
     });
 
-    it('fire phone forgot-password validate passcode event', async () => {
-      (verifyForgotPasswordPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
+    it('fire phone forgot-password validate verification code event', async () => {
+      (verifyForgotPasswordVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         success: true,
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation
+        <VerificationCode
           type={UserFlow.forgotPassword}
           method={SignInIdentifier.Phone}
           target={phone}
@@ -263,9 +258,9 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(verifyForgotPasswordPasscodeIdentifier).toBeCalledWith({
+        expect(verifyForgotPasswordVerificationCodeIdentifier).toBeCalledWith({
           phone,
-          passcode: '111111',
+          verificationCode: '111111',
         });
       });
 
@@ -275,16 +270,12 @@ describe('<PasscodeValidation />', () => {
 
   describe('continue flow', () => {
     it('set email', async () => {
-      (addProfileWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
+      (addProfileWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: '/redirect',
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation
-          type={UserFlow.continue}
-          method={SignInIdentifier.Email}
-          target={email}
-        />
+        <VerificationCode type={UserFlow.continue} method={SignInIdentifier.Email} target={email} />
       );
 
       const inputs = container.querySelectorAll('input');
@@ -296,10 +287,10 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(addProfileWithPasscodeIdentifier).toBeCalledWith(
+        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith(
           {
             email,
-            passcode: '111111',
+            verificationCode: '111111',
           },
           undefined
         );
@@ -311,16 +302,12 @@ describe('<PasscodeValidation />', () => {
     });
 
     it('set Phone', async () => {
-      (addProfileWithPasscodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
+      (addProfileWithVerificationCodeIdentifier as jest.Mock).mockImplementationOnce(() => ({
         redirectTo: '/redirect',
       }));
 
       const { container } = renderWithPageContext(
-        <PasscodeValidation
-          type={UserFlow.continue}
-          method={SignInIdentifier.Phone}
-          target={phone}
-        />
+        <VerificationCode type={UserFlow.continue} method={SignInIdentifier.Phone} target={phone} />
       );
 
       const inputs = container.querySelectorAll('input');
@@ -332,10 +319,10 @@ describe('<PasscodeValidation />', () => {
       }
 
       await waitFor(() => {
-        expect(addProfileWithPasscodeIdentifier).toBeCalledWith(
+        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith(
           {
             phone,
-            passcode: '111111',
+            verificationCode: '111111',
           },
           undefined
         );

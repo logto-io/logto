@@ -3,7 +3,7 @@ import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { sendPasscode, putInteraction } from '@/apis/interaction';
+import { sendVerificationCode, putInteraction } from '@/apis/interaction';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import PhoneSignIn from './PhoneSignIn';
@@ -16,7 +16,7 @@ jest.mock('i18next', () => ({
 }));
 
 jest.mock('@/apis/interaction', () => ({
-  sendPasscode: jest.fn(() => ({ success: true })),
+  sendVerificationCode: jest.fn(() => ({ success: true })),
   putInteraction: jest.fn(() => ({ success: true })),
 }));
 
@@ -61,7 +61,7 @@ describe('PhoneSignIn', () => {
 
     await waitFor(() => {
       expect(putInteraction).not.toBeCalled();
-      expect(sendPasscode).not.toBeCalled();
+      expect(sendVerificationCode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/phone/password', search: '' },
         { state: { phone: fullPhoneNumber } }
@@ -96,7 +96,7 @@ describe('PhoneSignIn', () => {
 
     await waitFor(() => {
       expect(putInteraction).not.toBeCalled();
-      expect(sendPasscode).not.toBeCalled();
+      expect(sendVerificationCode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/phone/password', search: '' },
         { state: { phone: fullPhoneNumber } }
@@ -132,9 +132,9 @@ describe('PhoneSignIn', () => {
 
     await waitFor(() => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
-      expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
+      expect(sendVerificationCode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/phone/passcode-validation', search: '' },
+        { pathname: '/sign-in/phone/verification-code', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });
@@ -168,9 +168,9 @@ describe('PhoneSignIn', () => {
 
     await waitFor(() => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
-      expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
+      expect(sendVerificationCode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/phone/passcode-validation', search: '' },
+        { pathname: '/sign-in/phone/verification-code', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });

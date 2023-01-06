@@ -14,47 +14,47 @@ const passcode = {
 
 await mockEsmWithActual('#src/libraries/passcode.js', () => passcode);
 
-const { sendPasscodeToIdentifier } = await import('./passcode-validation.js');
+const { sendVerificationCodeToIdentifier } = await import('./verification-code-validation.js');
 
-const sendPasscodeTestCase = [
+const sendVerificationCodeTestCase = [
   {
     payload: { email: 'email', event: InteractionEvent.SignIn },
-    createPasscodeParams: [VerificationCodeType.SignIn, { email: 'email' }],
+    createVerificationCodeParams: [VerificationCodeType.SignIn, { email: 'email' }],
   },
   {
     payload: { email: 'email', event: InteractionEvent.Register },
-    createPasscodeParams: [VerificationCodeType.Register, { email: 'email' }],
+    createVerificationCodeParams: [VerificationCodeType.Register, { email: 'email' }],
   },
   {
     payload: { email: 'email', event: InteractionEvent.ForgotPassword },
-    createPasscodeParams: [VerificationCodeType.ForgotPassword, { email: 'email' }],
+    createVerificationCodeParams: [VerificationCodeType.ForgotPassword, { email: 'email' }],
   },
   {
     payload: { phone: 'phone', event: InteractionEvent.SignIn },
-    createPasscodeParams: [VerificationCodeType.SignIn, { phone: 'phone' }],
+    createVerificationCodeParams: [VerificationCodeType.SignIn, { phone: 'phone' }],
   },
   {
     payload: { phone: 'phone', event: InteractionEvent.Register },
-    createPasscodeParams: [VerificationCodeType.Register, { phone: 'phone' }],
+    createVerificationCodeParams: [VerificationCodeType.Register, { phone: 'phone' }],
   },
   {
     payload: { phone: 'phone', event: InteractionEvent.ForgotPassword },
-    createPasscodeParams: [VerificationCodeType.ForgotPassword, { phone: 'phone' }],
+    createVerificationCodeParams: [VerificationCodeType.ForgotPassword, { phone: 'phone' }],
   },
 ];
 
-describe('passcode-validation utils', () => {
+describe('verification-code-validation utils', () => {
   const log = createMockLogContext();
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it.each(sendPasscodeTestCase)(
-    'send passcode successfully',
-    async ({ payload, createPasscodeParams }) => {
-      await sendPasscodeToIdentifier(payload, 'jti', log.createLog);
-      expect(passcode.createPasscode).toBeCalledWith('jti', ...createPasscodeParams);
+  it.each(sendVerificationCodeTestCase)(
+    'send verification code successfully',
+    async ({ payload, createVerificationCodeParams }) => {
+      await sendVerificationCodeToIdentifier(payload, 'jti', log.createLog);
+      expect(passcode.createPasscode).toBeCalledWith('jti', ...createVerificationCodeParams);
       expect(passcode.sendPasscode).toBeCalled();
     }
   );

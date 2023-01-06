@@ -7,7 +7,7 @@ import { EmailResetPassword } from '@/containers/EmailForm';
 import { PhoneResetPassword } from '@/containers/PhoneForm';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
-import { passcodeMethodGuard } from '@/types/guard';
+import { verificationCodeMethodGuard } from '@/types/guard';
 
 type Props = {
   method?: string;
@@ -17,7 +17,7 @@ const ForgotPassword = () => {
   const { method = '' } = useParams<Props>();
   const forgotPassword = useForgotPasswordSettings();
 
-  if (!is(method, passcodeMethodGuard)) {
+  if (!is(method, verificationCodeMethodGuard)) {
     return <ErrorPage />;
   }
 

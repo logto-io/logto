@@ -31,7 +31,14 @@ const normalize = (value: string[], length: number): string[] => {
   return value;
 };
 
-const Passcode = ({ name, className, value, length = defaultLength, error, onChange }: Props) => {
+const VerificationCode = ({
+  name,
+  className,
+  value,
+  length = defaultLength,
+  error,
+  onChange,
+}: Props) => {
   /* eslint-disable @typescript-eslint/ban-types */
   const inputReferences = useRef<Array<HTMLInputElement | null>>(
     Array.from<null>({ length }).fill(null)
@@ -199,4 +206,4 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
   );
 };
 
-export default Passcode;
+export default VerificationCode;

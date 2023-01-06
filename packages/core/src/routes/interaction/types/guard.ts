@@ -3,8 +3,8 @@ import { emailRegEx, phoneRegEx, validateRedirectUrl } from '@logto/core-kit';
 import { eventGuard, profileGuard, InteractionEvent } from '@logto/schemas';
 import { z } from 'zod';
 
-// Passcode Send Route Payload Guard
-export const sendPasscodePayloadGuard = z.union([
+// Verification Send Route Payload Guard
+export const sendVerificationCodePayloadGuard = z.union([
   z.object({
     email: z.string().regex(emailRegEx),
   }),

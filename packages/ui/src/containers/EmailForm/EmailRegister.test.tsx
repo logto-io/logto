@@ -3,14 +3,14 @@ import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { putInteraction, sendPasscode } from '@/apis/interaction';
+import { putInteraction, sendVerificationCode } from '@/apis/interaction';
 
 import EmailRegister from './EmailRegister';
 
 const mockedNavigate = jest.fn();
 
 jest.mock('@/apis/interaction', () => ({
-  sendPasscode: jest.fn(() => ({ success: true })),
+  sendVerificationCode: jest.fn(() => ({ success: true })),
   putInteraction: jest.fn(() => ({ success: true })),
 }));
 
@@ -42,9 +42,9 @@ describe('EmailRegister', () => {
 
     await waitFor(() => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.Register);
-      expect(sendPasscode).toBeCalledWith({ email });
+      expect(sendVerificationCode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/register/email/passcode-validation', search: '' },
+        { pathname: '/register/email/verification-code', search: '' },
         { state: { email } }
       );
     });

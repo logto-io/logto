@@ -16,19 +16,22 @@ import koaInteractionDetails from './middleware/koa-interaction-details.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
-import { sendPasscodePayloadGuard, socialAuthorizationUrlPayloadGuard } from './types/guard.js';
+import {
+  sendVerificationCodePayloadGuard,
+  socialAuthorizationUrlPayloadGuard,
+} from './types/guard.js';
 import {
   getInteractionStorage,
   storeInteractionResult,
   mergeIdentifiers,
 } from './utils/interaction.js';
-import { sendPasscodeToIdentifier } from './utils/passcode-validation.js';
 import {
   verifySignInModeSettings,
   verifyIdentifierSettings,
   verifyProfileSettings,
 } from './utils/sign-in-experience-validation.js';
 import { createSocialAuthorizationUrl } from './utils/social-verification.js';
+import { sendVerificationCodeToIdentifier } from './utils/verification-code-validation.js';
 import {
   verifyIdentifierPayload,
   verifyIdentifier,
@@ -327,18 +330,22 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     }
   );
 
-  // Create passwordless interaction passcode
+  // Create passwordless interaction verification-code
   router.post(
-    `${interactionPrefix}/${verificationPath}/passcode`,
+    `${interactionPrefix}/${verificationPath}/verification-code`,
     koaGuard({
-      body: sendPasscodePayloadGuard,
+      body: sendVerificationCodePayloadGuard,
     }),
     async (ctx, next) => {
       const { interactionDetails, guard, createLog } = ctx;
       // Check interaction exists
       const { event } = getInteractionStorage(interactionDetails.result);
 
-      await sendPasscodeToIdentifier({ event, ...guard.body }, interactionDetails.jti, createLog);
+      await sendVerificationCodeToIdentifier(
+        { event, ...guard.body },
+        interactionDetails.jti,
+        createLog
+      );
 
       ctx.status = 204;
 

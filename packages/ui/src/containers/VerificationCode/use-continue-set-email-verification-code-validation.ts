@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { useMemo, useCallback } from 'react';
 
-import { addProfileWithPasscodeIdentifier } from '@/apis/interaction';
+import { addProfileWithVerificationCodeIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
@@ -11,7 +11,7 @@ import { getSearchParameters } from '@/utils';
 import useIdentifierErrorAlert from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
-const useContinueSetEmailPasscodeValidation = (email: string, errorCallback?: () => void) => {
+const useContinueSetEmailVerificationCode = (email: string, errorCallback?: () => void) => {
   const { sharedErrorHandlers, errorMessage, clearErrorMessage } = useSharedErrorHandler();
 
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler(true);
@@ -22,7 +22,7 @@ const useContinueSetEmailPasscodeValidation = (email: string, errorCallback?: ()
     email
   );
 
-  const verifyPasscodeErrorHandlers: ErrorHandlers = useMemo(
+  const verifyVerificationCodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.email_already_in_use': identifierNotExistErrorHandler,
       ...requiredProfileErrorHandler,
@@ -37,21 +37,21 @@ const useContinueSetEmailPasscodeValidation = (email: string, errorCallback?: ()
     ]
   );
 
-  const { run: verifyPasscode } = useApi(
-    addProfileWithPasscodeIdentifier,
-    verifyPasscodeErrorHandlers
+  const { run: verifyVerificationCode } = useApi(
+    addProfileWithVerificationCodeIdentifier,
+    verifyVerificationCodeErrorHandlers
   );
 
   const onSubmit = useCallback(
-    async (passcode: string) => {
+    async (verificationCode: string) => {
       const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-      const result = await verifyPasscode({ email, passcode }, socialToBind);
+      const result = await verifyVerificationCode({ email, verificationCode }, socialToBind);
 
       if (result?.redirectTo) {
         window.location.replace(result.redirectTo);
       }
     },
-    [email, verifyPasscode]
+    [email, verifyVerificationCode]
   );
 
   return {
@@ -61,4 +61,4 @@ const useContinueSetEmailPasscodeValidation = (email: string, errorCallback?: ()
   };
 };
 
-export default useContinueSetEmailPasscodeValidation;
+export default useContinueSetEmailVerificationCode;

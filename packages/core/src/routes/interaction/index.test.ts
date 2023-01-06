@@ -84,10 +84,10 @@ const { storeInteractionResult, mergeIdentifiers, getInteractionStorage } = awai
   })
 );
 
-const { sendPasscodeToIdentifier } = await mockEsmWithActual(
-  './utils/passcode-validation.js',
+const { sendVerificationCodeToIdentifier } = await mockEsmWithActual(
+  './utils/verification-code-validation.js',
   () => ({
-    sendPasscodeToIdentifier: jest.fn(),
+    sendVerificationCodeToIdentifier: jest.fn(),
   })
 );
 
@@ -208,7 +208,7 @@ describe('session -> interactionRoutes', () => {
     it('should update identifiers properly', async () => {
       const body = {
         email: 'email@logto.io',
-        passcode: 'passcode',
+        verificationCode: 'verificationCode',
       };
       const response = await sessionRequest.patch(path).send(body);
       expect(getInteractionStorage).toBeCalled();
@@ -257,17 +257,17 @@ describe('session -> interactionRoutes', () => {
     });
   });
 
-  describe('POST /interaction/verification/passcode', () => {
-    const path = `${interactionPrefix}/${verificationPath}/passcode`;
+  describe('POST /interaction/verification/verification-code', () => {
+    const path = `${interactionPrefix}/${verificationPath}/verification-code`;
 
-    it('should call send passcode properly', async () => {
+    it('should call send verificationCode properly', async () => {
       const body = {
         email: 'email@logto.io',
       };
 
       const response = await sessionRequest.post(path).send(body);
       expect(getInteractionStorage).toBeCalled();
-      expect(sendPasscodeToIdentifier).toBeCalledWith(
+      expect(sendVerificationCodeToIdentifier).toBeCalledWith(
         {
           event: InteractionEvent.SignIn,
           ...body,
