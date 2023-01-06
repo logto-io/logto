@@ -114,7 +114,7 @@ describe('adminUserRoutes', () => {
   it('GET /users/:userId', async () => {
     const response = await userRequest.get('/users/foo');
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual(mockUserResponse);
+    expect(response.body).toEqual({ ...mockUserResponse, roleNames: ['admin'] });
   });
 
   it('POST /users', async () => {
