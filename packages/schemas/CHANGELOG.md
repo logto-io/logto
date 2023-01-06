@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-beta.18
+
+### Patch Changes
+
+- df9e98dc: Fix version lifecycle script
+
 ## 1.0.0-beta.17
 
 ### Major Changes

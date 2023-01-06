@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.0.0-beta.18
+
+### Patch Changes
+
+- Updated dependencies [df9e98dc]
+  - @logto/schemas@1.0.0-beta.18
+
 ## 1.0.0-beta.17
 
 ### Major Changes

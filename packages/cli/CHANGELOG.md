@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.0.0-beta.19
+
+### Patch Changes
+
+- df9e98dc: Fix version lifecycle script
+- Updated dependencies [df9e98dc]
+  - @logto/schemas@1.0.0-beta.18
+  - @logto/shared@1.0.0-beta.18
+
 ## 1.0.0-beta.18
 
 ### Major Changes
