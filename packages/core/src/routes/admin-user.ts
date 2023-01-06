@@ -1,7 +1,7 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, userInfoSelectFields, UserRole } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
-import { conditional, has, pick } from '@silverhand/essentials';
+import { conditional, deduplicate, has, pick } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
 
 import { isTrue } from '#src/env-set/parameters.js';
@@ -28,7 +28,11 @@ import {
   hasUserWithPhone,
   findUsersByRoleName,
 } from '#src/queries/user.js';
-import { deleteUsersRolesByUserIdAndRoleId, insertUsersRoles } from '#src/queries/users-roles.js';
+import {
+  deleteUsersRolesByUserIdAndRoleId,
+  findUsersRolesByRoleId,
+  insertUsersRoles,
+} from '#src/queries/users-roles.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
@@ -43,9 +47,12 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       async () => {
         const search = parseSearchParamsForSearch(searchParams);
         const hideAdminUser = isTrue(searchParams.get('hideAdminUser'));
-
+        const excludeRoleId = searchParams.get('excludeRoleId');
+        const excludeUsersRoles = excludeRoleId ? await findUsersRolesByRoleId(excludeRoleId) : [];
+        const excludeUserIdsByRole = excludeUsersRoles.map(({ userId }) => userId);
         const adminUsers = hideAdminUser ? await findUsersByRoleName(UserRole.Admin) : [];
-        const excludeUserIds = adminUsers.map(({ id }) => id);
+        const excludeUserIdsByAdmin = adminUsers.map(({ id }) => id);
+        const excludeUserIds = deduplicate([...excludeUserIdsByRole, ...excludeUserIdsByAdmin]);
 
         const [{ count }, users] = await Promise.all([
           countUsers(search, excludeUserIds),
