@@ -132,7 +132,6 @@ const Applications = () => {
         onRetry={async () => mutate(undefined, true)}
       />
       <Pagination
-        mode="pico"
         pageIndex={pageIndex}
         totalCount={totalCount}
         pageSize={pageSize}
