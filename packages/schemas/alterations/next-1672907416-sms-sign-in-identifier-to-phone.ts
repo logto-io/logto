@@ -1,13 +1,6 @@
 import { sql } from 'slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
-import type { Color, Branding, LanguageInfo, ConnectorTargets } from '../src/foundations/index.js';
-
-enum SignInMode {
-  SignIn = 'SignIn',
-  Register = 'Register',
-  SignInAndRegister = 'SignInAndRegister',
-}
 
 enum OldSignInIdentifier {
   Email = 'email',
@@ -31,15 +24,10 @@ type OldSignUp = {
 };
 
 type OldSignInExperience = {
+  [k: string]: unknown;
   id: string;
-  color: Color;
-  branding: Branding;
-  languageInfo: LanguageInfo;
-  termsOfUseUrl: string | null;
   signIn: OldSignIn;
   signUp: OldSignUp;
-  socialSignInConnectorTargets: ConnectorTargets;
-  signInMode: SignInMode;
 };
 
 enum SignInIdentifier {
@@ -64,15 +52,10 @@ type SignUp = {
 };
 
 type SignInExperience = {
+  [k: string]: unknown;
   id: string;
-  color: Color;
-  branding: Branding;
-  languageInfo: LanguageInfo;
-  termsOfUseUrl: string | null;
   signIn: SignIn;
   signUp: SignUp;
-  socialSignInConnectorTargets: ConnectorTargets;
-  signInMode: SignInMode;
 };
 
 const alterSignUp = (signUp: OldSignUp) => {
