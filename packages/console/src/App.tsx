@@ -64,6 +64,10 @@ const Main = () => {
                 <Route index element={<ApiResources />} />
                 <Route path="create" element={<ApiResources />} />
                 <Route path=":id" element={<ApiResourceDetails />}>
+                  <Route
+                    index
+                    element={<Navigate replace to={ApiResourceDetailsTabs.Settings} />}
+                  />
                   <Route path={ApiResourceDetailsTabs.Settings} element={<ApiResourceSettings />} />
                   <Route
                     path={ApiResourceDetailsTabs.Permissions}
