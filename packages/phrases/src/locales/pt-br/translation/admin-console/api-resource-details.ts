@@ -1,5 +1,7 @@
 const api_resource_details = {
   back_to_api_resources: 'Voltar para os recursos da API',
+  settings_tab: 'Settings', // UNTRANSLATED
+  permission_tab: 'Permission', // UNTRANSLATED
   settings: 'Configurações',
   settings_description:
     'Os recursos da API, também conhecidos como Indicadores de recursos, indicam os serviços ou recursos de destino a serem solicitados, geralmente uma variável de formato de URI que representa a identidade do recurso.',
@@ -9,6 +11,19 @@ const api_resource_details = {
     'Essa ação não pode ser desfeita. Isso excluirá permanentemente o recurso da API. Insira o nome do recurso de API <span>{{name}}</span> para confirmar.',
   enter_your_api_resource_name: 'Digite o nome do recurso da API',
   api_resource_deleted: 'O recurso da API {{name}} foi excluído com sucesso',
+  permission: {
+    create_button: 'Create Permission', // UNTRANSLATED
+    create_title: 'Create permission', // UNTRANSLATED
+    create_subtitle: 'Define the permissions (scopes) needed by this API.', // UNTRANSLATED
+    confirm_create: 'Create permission', // UNTRANSLATED
+    name: 'Permission name', // UNTRANSLATED
+    name_placeholder: 'Read: Resources', // UNTRANSLATED
+    description: 'Description', // UNTRANSLATED
+    description_placeholder: 'Able to read the resources', // UNTRANSLATED
+    permission_created: 'The permission {{name}} has been successfully created', // UNTRANSLATED
+    name_column: 'Permission', // UNTRANSLATED
+    description_column: 'Description', // UNTRANSLATED
+  },
 };
 
 export default api_resource_details;

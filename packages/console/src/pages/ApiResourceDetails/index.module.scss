@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.permissionPage {
+  height: 100%;
+}
+
 .backLink {
   margin: _.unit(1) 0 0 _.unit(1);
   user-select: none;
