@@ -1,5 +1,6 @@
 import type { Scope } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/images/delete.svg';
@@ -8,13 +9,13 @@ import IconButton from '@/components/IconButton';
 import Table from '@/components/Table';
 import type { RequestError } from '@/hooks/use-api';
 
+import type { ApiResourceDetailsOutletContext } from '../types';
 import * as styles from './index.module.scss';
 
-type Props = {
-  resourceId: string;
-};
-
-const ApiResourcePermissions = ({ resourceId }: Props) => {
+const ApiResourcePermissions = () => {
+  const {
+    resource: { id: resourceId },
+  } = useOutletContext<ApiResourceDetailsOutletContext>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     data: scopes,

@@ -1,4 +1,4 @@
-export enum ApiResourceTabs {
+export enum ApiResourceDetailsTabs {
   Settings = 'settings',
   Permissions = 'permissions',
 }

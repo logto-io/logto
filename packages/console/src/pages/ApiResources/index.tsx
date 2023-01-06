@@ -15,7 +15,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
-import { ApiResourceTabs } from '@/consts/page-tabs';
+import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -27,7 +27,7 @@ import * as styles from './index.module.scss';
 const apiResourcesPathname = '/api-resources';
 const createApiResourcePathname = `${apiResourcesPathname}/create`;
 const buildDetailsPathname = (id: string) =>
-  `${apiResourcesPathname}/${id}/${ApiResourceTabs.Settings}`;
+  `${apiResourcesPathname}/${id}/${ApiResourceDetailsTabs.Settings}`;
 
 const pageSize = 20;
 

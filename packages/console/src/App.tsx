@@ -33,7 +33,9 @@ import UserDetails from '@/pages/UserDetails';
 import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
-import { ApiResourceTabs, ConnectorsTabs, SignInExperiencePage } from './consts/page-tabs';
+import { ApiResourceDetailsTabs, ConnectorsTabs, SignInExperiencePage } from './consts/page-tabs';
+import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
+import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
 import { getBasename } from './utilities/router';
 
 void initI18n();
@@ -61,9 +63,12 @@ const Main = () => {
               <Route path="api-resources">
                 <Route index element={<ApiResources />} />
                 <Route path="create" element={<ApiResources />} />
-                <Route path=":id">
-                  <Route index element={<Navigate replace to={ApiResourceTabs.Settings} />} />
-                  <Route path=":tab" element={<ApiResourceDetails />} />
+                <Route path=":id" element={<ApiResourceDetails />}>
+                  <Route path={ApiResourceDetailsTabs.Settings} element={<ApiResourceSettings />} />
+                  <Route
+                    path={ApiResourceDetailsTabs.Permissions}
+                    element={<ApiResourcePermissions />}
+                  />
                 </Route>
               </Route>
               <Route path="sign-in-experience">

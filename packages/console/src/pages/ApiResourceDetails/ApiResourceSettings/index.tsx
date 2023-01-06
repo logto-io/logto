@@ -2,6 +2,7 @@ import type { Resource } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
@@ -10,19 +11,12 @@ import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 
-type Props = {
-  data: Resource;
-  isDeleting: boolean;
-  isLogtoManagementApiResource: boolean;
-  onResourceUpdated: (resource: Resource) => void;
-};
+import type { ApiResourceDetailsOutletContext } from '../types';
 
-const ApiResourceSettings = ({
-  data,
-  isDeleting,
-  isLogtoManagementApiResource,
-  onResourceUpdated,
-}: Props) => {
+const ApiResourceSettings = () => {
+  const { resource, isDeleting, isLogtoManagementApiResource, onResourceUpdated } =
+    useOutletContext<ApiResourceDetailsOutletContext>();
+
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     handleSubmit,
@@ -30,7 +24,7 @@ const ApiResourceSettings = ({
     reset,
     formState: { isDirty, isSubmitting, errors },
   } = useForm<Resource>({
-    defaultValues: data,
+    defaultValues: resource,
   });
 
   const api = useApi();
@@ -41,7 +35,7 @@ const ApiResourceSettings = ({
     }
 
     const updatedApiResource = await api
-      .patch(`/api/resources/${data.id}`, { json: formData })
+      .patch(`/api/resources/${resource.id}`, { json: formData })
       .json<Resource>();
     reset(updatedApiResource);
     onResourceUpdated(updatedApiResource);

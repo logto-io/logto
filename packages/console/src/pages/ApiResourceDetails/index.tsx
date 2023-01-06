@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
@@ -19,19 +19,18 @@ import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
-import { ApiResourceTabs } from '@/consts/page-tabs';
+import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
 
-import ApiResourcePermissions from './ApiResourcePermissions';
-import ApiResourceSettings from './ApiResourceSettings';
 import * as styles from './index.module.scss';
+import type { ApiResourceDetailsOutletContext } from './types';
 
 const ApiResourceDetails = () => {
   const { pathname } = useLocation();
-  const { id, tab = ApiResourceTabs.Settings } = useParams();
+  const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
@@ -39,6 +38,7 @@ const ApiResourceDetails = () => {
   const theme = useTheme();
   const Icon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
 
+  const isOnPermissionPage = pathname.endsWith(ApiResourceDetailsTabs.Permissions);
   const isLogtoManagementApiResource = data?.id === managementResource.id;
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
@@ -69,10 +69,7 @@ const ApiResourceDetails = () => {
 
   return (
     <div
-      className={classNames(
-        detailsStyles.container,
-        tab === ApiResourceTabs.Permissions && styles.permissionPage
-      )}
+      className={classNames(detailsStyles.container, isOnPermissionPage && styles.permissionPage)}
     >
       <TextLink to="/api-resources" icon={<Back />} className={styles.backLink}>
         {t('api_resource_details.back_to_api_resources')}
@@ -126,24 +123,26 @@ const ApiResourceDetails = () => {
             )}
           </Card>
           <TabNav>
-            <TabNavItem href={`/api-resources/${data.id}/${ApiResourceTabs.Settings}`}>
+            <TabNavItem href={`/api-resources/${data.id}/${ApiResourceDetailsTabs.Settings}`}>
               {t('api_resource_details.settings_tab')}
             </TabNavItem>
-            <TabNavItem href={`/api-resources/${data.id}/${ApiResourceTabs.Permissions}`}>
+            <TabNavItem href={`/api-resources/${data.id}/${ApiResourceDetailsTabs.Permissions}`}>
               {t('api_resource_details.permission_tab')}
             </TabNavItem>
           </TabNav>
-          {tab === ApiResourceTabs.Settings && (
-            <ApiResourceSettings
-              data={data}
-              isDeleting={isDeleting}
-              isLogtoManagementApiResource={isLogtoManagementApiResource}
-              onResourceUpdated={(resource) => {
-                void mutate(resource);
-              }}
-            />
-          )}
-          {tab === ApiResourceTabs.Permissions && <ApiResourcePermissions resourceId={data.id} />}
+          <Outlet
+            context={
+              // eslint-disable-next-line no-restricted-syntax
+              {
+                resource: data,
+                isDeleting,
+                isLogtoManagementApiResource,
+                onResourceUpdated: (resource: Resource) => {
+                  void mutate(resource);
+                },
+              } as ApiResourceDetailsOutletContext
+            }
+          />
         </>
       )}
     </div>
