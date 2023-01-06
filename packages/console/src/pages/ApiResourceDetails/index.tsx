@@ -1,10 +1,10 @@
 import type { Resource } from '@logto/schemas';
 import { AppearanceMode, managementResource } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
@@ -30,6 +30,7 @@ import ApiResourceSettings from './ApiResourceSettings';
 import * as styles from './index.module.scss';
 
 const ApiResourceDetails = () => {
+  const { pathname } = useLocation();
   const { tab = ApiResourceTabs.Settings, id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
@@ -41,6 +42,11 @@ const ApiResourceDetails = () => {
   const isLogtoManagementApiResource = data?.id === managementResource.id;
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
+
+  useEffect(() => {
+    setIsDeleteFormOpen(false);
+  }, [pathname]);
+
   const [isDeleting, setIsDeleting] = useState(false);
 
   const api = useApi();
