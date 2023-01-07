@@ -2,6 +2,7 @@ import type { Role } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
@@ -10,13 +11,10 @@ import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 
-type Props = {
-  data: Role;
-  isDeleting: boolean;
-  onRoleUpdated: (data: Role) => void;
-};
+import type { RoleDetailsOutletContext } from '../types';
 
-const RoleSettings = ({ data, isDeleting, onRoleUpdated }: Props) => {
+const RoleSettings = () => {
+  const { role, isDeleting, onRoleUpdated } = useOutletContext<RoleDetailsOutletContext>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     handleSubmit,
@@ -24,7 +22,7 @@ const RoleSettings = ({ data, isDeleting, onRoleUpdated }: Props) => {
     reset,
     formState: { isDirty, isSubmitting, errors },
   } = useForm<Role>({
-    defaultValues: data,
+    defaultValues: role,
   });
 
   const api = useApi();
@@ -34,7 +32,7 @@ const RoleSettings = ({ data, isDeleting, onRoleUpdated }: Props) => {
       return;
     }
 
-    const updatedRole = await api.patch(`/api/roles/${data.id}`, { json: formData }).json<Role>();
+    const updatedRole = await api.patch(`/api/roles/${role.id}`, { json: formData }).json<Role>();
     reset(updatedRole);
     onRoleUpdated(updatedRole);
     toast.success(t('general.saved'));

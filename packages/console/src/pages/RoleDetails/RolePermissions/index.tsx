@@ -11,25 +11,23 @@ import ConfirmModal from '@/components/ConfirmModal';
 import PermissionsTable from '@/components/PermissionsTable';
 import useApi from '@/hooks/use-api';
 
-import type { ApiResourceDetailsOutletContext } from '../types';
-import CreatePermissionModal from './components/CreatePermissionModal';
+import type { RoleDetailsOutletContext } from '../types';
 
-const ApiResourcePermissions = () => {
+const RolePermissions = () => {
   const {
-    resource: { id: resourceId },
-  } = useOutletContext<ApiResourceDetailsOutletContext>();
+    role: { id: roleId },
+  } = useOutletContext<RoleDetailsOutletContext>();
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const fetchUrl = `/api/resources/${resourceId}/scopes`;
-
   const { mutate } = useSWRConfig();
 
-  const api = useApi();
+  const fetchUrl = `/api/roles/${roleId}/scopes`;
 
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const [scopeToBeDeleted, setScopeToBeDeleted] = useState<Scope>();
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const api = useApi();
 
   const handleDelete = async () => {
     if (!scopeToBeDeleted || isDeleting) {
@@ -38,8 +36,10 @@ const ApiResourcePermissions = () => {
     setIsDeleting(true);
 
     try {
-      await api.delete(`/api/resources/${resourceId}/scopes/${scopeToBeDeleted.id}`);
-      toast.success(t('api_resource_details.permission.deleted', { name: scopeToBeDeleted.name }));
+      await api.delete(`/api/roles/${roleId}/scopes/${scopeToBeDeleted.id}`);
+      toast.success(
+        t('role_details.permission.permission_deleted', { name: scopeToBeDeleted.name })
+      );
       await mutate(fetchUrl);
       setScopeToBeDeleted(undefined);
     } finally {
@@ -50,43 +50,30 @@ const ApiResourcePermissions = () => {
   return (
     <>
       <PermissionsTable
+        isApiColumnDisplayed
         fetchUrl={fetchUrl}
         createButton={
           <Button
-            title="api_resource_details.permission.create_button"
+            title="role_details.permission.assign_button"
             type="primary"
             size="large"
             icon={<Plus />}
             onClick={() => {
-              setIsCreateFormOpen(true);
+              // TODO @xiaoyijun Assign Permissions to Role
             }}
           />
         }
         deleteHandler={setScopeToBeDeleted}
         placeholderContent={
           <Button
-            title="api_resource_details.permission.create_button"
+            title="role_details.permission.assign_button"
             type="outline"
             onClick={() => {
-              setIsCreateFormOpen(true);
+              // TODO @xiaoyijun Assign Permissions to Role
             }}
           />
         }
       />
-      {isCreateFormOpen && (
-        <CreatePermissionModal
-          resourceId={resourceId}
-          onClose={(scope) => {
-            if (scope) {
-              toast.success(
-                t('api_resource_details.permission.permission_created', { name: scope.name })
-              );
-              void mutate(fetchUrl);
-            }
-            setIsCreateFormOpen(false);
-          }}
-        />
-      )}
       {scopeToBeDeleted && (
         <ConfirmModal
           isOpen
@@ -104,4 +91,4 @@ const ApiResourcePermissions = () => {
   );
 };
 
-export default ApiResourcePermissions;
+export default RolePermissions;

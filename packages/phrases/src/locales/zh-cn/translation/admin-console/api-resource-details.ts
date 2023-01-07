@@ -21,8 +21,6 @@ const api_resource_details = {
     description: 'Description', // UNTRANSLATED
     description_placeholder: 'Able to read the resources', // UNTRANSLATED
     permission_created: 'The permission {{name}} has been successfully created', // UNTRANSLATED
-    name_column: 'Permission', // UNTRANSLATED
-    description_column: 'Description', // UNTRANSLATED
     delete_description:
       'If this permission is deleted, the user who had this permission will lose the access granted by it.', // UNTRANSLATED
     deleted: 'The permission {{name}} has been successfully deleted', // UNTRANSLATED
