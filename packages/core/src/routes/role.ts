@@ -1,9 +1,11 @@
 import { buildIdGenerator } from '@logto/core-kit';
+import type { ScopeResponse } from '@logto/schemas';
 import { Roles } from '@logto/schemas';
 import { object, string, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { findResourcesByIds } from '#src/queries/resource.js';
 import {
   deleteRolesScope,
   findRolesScopesByRoleId,
@@ -138,7 +140,20 @@ export default function roleRoutes<T extends AuthedRouter>(router: T) {
 
       await findRoleById(id);
       const rolesScopes = await findRolesScopesByRoleId(id);
-      ctx.body = await findScopesByIds(rolesScopes.map(({ scopeId }) => scopeId));
+      const scopes = await findScopesByIds(rolesScopes.map(({ scopeId }) => scopeId));
+      const resources = await findResourcesByIds(scopes.map(({ resourceId }) => resourceId));
+      const result: ScopeResponse[] = scopes.map((scope) => {
+        const resource = resources.find(({ id }) => scope.resourceId);
+
+        assertThat(resource, new Error(`Cannot find resource for id ${scope.resourceId}`));
+
+        return {
+          ...scope,
+          resource,
+        };
+      });
+
+      ctx.body = result;
 
       return next();
     }

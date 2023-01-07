@@ -1,7 +1,7 @@
 import type { Role } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
-import { mockRole, mockScope, mockUser } from '#src/__mocks__/index.js';
+import { mockRole, mockScope, mockUser, mockResource } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -29,6 +29,9 @@ const { findRoleByRoleName, findRoleById, deleteRoleById } = mockEsm(
 const { findScopeById, findScopesByIds } = await mockEsmWithActual('#src/queries/scope.js', () => ({
   findScopeById: jest.fn(),
   findScopesByIds: jest.fn(),
+}));
+await mockEsmWithActual('#src/queries/resource.js', () => ({
+  findResourcesByIds: jest.fn(async () => [mockResource]),
 }));
 const { insertRolesScopes, findRolesScopesByRoleId } = await mockEsmWithActual(
   '#src/queries/roles-scopes.js',
@@ -128,7 +131,12 @@ describe('role routes', () => {
     findScopesByIds.mockResolvedValueOnce([mockScope]);
     const response = await roleRequester.get(`/roles/${mockRole.id}/scopes`);
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockScope]);
+    expect(response.body).toEqual([
+      {
+        ...mockScope,
+        resource: mockResource,
+      },
+    ]);
   });
 
   it('POST /roles/:id/scopes', async () => {
