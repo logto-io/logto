@@ -9,6 +9,7 @@ if (process.argv.length > 3) {
 }
 
 // This is configured based on our practice. Change with care.
+// Should be synced with `/.github/workflows/changesets.yml`
 const allowedGroups = { core: 'core', toolkit: 'toolkit' };
 if (!Object.values(allowedGroups).includes(versionGroup)) {
   throw new Error('Version group is invalid. Should be one of ' + Object.values(allowedGroups).join(', ') + '.');
@@ -33,7 +34,8 @@ const ignoreCmd = getIgnoreGroup()
   .join('');
 const cmd = ('pnpm changeset version' + ignoreCmd);
 
-const catchCmdError = ({ stderr, code }) => {
+const catchCmdError = ({ stderr, stdout, code }) => {
+  console.log(stdout);
   console.error(stderr);
   process.exit(code ?? 1);
 };
@@ -44,3 +46,6 @@ await execAsync(cmd).catch(catchCmdError);
 
 // Manually run lifecycle script since changesets didn't
 await execAsync('pnpm -r version').catch(catchCmdError);
+
+// Sanity check for prepublish scripts
+await execAsync('pnpm -r prepublishOnly').catch(catchCmdError);
