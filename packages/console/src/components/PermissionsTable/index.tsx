@@ -49,12 +49,12 @@ const PermissionsTable = ({
     render: ({ description }) => <div className={styles.description}>{description}</div>,
   };
 
-  const resourceColumn: Column<ScopeResponse> = {
+  const apiColumn: Column<ScopeResponse> = {
     title: t('permissions.api_column'),
     dataIndex: 'resource',
     colSpan: 5,
     render: ({ resource }) => (
-      <div className={styles.resource}>
+      <div className={styles.api}>
         <TextLink to={`/api-resources/${resource.id}`} target="_blank">
           {resource.name}
         </TextLink>
@@ -80,7 +80,7 @@ const PermissionsTable = ({
   const columns = [
     nameColumn,
     descriptionColumn,
-    conditional(isApiColumnDisplayed && resourceColumn),
+    conditional(isApiColumnDisplayed && apiColumn),
     deleteColumn,
     // eslint-disable-next-line unicorn/prefer-native-coercion-functions
   ].filter((column): column is Column<ScopeResponse> => Boolean(column));
