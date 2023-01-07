@@ -18,6 +18,13 @@ import {
   updateRoleById,
 } from '#src/queries/roles.js';
 import { findScopeById, findScopesByIds } from '#src/queries/scope.js';
+import { findUserById, findUsersByIds } from '#src/queries/user.js';
+import {
+  deleteUsersRolesByUserIdAndRoleId,
+  findFirstUsersRolesByRoleIdAndUserIds,
+  findUsersRolesByRoleId,
+  insertUsersRoles,
+} from '#src/queries/users-roles.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AuthedRouter } from './types.js';
@@ -181,6 +188,71 @@ export default function roleRoutes<T extends AuthedRouter>(router: T) {
         params: { id, scopeId },
       } = ctx.guard;
       await deleteRolesScope(id, scopeId);
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/roles/:id/users',
+    koaGuard({
+      params: object({ id: string().min(1) }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+
+      await findRoleById(id);
+      const usersRoles = await findUsersRolesByRoleId(id);
+      ctx.body = await findUsersByIds(usersRoles.map(({ userId }) => userId));
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/roles/:id/users',
+    koaGuard({
+      params: object({ id: string().min(1) }),
+      body: object({ userIds: string().min(1).array() }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+        body: { userIds },
+      } = ctx.guard;
+
+      await findRoleById(id);
+      const existingRecord = await findFirstUsersRolesByRoleIdAndUserIds(id, userIds);
+
+      if (existingRecord) {
+        throw new RequestError({
+          code: 'role.user_exists',
+          status: 422,
+          userId: existingRecord.userId,
+        });
+      }
+
+      await Promise.all(userIds.map(async (userId) => findUserById(userId)));
+      await insertUsersRoles(userIds.map((userId) => ({ roleId: id, userId })));
+      ctx.status = 201;
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/roles/:id/users/:userId',
+    koaGuard({
+      params: object({ id: string().min(1), userId: string().min(1) }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id, userId },
+      } = ctx.guard;
+      await deleteUsersRolesByUserIdAndRoleId(userId, id);
       ctx.status = 204;
 
       return next();
