@@ -1,57 +1,80 @@
 import type { CreateCustomPhrase, CustomPhrase } from '@logto/schemas';
 import { CustomPhrases } from '@logto/schemas';
 import { convertToIdentifiers, manyRows } from '@logto/shared';
+import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
-import { buildInsertInto } from '#src/database/insert-into.js';
+import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(CustomPhrases);
 
-export const findAllCustomLanguageTags = async () => {
-  const rows = await manyRows<{ languageTag: string }>(
-    envSet.pool.query(sql`
-      select ${fields.languageTag}
+export const createCustomPhraseQueries = (pool: CommonQueryMethods) => {
+  const findAllCustomLanguageTags = async () => {
+    const rows = await manyRows<{ languageTag: string }>(
+      pool.query(sql`
+        select ${fields.languageTag}
+        from ${table}
+        order by ${fields.languageTag}
+      `)
+    );
+
+    return rows.map((row) => row.languageTag);
+  };
+
+  const findAllCustomPhrases = async () =>
+    manyRows(
+      pool.query<CustomPhrase>(sql`
+        select ${sql.join(Object.values(fields), sql`,`)}
+        from ${table}
+        order by ${fields.languageTag}
+      `)
+    );
+
+  const findCustomPhraseByLanguageTag = async (languageTag: string): Promise<CustomPhrase> =>
+    pool.one<CustomPhrase>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      order by ${fields.languageTag}
-    `)
+      where ${fields.languageTag} = ${languageTag}
+    `);
+
+  const upsertCustomPhrase = buildInsertIntoWithPool(pool)<CreateCustomPhrase, CustomPhrase>(
+    CustomPhrases,
+    {
+      returning: true,
+      onConflict: {
+        fields: [fields.languageTag],
+        setExcludedFields: [fields.translation],
+      },
+    }
   );
 
-  return rows.map((row) => row.languageTag);
+  const deleteCustomPhraseByLanguageTag = async (languageTag: string) => {
+    const { rowCount } = await pool.query(sql`
+      delete from ${table}
+      where ${fields.languageTag}=${languageTag}
+    `);
+
+    if (rowCount < 1) {
+      throw new DeletionError(CustomPhrases.table, languageTag);
+    }
+  };
+
+  return {
+    findAllCustomLanguageTags,
+    findAllCustomPhrases,
+    findCustomPhraseByLanguageTag,
+    upsertCustomPhrase,
+    deleteCustomPhraseByLanguageTag,
+  };
 };
 
-export const findAllCustomPhrases = async () =>
-  manyRows(
-    envSet.pool.query<CustomPhrase>(sql`
-      select ${sql.join(Object.values(fields), sql`,`)}
-      from ${table}
-      order by ${fields.languageTag}
-    `)
-  );
-
-export const findCustomPhraseByLanguageTag = async (languageTag: string): Promise<CustomPhrase> =>
-  envSet.pool.one<CustomPhrase>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.languageTag} = ${languageTag}
-  `);
-
-export const upsertCustomPhrase = buildInsertInto<CreateCustomPhrase, CustomPhrase>(CustomPhrases, {
-  returning: true,
-  onConflict: {
-    fields: [fields.languageTag],
-    setExcludedFields: [fields.translation],
-  },
-});
-
-export const deleteCustomPhraseByLanguageTag = async (languageTag: string) => {
-  const { rowCount } = await envSet.pool.query(sql`
-    delete from ${table}
-    where ${fields.languageTag}=${languageTag}
-  `);
-
-  if (rowCount < 1) {
-    throw new DeletionError(CustomPhrases.table, languageTag);
-  }
-};
+/** @deprecated Will be removed soon. Use createCustomPhraseQueries() factory instead. */
+export const {
+  findAllCustomLanguageTags,
+  findAllCustomPhrases,
+  findCustomPhraseByLanguageTag,
+  upsertCustomPhrase,
+  deleteCustomPhraseByLanguageTag,
+} = createCustomPhraseQueries(envSet.pool);
