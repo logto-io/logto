@@ -24,4 +24,5 @@ export const createSettingQueries = (pool: CommonQueryMethods) => {
   return { getSetting, updateSetting };
 };
 
+/** @deprecated Will be removed soon. Use createSettingQueries() factory instead. */
 export const { getSetting, updateSetting } = createSettingQueries(envSet.pool);

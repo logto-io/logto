@@ -25,5 +25,6 @@ export const createSignInExperienceQueries = (pool: CommonQueryMethods) => {
   return { updateDefaultSignInExperience, findDefaultSignInExperience };
 };
 
+/** @deprecated Will be removed soon. Use createSignInExperienceQueries() factory instead. */
 export const { updateDefaultSignInExperience, findDefaultSignInExperience } =
   createSignInExperienceQueries(envSet.pool);
