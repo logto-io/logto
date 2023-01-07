@@ -2,24 +2,18 @@ import type { CreateUser, User } from '@logto/schemas';
 import { Users, Applications } from '@logto/schemas';
 import type { UpdateWhereData } from '@logto/shared';
 
-import envSet from '#src/env-set/index.js';
 import { UpdateError } from '#src/errors/SlonikError/index.js';
 import { createTestPool } from '#src/utils/test-utils.js';
 
-import { buildUpdateWhere } from './update-where.js';
-
-const { jest } = import.meta;
-
-const poolSpy = jest.spyOn(envSet, 'pool', 'get');
+const { buildUpdateWhereWithPool } = await import('./update-where.js');
 
 describe('buildUpdateWhere()', () => {
   it('resolves a promise with `undefined` when `returning` is false', async () => {
     const pool = createTestPool(
       'update "users"\nset "username"=$1\nwhere "id"=$2 and "username"=$3'
     );
-    poolSpy.mockReturnValue(pool);
 
-    const updateWhere = buildUpdateWhere(Users);
+    const updateWhere = buildUpdateWhereWithPool(pool)(Users);
     await expect(
       updateWhere({
         set: { username: '123' },
@@ -45,9 +39,8 @@ describe('buildUpdateWhere()', () => {
         applicationId: String(applicationId),
       })
     );
-    poolSpy.mockReturnValue(pool);
 
-    const updateWhere = buildUpdateWhere(Users, true);
+    const updateWhere = buildUpdateWhereWithPool(pool)(Users, true);
     await expect(
       updateWhere({
         set: { username: '123', primaryEmail: 'foo@bar.com', applicationId: 'bar' },
@@ -65,9 +58,8 @@ describe('buildUpdateWhere()', () => {
         customClientMetadata: String(customClientMetadata),
       })
     );
-    poolSpy.mockReturnValue(pool);
 
-    const updateWhere = buildUpdateWhere(Applications, true);
+    const updateWhere = buildUpdateWhereWithPool(pool)(Applications, true);
     await expect(
       updateWhere({
         set: { customClientMetadata: { idTokenTtl: 3600 } },
@@ -81,9 +73,8 @@ describe('buildUpdateWhere()', () => {
     const pool = createTestPool(
       'update "users"\nset "username"=$1\nwhere "id"=$2 and "username"=$3'
     );
-    poolSpy.mockReturnValue(pool);
 
-    const updateWhere = buildUpdateWhere(Users);
+    const updateWhere = buildUpdateWhereWithPool(pool)(Users);
 
     await expect(
       updateWhere({
@@ -96,9 +87,8 @@ describe('buildUpdateWhere()', () => {
 
   it('throws `entity.not_exists_with_id` error with `undefined` when `returning` is true', async () => {
     const pool = createTestPool('update "users"\nset "username"=$1\nwhere "id"=$2\nreturning *');
-    poolSpy.mockReturnValue(pool);
 
-    const updateWhere = buildUpdateWhere(Users, true);
+    const updateWhere = buildUpdateWhereWithPool(pool)(Users, true);
     const updateWhereData: UpdateWhereData<User> = {
       set: { username: '123' },
       where: { id: 'foo' },
@@ -114,9 +104,8 @@ describe('buildUpdateWhere()', () => {
     const pool = createTestPool(
       'update "users"\nset "username"=$1\nwhere "username"=$2\nreturning *'
     );
-    poolSpy.mockReturnValue(pool);
 
-    const updateWhere = buildUpdateWhere(Users, true);
+    const updateWhere = buildUpdateWhereWithPool(pool)(Users, true);
     const updateWhereData: UpdateWhereData<User> = {
       set: { username: '123' },
       where: { username: 'foo' },

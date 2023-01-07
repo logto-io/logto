@@ -73,4 +73,5 @@ export const buildUpdateWhereWithPool =
     };
   };
 
+/** @deprecated Will be removed soon. Use buildUpdateWhereWithPool() factory instead. */
 export const buildUpdateWhere = buildUpdateWhereWithPool(envSet.pool);

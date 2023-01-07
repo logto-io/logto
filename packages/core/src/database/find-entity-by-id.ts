@@ -40,4 +40,5 @@ export const buildFindEntityByIdWithPool =
     };
   };
 
+/** @deprecated Will be removed soon. Use buildFindEntityByIdWithPool() factory instead. */
 export const buildFindEntityById = buildFindEntityByIdWithPool(envSet.pool);

@@ -87,4 +87,5 @@ export const buildInsertIntoWithPool =
     };
   };
 
+/** @deprecated Will be removed soon. Use buildInsertIntoWithPool() factory instead. */
 export const buildInsertInto = buildInsertIntoWithPool(envSet.pool);

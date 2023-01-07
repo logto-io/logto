@@ -10,4 +10,5 @@ export const getTotalRowCountWithPool =
       from ${table}
     `);
 
+/** @deprecated Will be removed soon. Use getTotalRowCountWithPool() factory instead. */
 export const getTotalRowCount = getTotalRowCountWithPool(envSet.pool);

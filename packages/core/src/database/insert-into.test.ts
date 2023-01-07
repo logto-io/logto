@@ -3,15 +3,10 @@ import { Users } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import decamelize from 'decamelize';
 
-import envSet from '#src/env-set/index.js';
 import { InsertionError } from '#src/errors/SlonikError/index.js';
 import { createTestPool } from '#src/utils/test-utils.js';
 
-import { buildInsertInto } from './insert-into.js';
-
-const { jest } = import.meta;
-
-const poolSpy = jest.spyOn(envSet, 'pool', 'get');
+const { buildInsertIntoWithPool } = await import('./insert-into.js');
 
 const buildExpectedInsertIntoSql = (keys: string[]) => [
   // eslint-disable-next-line sql/no-unsafe-query
@@ -24,9 +19,8 @@ describe('buildInsertInto()', () => {
     const user: CreateUser = { id: 'foo', username: '456', applicationId: 'bar' };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool(expectInsertIntoSql.join('\n'));
-    poolSpy.mockReturnValue(pool);
 
-    const insertInto = buildInsertInto(Users);
+    const insertInto = buildInsertIntoWithPool(pool)(Users);
     await expect(insertInto(user)).resolves.toBe(undefined);
   });
 
@@ -45,10 +39,9 @@ describe('buildInsertInto()', () => {
         'set "primary_email"=excluded."primary_email"',
       ].join('\n')
     );
-    poolSpy.mockReturnValue(pool);
 
     const { fields } = convertToIdentifiers(Users);
-    const insertInto = buildInsertInto(Users, {
+    const insertInto = buildInsertIntoWithPool(pool)(Users, {
       onConflict: {
         fields: [fields.id, fields.username],
         setExcludedFields: [fields.primaryEmail],
@@ -74,9 +67,8 @@ describe('buildInsertInto()', () => {
         applicationId: String(applicationId),
       })
     );
-    poolSpy.mockReturnValue(pool);
 
-    const insertInto = buildInsertInto(Users, { returning: true });
+    const insertInto = buildInsertIntoWithPool(pool)(Users, { returning: true });
     await expect(
       insertInto({ id: 'foo', username: '123', primaryEmail: 'foo@bar.com', applicationId: 'bar' })
     ).resolves.toStrictEqual(user);
@@ -91,9 +83,8 @@ describe('buildInsertInto()', () => {
     };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool([...expectInsertIntoSql, 'returning *'].join('\n'));
-    poolSpy.mockReturnValue(pool);
 
-    const insertInto = buildInsertInto(Users, { returning: true });
+    const insertInto = buildInsertIntoWithPool(pool)(Users, { returning: true });
     const dataToInsert = {
       id: 'foo',
       username: '123',

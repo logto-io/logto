@@ -9,15 +9,6 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import {
-  findTotalNumberOfApplications,
-  findAllApplications,
-  findApplicationById,
-  insertApplication,
-  updateApplicationById,
-  deleteApplicationById,
-} from './application.js';
-
 const { jest } = import.meta;
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
@@ -29,6 +20,15 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
     },
   })
 );
+
+const {
+  findTotalNumberOfApplications,
+  findAllApplications,
+  findApplicationById,
+  insertApplication,
+  updateApplicationById,
+  deleteApplicationById,
+} = await import('./application.js');
 
 describe('application query', () => {
   const { table, fields } = convertToIdentifiers(Applications);

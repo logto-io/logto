@@ -8,18 +8,6 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import {
-  deleteRoleById,
-  findAllRoles,
-  findRoleById,
-  findRoleByRoleName,
-  findRolesByRoleIds,
-  findRolesByRoleNames,
-  insertRole,
-  insertRoles,
-  updateRoleById,
-} from './roles.js';
-
 const { jest } = import.meta;
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
@@ -31,6 +19,18 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
     },
   })
 );
+
+const {
+  deleteRoleById,
+  findAllRoles,
+  findRoleById,
+  findRoleByRoleName,
+  findRolesByRoleIds,
+  findRolesByRoleNames,
+  insertRole,
+  insertRoles,
+  updateRoleById,
+} = await import('./roles.js');
 
 describe('roles query', () => {
   const { table, fields } = convertToIdentifiers(Roles);

@@ -8,16 +8,6 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import {
-  findAllConnectors,
-  findConnectorById,
-  countConnectorByConnectorId,
-  deleteConnectorById,
-  deleteConnectorByIds,
-  insertConnector,
-  updateConnector,
-} from './connector.js';
-
 const { jest } = import.meta;
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
@@ -29,6 +19,16 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
     },
   })
 );
+
+const {
+  findAllConnectors,
+  findConnectorById,
+  countConnectorByConnectorId,
+  deleteConnectorById,
+  deleteConnectorByIds,
+  insertConnector,
+  updateConnector,
+} = await import('./connector.js');
 
 describe('connector queries', () => {
   const { table, fields } = convertToIdentifiers(Connectors);
