@@ -23,7 +23,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { claimToUserKey, getUserClaims } from './scope.js';
 
-export default async function initOidc(app: Koa): Promise<Provider> {
+export default function initOidc(app: Koa): Provider {
   const { issuer, cookieKeys, privateJwks, defaultIdTokenTtl, defaultRefreshTokenTtl } =
     envSet.oidc;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');

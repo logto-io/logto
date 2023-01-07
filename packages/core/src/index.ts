@@ -1,14 +1,19 @@
 import { noop } from '@silverhand/essentials';
+import dotenv from 'dotenv';
+import { findUp } from 'find-up';
 import Koa from 'koa';
 
-import { loadConnectorFactories } from './connectors/index.js';
-import { configDotEnv } from './env-set/dot-env.js';
-import envSet from './env-set/index.js';
 import initI18n from './i18n/init.js';
 
+dotenv.config({ path: await findUp('.env', {}) });
+
+// Import after env has configured
+const { default: envSet } = await import('./env-set/index.js');
+await envSet.load();
+
+const { loadConnectorFactories } = await import('./connectors/index.js');
+
 try {
-  await configDotEnv();
-  await envSet.load();
   const app = new Koa({
     proxy: envSet.values.trustProxyHeader,
   });

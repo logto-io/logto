@@ -38,7 +38,7 @@ export default async function initApp(app: Koa): Promise<void> {
   app.use(koaConnectorErrorHandler());
   app.use(koaI18next());
 
-  const provider = await initOidc(app);
+  const provider = initOidc(app);
   initRouter(app, provider);
 
   app.use(mount('/', koaRootProxy()));
