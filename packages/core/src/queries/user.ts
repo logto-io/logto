@@ -225,9 +225,5 @@ export const findUsersByRoleName = async (roleName: string) => {
 
   const usersRoles = await findUsersRolesByRoleId(role.id);
 
-  if (usersRoles.length === 0) {
-    return [];
-  }
-
   return findUsersByIds(usersRoles.map(({ userId }) => userId));
 };

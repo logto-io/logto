@@ -27,11 +27,13 @@ export const findRolesByRoleIds = async (roleIds: string[]) =>
     : [];
 
 export const findRolesByRoleNames = async (roleNames: string[]) =>
-  envSet.pool.any<Role>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.name} in (${sql.join(roleNames, sql`, `)})
-  `);
+  roleNames.length > 0
+    ? envSet.pool.any<Role>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.name} in (${sql.join(roleNames, sql`, `)})
+    `)
+    : [];
 
 export const findRoleByRoleName = async (roleName: string, excludeRoleId?: string) =>
   envSet.pool.maybeOne<Role>(sql`
