@@ -1,8 +1,10 @@
 import { buildIdGenerator } from '@logto/core-kit';
 import { Resources, Scopes } from '@logto/schemas';
+import { tryThat } from '@logto/shared';
 import { object, string } from 'zod';
 
 import { isTrue } from '#src/env-set/parameters.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { attachScopesToResources } from '#src/libraries/resource.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -15,11 +17,13 @@ import {
   deleteResourceById,
 } from '#src/queries/resource.js';
 import {
+  countScopes,
   deleteScopeById,
-  findScopesByResourceId,
+  findScopes,
   insertScope,
   updateScopeById,
 } from '#src/queries/scope.js';
+import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter } from './types.js';
 
@@ -119,15 +123,46 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
 
   router.get(
     '/resources/:resourceId/scopes',
+    koaPagination({ isOptional: true }),
     koaGuard({ params: object({ resourceId: string().min(1) }) }),
     async (ctx, next) => {
       const {
         params: { resourceId },
       } = ctx.guard;
+      const { limit, offset, disabled } = ctx.pagination;
+      const { searchParams } = ctx.request.URL;
 
-      ctx.body = await findScopesByResourceId(resourceId);
+      return tryThat(
+        async () => {
+          const search = parseSearchParamsForSearch(searchParams);
 
-      return next();
+          if (disabled) {
+            ctx.body = await findScopes(resourceId, search);
+
+            return next();
+          }
+
+          const [{ count }, roles] = await Promise.all([
+            countScopes(resourceId, search),
+            findScopes(resourceId, search, limit, offset),
+          ]);
+
+          // Return totalCount to pagination middleware
+          ctx.pagination.totalCount = count;
+          ctx.body = roles;
+
+          return next();
+        },
+        (error) => {
+          if (error instanceof TypeError) {
+            throw new RequestError(
+              { code: 'request.invalid_input', details: error.message },
+              error
+            );
+          }
+          throw error;
+        }
+      );
     }
   );
 
