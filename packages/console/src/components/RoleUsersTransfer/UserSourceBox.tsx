@@ -1,7 +1,7 @@
 import type { User } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import type { ChangeEvent } from 'react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -22,11 +22,25 @@ type Props = {
 };
 
 const pageSize = 20;
+const searchDelay = 500;
 
 const UserSourceBox = ({ selectedUsers, onAddUser, onRemoveUser }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [pageIndex, setPageIndex] = useState(1);
   const [keyword, setKeyword] = useState('');
+  const timerRef = useRef<NodeJS.Timeout>();
+
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      clearTimer();
+    };
+  }, []);
 
   const { data } = useSWR<[User[], number], RequestError>(
     `/api/users?page=${pageIndex}&page_size=${pageSize}&hideAdminUser=true${conditionalString(
@@ -37,8 +51,12 @@ const UserSourceBox = ({ selectedUsers, onAddUser, onRemoveUser }: Props) => {
   const [dataSource = [], totalCount] = data ?? [];
 
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
-    setPageIndex(1);
-    setKeyword(event.target.value);
+    clearTimer();
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    timerRef.current = setTimeout(() => {
+      setPageIndex(1);
+      setKeyword(event.target.value);
+    }, searchDelay);
   };
 
   const isUserAdded = (user: User) => selectedUsers.findIndex(({ id }) => id === user.id) >= 0;
