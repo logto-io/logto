@@ -1,5 +1,5 @@
 import { buildIdGenerator } from '@logto/core-kit';
-import type { ScopeResponse } from '@logto/schemas';
+import type { RoleResponse, ScopeResponse } from '@logto/schemas';
 import { Roles } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
 import { object, string, z } from 'zod';
@@ -25,6 +25,7 @@ import {
 import { findScopeById, findScopesByIds } from '#src/queries/scope.js';
 import { findUserById, findUsersByIds } from '#src/queries/user.js';
 import {
+  countUsersRolesByRoleId,
   deleteUsersRolesByUserIdAndRoleId,
   findFirstUsersRolesByRoleIdAndUserIds,
   findUsersRolesByRoleId,
@@ -57,9 +58,23 @@ export default function roleRoutes<T extends AuthedRouter>(router: T) {
           findRoles(search, limit, offset),
         ]);
 
+        const rolesResponse: RoleResponse[] = await Promise.all(
+          roles.map(async (role) => {
+            const { count } = await countUsersRolesByRoleId(role.id);
+            const usersRoles = await findUsersRolesByRoleId(role.id, 3);
+            const users = await findUsersByIds(usersRoles.map(({ userId }) => userId));
+
+            return {
+              ...role,
+              usersCount: count,
+              featuredUsers: users.map(({ id, avatar }) => ({ id, avatar })),
+            };
+          })
+        );
+
         // Return totalCount to pagination middleware
         ctx.pagination.totalCount = count;
-        ctx.body = roles;
+        ctx.body = rolesResponse;
 
         return next();
       },
