@@ -28,16 +28,16 @@ const getDetailsTabNavLink = (logId: string, userId?: string) =>
   userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
 
 const AuditLogDetails = () => {
-  const { userId, logId } = useParams();
+  const { id, logId } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<LogDto, RequestError>(logId && `/api/logs/${logId}`);
-  const { data: userData } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
+  const { data: userData } = useSWR<User, RequestError>(id && `/api/users/${id}`);
 
   const isLoading = !data && !error;
 
   const backLink = getAuditLogDetailsRelatedResourceLink(pathname);
-  const backLinkTitle = userId
+  const backLinkTitle = id
     ? t('log_details.back_to_user', { name: userData?.name ?? t('users.unnamed') })
     : t('log_details.back_to_logs');
 
@@ -101,7 +101,7 @@ const AuditLogDetails = () => {
             </div>
           </Card>
           <TabNav>
-            <TabNavItem href={getDetailsTabNavLink(logId, userId)}>
+            <TabNavItem href={getDetailsTabNavLink(logId, id)}>
               {t('log_details.tab_details')}
             </TabNavItem>
           </TabNav>

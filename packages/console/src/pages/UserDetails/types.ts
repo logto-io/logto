@@ -1,3 +1,5 @@
+import type { User } from '@logto/schemas';
+
 export type UserDetailsForm = {
   primaryEmail: string;
   primaryPhone: string;
@@ -5,4 +7,10 @@ export type UserDetailsForm = {
   name: string;
   avatar: string;
   customData: string;
+};
+
+export type UserDetailsOutletContext = {
+  user: User;
+  isDeleting: boolean;
+  onUserUpdated: (user?: User) => void;
 };

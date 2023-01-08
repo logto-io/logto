@@ -10,7 +10,7 @@ import IconButton from '@/components/IconButton';
 import ModalLayout from '@/components/ModalLayout';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import * as styles from './CreateSuccess.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   username: string;
