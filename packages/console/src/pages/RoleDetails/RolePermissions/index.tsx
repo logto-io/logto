@@ -74,7 +74,7 @@ const RolePermissions = () => {
           }}
           onConfirm={handleDelete}
         >
-          {t('api_resource_details.permission.delete_description')}
+          {t('role_details.permission.deletion_description')}
         </ConfirmModal>
       )}
     </>
