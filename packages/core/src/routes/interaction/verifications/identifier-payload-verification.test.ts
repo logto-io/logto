@@ -3,17 +3,13 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { AnonymousInteractionResult } from '../types/index.js';
 
 const { jest } = import.meta;
 const { mockEsm, mockEsmDefault, mockEsmWithActual } = createMockUtils(jest);
-
-const { verifyUserPassword } = mockEsm('#src/libraries/user.js', () => ({
-  verifyUserPassword: jest.fn(),
-}));
 
 const findUserByIdentifier = mockEsmDefault('../utils/find-user-by-identifier.js', () => jest.fn());
 
@@ -37,6 +33,8 @@ const identifierPayloadVerification = await pickDefault(
 );
 
 const logContext = createMockLogContext();
+const verifyUserPassword = jest.fn();
+const tenant = new MockTenant(undefined, undefined, { users: { verifyUserPassword } });
 
 describe('identifier verification', () => {
   const baseCtx = { ...createContextWithRouteParameters(), ...logContext };
@@ -55,7 +53,7 @@ describe('identifier verification', () => {
     };
 
     await expect(
-      identifierPayloadVerification(baseCtx, createMockProvider(), identifier, interactionStorage)
+      identifierPayloadVerification(baseCtx, tenant, identifier, interactionStorage)
     ).rejects.toThrow();
     expect(findUserByIdentifier).toBeCalledWith({ username: 'username' });
     expect(verifyUserPassword).toBeCalledWith(null, 'password');
@@ -71,7 +69,7 @@ describe('identifier verification', () => {
     };
 
     await expect(
-      identifierPayloadVerification(baseCtx, createMockProvider(), identifier, interactionStorage)
+      identifierPayloadVerification(baseCtx, tenant, identifier, interactionStorage)
     ).rejects.toMatchError(new RequestError({ code: 'user.suspended', status: 401 }));
 
     expect(findUserByIdentifier).toBeCalledWith({ username: 'username' });
@@ -89,7 +87,7 @@ describe('identifier verification', () => {
 
     const result = await identifierPayloadVerification(
       baseCtx,
-      createMockProvider(),
+      tenant,
       identifier,
       interactionStorage
     );
@@ -109,7 +107,7 @@ describe('identifier verification', () => {
 
     const result = await identifierPayloadVerification(
       baseCtx,
-      createMockProvider(),
+      tenant,
       identifier,
       interactionStorage
     );
@@ -123,7 +121,7 @@ describe('identifier verification', () => {
 
     const result = await identifierPayloadVerification(
       baseCtx,
-      createMockProvider(),
+      tenant,
       identifier,
       interactionStorage
     );
@@ -141,7 +139,7 @@ describe('identifier verification', () => {
 
     const result = await identifierPayloadVerification(
       baseCtx,
-      createMockProvider(),
+      tenant,
       identifier,
       interactionStorage
     );
@@ -158,15 +156,14 @@ describe('identifier verification', () => {
   it('social', async () => {
     const identifier = { connectorId: 'logto', connectorData: {} };
 
-    const provider = createMockProvider();
     const result = await identifierPayloadVerification(
       baseCtx,
-      provider,
+      tenant,
       identifier,
       interactionStorage
     );
 
-    expect(verifySocialIdentity).toBeCalledWith(identifier, baseCtx, provider);
+    expect(verifySocialIdentity).toBeCalledWith(identifier, baseCtx, tenant.provider);
     expect(findUserByIdentifier).not.toBeCalled();
 
     expect(result).toEqual({
@@ -195,7 +192,7 @@ describe('identifier verification', () => {
 
     const result = await identifierPayloadVerification(
       baseCtx,
-      createMockProvider(),
+      tenant,
       identifierPayload,
       interactionRecord
     );
@@ -209,12 +206,7 @@ describe('identifier verification', () => {
     const identifierPayload = Object.freeze({ connectorId: 'logto', identityType: 'email' });
 
     await expect(
-      identifierPayloadVerification(
-        baseCtx,
-        createMockProvider(),
-        identifierPayload,
-        interactionStorage
-      )
+      identifierPayloadVerification(baseCtx, tenant, identifierPayload, interactionStorage)
     ).rejects.toMatchError(new RequestError('session.connector_session_not_found'));
   });
 
@@ -235,12 +227,7 @@ describe('identifier verification', () => {
     const identifierPayload = Object.freeze({ connectorId: 'logto', identityType: 'email' });
 
     await expect(
-      identifierPayloadVerification(
-        baseCtx,
-        createMockProvider(),
-        identifierPayload,
-        interactionRecord
-      )
+      identifierPayloadVerification(baseCtx, tenant, identifierPayload, interactionRecord)
     ).rejects.toMatchError(new RequestError('session.connector_session_not_found'));
   });
 });

@@ -3,7 +3,6 @@ import { convertToIdentifiers, convertToPrimitiveOrSql } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockResource } from '#src/__mocks__/index.js';
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
@@ -12,14 +11,13 @@ const { jest } = import.meta;
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
-jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
-  createMockPool({
-    query: async (sql, values) => {
-      return mockQuery(sql, values);
-    },
-  })
-);
+const pool = createMockPool({
+  query: async (sql, values) => {
+    return mockQuery(sql, values);
+  },
+});
 
+const { createResourceQueries } = await import('./resource.js');
 const {
   findTotalNumberOfResources,
   findAllResources,
@@ -28,7 +26,7 @@ const {
   insertResource,
   updateResourceById,
   deleteResourceById,
-} = await import('./resource.js');
+} = createResourceQueries(pool);
 
 describe('resource query', () => {
   const { table, fields } = convertToIdentifiers(Resources);

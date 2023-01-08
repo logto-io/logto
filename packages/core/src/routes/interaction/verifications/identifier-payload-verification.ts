@@ -4,11 +4,10 @@ import type {
   SocialConnectorPayload,
   SocialIdentityPayload,
 } from '@logto/schemas';
-import type Provider from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { verifyUserPassword } from '#src/libraries/user.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type {
@@ -33,7 +32,8 @@ import { verifyIdentifierByVerificationCode } from '../utils/verification-code-v
 const verifyPasswordIdentifier = async (
   event: InteractionEvent,
   identifier: PasswordIdentifierPayload,
-  ctx: WithLogContext
+  ctx: WithLogContext,
+  { libraries }: TenantContext
 ): Promise<AccountIdIdentifier> => {
   const { password, ...identity } = identifier;
 
@@ -41,7 +41,7 @@ const verifyPasswordIdentifier = async (
   log.append({ ...identity });
 
   const user = await findUserByIdentifier(identity);
-  const verifiedUser = await verifyUserPassword(user, password);
+  const verifiedUser = await libraries.users.verifyUserPassword(user, password);
 
   const { isSuspended, id } = verifiedUser;
 
@@ -54,7 +54,7 @@ const verifyVerificationCodeIdentifier = async (
   event: InteractionEvent,
   identifier: VerificationCodeIdentifierPayload,
   ctx: WithLogContext,
-  provider: Provider
+  { provider }: TenantContext
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
   const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
@@ -68,7 +68,7 @@ const verifyVerificationCodeIdentifier = async (
 const verifySocialIdentifier = async (
   identifier: SocialConnectorPayload,
   ctx: WithLogContext,
-  provider: Provider
+  { provider }: TenantContext
 ): Promise<SocialIdentifier> => {
   const userInfo = await verifySocialIdentity(identifier, ctx, provider);
 
@@ -101,22 +101,22 @@ const verifySocialIdentityInInteractionRecord = async (
 
 export default async function identifierPayloadVerification(
   ctx: WithLogContext,
-  provider: Provider,
+  tenant: TenantContext,
   identifierPayload: IdentifierPayload,
   interactionStorage: AnonymousInteractionResult
 ): Promise<Identifier> {
   const { event } = interactionStorage;
 
   if (isPasswordIdentifier(identifierPayload)) {
-    return verifyPasswordIdentifier(event, identifierPayload, ctx);
+    return verifyPasswordIdentifier(event, identifierPayload, ctx, tenant);
   }
 
   if (isVerificationCodeIdentifier(identifierPayload)) {
-    return verifyVerificationCodeIdentifier(event, identifierPayload, ctx, provider);
+    return verifyVerificationCodeIdentifier(event, identifierPayload, ctx, tenant);
   }
 
   if (isSocialIdentifier(identifierPayload)) {
-    return verifySocialIdentifier(identifierPayload, ctx, provider);
+    return verifySocialIdentifier(identifierPayload, ctx, tenant);
   }
 
   // Sign-In with social verified email or phone

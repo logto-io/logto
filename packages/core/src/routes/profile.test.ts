@@ -10,6 +10,7 @@ import {
   mockUser,
   mockUserResponse,
 } from '#src/__mocks__/index.js';
+import Queries from '#src/tenants/Queries.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -36,18 +37,11 @@ const { getUserInfoByAuthCode } = await mockEsmWithActual('#src/libraries/social
   getUserInfoByAuthCode: jest.fn(),
 }));
 
-const {
-  findUserById,
-  hasUser,
-  hasUserWithEmail,
-  hasUserWithPhone,
-  updateUserById,
-  deleteUserIdentity,
-} = await mockEsmWithActual('#src/queries/user.js', () => ({
-  findUserById: jest.fn(async (): Promise<User> => mockUser),
-  hasUser: jest.fn(async () => false),
-  hasUserWithEmail: jest.fn(async () => false),
-  hasUserWithPhone: jest.fn(async () => false),
+const usersQueries = {
+  findUserById: jest.fn(async () => mockUser),
+  hasUser: jest.fn(async (): Promise<boolean> => false),
+  hasUserWithEmail: jest.fn(async (): Promise<boolean> => false),
+  hasUserWithPhone: jest.fn(async (): Promise<boolean> => false),
   updateUserById: jest.fn(
     async (_, data: Partial<CreateUser>): Promise<User> => ({
       ...mockUser,
@@ -55,7 +49,15 @@ const {
     })
   ),
   deleteUserIdentity: jest.fn(),
-}));
+} satisfies Partial<Queries['users']>;
+const {
+  findUserById,
+  hasUser,
+  hasUserWithEmail,
+  hasUserWithPhone,
+  updateUserById,
+  deleteUserIdentity,
+} = usersQueries;
 
 const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
   encryptUserPassword: jest.fn(async (password: string) => ({
@@ -86,7 +88,7 @@ describe('session -> profileRoutes', () => {
   const mockGetSession: jest.Mock = jest.spyOn(provider.Session, 'get');
   const sessionRequest = createRequester({
     anonymousRoutes: profileRoutes,
-    tenantContext: new MockTenant(provider),
+    tenantContext: new MockTenant(provider, { users: usersQueries }),
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();
@@ -105,7 +107,7 @@ describe('session -> profileRoutes', () => {
     }));
   });
 
-  describe('GET /session/profile', () => {
+  describe('GET /profile', () => {
     it('should return current user data', async () => {
       const response = await sessionRequest.get(profileRoute);
       expect(response.statusCode).toEqual(200);
@@ -125,7 +127,7 @@ describe('session -> profileRoutes', () => {
     });
   });
 
-  describe('PATCH /session/profile', () => {
+  describe('PATCH /profile', () => {
     it('should update current user with display name, avatar and custom data', async () => {
       const updatedUserInfo = {
         name: 'John Doe',
@@ -152,7 +154,7 @@ describe('session -> profileRoutes', () => {
     });
   });
 
-  describe('PATCH /session/profile/username', () => {
+  describe('PATCH /profile/username', () => {
     it('should throw if last authentication time is over 10 mins ago', async () => {
       mockGetSession.mockImplementationOnce(async () => ({
         accountId: 'id',
@@ -188,7 +190,7 @@ describe('session -> profileRoutes', () => {
     });
   });
 
-  describe('PATCH /session/profile/password', () => {
+  describe('PATCH /profile/password', () => {
     it('should throw if last authentication time is over 10 mins ago', async () => {
       mockGetSession.mockImplementationOnce(async () => ({
         accountId: 'id',

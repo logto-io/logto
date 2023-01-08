@@ -44,8 +44,9 @@ export const verificationPath = 'verification';
 type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
 
 export default function interactionRoutes<T extends AnonymousRouter>(
-  ...[anonymousRouter, { provider }]: RouterInitArgs<T>
+  ...[anonymousRouter, tenant]: RouterInitArgs<T>
 ) {
+  const { provider } = tenant;
   const router =
     // @ts-expect-error for good koa types
     // eslint-disable-next-line no-restricted-syntax
@@ -83,7 +84,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       }
 
       const verifiedIdentifier = identifier && [
-        await verifyIdentifierPayload(ctx, provider, identifier, {
+        await verifyIdentifierPayload(ctx, tenant, identifier, {
           event,
         }),
       ];
@@ -166,7 +167,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       const verifiedIdentifier = await verifyIdentifierPayload(
         ctx,
-        provider,
+        tenant,
         identifierPayload,
         interactionStorage
       );
@@ -301,7 +302,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         await validateMandatoryUserProfile(ctx, verifiedInteraction);
       }
 
-      await submitInteraction(verifiedInteraction, ctx, provider);
+      await submitInteraction(verifiedInteraction, ctx, tenant);
 
       return next();
     }

@@ -3,7 +3,6 @@ import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockSetting } from '#src/__mocks__/index.js';
-import envSet from '#src/env-set/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
@@ -11,19 +10,18 @@ const { jest } = import.meta;
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
-jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
-  createMockPool({
-    query: async (sql, values) => {
-      return mockQuery(sql, values);
-    },
-  })
-);
+const pool = createMockPool({
+  query: async (sql, values) => {
+    return mockQuery(sql, values);
+  },
+});
 
-const { defaultSettingId, getSetting, updateSetting } = await import('./setting.js');
+const { defaultSettingId, createSettingQueries } = await import('./setting.js');
+const { getSetting, updateSetting } = createSettingQueries(pool);
 
 describe('setting query', () => {
   const { table, fields } = convertToIdentifiers(Settings);
-  const dbvalue = { ...mockSetting, adminConsole: JSON.stringify(mockSetting.adminConsole) };
+  const databaseValue = { ...mockSetting, adminConsole: JSON.stringify(mockSetting.adminConsole) };
 
   it('getSetting', async () => {
     const expectSql = sql`
@@ -36,10 +34,10 @@ describe('setting query', () => {
       expectSqlAssert(sql, expectSql.sql);
       expect(values).toEqual([defaultSettingId]);
 
-      return createMockQueryResult([dbvalue]);
+      return createMockQueryResult([databaseValue]);
     });
 
-    await expect(getSetting()).resolves.toEqual(dbvalue);
+    await expect(getSetting()).resolves.toEqual(databaseValue);
   });
 
   it('updateSetting', async () => {
@@ -58,9 +56,9 @@ describe('setting query', () => {
       expectSqlAssert(sql, expectSql.sql);
       expect(values).toEqual([JSON.stringify(adminConsole), defaultSettingId]);
 
-      return createMockQueryResult([dbvalue]);
+      return createMockQueryResult([databaseValue]);
     });
 
-    await expect(updateSetting({ adminConsole })).resolves.toEqual(dbvalue);
+    await expect(updateSetting({ adminConsole })).resolves.toEqual(databaseValue);
   });
 });

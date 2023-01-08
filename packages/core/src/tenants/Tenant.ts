@@ -19,12 +19,14 @@ import koaWelcomeProxy from '#src/middleware/koa-welcome-proxy.js';
 import initOidc from '#src/oidc/init.js';
 import initRouter from '#src/routes/init.js';
 
+import Libraries from './Libraries.js';
 import Queries from './Queries.js';
 import type TenantContext from './TenantContext.js';
 
 export default class Tenant implements TenantContext {
   public readonly provider: Provider;
   public readonly queries: Queries;
+  public readonly libraries: Libraries;
 
   public readonly app: Koa;
 
@@ -34,8 +36,10 @@ export default class Tenant implements TenantContext {
 
   constructor(public id: string) {
     const queries = new Queries(envSet.pool);
+    const libraries = new Libraries(queries);
 
     this.queries = queries;
+    this.libraries = libraries;
 
     // Init app
     const app = new Koa();
@@ -50,7 +54,7 @@ export default class Tenant implements TenantContext {
     app.use(koaConnectorErrorHandler());
     app.use(koaI18next());
 
-    const apisApp = initRouter({ provider, queries });
+    const apisApp = initRouter({ provider, queries, libraries });
     app.use(mount('/api', apisApp));
 
     app.use(mount('/', koaRootProxy()));

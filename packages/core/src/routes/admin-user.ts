@@ -6,39 +6,38 @@ import { boolean, literal, object, string } from 'zod';
 
 import { isTrue } from '#src/env-set/parameters.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import {
-  checkIdentifierCollision,
-  encryptUserPassword,
-  generateUserId,
-  insertUser,
-} from '#src/libraries/user.js';
+import { encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import { revokeInstanceByUserId } from '#src/queries/oidc-model-instance.js';
-import { findRolesByRoleNames } from '#src/queries/roles.js';
-import {
-  deleteUserById,
-  deleteUserIdentity,
-  findUsers,
-  countUsers,
-  findUserById,
-  hasUser,
-  updateUserById,
-  hasUserWithEmail,
-  hasUserWithPhone,
-  findUsersByRoleName,
-} from '#src/queries/user.js';
-import {
-  deleteUsersRolesByUserIdAndRoleId,
-  findUsersRolesByRoleId,
-  insertUsersRoles,
-} from '#src/queries/users-roles.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-export default function adminUserRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function adminUserRoutes<T extends AuthedRouter>(
+  ...[router, { queries, libraries }]: RouterInitArgs<T>
+) {
+  const {
+    oidcModelInstances: { revokeInstanceByUserId },
+    roles: { findRolesByRoleNames },
+    users: {
+      deleteUserById,
+      deleteUserIdentity,
+      findUsers,
+      countUsers,
+      findUserById,
+      hasUser,
+      updateUserById,
+      hasUserWithEmail,
+      hasUserWithPhone,
+      findUsersByRoleName,
+    },
+    usersRoles: { deleteUsersRolesByUserIdAndRoleId, findUsersRolesByRoleId, insertUsersRoles },
+  } = queries;
+  const {
+    users: { checkIdentifierCollision, generateUserId, insertUser },
+  } = libraries;
+
   router.get('/users', koaPagination(), async (ctx, next) => {
     const { limit, offset } = ctx.pagination;
     const { searchParams } = ctx.request.URL;
@@ -191,14 +190,14 @@ export default function adminUserRoutes<T extends AuthedRouter>(...[router]: Rou
     koaGuard({
       params: object({ userId: string() }),
       body: object({
-        username: string().regex(usernameRegEx).or(literal('')).nullable().optional(),
-        primaryEmail: string().regex(emailRegEx).or(literal('')).nullable().optional(),
-        primaryPhone: string().regex(phoneRegEx).or(literal('')).nullable().optional(),
-        name: string().or(literal('')).nullable().optional(),
-        avatar: string().url().or(literal('')).nullable().optional(),
-        customData: arbitraryObjectGuard.optional(),
-        roleNames: string().array().optional(),
-      }),
+        username: string().regex(usernameRegEx).or(literal('')).nullable(),
+        primaryEmail: string().regex(emailRegEx).or(literal('')).nullable(),
+        primaryPhone: string().regex(phoneRegEx).or(literal('')).nullable(),
+        name: string().or(literal('')).nullable(),
+        avatar: string().url().or(literal('')).nullable(),
+        customData: arbitraryObjectGuard,
+        roleNames: string().array(),
+      }).partial(),
     }),
     async (ctx, next) => {
       const {

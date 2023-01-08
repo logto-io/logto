@@ -1,4 +1,4 @@
-import type { CreateUser, Role, User } from '@logto/schemas';
+import type { CreateUser, Role, SignInExperience, User } from '@logto/schemas';
 import { userInfoSelectFields } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { pick } from '@silverhand/essentials';
@@ -9,10 +9,13 @@ import {
   mockUserListResponse,
   mockUserResponse,
 } from '#src/__mocks__/index.js';
+import Libraries from '#src/tenants/Libraries.js';
+import Queries from '#src/tenants/Queries.js';
+import { MockTenant, Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+const { mockEsmWithActual } = createMockUtils(jest);
 
 const filterUsersWithSearch = (users: User[], search: string) =>
   users.filter((user) =>
@@ -21,30 +24,35 @@ const filterUsersWithSearch = (users: User[], search: string) =>
     )
   );
 
-mockEsm('#src/queries/sign-in-experience.js', () => ({
-  findDefaultSignInExperience: jest.fn(async () => ({
-    signUp: {
-      identifiers: [],
-      password: false,
-      verify: false,
-    },
-  })),
-}));
-
-const mockHasUser = jest.fn(async () => false);
-const mockHasUserWithEmail = jest.fn(async () => false);
-const mockHasUserWithPhone = jest.fn(async () => false);
-
-const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserById } =
-  await mockEsmWithActual('#src/queries/user.js', () => ({
+const mockedQueries = {
+  oidcModelInstances: { revokeInstanceByUserId: jest.fn() },
+  signInExperiences: {
+    findDefaultSignInExperience: jest.fn(
+      async () =>
+        // @ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        ({
+          signUp: {
+            identifiers: [],
+            password: false,
+            verify: false,
+          },
+        } as SignInExperience)
+    ),
+  },
+  users: {
     countUsers: jest.fn(async (search) => ({
-      count: search ? filterUsersWithSearch(mockUserList, search).length : mockUserList.length,
+      count: search
+        ? filterUsersWithSearch(mockUserList, String(search)).length
+        : mockUserList.length,
     })),
     findUsers: jest.fn(
       async (limit, offset, search): Promise<User[]> =>
-        search ? filterUsersWithSearch(mockUserList, search) : mockUserList
+        // For testing, type should be `Search` but we use `string` in `filterUsersWithSearch()` here
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        search ? filterUsersWithSearch(mockUserList, String(search)) : mockUserList
     ),
-    findUserById: jest.fn(async (): Promise<User> => mockUser),
+    findUserById: jest.fn(async (id: string) => mockUser),
     hasUser: jest.fn(async () => mockHasUser()),
     hasUserWithEmail: jest.fn(async () => mockHasUserWithEmail()),
     hasUserWithPhone: jest.fn(async () => mockHasUserWithPhone()),
@@ -56,36 +64,45 @@ const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserByI
     ),
     deleteUserById: jest.fn(),
     deleteUserIdentity: jest.fn(),
-  }));
+  },
+  roles: {
+    findRolesByRoleNames: jest.fn(
+      async (): Promise<Role[]> => [{ id: 'role_id', name: 'admin', description: 'none' }]
+    ),
+  },
+} satisfies Partial2<Queries>;
+
+const mockHasUser = jest.fn(async () => false);
+const mockHasUserWithEmail = jest.fn(async () => false);
+const mockHasUserWithPhone = jest.fn(async () => false);
+
+const { revokeInstanceByUserId } = mockedQueries.oidcModelInstances;
+const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserById } =
+  mockedQueries.users;
+const { findRolesByRoleNames } = mockedQueries.roles;
 
 const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
-  generateUserId: jest.fn(() => 'fooId'),
   encryptUserPassword: jest.fn(() => ({
     passwordEncrypted: 'password',
     passwordEncryptionMethod: 'Argon2i',
   })),
+}));
+
+const usersLibraries = {
+  generateUserId: jest.fn(async () => 'fooId'),
   insertUser: jest.fn(
     async (user: CreateUser): Promise<User> => ({
       ...mockUser,
       ...user,
     })
   ),
-}));
-
-const { findRolesByRoleNames } = mockEsm('#src/queries/roles.js', () => ({
-  findRolesByRoleNames: jest.fn(
-    async (): Promise<Role[]> => [{ id: 'role_id', name: 'admin', description: 'none' }]
-  ),
-}));
-
-const { revokeInstanceByUserId } = mockEsm('#src/queries/oidc-model-instance.js', () => ({
-  revokeInstanceByUserId: jest.fn(),
-}));
+} satisfies Partial<Libraries['users']>;
 
 const adminUserRoutes = await pickDefault(import('./admin-user.js'));
 
 describe('adminUserRoutes', () => {
-  const userRequest = createRequester({ authedRoutes: adminUserRoutes });
+  const tenantContext = new MockTenant(undefined, mockedQueries, { users: usersLibraries });
+  const userRequest = createRequester({ authedRoutes: adminUserRoutes, tenantContext });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -259,8 +276,7 @@ describe('adminUserRoutes', () => {
     const name = 'Michael';
     const avatar = 'http://www.michael.png';
 
-    const mockFindUserById = findUserById as jest.Mock;
-    mockFindUserById.mockImplementationOnce(() => {
+    findUserById.mockImplementationOnce(() => {
       throw new Error(' ');
     });
 
@@ -296,8 +312,7 @@ describe('adminUserRoutes', () => {
   });
 
   it('PATCH /users/:userId should throw if role names are invalid', async () => {
-    const mockedFindRolesByRoleNames = findRolesByRoleNames as jest.Mock;
-    mockedFindRolesByRoleNames.mockImplementationOnce(
+    findRolesByRoleNames.mockImplementationOnce(
       async (): Promise<Role[]> => [
         { id: 'role_id1', name: 'worker', description: 'none' },
         { id: 'role_id2', name: 'cleaner', description: 'none' },
@@ -333,11 +348,13 @@ describe('adminUserRoutes', () => {
   it('PATCH /users/:userId/password should throw if user cannot be found', async () => {
     const notExistedUserId = 'notExistedUserId';
     const dummyPassword = '123456';
-    const mockedFindUserById = findUserById as jest.Mock;
-    mockedFindUserById.mockImplementationOnce((userId) => {
+
+    findUserById.mockImplementationOnce(async (userId) => {
       if (userId === notExistedUserId) {
         throw new Error(' ');
       }
+
+      return mockUser;
     });
 
     await expect(

@@ -1,18 +1,23 @@
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { createMockUtils } from '@logto/shared/esm';
+import { createMockPool } from 'slonik';
+
+import Queries from '#src/tenants/Queries.js';
 
 const { jest } = import.meta;
 
-const { mockEsmWithActual } = createMockUtils(jest);
+const pool = createMockPool({
+  query: jest.fn(),
+});
 
-const { updateUserById, hasUserWithId } = await mockEsmWithActual('#src/queries/user.js', () => ({
-  updateUserById: jest.fn(),
-  hasUserWithId: jest.fn(),
-}));
+const { encryptUserPassword, createUserLibrary } = await import('./user.js');
 
-const { encryptUserPassword, generateUserId } = await import('./user.js');
+const queries = new Queries(pool);
+
+const hasUserWithId = jest.spyOn(queries.users, 'hasUserWithId');
 
 describe('generateUserId()', () => {
+  const { generateUserId } = createUserLibrary(queries);
+
   afterEach(() => {
     hasUserWithId.mockClear();
   });
@@ -57,19 +62,5 @@ describe('encryptUserPassword()', () => {
     const { passwordEncryptionMethod, passwordEncrypted } = await encryptUserPassword('password');
     expect(passwordEncryptionMethod).toEqual(UsersPasswordEncryptionMethod.Argon2i);
     expect(passwordEncrypted).toContain('argon2');
-  });
-});
-
-describe('updateLastSignIn()', () => {
-  beforeAll(() => {
-    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
-  });
-
-  it('calls updateUserById with current timestamp', async () => {
-    await updateUserById('user-id', { lastSignInAt: Date.now() });
-    expect(updateUserById).toHaveBeenCalledWith(
-      'user-id',
-      expect.objectContaining({ lastSignInAt: new Date('2020-01-01').getTime() })
-    );
   });
 });

@@ -8,9 +8,8 @@ import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { checkSessionHealth } from '#src/libraries/session.js';
 import { getUserInfoByAuthCode } from '#src/libraries/social.js';
-import { checkIdentifierCollision, encryptUserPassword } from '#src/libraries/user.js';
+import { encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { deleteUserIdentity, findUserById, updateUserById } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { verificationTimeout } from './consts.js';
@@ -19,8 +18,14 @@ import type { AnonymousRouter, RouterInitArgs } from './types.js';
 export const profileRoute = '/profile';
 
 export default function profileRoutes<T extends AnonymousRouter>(
-  ...[router, { provider }]: RouterInitArgs<T>
+  ...[router, tenant]: RouterInitArgs<T>
 ) {
+  const { provider, libraries, queries } = tenant;
+  const { deleteUserIdentity, findUserById, updateUserById } = queries.users;
+  const {
+    users: { checkIdentifierCollision },
+  } = libraries;
+
   router.get(profileRoute, async (ctx, next) => {
     const { accountId: userId } = await provider.Session.get(ctx);
 
@@ -68,11 +73,14 @@ export default function profileRoutes<T extends AnonymousRouter>(
       body: object({ username: string().regex(usernameRegEx) }),
     }),
     async (ctx, next) => {
-      const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+      console.log('?0');
+      const userId = await checkSessionHealth(ctx, tenant, verificationTimeout);
       assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
       const { username } = ctx.guard.body;
+      console.log('?1');
       await checkIdentifierCollision({ username }, userId);
+      console.log('?2');
       await updateUserById(userId, { username }, 'replace');
 
       ctx.status = 204;
@@ -87,7 +95,7 @@ export default function profileRoutes<T extends AnonymousRouter>(
       body: object({ password: string().regex(passwordRegEx) }),
     }),
     async (ctx, next) => {
-      const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+      const userId = await checkSessionHealth(ctx, tenant, verificationTimeout);
 
       assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
@@ -115,7 +123,7 @@ export default function profileRoutes<T extends AnonymousRouter>(
       body: object({ primaryEmail: string().regex(emailRegEx) }),
     }),
     async (ctx, next) => {
-      const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+      const userId = await checkSessionHealth(ctx, tenant, verificationTimeout);
 
       assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
@@ -131,7 +139,7 @@ export default function profileRoutes<T extends AnonymousRouter>(
   );
 
   router.delete(`${profileRoute}/email`, async (ctx, next) => {
-    const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+    const userId = await checkSessionHealth(ctx, tenant, verificationTimeout);
 
     assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
@@ -152,7 +160,7 @@ export default function profileRoutes<T extends AnonymousRouter>(
       body: object({ primaryPhone: string().regex(phoneRegEx) }),
     }),
     async (ctx, next) => {
-      const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+      const userId = await checkSessionHealth(ctx, tenant, verificationTimeout);
 
       assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
@@ -168,7 +176,7 @@ export default function profileRoutes<T extends AnonymousRouter>(
   );
 
   router.delete(`${profileRoute}/phone`, async (ctx, next) => {
-    const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+    const userId = await checkSessionHealth(ctx, tenant, verificationTimeout);
 
     assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
@@ -192,7 +200,7 @@ export default function profileRoutes<T extends AnonymousRouter>(
       }),
     }),
     async (ctx, next) => {
-      const userId = await checkSessionHealth(ctx, provider, verificationTimeout);
+      const userId = await checkSessionHealth(ctx, tenant, verificationTimeout);
 
       assertThat(userId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 

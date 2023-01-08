@@ -1,7 +1,6 @@
 import { createMockPool, createMockQueryResult } from 'slonik';
 
 import { mockSignInExperience } from '#src/__mocks__/index.js';
-import envSet from '#src/env-set/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
@@ -9,17 +8,15 @@ const { jest } = import.meta;
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
-jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
-  createMockPool({
-    query: async (sql, values) => {
-      return mockQuery(sql, values);
-    },
-  })
-);
+const pool = createMockPool({
+  query: async (sql, values) => {
+    return mockQuery(sql, values);
+  },
+});
 
-const { findDefaultSignInExperience, updateDefaultSignInExperience } = await import(
-  './sign-in-experience.js'
-);
+const { createSignInExperienceQueries } = await import('./sign-in-experience.js');
+const { findDefaultSignInExperience, updateDefaultSignInExperience } =
+  createSignInExperienceQueries(pool);
 
 describe('sign-in-experience query', () => {
   const id = 'default';
