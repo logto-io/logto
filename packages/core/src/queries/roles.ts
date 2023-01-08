@@ -1,5 +1,5 @@
 import type { CreateRole, Role } from '@logto/schemas';
-import { Roles } from '@logto/schemas';
+import { SearchJointMode, Roles } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
@@ -9,14 +9,44 @@ import { buildInsertInto } from '#src/database/insert-into.js';
 import { buildUpdateWhere } from '#src/database/update-where.js';
 import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import type { Search } from '#src/utils/search.js';
+import { buildConditionsFromSearch } from '#src/utils/search.js';
 
 const { table, fields } = convertToIdentifiers(Roles);
 
-export const findAllRoles = async () =>
-  envSet.pool.any<Role>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
+const buildRoleConditions = (search: Search) => {
+  const hasSearch = search.matches.length > 0;
+  const searchFields = [Roles.fields.id, Roles.fields.name, Roles.fields.description];
+
+  return conditionalSql(
+    hasSearch,
+    () => sql`where ${buildConditionsFromSearch(search, searchFields)}`
+  );
+};
+
+export const defaultUserSearch = { matches: [], isCaseSensitive: false, joint: SearchJointMode.Or };
+
+export const countRoles = async (search: Search = defaultUserSearch) =>
+  envSet.pool.one<{ count: number }>(sql`
+    select count(*)
     from ${table}
+    ${buildRoleConditions(search)}
   `);
+
+export const findRoles = async (limit: number, offset: number, search: Search) =>
+  envSet.pool.any<Role>(
+    sql`
+      select ${sql.join(
+        Object.values(fields).map((field) => sql`${table}.${field}`),
+        sql`,`
+      )}
+      from ${table}
+      ${buildRoleConditions(search)}
+      limit ${limit}
+      offset ${offset}
+    `
+  );
+
 export const findRolesByRoleIds = async (roleIds: string[]) =>
   roleIds.length > 0
     ? envSet.pool.any<Role>(sql`

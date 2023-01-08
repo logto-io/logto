@@ -1,10 +1,12 @@
 import { buildIdGenerator } from '@logto/core-kit';
 import type { ScopeResponse } from '@logto/schemas';
 import { Roles } from '@logto/schemas';
+import { tryThat } from '@logto/shared';
 import { object, string, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
 import { findResourcesByIds } from '#src/queries/resource.js';
 import {
   deleteRolesScope,
@@ -12,10 +14,11 @@ import {
   insertRolesScopes,
 } from '#src/queries/roles-scopes.js';
 import {
+  countRoles,
   deleteRoleById,
-  findAllRoles,
   findRoleById,
   findRoleByRoleName,
+  findRoles,
   insertRole,
   updateRoleById,
 } from '#src/queries/roles.js';
@@ -28,16 +31,39 @@ import {
   insertUsersRoles,
 } from '#src/queries/users-roles.js';
 import assertThat from '#src/utils/assert-that.js';
+import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter } from './types.js';
 
 const roleId = buildIdGenerator(21);
 
 export default function roleRoutes<T extends AuthedRouter>(router: T) {
-  router.get('/roles', async (ctx, next) => {
-    ctx.body = await findAllRoles();
+  router.get('/roles', koaPagination(), async (ctx, next) => {
+    const { limit, offset } = ctx.pagination;
+    const { searchParams } = ctx.request.URL;
 
-    return next();
+    return tryThat(
+      async () => {
+        const search = parseSearchParamsForSearch(searchParams);
+
+        const [{ count }, roles] = await Promise.all([
+          countRoles(search),
+          findRoles(limit, offset, search),
+        ]);
+
+        // Return totalCount to pagination middleware
+        ctx.pagination.totalCount = count;
+        ctx.body = roles;
+
+        return next();
+      },
+      (error) => {
+        if (error instanceof TypeError) {
+          throw new RequestError({ code: 'request.invalid_input', details: error.message }, error);
+        }
+        throw error;
+      }
+    );
   });
 
   router.post(
