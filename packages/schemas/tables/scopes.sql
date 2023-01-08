@@ -6,3 +6,9 @@ create table scopes (
   created_at timestamptz not null default(now()),
   primary key (id)
 );
+
+create index scopes__resource_id_name
+on scopes (
+  resource_id,
+  name
+);

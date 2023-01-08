@@ -44,6 +44,18 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
       ${buildResourceConditions(search)}
     `);
 
+  const findScopeByNameAndResourceId = async (
+    name: string,
+    resourceId: string,
+    excludeScopeId?: string
+  ) =>
+    pool.maybeOne<Scope>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+          from ${table}
+          where ${fields.resourceId}=${resourceId} and ${fields.name}=${name}
+          ${conditionalSql(excludeScopeId, (id) => sql`and ${fields.id}<>${id}`)}
+    `);
+
   const findScopesByResourceId = async (resourceId: string) =>
     pool.any<Scope>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
@@ -94,6 +106,7 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
   return {
     findScopes,
     countScopes,
+    findScopeByNameAndResourceId,
     findScopesByResourceId,
     findScopesByResourceIds,
     findScopesByIds,
@@ -109,6 +122,7 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
 export const {
   findScopes,
   countScopes,
+  findScopeByNameAndResourceId,
   findScopesByResourceId,
   findScopesByResourceIds,
   findScopesByIds,

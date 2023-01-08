@@ -180,6 +180,9 @@ const errors = {
     scope_exists: 'The scope id {{scopeId}} has already been added to this role',
     user_exists: 'The user id {{userId}} is already been added to this role',
   },
+  scope: {
+    name_exists: 'The scope name {{name}} is already in use',
+  },
 };
 
 export default errors;
