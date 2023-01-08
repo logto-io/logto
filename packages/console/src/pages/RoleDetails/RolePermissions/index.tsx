@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/images/plus.svg';
-import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import PermissionsTable from '@/components/PermissionsTable';
 import type { RequestError } from '@/hooks/use-api';
@@ -58,26 +56,10 @@ const RolePermissions = () => {
         isApiColumnDisplayed
         scopes={scopes}
         isLoading={isLoading}
-        createButton={
-          <Button
-            title="role_details.permission.assign_button"
-            type="primary"
-            size="large"
-            icon={<Plus />}
-            onClick={() => {
-              // TODO @xiaoyijun Assign Permissions to Role
-            }}
-          />
-        }
-        placeholderContent={
-          <Button
-            title="role_details.permission.assign_button"
-            type="outline"
-            onClick={() => {
-              // TODO @xiaoyijun Assign Permissions to Role
-            }}
-          />
-        }
+        createButtonTitle="role_details.permission.assign_button"
+        createHandler={() => {
+          // TODO @xiaoyijun Assign Permissions to Role
+        }}
         deleteHandler={setScopeToBeDeleted}
         errorMessage={error?.body?.message ?? error?.message}
         retryHandler={async () => mutate(undefined, true)}

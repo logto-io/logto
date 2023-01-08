@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/images/plus.svg';
-import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import PermissionsTable from '@/components/PermissionsTable';
 import type { RequestError } from '@/hooks/use-api';
@@ -57,26 +55,10 @@ const ApiResourcePermissions = () => {
       <PermissionsTable
         scopes={scopes}
         isLoading={isLoading}
-        createButton={
-          <Button
-            title="api_resource_details.permission.create_button"
-            type="primary"
-            size="large"
-            icon={<Plus />}
-            onClick={() => {
-              setIsCreateFormOpen(true);
-            }}
-          />
-        }
-        placeholderContent={
-          <Button
-            title="api_resource_details.permission.create_button"
-            type="outline"
-            onClick={() => {
-              setIsCreateFormOpen(true);
-            }}
-          />
-        }
+        createButtonTitle="api_resource_details.permission.create_button"
+        createHandler={() => {
+          setIsCreateFormOpen(true);
+        }}
         deleteHandler={setScopeToBeDeleted}
         errorMessage={error?.body?.message ?? error?.message}
         retryHandler={async () => mutate(undefined, true)}

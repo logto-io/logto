@@ -1,11 +1,13 @@
+import type { AdminConsoleKey } from '@logto/phrases';
 import type { ScopeResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Delete from '@/assets/images/delete.svg';
+import Plus from '@/assets/images/plus.svg';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 
+import Button from '../Button';
 import IconButton from '../IconButton';
 import Search from '../Search';
 import Table from '../Table';
@@ -17,9 +19,9 @@ type Props = {
   scopes?: ScopeResponse[];
   isLoading: boolean;
   errorMessage?: string;
-  createButton: ReactNode;
+  createButtonTitle: AdminConsoleKey;
   isApiColumnDisplayed?: boolean;
-  placeholderContent: ReactNode;
+  createHandler: () => void;
   deleteHandler: (ScopeResponse: ScopeResponse) => void;
   retryHandler: () => void;
 };
@@ -28,9 +30,9 @@ const PermissionsTable = ({
   scopes,
   isLoading,
   errorMessage,
-  createButton,
+  createButtonTitle,
   isApiColumnDisplayed = false,
-  placeholderContent,
+  createHandler,
   deleteHandler,
   retryHandler,
 }: Props) => {
@@ -70,10 +72,10 @@ const PermissionsTable = ({
     title: null,
     dataIndex: 'delete',
     colSpan: 1,
-    render: (ScopeResponse) => (
+    render: (scope) => (
       <IconButton
         onClick={() => {
-          deleteHandler(ScopeResponse);
+          deleteHandler(scope);
         }}
       >
         <Delete />
@@ -93,17 +95,33 @@ const PermissionsTable = ({
     <Table
       className={styles.permissionTable}
       rowIndexKey="id"
-      rowGroups={[{ key: 'ScopeResponses', data: scopes }]}
+      rowGroups={[{ key: 'scopes', data: scopes }]}
       columns={columns}
       filter={
         <div className={styles.filter}>
           <Search />
-          {createButton}
+          <Button
+            title={createButtonTitle}
+            type="primary"
+            size="large"
+            icon={<Plus />}
+            onClick={() => {
+              createHandler();
+            }}
+          />
         </div>
       }
       isLoading={isLoading}
       placeholder={{
-        content: placeholderContent,
+        content: (
+          <Button
+            title={createButtonTitle}
+            type="outline"
+            onClick={() => {
+              createHandler();
+            }}
+          />
+        ),
       }}
       errorMessage={errorMessage}
       onRetry={retryHandler}
