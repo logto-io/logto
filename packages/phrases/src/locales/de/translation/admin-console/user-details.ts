@@ -16,6 +16,8 @@ const user_details = {
     congratulations: 'Der Benutzer wurde erfolgreich zurückgesetzt',
     new_password: 'Neues Passwort:',
   },
+  tab_settings: 'Settings', // UNTRANSLATED
+  tab_roles: 'Roles', // UNTRANSLATED
   tab_logs: 'Benutzer-Logs',
   settings: 'Settings', // UNTRANSLATED
   settings_description:
@@ -40,6 +42,13 @@ const user_details = {
       'Du entfernst die bestehende <name/> Identität. Bist du sicher, dass du das tun willst?',
   },
   suspended: 'Suspended', // UNTRANSLATED
+  roles: {
+    name_column: 'Role', // UNTRANSLATED
+    description_column: 'Description', // UNTRANSLATED
+    assign_button: 'Assign Roles', // UNTRANSLATED
+    delete_description: 'TBD', // UNTRANSLATED
+    deleted: 'The role {{name}} has been successfully deleted from the user.', // UNTRANSLATED
+  },
 };
 
 export default user_details;

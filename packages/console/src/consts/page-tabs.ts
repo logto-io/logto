@@ -16,6 +16,7 @@ export enum SignInExperiencePage {
 
 export enum UserDetailsTabs {
   Settings = 'settings',
+  Roles = 'roles',
   Logs = 'logs',
 }
 

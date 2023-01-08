@@ -32,7 +32,8 @@ import { UserDetailsOutletContext } from './types';
 
 const UserDetails = () => {
   const { pathname } = useLocation();
-  const isOnLogsPage = pathname.endsWith(UserDetailsTabs.Logs);
+  const isPageHasTable =
+    pathname.endsWith(UserDetailsTabs.Roles) || pathname.endsWith(UserDetailsTabs.Logs);
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
@@ -67,7 +68,7 @@ const UserDetails = () => {
   };
 
   return (
-    <div className={classNames(detailsStyles.container, isOnLogsPage && styles.resourceLayout)}>
+    <div className={classNames(detailsStyles.container, isPageHasTable && styles.resourceLayout)}>
       <TextLink to="/users" icon={<Back />} className={styles.backLink}>
         {t('user_details.back_to_users')}
       </TextLink>
@@ -151,7 +152,10 @@ const UserDetails = () => {
           </Card>
           <TabNav>
             <TabNavItem href={`/users/${data.id}/${UserDetailsTabs.Settings}`}>
-              {t('general.settings_nav')}
+              {t('user_details.tab_settings')}
+            </TabNavItem>
+            <TabNavItem href={`/users/${data.id}/${UserDetailsTabs.Roles}`}>
+              {t('user_details.tab_roles')}
             </TabNavItem>
             <TabNavItem href={`/users/${data.id}/${UserDetailsTabs.Logs}`}>
               {t('user_details.tab_logs')}
