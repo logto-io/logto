@@ -15,7 +15,7 @@ const { table, fields } = convertToIdentifiers(Resources);
 
 export const findTotalNumberOfResources = async () => getTotalRowCount(table);
 
-export const findAllResources = async (limit: number, offset: number) =>
+export const findAllResources = async (limit?: number, offset?: number) =>
   manyRows(
     envSet.pool.query<Resource>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
