@@ -38,17 +38,23 @@ import type { AuthedRouter } from './types.js';
 const roleId = buildIdGenerator(21);
 
 export default function roleRoutes<T extends AuthedRouter>(router: T) {
-  router.get('/roles', koaPagination(), async (ctx, next) => {
-    const { limit, offset } = ctx.pagination;
+  router.get('/roles', koaPagination({ isOptional: true }), async (ctx, next) => {
+    const { limit, offset, disabled } = ctx.pagination;
     const { searchParams } = ctx.request.URL;
 
     return tryThat(
       async () => {
         const search = parseSearchParamsForSearch(searchParams);
 
+        if (disabled) {
+          ctx.body = await findRoles(search);
+
+          return next();
+        }
+
         const [{ count }, roles] = await Promise.all([
           countRoles(search),
-          findRoles(limit, offset, search),
+          findRoles(search, limit, offset),
         ]);
 
         // Return totalCount to pagination middleware
