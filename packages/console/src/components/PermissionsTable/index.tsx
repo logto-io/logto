@@ -2,10 +2,9 @@ import type { ScopeResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import Delete from '@/assets/images/delete.svg';
-import type { RequestError } from '@/hooks/use-api';
+import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 
 import IconButton from '../IconButton';
 import Search from '../Search';
@@ -15,25 +14,27 @@ import TextLink from '../TextLink';
 import * as styles from './index.module.scss';
 
 type Props = {
-  fetchUrl: string;
+  scopes?: ScopeResponse[];
+  isLoading: boolean;
+  errorMessage?: string;
   createButton: ReactNode;
-  deleteHandler: (ScopeResponse: ScopeResponse) => void;
-  placeholderContent: ReactNode;
   isApiColumnDisplayed?: boolean;
+  placeholderContent: ReactNode;
+  deleteHandler: (ScopeResponse: ScopeResponse) => void;
+  retryHandler: () => void;
 };
 
 const PermissionsTable = ({
-  fetchUrl,
+  scopes,
+  isLoading,
+  errorMessage,
   createButton,
-  deleteHandler,
-  placeholderContent,
   isApiColumnDisplayed = false,
+  placeholderContent,
+  deleteHandler,
+  retryHandler,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
-  const { data: ScopeResponses, error, mutate } = useSWR<ScopeResponse[], RequestError>(fetchUrl);
-
-  const isLoading = !ScopeResponses && !error;
 
   const nameColumn: Column<ScopeResponse> = {
     title: t('permissions.name_column'),
@@ -55,7 +56,10 @@ const PermissionsTable = ({
     colSpan: 5,
     render: ({ resource }) => (
       <div className={styles.api}>
-        <TextLink to={`/api-resources/${resource.id}`} target="_blank">
+        <TextLink
+          to={`/api-resources/${resource.id}/${ApiResourceDetailsTabs.Settings}`}
+          target="_blank"
+        >
           {resource.name}
         </TextLink>
       </div>
@@ -89,7 +93,7 @@ const PermissionsTable = ({
     <Table
       className={styles.permissionTable}
       rowIndexKey="id"
-      rowGroups={[{ key: 'ScopeResponses', data: ScopeResponses }]}
+      rowGroups={[{ key: 'ScopeResponses', data: scopes }]}
       columns={columns}
       filter={
         <div className={styles.filter}>
@@ -101,8 +105,8 @@ const PermissionsTable = ({
       placeholder={{
         content: placeholderContent,
       }}
-      errorMessage={error?.body?.message ?? error?.message}
-      onRetry={async () => mutate(undefined, true)}
+      errorMessage={errorMessage}
+      onRetry={retryHandler}
     />
   );
 };

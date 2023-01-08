@@ -1,14 +1,15 @@
-import type { Scope } from '@logto/schemas';
+import type { Scope, ScopeResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
-import { useSWRConfig } from 'swr';
+import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import PermissionsTable from '@/components/PermissionsTable';
+import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 
 import type { RoleDetailsOutletContext } from '../types';
@@ -20,9 +21,13 @@ const RolePermissions = () => {
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { mutate } = useSWRConfig();
+  const {
+    data: scopes,
+    error,
+    mutate,
+  } = useSWR<ScopeResponse[], RequestError>(roleId && `/api/roles/${roleId}/scopes`);
 
-  const fetchUrl = `/api/roles/${roleId}/scopes`;
+  const isLoading = !scopes && !error;
 
   const [scopeToBeDeleted, setScopeToBeDeleted] = useState<Scope>();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -40,7 +45,7 @@ const RolePermissions = () => {
       toast.success(
         t('role_details.permission.permission_deleted', { name: scopeToBeDeleted.name })
       );
-      await mutate(fetchUrl);
+      await mutate();
       setScopeToBeDeleted(undefined);
     } finally {
       setIsDeleting(false);
@@ -51,7 +56,8 @@ const RolePermissions = () => {
     <>
       <PermissionsTable
         isApiColumnDisplayed
-        fetchUrl={fetchUrl}
+        scopes={scopes}
+        isLoading={isLoading}
         createButton={
           <Button
             title="role_details.permission.assign_button"
@@ -63,7 +69,6 @@ const RolePermissions = () => {
             }}
           />
         }
-        deleteHandler={setScopeToBeDeleted}
         placeholderContent={
           <Button
             title="role_details.permission.assign_button"
@@ -73,6 +78,9 @@ const RolePermissions = () => {
             }}
           />
         }
+        deleteHandler={setScopeToBeDeleted}
+        errorMessage={error?.body?.message ?? error?.message}
+        retryHandler={async () => mutate(undefined, true)}
       />
       {scopeToBeDeleted && (
         <ConfirmModal

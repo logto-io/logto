@@ -1,14 +1,15 @@
-import type { Scope } from '@logto/schemas';
+import type { Scope, ScopeResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
-import { useSWRConfig } from 'swr';
+import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import PermissionsTable from '@/components/PermissionsTable';
+import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 
 import type { ApiResourceDetailsOutletContext } from '../types';
@@ -21,9 +22,13 @@ const ApiResourcePermissions = () => {
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const fetchUrl = `/api/resources/${resourceId}/scopes`;
+  const {
+    data: scopes,
+    error,
+    mutate,
+  } = useSWR<ScopeResponse[], RequestError>(resourceId && `/api/resources/${resourceId}/scopes`);
 
-  const { mutate } = useSWRConfig();
+  const isLoading = !scopes && !error;
 
   const api = useApi();
 
@@ -40,7 +45,7 @@ const ApiResourcePermissions = () => {
     try {
       await api.delete(`/api/resources/${resourceId}/scopes/${scopeToBeDeleted.id}`);
       toast.success(t('api_resource_details.permission.deleted', { name: scopeToBeDeleted.name }));
-      await mutate(fetchUrl);
+      await mutate();
       setScopeToBeDeleted(undefined);
     } finally {
       setIsDeleting(false);
@@ -50,7 +55,8 @@ const ApiResourcePermissions = () => {
   return (
     <>
       <PermissionsTable
-        fetchUrl={fetchUrl}
+        scopes={scopes}
+        isLoading={isLoading}
         createButton={
           <Button
             title="api_resource_details.permission.create_button"
@@ -62,7 +68,6 @@ const ApiResourcePermissions = () => {
             }}
           />
         }
-        deleteHandler={setScopeToBeDeleted}
         placeholderContent={
           <Button
             title="api_resource_details.permission.create_button"
@@ -72,6 +77,9 @@ const ApiResourcePermissions = () => {
             }}
           />
         }
+        deleteHandler={setScopeToBeDeleted}
+        errorMessage={error?.body?.message ?? error?.message}
+        retryHandler={async () => mutate(undefined, true)}
       />
       {isCreateFormOpen && (
         <CreatePermissionModal
@@ -81,7 +89,7 @@ const ApiResourcePermissions = () => {
               toast.success(
                 t('api_resource_details.permission.permission_created', { name: scope.name })
               );
-              void mutate(fetchUrl);
+              void mutate();
             }
             setIsCreateFormOpen(false);
           }}
