@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.withTable {
+  height: 100%;
+}
+
 .container {
   .backLink {
     margin: _.unit(1) 0 0 _.unit(1);

@@ -22,4 +22,5 @@ export enum UserDetailsTabs {
 export enum RoleDetailsTabs {
   Settings = 'settings',
   Permissions = 'permissions',
+  Users = 'users',
 }

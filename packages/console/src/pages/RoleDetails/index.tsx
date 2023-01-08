@@ -30,6 +30,9 @@ const RoleDetails = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
 
+  const isPageHasTable =
+    pathname.endsWith(RoleDetailsTabs.Permissions) || pathname.endsWith(RoleDetailsTabs.Users);
+
   const { data, error, mutate } = useSWR<Role, RequestError>(id && `/api/roles/${id}`);
   const { mutate: mutateGlobal } = useSWRConfig();
   const isLoading = !data && !error;
@@ -62,7 +65,13 @@ const RoleDetails = () => {
   };
 
   return (
-    <div className={classNames(detailsStyles.container, styles.container)}>
+    <div
+      className={classNames(
+        detailsStyles.container,
+        styles.container,
+        isPageHasTable && styles.withTable
+      )}
+    >
       <TextLink to="/roles" icon={<Back />} className={styles.backLink}>
         {t('role_details.back_to_roles')}
       </TextLink>
@@ -110,6 +119,9 @@ const RoleDetails = () => {
             </TabNavItem>
             <TabNavItem href={`/roles/${data.id}/${RoleDetailsTabs.Permissions}`}>
               {t('role_details.permissions_tab')}
+            </TabNavItem>
+            <TabNavItem href={`/roles/${data.id}/${RoleDetailsTabs.Users}`}>
+              {t('role_details.users_tab')}
             </TabNavItem>
           </TabNav>
           <Outlet
