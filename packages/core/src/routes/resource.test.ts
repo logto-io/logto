@@ -2,21 +2,14 @@ import type { Resource, CreateResource } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockResource, mockScope } from '#src/__mocks__/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+const { mockEsm } = createMockUtils(jest);
 
-await mockEsmWithActual('#src/libraries/resource.js', () => ({
-  attachScopesToResources: async (resources: Resource[]) =>
-    resources.map((resource) => ({
-      ...resource,
-      scopes: [],
-    })),
-}));
-
-const { findResourceById } = mockEsm('#src/queries/resource.js', () => ({
+const resources = {
   findTotalNumberOfResources: async () => ({ count: 10 }),
   findAllResources: async (): Promise<Resource[]> => [mockResource],
   findResourceById: jest.fn(async (): Promise<Resource> => mockResource),
@@ -30,26 +23,40 @@ const { findResourceById } = mockEsm('#src/queries/resource.js', () => ({
   }),
   deleteResourceById: jest.fn(),
   findScopesByResourceId: async () => [mockScope],
-}));
+};
+const { findResourceById } = resources;
 
-const { insertScope, updateScopeById } = await mockEsmWithActual('#src/queries/scope.js', () => ({
+const scopes = {
   findScopesByResourceId: async () => [mockScope],
   findScopes: async () => [mockScope],
   insertScope: jest.fn(async () => mockScope),
   updateScopeById: jest.fn(async () => mockScope),
   deleteScopeById: jest.fn(),
   findScopeByNameAndResourceId: jest.fn(),
-}));
+};
+const { insertScope, updateScopeById } = scopes;
+
+const libraries = {
+  resources: {
+    attachScopesToResources: async (resources: readonly Resource[]) =>
+      resources.map((resource) => ({
+        ...resource,
+        scopes: [],
+      })),
+  },
+};
 
 mockEsm('@logto/core-kit', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => 'randomId',
 }));
 
+const tenantContext = new MockTenant(undefined, { scopes, resources }, libraries);
+
 const resourceRoutes = await pickDefault(import('./resource.js'));
 
 describe('resource routes', () => {
-  const resourceRequest = createRequester({ authedRoutes: resourceRoutes });
+  const resourceRequest = createRequester({ authedRoutes: resourceRoutes, tenantContext });
 
   it('GET /resources', async () => {
     const response = await resourceRequest.get('/resources');

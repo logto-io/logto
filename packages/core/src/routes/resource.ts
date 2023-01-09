@@ -5,25 +5,8 @@ import { object, string } from 'zod';
 
 import { isTrue } from '#src/env-set/parameters.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { attachScopesToResources } from '#src/libraries/resource.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import {
-  findTotalNumberOfResources,
-  findAllResources,
-  findResourceById,
-  insertResource,
-  updateResourceById,
-  deleteResourceById,
-} from '#src/queries/resource.js';
-import {
-  countScopes,
-  deleteScopeById,
-  findScopeByNameAndResourceId,
-  findScopes,
-  insertScope,
-  updateScopeById,
-} from '#src/queries/scope.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
@@ -32,7 +15,29 @@ import type { AuthedRouter, RouterInitArgs } from './types.js';
 const resourceId = buildIdGenerator(21);
 const scopeId = resourceId;
 
-export default function resourceRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function resourceRoutes<T extends AuthedRouter>(
+  ...[router, { queries, libraries }]: RouterInitArgs<T>
+) {
+  const {
+    resources: {
+      findTotalNumberOfResources,
+      findAllResources,
+      findResourceById,
+      insertResource,
+      updateResourceById,
+      deleteResourceById,
+    },
+    scopes: {
+      countScopes,
+      deleteScopeById,
+      findScopes,
+      findScopeByNameAndResourceId,
+      insertScope,
+      updateScopeById,
+    },
+  } = queries;
+  const { attachScopesToResources } = libraries.resources;
+
   router.get(
     '/resources',
     koaPagination({ isOptional: true }),
