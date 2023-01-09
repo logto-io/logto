@@ -1,4 +1,4 @@
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import { grantListener, grantRevocationListener } from './grant.js';
 import { interactionEndedListener, interactionStartedListener } from './interaction.js';

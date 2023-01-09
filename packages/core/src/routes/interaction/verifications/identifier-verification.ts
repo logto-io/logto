@@ -1,6 +1,6 @@
 import { InteractionEvent } from '@logto/schemas';
 import type { Context } from 'koa';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import type {
   RegisterInteractionResult,

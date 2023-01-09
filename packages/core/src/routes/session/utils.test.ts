@@ -1,7 +1,7 @@
 import type { User } from '@logto/schemas';
 import { UserRole, SignInIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
-import { Provider } from 'oidc-provider';
+import Provider from 'oidc-provider';
 
 import { mockSignInExperience, mockSignInMethod, mockUser } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';

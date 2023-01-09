@@ -2,7 +2,8 @@ import type { ConnectorSession } from '@logto/connector-kit';
 import { connectorSessionGuard } from '@logto/connector-kit';
 import type { Profile, InteractionEvent } from '@logto/schemas';
 import type { Context } from 'koa';
-import type { Provider, InteractionResults } from 'oidc-provider';
+import type { InteractionResults } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';

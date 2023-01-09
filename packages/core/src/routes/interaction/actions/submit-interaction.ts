@@ -1,7 +1,7 @@
 import type { User, Profile } from '@logto/schemas';
 import { InteractionEvent, UserRole, adminConsoleApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import { assignInteractionResults } from '#src/libraries/session.js';

@@ -7,7 +7,7 @@ import type { Nullable, Truthy } from '@silverhand/essentials';
 import { isSameArray } from '@silverhand/essentials';
 import { addSeconds, isAfter, isValid } from 'date-fns';
 import type { Context } from 'koa';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 

@@ -4,7 +4,7 @@ import type {
   SocialConnectorPayload,
   SocialIdentityPayload,
 } from '@logto/schemas';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { verifyUserPassword } from '#src/libraries/user.js';
