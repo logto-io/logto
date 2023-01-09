@@ -162,11 +162,13 @@ export const findUsers = async (
   );
 
 export const findUsersByIds = async (userIds: string[]) =>
-  envSet.pool.any<User>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.id} in (${sql.join(userIds, sql`, `)})
-  `);
+  userIds.length > 0
+    ? envSet.pool.any<User>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.id} in (${sql.join(userIds, sql`, `)})
+    `)
+    : [];
 
 const updateUser = buildUpdateWhere<CreateUser, User>(Users, true);
 
@@ -222,10 +224,6 @@ export const findUsersByRoleName = async (roleName: string) => {
   }
 
   const usersRoles = await findUsersRolesByRoleId(role.id);
-
-  if (usersRoles.length === 0) {
-    return [];
-  }
 
   return findUsersByIds(usersRoles.map(({ userId }) => userId));
 };

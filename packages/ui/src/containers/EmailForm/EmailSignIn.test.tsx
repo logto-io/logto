@@ -3,14 +3,14 @@ import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { sendPasscode, putInteraction } from '@/apis/interaction';
+import { sendVerificationCode, putInteraction } from '@/apis/interaction';
 
 import EmailSignIn from './EmailSignIn';
 
 const mockedNavigate = jest.fn();
 
 jest.mock('@/apis/interaction', () => ({
-  sendPasscode: jest.fn(() => ({ success: true })),
+  sendVerificationCode: jest.fn(() => ({ success: true })),
   putInteraction: jest.fn(() => ({ success: true })),
 }));
 
@@ -53,7 +53,7 @@ describe('EmailSignIn', () => {
 
     await waitFor(() => {
       expect(putInteraction).not.toBeCalled();
-      expect(sendPasscode).not.toBeCalled();
+      expect(sendVerificationCode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/email/password', search: '' },
         { state: { email } }
@@ -88,7 +88,7 @@ describe('EmailSignIn', () => {
 
     await waitFor(() => {
       expect(putInteraction).not.toBeCalled();
-      expect(sendPasscode).not.toBeCalled();
+      expect(sendVerificationCode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
         { pathname: '/sign-in/email/password', search: '' },
         { state: { email } }
@@ -124,9 +124,9 @@ describe('EmailSignIn', () => {
 
     await waitFor(() => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
-      expect(sendPasscode).toBeCalledWith({ email });
+      expect(sendVerificationCode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/email/passcode-validation', search: '' },
+        { pathname: '/sign-in/email/verification-code', search: '' },
         { state: { email } }
       );
     });
@@ -160,9 +160,9 @@ describe('EmailSignIn', () => {
 
     await waitFor(() => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
-      expect(sendPasscode).toBeCalledWith({ email });
+      expect(sendVerificationCode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/email/passcode-validation', search: '' },
+        { pathname: '/sign-in/email/verification-code', search: '' },
         { state: { email } }
       );
     });

@@ -1,0 +1,27 @@
+@use '@/scss/underscore' as _;
+
+.permissionTable {
+  margin-bottom: _.unit(6);
+  color: var(--color-text);
+
+  .filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  tbody {
+    td {
+      max-width: 100%;
+      @include _.text-ellipsis;
+      font: var(--font-body-medium);
+    }
+  }
+
+  .name {
+    display: inline-block;
+    padding: _.unit(1) _.unit(2);
+    border-radius: 6px;
+    background: var(--color-neutral-95);
+  }
+}

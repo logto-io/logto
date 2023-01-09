@@ -2,7 +2,7 @@ import { InteractionEvent, ConnectorType, SignInIdentifier } from '@logto/schema
 
 import {
   putInteraction,
-  sendVerificationPasscode,
+  sendVerificationCode,
   deleteUser,
   patchInteractionIdentifiers,
   putInteractionProfile,
@@ -13,7 +13,7 @@ import { generatePassword } from '#src/utils.js';
 
 import { initClient, processSession, logoutClient } from './utils/client.js';
 import { clearConnectorsByTypes, setEmailConnector, setSmsConnector } from './utils/connector.js';
-import { enableAllPasscodeSignInMethods } from './utils/sign-in-experience.js';
+import { enableAllVerificationCodeSignInMethods } from './utils/sign-in-experience.js';
 import { generateNewUser } from './utils/user.js';
 
 describe('reset password', () => {
@@ -21,7 +21,7 @@ describe('reset password', () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
     await setSmsConnector();
-    await enableAllPasscodeSignInMethods({
+    await enableAllVerificationCodeSignInMethods({
       identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
       password: true,
       verify: true,
@@ -41,22 +41,22 @@ describe('reset password', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, { event: InteractionEvent.ForgotPassword });
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       email: userProfile.primaryEmail,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    expect(passcodeRecord).toMatchObject({
+    expect(verificationCodeRecord).toMatchObject({
       address: userProfile.primaryEmail,
       type: InteractionEvent.ForgotPassword,
     });
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       email: userProfile.primaryEmail,
-      passcode: code,
+      verificationCode: code,
     });
 
     await expectRejects(client.submitInteraction(), 'user.new_password_required_in_profile');
@@ -65,9 +65,9 @@ describe('reset password', () => {
 
     await expectRejects(client.submitInteraction(), 'user.same_password');
 
-    const newPasscodeRecord = generatePassword();
+    const newPasswordRecord = generatePassword();
 
-    await client.successSend(patchInteractionProfile, { password: newPasscodeRecord });
+    await client.successSend(patchInteractionProfile, { password: newPasswordRecord });
 
     await client.submitInteraction();
 
@@ -75,7 +75,7 @@ describe('reset password', () => {
       event: InteractionEvent.SignIn,
       identifier: {
         email: userProfile.primaryEmail,
-        password: newPasscodeRecord,
+        password: newPasswordRecord,
       },
     });
 
@@ -94,22 +94,22 @@ describe('reset password', () => {
     const client = await initClient();
 
     await client.successSend(putInteraction, { event: InteractionEvent.ForgotPassword });
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       phone: userProfile.primaryPhone,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    expect(passcodeRecord).toMatchObject({
+    expect(verificationCodeRecord).toMatchObject({
       phone: userProfile.primaryPhone,
       type: InteractionEvent.ForgotPassword,
     });
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: userProfile.primaryPhone,
-      passcode: code,
+      verificationCode: code,
     });
 
     await expectRejects(client.submitInteraction(), 'user.new_password_required_in_profile');
@@ -118,9 +118,9 @@ describe('reset password', () => {
 
     await expectRejects(client.submitInteraction(), 'user.same_password');
 
-    const newPasscodeRecord = generatePassword();
+    const newPasswordRecord = generatePassword();
 
-    await client.successSend(patchInteractionProfile, { password: newPasscodeRecord });
+    await client.successSend(patchInteractionProfile, { password: newPasswordRecord });
 
     await client.submitInteraction();
 
@@ -128,7 +128,7 @@ describe('reset password', () => {
       event: InteractionEvent.SignIn,
       identifier: {
         phone: userProfile.primaryPhone,
-        password: newPasscodeRecord,
+        password: newPasswordRecord,
       },
     });
 

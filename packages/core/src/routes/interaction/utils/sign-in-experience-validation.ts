@@ -55,9 +55,9 @@ export const verifyIdentifierSettings = (
           return false;
         }
 
-        // Email Passcode Verification: SignIn verificationCode enabled or SignUp Email verify enabled
+        // Email verificationCode Verification: SignIn verificationCode enabled or SignUp Email verify enabled
         if (
-          'passcode' in identifier &&
+          'verificationCode' in identifier &&
           !verificationCode &&
           !signUp.identifiers.includes(SignInIdentifier.Email) &&
           !signUp.verify
@@ -86,9 +86,9 @@ export const verifyIdentifierSettings = (
           return false;
         }
 
-        // Phone Passcode Verification: SignIn verificationCode enabled or SignUp Email verify enabled
+        // Phone verificationCode Verification: SignIn verificationCode enabled or SignUp Email verify enabled
         if (
-          'passcode' in identifier &&
+          'verificationCode' in identifier &&
           !verificationCode &&
           !signUp.identifiers.includes(SignInIdentifier.Phone) &&
           !signUp.verify

@@ -21,9 +21,12 @@ await mockEsmWithActual('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
-const { verifyIdentifierByPasscode } = mockEsm('../utils/passcode-validation.js', () => ({
-  verifyIdentifierByPasscode: jest.fn(),
-}));
+const { verifyIdentifierByVerificationCode } = mockEsm(
+  '../utils/verification-code-validation.js',
+  () => ({
+    verifyIdentifierByVerificationCode: jest.fn(),
+  })
+);
 
 const { verifySocialIdentity } = mockEsm('../utils/social-verification.js', () => ({
   verifySocialIdentity: jest.fn().mockResolvedValue({ id: 'foo' }),
@@ -115,8 +118,8 @@ describe('identifier verification', () => {
     expect(result).toEqual({ key: 'accountId', value: 'foo' });
   });
 
-  it('email passcode', async () => {
-    const identifier = { email: 'email', passcode: 'passcode' };
+  it('email verificationCode', async () => {
+    const identifier = { email: 'email', verificationCode: 'verificationCode' };
 
     const result = await identifierPayloadVerification(
       baseCtx,
@@ -124,7 +127,7 @@ describe('identifier verification', () => {
       identifier,
       interactionStorage
     );
-    expect(verifyIdentifierByPasscode).toBeCalledWith(
+    expect(verifyIdentifierByVerificationCode).toBeCalledWith(
       { ...identifier, event: interactionStorage.event },
       'jti',
       logContext.createLog
@@ -133,8 +136,8 @@ describe('identifier verification', () => {
     expect(result).toEqual({ key: 'emailVerified', value: identifier.email });
   });
 
-  it('phone passcode', async () => {
-    const identifier = { phone: 'phone', passcode: 'passcode' };
+  it('phone verificationCode', async () => {
+    const identifier = { phone: 'phone', verificationCode: 'verificationCode' };
 
     const result = await identifierPayloadVerification(
       baseCtx,
@@ -143,7 +146,7 @@ describe('identifier verification', () => {
       interactionStorage
     );
 
-    expect(verifyIdentifierByPasscode).toBeCalledWith(
+    expect(verifyIdentifierByVerificationCode).toBeCalledWith(
       { ...identifier, event: interactionStorage.event },
       'jti',
       logContext.createLog

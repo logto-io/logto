@@ -2,14 +2,14 @@ import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { putInteraction, sendPasscode } from '@/apis/interaction';
+import { putInteraction, sendVerificationCode } from '@/apis/interaction';
 
 import EmailContinue from './EmailContinue';
 
 const mockedNavigate = jest.fn();
 
 jest.mock('@/apis/interaction', () => ({
-  sendPasscode: jest.fn(() => ({ success: true })),
+  sendVerificationCode: jest.fn(() => ({ success: true })),
   putInteraction: jest.fn(() => ({ success: true })),
 }));
 
@@ -41,9 +41,9 @@ describe('EmailContinue', () => {
 
     await waitFor(() => {
       expect(putInteraction).not.toBeCalled();
-      expect(sendPasscode).toBeCalledWith({ email });
+      expect(sendVerificationCode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/continue/email/passcode-validation', search: '' },
+        { pathname: '/continue/email/verification-code', search: '' },
         { state: { email } }
       );
     });

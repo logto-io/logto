@@ -65,6 +65,7 @@ const errors = {
     suspended: 'This account is suspended.', // UNTRANSLATED
     user_not_exist: 'User with {{ identifier }} does not exist.', // UNTRANSLATED,
     missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
+    role_exists: 'The role id {{roleId}} is already been added to this user', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: "La méthode de cryptage {{name}} n'est pas prise en charge.",
@@ -184,6 +185,7 @@ const errors = {
   role: {
     name_in_use: 'This role name {{name}} is already in use', // UNTRANSLATED
     scope_exists: 'The scope id {{scopeId}} has already been added to this role', // UNTRANSLATED
+    user_exists: 'The user id {{userId}} is already been added to this role', // UNTRANSLATED
   },
 };
 

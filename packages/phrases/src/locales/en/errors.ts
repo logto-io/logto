@@ -64,6 +64,7 @@ const errors = {
     suspended: 'This account is suspended.',
     user_not_exist: 'User with {{ identifier }} does not exist.',
     missing_profile: 'You need to provide additional info before signing-in.',
+    role_exists: 'The role id {{roleId}} is already been added to this user',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',
@@ -177,6 +178,7 @@ const errors = {
   role: {
     name_in_use: 'This role name {{name}} is already in use',
     scope_exists: 'The scope id {{scopeId}} has already been added to this role',
+    user_exists: 'The user id {{userId}} is already been added to this role',
   },
 };
 

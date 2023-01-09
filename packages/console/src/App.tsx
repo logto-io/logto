@@ -33,9 +33,16 @@ import UserDetails from '@/pages/UserDetails';
 import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
-import { ApiResourceDetailsTabs, ConnectorsTabs, SignInExperiencePage } from './consts/page-tabs';
+import {
+  ApiResourceDetailsTabs,
+  ConnectorsTabs,
+  RoleDetailsTabs,
+  SignInExperiencePage,
+} from './consts/page-tabs';
 import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
+import RolePermissions from './pages/RoleDetails/RolePermissions';
+import RoleSettings from './pages/RoleDetails/RoleSettings';
 import { getBasename } from './utilities/router';
 
 void initI18n();
@@ -99,7 +106,11 @@ const Main = () => {
               <Route path="roles">
                 <Route index element={<Roles />} />
                 <Route path="create" element={<Roles />} />
-                <Route path=":id" element={<RoleDetails />} />
+                <Route path=":id" element={<RoleDetails />}>
+                  <Route index element={<Navigate replace to={RoleDetailsTabs.Settings} />} />
+                  <Route path={RoleDetailsTabs.Settings} element={<RoleSettings />} />
+                  <Route path={RoleDetailsTabs.Permissions} element={<RolePermissions />} />
+                </Route>
               </Route>
               <Route path="settings" element={<Settings />} />
             </Route>

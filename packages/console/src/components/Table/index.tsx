@@ -24,6 +24,7 @@ type Props<
   rowGroups: Array<RowGroup<TFieldValues>>;
   columns: Array<Column<TFieldValues>>;
   rowIndexKey: TName;
+  filter?: ReactNode;
   isRowClickable?: (row: TFieldValues) => boolean;
   rowClickHandler?: (row: TFieldValues) => void;
   className?: string;
@@ -42,6 +43,7 @@ const Table = <
   rowGroups,
   columns,
   rowIndexKey,
+  filter,
   rowClickHandler,
   isRowClickable = () => Boolean(rowClickHandler),
   className,
@@ -60,7 +62,18 @@ const Table = <
 
   return (
     <div className={classNames(styles.container, className)}>
-      <table className={classNames(styles.headerTable, headerClassName)}>
+      {filter && (
+        <div className={styles.filterContainer}>
+          <div className={styles.filter}>{filter}</div>
+        </div>
+      )}
+      <table
+        className={classNames(
+          styles.headerTable,
+          filter && styles.hideTopBorderRadius,
+          headerClassName
+        )}
+      >
         <thead>
           <tr>
             {columns.map(({ title, colSpan, dataIndex }) => (
