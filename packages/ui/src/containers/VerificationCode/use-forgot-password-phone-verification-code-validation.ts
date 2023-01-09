@@ -2,7 +2,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import { useMemo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { verifyForgotPasswordPasscodeIdentifier } from '@/apis/interaction';
+import { verifyForgotPasswordVerificationCodeIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { UserFlow } from '@/types';
@@ -10,7 +10,7 @@ import { UserFlow } from '@/types';
 import useIdentifierErrorAlert from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
-const useForgotPasswordPhonePasscodeValidation = (phone: string, errorCallback?: () => void) => {
+const useForgotPasswordPhoneVerificationCode = (phone: string, errorCallback?: () => void) => {
   const navigate = useNavigate();
   const { sharedErrorHandlers, errorMessage, clearErrorMessage } = useSharedErrorHandler();
 
@@ -32,16 +32,16 @@ const useForgotPasswordPhonePasscodeValidation = (phone: string, errorCallback?:
     [identifierNotExistErrorHandler, sharedErrorHandlers, errorCallback, navigate]
   );
 
-  const { result, run: verifyPasscode } = useApi(
-    verifyForgotPasswordPasscodeIdentifier,
+  const { result, run: verifyVerificationCode } = useApi(
+    verifyForgotPasswordVerificationCodeIdentifier,
     errorHandlers
   );
 
   const onSubmit = useCallback(
-    async (passcode: string) => {
-      return verifyPasscode({ phone, passcode });
+    async (verificationCode: string) => {
+      return verifyVerificationCode({ phone, verificationCode });
     },
-    [phone, verifyPasscode]
+    [phone, verifyVerificationCode]
   );
 
   useEffect(() => {
@@ -57,4 +57,4 @@ const useForgotPasswordPhonePasscodeValidation = (phone: string, errorCallback?:
   };
 };
 
-export default useForgotPasswordPhonePasscodeValidation;
+export default useForgotPasswordPhoneVerificationCode;

@@ -5,8 +5,8 @@ import type {
   UsernamePasswordPayload,
   EmailPasswordPayload,
   PhonePasswordPayload,
-  EmailPasscodePayload,
-  PhonePasscodePayload,
+  EmailVerificationCodePayload,
+  PhoneVerificationCodePayload,
   SocialConnectorPayload,
   SocialIdentityPayload,
 } from '@logto/schemas';
@@ -77,19 +77,19 @@ export const setUserPassword = async (password: string) => {
   return result || { success: true };
 };
 
-export type SendPasscodePayload = { email: string } | { phone: string };
+export type SendVerificationCodePayload = { email: string } | { phone: string };
 
 export const putInteraction = async (event: InteractionEvent) =>
   api.put(`${interactionPrefix}`, { json: { event } });
 
-export const sendPasscode = async (payload: SendPasscodePayload) => {
-  await api.post(`${interactionPrefix}/${verificationPath}/passcode`, { json: payload });
+export const sendVerificationCode = async (payload: SendVerificationCodePayload) => {
+  await api.post(`${interactionPrefix}/${verificationPath}/verification-code`, { json: payload });
 
   return { success: true };
 };
 
-export const signInWithPasscodeIdentifier = async (
-  payload: EmailPasscodePayload | PhonePasscodePayload,
+export const signInWithVerificationCodeIdentifier = async (
+  payload: EmailVerificationCodePayload | PhoneVerificationCodePayload,
   socialToBind?: string
 ) => {
   await api.patch(`${interactionPrefix}/identifiers`, {
@@ -103,15 +103,15 @@ export const signInWithPasscodeIdentifier = async (
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
 
-export const addProfileWithPasscodeIdentifier = async (
-  payload: EmailPasscodePayload | PhonePasscodePayload,
+export const addProfileWithVerificationCodeIdentifier = async (
+  payload: EmailVerificationCodePayload | PhoneVerificationCodePayload,
   socialToBind?: string
 ) => {
   await api.patch(`${interactionPrefix}/identifiers`, {
     json: payload,
   });
 
-  const { passcode, ...identifier } = payload;
+  const { verificationCode, ...identifier } = payload;
 
   await api.patch(`${interactionPrefix}/profile`, {
     json: identifier,
@@ -124,8 +124,8 @@ export const addProfileWithPasscodeIdentifier = async (
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
 
-export const verifyForgotPasswordPasscodeIdentifier = async (
-  payload: EmailPasscodePayload | PhonePasscodePayload
+export const verifyForgotPasswordVerificationCodeIdentifier = async (
+  payload: EmailVerificationCodePayload | PhoneVerificationCodePayload
 ) => {
   await api.patch(`${interactionPrefix}/identifiers`, {
     json: payload,
@@ -146,7 +146,7 @@ export const signInWithVerifierIdentifier = async () => {
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
 
-export const registerWithVerifiedIdentifier = async (payload: SendPasscodePayload) => {
+export const registerWithVerifiedIdentifier = async (payload: SendVerificationCodePayload) => {
   await api.put(`${interactionPrefix}/event`, {
     json: {
       event: InteractionEvent.Register,

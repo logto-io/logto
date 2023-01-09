@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { useMemo, useCallback } from 'react';
 
-import { addProfileWithPasscodeIdentifier } from '@/apis/interaction';
+import { addProfileWithVerificationCodeIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
@@ -11,7 +11,7 @@ import { getSearchParameters } from '@/utils';
 import useIdentifierErrorAlert from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
-const useContinueSetPhonePasscodeValidation = (phone: string, errorCallback?: () => void) => {
+const useContinueSetPhoneVerificationCode = (phone: string, errorCallback?: () => void) => {
   const { sharedErrorHandlers, errorMessage, clearErrorMessage } = useSharedErrorHandler();
 
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler(true);
@@ -22,7 +22,7 @@ const useContinueSetPhonePasscodeValidation = (phone: string, errorCallback?: ()
     phone
   );
 
-  const verifyPasscodeErrorHandlers: ErrorHandlers = useMemo(
+  const verifyVerificationCodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.phone_already_in_use': identifierExistErrorHandler,
       ...requiredProfileErrorHandler,
@@ -32,21 +32,21 @@ const useContinueSetPhonePasscodeValidation = (phone: string, errorCallback?: ()
     [errorCallback, identifierExistErrorHandler, requiredProfileErrorHandler, sharedErrorHandlers]
   );
 
-  const { run: verifyPasscode } = useApi(
-    addProfileWithPasscodeIdentifier,
-    verifyPasscodeErrorHandlers
+  const { run: verifyVerificationCode } = useApi(
+    addProfileWithVerificationCodeIdentifier,
+    verifyVerificationCodeErrorHandlers
   );
 
   const onSubmit = useCallback(
-    async (passcode: string) => {
+    async (verificationCode: string) => {
       const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-      const result = await verifyPasscode({ phone, passcode }, socialToBind);
+      const result = await verifyVerificationCode({ phone, verificationCode }, socialToBind);
 
       if (result?.redirectTo) {
         window.location.replace(result.redirectTo);
       }
     },
-    [phone, verifyPasscode]
+    [phone, verifyVerificationCode]
   );
 
   return {
@@ -56,4 +56,4 @@ const useContinueSetPhonePasscodeValidation = (phone: string, errorCallback?: ()
   };
 };
 
-export default useContinueSetPhonePasscodeValidation;
+export default useContinueSetPhoneVerificationCode;

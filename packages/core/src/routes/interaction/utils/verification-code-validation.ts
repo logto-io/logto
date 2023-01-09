@@ -4,7 +4,10 @@ import type { InteractionEvent } from '@logto/schemas';
 import { createPasscode, sendPasscode, verifyPasscode } from '#src/libraries/passcode.js';
 import type { LogContext } from '#src/middleware/koa-audit-log.js';
 
-import type { SendPasscodePayload, PasscodeIdentifierPayload } from '../types/index.js';
+import type {
+  SendVerificationCodePayload,
+  VerificationCodeIdentifierPayload,
+} from '../types/index.js';
 
 /**
  * Refactor Needed:
@@ -19,8 +22,8 @@ const eventToVerificationCodeTypeMap: Record<InteractionEvent, VerificationCodeT
 const getVerificationCodeTypeByEvent = (event: InteractionEvent): VerificationCodeType =>
   eventToVerificationCodeTypeMap[event];
 
-export const sendPasscodeToIdentifier = async (
-  payload: SendPasscodePayload & { event: InteractionEvent },
+export const sendVerificationCodeToIdentifier = async (
+  payload: SendVerificationCodePayload & { event: InteractionEvent },
   jti: string,
   createLog: LogContext['createLog']
 ) => {
@@ -30,22 +33,22 @@ export const sendPasscodeToIdentifier = async (
   const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Create`);
   log.append(identifier);
 
-  const passcode = await createPasscode(jti, messageType, identifier);
-  const { dbEntry } = await sendPasscode(passcode);
+  const verificationCode = await createPasscode(jti, messageType, identifier);
+  const { dbEntry } = await sendPasscode(verificationCode);
 
   log.append({ connectorId: dbEntry.id });
 };
 
-export const verifyIdentifierByPasscode = async (
-  payload: PasscodeIdentifierPayload & { event: InteractionEvent },
+export const verifyIdentifierByVerificationCode = async (
+  payload: VerificationCodeIdentifierPayload & { event: InteractionEvent },
   jti: string,
   createLog: LogContext['createLog']
 ) => {
-  const { event, passcode, ...identifier } = payload;
+  const { event, verificationCode, ...identifier } = payload;
   const messageType = getVerificationCodeTypeByEvent(event);
 
   const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Submit`);
   log.append(identifier);
 
-  await verifyPasscode(jti, messageType, passcode, identifier);
+  await verifyPasscode(jti, messageType, verificationCode, identifier);
 };

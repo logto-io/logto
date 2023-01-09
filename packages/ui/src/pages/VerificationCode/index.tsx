@@ -3,11 +3,15 @@ import { useParams, useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
 
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
-import PasscodeValidation from '@/containers/PasscodeValidation';
+import VerificationCodeContainer from '@/containers/VerificationCode';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserFlow } from '@/types';
-import { passcodeStateGuard, passcodeMethodGuard, userFlowGuard } from '@/types/guard';
+import {
+  verificationCodeStateGuard,
+  verificationCodeMethodGuard,
+  userFlowGuard,
+} from '@/types/guard';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 type Parameters = {
@@ -15,14 +19,14 @@ type Parameters = {
   method: string;
 };
 
-const Passcode = () => {
+const VerificationCode = () => {
   const { method, type = '' } = useParams<Parameters>();
   const { signInMethods } = useSieMethods();
   const { state } = useLocation();
 
   const invalidType = !is(type, userFlowGuard);
-  const invalidMethod = !is(method, passcodeMethodGuard);
-  const invalidState = !is(state, passcodeStateGuard);
+  const invalidMethod = !is(method, verificationCodeMethodGuard);
+  const invalidState = !is(state, verificationCodeStateGuard);
 
   if (invalidType || invalidMethod) {
     return <ErrorPage />;
@@ -50,7 +54,7 @@ const Passcode = () => {
         target: method === 'email' ? target : formatPhoneNumberWithCountryCallingCode(target),
       }}
     >
-      <PasscodeValidation
+      <VerificationCodeContainer
         type={type}
         method={method}
         target={target}
@@ -60,4 +64,4 @@ const Passcode = () => {
   );
 };
 
-export default Passcode;
+export default VerificationCode;

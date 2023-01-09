@@ -3,14 +3,14 @@ import classNames from 'classnames';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
-import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
+import VerificationCodeInput, { defaultLength } from '@/components/VerificationCode';
 import { UserFlow } from '@/types';
 
 import PasswordSignInLink from './PasswordSignInLink';
 import * as styles from './index.module.scss';
-import useResendPasscode from './use-resend-passcode';
-import { getPasscodeValidationHook } from './utils';
+import useResendVerificationCode from './use-resend-verification-code';
+import { getVerificationCodeHook } from './utils';
 
 type Props = {
   type: UserFlow;
@@ -20,21 +20,22 @@ type Props = {
   className?: string;
 };
 
-const PasscodeValidation = ({ type, method, className, hasPasswordButton, target }: Props) => {
+const VerificationCode = ({ type, method, className, hasPasswordButton, target }: Props) => {
   const [code, setCode] = useState<string[]>([]);
   const { t } = useTranslation();
-  const usePasscodeValidation = getPasscodeValidationHook(type, method);
+  const useVerificationCode = getVerificationCodeHook(type, method);
 
   const errorCallback = useCallback(() => {
     setCode([]);
   }, []);
 
-  const { errorMessage, clearErrorMessage, onSubmit } = usePasscodeValidation(
-    target,
-    errorCallback
-  );
+  const { errorMessage, clearErrorMessage, onSubmit } = useVerificationCode(target, errorCallback);
 
-  const { seconds, isRunning, onResendPasscode } = useResendPasscode(type, method, target);
+  const { seconds, isRunning, onResendVerificationCode } = useResendVerificationCode(
+    type,
+    method,
+    target
+  );
 
   useEffect(() => {
     if (code.length === defaultLength && code.every(Boolean)) {
@@ -44,7 +45,7 @@ const PasscodeValidation = ({ type, method, className, hasPasswordButton, target
 
   return (
     <form className={classNames(styles.form, className)}>
-      <Passcode
+      <VerificationCodeInput
         name="passcode"
         className={classNames(styles.inputField, errorMessage && styles.withError)}
         value={code}
@@ -63,7 +64,7 @@ const PasscodeValidation = ({ type, method, className, hasPasswordButton, target
           text="description.resend_passcode"
           onClick={() => {
             clearErrorMessage();
-            void onResendPasscode();
+            void onResendVerificationCode();
           }}
         />
       )}
@@ -74,4 +75,4 @@ const PasscodeValidation = ({ type, method, className, hasPasswordButton, target
   );
 };
 
-export default PasscodeValidation;
+export default VerificationCode;

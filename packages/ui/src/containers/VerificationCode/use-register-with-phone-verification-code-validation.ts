@@ -3,45 +3,45 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { signInWithPasscodeIdentifier, registerWithVerifiedIdentifier } from '@/apis/interaction';
+import {
+  addProfileWithVerificationCodeIdentifier,
+  signInWithVerifierIdentifier,
+} from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
-import { UserFlow, SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
+import { UserFlow } from '@/types';
+import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 import useIdentifierErrorAlert from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
-const useSignInWithPhonePasscodeValidation = (phone: string, errorCallback?: () => void) => {
+const useRegisterWithPhoneVerificationCode = (phone: string, errorCallback?: () => void) => {
   const { t } = useTranslation();
   const { show } = useConfirmModal();
   const navigate = useNavigate();
   const { errorMessage, clearErrorMessage, sharedErrorHandlers } = useSharedErrorHandler();
-
   const { signInMode } = useSieMethods();
 
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
-  const { run: registerWithPhoneAsync } = useApi(
-    registerWithVerifiedIdentifier,
+  const { run: signInWithPhoneAsync } = useApi(
+    signInWithVerifierIdentifier,
     requiredProfileErrorHandlers
   );
 
-  const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-
-  const identifierNotExistErrorHandler = useIdentifierErrorAlert(
-    UserFlow.signIn,
+  const identifierExistErrorHandler = useIdentifierErrorAlert(
+    UserFlow.register,
     SignInIdentifier.Phone,
-    phone
+    formatPhoneNumberWithCountryCallingCode(phone)
   );
 
-  const phoneNotExistRegisterErrorHandler = useCallback(async () => {
+  const phoneExistSignInErrorHandler = useCallback(async () => {
     const [confirm] = await show({
-      confirmText: 'action.create',
-      ModalContent: t('description.sign_in_id_does_not_exist', {
+      confirmText: 'action.sign_in',
+      ModalContent: t('description.create_account_id_exists', {
         type: t(`description.phone_number`),
         value: phone,
       }),
@@ -53,37 +53,35 @@ const useSignInWithPhonePasscodeValidation = (phone: string, errorCallback?: () 
       return;
     }
 
-    const result = await registerWithPhoneAsync({ phone });
+    const result = await signInWithPhoneAsync();
 
     if (result?.redirectTo) {
       window.location.replace(result.redirectTo);
     }
-  }, [phone, navigate, show, registerWithPhoneAsync, t]);
+  }, [phone, navigate, show, signInWithPhoneAsync, t]);
 
   const errorHandlers = useMemo<ErrorHandlers>(
     () => ({
-      'user.user_not_exist':
-        // Block user auto register if is bind social or sign-in only flow
-        signInMode === SignInMode.SignIn || socialToBind
-          ? identifierNotExistErrorHandler
-          : phoneNotExistRegisterErrorHandler,
+      'user.phone_already_in_use':
+        signInMode === SignInMode.Register
+          ? identifierExistErrorHandler
+          : phoneExistSignInErrorHandler,
       ...sharedErrorHandlers,
       ...requiredProfileErrorHandlers,
       callback: errorCallback,
     }),
     [
       signInMode,
-      socialToBind,
-      identifierNotExistErrorHandler,
-      phoneNotExistRegisterErrorHandler,
+      identifierExistErrorHandler,
+      phoneExistSignInErrorHandler,
       sharedErrorHandlers,
       requiredProfileErrorHandlers,
       errorCallback,
     ]
   );
 
-  const { result, run: asyncSignInWithPasscodeIdentifier } = useApi(
-    signInWithPasscodeIdentifier,
+  const { result, run: verifyVerificationCode } = useApi(
+    addProfileWithVerificationCodeIdentifier,
     errorHandlers
   );
 
@@ -94,16 +92,13 @@ const useSignInWithPhonePasscodeValidation = (phone: string, errorCallback?: () 
   }, [result]);
 
   const onSubmit = useCallback(
-    async (code: string) => {
-      return asyncSignInWithPasscodeIdentifier(
-        {
-          phone,
-          passcode: code,
-        },
-        socialToBind
-      );
+    async (verificationCode: string) => {
+      return verifyVerificationCode({
+        phone,
+        verificationCode,
+      });
     },
-    [phone, socialToBind, asyncSignInWithPasscodeIdentifier]
+    [phone, verifyVerificationCode]
   );
 
   return {
@@ -113,4 +108,4 @@ const useSignInWithPhonePasscodeValidation = (phone: string, errorCallback?: () 
   };
 };
 
-export default useSignInWithPhonePasscodeValidation;
+export default useRegisterWithPhoneVerificationCode;

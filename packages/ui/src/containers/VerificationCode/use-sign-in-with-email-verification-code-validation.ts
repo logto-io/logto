@@ -3,7 +3,10 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { signInWithPasscodeIdentifier, registerWithVerifiedIdentifier } from '@/apis/interaction';
+import {
+  signInWithVerificationCodeIdentifier,
+  registerWithVerifiedIdentifier,
+} from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -15,7 +18,7 @@ import { getSearchParameters } from '@/utils';
 import useIdentifierErrorAlert from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
-const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () => void) => {
+const useSignInWithEmailVerificationCode = (email: string, errorCallback?: () => void) => {
   const { t } = useTranslation();
   const { show } = useConfirmModal();
   const navigate = useNavigate();
@@ -82,8 +85,8 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
     ]
   );
 
-  const { result, run: asyncSignInWithPasscodeIdentifier } = useApi(
-    signInWithPasscodeIdentifier,
+  const { result, run: asyncSignInWithVerificationCodeIdentifier } = useApi(
+    signInWithVerificationCodeIdentifier,
     errorHandlers
   );
 
@@ -94,16 +97,16 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
   }, [result]);
 
   const onSubmit = useCallback(
-    async (passcode: string) => {
-      return asyncSignInWithPasscodeIdentifier(
+    async (verificationCode: string) => {
+      return asyncSignInWithVerificationCodeIdentifier(
         {
           email,
-          passcode,
+          verificationCode,
         },
         socialToBind
       );
     },
-    [asyncSignInWithPasscodeIdentifier, email, socialToBind]
+    [asyncSignInWithVerificationCodeIdentifier, email, socialToBind]
   );
 
   return {
@@ -113,4 +116,4 @@ const useSignInWithEmailPasscodeValidation = (email: string, errorCallback?: () 
   };
 };
 
-export default useSignInWithEmailPasscodeValidation;
+export default useSignInWithEmailVerificationCode;

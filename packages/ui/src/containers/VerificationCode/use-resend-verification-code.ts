@@ -3,7 +3,7 @@ import { t } from 'i18next';
 import { useCallback, useContext } from 'react';
 import { useTimer } from 'react-timer-hook';
 
-import { getSendPasscodeApi } from '@/apis/utils';
+import { getSendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
 import type { UserFlow } from '@/types';
@@ -17,7 +17,7 @@ const getTimeout = () => {
   return now;
 };
 
-const useResendPasscode = (
+const useResendVerificationCode = (
   type: UserFlow,
   method: SignInIdentifier.Email | SignInIdentifier.Phone,
   target: string
@@ -29,23 +29,23 @@ const useResendPasscode = (
     expiryTimestamp: getTimeout(),
   });
 
-  const { run: sendPassCode } = useApi(getSendPasscodeApi(type));
+  const { run: sendVerificationCode } = useApi(getSendVerificationCodeApi(type));
 
-  const onResendPasscode = useCallback(async () => {
+  const onResendVerificationCode = useCallback(async () => {
     const payload = method === SignInIdentifier.Email ? { email: target } : { phone: target };
-    const result = await sendPassCode(payload);
+    const result = await sendVerificationCode(payload);
 
     if (result) {
       setToast(t('description.passcode_sent'));
       restart(getTimeout(), true);
     }
-  }, [method, restart, sendPassCode, setToast, target]);
+  }, [method, restart, sendVerificationCode, setToast, target]);
 
   return {
     seconds,
     isRunning,
-    onResendPasscode,
+    onResendVerificationCode,
   };
 };
 
-export default useResendPasscode;
+export default useResendVerificationCode;

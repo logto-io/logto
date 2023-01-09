@@ -66,17 +66,14 @@ export const submitInteraction = async (cookie: string) =>
     .post('interaction/submit', { headers: { cookie }, followRedirect: false })
     .json<RedirectResponse>();
 
-export type VerificationPasscodePayload =
+export type SendVerificationCodePayload =
   | {
       email: string;
     }
   | { phone: string };
 
-export const sendVerificationPasscode = async (
-  cookie: string,
-  payload: VerificationPasscodePayload
-) =>
-  api.post('interaction/verification/passcode', {
+export const sendVerificationCode = async (cookie: string, payload: SendVerificationCodePayload) =>
+  api.post('interaction/verification/verification-code', {
     headers: { cookie },
     json: payload,
     followRedirect: false,

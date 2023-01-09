@@ -3,7 +3,10 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { addProfileWithPasscodeIdentifier, signInWithVerifierIdentifier } from '@/apis/interaction';
+import {
+  addProfileWithVerificationCodeIdentifier,
+  signInWithVerifierIdentifier,
+} from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -14,7 +17,7 @@ import { UserFlow } from '@/types';
 import useIdentifierErrorAlert from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
-const useRegisterWithEmailPasscodeValidation = (email: string, errorCallback?: () => void) => {
+const useRegisterWithEmailVerificationCode = (email: string, errorCallback?: () => void) => {
   const { t } = useTranslation();
   const { show } = useConfirmModal();
   const navigate = useNavigate();
@@ -77,13 +80,16 @@ const useRegisterWithEmailPasscodeValidation = (email: string, errorCallback?: (
     ]
   );
 
-  const { result, run: verifyPasscode } = useApi(addProfileWithPasscodeIdentifier, errorHandlers);
+  const { result, run: verifyVerificationCode } = useApi(
+    addProfileWithVerificationCodeIdentifier,
+    errorHandlers
+  );
 
   const onSubmit = useCallback(
-    async (passcode: string) => {
-      return verifyPasscode({ email, passcode });
+    async (verificationCode: string) => {
+      return verifyVerificationCode({ email, verificationCode });
     },
-    [email, verifyPasscode]
+    [email, verifyVerificationCode]
   );
 
   useEffect(() => {
@@ -99,4 +105,4 @@ const useRegisterWithEmailPasscodeValidation = (email: string, errorCallback?: (
   };
 };
 
-export default useRegisterWithEmailPasscodeValidation;
+export default useRegisterWithEmailVerificationCode;

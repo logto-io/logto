@@ -1,8 +1,8 @@
 import { render, fireEvent } from '@testing-library/react';
 
-import Passcode, { defaultLength } from '.';
+import VerificationCode, { defaultLength } from '.';
 
-describe('Passcode Component', () => {
+describe('VerificationCode Component', () => {
   const onChange = jest.fn();
 
   beforeEach(() => {
@@ -12,7 +12,9 @@ describe('Passcode Component', () => {
   it('render with value', () => {
     const input = ['1', '2', '3', '4', '5', '6'];
 
-    const { container } = render(<Passcode name="passcode" value={input} onChange={onChange} />);
+    const { container } = render(
+      <VerificationCode name="passcode" value={input} onChange={onChange} />
+    );
 
     const inputElements = container.querySelectorAll('input');
     expect(inputElements).toHaveLength(defaultLength);
@@ -25,7 +27,9 @@ describe('Passcode Component', () => {
   it('render with short value', () => {
     const input = ['1', '2', '3'];
 
-    const { container } = render(<Passcode name="passcode" value={input} onChange={onChange} />);
+    const { container } = render(
+      <VerificationCode name="passcode" value={input} onChange={onChange} />
+    );
 
     const inputElements = container.querySelectorAll('input');
     expect(inputElements).toHaveLength(defaultLength);
@@ -42,7 +46,9 @@ describe('Passcode Component', () => {
   it('render with long value', () => {
     const input = ['1', '2', '3', '4', '5', '6', '7'];
 
-    const { container } = render(<Passcode name="passcode" value={input} onChange={onChange} />);
+    const { container } = render(
+      <VerificationCode name="passcode" value={input} onChange={onChange} />
+    );
 
     const inputElements = container.querySelectorAll('input');
     expect(inputElements).toHaveLength(defaultLength);
@@ -54,7 +60,9 @@ describe('Passcode Component', () => {
 
   it('on manual input', () => {
     const input = ['1', '2', '3', '4', '5', '6'];
-    const { container } = render(<Passcode name="passcode" value={input} onChange={onChange} />);
+    const { container } = render(
+      <VerificationCode name="passcode" value={input} onChange={onChange} />
+    );
     const inputElements = container.querySelectorAll('input');
 
     if (inputElements[2]) {
@@ -66,7 +74,9 @@ describe('Passcode Component', () => {
 
   it('on manual input with non-numric input', () => {
     const input = ['1', '2', '3', '4', '5', '6'];
-    const { container } = render(<Passcode name="passcode" value={input} onChange={onChange} />);
+    const { container } = render(
+      <VerificationCode name="passcode" value={input} onChange={onChange} />
+    );
     const inputElements = container.querySelectorAll('input');
 
     if (inputElements[2]) {
@@ -77,7 +87,9 @@ describe('Passcode Component', () => {
 
   it('replace old value with new input char', () => {
     const input = ['1', '2', '3', '4', '5', '6'];
-    const { container } = render(<Passcode name="passcode" value={input} onChange={onChange} />);
+    const { container } = render(
+      <VerificationCode name="passcode" value={input} onChange={onChange} />
+    );
     const inputElements = container.querySelectorAll('input');
 
     if (inputElements[2]) {
@@ -88,7 +100,9 @@ describe('Passcode Component', () => {
 
   it('onKeyDown handler', () => {
     const input = ['1', '2', '3', '4', '5', ''];
-    const { container } = render(<Passcode name="passcode" value={input} onChange={onChange} />);
+    const { container } = render(
+      <VerificationCode name="passcode" value={input} onChange={onChange} />
+    );
     const inputElements = container.querySelectorAll('input');
 
     // Backspace on empty input
@@ -112,7 +126,9 @@ describe('Passcode Component', () => {
 
   it('onPasteHandler', () => {
     const input = ['1', '2', '3', '4', '5', '6'];
-    const { container } = render(<Passcode name="passcode" value={input} onChange={onChange} />);
+    const { container } = render(
+      <VerificationCode name="passcode" value={input} onChange={onChange} />
+    );
     const inputElements = container.querySelectorAll('input');
 
     // Full update

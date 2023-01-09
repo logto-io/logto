@@ -3,7 +3,7 @@ import { Routes, Route, MemoryRouter } from 'react-router-dom';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 
-import Passcode from '.';
+import VerificationCode from '.';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -12,13 +12,13 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
-describe('Passcode Page', () => {
+describe('VerificationCode Page', () => {
   it('render properly', () => {
     const { queryByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/email/passcode-validation']}>
+      <MemoryRouter initialEntries={['/sign-in/email/verification-code']}>
         <SettingsProvider>
           <Routes>
-            <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
+            <Route path="/:type/:method/verification-code" element={<VerificationCode />} />
           </Routes>
         </SettingsProvider>
       </MemoryRouter>
@@ -30,9 +30,9 @@ describe('Passcode Page', () => {
 
   it('render with invalid method', () => {
     const { queryByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/username/passcode-validation']}>
+      <MemoryRouter initialEntries={['/sign-in/username/verification-code']}>
         <Routes>
-          <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
+          <Route path="/:type/:method/verification-code" element={<VerificationCode />} />
         </Routes>
       </MemoryRouter>
     );
@@ -43,9 +43,9 @@ describe('Passcode Page', () => {
 
   it('render with invalid type', () => {
     const { queryByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/social/email/passcode-validation']}>
+      <MemoryRouter initialEntries={['/social/email/verification-code']}>
         <Routes>
-          <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
+          <Route path="/:type/:method/verification-code" element={<VerificationCode />} />
         </Routes>
       </MemoryRouter>
     );
