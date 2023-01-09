@@ -5,6 +5,7 @@ const roles = {
   create: 'Add Roles',
   role_name: 'Role',
   role_description: 'Description',
+  assign_permissions: 'Assign permissions',
   create_role_title: 'Create a role',
   create_role_description:
     'Create and manage Roles for your applications. Roles contain collections of Permissions and can be assigned to Users.',

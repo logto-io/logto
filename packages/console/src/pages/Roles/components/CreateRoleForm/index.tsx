@@ -1,10 +1,11 @@
-import type { Role } from '@logto/schemas';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import type { Role, ScopeResponse } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
+import { Controller, useForm } from 'react-hook-form';
 
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import ModalLayout from '@/components/ModalLayout';
+import RolePermissionsTransfer from '@/components/RolePermissionsTransfer';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
 
@@ -12,11 +13,17 @@ export type Props = {
   onClose: (createdRole?: Role) => void;
 };
 
-type CreateRoleFormData = Pick<Role, 'name' | 'description'>;
+type CreateRoleFormData = Pick<Role, 'name' | 'description'> & {
+  scopes: ScopeResponse[];
+};
+
+type CreateRolePayload = Pick<Role, 'name' | 'description'> & {
+  scopeIds?: string[];
+};
 
 const CreateRoleForm = ({ onClose }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
+    control,
     handleSubmit,
     register,
     formState: { isSubmitting },
@@ -24,12 +31,18 @@ const CreateRoleForm = ({ onClose }: Props) => {
 
   const api = useApi();
 
-  const onSubmit = handleSubmit(async (formData) => {
+  const onSubmit = handleSubmit(async ({ name, description, scopes }) => {
     if (isSubmitting) {
       return;
     }
 
-    const createdRole = await api.post('/api/roles', { json: formData }).json<Role>();
+    const payload: CreateRolePayload = {
+      name,
+      description,
+      scopeIds: conditional(scopes.length > 0 && scopes.map(({ id }) => id)),
+    };
+
+    const createdRole = await api.post('/api/roles', { json: payload }).json<Role>();
     onClose(createdRole);
   });
 
@@ -37,6 +50,7 @@ const CreateRoleForm = ({ onClose }: Props) => {
     <ModalLayout
       title="roles.create_role_title"
       subtitle="roles.create_role_description"
+      size="large"
       footer={
         <Button
           isLoading={isSubmitting}
@@ -59,6 +73,16 @@ const CreateRoleForm = ({ onClose }: Props) => {
         </FormField>
         <FormField title="roles.role_description">
           <TextInput {...register('description')} />
+        </FormField>
+        <FormField title="roles.assign_permissions">
+          <Controller
+            control={control}
+            name="scopes"
+            defaultValue={[]}
+            render={({ field: { value, onChange } }) => (
+              <RolePermissionsTransfer value={value} onChange={onChange} />
+            )}
+          />
         </FormField>
       </form>
     </ModalLayout>

@@ -1,0 +1,31 @@
+@use '@/scss/underscore' as _;
+
+.targetPermissionItem {
+  display: flex;
+  align-items: center;
+  padding: _.unit(1.5) _.unit(4);
+
+  .title {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    font: var(--font-body-medium);
+    overflow: hidden;
+
+    .name {
+      padding: _.unit(1) _.unit(2);
+      border-radius: 6px;
+      background: var(--color-neutral-95);
+      @include _.text-ellipsis;
+    }
+
+    .resourceName {
+      margin: 0 _.unit(2);
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .icon {
+    color: var(--color-text-secondary);
+  }
+}
