@@ -1,5 +1,5 @@
 import { buildIdGenerator } from '@logto/core-kit';
-import type { User, CreateUser } from '@logto/schemas';
+import type { User, CreateUser, Scope } from '@logto/schemas';
 import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
@@ -51,7 +51,9 @@ export const createUserLibrary = (queries: Queries) => {
     pool,
     roles: { findRolesByRoleNames, insertRoles, findRoleByRoleName },
     users: { hasUser, hasUserWithEmail, hasUserWithId, hasUserWithPhone, findUsersByIds },
-    usersRoles: { insertUsersRoles, findUsersRolesByRoleId },
+    usersRoles: { insertUsersRoles, findUsersRolesByRoleId, findUsersRolesByUserId },
+    rolesScopes: { findRolesScopesByRoleIds },
+    scopes: { findScopesByIdsAndResourceId },
   } = queries;
 
   const generateUserId = async (retries = 500) =>
@@ -156,10 +158,25 @@ export const createUserLibrary = (queries: Queries) => {
     return findUsersByIds(usersRoles.map(({ userId }) => userId));
   };
 
+  const findUserScopesForResourceId = async (
+    userId: string,
+    resourceId: string
+  ): Promise<readonly Scope[]> => {
+    const usersRoles = await findUsersRolesByUserId(userId);
+    const rolesScopes = await findRolesScopesByRoleIds(usersRoles.map(({ roleId }) => roleId));
+    const scopes = await findScopesByIdsAndResourceId(
+      rolesScopes.map(({ scopeId }) => scopeId),
+      resourceId
+    );
+
+    return scopes;
+  };
+
   return {
     generateUserId,
     insertUser,
     checkIdentifierCollision,
     findUsersByRoleName,
+    findUserScopesForResourceId,
   };
 };
