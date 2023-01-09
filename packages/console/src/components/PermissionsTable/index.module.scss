@@ -10,19 +10,18 @@
     align-items: center;
   }
 
+  tbody {
+    td {
+      max-width: 100%;
+      @include _.text-ellipsis;
+      font: var(--font-body-medium);
+    }
+  }
+
   .name {
     display: inline-block;
-    font: var(--font-body-medium);
     padding: _.unit(1) _.unit(2);
     border-radius: 6px;
     background: var(--color-neutral-95);
-    max-width: 100%;
-    @include _.text-ellipsis;
-  }
-
-  .description {
-    max-width: 100%;
-    @include _.text-ellipsis;
-    font: var(--font-body-medium);
   }
 }
