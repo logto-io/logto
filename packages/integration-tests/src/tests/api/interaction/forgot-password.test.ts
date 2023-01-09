@@ -8,13 +8,16 @@ import {
   putInteractionProfile,
   patchInteractionProfile,
 } from '#src/api/index.js';
-import { expectRejects, readPasscode } from '#src/helpers.js';
+import { initClient, processSession, logoutClient } from '#src/helpers/client.js';
+import {
+  clearConnectorsByTypes,
+  setEmailConnector,
+  setSmsConnector,
+} from '#src/helpers/connector.js';
+import { expectRejects, readPasscode } from '#src/helpers/index.js';
+import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { generateNewUser } from '#src/helpers/user.js';
 import { generatePassword } from '#src/utils.js';
-
-import { initClient, processSession, logoutClient } from './utils/client.js';
-import { clearConnectorsByTypes, setEmailConnector, setSmsConnector } from './utils/connector.js';
-import { enableAllVerificationCodeSignInMethods } from './utils/sign-in-experience.js';
-import { generateNewUser } from './utils/user.js';
 
 describe('reset password', () => {
   beforeAll(async () => {

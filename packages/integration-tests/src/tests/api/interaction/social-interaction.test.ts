@@ -9,17 +9,16 @@ import {
   patchInteractionIdentifiers,
   putInteractionProfile,
 } from '#src/api/index.js';
-import { expectRejects } from '#src/helpers.js';
-import { generateUserId } from '#src/utils.js';
-
-import { initClient, logoutClient, processSession } from './utils/client.js';
+import { initClient, logoutClient, processSession } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
   clearConnectorById,
   setSocialConnector,
-} from './utils/connector.js';
-import { enableAllPasswordSignInMethods } from './utils/sign-in-experience.js';
-import { generateNewUser } from './utils/user.js';
+} from '#src/helpers/connector.js';
+import { expectRejects } from '#src/helpers/index.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { generateNewUser } from '#src/helpers/user.js';
+import { generateUserId } from '#src/utils.js';
 
 const state = 'foo_state';
 const redirectUri = 'http://foo.dev/callback';
@@ -102,6 +101,7 @@ describe('Social Identifier Interactions', () => {
       const {
         userProfile: { username, password },
       } = await generateNewUser({ username: true, password: true });
+
       const client = await initClient();
 
       const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';

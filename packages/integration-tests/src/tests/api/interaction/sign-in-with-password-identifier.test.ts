@@ -7,15 +7,18 @@ import {
   putInteractionProfile,
   deleteUser,
 } from '#src/api/index.js';
-import { readPasscode, expectRejects } from '#src/helpers.js';
-
-import { initClient, processSession, logoutClient } from './utils/client.js';
-import { clearConnectorsByTypes, setSmsConnector, setEmailConnector } from './utils/connector.js';
+import { initClient, processSession, logoutClient } from '#src/helpers/client.js';
+import {
+  clearConnectorsByTypes,
+  setSmsConnector,
+  setEmailConnector,
+} from '#src/helpers/connector.js';
+import { readPasscode, expectRejects } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,
   enableAllVerificationCodeSignInMethods,
-} from './utils/sign-in-experience.js';
-import { generateNewUser, generateNewUserProfile } from './utils/user.js';
+} from '#src/helpers/sign-in-experience.js';
+import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
 
 describe('Sign-In flow using password identifiers', () => {
   beforeAll(async () => {

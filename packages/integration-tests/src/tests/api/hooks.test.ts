@@ -5,12 +5,11 @@ import { HookEvent } from '@logto/schemas/models';
 import type { InferModelType } from '@withtyped/server';
 
 import { authedAdminApi, deleteUser, getLogs, putInteraction } from '#src/api/index.js';
-import { createMockServer } from '#src/helpers.js';
+import { initClient, processSession } from '#src/helpers/client.js';
+import { createMockServer } from '#src/helpers/index.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
 import { waitFor } from '#src/utils.js';
-
-import { initClient, processSession } from './interaction/utils/client.js';
-import { enableAllPasswordSignInMethods } from './interaction/utils/sign-in-experience.js';
-import { generateNewUser, generateNewUserProfile } from './interaction/utils/user.js';
 
 type Hook = InferModelType<typeof Hooks>;
 

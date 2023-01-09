@@ -1,17 +1,17 @@
 import path from 'path';
 
 import { fetchTokenByRefreshToken } from '@logto/js';
-import { managementResource } from '@logto/schemas';
+import { managementResource, InteractionEvent } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import fetch from 'node-fetch';
 
-import { signInWithPassword } from '#src/api/index.js';
+import { putInteraction } from '#src/api/index.js';
 import MockClient, { defaultConfig } from '#src/client/index.js';
 import { logtoUrl } from '#src/constants.js';
-import { createUserByAdmin } from '#src/helpers.js';
+import { processSession } from '#src/helpers/client.js';
+import { createUserByAdmin } from '#src/helpers/index.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateUsername, generatePassword } from '#src/utils.js';
-
-import { enableAllPasswordSignInMethods } from './interaction/utils/sign-in-experience.js';
 
 describe('get access token', () => {
   const username = generateUsername();
@@ -24,18 +24,17 @@ describe('get access token', () => {
 
   it('sign-in and getAccessToken', async () => {
     const client = new MockClient({ resources: [managementResource.indicator] });
-    await client.initSession();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await signInWithPassword({
-      username,
-      password,
-      interactionCookie: client.interactionCookie,
+    await client.initSession();
+
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: { username, password },
     });
 
-    await client.processSession(redirectTo);
+    const { redirectTo } = await client.submitInteraction();
 
-    assert(client.isAuthenticated, new Error('Sign in get get access token failed'));
+    await processSession(client, redirectTo);
 
     const accessToken = await client.getAccessToken(managementResource.indicator);
 
@@ -47,19 +46,20 @@ describe('get access token', () => {
 
   it('sign-in and get multiple Access Token by the same Refresh Token within refreshTokenReuseInterval', async () => {
     const client = new MockClient({ resources: [managementResource.indicator] });
-    await client.initSession();
-    assert(client.interactionCookie, new Error('Session not found'));
 
-    const { redirectTo } = await signInWithPassword({
-      username,
-      password,
-      interactionCookie: client.interactionCookie,
+    await client.initSession();
+
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: { username, password },
     });
 
-    await client.processSession(redirectTo);
-    assert(client.isAuthenticated, new Error('Sign in get get access token failed'));
+    const { redirectTo } = await client.submitInteraction();
+
+    await processSession(client, redirectTo);
 
     const refreshToken = await client.getRefreshToken();
+
     assert(refreshToken, new Error('No Refresh Token found'));
 
     const getAccessTokenByRefreshToken = async () =>
