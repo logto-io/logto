@@ -8,7 +8,19 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import {
+const { jest } = import.meta;
+
+const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
+
+jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
+  createMockPool({
+    query: async (sql, values) => {
+      return mockQuery(sql, values);
+    },
+  })
+);
+
+const {
   findUserByUsername,
   findUserByEmail,
   findUserByPhone,
@@ -21,19 +33,7 @@ import {
   updateUserById,
   deleteUserById,
   deleteUserIdentity,
-} from './user.js';
-
-const { jest } = import.meta;
-
-const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
-
-jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
-  createMockPool({
-    query: async (sql, values) => {
-      return mockQuery(sql, values);
-    },
-  })
-);
+} = await import('./user.js');
 
 describe('user query', () => {
   const { table, fields } = convertToIdentifiers(Users);

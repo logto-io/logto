@@ -7,8 +7,6 @@ import envSet from '#src/env-set/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import { defaultSettingId, getSetting, updateSetting } from './setting.js';
-
 const { jest } = import.meta;
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
@@ -20,6 +18,8 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
     },
   })
 );
+
+const { defaultSettingId, getSetting, updateSetting } = await import('./setting.js');
 
 describe('setting query', () => {
   const { table, fields } = convertToIdentifiers(Settings);

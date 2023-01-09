@@ -5,11 +5,6 @@ import envSet from '#src/env-set/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import {
-  findDefaultSignInExperience,
-  updateDefaultSignInExperience,
-} from './sign-in-experience.js';
-
 const { jest } = import.meta;
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
@@ -20,6 +15,10 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
       return mockQuery(sql, values);
     },
   })
+);
+
+const { findDefaultSignInExperience, updateDefaultSignInExperience } = await import(
+  './sign-in-experience.js'
 );
 
 describe('sign-in-experience query', () => {

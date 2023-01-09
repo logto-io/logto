@@ -8,16 +8,6 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
-import {
-  findTotalNumberOfResources,
-  findAllResources,
-  findResourceById,
-  findResourceByIndicator,
-  insertResource,
-  updateResourceById,
-  deleteResourceById,
-} from './resource.js';
-
 const { jest } = import.meta;
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
@@ -30,8 +20,22 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
   })
 );
 
+const {
+  findTotalNumberOfResources,
+  findAllResources,
+  findResourceById,
+  findResourceByIndicator,
+  insertResource,
+  updateResourceById,
+  deleteResourceById,
+} = await import('./resource.js');
+
 describe('resource query', () => {
   const { table, fields } = convertToIdentifiers(Resources);
+
+  afterEach(() => {
+    mockQuery.mockClear();
+  });
 
   it('findTotalNumberOfResources', async () => {
     const expectSql = sql`
