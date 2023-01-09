@@ -9,7 +9,7 @@ export const signInIdentifiers = Object.values(SignInIdentifier);
 export const signUpIdentifiersMapping: { [key in SignUpIdentifier]: SignInIdentifier[] } = {
   [SignUpIdentifier.Username]: [SignInIdentifier.Username],
   [SignUpIdentifier.Email]: [SignInIdentifier.Email],
-  [SignUpIdentifier.Sms]: [SignInIdentifier.Phone],
+  [SignUpIdentifier.Phone]: [SignInIdentifier.Phone],
   [SignUpIdentifier.EmailOrSms]: [SignInIdentifier.Email, SignInIdentifier.Phone],
   [SignUpIdentifier.None]: [],
 };
