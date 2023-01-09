@@ -10,9 +10,10 @@ import {
   mockLanguageInfo,
   mockSignInExperience,
 } from '#src/__mocks__/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+const { mockEsm } = createMockUtils(jest);
 
 mockEsm('#src/connectors.js', () => ({
   getLogtoConnectors: jest.fn(async () => [
@@ -24,25 +25,33 @@ mockEsm('#src/connectors.js', () => ({
   ]),
 }));
 
-const { validateLanguageInfo } = await mockEsmWithActual(
-  '#src/libraries/sign-in-experience.js',
-  () => ({
-    validateLanguageInfo: jest.fn(),
-  })
+const validateLanguageInfo = jest.fn();
+
+const tenantContext = new MockTenant(
+  undefined,
+  {
+    signInExperiences: {
+      updateDefaultSignInExperience: async (
+        data: Partial<CreateSignInExperience>
+      ): Promise<SignInExperience> => ({
+        ...mockSignInExperience,
+        ...data,
+      }),
+    },
+  },
+  {
+    signInExperiences: {
+      validateLanguageInfo,
+    },
+  }
 );
 
-await mockEsmWithActual('#src/queries/sign-in-experience.js', () => ({
-  updateDefaultSignInExperience: async (
-    data: Partial<CreateSignInExperience>
-  ): Promise<SignInExperience> => ({
-    ...mockSignInExperience,
-    ...data,
-  }),
-}));
-
-const signInExperiencesRoutes = await pickDefault(import('./sign-in-experience.js'));
+const signInExperiencesRoutes = await pickDefault(import('./index.js'));
 const { createRequester } = await import('#src/utils/test-utils.js');
-const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
+const signInExperienceRequester = createRequester({
+  authedRoutes: signInExperiencesRoutes,
+  tenantContext,
+});
 
 const expectPatchResponseStatus = async (
   signInExperience: Record<string, unknown>,

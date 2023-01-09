@@ -15,18 +15,11 @@ import {
   mockAliyunSmsConnector,
   mockTermsOfUseUrl,
 } from '#src/__mocks__/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
-
-const { validateBranding, validateLanguageInfo, validateSignIn, validateSignUp } =
-  await mockEsmWithActual('#src/libraries/sign-in-experience/index.js', () => ({
-    validateBranding: jest.fn(),
-    validateLanguageInfo: jest.fn(),
-    validateSignIn: jest.fn(),
-    validateSignUp: jest.fn(),
-  }));
+const { mockEsmWithActual } = createMockUtils(jest);
 
 const logtoConnectors = [
   mockFacebookConnector,
@@ -40,7 +33,16 @@ await mockEsmWithActual('#src/connectors.js', () => ({
   getLogtoConnectors: async () => logtoConnectors,
 }));
 
-const { findDefaultSignInExperience } = mockEsm('#src/queries/sign-in-experience.js', () => ({
+const { validateBranding, validateSignIn, validateSignUp } = await mockEsmWithActual(
+  '#src/libraries/sign-in-experience/index.js',
+  () => ({
+    validateBranding: jest.fn(),
+    validateSignIn: jest.fn(),
+    validateSignUp: jest.fn(),
+  })
+);
+
+const signInExperiences = {
   findDefaultSignInExperience: jest.fn(async () => mockSignInExperience),
   updateDefaultSignInExperience: async (
     data: Partial<CreateSignInExperience>
@@ -48,14 +50,22 @@ const { findDefaultSignInExperience } = mockEsm('#src/queries/sign-in-experience
     ...mockSignInExperience,
     ...data,
   }),
-}));
+};
+const { findDefaultSignInExperience } = signInExperiences;
 
-mockEsm('#src/queries/custom-phrase.js', () => ({
-  findAllCustomLanguageTags: async () => [],
-}));
+const validateLanguageInfo = jest.fn();
 
-const signInExperiencesRoutes = await pickDefault(import('./sign-in-experience.js'));
-const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
+const tenantContext = new MockTenant(
+  undefined,
+  { signInExperiences, customPhrases: { findAllCustomLanguageTags: async () => [] } },
+  { signInExperiences: { validateLanguageInfo } }
+);
+
+const signInExperiencesRoutes = await pickDefault(import('./index.js'));
+const signInExperienceRequester = createRequester({
+  authedRoutes: signInExperiencesRoutes,
+  tenantContext,
+});
 
 describe('GET /sign-in-exp', () => {
   afterAll(() => {

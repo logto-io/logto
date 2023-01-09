@@ -4,21 +4,19 @@ import { literal, object, string } from 'zod';
 import { getLogtoConnectors } from '#src/connectors/index.js';
 import {
   validateBranding,
-  validateLanguageInfo,
   validateSignUp,
   validateSignIn,
 } from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import {
-  findDefaultSignInExperience,
-  updateDefaultSignInExperience,
-} from '#src/queries/sign-in-experience.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
 export default function signInExperiencesRoutes<T extends AuthedRouter>(
-  ...[router]: RouterInitArgs<T>
+  ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
+  const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;
+  const { validateLanguageInfo } = libraries.signInExperiences;
+
   /**
    * As we only support single signInExperience settings for V1
    * always return the default settings in DB for the /sign-in-exp get method

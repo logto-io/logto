@@ -30,7 +30,7 @@ const { findApplicationById } = await mockEsmWithActual('#src/queries/applicatio
   ),
 }));
 
-mockEsm('@logto/core-kit', () => ({
+await mockEsmWithActual('@logto/core-kit', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => 'randomId',
   generateStandardId: () => 'randomId',

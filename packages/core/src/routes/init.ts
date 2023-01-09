@@ -23,7 +23,7 @@ import resourceRoutes from './resource.js';
 import roleRoutes from './role.js';
 import sessionRoutes from './session/index.js';
 import settingRoutes from './setting.js';
-import signInExperiencesRoutes from './sign-in-experience.js';
+import signInExperiencesRoutes from './sign-in-experience/index.js';
 import statusRoutes from './status.js';
 import swaggerRoutes from './swagger.js';
 import type { AnonymousRouter, AnonymousRouterLegacy, AuthedRouter } from './types.js';
