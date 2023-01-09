@@ -4,12 +4,11 @@ import { conditional } from '@silverhand/essentials';
 import type { AllClientMetadata, ClientAuthMethod } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
-export const getConstantClientMetadata = (
-  type: ApplicationType
-): Pick<
-  AllClientMetadata,
-  'application_type' | 'grant_types' | 'token_endpoint_auth_method' | 'response_types'
-> => {
+import envSet from '#src/env-set/index.js';
+
+export const getConstantClientMetadata = (type: ApplicationType): AllClientMetadata => {
+  const { jwkSigningAlg } = envSet.oidc;
+
   const getTokenEndpointAuthMethod = (): ClientAuthMethod => {
     switch (type) {
       case ApplicationType.Native:
@@ -28,6 +27,11 @@ export const getConstantClientMetadata = (
         : [GrantType.AuthorizationCode, GrantType.RefreshToken],
     token_endpoint_auth_method: getTokenEndpointAuthMethod(),
     response_types: conditional(type === ApplicationType.MachineToMachine && []),
+    // https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use
+    authorization_signed_response_alg: jwkSigningAlg,
+    userinfo_signed_response_alg: jwkSigningAlg,
+    id_token_signed_response_alg: jwkSigningAlg,
+    introspection_signed_response_alg: jwkSigningAlg,
   };
 };
 

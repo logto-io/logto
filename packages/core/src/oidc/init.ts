@@ -21,9 +21,18 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { claimToUserKey, getUserClaims } from './scope.js';
 
+// Temporarily removed 'EdDSA' since it's not supported by browser yet
+const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
+
 export default function initOidc(): Provider {
-  const { issuer, cookieKeys, privateJwks, defaultIdTokenTtl, defaultRefreshTokenTtl } =
-    envSet.oidc;
+  const {
+    issuer,
+    cookieKeys,
+    privateJwks,
+    jwkSigningAlg,
+    defaultIdTokenTtl,
+    defaultRefreshTokenTtl,
+  } = envSet.oidc;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
 
   const cookieConfig = Object.freeze({
@@ -35,7 +44,8 @@ export default function initOidc(): Provider {
   const oidc = new Provider(issuer, {
     adapter: postgresAdapter,
     renderError: (_ctx, _out, error) => {
-      console.log('OIDC error', error);
+      console.error(error);
+
       throw error;
     },
     cookies: {
@@ -45,6 +55,12 @@ export default function initOidc(): Provider {
     },
     jwks: {
       keys: privateJwks,
+    },
+    enabledJWA: {
+      authorizationSigningAlgValues: [...supportedSigningAlgs],
+      userinfoSigningAlgValues: [...supportedSigningAlgs],
+      idTokenSigningAlgValues: [...supportedSigningAlgs],
+      introspectionSigningAlgValues: [...supportedSigningAlgs],
     },
     conformIdTokenClaims: false,
     features: {
@@ -77,6 +93,9 @@ export default function initOidc(): Provider {
             accessTokenFormat: 'jwt',
             scope: '',
             accessTokenTTL,
+            jwt: {
+              sign: { alg: jwkSigningAlg },
+            },
           };
         },
       },
