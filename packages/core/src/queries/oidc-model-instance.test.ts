@@ -1,31 +1,22 @@
 import type { CreateOidcModelInstance } from '@logto/schemas';
 import { OidcModelInstances } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
-import { createMockUtils } from '@logto/shared/esm';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import envSet from '#src/env-set/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-const { mockEsmWithActual } = createMockUtils(jest);
-
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
-jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
-  createMockPool({
-    query: async (sql, values) => {
-      return mockQuery(sql, values);
-    },
-  })
-);
+const pool = createMockPool({
+  query: async (sql, values) => {
+    return mockQuery(sql, values);
+  },
+});
 
-await mockEsmWithActual('@logto/shared', () => ({
-  convertToTimestamp: () => 100,
-}));
-
+const { createOidcModelInstanceQueries } = await import('./oidc-model-instance.js');
 const {
   upsertInstance,
   findPayloadById,
@@ -33,7 +24,7 @@ const {
   consumeInstanceById,
   destroyInstanceById,
   revokeInstanceByGrantId,
-} = await import('./oidc-model-instance.js');
+} = createOidcModelInstanceQueries(pool);
 
 describe('oidc-model-instance query', () => {
   const { table, fields } = convertToIdentifiers(OidcModelInstances);
@@ -118,9 +109,11 @@ describe('oidc-model-instance query', () => {
   });
 
   it('consumeInstanceById', async () => {
+    jest.useFakeTimers().setSystemTime(100_000);
+
     const expectSql = sql`
       update ${table}
-      set ${fields.consumedAt}=$1
+      set ${fields.consumedAt}=to_timestamp($1)
       where ${fields.modelName}=$2
       and ${fields.id}=$3
     `;
@@ -133,6 +126,8 @@ describe('oidc-model-instance query', () => {
     });
 
     await consumeInstanceById(instance.modelName, instance.id);
+
+    jest.useRealTimers();
   });
 
   it('destroyInstanceById', async () => {

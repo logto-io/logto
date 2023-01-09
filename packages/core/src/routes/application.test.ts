@@ -5,9 +5,9 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { mockApplication } from '#src/__mocks__/index.js';
 
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
-const { findApplicationById } = mockEsm('#src/queries/application.js', () => ({
+const { findApplicationById } = await mockEsmWithActual('#src/queries/application.js', () => ({
   findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
   findAllApplications: jest.fn(async () => [mockApplication]),
   findApplicationById: jest.fn(async () => mockApplication),

@@ -1,12 +1,11 @@
 import type { User, Profile } from '@logto/schemas';
 import { InteractionEvent, UserRole, adminConsoleApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import type Provider from 'oidc-provider';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
-import { encryptUserPassword, generateUserId, insertUser } from '#src/libraries/user.js';
-import { hasActiveUsers, findUserById, updateUserById } from '#src/queries/user.js';
+import { encryptUserPassword } from '#src/libraries/user.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 
 import type { WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 import type {
@@ -130,8 +129,12 @@ const parseUserProfile = async (
 export default async function submitInteraction(
   interaction: VerifiedInteractionResult,
   ctx: WithInteractionDetailsContext,
-  provider: Provider
+  { provider, libraries, queries }: TenantContext
 ) {
+  const { hasActiveUsers, findUserById, updateUserById } = queries.users;
+  const {
+    users: { generateUserId, insertUser },
+  } = libraries;
   const { event, profile } = interaction;
 
   if (event === InteractionEvent.Register) {

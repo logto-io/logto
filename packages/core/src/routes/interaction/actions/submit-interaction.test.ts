@@ -3,7 +3,7 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type {
@@ -26,25 +26,24 @@ const { assignInteractionResults } = mockEsm('#src/libraries/session.js', () => 
   assignInteractionResults: jest.fn(),
 }));
 
-const { encryptUserPassword, generateUserId, insertUser } = mockEsm(
-  '#src/libraries/user.js',
-  () => ({
-    encryptUserPassword: jest.fn().mockResolvedValue({
-      passwordEncrypted: 'passwordEncrypted',
-      passwordEncryptionMethod: 'plain',
-    }),
-    generateUserId: jest.fn().mockResolvedValue('uid'),
-    insertUser: jest.fn(),
-  })
-);
+const { encryptUserPassword } = mockEsm('#src/libraries/user.js', () => ({
+  encryptUserPassword: jest.fn().mockResolvedValue({
+    passwordEncrypted: 'passwordEncrypted',
+    passwordEncryptionMethod: 'plain',
+  }),
+}));
 
-const { hasActiveUsers, updateUserById } = mockEsm('#src/queries/user.js', () => ({
+const userQueries = {
   findUserById: jest
     .fn()
     .mockResolvedValue({ identities: { google: { userId: 'googleId', details: {} } } }),
   updateUserById: jest.fn(),
   hasActiveUsers: jest.fn().mockResolvedValue(true),
-}));
+};
+const { hasActiveUsers, updateUserById } = userQueries;
+
+const userLibraries = { generateUserId: jest.fn().mockResolvedValue('uid'), insertUser: jest.fn() };
+const { generateUserId, insertUser } = userLibraries;
 
 const submitInteraction = await pickDefault(import('./submit-interaction.js'));
 const now = Date.now();
@@ -52,7 +51,7 @@ const now = Date.now();
 jest.useFakeTimers().setSystemTime(now);
 
 describe('submit action', () => {
-  const provider = createMockProvider();
+  const tenant = new MockTenant(undefined, { users: userQueries }, { users: userLibraries });
   const ctx = {
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
@@ -102,7 +101,7 @@ describe('submit action', () => {
       identifiers,
     };
 
-    await submitInteraction(interaction, ctx, provider);
+    await submitInteraction(interaction, ctx, tenant);
 
     expect(generateUserId).toBeCalled();
     expect(hasActiveUsers).not.toBeCalled();
@@ -113,7 +112,9 @@ describe('submit action', () => {
       id: 'uid',
       ...upsertProfile,
     });
-    expect(assignInteractionResults).toBeCalledWith(ctx, provider, { login: { accountId: 'uid' } });
+    expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
+      login: { accountId: 'uid' },
+    });
   });
 
   it('admin user register', async () => {
@@ -135,7 +136,7 @@ describe('submit action', () => {
       identifiers,
     };
 
-    await submitInteraction(interaction, adminConsoleCtx, provider);
+    await submitInteraction(interaction, adminConsoleCtx, tenant);
 
     expect(generateUserId).toBeCalled();
     expect(hasActiveUsers).toBeCalled();
@@ -147,7 +148,7 @@ describe('submit action', () => {
       roleNames: [UserRole.Admin],
       ...upsertProfile,
     });
-    expect(assignInteractionResults).toBeCalledWith(adminConsoleCtx, provider, {
+    expect(assignInteractionResults).toBeCalledWith(adminConsoleCtx, tenant.provider, {
       login: { accountId: 'uid' },
     });
   });
@@ -164,7 +165,7 @@ describe('submit action', () => {
       identifiers,
     };
 
-    await submitInteraction(interaction, ctx, provider);
+    await submitInteraction(interaction, ctx, tenant);
 
     expect(encryptUserPassword).toBeCalledWith('password');
     expect(getLogtoConnectorById).toBeCalledWith('logto');
@@ -178,7 +179,9 @@ describe('submit action', () => {
       },
       lastSignInAt: now,
     });
-    expect(assignInteractionResults).toBeCalledWith(ctx, provider, { login: { accountId: 'foo' } });
+    expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
+      login: { accountId: 'foo' },
+    });
   });
 
   it('sign-in and sync new Social', async () => {
@@ -194,7 +197,7 @@ describe('submit action', () => {
       identifiers,
     };
 
-    await submitInteraction(interaction, ctx, provider);
+    await submitInteraction(interaction, ctx, tenant);
     expect(getLogtoConnectorById).toBeCalledWith('logto');
     expect(updateUserById).toBeCalledWith('foo', {
       primaryEmail: 'email',
@@ -202,7 +205,9 @@ describe('submit action', () => {
       avatar: userInfo.avatar,
       lastSignInAt: now,
     });
-    expect(assignInteractionResults).toBeCalledWith(ctx, provider, { login: { accountId: 'foo' } });
+    expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
+      login: { accountId: 'foo' },
+    });
   });
 
   it('reset password', async () => {
@@ -212,7 +217,7 @@ describe('submit action', () => {
       identifiers: [{ key: 'accountId', value: 'foo' }],
       profile: { password: 'password' },
     };
-    await submitInteraction(interaction, ctx, provider);
+    await submitInteraction(interaction, ctx, tenant);
 
     expect(encryptUserPassword).toBeCalledWith('password');
 

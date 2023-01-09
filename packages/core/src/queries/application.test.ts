@@ -4,7 +4,6 @@ import { createMockPool, createMockQueryResult, sql } from 'slonik';
 import { snakeCase } from 'snake-case';
 
 import { mockApplication } from '#src/__mocks__/index.js';
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
@@ -13,14 +12,13 @@ const { jest } = import.meta;
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
-jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
-  createMockPool({
-    query: async (sql, values) => {
-      return mockQuery(sql, values);
-    },
-  })
-);
+const pool = createMockPool({
+  query: async (sql, values) => {
+    return mockQuery(sql, values);
+  },
+});
 
+const { createApplicationQueries } = await import('./application.js');
 const {
   findTotalNumberOfApplications,
   findAllApplications,
@@ -28,7 +26,7 @@ const {
   insertApplication,
   updateApplicationById,
   deleteApplicationById,
-} = await import('./application.js');
+} = createApplicationQueries(pool);
 
 describe('application query', () => {
   const { table, fields } = convertToIdentifiers(Applications);

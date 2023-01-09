@@ -45,7 +45,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
   ) => updateApplication({ set, where: { id }, jsonbMode: 'merge' });
 
   const deleteApplicationById = async (id: string) => {
-    const { rowCount } = await envSet.pool.query(sql`
+    const { rowCount } = await pool.query(sql`
       delete from ${table}
       where ${fields.id}=${id}
     `);

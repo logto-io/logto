@@ -64,7 +64,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   );
 
   const findPayloadById = async (modelName: string, id: string) => {
-    const result = await envSet.pool.maybeOne<QueryResult>(sql`
+    const result = await pool.maybeOne<QueryResult>(sql`
       ${findByModel(modelName)}
       and ${fields.id}=${id}
     `);
@@ -80,7 +80,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     field: Field,
     value: T
   ) => {
-    const result = await envSet.pool.maybeOne<QueryResult>(sql`
+    const result = await pool.maybeOne<QueryResult>(sql`
       ${findByModel(modelName)}
       and ${fields.payload}->>${field}=${value}
     `);
@@ -89,7 +89,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   const consumeInstanceById = async (modelName: string, id: string) => {
-    await envSet.pool.query(sql`
+    await pool.query(sql`
       update ${table}
       set ${fields.consumedAt}=${convertToTimestamp()}
       where ${fields.modelName}=${modelName}
@@ -98,7 +98,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   const destroyInstanceById = async (modelName: string, id: string) => {
-    await envSet.pool.query(sql`
+    await pool.query(sql`
       delete from ${table}
       where ${fields.modelName}=${modelName}
       and ${fields.id}=${id}
@@ -106,7 +106,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   const revokeInstanceByGrantId = async (modelName: string, grantId: string) => {
-    await envSet.pool.query(sql`
+    await pool.query(sql`
       delete from ${table}
       where ${fields.modelName}=${modelName}
       and ${fields.payload}->>'grantId'=${grantId}
@@ -114,7 +114,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   const revokeInstanceByUserId = async (modelName: string, userId: string) => {
-    await envSet.pool.query(sql`
+    await pool.query(sql`
       delete from ${table}
       where ${fields.modelName}=${modelName}
       and ${fields.payload}->>'accountId'=${userId}

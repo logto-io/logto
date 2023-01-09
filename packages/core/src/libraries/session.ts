@@ -6,6 +6,7 @@ import { errors } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { findUserById, updateUserById } from '#src/queries/user.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 export const assignInteractionResults = async (
@@ -37,7 +38,7 @@ export const assignInteractionResults = async (
 
 export const checkSessionHealth = async (
   ctx: Context,
-  provider: Provider,
+  { provider, queries: { users } }: TenantContext,
   tolerance = 10 * 60 // 10 mins
 ) => {
   const { accountId, loginTs } = await provider.Session.get(ctx);
@@ -48,7 +49,7 @@ export const checkSessionHealth = async (
   );
 
   if (!loginTs || loginTs < getUnixTime(new Date()) - tolerance) {
-    const { passwordEncrypted, primaryPhone, primaryEmail } = await findUserById(accountId);
+    const { passwordEncrypted, primaryPhone, primaryEmail } = await users.findUserById(accountId);
 
     // No authenticated method configured for this user. Pass!
     if (!passwordEncrypted && !primaryPhone && !primaryEmail) {
