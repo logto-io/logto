@@ -23,7 +23,7 @@ const customPhrases = {
 };
 const { findAllCustomLanguageTags } = customPhrases;
 
-const { getLogtoConnectors } = mockEsm('#src/connectors.js', () => ({
+const { getLogtoConnectors } = mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectors: jest.fn(),
 }));
 

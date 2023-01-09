@@ -31,7 +31,7 @@ const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
   };
 });
 
-await mockEsmWithActual('#src/connectors/index.js', () => ({
+await mockEsmWithActual('#src/libraries/connector.js', () => ({
   getLogtoConnectorById: jest.fn(async (connectorId: string) => {
     const connector = await getLogtoConnectorByIdHelper(connectorId);
 

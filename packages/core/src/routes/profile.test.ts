@@ -27,7 +27,7 @@ const getLogtoConnectorById = jest.fn(async () => ({
   getAuthorizationUri: jest.fn(async () => ''),
 }));
 
-mockEsm('#src/connectors/index.js', () => ({
+mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectors: mockLogtoConnectorList,
   getLogtoConnectorById,
 }));

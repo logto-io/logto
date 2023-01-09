@@ -1,4 +1,4 @@
-import { getLogtoConnectorById } from '#src/connectors/index.js';
+import { getLogtoConnectorById } from '#src/libraries/connector.js';
 import {
   findUserByEmail,
   findUserByUsername,

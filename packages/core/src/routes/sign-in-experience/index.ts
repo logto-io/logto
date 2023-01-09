@@ -1,7 +1,7 @@
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
 import { literal, object, string } from 'zod';
 
-import { getLogtoConnectors } from '#src/connectors/index.js';
+import { getLogtoConnectors } from '#src/libraries/connector.js';
 import {
   validateBranding,
   validateSignUp,

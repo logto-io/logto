@@ -4,8 +4,8 @@ import { createMockUtils } from '@logto/shared/esm';
 import { any } from 'zod';
 
 import { mockConnector, mockMetadata } from '#src/__mocks__/index.js';
-import { defaultConnectorMethods } from '#src/connectors/consts.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { defaultConnectorMethods } from '#src/utils/connectors/consts.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -26,7 +26,7 @@ const {
   increasePasscodeTryCount: jest.fn(),
 }));
 
-const { getLogtoConnectors } = mockEsm('#src/connectors/index.js', () => ({
+const { getLogtoConnectors } = mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectors: jest.fn(),
 }));
 

@@ -15,7 +15,7 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-mockEsm('#src/connectors.js', () => ({
+mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectors: jest.fn(async () => [
     mockAliyunDmConnector,
     mockAliyunSmsConnector,

@@ -6,8 +6,8 @@ import type { Nullable } from '@silverhand/essentials';
 import type { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
-import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { getLogtoConnectorById } from '#src/libraries/connector.js';
 import { findUserByEmail, findUserByPhone } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
 

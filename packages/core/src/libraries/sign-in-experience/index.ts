@@ -11,8 +11,8 @@ import {
 import { deduplicate } from '@silverhand/essentials';
 import i18next from 'i18next';
 
-import { getLogtoConnectors } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { getLogtoConnectors } from '#src/libraries/connector.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 

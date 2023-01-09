@@ -16,16 +16,16 @@ import {
   mockLogtoConnectorList,
   mockLogtoConnector,
 } from '#src/__mocks__/index.js';
-import { defaultConnectorMethods } from '#src/connectors/consts.js';
-import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
+import { defaultConnectorMethods } from '#src/utils/connectors/consts.js';
+import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
-mockEsm('#src/libraries/connector.js', () => ({
+mockEsm('#src/utils/connectors/platform.js', () => ({
   checkSocialConnectorTargetAndPlatformUniqueness: jest.fn(),
 }));
 
@@ -52,8 +52,12 @@ const {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const getLogtoConnectors = jest.fn<Promise<LogtoConnector[]>, []>();
-const { loadConnectorFactories } = mockEsm('#src/connectors/index.js', () => ({
+
+const { loadConnectorFactories } = mockEsm('#src/utils/connectors/factories.js', () => ({
   loadConnectorFactories: jest.fn(),
+}));
+
+mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectors,
   getLogtoConnectorById: async (connectorId: string) => {
     const connectors = await getLogtoConnectors();

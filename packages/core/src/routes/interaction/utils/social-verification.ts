@@ -3,7 +3,7 @@ import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import type Provider from 'oidc-provider';
 
-import { getLogtoConnectorById } from '#src/connectors/index.js';
+import { getLogtoConnectorById } from '#src/libraries/connector.js';
 import { getUserInfoByAuthCode } from '#src/libraries/social.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {

@@ -2,7 +2,7 @@ import type { User, Profile } from '@logto/schemas';
 import { InteractionEvent, UserRole, adminConsoleApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { getLogtoConnectorById } from '#src/connectors/index.js';
+import { getLogtoConnectorById } from '#src/libraries/connector.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import type TenantContext from '#src/tenants/TenantContext.js';

@@ -3,7 +3,7 @@ import { ConnectorType } from '@logto/connector-kit';
 import { adminConsoleApplicationId } from '@logto/schemas';
 import etag from 'etag';
 
-import { getLogtoConnectors } from '#src/connectors/index.js';
+import { getLogtoConnectors } from '#src/libraries/connector.js';
 import { getApplicationIdFromInteraction } from '#src/libraries/session.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';

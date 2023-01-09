@@ -5,8 +5,8 @@ import { conditional, pick } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { object, string, unknown } from 'zod';
 
-import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { getLogtoConnectorById } from '#src/libraries/connector.js';
 import {
   assignInteractionResults,
   getApplicationIdFromInteraction,
