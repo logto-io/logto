@@ -44,6 +44,7 @@ import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermis
 import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
 import RolePermissions from './pages/RoleDetails/RolePermissions';
 import RoleSettings from './pages/RoleDetails/RoleSettings';
+import RoleUsers from './pages/RoleDetails/RoleUsers';
 import UserLogs from './pages/UserDetails/UserLogs';
 import UserRoles from './pages/UserDetails/UserRoles';
 import UserSettings from './pages/UserDetails/UserSettings';
@@ -119,6 +120,7 @@ const Main = () => {
                   <Route index element={<Navigate replace to={RoleDetailsTabs.Settings} />} />
                   <Route path={RoleDetailsTabs.Settings} element={<RoleSettings />} />
                   <Route path={RoleDetailsTabs.Permissions} element={<RolePermissions />} />
+                  <Route path={RoleDetailsTabs.Users} element={<RoleUsers />} />
                 </Route>
               </Route>
               <Route path="settings" element={<Settings />} />

@@ -27,6 +27,15 @@ const role_details = {
       'If this permission is deleted, the affected user with this role will lose the access granted by this permission.', // UNTRANSLATED
     permission_deleted: 'The permission {{name}} has been successfully deleted from this role.', // UNTRANSLATED
   },
+  users: {
+    assign_button: 'Assign Users', // UNTRANSLATED
+    name_column: 'User', // UNTRANSLATED
+    app_column: 'App', // UNTRANSLATED
+    latest_sign_in_column: 'Latest sign in', // UNTRANSLATED
+    delete_description:
+      'It will remain in your user pool but lose the authorization for this role.', // UNTRANSLATED
+    deleted: 'The user {{name}} has been successfully deleted from this role.', // UNTRANSLATED
+  },
 };
 
 export default role_details;

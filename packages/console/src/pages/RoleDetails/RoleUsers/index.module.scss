@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.usersTable {
+  margin-bottom: _.unit(6);
+  color: var(--color-text);
+
+  .filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  tbody {
+    td {
+      max-width: 100%;
+      @include _.text-ellipsis;
+      font: var(--font-body-medium);
+    }
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+}
