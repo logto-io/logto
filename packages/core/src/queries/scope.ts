@@ -2,24 +2,18 @@ import type { CreateScope, Scope } from '@logto/schemas';
 import { Scopes } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
+import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
-import { buildFindEntityById } from '#src/database/find-entity-by-id.js';
-import { buildInsertInto } from '#src/database/insert-into.js';
-import { buildUpdateWhere } from '#src/database/update-where.js';
+import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
+import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 
 const { table, fields } = convertToIdentifiers(Scopes);
-
-export const findScopesByResourceId = async (resourceId: string) =>
-  envSet.pool.any<Scope>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.resourceId}=${resourceId}
-  `);
 
 const buildResourceConditions = (search: Search) => {
   const hasSearch = search.matches.length > 0;
@@ -31,65 +25,96 @@ const buildResourceConditions = (search: Search) => {
   );
 };
 
-export const findScopes = async (
-  resourceId: string,
-  search: Search,
-  limit?: number,
-  offset?: number
-) =>
-  envSet.pool.any<Scope>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.resourceId}=${resourceId}
-    ${buildResourceConditions(search)}
-    ${conditionalSql(limit, (value) => sql`limit ${value}`)}
-    ${conditionalSql(offset, (value) => sql`offset ${value}`)}
-  `);
-
-export const countScopes = async (resourceId: string, search: Search) =>
-  envSet.pool.one<{ count: number }>(sql`
-    select count(*)
-    from ${table}
-    where ${fields.resourceId}=${resourceId}
-    ${buildResourceConditions(search)}
-  `);
-
-export const findScopesByResourceIds = async (resourceIds: string[]) =>
-  resourceIds.length > 0
-    ? envSet.pool.any<Scope>(sql`
+export const createScopeQueries = (pool: CommonQueryMethods) => {
+  const findScopes = async (resourceId: string, search: Search, limit?: number, offset?: number) =>
+    pool.any<Scope>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      where ${fields.resourceId} in (${sql.join(resourceIds, sql`, `)})
-    `)
-    : [];
+      where ${fields.resourceId}=${resourceId}
+      ${buildResourceConditions(search)}
+      ${conditionalSql(limit, (value) => sql`limit ${value}`)}
+      ${conditionalSql(offset, (value) => sql`offset ${value}`)}
+    `);
 
-export const findScopesByIds = async (scopeIds: string[]) =>
-  scopeIds.length > 0
-    ? envSet.pool.any<Scope>(sql`
+  const countScopes = async (resourceId: string, search: Search) =>
+    pool.one<{ count: number }>(sql`
+      select count(*)
+      from ${table}
+      where ${fields.resourceId}=${resourceId}
+      ${buildResourceConditions(search)}
+    `);
+
+  const findScopesByResourceId = async (resourceId: string) =>
+    pool.any<Scope>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      where ${fields.id} in (${sql.join(scopeIds, sql`, `)})
-    `)
-    : [];
+      where ${fields.resourceId}=${resourceId}
+    `);
 
-export const insertScope = buildInsertInto<CreateScope, Scope>(Scopes, {
-  returning: true,
-});
+  const findScopesByResourceIds = async (resourceIds: string[]) =>
+    resourceIds.length > 0
+      ? pool.any<Scope>(sql`
+        select ${sql.join(Object.values(fields), sql`, `)}
+        from ${table}
+        where ${fields.resourceId} in (${sql.join(resourceIds, sql`, `)})
+      `)
+      : [];
 
-export const findScopeById = buildFindEntityById<CreateScope, Scope>(Scopes);
+  const findScopesByIds = async (scopeIds: string[]) =>
+    scopeIds.length > 0
+      ? pool.any<Scope>(sql`
+        select ${sql.join(Object.values(fields), sql`, `)}
+        from ${table}
+        where ${fields.id} in (${sql.join(scopeIds, sql`, `)})
+      `)
+      : [];
 
-const updateScope = buildUpdateWhere<CreateScope, Scope>(Scopes, true);
+  const insertScope = buildInsertIntoWithPool(pool)<CreateScope, Scope>(Scopes, {
+    returning: true,
+  });
 
-export const updateScopeById = async (id: string, set: Partial<OmitAutoSetFields<CreateScope>>) =>
-  updateScope({ set, where: { id }, jsonbMode: 'merge' });
+  const findScopeById = buildFindEntityByIdWithPool(pool)<CreateScope, Scope>(Scopes);
 
-export const deleteScopeById = async (id: string) => {
-  const { rowCount } = await envSet.pool.query(sql`
-    delete from ${table}
-    where ${fields.id}=${id}
-  `);
+  const updateScope = buildUpdateWhereWithPool(pool)<CreateScope, Scope>(Scopes, true);
 
-  if (rowCount < 1) {
-    throw new DeletionError(Scopes.table, id);
-  }
+  const updateScopeById = async (id: string, set: Partial<OmitAutoSetFields<CreateScope>>) =>
+    updateScope({ set, where: { id }, jsonbMode: 'merge' });
+
+  const deleteScopeById = async (id: string) => {
+    const { rowCount } = await pool.query(sql`
+      delete from ${table}
+      where ${fields.id}=${id}
+    `);
+
+    if (rowCount < 1) {
+      throw new DeletionError(Scopes.table, id);
+    }
+  };
+
+  return {
+    findScopes,
+    countScopes,
+    findScopesByResourceId,
+    findScopesByResourceIds,
+    findScopesByIds,
+    insertScope,
+    findScopeById,
+    updateScope,
+    updateScopeById,
+    deleteScopeById,
+  };
 };
+
+/** @deprecated Will be removed soon. Use createScopeQueries() factory instead. */
+export const {
+  findScopes,
+  countScopes,
+  findScopesByResourceId,
+  findScopesByResourceIds,
+  findScopesByIds,
+  insertScope,
+  findScopeById,
+  updateScope,
+  updateScopeById,
+  deleteScopeById,
+} = createScopeQueries(envSet.pool);
