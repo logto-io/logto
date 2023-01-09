@@ -45,6 +45,7 @@ import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings'
 import RolePermissions from './pages/RoleDetails/RolePermissions';
 import RoleSettings from './pages/RoleDetails/RoleSettings';
 import UserLogs from './pages/UserDetails/UserLogs';
+import UserRoles from './pages/UserDetails/UserRoles';
 import UserSettings from './pages/UserDetails/UserSettings';
 import { getBasename } from './utilities/router';
 
@@ -101,6 +102,7 @@ const Main = () => {
                 <Route path=":id" element={<UserDetails />}>
                   <Route index element={<Navigate replace to={UserDetailsTabs.Settings} />} />
                   <Route path={UserDetailsTabs.Settings} element={<UserSettings />} />
+                  <Route path={UserDetailsTabs.Roles} element={<UserRoles />} />
                   <Route path={UserDetailsTabs.Logs} element={<UserLogs />}>
                     <Route path=":logId" element={<AuditLogDetails />} />
                   </Route>

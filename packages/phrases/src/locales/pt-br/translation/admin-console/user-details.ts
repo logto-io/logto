@@ -14,6 +14,8 @@ const user_details = {
     congratulations: 'Este usuário foi redefinido',
     new_password: 'Nova senha:',
   },
+  tab_settings: 'Settings', // UNTRANSLATED
+  tab_roles: 'Roles', // UNTRANSLATED
   tab_logs: 'Logs',
   settings: 'Configurações',
   settings_description:
@@ -38,6 +40,13 @@ const user_details = {
       'Você está removendo a identidade <name/> existente. Você tem certeza que deseja fazer isso?',
   },
   suspended: 'Suspenso',
+  roles: {
+    name_column: 'Role', // UNTRANSLATED
+    description_column: 'Description', // UNTRANSLATED
+    assign_button: 'Assign Roles', // UNTRANSLATED
+    delete_description: 'TBD', // UNTRANSLATED
+    deleted: 'The role {{name}} has been successfully deleted from the user.', // UNTRANSLATED
+  },
 };
 
 export default user_details;

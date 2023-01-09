@@ -14,6 +14,8 @@ const user_details = {
     congratulations: '해당 사용자의 비밀번호가 성공적으로 초기화 되었어요.',
     new_password: '새로운 비밀번호:',
   },
+  tab_settings: 'Settings', // UNTRANSLATED
+  tab_roles: 'Roles', // UNTRANSLATED
   tab_logs: '사용자 기록',
   settings: '설정',
   settings_description:
@@ -37,6 +39,13 @@ const user_details = {
     deletion_confirmation: '<name/> 신원을 삭제하려고 해요. 정말로 진행할까요?',
   },
   suspended: '정지됨',
+  roles: {
+    name_column: 'Role', // UNTRANSLATED
+    description_column: 'Description', // UNTRANSLATED
+    assign_button: 'Assign Roles', // UNTRANSLATED
+    delete_description: 'TBD', // UNTRANSLATED
+    deleted: 'The role {{name}} has been successfully deleted from the user.', // UNTRANSLATED
+  },
 };
 
 export default user_details;
