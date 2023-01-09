@@ -1,7 +1,9 @@
 import type { CreateResource } from '../db-entries/index.js';
 
+export const managementResourceId = 'management-api';
+
 export const managementResource: Readonly<CreateResource> = Object.freeze({
-  id: 'management-api',
+  id: managementResourceId,
   /**
    * The fixed resource indicator for Management APIs.
    *
