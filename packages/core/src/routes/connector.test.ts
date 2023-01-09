@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
 import { ConnectorPlatform, VerificationCodeType } from '@logto/connector-kit';
+import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { any } from 'zod';
@@ -17,6 +18,8 @@ import {
   mockLogtoConnector,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import Queries from '#src/tenants/Queries.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import assertThat from '#src/utils/assert-that.js';
 import { defaultConnectorMethods } from '#src/utils/connectors/consts.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
@@ -29,26 +32,22 @@ mockEsm('#src/utils/connectors/platform.js', () => ({
   checkSocialConnectorTargetAndPlatformUniqueness: jest.fn(),
 }));
 
-const { removeUnavailableSocialConnectorTargets } = mockEsm(
-  '#src/libraries/sign-in-experience/index.js',
-  () => ({
-    removeUnavailableSocialConnectorTargets: jest.fn(),
-  })
-);
+const removeUnavailableSocialConnectorTargets = jest.fn();
 
+const connectorQueries = {
+  findConnectorById: jest.fn(),
+  countConnectorByConnectorId: jest.fn(),
+  deleteConnectorById: jest.fn(),
+  deleteConnectorByIds: jest.fn(),
+  insertConnector: jest.fn(async (body) => body as Connector),
+} satisfies Partial<Queries['connectors']>;
 const {
   findConnectorById,
   countConnectorByConnectorId,
   deleteConnectorById,
   deleteConnectorByIds,
   insertConnector,
-} = await mockEsmWithActual('#src/queries/connector.js', () => ({
-  findConnectorById: jest.fn(),
-  countConnectorByConnectorId: jest.fn(),
-  deleteConnectorById: jest.fn(),
-  deleteConnectorByIds: jest.fn(),
-  insertConnector: jest.fn(async (body: unknown) => body),
-}));
+} = connectorQueries;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const getLogtoConnectors = jest.fn<Promise<LogtoConnector[]>, []>();
@@ -57,27 +56,35 @@ const { loadConnectorFactories } = mockEsm('#src/utils/connectors/factories.js',
   loadConnectorFactories: jest.fn(),
 }));
 
-mockEsm('#src/libraries/connector.js', () => ({
-  getLogtoConnectors,
-  getLogtoConnectorById: async (connectorId: string) => {
-    const connectors = await getLogtoConnectors();
-    const connector = connectors.find(({ dbEntry }) => dbEntry.id === connectorId);
-    assertThat(
-      connector,
-      new RequestError({
-        code: 'entity.not_found',
-        connectorId,
-        status: 404,
-      })
-    );
+const tenantContext = new MockTenant(
+  undefined,
+  { connectors: connectorQueries },
+  {
+    signInExperiences: { removeUnavailableSocialConnectorTargets },
+    connectors: {
+      getLogtoConnectors,
+      getLogtoConnectorById: async (connectorId: string) => {
+        const connectors = await getLogtoConnectors();
+        const connector = connectors.find(({ dbEntry }) => dbEntry.id === connectorId);
+        assertThat(
+          connector,
+          new RequestError({
+            code: 'entity.not_found',
+            connectorId,
+            status: 404,
+          })
+        );
 
-    return connector;
-  },
-}));
+        return connector;
+      },
+    },
+  }
+);
+
 const connectorRoutes = await pickDefault(import('./connector.js'));
 
 describe('connector route', () => {
-  const connectorRequest = createRequester({ authedRoutes: connectorRoutes });
+  const connectorRequest = createRequester({ authedRoutes: connectorRoutes, tenantContext });
 
   describe('GET /connectors', () => {
     afterEach(() => {

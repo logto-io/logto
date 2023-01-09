@@ -29,10 +29,6 @@ const logtoConnectors = [
   mockAliyunSmsConnector,
 ];
 
-await mockEsmWithActual('#src/libraries/connector.js', () => ({
-  getLogtoConnectors: async () => logtoConnectors,
-}));
-
 const { validateBranding, validateSignIn, validateSignUp } = await mockEsmWithActual(
   '#src/libraries/sign-in-experience/index.js',
   () => ({
@@ -58,7 +54,10 @@ const validateLanguageInfo = jest.fn();
 const tenantContext = new MockTenant(
   undefined,
   { signInExperiences, customPhrases: { findAllCustomLanguageTags: async () => [] } },
-  { signInExperiences: { validateLanguageInfo } }
+  {
+    signInExperiences: { validateLanguageInfo },
+    connectors: { getLogtoConnectors: async () => logtoConnectors },
+  }
 );
 
 const signInExperiencesRoutes = await pickDefault(import('./index.js'));

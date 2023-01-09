@@ -7,10 +7,6 @@ import { createRequester } from '#src/utils/test-utils.js';
 
 const { mockEsm } = createMockUtils(import.meta.jest);
 
-mockEsm('#src/libraries/connector.js', () => ({
-  getLogtoConnectors: async () => [],
-}));
-
 const signInExperiencesRoutes = await pickDefault(import('./index.js'));
 const signInExperienceRequester = createRequester({
   authedRoutes: signInExperiencesRoutes,

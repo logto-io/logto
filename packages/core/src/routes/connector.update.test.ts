@@ -1,6 +1,6 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 
 import {
   mockMetadata,
@@ -9,53 +9,56 @@ import {
   mockLogtoConnector,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
-const getLogtoConnectors = jest.fn() as jest.MockedFunction<() => Promise<LogtoConnector[]>>;
-const getLogtoConnectorById = jest.fn(async (connectorId: string) => {
-  const connectors = await getLogtoConnectors();
-  const connector = connectors.find(({ dbEntry }) => dbEntry.id === connectorId);
+const getLogtoConnectors: jest.MockedFunction<() => Promise<LogtoConnector[]>> = jest.fn();
+const getLogtoConnectorById: jest.MockedFunction<(connectorId: string) => Promise<LogtoConnector>> =
+  jest.fn(async (connectorId: string) => {
+    const connectors = await getLogtoConnectors();
+    const connector = connectors.find(({ dbEntry }) => dbEntry.id === connectorId);
 
-  assertThat(
-    connector,
-    new RequestError({
-      code: 'entity.not_found',
-      connectorId,
-      status: 404,
-    })
-  );
+    assertThat(
+      connector,
+      new RequestError({
+        code: 'entity.not_found',
+        connectorId,
+        status: 404,
+      })
+    );
 
-  return {
-    ...connector,
-    sendMessage: sendMessagePlaceHolder,
-  };
-}) as jest.MockedFunction<(connectorId: string) => Promise<LogtoConnector>>;
+    return {
+      ...connector,
+      sendMessage: sendMessagePlaceHolder,
+    };
+  });
 
 const sendMessagePlaceHolder = jest.fn();
+const updateConnector = jest.fn();
 
-const { updateConnector } = await mockEsmWithActual('#src/queries/connector.js', () => ({
-  updateConnector: jest.fn(),
-}));
-
-await mockEsmWithActual('#src/libraries/connector.js', () => ({
-  getLogtoConnectors,
-  getLogtoConnectorById,
-}));
-
-mockEsm('#src/libraries/sign-in-experience.js', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  removeUnavailableSocialConnectorTargets: async () => {},
-}));
+const tenantContext = new MockTenant(
+  undefined,
+  { connectors: { updateConnector } },
+  {
+    connectors: {
+      getLogtoConnectors,
+      getLogtoConnectorById,
+    },
+    signInExperiences: {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      removeUnavailableSocialConnectorTargets: async () => {},
+    },
+  }
+);
 
 const connectorRoutes = await pickDefault(import('./connector.js'));
 
 describe('connector PATCH routes', () => {
-  const connectorRequest = createRequester({ authedRoutes: connectorRoutes });
+  const connectorRequest = createRequester({ authedRoutes: connectorRoutes, tenantContext });
 
   describe('PATCH /connectors/:id', () => {
     afterEach(() => {

@@ -1,29 +1,10 @@
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 
-import {
-  mockAliyunDmConnector,
-  mockAliyunSmsConnector,
-  mockFacebookConnector,
-  mockGithubConnector,
-  mockGoogleConnector,
-  mockLanguageInfo,
-  mockSignInExperience,
-} from '#src/__mocks__/index.js';
+import { mockLanguageInfo, mockSignInExperience } from '#src/__mocks__/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
-
-mockEsm('#src/libraries/connector.js', () => ({
-  getLogtoConnectors: jest.fn(async () => [
-    mockAliyunDmConnector,
-    mockAliyunSmsConnector,
-    mockFacebookConnector,
-    mockGithubConnector,
-    mockGoogleConnector,
-  ]),
-}));
 
 const validateLanguageInfo = jest.fn();
 

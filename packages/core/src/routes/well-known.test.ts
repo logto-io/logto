@@ -17,7 +17,7 @@ import {
 } from '#src/__mocks__/index.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+const { mockEsmWithActual } = createMockUtils(jest);
 
 await mockEsmWithActual('i18next', () => ({
   default: {
@@ -30,18 +30,6 @@ const sieQueries = {
   findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
 };
 const { findDefaultSignInExperience } = sieQueries;
-
-mockEsm('#src/libraries/connector.js', () => ({
-  getLogtoConnectors: jest.fn(async () => [
-    mockAliyunDmConnector,
-    mockAliyunSmsConnector,
-    mockFacebookConnector,
-    mockGithubConnector,
-    mockGoogleConnector,
-    mockWechatConnector,
-    mockWechatNativeConnector,
-  ]),
-}));
 
 const wellKnownRoutes = await pickDefault(import('#src/routes/well-known.js'));
 const { createMockProvider } = await import('#src/test-utils/oidc-provider.js');
@@ -56,10 +44,26 @@ describe('GET /.well-known/sign-in-exp', () => {
   const provider = createMockProvider();
   const sessionRequest = createRequester({
     anonymousRoutes: wellKnownRoutes,
-    tenantContext: new MockTenant(provider, {
-      signInExperiences: sieQueries,
-      users: { hasActiveUsers: jest.fn().mockResolvedValue(true) },
-    }),
+    tenantContext: new MockTenant(
+      provider,
+      {
+        signInExperiences: sieQueries,
+        users: { hasActiveUsers: jest.fn().mockResolvedValue(true) },
+      },
+      {
+        connectors: {
+          getLogtoConnectors: jest.fn(async () => [
+            mockAliyunDmConnector,
+            mockAliyunSmsConnector,
+            mockFacebookConnector,
+            mockGithubConnector,
+            mockGoogleConnector,
+            mockWechatConnector,
+            mockWechatNativeConnector,
+          ]),
+        },
+      }
+    ),
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();
