@@ -5,11 +5,12 @@ import TargetUsersBox from './TargetUsersBox';
 import * as styles from './index.module.scss';
 
 type Props = {
+  roleId: string;
   value: User[];
   onChange: (value: User[]) => void;
 };
 
-const RoleUsersTransfer = ({ value, onChange }: Props) => {
+const RoleUsersTransfer = ({ roleId, value, onChange }: Props) => {
   const onAddUser = (user: User) => {
     onChange([user, ...value]);
   };
@@ -20,7 +21,12 @@ const RoleUsersTransfer = ({ value, onChange }: Props) => {
 
   return (
     <div className={styles.container}>
-      <SourceUsersBox selectedUsers={value} onAddUser={onAddUser} onRemoveUser={onRemoveUser} />
+      <SourceUsersBox
+        roleId={roleId}
+        selectedUsers={value}
+        onAddUser={onAddUser}
+        onRemoveUser={onRemoveUser}
+      />
       <div className={styles.verticalBar} />
       <TargetUsersBox selectedUsers={value} onRemoveUser={onRemoveUser} />
     </div>

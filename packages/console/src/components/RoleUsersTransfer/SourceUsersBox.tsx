@@ -16,6 +16,7 @@ import UserAvatar from '../UserAvatar';
 import * as styles from './index.module.scss';
 
 type Props = {
+  roleId: string;
   onAddUser: (user: User) => void;
   onRemoveUser: (user: User) => void;
   selectedUsers: User[];
@@ -24,7 +25,7 @@ type Props = {
 const pageSize = 20;
 const searchDelay = 500;
 
-const SourceUsersBox = ({ selectedUsers, onAddUser, onRemoveUser }: Props) => {
+const SourceUsersBox = ({ roleId, selectedUsers, onAddUser, onRemoveUser }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [pageIndex, setPageIndex] = useState(1);
   const [keyword, setKeyword] = useState('');
@@ -43,7 +44,7 @@ const SourceUsersBox = ({ selectedUsers, onAddUser, onRemoveUser }: Props) => {
   }, []);
 
   const { data } = useSWR<[User[], number], RequestError>(
-    `/api/users?page=${pageIndex}&page_size=${pageSize}&hideAdminUser=true${conditionalString(
+    `/api/users?excludeRoleId=${roleId}&page=${pageIndex}&page_size=${pageSize}&hideAdminUser=true${conditionalString(
       keyword && `&search=${encodeURIComponent(`%${keyword}%`)}`
     )}`
   );
