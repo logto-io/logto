@@ -51,8 +51,10 @@ const {
   findUsersRolesByRoleId,
   deleteUsersRolesByUserIdAndRoleId,
   findFirstUsersRolesByRoleIdAndUserIds,
+  countUsersRolesByRoleId,
 } = await mockEsmWithActual('#src/queries/users-roles.js', () => ({
   insertUsersRoles: jest.fn(),
+  countUsersRolesByRoleId: jest.fn(),
   findUsersRolesByRoleId: jest.fn(),
   findFirstUsersRolesByRoleIdAndUserIds: jest.fn(),
   deleteUsersRolesByUserIdAndRoleId: jest.fn(),
@@ -62,10 +64,24 @@ const roleRoutes = await pickDefault(import('./role.js'));
 describe('role routes', () => {
   const roleRequester = createRequester({ authedRoutes: roleRoutes });
 
-  it('GET /roles', async () => {
-    const response = await roleRequester.get('/roles');
+  it('GET /roles?page=1', async () => {
+    countUsersRolesByRoleId.mockResolvedValueOnce({ count: 1 });
+    findUsersByIds.mockResolvedValueOnce([mockUser]);
+    findUsersRolesByRoleId.mockResolvedValueOnce([]);
+    const response = await roleRequester.get('/roles?page=1&page_size=20');
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockRole]);
+    expect(response.body).toEqual([
+      {
+        ...mockRole,
+        usersCount: 1,
+        featuredUsers: [
+          {
+            id: mockUser.id,
+            avatar: mockUser.avatar,
+          },
+        ],
+      },
+    ]);
   });
 
   it('POST /roles', async () => {

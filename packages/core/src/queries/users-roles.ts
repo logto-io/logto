@@ -1,6 +1,6 @@
 import type { UsersRole } from '@logto/schemas';
 import { UsersRoles } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
+import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql } from 'slonik';
 
 import envSet from '#src/env-set/index.js';
@@ -14,9 +14,17 @@ export const findUsersRolesByUserId = async (userId: string) =>
     where ${fields.userId}=${userId}
   `);
 
-export const findUsersRolesByRoleId = async (roleId: string) =>
+export const findUsersRolesByRoleId = async (roleId: string, limit?: number) =>
   envSet.pool.any<UsersRole>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
+    from ${table}
+    where ${fields.roleId}=${roleId}
+    ${conditionalSql(limit, (value) => sql`limit ${value}`)}
+  `);
+
+export const countUsersRolesByRoleId = async (roleId: string) =>
+  envSet.pool.one<{ count: number }>(sql`
+    select count(*)
     from ${table}
     where ${fields.roleId}=${roleId}
   `);
