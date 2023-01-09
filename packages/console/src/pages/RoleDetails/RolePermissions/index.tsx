@@ -53,7 +53,7 @@ const RolePermissions = () => {
   return (
     <>
       <PermissionsTable
-        isApiColumnDisplayed
+        isApiColumnVisible
         scopes={scopes}
         isLoading={isLoading}
         createButtonTitle="role_details.permission.assign_button"

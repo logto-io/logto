@@ -22,7 +22,7 @@ import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import * as styles from './index.module.scss';
-import type { RoleDetailsOutletContext } from './types';
+import { RoleDetailsOutletContext } from './types';
 
 const RoleDetails = () => {
   const { pathname } = useLocation();
@@ -114,14 +114,13 @@ const RoleDetails = () => {
           </TabNav>
           <Outlet
             context={
-              // eslint-disable-next-line no-restricted-syntax
               {
                 role: data,
                 isDeleting,
                 onRoleUpdated: (role: Role) => {
                   void mutate(role);
                 },
-              } as RoleDetailsOutletContext
+              } satisfies RoleDetailsOutletContext
             }
           />
         </>

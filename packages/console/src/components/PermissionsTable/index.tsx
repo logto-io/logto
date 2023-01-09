@@ -20,7 +20,7 @@ type Props = {
   isLoading: boolean;
   errorMessage?: string;
   createButtonTitle: AdminConsoleKey;
-  isApiColumnDisplayed?: boolean;
+  isApiColumnVisible?: boolean;
   createHandler: () => void;
   deleteHandler: (ScopeResponse: ScopeResponse) => void;
   retryHandler: () => void;
@@ -31,7 +31,7 @@ const PermissionsTable = ({
   isLoading,
   errorMessage,
   createButtonTitle,
-  isApiColumnDisplayed = false,
+  isApiColumnVisible = false,
   createHandler,
   deleteHandler,
   retryHandler,
@@ -41,14 +41,14 @@ const PermissionsTable = ({
   const nameColumn: Column<ScopeResponse> = {
     title: t('permissions.name_column'),
     dataIndex: 'name',
-    colSpan: isApiColumnDisplayed ? 5 : 6,
+    colSpan: isApiColumnVisible ? 5 : 6,
     render: ({ name }) => <div className={styles.name}>{name}</div>,
   };
 
   const descriptionColumn: Column<ScopeResponse> = {
     title: t('permissions.description_column'),
     dataIndex: 'description',
-    colSpan: isApiColumnDisplayed ? 5 : 9,
+    colSpan: isApiColumnVisible ? 5 : 9,
     render: ({ description }) => description,
   };
 
@@ -84,7 +84,7 @@ const PermissionsTable = ({
   const columns = [
     nameColumn,
     descriptionColumn,
-    conditional(isApiColumnDisplayed && apiColumn),
+    conditional(isApiColumnVisible && apiColumn),
     deleteColumn,
     // eslint-disable-next-line unicorn/prefer-native-coercion-functions
   ].filter((column): column is Column<ScopeResponse> => Boolean(column));
