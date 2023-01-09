@@ -10,6 +10,8 @@ import {
   createDefaultSetting,
   createDemoAppApplication,
   defaultRole,
+  managementResourceScope,
+  defaultRoleScopeRelation,
 } from '@logto/schemas';
 import { Hooks } from '@logto/schemas/models';
 import chalk from 'chalk';
@@ -57,10 +59,12 @@ const createTables = async (connection: DatabaseTransactionConnection) => {
 const seedTables = async (connection: DatabaseTransactionConnection, latestTimestamp: number) => {
   await Promise.all([
     connection.query(insertInto(managementResource, 'resources')),
+    connection.query(insertInto(managementResourceScope, 'scopes')),
     connection.query(insertInto(createDefaultSetting(), 'settings')),
     connection.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
     connection.query(insertInto(createDemoAppApplication(generateStandardId()), 'applications')),
     connection.query(insertInto(defaultRole, 'roles')),
+    connection.query(insertInto(defaultRoleScopeRelation, 'roles_scopes')),
     updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
 };

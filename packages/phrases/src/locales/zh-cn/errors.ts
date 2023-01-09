@@ -61,6 +61,7 @@ const errors = {
     suspended: '账号已被禁用。',
     user_not_exist: '未找到与 {{ identifier }} 相关联的用户。',
     missing_profile: '请于登录时提供必要的用户补充信息。',
+    role_exists: 'The role id {{roleId}} is already been added to this user', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',
@@ -160,6 +161,7 @@ const errors = {
   role: {
     name_in_use: 'This role name {{name}} is already in use', // UNTRANSLATED
     scope_exists: 'The scope id {{scopeId}} has already been added to this role', // UNTRANSLATED
+    user_exists: 'The user id {{userId}} is already been added to this role', // UNTRANSLATED
   },
 };
 

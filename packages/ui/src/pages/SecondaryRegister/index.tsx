@@ -8,7 +8,7 @@ import { EmailRegister } from '@/containers/EmailForm';
 import { PhoneRegister } from '@/containers/PhoneForm';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
-import { SignInMethodGuard, passcodeMethodGuard } from '@/types/guard';
+import { SignInMethodGuard, verificationCodeMethodGuard } from '@/types/guard';
 
 type Parameters = {
   method?: string;
@@ -28,7 +28,7 @@ const SecondaryRegister = () => {
   }
 
   // Validate the verify settings
-  if (is(method, passcodeMethodGuard) && !signUpSettings.verify) {
+  if (is(method, verificationCodeMethodGuard) && !signUpSettings.verify) {
     return <ErrorPage />;
   }
 

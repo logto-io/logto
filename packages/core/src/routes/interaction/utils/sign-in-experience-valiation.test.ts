@@ -120,8 +120,8 @@ describe('identifier validation', () => {
     }).toThrow();
   });
 
-  it('email passcode', () => {
-    const identifier = { email: 'email', passcode: 'passcode' };
+  it('email verificationCode', () => {
+    const identifier = { email: 'email', verificationCode: 'verificationCode' };
 
     expect(() => {
       verifyIdentifierSettings(identifier, mockSignInExperience);
@@ -211,8 +211,8 @@ describe('identifier validation', () => {
     }).toThrow();
   });
 
-  it('phone passcode', () => {
-    const identifier = { phone: '123456', passcode: 'passcode' };
+  it('phone verificationCode', () => {
+    const identifier = { phone: '123456', verificationCode: 'verificationCode' };
 
     expect(() => {
       verifyIdentifierSettings(identifier, mockSignInExperience);

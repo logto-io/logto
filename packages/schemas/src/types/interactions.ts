@@ -25,17 +25,17 @@ export const phonePasswordPayloadGuard = z.object({
 });
 export type PhonePasswordPayload = z.infer<typeof phonePasswordPayloadGuard>;
 
-export const emailPasscodePayloadGuard = z.object({
+export const emailVerificationCodePayloadGuard = z.object({
   email: z.string().regex(emailRegEx),
-  passcode: z.string().min(1),
+  verificationCode: z.string().min(1),
 });
-export type EmailPasscodePayload = z.infer<typeof emailPasscodePayloadGuard>;
+export type EmailVerificationCodePayload = z.infer<typeof emailVerificationCodePayloadGuard>;
 
-export const phonePasscodePayloadGuard = z.object({
+export const phoneVerificationCodePayloadGuard = z.object({
   phone: z.string().regex(phoneRegEx),
-  passcode: z.string().min(1),
+  verificationCode: z.string().min(1),
 });
-export type PhonePasscodePayload = z.infer<typeof phonePasscodePayloadGuard>;
+export type PhoneVerificationCodePayload = z.infer<typeof phoneVerificationCodePayloadGuard>;
 
 export const socialConnectorPayloadGuard = z.object({
   connectorId: z.string(),
@@ -64,8 +64,8 @@ export const identifierPayloadGuard = z.union([
   usernamePasswordPayloadGuard,
   emailPasswordPayloadGuard,
   phonePasswordPayloadGuard,
-  emailPasscodePayloadGuard,
-  phonePasscodePayloadGuard,
+  emailVerificationCodePayloadGuard,
+  phoneVerificationCodePayloadGuard,
   socialConnectorPayloadGuard,
   socialIdentityPayloadGuard,
 ]);
@@ -74,8 +74,8 @@ export type IdentifierPayload =
   | UsernamePasswordPayload
   | EmailPasswordPayload
   | PhonePasswordPayload
-  | EmailPasscodePayload
-  | PhonePasscodePayload
+  | EmailVerificationCodePayload
+  | PhoneVerificationCodePayload
   | SocialConnectorPayload
   | SocialIdentityPayload;
 

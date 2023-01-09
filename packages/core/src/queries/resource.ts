@@ -15,7 +15,7 @@ const { table, fields } = convertToIdentifiers(Resources);
 
 export const findTotalNumberOfResources = async () => getTotalRowCount(table);
 
-export const findAllResources = async (limit: number, offset: number) =>
+export const findAllResources = async (limit?: number, offset?: number) =>
   manyRows(
     envSet.pool.query<Resource>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
@@ -31,6 +31,15 @@ export const findResourceByIndicator = async (indicator: string) =>
     from ${table}
     where ${fields.indicator}=${indicator}
   `);
+
+export const findResourcesByIds = async (resourceIds: string[]) =>
+  resourceIds.length > 0
+    ? envSet.pool.any<Resource>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.id} in (${sql.join(resourceIds, sql`, `)})
+    `)
+    : [];
 
 export const findResourceById = buildFindEntityById<CreateResource, Resource>(Resources);
 

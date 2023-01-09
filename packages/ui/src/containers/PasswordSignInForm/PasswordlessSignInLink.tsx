@@ -3,7 +3,7 @@ import { useContext, useEffect } from 'react';
 
 import TextLink from '@/components/TextLink';
 import { PageContext } from '@/hooks/use-page-context';
-import usePasswordlessSendCode from '@/hooks/use-passwordless-send-code';
+import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import { UserFlow } from '@/types';
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 const PasswordlessSignInLink = ({ className, method, value }: Props) => {
   const { setToast } = useContext(PageContext);
 
-  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordlessSendCode(
+  const { errorMessage, clearErrorMessage, onSubmit } = useSendVerificationCode(
     UserFlow.signIn,
     method,
     true

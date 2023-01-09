@@ -17,6 +17,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import UserAvatar from '@/components/UserAvatar';
+import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
@@ -30,7 +31,7 @@ const userTableColumn = 3;
 
 const usersPathname = '/users';
 const createUserPathname = `${usersPathname}/create`;
-const buildDetailsPathname = (id: string) => `${usersPathname}/${id}`;
+const buildDetailsPathname = (id: string) => `${usersPathname}/${id}/${UserDetailsTabs.Settings}`;
 
 const Users = () => {
   const { pathname } = useLocation();

@@ -1,7 +1,7 @@
 import type { Role } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
-import { mockRole, mockScope } from '#src/__mocks__/index.js';
+import { mockRole, mockScope, mockUser, mockResource } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -11,7 +11,8 @@ const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 const { findRoleByRoleName, findRoleById, deleteRoleById } = mockEsm(
   '#src/queries/roles.js',
   () => ({
-    findAllRoles: jest.fn(async (): Promise<Role[]> => [mockRole]),
+    findRoles: jest.fn(async (): Promise<Role[]> => [mockRole]),
+    countRoles: jest.fn(async () => ({ count: 10 })),
     findRoleByRoleName: jest.fn(async (): Promise<Role | undefined> => undefined),
     insertRole: jest.fn(async (data) => ({
       ...data,
@@ -23,11 +24,15 @@ const { findRoleByRoleName, findRoleById, deleteRoleById } = mockEsm(
       ...mockRole,
       ...data,
     })),
+    findRolesByRoleIds: jest.fn(),
   })
 );
 const { findScopeById, findScopesByIds } = await mockEsmWithActual('#src/queries/scope.js', () => ({
   findScopeById: jest.fn(),
   findScopesByIds: jest.fn(),
+}));
+await mockEsmWithActual('#src/queries/resource.js', () => ({
+  findResourcesByIds: jest.fn(async () => [mockResource]),
 }));
 const { insertRolesScopes, findRolesScopesByRoleId } = await mockEsmWithActual(
   '#src/queries/roles-scopes.js',
@@ -37,15 +42,46 @@ const { insertRolesScopes, findRolesScopesByRoleId } = await mockEsmWithActual(
     deleteRolesScope: jest.fn(),
   })
 );
+const { findUsersByIds } = await mockEsmWithActual('#src/queries/user.js', () => ({
+  findUsersByIds: jest.fn(),
+  findUserById: jest.fn(),
+}));
+const {
+  insertUsersRoles,
+  findUsersRolesByRoleId,
+  deleteUsersRolesByUserIdAndRoleId,
+  findFirstUsersRolesByRoleIdAndUserIds,
+  countUsersRolesByRoleId,
+} = await mockEsmWithActual('#src/queries/users-roles.js', () => ({
+  insertUsersRoles: jest.fn(),
+  countUsersRolesByRoleId: jest.fn(),
+  findUsersRolesByRoleId: jest.fn(),
+  findFirstUsersRolesByRoleIdAndUserIds: jest.fn(),
+  deleteUsersRolesByUserIdAndRoleId: jest.fn(),
+}));
 const roleRoutes = await pickDefault(import('./role.js'));
 
 describe('role routes', () => {
   const roleRequester = createRequester({ authedRoutes: roleRoutes });
 
-  it('GET /roles', async () => {
-    const response = await roleRequester.get('/roles');
+  it('GET /roles?page=1', async () => {
+    countUsersRolesByRoleId.mockResolvedValueOnce({ count: 1 });
+    findUsersByIds.mockResolvedValueOnce([mockUser]);
+    findUsersRolesByRoleId.mockResolvedValueOnce([]);
+    const response = await roleRequester.get('/roles?page=1&page_size=20');
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockRole]);
+    expect(response.body).toEqual([
+      {
+        ...mockRole,
+        usersCount: 1,
+        featuredUsers: [
+          {
+            id: mockUser.id,
+            avatar: mockUser.avatar,
+          },
+        ],
+      },
+    ]);
   });
 
   it('POST /roles', async () => {
@@ -112,7 +148,12 @@ describe('role routes', () => {
     findScopesByIds.mockResolvedValueOnce([mockScope]);
     const response = await roleRequester.get(`/roles/${mockRole.id}/scopes`);
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockScope]);
+    expect(response.body).toEqual([
+      {
+        ...mockScope,
+        resource: mockResource,
+      },
+    ]);
   });
 
   it('POST /roles/:id/scopes', async () => {
@@ -132,5 +173,30 @@ describe('role routes', () => {
     findRolesScopesByRoleId.mockResolvedValueOnce([]);
     const response = await roleRequester.delete(`/roles/${mockRole.id}/scopes/${mockScope.id}`);
     expect(response.status).toEqual(204);
+  });
+
+  it('GET /roles/:id/users', async () => {
+    findRoleById.mockResolvedValueOnce(mockRole);
+    findUsersRolesByRoleId.mockResolvedValueOnce([]);
+    findUsersByIds.mockResolvedValueOnce([mockUser]);
+    const response = await roleRequester.get(`/roles/${mockRole.id}/users`);
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual([mockUser]);
+  });
+
+  it('POST /roles/:id/users', async () => {
+    findRoleById.mockResolvedValueOnce(mockRole);
+    findFirstUsersRolesByRoleIdAndUserIds.mockResolvedValueOnce(null);
+    const response = await roleRequester.post(`/roles/${mockRole.id}/users`).send({
+      userIds: [mockUser.id],
+    });
+    expect(response.status).toEqual(201);
+    expect(insertUsersRoles).toHaveBeenCalledWith([{ userId: mockUser.id, roleId: mockRole.id }]);
+  });
+
+  it('DELETE /roles/:id/users/:userId', async () => {
+    const response = await roleRequester.delete(`/roles/${mockRole.id}/users/${mockUser.id}`);
+    expect(response.status).toEqual(204);
+    expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(mockUser.id, mockRole.id);
   });
 });

@@ -2,7 +2,7 @@ import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { putInteraction, sendPasscode } from '@/apis/interaction';
+import { putInteraction, sendVerificationCode } from '@/apis/interaction';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import PhoneContinue from './PhoneContinue';
@@ -15,7 +15,7 @@ jest.mock('i18next', () => ({
 }));
 
 jest.mock('@/apis/interaction', () => ({
-  sendPasscode: jest.fn(() => ({ success: true })),
+  sendVerificationCode: jest.fn(() => ({ success: true })),
   putInteraction: jest.fn(() => ({ success: true })),
 }));
 
@@ -49,9 +49,9 @@ describe('PhoneContinue', () => {
 
     await waitFor(() => {
       expect(putInteraction).not.toBeCalled();
-      expect(sendPasscode).toBeCalledWith({ phone: fullPhoneNumber });
+      expect(sendVerificationCode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/continue/phone/passcode-validation', search: '' },
+        { pathname: '/continue/phone/verification-code', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });

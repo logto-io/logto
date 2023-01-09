@@ -32,10 +32,10 @@ const { findResourceById } = mockEsm('#src/queries/resource.js', () => ({
   findScopesByResourceId: async () => [mockScope],
 }));
 
-const { insertScope, updateScopeById } = mockEsm('#src/queries/scope.js', () => ({
+const { insertScope, updateScopeById } = await mockEsmWithActual('#src/queries/scope.js', () => ({
   findScopesByResourceId: async () => [mockScope],
+  findScopes: async () => [mockScope],
   insertScope: jest.fn(async () => mockScope),
-  findScopeById: jest.fn(),
   updateScopeById: jest.fn(async () => mockScope),
   deleteScopeById: jest.fn(),
 }));
@@ -54,6 +54,13 @@ describe('resource routes', () => {
     const response = await resourceRequest.get('/resources');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([mockResource]);
+    expect(response.header).not.toHaveProperty('total-number');
+  });
+
+  it('GET /resources?page=1', async () => {
+    const response = await resourceRequest.get('/resources?page=1');
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual([mockResource]);
     expect(response.header).toHaveProperty('total-number', '10');
   });
 
@@ -61,7 +68,6 @@ describe('resource routes', () => {
     const response = await resourceRequest.get('/resources?includeScopes=true');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([{ ...mockResource, scopes: [] }]);
-    expect(response.header).toHaveProperty('total-number', '10');
   });
 
   it('POST /resources', async () => {

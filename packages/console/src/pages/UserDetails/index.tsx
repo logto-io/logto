@@ -1,10 +1,10 @@
 import type { User } from '@logto/schemas';
 import classNames from 'classnames';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Back from '@/assets/images/back.svg';
@@ -19,6 +19,7 @@ import DetailsSkeleton from '@/components/DetailsSkeleton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UserAvatar from '@/components/UserAvatar';
+import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -26,34 +27,24 @@ import * as modalStyles from '@/scss/modal.module.scss';
 
 import CreateSuccess from './components/CreateSuccess';
 import ResetPasswordForm from './components/ResetPasswordForm';
-import UserLogs from './components/UserLogs';
-import UserSettings from './components/UserSettings';
 import * as styles from './index.module.scss';
-import { userDetailsParser } from './utils';
+import { UserDetailsOutletContext } from './types';
 
 const UserDetails = () => {
   const { pathname } = useLocation();
-  const isLogs = pathname.endsWith('/logs');
-  const { userId } = useParams();
+  const isPageHasTable =
+    pathname.endsWith(UserDetailsTabs.Roles) || pathname.endsWith(UserDetailsTabs.Logs);
+  const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
   const [resetResult, setResetResult] = useState<string>();
 
-  const { data, error, mutate } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
+  const { data, error, mutate } = useSWR<User, RequestError>(id && `/api/users/${id}`);
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
-
-  const userFormData = useMemo(() => {
-    if (!data) {
-      return;
-    }
-
-    return userDetailsParser.toLocalForm(data);
-  }, [data]);
 
   useEffect(() => {
     setIsDeleteFormOpen(false);
@@ -69,24 +60,21 @@ const UserDetails = () => {
 
     try {
       await api.delete(`/api/users/${data.id}`);
-      setIsDeleted(true);
-      setIsDeleting(false);
-      setIsDeleteFormOpen(false);
       toast.success(t('user_details.deleted', { name: data.name }));
       navigate('/users');
-    } catch {
+    } finally {
       setIsDeleting(false);
     }
   };
 
   return (
-    <div className={classNames(detailsStyles.container, isLogs && styles.resourceLayout)}>
+    <div className={classNames(detailsStyles.container, isPageHasTable && styles.resourceLayout)}>
       <TextLink to="/users" icon={<Back />} className={styles.backLink}>
         {t('user_details.back_to_users')}
       </TextLink>
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-      {userId && data && (
+      {data && (
         <>
           <Card className={styles.header}>
             <UserAvatar className={styles.avatar} url={data.avatar} />
@@ -163,32 +151,39 @@ const UserDetails = () => {
             </div>
           </Card>
           <TabNav>
-            <TabNavItem href={`/users/${userId}`}>{t('general.settings_nav')}</TabNavItem>
-            <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
+            <TabNavItem href={`/users/${data.id}/${UserDetailsTabs.Settings}`}>
+              {t('user_details.tab_settings')}
+            </TabNavItem>
+            <TabNavItem href={`/users/${data.id}/${UserDetailsTabs.Roles}`}>
+              {t('user_details.tab_roles')}
+            </TabNavItem>
+            <TabNavItem href={`/users/${data.id}/${UserDetailsTabs.Logs}`}>
+              {t('user_details.tab_logs')}
+            </TabNavItem>
           </TabNav>
-          {isLogs && <UserLogs userId={data.id} />}
-          {!isLogs && userFormData && (
-            <UserSettings
-              userData={data}
-              userFormData={userFormData}
-              isDeleted={isDeleted}
-              onUserUpdated={(user) => {
-                void mutate(user);
+          <Outlet
+            context={
+              {
+                user: data,
+                isDeleting,
+                onUserUpdated: (user) => {
+                  void mutate(user);
+                },
+              } satisfies UserDetailsOutletContext
+            }
+          />
+          {resetResult && (
+            <CreateSuccess
+              title="user_details.reset_password.congratulations"
+              username={data.username ?? '-'}
+              password={resetResult}
+              passwordLabel={t('user_details.reset_password.new_password')}
+              onClose={() => {
+                setResetResult(undefined);
               }}
             />
           )}
         </>
-      )}
-      {data && resetResult && (
-        <CreateSuccess
-          title="user_details.reset_password.congratulations"
-          username={data.username ?? '-'}
-          password={resetResult}
-          passwordLabel={t('user_details.reset_password.new_password')}
-          onClose={() => {
-            setResetResult(undefined);
-          }}
-        />
       )}
     </div>
   );

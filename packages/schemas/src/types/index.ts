@@ -6,3 +6,5 @@ export * from './logto-config.js';
 export * from './interactions.js';
 export * from './search.js';
 export * from './resource.js';
+export * from './scope.js';
+export * from './role.js';

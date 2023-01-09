@@ -2,7 +2,7 @@ import type { SignIn } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 
 import useContinueSignInWithPassword from '@/hooks/use-continue-sign-in-with-password';
-import usePasswordlessSendCode from '@/hooks/use-passwordless-send-code';
+import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import type { ArrayElement } from '@/types';
 import { UserFlow } from '@/types';
 
@@ -18,8 +18,8 @@ type Props = FormProps & {
   signInMethod: ArrayElement<SignIn['methods']>;
 };
 
-const EmailSignInWithPasscode = (props: FormProps) => {
-  const { onSubmit, errorMessage, clearErrorMessage } = usePasswordlessSendCode(
+const EmailSignInWithVerificationCode = (props: FormProps) => {
+  const { onSubmit, errorMessage, clearErrorMessage } = useSendVerificationCode(
     UserFlow.signIn,
     SignInIdentifier.Email
   );
@@ -49,9 +49,9 @@ const EmailSignIn = ({ signInMethod, ...props }: Props) => {
     return <EmailSignInWithPassword {...props} />;
   }
 
-  // Send passcode
+  // Send verification code
   if (verificationCode) {
-    return <EmailSignInWithPasscode {...props} />;
+    return <EmailSignInWithVerificationCode {...props} />;
   }
 
   return null;

@@ -2,7 +2,7 @@ import { InteractionEvent, ConnectorType, SignInIdentifier } from '@logto/schema
 
 import {
   putInteraction,
-  sendVerificationPasscode,
+  sendVerificationCode,
   patchInteractionIdentifiers,
   putInteractionProfile,
   deleteUser,
@@ -13,7 +13,7 @@ import { initClient, processSession, logoutClient } from './utils/client.js';
 import { clearConnectorsByTypes, setSmsConnector, setEmailConnector } from './utils/connector.js';
 import {
   enableAllPasswordSignInMethods,
-  enableAllPasscodeSignInMethods,
+  enableAllVerificationCodeSignInMethods,
 } from './utils/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from './utils/user.js';
 
@@ -91,7 +91,7 @@ describe('Sign-In flow using password identifiers', () => {
 
   // Fulfill the email address
   it('sign-in with username and password and fulfill the email', async () => {
-    await enableAllPasscodeSignInMethods({
+    await enableAllVerificationCodeSignInMethods({
       identifiers: [SignInIdentifier.Email],
       password: true,
       verify: true,
@@ -111,7 +111,7 @@ describe('Sign-In flow using password identifiers', () => {
 
     await expectRejects(client.submitInteraction(), 'user.missing_profile');
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       email: primaryEmail,
     });
 
@@ -119,7 +119,7 @@ describe('Sign-In flow using password identifiers', () => {
 
     await client.successSend(patchInteractionIdentifiers, {
       email: primaryEmail,
-      passcode: code,
+      verificationCode: code,
     });
 
     await client.successSend(putInteractionProfile, {
@@ -150,7 +150,7 @@ describe('Sign-In flow using password identifiers', () => {
 
   // Fulfill the phone number
   it('sign-in with username and password and fulfill the phone number', async () => {
-    await enableAllPasscodeSignInMethods({
+    await enableAllVerificationCodeSignInMethods({
       identifiers: [SignInIdentifier.Phone, SignInIdentifier.Email],
       password: true,
       verify: true,
@@ -170,7 +170,7 @@ describe('Sign-In flow using password identifiers', () => {
 
     await expectRejects(client.submitInteraction(), 'user.missing_profile');
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       phone: primaryPhone,
     });
 
@@ -178,7 +178,7 @@ describe('Sign-In flow using password identifiers', () => {
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: primaryPhone,
-      passcode: code,
+      verificationCode: code,
     });
 
     await client.successSend(putInteractionProfile, {
