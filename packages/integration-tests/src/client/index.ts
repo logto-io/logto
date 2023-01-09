@@ -5,8 +5,7 @@ import type { Nullable, Optional } from '@silverhand/essentials';
 import { assert } from '@silverhand/essentials';
 import { got } from 'got';
 
-import { consent } from '#src/api/index.js';
-import { submitInteraction } from '#src/api/interaction.js';
+import { consent, submitInteraction } from '#src/api/index.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
 
 import { MemoryStorage } from './storage.js';

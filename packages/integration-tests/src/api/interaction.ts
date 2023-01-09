@@ -94,3 +94,13 @@ export const createSocialAuthorizationUri = async (
     json: payload,
     followRedirect: false,
   });
+
+export const consent = async (cookie: string) =>
+  api
+    .post('interaction/consent', {
+      headers: {
+        cookie,
+      },
+      followRedirect: false,
+    })
+    .json<RedirectResponse>();

@@ -11,6 +11,8 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouter, RouterInitArgs } from '../types.js';
 import submitInteraction from './actions/submit-interaction.js';
+import consentRoutes from './consent.js';
+import { interactionPrefix, verificationPath } from './const.js';
 import koaInteractionDetails from './middleware/koa-interaction-details.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
@@ -38,10 +40,7 @@ import {
   validateMandatoryUserProfile,
 } from './verifications/index.js';
 
-export const interactionPrefix = '/interaction';
-export const verificationPath = 'verification';
-
-type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
+export type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
 
 export default function interactionRoutes<T extends AnonymousRouter>(
   ...[anonymousRouter, tenant]: RouterInitArgs<T>
@@ -351,4 +350,6 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       return next();
     }
   );
+
+  consentRoutes(router, provider);
 }
