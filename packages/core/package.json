@@ -76,7 +76,6 @@
     "@silverhand/ts-config": "1.2.1",
     "@types/debug": "^4.1.7",
     "@types/etag": "^1.8.1",
-    "@types/fs-extra": "^9.0.13",
     "@types/http-errors": "^1.8.2",
     "@types/jest": "^29.1.2",
     "@types/js-yaml": "^4.0.5",
