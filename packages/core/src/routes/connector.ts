@@ -25,7 +25,7 @@ import {
 } from '#src/queries/connector.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AuthedRouter } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 const transpileLogtoConnector = ({
   dbEntry,
@@ -39,7 +39,7 @@ const transpileLogtoConnector = ({
 
 const generateConnectorId = buildIdGenerator(12);
 
-export default function connectorRoutes<T extends AuthedRouter>(router: T) {
+export default function connectorRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
   router.get(
     '/connectors',
     koaGuard({

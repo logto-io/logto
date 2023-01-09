@@ -5,7 +5,7 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { createMockTenantWithInteraction } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
 
@@ -44,7 +44,7 @@ const phraseRoutes = await pickDefault(import('./phrase.js'));
 const { createRequester } = await import('#src/utils/test-utils.js');
 const phraseRequest = createRequester({
   anonymousRoutes: phraseRoutes,
-  provider: createMockProvider(interactionDetails),
+  tenantContext: createMockTenantWithInteraction(interactionDetails),
 });
 
 describe('when the application is admin-console', () => {

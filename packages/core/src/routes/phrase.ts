@@ -1,13 +1,12 @@
 import { isBuiltInLanguageTag } from '@logto/phrases-ui';
 import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas';
-import type { Provider } from 'oidc-provider';
 
 import detectLanguage from '#src/i18n/detect-language.js';
 import { getPhrase } from '#src/libraries/phrase.js';
 import { findAllCustomLanguageTags } from '#src/queries/custom-phrase.js';
 import { findDefaultSignInExperience } from '#src/queries/sign-in-experience.js';
 
-import type { AnonymousRouter } from './types.js';
+import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 const getLanguageInfo = async (applicationId: unknown) => {
   if (applicationId === adminConsoleApplicationId) {
@@ -19,7 +18,9 @@ const getLanguageInfo = async (applicationId: unknown) => {
   return languageInfo;
 };
 
-export default function phraseRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
+export default function phraseRoutes<T extends AnonymousRouter>(
+  ...[router, { provider }]: RouterInitArgs<T>
+) {
   router.get('/phrase', async (ctx, next) => {
     const interaction = await provider
       .interactionDetails(ctx.req, ctx.res)

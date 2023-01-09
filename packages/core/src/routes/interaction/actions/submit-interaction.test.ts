@@ -38,7 +38,7 @@ const { encryptUserPassword, generateUserId, insertUser } = mockEsm(
   })
 );
 
-const { hasActiveUsers } = mockEsm('#src/queries/user.js', () => ({
+const { hasActiveUsers, updateUserById } = mockEsm('#src/queries/user.js', () => ({
   findUserById: jest
     .fn()
     .mockResolvedValue({ identities: { google: { userId: 'googleId', details: {} } } }),
@@ -46,7 +46,6 @@ const { hasActiveUsers } = mockEsm('#src/queries/user.js', () => ({
   hasActiveUsers: jest.fn().mockResolvedValue(true),
 }));
 
-const { updateUserById } = await import('#src/queries/user.js');
 const submitInteraction = await pickDefault(import('./submit-interaction.js'));
 const now = Date.now();
 

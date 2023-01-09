@@ -5,7 +5,7 @@ import koaBody from 'koa-body';
 import LogtoRequestError from '#src/errors/RequestError/index.js';
 import modelRouters from '#src/model-routers/index.js';
 
-import type { AuthedRouter } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 // Organize this function if we decide to adopt withtyped eventually
 const errorHandler: MiddlewareType = async (_, next) => {
@@ -23,6 +23,6 @@ const errorHandler: MiddlewareType = async (_, next) => {
   }
 };
 
-export default function hookRoutes<T extends AuthedRouter>(router: T) {
+export default function hookRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
   router.all('/hooks/(.*)?', koaBody(), errorHandler, koaAdapter(modelRouters.hook.routes()));
 }

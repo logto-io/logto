@@ -11,7 +11,7 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Passcodes);
 
-const createPasscodeQueries = (pool: CommonQueryMethods) => {
+export const createPasscodeQueries = (pool: CommonQueryMethods) => {
   const findUnconsumedPasscodeByJtiAndType = async (jti: string, type: VerificationCodeType) =>
     pool.maybeOne<Passcode>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}

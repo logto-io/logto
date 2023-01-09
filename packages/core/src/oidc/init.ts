@@ -5,8 +5,6 @@ import { readFileSync } from 'fs';
 import { userClaims } from '@logto/core-kit';
 import { CustomClientMetadataKey } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
-import type Koa from 'koa';
-import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -23,7 +21,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { claimToUserKey, getUserClaims } from './scope.js';
 
-export default function initOidc(app: Koa): Provider {
+export default function initOidc(): Provider {
   const { issuer, cookieKeys, privateJwks, defaultIdTokenTtl, defaultRefreshTokenTtl } =
     envSet.oidc;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
@@ -33,6 +31,7 @@ export default function initOidc(app: Koa): Provider {
     path: '/',
     signed: true,
   } as const);
+
   const oidc = new Provider(issuer, {
     adapter: postgresAdapter,
     renderError: (_ctx, _out, error) => {
@@ -191,8 +190,6 @@ export default function initOidc(app: Koa): Provider {
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog());
-
-  app.use(mount('/oidc', oidc.app));
 
   return oidc;
 }

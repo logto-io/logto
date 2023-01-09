@@ -14,9 +14,11 @@ import {
   updateDefaultSignInExperience,
 } from '#src/queries/sign-in-experience.js';
 
-import type { AuthedRouter } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-export default function signInExperiencesRoutes<T extends AuthedRouter>(router: T) {
+export default function signInExperiencesRoutes<T extends AuthedRouter>(
+  ...[router]: RouterInitArgs<T>
+) {
   /**
    * As we only support single signInExperience settings for V1
    * always return the default settings in DB for the /sign-in-exp get method

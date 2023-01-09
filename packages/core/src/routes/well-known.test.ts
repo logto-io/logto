@@ -16,6 +16,7 @@ import {
   mockWechatNativeConnector,
 } from '#src/__mocks__/index.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -58,7 +59,7 @@ describe('GET /.well-known/sign-in-exp', () => {
   const provider = createMockProvider();
   const sessionRequest = createRequester({
     anonymousRoutes: wellKnownRoutes,
-    provider,
+    tenantContext: new MockTenant(provider),
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();

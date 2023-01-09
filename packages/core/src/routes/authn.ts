@@ -5,14 +5,14 @@ import { verifyBearerTokenFromRequest } from '#src/middleware/koa-auth.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from './types.js';
+import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 /**
  * Authn stands for authentication.
  * This router will have a route `/authn` to authenticate tokens with a general manner.
  * For now, we only implement the API for Hasura authentication.
  */
-export default function authnRoutes<T extends AnonymousRouter>(router: T) {
+export default function authnRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
   router.get(
     '/authn/hasura',
     koaGuard({

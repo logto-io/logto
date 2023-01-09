@@ -5,7 +5,7 @@ import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 import type { Provider } from 'oidc-provider';
 
-import { MountedApps } from '#src/env-set/index.js';
+import envSet, { MountedApps } from '#src/env-set/index.js';
 import koaCheckDemoApp from '#src/middleware/koa-check-demo-app.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
@@ -19,18 +19,29 @@ import koaWelcomeProxy from '#src/middleware/koa-welcome-proxy.js';
 import initOidc from '#src/oidc/init.js';
 import initRouter from '#src/routes/init.js';
 
-export default class Tenant {
-  public readonly provider: Provider;
+import Queries from './Queries.js';
+import type TenantContext from './TenantContext.js';
 
-  protected readonly app: Koa;
+export default class Tenant implements TenantContext {
+  public readonly provider: Provider;
+  public readonly queries: Queries;
+
+  public readonly app: Koa;
 
   get run(): MiddlewareType {
     return mount(this.app);
   }
 
   constructor(public id: string) {
+    const queries = new Queries(envSet.pool);
+
+    this.queries = queries;
+
+    // Init app
     const app = new Koa();
-    const provider = initOidc(app);
+
+    const provider = initOidc();
+    app.use(mount('/oidc', provider.app));
 
     app.use(koaLogger());
     app.use(koaErrorHandler());
@@ -39,7 +50,8 @@ export default class Tenant {
     app.use(koaConnectorErrorHandler());
     app.use(koaI18next());
 
-    initRouter(app, provider);
+    const apisApp = initRouter({ provider, queries });
+    app.use(mount('/api', apisApp));
 
     app.use(mount('/', koaRootProxy()));
 

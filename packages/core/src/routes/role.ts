@@ -34,11 +34,11 @@ import {
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 const roleId = buildIdGenerator(21);
 
-export default function roleRoutes<T extends AuthedRouter>(router: T) {
+export default function roleRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
   router.get('/roles', koaPagination({ isOptional: true }), async (ctx, next) => {
     const { limit, offset, disabled } = ctx.pagination;
     const { searchParams } = ctx.request.URL;
