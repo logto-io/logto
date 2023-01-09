@@ -5,7 +5,7 @@ export const managementResourceScopeId = 'management-api-scope';
 
 export const managementResourceScope: Readonly<CreateScope> = Object.freeze({
   id: managementResourceScopeId,
-  name: 'general',
+  name: 'default',
   description: 'Default scope for management API',
   resourceId: managementResourceId,
 });
