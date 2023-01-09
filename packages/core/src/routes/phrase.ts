@@ -2,25 +2,28 @@ import { isBuiltInLanguageTag } from '@logto/phrases-ui';
 import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas';
 
 import detectLanguage from '#src/i18n/detect-language.js';
-import { getPhrase } from '#src/libraries/phrase.js';
-import { findAllCustomLanguageTags } from '#src/queries/custom-phrase.js';
-import { findDefaultSignInExperience } from '#src/queries/sign-in-experience.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
-const getLanguageInfo = async (applicationId: unknown) => {
-  if (applicationId === adminConsoleApplicationId) {
-    return adminConsoleSignInExperience.languageInfo;
-  }
-
-  const { languageInfo } = await findDefaultSignInExperience();
-
-  return languageInfo;
-};
-
 export default function phraseRoutes<T extends AnonymousRouter>(
-  ...[router, { provider }]: RouterInitArgs<T>
+  ...[router, { provider, queries, libraries }]: RouterInitArgs<T>
 ) {
+  const {
+    customPhrases: { findAllCustomLanguageTags },
+    signInExperiences: { findDefaultSignInExperience },
+  } = queries;
+  const { getPhrases } = libraries.phrases;
+
+  const getLanguageInfo = async (applicationId: unknown) => {
+    if (applicationId === adminConsoleApplicationId) {
+      return adminConsoleSignInExperience.languageInfo;
+    }
+
+    const { languageInfo } = await findDefaultSignInExperience();
+
+    return languageInfo;
+  };
+
   router.get('/phrase', async (ctx, next) => {
     const interaction = await provider
       .interactionDetails(ctx.req, ctx.res)
@@ -39,7 +42,7 @@ export default function phraseRoutes<T extends AnonymousRouter>(
       ) ?? 'en';
 
     ctx.set('Content-Language', language);
-    ctx.body = await getPhrase(language, customLanguages);
+    ctx.body = await getPhrases(language, customLanguages);
 
     return next();
   });
