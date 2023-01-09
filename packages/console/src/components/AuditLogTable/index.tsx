@@ -24,11 +24,12 @@ const pageSize = 20;
 
 type Props = {
   userId?: string;
+  className?: string;
 };
 
 const defaultTableColumn = 4;
 
-const AuditLogTable = ({ userId }: Props) => {
+const AuditLogTable = ({ userId, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
   const [query, setQuery] = useSearchParams();
@@ -68,7 +69,7 @@ const AuditLogTable = ({ userId }: Props) => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, className)}>
       <div className={styles.tableLayout}>
         <div className={styles.filter}>
           <div className={styles.title}>{t('logs.filter_by')}</div>

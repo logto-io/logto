@@ -14,7 +14,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { getConnectorGroups } from '@/pages/Connectors/utils';
 
-import * as styles from './UserConnectors.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   userId: string;

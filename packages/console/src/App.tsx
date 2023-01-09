@@ -38,11 +38,14 @@ import {
   ConnectorsTabs,
   RoleDetailsTabs,
   SignInExperiencePage,
+  UserDetailsTabs,
 } from './consts/page-tabs';
 import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
 import RolePermissions from './pages/RoleDetails/RolePermissions';
 import RoleSettings from './pages/RoleDetails/RoleSettings';
+import UserLogs from './pages/UserDetails/UserLogs';
+import UserSettings from './pages/UserDetails/UserSettings';
 import { getBasename } from './utilities/router';
 
 void initI18n();
@@ -95,9 +98,13 @@ const Main = () => {
               <Route path="users">
                 <Route index element={<Users />} />
                 <Route path="create" element={<Users />} />
-                <Route path=":userId" element={<UserDetails />} />
-                <Route path=":userId/logs" element={<UserDetails />} />
-                <Route path=":userId/logs/:logId" element={<AuditLogDetails />} />
+                <Route path=":id" element={<UserDetails />}>
+                  <Route index element={<Navigate replace to={UserDetailsTabs.Settings} />} />
+                  <Route path={UserDetailsTabs.Settings} element={<UserSettings />} />
+                  <Route path={UserDetailsTabs.Logs} element={<UserLogs />}>
+                    <Route path=":logId" element={<AuditLogDetails />} />
+                  </Route>
+                </Route>
               </Route>
               <Route path="audit-logs">
                 <Route index element={<AuditLogs />} />
