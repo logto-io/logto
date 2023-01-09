@@ -22,7 +22,6 @@ jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
 
 const {
   deleteRoleById,
-  findAllRoles,
   findRoleById,
   findRoleByRoleName,
   findRolesByRoleIds,
