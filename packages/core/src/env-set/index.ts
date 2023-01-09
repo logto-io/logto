@@ -5,7 +5,7 @@ import type { PostgreSql } from '@withtyped/postgres';
 import type { QueryClient } from '@withtyped/server';
 import type { DatabasePool } from 'slonik';
 
-import { getOidcConfigs } from '#src/libraries/logto-config.js';
+import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { appendPath } from '#src/utils/url.js';
 
 import { checkAlterationState } from './check-alteration-state.js';
@@ -108,7 +108,8 @@ class EnvSet {
     this.#pool = pool;
     this.#queryClient = createQueryClient(this.databaseUrl, this.isTest);
 
-    const [, oidcConfigs] = await Promise.all([checkAlterationState(pool), getOidcConfigs(pool)]);
+    const { getOidcConfigs } = createLogtoConfigLibrary(pool);
+    const [, oidcConfigs] = await Promise.all([checkAlterationState(pool), getOidcConfigs()]);
     this.#oidc = await loadOidcValues(
       appendPath(this.values.endpoint, '/oidc').toString(),
       oidcConfigs

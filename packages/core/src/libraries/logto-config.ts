@@ -5,30 +5,34 @@ import chalk from 'chalk';
 import type { CommonQueryMethods } from 'slonik';
 import { z, ZodError } from 'zod';
 
-export const getOidcConfigs = async (pool: CommonQueryMethods): Promise<LogtoOidcConfigType> => {
-  try {
-    const { rows } = await getRowsByKeys(pool, Object.values(LogtoOidcConfigKey));
+export const createLogtoConfigLibrary = (pool: CommonQueryMethods) => {
+  const getOidcConfigs = async (): Promise<LogtoOidcConfigType> => {
+    try {
+      const { rows } = await getRowsByKeys(pool, Object.values(LogtoOidcConfigKey));
 
-    return z
-      .object(logtoOidcConfigGuard)
-      .parse(Object.fromEntries(rows.map(({ key, value }) => [key, value])));
-  } catch (error: unknown) {
-    if (error instanceof ZodError) {
+      return z
+        .object(logtoOidcConfigGuard)
+        .parse(Object.fromEntries(rows.map(({ key, value }) => [key, value])));
+    } catch (error: unknown) {
+      if (error instanceof ZodError) {
+        console.error(
+          error.issues
+            .map(({ message, path }) => `${message} at ${chalk.green(path.join('.'))}`)
+            .join('\n')
+        );
+      } else {
+        console.error(error);
+      }
+
       console.error(
-        error.issues
-          .map(({ message, path }) => `${message} at ${chalk.green(path.join('.'))}`)
-          .join('\n')
+        `\n${chalk.red('[error]')} Failed to get OIDC configs from your Logto database.` +
+          ' Did you forget to seed your database?\n\n' +
+          `  Use ${chalk.green('npm run cli db seed')} to seed your Logto database;\n` +
+          `  Or use ${chalk.green('npm run cli db seed oidc')} to seed OIDC configs alone.\n`
       );
-    } else {
-      console.error(error);
+      throw new Error('Failed to get configs');
     }
+  };
 
-    console.error(
-      `\n${chalk.red('[error]')} Failed to get OIDC configs from your Logto database.` +
-        ' Did you forget to seed your database?\n\n' +
-        `  Use ${chalk.green('npm run cli db seed')} to seed your Logto database;\n` +
-        `  Or use ${chalk.green('npm run cli db seed oidc')} to seed OIDC configs alone.\n`
-    );
-    throw new Error('Failed to get configs');
-  }
+  return { getOidcConfigs };
 };
