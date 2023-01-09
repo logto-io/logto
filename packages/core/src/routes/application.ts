@@ -14,11 +14,11 @@ import {
   findTotalNumberOfApplications,
 } from '#src/queries/application.js';
 
-import type { AuthedRouter } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 const applicationId = buildIdGenerator(21);
 
-export default function applicationRoutes<T extends AuthedRouter>(router: T) {
+export default function applicationRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
   router.get('/applications', koaPagination(), async (ctx, next) => {
     const { limit, offset } = ctx.pagination;
 

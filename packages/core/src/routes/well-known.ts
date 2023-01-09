@@ -2,15 +2,16 @@ import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
 import { adminConsoleApplicationId } from '@logto/schemas';
 import etag from 'etag';
-import type { Provider } from 'oidc-provider';
 
 import { getLogtoConnectors } from '#src/connectors/index.js';
 import { getApplicationIdFromInteraction } from '#src/libraries/session.js';
 import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
 
-import type { AnonymousRouter } from './types.js';
+import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
-export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
+export default function wellKnownRoutes<T extends AnonymousRouter>(
+  ...[router, { provider }]: RouterInitArgs<T>
+) {
   router.get(
     '/.well-known/sign-in-exp',
     async (ctx, next) => {

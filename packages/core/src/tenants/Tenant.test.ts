@@ -24,7 +24,7 @@ const middlewareList = [
 });
 
 // eslint-disable-next-line unicorn/consistent-function-scoping
-mockEsmDefault('#src/oidc/init.js', () => () => createMockProvider);
+mockEsmDefault('#src/oidc/init.js', () => () => createMockProvider());
 
 const Tenant = await pickDefault(import('./Tenant.js'));
 

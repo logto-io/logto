@@ -2,7 +2,6 @@ import type { MiddlewareType, Context, Middleware } from 'koa';
 import Koa from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import Router from 'koa-router';
-import type { Provider } from 'oidc-provider';
 import type { QueryResult, QueryResultRow } from 'slonik';
 import { createMockPool, createMockQueryResult } from 'slonik';
 import type {
@@ -12,8 +11,10 @@ import type {
 import request from 'supertest';
 
 import type { AuthedRouter, AnonymousRouter } from '#src/routes/types.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 import type { Options } from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 
 /**
  *  Slonik Query Mock Utils
@@ -103,46 +104,24 @@ export const createContextWithRouteParameters = (
 /**
  * Supertest Request Mock Utils
  **/
-type RouteLauncher<T extends AuthedRouter | AnonymousRouter> = (router: T) => void;
-
-type ProviderRouteLauncher<T extends AuthedRouter | AnonymousRouter> = (
+type RouteLauncher<T extends AuthedRouter | AnonymousRouter> = (
   router: T,
-  provider: Provider
+  tenant: TenantContext
 ) => void;
-
-export function createRequester(
-  payload:
-    | {
-        anonymousRoutes?: RouteLauncher<AnonymousRouter> | Array<RouteLauncher<AnonymousRouter>>;
-        authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
-        middlewares?: Middleware[];
-      }
-    | {
-        anonymousRoutes?:
-          | ProviderRouteLauncher<AnonymousRouter>
-          | Array<ProviderRouteLauncher<AnonymousRouter>>;
-        authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
-        middlewares?: Middleware[];
-        provider: Provider;
-      }
-): request.SuperTest<request.Test>;
 
 export function createRequester({
   anonymousRoutes,
   authedRoutes,
-  provider,
   middlewares,
+  tenantContext,
 }: {
-  anonymousRoutes?:
-    | RouteLauncher<AnonymousRouter>
-    | Array<RouteLauncher<AnonymousRouter>>
-    | ProviderRouteLauncher<AnonymousRouter>
-    | Array<ProviderRouteLauncher<AnonymousRouter>>;
+  anonymousRoutes?: RouteLauncher<AnonymousRouter> | Array<RouteLauncher<AnonymousRouter>>;
   authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
-  provider?: Provider;
   middlewares?: Middleware[];
+  tenantContext?: TenantContext;
 }): request.SuperTest<request.Test> {
   const app = new Koa();
+  const tenant = tenantContext ?? new MockTenant();
 
   if (middlewares) {
     for (const middleware of middlewares) {
@@ -154,13 +133,7 @@ export function createRequester({
     const anonymousRouter: AnonymousRouter = new Router();
 
     for (const route of Array.isArray(anonymousRoutes) ? anonymousRoutes : [anonymousRoutes]) {
-      if (provider) {
-        route(anonymousRouter, provider);
-      } else {
-        // For test use only
-        // eslint-disable-next-line no-restricted-syntax
-        (route as RouteLauncher<AnonymousRouter>)(anonymousRouter);
-      }
+      route(anonymousRouter, tenant);
     }
 
     app.use(anonymousRouter.routes()).use(anonymousRouter.allowedMethods());
@@ -176,7 +149,7 @@ export function createRequester({
     });
 
     for (const route of Array.isArray(authedRoutes) ? authedRoutes : [authedRoutes]) {
-      route(authRouter);
+      route(authRouter, tenant);
     }
 
     app.use(authRouter.routes()).use(authRouter.allowedMethods());

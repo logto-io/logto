@@ -25,12 +25,12 @@ import {
 } from '#src/queries/scope.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 const resourceId = buildIdGenerator(21);
 const scopeId = resourceId;
 
-export default function resourceRoutes<T extends AuthedRouter>(router: T) {
+export default function resourceRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
   router.get(
     '/resources',
     koaPagination({ isOptional: true }),

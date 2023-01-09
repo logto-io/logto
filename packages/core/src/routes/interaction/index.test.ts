@@ -6,7 +6,7 @@ import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type koaAuditLog from '#src/middleware/koa-audit-log.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { createMockTenantWithInteraction } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -120,7 +120,7 @@ describe('session -> interactionRoutes', () => {
   };
   const sessionRequest = createRequester({
     anonymousRoutes: interactionRoutes,
-    provider: createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
+    tenantContext: createMockTenantWithInteraction(jest.fn().mockResolvedValue(baseProviderMock)),
   });
 
   afterEach(() => {
@@ -224,7 +224,7 @@ describe('session -> interactionRoutes', () => {
     const path = `${interactionPrefix}/profile`;
     const sessionRequest = createRequester({
       anonymousRoutes: interactionRoutes,
-      provider: createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
+      tenantContext: createMockTenantWithInteraction(jest.fn().mockResolvedValue(baseProviderMock)),
     });
 
     it('PUT /interaction/profile', async () => {

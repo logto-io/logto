@@ -116,7 +116,17 @@
       ],
       "default-case": "off",
       "import/extensions": "off"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.test.ts"
+        ],
+        "rules": {
+          "@typescript-eslint/ban-ts-comment": "off"
+        }
+      }
+    ]
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

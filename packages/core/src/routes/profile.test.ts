@@ -11,6 +11,7 @@ import {
   mockUserResponse,
 } from '#src/__mocks__/index.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -85,7 +86,7 @@ describe('session -> profileRoutes', () => {
   const mockGetSession: jest.Mock = jest.spyOn(provider.Session, 'get');
   const sessionRequest = createRequester({
     anonymousRoutes: profileRoutes,
-    provider,
+    tenantContext: new MockTenant(provider),
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();

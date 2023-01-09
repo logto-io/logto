@@ -1,7 +1,6 @@
 import type { LogtoErrorCode } from '@logto/phrases';
 import { InteractionEvent, eventGuard, identifierPayloadGuard, profileGuard } from '@logto/schemas';
 import type Router from 'koa-router';
-import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -10,7 +9,7 @@ import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AnonymousRouter } from '../types.js';
+import type { AnonymousRouter, RouterInitArgs } from '../types.js';
 import submitInteraction from './actions/submit-interaction.js';
 import koaInteractionDetails from './middleware/koa-interaction-details.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
@@ -45,8 +44,7 @@ export const verificationPath = 'verification';
 type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
 
 export default function interactionRoutes<T extends AnonymousRouter>(
-  anonymousRouter: T,
-  provider: Provider
+  ...[anonymousRouter, { provider }]: RouterInitArgs<T>
 ) {
   const router =
     // @ts-expect-error for good koa types

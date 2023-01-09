@@ -9,7 +9,7 @@ import {
 } from '#src/queries/log.js';
 import { countUsers, getDailyNewUserCountsByTimeInterval } from '#src/queries/user.js';
 
-import type { AuthedRouter } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 const getDateString = (date: Date | number) => format(date, 'yyyy-MM-dd');
 
@@ -17,7 +17,7 @@ const indices = (length: number) => [...Array.from({ length }).keys()];
 
 const getEndOfDayTimestamp = (date: Date | number) => endOfDay(date).valueOf();
 
-export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
+export default function dashboardRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
   router.get('/dashboard/users/total', async (ctx, next) => {
     const { count: totalUserCount } = await countUsers();
     ctx.body = { totalUserCount };

@@ -36,9 +36,9 @@ import {
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
+export default function adminUserRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
   router.get('/users', koaPagination(), async (ctx, next) => {
     const { limit, offset } = ctx.pagination;
     const { searchParams } = ctx.request.URL;

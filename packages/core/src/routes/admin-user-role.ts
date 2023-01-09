@@ -11,9 +11,11 @@ import {
 } from '#src/queries/users-roles.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { AuthedRouter } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-export default function adminUserRoleRoutes<T extends AuthedRouter>(router: T) {
+export default function adminUserRoleRoutes<T extends AuthedRouter>(
+  ...[router]: RouterInitArgs<T>
+) {
   router.get(
     '/users/:userId/roles',
     koaGuard({

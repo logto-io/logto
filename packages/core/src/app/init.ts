@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import type Koa from 'koa';
 
 import envSet from '#src/env-set/index.js';
-import { tenantPool } from '#src/tenants/index.js';
+import { tenantPool, defaultTenant } from '#src/tenants/index.js';
 
 const logListening = () => {
   const { localhostUrl, endpoint } = envSet.values;
@@ -15,8 +15,6 @@ const logListening = () => {
     console.log(chalk.bold(chalk.green(`App is running at ${url}`)));
   }
 };
-
-const defaultTenant = 'default';
 
 export default async function initApp(app: Koa): Promise<void> {
   app.use(async (ctx, next) => {

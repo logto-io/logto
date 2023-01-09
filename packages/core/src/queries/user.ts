@@ -16,7 +16,7 @@ import { findUsersRolesByRoleId, findUsersRolesByUserId } from './users-roles.js
 
 const { table, fields } = convertToIdentifiers(Users);
 
-const createUserQueries = (pool: CommonQueryMethods) => {
+export const createUserQueries = (pool: CommonQueryMethods) => {
   const findUserByUsername = async (username: string) =>
     pool.maybeOne<User>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}

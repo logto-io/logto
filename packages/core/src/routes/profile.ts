@@ -2,7 +2,6 @@ import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/cor
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
 import { has, pick } from '@silverhand/essentials';
 import { argon2Verify } from 'hash-wasm';
-import type { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';
 
 import { getLogtoConnectorById } from '#src/connectors/index.js';
@@ -15,11 +14,13 @@ import { deleteUserIdentity, findUserById, updateUserById } from '#src/queries/u
 import assertThat from '#src/utils/assert-that.js';
 
 import { verificationTimeout } from './consts.js';
-import type { AnonymousRouter } from './types.js';
+import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 export const profileRoute = '/profile';
 
-export default function profileRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
+export default function profileRoutes<T extends AnonymousRouter>(
+  ...[router, { provider }]: RouterInitArgs<T>
+) {
   router.get(profileRoute, async (ctx, next) => {
     const { accountId: userId } = await provider.Session.get(ctx);
 
