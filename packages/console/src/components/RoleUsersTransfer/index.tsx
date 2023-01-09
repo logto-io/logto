@@ -1,7 +1,7 @@
 import type { User } from '@logto/schemas';
 
+import SourceUsersBox from './SourceUsersBox';
 import TargetUsersBox from './TargetUsersBox';
-import UserSourceBox from './UserSourceBox';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -20,7 +20,7 @@ const RoleUsersTransfer = ({ value, onChange }: Props) => {
 
   return (
     <div className={styles.container}>
-      <UserSourceBox selectedUsers={value} onAddUser={onAddUser} onRemoveUser={onRemoveUser} />
+      <SourceUsersBox selectedUsers={value} onAddUser={onAddUser} onRemoveUser={onRemoveUser} />
       <div className={styles.verticalBar} />
       <TargetUsersBox selectedUsers={value} onRemoveUser={onRemoveUser} />
     </div>

@@ -24,7 +24,7 @@ type Props = {
 const pageSize = 20;
 const searchDelay = 500;
 
-const UserSourceBox = ({ selectedUsers, onAddUser, onRemoveUser }: Props) => {
+const SourceUsersBox = ({ selectedUsers, onAddUser, onRemoveUser }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [pageIndex, setPageIndex] = useState(1);
   const [keyword, setKeyword] = useState('');
@@ -126,4 +126,4 @@ const UserSourceBox = ({ selectedUsers, onAddUser, onRemoveUser }: Props) => {
     </div>
   );
 };
-export default UserSourceBox;
+export default SourceUsersBox;
