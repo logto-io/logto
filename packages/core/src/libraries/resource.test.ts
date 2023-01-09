@@ -41,9 +41,4 @@ describe('attachScopesToResources', () => {
       },
     ]);
   });
-
-  it('should return empty array for empty array input', async () => {
-    await expect(attachScopesToResources([])).resolves.toEqual([]);
-    expect(findScopesByResourceIds).not.toHaveBeenCalled();
-  });
 });

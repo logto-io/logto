@@ -6,7 +6,7 @@ export const attachScopesToResources = async (
   resources: readonly Resource[]
 ): Promise<ResourceResponse[]> => {
   const resourceIds = resources.map(({ id }) => id);
-  const scopes = resourceIds.length > 0 ? await findScopesByResourceIds(resourceIds) : [];
+  const scopes = await findScopesByResourceIds(resourceIds);
 
   return resources.map((resource) => ({
     ...resource,

@@ -62,6 +62,7 @@ const errors = {
     suspended: '이 계정은 일시 정시되었어요.',
     user_not_exist: '{{identifier}}의 사용자가 아직 등록되지 않았어요.',
     missing_profile: '로그인 전에 추가 정보를 제공해야해요.',
+    role_exists: 'The role id {{roleId}} is already been added to this user', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '{{name}} 암호화 방법을 지원하지 않아요.',
@@ -171,6 +172,7 @@ const errors = {
   role: {
     name_in_use: 'This role name {{name}} is already in use', // UNTRANSLATED
     scope_exists: 'The scope id {{scopeId}} has already been added to this role', // UNTRANSLATED
+    user_exists: 'The user id {{userId}} is already been added to this role', // UNTRANSLATED
   },
 };
 

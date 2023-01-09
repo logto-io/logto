@@ -30,6 +30,7 @@
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
+    "prepublishOnly": "! ls alterations/next-*",
     "prepack": "pnpm build",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test": "pnpm build:test && pnpm test:only",

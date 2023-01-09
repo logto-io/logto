@@ -14,6 +14,8 @@ const user_details = {
     congratulations: '该用户已被重置',
     new_password: '新密码：',
   },
+  tab_settings: 'Settings', // UNTRANSLATED
+  tab_roles: 'Roles', // UNTRANSLATED
   tab_logs: '用户日志',
   settings: 'Settings', // UNTRANSLATED
   settings_description:
@@ -36,6 +38,13 @@ const user_details = {
     deletion_confirmation: '你在正要删除现有的 <name /> 身份，是否确认？',
   },
   suspended: '已禁用',
+  roles: {
+    name_column: 'Role', // UNTRANSLATED
+    description_column: 'Description', // UNTRANSLATED
+    assign_button: 'Assign Roles', // UNTRANSLATED
+    delete_description: 'TBD', // UNTRANSLATED
+    deleted: 'The role {{name}} has been successfully deleted from the user.', // UNTRANSLATED
+  },
 };
 
 export default user_details;

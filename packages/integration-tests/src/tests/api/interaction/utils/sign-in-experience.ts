@@ -30,7 +30,7 @@ const defaultPasswordSignInMethods = [
   },
 ];
 
-const defaultPasscodeSignInMethods = [
+const defaultVerificationCodeSignInMethods = [
   {
     identifier: SignInIdentifier.Username,
     password: true,
@@ -62,13 +62,13 @@ export const enableAllPasswordSignInMethods = async (
     },
   });
 
-export const enableAllPasscodeSignInMethods = async (
+export const enableAllVerificationCodeSignInMethods = async (
   signUp: SignInExperience['signUp'] = defaultSignUpMethod
 ) =>
   updateSignInExperience({
     signInMode: SignInMode.SignInAndRegister,
     signUp,
     signIn: {
-      methods: defaultPasscodeSignInMethods,
+      methods: defaultVerificationCodeSignInMethods,
     },
   });

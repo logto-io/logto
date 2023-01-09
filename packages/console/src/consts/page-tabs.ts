@@ -13,3 +13,15 @@ export enum SignInExperiencePage {
   SignUpAndSignInTab = 'sign-up-and-sign-in',
   OthersTab = 'others',
 }
+
+export enum UserDetailsTabs {
+  Settings = 'settings',
+  Roles = 'roles',
+  Logs = 'logs',
+}
+
+export enum RoleDetailsTabs {
+  Settings = 'settings',
+  Permissions = 'permissions',
+  Users = 'users',
+}

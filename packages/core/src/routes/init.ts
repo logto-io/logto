@@ -8,6 +8,7 @@ import koaAuditLogLegacy from '#src/middleware/koa-audit-log-legacy.js';
 
 import koaAuth from '../middleware/koa-auth.js';
 import koaLogSessionLegacy from '../middleware/koa-log-session-legacy.js';
+import adminUserRoleRoutes from './admin-user-role.js';
 import adminUserRoutes from './admin-user.js';
 import applicationRoutes from './application.js';
 import authnRoutes from './authn.js';
@@ -45,6 +46,7 @@ const createRouters = (provider: Provider) => {
   resourceRoutes(managementRouter);
   signInExperiencesRoutes(managementRouter);
   adminUserRoutes(managementRouter);
+  adminUserRoleRoutes(managementRouter);
   logRoutes(managementRouter);
   roleRoutes(managementRouter);
   dashboardRoutes(managementRouter);

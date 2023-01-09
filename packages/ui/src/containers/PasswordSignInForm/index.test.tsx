@@ -2,14 +2,18 @@ import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { fireEvent, waitFor, act } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { signInWithPasswordIdentifier, putInteraction, sendPasscode } from '@/apis/interaction';
+import {
+  signInWithPasswordIdentifier,
+  putInteraction,
+  sendVerificationCode,
+} from '@/apis/interaction';
 import { UserFlow } from '@/types';
 
 import PasswordSignInForm from '.';
 
 jest.mock('@/apis/interaction', () => ({
   signInWithPasswordIdentifier: jest.fn(() => ({ redirectTo: '/' })),
-  sendPasscode: jest.fn(() => ({ success: true })),
+  sendVerificationCode: jest.fn(() => ({ success: true })),
   putInteraction: jest.fn(() => ({ success: true })),
 }));
 
@@ -67,22 +71,22 @@ describe('PasswordSignInForm', () => {
       expect(signInWithPasswordIdentifier).toBeCalledWith({ email, password }, undefined);
     });
 
-    const sendPasscodeLink = getByText('action.sign_in_via_passcode');
+    const sendVerificationCodeLink = getByText('action.sign_in_via_passcode');
 
-    expect(sendPasscodeLink).not.toBeNull();
+    expect(sendVerificationCodeLink).not.toBeNull();
 
     act(() => {
-      fireEvent.click(sendPasscodeLink);
+      fireEvent.click(sendVerificationCodeLink);
     });
 
     await waitFor(() => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
-      expect(sendPasscode).toBeCalledWith({ email });
+      expect(sendVerificationCode).toBeCalledWith({ email });
     });
 
     expect(mockedNavigate).toBeCalledWith(
       {
-        pathname: `/${UserFlow.signIn}/${SignInIdentifier.Email}/passcode-validation`,
+        pathname: `/${UserFlow.signIn}/${SignInIdentifier.Email}/verification-code`,
         search: '',
       },
       {
@@ -113,22 +117,22 @@ describe('PasswordSignInForm', () => {
       expect(signInWithPasswordIdentifier).toBeCalledWith({ phone, password }, undefined);
     });
 
-    const sendPasscodeLink = getByText('action.sign_in_via_passcode');
+    const sendVerificationCodeLink = getByText('action.sign_in_via_passcode');
 
-    expect(sendPasscodeLink).not.toBeNull();
+    expect(sendVerificationCodeLink).not.toBeNull();
 
     act(() => {
-      fireEvent.click(sendPasscodeLink);
+      fireEvent.click(sendVerificationCodeLink);
     });
 
     await waitFor(() => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
-      expect(sendPasscode).toBeCalledWith({ phone });
+      expect(sendVerificationCode).toBeCalledWith({ phone });
     });
 
     expect(mockedNavigate).toBeCalledWith(
       {
-        pathname: `/${UserFlow.signIn}/${SignInIdentifier.Phone}/passcode-validation`,
+        pathname: `/${UserFlow.signIn}/${SignInIdentifier.Phone}/verification-code`,
         search: '',
       },
       {

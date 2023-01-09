@@ -13,7 +13,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type {
   PasswordIdentifierPayload,
-  PasscodeIdentifierPayload,
+  VerificationCodeIdentifierPayload,
   SocialIdentifier,
   VerifiedEmailIdentifier,
   VerifiedPhoneIdentifier,
@@ -22,9 +22,13 @@ import type {
   AccountIdIdentifier,
 } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
-import { isPasscodeIdentifier, isPasswordIdentifier, isSocialIdentifier } from '../utils/index.js';
-import { verifyIdentifierByPasscode } from '../utils/passcode-validation.js';
+import {
+  isVerificationCodeIdentifier,
+  isPasswordIdentifier,
+  isSocialIdentifier,
+} from '../utils/index.js';
 import { verifySocialIdentity } from '../utils/social-verification.js';
+import { verifyIdentifierByVerificationCode } from '../utils/verification-code-validation.js';
 
 const verifyPasswordIdentifier = async (
   event: InteractionEvent,
@@ -46,15 +50,15 @@ const verifyPasswordIdentifier = async (
   return { key: 'accountId', value: id };
 };
 
-const verifyPasscodeIdentifier = async (
+const verifyVerificationCodeIdentifier = async (
   event: InteractionEvent,
-  identifier: PasscodeIdentifierPayload,
+  identifier: VerificationCodeIdentifierPayload,
   ctx: WithLogContext,
   provider: Provider
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
   const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
-  await verifyIdentifierByPasscode({ ...identifier, event }, jti, ctx.createLog);
+  await verifyIdentifierByVerificationCode({ ...identifier, event }, jti, ctx.createLog);
 
   return 'email' in identifier
     ? { key: 'emailVerified', value: identifier.email }
@@ -107,8 +111,8 @@ export default async function identifierPayloadVerification(
     return verifyPasswordIdentifier(event, identifierPayload, ctx);
   }
 
-  if (isPasscodeIdentifier(identifierPayload)) {
-    return verifyPasscodeIdentifier(event, identifierPayload, ctx, provider);
+  if (isVerificationCodeIdentifier(identifierPayload)) {
+    return verifyVerificationCodeIdentifier(event, identifierPayload, ctx, provider);
   }
 
   if (isSocialIdentifier(identifierPayload)) {

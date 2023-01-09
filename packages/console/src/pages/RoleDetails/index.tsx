@@ -1,9 +1,9 @@
 import type { Role } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Back from '@/assets/images/back.svg';
@@ -16,23 +16,33 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
+import { RoleDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 
-import RoleSettings from './RoleSettings';
 import * as styles from './index.module.scss';
+import { RoleDetailsOutletContext } from './types';
 
 const RoleDetails = () => {
+  const { pathname } = useLocation();
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
+
+  const isPageHasTable =
+    pathname.endsWith(RoleDetailsTabs.Permissions) || pathname.endsWith(RoleDetailsTabs.Users);
 
   const { data, error, mutate } = useSWR<Role, RequestError>(id && `/api/roles/${id}`);
   const { mutate: mutateGlobal } = useSWRConfig();
   const isLoading = !data && !error;
 
   const [isDeletionAlertOpen, setIsDeletionAlertOpen] = useState(false);
+
+  useEffect(() => {
+    setIsDeletionAlertOpen(false);
+  }, [pathname]);
+
   const [isDeleting, setIsDeleting] = useState(false);
 
   const api = useApi();
@@ -55,7 +65,13 @@ const RoleDetails = () => {
   };
 
   return (
-    <div className={classNames(detailsStyles.container, styles.container)}>
+    <div
+      className={classNames(
+        detailsStyles.container,
+        styles.container,
+        isPageHasTable && styles.withTable
+      )}
+    >
       <TextLink to="/roles" icon={<Back />} className={styles.backLink}>
         {t('role_details.back_to_roles')}
       </TextLink>
@@ -98,14 +114,26 @@ const RoleDetails = () => {
             </ConfirmModal>
           </Card>
           <TabNav>
-            <TabNavItem href={`/roles/${data.id}`}>{t('role_details.settings_tab')}</TabNavItem>
+            <TabNavItem href={`/roles/${data.id}/${RoleDetailsTabs.Settings}`}>
+              {t('role_details.settings_tab')}
+            </TabNavItem>
+            <TabNavItem href={`/roles/${data.id}/${RoleDetailsTabs.Permissions}`}>
+              {t('role_details.permissions_tab')}
+            </TabNavItem>
+            <TabNavItem href={`/roles/${data.id}/${RoleDetailsTabs.Users}`}>
+              {t('role_details.users_tab')}
+            </TabNavItem>
           </TabNav>
-          <RoleSettings
-            data={data}
-            isDeleting={isDeleting}
-            onRoleUpdated={(data) => {
-              void mutate(data);
-            }}
+          <Outlet
+            context={
+              {
+                role: data,
+                isDeleting,
+                onRoleUpdated: (role: Role) => {
+                  void mutate(role);
+                },
+              } satisfies RoleDetailsOutletContext
+            }
           />
         </>
       )}

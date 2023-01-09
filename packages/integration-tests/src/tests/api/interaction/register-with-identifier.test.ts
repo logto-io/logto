@@ -2,7 +2,7 @@ import { ConnectorType, InteractionEvent, SignInIdentifier } from '@logto/schema
 import { assert } from '@silverhand/essentials';
 
 import {
-  sendVerificationPasscode,
+  sendVerificationCode,
   putInteraction,
   deleteUser,
   patchInteractionIdentifiers,
@@ -16,7 +16,7 @@ import { readPasscode, expectRejects } from '#src/helpers.js';
 import { initClient, processSession, logoutClient } from './utils/client.js';
 import { clearConnectorsByTypes, setEmailConnector, setSmsConnector } from './utils/connector.js';
 import {
-  enableAllPasscodeSignInMethods,
+  enableAllVerificationCodeSignInMethods,
   enableAllPasswordSignInMethods,
 } from './utils/sign-in-experience.js';
 import { generateNewUserProfile, generateNewUser } from './utils/user.js';
@@ -59,7 +59,7 @@ describe('Register with passwordless identifier', () => {
   });
 
   it('register with email', async () => {
-    await enableAllPasscodeSignInMethods({
+    await enableAllVerificationCodeSignInMethods({
       identifiers: [SignInIdentifier.Email],
       password: false,
       verify: true,
@@ -72,22 +72,22 @@ describe('Register with passwordless identifier', () => {
       event: InteractionEvent.Register,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       email: primaryEmail,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    expect(passcodeRecord).toMatchObject({
+    expect(verificationCodeRecord).toMatchObject({
       address: primaryEmail,
       type: InteractionEvent.Register,
     });
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       email: primaryEmail,
-      passcode: code,
+      verificationCode: code,
     });
 
     await client.successSend(putInteractionProfile, {
@@ -102,7 +102,7 @@ describe('Register with passwordless identifier', () => {
   });
 
   it('register with email and fulfill password', async () => {
-    await enableAllPasscodeSignInMethods({
+    await enableAllVerificationCodeSignInMethods({
       identifiers: [SignInIdentifier.Email],
       password: true,
       verify: true,
@@ -118,17 +118,17 @@ describe('Register with passwordless identifier', () => {
       event: InteractionEvent.Register,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       email: primaryEmail,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       email: primaryEmail,
-      passcode: code,
+      verificationCode: code,
     });
 
     await client.successSend(putInteractionProfile, {
@@ -163,7 +163,7 @@ describe('Register with passwordless identifier', () => {
   });
 
   it('register with phone', async () => {
-    await enableAllPasscodeSignInMethods({
+    await enableAllVerificationCodeSignInMethods({
       identifiers: [SignInIdentifier.Phone],
       password: false,
       verify: true,
@@ -176,22 +176,22 @@ describe('Register with passwordless identifier', () => {
       event: InteractionEvent.Register,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       phone: primaryPhone,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    expect(passcodeRecord).toMatchObject({
+    expect(verificationCodeRecord).toMatchObject({
       phone: primaryPhone,
       type: InteractionEvent.Register,
     });
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: primaryPhone,
-      passcode: code,
+      verificationCode: code,
     });
 
     await client.successSend(putInteractionProfile, {
@@ -206,7 +206,7 @@ describe('Register with passwordless identifier', () => {
   });
 
   it('register with phone and fulfill password', async () => {
-    await enableAllPasscodeSignInMethods({
+    await enableAllVerificationCodeSignInMethods({
       identifiers: [SignInIdentifier.Phone],
       password: true,
       verify: true,
@@ -222,7 +222,7 @@ describe('Register with passwordless identifier', () => {
       event: InteractionEvent.Register,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       phone: primaryPhone,
     });
 
@@ -230,7 +230,7 @@ describe('Register with passwordless identifier', () => {
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: primaryPhone,
-      passcode: code,
+      verificationCode: code,
     });
 
     await client.successSend(putInteractionProfile, {
@@ -271,7 +271,7 @@ describe('Register with passwordless identifier', () => {
       userProfile: { primaryEmail },
     } = await generateNewUser({ primaryEmail: true });
 
-    await enableAllPasscodeSignInMethods({
+    await enableAllVerificationCodeSignInMethods({
       identifiers: [SignInIdentifier.Email],
       password: false,
       verify: true,
@@ -283,22 +283,22 @@ describe('Register with passwordless identifier', () => {
       event: InteractionEvent.Register,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       email: primaryEmail,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    expect(passcodeRecord).toMatchObject({
+    expect(verificationCodeRecord).toMatchObject({
       address: primaryEmail,
       type: InteractionEvent.Register,
     });
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       email: primaryEmail,
-      passcode: code,
+      verificationCode: code,
     });
 
     await client.successSend(putInteractionProfile, {
@@ -322,7 +322,7 @@ describe('Register with passwordless identifier', () => {
       userProfile: { primaryPhone },
     } = await generateNewUser({ primaryPhone: true });
 
-    await enableAllPasscodeSignInMethods({
+    await enableAllVerificationCodeSignInMethods({
       identifiers: [SignInIdentifier.Phone],
       password: false,
       verify: true,
@@ -335,22 +335,22 @@ describe('Register with passwordless identifier', () => {
       event: InteractionEvent.Register,
     });
 
-    await client.successSend(sendVerificationPasscode, {
+    await client.successSend(sendVerificationCode, {
       phone: primaryPhone,
     });
 
-    const passcodeRecord = await readPasscode();
+    const verificationCodeRecord = await readPasscode();
 
-    expect(passcodeRecord).toMatchObject({
+    expect(verificationCodeRecord).toMatchObject({
       phone: primaryPhone,
       type: InteractionEvent.Register,
     });
 
-    const { code } = passcodeRecord;
+    const { code } = verificationCodeRecord;
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: primaryPhone,
-      passcode: code,
+      verificationCode: code,
     });
 
     await client.successSend(putInteractionProfile, {
