@@ -1,4 +1,4 @@
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import type Queries from './Queries.js';
 

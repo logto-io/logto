@@ -1,6 +1,6 @@
 import { VerificationCodeType } from '@logto/connector-kit';
 import { addDays, subSeconds } from 'date-fns';
-import { Provider } from 'oidc-provider';
+import Provider from 'oidc-provider';
 
 import { mockUser } from '#src/__mocks__/index.js';
 import { createRequester } from '#src/utils/test-utils.js';

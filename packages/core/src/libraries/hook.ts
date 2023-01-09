@@ -5,7 +5,7 @@ import { trySafe } from '@logto/shared';
 import { conditional, pick } from '@silverhand/essentials';
 import type { Response } from 'got';
 import { got, HTTPError } from 'got';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import modelRouters from '#src/model-routers/index.js';

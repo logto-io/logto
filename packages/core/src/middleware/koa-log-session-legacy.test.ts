@@ -1,4 +1,4 @@
-import { Provider } from 'oidc-provider';
+import Provider from 'oidc-provider';
 
 import type { WithLogContextLegacy } from '#src/middleware/koa-audit-log-legacy.js';
 import koaLogSessionLegacy from '#src/middleware/koa-log-session-legacy.js';

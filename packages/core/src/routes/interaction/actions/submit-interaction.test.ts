@@ -1,6 +1,6 @@
 import { InteractionEvent, adminConsoleApplicationId, UserRole } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';

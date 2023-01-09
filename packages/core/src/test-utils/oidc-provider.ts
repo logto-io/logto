@@ -1,4 +1,4 @@
-import { Provider } from 'oidc-provider';
+import Provider from 'oidc-provider';
 
 const { jest } = import.meta;
 

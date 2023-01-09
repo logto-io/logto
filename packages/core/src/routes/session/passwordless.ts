@@ -1,6 +1,6 @@
 import { VerificationCodeType } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';

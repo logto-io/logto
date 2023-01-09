@@ -1,6 +1,7 @@
 import { getUnixTime } from 'date-fns';
 import type { Context } from 'koa';
-import type { InteractionResults, Provider } from 'oidc-provider';
+import type { InteractionResults } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';

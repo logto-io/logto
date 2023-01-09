@@ -1,5 +1,5 @@
 import type { MiddlewareType } from 'koa';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 

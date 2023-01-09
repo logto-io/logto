@@ -5,7 +5,7 @@ import { readFileSync } from 'fs';
 import { userClaims } from '@logto/core-kit';
 import { CustomClientMetadataKey } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
-import { Provider, errors } from 'oidc-provider';
+import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
 import envSet from '#src/env-set/index.js';

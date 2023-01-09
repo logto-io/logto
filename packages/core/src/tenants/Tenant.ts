@@ -3,7 +3,7 @@ import Koa from 'koa';
 import compose from 'koa-compose';
 import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import envSet, { MountedApps } from '#src/env-set/index.js';
 import koaCheckDemoApp from '#src/middleware/koa-check-demo-app.js';

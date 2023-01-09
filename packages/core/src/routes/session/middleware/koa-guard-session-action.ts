@@ -1,6 +1,6 @@
 import { SignInMode, adminConsoleApplicationId } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';

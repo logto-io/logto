@@ -1,7 +1,7 @@
 import { VerificationCodeType } from '@logto/connector-kit';
 import { SignInIdentifier } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import {

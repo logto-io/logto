@@ -1,7 +1,7 @@
 import { VerificationCodeType } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
 import { addDays, subDays } from 'date-fns';
-import { Provider } from 'oidc-provider';
+import Provider from 'oidc-provider';
 
 import {
   mockPasswordEncrypted,

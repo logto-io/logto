@@ -1,7 +1,7 @@
 import { trySafe } from '@logto/shared';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import { triggerInteractionHooksIfNeeded } from '#src/libraries/hook.js';
 

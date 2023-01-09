@@ -1,6 +1,6 @@
 import { passwordRegEx } from '@logto/core-kit';
 import { argon2Verify } from 'hash-wasm';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';

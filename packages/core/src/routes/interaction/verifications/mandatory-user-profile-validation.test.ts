@@ -1,6 +1,6 @@
 import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
