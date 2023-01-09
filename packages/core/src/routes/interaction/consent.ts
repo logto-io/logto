@@ -1,7 +1,7 @@
 import { adminConsoleApplicationId, UserRole } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
-import type { Provider } from 'oidc-provider';
+import type Provider from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';

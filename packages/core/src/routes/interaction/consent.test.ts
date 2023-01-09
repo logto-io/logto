@@ -2,7 +2,8 @@ import type { User } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockUser } from '#src/__mocks__/index.js';
-import { createMockProvider, GrantMock } from '#src/test-utils/oidc-provider.js';
+import { GrantMock } from '#src/test-utils/oidc-provider.js';
+import { createMockTenantWithInteraction } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 import { interactionPrefix } from './const.js';
@@ -52,7 +53,10 @@ describe('interaction -> consent', () => {
   it('with empty details and reusing old grant', async () => {
     const sessionRequest = createRequester({
       anonymousRoutes: interactionRoutes,
-      provider: createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant),
+      tenantContext: createMockTenantWithInteraction(
+        jest.fn().mockResolvedValue(baseInteractionDetails),
+        Grant
+      ),
     });
 
     await sessionRequest.post(`${interactionPrefix}/consent`);
@@ -70,7 +74,7 @@ describe('interaction -> consent', () => {
   it('with empty details and creating new grant', async () => {
     const sessionRequest = createRequester({
       anonymousRoutes: interactionRoutes,
-      provider: createMockProvider(
+      tenantContext: createMockTenantWithInteraction(
         jest.fn().mockResolvedValue({
           ...baseInteractionDetails,
           grantId: 'exists',
@@ -95,7 +99,7 @@ describe('interaction -> consent', () => {
   it('should save application id when the user first consented', async () => {
     const sessionRequest = createRequester({
       anonymousRoutes: interactionRoutes,
-      provider: createMockProvider(
+      tenantContext: createMockTenantWithInteraction(
         jest.fn().mockResolvedValue({
           ...baseInteractionDetails,
           prompt: {
@@ -117,7 +121,7 @@ describe('interaction -> consent', () => {
   it('missingOIDCScope and missingResourceScopes', async () => {
     const sessionRequest = createRequester({
       anonymousRoutes: interactionRoutes,
-      provider: createMockProvider(
+      tenantContext: createMockTenantWithInteraction(
         jest.fn().mockResolvedValue({
           ...baseInteractionDetails,
           prompt: {

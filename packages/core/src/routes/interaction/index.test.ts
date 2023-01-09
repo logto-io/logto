@@ -124,6 +124,10 @@ describe('interaction routes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+
+    getInteractionStorage.mockReturnValue({
+      event: InteractionEvent.SignIn,
+    });
   });
 
   describe('PUT /interaction', () => {
@@ -154,6 +158,10 @@ describe('interaction routes', () => {
 
   describe('submit interaction', () => {
     const path = `${interactionPrefix}/submit`;
+
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
 
     it('should call identifier and profile verification properly', async () => {
       await sessionRequest.post(path).send();
