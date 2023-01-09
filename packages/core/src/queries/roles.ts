@@ -33,7 +33,7 @@ export const countRoles = async (search: Search = defaultUserSearch) =>
     ${buildRoleConditions(search)}
   `);
 
-export const findRoles = async (limit: number, offset: number, search: Search) =>
+export const findRoles = async (search: Search, limit?: number, offset?: number) =>
   envSet.pool.any<Role>(
     sql`
       select ${sql.join(
@@ -42,8 +42,8 @@ export const findRoles = async (limit: number, offset: number, search: Search) =
       )}
       from ${table}
       ${buildRoleConditions(search)}
-      limit ${limit}
-      offset ${offset}
+      ${conditionalSql(limit, (value) => sql`limit ${value}`)}
+      ${conditionalSql(offset, (value) => sql`offset ${value}`)}
     `
   );
 
