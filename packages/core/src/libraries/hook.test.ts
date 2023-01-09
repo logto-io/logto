@@ -48,7 +48,7 @@ mockEsm('#src/queries/application.js', () => ({
 }));
 
 // eslint-disable-next-line unicorn/consistent-function-scoping
-mockEsmDefault('#src/env-set/create-query-client-by-env.js', () => () => queryClient);
+mockEsmDefault('#src/env-set/create-query-client.js', () => () => queryClient);
 jest.spyOn(queryClient, 'query').mockImplementation(queryFunction);
 
 const { triggerInteractionHooksIfNeeded } = await import('./hook.js');
