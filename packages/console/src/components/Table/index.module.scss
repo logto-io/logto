@@ -1,9 +1,16 @@
 @use '@/scss/underscore' as _;
 
 .container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tableContainer {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  flex: 1;
 
   .filterContainer {
     background-color: var(--color-layer-1);
@@ -87,4 +94,8 @@
       }
     }
   }
+}
+
+.pagination {
+  margin-top: _.unit(4);
 }
