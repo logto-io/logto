@@ -52,16 +52,6 @@ export const signInWithPassword = async ({
     })
     .json<RedirectResponse>();
 
-export const consent = async (interactionCookie: string) =>
-  api
-    .post('session/consent', {
-      headers: {
-        cookie: interactionCookie,
-      },
-      followRedirect: false,
-    })
-    .json<RedirectResponse>();
-
 export const sendRegisterUserWithEmailPasscode = (email: string, interactionCookie: string) =>
   api.post('session/passwordless/email/send', {
     headers: {

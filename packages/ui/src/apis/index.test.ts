@@ -18,6 +18,6 @@ describe('api', () => {
 
   it('consent', async () => {
     await consent();
-    expect(ky.post).toBeCalledWith('/api/session/consent');
+    expect(ky.post).toBeCalledWith('/api/interaction/consent');
   });
 });

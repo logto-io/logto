@@ -9,6 +9,8 @@ import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockTenantWithInteraction } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
+import { verificationPath, interactionPrefix } from './const.js';
+
 const { jest } = import.meta;
 const { mockEsm, mockEsmDefault, mockEsmWithActual } = createMockUtils(jest);
 
@@ -106,18 +108,15 @@ await mockEsmWithActual(
   })
 );
 
-const {
-  default: interactionRoutes,
-  verificationPath,
-  interactionPrefix,
-} = await import('./index.js');
+const { default: interactionRoutes } = await import('./index.js');
 
-describe('session -> interactionRoutes', () => {
+describe('interaction routes', () => {
   const baseProviderMock = {
     params: {},
     jti: 'jti',
     client_id: demoAppApplicationId,
   };
+
   const sessionRequest = createRequester({
     anonymousRoutes: interactionRoutes,
     tenantContext: createMockTenantWithInteraction(jest.fn().mockResolvedValue(baseProviderMock)),
@@ -125,6 +124,10 @@ describe('session -> interactionRoutes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+
+    getInteractionStorage.mockReturnValue({
+      event: InteractionEvent.SignIn,
+    });
   });
 
   describe('PUT /interaction', () => {
@@ -150,6 +153,36 @@ describe('session -> interactionRoutes', () => {
     it('should call assignInteractionResult properly', async () => {
       await sessionRequest.delete(`${interactionPrefix}`);
       expect(assignInteractionResults).toBeCalled();
+    });
+  });
+
+  describe('submit interaction', () => {
+    const path = `${interactionPrefix}/submit`;
+
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should call identifier and profile verification properly', async () => {
+      await sessionRequest.post(path).send();
+      expect(getInteractionStorage).toBeCalled();
+      expect(verifyIdentifier).toBeCalled();
+      expect(verifyProfile).toBeCalled();
+      expect(validateMandatoryUserProfile).toBeCalled();
+      expect(submitInteraction).toBeCalled();
+    });
+
+    it('should not call validateMandatoryUserProfile for forgot password request', async () => {
+      getInteractionStorage.mockReturnValue({
+        event: InteractionEvent.ForgotPassword,
+      });
+
+      await sessionRequest.post(path).send();
+      expect(getInteractionStorage).toBeCalled();
+      expect(verifyIdentifier).toBeCalled();
+      expect(verifyProfile).toBeCalled();
+      expect(validateMandatoryUserProfile).not.toBeCalled();
+      expect(submitInteraction).toBeCalled();
     });
   });
 
@@ -276,32 +309,6 @@ describe('session -> interactionRoutes', () => {
         createLog
       );
       expect(response.status).toEqual(204);
-    });
-  });
-
-  describe('submit interaction', () => {
-    const path = `${interactionPrefix}/submit`;
-
-    it('should call identifier and profile verification properly', async () => {
-      await sessionRequest.post(path).send();
-      expect(getInteractionStorage).toBeCalled();
-      expect(verifyIdentifier).toBeCalled();
-      expect(verifyProfile).toBeCalled();
-      expect(validateMandatoryUserProfile).toBeCalled();
-      expect(submitInteraction).toBeCalled();
-    });
-
-    it('should not call validateMandatoryUserProfile for forgot password request', async () => {
-      getInteractionStorage.mockReturnValue({
-        event: InteractionEvent.ForgotPassword,
-      });
-
-      await sessionRequest.post(path).send();
-      expect(getInteractionStorage).toBeCalled();
-      expect(verifyIdentifier).toBeCalled();
-      expect(verifyProfile).toBeCalled();
-      expect(validateMandatoryUserProfile).not.toBeCalled();
-      expect(submitInteraction).toBeCalled();
     });
   });
 

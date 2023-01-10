@@ -5,5 +5,5 @@ export const consent = async () => {
     redirectTo: string;
   };
 
-  return api.post('/api/session/consent').json<Response>();
+  return api.post('/api/interaction/consent').json<Response>();
 };

@@ -4,6 +4,7 @@ import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
+import type { GrantMock } from './oidc-provider.js';
 import { createMockProvider } from './oidc-provider.js';
 
 const { jest } = import.meta;
@@ -58,5 +59,7 @@ export class MockTenant implements TenantContext {
   }
 }
 
-export const createMockTenantWithInteraction = (interactionDetails?: jest.Mock) =>
-  new MockTenant(createMockProvider(interactionDetails));
+export const createMockTenantWithInteraction = (
+  interactionDetails?: jest.Mock,
+  Grant?: typeof GrantMock
+) => new MockTenant(createMockProvider(interactionDetails, Grant));
