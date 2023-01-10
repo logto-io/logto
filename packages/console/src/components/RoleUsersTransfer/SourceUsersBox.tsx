@@ -52,8 +52,6 @@ const SourceUsersBox = ({ roleId, selectedUsers, onAddUser, onRemoveUser }: Prop
     ...conditional(keyword && { search: `%${keyword}%` }),
   });
 
-  console.log(url);
-
   const { data } = useSWR<[User[], number], RequestError>(url);
 
   const [dataSource = [], totalCount] = data ?? [];
