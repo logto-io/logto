@@ -26,7 +26,7 @@ import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+const { mockEsm } = createMockUtils(jest);
 
 mockEsm('#src/utils/connectors/platform.js', () => ({
   checkSocialConnectorTargetAndPlatformUniqueness: jest.fn(),

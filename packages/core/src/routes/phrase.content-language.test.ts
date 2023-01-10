@@ -1,41 +1,42 @@
 import en from '@logto/phrases-ui/lib/locales/en.js';
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import type { SignInExperience } from '@logto/schemas';
+import { pickDefault } from '@logto/shared/esm';
 
 import { trTrTag, zhCnTag, zhHkTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsmWithActual } = createMockUtils(jest);
 
 const fallbackLanguage = trTrTag;
 const unsupportedLanguageX = 'xx-XX';
 const unsupportedLanguageY = 'yy-YY';
 
-const { findDefaultSignInExperience } = await mockEsmWithActual(
-  '#src/queries/sign-in-experience.js',
-  () => ({
-    findDefaultSignInExperience: jest.fn(async () => ({
-      ...mockSignInExperience,
-      languageInfo: {
-        autoDetect: true,
-        fallbackLanguage,
-      },
-    })),
+const findDefaultSignInExperience = jest.fn(
+  async (): Promise<SignInExperience> => ({
+    ...mockSignInExperience,
+    languageInfo: {
+      autoDetect: true,
+      fallbackLanguage,
+    },
   })
 );
 
-await mockEsmWithActual('#src/queries/custom-phrase.js', () => ({
-  findAllCustomLanguageTags: async () => [trTrTag, zhCnTag],
-}));
+const tenantContext = new MockTenant(
+  undefined,
+  {
+    customPhrases: { findAllCustomLanguageTags: async () => [trTrTag, zhCnTag] },
+    signInExperiences: { findDefaultSignInExperience },
+  },
+  { phrases: { getPhrases: jest.fn().mockResolvedValue(en) } }
+);
 
-await mockEsmWithActual('#src/libraries/phrase.js', () => ({
-  getPhrase: jest.fn().mockResolvedValue(en),
-}));
 const phraseRoutes = await pickDefault(import('./phrase.js'));
 
 const phraseRequest = createRequester({
   anonymousRoutes: phraseRoutes,
+  tenantContext,
 });
 
 afterEach(() => {
@@ -48,6 +49,7 @@ describe('when auto-detect is not enabled', () => {
       ...mockSignInExperience,
       languageInfo: {
         autoDetect: false,
+        // @ts-expect-error
         fallbackLanguage: unsupportedLanguageX,
       },
     });
@@ -88,6 +90,7 @@ describe('when auto-detect is enabled', () => {
       ...mockSignInExperience,
       languageInfo: {
         autoDetect: true,
+        // @ts-expect-error
         fallbackLanguage: unsupportedLanguageX,
       },
     });
