@@ -12,7 +12,8 @@ import { deduplicate } from '@silverhand/essentials';
 import i18next from 'i18next';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { getLogtoConnectors } from '#src/libraries/connector.js';
+import type { ConnectorLibrary } from '#src/libraries/connector.js';
+import { defaultConnectorLibrary } from '#src/libraries/connector.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -29,7 +30,10 @@ export const validateBranding = (branding: Branding) => {
   assertThat(branding.logoUrl.trim(), 'sign_in_experiences.empty_logo');
 };
 
-export const createSignInExperienceLibrary = (queries: Queries) => {
+export const createSignInExperienceLibrary = (
+  queries: Queries,
+  connectorLibrary: ConnectorLibrary
+) => {
   const {
     customPhrases: { findAllCustomLanguageTags },
     signInExperiences: { findDefaultSignInExperience, updateDefaultSignInExperience },
@@ -49,7 +53,7 @@ export const createSignInExperienceLibrary = (queries: Queries) => {
   };
 
   const removeUnavailableSocialConnectorTargets = async () => {
-    const connectors = await getLogtoConnectors();
+    const connectors = await connectorLibrary.getLogtoConnectors();
     const availableSocialConnectorTargets = deduplicate(
       connectors
         .filter(({ type }) => type === ConnectorType.Social)
@@ -113,4 +117,4 @@ export const {
   validateLanguageInfo,
   removeUnavailableSocialConnectorTargets,
   getSignInExperienceForApplication,
-} = createSignInExperienceLibrary(defaultQueries);
+} = createSignInExperienceLibrary(defaultQueries, defaultConnectorLibrary);

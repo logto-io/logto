@@ -6,17 +6,7 @@ import cleanDeep from 'clean-deep';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { getLogtoConnectorById, getLogtoConnectors } from '#src/libraries/connector.js';
-import { removeUnavailableSocialConnectorTargets } from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import {
-  findConnectorById,
-  countConnectorByConnectorId,
-  deleteConnectorById,
-  deleteConnectorByIds,
-  insertConnector,
-  updateConnector,
-} from '#src/queries/connector.js';
 import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
@@ -36,7 +26,22 @@ const transpileLogtoConnector = ({
 
 const generateConnectorId = buildIdGenerator(12);
 
-export default function connectorRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function connectorRoutes<T extends AuthedRouter>(
+  ...[router, { queries, libraries }]: RouterInitArgs<T>
+) {
+  const {
+    findConnectorById,
+    countConnectorByConnectorId,
+    deleteConnectorById,
+    deleteConnectorByIds,
+    insertConnector,
+    updateConnector,
+  } = queries.connectors;
+  const {
+    connectors: { getLogtoConnectorById, getLogtoConnectors },
+    signInExperiences: { removeUnavailableSocialConnectorTargets },
+  } = libraries;
+
   router.get(
     '/connectors',
     koaGuard({

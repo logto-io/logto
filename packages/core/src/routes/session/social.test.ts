@@ -3,7 +3,7 @@ import type { SocialUserInfo } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
 import Provider from 'oidc-provider';
 
-import { mockLogtoConnectorList, mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
+import { mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { getLogtoConnectorById } from '#src/libraries/connector.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -91,7 +91,6 @@ const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
 });
 
 jest.mock('#src/libraries/connector.js', () => ({
-  getLogtoConnectors: jest.fn(async () => mockLogtoConnectorList),
   getLogtoConnectorById: jest.fn(async (connectorId: string) => {
     const connector = await getLogtoConnectorByIdHelper(connectorId);
 

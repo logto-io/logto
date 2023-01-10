@@ -1,10 +1,7 @@
 import type { Connector } from '@logto/schemas';
-import { createMockUtils } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-
-const { jest } = import.meta;
-const { mockEsmWithActual } = createMockUtils(jest);
+import { MockQueries } from '#src/test-utils/tenant.js';
 
 const connectors: Connector[] = [
   {
@@ -17,11 +14,10 @@ const connectors: Connector[] = [
   },
 ];
 
-await mockEsmWithActual('#src/queries/connector.js', () => ({
-  findAllConnectors: jest.fn(async () => connectors),
-}));
-
-const { getConnectorConfig } = await import('./connector.js');
+const { createConnectorLibrary } = await import('./connector.js');
+const { getConnectorConfig } = createConnectorLibrary(
+  new MockQueries({ connectors: { findAllConnectors: async () => connectors } })
+);
 
 it('getConnectorConfig() should return right config', async () => {
   const config = await getConnectorConfig('id');

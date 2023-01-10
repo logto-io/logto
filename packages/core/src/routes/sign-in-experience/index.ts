@@ -1,7 +1,6 @@
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
 import { literal, object, string } from 'zod';
 
-import { getLogtoConnectors } from '#src/libraries/connector.js';
 import {
   validateBranding,
   validateSignUp,
@@ -15,7 +14,10 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;
-  const { validateLanguageInfo } = libraries.signInExperiences;
+  const {
+    signInExperiences: { validateLanguageInfo },
+    connectors: { getLogtoConnectors },
+  } = libraries;
 
   /**
    * As we only support single signInExperience settings for V1

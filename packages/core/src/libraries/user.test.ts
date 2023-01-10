@@ -1,7 +1,7 @@
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { createMockPool } from 'slonik';
 
-import Queries from '#src/tenants/Queries.js';
+import { MockQueries } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
 
@@ -11,9 +11,8 @@ const pool = createMockPool({
 
 const { encryptUserPassword, createUserLibrary } = await import('./user.js');
 
-const queries = new Queries(pool);
-
-const hasUserWithId = jest.spyOn(queries.users, 'hasUserWithId');
+const hasUserWithId = jest.fn();
+const queries = new MockQueries({ users: { hasUserWithId } });
 
 describe('generateUserId()', () => {
   const { generateUserId } = createUserLibrary(queries);

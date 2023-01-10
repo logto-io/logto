@@ -7,15 +7,6 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import type { GrantMock } from './oidc-provider.js';
 import { createMockProvider } from './oidc-provider.js';
 
-export const createQueriesWithMockPool = () =>
-  new Queries(
-    createMockPool({
-      query: async (sql, values) => {
-        return createMockQueryResult([]);
-      },
-    })
-  );
-
 export class MockQueries extends Queries {
   constructor(queriesOverride?: Partial2<Queries>) {
     super(

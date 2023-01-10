@@ -1,16 +1,10 @@
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 import { BrandingStyle } from '@logto/schemas';
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 
 import { mockBranding, mockSignInExperience } from '#src/__mocks__/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
-
-const { mockEsm } = createMockUtils(import.meta.jest);
-
-mockEsm('#src/libraries/connector.js', () => ({
-  getLogtoConnectors: async () => [],
-}));
 
 const tenantContext = new MockTenant(undefined, {
   signInExperiences: {

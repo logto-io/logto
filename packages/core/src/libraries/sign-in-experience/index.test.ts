@@ -2,7 +2,6 @@ import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-ui';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 import { BrandingStyle } from '@logto/schemas';
-import { createMockUtils } from '@logto/shared/esm';
 
 import {
   socialTarget01,
@@ -13,8 +12,9 @@ import {
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
+import { createConnectorLibrary } from '../connector.js';
+
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
 
 const allCustomLanguageTags: LanguageTag[] = [];
 
@@ -22,10 +22,6 @@ const customPhrases = {
   findAllCustomLanguageTags: jest.fn(async () => allCustomLanguageTags),
 };
 const { findAllCustomLanguageTags } = customPhrases;
-
-const { getLogtoConnectors } = mockEsm('#src/libraries/connector.js', () => ({
-  getLogtoConnectors: jest.fn(),
-}));
 
 const signInExperiences = {
   findDefaultSignInExperience: jest.fn(),
@@ -43,10 +39,12 @@ const queries = new MockQueries({
   customPhrases,
   signInExperiences,
 });
+const connectorLibrary = createConnectorLibrary(queries);
+const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
 const { validateBranding, createSignInExperienceLibrary } = await import('./index.js');
 const { validateLanguageInfo, removeUnavailableSocialConnectorTargets } =
-  createSignInExperienceLibrary(queries);
+  createSignInExperienceLibrary(queries, connectorLibrary);
 
 beforeEach(() => {
   jest.clearAllMocks();
