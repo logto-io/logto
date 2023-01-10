@@ -19,10 +19,12 @@ import {
 import {
   countScopes,
   deleteScopeById,
+  findScopeByNameAndResourceId,
   findScopes,
   insertScope,
   updateScopeById,
 } from '#src/queries/scope.js';
+import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -185,6 +187,15 @@ export default function resourceRoutes<T extends AuthedRouter>(...[router]: Rout
         body,
       } = ctx.guard;
 
+      assertThat(
+        !(await findScopeByNameAndResourceId(body.name, resourceId)),
+        new RequestError({
+          code: 'scope.name_exists',
+          name: body.name,
+          status: 422,
+        })
+      );
+
       ctx.body = await insertScope({
         ...body,
         id: scopeId(),
@@ -203,9 +214,20 @@ export default function resourceRoutes<T extends AuthedRouter>(...[router]: Rout
     }),
     async (ctx, next) => {
       const {
-        params: { scopeId },
+        params: { scopeId, resourceId },
         body,
       } = ctx.guard;
+
+      if (body.name) {
+        assertThat(
+          !(await findScopeByNameAndResourceId(body.name, resourceId, scopeId)),
+          new RequestError({
+            code: 'scope.name_exists',
+            name: body.name,
+            status: 422,
+          })
+        );
+      }
 
       ctx.body = await updateScopeById(scopeId, body);
 

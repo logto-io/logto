@@ -38,6 +38,7 @@ const { insertScope, updateScopeById } = await mockEsmWithActual('#src/queries/s
   insertScope: jest.fn(async () => mockScope),
   updateScopeById: jest.fn(async () => mockScope),
   deleteScopeById: jest.fn(),
+  findScopeByNameAndResourceId: jest.fn(),
 }));
 
 mockEsm('@logto/core-kit', () => ({
