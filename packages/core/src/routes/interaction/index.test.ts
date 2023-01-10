@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { InteractionEvent, demoAppApplicationId } from '@logto/schemas';
+import { demoAppApplicationId, InteractionEvent } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
@@ -7,7 +7,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type koaAuditLog from '#src/middleware/koa-audit-log.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
-import { createMockTenantWithInteraction, MockTenant } from '#src/test-utils/tenant.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -34,10 +34,6 @@ const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
     getAuthorizationUri: jest.fn(async () => ''),
   };
 });
-
-await mockEsmWithActual('#src/libraries/sign-in-experience/index.js', () => ({
-  getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
-}));
 
 const { assignInteractionResults } = await mockEsmWithActual('#src/libraries/session.js', () => ({
   assignInteractionResults: jest.fn(),
@@ -95,37 +91,40 @@ await mockEsmWithActual(
   })
 );
 
+const baseProviderMock = {
+  params: {},
+  jti: 'jti',
+  client_id: demoAppApplicationId,
+};
+
+const tenantContext = new MockTenant(
+  createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
+  undefined,
+  {
+    connectors: {
+      getLogtoConnectorById: async (connectorId: string) => {
+        const connector = await getLogtoConnectorByIdHelper(connectorId);
+
+        if (connector.type !== ConnectorType.Social) {
+          throw new RequestError({
+            code: 'entity.not_found',
+            status: 404,
+          });
+        }
+
+        // @ts-expect-error
+        return connector as LogtoConnector;
+      },
+    },
+    signInExperiences: {
+      getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
+    },
+  }
+);
+
 const { default: interactionRoutes } = await import('./index.js');
 
 describe('interaction routes', () => {
-  const baseProviderMock = {
-    params: {},
-    jti: 'jti',
-    client_id: demoAppApplicationId,
-  };
-
-  const tenantContext = new MockTenant(
-    createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
-    undefined,
-    {
-      connectors: {
-        getLogtoConnectorById: async (connectorId: string) => {
-          const connector = await getLogtoConnectorByIdHelper(connectorId);
-
-          if (connector.type !== ConnectorType.Social) {
-            throw new RequestError({
-              code: 'entity.not_found',
-              status: 404,
-            });
-          }
-
-          // @ts-expect-error
-          return connector as LogtoConnector;
-        },
-      },
-    }
-  );
-
   const sessionRequest = createRequester({
     anonymousRoutes: interactionRoutes,
     tenantContext,
@@ -266,7 +265,7 @@ describe('interaction routes', () => {
     const path = `${interactionPrefix}/profile`;
     const sessionRequest = createRequester({
       anonymousRoutes: interactionRoutes,
-      tenantContext: createMockTenantWithInteraction(jest.fn().mockResolvedValue(baseProviderMock)),
+      tenantContext,
     });
 
     it('PUT /interaction/profile', async () => {

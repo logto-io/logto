@@ -2,23 +2,26 @@ import { InteractionEvent } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 
 import type { Identifier, IdentifierVerifiedInteractionResult } from '../types/index.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+const { mockEsm } = createMockUtils(jest);
 
-const { findUserById } = await mockEsmWithActual('#src/queries/user.js', () => ({
+const userQueries = {
   findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
   hasUserWithPhone: jest.fn().mockResolvedValue(false),
   hasUserWithIdentity: jest.fn().mockResolvedValue(false),
-}));
+};
+const { findUserById } = userQueries;
 
 mockEsm('../utils/index.js', () => ({
   isUserPasswordSet: jest.fn().mockResolvedValueOnce(true),
 }));
 
+const tenantContext = new MockTenant(undefined, { users: userQueries });
 const verifyProfile = await pickDefault(import('./profile-verification.js'));
 
 describe('Should throw when providing existing identifiers in profile', () => {
@@ -48,7 +51,7 @@ describe('Should throw when providing existing identifiers in profile', () => {
       },
     };
 
-    await expect(verifyProfile(interaction)).rejects.toMatchError(
+    await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.username_exists_in_profile',
       })
@@ -65,7 +68,7 @@ describe('Should throw when providing existing identifiers in profile', () => {
       },
     };
 
-    await expect(verifyProfile(interaction)).rejects.toMatchError(
+    await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.email_exists_in_profile',
       })
@@ -82,7 +85,7 @@ describe('Should throw when providing existing identifiers in profile', () => {
       },
     };
 
-    await expect(verifyProfile(interaction)).rejects.toMatchError(
+    await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.phone_exists_in_profile',
       })
@@ -99,7 +102,7 @@ describe('Should throw when providing existing identifiers in profile', () => {
       },
     };
 
-    await expect(verifyProfile(interaction)).rejects.toMatchError(
+    await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.password_exists_in_profile',
       })

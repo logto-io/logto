@@ -56,7 +56,7 @@ describe('verifyIdentifier', () => {
     const result = await verifyIdentifier(ctx, tenant, interactionRecord);
 
     expect(result).toBe(verifiedRecord);
-    expect(verifyUserAccount).toBeCalledWith(interactionRecord, tenant.libraries.socials);
+    expect(verifyUserAccount).toBeCalledWith(tenant, interactionRecord);
     expect(storeInteractionResult).toBeCalledWith(verifiedRecord, ctx, tenant.provider);
   });
 });

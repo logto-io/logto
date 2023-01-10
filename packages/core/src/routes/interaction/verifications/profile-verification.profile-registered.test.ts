@@ -1,28 +1,31 @@
 import { InteractionEvent } from '@logto/schemas';
-import { createMockUtils, pickDefault } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 
 import type { Identifier, IdentifierVerifiedInteractionResult } from '../types/index.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
-const { hasUser, hasUserWithEmail, hasUserWithPhone, hasUserWithIdentity } =
-  await mockEsmWithActual('#src/queries/user.js', () => ({
-    hasUser: jest.fn().mockResolvedValue(false),
-    findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
-    hasUserWithEmail: jest.fn().mockResolvedValue(false),
-    hasUserWithPhone: jest.fn().mockResolvedValue(false),
-    hasUserWithIdentity: jest.fn().mockResolvedValue(false),
-  }));
+const userQueries = {
+  hasUser: jest.fn().mockResolvedValue(false),
+  findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
+  hasUserWithEmail: jest.fn().mockResolvedValue(false),
+  hasUserWithPhone: jest.fn().mockResolvedValue(false),
+  hasUserWithIdentity: jest.fn().mockResolvedValue(false),
+};
+const { hasUser, hasUserWithEmail, hasUserWithPhone, hasUserWithIdentity } = userQueries;
 
-mockEsm('#src/libraries/connector.js', () => ({
-  getLogtoConnectorById: jest.fn().mockResolvedValue({
-    metadata: { target: 'logto' },
-  }),
-}));
+const getLogtoConnectorById = jest.fn().mockResolvedValue({
+  metadata: { target: 'logto' },
+});
 
+const tenantContext = new MockTenant(
+  undefined,
+  { users: userQueries },
+  { connectors: { getLogtoConnectorById } }
+);
 const verifyProfile = await pickDefault(import('./profile-verification.js'));
 
 const identifiers: Identifier[] = [
@@ -49,7 +52,7 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(verifyProfile(interaction)).rejects.toMatchError(
+    await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.username_already_in_use',
         status: 422,
@@ -66,7 +69,7 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(verifyProfile(interaction)).rejects.toMatchError(
+    await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.email_already_in_use',
         status: 422,
@@ -83,7 +86,7 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(verifyProfile(interaction)).rejects.toMatchError(
+    await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.phone_already_in_use',
         status: 422,
@@ -101,7 +104,7 @@ describe('profile registered validation', () => {
       },
     };
 
-    await expect(verifyProfile(interaction)).rejects.toMatchError(
+    await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
       new RequestError({
         code: 'user.identity_already_in_use',
         status: 422,

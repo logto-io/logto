@@ -2,7 +2,7 @@ import type { User, Profile } from '@logto/schemas';
 import { InteractionEvent, UserRole, adminConsoleApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { getLogtoConnectorById } from '#src/libraries/connector.js';
+import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import type { LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -21,15 +21,18 @@ import { clearInteractionStorage, categorizeIdentifiers } from '../utils/interac
 const filterSocialIdentifiers = (identifiers: Identifier[]): SocialIdentifier[] =>
   identifiers.filter((identifier): identifier is SocialIdentifier => identifier.key === 'social');
 
-const getNewSocialProfile = async ({
-  user,
-  connectorId,
-  identifiers,
-}: {
-  user?: User;
-  connectorId: string;
-  identifiers: SocialIdentifier[];
-}) => {
+const getNewSocialProfile = async (
+  { getLogtoConnectorById }: ConnectorLibrary,
+  {
+    user,
+    connectorId,
+    identifiers,
+  }: {
+    user?: User;
+    connectorId: string;
+    identifiers: SocialIdentifier[];
+  }
+) => {
   // TODO: @simeng refactor me. This step should be verified by the previous profile verification cycle Already.
   // Should pickup the verified social user info result automatically
   const socialIdentifier = identifiers.find((identifier) => identifier.connectorId === connectorId);
@@ -60,7 +63,10 @@ const getNewSocialProfile = async ({
   };
 };
 
-const getSyncedSocialUserProfile = async (socialIdentifier: SocialIdentifier) => {
+const getSyncedSocialUserProfile = async (
+  { getLogtoConnectorById }: ConnectorLibrary,
+  socialIdentifier: SocialIdentifier
+) => {
   const {
     userInfo: { name, avatar },
     connectorId,
@@ -79,6 +85,7 @@ const getSyncedSocialUserProfile = async (socialIdentifier: SocialIdentifier) =>
 };
 
 const parseNewUserProfile = async (
+  connectorLibrary: ConnectorLibrary,
   profile: Profile,
   profileIdentifiers: Identifier[],
   user?: User
@@ -89,7 +96,7 @@ const parseNewUserProfile = async (
     conditional(password && (await encryptUserPassword(password))),
     conditional(
       connectorId &&
-        (await getNewSocialProfile({
+        (await getNewSocialProfile(connectorLibrary, {
           connectorId,
           identifiers: filterSocialIdentifiers(profileIdentifiers),
           user,
@@ -107,18 +114,20 @@ const parseNewUserProfile = async (
 };
 
 const parseUserProfile = async (
+  connectorLibrary: ConnectorLibrary,
   { profile, identifiers }: VerifiedSignInInteractionResult | VerifiedRegisterInteractionResult,
   user?: User
 ) => {
   const { authIdentifiers, profileIdentifiers } = categorizeIdentifiers(identifiers ?? [], profile);
 
-  const newUserProfile = profile && (await parseNewUserProfile(profile, profileIdentifiers, user));
+  const newUserProfile =
+    profile && (await parseNewUserProfile(connectorLibrary, profile, profileIdentifiers, user));
 
   // Sync the last social profile
   const socialIdentifier = filterSocialIdentifiers(authIdentifiers).slice(-1)[0];
 
   const syncedSocialUserProfile =
-    socialIdentifier && (await getSyncedSocialUserProfile(socialIdentifier));
+    socialIdentifier && (await getSyncedSocialUserProfile(connectorLibrary, socialIdentifier));
 
   return {
     ...syncedSocialUserProfile,
@@ -137,12 +146,13 @@ export default async function submitInteraction(
 
   const {
     users: { generateUserId, insertUser },
+    connectors,
   } = libraries;
   const { event, profile } = interaction;
 
   if (event === InteractionEvent.Register) {
     const id = await generateUserId();
-    const upsertProfile = await parseUserProfile(interaction);
+    const upsertProfile = await parseUserProfile(connectors, interaction);
 
     const { client_id } = ctx.interactionDetails.params;
 
@@ -168,7 +178,7 @@ export default async function submitInteraction(
 
   if (event === InteractionEvent.SignIn) {
     const user = await findUserById(accountId);
-    const upsertProfile = await parseUserProfile(interaction, user);
+    const upsertProfile = await parseUserProfile(connectors, interaction, user);
 
     await updateUserById(accountId, upsertProfile);
 

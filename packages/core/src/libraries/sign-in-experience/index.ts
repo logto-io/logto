@@ -13,11 +13,8 @@ import i18next from 'i18next';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
-import { defaultConnectorLibrary } from '#src/libraries/connector.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
-
-import { defaultQueries } from '../shared.js';
 
 export * from './sign-up.js';
 export * from './sign-in.js';
@@ -29,6 +26,8 @@ export const validateBranding = (branding: Branding) => {
 
   assertThat(branding.logoUrl.trim(), 'sign_in_experiences.empty_logo');
 };
+
+export type SignInExperienceLibrary = ReturnType<typeof createSignInExperienceLibrary>;
 
 export const createSignInExperienceLibrary = (
   queries: Queries,
@@ -111,10 +110,3 @@ export const createSignInExperienceLibrary = (
     getSignInExperienceForApplication,
   };
 };
-
-/** @deprecated Don't use. This is for transition only and will be removed soon. */
-export const {
-  validateLanguageInfo,
-  removeUnavailableSocialConnectorTargets,
-  getSignInExperienceForApplication,
-} = createSignInExperienceLibrary(defaultQueries, defaultConnectorLibrary);
