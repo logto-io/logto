@@ -19,9 +19,9 @@
     "lint:report": "pnpm lint --format json --output-file report.json",
     "dev": "rm -rf build/ && pnpm run copyfiles && nodemon",
     "start": "NODE_ENV=production node build/index.js",
-    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:only": "NODE_OPTIONS=\"--experimental-vm-modules --max_old_space_size=4096\" jest --logHeapUsage",
     "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm test:only --coverage --silent --maxWorkers=75%",
+    "test:ci": "pnpm test:only --coverage --silent",
     "test:report": "codecov -F core"
   },
   "dependencies": {
