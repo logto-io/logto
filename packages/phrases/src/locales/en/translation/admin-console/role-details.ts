@@ -35,6 +35,11 @@ const role_details = {
     delete_description:
       'It will remain in your user pool but lose the authorization for this role.',
     deleted: 'The user {{name}} has been successfully deleted from this role.', // UNTRANSLATED
+    assign_title: 'Assign users',
+    assign_subtitle: 'Assign users to the role',
+    assign_users_field: 'Assign users',
+    confirm_assign: 'Assign users',
+    users_assigned: 'The selected users were successfully assigned to this role!',
   },
 };
 

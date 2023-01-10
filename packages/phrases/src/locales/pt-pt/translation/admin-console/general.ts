@@ -41,6 +41,7 @@ const general = {
   page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
   learn_more: 'Learn more', // UNTRANSLATED
   tab_errors: '{{count, number}} errors', // UNTRANSLATED
+  skip_for_now: 'Skip for now', // UNTRANSLATED
 };
 
 export default general;

@@ -20,6 +20,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 
 import type { RoleDetailsOutletContext } from '../types';
+import AssignUsersModal from './components/AssignUsersModal';
 import * as styles from './index.module.scss';
 
 const RoleUsers = () => {
@@ -37,6 +38,7 @@ const RoleUsers = () => {
 
   const isLoading = !users && !error;
 
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [userToBeDeleted, setUserToBeDeleted] = useState<User>();
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -117,7 +119,7 @@ const RoleUsers = () => {
               size="large"
               icon={<Plus />}
               onClick={() => {
-                // TODO @xiaoyijun assign users to role
+                setIsAssignModalOpen(true);
               }}
             />
           </div>
@@ -128,7 +130,7 @@ const RoleUsers = () => {
               title="role_details.users.assign_button"
               type="outline"
               onClick={() => {
-                // TODO @xiaoyijun assign users to role
+                setIsAssignModalOpen(true);
               }}
             />
           ),
@@ -146,6 +148,17 @@ const RoleUsers = () => {
         >
           {t('role_details.users.delete_description')}
         </ConfirmModal>
+      )}
+      {isAssignModalOpen && (
+        <AssignUsersModal
+          roleId={roleId}
+          onClose={(success) => {
+            if (success) {
+              void mutate();
+            }
+            setIsAssignModalOpen(false);
+          }}
+        />
       )}
     </>
   );
