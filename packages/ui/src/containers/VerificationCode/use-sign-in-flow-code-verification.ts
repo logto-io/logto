@@ -1,3 +1,4 @@
+import type { EmailVerificationCodePayload, PhoneVerificationCodePayload } from '@logto/schemas';
 import { SignInIdentifier, SignInMode } from '@logto/schemas';
 import { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,41 +13,51 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
-import { UserFlow, SearchParameters } from '@/types';
+import type { VerificationCodeIdentifier } from '@/types';
+import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 
-import useIdentifierErrorAlert from './use-identifier-error-alert';
-import useSharedErrorHandler from './use-shared-error-handler';
+import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
+import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
 
-const useSignInWithEmailVerificationCode = (email: string, errorCallback?: () => void) => {
+const useSignInFlowCodeVerification = (
+  method: VerificationCodeIdentifier,
+  target: string,
+  errorCallback?: () => void
+) => {
   const { t } = useTranslation();
   const { show } = useConfirmModal();
   const navigate = useNavigate();
-  const { errorMessage, clearErrorMessage, sharedErrorHandlers } = useSharedErrorHandler();
+
+  const { errorMessage, clearErrorMessage, generalVerificationCodeErrorHandlers } =
+    useGeneralVerificationCodeErrorHandler();
 
   const { signInMode } = useSieMethods();
 
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
 
-  const { run: registerWithEmailAsync } = useApi(
+  const { run: registerWithIdentifierAsync } = useApi(
     registerWithVerifiedIdentifier,
     requiredProfileErrorHandlers
   );
 
   const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
 
-  const identifierNotExistErrorHandler = useIdentifierErrorAlert(
-    UserFlow.signIn,
-    SignInIdentifier.Email,
-    email
-  );
+  const showIdentifierErrorAlert = useIdentifierErrorAlert();
 
-  const emailNotExistRegisterErrorHandler = useCallback(async () => {
+  const identifierNotExistErrorHandler = useCallback(async () => {
+    // Should not redirect user to register if is sign-in only mode or bind social flow
+    if (signInMode === SignInMode.SignIn || socialToBind) {
+      void showIdentifierErrorAlert(IdentifierErrorType.IdentifierNotExist, method, target);
+
+      return;
+    }
+
     const [confirm] = await show({
       confirmText: 'action.create',
       ModalContent: t('description.sign_in_id_does_not_exist', {
-        type: t(`description.email`),
-        value: email,
+        ype: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
+        value: target,
       }),
     });
 
@@ -56,32 +67,37 @@ const useSignInWithEmailVerificationCode = (email: string, errorCallback?: () =>
       return;
     }
 
-    const result = await registerWithEmailAsync({ email });
+    const result = await registerWithIdentifierAsync(
+      method === SignInIdentifier.Email ? { email: target } : { phone: target }
+    );
 
     if (result?.redirectTo) {
       window.location.replace(result.redirectTo);
     }
-  }, [email, navigate, show, registerWithEmailAsync, t]);
+  }, [
+    method,
+    navigate,
+    registerWithIdentifierAsync,
+    show,
+    showIdentifierErrorAlert,
+    signInMode,
+    socialToBind,
+    t,
+    target,
+  ]);
 
   const errorHandlers = useMemo<ErrorHandlers>(
     () => ({
-      'user.user_not_exist':
-        // Block user auto register if is bind social or sign-in only flow
-        signInMode === SignInMode.SignIn || socialToBind
-          ? identifierNotExistErrorHandler
-          : emailNotExistRegisterErrorHandler,
-      ...sharedErrorHandlers,
+      'user.user_not_exist': identifierNotExistErrorHandler,
+      ...generalVerificationCodeErrorHandlers,
       ...requiredProfileErrorHandlers,
       callback: errorCallback,
     }),
     [
-      emailNotExistRegisterErrorHandler,
       errorCallback,
       identifierNotExistErrorHandler,
       requiredProfileErrorHandlers,
-      sharedErrorHandlers,
-      signInMode,
-      socialToBind,
+      generalVerificationCodeErrorHandlers,
     ]
   );
 
@@ -97,16 +113,10 @@ const useSignInWithEmailVerificationCode = (email: string, errorCallback?: () =>
   }, [result]);
 
   const onSubmit = useCallback(
-    async (verificationCode: string) => {
-      return asyncSignInWithVerificationCodeIdentifier(
-        {
-          email,
-          verificationCode,
-        },
-        socialToBind
-      );
+    async (payload: EmailVerificationCodePayload | PhoneVerificationCodePayload) => {
+      return asyncSignInWithVerificationCodeIdentifier(payload, socialToBind);
     },
-    [asyncSignInWithVerificationCodeIdentifier, email, socialToBind]
+    [asyncSignInWithVerificationCodeIdentifier, socialToBind]
   );
 
   return {
@@ -116,4 +126,4 @@ const useSignInWithEmailVerificationCode = (email: string, errorCallback?: () =>
   };
 };
 
-export default useSignInWithEmailVerificationCode;
+export default useSignInFlowCodeVerification;
