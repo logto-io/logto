@@ -20,6 +20,7 @@ import type { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
+import { buildUrl } from '@/utilities/url';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -38,9 +39,14 @@ const ApiResources = () => {
   const [query, setQuery] = useSearchParams();
   const search = query.toString();
   const pageIndex = Number(query.get('page') ?? '1');
-  const { data, error, mutate } = useSWR<[Resource[], number], RequestError>(
-    `/api/resources?page=${pageIndex}&page_size=${pageSize}`
-  );
+
+  const url = buildUrl('/api/resources', {
+    page: `${pageIndex}`,
+    page_size: `${pageSize}`,
+  });
+
+  const { data, error, mutate } = useSWR<[Resource[], number], RequestError>(url);
+
   const isLoading = !data && !error;
   const navigate = useNavigate();
   const theme = useTheme();
