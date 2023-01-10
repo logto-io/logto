@@ -13,13 +13,10 @@ import i18next from 'i18next';
 
 import { getLogtoConnectors } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { findAllCustomLanguageTags } from '#src/queries/custom-phrase.js';
-import {
-  findDefaultSignInExperience,
-  updateDefaultSignInExperience,
-} from '#src/queries/sign-in-experience.js';
-import { hasActiveUsers } from '#src/queries/user.js';
+import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+
+import { defaultQueries } from '../shared.js';
 
 export * from './sign-up.js';
 export * from './sign-in.js';
@@ -32,66 +29,88 @@ export const validateBranding = (branding: Branding) => {
   assertThat(branding.logoUrl.trim(), 'sign_in_experiences.empty_logo');
 };
 
-export const validateLanguageInfo = async (languageInfo: LanguageInfo) => {
-  const supportedLanguages = [...builtInLanguages, ...(await findAllCustomLanguageTags())];
+export const createSignInExperienceLibrary = (queries: Queries) => {
+  const {
+    customPhrases: { findAllCustomLanguageTags },
+    signInExperiences: { findDefaultSignInExperience, updateDefaultSignInExperience },
+    users: { hasActiveUsers },
+  } = queries;
 
-  assertThat(
-    supportedLanguages.includes(languageInfo.fallbackLanguage),
-    new RequestError({
-      code: 'sign_in_experiences.unsupported_default_language',
-      language: languageInfo.fallbackLanguage,
-    })
-  );
+  const validateLanguageInfo = async (languageInfo: LanguageInfo) => {
+    const supportedLanguages = [...builtInLanguages, ...(await findAllCustomLanguageTags())];
+
+    assertThat(
+      supportedLanguages.includes(languageInfo.fallbackLanguage),
+      new RequestError({
+        code: 'sign_in_experiences.unsupported_default_language',
+        language: languageInfo.fallbackLanguage,
+      })
+    );
+  };
+
+  const removeUnavailableSocialConnectorTargets = async () => {
+    const connectors = await getLogtoConnectors();
+    const availableSocialConnectorTargets = deduplicate(
+      connectors
+        .filter(({ type }) => type === ConnectorType.Social)
+        .map(({ metadata: { target } }) => target)
+    );
+
+    const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
+
+    await updateDefaultSignInExperience({
+      socialSignInConnectorTargets: socialSignInConnectorTargets.filter((target) =>
+        availableSocialConnectorTargets.includes(target)
+      ),
+    });
+  };
+
+  const getSignInExperienceForApplication = async (
+    applicationId?: string
+  ): Promise<SignInExperience & { notification?: string }> => {
+    const signInExperience = await findDefaultSignInExperience();
+
+    // Hard code AdminConsole sign-in methods settings.
+    if (applicationId === adminConsoleApplicationId) {
+      return {
+        ...adminConsoleSignInExperience,
+        branding: {
+          ...adminConsoleSignInExperience.branding,
+          slogan: i18next.t('admin_console.welcome.title'),
+        },
+        termsOfUseUrl: signInExperience.termsOfUseUrl,
+        languageInfo: signInExperience.languageInfo,
+        signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
+        socialSignInConnectorTargets: [],
+      };
+    }
+
+    // Insert Demo App Notification
+    if (applicationId === demoAppApplicationId) {
+      const { socialSignInConnectorTargets } = signInExperience;
+
+      const notification = i18next.t('demo_app.notification');
+
+      return {
+        ...signInExperience,
+        socialSignInConnectorTargets,
+        notification,
+      };
+    }
+
+    return signInExperience;
+  };
+
+  return {
+    validateLanguageInfo,
+    removeUnavailableSocialConnectorTargets,
+    getSignInExperienceForApplication,
+  };
 };
 
-export const removeUnavailableSocialConnectorTargets = async () => {
-  const connectors = await getLogtoConnectors();
-  const availableSocialConnectorTargets = deduplicate(
-    connectors
-      .filter(({ type }) => type === ConnectorType.Social)
-      .map(({ metadata: { target } }) => target)
-  );
-
-  const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
-  await updateDefaultSignInExperience({
-    socialSignInConnectorTargets: socialSignInConnectorTargets.filter((target) =>
-      availableSocialConnectorTargets.includes(target)
-    ),
-  });
-};
-
-export const getSignInExperienceForApplication = async (
-  applicationId?: string
-): Promise<SignInExperience & { notification?: string }> => {
-  const signInExperience = await findDefaultSignInExperience();
-
-  // Hard code AdminConsole sign-in methods settings.
-  if (applicationId === adminConsoleApplicationId) {
-    return {
-      ...adminConsoleSignInExperience,
-      branding: {
-        ...adminConsoleSignInExperience.branding,
-        slogan: i18next.t('admin_console.welcome.title'),
-      },
-      termsOfUseUrl: signInExperience.termsOfUseUrl,
-      languageInfo: signInExperience.languageInfo,
-      signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
-      socialSignInConnectorTargets: [],
-    };
-  }
-
-  // Insert Demo App Notification
-  if (applicationId === demoAppApplicationId) {
-    const { socialSignInConnectorTargets } = signInExperience;
-
-    const notification = i18next.t('demo_app.notification');
-
-    return {
-      ...signInExperience,
-      socialSignInConnectorTargets,
-      notification,
-    };
-  }
-
-  return signInExperience;
-};
+/** @deprecated Don't use. This is for transition only and will be removed soon. */
+export const {
+  validateLanguageInfo,
+  removeUnavailableSocialConnectorTargets,
+  getSignInExperienceForApplication,
+} = createSignInExperienceLibrary(defaultQueries);

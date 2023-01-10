@@ -18,34 +18,42 @@ const { mockEsm } = createMockUtils(jest);
 
 const allCustomLanguageTags: LanguageTag[] = [];
 
-const { findAllCustomLanguageTags } = mockEsm('#src/queries/custom-phrase.js', () => ({
+const customPhrases = {
   findAllCustomLanguageTags: jest.fn(async () => allCustomLanguageTags),
-}));
+};
+const { findAllCustomLanguageTags } = customPhrases;
+
 const { getLogtoConnectors } = mockEsm('#src/connectors.js', () => ({
   getLogtoConnectors: jest.fn(),
 }));
-const { findDefaultSignInExperience, updateDefaultSignInExperience } = mockEsm(
-  '#src/queries/sign-in-experience.js',
-  () => ({
-    findDefaultSignInExperience: jest.fn(),
-    updateDefaultSignInExperience: jest.fn(
-      async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
-        ...mockSignInExperience,
-        ...data,
-      })
-    ),
-  })
-);
 
-const { validateBranding, validateLanguageInfo, removeUnavailableSocialConnectorTargets } =
-  await import('./index.js');
+const signInExperiences = {
+  findDefaultSignInExperience: jest.fn(),
+  updateDefaultSignInExperience: jest.fn(
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+      ...mockSignInExperience,
+      ...data,
+    })
+  ),
+};
+const { findDefaultSignInExperience, updateDefaultSignInExperience } = signInExperiences;
+
+const { MockQueries } = await import('#src/test-utils/tenant.js');
+const queries = new MockQueries({
+  customPhrases,
+  signInExperiences,
+});
+
+const { validateBranding, createSignInExperienceLibrary } = await import('./index.js');
+const { validateLanguageInfo, removeUnavailableSocialConnectorTargets } =
+  createSignInExperienceLibrary(queries);
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe('validate branding', () => {
-  test('should throw when the UI style contains the slogan and slogan is empty', () => {
+  it('should throw when the UI style contains the slogan and slogan is empty', () => {
     expect(() => {
       validateBranding({
         ...mockBranding,
@@ -55,7 +63,7 @@ describe('validate branding', () => {
     }).toMatchError(new RequestError('sign_in_experiences.empty_slogan'));
   });
 
-  test('should throw when the logo is empty', () => {
+  it('should throw when the logo is empty', () => {
     expect(() => {
       validateBranding({
         ...mockBranding,
@@ -66,7 +74,7 @@ describe('validate branding', () => {
     }).toMatchError(new RequestError('sign_in_experiences.empty_logo'));
   });
 
-  test('should throw when the UI style contains the slogan and slogan is blank', () => {
+  it('should throw when the UI style contains the slogan and slogan is blank', () => {
     expect(() => {
       validateBranding({
         ...mockBranding,
@@ -76,7 +84,7 @@ describe('validate branding', () => {
     }).toMatchError(new RequestError('sign_in_experiences.empty_slogan'));
   });
 
-  test('should not throw when the UI style does not contain the slogan and slogan is empty', () => {
+  it('should not throw when the UI style does not contain the slogan and slogan is empty', () => {
     expect(() => {
       validateBranding({
         ...mockBranding,
@@ -138,7 +146,7 @@ describe('validate language info', () => {
 });
 
 describe('remove unavailable social connector targets', () => {
-  test('should remove unavailable social connector targets in sign-in experience', async () => {
+  it('should remove unavailable social connector targets in sign-in experience', async () => {
     const mockSocialConnectorTargets = mockSocialConnectors.map(
       ({ metadata: { target } }) => target
     );

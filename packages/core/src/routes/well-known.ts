@@ -5,13 +5,14 @@ import etag from 'etag';
 
 import { getLogtoConnectors } from '#src/connectors/index.js';
 import { getApplicationIdFromInteraction } from '#src/libraries/session.js';
-import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(
-  ...[router, { provider }]: RouterInitArgs<T>
+  ...[router, { provider, libraries }]: RouterInitArgs<T>
 ) {
+  const { getSignInExperienceForApplication } = libraries.signInExperiences;
+
   router.get(
     '/.well-known/sign-in-exp',
     async (ctx, next) => {

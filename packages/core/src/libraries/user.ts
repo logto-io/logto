@@ -10,15 +10,14 @@ import pRetry from 'p-retry';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import envSet from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import Queries from '#src/tenants/Queries.js';
+import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { encryptPassword } from '#src/utils/password.js';
 
+import { defaultQueries } from './shared.js';
+
 const userId = buildIdGenerator(12);
 const roleId = buildIdGenerator(21);
-
-/** @deprecated Don't use. This is for transition only and will be removed soon. */
-export const defaultQueries = new Queries(envSet.pool);
 
 export const encryptUserPassword = async (
   password: string

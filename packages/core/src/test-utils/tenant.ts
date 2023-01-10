@@ -7,13 +7,39 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import type { GrantMock } from './oidc-provider.js';
 import { createMockProvider } from './oidc-provider.js';
 
-const { jest } = import.meta;
+export const createQueriesWithMockPool = () =>
+  new Queries(
+    createMockPool({
+      query: async (sql, values) => {
+        return createMockQueryResult([]);
+      },
+    })
+  );
 
-const pool = createMockPool({
-  query: async (sql, values) => {
-    return createMockQueryResult([]);
-  },
-});
+export class MockQueries extends Queries {
+  constructor(queriesOverride?: Partial2<Queries>) {
+    super(
+      createMockPool({
+        query: async (sql, values) => {
+          return createMockQueryResult([]);
+        },
+      })
+    );
+
+    if (!queriesOverride) {
+      return;
+    }
+
+    const overrideKey = <Key extends keyof Queries>(key: Key) => {
+      this[key] = { ...this[key], ...queriesOverride[key] };
+    };
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key of Object.keys(queriesOverride) as Array<keyof Queries>) {
+      overrideKey(key);
+    }
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type DeepPartial<T> = T extends object
@@ -33,8 +59,7 @@ export class MockTenant implements TenantContext {
     queriesOverride?: Partial2<Queries>,
     librariesOverride?: Partial2<Libraries>
   ) {
-    this.queries = new Queries(pool);
-    this.setPartial('queries', queriesOverride);
+    this.queries = new MockQueries(queriesOverride);
     this.libraries = new Libraries(this.queries);
     this.setPartial('libraries', librariesOverride);
   }
