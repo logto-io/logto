@@ -5,20 +5,23 @@ import { object, string } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
-import {
-  deleteApplicationById,
-  findApplicationById,
-  findAllApplications,
-  insertApplication,
-  updateApplicationById,
-  findTotalNumberOfApplications,
-} from '#src/queries/application.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 const applicationId = buildIdGenerator(21);
 
-export default function applicationRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function applicationRoutes<T extends AuthedRouter>(
+  ...[router, { queries }]: RouterInitArgs<T>
+) {
+  const {
+    deleteApplicationById,
+    findApplicationById,
+    findAllApplications,
+    insertApplication,
+    updateApplicationById,
+    findTotalNumberOfApplications,
+  } = queries.applications;
+
   router.get('/applications', koaPagination(), async (ctx, next) => {
     const { limit, offset } = ctx.pagination;
 

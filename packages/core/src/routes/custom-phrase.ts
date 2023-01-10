@@ -7,13 +7,6 @@ import { object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import {
-  deleteCustomPhraseByLanguageTag,
-  findAllCustomPhrases,
-  findCustomPhraseByLanguageTag,
-  upsertCustomPhrase,
-} from '#src/queries/custom-phrase.js';
-import { findDefaultSignInExperience } from '#src/queries/sign-in-experience.js';
 import assertThat from '#src/utils/assert-that.js';
 import { isStrictlyPartial } from '#src/utils/translation.js';
 
@@ -24,7 +17,19 @@ const cleanDeepTranslation = (translation: Translation) =>
   // eslint-disable-next-line no-restricted-syntax
   cleanDeep(translation) as Translation;
 
-export default function customPhraseRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function customPhraseRoutes<T extends AuthedRouter>(
+  ...[router, { queries }]: RouterInitArgs<T>
+) {
+  const {
+    customPhrases: {
+      deleteCustomPhraseByLanguageTag,
+      findAllCustomPhrases,
+      findCustomPhraseByLanguageTag,
+      upsertCustomPhrase,
+    },
+    signInExperiences: { findDefaultSignInExperience },
+  } = queries;
+
   router.get(
     '/custom-phrases',
     koaGuard({

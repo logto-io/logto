@@ -7,31 +7,6 @@ import { object, string, z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import { findResourcesByIds } from '#src/queries/resource.js';
-import {
-  deleteRolesScope,
-  findRolesScopesByRoleId,
-  insertRolesScopes,
-} from '#src/queries/roles-scopes.js';
-import {
-  countRoles,
-  deleteRoleById,
-  findRoleById,
-  findRoleByRoleName,
-  findRoles,
-  insertRole,
-  updateRoleById,
-} from '#src/queries/roles.js';
-import { findScopeById, findScopesByIds } from '#src/queries/scope.js';
-import { findUserById, findUsersByIds } from '#src/queries/user.js';
-import {
-  countUsersRolesByRoleId,
-  deleteUsersRolesByUserIdAndRoleId,
-  findFirstUsersRolesByRoleIdAndUserIds,
-  findUsersRolesByRoleId,
-  findUsersRolesByUserId,
-  insertUsersRoles,
-} from '#src/queries/users-roles.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
@@ -39,7 +14,33 @@ import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 const roleId = buildIdGenerator(21);
 
-export default function roleRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function roleRoutes<T extends AuthedRouter>(
+  ...[router, { queries }]: RouterInitArgs<T>
+) {
+  const {
+    resources: { findResourcesByIds },
+    rolesScopes: { deleteRolesScope, findRolesScopesByRoleId, insertRolesScopes },
+    roles: {
+      countRoles,
+      deleteRoleById,
+      findRoleById,
+      findRoleByRoleName,
+      findRoles,
+      insertRole,
+      updateRoleById,
+    },
+    scopes: { findScopeById, findScopesByIds },
+    users: { findUserById, findUsersByIds },
+    usersRoles: {
+      countUsersRolesByRoleId,
+      deleteUsersRolesByUserIdAndRoleId,
+      findFirstUsersRolesByRoleIdAndUserIds,
+      findUsersRolesByRoleId,
+      findUsersRolesByUserId,
+      insertUsersRoles,
+    },
+  } = queries;
+
   router.get('/roles', koaPagination({ isOptional: true }), async (ctx, next) => {
     const { limit, offset, disabled } = ctx.pagination;
     const { searchParams } = ctx.request.URL;

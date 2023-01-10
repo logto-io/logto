@@ -9,7 +9,6 @@ import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js'
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { getTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Applications);
@@ -65,14 +64,3 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     deleteApplicationById,
   };
 };
-
-/** @deprecated Will be removed soon. Use createApplicationQueries() factory instead. */
-export const {
-  findTotalNumberOfApplications,
-  findAllApplications,
-  findApplicationById,
-  insertApplication,
-  updateApplication,
-  updateApplicationById,
-  deleteApplicationById,
-} = createApplicationQueries(envSet.pool);

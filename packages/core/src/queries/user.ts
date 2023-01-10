@@ -11,6 +11,7 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 
+// TODO: @sijie remove this
 import { findRoleByRoleName, findRolesByRoleIds } from './roles.js';
 import { findUsersRolesByRoleId, findUsersRolesByUserId } from './users-roles.js';
 

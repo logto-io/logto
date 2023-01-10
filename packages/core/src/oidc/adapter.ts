@@ -8,15 +8,7 @@ import { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
 import envSet, { MountedApps } from '#src/env-set/index.js';
-import { findApplicationById } from '#src/queries/application.js';
-import {
-  consumeInstanceById,
-  destroyInstanceById,
-  findPayloadById,
-  findPayloadByPayloadField,
-  revokeInstanceByGrantId,
-  upsertInstance,
-} from '#src/queries/oidc-model-instance.js';
+import type Queries from '#src/tenants/Queries.js';
 import { appendPath } from '#src/utils/url.js';
 
 import { getConstantClientMetadata } from './utils.js';
@@ -54,7 +46,22 @@ const buildDemoAppUris = (
   return data;
 };
 
-export default function postgresAdapter(modelName: string): ReturnType<AdapterFactory> {
+export default function postgresAdapter(
+  queries: Queries,
+  modelName: string
+): ReturnType<AdapterFactory> {
+  const {
+    applications: { findApplicationById },
+    oidcModelInstances: {
+      consumeInstanceById,
+      destroyInstanceById,
+      findPayloadById,
+      findPayloadByPayloadField,
+      revokeInstanceByGrantId,
+      upsertInstance,
+    },
+  } = queries;
+
   if (modelName === 'Client') {
     const reject = async () => {
       throw new Error('Not implemented');

@@ -73,7 +73,10 @@ export default class Tenant implements TenantContext {
     app.use(
       mount(
         '/' + MountedApps.DemoApp,
-        compose([koaCheckDemoApp(), koaSpaProxy(MountedApps.DemoApp, 5003, MountedApps.DemoApp)])
+        compose([
+          koaCheckDemoApp(this.queries),
+          koaSpaProxy(MountedApps.DemoApp, 5003, MountedApps.DemoApp),
+        ])
       )
     );
 

@@ -5,7 +5,6 @@ import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(CustomPhrases);
@@ -69,12 +68,3 @@ export const createCustomPhraseQueries = (pool: CommonQueryMethods) => {
     deleteCustomPhraseByLanguageTag,
   };
 };
-
-/** @deprecated Will be removed soon. Use createCustomPhraseQueries() factory instead. */
-export const {
-  findAllCustomLanguageTags,
-  findAllCustomPhrases,
-  findCustomPhraseByLanguageTag,
-  upsertCustomPhrase,
-  deleteCustomPhraseByLanguageTag,
-} = createCustomPhraseQueries(envSet.pool);

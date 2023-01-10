@@ -1,13 +1,13 @@
 import { demoAppApplicationId } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 
-import { findApplicationById } from '#src/queries/application.js';
+import type Queries from '#src/tenants/Queries.js';
 
-export default function koaCheckDemoApp<StateT, ContextT, ResponseBodyT>(): MiddlewareType<
-  StateT,
-  ContextT,
-  ResponseBodyT
-> {
+export default function koaCheckDemoApp<StateT, ContextT, ResponseBodyT>(
+  queries: Queries
+): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+  const { findApplicationById } = queries.applications;
+
   return async (ctx, next) => {
     try {
       await findApplicationById(demoAppApplicationId);

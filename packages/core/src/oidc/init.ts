@@ -45,7 +45,7 @@ export default function initOidc(queries: Queries): Provider {
   } as const);
 
   const oidc = new Provider(issuer, {
-    adapter: postgresAdapter,
+    adapter: postgresAdapter.bind(null, queries),
     renderError: (_ctx, _out, error) => {
       console.error(error);
 

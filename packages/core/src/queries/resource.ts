@@ -9,7 +9,6 @@ import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js'
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { getTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Resources);
@@ -80,16 +79,3 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
     deleteResourceById,
   };
 };
-
-/** @deprecated Will be removed soon. Use createResourceQueries() factory instead. */
-export const {
-  findTotalNumberOfResources,
-  findAllResources,
-  findResourceByIndicator,
-  findResourceById,
-  findResourcesByIds,
-  insertResource,
-  updateResource,
-  updateResourceById,
-  deleteResourceById,
-} = createResourceQueries(envSet.pool);

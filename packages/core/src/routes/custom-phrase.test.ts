@@ -5,6 +5,7 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { mockZhCnCustomPhrase, trTrTag, zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -16,12 +17,7 @@ const mockCustomPhrases: Record<string, CustomPhrase> = {
   [mockLanguageTag]: mockPhrase,
 };
 
-const {
-  deleteCustomPhraseByLanguageTag,
-  findAllCustomPhrases,
-  findCustomPhraseByLanguageTag,
-  upsertCustomPhrase,
-} = mockEsm('#src/queries/custom-phrase.js', () => ({
+const customPhrases = {
   deleteCustomPhraseByLanguageTag: jest.fn(async (languageTag: string) => {
     if (!mockCustomPhrases[languageTag]) {
       throw new RequestError({ code: 'entity.not_found', status: 404 });
@@ -38,15 +34,15 @@ const {
     return mockCustomPhrase;
   }),
   upsertCustomPhrase: jest.fn(async () => mockPhrase),
-}));
+};
+const {
+  deleteCustomPhraseByLanguageTag,
+  findAllCustomPhrases,
+  findCustomPhraseByLanguageTag,
+  upsertCustomPhrase,
+} = customPhrases;
 
-const { isStrictlyPartial } = mockEsm('#src/utils/translation.js', () => ({
-  isStrictlyPartial: jest.fn(() => true),
-}));
-
-const mockFallbackLanguage = trTrTag;
-
-mockEsm('#src/queries/sign-in-experience.js', () => ({
+const signInExperiences = {
   findDefaultSignInExperience: jest.fn(
     async (): Promise<SignInExperience> => ({
       ...mockSignInExperience,
@@ -56,10 +52,18 @@ mockEsm('#src/queries/sign-in-experience.js', () => ({
       },
     })
   ),
+};
+
+const { isStrictlyPartial } = mockEsm('#src/utils/translation.js', () => ({
+  isStrictlyPartial: jest.fn(() => true),
 }));
 
+const mockFallbackLanguage = trTrTag;
+
+const tenantContext = new MockTenant(undefined, { customPhrases, signInExperiences });
+
 const customPhraseRoutes = await pickDefault(import('./custom-phrase.js'));
-const customPhraseRequest = createRequester({ authedRoutes: customPhraseRoutes });
+const customPhraseRequest = createRequester({ authedRoutes: customPhraseRoutes, tenantContext });
 
 describe('customPhraseRoutes', () => {
   afterEach(() => {
