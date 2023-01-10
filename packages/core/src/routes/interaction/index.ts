@@ -45,12 +45,12 @@ export type RouterContext<T> = T extends Router<unknown, infer Context> ? Contex
 export default function interactionRoutes<T extends AnonymousRouter>(
   ...[anonymousRouter, tenant]: RouterInitArgs<T>
 ) {
-  const { provider } = tenant;
+  const { provider, queries } = tenant;
   const router =
     // @ts-expect-error for good koa types
     // eslint-disable-next-line no-restricted-syntax
     (anonymousRouter as Router<unknown, WithInteractionDetailsContext<RouterContext<T>>>).use(
-      koaAuditLog(),
+      koaAuditLog(queries),
       koaInteractionDetails(provider)
     );
 
@@ -280,7 +280,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   router.post(
     `${interactionPrefix}/submit`,
     koaInteractionSie(),
-    koaInteractionHooks(provider),
+    koaInteractionHooks(tenant),
     async (ctx, next) => {
       const { interactionDetails, createLog } = ctx;
       const interactionStorage = getInteractionStorage(interactionDetails.result);

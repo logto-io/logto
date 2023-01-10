@@ -1,10 +1,9 @@
 import { Hooks } from '@logto/schemas/models';
 import { createModelRouter } from '@withtyped/postgres';
+import type { QueryClient } from '@withtyped/server';
 
-import envSet from '#src/env-set/index.js';
+export type ModelRouters = ReturnType<typeof createModelRouters>;
 
-const modelRouters = {
-  hook: createModelRouter(Hooks, envSet.queryClient).withCrud(),
-};
-
-export default modelRouters;
+export const createModelRouters = (queryClient: QueryClient) => ({
+  hook: createModelRouter(Hooks, queryClient).withCrud(),
+});

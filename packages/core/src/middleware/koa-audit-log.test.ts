@@ -3,23 +3,25 @@ import { LogResult } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import i18next from 'i18next';
 
-import RequestError from '#src/errors/RequestError/index.js';
-import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
-
 import type { WithLogContext, LogPayload } from './koa-audit-log.js';
 
 const { jest } = import.meta;
 
-const { mockEsm } = createMockUtils(jest);
-
-const { insertLog } = mockEsm('#src/queries/log.js', () => ({
-  insertLog: jest.fn(),
-}));
+const { mockEsmWithActual } = createMockUtils(jest);
 
 const nanoIdMock = 'mockId';
-mockEsm('@logto/core-kit', () => ({
+await mockEsmWithActual('@logto/core-kit', () => ({
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  buildIdGenerator: () => () => nanoIdMock,
   generateStandardId: () => nanoIdMock,
 }));
+
+const { default: RequestError } = await import('#src/errors/RequestError/index.js');
+const { MockQueries } = await import('#src/test-utils/tenant.js');
+const { createContextWithRouteParameters } = await import('#src/utils/test-utils.js');
+
+const insertLog = jest.fn();
+const queries = new MockQueries({ logs: { insertLog } });
 
 const koaLog = await pickDefault(import('./koa-audit-log.js'));
 
@@ -51,7 +53,7 @@ describe('koaAuditLog middleware', () => {
       log.append(mockPayload);
       log.append(additionalMockPayload);
     };
-    await koaLog()(ctx, next);
+    await koaLog(queries)(ctx, next);
 
     expect(insertLog).toBeCalledWith({
       id: nanoIdMock,
@@ -82,7 +84,7 @@ describe('koaAuditLog middleware', () => {
       const log2 = ctx.createLog(logKey);
       log2.append(mockPayload);
     };
-    await koaLog()(ctx, next);
+    await koaLog(queries)(ctx, next);
 
     const basePayload = {
       ...mockPayload,
@@ -116,7 +118,7 @@ describe('koaAuditLog middleware', () => {
 
     // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/no-empty-function
     const next = async () => {};
-    await koaLog()(ctx, next);
+    await koaLog(queries)(ctx, next);
     expect(insertLog).not.toBeCalled();
   });
 
@@ -136,7 +138,7 @@ describe('koaAuditLog middleware', () => {
         log.append(mockPayload);
         throw error;
       };
-      await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
+      await expect(koaLog(queries)(ctx, next)).rejects.toMatchError(error);
 
       expect(insertLog).toBeCalledWith({
         id: nanoIdMock,
@@ -172,7 +174,7 @@ describe('koaAuditLog middleware', () => {
         log2.append(mockPayload);
         throw error;
       };
-      await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
+      await expect(koaLog(queries)(ctx, next)).rejects.toMatchError(error);
 
       expect(insertLog).toHaveBeenCalledTimes(2);
       expect(insertLog).toBeCalledWith({

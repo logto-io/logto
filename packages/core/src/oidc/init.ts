@@ -13,10 +13,8 @@ import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.js';
-import { findApplicationById } from '#src/queries/application.js';
-import { findResourceByIndicator } from '#src/queries/resource.js';
-import { findUserById } from '#src/queries/user.js';
 import { routes } from '#src/routes/consts.js';
+import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { claimToUserKey, getUserClaims } from './scope.js';
@@ -24,7 +22,12 @@ import { claimToUserKey, getUserClaims } from './scope.js';
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
 
-export default function initOidc(): Provider {
+export default function initOidc(queries: Queries): Provider {
+  const {
+    applications: { findApplicationById },
+    resources: { findResourceByIndicator },
+    users: { findUserById },
+  } = queries;
   const {
     issuer,
     cookieKeys,
@@ -208,7 +211,7 @@ export default function initOidc(): Provider {
   addOidcEventListeners(oidc);
 
   // Provide audit log context for event listeners
-  oidc.use(koaAuditLog());
+  oidc.use(koaAuditLog(queries));
 
   return oidc;
 }
