@@ -128,7 +128,8 @@ describe('identifier verification', () => {
     expect(verifyIdentifierByVerificationCode).toBeCalledWith(
       { ...identifier, event: interactionStorage.event },
       'jti',
-      logContext.createLog
+      logContext.createLog,
+      tenant.libraries.passcodes
     );
 
     expect(result).toEqual({ key: 'emailVerified', value: identifier.email });
@@ -147,7 +148,8 @@ describe('identifier verification', () => {
     expect(verifyIdentifierByVerificationCode).toBeCalledWith(
       { ...identifier, event: interactionStorage.event },
       'jti',
-      logContext.createLog
+      logContext.createLog,
+      tenant.libraries.passcodes
     );
 
     expect(result).toEqual({ key: 'phoneVerified', value: identifier.phone });

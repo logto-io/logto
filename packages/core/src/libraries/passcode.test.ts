@@ -1,15 +1,29 @@
 import { ConnectorType, VerificationCodeType } from '@logto/connector-kit';
 import { Passcode } from '@logto/schemas';
-import { createMockUtils } from '@logto/shared/esm';
 import { any } from 'zod';
 
 import { mockConnector, mockMetadata } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { MockQueries } from '#src/test-utils/tenant.js';
 import { defaultConnectorMethods } from '#src/utils/connectors/consts.js';
 
-const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
+import {
+  createPasscodeLibrary,
+  passcodeExpiration,
+  passcodeMaxTryCount,
+  passcodeLength,
+} from './passcode.js';
 
+const { jest } = import.meta;
+
+const passcodeQueries = {
+  findUnconsumedPasscodesByJtiAndType: jest.fn(),
+  findUnconsumedPasscodeByJtiAndType: jest.fn(),
+  deletePasscodesByIds: jest.fn(),
+  insertPasscode: jest.fn(),
+  consumePasscode: jest.fn(),
+  increasePasscodeTryCount: jest.fn(),
+};
 const {
   findUnconsumedPasscodeByJtiAndType,
   findUnconsumedPasscodesByJtiAndType,
@@ -17,27 +31,15 @@ const {
   increasePasscodeTryCount,
   insertPasscode,
   consumePasscode,
-} = mockEsm('#src/queries/passcode.js', () => ({
-  findUnconsumedPasscodesByJtiAndType: jest.fn(),
-  findUnconsumedPasscodeByJtiAndType: jest.fn(),
-  deletePasscodesByIds: jest.fn(),
-  insertPasscode: jest.fn(),
-  consumePasscode: jest.fn(),
-  increasePasscodeTryCount: jest.fn(),
-}));
+} = passcodeQueries;
 
-const { getLogtoConnectors } = mockEsm('#src/libraries/connector.js', () => ({
-  getLogtoConnectors: jest.fn(),
-}));
+const getLogtoConnectors = jest.fn();
 
-const {
-  createPasscode,
-  passcodeExpiration,
-  passcodeMaxTryCount,
-  passcodeLength,
-  sendPasscode,
-  verifyPasscode,
-} = await import('./passcode.js');
+const { createPasscode, sendPasscode, verifyPasscode } = createPasscodeLibrary(
+  new MockQueries({ passcodes: passcodeQueries }),
+  // @ts-expect-error
+  { getLogtoConnectors }
+);
 
 beforeAll(() => {
   findUnconsumedPasscodesByJtiAndType.mockResolvedValue([]);
