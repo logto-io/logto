@@ -5,7 +5,7 @@ import { createResource } from '#src/api/index.js';
 import { createScope, deleteScope, getScopes, updateScope } from '#src/api/scope.js';
 import { generateScopeName } from '#src/utils.js';
 
-describe('admin console api resources', () => {
+describe('scopes', () => {
   it('should get management api resource scopes successfully', async () => {
     const scopes = await getScopes(managementResource.id);
 

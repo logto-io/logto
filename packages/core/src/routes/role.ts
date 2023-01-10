@@ -1,7 +1,8 @@
 import { buildIdGenerator } from '@logto/core-kit';
 import type { RoleResponse, ScopeResponse } from '@logto/schemas';
-import { Roles } from '@logto/schemas';
+import { userInfoSelectFields, Roles } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
+import { pick } from '@silverhand/essentials';
 import { object, string, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -107,6 +108,7 @@ export default function roleRoutes<T extends AuthedRouter>(...[router]: RouterIn
         new RequestError({
           code: 'role.name_in_use',
           name: roleBody.name,
+          status: 422,
         })
       );
 
@@ -156,7 +158,14 @@ export default function roleRoutes<T extends AuthedRouter>(...[router]: RouterIn
       } = ctx.guard;
 
       await findRoleById(id);
-      assertThat(!name || !(await findRoleByRoleName(name, id)), 'role.name_in_use');
+      assertThat(
+        !name || !(await findRoleByRoleName(name, id)),
+        new RequestError({
+          code: 'role.name_in_use',
+          name,
+          status: 422,
+        })
+      );
       ctx.body = await updateRoleById(id, body);
 
       return next();
@@ -238,7 +247,10 @@ export default function roleRoutes<T extends AuthedRouter>(...[router]: RouterIn
 
       await Promise.all(scopeIds.map(async (scopeId) => findScopeById(scopeId)));
       await insertRolesScopes(scopeIds.map((scopeId) => ({ roleId: id, scopeId })));
-      ctx.status = 201;
+
+      const newRolesScopes = await findRolesScopesByRoleId(id);
+      const scopes = await findScopesByIds(newRolesScopes.map(({ scopeId }) => scopeId));
+      ctx.body = scopes;
 
       return next();
     }
@@ -272,7 +284,8 @@ export default function roleRoutes<T extends AuthedRouter>(...[router]: RouterIn
 
       await findRoleById(id);
       const usersRoles = await findUsersRolesByRoleId(id);
-      ctx.body = await findUsersByIds(usersRoles.map(({ userId }) => userId));
+      const users = await findUsersByIds(usersRoles.map(({ userId }) => userId));
+      ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
 
       return next();
     }

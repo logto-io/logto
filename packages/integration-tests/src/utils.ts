@@ -7,6 +7,7 @@ export const generateResourceName = () => `res_${crypto.randomUUID()}`;
 export const generateResourceIndicator = () => `https://${crypto.randomUUID()}.logto.io`;
 export const generateEmail = () => `${crypto.randomUUID().toLowerCase()}@logto.io`;
 export const generateScopeName = () => `sc:${crypto.randomUUID()}`;
+export const generateRoleName = () => `role_${crypto.randomUUID()}`;
 
 export const generatePhone = () => {
   const array = new Uint32Array(1);

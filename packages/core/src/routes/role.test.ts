@@ -132,7 +132,7 @@ describe('role routes', () => {
       const response = await roleRequester
         .patch(`/roles/${mockRole.id}`)
         .send({ name: mockRole.name });
-      expect(response.status).toEqual(400);
+      expect(response.status).toEqual(422);
     });
   });
 
@@ -158,11 +158,12 @@ describe('role routes', () => {
 
   it('POST /roles/:id/scopes', async () => {
     findRoleById.mockResolvedValueOnce(mockRole);
-    findRolesScopesByRoleId.mockResolvedValueOnce([]);
+    findRolesScopesByRoleId.mockResolvedValue([]);
+    findScopesByIds.mockResolvedValueOnce([]);
     const response = await roleRequester.post(`/roles/${mockRole.id}/scopes`).send({
       scopeIds: [mockScope.id],
     });
-    expect(response.status).toEqual(201);
+    expect(response.status).toEqual(200);
     expect(insertRolesScopes).toHaveBeenCalledWith([
       { roleId: mockRole.id, scopeId: mockScope.id },
     ]);
@@ -181,7 +182,7 @@ describe('role routes', () => {
     findUsersByIds.mockResolvedValueOnce([mockUser]);
     const response = await roleRequester.get(`/roles/${mockRole.id}/users`);
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockUser]);
+    expect(response.body[0]).toHaveProperty('id', mockUser.id);
   });
 
   it('POST /roles/:id/users', async () => {
