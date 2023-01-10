@@ -3,7 +3,7 @@ import type { IncomingHttpHeaders } from 'http';
 import type { User } from '@logto/schemas';
 
 import { authedAdminApi, deleteUser } from '#src/api/index.js';
-import { createUserByAdmin, expectRejects } from '#src/helpers.js';
+import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 
 const getUsers = async <T>(
   init: string[][] | Record<string, string> | URLSearchParams

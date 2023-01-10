@@ -16,7 +16,8 @@ import {
   updateConnectorConfig,
   deleteConnectorById,
 } from '#src/api/index.js';
-import { createUserByAdmin, bindSocialToNewCreatedUser } from '#src/helpers.js';
+import { createUserByAdmin } from '#src/helpers/index.js';
+import { createNewSocialUserWithUsernameAndPassword } from '#src/helpers/interactions.js';
 
 describe('admin console user management', () => {
   it('should create user successfully', async () => {
@@ -72,7 +73,7 @@ describe('admin console user management', () => {
     const { id } = await postConnector({ connectorId: mockSocialConnectorId });
     await updateConnectorConfig(id, mockSocialConnectorConfig);
 
-    const createdUserId = await bindSocialToNewCreatedUser(id);
+    const createdUserId = await createNewSocialUserWithUsernameAndPassword(id);
 
     const userInfo = await getUser(createdUserId);
     expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);
