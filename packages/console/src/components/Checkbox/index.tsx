@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import { onKeyDownHandler } from '@/utilities/a11y';
 
@@ -8,7 +8,6 @@ import { Tooltip } from '../Tip';
 import * as styles from './index.module.scss';
 
 type Props = {
-  name?: string;
   /* eslint-disable react/boolean-prop-naming */
   checked: boolean;
   disabled: boolean;
@@ -21,7 +20,6 @@ type Props = {
 };
 
 const Checkbox = ({
-  name,
   checked,
   disabled,
   indeterminate,
@@ -32,9 +30,9 @@ const Checkbox = ({
 }: Props) => {
   const [isIndeterminate, setIsIndeterminate] = useState(indeterminate);
 
-  useEffect(() => {
-    setIsIndeterminate(isIndeterminate);
-  }, [isIndeterminate]);
+  useLayoutEffect(() => {
+    setIsIndeterminate(indeterminate);
+  }, [indeterminate]);
 
   const handleChange = () => {
     if (disabled) {
@@ -59,7 +57,6 @@ const Checkbox = ({
         onClick={handleChange}
         onKeyDown={onKeyDownHandler(handleChange)}
       >
-        <input type="checkbox" checked={checked} disabled={disabled} name={name} />
         <Tooltip horizontalAlign="start" content={tooltip} anchorClassName={styles.tooltipAnchor}>
           <svg
             className={classNames(
