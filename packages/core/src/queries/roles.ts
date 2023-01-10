@@ -1,7 +1,7 @@
 import type { CreateRole, Role } from '@logto/schemas';
 import { adminConsoleAdminRoleId, SearchJointMode, Roles } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
-import { conditionalSql, convertToIdentifiers } from '@logto/shared';
+import { conditionalArraySql, conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -28,20 +28,33 @@ const buildRoleConditions = (search: Search) => {
 export const defaultUserSearch = { matches: [], isCaseSensitive: false, joint: SearchJointMode.Or };
 
 export const createRolesQueries = (pool: CommonQueryMethods) => {
-  const countRoles = async (search: Search = defaultUserSearch) =>
+  const countRoles = async (search: Search = defaultUserSearch, excludeRoleIds: string[] = []) =>
     pool.one<{ count: number }>(sql`
       select count(*)
       from ${table}
       where ${fields.id}<>${adminConsoleAdminRoleId}
+      ${conditionalArraySql(
+        excludeRoleIds,
+        (value) => sql`and ${fields.id} not in (${sql.join(value, sql`, `)})`
+      )}
       ${buildRoleConditions(search)}
     `);
 
-  const findRoles = async (search: Search, limit?: number, offset?: number) =>
+  const findRoles = async (
+    search: Search,
+    excludeRoleIds: string[] = [],
+    limit?: number,
+    offset?: number
+  ) =>
     pool.any<Role>(
       sql`
         select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
         where ${fields.id}<>${adminConsoleAdminRoleId}
+        ${conditionalArraySql(
+          excludeRoleIds,
+          (value) => sql`and ${fields.id} not in (${sql.join(value, sql`, `)})`
+        )}
         ${buildRoleConditions(search)}
         ${conditionalSql(limit, (value) => sql`limit ${value}`)}
         ${conditionalSql(offset, (value) => sql`offset ${value}`)}

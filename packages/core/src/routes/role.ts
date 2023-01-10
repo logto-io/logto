@@ -29,6 +29,7 @@ import {
   deleteUsersRolesByUserIdAndRoleId,
   findFirstUsersRolesByRoleIdAndUserIds,
   findUsersRolesByRoleId,
+  findUsersRolesByUserId,
   insertUsersRoles,
 } from '#src/queries/users-roles.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -46,16 +47,19 @@ export default function roleRoutes<T extends AuthedRouter>(...[router]: RouterIn
     return tryThat(
       async () => {
         const search = parseSearchParamsForSearch(searchParams);
+        const excludeUserId = searchParams.get('excludeUserId');
+        const usersRoles = excludeUserId ? await findUsersRolesByUserId(excludeUserId) : [];
+        const excludeRoleIds = usersRoles.map(({ roleId }) => roleId);
 
         if (disabled) {
-          ctx.body = await findRoles(search);
+          ctx.body = await findRoles(search, excludeRoleIds);
 
           return next();
         }
 
         const [{ count }, roles] = await Promise.all([
-          countRoles(search),
-          findRoles(search, limit, offset),
+          countRoles(search, excludeRoleIds),
+          findRoles(search, excludeRoleIds, limit, offset),
         ]);
 
         const rolesResponse: RoleResponse[] = await Promise.all(
