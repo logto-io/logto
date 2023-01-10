@@ -5,10 +5,10 @@ import { addProfileWithVerificationCodeIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
-import { UserFlow, SearchParameters } from '@/types';
+import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 
-import useIdentifierErrorAlert from './use-identifier-error-alert';
+import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
 const useContinueSetEmailVerificationCode = (email: string, errorCallback?: () => void) => {
@@ -17,7 +17,7 @@ const useContinueSetEmailVerificationCode = (email: string, errorCallback?: () =
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler(true);
 
   const identifierNotExistErrorHandler = useIdentifierErrorAlert(
-    UserFlow.continue,
+    IdentifierErrorType.IdentifierAlreadyExists,
     SignInIdentifier.Email,
     email
   );

@@ -12,10 +12,9 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
-import { UserFlow } from '@/types';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
-import useIdentifierErrorAlert from './use-identifier-error-alert';
+import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
 const useRegisterWithPhoneVerificationCode = (phone: string, errorCallback?: () => void) => {
@@ -33,7 +32,7 @@ const useRegisterWithPhoneVerificationCode = (phone: string, errorCallback?: () 
   );
 
   const identifierExistErrorHandler = useIdentifierErrorAlert(
-    UserFlow.register,
+    IdentifierErrorType.IdentifierAlreadyExists,
     SignInIdentifier.Phone,
     formatPhoneNumberWithCountryCallingCode(phone)
   );

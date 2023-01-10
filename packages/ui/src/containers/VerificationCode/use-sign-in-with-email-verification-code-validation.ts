@@ -12,10 +12,10 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
-import { UserFlow, SearchParameters } from '@/types';
+import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 
-import useIdentifierErrorAlert from './use-identifier-error-alert';
+import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
 const useSignInWithEmailVerificationCode = (email: string, errorCallback?: () => void) => {
@@ -36,7 +36,7 @@ const useSignInWithEmailVerificationCode = (email: string, errorCallback?: () =>
   const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
 
   const identifierNotExistErrorHandler = useIdentifierErrorAlert(
-    UserFlow.signIn,
+    IdentifierErrorType.IdentifierNotExist,
     SignInIdentifier.Email,
     email
   );

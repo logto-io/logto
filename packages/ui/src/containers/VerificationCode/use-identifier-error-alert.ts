@@ -4,11 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
-import { UserFlow } from '@/types';
+
+export enum IdentifierErrorType {
+  IdentifierNotExist = 'IdentifierNotExist',
+  IdentifierAlreadyExists = 'IdentifierAlreadyExists',
+}
 
 const useIdentifierErrorAlert = (
-  flow: UserFlow,
-  method: SignInIdentifier.Email | SignInIdentifier.Phone,
+  type: IdentifierErrorType,
+  identifierType: SignInIdentifier.Email | SignInIdentifier.Phone,
   value: string
 ) => {
   const { show } = useConfirmModal();
@@ -20,18 +24,20 @@ const useIdentifierErrorAlert = (
     await show({
       type: 'alert',
       ModalContent: t(
-        flow === UserFlow.register || flow === UserFlow.continue
+        type === IdentifierErrorType.IdentifierAlreadyExists
           ? 'description.create_account_id_exists_alert'
           : 'description.sign_in_id_does_not_exist_alert',
         {
-          type: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
+          type: t(
+            `description.${identifierType === SignInIdentifier.Email ? 'email' : 'phone_number'}`
+          ),
           value,
         }
       ),
       cancelText: 'action.got_it',
     });
     navigate(-1);
-  }, [flow, method, navigate, show, t, value]);
+  }, [identifierType, navigate, show, t, type, value]);
 };
 
 export default useIdentifierErrorAlert;

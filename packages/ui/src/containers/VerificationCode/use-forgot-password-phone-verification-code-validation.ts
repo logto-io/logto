@@ -7,7 +7,7 @@ import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { UserFlow } from '@/types';
 
-import useIdentifierErrorAlert from './use-identifier-error-alert';
+import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
 const useForgotPasswordPhoneVerificationCode = (phone: string, errorCallback?: () => void) => {
@@ -15,7 +15,7 @@ const useForgotPasswordPhoneVerificationCode = (phone: string, errorCallback?: (
   const { sharedErrorHandlers, errorMessage, clearErrorMessage } = useSharedErrorHandler();
 
   const identifierNotExistErrorHandler = useIdentifierErrorAlert(
-    UserFlow.forgotPassword,
+    IdentifierErrorType.IdentifierNotExist,
     SignInIdentifier.Phone,
     phone
   );

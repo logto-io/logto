@@ -12,9 +12,8 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
-import { UserFlow } from '@/types';
 
-import useIdentifierErrorAlert from './use-identifier-error-alert';
+import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
 import useSharedErrorHandler from './use-shared-error-handler';
 
 const useRegisterWithEmailVerificationCode = (email: string, errorCallback?: () => void) => {
@@ -33,7 +32,7 @@ const useRegisterWithEmailVerificationCode = (email: string, errorCallback?: () 
   );
 
   const identifierExistErrorHandler = useIdentifierErrorAlert(
-    UserFlow.register,
+    IdentifierErrorType.IdentifierAlreadyExists,
     SignInIdentifier.Email,
     email
   );
