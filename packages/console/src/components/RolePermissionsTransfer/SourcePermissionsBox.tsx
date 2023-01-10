@@ -13,11 +13,12 @@ import * as styles from './index.module.scss';
 import type { DetailedResourceResponse } from './types';
 
 type Props = {
+  excludeScopeIds: string[];
   selectedPermissions: ScopeResponse[];
   onChange: (value: ScopeResponse[]) => void;
 };
 
-const SourcePermissionsBox = ({ selectedPermissions, onChange }: Props) => {
+const SourcePermissionsBox = ({ excludeScopeIds, selectedPermissions, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data = [] } = useSWR<ResourceResponse[]>(`/api/resources?includeScopes=true`);
 
@@ -60,13 +61,15 @@ const SourcePermissionsBox = ({ selectedPermissions, onChange }: Props) => {
     scopes.filter((scope) => selectedPermissions.findIndex(({ id }) => id === scope.id) >= 0);
 
   const resources = data
-    .filter(({ scopes }) => scopes.length > 0)
+    .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.includes(id)))
     .map(({ scopes, ...resource }) => ({
       ...resource,
-      scopes: scopes.map((scope) => ({
-        ...scope,
-        resource,
-      })),
+      scopes: scopes
+        .filter(({ id }) => !excludeScopeIds.includes(id))
+        .map((scope) => ({
+          ...scope,
+          resource,
+        })),
     }));
 
   const dataSource =

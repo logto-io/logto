@@ -7,11 +7,16 @@ import * as styles from './index.module.scss';
 type Props = {
   value: ScopeResponse[];
   onChange: (value: ScopeResponse[]) => void;
+  excludeScopeIds?: string[];
 };
 
-const RolePermissionsTransfer = ({ value, onChange }: Props) => (
+const RolePermissionsTransfer = ({ excludeScopeIds = [], value, onChange }: Props) => (
   <div className={styles.container}>
-    <SourcePermissionsBox selectedPermissions={value} onChange={onChange} />
+    <SourcePermissionsBox
+      excludeScopeIds={excludeScopeIds}
+      selectedPermissions={value}
+      onChange={onChange}
+    />
     <div className={styles.verticalBar} />
     <TargetPermissionsBox
       selectedScopes={value}
