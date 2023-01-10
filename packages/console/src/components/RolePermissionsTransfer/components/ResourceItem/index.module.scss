@@ -1,0 +1,38 @@
+@use '@/scss/underscore' as _;
+
+.resourceItem {
+  padding: 0 _.unit(4);
+  user-select: none;
+
+  .title {
+    display: flex;
+    align-items: center;
+    margin-top: _.unit(1.5);
+
+    .resource {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      .caret {
+        margin-right: _.unit(2);
+        color: var(--color-text-secondary);
+      }
+
+      .name {
+        font: var(--font-label-2);
+        @include _.text-ellipsis;
+      }
+
+      .permissionInfo {
+        font: var(--font-body-medium);
+        color: var(--color-text-secondary);
+        margin-left: _.unit(2);
+      }
+    }
+  }
+
+  .invisible {
+    display: none;
+  }
+}
