@@ -4,7 +4,7 @@ import type { AlterationScript } from '../lib/types/alteration.js';
 
 enum OldSignInIdentifier {
   Email = 'email',
-  Sms = 'Sms',
+  Sms = 'sms',
   Username = 'username',
 }
 
@@ -32,7 +32,7 @@ type OldSignInExperience = {
 
 enum SignInIdentifier {
   Email = 'email',
-  Phone = 'Phone',
+  Phone = 'phone',
   Username = 'username',
 }
 
