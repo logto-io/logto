@@ -8,6 +8,10 @@ import type { FieldIdentifiers, Table } from './types.js';
 
 export const conditionalSql = <T>(value: T, buildSql: (value: Exclude<T, Falsy>) => SqlSqlToken) =>
   notFalsy(value) ? buildSql(value) : sql``;
+export const conditionalArraySql = <T>(
+  value: T[],
+  buildSql: (value: Exclude<T[], Falsy>) => SqlSqlToken
+) => (value.length > 0 ? buildSql(value) : sql``);
 
 export const autoSetFields = Object.freeze(['createdAt', 'updatedAt'] as const);
 export type OmitAutoSetFields<T> = Omit<T, typeof autoSetFields[number]>;
