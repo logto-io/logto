@@ -10,7 +10,7 @@ import { UserFlow } from '@/types';
 import PasswordSignInLink from './PasswordSignInLink';
 import * as styles from './index.module.scss';
 import useResendVerificationCode from './use-resend-verification-code';
-import { codeVerificationHooks } from './utils';
+import { getCodeVerificationHookByFlow } from './utils';
 
 type Props = {
   type: UserFlow;
@@ -24,7 +24,7 @@ const VerificationCode = ({ type, method, className, hasPasswordButton, target }
   const [code, setCode] = useState<string[]>([]);
   const { t } = useTranslation();
 
-  const useVerificationCode = codeVerificationHooks[type];
+  const useVerificationCode = getCodeVerificationHookByFlow(type);
 
   const errorCallback = useCallback(() => {
     setCode([]);

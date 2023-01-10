@@ -11,3 +11,5 @@ export const codeVerificationHooks = Object.freeze({
   [UserFlow.forgotPassword]: useForgotPasswordFlowCodeVerification,
   [UserFlow.continue]: useContinueFlowCodeVerification,
 });
+
+export const getCodeVerificationHookByFlow = (flow: UserFlow) => codeVerificationHooks[flow];
