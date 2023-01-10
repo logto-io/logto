@@ -1,6 +1,6 @@
 import type { Log } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
-import { conditional, conditionalString } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -14,6 +14,7 @@ import TableLoading from '@/components/Table/TableLoading';
 import UserName from '@/components/UserName';
 import type { RequestError } from '@/hooks/use-api';
 import * as tableStyles from '@/scss/table.module.scss';
+import { buildUrl } from '@/utilities/url';
 
 import ApplicationSelector from './components/ApplicationSelector';
 import EventName from './components/EventName';
@@ -36,16 +37,16 @@ const AuditLogTable = ({ userId, className }: Props) => {
   const pageIndex = Number(query.get('page') ?? '1');
   const event = query.get('event');
   const applicationId = query.get('applicationId');
-  const queryString = [
-    `page=${pageIndex}`,
-    `page_size=${pageSize}`,
-    conditionalString(event && `logType=${event}`),
-    conditionalString(applicationId && `applicationId=${applicationId}`),
-    conditionalString(userId && `userId=${userId}`),
-  ]
-    .filter(Boolean)
-    .join('&');
-  const { data, error, mutate } = useSWR<[Log[], number], RequestError>(`/api/logs?${queryString}`);
+
+  const url = buildUrl('/api/logs', {
+    page: `${pageIndex}`,
+    page_size: `${pageSize}`,
+    ...conditional(event && { logType: event }),
+    ...conditional(applicationId && { applicationId }),
+    ...conditional(userId && { userId }),
+  });
+
+  const { data, error, mutate } = useSWR<[Log[], number], RequestError>(url);
   const isLoading = !data && !error;
   const navigate = useNavigate();
   const [logs, totalCount] = data ?? [];

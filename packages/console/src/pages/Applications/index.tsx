@@ -17,6 +17,7 @@ import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { buildUrl } from '@/utilities/url';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -35,9 +36,13 @@ const Applications = () => {
   const [query, setQuery] = useSearchParams();
   const search = query.toString();
   const pageIndex = Number(query.get('page') ?? '1');
-  const { data, error, mutate } = useSWR<[Application[], number], RequestError>(
-    `/api/applications?page=${pageIndex}&page_size=${pageSize}`
-  );
+  const url = buildUrl('/api/applications', {
+    page: `${pageIndex}`,
+    page_size: `${pageSize}`,
+  });
+
+  const { data, error, mutate } = useSWR<[Application[], number], RequestError>(url);
+
   const isLoading = !data && !error;
   const [applications, totalCount] = data ?? [];
 

@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { conditionalString } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import type { ChangeEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import Search from '@/assets/images/search.svg';
 import type { RequestError } from '@/hooks/use-api';
 import { onKeyDownHandler } from '@/utilities/a11y';
+import { buildUrl } from '@/utilities/url';
 
 import Checkbox from '../Checkbox';
 import Pagination from '../Pagination';
@@ -43,11 +44,15 @@ const SourceUsersBox = ({ roleId, selectedUsers, onAddUser, onRemoveUser }: Prop
     };
   }, []);
 
-  const { data } = useSWR<[User[], number], RequestError>(
-    `/api/users?excludeRoleId=${roleId}&page=${pageIndex}&page_size=${pageSize}&hideAdminUser=true${conditionalString(
-      keyword && `&search=${encodeURIComponent(`%${keyword}%`)}`
-    )}`
-  );
+  const url = buildUrl('/api/users', {
+    excludeRoleId: roleId,
+    hideAdminUser: 'true',
+    page: `${pageIndex}`,
+    page_size: `${pageSize}`,
+    ...conditional(keyword && { search: `%${keyword}%` }),
+  });
+
+  const { data } = useSWR<[User[], number], RequestError>(url);
 
   const [dataSource = [], totalCount] = data ?? [];
 

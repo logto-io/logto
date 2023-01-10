@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { conditional, conditionalString } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -21,6 +21,7 @@ import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
+import { buildUrl } from '@/utilities/url';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -41,11 +42,15 @@ const Users = () => {
   const search = query.toString();
   const pageIndex = Number(query.get('page') ?? '1');
   const keyword = query.get('search') ?? '';
-  const { data, error, mutate } = useSWR<[User[], number], RequestError>(
-    `/api/users?page=${pageIndex}&page_size=${pageSize}&hideAdminUser=true${conditionalString(
-      keyword && `&search=${encodeURIComponent(`%${keyword}%`)}`
-    )}`
-  );
+
+  const url = buildUrl('/api/users', {
+    hideAdminUser: 'true',
+    page: `${pageIndex}`,
+    page_size: `${pageSize}`,
+    ...conditional(keyword && { search: `%${keyword}%` }),
+  });
+
+  const { data, error, mutate } = useSWR<[User[], number], RequestError>(url);
   const isLoading = !data && !error;
   const navigate = useNavigate();
   const [users, totalCount] = data ?? [];
