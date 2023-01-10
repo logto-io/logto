@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import { useParams, useLocation } from 'react-router-dom';
-import { is } from 'superstruct';
+import { is, validate } from 'superstruct';
 
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import VerificationCodeContainer from '@/containers/VerificationCode';
@@ -15,7 +15,7 @@ import {
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 type Parameters = {
-  type: UserFlow;
+  type: string;
   method: string;
 };
 
@@ -24,11 +24,12 @@ const VerificationCode = () => {
   const { signInMethods } = useSieMethods();
   const { state } = useLocation();
 
-  const invalidType = !is(type, userFlowGuard);
   const invalidMethod = !is(method, verificationCodeMethodGuard);
   const invalidState = !is(state, verificationCodeStateGuard);
 
-  if (invalidType || invalidMethod) {
+  const [, flow] = validate(type, userFlowGuard);
+
+  if (!flow || invalidMethod) {
     return <ErrorPage />;
   }
 
@@ -55,7 +56,7 @@ const VerificationCode = () => {
       }}
     >
       <VerificationCodeContainer
-        type={type}
+        type={flow}
         method={method}
         target={target}
         hasPasswordButton={type === UserFlow.signIn && methodSettings?.password}

@@ -1,6 +1,8 @@
 import { SignInIdentifier, MissingProfile } from '@logto/schemas';
 import * as s from 'superstruct';
 
+import { UserFlow } from '.';
+
 export const bindSocialStateGuard = s.object({
   relatedUser: s.object({
     type: s.union([s.literal('email'), s.literal('phone')]),
@@ -24,11 +26,11 @@ export const SignInMethodGuard = s.union([
   s.literal(SignInIdentifier.Username),
 ]);
 
-export const userFlowGuard = s.union([
-  s.literal('sign-in'),
-  s.literal('register'),
-  s.literal('forgot-password'),
-  s.literal('continue'),
+export const userFlowGuard = s.enums([
+  UserFlow.signIn,
+  UserFlow.register,
+  UserFlow.forgotPassword,
+  UserFlow.continue,
 ]);
 
 export const continueMethodGuard = s.union([
