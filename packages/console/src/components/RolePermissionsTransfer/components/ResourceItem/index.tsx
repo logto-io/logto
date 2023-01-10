@@ -9,7 +9,7 @@ import Checkbox from '@/components/Checkbox';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import type { DetailedResourceResponse } from '../../types';
-import PermissionItem from '../PermissionItem';
+import SourcePermissionItem from '../SourcePermissionItem';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -66,7 +66,7 @@ const ResourceItem = ({
       </div>
       <div className={classNames(isScopesInvisible && styles.invisible)}>
         {scopes.map((scope) => (
-          <PermissionItem
+          <SourcePermissionItem
             key={scope.id}
             scope={scope}
             isSelected={selectedPermissions.findIndex(({ id }) => scope.id === id) >= 0}
