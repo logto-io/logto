@@ -41,8 +41,8 @@ const ApiResources = () => {
   const pageIndex = Number(query.get('page') ?? '1');
 
   const url = buildUrl('/api/resources', {
-    page: `${pageIndex}`,
-    page_size: `${pageSize}`,
+    page: String(pageIndex),
+    page_size: String(pageSize),
   });
 
   const { data, error, mutate } = useSWR<[Resource[], number], RequestError>(url);
