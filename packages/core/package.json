@@ -21,7 +21,7 @@
     "start": "NODE_ENV=production node build/index.js",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm test:only --coverage --silent",
+    "test:ci": "pnpm test:only --coverage --silent --maxWorkers=50%",
     "test:report": "codecov -F core"
   },
   "dependencies": {

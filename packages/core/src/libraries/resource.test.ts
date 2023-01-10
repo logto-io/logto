@@ -1,19 +1,19 @@
-import { createMockUtils } from '@logto/shared/esm';
-
 import { mockResource, mockResource2, mockResource3, mockScope } from '#src/__mocks__/index.js';
+import { MockQueries } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
-const { mockEsmWithActual } = createMockUtils(jest);
 
-const { findScopesByResourceIds } = await mockEsmWithActual('#src/queries/scope.js', () => ({
-  findScopesByResourceIds: jest.fn(async () => [
-    { ...mockScope, id: '1', resourceId: mockResource.id },
-    { ...mockScope, id: '2', resourceId: mockResource.id },
-    { ...mockScope, id: '3', resourceId: mockResource2.id },
-  ]),
-}));
+const findScopesByResourceIds = jest.fn(async () => [
+  { ...mockScope, id: '1', resourceId: mockResource.id },
+  { ...mockScope, id: '2', resourceId: mockResource.id },
+  { ...mockScope, id: '3', resourceId: mockResource2.id },
+]);
 
-const { attachScopesToResources } = await import('./resource.js');
+const { createResourceLibrary } = await import('./resource.js');
+
+const { attachScopesToResources } = createResourceLibrary(
+  new MockQueries({ scopes: { findScopesByResourceIds } })
+);
 
 describe('attachScopesToResources', () => {
   beforeEach(() => {
