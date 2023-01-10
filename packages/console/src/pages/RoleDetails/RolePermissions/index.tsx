@@ -11,6 +11,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 
 import type { RoleDetailsOutletContext } from '../types';
+import AssignPermissionsModal from './components/AssignPermissionsModal';
 
 const RolePermissions = () => {
   const {
@@ -27,6 +28,7 @@ const RolePermissions = () => {
 
   const isLoading = !scopes && !error;
 
+  const [isAssignPermissionsModalOpen, setIsAssignPermissionsModalOpen] = useState(false);
   const [scopeToBeDeleted, setScopeToBeDeleted] = useState<Scope>();
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -58,7 +60,7 @@ const RolePermissions = () => {
         isLoading={isLoading}
         createButtonTitle="role_details.permission.assign_button"
         createHandler={() => {
-          // TODO @xiaoyijun Assign Permissions to Role
+          setIsAssignPermissionsModalOpen(true);
         }}
         deleteHandler={setScopeToBeDeleted}
         errorMessage={error?.body?.message ?? error?.message}
@@ -76,6 +78,17 @@ const RolePermissions = () => {
         >
           {t('role_details.permission.deletion_description')}
         </ConfirmModal>
+      )}
+      {isAssignPermissionsModalOpen && (
+        <AssignPermissionsModal
+          roleId={roleId}
+          onClose={(success) => {
+            if (success) {
+              void mutate();
+            }
+            setIsAssignPermissionsModalOpen(false);
+          }}
+        />
       )}
     </>
   );
