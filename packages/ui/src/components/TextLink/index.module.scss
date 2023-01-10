@@ -3,7 +3,12 @@
 .link {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  display: inline-flex;
+  justify-content: center;
 
+  > svg {
+    margin-right: _.unit(2);
+  }
 
   &.primary {
     color: var(--color-brand-default);
