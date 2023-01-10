@@ -161,11 +161,13 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     );
 
   const findUsersByIds = async (userIds: string[]) =>
-    pool.any<User>(sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.id} in (${sql.join(userIds, sql`, `)})
-    `);
+    userIds.length > 0
+      ? pool.any<User>(sql`
+        select ${sql.join(Object.values(fields), sql`, `)}
+        from ${table}
+        where ${fields.id} in (${sql.join(userIds, sql`, `)})
+      `)
+      : [];
 
   const updateUser = buildUpdateWhereWithPool(pool)<CreateUser, User>(Users, true);
 
