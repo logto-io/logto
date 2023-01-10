@@ -6,7 +6,7 @@ import type { Context, MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { insertLog } from '#src/queries/log.js';
+import type Queries from '#src/tenants/Queries.js';
 
 const removeUndefinedKeys = (object: Record<string, unknown>) =>
   Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
@@ -93,11 +93,9 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
  * @see {@link LogKey} for all available log keys, and {@link LogResult} for result enums.
  * @see {@link LogContextPayload} for the basic type suggestion of log data.
  */
-export default function koaAuditLog<
-  StateT,
-  ContextT extends IRouterParamContext,
-  ResponseBodyT
->(): MiddlewareType<StateT, WithLogContext<ContextT>, ResponseBodyT> {
+export default function koaAuditLog<StateT, ContextT extends IRouterParamContext, ResponseBodyT>({
+  logs: { insertLog },
+}: Queries): MiddlewareType<StateT, WithLogContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     const entries: LogEntry[] = [];
 

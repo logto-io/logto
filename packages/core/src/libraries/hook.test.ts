@@ -4,54 +4,64 @@ import { createMockUtils } from '@logto/shared/esm';
 import type { InferModelType } from '@withtyped/server';
 import { got } from 'got';
 
-import modelRouters from '#src/model-routers/index.js';
-import { MockQueryClient } from '#src/test-utils/query-client.js';
+import type { ModelRouters } from '#src/model-routers/index.js';
 
 import type { Interaction } from './hook.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmDefault } = createMockUtils(jest);
+const { mockEsmDefault, mockEsmWithActual } = createMockUtils(jest);
+
+const nanoIdMock = 'mockId';
+await mockEsmWithActual('@logto/core-kit', () => ({
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  buildIdGenerator: () => () => nanoIdMock,
+  generateStandardId: () => nanoIdMock,
+}));
+
+const { createModelRouters } = await import('#src/model-routers/index.js');
+const { MockQueryClient } = await import('#src/test-utils/query-client.js');
+const { MockQueries } = await import('#src/test-utils/tenant.js');
 
 const queryClient = new MockQueryClient();
 const queryFunction = jest.fn();
 
 const url = 'https://logto.gg';
-const hook: InferModelType<typeof modelRouters.hook.model> = {
+const hook: InferModelType<ModelRouters['hook']['model']> = {
   id: 'foo',
   event: HookEvent.PostSignIn,
   config: { headers: { bar: 'baz' }, url, retries: 3 },
   createdAt: new Date(),
 };
-const readAll = jest
-  .spyOn(modelRouters.hook.client, 'readAll')
-  .mockResolvedValue({ rows: [hook], rowCount: 1 });
 
 const post = jest
   .spyOn(got, 'post')
   // @ts-expect-error for testing
   .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
 
-const nanoIdMock = 'mockId';
-mockEsm('@logto/core-kit', () => ({
-  generateStandardId: () => nanoIdMock,
-}));
-
-const { insertLog } = mockEsm('#src/queries/log.js', () => ({
-  insertLog: jest.fn(),
-}));
-
-mockEsm('#src/queries/user.js', () => ({
-  findUserById: () => ({ id: 'user_id', username: 'user', extraField: 'not_ok' }),
-}));
-mockEsm('#src/queries/application.js', () => ({
-  findApplicationById: () => ({ id: 'app_id', extraField: 'not_ok' }),
-}));
+const insertLog = jest.fn();
 
 // eslint-disable-next-line unicorn/consistent-function-scoping
 mockEsmDefault('#src/env-set/create-query-client.js', () => () => queryClient);
 jest.spyOn(queryClient, 'query').mockImplementation(queryFunction);
 
-const { triggerInteractionHooksIfNeeded } = await import('./hook.js');
+const { createHookLibrary } = await import('./hook.js');
+const modelRouters = createModelRouters(new MockQueryClient());
+const { triggerInteractionHooksIfNeeded } = createHookLibrary(
+  new MockQueries({
+    // @ts-expect-error
+    users: { findUserById: () => ({ id: 'user_id', username: 'user', extraField: 'not_ok' }) },
+    applications: {
+      // @ts-expect-error
+      findApplicationById: async () => ({ id: 'app_id', extraField: 'not_ok' }),
+    },
+    logs: { insertLog },
+  }),
+  modelRouters
+);
+
+const readAll = jest
+  .spyOn(modelRouters.hook.client, 'readAll')
+  .mockResolvedValue({ rows: [hook], rowCount: 1 });
 
 describe('triggerInteractionHooksIfNeeded()', () => {
   afterEach(() => {

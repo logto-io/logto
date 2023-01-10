@@ -1,11 +1,13 @@
 import { createMockPool, createMockQueryResult } from 'slonik';
 
+import { createModelRouters } from '#src/model-routers/index.js';
 import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import type { GrantMock } from './oidc-provider.js';
 import { createMockProvider } from './oidc-provider.js';
+import { MockQueryClient } from './query-client.js';
 
 export class MockQueries extends Queries {
   constructor(queriesOverride?: Partial2<Queries>) {
@@ -44,6 +46,7 @@ export type Partial2<T> = { [key in keyof T]?: Partial<T[key]> };
 export class MockTenant implements TenantContext {
   public queries: Queries;
   public libraries: Libraries;
+  public modelRouters = createModelRouters(new MockQueryClient());
 
   constructor(
     public provider = createMockProvider(),
@@ -51,7 +54,7 @@ export class MockTenant implements TenantContext {
     librariesOverride?: Partial2<Libraries>
   ) {
     this.queries = new MockQueries(queriesOverride);
-    this.libraries = new Libraries(this.queries);
+    this.libraries = new Libraries(this.queries, this.modelRouters);
     this.setPartial('libraries', librariesOverride);
   }
 

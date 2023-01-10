@@ -8,10 +8,8 @@ import { got, HTTPError } from 'got';
 import type Provider from 'oidc-provider';
 
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
-import modelRouters from '#src/model-routers/index.js';
-import { findApplicationById } from '#src/queries/application.js';
-import { insertLog } from '#src/queries/log.js';
-import { findUserById } from '#src/queries/user.js';
+import type { ModelRouters } from '#src/model-routers/index.js';
+import type Queries from '#src/tenants/Queries.js';
 
 const parseResponse = ({ statusCode, body }: Response) => ({
   statusCode,
@@ -27,80 +25,90 @@ const eventToHook: Record<InteractionEvent, HookEvent> = {
 
 export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
 
-export const triggerInteractionHooksIfNeeded = async (
-  event: InteractionEvent,
-  details?: Interaction,
-  userAgent?: string
-) => {
-  const userId = details?.result?.login?.accountId;
-  const sessionId = details?.jti;
-  const applicationId = details?.params.client_id;
+export const createHookLibrary = (queries: Queries, { hook }: ModelRouters) => {
+  const {
+    applications: { findApplicationById },
+    logs: { insertLog },
+    users: { findUserById },
+  } = queries;
 
-  if (!userId) {
-    return;
-  }
+  const triggerInteractionHooksIfNeeded = async (
+    event: InteractionEvent,
+    details?: Interaction,
+    userAgent?: string
+  ) => {
+    const userId = details?.result?.login?.accountId;
+    const sessionId = details?.jti;
+    const applicationId = details?.params.client_id;
 
-  const hookEvent = eventToHook[event];
-  const { rows } = await modelRouters.hook.client.readAll();
+    if (!userId) {
+      return;
+    }
 
-  const [user, application] = await Promise.all([
-    trySafe(findUserById(userId)),
-    trySafe(async () =>
-      conditional(typeof applicationId === 'string' && (await findApplicationById(applicationId)))
-    ),
-  ]);
+    const hookEvent = eventToHook[event];
+    const { rows } = await hook.client.readAll();
 
-  const payload = {
-    event: hookEvent,
-    interactionEvent: event,
-    createdAt: new Date().toISOString(),
-    sessionId,
-    userAgent,
-    userId,
-    user: user && pick(user, ...userInfoSelectFields),
-    application: application && pick(application, 'id', 'type', 'name', 'description'),
-  } satisfies Omit<HookEventPayload, 'hookId'>;
+    const [user, application] = await Promise.all([
+      trySafe(findUserById(userId)),
+      trySafe(async () =>
+        conditional(typeof applicationId === 'string' && (await findApplicationById(applicationId)))
+      ),
+    ]);
 
-  await Promise.all(
-    rows
-      .filter(({ event }) => event === hookEvent)
-      .map(async ({ config: { url, headers, retries }, id }) => {
-        console.log(`\tTriggering hook ${id} due to ${hookEvent} event`);
-        const json: HookEventPayload = { hookId: id, ...payload };
-        const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
+    const payload = {
+      event: hookEvent,
+      interactionEvent: event,
+      createdAt: new Date().toISOString(),
+      sessionId,
+      userAgent,
+      userId,
+      user: user && pick(user, ...userInfoSelectFields),
+      application: application && pick(application, 'id', 'type', 'name', 'description'),
+    } satisfies Omit<HookEventPayload, 'hookId'>;
 
-        logEntry.append({ json, hookId: id });
+    await Promise.all(
+      rows
+        .filter(({ event }) => event === hookEvent)
+        .map(async ({ config: { url, headers, retries }, id }) => {
+          console.log(`\tTriggering hook ${id} due to ${hookEvent} event`);
+          const json: HookEventPayload = { hookId: id, ...payload };
+          const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
 
-        // Trigger web hook and log response
-        await got
-          .post(url, {
-            headers: { 'user-agent': 'Logto (https://logto.io)', ...headers },
-            json,
-            retry: { limit: retries },
-            timeout: { request: 10_000 },
-          })
-          .then(async (response) => {
-            logEntry.append({
-              response: parseResponse(response),
+          logEntry.append({ json, hookId: id });
+
+          // Trigger web hook and log response
+          await got
+            .post(url, {
+              headers: { 'user-agent': 'Logto (https://logto.io)', ...headers },
+              json,
+              retry: { limit: retries },
+              timeout: { request: 10_000 },
+            })
+            .then(async (response) => {
+              logEntry.append({
+                response: parseResponse(response),
+              });
+            })
+            .catch(async (error) => {
+              logEntry.append({
+                result: LogResult.Error,
+                response: conditional(error instanceof HTTPError && parseResponse(error.response)),
+                error: conditional(error instanceof Error && String(error)),
+              });
             });
-          })
-          .catch(async (error) => {
-            logEntry.append({
-              result: LogResult.Error,
-              response: conditional(error instanceof HTTPError && parseResponse(error.response)),
-              error: conditional(error instanceof Error && String(error)),
-            });
+
+          console.log(
+            `\tHook ${id} ${logEntry.payload.result === LogResult.Success ? 'succeeded' : 'failed'}`
+          );
+
+          await insertLog({
+            id: generateStandardId(),
+            key: logEntry.key,
+            payload: logEntry.payload,
           });
+        })
+    );
+  };
 
-        console.log(
-          `\tHook ${id} ${logEntry.payload.result === LogResult.Success ? 'succeeded' : 'failed'}`
-        );
-
-        await insertLog({
-          id: generateStandardId(),
-          key: logEntry.key,
-          payload: logEntry.payload,
-        });
-      })
-  );
+  return { triggerInteractionHooksIfNeeded };
 };
