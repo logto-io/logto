@@ -1,0 +1,33 @@
+@use '@/scss/underscore' as _;
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: _.unit(2.5) _.unit(4);
+  font: var(--font-body-medium);
+  user-select: none;
+
+  &:hover {
+    background-color: var(--color-hover);
+  }
+
+  .info {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+
+    .name {
+      @include _.text-ellipsis;
+    }
+
+    .count {
+      flex-shrink: 0;
+      margin-left: _.unit(2);
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .icon {
+    color: var(--color-text-secondary);
+  }
+}

@@ -17,12 +17,12 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 
 import type { UserDetailsOutletContext } from '../types';
+import AssignRolesModal from './components/AssignRolesModal';
 import * as styles from './index.module.scss';
 
 const UserRoles = () => {
-  const {
-    user: { id: userId },
-  } = useOutletContext<UserDetailsOutletContext>();
+  const { user } = useOutletContext<UserDetailsOutletContext>();
+  const { id: userId } = user;
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -30,6 +30,7 @@ const UserRoles = () => {
 
   const isLoading = !roles && !error;
 
+  const [isAssignRolesModalOpen, setIsAssignRolesModalOpen] = useState(false);
   const [roleToBeDeleted, setRoleToBeDeleted] = useState<Role>();
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -99,7 +100,7 @@ const UserRoles = () => {
               size="large"
               icon={<Plus />}
               onClick={() => {
-                // TODO @xiaoyijun assign roles to user
+                setIsAssignRolesModalOpen(true);
               }}
             />
           </div>
@@ -110,7 +111,7 @@ const UserRoles = () => {
               title="user_details.roles.assign_button"
               type="outline"
               onClick={() => {
-                // TODO @xiaoyijun assign roles to user
+                setIsAssignRolesModalOpen(true);
               }}
             />
           ),
@@ -130,6 +131,17 @@ const UserRoles = () => {
         >
           {t('user_details.roles.delete_description')}
         </ConfirmModal>
+      )}
+      {isAssignRolesModalOpen && (
+        <AssignRolesModal
+          user={user}
+          onClose={(success) => {
+            if (success) {
+              void mutate();
+            }
+            setIsAssignRolesModalOpen(false);
+          }}
+        />
       )}
     </>
   );
