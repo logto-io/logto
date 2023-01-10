@@ -15,7 +15,6 @@ import ContinueWithEmailOrPhone from './pages/Continue/EmailOrPhone';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import PasswordRegisterWithUsername from './pages/PasswordRegisterWithUsername';
-import Profile from './pages/Profile';
 import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 import SecondaryRegister from './pages/SecondaryRegister';
@@ -63,7 +62,6 @@ const App = () => {
       <Provider value={context}>
         <AppBoundary>
           <Routes>
-            <Route path="/profile" element={<Profile />} />
             <Route element={<AppContent />}>
               <Route path="/" element={<Navigate replace to="/sign-in" />} />
               <Route path="/sign-in/consent" element={<Consent />} />

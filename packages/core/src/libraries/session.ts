@@ -1,13 +1,9 @@
-import { getUnixTime } from 'date-fns';
 import type { Context } from 'koa';
 import type { InteractionResults } from 'oidc-provider';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import { findUserById, updateUserById } from '#src/queries/user.js';
-import type TenantContext from '#src/tenants/TenantContext.js';
-import assertThat from '#src/utils/assert-that.js';
 
 export const assignInteractionResults = async (
   ctx: Context,
@@ -34,31 +30,6 @@ export const assignInteractionResults = async (
     }
   );
   ctx.body = { redirectTo };
-};
-
-export const checkSessionHealth = async (
-  ctx: Context,
-  { provider, queries: { users } }: TenantContext,
-  tolerance = 10 * 60 // 10 mins
-) => {
-  const { accountId, loginTs } = await provider.Session.get(ctx);
-
-  assertThat(
-    accountId,
-    new RequestError({ code: 'auth.unauthorized', id: accountId, status: 401 })
-  );
-
-  if (!loginTs || loginTs < getUnixTime(new Date()) - tolerance) {
-    const { passwordEncrypted, primaryPhone, primaryEmail } = await users.findUserById(accountId);
-
-    // No authenticated method configured for this user. Pass!
-    if (!passwordEncrypted && !primaryPhone && !primaryEmail) {
-      return;
-    }
-    throw new RequestError({ code: 'auth.require_re_authentication', status: 422 });
-  }
-
-  return accountId;
 };
 
 export const saveUserFirstConsentedAppId = async (userId: string, applicationId: string) => {
