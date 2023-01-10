@@ -291,17 +291,13 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       const accountVerifiedInteraction = await verifyIdentifier(ctx, provider, interactionStorage);
 
-      if (event !== InteractionEvent.Register) {
-        log.append({ accountId: accountVerifiedInteraction.accountId });
-      }
-
       const verifiedInteraction = await verifyProfile(accountVerifiedInteraction);
 
       if (event !== InteractionEvent.ForgotPassword) {
         await validateMandatoryUserProfile(ctx, verifiedInteraction);
       }
 
-      await submitInteraction(verifiedInteraction, ctx, tenant);
+      await submitInteraction(verifiedInteraction, ctx, tenant, log);
 
       return next();
     }

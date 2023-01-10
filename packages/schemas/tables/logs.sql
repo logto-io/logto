@@ -2,7 +2,7 @@ create table logs
 (
   id varchar(21) not null,
   key varchar(128) not null,
-  payload jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,
+  payload jsonb /* @use LogContextPayload */ not null default '{}'::jsonb,
   created_at timestamptz not null default (now()),
   primary key (id)
 );

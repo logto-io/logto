@@ -38,7 +38,7 @@ export class LogEntry {
   }
 }
 
-export type LogPayload = Partial<LogContextPayload> & Record<string, unknown>;
+export type LogPayload = Partial<LogContextPayload>;
 
 export type LogContext = {
   createLog: (key: LogKey) => LogEntry;
