@@ -1,5 +1,4 @@
-import type { User } from '@logto/schemas';
-import type { LogDto } from '@logto/schemas/lib/types/log-legacy';
+import type { User, Log } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
@@ -31,7 +30,7 @@ const AuditLogDetails = () => {
   const { id, logId } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error } = useSWR<LogDto, RequestError>(logId && `/api/logs/${logId}`);
+  const { data, error } = useSWR<Log, RequestError>(logId && `/api/logs/${logId}`);
   const { data: userData } = useSWR<User, RequestError>(id && `/api/users/${id}`);
 
   const isLoading = !data && !error;

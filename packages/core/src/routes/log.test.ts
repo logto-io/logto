@@ -1,3 +1,5 @@
+import { LogResult } from '@logto/schemas';
+import type { Log } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { createRequester } from '#src/utils/test-utils.js';
@@ -5,8 +7,8 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const mockBody = { key: 'a', payload: {}, createdAt: 123 };
-const mockLog = { id: '1', ...mockBody };
+const mockBody = { key: 'a', payload: { key: 'a', result: LogResult.Success }, createdAt: 123 };
+const mockLog: Log = { id: '1', ...mockBody };
 const mockLogs = [mockLog, { id: '2', ...mockBody }];
 
 const { countLogs, findLogs, findLogById } = mockEsm('#src/queries/log.js', () => ({

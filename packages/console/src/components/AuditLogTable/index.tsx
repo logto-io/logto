@@ -1,5 +1,5 @@
+import type { Log } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
-import type { LogDto } from '@logto/schemas/lib/types/log-legacy';
 import { conditional, conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -45,9 +45,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
   ]
     .filter(Boolean)
     .join('&');
-  const { data, error, mutate } = useSWR<[LogDto[], number], RequestError>(
-    `/api/logs?${queryString}`
-  );
+  const { data, error, mutate } = useSWR<[Log[], number], RequestError>(`/api/logs?${queryString}`);
   const isLoading = !data && !error;
   const navigate = useNavigate();
   const [logs, totalCount] = data ?? [];
