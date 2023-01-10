@@ -68,9 +68,9 @@ const verifyVerificationCodeIdentifier = async (
 const verifySocialIdentifier = async (
   identifier: SocialConnectorPayload,
   ctx: WithLogContext,
-  { provider }: TenantContext
+  tenant: TenantContext
 ): Promise<SocialIdentifier> => {
-  const userInfo = await verifySocialIdentity(identifier, ctx, provider);
+  const userInfo = await verifySocialIdentity(identifier, ctx, tenant);
 
   return { key: 'social', connectorId: identifier.connectorId, userInfo };
 };

@@ -163,7 +163,7 @@ describe('identifier verification', () => {
       interactionStorage
     );
 
-    expect(verifySocialIdentity).toBeCalledWith(identifier, baseCtx, tenant.provider);
+    expect(verifySocialIdentity).toBeCalledWith(identifier, baseCtx, tenant);
     expect(findUserByIdentifier).not.toBeCalled();
 
     expect(result).toEqual({
