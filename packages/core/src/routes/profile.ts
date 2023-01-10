@@ -4,8 +4,8 @@ import { has, pick } from '@silverhand/essentials';
 import { argon2Verify } from 'hash-wasm';
 import { object, string, unknown } from 'zod';
 
-import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { getLogtoConnectorById } from '#src/libraries/connector.js';
 import { checkSessionHealth } from '#src/libraries/session.js';
 import { getUserInfoByAuthCode } from '#src/libraries/social.js';
 import { encryptUserPassword } from '#src/libraries/user.js';

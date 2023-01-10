@@ -17,7 +17,7 @@ const { hasUser, hasUserWithEmail, hasUserWithPhone, hasUserWithIdentity } =
     hasUserWithIdentity: jest.fn().mockResolvedValue(false),
   }));
 
-mockEsm('#src/connectors/index.js', () => ({
+mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectorById: jest.fn().mockResolvedValue({
     metadata: { target: 'logto' },
   }),

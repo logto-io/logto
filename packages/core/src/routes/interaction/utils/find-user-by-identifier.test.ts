@@ -12,7 +12,7 @@ const queries = {
 
 mockEsm('#src/queries/user.js', () => queries);
 
-const { getLogtoConnectorById } = mockEsm('#src/connectors/index.js', () => ({
+const { getLogtoConnectorById } = mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectorById: jest.fn().mockResolvedValue({ metadata: { target: 'logto' } }),
 }));
 

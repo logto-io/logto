@@ -16,7 +16,7 @@ import type {
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const { getLogtoConnectorById } = mockEsm('#src/connectors/index.js', () => ({
+const { getLogtoConnectorById } = mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectorById: jest
     .fn()
     .mockResolvedValue({ metadata: { target: 'logto' }, dbEntry: { syncProfile: true } }),

@@ -6,10 +6,9 @@ import path from 'path';
 import { findPackage } from '@logto/shared';
 
 import { getPathInModule } from '../../../utilities.js';
-import { metaUrl } from './meta-url.js';
 import type { AlterationFile } from './type.js';
 
-const currentDirname = path.dirname(fileURLToPath(metaUrl));
+const currentDirname = path.dirname(fileURLToPath(import.meta.url));
 const alterationFilenameRegex = /-(\d+)-?.*\.js$/;
 
 export const getTimestampFromFilename = (filename: string) => {

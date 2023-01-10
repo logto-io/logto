@@ -13,7 +13,7 @@ const { getUserInfoByAuthCode } = mockEsm('#src/libraries/social.js', () => ({
   getUserInfoByAuthCode: jest.fn().mockResolvedValue({ id: 'foo' }),
 }));
 
-mockEsm('#src/connectors.js', () => ({
+mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectorById: jest.fn().mockResolvedValue({
     metadata: {
       id: 'social',

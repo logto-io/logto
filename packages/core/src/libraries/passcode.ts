@@ -7,10 +7,8 @@ import {
 import type { Passcode } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
-import { getLogtoConnectors } from '#src/connectors/index.js';
-import type { LogtoConnector } from '#src/connectors/types.js';
-import { ConnectorType } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { getLogtoConnectors } from '#src/libraries/connector.js';
 import {
   consumePasscode,
   deletePasscodesByIds,
@@ -20,6 +18,8 @@ import {
   insertPasscode,
 } from '#src/queries/passcode.js';
 import assertThat from '#src/utils/assert-that.js';
+import { ConnectorType } from '#src/utils/connectors/types.js';
+import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 export const passcodeLength = 6;
 const randomCode = customAlphabet('1234567890', passcodeLength);

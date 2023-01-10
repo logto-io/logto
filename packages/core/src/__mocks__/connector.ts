@@ -3,7 +3,7 @@ import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import type { LogtoConnector, ConnectorFactory } from '#src/connectors/types.js';
+import type { LogtoConnector, ConnectorFactory } from '#src/utils/connectors/types.js';
 
 import {
   mockConnector0,

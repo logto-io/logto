@@ -8,7 +8,7 @@ import { createRequester } from '#src/utils/test-utils.js';
 
 const { mockEsm } = createMockUtils(import.meta.jest);
 
-mockEsm('#src/connectors.js', () => ({
+mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectors: async () => [],
 }));
 

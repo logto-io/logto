@@ -1,6 +1,6 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 
-const notImplemented = () => {
+export const notImplemented = () => {
   throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
 };
 

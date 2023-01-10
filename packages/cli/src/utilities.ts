@@ -15,8 +15,6 @@ import type { Options } from 'ora';
 import ora from 'ora';
 import { z } from 'zod';
 
-import { metaUrl } from './meta-url.js';
-
 export const safeExecSync = (command: string) => {
   try {
     return execSync(command, { encoding: 'utf8', stdio: 'pipe' });
@@ -87,7 +85,7 @@ export const downloadFile = async (url: string, destination: string) => {
 export const getPathInModule = (moduleName: string, relativePath = '/') =>
   // https://stackoverflow.com/a/49455609/12514940
   path.join(
-    path.dirname(createRequire(metaUrl).resolve(`${moduleName}/package.json`)),
+    path.dirname(createRequire(import.meta.url).resolve(`${moduleName}/package.json`)),
     relativePath
   );
 

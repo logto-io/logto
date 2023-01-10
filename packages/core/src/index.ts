@@ -11,7 +11,7 @@ dotenv.config({ path: await findUp('.env', {}) });
 const { default: envSet } = await import('./env-set/index.js');
 await envSet.load();
 
-const { loadConnectorFactories } = await import('./connectors/index.js');
+const { loadConnectorFactories } = await import('./utils/connectors/factories.js');
 
 try {
   const app = new Koa({

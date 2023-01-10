@@ -5,14 +5,8 @@ import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas'
 import cleanDeep from 'clean-deep';
 import { object, string } from 'zod';
 
-import {
-  getLogtoConnectorById,
-  getLogtoConnectors,
-  loadConnectorFactories,
-} from '#src/connectors/index.js';
-import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/libraries/connector.js';
+import { getLogtoConnectorById, getLogtoConnectors } from '#src/libraries/connector.js';
 import { removeUnavailableSocialConnectorTargets } from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import {
@@ -24,6 +18,9 @@ import {
   updateConnector,
 } from '#src/queries/connector.js';
 import assertThat from '#src/utils/assert-that.js';
+import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
+import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
+import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 

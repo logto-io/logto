@@ -29,7 +29,7 @@ const logtoConnectors = [
   mockAliyunSmsConnector,
 ];
 
-await mockEsmWithActual('#src/connectors.js', () => ({
+await mockEsmWithActual('#src/libraries/connector.js', () => ({
   getLogtoConnectors: async () => logtoConnectors,
 }));
 

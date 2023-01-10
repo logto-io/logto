@@ -2,8 +2,8 @@ import type { Profile, User } from '@logto/schemas';
 import { InteractionEvent } from '@logto/schemas';
 import { argon2Verify } from 'hash-wasm';
 
-import { getLogtoConnectorById } from '#src/connectors/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { getLogtoConnectorById } from '#src/libraries/connector.js';
 import {
   findUserById,
   hasUser,

@@ -1,46 +1,35 @@
-import { ConnectorType } from '@logto/schemas';
+import type { Connector } from '@logto/schemas';
+import { createMockUtils } from '@logto/shared/esm';
 
-import {
-  mockMetadata0,
-  mockMetadata1,
-  mockConnector0,
-  mockConnector1,
-  mockLogtoConnector,
-  mockLogtoConnectorList,
-} from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
-import { checkSocialConnectorTargetAndPlatformUniqueness } from './connector.js';
+const { jest } = import.meta;
+const { mockEsmWithActual } = createMockUtils(jest);
 
-describe('check social connector target and platform uniqueness', () => {
-  it('throws if more than one same-platform social connectors sharing the same `target`', () => {
-    const mockConnectors = [
-      {
-        dbEntry: mockConnector0,
-        metadata: { ...mockMetadata0, target: 'target' },
-        type: ConnectorType.Social,
-        ...mockLogtoConnector,
-      },
-      {
-        dbEntry: mockConnector1,
-        metadata: { ...mockMetadata1, target: 'target' },
-        type: ConnectorType.Social,
-        ...mockLogtoConnector,
-      },
-    ];
-    expect(() => {
-      checkSocialConnectorTargetAndPlatformUniqueness(mockConnectors);
-    }).toMatchError(
-      new RequestError({
-        code: 'connector.multiple_target_with_same_platform',
-        status: 400,
-      })
-    );
-  });
+const connectors: Connector[] = [
+  {
+    id: 'id',
+    config: { foo: 'bar' },
+    createdAt: 0,
+    syncProfile: false,
+    connectorId: 'id',
+    metadata: {},
+  },
+];
 
-  it('should not throw when no multiple connectors sharing same target and platform', () => {
-    expect(() => {
-      checkSocialConnectorTargetAndPlatformUniqueness(mockLogtoConnectorList);
-    }).not.toThrow();
-  });
+await mockEsmWithActual('#src/queries/connector.js', () => ({
+  findAllConnectors: jest.fn(async () => connectors),
+}));
+
+const { getConnectorConfig } = await import('./connector.js');
+
+it('getConnectorConfig() should return right config', async () => {
+  const config = await getConnectorConfig('id');
+  expect(config).toMatchObject({ foo: 'bar' });
+});
+
+it('getConnectorConfig() should throw error if connector not found', async () => {
+  await expect(getConnectorConfig('not-found')).rejects.toMatchError(
+    new RequestError({ code: 'entity.not_found', id: 'not-found', status: 404 })
+  );
 });

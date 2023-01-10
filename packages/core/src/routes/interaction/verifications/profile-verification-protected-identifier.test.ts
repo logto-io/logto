@@ -15,7 +15,7 @@ await mockEsmWithActual('#src/queries/user.js', () => ({
   hasUserWithIdentity: jest.fn().mockResolvedValue(false),
 }));
 
-mockEsm('#src/connectors/index.js', () => ({
+mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectorById: jest.fn().mockResolvedValue({
     metadata: { target: 'logto' },
   }),

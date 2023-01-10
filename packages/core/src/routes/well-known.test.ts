@@ -31,7 +31,7 @@ const sieQueries = {
 };
 const { findDefaultSignInExperience } = sieQueries;
 
-mockEsm('#src/connectors.js', () => ({
+mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectors: jest.fn(async () => [
     mockAliyunDmConnector,
     mockAliyunSmsConnector,

@@ -8,9 +8,9 @@ import {
   mockLogtoConnectorList,
   mockLogtoConnector,
 } from '#src/__mocks__/index.js';
-import type { LogtoConnector } from '#src/connectors/types.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
+import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -42,7 +42,7 @@ const { updateConnector } = await mockEsmWithActual('#src/queries/connector.js',
   updateConnector: jest.fn(),
 }));
 
-await mockEsmWithActual('#src/connectors.js', () => ({
+await mockEsmWithActual('#src/libraries/connector.js', () => ({
   getLogtoConnectors,
   getLogtoConnectorById,
 }));
