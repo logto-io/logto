@@ -16,7 +16,6 @@ import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
 import phraseRoutes from './phrase.js';
-import profileRoutes from './profile.js';
 import resourceRoutes from './resource.js';
 import roleRoutes from './role.js';
 import settingRoutes from './setting.js';
@@ -45,23 +44,15 @@ const createRouters = (tenant: TenantContext) => {
   customPhraseRoutes(managementRouter, tenant);
   hookRoutes(managementRouter, tenant);
 
-  const profileRouter: AnonymousRouter = new Router();
-  profileRoutes(profileRouter, tenant);
-
   const anonymousRouter: AnonymousRouter = new Router();
   phraseRoutes(anonymousRouter, tenant);
   wellKnownRoutes(anonymousRouter, tenant);
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
   // The swagger.json should contain all API routers.
-  swaggerRoutes(anonymousRouter, [
-    interactionRouter,
-    profileRouter,
-    managementRouter,
-    anonymousRouter,
-  ]);
+  swaggerRoutes(anonymousRouter, [interactionRouter, managementRouter, anonymousRouter]);
 
-  return [interactionRouter, profileRouter, managementRouter, anonymousRouter];
+  return [interactionRouter, managementRouter, anonymousRouter];
 };
 
 export default function initRouter(tenant: TenantContext): Koa {
