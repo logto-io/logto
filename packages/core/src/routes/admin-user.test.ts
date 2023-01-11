@@ -70,6 +70,9 @@ const mockedQueries = {
       async (): Promise<Role[]> => [{ id: 'role_id', name: 'admin', description: 'none' }]
     ),
   },
+  usersRoles: {
+    deleteUsersRolesByUserIdAndRoleId: jest.fn(),
+  },
 } satisfies Partial2<Queries>;
 
 const mockHasUser = jest.fn(async () => false);

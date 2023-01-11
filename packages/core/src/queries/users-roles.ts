@@ -1,10 +1,11 @@
 import type { UsersRole } from '@logto/schemas';
-import { UsersRoles } from '@logto/schemas';
+import { RolesScopes, UsersRoles } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
 import envSet from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(UsersRoles);
 
@@ -52,10 +53,14 @@ export const createUsersRolesQueries = (pool: CommonQueryMethods) => {
     `);
 
   const deleteUsersRolesByUserIdAndRoleId = async (userId: string, roleId: string) => {
-    await pool.query(sql`
+    const { rowCount } = await pool.query(sql`
       delete from ${table}
       where ${fields.userId} = ${userId} and ${fields.roleId} = ${roleId}
     `);
+
+    if (rowCount < 1) {
+      throw new DeletionError(RolesScopes.table);
+    }
   };
 
   return {
