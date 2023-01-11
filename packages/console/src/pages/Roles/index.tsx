@@ -15,6 +15,7 @@ import useTableSearchParams, { formatKeyword } from '@/hooks/use-table-search-pa
 import * as pageStyles from '@/scss/resources.module.scss';
 import { buildUrl } from '@/utilities/url';
 
+import AssignedUsers from './components/AssignedUsers';
 import CreateRoleModal from './components/CreateRoleModal';
 
 const rolesPathname = '/roles';
@@ -30,7 +31,7 @@ const Roles = () => {
   const {
     pagination: { pageIndex, pageSize, setPageIndex },
     search: { keyword, setKeyword },
-  } = useTableSearchParams();
+  } = useTableSearchParams({ pageSize: 20 });
 
   const url = buildUrl('/api/roles', {
     page: String(pageIndex),
@@ -68,14 +69,22 @@ const Roles = () => {
           {
             title: t('roles.role_name'),
             dataIndex: 'name',
-            colSpan: 6,
+            colSpan: 5,
             render: ({ id, name }) => <ItemPreview title={name} to={buildDetailsPathname(id)} />,
           },
           {
             title: t('roles.role_description'),
             dataIndex: 'description',
-            colSpan: 10,
+            colSpan: 6,
             render: ({ description }) => description,
+          },
+          {
+            title: <span>{t('roles.assigned_users')}</span>,
+            dataIndex: 'users',
+            colSpan: 5,
+            render: ({ featuredUsers, usersCount }) => (
+              <AssignedUsers users={featuredUsers} count={usersCount} />
+            ),
           },
         ]}
         rowClickHandler={({ id }) => {

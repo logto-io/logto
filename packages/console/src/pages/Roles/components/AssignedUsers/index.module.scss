@@ -1,0 +1,37 @@
+@use '@/scss/underscore' as _;
+
+.users {
+  display: flex;
+  align-items: center;
+
+  .avatars {
+    display: flex;
+    align-items: center;
+    transform: scaleX(-1);
+
+    .avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid var(--color-layer-1);
+      transform: scaleX(-1);
+
+      &:not(:last-child) {
+        margin-right: _.unit(-2);
+      }
+    }
+  }
+
+  .count {
+    margin-left: _.unit(2);
+    color: var(--color-text);
+    font: var(--font-body-medium);
+  }
+}
+
+.empty {
+  padding-left: _.unit(10);
+}
+
