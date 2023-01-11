@@ -30,7 +30,7 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
   const [pageIndex, setPageIndex] = useState(1);
   const [keyword, setKeyword] = useState('');
 
-  const debounce = useDebounce(searchDelay);
+  const debounce = useDebounce();
 
   const url = buildUrl('/api/roles', {
     excludeUserId: userId,
@@ -50,7 +50,7 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
     debounce(() => {
       setPageIndex(1);
       setKeyword(event.target.value);
-    });
+    }, searchDelay);
   };
 
   return (

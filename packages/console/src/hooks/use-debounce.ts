@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const useDebounce = (wait: number) => {
+const useDebounce = () => {
   const timerRef = useRef<NodeJS.Timeout>();
 
   const clearTimer = () => {
@@ -15,7 +15,7 @@ const useDebounce = (wait: number) => {
     };
   }, []);
 
-  return (callback: () => void) => {
+  return (callback: () => void, wait: number) => {
     clearTimer();
     // eslint-disable-next-line @silverhand/fp/no-mutation
     timerRef.current = setTimeout(() => {
