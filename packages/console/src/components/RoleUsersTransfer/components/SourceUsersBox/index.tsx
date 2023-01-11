@@ -10,6 +10,7 @@ import Pagination from '@/components/Pagination';
 import TextInput from '@/components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useDebounce from '@/hooks/use-debounce';
+import { formatKeyword } from '@/hooks/use-table-search-params';
 import * as transferLayout from '@/scss/transfer.module.scss';
 import { buildUrl } from '@/utilities/url';
 
@@ -36,7 +37,7 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
     hideAdminUser: String(true),
     page: String(pageIndex),
     page_size: String(pageSize),
-    ...conditional(keyword && { search: `%${keyword}%` }),
+    ...conditional(keyword && { search: formatKeyword(keyword) }),
   });
 
   const { data } = useSWR<[User[], number], RequestError>(url);
