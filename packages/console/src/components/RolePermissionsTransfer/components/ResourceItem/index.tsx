@@ -70,7 +70,9 @@ const ResourceItem = ({
             key={scope.id}
             scope={scope}
             isSelected={selectedPermissions.findIndex(({ id }) => scope.id === id) >= 0}
-            onSelectPermission={onSelectPermission}
+            onSelect={() => {
+              onSelectPermission(scope);
+            }}
           />
         ))}
       </div>

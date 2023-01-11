@@ -1,4 +1,4 @@
-import type { ResourceResponse, ScopeResponse } from '@logto/schemas';
+import type { ResourceResponse, Scope, ScopeResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
@@ -6,21 +6,25 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Search from '@/assets/images/search.svg';
+import TextInput from '@/components/TextInput';
+import * as transferLayout from '@/scss/transfer.module.scss';
 
-import TextInput from '../TextInput';
-import ResourceItem from './components/ResourceItem';
+import type { DetailedResourceResponse } from '../../types';
+import ResourceItem from '../ResourceItem';
 import * as styles from './index.module.scss';
-import type { DetailedResourceResponse } from './types';
 
 type Props = {
-  excludeScopeIds: string[];
+  roleId?: string;
   selectedPermissions: ScopeResponse[];
   onChange: (value: ScopeResponse[]) => void;
 };
 
-const SourcePermissionsBox = ({ excludeScopeIds, selectedPermissions, onChange }: Props) => {
+const SourcePermissionsBox = ({ roleId, selectedPermissions, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data = [] } = useSWR<ResourceResponse[]>(`/api/resources?includeScopes=true`);
+  const { data = [] } = useSWR<ResourceResponse[]>('/api/resources?includeScopes=true');
+  const { data: roleScopes = [] } = useSWR<Scope[]>(roleId && `/api/roles/${roleId}/scopes`);
+
+  const excludeScopeIds = new Set(roleScopes.map(({ id }) => id));
 
   const [keyword, setKeyword] = useState('');
 
@@ -32,40 +36,29 @@ const SourcePermissionsBox = ({ excludeScopeIds, selectedPermissions, onChange }
     selectedPermissions.findIndex(({ id }) => id === scope.id) >= 0;
 
   const onSelectPermission = (scope: ScopeResponse) => {
-    const permissionAdded = isPermissionAdded(scope);
-
-    if (permissionAdded) {
-      onChange(selectedPermissions.filter(({ id }) => id !== scope.id));
-
-      return;
-    }
-
-    onChange([scope, ...selectedPermissions]);
+    onChange(
+      isPermissionAdded(scope)
+        ? selectedPermissions.filter(({ id }) => id !== scope.id)
+        : [scope, ...selectedPermissions]
+    );
   };
 
   const onSelectResource = ({ scopes }: DetailedResourceResponse) => {
     const isAllSelected = scopes.every((scope) => isPermissionAdded(scope));
     const scopesIds = new Set(scopes.map(({ id }) => id));
     const basePermissions = selectedPermissions.filter(({ id }) => !scopesIds.has(id));
-
-    if (isAllSelected) {
-      onChange(basePermissions);
-
-      return;
-    }
-
-    onChange([...scopes, ...basePermissions]);
+    onChange(isAllSelected ? basePermissions : [...scopes, ...basePermissions]);
   };
 
   const getResourceSelectedPermissions = ({ scopes }: DetailedResourceResponse) =>
     scopes.filter((scope) => selectedPermissions.findIndex(({ id }) => id === scope.id) >= 0);
 
   const resources = data
-    .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.includes(id)))
+    .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.has(id)))
     .map(({ scopes, ...resource }) => ({
       ...resource,
       scopes: scopes
-        .filter(({ id }) => !excludeScopeIds.includes(id))
+        .filter(({ id }) => !excludeScopeIds.has(id))
         .map((scope) => ({
           ...scope,
           resource,
@@ -89,8 +82,8 @@ const SourcePermissionsBox = ({ excludeScopeIds, selectedPermissions, onChange }
     ) ?? resources;
 
   return (
-    <div className={styles.box}>
-      <div className={styles.top}>
+    <div className={transferLayout.box}>
+      <div className={transferLayout.boxTopBar}>
         <TextInput
           className={styles.search}
           icon={<Search className={styles.icon} />}
@@ -98,7 +91,7 @@ const SourcePermissionsBox = ({ excludeScopeIds, selectedPermissions, onChange }
           onChange={handleSearchInput}
         />
       </div>
-      <div className={styles.content}>
+      <div className={transferLayout.boxContent}>
         {dataSource.map((resource) => (
           <ResourceItem
             key={resource.id}

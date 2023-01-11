@@ -13,11 +13,10 @@ import * as modalStyles from '@/scss/modal.module.scss';
 
 type Props = {
   roleId: string;
-  excludeScopeIds: string[];
   onClose: (success?: boolean) => void;
 };
 
-const AssignPermissionsModal = ({ roleId, excludeScopeIds, onClose }: Props) => {
+const AssignPermissionsModal = ({ roleId, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,8 +71,8 @@ const AssignPermissionsModal = ({ roleId, excludeScopeIds, onClose }: Props) => 
       >
         <FormField title="role_details.permission.assign_form_filed">
           <RolePermissionsTransfer
+            roleId={roleId}
             value={scopes}
-            excludeScopeIds={excludeScopeIds}
             onChange={(scopes) => {
               setScopes(scopes);
             }}

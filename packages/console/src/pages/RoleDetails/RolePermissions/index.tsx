@@ -81,7 +81,6 @@ const RolePermissions = () => {
       )}
       {isAssignPermissionsModalOpen && (
         <AssignPermissionsModal
-          excludeScopeIds={scopes?.map(({ id }) => id) ?? []}
           roleId={roleId}
           onClose={(success) => {
             if (success) {
