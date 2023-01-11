@@ -32,6 +32,7 @@ const TermsOfUseConfirmModalContent = ({ cancel }: ModalContentRenderProps) => {
         link: (
           <TextLink
             key={t('description.terms_of_use')}
+            type="inlinePrimary"
             text="description.terms_of_use"
             {...linkProps}
           />
