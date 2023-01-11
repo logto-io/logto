@@ -2,20 +2,19 @@ import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { findRolesByRoleIds, findRoleById } from '#src/queries/roles.js';
-import { findUserById } from '#src/queries/user.js';
-import {
-  deleteUsersRolesByUserIdAndRoleId,
-  findUsersRolesByUserId,
-  insertUsersRoles,
-} from '#src/queries/users-roles.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function adminUserRoleRoutes<T extends AuthedRouter>(
-  ...[router]: RouterInitArgs<T>
+  ...[router, { queries }]: RouterInitArgs<T>
 ) {
+  const {
+    roles: { findRolesByRoleIds, findRoleById },
+    users: { findUserById },
+    usersRoles: { deleteUsersRolesByUserIdAndRoleId, findUsersRolesByUserId, insertUsersRoles },
+  } = queries;
+
   router.get(
     '/users/:userId/roles',
     koaGuard({

@@ -4,7 +4,6 @@ import type { CommonQueryMethods } from 'slonik';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
-import envSet from '#src/env-set/index.js';
 
 const id = 'default';
 
@@ -24,7 +23,3 @@ export const createSignInExperienceQueries = (pool: CommonQueryMethods) => {
 
   return { updateDefaultSignInExperience, findDefaultSignInExperience };
 };
-
-/** @deprecated Will be removed soon. Use createSignInExperienceQueries() factory instead. */
-export const { updateDefaultSignInExperience, findDefaultSignInExperience } =
-  createSignInExperienceQueries(envSet.pool);

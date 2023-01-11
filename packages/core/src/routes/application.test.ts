@@ -3,38 +3,43 @@ import { ApplicationType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockApplication } from '#src/__mocks__/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+const { mockEsmWithActual } = createMockUtils(jest);
 
-const { findApplicationById } = await mockEsmWithActual('#src/queries/application.js', () => ({
-  findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
-  findAllApplications: jest.fn(async () => [mockApplication]),
-  findApplicationById: jest.fn(async () => mockApplication),
-  deleteApplicationById: jest.fn(),
-  insertApplication: jest.fn(
-    async (body: CreateApplication): Promise<Application> => ({
-      ...mockApplication,
-      ...body,
-      oidcClientMetadata: {
-        ...mockApplication.oidcClientMetadata,
-        ...body.oidcClientMetadata,
-      },
-    })
-  ),
-  updateApplicationById: jest.fn(
-    async (_, data: Partial<CreateApplication>): Promise<Application> => ({
-      ...mockApplication,
-      ...data,
-    })
-  ),
-}));
+const findApplicationById = jest.fn(async () => mockApplication);
 
 await mockEsmWithActual('@logto/core-kit', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => 'randomId',
   generateStandardId: () => 'randomId',
 }));
+
+const tenantContext = new MockTenant(undefined, {
+  applications: {
+    findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
+    findAllApplications: jest.fn(async () => [mockApplication]),
+    findApplicationById,
+    deleteApplicationById: jest.fn(),
+    insertApplication: jest.fn(
+      async (body: CreateApplication): Promise<Application> => ({
+        ...mockApplication,
+        ...body,
+        oidcClientMetadata: {
+          ...mockApplication.oidcClientMetadata,
+          ...body.oidcClientMetadata,
+        },
+      })
+    ),
+    updateApplicationById: jest.fn(
+      async (_, data: Partial<CreateApplication>): Promise<Application> => ({
+        ...mockApplication,
+        ...data,
+      })
+    ),
+  },
+});
 
 const { createRequester } = await import('#src/utils/test-utils.js');
 const applicationRoutes = await pickDefault(import('./application.js'));
@@ -46,7 +51,7 @@ const customClientMetadata = {
 };
 
 describe('application route', () => {
-  const applicationRequest = createRequester({ authedRoutes: applicationRoutes });
+  const applicationRequest = createRequester({ authedRoutes: applicationRoutes, tenantContext });
 
   it('GET /applications', async () => {
     const response = await applicationRequest.get('/applications');

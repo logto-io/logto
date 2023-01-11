@@ -6,7 +6,6 @@ import { sql } from 'slonik';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
-import envSet from '#src/env-set/index.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
 
@@ -88,13 +87,3 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     countActiveUsersByTimeInterval,
   };
 };
-
-/** @deprecated Will be removed soon. Use createLogQueries() factory instead. */
-export const {
-  insertLog,
-  countLogs,
-  findLogs,
-  findLogById,
-  getDailyActiveUserCountsByTimeInterval,
-  countActiveUsersByTimeInterval,
-} = createLogQueries(envSet.pool);

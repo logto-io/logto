@@ -131,14 +131,3 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     revokeInstanceByUserId,
   };
 };
-
-/** @deprecated Will be removed soon. Use createOidcModelInstanceQueries() factory instead. */
-export const {
-  upsertInstance,
-  findPayloadById,
-  findPayloadByPayloadField,
-  consumeInstanceById,
-  destroyInstanceById,
-  revokeInstanceByGrantId,
-  revokeInstanceByUserId,
-} = createOidcModelInstanceQueries(envSet.pool);

@@ -1,27 +1,31 @@
 import { LogResult } from '@logto/schemas';
 import type { Log } from '@logto/schemas';
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
 
 const mockBody = { key: 'a', payload: { key: 'a', result: LogResult.Success }, createdAt: 123 };
 const mockLog: Log = { id: '1', ...mockBody };
 const mockLogs = [mockLog, { id: '2', ...mockBody }];
 
-const { countLogs, findLogs, findLogById } = mockEsm('#src/queries/log.js', () => ({
+const logs = {
   countLogs: jest.fn().mockResolvedValue({
     count: mockLogs.length,
   }),
   findLogs: jest.fn().mockResolvedValue(mockLogs),
   findLogById: jest.fn().mockResolvedValue(mockLog),
-}));
+};
+const { countLogs, findLogs, findLogById } = logs;
 const logRoutes = await pickDefault(import('./log.js'));
 
 describe('logRoutes', () => {
-  const logRequest = createRequester({ authedRoutes: logRoutes });
+  const logRequest = createRequester({
+    authedRoutes: logRoutes,
+    tenantContext: new MockTenant(undefined, { logs }),
+  });
 
   afterEach(() => {
     jest.clearAllMocks();

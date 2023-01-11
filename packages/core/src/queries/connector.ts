@@ -6,7 +6,6 @@ import { sql } from 'slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Connectors);
@@ -72,14 +71,3 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
     updateConnector,
   };
 };
-
-/** @deprecated Will be removed soon. Use createConnectorQueries() factory instead. */
-export const {
-  findAllConnectors,
-  findConnectorById,
-  countConnectorByConnectorId,
-  deleteConnectorById,
-  deleteConnectorByIds,
-  insertConnector,
-  updateConnector,
-} = createConnectorQueries(envSet.pool);

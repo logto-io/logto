@@ -3,11 +3,6 @@ import { endOfDay, format, subDays } from 'date-fns';
 import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
-import {
-  countActiveUsersByTimeInterval,
-  getDailyActiveUserCountsByTimeInterval,
-} from '#src/queries/log.js';
-import { countUsers, getDailyNewUserCountsByTimeInterval } from '#src/queries/user.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
@@ -17,7 +12,14 @@ const indices = (length: number) => [...Array.from({ length }).keys()];
 
 const getEndOfDayTimestamp = (date: Date | number) => endOfDay(date).valueOf();
 
-export default function dashboardRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function dashboardRoutes<T extends AuthedRouter>(
+  ...[router, { queries }]: RouterInitArgs<T>
+) {
+  const {
+    logs: { countActiveUsersByTimeInterval, getDailyActiveUserCountsByTimeInterval },
+    users: { countUsers, getDailyNewUserCountsByTimeInterval },
+  } = queries;
+
   router.get('/dashboard/users/total', async (ctx, next) => {
     const { count: totalUserCount } = await countUsers();
     ctx.body = { totalUserCount };

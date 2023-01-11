@@ -1,11 +1,14 @@
 import { Settings } from '@logto/schemas';
 
 import koaGuard from '#src/middleware/koa-guard.js';
-import { getSetting, updateSetting } from '#src/queries/setting.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-export default function settingRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function settingRoutes<T extends AuthedRouter>(
+  ...[router, { queries }]: RouterInitArgs<T>
+) {
+  const { getSetting, updateSetting } = queries.settings;
+
   router.get('/settings', async (ctx, next) => {
     const { id, ...rest } = await getSetting();
     ctx.body = rest;

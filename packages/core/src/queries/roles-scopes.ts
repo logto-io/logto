@@ -4,7 +4,6 @@ import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(RolesScopes);
@@ -39,7 +38,3 @@ export const createRolesScopesQueries = (pool: CommonQueryMethods) => {
 
   return { insertRolesScopes, findRolesScopesByRoleId, deleteRolesScope };
 };
-
-/** @deprecated Will be removed soon. Use createRolesScopesQueries() factory instead. */
-export const { insertRolesScopes, findRolesScopesByRoleId, deleteRolesScope } =
-  createRolesScopesQueries(envSet.pool);

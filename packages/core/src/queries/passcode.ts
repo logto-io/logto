@@ -6,7 +6,6 @@ import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Passcodes);
@@ -82,14 +81,3 @@ export const createPasscodeQueries = (pool: CommonQueryMethods) => {
     deletePasscodesByIds,
   };
 };
-
-/** @deprecated Will be removed soon. Use createPasscodeQueries() factory instead. */
-export const {
-  findUnconsumedPasscodeByJtiAndType,
-  findUnconsumedPasscodesByJtiAndType,
-  insertPasscode,
-  consumePasscode,
-  increasePasscodeTryCount,
-  deletePasscodeById,
-  deletePasscodesByIds,
-} = createPasscodeQueries(envSet.pool);

@@ -3,11 +3,14 @@ import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import { countLogs, findLogById, findLogs } from '#src/queries/log.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-export default function logRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+export default function logRoutes<T extends AuthedRouter>(
+  ...[router, { queries }]: RouterInitArgs<T>
+) {
+  const { countLogs, findLogById, findLogs } = queries.logs;
+
   router.get(
     '/logs',
     koaPagination(),

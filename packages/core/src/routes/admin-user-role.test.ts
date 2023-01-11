@@ -1,29 +1,32 @@
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 
 import { mockRole, mockUser } from '#src/__mocks__/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-const { mockEsmWithActual } = createMockUtils(jest);
+const users = { findUserById: jest.fn() };
 
-await mockEsmWithActual('#src/queries/user.js', () => ({
-  findUserById: jest.fn(),
-}));
-const { findRolesByRoleIds } = await mockEsmWithActual('#src/queries/roles.js', () => ({
+const roles = {
   findRolesByRoleIds: jest.fn(),
   findRoleById: jest.fn(),
-}));
-const { findUsersRolesByUserId, insertUsersRoles, deleteUsersRolesByUserIdAndRoleId } =
-  await mockEsmWithActual('#src/queries/users-roles.js', () => ({
-    findUsersRolesByUserId: jest.fn(),
-    insertUsersRoles: jest.fn(),
-    deleteUsersRolesByUserIdAndRoleId: jest.fn(),
-  }));
+};
+const { findRolesByRoleIds } = roles;
+
+const usersRoles = {
+  findUsersRolesByUserId: jest.fn(),
+  insertUsersRoles: jest.fn(),
+  deleteUsersRolesByUserIdAndRoleId: jest.fn(),
+};
+const { findUsersRolesByUserId, insertUsersRoles, deleteUsersRolesByUserIdAndRoleId } = usersRoles;
+
+const tenantContext = new MockTenant(undefined, { usersRoles, users, roles });
+
 const roleRoutes = await pickDefault(import('./admin-user-role.js'));
 
 describe('user role routes', () => {
-  const roleRequester = createRequester({ authedRoutes: roleRoutes });
+  const roleRequester = createRequester({ authedRoutes: roleRoutes, tenantContext });
 
   it('GET /users/:id/roles', async () => {
     findUsersRolesByUserId.mockResolvedValueOnce([]);

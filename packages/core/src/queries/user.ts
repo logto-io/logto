@@ -11,8 +11,9 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 
-import { findRoleByRoleName, findRolesByRoleIds } from './roles.js';
-import { findUsersRolesByRoleId, findUsersRolesByUserId } from './users-roles.js';
+// TODO: @sijie remove this
+import { findRolesByRoleIds } from './roles.js';
+import { findUsersRolesByUserId } from './users-roles.js';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -215,22 +216,6 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       group by date(${fields.createdAt})
     `);
 
-  const findUsersByRoleName = async (roleName: string) => {
-    const role = await findRoleByRoleName(roleName);
-
-    if (!role) {
-      return [];
-    }
-
-    const usersRoles = await findUsersRolesByRoleId(role.id);
-
-    if (usersRoles.length === 0) {
-      return [];
-    }
-
-    return findUsersByIds(usersRoles.map(({ userId }) => userId));
-  };
-
   return {
     findUserByUsername,
     findUserByEmail,
@@ -250,7 +235,6 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     deleteUserIdentity,
     hasActiveUsers,
     getDailyNewUserCountsByTimeInterval,
-    findUsersByRoleName,
   };
 };
 
@@ -274,5 +258,4 @@ export const {
   deleteUserIdentity,
   hasActiveUsers,
   getDailyNewUserCountsByTimeInterval,
-  findUsersByRoleName,
 } = createUserQueries(envSet.pool);
