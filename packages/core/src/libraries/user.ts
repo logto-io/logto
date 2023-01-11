@@ -50,8 +50,8 @@ export const createUserLibrary = (queries: Queries) => {
   const {
     pool,
     roles: { findRolesByRoleNames, insertRoles, findRoleByRoleName },
-    users: { hasUser, hasUserWithEmail, hasUserWithId, hasUserWithPhone },
-    usersRoles: { insertUsersRoles },
+    users: { hasUser, hasUserWithEmail, hasUserWithId, hasUserWithPhone, findUsersByIds },
+    usersRoles: { insertUsersRoles, findUsersRolesByRoleId },
   } = queries;
 
   const generateUserId = async (retries = 500) =>
@@ -140,9 +140,26 @@ export const createUserLibrary = (queries: Queries) => {
     }
   };
 
+  const findUsersByRoleName = async (roleName: string) => {
+    const role = await findRoleByRoleName(roleName);
+
+    if (!role) {
+      return [];
+    }
+
+    const usersRoles = await findUsersRolesByRoleId(role.id);
+
+    if (usersRoles.length === 0) {
+      return [];
+    }
+
+    return findUsersByIds(usersRoles.map(({ userId }) => userId));
+  };
+
   return {
     generateUserId,
     insertUser,
     checkIdentifierCollision,
+    findUsersByRoleName,
   };
 };

@@ -30,12 +30,11 @@ export default function adminUserRoutes<T extends AuthedRouter>(
       updateUserById,
       hasUserWithEmail,
       hasUserWithPhone,
-      findUsersByRoleName,
     },
     usersRoles: { deleteUsersRolesByUserIdAndRoleId, findUsersRolesByRoleId, insertUsersRoles },
   } = queries;
   const {
-    users: { checkIdentifierCollision, generateUserId, insertUser },
+    users: { checkIdentifierCollision, generateUserId, insertUser, findUsersByRoleName },
   } = libraries;
 
   router.get('/users', koaPagination(), async (ctx, next) => {
