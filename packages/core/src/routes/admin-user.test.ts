@@ -92,6 +92,7 @@ const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js'
 }));
 
 const usersLibraries = {
+  findUserByIdWithRoles: jest.fn(async (id: string) => mockUser),
   generateUserId: jest.fn(async () => 'fooId'),
   insertUser: jest.fn(
     async (user: CreateUser): Promise<User> => ({
@@ -100,6 +101,7 @@ const usersLibraries = {
     })
   ),
 } satisfies Partial<Libraries['users']>;
+const { findUserByIdWithRoles } = usersLibraries;
 
 const adminUserRoutes = await pickDefault(import('./admin-user.js'));
 
@@ -279,7 +281,7 @@ describe('adminUserRoutes', () => {
     const name = 'Michael';
     const avatar = 'http://www.michael.png';
 
-    findUserById.mockImplementationOnce(() => {
+    findUserByIdWithRoles.mockImplementationOnce(() => {
       throw new Error(' ');
     });
 
@@ -324,7 +326,7 @@ describe('adminUserRoutes', () => {
     await expect(
       userRequest.patch('/users/foo').send({ roleNames: ['superadmin'] })
     ).resolves.toHaveProperty('status', 400);
-    expect(findUserById).toHaveBeenCalledTimes(1);
+    expect(findUserByIdWithRoles).toHaveBeenCalledTimes(1);
     expect(updateUserById).not.toHaveBeenCalled();
   });
 
@@ -341,7 +343,7 @@ describe('adminUserRoutes', () => {
     const password = '123456';
     const response = await userRequest.patch(`/users/${mockedUserId}/password`).send({ password });
     expect(encryptUserPassword).toHaveBeenCalledWith(password);
-    expect(updateUserById).toHaveBeenCalledTimes(1);
+    expect(findUserById).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockUserResponse,

@@ -6,7 +6,6 @@ import { notFalsy } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
-import envSet from '#src/env-set/index.js';
 import { UpdateError } from '#src/errors/SlonikError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import { isKeyOf } from '#src/utils/schema.js';
@@ -72,6 +71,3 @@ export const buildUpdateWhereWithPool =
       return data;
     };
   };
-
-/** @deprecated Will be removed soon. Use buildUpdateWhereWithPool() factory instead. */
-export const buildUpdateWhere = buildUpdateWhereWithPool(envSet.pool);

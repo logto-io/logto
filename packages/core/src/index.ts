@@ -3,19 +3,19 @@ import dotenv from 'dotenv';
 import { findUp } from 'find-up';
 import Koa from 'koa';
 
+import { EnvSet } from './env-set/index.js';
 import initI18n from './i18n/init.js';
+import { tenantPool } from './tenants/index.js';
 
 dotenv.config({ path: await findUp('.env', {}) });
 
 // Import after env has configured
-const { default: envSet } = await import('./env-set/index.js');
-await envSet.load();
 
 const { loadConnectorFactories } = await import('./utils/connectors/factories.js');
 
 try {
   const app = new Koa({
-    proxy: envSet.values.trustProxyHeader,
+    proxy: EnvSet.values.trustProxyHeader,
   });
   await initI18n();
   await loadConnectorFactories();
@@ -27,5 +27,5 @@ try {
   console.error('Error while initializing app:');
   console.error(error);
 
-  await Promise.all([envSet.poolSafe?.end(), envSet.queryClientSafe?.end()]).catch(noop);
+  await tenantPool.endAll().catch(noop);
 }

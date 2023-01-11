@@ -29,6 +29,7 @@ export const createHookLibrary = (queries: Queries, { hook }: ModelRouters) => {
   const {
     applications: { findApplicationById },
     logs: { insertLog },
+    // TODO: @gao should we use the library function thus we can pass full userinfo to the payload?
     users: { findUserById },
   } = queries;
 

@@ -2,9 +2,11 @@ import { UserRole } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
+import Sinon from 'sinon';
 
-import envSet from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { envSetForTest } from '#src/test-utils/env-set.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { WithAuthContext } from './koa-auth.js';
@@ -55,14 +57,15 @@ describe('koaAuth middleware', () => {
   });
 
   it('should read DEVELOPMENT_USER_ID from env variable first if not production and not integration test', async () => {
-    const spy = jest
-      .spyOn(envSet, 'values', 'get')
-      .mockReturnValue({ ...envSet.values, developmentUserId: 'foo' });
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      developmentUserId: 'foo',
+    });
 
-    await koaAuth()(ctx, next);
+    await koaAuth(envSetForTest)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'user', id: 'foo' });
 
-    spy.mockRestore();
+    stub.restore();
   });
 
   it('should read `development-user-id` from headers if not production and not integration test', async () => {
@@ -74,27 +77,27 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await koaAuth()(mockCtx, next);
+    await koaAuth(envSetForTest)(mockCtx, next);
     expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo' });
   });
 
   it('should read DEVELOPMENT_USER_ID from env variable first if is in production and integration test', async () => {
-    const spy = jest.spyOn(envSet, 'values', 'get').mockReturnValue({
-      ...envSet.values,
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
       developmentUserId: 'foo',
       isProduction: true,
       isIntegrationTest: true,
     });
 
-    await koaAuth()(ctx, next);
+    await koaAuth(envSetForTest)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'user', id: 'foo' });
 
-    spy.mockRestore();
+    stub.restore();
   });
 
   it('should read `development-user-id` from headers if is in production and integration test', async () => {
-    const spy = jest.spyOn(envSet, 'values', 'get').mockReturnValue({
-      ...envSet.values,
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
       isProduction: true,
       isIntegrationTest: true,
     });
@@ -107,10 +110,10 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await koaAuth()(mockCtx, next);
+    await koaAuth(envSetForTest)(mockCtx, next);
     expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo' });
 
-    spy.mockRestore();
+    stub.restore();
   });
 
   it('should set user auth with given sub returned from accessToken', async () => {
@@ -120,12 +123,12 @@ describe('koaAuth middleware', () => {
         authorization: 'Bearer access_token',
       },
     };
-    await koaAuth()(ctx, next);
+    await koaAuth(envSetForTest)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'user', id: 'fooUser' });
   });
 
   it('expect to throw if authorization header is missing', async () => {
-    await expect(koaAuth()(ctx, next)).rejects.toMatchError(authHeaderMissingError);
+    await expect(koaAuth(envSetForTest)(ctx, next)).rejects.toMatchError(authHeaderMissingError);
   });
 
   it('expect to throw if authorization header token type not recognized ', async () => {
@@ -136,7 +139,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth()(ctx, next)).rejects.toMatchError(tokenNotSupportedError);
+    await expect(koaAuth(envSetForTest)(ctx, next)).rejects.toMatchError(tokenNotSupportedError);
   });
 
   it('expect to throw if jwt sub is missing', async () => {
@@ -149,7 +152,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth()(ctx, next)).rejects.toMatchError(jwtSubMissingError);
+    await expect(koaAuth(envSetForTest)(ctx, next)).rejects.toMatchError(jwtSubMissingError);
   });
 
   it('expect to have `client` type per jwt verify result', async () => {
@@ -162,7 +165,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await koaAuth()(ctx, next);
+    await koaAuth(envSetForTest)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'app', id: 'bar' });
   });
 
@@ -176,7 +179,9 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(UserRole.Admin)(ctx, next)).rejects.toMatchError(forbiddenError);
+    await expect(koaAuth(envSetForTest, UserRole.Admin)(ctx, next)).rejects.toMatchError(
+      forbiddenError
+    );
   });
 
   it('expect to throw if jwt role_names does not include admin', async () => {
@@ -191,7 +196,9 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(UserRole.Admin)(ctx, next)).rejects.toMatchError(forbiddenError);
+    await expect(koaAuth(envSetForTest, UserRole.Admin)(ctx, next)).rejects.toMatchError(
+      forbiddenError
+    );
   });
 
   it('expect to throw unauthorized error if unknown error occurs', async () => {
@@ -205,7 +212,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth()(ctx, next)).rejects.toMatchError(
+    await expect(koaAuth(envSetForTest)(ctx, next)).rejects.toMatchError(
       new RequestError({ code: 'auth.unauthorized', status: 401 }, new Error('unknown error'))
     );
   });

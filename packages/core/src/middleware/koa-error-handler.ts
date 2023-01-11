@@ -2,7 +2,7 @@ import type { RequestErrorBody } from '@logto/schemas';
 import type { Middleware } from 'koa';
 import { HttpError } from 'koa';
 
-import envSet from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
@@ -14,7 +14,7 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
     try {
       await next();
     } catch (error: unknown) {
-      if (!envSet.values.isProduction) {
+      if (!EnvSet.values.isProduction) {
         console.error(error);
       }
 
@@ -31,7 +31,7 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
       }
 
       // Should log 500 errors in prod anyway
-      if (envSet.values.isProduction) {
+      if (EnvSet.values.isProduction) {
         console.error(error);
       }
 

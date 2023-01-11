@@ -4,9 +4,12 @@ import { conditional } from '@silverhand/essentials';
 import type { AllClientMetadata, ClientAuthMethod } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
-import envSet from '#src/env-set/index.js';
+import type { EnvSet } from '#src/env-set/index.js';
 
-export const getConstantClientMetadata = (type: ApplicationType): AllClientMetadata => {
+export const getConstantClientMetadata = (
+  envSet: EnvSet,
+  type: ApplicationType
+): AllClientMetadata => {
   const { jwkSigningAlg } = envSet.oidc;
 
   const getTokenEndpointAuthMethod = (): ClientAuthMethod => {

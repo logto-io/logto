@@ -1,12 +1,11 @@
 import { adminConsoleApplicationId, UserRole } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
-import type Provider from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { assignInteractionResults, saveUserFirstConsentedAppId } from '#src/libraries/session.js';
-import { findUserById } from '#src/queries/user.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix } from './const.js';
@@ -14,7 +13,7 @@ import type { WithInteractionDetailsContext } from './middleware/koa-interaction
 
 export default function consentRoutes<T>(
   router: Router<unknown, WithInteractionDetailsContext<T>>,
-  provider: Provider
+  { provider, libraries, queries }: TenantContext
 ) {
   router.post(`${interactionPrefix}/consent`, async (ctx, next) => {
     const { interactionDetails } = ctx;
@@ -32,7 +31,7 @@ export default function consentRoutes<T>(
 
     // Temp solution before migrating to RBAC. Block non-admin user from consenting to admin console
     if (String(client_id) === adminConsoleApplicationId) {
-      const { roleNames } = await findUserById(accountId);
+      const { roleNames } = await libraries.users.findUserByIdWithRoles(accountId);
 
       assertThat(
         roleNames.includes(UserRole.Admin),
@@ -44,7 +43,7 @@ export default function consentRoutes<T>(
       conditional(grantId && (await provider.Grant.find(grantId))) ??
       new provider.Grant({ accountId, clientId: String(client_id) });
 
-    await saveUserFirstConsentedAppId(accountId, String(client_id));
+    await saveUserFirstConsentedAppId(queries, accountId, String(client_id));
 
     // V2: fulfill missing claims / resources
     const PromptDetailsBody = z.object({

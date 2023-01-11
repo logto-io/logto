@@ -2,8 +2,10 @@ import type { User } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockUser } from '#src/__mocks__/index.js';
-import { GrantMock } from '#src/test-utils/oidc-provider.js';
-import { createMockTenantWithInteraction } from '#src/test-utils/tenant.js';
+import type Queries from '#src/tenants/Queries.js';
+import { createMockProvider, GrantMock } from '#src/test-utils/oidc-provider.js';
+import type { Partial2 } from '#src/test-utils/tenant.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 import { interactionPrefix } from './const.js';
@@ -28,10 +30,14 @@ class Grant extends GrantMock {
   }
 }
 
-const { findUserById, updateUserById } = await mockEsmWithActual('#src/queries/user.js', () => ({
+const userQueries = {
   findUserById: jest.fn(async (): Promise<User> => mockUser),
   updateUserById: jest.fn(async (..._args: unknown[]) => ({ id: 'id' })),
-}));
+};
+const { findUserById, updateUserById } = userQueries;
+
+// @ts-expect-error
+const queries: Partial2<Queries> = { users: userQueries };
 
 const { assignInteractionResults } = await mockEsmWithActual('#src/libraries/session.js', () => ({
   assignInteractionResults: jest.fn(),
@@ -53,9 +59,9 @@ describe('interaction -> consent', () => {
   it('with empty details and reusing old grant', async () => {
     const sessionRequest = createRequester({
       anonymousRoutes: interactionRoutes,
-      tenantContext: createMockTenantWithInteraction(
-        jest.fn().mockResolvedValue(baseInteractionDetails),
-        Grant
+      tenantContext: new MockTenant(
+        createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant),
+        queries
       ),
     });
 
@@ -74,12 +80,15 @@ describe('interaction -> consent', () => {
   it('with empty details and creating new grant', async () => {
     const sessionRequest = createRequester({
       anonymousRoutes: interactionRoutes,
-      tenantContext: createMockTenantWithInteraction(
-        jest.fn().mockResolvedValue({
-          ...baseInteractionDetails,
-          grantId: 'exists',
-        }),
-        Grant
+      tenantContext: new MockTenant(
+        createMockProvider(
+          jest.fn().mockResolvedValue({
+            ...baseInteractionDetails,
+            grantId: 'exists',
+          }),
+          Grant
+        ),
+        queries
       ),
     });
 
@@ -99,16 +108,19 @@ describe('interaction -> consent', () => {
   it('should save application id when the user first consented', async () => {
     const sessionRequest = createRequester({
       anonymousRoutes: interactionRoutes,
-      tenantContext: createMockTenantWithInteraction(
-        jest.fn().mockResolvedValue({
-          ...baseInteractionDetails,
-          prompt: {
-            name: 'consent',
-            details: {},
-            reasons: ['consent_prompt', 'native_client_prompt'],
-          },
-        }),
-        Grant
+      tenantContext: new MockTenant(
+        createMockProvider(
+          jest.fn().mockResolvedValue({
+            ...baseInteractionDetails,
+            prompt: {
+              name: 'consent',
+              details: {},
+              reasons: ['consent_prompt', 'native_client_prompt'],
+            },
+          }),
+          Grant
+        ),
+        queries
       ),
     });
 
@@ -121,20 +133,23 @@ describe('interaction -> consent', () => {
   it('missingOIDCScope and missingResourceScopes', async () => {
     const sessionRequest = createRequester({
       anonymousRoutes: interactionRoutes,
-      tenantContext: createMockTenantWithInteraction(
-        jest.fn().mockResolvedValue({
-          ...baseInteractionDetails,
-          prompt: {
-            details: {
-              missingOIDCScope: ['scope1', 'scope2'],
-              missingResourceScopes: {
-                resource1: ['scope1', 'scope2'],
-                resource2: ['scope3'],
+      tenantContext: new MockTenant(
+        createMockProvider(
+          jest.fn().mockResolvedValue({
+            ...baseInteractionDetails,
+            prompt: {
+              details: {
+                missingOIDCScope: ['scope1', 'scope2'],
+                missingResourceScopes: {
+                  resource1: ['scope1', 'scope2'],
+                  resource2: ['scope3'],
+                },
               },
             },
-          },
-        }),
-        Grant
+          }),
+          Grant
+        ),
+        queries
       ),
     });
 

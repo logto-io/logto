@@ -1,7 +1,6 @@
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -13,6 +12,7 @@ const { verifyBearerTokenFromRequest } = await mockEsmWithActual(
   })
 );
 
+const { createRequester } = await import('#src/utils/test-utils.js');
 const request = createRequester({
   anonymousRoutes: await pickDefault(import('#src/routes/authn.js')),
 });
@@ -71,7 +71,7 @@ describe('authn route for Hasura', () => {
 
   describe('with failed verification', () => {
     beforeEach(() => {
-      verifyBearerTokenFromRequest.mockImplementation(async (_, resource) => {
+      verifyBearerTokenFromRequest.mockImplementation(async (_, __, resource) => {
         if (resource) {
           throw new RequestError({ code: 'auth.jwt_sub_missing', status: 401 });
         }

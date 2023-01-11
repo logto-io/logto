@@ -297,7 +297,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       const verifiedInteraction = await verifyProfile(tenant, accountVerifiedInteraction);
 
       if (event !== InteractionEvent.ForgotPassword) {
-        await validateMandatoryUserProfile(ctx, verifiedInteraction);
+        await validateMandatoryUserProfile(queries.users, ctx, verifiedInteraction);
       }
 
       await submitInteraction(verifiedInteraction, ctx, tenant, log);
@@ -351,5 +351,5 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     }
   );
 
-  consentRoutes(router, provider);
+  consentRoutes(router, tenant);
 }

@@ -34,7 +34,13 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     usersRoles: { deleteUsersRolesByUserIdAndRoleId, findUsersRolesByRoleId, insertUsersRoles },
   } = queries;
   const {
-    users: { checkIdentifierCollision, generateUserId, insertUser, findUsersByRoleName },
+    users: {
+      checkIdentifierCollision,
+      generateUserId,
+      insertUser,
+      findUsersByRoleName,
+      findUserByIdWithRoles,
+    },
   } = libraries;
 
   router.get('/users', koaPagination(), async (ctx, next) => {
@@ -81,7 +87,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         params: { userId },
       } = ctx.guard;
 
-      const user = await findUserById(userId);
+      const user = await findUserByIdWithRoles(userId);
 
       ctx.body = pick(user, 'roleNames', ...userInfoSelectFields);
 
@@ -204,7 +210,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
-      const user = await findUserById(userId);
+      const user = await findUserByIdWithRoles(userId);
       await checkIdentifierCollision(body, userId);
 
       const { roleNames, ...userUpdates } = body;
@@ -357,6 +363,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(
       ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
+      // TODO: @sijie break into smaller files
+      // eslint-disable-next-line max-lines
     }
   );
 }

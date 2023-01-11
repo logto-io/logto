@@ -4,6 +4,7 @@ import type Provider from 'oidc-provider';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { MockQueries } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
@@ -11,9 +12,8 @@ import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
 const { jest } = import.meta;
 const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
-const { findUserById } = await mockEsmWithActual('#src/queries/user.js', () => ({
-  findUserById: jest.fn(),
-}));
+const findUserById = jest.fn();
+const { users } = new MockQueries({ users: { findUserById } });
 
 const { isUserPasswordSet } = mockEsm('../utils/index.js', () => ({
   isUserPasswordSet: jest.fn(),
@@ -37,7 +37,7 @@ describe('validateMandatoryUserProfile', () => {
   };
 
   it('username and password missing but required', async () => {
-    await expect(validateMandatoryUserProfile(baseCtx, interaction)).rejects.toMatchError(
+    await expect(validateMandatoryUserProfile(users, baseCtx, interaction)).rejects.toMatchError(
       new RequestError(
         { code: 'user.missing_profile', status: 422 },
         { missingProfile: [MissingProfile.password, MissingProfile.username] }
@@ -45,7 +45,7 @@ describe('validateMandatoryUserProfile', () => {
     );
 
     await expect(
-      validateMandatoryUserProfile(baseCtx, {
+      validateMandatoryUserProfile(users, baseCtx, {
         ...interaction,
         profile: {
           username: 'username',
@@ -61,12 +61,12 @@ describe('validateMandatoryUserProfile', () => {
     });
     isUserPasswordSet.mockResolvedValueOnce(true);
 
-    await expect(validateMandatoryUserProfile(baseCtx, interaction)).resolves.not.toThrow();
+    await expect(validateMandatoryUserProfile(users, baseCtx, interaction)).resolves.not.toThrow();
   });
 
   it('register user has social profile', async () => {
     await expect(
-      validateMandatoryUserProfile(baseCtx, {
+      validateMandatoryUserProfile(users, baseCtx, {
         event: InteractionEvent.Register,
         profile: {
           username: 'foo',
@@ -85,7 +85,7 @@ describe('validateMandatoryUserProfile', () => {
       },
     };
 
-    await expect(validateMandatoryUserProfile(ctx, interaction)).rejects.toMatchError(
+    await expect(validateMandatoryUserProfile(users, ctx, interaction)).rejects.toMatchError(
       new RequestError(
         { code: 'user.missing_profile', status: 422 },
         { missingProfile: [MissingProfile.email] }
@@ -106,7 +106,7 @@ describe('validateMandatoryUserProfile', () => {
       },
     };
 
-    await expect(validateMandatoryUserProfile(ctx, interaction)).resolves.not.toThrow();
+    await expect(validateMandatoryUserProfile(users, ctx, interaction)).resolves.not.toThrow();
   });
 
   it('phone missing but required', async () => {
@@ -118,7 +118,7 @@ describe('validateMandatoryUserProfile', () => {
       },
     };
 
-    await expect(validateMandatoryUserProfile(ctx, interaction)).rejects.toMatchError(
+    await expect(validateMandatoryUserProfile(users, ctx, interaction)).rejects.toMatchError(
       new RequestError(
         { code: 'user.missing_profile', status: 422 },
         { missingProfile: [MissingProfile.phone] }
@@ -139,7 +139,7 @@ describe('validateMandatoryUserProfile', () => {
       },
     };
 
-    await expect(validateMandatoryUserProfile(ctx, interaction)).resolves.not.toThrow();
+    await expect(validateMandatoryUserProfile(users, ctx, interaction)).resolves.not.toThrow();
   });
 
   it('email or Phone required', async () => {
@@ -155,7 +155,7 @@ describe('validateMandatoryUserProfile', () => {
       },
     };
 
-    await expect(validateMandatoryUserProfile(ctx, interaction)).rejects.toMatchError(
+    await expect(validateMandatoryUserProfile(users, ctx, interaction)).rejects.toMatchError(
       new RequestError(
         { code: 'user.missing_profile', status: 422 },
         { missingProfile: [MissingProfile.emailOrPhone] }
@@ -163,14 +163,14 @@ describe('validateMandatoryUserProfile', () => {
     );
 
     await expect(
-      validateMandatoryUserProfile(ctx, {
+      validateMandatoryUserProfile(users, ctx, {
         ...interaction,
         profile: { email: 'email' },
       })
     ).resolves.not.toThrow();
 
     await expect(
-      validateMandatoryUserProfile(ctx, {
+      validateMandatoryUserProfile(users, ctx, {
         ...interaction,
         profile: { phone: '123456' },
       })
@@ -191,35 +191,35 @@ describe('validateMandatoryUserProfile', () => {
     };
 
     await expect(
-      validateMandatoryUserProfile(ctx, {
+      validateMandatoryUserProfile(users, ctx, {
         event: InteractionEvent.Register,
         profile: { password: 'password' },
       })
     ).rejects.toMatchError(new RequestError({ code: 'user.missing_profile', status: 422 }));
 
     await expect(
-      validateMandatoryUserProfile(ctx, {
+      validateMandatoryUserProfile(users, ctx, {
         event: InteractionEvent.Register,
         profile: { username: 'username' },
       })
     ).resolves.not.toThrow();
 
     await expect(
-      validateMandatoryUserProfile(ctx, {
+      validateMandatoryUserProfile(users, ctx, {
         event: InteractionEvent.Register,
         profile: { email: 'email' },
       })
     ).resolves.not.toThrow();
 
     await expect(
-      validateMandatoryUserProfile(ctx, {
+      validateMandatoryUserProfile(users, ctx, {
         event: InteractionEvent.Register,
         profile: { phone: '123456' },
       })
     ).resolves.not.toThrow();
 
     await expect(
-      validateMandatoryUserProfile(ctx, {
+      validateMandatoryUserProfile(users, ctx, {
         event: InteractionEvent.Register,
         profile: { connectorId: 'logto' },
       })

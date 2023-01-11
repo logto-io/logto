@@ -8,7 +8,6 @@ import { sql } from 'slonik';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
@@ -132,18 +131,3 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
     deleteRoleById,
   };
 };
-
-/** @deprecated Will be removed soon. Use createRolesQueries() factory instead. */
-export const {
-  countRoles,
-  findRoles,
-  findRolesByRoleIds,
-  findRolesByRoleNames,
-  findRoleByRoleName,
-  insertRoles,
-  insertRole,
-  findRoleById,
-  updateRole,
-  updateRoleById,
-  deleteRoleById,
-} = createRolesQueries(envSet.pool);

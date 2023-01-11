@@ -3,7 +3,7 @@ import type { InteractionResults } from 'oidc-provider';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
-import { findUserById, updateUserById } from '#src/queries/user.js';
+import type Queries from '#src/tenants/Queries.js';
 
 export const assignInteractionResults = async (
   ctx: Context,
@@ -32,7 +32,12 @@ export const assignInteractionResults = async (
   ctx.body = { redirectTo };
 };
 
-export const saveUserFirstConsentedAppId = async (userId: string, applicationId: string) => {
+export const saveUserFirstConsentedAppId = async (
+  queries: Queries,
+  userId: string,
+  applicationId: string
+) => {
+  const { findUserById, updateUserById } = queries.users;
   const { applicationId: firstConsentedAppId } = await findUserById(userId);
 
   if (!firstConsentedAppId) {

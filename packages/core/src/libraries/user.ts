@@ -1,5 +1,5 @@
 import { buildIdGenerator } from '@logto/core-kit';
-import type { User, CreateUser, Scope } from '@logto/schemas';
+import type { User, CreateUser, Scope, UserWithRoleNames } from '@logto/schemas';
 import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
@@ -8,7 +8,7 @@ import { argon2Verify } from 'hash-wasm';
 import pRetry from 'p-retry';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
-import envSet from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -46,15 +46,38 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
   return user;
 };
 
+export type UserLibrary = ReturnType<typeof createUserLibrary>;
+
 export const createUserLibrary = (queries: Queries) => {
   const {
     pool,
-    roles: { findRolesByRoleNames, insertRoles, findRoleByRoleName },
-    users: { hasUser, hasUserWithEmail, hasUserWithId, hasUserWithPhone, findUsersByIds },
+    roles: { findRolesByRoleNames, insertRoles, findRoleByRoleName, findRolesByRoleIds },
+    users: {
+      hasUser,
+      hasUserWithEmail,
+      hasUserWithId,
+      hasUserWithPhone,
+      findUsersByIds,
+      findUserById,
+    },
     usersRoles: { insertUsersRoles, findUsersRolesByRoleId, findUsersRolesByUserId },
     rolesScopes: { findRolesScopesByRoleIds },
     scopes: { findScopesByIdsAndResourceId },
   } = queries;
+
+  // TODO: @sijie remove this if no need for `UserWithRoleNames` anymore
+  const findUserByIdWithRoles = async (id: string): Promise<UserWithRoleNames> => {
+    const user = await findUserById(id);
+    const userRoles = await findUsersRolesByUserId(user.id);
+
+    const roles =
+      userRoles.length > 0 ? await findRolesByRoleIds(userRoles.map(({ roleId }) => roleId)) : [];
+
+    return {
+      ...user,
+      roleNames: roles.map(({ name }) => name),
+    };
+  };
 
   const generateUserId = async (retries = 500) =>
     pRetry(
@@ -81,7 +104,7 @@ export const createUserLibrary = (queries: Queries) => {
     ...rest
   }: OmitAutoSetFields<CreateUser> & { roleNames?: string[] }) => {
     const computedRoleNames = deduplicate(
-      (roleNames ?? []).concat(envSet.values.userDefaultRoleNames)
+      (roleNames ?? []).concat(EnvSet.values.userDefaultRoleNames)
     );
 
     if (computedRoleNames.length > 0) {
@@ -173,6 +196,7 @@ export const createUserLibrary = (queries: Queries) => {
   };
 
   return {
+    findUserByIdWithRoles,
     generateUserId,
     insertUser,
     checkIdentifierCollision,

@@ -1,5 +1,7 @@
 import { ApplicationType, CustomClientMetadataKey, GrantType } from '@logto/schemas';
 
+import { envSetForTest } from '#src/test-utils/env-set.js';
+
 import {
   isOriginAllowed,
   buildOidcClientMetadata,
@@ -8,22 +10,22 @@ import {
 } from './utils.js';
 
 describe('getConstantClientMetadata()', () => {
-  expect(getConstantClientMetadata(ApplicationType.SPA)).toEqual({
+  expect(getConstantClientMetadata(envSetForTest, ApplicationType.SPA)).toEqual({
     application_type: 'web',
     grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
     token_endpoint_auth_method: 'none',
   });
-  expect(getConstantClientMetadata(ApplicationType.Native)).toEqual({
+  expect(getConstantClientMetadata(envSetForTest, ApplicationType.Native)).toEqual({
     application_type: 'native',
     grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
     token_endpoint_auth_method: 'none',
   });
-  expect(getConstantClientMetadata(ApplicationType.Traditional)).toEqual({
+  expect(getConstantClientMetadata(envSetForTest, ApplicationType.Traditional)).toEqual({
     application_type: 'web',
     grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
     token_endpoint_auth_method: 'client_secret_basic',
   });
-  expect(getConstantClientMetadata(ApplicationType.MachineToMachine)).toEqual({
+  expect(getConstantClientMetadata(envSetForTest, ApplicationType.MachineToMachine)).toEqual({
     application_type: 'web',
     grant_types: [GrantType.ClientCredentials],
     token_endpoint_auth_method: 'client_secret_basic',
