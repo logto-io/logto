@@ -2,7 +2,7 @@ import { adminConsoleAdminRoleId } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { assignRolesToUser, getUserRoles, deleteRoleFromUser } from '#src/api/index.js';
-import { createUserByAdmin } from '#src/helpers.js';
+import { createUserByAdmin } from '#src/helpers/index.js';
 
 describe('admin console user management (roles)', () => {
   it('should get empty list successfully', async () => {
