@@ -31,7 +31,7 @@ const Roles = () => {
   const {
     pagination: { pageIndex, pageSize, setPageIndex },
     search: { keyword, setKeyword },
-  } = useTableSearchParams({ pageSize: 20 });
+  } = useTableSearchParams();
 
   const url = buildUrl('/api/roles', {
     page: String(pageIndex),
