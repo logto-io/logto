@@ -1,7 +1,10 @@
 import type { User } from '@logto/schemas';
+import classNames from 'classnames';
 
-import SourceUsersBox from './SourceUsersBox';
-import TargetUsersBox from './TargetUsersBox';
+import * as transferLayout from '@/scss/transfer.module.scss';
+
+import SourceUsersBox from './components/SourceUsersBox';
+import TargetUsersBox from './components/TargetUsersBox';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -10,27 +13,12 @@ type Props = {
   onChange: (value: User[]) => void;
 };
 
-const RoleUsersTransfer = ({ roleId, value, onChange }: Props) => {
-  const onAddUser = (user: User) => {
-    onChange([user, ...value]);
-  };
-
-  const onRemoveUser = (user: User) => {
-    onChange(value.filter(({ id }) => id !== user.id));
-  };
-
-  return (
-    <div className={styles.container}>
-      <SourceUsersBox
-        roleId={roleId}
-        selectedUsers={value}
-        onAddUser={onAddUser}
-        onRemoveUser={onRemoveUser}
-      />
-      <div className={styles.verticalBar} />
-      <TargetUsersBox selectedUsers={value} onRemoveUser={onRemoveUser} />
-    </div>
-  );
-};
+const RoleUsersTransfer = ({ roleId, value, onChange }: Props) => (
+  <div className={classNames(transferLayout.container, styles.roleUsersTransfer)}>
+    <SourceUsersBox roleId={roleId} selectedUsers={value} onChange={onChange} />
+    <div className={transferLayout.verticalBar} />
+    <TargetUsersBox selectedUsers={value} onChange={onChange} />
+  </div>
+);
 
 export default RoleUsersTransfer;
