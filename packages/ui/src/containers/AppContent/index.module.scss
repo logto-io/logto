@@ -12,10 +12,14 @@
 }
 
 /* Main Layout */
-.container {
+.viewBox {
   position: absolute;
   inset: 0;
   overflow: auto;
+}
+
+.container {
+  min-height: 100%;
   @include _.flex_column(center, normal);
 }
 
@@ -29,12 +33,20 @@
 }
 
 :global(body.mobile) {
+  .container {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
   .main {
     flex: 1;
     align-self: stretch;
     padding: _.unit(4) _.unit(5);
     position: relative;
     background: var(--color-bg-body);
+  }
+
+  .placeHolder {
+    display: none;
   }
 }
 
@@ -47,6 +59,5 @@
     border-radius: 16px;
     background: var(--color-bg-float);
     box-shadow: var(--color-shadow-2);
-    overflow: hidden;
   }
 }

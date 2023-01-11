@@ -4,7 +4,6 @@ import { MemoryRouter } from 'react-router-dom';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
-import { defaultSize } from '@/containers/SocialSignIn/SocialSignInList';
 import Register from '@/pages/Register';
 
 jest.mock('i18next', () => ({
@@ -24,7 +23,9 @@ describe('<Register />', () => {
     expect(container.querySelector('input[name="new-username"]')).not.toBeNull();
 
     // Social
-    expect(queryAllByText('action.sign_in_with')).toHaveLength(defaultSize);
+    expect(queryAllByText('action.sign_in_with')).toHaveLength(
+      mockSignInExperienceSettings.socialConnectors.length
+    );
   });
 
   test('renders with email passwordless as primary', async () => {
