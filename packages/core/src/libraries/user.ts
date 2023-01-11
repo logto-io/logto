@@ -14,8 +14,6 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { encryptPassword } from '#src/utils/password.js';
 
-import { defaultQueries } from './shared.js';
-
 const userId = buildIdGenerator(12);
 const roleId = buildIdGenerator(21);
 
@@ -33,6 +31,19 @@ export const encryptUserPassword = async (
   );
 
   return { passwordEncrypted, passwordEncryptionMethod };
+};
+
+export const verifyUserPassword = async (user: Nullable<User>, password: string): Promise<User> => {
+  assertThat(user, 'session.invalid_credentials');
+  const { passwordEncrypted, passwordEncryptionMethod } = user;
+
+  assertThat(passwordEncrypted && passwordEncryptionMethod, 'session.invalid_credentials');
+
+  const result = await argon2Verify({ password, hash: passwordEncrypted });
+
+  assertThat(result, 'session.invalid_credentials');
+
+  return user;
 };
 
 export const createUserLibrary = (queries: Queries) => {
@@ -56,19 +67,6 @@ export const createUserLibrary = (queries: Queries) => {
       },
       { retries, factor: 0 } // No need for exponential backoff
     );
-
-  const verifyUserPassword = async (user: Nullable<User>, password: string): Promise<User> => {
-    assertThat(user, 'session.invalid_credentials');
-    const { passwordEncrypted, passwordEncryptionMethod } = user;
-
-    assertThat(passwordEncrypted && passwordEncryptionMethod, 'session.invalid_credentials');
-
-    const result = await argon2Verify({ password, hash: passwordEncrypted });
-
-    assertThat(result, 'session.invalid_credentials');
-
-    return user;
-  };
 
   const insertUserQuery = buildInsertIntoWithPool(pool)<CreateUser, User>(Users, {
     returning: true,
@@ -144,12 +142,7 @@ export const createUserLibrary = (queries: Queries) => {
 
   return {
     generateUserId,
-    verifyUserPassword,
     insertUser,
     checkIdentifierCollision,
   };
 };
-
-/** @deprecated Don't use. This is for transition only and will be removed soon. */
-export const { generateUserId, verifyUserPassword, insertUser, checkIdentifierCollision } =
-  createUserLibrary(defaultQueries);

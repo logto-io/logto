@@ -9,8 +9,6 @@ import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
 import { validateConnectorModule, parseMetadata } from '#src/utils/connectors/index.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
-import { defaultQueries } from './shared.js';
-
 export type ConnectorLibrary = ReturnType<typeof createConnectorLibrary>;
 
 export const createConnectorLibrary = (queries: Queries) => {
@@ -94,10 +92,3 @@ export const createConnectorLibrary = (queries: Queries) => {
 
   return { getConnectorConfig, getLogtoConnectors, getLogtoConnectorById };
 };
-
-/** @deprecated Don't use. This is for transition only and will be removed soon. */
-export const defaultConnectorLibrary = createConnectorLibrary(defaultQueries);
-
-/** @deprecated Don't use. This is for transition only and will be removed soon. */
-export const { getConnectorConfig, getLogtoConnectors, getLogtoConnectorById } =
-  defaultConnectorLibrary;

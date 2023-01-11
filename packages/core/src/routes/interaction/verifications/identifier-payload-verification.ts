@@ -6,6 +6,7 @@ import type {
 } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { verifyUserPassword } from '#src/libraries/user.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -33,15 +34,15 @@ const verifyPasswordIdentifier = async (
   event: InteractionEvent,
   identifier: PasswordIdentifierPayload,
   ctx: WithLogContext,
-  { libraries }: TenantContext
+  tenant: TenantContext
 ): Promise<AccountIdIdentifier> => {
   const { password, ...identity } = identifier;
 
   const log = ctx.createLog(`Interaction.${event}.Identifier.Password.Submit`);
   log.append({ ...identity });
 
-  const user = await findUserByIdentifier(identity);
-  const verifiedUser = await libraries.users.verifyUserPassword(user, password);
+  const user = await findUserByIdentifier(tenant, identity);
+  const verifiedUser = await verifyUserPassword(user, password);
 
   const { isSuspended, id } = verifiedUser;
 

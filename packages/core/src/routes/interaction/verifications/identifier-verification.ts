@@ -19,7 +19,7 @@ type InteractionResult =
 
 export default async function verifyIdentifier(
   ctx: Context,
-  { provider, libraries }: TenantContext,
+  tenant: TenantContext,
   interactionRecord: InteractionResult
 ): Promise<RegisterInteractionResult | AccountVerifiedInteractionResult> {
   if (interactionRecord.event === InteractionEvent.Register) {
@@ -27,11 +27,8 @@ export default async function verifyIdentifier(
   }
 
   // Verify the user account and assign the verified result to the interaction record
-  const accountVerifiedInteractionResult = await verifyUserAccount(
-    interactionRecord,
-    libraries.socials
-  );
-  await storeInteractionResult(accountVerifiedInteractionResult, ctx, provider);
+  const accountVerifiedInteractionResult = await verifyUserAccount(tenant, interactionRecord);
+  await storeInteractionResult(accountVerifiedInteractionResult, ctx, tenant.provider);
 
   return accountVerifiedInteractionResult;
 }

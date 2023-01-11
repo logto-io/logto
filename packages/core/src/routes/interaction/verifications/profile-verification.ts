@@ -3,14 +3,7 @@ import { InteractionEvent } from '@logto/schemas';
 import { argon2Verify } from 'hash-wasm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { getLogtoConnectorById } from '#src/libraries/connector.js';
-import {
-  findUserById,
-  hasUser,
-  hasUserWithEmail,
-  hasUserWithPhone,
-  hasUserWithIdentity,
-} from '#src/queries/user.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { forgotPasswordProfileGuard } from '../types/guard.js';
@@ -65,9 +58,12 @@ const verifyProfileIdentifiers = (
 };
 
 const verifyProfileNotRegisteredByOtherUserAccount = async (
+  { queries, libraries }: TenantContext,
   { username, email, phone, connectorId }: Profile,
   identifiers: Identifier[] = []
 ) => {
+  const { hasUser, hasUserWithEmail, hasUserWithPhone, hasUserWithIdentity } = queries.users;
+
   if (username) {
     assertThat(
       !(await hasUser(username)),
@@ -101,7 +97,7 @@ const verifyProfileNotRegisteredByOtherUserAccount = async (
   if (connectorId) {
     const {
       metadata: { target },
-    } = await getLogtoConnectorById(connectorId);
+    } = await libraries.connectors.getLogtoConnectorById(connectorId);
 
     const socialIdentifier = identifiers.find(
       (identifier): identifier is SocialIdentifier => identifier.key === 'social'
@@ -164,13 +160,15 @@ const verifyProfileNotExistInCurrentUserAccount = async (
 };
 
 export default async function verifyProfile(
+  tenant: TenantContext,
   interaction: IdentifierVerifiedInteractionResult
 ): Promise<VerifiedInteractionResult> {
+  const { findUserById } = tenant.queries.users;
   const { event, identifiers, accountId, profile = {} } = interaction;
 
   if (event === InteractionEvent.Register) {
     verifyProfileIdentifiers(profile, identifiers);
-    await verifyProfileNotRegisteredByOtherUserAccount(profile, identifiers);
+    await verifyProfileNotRegisteredByOtherUserAccount(tenant, profile, identifiers);
 
     return interaction;
   }
@@ -180,7 +178,7 @@ export default async function verifyProfile(
     // Find existing account
     const user = await findUserById(accountId);
     await verifyProfileNotExistInCurrentUserAccount(profile, user);
-    await verifyProfileNotRegisteredByOtherUserAccount(profile, identifiers);
+    await verifyProfileNotRegisteredByOtherUserAccount(tenant, profile, identifiers);
 
     return interaction;
   }

@@ -1,14 +1,15 @@
-import { getLogtoConnectorById } from '#src/libraries/connector.js';
-import {
-  findUserByEmail,
-  findUserByUsername,
-  findUserByPhone,
-  findUserByIdentity,
-} from '#src/queries/user.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 
 import type { UserIdentity } from '../types/index.js';
 
-export default async function findUserByIdentifier(identity: UserIdentity) {
+export default async function findUserByIdentifier(
+  { queries, libraries }: TenantContext,
+  identity: UserIdentity
+) {
+  const { findUserByEmail, findUserByUsername, findUserByPhone, findUserByIdentity } =
+    queries.users;
+  const { getLogtoConnectorById } = libraries.connectors;
+
   if ('username' in identity) {
     return findUserByUsername(identity.username);
   }

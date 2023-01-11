@@ -1,26 +1,31 @@
 import { InteractionEvent } from '@logto/schemas';
-import { createMockUtils, pickDefault } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 
 import type { Identifier } from '../types/index.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
-await mockEsmWithActual('#src/queries/user.js', () => ({
-  findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
-  hasUserWithEmail: jest.fn().mockResolvedValue(false),
-  hasUserWithPhone: jest.fn().mockResolvedValue(false),
-  hasUserWithIdentity: jest.fn().mockResolvedValue(false),
-}));
-
-mockEsm('#src/libraries/connector.js', () => ({
-  getLogtoConnectorById: jest.fn().mockResolvedValue({
-    metadata: { target: 'logto' },
-  }),
-}));
-
+const tenantContext = new MockTenant(
+  undefined,
+  {
+    users: {
+      findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
+      hasUserWithEmail: jest.fn().mockResolvedValue(false),
+      hasUserWithPhone: jest.fn().mockResolvedValue(false),
+      hasUserWithIdentity: jest.fn().mockResolvedValue(false),
+    },
+  },
+  {
+    connectors: {
+      getLogtoConnectorById: jest.fn().mockResolvedValue({
+        metadata: { target: 'logto' },
+      }),
+    },
+  }
+);
 const verifyProfile = await pickDefault(import('./profile-verification.js'));
 
 describe('profile protected identifier verification', () => {
@@ -43,7 +48,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(verifyProfile(interaction)).rejects.toMatchError(
+      await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
     });
@@ -58,7 +63,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(verifyProfile(interaction)).rejects.toMatchError(
+      await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
     });
@@ -73,7 +78,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(verifyProfile(interaction)).resolves.not.toThrow();
+      await expect(verifyProfile(tenantContext, interaction)).resolves.not.toThrow();
     });
 
     it('phone without a verified identifier should throw', async () => {
@@ -84,7 +89,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(verifyProfile(interaction)).rejects.toMatchError(
+      await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
     });
@@ -99,7 +104,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(verifyProfile(interaction)).rejects.toMatchError(
+      await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
     });
@@ -114,7 +119,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(verifyProfile(interaction)).resolves.not.toThrow();
+      await expect(verifyProfile(tenantContext, interaction)).resolves.not.toThrow();
     });
 
     it('connectorId without a verified identifier should throw', async () => {
@@ -127,7 +132,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(verifyProfile(interaction)).rejects.toMatchError(
+      await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
         new RequestError({ code: 'session.connector_session_not_found', status: 404 })
       );
     });
@@ -144,7 +149,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(verifyProfile(interaction)).rejects.toMatchError(
+      await expect(verifyProfile(tenantContext, interaction)).rejects.toMatchError(
         new RequestError({ code: 'session.connector_session_not_found', status: 404 })
       );
     });
@@ -163,7 +168,7 @@ describe('profile protected identifier verification', () => {
         },
       };
 
-      await expect(verifyProfile(interaction)).resolves.not.toThrow();
+      await expect(verifyProfile(tenantContext, interaction)).resolves.not.toThrow();
     });
   });
 });

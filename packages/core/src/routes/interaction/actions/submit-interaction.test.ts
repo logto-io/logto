@@ -16,11 +16,9 @@ import type {
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const { getLogtoConnectorById } = mockEsm('#src/libraries/connector.js', () => ({
-  getLogtoConnectorById: jest
-    .fn()
-    .mockResolvedValue({ metadata: { target: 'logto' }, dbEntry: { syncProfile: true } }),
-}));
+const getLogtoConnectorById = jest
+  .fn()
+  .mockResolvedValue({ metadata: { target: 'logto' }, dbEntry: { syncProfile: true } });
 
 const { assignInteractionResults } = mockEsm('#src/libraries/session.js', () => ({
   assignInteractionResults: jest.fn(),
@@ -51,7 +49,11 @@ const now = Date.now();
 jest.useFakeTimers().setSystemTime(now);
 
 describe('submit action', () => {
-  const tenant = new MockTenant(undefined, { users: userQueries }, { users: userLibraries });
+  const tenant = new MockTenant(
+    undefined,
+    { users: userQueries },
+    { users: userLibraries, connectors: { getLogtoConnectorById } }
+  );
   const ctx = {
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),

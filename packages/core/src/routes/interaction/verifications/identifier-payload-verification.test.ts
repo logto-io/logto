@@ -28,13 +28,16 @@ const { verifySocialIdentity } = mockEsm('../utils/social-verification.js', () =
   verifySocialIdentity: jest.fn().mockResolvedValue({ id: 'foo' }),
 }));
 
+const { verifyUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
+  verifyUserPassword: jest.fn(),
+}));
+
 const identifierPayloadVerification = await pickDefault(
   import('./identifier-payload-verification.js')
 );
 
 const logContext = createMockLogContext();
-const verifyUserPassword = jest.fn();
-const tenant = new MockTenant(undefined, undefined, { users: { verifyUserPassword } });
+const tenant = new MockTenant();
 
 describe('identifier verification', () => {
   const baseCtx = { ...createContextWithRouteParameters(), ...logContext };
@@ -55,7 +58,7 @@ describe('identifier verification', () => {
     await expect(
       identifierPayloadVerification(baseCtx, tenant, identifier, interactionStorage)
     ).rejects.toThrow();
-    expect(findUserByIdentifier).toBeCalledWith({ username: 'username' });
+    expect(findUserByIdentifier).toBeCalledWith(tenant, { username: 'username' });
     expect(verifyUserPassword).toBeCalledWith(null, 'password');
   });
 
@@ -72,7 +75,7 @@ describe('identifier verification', () => {
       identifierPayloadVerification(baseCtx, tenant, identifier, interactionStorage)
     ).rejects.toMatchError(new RequestError({ code: 'user.suspended', status: 401 }));
 
-    expect(findUserByIdentifier).toBeCalledWith({ username: 'username' });
+    expect(findUserByIdentifier).toBeCalledWith(tenant, { username: 'username' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
   });
 
@@ -91,7 +94,7 @@ describe('identifier verification', () => {
       identifier,
       interactionStorage
     );
-    expect(findUserByIdentifier).toBeCalledWith({ email: 'email' });
+    expect(findUserByIdentifier).toBeCalledWith(tenant, { email: 'email' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
     expect(result).toEqual({ key: 'accountId', value: 'foo' });
   });
@@ -111,7 +114,7 @@ describe('identifier verification', () => {
       identifier,
       interactionStorage
     );
-    expect(findUserByIdentifier).toBeCalledWith({ phone: 'phone' });
+    expect(findUserByIdentifier).toBeCalledWith(tenant, { phone: 'phone' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
     expect(result).toEqual({ key: 'accountId', value: 'foo' });
   });

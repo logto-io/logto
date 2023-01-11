@@ -1,7 +1,7 @@
 import { deduplicate } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import type { SocialLibrary } from '#src/libraries/social.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { maskUserInfo } from '#src/utils/format.js';
 
@@ -18,9 +18,11 @@ import findUserByIdentifier from '../utils/find-user-by-identifier.js';
 import { categorizeIdentifiers } from '../utils/interaction.js';
 
 const identifyUserByVerifiedEmailOrPhone = async (
+  tenant: TenantContext,
   identifier: VerifiedEmailIdentifier | VerifiedPhoneIdentifier
 ) => {
   const user = await findUserByIdentifier(
+    tenant,
     identifier.key === 'emailVerified' ? { email: identifier.value } : { phone: identifier.value }
   );
 
@@ -37,15 +39,15 @@ const identifyUserByVerifiedEmailOrPhone = async (
 };
 
 const identifyUserBySocialIdentifier = async (
-  identifier: SocialIdentifier,
-  socialLibrary: SocialLibrary
+  tenant: TenantContext,
+  identifier: SocialIdentifier
 ) => {
   const { connectorId, userInfo } = identifier;
 
-  const user = await findUserByIdentifier({ connectorId, userInfo });
+  const user = await findUserByIdentifier(tenant, { connectorId, userInfo });
 
   if (!user) {
-    const relatedInfo = await socialLibrary.findSocialRelatedUser(userInfo);
+    const relatedInfo = await tenant.libraries.socials.findSocialRelatedUser(userInfo);
 
     throw new RequestError(
       {
@@ -63,21 +65,21 @@ const identifyUserBySocialIdentifier = async (
   return id;
 };
 
-const identifyUser = async (identifier: Identifier, socialLibrary: SocialLibrary) => {
+const identifyUser = async (tenant: TenantContext, identifier: Identifier) => {
   if (identifier.key === 'social') {
-    return identifyUserBySocialIdentifier(identifier, socialLibrary);
+    return identifyUserBySocialIdentifier(tenant, identifier);
   }
 
   if (identifier.key === 'accountId') {
     return identifier.value;
   }
 
-  return identifyUserByVerifiedEmailOrPhone(identifier);
+  return identifyUserByVerifiedEmailOrPhone(tenant, identifier);
 };
 
 export default async function verifyUserAccount(
-  interaction: SignInInteractionResult | ForgotPasswordInteractionResult,
-  socialLibrary: SocialLibrary
+  tenant: TenantContext,
+  interaction: SignInInteractionResult | ForgotPasswordInteractionResult
 ): Promise<AccountVerifiedInteractionResult> {
   const { identifiers = [], accountId, profile } = interaction;
 
@@ -95,7 +97,7 @@ export default async function verifyUserAccount(
 
   // Verify authIdentifiers
   const accountIds = await Promise.all(
-    authIdentifiers.map(async (identifier) => identifyUser(identifier, socialLibrary))
+    authIdentifiers.map(async (identifier) => identifyUser(tenant, identifier))
   );
   const deduplicateAccountIds = deduplicate(accountIds);
 

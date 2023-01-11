@@ -2,7 +2,7 @@ import type { SignInExperience } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 
-import { getSignInExperienceForApplication } from '#src/libraries/sign-in-experience/index.js';
+import type { SignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
 
 import type { WithInteractionDetailsContext } from './koa-interaction-details.js';
 
@@ -10,7 +10,9 @@ export type WithInteractionSieContext<ContextT> = WithInteractionDetailsContext<
   signInExperience: SignInExperience;
 };
 
-export default function koaInteractionSie<StateT, ContextT, ResponseT>(): MiddlewareType<
+export default function koaInteractionSie<StateT, ContextT, ResponseT>({
+  getSignInExperienceForApplication,
+}: SignInExperienceLibrary): MiddlewareType<
   StateT,
   WithInteractionSieContext<ContextT>,
   ResponseT
