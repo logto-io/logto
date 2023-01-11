@@ -289,7 +289,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       const log = createLog(`Interaction.${event}.Submit`);
       log.append({ interaction: interactionStorage });
 
-      const accountVerifiedInteraction = await verifyIdentifier(ctx, provider, interactionStorage);
+      const accountVerifiedInteraction = await verifyIdentifier(ctx, tenant, interactionStorage);
 
       const verifiedInteraction = await verifyProfile(accountVerifiedInteraction);
 
@@ -316,7 +316,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       log.append(payload);
 
-      const redirectTo = await createSocialAuthorizationUrl(ctx, provider, payload);
+      const redirectTo = await createSocialAuthorizationUrl(ctx, tenant, payload);
 
       ctx.body = { redirectTo };
 

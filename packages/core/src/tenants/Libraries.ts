@@ -3,6 +3,7 @@ import { createHookLibrary } from '#src/libraries/hook.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createResourceLibrary } from '#src/libraries/resource.js';
 import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
+import { createSocialLibrary } from '#src/libraries/social.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import type { ModelRouters } from '#src/model-routers/index.js';
 
@@ -15,6 +16,7 @@ export default class Libraries {
   phrases = createPhraseLibrary(this.queries);
   resources = createResourceLibrary(this.queries);
   hooks = createHookLibrary(this.queries, this.modelRouters);
+  socials = createSocialLibrary(this.queries, this.connectors);
 
   constructor(private readonly queries: Queries, private readonly modelRouters: ModelRouters) {}
 }

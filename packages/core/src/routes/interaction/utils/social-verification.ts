@@ -1,24 +1,26 @@
 import type { ConnectorSession, SocialUserInfo } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import type Provider from 'oidc-provider';
 
-import { getLogtoConnectorById } from '#src/libraries/connector.js';
-import { getUserInfoByAuthCode } from '#src/libraries/social.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
   getConnectorSessionResult,
   assignConnectorSessionResult,
 } from '#src/routes/interaction/utils/interaction.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { SocialAuthorizationUrlPayload } from '../types/index.js';
 
 export const createSocialAuthorizationUrl = async (
   ctx: WithLogContext,
-  provider: Provider,
+  { provider, libraries }: TenantContext,
   payload: SocialAuthorizationUrlPayload
 ) => {
+  const {
+    connectors: { getLogtoConnectorById },
+  } = libraries;
+
   const { connectorId, state, redirectUri } = payload;
   assertThat(state && redirectUri, 'session.insufficient_info');
 
@@ -40,8 +42,12 @@ export const createSocialAuthorizationUrl = async (
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
   ctx: WithLogContext,
-  provider: Provider
+  { provider, libraries }: TenantContext
 ): Promise<SocialUserInfo> => {
+  const {
+    socials: { getUserInfoByAuthCode },
+  } = libraries;
+
   const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 

@@ -1,7 +1,7 @@
 import { deduplicate } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { findSocialRelatedUser } from '#src/libraries/social.js';
+import type { SocialLibrary } from '#src/libraries/social.js';
 import assertThat from '#src/utils/assert-that.js';
 import { maskUserInfo } from '#src/utils/format.js';
 
@@ -36,13 +36,16 @@ const identifyUserByVerifiedEmailOrPhone = async (
   return id;
 };
 
-const identifyUserBySocialIdentifier = async (identifier: SocialIdentifier) => {
+const identifyUserBySocialIdentifier = async (
+  identifier: SocialIdentifier,
+  socialLibrary: SocialLibrary
+) => {
   const { connectorId, userInfo } = identifier;
 
   const user = await findUserByIdentifier({ connectorId, userInfo });
 
   if (!user) {
-    const relatedInfo = await findSocialRelatedUser(userInfo);
+    const relatedInfo = await socialLibrary.findSocialRelatedUser(userInfo);
 
     throw new RequestError(
       {
@@ -60,9 +63,9 @@ const identifyUserBySocialIdentifier = async (identifier: SocialIdentifier) => {
   return id;
 };
 
-const identifyUser = async (identifier: Identifier) => {
+const identifyUser = async (identifier: Identifier, socialLibrary: SocialLibrary) => {
   if (identifier.key === 'social') {
-    return identifyUserBySocialIdentifier(identifier);
+    return identifyUserBySocialIdentifier(identifier, socialLibrary);
   }
 
   if (identifier.key === 'accountId') {
@@ -73,7 +76,8 @@ const identifyUser = async (identifier: Identifier) => {
 };
 
 export default async function verifyUserAccount(
-  interaction: SignInInteractionResult | ForgotPasswordInteractionResult
+  interaction: SignInInteractionResult | ForgotPasswordInteractionResult,
+  socialLibrary: SocialLibrary
 ): Promise<AccountVerifiedInteractionResult> {
   const { identifiers = [], accountId, profile } = interaction;
 
@@ -91,7 +95,7 @@ export default async function verifyUserAccount(
 
   // Verify authIdentifiers
   const accountIds = await Promise.all(
-    authIdentifiers.map(async (identifier) => identifyUser(identifier))
+    authIdentifiers.map(async (identifier) => identifyUser(identifier, socialLibrary))
   );
   const deduplicateAccountIds = deduplicate(accountIds);
 

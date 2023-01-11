@@ -2,6 +2,7 @@ import { InteractionEvent } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import type { SocialLibrary } from '#src/libraries/social.js';
 
 import type { SignInInteractionResult } from '../types/index.js';
 
@@ -10,9 +11,10 @@ const { mockEsm, mockEsmDefault } = createMockUtils(jest);
 
 const findUserByIdentifier = mockEsmDefault('../utils/find-user-by-identifier.js', () => jest.fn());
 
-mockEsm('#src/libraries/social.js', () => ({
+// @ts-expect-error
+const socialLibrary: SocialLibrary = {
   findSocialRelatedUser: jest.fn().mockResolvedValue(null),
-}));
+};
 
 const verifyUserAccount = await pickDefault(import('./user-identity-verification.js'));
 
@@ -28,7 +30,7 @@ describe('verifyUserAccount', () => {
       event: InteractionEvent.SignIn,
     };
 
-    await expect(verifyUserAccount(interaction)).rejects.toMatchError(
+    await expect(verifyUserAccount(interaction, socialLibrary)).rejects.toMatchError(
       new RequestError({ code: 'session.identifier_not_found', status: 404 })
     );
   });
@@ -39,7 +41,7 @@ describe('verifyUserAccount', () => {
       identifiers: [{ key: 'accountId', value: 'foo' }],
     };
 
-    const result = await verifyUserAccount(interaction);
+    const result = await verifyUserAccount(interaction, socialLibrary);
 
     expect(result).toEqual({ ...interaction, accountId: 'foo' });
   });
@@ -52,7 +54,7 @@ describe('verifyUserAccount', () => {
       identifiers: [{ key: 'emailVerified', value: 'email' }],
     };
 
-    const result = await verifyUserAccount(interaction);
+    const result = await verifyUserAccount(interaction, socialLibrary);
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
 
     expect(result).toEqual({ ...interaction, accountId: 'foo' });
@@ -66,7 +68,7 @@ describe('verifyUserAccount', () => {
       identifiers: [{ key: 'phoneVerified', value: '123456' }],
     };
 
-    const result = await verifyUserAccount(interaction);
+    const result = await verifyUserAccount(interaction, socialLibrary);
     expect(findUserByIdentifierMock).toBeCalledWith({ phone: '123456' });
 
     expect(result).toEqual({ ...interaction, accountId: 'foo' });
@@ -80,7 +82,7 @@ describe('verifyUserAccount', () => {
       identifiers: [{ key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } }],
     };
 
-    const result = await verifyUserAccount(interaction);
+    const result = await verifyUserAccount(interaction, socialLibrary);
     expect(findUserByIdentifierMock).toBeCalledWith({
       connectorId: 'connectorId',
       userInfo: { id: 'foo' },
@@ -97,7 +99,7 @@ describe('verifyUserAccount', () => {
       identifiers: [{ key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } }],
     };
 
-    await expect(verifyUserAccount(interaction)).rejects.toMatchError(
+    await expect(verifyUserAccount(interaction, socialLibrary)).rejects.toMatchError(
       new RequestError(
         {
           code: 'user.identity_not_exist',
@@ -124,7 +126,7 @@ describe('verifyUserAccount', () => {
       ],
     };
 
-    const result = await verifyUserAccount(interaction);
+    const result = await verifyUserAccount(interaction, socialLibrary);
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
 
     expect(result).toEqual({ ...interaction, accountId: 'foo' });
@@ -141,7 +143,7 @@ describe('verifyUserAccount', () => {
       ],
     };
 
-    await expect(verifyUserAccount(interaction)).rejects.toMatchError(
+    await expect(verifyUserAccount(interaction, socialLibrary)).rejects.toMatchError(
       new RequestError({ code: 'user.user_not_exist', status: 404 }, { identifier: 'email' })
     );
 
@@ -161,7 +163,7 @@ describe('verifyUserAccount', () => {
       ],
     };
 
-    await expect(verifyUserAccount(interaction)).rejects.toMatchError(
+    await expect(verifyUserAccount(interaction, socialLibrary)).rejects.toMatchError(
       new RequestError({ code: 'user.suspended', status: 401 })
     );
 
@@ -182,7 +184,7 @@ describe('verifyUserAccount', () => {
       ],
     };
 
-    await expect(verifyUserAccount(interaction)).rejects.toMatchError(
+    await expect(verifyUserAccount(interaction, socialLibrary)).rejects.toMatchError(
       new RequestError('session.verification_failed')
     );
     expect(findUserByIdentifierMock).toHaveBeenNthCalledWith(1, { email: 'email' });
@@ -198,7 +200,7 @@ describe('verifyUserAccount', () => {
       identifiers: [{ key: 'emailVerified', value: 'email' }],
     };
 
-    await expect(verifyUserAccount(interaction)).rejects.toMatchError(
+    await expect(verifyUserAccount(interaction, socialLibrary)).rejects.toMatchError(
       new RequestError('session.verification_failed')
     );
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
@@ -220,7 +222,7 @@ describe('verifyUserAccount', () => {
       },
     };
 
-    const result = await verifyUserAccount(interaction);
+    const result = await verifyUserAccount(interaction, socialLibrary);
     expect(findUserByIdentifierMock).toBeCalledWith({ email: 'email' });
 
     expect(result).toEqual({ ...interaction, accountId: 'foo' });

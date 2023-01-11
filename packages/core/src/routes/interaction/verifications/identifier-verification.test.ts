@@ -2,7 +2,7 @@ import { InteractionEvent } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { SignInInteractionResult } from '../types/index.js';
@@ -22,7 +22,7 @@ describe('verifyIdentifier', () => {
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
   };
-  const provider = createMockProvider();
+  const tenant = new MockTenant();
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -33,7 +33,7 @@ describe('verifyIdentifier', () => {
       event: InteractionEvent.Register,
     };
 
-    const result = await verifyIdentifier(ctx, provider, interactionRecord);
+    const result = await verifyIdentifier(ctx, tenant, interactionRecord);
 
     expect(result).toBe(interactionRecord);
     expect(verifyUserAccount).not.toBeCalled();
@@ -53,10 +53,10 @@ describe('verifyIdentifier', () => {
 
     verifyUserAccount.mockResolvedValue(verifiedRecord);
 
-    const result = await verifyIdentifier(ctx, provider, interactionRecord);
+    const result = await verifyIdentifier(ctx, tenant, interactionRecord);
 
     expect(result).toBe(verifiedRecord);
-    expect(verifyUserAccount).toBeCalledWith(interactionRecord);
-    expect(storeInteractionResult).toBeCalledWith(verifiedRecord, ctx, provider);
+    expect(verifyUserAccount).toBeCalledWith(interactionRecord, tenant.libraries.socials);
+    expect(storeInteractionResult).toBeCalledWith(verifiedRecord, ctx, tenant.provider);
   });
 });

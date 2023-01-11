@@ -6,7 +6,9 @@ import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type koaAuditLog from '#src/middleware/koa-audit-log.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
-import { createMockTenantWithInteraction } from '#src/test-utils/tenant.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { createMockTenantWithInteraction, MockTenant } from '#src/test-utils/tenant.js';
+import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 import { verificationPath, interactionPrefix } from './const.js';
@@ -32,21 +34,6 @@ const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
     getAuthorizationUri: jest.fn(async () => ''),
   };
 });
-
-await mockEsmWithActual('#src/libraries/connector.js', () => ({
-  getLogtoConnectorById: jest.fn(async (connectorId: string) => {
-    const connector = await getLogtoConnectorByIdHelper(connectorId);
-
-    if (connector.type !== ConnectorType.Social) {
-      throw new RequestError({
-        code: 'entity.not_found',
-        status: 404,
-      });
-    }
-
-    return connector;
-  }),
-}));
 
 await mockEsmWithActual('#src/libraries/sign-in-experience/index.js', () => ({
   getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
@@ -119,7 +106,27 @@ describe('interaction routes', () => {
 
   const sessionRequest = createRequester({
     anonymousRoutes: interactionRoutes,
-    tenantContext: createMockTenantWithInteraction(jest.fn().mockResolvedValue(baseProviderMock)),
+    tenantContext: new MockTenant(
+      createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
+      undefined,
+      {
+        connectors: {
+          getLogtoConnectorById: async (connectorId: string) => {
+            const connector = await getLogtoConnectorByIdHelper(connectorId);
+
+            if (connector.type !== ConnectorType.Social) {
+              throw new RequestError({
+                code: 'entity.not_found',
+                status: 404,
+              });
+            }
+
+            // @ts-expect-error
+            return connector as LogtoConnector;
+          },
+        },
+      }
+    ),
   });
 
   afterEach(() => {
