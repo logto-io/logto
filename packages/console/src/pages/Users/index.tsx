@@ -45,8 +45,8 @@ const Users = () => {
 
   const url = buildUrl('/api/users', {
     hideAdminUser: 'true',
-    page: `${pageIndex}`,
-    page_size: `${pageSize}`,
+    page: String(pageIndex),
+    page_size: String(pageSize),
     ...conditional(keyword && { search: `%${keyword}%` }),
   });
 

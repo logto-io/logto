@@ -37,8 +37,8 @@ const Applications = () => {
   const search = query.toString();
   const pageIndex = Number(query.get('page') ?? '1');
   const url = buildUrl('/api/applications', {
-    page: `${pageIndex}`,
-    page_size: `${pageSize}`,
+    page: String(pageIndex),
+    page_size: String(pageSize),
   });
 
   const { data, error, mutate } = useSWR<[Application[], number], RequestError>(url);
