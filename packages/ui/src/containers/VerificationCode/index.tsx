@@ -1,4 +1,4 @@
-import type { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
@@ -10,7 +10,7 @@ import { UserFlow } from '@/types';
 import PasswordSignInLink from './PasswordSignInLink';
 import * as styles from './index.module.scss';
 import useResendVerificationCode from './use-resend-verification-code';
-import { getVerificationCodeHook } from './utils';
+import { getCodeVerificationHookByFlow } from './utils';
 
 type Props = {
   type: UserFlow;
@@ -23,13 +23,18 @@ type Props = {
 const VerificationCode = ({ type, method, className, hasPasswordButton, target }: Props) => {
   const [code, setCode] = useState<string[]>([]);
   const { t } = useTranslation();
-  const useVerificationCode = getVerificationCodeHook(type, method);
+
+  const useVerificationCode = getCodeVerificationHookByFlow(type);
 
   const errorCallback = useCallback(() => {
     setCode([]);
   }, []);
 
-  const { errorMessage, clearErrorMessage, onSubmit } = useVerificationCode(target, errorCallback);
+  const { errorMessage, clearErrorMessage, onSubmit } = useVerificationCode(
+    method,
+    target,
+    errorCallback
+  );
 
   const { seconds, isRunning, onResendVerificationCode } = useResendVerificationCode(
     type,
@@ -39,9 +44,13 @@ const VerificationCode = ({ type, method, className, hasPasswordButton, target }
 
   useEffect(() => {
     if (code.length === defaultLength && code.every(Boolean)) {
-      void onSubmit(code.join(''));
+      const payload =
+        method === SignInIdentifier.Email
+          ? { email: target, verificationCode: code.join('') }
+          : { phone: target, verificationCode: code.join('') };
+      void onSubmit(payload);
     }
-  }, [code, onSubmit, target]);
+  }, [code, method, onSubmit, target]);
 
   return (
     <form className={classNames(styles.form, className)}>

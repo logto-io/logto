@@ -2,11 +2,11 @@ import { useState, useMemo } from 'react';
 
 import type { ErrorHandlers } from '@/hooks/use-api';
 
-const useSharedErrorHandler = () => {
+const useGeneralVerificationCodeErrorHandler = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
 
   // Have to wrap up in a useMemo hook otherwise the handler updates on every cycle
-  const sharedErrorHandlers: ErrorHandlers = useMemo(
+  const generalVerificationCodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
       'verification_code.expired': (error) => {
         setErrorMessage(error.message);
@@ -20,11 +20,11 @@ const useSharedErrorHandler = () => {
 
   return {
     errorMessage,
-    sharedErrorHandlers,
+    generalVerificationCodeErrorHandlers,
     clearErrorMessage: () => {
       setErrorMessage('');
     },
   };
 };
 
-export default useSharedErrorHandler;
+export default useGeneralVerificationCodeErrorHandler;

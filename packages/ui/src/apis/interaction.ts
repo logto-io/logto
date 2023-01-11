@@ -134,7 +134,7 @@ export const verifyForgotPasswordVerificationCodeIdentifier = async (
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
 
-export const signInWithVerifierIdentifier = async () => {
+export const signInWithVerifiedIdentifier = async () => {
   await api.delete(`${interactionPrefix}/profile`);
 
   await api.put(`${interactionPrefix}/event`, {
