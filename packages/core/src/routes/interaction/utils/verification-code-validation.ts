@@ -1,7 +1,7 @@
 import { VerificationCodeType } from '@logto/connector-kit';
 import type { InteractionEvent } from '@logto/schemas';
 
-import { createPasscode, sendPasscode, verifyPasscode } from '#src/libraries/passcode.js';
+import type { PasscodeLibrary } from '#src/libraries/passcode.js';
 import type { LogContext } from '#src/middleware/koa-audit-log.js';
 
 import type {
@@ -25,7 +25,8 @@ const getVerificationCodeTypeByEvent = (event: InteractionEvent): VerificationCo
 export const sendVerificationCodeToIdentifier = async (
   payload: SendVerificationCodePayload & { event: InteractionEvent },
   jti: string,
-  createLog: LogContext['createLog']
+  createLog: LogContext['createLog'],
+  { createPasscode, sendPasscode }: PasscodeLibrary
 ) => {
   const { event, ...identifier } = payload;
   const messageType = getVerificationCodeTypeByEvent(event);
@@ -42,7 +43,8 @@ export const sendVerificationCodeToIdentifier = async (
 export const verifyIdentifierByVerificationCode = async (
   payload: VerificationCodeIdentifierPayload & { event: InteractionEvent },
   jti: string,
-  createLog: LogContext['createLog']
+  createLog: LogContext['createLog'],
+  passcodeLibrary: PasscodeLibrary
 ) => {
   const { event, verificationCode, ...identifier } = payload;
   const messageType = getVerificationCodeTypeByEvent(event);
@@ -50,5 +52,5 @@ export const verifyIdentifierByVerificationCode = async (
   const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Submit`);
   log.append(identifier);
 
-  await verifyPasscode(jti, messageType, verificationCode, identifier);
+  await passcodeLibrary.verifyPasscode(jti, messageType, verificationCode, identifier);
 };

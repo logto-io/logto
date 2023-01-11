@@ -1,5 +1,6 @@
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import { createHookLibrary } from '#src/libraries/hook.js';
+import { createPasscodeLibrary } from '#src/libraries/passcode.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createResourceLibrary } from '#src/libraries/resource.js';
 import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
@@ -17,6 +18,7 @@ export default class Libraries {
   resources = createResourceLibrary(this.queries);
   hooks = createHookLibrary(this.queries, this.modelRouters);
   socials = createSocialLibrary(this.queries, this.connectors);
+  passcodes = createPasscodeLibrary(this.queries, this.connectors);
 
   constructor(private readonly queries: Queries, private readonly modelRouters: ModelRouters) {}
 }

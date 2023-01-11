@@ -54,11 +54,16 @@ const verifyVerificationCodeIdentifier = async (
   event: InteractionEvent,
   identifier: VerificationCodeIdentifierPayload,
   ctx: WithLogContext,
-  { provider }: TenantContext
+  { provider, libraries }: TenantContext
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
   const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
-  await verifyIdentifierByVerificationCode({ ...identifier, event }, jti, ctx.createLog);
+  await verifyIdentifierByVerificationCode(
+    { ...identifier, event },
+    jti,
+    ctx.createLog,
+    libraries.passcodes
+  );
 
   return 'email' in identifier
     ? { key: 'emailVerified', value: identifier.email }

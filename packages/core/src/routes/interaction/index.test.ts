@@ -104,29 +104,31 @@ describe('interaction routes', () => {
     client_id: demoAppApplicationId,
   };
 
+  const tenantContext = new MockTenant(
+    createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
+    undefined,
+    {
+      connectors: {
+        getLogtoConnectorById: async (connectorId: string) => {
+          const connector = await getLogtoConnectorByIdHelper(connectorId);
+
+          if (connector.type !== ConnectorType.Social) {
+            throw new RequestError({
+              code: 'entity.not_found',
+              status: 404,
+            });
+          }
+
+          // @ts-expect-error
+          return connector as LogtoConnector;
+        },
+      },
+    }
+  );
+
   const sessionRequest = createRequester({
     anonymousRoutes: interactionRoutes,
-    tenantContext: new MockTenant(
-      createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
-      undefined,
-      {
-        connectors: {
-          getLogtoConnectorById: async (connectorId: string) => {
-            const connector = await getLogtoConnectorByIdHelper(connectorId);
-
-            if (connector.type !== ConnectorType.Social) {
-              throw new RequestError({
-                code: 'entity.not_found',
-                status: 404,
-              });
-            }
-
-            // @ts-expect-error
-            return connector as LogtoConnector;
-          },
-        },
-      }
-    ),
+    tenantContext,
   });
 
   afterEach(() => {
@@ -313,7 +315,8 @@ describe('interaction routes', () => {
           ...body,
         },
         'jti',
-        createLog
+        createLog,
+        tenantContext.libraries.passcodes
       );
       expect(response.status).toEqual(204);
     });
