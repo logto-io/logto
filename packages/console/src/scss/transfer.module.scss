@@ -1,0 +1,39 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.box {
+  flex: 1 1 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.boxTopBar {
+  height: 52px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 _.unit(4);
+}
+
+.boxContent {
+  flex: 1 1 0;
+  overflow-y: auto;
+}
+
+.boxPagination {
+  height: 40px;
+  padding-right: _.unit(4);
+  border-top: 1px solid var(--color-border);
+}
+
+.verticalBar {
+  @include _.vertical-bar;
+}

@@ -1,17 +1,18 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import Close from '@/assets/images/close.svg';
 
 import Card from '../Card';
 import CardTitle from '../CardTitle';
+import type DangerousRaw from '../DangerousRaw';
 import IconButton from '../IconButton';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: AdminConsoleKey;
-  subtitle?: AdminConsoleKey;
+  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   children: ReactNode;
   footer?: ReactNode;
   onClose?: () => void;

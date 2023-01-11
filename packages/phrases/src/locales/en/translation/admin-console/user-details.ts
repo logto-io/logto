@@ -46,6 +46,14 @@ const user_details = {
     assign_button: 'Assign Roles',
     delete_description: 'TBD', // UNTRANSLATED
     deleted: 'The role {{name}} has been successfully deleted from the user.', // UNTRANSLATED
+    assign_title: 'Assign roles to {{name}}',
+    assign_subtitle: 'Authorize {{name}} one or more roles',
+    assign_role_field: 'Assign roles',
+    role_search_placeholder: 'Search by role name',
+    added_text: '{{value, number}} added',
+    assigned_user_count: '{{value, number}} users',
+    confirm_assign: 'Assign roles',
+    role_assigned: 'Successfully assigned role(s)',
   },
 };
 
