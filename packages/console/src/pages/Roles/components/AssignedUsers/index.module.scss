@@ -7,19 +7,19 @@
   .avatars {
     display: flex;
     align-items: center;
-    transform: scaleX(-1);
+    flex-direction: row-reverse;
 
     .avatar {
+      position: relative;
       width: 24px;
       height: 24px;
       border-radius: 4px;
       object-fit: cover;
       flex-shrink: 0;
       border: 2px solid var(--color-layer-1);
-      transform: scaleX(-1);
 
       &:not(:last-child) {
-        margin-right: _.unit(-2);
+        margin-left: _.unit(-2);
       }
     }
   }
