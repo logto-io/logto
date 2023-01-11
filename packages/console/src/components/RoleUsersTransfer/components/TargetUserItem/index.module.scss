@@ -21,6 +21,10 @@
     @include _.text-ellipsis;
   }
 
+  .icon {
+    color: var(--color-text-secondary);
+  }
+
   &:hover {
     background: var(--color-hover);
   }
