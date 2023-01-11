@@ -2,7 +2,7 @@ import type { SignInExperience, SignInIdentifier, SignUp } from '@logto/schemas'
 
 export enum SignUpIdentifier {
   Email = 'email',
-  Sms = 'sms',
+  Phone = 'phone',
   Username = 'username',
   EmailOrSms = 'emailOrSms',
   None = 'none',
