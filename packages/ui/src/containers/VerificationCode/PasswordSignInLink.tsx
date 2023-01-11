@@ -1,5 +1,6 @@
 import type { SignInIdentifier } from '@logto/schemas';
 
+import SwitchIcon from '@/assets/icons/switch-icon.svg';
 import TextLink from '@/components/TextLink';
 import { UserFlow } from '@/types';
 
@@ -14,6 +15,7 @@ const PasswordSignInLink = ({ className, method, target }: Props) => {
     <TextLink
       replace
       className={className}
+      icon={<SwitchIcon />}
       text="action.sign_in_via_password"
       to={`/${UserFlow.signIn}/${method}/password`}
       state={{ [method]: target }}

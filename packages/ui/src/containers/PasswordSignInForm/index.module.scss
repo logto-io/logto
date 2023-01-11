@@ -9,9 +9,12 @@
 
   .inputField,
   .link,
-  .switch,
   .formErrors {
     margin-bottom: _.unit(4);
+  }
+
+  .switch {
+    margin-top: _.unit(4);
   }
 
   .link,

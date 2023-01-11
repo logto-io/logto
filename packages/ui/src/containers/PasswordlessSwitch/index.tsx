@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
+import SwitchIcon from '@/assets/icons/switch-icon.svg';
 import TextLink from '@/components/TextLink';
 
 type Props = {
@@ -15,7 +16,12 @@ const PasswordlessSwitch = ({ target, className }: Props) => {
   const targetPathname = pathname.split('/').slice(0, -1).join('/') + `/${target}`;
 
   return (
-    <TextLink replace className={className} to={{ pathname: targetPathname, search }}>
+    <TextLink
+      replace
+      className={className}
+      icon={<SwitchIcon />}
+      to={{ pathname: targetPathname, search }}
+    >
       {t('action.switch_to', {
         method: t(`description.${target === 'email' ? 'email' : 'phone_number'}`),
       })}

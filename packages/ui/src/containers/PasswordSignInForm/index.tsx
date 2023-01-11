@@ -91,11 +91,11 @@ const PasswordSignInForm = ({
         />
       )}
 
+      <Button title="action.continue" onClick={async () => onSubmitHandler()} />
+
       {hasPasswordlessButton && (
         <PasswordlessSignInLink className={styles.switch} method={method} value={value} />
       )}
-
-      <Button title="action.continue" onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
     </form>
