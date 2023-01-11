@@ -10,7 +10,7 @@ import Next from './Next';
 import Previous from './Previous';
 import * as styles from './index.module.scss';
 
-type Props = {
+export type Props = {
   pageIndex: number;
   totalCount?: number;
   pageSize: number;

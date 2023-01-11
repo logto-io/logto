@@ -1,4 +1,5 @@
-import type { Role } from '@logto/schemas';
+import type { RoleResponse } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -7,9 +8,12 @@ import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import ItemPreview from '@/components/ItemPreview';
+import Search from '@/components/Search';
 import Table from '@/components/Table';
 import type { RequestError } from '@/hooks/use-api';
+import useTableSearchParams, { formatKeyword } from '@/hooks/use-table-search-params';
 import * as pageStyles from '@/scss/resources.module.scss';
+import { buildUrl } from '@/utilities/url';
 
 import CreateRoleModal from './components/CreateRoleModal';
 
@@ -19,11 +23,26 @@ const buildDetailsPathname = (id: string) => `${rolesPathname}/${id}`;
 
 const Roles = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const navigate = useNavigate();
   const isOnCreatePage = pathname === createRolePathname;
-  const { data: roles, error, mutate } = useSWR<Role[], RequestError>(`/api/roles`);
-  const isLoading = !roles && !error;
+
+  const {
+    pagination: { pageIndex, pageSize, setPageIndex },
+    search: { keyword, setKeyword },
+  } = useTableSearchParams();
+
+  const url = buildUrl('/api/roles', {
+    page: String(pageIndex),
+    page_size: String(pageSize),
+    ...conditional(keyword && { search: formatKeyword(keyword) }),
+  });
+
+  const { data, error, mutate } = useSWR<[RoleResponse[], number], RequestError>(url);
+
+  const isLoading = !data && !error;
+
+  const [roles, totalCount] = data ?? [];
 
   return (
     <div className={pageStyles.container}>
@@ -35,7 +54,7 @@ const Roles = () => {
           type="primary"
           size="large"
           onClick={() => {
-            navigate(createRolePathname);
+            navigate({ pathname: createRolePathname, search });
           }}
         />
       </div>
@@ -62,13 +81,33 @@ const Roles = () => {
         rowClickHandler={({ id }) => {
           navigate(buildDetailsPathname(id));
         }}
+        filter={
+          <Search
+            defaultValue={keyword}
+            isClearable={Boolean(keyword)}
+            onSearch={(value) => {
+              setKeyword(value);
+              setPageIndex(1);
+            }}
+            onClearSearch={() => {
+              setKeyword('');
+              setPageIndex(1);
+            }}
+          />
+        }
+        pagination={{
+          pageIndex,
+          totalCount,
+          pageSize,
+          onChange: setPageIndex,
+        }}
         placeholder={{
           content: (
             <Button
               title="roles.create"
               type="outline"
               onClick={() => {
-                navigate(createRolePathname);
+                navigate({ pathname: createRolePathname, search });
               }}
             />
           ),
@@ -78,7 +117,7 @@ const Roles = () => {
       {isOnCreatePage && (
         <CreateRoleModal
           onClose={() => {
-            navigate(rolesPathname);
+            navigate({ pathname: rolesPathname, search });
           }}
         />
       )}
