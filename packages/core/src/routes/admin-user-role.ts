@@ -1,8 +1,11 @@
+import { tryThat } from '@logto/shared';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
+import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
@@ -10,13 +13,14 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {
-    roles: { findRolesByRoleIds, findRoleById },
+    roles: { findRoleById, countRoles, findRoles },
     users: { findUserById },
     usersRoles: { deleteUsersRolesByUserIdAndRoleId, findUsersRolesByUserId, insertUsersRoles },
   } = queries;
 
   router.get(
     '/users/:userId/roles',
+    koaPagination(),
     koaGuard({
       params: object({ userId: string() }),
     }),
@@ -24,14 +28,37 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
       const {
         params: { userId },
       } = ctx.guard;
-
+      const { limit, offset } = ctx.pagination;
+      const { searchParams } = ctx.request.URL;
       await findUserById(userId);
-      const usersRoles = await findUsersRolesByUserId(userId);
-      const roles = await findRolesByRoleIds(usersRoles.map(({ roleId }) => roleId));
 
-      ctx.body = roles;
+      return tryThat(
+        async () => {
+          const search = parseSearchParamsForSearch(searchParams);
 
-      return next();
+          const usersRoles = await findUsersRolesByUserId(userId);
+          const roleIds = usersRoles.map(({ roleId }) => roleId);
+          const [{ count }, roles] = await Promise.all([
+            countRoles(search, { roleIds }),
+            findRoles(search, limit, offset, { roleIds }),
+          ]);
+
+          // Return totalCount to pagination middleware
+          ctx.pagination.totalCount = count;
+          ctx.body = roles;
+
+          return next();
+        },
+        (error) => {
+          if (error instanceof TypeError) {
+            throw new RequestError(
+              { code: 'request.invalid_input', details: error.message },
+              error
+            );
+          }
+          throw error;
+        }
+      );
     }
   );
 

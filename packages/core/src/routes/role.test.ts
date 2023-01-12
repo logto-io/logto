@@ -78,11 +78,11 @@ const tenantContext = new MockTenant(undefined, {
 describe('role routes', () => {
   const roleRequester = createRequester({ authedRoutes: roleRoutes, tenantContext });
 
-  it('GET /roles?page=1', async () => {
+  it('GET /roles', async () => {
     countUsersRolesByRoleId.mockResolvedValueOnce({ count: 1 });
     findUsersByIds.mockResolvedValueOnce([mockUser]);
     findUsersRolesByRoleId.mockResolvedValueOnce([]);
-    const response = await roleRequester.get('/roles?page=1&page_size=20');
+    const response = await roleRequester.get('/roles');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([
       {
