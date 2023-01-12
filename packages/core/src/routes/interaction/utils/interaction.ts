@@ -136,33 +136,58 @@ export const clearInteractionStorage = async (ctx: Context, provider: Provider) 
 export const assignConnectorSessionResult = async (
   ctx: Context,
   provider: Provider,
-  connectorSession: ConnectorSession
+  connectorSession: ConnectorSession,
+  mode: 'replace' | 'merge' = 'replace'
 ) => {
-  const details = await provider.interactionDetails(ctx.req, ctx.res);
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  const connectorSessionResult = z
+    .object({
+      connectorSession: connectorSessionGuard,
+    })
+    .catchall(z.unknown())
+    .safeParse(result);
+
+  if (result && connectorSessionResult.success && mode === 'merge') {
+    const { connectorSession: originalConnectorSession, ...rest } = connectorSessionResult.data;
+    await provider.interactionResult(ctx.req, ctx.res, {
+      ...rest,
+      connectorSession: { ...originalConnectorSession, ...connectorSession },
+    });
+
+    return;
+  }
+
   await provider.interactionResult(ctx.req, ctx.res, {
-    ...details.result,
+    ...result,
     connectorSession,
   });
 };
 
 export const getConnectorSessionResult = async (
   ctx: Context,
-  provider: Provider
+  provider: Provider,
+  clearAfterGet = true
 ): Promise<ConnectorSession> => {
   const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-  const signInResult = z
+  const connectorSessionResult = z
     .object({
       connectorSession: connectorSessionGuard,
     })
     .safeParse(result);
 
-  assertThat(result && signInResult.success, 'session.connector_validation_session_not_found');
+  assertThat(
+    result && connectorSessionResult.success,
+    'session.connector_validation_session_not_found'
+  );
 
-  const { connectorSession, ...rest } = result;
-  await provider.interactionResult(ctx.req, ctx.res, {
-    ...rest,
-  });
+  if (clearAfterGet) {
+    const { connectorSession, ...rest } = result;
+    await provider.interactionResult(ctx.req, ctx.res, {
+      ...rest,
+    });
+  }
 
-  return signInResult.data.connectorSession;
+  return connectorSessionResult.data.connectorSession;
 };
