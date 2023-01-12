@@ -16,6 +16,7 @@ import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
 import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
+import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
 import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
@@ -57,7 +58,10 @@ const useSignInFlowCodeVerification = (
       confirmText: 'action.create',
       ModalContent: t('description.sign_in_id_does_not_exist', {
         ype: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
-        value: target,
+        value:
+          method === SignInIdentifier.Email
+            ? target
+            : formatPhoneNumberWithCountryCallingCode(target),
       }),
     });
 
