@@ -25,6 +25,7 @@
       }
 
       .scopeInfo {
+        flex-shrink: 0;
         font: var(--font-body-medium);
         color: var(--color-text-secondary);
         margin-left: _.unit(2);
