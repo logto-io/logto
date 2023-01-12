@@ -6,7 +6,7 @@ describe('VerificationCode Component', () => {
   const onChange = jest.fn();
 
   beforeEach(() => {
-    onChange.mockClear();
+    jest.clearAllMocks();
   });
 
   it('render with value', () => {
@@ -80,8 +80,10 @@ describe('VerificationCode Component', () => {
     const inputElements = container.querySelectorAll('input');
 
     if (inputElements[2]) {
-      fireEvent.input(inputElements[2], { target: { value: 'a' } });
-      expect(onChange).not.toBeCalled();
+      for (const value of ['a', 'e', '+', '-', '.']) {
+        fireEvent.input(inputElements[2], { target: { value } });
+        expect(onChange).not.toBeCalled();
+      }
     }
   });
 
@@ -124,53 +126,90 @@ describe('VerificationCode Component', () => {
     }
   });
 
-  it('onPasteHandler', () => {
-    const input = ['1', '2', '3', '4', '5', '6'];
-    const { container } = render(
-      <VerificationCode name="passcode" value={input} onChange={onChange} />
-    );
-    const inputElements = container.querySelectorAll('input');
+  describe('onPasteHandler', () => {
+    it('full update', () => {
+      const input = ['1', '2', '3', '4', '5', '6'];
+      const { container } = render(
+        <VerificationCode name="passcode" value={input} onChange={onChange} />
+      );
+      const inputElements = container.querySelectorAll('input');
 
-    // Full update
-    if (inputElements[0]) {
-      fireEvent.paste(inputElements[0], {
-        clipboardData: {
-          getData: () => '789012',
-        },
-      });
-      expect(onChange).toBeCalledWith(['7', '8', '9', '0', '1', '2']);
-    }
+      if (inputElements[0]) {
+        fireEvent.paste(inputElements[0], {
+          clipboardData: {
+            getData: () => '789012',
+          },
+        });
+        expect(onChange).toBeCalledWith(['7', '8', '9', '0', '1', '2']);
+      }
+    });
 
-    // Partial update
-    if (inputElements[2]) {
-      fireEvent.paste(inputElements[2], {
-        clipboardData: {
-          getData: () => '789',
-        },
-      });
-      expect(onChange).toBeCalledWith(['1', '2', '7', '8', '9', '6']);
-    }
+    it('partial update', () => {
+      const input = ['1', '2', '3', '4', '5', '6'];
+      const { container } = render(
+        <VerificationCode name="passcode" value={input} onChange={onChange} />
+      );
+      const inputElements = container.querySelectorAll('input');
 
-    // OverLength update
-    if (inputElements[4]) {
-      fireEvent.paste(inputElements[4], {
-        clipboardData: {
-          getData: () => '7890',
-        },
-      });
-      expect(onChange).toBeCalledWith(['1', '2', '3', '4', '7', '8']);
-    }
+      if (inputElements[2]) {
+        fireEvent.paste(inputElements[2], {
+          clipboardData: {
+            getData: () => '789',
+          },
+        });
+        expect(onChange).toBeCalledWith(['1', '2', '7', '8', '9', '6']);
+      }
+    });
 
-    onChange.mockClear();
+    it('overLength partial update', () => {
+      const input = ['1', '2', '3', '4', '5', '6'];
+      const { container } = render(
+        <VerificationCode name="passcode" value={input} onChange={onChange} />
+      );
+      const inputElements = container.querySelectorAll('input');
 
-    // Non-numeric past data
-    if (inputElements[0]) {
-      fireEvent.paste(inputElements[0], {
-        clipboardData: {
-          getData: () => 'test input',
-        },
-      });
-      expect(onChange).not.toBeCalled();
-    }
+      if (inputElements[4]) {
+        fireEvent.paste(inputElements[4], {
+          clipboardData: {
+            getData: () => '7890',
+          },
+        });
+        expect(onChange).toBeCalledWith(['1', '2', '3', '4', '7', '8']);
+      }
+    });
+
+    it('filter numeric past data', () => {
+      const input = ['1', '2', '3', '4', '5', '6'];
+      const { container } = render(
+        <VerificationCode name="passcode" value={input} onChange={onChange} />
+      );
+      const inputElements = container.querySelectorAll('input');
+
+      if (inputElements[0]) {
+        fireEvent.paste(inputElements[0], {
+          clipboardData: {
+            getData: () => 'test input 124 343',
+          },
+        });
+        expect(onChange).toBeCalledWith(['1', '2', '4', '3', '4', '3']);
+      }
+    });
+
+    it('Non-numeric past data', () => {
+      const input = ['1', '2', '3', '4', '5', '6'];
+      const { container } = render(
+        <VerificationCode name="passcode" value={input} onChange={onChange} />
+      );
+      const inputElements = container.querySelectorAll('input');
+
+      if (inputElements[0]) {
+        fireEvent.paste(inputElements[0], {
+          clipboardData: {
+            getData: () => 'test input',
+          },
+        });
+        expect(onChange).not.toBeCalled();
+      }
+    });
   });
 });

@@ -71,9 +71,10 @@ const VerificationCode = ({ type, method, className, hasPasswordButton, target }
         <TextLink
           className={styles.link}
           text="description.resend_passcode"
-          onClick={() => {
+          onClick={async () => {
             clearErrorMessage();
-            void onResendVerificationCode();
+            await onResendVerificationCode();
+            setCode([]);
           }}
         />
       )}

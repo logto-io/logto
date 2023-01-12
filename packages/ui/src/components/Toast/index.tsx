@@ -17,6 +17,8 @@ const Toast = ({ message, duration = 3000, callback }: Props) => {
       return;
     }
 
+    const { activeElement } = document;
+
     setText(message);
 
     const timer = setTimeout(() => {
@@ -30,6 +32,7 @@ const Toast = ({ message, duration = 3000, callback }: Props) => {
 
   return (
     <ReactModal
+      shouldFocusAfterRender={false}
       // For styling use
       // eslint-disable-next-line jsx-a11y/aria-role
       role="toast"
