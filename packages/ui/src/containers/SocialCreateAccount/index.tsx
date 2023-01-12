@@ -17,19 +17,29 @@ type Props = {
 
 const SocialCreateAccount = ({ connectorId, className }: Props) => {
   const { t } = useTranslation();
-  const { relatedUser, registerWithSocial, bindSocialRelatedUser } = useBindSocial();
+
+  const { relatedUser, socialIdentity, registerWithSocial, bindSocialRelatedUser } =
+    useBindSocial();
+
   const { signInMethods } = useSieMethods();
+
+  const relatedIdentifier = relatedUser && socialIdentity?.[relatedUser.type];
 
   return (
     <div className={classNames(styles.container, className)}>
-      {relatedUser && (
+      {relatedIdentifier && (
         <>
           <div className={styles.desc}>{t('description.social_bind_with_existing')}</div>
           <Button
             title="action.bind"
             i18nProps={{ address: relatedUser.value }}
             onClick={() => {
-              bindSocialRelatedUser({ connectorId, identityType: relatedUser.type });
+              bindSocialRelatedUser({
+                connectorId,
+                ...(relatedUser.type === 'email'
+                  ? { email: relatedIdentifier }
+                  : { phone: relatedIdentifier }),
+              });
             }}
           />
         </>

@@ -39,11 +39,19 @@ export const socialConnectorPayloadGuard = z.object({
 });
 export type SocialConnectorPayload = z.infer<typeof socialConnectorPayloadGuard>;
 
-export const socialIdentityPayloadGuard = z.object({
+export const socialEmailPayloadGuard = z.object({
   connectorId: z.string(),
-  identityType: z.union([z.literal('phone'), z.literal('email')]),
+  email: z.string(),
 });
-export type SocialIdentityPayload = z.infer<typeof socialIdentityPayloadGuard>;
+
+export type SocialEmailPayload = z.infer<typeof socialEmailPayloadGuard>;
+
+export const socialPhonePayloadGuard = z.object({
+  connectorId: z.string(),
+  phone: z.string(),
+});
+
+export type SocialPhonePayload = z.infer<typeof socialPhonePayloadGuard>;
 
 // Interaction Payload Guard
 
@@ -63,7 +71,8 @@ export const identifierPayloadGuard = z.union([
   emailVerificationCodePayloadGuard,
   phoneVerificationCodePayloadGuard,
   socialConnectorPayloadGuard,
-  socialIdentityPayloadGuard,
+  socialEmailPayloadGuard,
+  socialPhonePayloadGuard,
 ]);
 
 export type IdentifierPayload =
@@ -73,7 +82,8 @@ export type IdentifierPayload =
   | EmailVerificationCodePayload
   | PhoneVerificationCodePayload
   | SocialConnectorPayload
-  | SocialIdentityPayload;
+  | SocialPhonePayload
+  | SocialEmailPayload;
 
 export const profileGuard = z.object({
   username: z.string().regex(usernameRegEx).optional(),

@@ -178,7 +178,10 @@ describe('Social Identifier Interactions', () => {
 
       await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
 
-      await client.successSend(patchInteractionIdentifiers, { connectorId, identityType: 'email' });
+      await client.successSend(patchInteractionIdentifiers, {
+        connectorId,
+        email: userProfile.primaryEmail,
+      });
       await client.successSend(putInteractionProfile, { connectorId });
 
       const { redirectTo } = await client.submitInteraction();

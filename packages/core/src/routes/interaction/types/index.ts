@@ -4,6 +4,8 @@ import type {
   EmailPasswordPayload,
   PhonePasswordPayload,
   InteractionEvent,
+  SocialEmailPayload,
+  SocialPhonePayload,
 } from '@logto/schemas';
 import type { z } from 'zod';
 
@@ -26,6 +28,8 @@ export type PasswordIdentifierPayload =
   | UsernamePasswordPayload
   | EmailPasswordPayload
   | PhonePasswordPayload;
+
+export type SocialVerifiedIdentifierPayload = SocialEmailPayload | SocialPhonePayload;
 
 export type SocialAuthorizationUrlPayload = z.infer<typeof socialAuthorizationUrlPayloadGuard>;
 

@@ -97,7 +97,13 @@ describe('verifyUserAccount', () => {
 
     const interaction: SignInInteractionResult = {
       event: InteractionEvent.SignIn,
-      identifiers: [{ key: 'social', connectorId: 'connectorId', userInfo: { id: 'foo' } }],
+      identifiers: [
+        {
+          key: 'social',
+          connectorId: 'connectorId',
+          userInfo: { id: 'foo', email: 'email@logto.io' },
+        },
+      ],
     };
 
     await expect(verifyUserAccount(tenant, interaction)).rejects.toMatchError(
@@ -106,13 +112,13 @@ describe('verifyUserAccount', () => {
           code: 'user.identity_not_exist',
           status: 422,
         },
-        null
+        { email: 'email@logto.io' }
       )
     );
 
     expect(findUserByIdentifierMock).toBeCalledWith(tenant, {
       connectorId: 'connectorId',
-      userInfo: { id: 'foo' },
+      userInfo: { id: 'foo', email: 'email@logto.io' },
     });
   });
 

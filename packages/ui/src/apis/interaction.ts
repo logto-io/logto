@@ -8,7 +8,8 @@ import type {
   EmailVerificationCodePayload,
   PhoneVerificationCodePayload,
   SocialConnectorPayload,
-  SocialIdentityPayload,
+  SocialEmailPayload,
+  SocialPhonePayload,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -215,7 +216,7 @@ export const registerWithVerifiedSocial = async (connectorId: string) => {
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
 
-export const bindSocialRelatedUser = async (payload: SocialIdentityPayload) => {
+export const bindSocialRelatedUser = async (payload: SocialEmailPayload | SocialPhonePayload) => {
   await api.patch(`${interactionPrefix}/identifiers`, {
     json: payload,
   });

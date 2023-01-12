@@ -2,7 +2,6 @@ import type {
   InteractionEvent,
   IdentifierPayload,
   SocialConnectorPayload,
-  SocialIdentityPayload,
   VerifyVerificationCodePayload,
 } from '@logto/schemas';
 
@@ -20,6 +19,7 @@ import type {
   AnonymousInteractionResult,
   Identifier,
   AccountIdIdentifier,
+  SocialVerifiedIdentifierPayload,
 } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
 import {
@@ -81,13 +81,15 @@ const verifySocialIdentifier = async (
   return { key: 'social', connectorId: identifier.connectorId, userInfo };
 };
 
-const verifySocialIdentityInInteractionRecord = async (
-  { connectorId, identityType }: SocialIdentityPayload,
+const verifySocialVerifiedIdentifier = async (
+  payload: SocialVerifiedIdentifierPayload,
   ctx: WithLogContext,
   interactionRecord?: AnonymousInteractionResult
 ): Promise<VerifiedEmailIdentifier | VerifiedPhoneIdentifier> => {
   const log = ctx.createLog(`Interaction.SignIn.Identifier.Social.Submit`);
-  log.append({ connectorId, identityType });
+  log.append(payload);
+
+  const { connectorId } = payload;
 
   // Sign-In with social verified email or phone requires a social identifier in the interaction result
   const socialIdentifierRecord = interactionRecord?.identifiers?.find(
@@ -95,13 +97,32 @@ const verifySocialIdentityInInteractionRecord = async (
       entity.key === 'social' && entity.connectorId === connectorId
   );
 
-  const verifiedSocialIdentity = socialIdentifierRecord?.userInfo[identityType];
+  assertThat(socialIdentifierRecord, new RequestError('session.connector_session_not_found'));
 
-  assertThat(verifiedSocialIdentity, new RequestError('session.connector_session_not_found'));
+  // Verified Email Payload
+  if ('email' in payload) {
+    const { email } = payload;
+    assertThat(
+      socialIdentifierRecord.userInfo.email === email,
+      new RequestError('session.connector_session_not_found')
+    );
+
+    return {
+      key: 'emailVerified',
+      value: email,
+    };
+  }
+
+  // Verified Phone Payload
+  const { phone } = payload;
+  assertThat(
+    socialIdentifierRecord.userInfo.phone === phone,
+    new RequestError('session.connector_session_not_found')
+  );
 
   return {
-    key: identityType === 'email' ? 'emailVerified' : 'phoneVerified',
-    value: verifiedSocialIdentity,
+    key: 'phoneVerified',
+    value: phone,
   };
 };
 
@@ -126,5 +147,5 @@ export default async function identifierPayloadVerification(
   }
 
   // Sign-In with social verified email or phone
-  return verifySocialIdentityInInteractionRecord(identifierPayload, ctx, interactionStorage);
+  return verifySocialVerifiedIdentifier(identifierPayload, ctx, interactionStorage);
 }

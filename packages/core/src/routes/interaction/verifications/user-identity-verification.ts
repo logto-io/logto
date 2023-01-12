@@ -54,7 +54,11 @@ const identifyUserBySocialIdentifier = async (
         code: 'user.identity_not_exist',
         status: 422,
       },
-      relatedInfo && { relatedUser: maskUserInfo(relatedInfo[0]) }
+      {
+        ...(relatedInfo && { relatedUser: maskUserInfo(relatedInfo[0]) }),
+        ...(userInfo.email && { email: userInfo.email }),
+        ...(userInfo.phone && { phone: userInfo.phone }),
+      }
     );
   }
 
