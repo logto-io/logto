@@ -73,24 +73,31 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
       }));
   }, [data, roleScopes]);
 
-  const dataSource = useMemo(
-    () =>
+  const dataSource = useMemo(() => {
+    const lowerCasedKeyword = keyword.toLowerCase();
+
+    return (
       conditional(
-        keyword &&
+        lowerCasedKeyword &&
           resources
             .filter(({ name, scopes }) => {
-              return name.includes(keyword) || scopes.some(({ name }) => name.includes(keyword));
+              return (
+                name.toLowerCase().includes(lowerCasedKeyword) ||
+                scopes.some(({ name }) => name.toLowerCase().includes(lowerCasedKeyword))
+              );
             })
             .map(({ scopes, ...resource }) => ({
               ...resource,
               scopes: scopes.filter(
-                ({ name, resource }) => name.includes(keyword) || resource.name.includes(keyword)
+                ({ name, resource }) =>
+                  name.toLocaleLowerCase().includes(lowerCasedKeyword) ||
+                  resource.name.toLocaleLowerCase().includes(lowerCasedKeyword)
               ),
             }))
             .filter(({ scopes }) => scopes.length > 0)
-      ) ?? resources,
-    [keyword, resources]
-  );
+      ) ?? resources
+    );
+  }, [keyword, resources]);
 
   return (
     <div className={transferLayout.box}>
