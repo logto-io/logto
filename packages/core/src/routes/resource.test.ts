@@ -28,7 +28,8 @@ const { findResourceById } = resources;
 
 const scopes = {
   findScopesByResourceId: async () => [mockScope],
-  findScopes: async () => [mockScope],
+  searchScopesByResourceId: async () => [mockScope],
+  countScopesByResourceId: async () => ({ count: 1 }),
   insertScope: jest.fn(async () => mockScope),
   updateScopeById: jest.fn(async () => mockScope),
   deleteScopeById: jest.fn(),

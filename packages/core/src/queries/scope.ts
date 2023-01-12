@@ -25,7 +25,12 @@ const buildResourceConditions = (search: Search) => {
 };
 
 export const createScopeQueries = (pool: CommonQueryMethods) => {
-  const findScopes = async (resourceId: string, search: Search, limit?: number, offset?: number) =>
+  const searchScopesByResourceId = async (
+    resourceId: string,
+    search: Search,
+    limit?: number,
+    offset?: number
+  ) =>
     pool.any<Scope>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
@@ -35,11 +40,34 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
       ${conditionalSql(offset, (value) => sql`offset ${value}`)}
     `);
 
-  const countScopes = async (resourceId: string, search: Search) =>
+  const searchScopesByScopeIds = async (
+    scopeIds: string[],
+    search: Search,
+    limit?: number,
+    offset?: number
+  ) =>
+    pool.any<Scope>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.id} in (${scopeIds.length > 0 ? sql.join(scopeIds, sql`, `) : sql`null`})
+      ${buildResourceConditions(search)}
+      ${conditionalSql(limit, (value) => sql`limit ${value}`)}
+      ${conditionalSql(offset, (value) => sql`offset ${value}`)}
+    `);
+
+  const countScopesByResourceId = async (resourceId: string, search: Search) =>
     pool.one<{ count: number }>(sql`
       select count(*)
       from ${table}
       where ${fields.resourceId}=${resourceId}
+      ${buildResourceConditions(search)}
+    `);
+
+  const countScopesByScopeIds = async (scopeIds: string[], search: Search) =>
+    pool.one<{ count: number }>(sql`
+      select count(*)
+      from ${table}
+      where ${fields.id} in (${scopeIds.length > 0 ? sql.join(scopeIds, sql`, `) : sql`null`})
       ${buildResourceConditions(search)}
     `);
 
@@ -116,8 +144,10 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
   };
 
   return {
-    findScopes,
-    countScopes,
+    searchScopesByResourceId,
+    searchScopesByScopeIds,
+    countScopesByResourceId,
+    countScopesByScopeIds,
     findScopeByNameAndResourceId,
     findScopesByResourceId,
     findScopesByResourceIds,

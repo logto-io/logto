@@ -18,6 +18,7 @@ import logRoutes from './log.js';
 import phraseRoutes from './phrase.js';
 import resourceRoutes from './resource.js';
 import roleRoutes from './role.js';
+import roleScopeRoutes from './role.scope.js';
 import settingRoutes from './setting.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
 import statusRoutes from './status.js';
@@ -41,6 +42,7 @@ const createRouters = (tenant: TenantContext) => {
   adminUserRoleRoutes(managementRouter, tenant);
   logRoutes(managementRouter, tenant);
   roleRoutes(managementRouter, tenant);
+  roleScopeRoutes(managementRouter, tenant);
   dashboardRoutes(managementRouter, tenant);
   customPhraseRoutes(managementRouter, tenant);
   hookRoutes(managementRouter, tenant);
