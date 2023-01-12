@@ -30,7 +30,7 @@ export default function roleRoutes<T extends AuthedRouter>(
       updateRoleById,
     },
     scopes: { findScopeById },
-    users: { findUserById, findUsersByIds },
+    users: { findUserById, findUsersByIds, countUsers, findUsers },
     usersRoles: {
       countUsersRolesByRoleId,
       deleteUsersRolesByUserIdAndRoleId,
@@ -190,6 +190,7 @@ export default function roleRoutes<T extends AuthedRouter>(
 
   router.get(
     '/roles/:id/users',
+    koaPagination(),
     koaGuard({
       params: object({ id: string().min(1) }),
     }),
@@ -197,13 +198,37 @@ export default function roleRoutes<T extends AuthedRouter>(
       const {
         params: { id },
       } = ctx.guard;
+      const { limit, offset } = ctx.pagination;
+      const { searchParams } = ctx.request.URL;
 
       await findRoleById(id);
-      const usersRoles = await findUsersRolesByRoleId(id);
-      const users = await findUsersByIds(usersRoles.map(({ userId }) => userId));
-      ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
 
-      return next();
+      return tryThat(
+        async () => {
+          const search = parseSearchParamsForSearch(searchParams);
+          const usersRoles = await findUsersRolesByRoleId(id);
+          const userIds = usersRoles.map(({ userId }) => userId);
+
+          const [{ count }, users] = await Promise.all([
+            countUsers(search, undefined, userIds),
+            findUsers(limit, offset, search, undefined, userIds),
+          ]);
+
+          ctx.pagination.totalCount = count;
+          ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
+
+          return next();
+        },
+        (error) => {
+          if (error instanceof TypeError) {
+            throw new RequestError(
+              { code: 'request.invalid_input', details: error.message },
+              error
+            );
+          }
+          throw error;
+        }
+      );
     }
   );
 
