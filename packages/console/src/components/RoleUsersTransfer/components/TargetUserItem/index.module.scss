@@ -1,0 +1,31 @@
+@use '@/scss/underscore' as _;
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: _.unit(2.5) _.unit(4);
+  user-select: none;
+
+  .avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+    margin-right: _.unit(2);
+  }
+
+  .name {
+    flex: 1 1 0;
+    font: var(--font-body-medium);
+    @include _.text-ellipsis;
+  }
+
+  .icon {
+    color: var(--color-text-secondary);
+  }
+
+  &:hover {
+    background: var(--color-hover);
+  }
+}

@@ -25,7 +25,7 @@ const AssignUsersModal = ({ roleId, isRemindSkip = false, onClose }: Props) => {
   const api = useApi();
 
   const handleAssign = async () => {
-    if (users.length === 0) {
+    if (isLoading || users.length === 0) {
       return;
     }
 
@@ -70,6 +70,7 @@ const AssignUsersModal = ({ roleId, isRemindSkip = false, onClose }: Props) => {
             />
             <Button
               isLoading={isLoading}
+              disabled={users.length === 0}
               htmlType="submit"
               title="role_details.users.confirm_assign"
               size="large"
