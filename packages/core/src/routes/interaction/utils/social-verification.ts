@@ -38,12 +38,9 @@ export const createSocialAuthorizationUrl = async (
       state,
       redirectUri,
       /**
-       * For upcoming POST /interaction/verification/assertion API, we need to block requests
+       * For POST /saml-assertion-handler/:connectorId API, we need to block requests
        * for non-SAML connector (relies on connectorFactoryId) and use `connectorId`
        * to find correct connector config.
-       *
-       * TODO @darcy : add check on `connectorId` and `connectorFactoryId` existence and save logic
-       * in SAML connector `getAuthorizationUri` method.
        */
       connectorId,
       connectorFactoryId: connector.metadata.id,
