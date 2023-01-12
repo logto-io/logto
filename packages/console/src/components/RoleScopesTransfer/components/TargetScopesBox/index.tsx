@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import * as transferLayout from '@/scss/transfer.module.scss';
 
-import TargetPermissionItem from '../TargetPermissionItem';
+import TargetScopeItem from '../TargetScopeItem';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
   onChange: (value: ScopeResponse[]) => void;
 };
 
-const TargetPermissionsBox = ({ selectedScopes, onChange }: Props) => {
+const TargetScopesBox = ({ selectedScopes, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -23,7 +23,7 @@ const TargetPermissionsBox = ({ selectedScopes, onChange }: Props) => {
       </div>
       <div className={transferLayout.boxContent}>
         {selectedScopes.map((scope) => (
-          <TargetPermissionItem
+          <TargetScopeItem
             key={scope.id}
             scope={scope}
             onDelete={() => {
@@ -36,4 +36,4 @@ const TargetPermissionsBox = ({ selectedScopes, onChange }: Props) => {
   );
 };
 
-export default TargetPermissionsBox;
+export default TargetScopesBox;

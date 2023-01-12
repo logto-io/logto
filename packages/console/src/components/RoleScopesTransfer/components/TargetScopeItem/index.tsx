@@ -7,10 +7,10 @@ import * as styles from './index.module.scss';
 
 export type Props = {
   scope: ScopeResponse;
-  onDelete: () => void;
+  onDelete: (scope: ScopeResponse) => void;
 };
 
-const TargetPermissionItem = ({ scope, onDelete }: Props) => {
+const TargetScopeItem = ({ scope, onDelete }: Props) => {
   const {
     name,
     resource: { name: resourceName },
@@ -22,11 +22,17 @@ const TargetPermissionItem = ({ scope, onDelete }: Props) => {
         <div className={styles.name}>{name}</div>
         <div className={styles.resourceName}>{`(${resourceName})`}</div>
       </div>
-      <IconButton size="small" iconClassName={styles.icon} onClick={onDelete}>
+      <IconButton
+        size="small"
+        iconClassName={styles.icon}
+        onClick={() => {
+          onDelete(scope);
+        }}
+      >
         <Close />
       </IconButton>
     </div>
   );
 };
 
-export default TargetPermissionItem;
+export default TargetScopeItem;

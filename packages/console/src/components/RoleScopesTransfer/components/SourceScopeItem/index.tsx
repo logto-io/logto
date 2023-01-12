@@ -8,16 +8,16 @@ import * as styles from './index.module.scss';
 type Props = {
   scope: ScopeResponse;
   isSelected: boolean;
-  onSelect: () => void;
+  onSelect: (scope: ScopeResponse) => void;
 };
 
-const SourcePermissionItem = ({ scope: { name }, isSelected, onSelect }: Props) => (
+const SourceScopeItem = ({ scope, scope: { name }, isSelected, onSelect }: Props) => (
   <div className={styles.sourcePermissionItem}>
     <Checkbox
       checked={isSelected}
       disabled={false}
       onChange={() => {
-        onSelect();
+        onSelect(scope);
       }}
     />
     <div
@@ -25,10 +25,10 @@ const SourcePermissionItem = ({ scope: { name }, isSelected, onSelect }: Props) 
       role="button"
       tabIndex={0}
       onKeyDown={onKeyDownHandler(() => {
-        onSelect();
+        onSelect(scope);
       })}
       onClick={() => {
-        onSelect();
+        onSelect(scope);
       }}
     >
       {name}
@@ -36,4 +36,4 @@ const SourcePermissionItem = ({ scope: { name }, isSelected, onSelect }: Props) 
   </div>
 );
 
-export default SourcePermissionItem;
+export default SourceScopeItem;

@@ -7,7 +7,7 @@ import ReactModal from 'react-modal';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import ModalLayout from '@/components/ModalLayout';
-import RolePermissionsTransfer from '@/components/RolePermissionsTransfer';
+import RoleScopesTransfer from '@/components/RoleScopesTransfer';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -70,7 +70,7 @@ const AssignPermissionsModal = ({ roleId, onClose }: Props) => {
         onClose={onClose}
       >
         <FormField title="role_details.permission.assign_form_filed">
-          <RolePermissionsTransfer
+          <RoleScopesTransfer
             roleId={roleId}
             value={scopes}
             onChange={(scopes) => {

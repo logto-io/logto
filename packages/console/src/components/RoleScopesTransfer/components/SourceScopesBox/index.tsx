@@ -6,20 +6,20 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Search from '@/assets/images/search.svg';
+import type { DetailedResourceResponse } from '@/components/RoleScopesTransfer/types';
 import TextInput from '@/components/TextInput';
 import * as transferLayout from '@/scss/transfer.module.scss';
 
-import type { DetailedResourceResponse } from '../../types';
 import ResourceItem from '../ResourceItem';
 import * as styles from './index.module.scss';
 
 type Props = {
   roleId?: string;
-  selectedPermissions: ScopeResponse[];
+  selectedScopes: ScopeResponse[];
   onChange: (value: ScopeResponse[]) => void;
 };
 
-const SourcePermissionsBox = ({ roleId, selectedPermissions, onChange }: Props) => {
+const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data = [] } = useSWR<ResourceResponse[]>('/api/resources?includeScopes=true');
   const { data: roleScopes = [] } = useSWR<Scope[]>(roleId && `/api/roles/${roleId}/scopes`);
@@ -32,26 +32,32 @@ const SourcePermissionsBox = ({ roleId, selectedPermissions, onChange }: Props) 
     setKeyword(event.target.value);
   };
 
-  const isPermissionAdded = (scope: ScopeResponse) =>
-    selectedPermissions.findIndex(({ id }) => id === scope.id) >= 0;
+  const isScopeAdded = (scope: ScopeResponse) =>
+    selectedScopes.findIndex(({ id }) => id === scope.id) >= 0;
 
-  const onSelectPermission = (scope: ScopeResponse) => {
+  const onSelectScope = (scope: ScopeResponse) => {
     onChange(
-      isPermissionAdded(scope)
-        ? selectedPermissions.filter(({ id }) => id !== scope.id)
-        : [scope, ...selectedPermissions]
+      isScopeAdded(scope)
+        ? selectedScopes.filter(({ id }) => id !== scope.id)
+        : [scope, ...selectedScopes]
     );
   };
 
-  const onSelectResource = ({ scopes }: DetailedResourceResponse) => {
-    const isAllSelected = scopes.every((scope) => isPermissionAdded(scope));
-    const scopesIds = new Set(scopes.map(({ id }) => id));
-    const basePermissions = selectedPermissions.filter(({ id }) => !scopesIds.has(id));
-    onChange(isAllSelected ? basePermissions : [...scopes, ...basePermissions]);
+  const onSelectResource = ({ scopes: resourceScopes }: DetailedResourceResponse) => {
+    const isAllSelected = resourceScopes.every((scope) => isScopeAdded(scope));
+    const resourceScopesIds = new Set(resourceScopes.map(({ id }) => id));
+    const selectedScopesExcludeResourceScopes = selectedScopes.filter(
+      ({ id }) => !resourceScopesIds.has(id)
+    );
+    onChange(
+      isAllSelected
+        ? selectedScopesExcludeResourceScopes
+        : [...resourceScopes, ...selectedScopesExcludeResourceScopes]
+    );
   };
 
-  const getResourceSelectedPermissions = ({ scopes }: DetailedResourceResponse) =>
-    scopes.filter((scope) => selectedPermissions.findIndex(({ id }) => id === scope.id) >= 0);
+  const getResourceSelectedScopes = ({ scopes }: DetailedResourceResponse) =>
+    scopes.filter((scope) => selectedScopes.findIndex(({ id }) => id === scope.id) >= 0);
 
   const resources = data
     .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.has(id)))
@@ -96,9 +102,9 @@ const SourcePermissionsBox = ({ roleId, selectedPermissions, onChange }: Props) 
           <ResourceItem
             key={resource.id}
             resource={resource}
-            selectedPermissions={getResourceSelectedPermissions(resource)}
+            selectedScopes={getResourceSelectedScopes(resource)}
             onSelectResource={onSelectResource}
-            onSelectPermission={onSelectPermission}
+            onSelectScope={onSelectScope}
           />
         ))}
       </div>
@@ -106,4 +112,4 @@ const SourcePermissionsBox = ({ roleId, selectedPermissions, onChange }: Props) 
   );
 };
 
-export default SourcePermissionsBox;
+export default SourceScopesBox;

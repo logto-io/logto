@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import ModalLayout from '@/components/ModalLayout';
-import RolePermissionsTransfer from '@/components/RolePermissionsTransfer';
+import RoleScopesTransfer from '@/components/RoleScopesTransfer';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
 
@@ -80,7 +80,7 @@ const CreateRoleForm = ({ onClose }: Props) => {
             name="scopes"
             defaultValue={[]}
             render={({ field: { value, onChange } }) => (
-              <RolePermissionsTransfer value={value} onChange={onChange} />
+              <RoleScopesTransfer value={value} onChange={onChange} />
             )}
           />
         </FormField>
