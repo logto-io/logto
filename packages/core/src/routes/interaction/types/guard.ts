@@ -1,17 +1,7 @@
 import { socialUserInfoGuard } from '@logto/connector-kit';
-import { emailRegEx, phoneRegEx, validateRedirectUrl } from '@logto/core-kit';
+import { validateRedirectUrl } from '@logto/core-kit';
 import { eventGuard, profileGuard, InteractionEvent } from '@logto/schemas';
 import { z } from 'zod';
-
-// Verification Send Route Payload Guard
-export const sendVerificationCodePayloadGuard = z.union([
-  z.object({
-    email: z.string().regex(emailRegEx),
-  }),
-  z.object({
-    phone: z.string().regex(phoneRegEx),
-  }),
-]);
 
 // Social Authorization Uri Route Payload Guard
 export const socialAuthorizationUrlPayloadGuard = z.object({

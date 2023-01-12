@@ -8,3 +8,4 @@ export * from './search.js';
 export * from './resource.js';
 export * from './scope.js';
 export * from './role.js';
+export * from './verification-code.js';

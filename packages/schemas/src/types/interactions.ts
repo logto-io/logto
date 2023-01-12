@@ -2,6 +2,14 @@ import { emailRegEx, phoneRegEx, usernameRegEx, passwordRegEx } from '@logto/cor
 import { z } from 'zod';
 
 import { arbitraryObjectGuard } from '../foundations/index.js';
+import type {
+  EmailVerificationCodePayload,
+  PhoneVerificationCodePayload,
+} from './verification-code.js';
+import {
+  emailVerificationCodePayloadGuard,
+  phoneVerificationCodePayloadGuard,
+} from './verification-code.js';
 
 /**
  * Detailed Identifier Methods guard
@@ -24,18 +32,6 @@ export const phonePasswordPayloadGuard = z.object({
   password: z.string().min(1),
 });
 export type PhonePasswordPayload = z.infer<typeof phonePasswordPayloadGuard>;
-
-export const emailVerificationCodePayloadGuard = z.object({
-  email: z.string().regex(emailRegEx),
-  verificationCode: z.string().min(1),
-});
-export type EmailVerificationCodePayload = z.infer<typeof emailVerificationCodePayloadGuard>;
-
-export const phoneVerificationCodePayloadGuard = z.object({
-  phone: z.string().regex(phoneRegEx),
-  verificationCode: z.string().min(1),
-});
-export type PhoneVerificationCodePayload = z.infer<typeof phoneVerificationCodePayloadGuard>;
 
 export const socialConnectorPayloadGuard = z.object({
   connectorId: z.string(),

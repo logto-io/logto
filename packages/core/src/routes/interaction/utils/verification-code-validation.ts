@@ -1,13 +1,12 @@
 import { VerificationCodeType } from '@logto/connector-kit';
-import type { InteractionEvent } from '@logto/schemas';
+import type {
+  InteractionEvent,
+  RequestVerificationCodePayload,
+  VerifyVerificationCodePayload,
+} from '@logto/schemas';
 
 import type { PasscodeLibrary } from '#src/libraries/passcode.js';
 import type { LogContext } from '#src/middleware/koa-audit-log.js';
-
-import type {
-  SendVerificationCodePayload,
-  VerificationCodeIdentifierPayload,
-} from '../types/index.js';
 
 /**
  * Refactor Needed:
@@ -23,7 +22,7 @@ const getVerificationCodeTypeByEvent = (event: InteractionEvent): VerificationCo
   eventToVerificationCodeTypeMap[event];
 
 export const sendVerificationCodeToIdentifier = async (
-  payload: SendVerificationCodePayload & { event: InteractionEvent },
+  payload: RequestVerificationCodePayload & { event: InteractionEvent },
   jti: string,
   createLog: LogContext['createLog'],
   { createPasscode, sendPasscode }: PasscodeLibrary
@@ -41,7 +40,7 @@ export const sendVerificationCodeToIdentifier = async (
 };
 
 export const verifyIdentifierByVerificationCode = async (
-  payload: VerificationCodeIdentifierPayload & { event: InteractionEvent },
+  payload: VerifyVerificationCodePayload & { event: InteractionEvent },
   jti: string,
   createLog: LogContext['createLog'],
   passcodeLibrary: PasscodeLibrary

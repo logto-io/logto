@@ -1,7 +1,7 @@
 import type { VerificationCodeType } from '@logto/connector-kit';
-import type { Passcode, CreatePasscode } from '@logto/schemas';
+import type { Passcode, CreatePasscode, RequestVerificationCodePayload } from '@logto/schemas';
 import { Passcodes } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
+import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -10,24 +10,49 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Passcodes);
 
+type FindByIdentifierAndTypeProperties = {
+  type: VerificationCodeType;
+} & RequestVerificationCodePayload;
+
+const buildSqlForFindByJtiAndType = (jti: string, type: VerificationCodeType) => sql`
+  select ${sql.join(Object.values(fields), sql`, `)}
+  from ${table}
+  where ${fields.interactionJti}=${jti} and ${fields.type}=${type} and ${fields.consumed} = false
+`;
+
+// Identifier requires either a valid email address or phone number
+const buildSqlForFindByIdentifierAndType = ({
+  type,
+  ...identifier
+}: FindByIdentifierAndTypeProperties) => sql`
+  select ${sql.join(Object.values(fields), sql`, `)}
+  from ${table}
+  where 
+    ${conditionalSql(
+      'email' in identifier && identifier.email,
+      (email) => sql`${fields.email}=${email}`
+    )}
+    ${conditionalSql(
+      'phone' in identifier && identifier.phone,
+      (phone) => sql`${fields.phone}=${phone}`
+    )}
+    and ${fields.type}=${type} and ${fields.consumed} = false
+`;
+
 export const createPasscodeQueries = (pool: CommonQueryMethods) => {
   const findUnconsumedPasscodeByJtiAndType = async (jti: string, type: VerificationCodeType) =>
-    pool.maybeOne<Passcode>(sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.interactionJti}=${jti} and ${fields.type}=${type} and ${
-      fields.consumed
-    } = false
-    `);
+    pool.maybeOne<Passcode>(buildSqlForFindByJtiAndType(jti, type));
 
   const findUnconsumedPasscodesByJtiAndType = async (jti: string, type: VerificationCodeType) =>
-    pool.any<Passcode>(sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.interactionJti}=${jti} and ${fields.type}=${type} and ${
-      fields.consumed
-    } = false
-    `);
+    pool.any<Passcode>(buildSqlForFindByJtiAndType(jti, type));
+
+  const findUnconsumedPasscodeByIdentifierAndType = async (
+    properties: FindByIdentifierAndTypeProperties
+  ) => pool.maybeOne<Passcode>(buildSqlForFindByIdentifierAndType(properties));
+
+  const findUnconsumedPasscodesByIdentifierAndType = async (
+    properties: FindByIdentifierAndTypeProperties
+  ) => pool.any<Passcode>(buildSqlForFindByIdentifierAndType(properties));
 
   const insertPasscode = buildInsertIntoWithPool(pool)<CreatePasscode, Passcode>(Passcodes, {
     returning: true,
@@ -74,6 +99,8 @@ export const createPasscodeQueries = (pool: CommonQueryMethods) => {
   return {
     findUnconsumedPasscodeByJtiAndType,
     findUnconsumedPasscodesByJtiAndType,
+    findUnconsumedPasscodeByIdentifierAndType,
+    findUnconsumedPasscodesByIdentifierAndType,
     insertPasscode,
     consumePasscode,
     increasePasscodeTryCount,

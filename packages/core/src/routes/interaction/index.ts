@@ -1,5 +1,11 @@
 import type { LogtoErrorCode } from '@logto/phrases';
-import { InteractionEvent, eventGuard, identifierPayloadGuard, profileGuard } from '@logto/schemas';
+import {
+  InteractionEvent,
+  eventGuard,
+  identifierPayloadGuard,
+  profileGuard,
+  requestVerificationCodePayloadGuard,
+} from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -17,10 +23,7 @@ import koaInteractionDetails from './middleware/koa-interaction-details.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
-import {
-  sendVerificationCodePayloadGuard,
-  socialAuthorizationUrlPayloadGuard,
-} from './types/guard.js';
+import { socialAuthorizationUrlPayloadGuard } from './types/guard.js';
 import {
   getInteractionStorage,
   storeInteractionResult,
@@ -328,7 +331,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   router.post(
     `${interactionPrefix}/${verificationPath}/verification-code`,
     koaGuard({
-      body: sendVerificationCodePayloadGuard,
+      body: requestVerificationCodePayloadGuard,
     }),
     async (ctx, next) => {
       const { interactionDetails, guard, createLog } = ctx;

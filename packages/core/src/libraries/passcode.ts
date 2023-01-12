@@ -28,18 +28,24 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     deletePasscodesByIds,
     findUnconsumedPasscodeByJtiAndType,
     findUnconsumedPasscodesByJtiAndType,
+    findUnconsumedPasscodeByIdentifierAndType,
+    findUnconsumedPasscodesByIdentifierAndType,
     increasePasscodeTryCount,
     insertPasscode,
   } = queries.passcodes;
   const { getLogtoConnectors } = connectorLibrary;
 
   const createPasscode = async (
-    jti: string,
+    jti: string | undefined,
     type: VerificationCodeType,
     payload: { phone: string } | { email: string }
   ) => {
     // Disable existing passcodes.
-    const passcodes = await findUnconsumedPasscodesByJtiAndType(jti, type);
+    const passcodes = jti
+      ? // Session based flows. E.g. SignIn, Register, etc.
+        await findUnconsumedPasscodesByJtiAndType(jti, type)
+      : // Generic flow. E.g. Triggered by management API
+        await findUnconsumedPasscodesByIdentifierAndType({ type, ...payload });
 
     if (passcodes.length > 0) {
       await deletePasscodesByIds(passcodes.map(({ id }) => id));
@@ -97,12 +103,16 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
   };
 
   const verifyPasscode = async (
-    sessionId: string,
+    jti: string | undefined,
     type: VerificationCodeType,
     code: string,
     payload: { phone: string } | { email: string }
   ): Promise<void> => {
-    const passcode = await findUnconsumedPasscodeByJtiAndType(sessionId, type);
+    const passcode = jti
+      ? // Session based flows. E.g. SignIn, Register, etc.
+        await findUnconsumedPasscodeByJtiAndType(jti, type)
+      : // Generic flow. E.g. Triggered by management API
+        await findUnconsumedPasscodeByIdentifierAndType({ type, ...payload });
 
     if (!passcode) {
       throw new RequestError('verification_code.not_found');
