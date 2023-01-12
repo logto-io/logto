@@ -71,8 +71,8 @@ const CreateRoleForm = ({ onClose }: Props) => {
             {...register('name', { required: true })}
           />
         </FormField>
-        <FormField title="roles.role_description">
-          <TextInput {...register('description')} />
+        <FormField isRequired title="roles.role_description">
+          <TextInput {...register('description', { required: true })} />
         </FormField>
         <FormField title="roles.assign_permissions">
           <Controller

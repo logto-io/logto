@@ -44,8 +44,9 @@ const user_details = {
     name_column: 'Role',
     description_column: 'Description',
     assign_button: 'Assign Roles',
-    delete_description: 'TBD', // UNTRANSLATED
-    deleted: 'The role {{name}} has been successfully deleted from the user.', // UNTRANSLATED
+    delete_description:
+      'This action will removing this role from this user. The role itself will still exist, but it will no longer be associated with this user.',
+    deleted: '{{name}} was successfully removed from this user!',
     assign_title: 'Assign roles to {{name}}',
     assign_subtitle: 'Authorize {{name}} one or more roles',
     assign_role_field: 'Assign roles',
