@@ -12,7 +12,9 @@ import type { AnonymousRouter, RouterInitArgs } from './types.js';
  * This router will have a route `/authn` to authenticate tokens with a general manner.
  * For now, we only implement the API for Hasura authentication.
  */
-export default function authnRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
+export default function authnRoutes<T extends AnonymousRouter>(
+  ...[router, { envSet }]: RouterInitArgs<T>
+) {
   router.get(
     '/authn/hasura',
     koaGuard({
@@ -25,7 +27,7 @@ export default function authnRoutes<T extends AnonymousRouter>(...[router]: Rout
 
       const verifyToken = async (expectedResource?: string) => {
         try {
-          return await verifyBearerTokenFromRequest(ctx.request, expectedResource);
+          return await verifyBearerTokenFromRequest(envSet, ctx.request, expectedResource);
         } catch {
           return {
             sub: undefined,

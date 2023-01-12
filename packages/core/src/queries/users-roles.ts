@@ -4,7 +4,6 @@ import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(UsersRoles);
@@ -72,13 +71,3 @@ export const createUsersRolesQueries = (pool: CommonQueryMethods) => {
     deleteUsersRolesByUserIdAndRoleId,
   };
 };
-
-/** @deprecated Will be removed soon. Use createUsersRolesQueries() factory instead. */
-export const {
-  countUsersRolesByRoleId,
-  findFirstUsersRolesByRoleIdAndUserIds,
-  findUsersRolesByUserId,
-  findUsersRolesByRoleId,
-  insertUsersRoles,
-  deleteUsersRolesByUserIdAndRoleId,
-} = createUsersRolesQueries(envSet.pool);

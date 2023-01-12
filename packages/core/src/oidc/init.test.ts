@@ -1,9 +1,12 @@
-import { MockQueries } from '#src/test-utils/tenant.js';
+import { envSetForTest } from '#src/test-utils/env-set.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 
 import initOidc from './init.js';
 
 describe('oidc provider init', () => {
   it('init should not throw', async () => {
-    expect(() => initOidc(new MockQueries())).not.toThrow();
+    const { queries, libraries } = new MockTenant();
+
+    expect(() => initOidc(envSetForTest, queries, libraries)).not.toThrow();
   });
 });

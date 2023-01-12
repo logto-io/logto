@@ -7,21 +7,21 @@ import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import envSet, { MountedApps } from '#src/env-set/index.js';
+import { EnvSet, MountedApps } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { appendPath } from '#src/utils/url.js';
 
 import { getConstantClientMetadata } from './utils.js';
 
-const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
-  const { localhostUrl, adminConsoleUrl } = envSet.values;
+const buildAdminConsoleClientMetadata = (envSet: EnvSet): AllClientMetadata => {
+  const { localhostUrl, adminConsoleUrl } = EnvSet.values;
   const urls = deduplicate([
     appendPath(localhostUrl, '/console').toString(),
     adminConsoleUrl.toString(),
   ]);
 
   return {
-    ...getConstantClientMetadata(ApplicationType.SPA),
+    ...getConstantClientMetadata(envSet, ApplicationType.SPA),
     client_id: adminConsoleApplicationId,
     client_name: 'Admin Console',
     redirect_uris: urls.map((url) => appendPath(url, '/callback').toString()),
@@ -32,7 +32,7 @@ const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
 const buildDemoAppUris = (
   oidcClientMetadata: OidcClientMetadata
 ): Pick<OidcClientMetadata, 'redirectUris' | 'postLogoutRedirectUris'> => {
-  const { localhostUrl, endpoint } = envSet.values;
+  const { localhostUrl, endpoint } = EnvSet.values;
   const urls = [
     appendPath(localhostUrl, MountedApps.DemoApp).toString(),
     appendPath(endpoint, MountedApps.DemoApp).toString(),
@@ -47,6 +47,7 @@ const buildDemoAppUris = (
 };
 
 export default function postgresAdapter(
+  envSet: EnvSet,
   queries: Queries,
   modelName: string
 ): ReturnType<AdapterFactory> {
@@ -77,7 +78,7 @@ export default function postgresAdapter(
       client_id,
       client_secret,
       client_name,
-      ...getConstantClientMetadata(type),
+      ...getConstantClientMetadata(envSet, type),
       ...snakecaseKeys(oidcClientMetadata),
       ...(client_id === demoAppApplicationId &&
         snakecaseKeys(buildDemoAppUris(oidcClientMetadata))),
@@ -90,7 +91,7 @@ export default function postgresAdapter(
       find: async (id) => {
         // Directly return client metadata since Admin Console does not belong to any tenant in the OSS version.
         if (id === adminConsoleApplicationId) {
-          return buildAdminConsoleClientMetadata();
+          return buildAdminConsoleClientMetadata(envSet);
         }
 
         return transpileClient(

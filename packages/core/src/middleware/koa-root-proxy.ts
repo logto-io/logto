@@ -1,7 +1,7 @@
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
-import envSet from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { appendPath } from '#src/utils/url.js';
 
 export default function koaRootProxy<
@@ -9,7 +9,7 @@ export default function koaRootProxy<
   ContextT extends IRouterParamContext,
   ResponseBodyT
 >(): MiddlewareType<StateT, ContextT, ResponseBodyT> {
-  const { endpoint } = envSet.values;
+  const { endpoint } = EnvSet.values;
 
   return async (ctx, next) => {
     const requestPath = ctx.request.path;

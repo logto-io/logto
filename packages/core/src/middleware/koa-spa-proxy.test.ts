@@ -1,6 +1,7 @@
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import Sinon from 'sinon';
 
-import envSet, { MountedApps } from '#src/env-set/index.js';
+import { EnvSet, MountedApps } from '#src/env-set/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -53,8 +54,8 @@ describe('koaSpaProxy middleware', () => {
   });
 
   it('production env should overwrite the request path to root if no target ui file are detected', async () => {
-    const spy = jest.spyOn(envSet, 'values', 'get').mockReturnValue({
-      ...envSet.values,
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
       isProduction: true,
     });
 
@@ -66,12 +67,12 @@ describe('koaSpaProxy middleware', () => {
 
     expect(mockStaticMiddleware).toBeCalled();
     expect(ctx.request.path).toEqual('/');
-    spy.mockRestore();
+    stub.restore();
   });
 
   it('production env should call the static middleware if path hit the ui file directory', async () => {
-    const spy = jest.spyOn(envSet, 'values', 'get').mockReturnValue({
-      ...envSet.values,
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
       isProduction: true,
     });
 
@@ -81,6 +82,6 @@ describe('koaSpaProxy middleware', () => {
 
     await koaSpaProxy()(ctx, next);
     expect(mockStaticMiddleware).toBeCalled();
-    spy.mockRestore();
+    stub.restore();
   });
 });

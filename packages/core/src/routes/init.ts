@@ -32,7 +32,7 @@ const createRouters = (tenant: TenantContext) => {
   interactionRoutes(interactionRouter, tenant);
 
   const managementRouter: AuthedRouter = new Router();
-  managementRouter.use(koaAuth(UserRole.Admin));
+  managementRouter.use(koaAuth(tenant.envSet, UserRole.Admin));
   applicationRoutes(managementRouter, tenant);
   settingRoutes(managementRouter, tenant);
   connectorRoutes(managementRouter, tenant);

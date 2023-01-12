@@ -5,7 +5,7 @@ import type { MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import type { IRouterParamContext } from 'koa-router';
 
-import envSet, { MountedApps } from '#src/env-set/index.js';
+import { EnvSet, MountedApps } from '#src/env-set/index.js';
 import serveStatic from '#src/middleware/koa-serve-static.js';
 
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
@@ -17,7 +17,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 
   const distributionPath = path.join('..', packagePath, 'dist');
 
-  const spaProxy: Middleware = envSet.values.isProduction
+  const spaProxy: Middleware = EnvSet.values.isProduction
     ? serveStatic(distributionPath)
     : proxy('*', {
         target: `http://localhost:${port}`,
@@ -45,7 +45,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
       return next();
     }
 
-    if (!envSet.values.isProduction) {
+    if (!EnvSet.values.isProduction) {
       return spaProxy(ctx, next);
     }
 

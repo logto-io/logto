@@ -8,13 +8,13 @@ import { tryThat } from '@logto/shared';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import envSet from '#src/env-set/index.js';
+import type { EnvSet } from '#src/env-set/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
-import { createUserLibrary } from '#src/libraries/user.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.js';
 import { routes } from '#src/routes/consts.js';
+import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -23,12 +23,7 @@ import { claimToUserKey, getUserClaims } from './scope.js';
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
 
-export default function initOidc(queries: Queries): Provider {
-  const {
-    applications: { findApplicationById },
-    resources: { findResourceByIndicator },
-    users: { findUserById },
-  } = queries;
+export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Libraries): Provider {
   const {
     issuer,
     cookieKeys,
@@ -37,7 +32,11 @@ export default function initOidc(queries: Queries): Provider {
     defaultIdTokenTtl,
     defaultRefreshTokenTtl,
   } = envSet.oidc;
-  const { findUserScopesForResourceId } = createUserLibrary(queries);
+  const {
+    applications: { findApplicationById },
+    resources: { findResourceByIndicator },
+  } = queries;
+  const { findUserByIdWithRoles, findUserScopesForResourceId } = libraries.users;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
 
   const cookieConfig = Object.freeze({
@@ -47,7 +46,7 @@ export default function initOidc(queries: Queries): Provider {
   } as const);
 
   const oidc = new Provider(issuer, {
-    adapter: postgresAdapter.bind(null, queries),
+    adapter: postgresAdapter.bind(null, envSet, queries),
     renderError: (_ctx, _out, error) => {
       console.error(error);
 
@@ -135,7 +134,7 @@ export default function initOidc(queries: Queries): Provider {
     claims: userClaims,
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
     findAccount: async (_ctx, sub) => {
-      const user = await findUserById(sub);
+      const user = await findUserByIdWithRoles(sub);
 
       return {
         accountId: sub,
@@ -191,7 +190,7 @@ export default function initOidc(queries: Queries): Provider {
       if (token.kind === 'AccessToken') {
         const { accountId } = token;
         const { roleNames } = await tryThat(
-          findUserById(accountId),
+          findUserByIdWithRoles(accountId),
           new errors.InvalidClient(`invalid user ${accountId}`)
         );
 

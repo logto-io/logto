@@ -3,7 +3,6 @@ import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql, NotFoundError } from 'slonik';
 
-import envSet from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import { isKeyOf } from '#src/utils/schema.js';
@@ -39,6 +38,3 @@ export const buildFindEntityByIdWithPool =
       }
     };
   };
-
-/** @deprecated Will be removed soon. Use buildFindEntityByIdWithPool() factory instead. */
-export const buildFindEntityById = buildFindEntityByIdWithPool(envSet.pool);

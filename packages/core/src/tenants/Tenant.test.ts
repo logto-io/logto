@@ -29,8 +29,8 @@ mockEsmDefault('#src/oidc/init.js', () => () => createMockProvider());
 const Tenant = await pickDefault(import('./Tenant.js'));
 
 describe('Tenant', () => {
-  it('should call middleware factories', () => {
-    const _ = new Tenant('foo');
+  it('should call middleware factories', async () => {
+    await Tenant.create('foo');
 
     for (const middleware of middlewareList) {
       expect(middleware).toBeCalled();

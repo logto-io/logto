@@ -10,7 +10,6 @@ import { has } from '@silverhand/essentials';
 import type { CommonQueryMethods, IdentifierSqlToken } from 'slonik';
 import { sql } from 'slonik';
 
-import envSet from '#src/env-set/index.js';
 import { InsertionError } from '#src/errors/SlonikError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -86,6 +85,3 @@ export const buildInsertIntoWithPool =
       return entry;
     };
   };
-
-/** @deprecated Will be removed soon. Use buildInsertIntoWithPool() factory instead. */
-export const buildInsertInto = buildInsertIntoWithPool(envSet.pool);

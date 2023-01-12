@@ -1,4 +1,4 @@
-import type { User, CreateUser, UserWithRoleNames } from '@logto/schemas';
+import type { User, CreateUser } from '@logto/schemas';
 import { SearchJointMode, Users } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
@@ -6,14 +6,9 @@ import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
-import envSet from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
-
-// TODO: @sijie remove this
-import { findRolesByRoleIds } from './roles.js';
-import { findUsersRolesByUserId } from './users-roles.js';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -39,22 +34,12 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       where ${fields.primaryPhone}=${phone}
     `);
 
-  const findUserById = async (id: string): Promise<UserWithRoleNames> => {
-    const user = await pool.one<User>(sql`
+  const findUserById = async (id: string): Promise<User> =>
+    pool.one<User>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
       where ${fields.id}=${id}
     `);
-    const userRoles = await findUsersRolesByUserId(user.id);
-
-    const roles =
-      userRoles.length > 0 ? await findRolesByRoleIds(userRoles.map(({ roleId }) => roleId)) : [];
-
-    return {
-      ...user,
-      roleNames: roles.map(({ name }) => name),
-    };
-  };
 
   const findUserByIdentity = async (target: string, userId: string) =>
     pool.maybeOne<User>(
@@ -252,25 +237,3 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     getDailyNewUserCountsByTimeInterval,
   };
 };
-
-/** @deprecated Will be removed soon. Use createUserQueries() factory instead. */
-export const {
-  findUserByUsername,
-  findUserByEmail,
-  findUserByPhone,
-  findUserById,
-  findUserByIdentity,
-  hasUser,
-  hasUserWithId,
-  hasUserWithEmail,
-  hasUserWithPhone,
-  hasUserWithIdentity,
-  countUsers,
-  findUsers,
-  findUsersByIds,
-  updateUserById,
-  deleteUserById,
-  deleteUserIdentity,
-  hasActiveUsers,
-  getDailyNewUserCountsByTimeInterval,
-} = createUserQueries(envSet.pool);

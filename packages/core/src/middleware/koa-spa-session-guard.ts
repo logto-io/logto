@@ -2,7 +2,7 @@ import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import type Provider from 'oidc-provider';
 
-import envSet from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { appendPath } from '#src/utils/url.js';
 
 // Need To Align With UI
@@ -20,7 +20,7 @@ export default function koaSpaSessionGuard<
   ContextT extends IRouterParamContext,
   ResponseBodyT
 >(provider: Provider): MiddlewareType<StateT, ContextT, ResponseBodyT> {
-  const { endpoint } = envSet.values;
+  const { endpoint } = EnvSet.values;
 
   return async (ctx, next) => {
     const requestPath = ctx.request.path;

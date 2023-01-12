@@ -7,7 +7,7 @@ import { jwtVerify } from 'jose';
 import type { MiddlewareType, Request } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
-import envSet from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -46,10 +46,11 @@ type TokenInfo = {
 };
 
 export const verifyBearerTokenFromRequest = async (
+  envSet: EnvSet,
   request: Request,
   resourceIndicator: Optional<string>
 ): Promise<TokenInfo> => {
-  const { isProduction, isIntegrationTest, developmentUserId } = envSet.values;
+  const { isProduction, isIntegrationTest, developmentUserId } = EnvSet.values;
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
 
   if ((!isProduction || isIntegrationTest) && userId) {
@@ -78,10 +79,12 @@ export const verifyBearerTokenFromRequest = async (
 };
 
 export default function koaAuth<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
+  envSet: EnvSet,
   forRole?: UserRole
 ): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     const { sub, clientId, roleNames } = await verifyBearerTokenFromRequest(
+      envSet,
       ctx.request,
       managementResource.indicator
     );

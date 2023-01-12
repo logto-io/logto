@@ -18,7 +18,6 @@ const { privateKey } = generateKeyPairSync('rsa', {
 const getOidcConfigs = async (): Promise<LogtoOidcConfigType> => ({
   [LogtoOidcConfigKey.PrivateKeys]: [privateKey],
   [LogtoOidcConfigKey.CookieKeys]: ['LOGTOSEKRIT1'],
-  [LogtoOidcConfigKey.RefreshTokenReuseInterval]: 3,
 });
 
 export const createLogtoConfigLibrary = () => ({ getOidcConfigs });

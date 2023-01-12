@@ -5,11 +5,11 @@ import { deduplicate } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type Koa from 'koa';
 
-import envSet from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { tenantPool, defaultTenant } from '#src/tenants/index.js';
 
 const logListening = () => {
-  const { localhostUrl, endpoint } = envSet.values;
+  const { localhostUrl, endpoint } = EnvSet.values;
 
   for (const url of deduplicate([localhostUrl, endpoint])) {
     console.log(chalk.bold(chalk.green(`App is running at ${url}`)));
@@ -19,12 +19,12 @@ const logListening = () => {
 export default async function initApp(app: Koa): Promise<void> {
   app.use(async (ctx, next) => {
     // TODO: add multi-tenancy logic
-    const tenant = tenantPool.get(defaultTenant);
+    const tenant = await tenantPool.get(defaultTenant);
 
     return tenant.run(ctx, next);
   });
 
-  const { isHttpsEnabled, httpsCert, httpsKey, port } = envSet.values;
+  const { isHttpsEnabled, httpsCert, httpsKey, port } = EnvSet.values;
 
   if (isHttpsEnabled && httpsCert && httpsKey) {
     http2

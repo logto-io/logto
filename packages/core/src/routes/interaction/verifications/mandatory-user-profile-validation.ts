@@ -4,7 +4,7 @@ import type { Nullable } from '@silverhand/essentials';
 import type { Context } from 'koa';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { findUserById } from '#src/queries/user.js';
+import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { WithInteractionSieContext } from '../middleware/koa-interaction-sie.js';
@@ -84,13 +84,15 @@ const validateRegisterMandatoryUserProfile = (profile?: Profile) => {
 };
 
 export default async function validateMandatoryUserProfile(
+  userQueries: Queries['users'],
   ctx: WithInteractionSieContext<Context>,
   interaction: IdentifierVerifiedInteractionResult
 ) {
   const { signUp } = ctx.signInExperience;
   const { event, accountId, profile } = interaction;
 
-  const user = event === InteractionEvent.Register ? null : await findUserById(accountId);
+  const user =
+    event === InteractionEvent.Register ? null : await userQueries.findUserById(accountId);
   const missingProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
 
   assertThat(

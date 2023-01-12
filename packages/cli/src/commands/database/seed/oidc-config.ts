@@ -2,7 +2,7 @@ import { readFile } from 'fs/promises';
 
 import type { LogtoOidcConfigType } from '@logto/schemas';
 import { LogtoOidcConfigKey } from '@logto/schemas';
-import { getEnv, getEnvAsStringArray } from '@silverhand/essentials';
+import { getEnvAsStringArray } from '@silverhand/essentials';
 
 import { generateOidcCookieKey, generateOidcPrivateKey } from '../utilities.js';
 
@@ -66,12 +66,5 @@ export const oidcConfigReaders: {
     const keys = getEnvAsStringArray(envKey);
 
     return { value: keys.length > 0 ? keys : [generateOidcCookieKey()], fromEnv: keys.length > 0 };
-  },
-  [LogtoOidcConfigKey.RefreshTokenReuseInterval]: async () => {
-    const envKey = 'OIDC_REFRESH_TOKEN_REUSE_INTERVAL';
-    const raw = Number(getEnv(envKey));
-    const value = Math.max(3, raw || 0);
-
-    return { value, fromEnv: raw === value };
   },
 };

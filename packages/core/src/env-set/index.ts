@@ -51,8 +51,11 @@ const loadEnvValues = () => {
   });
 };
 
-class EnvSet {
-  static envValues: ReturnType<typeof loadEnvValues> = loadEnvValues();
+export class EnvSet {
+  static values: ReturnType<typeof loadEnvValues> = loadEnvValues();
+  static get isTest() {
+    return this.values.isTest;
+  }
 
   #pool: Optional<DatabasePool>;
   // Use another pool for `withtyped` while adopting the new model,
@@ -60,15 +63,7 @@ class EnvSet {
   #queryClient: Optional<QueryClient<PostgreSql>>;
   #oidc: Optional<Awaited<ReturnType<typeof loadOidcValues>>>;
 
-  constructor(public readonly databaseUrl = EnvSet.envValues.dbUrl) {}
-
-  get values() {
-    return EnvSet.envValues;
-  }
-
-  get isTest() {
-    return EnvSet.envValues.isTest;
-  }
+  constructor(public readonly databaseUrl = EnvSet.values.dbUrl) {}
 
   get pool() {
     if (!this.#pool) {
@@ -103,20 +98,16 @@ class EnvSet {
   }
 
   async load() {
-    const pool = await createPool(this.databaseUrl, this.isTest);
+    const pool = await createPool(this.databaseUrl, EnvSet.isTest);
 
     this.#pool = pool;
-    this.#queryClient = createQueryClient(this.databaseUrl, this.isTest);
+    this.#queryClient = createQueryClient(this.databaseUrl, EnvSet.isTest);
 
     const { getOidcConfigs } = createLogtoConfigLibrary(pool);
     const [, oidcConfigs] = await Promise.all([checkAlterationState(pool), getOidcConfigs()]);
     this.#oidc = await loadOidcValues(
-      appendPath(this.values.endpoint, '/oidc').toString(),
+      appendPath(EnvSet.values.endpoint, '/oidc').toString(),
       oidcConfigs
     );
   }
 }
-
-const envSet = new EnvSet();
-
-export default envSet;

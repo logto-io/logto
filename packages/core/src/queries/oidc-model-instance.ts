@@ -12,21 +12,27 @@ import type { CommonQueryMethods, ValueExpression } from 'slonik';
 import { sql } from 'slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
-import envSet from '#src/env-set/index.js';
 
 export type WithConsumed<T> = T & { consumed?: boolean };
 export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
 
 const { table, fields } = convertToIdentifiers(OidcModelInstances);
 
+/**
+ * This interval helps to avoid concurrency issues when exchanging the rotating refresh token multiple times within a given timeframe;
+ * During the leeway window (in seconds), the consumed refresh token will be considered as valid.
+ *
+ * This is useful for distributed apps and serverless apps like Next.js, in which there is no shared memory.
+ */
+// Hard-code this value since 3 seconds is a reasonable number for concurrency and no need for further configuration
+const refreshTokenReuseInterval = 3;
+
 const isConsumed = (modelName: string, consumedAt: Nullable<number>): boolean => {
   if (!consumedAt) {
     return false;
   }
 
-  const { refreshTokenReuseInterval } = envSet.oidc;
-
-  if (modelName !== 'RefreshToken' || !refreshTokenReuseInterval) {
+  if (modelName !== 'RefreshToken') {
     return Boolean(consumedAt);
   }
 
