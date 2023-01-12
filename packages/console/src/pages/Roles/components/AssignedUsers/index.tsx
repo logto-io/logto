@@ -20,7 +20,7 @@ const AssignedUsers = ({ users, count }: Props) =>
       <span className={styles.count}>{count.toLocaleString()}</span>
     </div>
   ) : (
-    <span className={styles.empty}>-</span>
+    <div className={styles.empty}>-</div>
   );
 
 export default AssignedUsers;
