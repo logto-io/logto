@@ -11,6 +11,7 @@ export type Props = AnchorHTMLAttributes<HTMLAnchorElement> & {
   className?: string;
   children?: ReactNode;
   text?: TFuncKey;
+  icon?: ReactNode;
   type?: 'primary' | 'secondary' | 'inlinePrimary';
 } & Partial<LinkProps>;
 
