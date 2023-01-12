@@ -1,7 +1,7 @@
 import type { ResourceResponse, Scope, ScopeResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { ChangeEvent } from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -23,8 +23,6 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data = [] } = useSWR<ResourceResponse[]>('/api/resources?includeScopes=true');
   const { data: roleScopes = [] } = useSWR<Scope[]>(roleId && `/api/roles/${roleId}/scopes`);
-
-  const excludeScopeIds = new Set(roleScopes.map(({ id }) => id));
 
   const [keyword, setKeyword] = useState('');
 
@@ -59,33 +57,40 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
   const getResourceSelectedScopes = ({ scopes }: DetailedResourceResponse) =>
     scopes.filter((scope) => selectedScopes.findIndex(({ id }) => id === scope.id) >= 0);
 
-  const resources = data
-    .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.has(id)))
-    .map(({ scopes, ...resource }) => ({
-      ...resource,
-      scopes: scopes
-        .filter(({ id }) => !excludeScopeIds.has(id))
-        .map((scope) => ({
-          ...scope,
-          resource,
-        })),
-    }));
+  const resources = useMemo(() => {
+    const excludeScopeIds = new Set(roleScopes.map(({ id }) => id));
 
-  const dataSource =
-    conditional(
-      keyword &&
-        resources
-          .filter(({ name, scopes }) => {
-            return name.includes(keyword) || scopes.some(({ name }) => name.includes(keyword));
-          })
-          .map(({ scopes, ...resource }) => ({
-            ...resource,
-            scopes: scopes.filter(
-              ({ name, resource }) => name.includes(keyword) || resource.name.includes(keyword)
-            ),
-          }))
-          .filter(({ scopes }) => scopes.length > 0)
-    ) ?? resources;
+    return data
+      .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.has(id)))
+      .map(({ scopes, ...resource }) => ({
+        ...resource,
+        scopes: scopes
+          .filter(({ id }) => !excludeScopeIds.has(id))
+          .map((scope) => ({
+            ...scope,
+            resource,
+          })),
+      }));
+  }, [data, roleScopes]);
+
+  const dataSource = useMemo(
+    () =>
+      conditional(
+        keyword &&
+          resources
+            .filter(({ name, scopes }) => {
+              return name.includes(keyword) || scopes.some(({ name }) => name.includes(keyword));
+            })
+            .map(({ scopes, ...resource }) => ({
+              ...resource,
+              scopes: scopes.filter(
+                ({ name, resource }) => name.includes(keyword) || resource.name.includes(keyword)
+              ),
+            }))
+            .filter(({ scopes }) => scopes.length > 0)
+      ) ?? resources,
+    [keyword, resources]
+  );
 
   return (
     <div className={transferLayout.box}>
