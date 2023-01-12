@@ -57,7 +57,7 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
   const getResourceSelectedScopes = ({ scopes }: DetailedResourceResponse) =>
     scopes.filter((scope) => selectedScopes.findIndex(({ id }) => id === scope.id) >= 0);
 
-  const resources = useMemo(() => {
+  const resources: DetailedResourceResponse[] = useMemo(() => {
     const excludeScopeIds = new Set(roleScopes.map(({ id }) => id));
 
     return data
