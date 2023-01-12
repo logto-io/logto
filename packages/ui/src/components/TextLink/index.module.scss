@@ -11,9 +11,13 @@
   }
 
   &.primary {
+    font: var(--font-label-2);
+  }
+
+  &.primary,
+  &.inlinePrimary {
     color: var(--color-brand-default);
     text-decoration: none;
-    font: var(--font-label-2);
 
     &:active {
       color: var(--color-brand-hover);
@@ -29,11 +33,13 @@
 
 :global(body.desktop) {
   .link {
-    &.primary:hover {
+    &.primary:hover,
+    &.inlinePrimary:hover {
       color: var(--color-brand-hover);
     }
 
-    &.primary:focus-visible {
+    &.primary:focus-visible,
+    &.inlinePrimary:focus-visible {
       outline: _.border(var(--color-overlay-brand-focused));
     }
 

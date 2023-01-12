@@ -37,6 +37,7 @@ const OtherMethodsLink = ({ methods, template, search, flow, className }: Props)
         <TextLink
           key={identifier}
           className={styles.signInMethodLink}
+          type="inlinePrimary"
           text={`input.${SignInMethodsKeyMap[identifier]}`}
           to={{ pathname: `/${flow}/${identifier}`, search }}
         />
