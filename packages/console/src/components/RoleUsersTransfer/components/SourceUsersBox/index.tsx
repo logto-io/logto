@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import Search from '@/assets/images/search.svg';
 import Pagination from '@/components/Pagination';
 import TextInput from '@/components/TextInput';
+import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useDebounce from '@/hooks/use-debounce';
 import { formatKeyword } from '@/hooks/use-table-search-params';
@@ -23,7 +24,6 @@ type Props = {
   selectedUsers: User[];
 };
 
-const pageSize = 20;
 const searchDelay = 500;
 
 const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
@@ -36,7 +36,7 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
     excludeRoleId: roleId,
     hideAdminUser: String(true),
     page: String(pageIndex),
-    page_size: String(pageSize),
+    page_size: String(defaultPageSize),
     ...conditional(keyword && { search: formatKeyword(keyword) }),
   });
 
@@ -87,7 +87,7 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
         mode="pico"
         pageIndex={pageIndex}
         totalCount={totalCount}
-        pageSize={pageSize}
+        pageSize={defaultPageSize}
         className={transferLayout.boxPagination}
         onChange={(page) => {
           setPageIndex(page);
