@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { VerificationCodeIdentifier } from '@/types';
+import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 export enum IdentifierErrorType {
   IdentifierNotExist = 'IdentifierNotExist',
@@ -33,7 +34,10 @@ const useIdentifierErrorAlert = () => {
             type: t(
               `description.${identifierType === SignInIdentifier.Email ? 'email' : 'phone_number'}`
             ),
-            identifier,
+            identifier:
+              identifierType === SignInIdentifier.Email
+                ? identifier
+                : formatPhoneNumberWithCountryCallingCode(identifier),
           }
         ),
         cancelText: 'action.got_it',

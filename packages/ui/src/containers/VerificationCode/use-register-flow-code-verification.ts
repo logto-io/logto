@@ -14,6 +14,7 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
+import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
 import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
@@ -52,7 +53,10 @@ const useRegisterFlowCodeVerification = (
       confirmText: 'action.sign_in',
       ModalContent: t('description.create_account_id_exists', {
         type: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
-        value: target,
+        value:
+          method === SignInIdentifier.Email
+            ? target
+            : formatPhoneNumberWithCountryCallingCode(target),
       }),
     });
 
