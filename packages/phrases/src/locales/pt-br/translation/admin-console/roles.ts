@@ -5,6 +5,7 @@ const roles = {
   create: 'Add Roles', // UNTRANSLATED
   role_name: 'Role', // UNTRANSLATED
   role_description: 'Description', // UNTRANSLATED
+  assigned_users: 'Assigned users', // UNTRANSLATED
   assign_permissions: 'Assign permissions', // UNTRANSLATED
   create_role_title: 'Create a role', // UNTRANSLATED
   create_role_description:
