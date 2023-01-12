@@ -28,9 +28,9 @@ export default function resourceRoutes<T extends AuthedRouter>(
       deleteResourceById,
     },
     scopes: {
-      countScopes,
+      countScopesByResourceId,
       deleteScopeById,
-      findScopes,
+      searchScopesByResourceId,
       findScopeByNameAndResourceId,
       insertScope,
       updateScopeById,
@@ -137,28 +137,22 @@ export default function resourceRoutes<T extends AuthedRouter>(
 
   router.get(
     '/resources/:resourceId/scopes',
-    koaPagination({ isOptional: true }),
+    koaPagination(),
     koaGuard({ params: object({ resourceId: string().min(1) }) }),
     async (ctx, next) => {
       const {
         params: { resourceId },
       } = ctx.guard;
-      const { limit, offset, disabled } = ctx.pagination;
+      const { limit, offset } = ctx.pagination;
       const { searchParams } = ctx.request.URL;
 
       return tryThat(
         async () => {
           const search = parseSearchParamsForSearch(searchParams);
 
-          if (disabled) {
-            ctx.body = await findScopes(resourceId, search);
-
-            return next();
-          }
-
           const [{ count }, roles] = await Promise.all([
-            countScopes(resourceId, search),
-            findScopes(resourceId, search, limit, offset),
+            countScopesByResourceId(resourceId, search),
+            searchScopesByResourceId(resourceId, search, limit, offset),
           ]);
 
           // Return totalCount to pagination middleware

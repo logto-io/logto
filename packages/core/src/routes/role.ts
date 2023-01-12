@@ -1,5 +1,5 @@
 import { buildIdGenerator } from '@logto/core-kit';
-import type { RoleResponse, ScopeResponse } from '@logto/schemas';
+import type { RoleResponse } from '@logto/schemas';
 import { userInfoSelectFields, Roles } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
 import { pick } from '@silverhand/essentials';
@@ -19,8 +19,7 @@ export default function roleRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {
-    resources: { findResourcesByIds },
-    rolesScopes: { deleteRolesScope, findRolesScopesByRoleId, insertRolesScopes },
+    rolesScopes: { insertRolesScopes },
     roles: {
       countRoles,
       deleteRoleById,
@@ -30,7 +29,7 @@ export default function roleRoutes<T extends AuthedRouter>(
       insertRole,
       updateRoleById,
     },
-    scopes: { findScopeById, findScopesByIds },
+    scopes: { findScopeById },
     users: { findUserById, findUsersByIds },
     usersRoles: {
       countUsersRolesByRoleId,
@@ -183,90 +182,6 @@ export default function roleRoutes<T extends AuthedRouter>(
         params: { id },
       } = ctx.guard;
       await deleteRoleById(id);
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  router.get(
-    '/roles/:id/scopes',
-    koaGuard({
-      params: object({ id: string().min(1) }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { id },
-      } = ctx.guard;
-
-      await findRoleById(id);
-      const rolesScopes = await findRolesScopesByRoleId(id);
-      const scopes = await findScopesByIds(rolesScopes.map(({ scopeId }) => scopeId));
-      const resources = await findResourcesByIds(scopes.map(({ resourceId }) => resourceId));
-      const result: ScopeResponse[] = scopes.map((scope) => {
-        const resource = resources.find(({ id }) => scope.resourceId);
-
-        assertThat(resource, new Error(`Cannot find resource for id ${scope.resourceId}`));
-
-        return {
-          ...scope,
-          resource,
-        };
-      });
-
-      ctx.body = result;
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/roles/:id/scopes',
-    koaGuard({
-      params: object({ id: string().min(1) }),
-      body: object({ scopeIds: string().min(1).array() }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { id },
-        body: { scopeIds },
-      } = ctx.guard;
-
-      await findRoleById(id);
-      const rolesScopes = await findRolesScopesByRoleId(id);
-
-      for (const scopeId of scopeIds) {
-        assertThat(
-          !rolesScopes.some(({ scopeId: _scopeId }) => _scopeId === scopeId),
-          new RequestError({
-            code: 'role.scope_exists',
-            status: 422,
-            scopeId,
-          })
-        );
-      }
-
-      await Promise.all(scopeIds.map(async (scopeId) => findScopeById(scopeId)));
-      await insertRolesScopes(scopeIds.map((scopeId) => ({ roleId: id, scopeId })));
-
-      const newRolesScopes = await findRolesScopesByRoleId(id);
-      const scopes = await findScopesByIds(newRolesScopes.map(({ scopeId }) => scopeId));
-      ctx.body = scopes;
-
-      return next();
-    }
-  );
-
-  router.delete(
-    '/roles/:id/scopes/:scopeId',
-    koaGuard({
-      params: object({ id: string().min(1), scopeId: string().min(1) }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { id, scopeId },
-      } = ctx.guard;
-      await deleteRolesScope(id, scopeId);
       ctx.status = 204;
 
       return next();

@@ -28,9 +28,8 @@ const { findRoleByRoleName, findRoleById, deleteRoleById } = roles;
 
 const scopes = {
   findScopeById: jest.fn(),
-  findScopesByIds: jest.fn(),
 };
-const { findScopeById, findScopesByIds } = scopes;
+const { findScopeById } = scopes;
 
 const resources = {
   findResourcesByIds: jest.fn(async () => [mockResource]),
@@ -38,10 +37,9 @@ const resources = {
 
 const rolesScopes = {
   insertRolesScopes: jest.fn(),
-  findRolesScopesByRoleId: jest.fn(),
   deleteRolesScope: jest.fn(),
 };
-const { insertRolesScopes, findRolesScopesByRoleId } = rolesScopes;
+const { insertRolesScopes } = rolesScopes;
 
 const users = {
   findUsersByIds: jest.fn(),
@@ -154,40 +152,6 @@ describe('role routes', () => {
     const response = await roleRequester.delete(`/roles/${mockRole.id}`);
     expect(response.status).toEqual(204);
     expect(deleteRoleById).toHaveBeenCalledWith(mockRole.id);
-  });
-
-  it('GET /roles/:id/scopes', async () => {
-    findRoleById.mockResolvedValueOnce(mockRole);
-    findRolesScopesByRoleId.mockResolvedValueOnce([]);
-    findScopesByIds.mockResolvedValueOnce([mockScope]);
-    const response = await roleRequester.get(`/roles/${mockRole.id}/scopes`);
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual([
-      {
-        ...mockScope,
-        resource: mockResource,
-      },
-    ]);
-  });
-
-  it('POST /roles/:id/scopes', async () => {
-    findRoleById.mockResolvedValueOnce(mockRole);
-    findRolesScopesByRoleId.mockResolvedValue([]);
-    findScopesByIds.mockResolvedValueOnce([]);
-    const response = await roleRequester.post(`/roles/${mockRole.id}/scopes`).send({
-      scopeIds: [mockScope.id],
-    });
-    expect(response.status).toEqual(200);
-    expect(insertRolesScopes).toHaveBeenCalledWith([
-      { roleId: mockRole.id, scopeId: mockScope.id },
-    ]);
-  });
-
-  it('DELETE /roles/:id/scopes/:scopeId', async () => {
-    findRoleById.mockResolvedValueOnce(mockRole);
-    findRolesScopesByRoleId.mockResolvedValueOnce([]);
-    const response = await roleRequester.delete(`/roles/${mockRole.id}/scopes/${mockScope.id}`);
-    expect(response.status).toEqual(204);
   });
 
   it('GET /roles/:id/users', async () => {
