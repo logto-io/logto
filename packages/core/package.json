@@ -34,7 +34,7 @@
     "@logto/schemas": "workspace:*",
     "@logto/shared": "workspace:*",
     "@silverhand/essentials": "2.1.0",
-    "@withtyped/postgres": "^0.3.1",
+    "@withtyped/postgres": "^0.4.0",
     "@withtyped/server": "^0.3.1",
     "chalk": "^5.0.0",
     "clean-deep": "^3.4.0",
