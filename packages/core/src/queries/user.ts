@@ -105,7 +105,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       `
     );
 
-  const buildUserConditions = (search: Search, excludeUserIds: string[]) => {
+  const buildUserConditions = (search: Search, excludeUserIds: string[], userIds?: string[]) => {
     const hasSearch = search.matches.length > 0;
     const searchFields = [
       Users.fields.id,
@@ -127,6 +127,16 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       `;
     }
 
+    if (userIds) {
+      return sql`
+        where ${fields.id} in (${userIds.length > 0 ? sql.join(userIds, sql`, `) : sql`null`})
+        ${conditionalSql(
+          hasSearch,
+          () => sql`and (${buildConditionsFromSearch(search, searchFields)})`
+        )}
+      `;
+    }
+
     return conditionalSql(
       hasSearch,
       () => sql`where ${buildConditionsFromSearch(search, searchFields)}`
@@ -135,18 +145,23 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
 
   const defaultUserSearch = { matches: [], isCaseSensitive: false, joint: SearchJointMode.Or };
 
-  const countUsers = async (search: Search = defaultUserSearch, excludeUserIds: string[] = []) =>
+  const countUsers = async (
+    search: Search = defaultUserSearch,
+    excludeUserIds: string[] = [],
+    userIds?: string[]
+  ) =>
     pool.one<{ count: number }>(sql`
       select count(*)
       from ${table}
-      ${buildUserConditions(search, excludeUserIds)}
+      ${buildUserConditions(search, excludeUserIds, userIds)}
     `);
 
   const findUsers = async (
     limit: number,
     offset: number,
     search: Search,
-    excludeUserIds: string[] = []
+    excludeUserIds: string[] = [],
+    userIds?: string[]
   ) =>
     pool.any<User>(
       sql`
@@ -155,7 +170,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
           sql`,`
         )}
         from ${table}
-        ${buildUserConditions(search, excludeUserIds)}
+        ${buildUserConditions(search, excludeUserIds, userIds)}
         limit ${limit}
         offset ${offset}
       `

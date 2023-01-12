@@ -44,6 +44,8 @@ const { insertRolesScopes } = rolesScopes;
 const users = {
   findUsersByIds: jest.fn(),
   findUserById: jest.fn(),
+  countUsers: jest.fn(async () => ({ count: 1 })),
+  findUsers: jest.fn(async () => [mockUser]),
 };
 const { findUsersByIds } = users;
 
