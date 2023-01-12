@@ -17,8 +17,6 @@ const Toast = ({ message, duration = 3000, callback }: Props) => {
       return;
     }
 
-    const { activeElement } = document;
-
     setText(message);
 
     const timer = setTimeout(() => {
