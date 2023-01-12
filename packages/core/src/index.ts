@@ -3,15 +3,15 @@ import dotenv from 'dotenv';
 import { findUp } from 'find-up';
 import Koa from 'koa';
 
-import { EnvSet } from './env-set/index.js';
 import initI18n from './i18n/init.js';
-import { tenantPool } from './tenants/index.js';
 
 dotenv.config({ path: await findUp('.env', {}) });
 
 // Import after env has configured
 
 const { loadConnectorFactories } = await import('./utils/connectors/factories.js');
+const { EnvSet } = await import('./env-set/index.js');
+const { tenantPool } = await import('./tenants/index.js');
 
 try {
   const app = new Koa({
