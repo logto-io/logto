@@ -30,7 +30,6 @@ const SourceUserItem = ({ user: { avatar, name }, isSelected, onSelect }: Props)
     >
       <Checkbox
         checked={isSelected}
-        disabled={false}
         onChange={() => {
           onSelect();
         }}

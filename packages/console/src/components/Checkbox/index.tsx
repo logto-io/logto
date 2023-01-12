@@ -10,7 +10,7 @@ import * as styles from './index.module.scss';
 type Props = {
   /* eslint-disable react/boolean-prop-naming */
   checked: boolean;
-  disabled: boolean;
+  disabled?: boolean;
   indeterminate?: boolean;
   /* eslint-enable react/boolean-prop-naming */
   onChange: (value: boolean) => void;
@@ -21,7 +21,7 @@ type Props = {
 
 const Checkbox = ({
   checked,
-  disabled,
+  disabled = false,
   indeterminate,
   onChange,
   label,

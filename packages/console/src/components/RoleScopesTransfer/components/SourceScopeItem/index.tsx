@@ -15,7 +15,6 @@ const SourceScopeItem = ({ scope, scope: { name }, isSelected, onSelect }: Props
   <div className={styles.sourceScopeItem}>
     <Checkbox
       checked={isSelected}
-      disabled={false}
       onChange={() => {
         onSelect(scope);
       }}
