@@ -1,3 +1,5 @@
+import { assert } from '@silverhand/essentials';
+
 export const generateName = () => crypto.randomUUID();
 export const generateUserId = () => crypto.randomUUID();
 export const generateUsername = () => `usr_${crypto.randomUUID().replaceAll('-', '_')}`;
@@ -19,3 +21,12 @@ export const waitFor = async (ms: number) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
+
+export const getAccessTokenPayload = (accessToken: string): Record<string, unknown> => {
+  const payloadPart = accessToken.split('.')[1];
+  assert(typeof payloadPart === 'string', new Error('Invalid access token'));
+  const payload = Buffer.from(payloadPart, 'base64').toString();
+
+  // eslint-disable-next-line no-restricted-syntax
+  return JSON.parse(payload) as Record<string, unknown>;
+};

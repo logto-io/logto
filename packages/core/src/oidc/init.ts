@@ -92,9 +92,8 @@ export default function initOidc(queries: Queries): Provider {
             throw new errors.InvalidTarget();
           }
 
-          const scopes = ctx.oidc.account
-            ? await findUserScopesForResourceId(ctx.oidc.account.accountId, resourceServer.id)
-            : [];
+          const userId = ctx.oidc.session?.accountId;
+          const scopes = userId ? await findUserScopesForResourceId(userId, resourceServer.id) : [];
 
           const { accessTokenTtl: accessTokenTTL } = resourceServer;
 
