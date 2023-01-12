@@ -2,6 +2,7 @@ import { adminConsoleAdminRoleId } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { assignRolesToUser, getUserRoles, deleteRoleFromUser } from '#src/api/index.js';
+import { createRole } from '#src/api/role.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 
 describe('admin console user management (roles)', () => {
@@ -14,10 +15,11 @@ describe('admin console user management (roles)', () => {
 
   it('should assign role to user and get list successfully', async () => {
     const user = await createUserByAdmin();
+    const role = await createRole();
 
-    await assignRolesToUser(user.id, [adminConsoleAdminRoleId]);
+    await assignRolesToUser(user.id, [role.id]);
     const roles = await getUserRoles(user.id);
-    expect(roles[0]).toHaveProperty('id', adminConsoleAdminRoleId);
+    expect(roles[0]).toHaveProperty('id', role.id);
   });
 
   it('should delete role from user successfully', async () => {

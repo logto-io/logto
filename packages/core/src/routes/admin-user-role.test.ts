@@ -11,6 +11,8 @@ const users = { findUserById: jest.fn() };
 const roles = {
   findRolesByRoleIds: jest.fn(),
   findRoleById: jest.fn(),
+  countRoles: jest.fn(async () => ({ count: 1 })),
+  findRoles: jest.fn(async () => [mockRole]),
 };
 const { findRolesByRoleIds } = roles;
 
@@ -30,7 +32,6 @@ describe('user role routes', () => {
 
   it('GET /users/:id/roles', async () => {
     findUsersRolesByUserId.mockResolvedValueOnce([]);
-    findRolesByRoleIds.mockResolvedValueOnce([mockRole]);
     const response = await roleRequester.get(`/users/${mockUser.id}/roles`);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([mockRole]);

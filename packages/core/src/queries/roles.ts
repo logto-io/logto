@@ -28,7 +28,10 @@ const buildRoleConditions = (search: Search) => {
 export const defaultUserSearch = { matches: [], isCaseSensitive: false, joint: SearchJointMode.Or };
 
 export const createRolesQueries = (pool: CommonQueryMethods) => {
-  const countRoles = async (search: Search = defaultUserSearch, excludeRoleIds: string[] = []) =>
+  const countRoles = async (
+    search: Search = defaultUserSearch,
+    { excludeRoleIds = [], roleIds = [] }: { excludeRoleIds?: string[]; roleIds?: string[] } = {}
+  ) =>
     pool.one<{ count: number }>(sql`
       select count(*)
       from ${table}
@@ -37,14 +40,19 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
         excludeRoleIds,
         (value) => sql`and ${fields.id} not in (${sql.join(value, sql`, `)})`
       )}
+      ${conditionalSql(
+        roleIds,
+        (value) =>
+          sql`and ${fields.id} in (${value.length > 0 ? sql.join(value, sql`, `) : sql`null`})`
+      )}
       ${buildRoleConditions(search)}
     `);
 
   const findRoles = async (
     search: Search,
-    excludeRoleIds: string[] = [],
     limit?: number,
-    offset?: number
+    offset?: number,
+    { excludeRoleIds = [], roleIds }: { excludeRoleIds?: string[]; roleIds?: string[] } = {}
   ) =>
     pool.any<Role>(
       sql`
@@ -54,6 +62,11 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
         ${conditionalArraySql(
           excludeRoleIds,
           (value) => sql`and ${fields.id} not in (${sql.join(value, sql`, `)})`
+        )}
+        ${conditionalSql(
+          roleIds,
+          (value) =>
+            sql`and ${fields.id} in (${value.length > 0 ? sql.join(value, sql`, `) : sql`null`})`
         )}
         ${buildRoleConditions(search)}
         ${conditionalSql(limit, (value) => sql`limit ${value}`)}

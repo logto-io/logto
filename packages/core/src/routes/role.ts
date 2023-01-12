@@ -41,8 +41,8 @@ export default function roleRoutes<T extends AuthedRouter>(
     },
   } = queries;
 
-  router.get('/roles', koaPagination({ isOptional: true }), async (ctx, next) => {
-    const { limit, offset, disabled } = ctx.pagination;
+  router.get('/roles', koaPagination(), async (ctx, next) => {
+    const { limit, offset } = ctx.pagination;
     const { searchParams } = ctx.request.URL;
 
     return tryThat(
@@ -52,15 +52,9 @@ export default function roleRoutes<T extends AuthedRouter>(
         const usersRoles = excludeUserId ? await findUsersRolesByUserId(excludeUserId) : [];
         const excludeRoleIds = usersRoles.map(({ roleId }) => roleId);
 
-        if (disabled) {
-          ctx.body = await findRoles(search, excludeRoleIds);
-
-          return next();
-        }
-
         const [{ count }, roles] = await Promise.all([
-          countRoles(search, excludeRoleIds),
-          findRoles(search, excludeRoleIds, limit, offset),
+          countRoles(search, { excludeRoleIds }),
+          findRoles(search, limit, offset, { excludeRoleIds }),
         ]);
 
         const rolesResponse: RoleResponse[] = await Promise.all(
