@@ -10,6 +10,7 @@ import snakecaseKeys from 'snakecase-keys';
 
 import envSet from '#src/env-set/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
+import { createUserLibrary } from '#src/libraries/user.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.js';
@@ -36,6 +37,7 @@ export default function initOidc(queries: Queries): Provider {
     defaultIdTokenTtl,
     defaultRefreshTokenTtl,
   } = envSet.oidc;
+  const { findUserScopesForResourceId } = createUserLibrary(queries);
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
 
   const cookieConfig = Object.freeze({
@@ -83,18 +85,22 @@ export default function initOidc(queries: Queries): Provider {
         defaultResource: () => '',
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
-        getResourceServerInfo: async (_, indicator) => {
+        getResourceServerInfo: async (ctx, indicator) => {
           const resourceServer = await findResourceByIndicator(indicator);
 
           if (!resourceServer) {
             throw new errors.InvalidTarget();
           }
 
+          const scopes = ctx.oidc.account
+            ? await findUserScopesForResourceId(ctx.oidc.account.accountId, resourceServer.id)
+            : [];
+
           const { accessTokenTtl: accessTokenTTL } = resourceServer;
 
           return {
             accessTokenFormat: 'jwt',
-            scope: '',
+            scope: scopes.map(({ name }) => name).join(' '),
             accessTokenTTL,
             jwt: {
               sign: { alg: jwkSigningAlg },

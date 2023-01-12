@@ -25,6 +25,15 @@ export const createRolesScopesQueries = (pool: CommonQueryMethods) => {
       where ${fields.roleId}=${roleId}
     `);
 
+  const findRolesScopesByRoleIds = async (roleIds: string[]) =>
+    roleIds.length > 0
+      ? pool.any<RolesScope>(sql`
+        select ${sql.join(Object.values(fields), sql`,`)}
+        from ${table}
+        where ${fields.roleId} in (${sql.join(roleIds, sql`, `)})
+      `)
+      : [];
+
   const deleteRolesScope = async (roleId: string, scopeId: string) => {
     const { rowCount } = await pool.query(sql`
       delete from ${table}
@@ -36,5 +45,5 @@ export const createRolesScopesQueries = (pool: CommonQueryMethods) => {
     }
   };
 
-  return { insertRolesScopes, findRolesScopesByRoleId, deleteRolesScope };
+  return { insertRolesScopes, findRolesScopesByRoleId, findRolesScopesByRoleIds, deleteRolesScope };
 };
