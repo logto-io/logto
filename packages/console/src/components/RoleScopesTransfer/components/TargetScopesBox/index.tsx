@@ -26,7 +26,7 @@ const TargetScopesBox = ({ selectedScopes, onChange }: Props) => {
           <TargetScopeItem
             key={scope.id}
             scope={scope}
-            onDelete={() => {
+            onDelete={(scope) => {
               onChange(selectedScopes.filter(({ id }) => id !== scope.id));
             }}
           />
