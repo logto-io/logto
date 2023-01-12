@@ -12,7 +12,7 @@ type Props = {
 };
 
 const SourceScopeItem = ({ scope, scope: { name }, isSelected, onSelect }: Props) => (
-  <div className={styles.sourcePermissionItem}>
+  <div className={styles.sourceScopeItem}>
     <Checkbox
       checked={isSelected}
       disabled={false}

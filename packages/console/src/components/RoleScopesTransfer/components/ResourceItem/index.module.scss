@@ -24,7 +24,7 @@
         @include _.text-ellipsis;
       }
 
-      .permissionInfo {
+      .scopeInfo {
         font: var(--font-body-medium);
         color: var(--color-text-secondary);
         margin-left: _.unit(2);

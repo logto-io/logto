@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.sourcePermissionItem {
+.sourceScopeItem {
   display: flex;
   align-items: center;
   padding: _.unit(1.5) _.unit(7);

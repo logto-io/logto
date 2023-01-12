@@ -54,7 +54,7 @@ const ResourceItem = ({ resource, selectedScopes, onSelectResource, onSelectScop
             <CaretExpanded className={styles.caret} />
           )}
           <div className={styles.name}>{name}</div>
-          <div className={styles.permissionInfo}>
+          <div className={styles.scopeInfo}>
             ({t('role_details.permission.api_permission_count', { value: scopes.length })})
           </div>
         </div>
