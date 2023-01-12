@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.targetPermissionItem {
+.targetScopeItem {
   display: flex;
   align-items: center;
   padding: _.unit(1.5) _.unit(4);
@@ -27,5 +27,9 @@
 
   .icon {
     color: var(--color-text-secondary);
+  }
+
+  &:hover {
+    background: var(--color-hover);
   }
 }

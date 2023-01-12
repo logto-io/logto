@@ -9,25 +9,20 @@ import Checkbox from '@/components/Checkbox';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import type { DetailedResourceResponse } from '../../types';
-import SourcePermissionItem from '../SourcePermissionItem';
+import SourceScopeItem from '../SourceScopeItem';
 import * as styles from './index.module.scss';
 
 type Props = {
   resource: DetailedResourceResponse;
-  selectedPermissions: ScopeResponse[];
+  selectedScopes: ScopeResponse[];
   onSelectResource: (resource: DetailedResourceResponse) => void;
-  onSelectPermission: (scope: ScopeResponse) => void;
+  onSelectScope: (scope: ScopeResponse) => void;
 };
 
-const ResourceItem = ({
-  resource,
-  selectedPermissions,
-  onSelectResource,
-  onSelectPermission,
-}: Props) => {
+const ResourceItem = ({ resource, selectedScopes, onSelectResource, onSelectScope }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { name, scopes } = resource;
-  const selectedScopesCount = selectedPermissions.length;
+  const selectedScopesCount = selectedScopes.length;
   const totalScopesCount = scopes.length;
   const [isScopesInvisible, setIsScopesInvisible] = useState(true);
 
@@ -59,18 +54,18 @@ const ResourceItem = ({
             <CaretExpanded className={styles.caret} />
           )}
           <div className={styles.name}>{name}</div>
-          <div className={styles.permissionInfo}>
+          <div className={styles.scopeInfo}>
             ({t('role_details.permission.api_permission_count', { value: scopes.length })})
           </div>
         </div>
       </div>
       <div className={classNames(isScopesInvisible && styles.invisible)}>
         {scopes.map((scope) => (
-          <SourcePermissionItem
+          <SourceScopeItem
             key={scope.id}
             scope={scope}
-            isSelected={selectedPermissions.findIndex(({ id }) => scope.id === id) >= 0}
-            onSelectPermission={onSelectPermission}
+            isSelected={selectedScopes.findIndex(({ id }) => scope.id === id) >= 0}
+            onSelect={onSelectScope}
           />
         ))}
       </div>
