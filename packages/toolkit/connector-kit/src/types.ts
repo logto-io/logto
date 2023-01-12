@@ -168,6 +168,7 @@ export type GetAuthorizationUri = (
   payload: {
     state: string;
     redirectUri: string;
+    customConfigs?: Record<string, unknown>;
     headers?: { userAgent?: string };
   },
   setSession?: SetSession
