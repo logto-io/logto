@@ -9,11 +9,18 @@ import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 
 import Button from '../Button';
 import IconButton from '../IconButton';
+import type { Props as PaginationProps } from '../Pagination';
 import Search from '../Search';
 import Table from '../Table';
 import type { Column } from '../Table/types';
 import TextLink from '../TextLink';
 import * as styles from './index.module.scss';
+
+type SearchProps = {
+  keyword: string;
+  searchHandler: (value: string) => void;
+  clearSearchHandler: () => void;
+};
 
 type Props = {
   scopes?: ScopeResponse[];
@@ -21,6 +28,8 @@ type Props = {
   errorMessage?: string;
   createButtonTitle: AdminConsoleKey;
   isApiColumnVisible?: boolean;
+  pagination?: PaginationProps;
+  search: SearchProps;
   createHandler: () => void;
   deleteHandler: (ScopeResponse: ScopeResponse) => void;
   retryHandler: () => void;
@@ -32,6 +41,8 @@ const PermissionsTable = ({
   errorMessage,
   createButtonTitle,
   isApiColumnVisible = false,
+  pagination,
+  search: { keyword, searchHandler, clearSearchHandler },
   createHandler,
   deleteHandler,
   retryHandler,
@@ -97,7 +108,12 @@ const PermissionsTable = ({
       columns={columns}
       filter={
         <div className={styles.filter}>
-          <Search />
+          <Search
+            defaultValue={keyword}
+            isClearable={Boolean(keyword)}
+            onSearch={searchHandler}
+            onClearSearch={clearSearchHandler}
+          />
           <Button
             title={createButtonTitle}
             type="primary"
@@ -110,6 +126,7 @@ const PermissionsTable = ({
         </div>
       }
       isLoading={isLoading}
+      pagination={pagination}
       placeholder={{
         content: (
           <Button

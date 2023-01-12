@@ -1,6 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .usersTable {
+  flex: 1;
   margin-bottom: _.unit(6);
   color: var(--color-text);
 

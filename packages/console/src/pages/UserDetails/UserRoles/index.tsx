@@ -1,4 +1,5 @@
 import type { Role } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +16,8 @@ import Table from '@/components/Table';
 import TextLink from '@/components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useTableSearchParams, { formatKeyword } from '@/hooks/use-table-search-params';
+import { buildUrl } from '@/utilities/url';
 
 import type { UserDetailsOutletContext } from '../types';
 import AssignRolesModal from './components/AssignRolesModal';
@@ -26,9 +29,22 @@ const UserRoles = () => {
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { data: roles, error, mutate } = useSWR<Role[], RequestError>(`/api/users/${userId}/roles`);
+  const {
+    pagination: { pageIndex, pageSize, setPageIndex },
+    search: { keyword, setKeyword },
+  } = useTableSearchParams();
 
-  const isLoading = !roles && !error;
+  const { data, error, mutate } = useSWR<[Role[], number], RequestError>(
+    buildUrl(`/api/users/${userId}/roles`, {
+      page: String(pageIndex),
+      page_size: String(pageSize),
+      ...conditional(keyword && { search: formatKeyword(keyword) }),
+    })
+  );
+
+  const isLoading = !data && !error;
+
+  const [roles, totalCount] = data ?? [];
 
   const [isAssignRolesModalOpen, setIsAssignRolesModalOpen] = useState(false);
   const [roleToBeDeleted, setRoleToBeDeleted] = useState<Role>();
@@ -93,7 +109,18 @@ const UserRoles = () => {
         ]}
         filter={
           <div className={styles.filter}>
-            <Search />
+            <Search
+              defaultValue={keyword}
+              isClearable={Boolean(keyword)}
+              onSearch={(value) => {
+                setKeyword(value);
+                setPageIndex(1);
+              }}
+              onClearSearch={() => {
+                setKeyword('');
+                setPageIndex(1);
+              }}
+            />
             <Button
               title="user_details.roles.assign_button"
               type="primary"
@@ -105,6 +132,12 @@ const UserRoles = () => {
             />
           </div>
         }
+        pagination={{
+          pageIndex,
+          pageSize,
+          totalCount,
+          onChange: setPageIndex,
+        }}
         placeholder={{
           content: (
             <Button

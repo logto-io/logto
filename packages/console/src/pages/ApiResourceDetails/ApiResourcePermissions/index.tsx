@@ -1,4 +1,5 @@
 import type { Scope, ScopeResponse } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +10,8 @@ import ConfirmModal from '@/components/ConfirmModal';
 import PermissionsTable from '@/components/PermissionsTable';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useTableSearchParams, { formatKeyword } from '@/hooks/use-table-search-params';
+import { buildUrl } from '@/utilities/url';
 
 import type { ApiResourceDetailsOutletContext } from '../types';
 import CreatePermissionModal from './components/CreatePermissionModal';
@@ -21,12 +24,21 @@ const ApiResourcePermissions = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
-    data: scopes,
-    error,
-    mutate,
-  } = useSWR<ScopeResponse[], RequestError>(resourceId && `/api/resources/${resourceId}/scopes`);
+    pagination: { pageIndex, pageSize, setPageIndex },
+    search: { keyword, setKeyword },
+  } = useTableSearchParams();
 
-  const isLoading = !scopes && !error;
+  const { data, error, mutate } = useSWR<[ScopeResponse[], number], RequestError>(
+    resourceId &&
+      buildUrl(`/api/resources/${resourceId}/scopes`, {
+        page: String(pageIndex),
+        page_size: String(pageSize),
+        ...conditional(keyword && { search: formatKeyword(keyword) }),
+      })
+  );
+
+  const isLoading = !data && !error;
+  const [scopes, totalCount] = data ?? [];
 
   const api = useApi();
 
@@ -62,6 +74,23 @@ const ApiResourcePermissions = () => {
         deleteHandler={setScopeToBeDeleted}
         errorMessage={error?.body?.message ?? error?.message}
         retryHandler={async () => mutate(undefined, true)}
+        pagination={{
+          pageIndex,
+          pageSize,
+          totalCount,
+          onChange: setPageIndex,
+        }}
+        search={{
+          keyword,
+          searchHandler: (value) => {
+            setKeyword(value);
+            setPageIndex(1);
+          },
+          clearSearchHandler: () => {
+            setKeyword('');
+            setPageIndex(1);
+          },
+        }}
       />
       {isCreateFormOpen && (
         <CreatePermissionModal
