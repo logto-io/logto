@@ -105,7 +105,7 @@ const VerificationCode = ({
         clipboardData,
       } = event;
 
-      const data = clipboardData.getData('text');
+      const data = clipboardData.getData('text').match(/\d/g)?.join('') ?? '';
 
       // Unrecognized target input field
       if (!dataset.id) {
@@ -160,6 +160,10 @@ const VerificationCode = ({
           event.preventDefault();
           nextTarget?.focus();
           break;
+        case '+':
+        case '-':
+        case 'e':
+        case '.':
         case 'ArrowUp':
         case 'ArrowDown':
           event.preventDefault();
@@ -175,7 +179,7 @@ const VerificationCode = ({
     if (value.length === 0) {
       inputReferences.current[0]?.focus();
     }
-  }, [value, onChange]);
+  }, [value]);
 
   return (
     <div className={className}>
