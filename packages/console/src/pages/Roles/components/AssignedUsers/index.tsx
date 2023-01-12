@@ -10,14 +10,14 @@ type Props = {
 };
 
 const AssignedUsers = ({ users, count }: Props) =>
-  count > 0 ? (
+  count ? (
     <div className={styles.users}>
       <div className={styles.avatars}>
         {users.map(({ id, avatar }) => (
           <UserAvatar key={id} url={avatar} className={styles.avatar} />
         ))}
       </div>
-      <span className={styles.count}>{count.toLocaleString()}</span>
+      {count > 2 && <span className={styles.count}>{count.toLocaleString()}</span>}
     </div>
   ) : (
     <div className={styles.empty}>-</div>
