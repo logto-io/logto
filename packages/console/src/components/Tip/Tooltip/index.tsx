@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -124,7 +125,7 @@ const Tooltip = ({
 
   return (
     <>
-      <div ref={anchorRef} className={anchorClassName}>
+      <div ref={anchorRef} className={classNames(styles.anchor, anchorClassName)}>
         {children}
       </div>
       {tooltipDom &&

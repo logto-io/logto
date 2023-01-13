@@ -3,3 +3,7 @@
 .content {
   @include _.multi-line-ellipsis(6);
 }
+
+.anchor {
+  display: inline-block;
+}

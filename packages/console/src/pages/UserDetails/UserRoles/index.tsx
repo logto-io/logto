@@ -14,6 +14,7 @@ import IconButton from '@/components/IconButton';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
 import TextLink from '@/components/TextLink';
+import { Tooltip } from '@/components/Tip';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTableSearchParams, { formatKeyword } from '@/hooks/use-table-search-params';
@@ -97,13 +98,15 @@ const UserRoles = () => {
             dataIndex: 'delete',
             colSpan: 1,
             render: (role) => (
-              <IconButton
-                onClick={() => {
-                  setRoleToBeDeleted(role);
-                }}
-              >
-                <Delete />
-              </IconButton>
+              <Tooltip content={t('general.delete')}>
+                <IconButton
+                  onClick={() => {
+                    setRoleToBeDeleted(role);
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+              </Tooltip>
             ),
           },
         ]}
