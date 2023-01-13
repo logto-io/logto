@@ -46,7 +46,7 @@ describe('SetPassword', () => {
     });
 
     await waitFor(() => {
-      expect(addProfile).toBeCalledWith({ username: 'username' }, undefined);
+      expect(addProfile).toBeCalledWith({ username: 'username' });
     });
   });
 });

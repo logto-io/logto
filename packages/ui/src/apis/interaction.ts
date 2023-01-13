@@ -26,25 +26,13 @@ export type PasswordSignInPayload =
   | EmailPasswordPayload
   | PhonePasswordPayload;
 
-export const signInWithPasswordIdentifier = async (
-  payload: PasswordSignInPayload,
-  socialToBind?: string
-) => {
-  if (socialToBind) {
-    await api.patch(`${interactionPrefix}/identifiers`, {
-      json: payload,
-    });
-    await api.patch(`${interactionPrefix}/profile`, {
-      json: { connectorId: socialToBind },
-    });
-  } else {
-    await api.put(`${interactionPrefix}`, {
-      json: {
-        event: InteractionEvent.SignIn,
-        identifier: payload,
-      },
-    });
-  }
+export const signInWithPasswordIdentifier = async (payload: PasswordSignInPayload) => {
+  await api.put(`${interactionPrefix}`, {
+    json: {
+      event: InteractionEvent.SignIn,
+      identifier: payload,
+    },
+  });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
@@ -89,23 +77,17 @@ export const sendVerificationCode = async (payload: SendVerificationCodePayload)
 };
 
 export const signInWithVerificationCodeIdentifier = async (
-  payload: EmailVerificationCodePayload | PhoneVerificationCodePayload,
-  socialToBind?: string
+  payload: EmailVerificationCodePayload | PhoneVerificationCodePayload
 ) => {
   await api.patch(`${interactionPrefix}/identifiers`, {
     json: payload,
-  });
-
-  await api.patch(`${interactionPrefix}/profile`, {
-    json: { connectorId: socialToBind },
   });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
 
 export const addProfileWithVerificationCodeIdentifier = async (
-  payload: EmailVerificationCodePayload | PhoneVerificationCodePayload,
-  socialToBind?: string
+  payload: EmailVerificationCodePayload | PhoneVerificationCodePayload
 ) => {
   await api.patch(`${interactionPrefix}/identifiers`, {
     json: payload,
@@ -115,10 +97,6 @@ export const addProfileWithVerificationCodeIdentifier = async (
 
   await api.patch(`${interactionPrefix}/profile`, {
     json: identifier,
-  });
-
-  await api.patch(`${interactionPrefix}/profile`, {
-    json: { connectorId: socialToBind },
   });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
@@ -160,15 +138,8 @@ export const registerWithVerifiedIdentifier = async (payload: SendVerificationCo
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
 
-export const addProfile = async (
-  payload: { username: string } | { password: string },
-  socialToBind?: string
-) => {
+export const addProfile = async (payload: { username: string } | { password: string }) => {
   await api.patch(`${interactionPrefix}/profile`, { json: payload });
-
-  await api.patch(`${interactionPrefix}/profile`, {
-    json: { connectorId: socialToBind },
-  });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };

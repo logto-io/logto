@@ -193,13 +193,10 @@ describe('<UsernameSignIn>', () => {
 
     act(() => {
       void waitFor(() => {
-        expect(signInWithPasswordIdentifier).toBeCalledWith(
-          {
-            username: 'username',
-            password: 'password',
-          },
-          undefined
-        );
+        expect(signInWithPasswordIdentifier).toBeCalledWith({
+          username: 'username',
+          password: 'password',
+        });
       });
     });
   });

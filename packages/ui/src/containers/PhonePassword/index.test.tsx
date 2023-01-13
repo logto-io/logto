@@ -187,13 +187,10 @@ describe('<PhonePassword>', () => {
 
     act(() => {
       void waitFor(() => {
-        expect(signInWithPasswordIdentifier).toBeCalledWith(
-          {
-            phone: 'phone',
-            password: 'password',
-          },
-          undefined
-        );
+        expect(signInWithPasswordIdentifier).toBeCalledWith({
+          phone: 'phone',
+          password: 'password',
+        });
       });
     });
   });

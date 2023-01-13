@@ -7,8 +7,6 @@ import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import type { VerificationCodeIdentifier } from '@/types';
-import { SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
 import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
@@ -61,8 +59,7 @@ const useContinueFlowCodeVerification = (
 
   const onSubmit = useCallback(
     async (payload: EmailVerificationCodePayload | PhoneVerificationCodePayload) => {
-      const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-      const result = await verifyVerificationCode(payload, socialToBind);
+      const result = await verifyVerificationCode(payload);
 
       if (result?.redirectTo) {
         window.location.replace(result.redirectTo);
