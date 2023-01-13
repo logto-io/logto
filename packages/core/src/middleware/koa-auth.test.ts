@@ -1,4 +1,4 @@
-import { UserRole } from '@logto/schemas';
+import { managementResourceScope } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
@@ -15,7 +15,9 @@ const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
 const { jwtVerify } = mockEsm('jose', () => ({
-  jwtVerify: jest.fn().mockReturnValue({ payload: { sub: 'fooUser', role_names: ['admin'] } }),
+  jwtVerify: jest
+    .fn()
+    .mockReturnValue({ payload: { sub: 'fooUser', scope: managementResourceScope.name } }),
 }));
 
 const koaAuth = await pickDefault(import('./koa-auth.js'));
@@ -169,7 +171,7 @@ describe('koaAuth middleware', () => {
     expect(ctx.auth).toEqual({ type: 'app', id: 'bar' });
   });
 
-  it('expect to throw if jwt role_names is missing', async () => {
+  it('expect to throw if jwt scope is missing', async () => {
     jwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'fooUser' } }));
 
     ctx.request = {
@@ -179,14 +181,14 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(envSetForTest, UserRole.Admin)(ctx, next)).rejects.toMatchError(
-      forbiddenError
-    );
+    await expect(
+      koaAuth(envSetForTest, managementResourceScope.name)(ctx, next)
+    ).rejects.toMatchError(forbiddenError);
   });
 
-  it('expect to throw if jwt role_names does not include admin', async () => {
+  it('expect to throw if jwt scope does not include management resource scope', async () => {
     jwtVerify.mockImplementationOnce(() => ({
-      payload: { sub: 'fooUser', role_names: ['foo'] },
+      payload: { sub: 'fooUser', scope: 'foo' },
     }));
 
     ctx.request = {
@@ -196,9 +198,9 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(envSetForTest, UserRole.Admin)(ctx, next)).rejects.toMatchError(
-      forbiddenError
-    );
+    await expect(
+      koaAuth(envSetForTest, managementResourceScope.name)(ctx, next)
+    ).rejects.toMatchError(forbiddenError);
   });
 
   it('expect to throw unauthorized error if unknown error occurs', async () => {

@@ -1,4 +1,8 @@
-import { adminConsoleApplicationId, UserRole } from '@logto/schemas';
+import {
+  adminConsoleApplicationId,
+  managementResourceId,
+  managementResourceScope,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
@@ -29,12 +33,15 @@ export default function consentRoutes<T>(
 
     const { accountId } = session;
 
-    // Temp solution before migrating to RBAC. Block non-admin user from consenting to admin console
+    // Block non-admin user from consenting to admin console
     if (String(client_id) === adminConsoleApplicationId) {
-      const { roleNames } = await libraries.users.findUserByIdWithRoles(accountId);
+      const scopes = await libraries.users.findUserScopesForResourceId(
+        accountId,
+        managementResourceId
+      );
 
       assertThat(
-        roleNames.includes(UserRole.Admin),
+        scopes.some(({ name }) => name === managementResourceScope.name),
         new RequestError({ code: 'auth.forbidden', status: 401 })
       );
     }
