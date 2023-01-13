@@ -1,3 +1,4 @@
+import { noSpaceRegEx } from '@logto/core-kit';
 import type { Scope } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +23,7 @@ const CreatePermissionModal = ({ resourceId, onClose }: Props) => {
   const {
     handleSubmit,
     register,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<CreatePermissionFormData>();
 
   const api = useApi();
@@ -70,7 +71,15 @@ const CreatePermissionModal = ({ resourceId, onClose }: Props) => {
               // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus
               placeholder={t('api_resource_details.permission.name_placeholder')}
-              {...register('name', { required: true })}
+              {...register('name', {
+                required: true,
+                pattern: {
+                  value: noSpaceRegEx,
+                  message: t('api_resource_details.permission.forbidden_space_in_name'),
+                },
+              })}
+              hasError={Boolean(errors.name)}
+              errorMessage={errors.name?.message}
             />
           </FormField>
           <FormField title="api_resource_details.permission.description">

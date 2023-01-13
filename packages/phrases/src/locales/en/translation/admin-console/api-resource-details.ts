@@ -18,6 +18,7 @@ const api_resource_details = {
     confirm_create: 'Create permission',
     name: 'Permission name',
     name_placeholder: 'Read:Resources',
+    forbidden_space_in_name: 'The permission name must not contain any spaces.',
     description: 'Description',
     description_placeholder: 'Able to read the resources',
     permission_created: 'The permission {{name}} has been successfully created',
