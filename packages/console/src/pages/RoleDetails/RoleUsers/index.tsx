@@ -1,4 +1,5 @@
 import type { User } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +19,8 @@ import Table from '@/components/Table';
 import UserAvatar from '@/components/UserAvatar';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useTableSearchParams, { formatKeyword } from '@/hooks/use-table-search-params';
+import { buildUrl } from '@/utilities/url';
 
 import type { RoleDetailsOutletContext } from '../types';
 import AssignUsersModal from './components/AssignUsersModal';
@@ -31,12 +34,22 @@ const RoleUsers = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
-    data: users,
-    error,
-    mutate,
-  } = useSWR<User[], RequestError>(roleId && `/api/roles/${roleId}/users`);
+    pagination: { pageIndex, pageSize, setPageIndex },
+    search: { keyword, setKeyword },
+  } = useTableSearchParams();
 
-  const isLoading = !users && !error;
+  const { data, error, mutate } = useSWR<[User[], number], RequestError>(
+    roleId &&
+      buildUrl(`/api/roles/${roleId}/users`, {
+        page: String(pageIndex),
+        page_size: String(pageSize),
+        ...conditional(keyword && { search: formatKeyword(keyword) }),
+      })
+  );
+
+  const isLoading = !data && !error;
+
+  const [users, totalCount] = data ?? [];
 
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [userToBeDeleted, setUserToBeDeleted] = useState<User>();
@@ -84,7 +97,7 @@ const RoleUsers = () => {
           },
           {
             title: t('role_details.users.app_column'),
-            dataIndex: 'name',
+            dataIndex: 'app',
             colSpan: 5,
             render: ({ applicationId }) =>
               applicationId ? <ApplicationName applicationId={applicationId} /> : '-',
@@ -112,7 +125,18 @@ const RoleUsers = () => {
         ]}
         filter={
           <div className={styles.filter}>
-            <Search />
+            <Search
+              defaultValue={keyword}
+              isClearable={Boolean(keyword)}
+              onSearch={(value) => {
+                setKeyword(value);
+                setPageIndex(1);
+              }}
+              onClearSearch={() => {
+                setKeyword('');
+                setPageIndex(1);
+              }}
+            />
             <Button
               title="role_details.users.assign_button"
               type="primary"
@@ -124,6 +148,12 @@ const RoleUsers = () => {
             />
           </div>
         }
+        pagination={{
+          pageIndex,
+          pageSize,
+          totalCount,
+          onChange: setPageIndex,
+        }}
         placeholder={{
           content: (
             <Button
