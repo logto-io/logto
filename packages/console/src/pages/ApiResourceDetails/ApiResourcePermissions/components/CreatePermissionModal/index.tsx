@@ -75,7 +75,7 @@ const CreatePermissionModal = ({ resourceId, onClose }: Props) => {
                 required: true,
                 pattern: {
                   value: noSpaceRegEx,
-                  message: 'Space is not allowed in the permission name.',
+                  message: t('api_resource_details.permission.forbidden_space_in_name'),
                 },
               })}
               hasError={Boolean(errors.name)}
