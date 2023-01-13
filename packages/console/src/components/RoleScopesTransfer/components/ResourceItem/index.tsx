@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import CaretExpanded from '@/assets/images/caret-expanded.svg';
 import CaretFolded from '@/assets/images/caret-folded.svg';
 import Checkbox from '@/components/Checkbox';
+import IconButton from '@/components/IconButton';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import type { DetailedResourceResponse } from '../../types';
@@ -47,11 +48,9 @@ const ResourceItem = ({ resource, selectedScopes, onSelectResource, onSelectScop
             setIsScopesInvisible(!isScopesInvisible);
           }}
         >
-          {isScopesInvisible ? (
-            <CaretFolded className={styles.caret} />
-          ) : (
-            <CaretExpanded className={styles.caret} />
-          )}
+          <IconButton className={styles.caret}>
+            {isScopesInvisible ? <CaretFolded /> : <CaretExpanded />}
+          </IconButton>
           <div className={styles.name}>{name}</div>
           <div className={styles.scopeInfo}>
             ({t('role_details.permission.api_permission_count', { value: scopes.length })})

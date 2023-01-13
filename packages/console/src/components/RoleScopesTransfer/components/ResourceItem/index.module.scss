@@ -7,7 +7,8 @@
   .title {
     display: flex;
     align-items: center;
-    margin-top: _.unit(1.5);
+    padding: _.unit(1.5) 0;
+
 
     .resource {
       display: flex;
@@ -16,11 +17,10 @@
 
       .caret {
         margin-right: _.unit(2);
-        color: var(--color-text-secondary);
       }
 
       .name {
-        font: var(--font-label-2);
+        font: var(--font-label-large);
         @include _.text-ellipsis;
       }
 
