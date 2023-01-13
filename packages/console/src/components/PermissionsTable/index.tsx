@@ -70,10 +70,7 @@ const PermissionsTable = ({
     dataIndex: 'resource',
     colSpan: 5,
     render: ({ resource }) => (
-      <TextLink
-        to={`/api-resources/${resource.id}/${ApiResourceDetailsTabs.Settings}`}
-        target="_blank"
-      >
+      <TextLink to={`/api-resources/${resource.id}/${ApiResourceDetailsTabs.Settings}`}>
         {resource.name}
       </TextLink>
     ),
