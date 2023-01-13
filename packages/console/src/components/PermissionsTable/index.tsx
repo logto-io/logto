@@ -84,6 +84,7 @@ const PermissionsTable = ({
     dataIndex: 'delete',
     colSpan: 1,
     render: (scope) =>
+      // Note: hide the delete button rather than the whole column to keep the table column spaces.
       isReadOnly ? null : (
         <IconButton
           onClick={() => {
