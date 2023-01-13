@@ -5,4 +5,4 @@
 "@logto/ui": minor
 ---
 
-Replace `passcode` naming convention in the interaction APIs and main flow ui with `verification code`.
+Replace `passcode` naming convention in the interaction APIs and main flow ui with `verificationCode`.

@@ -6,4 +6,4 @@
 "@logto/ui": minor
 ---
 
-Replace the `sms` naming conventiion using `phone` cross logto codebase. Including Sign In Experience type, API paths, API payload and internal variable name.
+Replace the `sms` naming convention using `phone` cross logto codebase. Including Sign-in Experience types, API paths, API payload and internal variable names.
