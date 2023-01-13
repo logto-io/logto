@@ -50,7 +50,7 @@ importers:
       p-limit: ^4.0.0
       p-retry: ^5.1.2
       prettier: ^2.8.1
-      rimraf: ^3.0.2
+      rimraf: ^4.0.0
       roarr: ^7.11.0
       semver: ^7.3.8
       sinon: ^15.0.0
@@ -98,7 +98,7 @@ importers:
       jest: 29.3.1_@types+node@18.11.18
       lint-staged: 13.0.0
       prettier: 2.8.1
-      rimraf: 3.0.2
+      rimraf: 4.0.4
       sinon: 15.0.0
       typescript: 4.9.4
 
@@ -12846,6 +12846,12 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.0
+    dev: true
+
+  /rimraf/4.0.4:
+    resolution: {integrity: sha512-R0hoVr9xTwemarQjoWlNt/nb5dEGVTBhVdkRmEX2zEkT8T6onH0XKiGjuaC7rNNj/gYzY2p4NVRJ3sjO1ascHQ==}
+    engines: {node: '>=14'}
+    hasBin: true
     dev: true
 
   /roarr/2.15.4:
