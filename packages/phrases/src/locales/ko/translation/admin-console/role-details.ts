@@ -36,7 +36,7 @@ const role_details = {
     deleted: '{{name}} was successfully removed from this role!', // UNTRANSLATED
     assign_title: 'Assign users', // UNTRANSLATED
     assign_subtitle:
-      'Assign users to this role. You can search by name, email, phone, username, or user ID.', // UNTRANSLATED
+      'Assign users to this role. Find appropriate users by searching name, email, phone, or user ID.', // UNTRANSLATED
     assign_users_field: 'Assign users', // UNTRANSLATED
     confirm_assign: 'Assign users', // UNTRANSLATED
     users_assigned: 'The selected users were successfully assigned to this role!', // UNTRANSLATED
