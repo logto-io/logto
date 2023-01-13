@@ -62,7 +62,7 @@ const alterSignUp = (signUp: OldSignUp) => {
   const { identifiers, password, verify } = signUp;
 
   const newIdentifiers = identifiers.map((identifier) => {
-    if (identifier === OldSignInIdentifier.Sms) {
+    if (identifier.toLocaleLowerCase() === OldSignInIdentifier.Sms) {
       return SignInIdentifier.Phone;
     }
 
