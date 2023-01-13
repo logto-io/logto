@@ -43,7 +43,7 @@ describe('EmailContinue', () => {
       expect(putInteraction).not.toBeCalled();
       expect(sendVerificationCode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/continue/email/verification-code', search: '' },
+        { pathname: '/continue/email/verification-code' },
         { state: { email } }
       );
     });

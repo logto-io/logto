@@ -87,7 +87,6 @@ describe('PasswordSignInForm', () => {
     expect(mockedNavigate).toBeCalledWith(
       {
         pathname: `/${UserFlow.signIn}/${SignInIdentifier.Email}/verification-code`,
-        search: '',
       },
       {
         state: { email },
@@ -133,7 +132,6 @@ describe('PasswordSignInForm', () => {
     expect(mockedNavigate).toBeCalledWith(
       {
         pathname: `/${UserFlow.signIn}/${SignInIdentifier.Phone}/verification-code`,
-        search: '',
       },
       {
         state: { phone },

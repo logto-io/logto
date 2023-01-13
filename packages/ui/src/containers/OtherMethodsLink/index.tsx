@@ -14,8 +14,6 @@ import * as styles from './index.module.scss';
 type Props = {
   methods: SignInIdentifier[];
   flow: Exclude<UserFlow, 'forgot-password'>;
-  // Allows social page to pass additional query params to the sign-in pages
-  search?: string;
   className?: string;
   template: TFuncKey<'translation', 'secondary'>;
 };
@@ -28,7 +26,7 @@ const SignInMethodsKeyMap: {
   [SignInIdentifier.Phone]: 'phone_number',
 };
 
-const OtherMethodsLink = ({ methods, template, search, flow, className }: Props) => {
+const OtherMethodsLink = ({ methods, template, flow, className }: Props) => {
   const { t } = useTranslation();
 
   const methodsLink = useMemo(
@@ -39,10 +37,10 @@ const OtherMethodsLink = ({ methods, template, search, flow, className }: Props)
           className={styles.signInMethodLink}
           type="inlinePrimary"
           text={`input.${SignInMethodsKeyMap[identifier]}`}
-          to={{ pathname: `/${flow}/${identifier}`, search }}
+          to={{ pathname: `/${flow}/${identifier}` }}
         />
       )),
-    [flow, methods, search]
+    [flow, methods]
   );
 
   if (methodsLink.length === 0) {

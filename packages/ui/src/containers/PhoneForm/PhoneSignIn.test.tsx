@@ -63,7 +63,7 @@ describe('PhoneSignIn', () => {
       expect(putInteraction).not.toBeCalled();
       expect(sendVerificationCode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/phone/password', search: '' },
+        { pathname: '/sign-in/phone/password' },
         { state: { phone: fullPhoneNumber } }
       );
     });
@@ -98,7 +98,7 @@ describe('PhoneSignIn', () => {
       expect(putInteraction).not.toBeCalled();
       expect(sendVerificationCode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/phone/password', search: '' },
+        { pathname: '/sign-in/phone/password' },
         { state: { phone: fullPhoneNumber } }
       );
     });
@@ -134,7 +134,7 @@ describe('PhoneSignIn', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
       expect(sendVerificationCode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/phone/verification-code', search: '' },
+        { pathname: '/sign-in/phone/verification-code' },
         { state: { phone: fullPhoneNumber } }
       );
     });
@@ -170,7 +170,7 @@ describe('PhoneSignIn', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
       expect(sendVerificationCode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/phone/verification-code', search: '' },
+        { pathname: '/sign-in/phone/verification-code' },
         { state: { phone: fullPhoneNumber } }
       );
     });

@@ -44,7 +44,7 @@ describe('EmailRegister', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.Register);
       expect(sendVerificationCode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/register/email/verification-code', search: '' },
+        { pathname: '/register/email/verification-code' },
         { state: { email } }
       );
     });

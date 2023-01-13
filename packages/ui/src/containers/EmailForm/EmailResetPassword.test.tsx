@@ -47,7 +47,6 @@ describe('EmailRegister', () => {
       expect(mockedNavigate).toBeCalledWith(
         {
           pathname: `/${UserFlow.forgotPassword}/${SignInIdentifier.Email}/verification-code`,
-          search: '',
         },
         { state: { email } }
       );
