@@ -19,6 +19,7 @@ import CreatePermissionModal from './components/CreatePermissionModal';
 const ApiResourcePermissions = () => {
   const {
     resource: { id: resourceId },
+    isLogtoManagementApiResource,
   } = useOutletContext<ApiResourceDetailsOutletContext>();
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -67,6 +68,7 @@ const ApiResourcePermissions = () => {
       <PermissionsTable
         scopes={scopes}
         isLoading={isLoading}
+        isReadOnly={isLogtoManagementApiResource}
         createButtonTitle="api_resource_details.permission.create_button"
         createHandler={() => {
           setIsCreateFormOpen(true);

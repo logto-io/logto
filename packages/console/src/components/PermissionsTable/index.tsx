@@ -27,6 +27,7 @@ type Props = {
   isLoading: boolean;
   errorMessage?: string;
   createButtonTitle: AdminConsoleKey;
+  isReadOnly?: boolean;
   isApiColumnVisible?: boolean;
   pagination?: PaginationProps;
   search: SearchProps;
@@ -40,6 +41,7 @@ const PermissionsTable = ({
   isLoading,
   errorMessage,
   createButtonTitle,
+  isReadOnly = false,
   isApiColumnVisible = false,
   pagination,
   search: { keyword, searchHandler, clearSearchHandler },
@@ -81,15 +83,16 @@ const PermissionsTable = ({
     title: null,
     dataIndex: 'delete',
     colSpan: 1,
-    render: (scope) => (
-      <IconButton
-        onClick={() => {
-          deleteHandler(scope);
-        }}
-      >
-        <Delete />
-      </IconButton>
-    ),
+    render: (scope) =>
+      isReadOnly ? null : (
+        <IconButton
+          onClick={() => {
+            deleteHandler(scope);
+          }}
+        >
+          <Delete />
+        </IconButton>
+      ),
   };
 
   const columns = [
@@ -114,21 +117,23 @@ const PermissionsTable = ({
             onSearch={searchHandler}
             onClearSearch={clearSearchHandler}
           />
-          <Button
-            title={createButtonTitle}
-            type="primary"
-            size="large"
-            icon={<Plus />}
-            onClick={() => {
-              createHandler();
-            }}
-          />
+          {!isReadOnly && (
+            <Button
+              title={createButtonTitle}
+              type="primary"
+              size="large"
+              icon={<Plus />}
+              onClick={() => {
+                createHandler();
+              }}
+            />
+          )}
         </div>
       }
       isLoading={isLoading}
       pagination={pagination}
       placeholder={{
-        content: (
+        content: isReadOnly ? undefined : (
           <Button
             title={createButtonTitle}
             type="outline"
