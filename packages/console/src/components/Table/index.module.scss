@@ -67,28 +67,28 @@
 
           &.clickable {
             cursor: pointer;
+          }
+        }
 
-            &:hover {
-              background: var(--color-hover);
+        tr.hoverEffect:hover {
+          background: var(--color-hover);
 
-              td {
-                border-top: 1px solid transparent;
-              }
+          td {
+            border-top: 1px solid transparent;
+          }
 
-              + tr {
-                td {
-                  border-top: 1px solid transparent;
-                }
-              }
-
-              td:first-child {
-                border-radius: 8px 0 0 8px;
-              }
-
-              td:last-child {
-                border-radius: 0 8px 8px 0;
-              }
+          + tr {
+            td {
+              border-top: 1px solid transparent;
             }
+          }
+
+          td:first-child {
+            border-radius: 8px 0 0 8px;
+          }
+
+          td:last-child {
+            border-radius: 0 8px 8px 0;
           }
         }
       }

@@ -177,6 +177,7 @@ const LanguageDetails = () => {
       </div>
       <div className={styles.container}>
         <Table
+          isRowHoverEffectDisabled
           className={styles.content}
           headerClassName={styles.tableWrapper}
           bodyClassName={styles.tableWrapper}
