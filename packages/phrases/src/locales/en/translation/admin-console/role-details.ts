@@ -18,7 +18,6 @@ const role_details = {
     assign_subtitle:
       'Assign permissions to this role. The role will gain the added permissions, and users with this role will inherit these permissions.',
     assign_form_filed: 'Assign permissions',
-    search_placeholder: 'Search by API or Permission name',
     added_text: '{{value, number}} permissions added',
     api_permission_count: '{{value, number}} permissions',
     confirm_assign: 'Assign Permission',
@@ -36,7 +35,8 @@ const role_details = {
       'It will remain in your user pool but lose the authorization for this role.',
     deleted: '{{name}} was successfully removed from this role!', // UNTRANSLATED
     assign_title: 'Assign users',
-    assign_subtitle: 'Assign users to the role',
+    assign_subtitle:
+      'Assign users to this role. You can search by name, email, phone, username, or user ID.',
     assign_users_field: 'Assign users',
     confirm_assign: 'Assign users',
     users_assigned: 'The selected users were successfully assigned to this role!',

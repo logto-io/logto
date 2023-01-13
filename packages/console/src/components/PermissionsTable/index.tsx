@@ -117,6 +117,11 @@ const PermissionsTable = ({
           <Search
             defaultValue={keyword}
             isClearable={Boolean(keyword)}
+            placeholder={t(
+              isApiColumnVisible
+                ? 'permissions.search_placeholder'
+                : 'permissions.search_placeholder_without_api'
+            )}
             onSearch={searchHandler}
             onClearSearch={clearSearchHandler}
           />

@@ -11,11 +11,18 @@ import * as styles from './index.module.scss';
 type Props = {
   defaultValue?: string;
   isClearable?: boolean;
+  placeholder?: string;
   onSearch?: (value: string) => void;
   onClearSearch?: () => void;
 };
 
-const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearch }: Props) => {
+const Search = ({
+  defaultValue = '',
+  isClearable = false,
+  placeholder,
+  onSearch,
+  onClearSearch,
+}: Props) => {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -39,7 +46,7 @@ const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearc
         <TextInput
           value={inputValue}
           icon={<SearchIcon className={styles.searchIcon} />}
-          placeholder={t('general.search_placeholder')}
+          placeholder={placeholder ?? t('general.search_placeholder')}
           onChange={handleSearchChange}
           onKeyPress={handleSearchKeyPress}
         />
