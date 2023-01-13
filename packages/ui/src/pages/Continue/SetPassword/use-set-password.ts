@@ -6,8 +6,6 @@ import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
-import { SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
 
 const useSetPassword = () => {
   const navigate = useNavigate();
@@ -30,8 +28,7 @@ const useSetPassword = () => {
 
   const setPassword = useCallback(
     async (password: string) => {
-      const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-      await asyncAddProfile({ password }, socialToBind);
+      await asyncAddProfile({ password });
     },
     [asyncAddProfile]
   );

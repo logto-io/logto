@@ -103,10 +103,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(signInWithVerificationCodeIdentifier).toBeCalledWith(
-          { email, verificationCode: '111111' },
-          undefined
-        );
+        expect(signInWithVerificationCodeIdentifier).toBeCalledWith({
+          email,
+          verificationCode: '111111',
+        });
       });
 
       await waitFor(() => {
@@ -131,13 +131,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(signInWithVerificationCodeIdentifier).toBeCalledWith(
-          {
-            phone,
-            verificationCode: '111111',
-          },
-          undefined
-        );
+        expect(signInWithVerificationCodeIdentifier).toBeCalledWith({
+          phone,
+          verificationCode: '111111',
+        });
       });
 
       await waitFor(() => {
@@ -287,13 +284,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith(
-          {
-            email,
-            verificationCode: '111111',
-          },
-          undefined
-        );
+        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith({
+          email,
+          verificationCode: '111111',
+        });
       });
 
       await waitFor(() => {
@@ -319,13 +313,10 @@ describe('<VerificationCode />', () => {
       }
 
       await waitFor(() => {
-        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith(
-          {
-            phone,
-            verificationCode: '111111',
-          },
-          undefined
-        );
+        expect(addProfileWithVerificationCodeIdentifier).toBeCalledWith({
+          phone,
+          verificationCode: '111111',
+        });
       });
 
       await waitFor(() => {

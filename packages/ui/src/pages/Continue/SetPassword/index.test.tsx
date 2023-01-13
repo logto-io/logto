@@ -52,7 +52,7 @@ describe('SetPassword', () => {
     });
 
     await waitFor(() => {
-      expect(addProfile).toBeCalledWith({ password: '123456' }, undefined);
+      expect(addProfile).toBeCalledWith({ password: '123456' });
     });
   });
 });

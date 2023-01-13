@@ -68,7 +68,7 @@ describe('PasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(signInWithPasswordIdentifier).toBeCalledWith({ email, password }, undefined);
+      expect(signInWithPasswordIdentifier).toBeCalledWith({ email, password });
     });
 
     const sendVerificationCodeLink = getByText('action.sign_in_via_passcode');
@@ -114,7 +114,7 @@ describe('PasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(signInWithPasswordIdentifier).toBeCalledWith({ phone, password }, undefined);
+      expect(signInWithPasswordIdentifier).toBeCalledWith({ phone, password });
     });
 
     const sendVerificationCodeLink = getByText('action.sign_in_via_passcode');

@@ -30,7 +30,6 @@ describe('SocialCreateAccount', () => {
     );
     expect(queryByText('description.social_create_account')).not.toBeNull();
     expect(queryByText('description.social_bind_with_existing')).not.toBeNull();
-    expect(queryByText('secondary.social_bind_with')).not.toBeNull();
   });
 
   it('should call registerWithVerifiedSocial when click create button', async () => {

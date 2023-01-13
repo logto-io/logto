@@ -180,13 +180,10 @@ describe('<EmailPassword>', () => {
 
     act(() => {
       void waitFor(() => {
-        expect(signInWithPasswordIdentifier).toBeCalledWith(
-          {
-            email: 'email',
-            password: 'password',
-          },
-          undefined
-        );
+        expect(signInWithPasswordIdentifier).toBeCalledWith({
+          email: 'email',
+          password: 'password',
+        });
       });
     });
   });
