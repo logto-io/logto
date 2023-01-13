@@ -3,13 +3,13 @@ const role_details = {
   identifier: 'Identifier',
   delete_description:
     'Doing so will remove the permissions associated with this role from the affected users and delete the mapping between roles, users, and permissions.', // UNTRANSLATED
-  role_deleted: 'The role {{name}} has been successfully deleted', // UNTRANSLATED
+  role_deleted: '{{name}} was successfully deleted!', // UNTRANSLATED
   settings_tab: 'Settings',
   users_tab: 'Users',
   permissions_tab: 'Permissions',
   settings: 'Settings',
   settings_description:
-    'It real sent your at. Amounted all shy set why followed declared. Repeated of endeavor mr position kindness offering ignorant so up. Simplicity are melancholy preference considered saw companions.', // UNTRANSLATED
+    'Roles are a grouping of permissions that can be assigned to users. They also provide a way to aggregate permissions defined for different APIs, making it more efficient to add, remove, or adjust permissions compared to assigning them individually to users.', // UNTRANSLATED
   field_name: 'Name',
   field_description: 'Description',
   permission: {
@@ -25,7 +25,7 @@ const role_details = {
     permission_assigned: 'The selected permissions were successfully assigned to this role!', // UNTRANSLATED
     deletion_description:
       'If this permission is deleted, the affected user with this role will lose the access granted by this permission.', // UNTRANSLATED
-    permission_deleted: 'The permission {{name}} has been successfully deleted from this role.', // UNTRANSLATED
+    permission_deleted: 'The permission "{{name}}" was successfully removed from this role!', // UNTRANSLATED
   },
   users: {
     assign_button: 'Assign Users', // UNTRANSLATED
@@ -34,7 +34,7 @@ const role_details = {
     latest_sign_in_column: 'Latest sign in', // UNTRANSLATED
     delete_description:
       'It will remain in your user pool but lose the authorization for this role.', // UNTRANSLATED
-    deleted: 'The user {{name}} has been successfully deleted from this role.', // UNTRANSLATED
+    deleted: '{{name}} was successfully removed from this role!', // UNTRANSLATED
     assign_title: 'Assign users', // UNTRANSLATED
     assign_subtitle: 'Assign users to the role', // UNTRANSLATED
     assign_users_field: 'Assign users', // UNTRANSLATED

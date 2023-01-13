@@ -17,13 +17,13 @@ const api_resource_details = {
     create_subtitle: 'Define the permissions (scopes) needed by this API.',
     confirm_create: 'Create permission',
     name: 'Permission name',
-    name_placeholder: 'Read: Resources',
+    name_placeholder: 'Read:Resources',
     description: 'Description',
     description_placeholder: 'Able to read the resources',
     permission_created: 'The permission {{name}} has been successfully created',
     delete_description:
       'If this permission is deleted, the user who had this permission will lose the access granted by it.',
-    deleted: 'The permission {{name}} has been successfully deleted',
+    deleted: 'The permission "{{name}}" was successfully deleted!',
   },
 };
 

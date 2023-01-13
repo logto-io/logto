@@ -1,6 +1,7 @@
 import type { Role, ScopeResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
@@ -22,6 +23,7 @@ type CreateRolePayload = Pick<Role, 'name' | 'description'> & {
 };
 
 const CreateRoleForm = ({ onClose }: Props) => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
     handleSubmit,
@@ -69,10 +71,14 @@ const CreateRoleForm = ({ onClose }: Props) => {
             // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             {...register('name', { required: true })}
+            placeholder={t('roles.role_name_placeholder')}
           />
         </FormField>
-        <FormField title="roles.role_description">
-          <TextInput {...register('description')} />
+        <FormField isRequired title="roles.role_description">
+          <TextInput
+            {...register('description', { required: true })}
+            placeholder={t('roles.role_description_placeholder')}
+          />
         </FormField>
         <FormField title="roles.assign_permissions">
           <Controller
