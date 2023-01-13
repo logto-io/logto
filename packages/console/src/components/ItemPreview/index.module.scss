@@ -17,14 +17,13 @@
       font: var(--font-body-medium);
       color: var(--color-text-link);
       text-decoration: none;
+      @include _.text-ellipsis;
     }
 
     .subtitle {
       font: var(--font-body-small);
       color: var(--color-text-secondary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      @include _.text-ellipsis;
     }
   }
 

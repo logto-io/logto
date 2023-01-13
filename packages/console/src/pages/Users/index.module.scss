@@ -1,28 +1,5 @@
-@use '@/scss/underscore' as _;
-
-.filter {
-  padding: _.unit(3);
-  background-color: var(--color-layer-1);
-  border-bottom: 1px solid var(--color-divider);
-  border-radius: 12px 12px 0 0;
-
-  .searchInput {
-    width: 338px;
-  }
-}
-
-.tableLayout {
-  display: flex;
-  flex-direction: column;
-
-  .tableContainer {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
-}
-
-.pagination {
-  margin-top: _.unit(4);
+.searchInput {
+  width: 338px;
 }
 
 .avatar {
@@ -31,9 +8,4 @@
   border-radius: 6px;
   object-fit: cover;
   flex-shrink: 0;
-}
-
-.userName {
-  width: 360px;
-  font: var(--font-body-medium);
 }
