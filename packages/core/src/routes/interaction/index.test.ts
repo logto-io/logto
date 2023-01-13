@@ -172,6 +172,10 @@ describe('interaction routes', () => {
     });
 
     it('should call identifier and profile verification properly', async () => {
+      verifyProfile.mockReturnValueOnce({
+        event: InteractionEvent.SignIn,
+      });
+
       await sessionRequest.post(path).send();
       expect(getInteractionStorage).toBeCalled();
       expect(verifyIdentifier).toBeCalled();
@@ -182,6 +186,10 @@ describe('interaction routes', () => {
 
     it('should not call validateMandatoryUserProfile for forgot password request', async () => {
       getInteractionStorage.mockReturnValue({
+        event: InteractionEvent.ForgotPassword,
+      });
+
+      verifyProfile.mockReturnValueOnce({
         event: InteractionEvent.ForgotPassword,
       });
 
