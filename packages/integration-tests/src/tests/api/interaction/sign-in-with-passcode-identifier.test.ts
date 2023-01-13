@@ -15,7 +15,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
-import { expectRejects, readPasscode } from '#src/helpers/index.js';
+import { expectRejects, readVerificationCode } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
 import { generateEmail, generatePhone } from '#src/utils.js';
@@ -43,7 +43,7 @@ describe('Sign-In flow using verification-code identifiers', () => {
       email: userProfile.primaryEmail,
     });
 
-    const verificationCodeRecord = await readPasscode();
+    const verificationCodeRecord = await readVerificationCode();
 
     expect(verificationCodeRecord).toMatchObject({
       address: userProfile.primaryEmail,
@@ -76,7 +76,7 @@ describe('Sign-In flow using verification-code identifiers', () => {
       phone: userProfile.primaryPhone,
     });
 
-    const verificationCodeRecord = await readPasscode();
+    const verificationCodeRecord = await readVerificationCode();
 
     expect(verificationCodeRecord).toMatchObject({
       phone: userProfile.primaryPhone,
@@ -115,7 +115,7 @@ describe('Sign-In flow using verification-code identifiers', () => {
       email: newEmail,
     });
 
-    const verificationCodeRecord = await readPasscode();
+    const verificationCodeRecord = await readVerificationCode();
 
     const { code } = verificationCodeRecord;
 
@@ -154,7 +154,7 @@ describe('Sign-In flow using verification-code identifiers', () => {
       phone: newPhone,
     });
 
-    const verificationCodeRecord = await readPasscode();
+    const verificationCodeRecord = await readVerificationCode();
 
     const { code } = verificationCodeRecord;
 
@@ -198,7 +198,7 @@ describe('Sign-In flow using verification-code identifiers', () => {
     await client.successSend(sendVerificationCode, {
       email: userProfile.primaryEmail,
     });
-    const { code } = await readPasscode();
+    const { code } = await readVerificationCode();
 
     await client.successSend(patchInteractionIdentifiers, {
       email: userProfile.primaryEmail,
@@ -257,7 +257,7 @@ describe('Sign-In flow using verification-code identifiers', () => {
     await client.successSend(sendVerificationCode, {
       email: userProfile.primaryEmail,
     });
-    const { code } = await readPasscode();
+    const { code } = await readVerificationCode();
 
     await client.successSend(patchInteractionIdentifiers, {
       email: userProfile.primaryEmail,
@@ -308,7 +308,7 @@ describe('Sign-In flow using verification-code identifiers', () => {
     await client.successSend(sendVerificationCode, {
       email: userProfile.primaryEmail,
     });
-    const { code } = await readPasscode();
+    const { code } = await readVerificationCode();
 
     await client.successSend(patchInteractionIdentifiers, {
       email: userProfile.primaryEmail,

@@ -13,7 +13,7 @@ import {
   setSmsConnector,
   setEmailConnector,
 } from '#src/helpers/connector.js';
-import { readPasscode, expectRejects } from '#src/helpers/index.js';
+import { readVerificationCode, expectRejects } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,
   enableAllVerificationCodeSignInMethods,
@@ -118,7 +118,7 @@ describe('Sign-In flow using password identifiers', () => {
       email: primaryEmail,
     });
 
-    const { code } = await readPasscode();
+    const { code } = await readVerificationCode();
 
     await client.successSend(patchInteractionIdentifiers, {
       email: primaryEmail,
@@ -177,7 +177,7 @@ describe('Sign-In flow using password identifiers', () => {
       phone: primaryPhone,
     });
 
-    const { code } = await readPasscode();
+    const { code } = await readVerificationCode();
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: primaryPhone,
