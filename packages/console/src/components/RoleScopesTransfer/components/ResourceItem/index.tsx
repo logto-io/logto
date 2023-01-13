@@ -32,7 +32,6 @@ const ResourceItem = ({ resource, selectedScopes, onSelectResource, onSelectScop
         <Checkbox
           checked={selectedScopesCount === totalScopesCount}
           indeterminate={selectedScopesCount > 0 && selectedScopesCount < totalScopesCount}
-          disabled={false}
           onChange={() => {
             onSelectResource(resource);
           }}

@@ -30,7 +30,6 @@ const SourceRoleItem = ({ role, isSelected, onSelect }: Props) => {
     >
       <Checkbox
         checked={isSelected}
-        disabled={false}
         onChange={() => {
           onSelect();
         }}
