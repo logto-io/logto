@@ -14,6 +14,7 @@ const roles = {
     'Create and manage Roles for your applications. Roles contain collections of Permissions and can be assigned to Users.',
   create_role_button: 'Create role',
   role_created: 'The role {{name}} has been successfully created!', // UNTRANSLATED
+  search: 'Search by role name, description or ID',
 };
 
 export default roles;

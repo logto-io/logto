@@ -12,6 +12,7 @@ type Props = {
   defaultValue?: string;
   isClearable?: boolean;
   placeholder?: string;
+  inputClassName?: string;
   onSearch?: (value: string) => void;
   onClearSearch?: () => void;
 };
@@ -20,6 +21,7 @@ const Search = ({
   defaultValue = '',
   isClearable = false,
   placeholder,
+  inputClassName,
   onSearch,
   onClearSearch,
 }: Props) => {
@@ -42,15 +44,14 @@ const Search = ({
 
   return (
     <div className={styles.search}>
-      <div className={styles.searchInput}>
-        <TextInput
-          value={inputValue}
-          icon={<SearchIcon className={styles.searchIcon} />}
-          placeholder={placeholder ?? t('general.search_placeholder')}
-          onChange={handleSearchChange}
-          onKeyPress={handleSearchKeyPress}
-        />
-      </div>
+      <TextInput
+        className={inputClassName}
+        value={inputValue}
+        icon={<SearchIcon className={styles.searchIcon} />}
+        placeholder={placeholder}
+        onChange={handleSearchChange}
+        onKeyPress={handleSearchKeyPress}
+      />
       <Button title="general.search" onClick={handleClick} />
       {isClearable && (
         <Button size="small" type="text" title="general.clear_result" onClick={onClearSearch} />

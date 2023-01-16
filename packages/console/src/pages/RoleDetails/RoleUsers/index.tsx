@@ -128,6 +128,7 @@ const RoleUsers = () => {
             <Search
               defaultValue={keyword}
               isClearable={Boolean(keyword)}
+              placeholder={t('general.search_placeholder')}
               onSearch={(value) => {
                 setKeyword(value);
                 setPageIndex(1);

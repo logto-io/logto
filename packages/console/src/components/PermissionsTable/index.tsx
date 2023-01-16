@@ -115,6 +115,7 @@ const PermissionsTable = ({
       filter={
         <div className={styles.filter}>
           <Search
+            inputClassName={styles.searchInput}
             defaultValue={keyword}
             isClearable={Boolean(keyword)}
             placeholder={t(

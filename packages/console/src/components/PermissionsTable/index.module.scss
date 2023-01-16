@@ -9,6 +9,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .searchInput {
+      width: 306px;
+    }
   }
 
   tbody {
