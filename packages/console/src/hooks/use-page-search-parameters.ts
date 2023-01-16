@@ -15,14 +15,14 @@ type UsePageSearchParametersReturn<T extends Parameters = Parameters> = [
  * Manage page search parameters
  *
  * @param config Define search parameter keys and their default value. E.g., `{ page: 1, keyword: '' }`
- * @returns [searchParams, updateSearchParams]
+ * @returns [pageSearchParams, updatePageSearchParams]
  */
 const usePageSearchParameters = <T extends Parameters>(
   config: T
 ): UsePageSearchParametersReturn<T> => {
   const [searchParameters, setSearchParameters] = useSearchParams();
 
-  const updateSearchParameters = useCallback(
+  const updatePageSearchParameters = useCallback(
     (parameters: Partial<T>) => {
       const baseParameters = new URLSearchParams(searchParameters);
 
@@ -55,7 +55,7 @@ const usePageSearchParameters = <T extends Parameters>(
         return [parameterKey, parameterValue];
       })
     ) as UsePageSearchParametersReturn<T>[0],
-    updateSearchParameters,
+    updatePageSearchParameters,
   ];
 };
 

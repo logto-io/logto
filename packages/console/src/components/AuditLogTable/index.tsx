@@ -28,7 +28,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
   const pageSize = defaultPageSize;
-  const [{ page, event, applicationId }, updateSearchParameters] = usePageSearchParameters({
+  const [{ page, event, applicationId }, updatePageSearchParameters] = usePageSearchParameters({
     page: 1,
     event: '',
     applicationId: '',
@@ -103,7 +103,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
             <EventSelector
               value={event}
               onChange={(event) => {
-                updateSearchParameters({ event, page: undefined });
+                updatePageSearchParameters({ event, page: undefined });
               }}
             />
           </div>
@@ -111,7 +111,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
             <ApplicationSelector
               value={applicationId}
               onChange={(applicationId) => {
-                updateSearchParameters({ applicationId, page: undefined });
+                updatePageSearchParameters({ applicationId, page: undefined });
               }}
             />
           </div>
@@ -122,7 +122,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
         totalCount,
         pageSize,
         onChange: (page) => {
-          updateSearchParameters({ page });
+          updatePageSearchParameters({ page });
         },
       }}
       isLoading={isLoading}
