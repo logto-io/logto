@@ -1,4 +1,4 @@
-import type { ConnectorSession } from '@logto/connector-kit';
+import type { ConnectorSession, SetSessionMode } from '@logto/connector-kit';
 import { connectorSessionGuard } from '@logto/connector-kit';
 import type { Profile } from '@logto/schemas';
 import { InteractionEvent } from '@logto/schemas';
@@ -137,7 +137,7 @@ export const assignConnectorSessionResult = async (
   ctx: Context,
   provider: Provider,
   connectorSession: ConnectorSession,
-  mode: 'replace' | 'merge' = 'replace'
+  mode: SetSessionMode = 'replace'
 ) => {
   const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
@@ -167,7 +167,7 @@ export const assignConnectorSessionResult = async (
 export const getConnectorSessionResult = async (
   ctx: Context,
   provider: Provider,
-  clearAfterGet = true
+  preserveResult = false
 ): Promise<ConnectorSession> => {
   const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
@@ -182,7 +182,7 @@ export const getConnectorSessionResult = async (
     'session.connector_validation_session_not_found'
   );
 
-  if (clearAfterGet) {
+  if (!preserveResult) {
     const { connectorSession, ...rest } = result;
     await provider.interactionResult(ctx.req, ctx.res, {
       ...rest,

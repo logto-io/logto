@@ -1,5 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { isLanguageTag } from '@logto/language-kit';
+import type { Optional } from '@silverhand/essentials';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -136,9 +137,11 @@ export const connectorSessionGuard = z
 
 export type ConnectorSession = z.infer<typeof connectorSessionGuard>;
 
-export type GetSession = () => Promise<ConnectorSession>;
+export type GetSession = (preserveResult?: boolean) => Promise<ConnectorSession>;
 
-export type SetSession = (storage: ConnectorSession) => Promise<void>;
+export type SetSessionMode = Optional<'replace' | 'merge'>;
+
+export type SetSession = (storage: ConnectorSession, mode: SetSessionMode) => Promise<void>;
 
 export type BaseConnector<Type extends ConnectorType> = {
   type: Type;

@@ -1,6 +1,7 @@
-import type { ConnectorSession, SocialUserInfo } from '@logto/connector-kit';
+import type { ConnectorSession, SetSessionMode, SocialUserInfo } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import type { Optional } from '@silverhand/essentials';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
@@ -50,8 +51,8 @@ export const createSocialAuthorizationUrl = async (
       jti,
       headers: { userAgent },
     },
-    async (connectorStorage: ConnectorSession) =>
-      assignConnectorSessionResult(ctx, provider, connectorStorage)
+    async (connectorStorage: ConnectorSession, mode: SetSessionMode) =>
+      assignConnectorSessionResult(ctx, provider, connectorStorage, mode)
   );
 };
 
@@ -67,8 +68,11 @@ export const verifySocialIdentity = async (
   const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 
-  const userInfo = await getUserInfoByAuthCode(connectorId, connectorData, async () =>
-    getConnectorSessionResult(ctx, provider)
+  const userInfo = await getUserInfoByAuthCode(
+    connectorId,
+    connectorData,
+    async (preserveResult: Optional<boolean>) =>
+      getConnectorSessionResult(ctx, provider, preserveResult)
   );
 
   log.append(userInfo);
