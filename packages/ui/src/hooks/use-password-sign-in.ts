@@ -4,8 +4,6 @@ import type { PasswordSignInPayload } from '@/apis/interaction';
 import { signInWithPasswordIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import { SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
 
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 
@@ -38,8 +36,7 @@ const usePasswordSignIn = () => {
 
   const onSubmit = useCallback(
     async (payload: PasswordSignInPayload) => {
-      const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-      await asyncSignIn(payload, socialToBind);
+      await asyncSignIn(payload);
     },
     [asyncSignIn]
   );

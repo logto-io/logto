@@ -5,8 +5,6 @@ import { addProfile } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
-import { SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
 
 const useSetUsername = () => {
   const navigate = useNavigate();
@@ -32,8 +30,7 @@ const useSetUsername = () => {
 
   const onSubmit = useCallback(
     async (username: string) => {
-      const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-      await asyncAddProfile({ username }, socialToBind);
+      await asyncAddProfile({ username });
     },
     [asyncAddProfile]
   );

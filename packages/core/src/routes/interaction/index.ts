@@ -28,6 +28,7 @@ import {
   getInteractionStorage,
   storeInteractionResult,
   mergeIdentifiers,
+  isForgotPasswordInteractionResult,
 } from './utils/interaction.js';
 import {
   verifySignInModeSettings,
@@ -287,6 +288,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { interactionDetails, createLog } = ctx;
       const interactionStorage = getInteractionStorage(interactionDetails.result);
+
       const { event } = interactionStorage;
 
       const log = createLog(`Interaction.${event}.Submit`);
@@ -294,13 +296,13 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       const accountVerifiedInteraction = await verifyIdentifier(ctx, tenant, interactionStorage);
 
-      const verifiedInteraction = await verifyProfile(tenant, accountVerifiedInteraction);
+      const profileVerifiedInteraction = await verifyProfile(tenant, accountVerifiedInteraction);
 
-      if (event !== InteractionEvent.ForgotPassword) {
-        await validateMandatoryUserProfile(queries.users, ctx, verifiedInteraction);
-      }
+      const interaction = isForgotPasswordInteractionResult(profileVerifiedInteraction)
+        ? profileVerifiedInteraction
+        : await validateMandatoryUserProfile(queries.users, ctx, profileVerifiedInteraction);
 
-      await submitInteraction(verifiedInteraction, ctx, tenant, log);
+      await submitInteraction(interaction, ctx, tenant, log);
 
       return next();
     }

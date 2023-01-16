@@ -26,7 +26,6 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
             navigate(
               {
                 pathname: `/${UserFlow.continue}/${missingProfile}`,
-                search: location.search,
               },
               { replace }
             );
@@ -35,7 +34,6 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
             navigate(
               {
                 pathname: `/${UserFlow.continue}/phone`,
-                search: location.search,
               },
               { replace }
             );
@@ -44,7 +42,6 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
             navigate(
               {
                 pathname: `/${UserFlow.continue}/email-or-phone/email`,
-                search: location.search,
               },
               { replace }
             );
