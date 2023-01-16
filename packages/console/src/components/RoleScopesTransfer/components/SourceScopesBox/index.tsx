@@ -9,6 +9,7 @@ import Search from '@/assets/images/search.svg';
 import DataEmpty from '@/components/DataEmpty';
 import type { DetailedResourceResponse } from '@/components/RoleScopesTransfer/types';
 import TextInput from '@/components/TextInput';
+import type { RequestError } from '@/hooks/use-api';
 import * as transferLayout from '@/scss/transfer.module.scss';
 
 import ResourceItem from '../ResourceItem';
@@ -22,8 +23,18 @@ type Props = {
 
 const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data = [] } = useSWR<ResourceResponse[]>('/api/resources?includeScopes=true');
-  const { data: roleScopes = [] } = useSWR<Scope[]>(roleId && `/api/roles/${roleId}/scopes`);
+
+  const { data: allResources, error: fetchAllResourcesError } = useSWR<
+    ResourceResponse[],
+    RequestError
+  >('/api/resources?includeScopes=true');
+
+  const { data: roleScopes, error: fetchRoleScopesError } = useSWR<Scope[], RequestError>(
+    roleId && `/api/roles/${roleId}/scopes`
+  );
+
+  const isLoading =
+    (!allResources && !fetchAllResourcesError) || (!roleScopes && !fetchRoleScopesError);
 
   const [keyword, setKeyword] = useState('');
 
@@ -59,9 +70,13 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
     scopes.filter((scope) => selectedScopes.findIndex(({ id }) => id === scope.id) >= 0);
 
   const resources: DetailedResourceResponse[] = useMemo(() => {
+    if (!allResources || !roleScopes) {
+      return [];
+    }
+
     const excludeScopeIds = new Set(roleScopes.map(({ id }) => id));
 
-    return data
+    return allResources
       .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.has(id)))
       .map(({ scopes, ...resource }) => ({
         ...resource,
@@ -72,7 +87,7 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
             resource,
           })),
       }));
-  }, [data, roleScopes]);
+  }, [allResources, roleScopes]);
 
   const dataSource = useMemo(() => {
     const lowerCasedKeyword = keyword.toLowerCase();
@@ -111,7 +126,13 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
         />
       </div>
       <div className={transferLayout.boxContent}>
-        {dataSource.length > 0 ? (
+        {!isLoading && dataSource.length === 0 && (
+          <DataEmpty
+            imageClassName={styles.emptyImage}
+            title={t('role_details.permission.empty')}
+          />
+        )}
+        {dataSource.length > 0 &&
           dataSource.map((resource) => (
             <ResourceItem
               key={resource.id}
@@ -120,13 +141,7 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
               onSelectResource={onSelectResource}
               onSelectScope={onSelectScope}
             />
-          ))
-        ) : (
-          <DataEmpty
-            imageClassName={styles.emptyImage}
-            title={t('role_details.permission.empty')}
-          />
-        )}
+          ))}
       </div>
     </div>
   );

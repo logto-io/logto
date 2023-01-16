@@ -41,7 +41,9 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
     ...conditional(keyword && { search: formatKeyword(keyword) }),
   });
 
-  const { data } = useSWR<[User[], number], RequestError>(url);
+  const { data, error } = useSWR<[User[], number], RequestError>(url);
+
+  const isLoading = !data && !error;
 
   const [dataSource = [], totalCount] = data ?? [];
 
@@ -65,7 +67,10 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
         />
       </div>
       <div className={transferLayout.boxContent}>
-        {dataSource.length > 0 ? (
+        {!isLoading && dataSource.length === 0 && (
+          <DataEmpty imageClassName={styles.emptyImage} title={t('role_details.users.empty')} />
+        )}
+        {dataSource.length > 0 &&
           dataSource.map((user) => {
             const isSelected = isUserAdded(user);
 
@@ -83,10 +88,7 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
                 }}
               />
             );
-          })
-        ) : (
-          <DataEmpty imageClassName={styles.emptyImage} title={t('role_details.users.empty')} />
-        )}
+          })}
       </div>
       <Pagination
         mode="pico"

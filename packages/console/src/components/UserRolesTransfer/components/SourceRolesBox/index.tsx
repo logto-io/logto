@@ -9,6 +9,7 @@ import Search from '@/assets/images/search.svg';
 import DataEmpty from '@/components/DataEmpty';
 import Pagination from '@/components/Pagination';
 import TextInput from '@/components/TextInput';
+import type { RequestError } from '@/hooks/use-api';
 import useDebounce from '@/hooks/use-debounce';
 import * as transferLayout from '@/scss/transfer.module.scss';
 import { buildUrl } from '@/utilities/url';
@@ -40,7 +41,9 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
     ...conditional(keyword && { search: `%${keyword}%` }),
   });
 
-  const { data } = useSWR<[RoleResponse[], number]>(url);
+  const { data, error } = useSWR<[RoleResponse[], number], RequestError>(url);
+
+  const isLoading = !data && !error;
 
   const [dataSource = [], totalCount] = data ?? [];
 
@@ -65,7 +68,10 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
         />
       </div>
       <div className={transferLayout.boxContent}>
-        {dataSource.length > 0 ? (
+        {!isLoading && dataSource.length === 0 && (
+          <DataEmpty imageClassName={styles.emptyImage} title={t('user_details.roles.empty')} />
+        )}
+        {dataSource.length > 0 &&
           dataSource.map((role) => {
             const isSelected = isRoleSelected(role);
 
@@ -83,10 +89,7 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
                 }}
               />
             );
-          })
-        ) : (
-          <DataEmpty imageClassName={styles.emptyImage} title={t('user_details.roles.empty')} />
-        )}
+          })}
       </div>
       <Pagination
         mode="pico"
