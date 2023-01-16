@@ -10,6 +10,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 export type SocialUserInfoSession = {
   connectorId: string;
@@ -45,7 +46,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
   const { findUserByEmail, findUserByPhone } = queries.users;
   const { getLogtoConnectorById } = connectorLibrary;
 
-  const getConnector = async (connectorId: string) => {
+  const getConnector = async (connectorId: string): Promise<LogtoConnector> => {
     try {
       return await getLogtoConnectorById(connectorId);
     } catch (error: unknown) {
@@ -109,5 +110,10 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
     return null;
   };
 
-  return { getUserInfoByAuthCode, getUserInfoFromInteractionResult, findSocialRelatedUser };
+  return {
+    getConnector,
+    getUserInfoByAuthCode,
+    getUserInfoFromInteractionResult,
+    findSocialRelatedUser,
+  };
 };

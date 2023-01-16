@@ -4,8 +4,8 @@ import { ConnectorType } from '@logto/schemas';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
-  getConnectorSessionResult,
   assignConnectorSessionResult,
+  getConnectorSessionResult,
 } from '#src/routes/interaction/utils/interaction.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -31,6 +31,7 @@ export const createSocialAuthorizationUrl = async (
   const {
     headers: { 'user-agent': userAgent },
   } = ctx.request;
+
   const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
   return connector.getAuthorizationUri(
