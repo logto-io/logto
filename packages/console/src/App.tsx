@@ -1,6 +1,10 @@
 import { UserScope } from '@logto/core-kit';
 import { LogtoProvider } from '@logto/react';
-import { adminConsoleApplicationId, managementResource } from '@logto/schemas';
+import {
+  adminConsoleApplicationId,
+  managementResource,
+  managementResourceScope,
+} from '@logto/schemas';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
@@ -139,7 +143,7 @@ const App = () => (
         endpoint: window.location.origin,
         appId: adminConsoleApplicationId,
         resources: [managementResource.indicator],
-        scopes: [UserScope.Identities, UserScope.CustomData],
+        scopes: [UserScope.Identities, UserScope.CustomData, managementResourceScope.name],
       }}
     >
       <Main />

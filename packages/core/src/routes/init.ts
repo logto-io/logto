@@ -1,4 +1,4 @@
-import { UserRole } from '@logto/schemas';
+import { managementResourceScope } from '@logto/schemas';
 import Koa from 'koa';
 import Router from 'koa-router';
 
@@ -32,7 +32,7 @@ const createRouters = (tenant: TenantContext) => {
   interactionRoutes(interactionRouter, tenant);
 
   const managementRouter: AuthedRouter = new Router();
-  managementRouter.use(koaAuth(tenant.envSet, UserRole.Admin));
+  managementRouter.use(koaAuth(tenant.envSet, managementResourceScope.name));
   applicationRoutes(managementRouter, tenant);
   settingRoutes(managementRouter, tenant);
   connectorRoutes(managementRouter, tenant);

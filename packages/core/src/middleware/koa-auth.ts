@@ -1,11 +1,11 @@
 import type { IncomingHttpHeaders } from 'http';
 
-import { UserRole, managementResource } from '@logto/schemas';
+import { managementResource, managementResourceScope } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
-import { conditional } from '@silverhand/essentials';
 import { jwtVerify } from 'jose';
 import type { MiddlewareType, Request } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
+import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -42,6 +42,7 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
 type TokenInfo = {
   sub: string;
   clientId: unknown;
+  scopes: string[];
   roleNames?: string[];
 };
 
@@ -54,13 +55,13 @@ export const verifyBearerTokenFromRequest = async (
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
 
   if ((!isProduction || isIntegrationTest) && userId) {
-    return { sub: userId, clientId: undefined, roleNames: [UserRole.Admin] };
+    return { sub: userId, clientId: undefined, scopes: [managementResourceScope.name] };
   }
 
   try {
     const { localJWKSet, issuer } = envSet.oidc;
     const {
-      payload: { sub, client_id: clientId, role_names: roleNames },
+      payload: { sub, client_id: clientId, scope = '' },
     } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), localJWKSet, {
       issuer,
       audience: resourceIndicator,
@@ -68,7 +69,7 @@ export const verifyBearerTokenFromRequest = async (
 
     assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
 
-    return { sub, clientId, roleNames: conditional(Array.isArray(roleNames) && roleNames) };
+    return { sub, clientId, scopes: z.string().parse(scope).split(' ') };
   } catch (error: unknown) {
     if (error instanceof RequestError) {
       throw error;
@@ -80,18 +81,18 @@ export const verifyBearerTokenFromRequest = async (
 
 export default function koaAuth<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
   envSet: EnvSet,
-  forRole?: UserRole
+  forScope?: string
 ): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
-    const { sub, clientId, roleNames } = await verifyBearerTokenFromRequest(
+    const { sub, clientId, scopes } = await verifyBearerTokenFromRequest(
       envSet,
       ctx.request,
       managementResource.indicator
     );
 
-    if (forRole) {
+    if (forScope) {
       assertThat(
-        roleNames?.includes(forRole),
+        scopes.includes(forScope),
         new RequestError({ code: 'auth.forbidden', status: 403 })
       );
     }

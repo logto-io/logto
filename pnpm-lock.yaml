@@ -109,7 +109,7 @@ importers:
       '@logto/language-kit': workspace:*
       '@logto/phrases': workspace:*
       '@logto/phrases-ui': workspace:*
-      '@logto/react': 1.0.0-beta.14
+      '@logto/react': 1.0.0-beta.15
       '@logto/schemas': workspace:*
       '@mdx-js/react': ^1.6.22
       '@parcel/core': 2.8.2
@@ -178,7 +178,7 @@ importers:
       '@logto/language-kit': link:../toolkit/language-kit
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
-      '@logto/react': 1.0.0-beta.14_react@18.2.0
+      '@logto/react': 1.0.0-beta.15_react@18.2.0
       '@logto/schemas': link:../schemas
       '@mdx-js/react': 1.6.22_react@18.2.0
       '@parcel/core': 2.8.2
@@ -408,7 +408,7 @@ importers:
       '@logto/core-kit': workspace:*
       '@logto/language-kit': workspace:*
       '@logto/phrases': workspace:*
-      '@logto/react': 1.0.0-beta.14
+      '@logto/react': 1.0.0-beta.15
       '@logto/schemas': workspace:*
       '@parcel/core': 2.8.2
       '@parcel/transformer-sass': 2.8.2
@@ -436,7 +436,7 @@ importers:
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/language-kit': link:../toolkit/language-kit
       '@logto/phrases': link:../phrases
-      '@logto/react': 1.0.0-beta.14_react@18.2.0
+      '@logto/react': 1.0.0-beta.15_react@18.2.0
       '@logto/schemas': link:../schemas
       '@parcel/core': 2.8.2
       '@parcel/transformer-sass': 2.8.2_@parcel+core@2.8.2
@@ -466,7 +466,7 @@ importers:
       '@jest/types': ^29.1.2
       '@logto/connector-kit': workspace:*
       '@logto/js': 1.0.0-beta.14
-      '@logto/node': 1.0.0-beta.14
+      '@logto/node': 1.0.0-beta.15
       '@logto/schemas': workspace:*
       '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': 1.3.0
@@ -494,7 +494,7 @@ importers:
       '@jest/types': 29.1.2
       '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/js': 1.0.0-beta.14
-      '@logto/node': 1.0.0-beta.14
+      '@logto/node': 1.0.0-beta.15
       '@logto/schemas': link:../schemas
       '@peculiar/webcrypto': 1.3.3
       '@silverhand/eslint-config': 1.3.0_k3lfx77tsvurbevhk73p7ygch4
@@ -2310,24 +2310,12 @@ packages:
     dev: true
     optional: true
 
-  /@logto/browser/1.0.0-beta.14:
-    resolution: {integrity: sha512-yjD1qtRXbX2E5Jgr5F1BK4SRwNhIlbJZK1yZLZNvOltEG76NhfoqvCI8P5PGIiPwvunB2lqPNJFsNOSI3k0Q+w==}
+  /@logto/browser/1.0.0-beta.15:
+    resolution: {integrity: sha512-AbIvIAO9GYXa2G2Komx0+pQ/PrSIdXCpEVZUtjEhQXQ07gmkeq4TRv3Q68H7HyHTVS1S2Rd5eZpWcqTcrj7DhQ==}
     dependencies:
-      '@logto/client': 1.0.0-beta.14
+      '@logto/client': 1.0.0-beta.15
       '@silverhand/essentials': 1.3.0
       js-base64: 3.7.3
-    dev: true
-
-  /@logto/client/1.0.0-beta.14:
-    resolution: {integrity: sha512-quhQJ4rjb1Djhspeq2F5pFxXdgjN5UaWei6nnbUfp12CDhRojKrLJIGl+FDx/HSWuG0b93nwxKnJeJsiX/8E3Q==}
-    dependencies:
-      '@logto/core-kit': 1.0.0-beta.20
-      '@logto/js': 1.0.0-beta.14
-      '@silverhand/essentials': 1.3.0
-      camelcase-keys: 7.0.2
-      jose: 4.11.1
-      lodash.get: 4.4.2
-      lodash.once: 4.1.1
     dev: true
 
   /@logto/client/1.0.0-beta.15:
@@ -2371,8 +2359,8 @@ packages:
       zod: 3.20.2
     dev: true
 
-  /@logto/node/1.0.0-beta.14:
-    resolution: {integrity: sha512-+0S6lBBcG3pOmjEMRQnD+6X0MJ3V3E/4In59ckl/uVr/UgIufvOKWJwWCfsVKyguaO3QweJn19x7YkF8FyO31g==}
+  /@logto/node/1.0.0-beta.15:
+    resolution: {integrity: sha512-ELTnVZqKwRH7NIa3C2EWEmWGvocPexpcdpWE9GHFt4N7nYB1mcFoeB5yni6uLdkUNpoW1cKfoGg8ZXEPlaodGQ==}
     dependencies:
       '@logto/client': 1.0.0-beta.15
       '@silverhand/essentials': 1.3.0
@@ -2382,12 +2370,12 @@ packages:
       - encoding
     dev: true
 
-  /@logto/react/1.0.0-beta.14_react@18.2.0:
-    resolution: {integrity: sha512-lHuwpHzJkIbHj/VvhzxmL7hWkyDYA8rInv0sm0M21br43OotgP7fMc62Wj78ty+QIj+or5UGwCcULBa8HySQcQ==}
+  /@logto/react/1.0.0-beta.15_react@18.2.0:
+    resolution: {integrity: sha512-G/GZFtPifv9Ln+iL8ka+LhfnawyC2UUFzcEIomO5qP5fN11+eYES80O6a0jNGPm3+8t6otefYPO8skyByohm/w==}
     peerDependencies:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
-      '@logto/browser': 1.0.0-beta.14
+      '@logto/browser': 1.0.0-beta.15
       '@silverhand/essentials': 1.3.0
       react: 18.2.0
     dev: true
