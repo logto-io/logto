@@ -16,6 +16,7 @@ import IconButton from '@/components/IconButton';
 import ItemPreview from '@/components/ItemPreview';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
+import { Tooltip } from '@/components/Tip';
 import UserAvatar from '@/components/UserAvatar';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
@@ -113,13 +114,15 @@ const RoleUsers = () => {
             dataIndex: 'delete',
             colSpan: 1,
             render: (user) => (
-              <IconButton
-                onClick={() => {
-                  setUserToBeDeleted(user);
-                }}
-              >
-                <Delete />
-              </IconButton>
+              <Tooltip content={t('general.delete')}>
+                <IconButton
+                  onClick={() => {
+                    setUserToBeDeleted(user);
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+              </Tooltip>
             ),
           },
         ]}

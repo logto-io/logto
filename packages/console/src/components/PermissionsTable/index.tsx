@@ -5,15 +5,16 @@ import { useTranslation } from 'react-i18next';
 
 import Delete from '@/assets/images/delete.svg';
 import Plus from '@/assets/images/plus.svg';
+import Button from '@/components/Button';
+import IconButton from '@/components/IconButton';
+import Search from '@/components/Search';
+import Table from '@/components/Table';
+import type { Column } from '@/components/Table/types';
+import TextLink from '@/components/TextLink';
+import { Tooltip } from '@/components/Tip';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 
-import Button from '../Button';
-import IconButton from '../IconButton';
 import type { Props as PaginationProps } from '../Pagination';
-import Search from '../Search';
-import Table from '../Table';
-import type { Column } from '../Table/types';
-import TextLink from '../TextLink';
 import * as styles from './index.module.scss';
 
 type SearchProps = {
@@ -85,13 +86,15 @@ const PermissionsTable = ({
        * When the table is read-only, hide the delete button rather than the whole column to keep the table column spaces.
        */
       isReadOnly ? null : (
-        <IconButton
-          onClick={() => {
-            deleteHandler(scope);
-          }}
-        >
-          <Delete />
-        </IconButton>
+        <Tooltip content={t('general.delete')}>
+          <IconButton
+            onClick={() => {
+              deleteHandler(scope);
+            }}
+          >
+            <Delete />
+          </IconButton>
+        </Tooltip>
       ),
   };
 
