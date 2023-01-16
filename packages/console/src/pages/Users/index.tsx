@@ -1,8 +1,7 @@
 import type { User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
@@ -11,40 +10,33 @@ import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import DateTime from '@/components/DateTime';
 import ItemPreview from '@/components/ItemPreview';
-import Pagination from '@/components/Pagination';
 import Search from '@/components/Search';
-import TableEmpty from '@/components/Table/TableEmpty';
-import TableError from '@/components/Table/TableError';
-import TableLoading from '@/components/Table/TableLoading';
+import Table from '@/components/Table';
 import UserAvatar from '@/components/UserAvatar';
 import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
+import useTableSearchParams from '@/hooks/use-table-search-params';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import * as tableStyles from '@/scss/table.module.scss';
 import { buildUrl } from '@/utilities/url';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
-
-const pageSize = 20;
-
-const userTableColumn = 3;
 
 const usersPathname = '/users';
 const createUserPathname = `${usersPathname}/create`;
 const buildDetailsPathname = (id: string) => `${usersPathname}/${id}/${UserDetailsTabs.Settings}`;
 
 const Users = () => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const isCreateNew = pathname === createUserPathname;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [query, setQuery] = useSearchParams();
-  const search = query.toString();
-  const pageIndex = Number(query.get('page') ?? '1');
-  const keyword = query.get('search') ?? '';
+  const {
+    pagination: { pageIndex, pageSize, setPageIndex },
+    search: { keyword, setKeyword },
+  } = useTableSearchParams();
 
   const url = buildUrl('/api/users', {
-    hideAdminUser: 'true',
+    hideAdminUser: String(true),
     page: String(pageIndex),
     page_size: String(pageSize),
     ...conditional(keyword && { search: `%${keyword}%` }),
@@ -82,93 +74,81 @@ const Users = () => {
           />
         )}
       </div>
-      <div className={classNames(resourcesStyles.table, styles.tableLayout)}>
-        <div className={styles.filter}>
+      <Table
+        className={resourcesStyles.table}
+        rowGroups={[{ key: 'users', data: users }]}
+        rowIndexKey="id"
+        isLoading={isLoading}
+        errorMessage={error?.body?.message ?? error?.message}
+        columns={[
+          {
+            title: t('users.user_name'),
+            dataIndex: 'name',
+            colSpan: 6,
+            render: ({ id, name, avatar }) => (
+              <ItemPreview
+                title={name ?? t('users.unnamed')}
+                subtitle={id}
+                icon={<UserAvatar className={styles.avatar} url={avatar} />}
+                to={buildDetailsPathname(id)}
+                size="compact"
+              />
+            ),
+          },
+          {
+            title: t('users.application_name'),
+            dataIndex: 'app',
+            colSpan: 5,
+            render: ({ applicationId }) =>
+              applicationId ? <ApplicationName applicationId={applicationId} /> : <div>-</div>,
+          },
+          {
+            title: t('users.latest_sign_in'),
+            dataIndex: 'lastSignInAt',
+            colSpan: 5,
+            render: ({ lastSignInAt }) => <DateTime>{lastSignInAt}</DateTime>,
+          },
+        ]}
+        filter={
           <Search
             inputClassName={styles.searchInput}
             placeholder={t('users.search')}
             defaultValue={keyword}
             isClearable={Boolean(keyword)}
             onSearch={(value) => {
-              setQuery(value ? { search: value } : {});
+              setKeyword(value);
+              setPageIndex(1);
             }}
             onClearSearch={() => {
-              setQuery({});
+              setKeyword('');
+              setPageIndex(1);
             }}
           />
-        </div>
-        <div className={classNames(tableStyles.scrollable, styles.tableContainer)}>
-          <table className={conditional(!data && tableStyles.empty)}>
-            <colgroup>
-              <col className={styles.userName} />
-              <col />
-              <col />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>{t('users.user_name')}</th>
-                <th>{t('users.application_name')}</th>
-                <th>{t('users.latest_sign_in')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!data && error && (
-                <TableError
-                  columns={userTableColumn}
-                  content={error.body?.message ?? error.message}
-                  onRetry={async () => mutate(undefined, true)}
-                />
-              )}
-              {isLoading && <TableLoading columns={userTableColumn} />}
-              {users?.length === 0 && (
-                <TableEmpty columns={userTableColumn}>
-                  <Button
-                    title="users.create"
-                    type="outline"
-                    onClick={() => {
-                      navigate({
-                        pathname: createUserPathname,
-                        search,
-                      });
-                    }}
-                  />
-                </TableEmpty>
-              )}
-              {users?.map(({ id, name, avatar, lastSignInAt, applicationId }) => (
-                <tr
-                  key={id}
-                  className={tableStyles.clickable}
-                  onClick={() => {
-                    navigate(buildDetailsPathname(id));
-                  }}
-                >
-                  <td>
-                    <ItemPreview
-                      title={name ?? t('users.unnamed')}
-                      subtitle={id}
-                      icon={<UserAvatar className={styles.avatar} url={avatar} />}
-                      to={buildDetailsPathname(id)}
-                      size="compact"
-                    />
-                  </td>
-                  <td>{applicationId ? <ApplicationName applicationId={applicationId} /> : '-'}</td>
-                  <td>
-                    <DateTime>{lastSignInAt}</DateTime>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <Pagination
-        pageIndex={pageIndex}
-        totalCount={totalCount}
-        pageSize={pageSize}
-        className={styles.pagination}
-        onChange={(page) => {
-          setQuery({ page: String(page), ...conditional(keyword && { search: keyword }) });
+        }
+        placeholder={{
+          content: (
+            <Button
+              title="users.create"
+              type="outline"
+              onClick={() => {
+                navigate({
+                  pathname: createUserPathname,
+                  search,
+                });
+              }}
+            />
+          ),
         }}
+        rowClickHandler={({ id }) => {
+          navigate(buildDetailsPathname(id));
+        }}
+        pagination={{
+          pageIndex,
+          pageSize,
+          totalCount,
+          onChange: setPageIndex,
+        }}
+        onRetry={async () => mutate(undefined, true)}
       />
     </div>
   );
