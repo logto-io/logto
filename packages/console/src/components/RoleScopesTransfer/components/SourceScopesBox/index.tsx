@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Search from '@/assets/images/search.svg';
+import DataEmpty from '@/components/DataEmpty';
 import type { DetailedResourceResponse } from '@/components/RoleScopesTransfer/types';
 import TextInput from '@/components/TextInput';
 import * as transferLayout from '@/scss/transfer.module.scss';
@@ -110,15 +111,22 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
         />
       </div>
       <div className={transferLayout.boxContent}>
-        {dataSource.map((resource) => (
-          <ResourceItem
-            key={resource.id}
-            resource={resource}
-            selectedScopes={getResourceSelectedScopes(resource)}
-            onSelectResource={onSelectResource}
-            onSelectScope={onSelectScope}
+        {dataSource.length > 0 ? (
+          dataSource.map((resource) => (
+            <ResourceItem
+              key={resource.id}
+              resource={resource}
+              selectedScopes={getResourceSelectedScopes(resource)}
+              onSelectResource={onSelectResource}
+              onSelectScope={onSelectScope}
+            />
+          ))
+        ) : (
+          <DataEmpty
+            imageClassName={styles.emptyImage}
+            title={t('role_details.permission.empty')}
           />
-        ))}
+        )}
       </div>
     </div>
   );

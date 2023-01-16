@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Search from '@/assets/images/search.svg';
+import DataEmpty from '@/components/DataEmpty';
 import Pagination from '@/components/Pagination';
 import TextInput from '@/components/TextInput';
 import useDebounce from '@/hooks/use-debounce';
@@ -64,24 +65,28 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
         />
       </div>
       <div className={transferLayout.boxContent}>
-        {dataSource.map((role) => {
-          const isSelected = isRoleSelected(role);
+        {dataSource.length > 0 ? (
+          dataSource.map((role) => {
+            const isSelected = isRoleSelected(role);
 
-          return (
-            <SourceRoleItem
-              key={role.id}
-              role={role}
-              isSelected={isSelected}
-              onSelect={() => {
-                onChange(
-                  isSelected
-                    ? selectedRoles.filter(({ id }) => id !== role.id)
-                    : [role, ...selectedRoles]
-                );
-              }}
-            />
-          );
-        })}
+            return (
+              <SourceRoleItem
+                key={role.id}
+                role={role}
+                isSelected={isSelected}
+                onSelect={() => {
+                  onChange(
+                    isSelected
+                      ? selectedRoles.filter(({ id }) => id !== role.id)
+                      : [role, ...selectedRoles]
+                  );
+                }}
+              />
+            );
+          })
+        ) : (
+          <DataEmpty imageClassName={styles.emptyImage} title={t('user_details.roles.empty')} />
+        )}
       </div>
       <Pagination
         mode="pico"

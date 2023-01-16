@@ -1,37 +1,18 @@
-import { AppearanceMode } from '@logto/schemas';
-import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-
-import EmptyDark from '@/assets/images/table-empty-dark.svg';
-import Empty from '@/assets/images/table-empty.svg';
-import { useTheme } from '@/hooks/use-theme';
+import DataEmpty from '@/components/DataEmpty';
+import type { Props as DataEmptyProps } from '@/components/DataEmpty';
 
 import * as styles from './TableEmpty.module.scss';
 
-type Props = {
-  title?: string;
-  description?: string;
-  image?: ReactNode;
-  children?: ReactNode;
+type Props = DataEmptyProps & {
   columns: number;
 };
 
-const TableEmpty = ({ title, description, image, children, columns }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const theme = useTheme();
-
-  return (
-    <tr>
-      <td colSpan={columns} className={styles.tableEmptyTableData}>
-        <div className={styles.tableEmpty}>
-          {image ?? (theme === AppearanceMode.LightMode ? <Empty /> : <EmptyDark />)}
-          <div className={styles.title}>{title ?? t('errors.empty')}</div>
-          {description && <div className={styles.description}>{description}</div>}
-          {children}
-        </div>
-      </td>
-    </tr>
-  );
-};
+const TableEmpty = ({ columns, ...emptyProps }: Props) => (
+  <tr>
+    <td colSpan={columns} className={styles.tableEmptyTableData}>
+      <DataEmpty {...emptyProps} />
+    </td>
+  </tr>
+);
 
 export default TableEmpty;

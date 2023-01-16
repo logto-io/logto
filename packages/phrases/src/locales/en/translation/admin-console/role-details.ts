@@ -25,6 +25,7 @@ const role_details = {
     deletion_description:
       'If this permission is deleted, the affected user with this role will lose the access granted by this permission.',
     permission_deleted: 'The permission "{{name}}" was successfully removed from this role!',
+    empty: 'No permission available',
   },
   users: {
     assign_button: 'Assign Users',
@@ -40,6 +41,7 @@ const role_details = {
     assign_users_field: 'Assign users',
     confirm_assign: 'Assign users',
     users_assigned: 'The selected users were successfully assigned to this role!',
+    empty: 'No user available',
   },
 };
 
