@@ -1,45 +1,41 @@
 import type { Log } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApplicationName from '@/components/ApplicationName';
-import Pagination from '@/components/Pagination';
-import TableEmpty from '@/components/Table/TableEmpty';
-import TableError from '@/components/Table/TableError';
-import TableLoading from '@/components/Table/TableLoading';
 import UserName from '@/components/UserName';
+import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
-import * as tableStyles from '@/scss/table.module.scss';
+import usePageSearchParameters from '@/hooks/use-page-search-parameters';
 import { buildUrl } from '@/utilities/url';
 
+import Table from '../Table';
+import type { Column } from '../Table/types';
 import ApplicationSelector from './components/ApplicationSelector';
 import EventName from './components/EventName';
 import EventSelector from './components/EventSelector';
 import * as styles from './index.module.scss';
-
-const pageSize = 20;
 
 type Props = {
   userId?: string;
   className?: string;
 };
 
-const defaultTableColumn = 4;
-
 const AuditLogTable = ({ userId, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
-  const [query, setQuery] = useSearchParams();
-  const pageIndex = Number(query.get('page') ?? '1');
-  const event = query.get('event');
-  const applicationId = query.get('applicationId');
+  const pageSize = defaultPageSize;
+  const [{ page, event, applicationId }, updatePageSearchParameters] = usePageSearchParameters({
+    page: 1,
+    event: '',
+    applicationId: '',
+  });
 
   const url = buildUrl('/api/logs', {
-    page: String(pageIndex),
+    page: String(page),
     page_size: String(pageSize),
     ...conditional(event && { logType: event }),
     ...conditional(applicationId && { applicationId }),
@@ -50,109 +46,89 @@ const AuditLogTable = ({ userId, className }: Props) => {
   const isLoading = !data && !error;
   const navigate = useNavigate();
   const [logs, totalCount] = data ?? [];
-  const showUserColumn = !userId;
-  const tableColumnCount = showUserColumn ? defaultTableColumn : defaultTableColumn - 1;
+  const isUserColumnVisible = !userId;
 
-  const updateQuery = (key: string, value: string) => {
-    const queries: Record<string, string> = {};
-
-    for (const [key, value] of query.entries()) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      queries[key] = value;
-    }
-
-    setQuery({
-      ...queries,
-      [key]: value,
-    });
+  const eventColumn: Column<Log> = {
+    title: t('logs.event'),
+    dataIndex: 'event',
+    colSpan: isUserColumnVisible ? 5 : 6,
+    render: ({ key, payload: { result } }) => (
+      <EventName eventKey={key} isSuccess={result === LogResult.Success} />
+    ),
   };
 
+  const userColumn: Column<Log> = {
+    title: t('logs.user'),
+    dataIndex: 'user',
+    colSpan: 5,
+    render: ({ payload: { userId } }) => (userId ? <UserName userId={userId} /> : <div>-</div>),
+  };
+
+  const applicationColumn: Column<Log> = {
+    title: t('logs.application'),
+    dataIndex: 'application',
+    colSpan: isUserColumnVisible ? 3 : 5,
+    render: ({ payload: { applicationId } }) =>
+      applicationId ? <ApplicationName applicationId={applicationId} /> : <div>-</div>,
+  };
+
+  const timeColumn: Column<Log> = {
+    title: t('logs.time'),
+    dataIndex: 'time',
+    colSpan: isUserColumnVisible ? 3 : 5,
+    render: ({ createdAt }) => new Date(createdAt).toLocaleString(),
+  };
+
+  const columns: Array<Column<Log>> = [
+    eventColumn,
+    conditional(isUserColumnVisible && userColumn),
+    applicationColumn,
+    timeColumn,
+    // eslint-disable-next-line unicorn/prefer-native-coercion-functions
+  ].filter((column): column is Column<Log> => Boolean(column));
+
   return (
-    <div className={classNames(styles.container, className)}>
-      <div className={styles.tableLayout}>
+    <Table
+      className={className}
+      rowGroups={[{ key: 'logs', data: logs }]}
+      rowIndexKey="id"
+      columns={columns}
+      rowClickHandler={({ id }) => {
+        navigate(`${pathname}/${id}`);
+      }}
+      filter={
         <div className={styles.filter}>
           <div className={styles.title}>{t('logs.filter_by')}</div>
           <div className={styles.eventSelector}>
             <EventSelector
-              value={event ?? undefined}
-              onChange={(value) => {
-                updateQuery('event', value ?? '');
+              value={event}
+              onChange={(event) => {
+                updatePageSearchParameters({ event, page: undefined });
               }}
             />
           </div>
           <div className={styles.applicationSelector}>
             <ApplicationSelector
-              value={applicationId ?? undefined}
-              onChange={(value) => {
-                updateQuery('applicationId', value ?? '');
+              value={applicationId}
+              onChange={(applicationId) => {
+                updatePageSearchParameters({ applicationId, page: undefined });
               }}
             />
           </div>
         </div>
-        <div className={classNames(tableStyles.scrollable, styles.tableContainer)}>
-          <table className={conditional(logs?.length === 0 && tableStyles.empty)}>
-            <colgroup>
-              <col className={styles.eventName} />
-              {showUserColumn && <col />}
-              <col />
-              <col />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>{t('logs.event')}</th>
-                {showUserColumn && <th>{t('logs.user')}</th>}
-                <th>{t('logs.application')}</th>
-                <th>{t('logs.time')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!data && error && (
-                <TableError
-                  columns={tableColumnCount}
-                  content={error.body?.message ?? error.message}
-                  onRetry={async () => mutate(undefined, true)}
-                />
-              )}
-              {isLoading && <TableLoading columns={tableColumnCount} />}
-              {logs?.length === 0 && <TableEmpty columns={tableColumnCount} />}
-              {logs?.map(({ key, payload, createdAt, id }) => (
-                <tr
-                  key={id}
-                  className={tableStyles.clickable}
-                  onClick={() => {
-                    navigate(`${pathname}/${id}`);
-                  }}
-                >
-                  <td>
-                    <EventName eventKey={key} isSuccess={payload.result === LogResult.Success} />
-                  </td>
-                  {showUserColumn && (
-                    <td>{payload.userId ? <UserName userId={payload.userId} /> : '-'}</td>
-                  )}
-                  <td>
-                    {payload.applicationId ? (
-                      <ApplicationName applicationId={payload.applicationId} />
-                    ) : (
-                      '-'
-                    )}
-                  </td>
-                  <td>{new Date(createdAt).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <Pagination
-        pageIndex={pageIndex}
-        totalCount={totalCount}
-        pageSize={pageSize}
-        className={styles.pagination}
-        onChange={(page) => {
-          updateQuery('page', String(page));
-        }}
-      />
-    </div>
+      }
+      pagination={{
+        pageIndex: Number(page),
+        totalCount,
+        pageSize,
+        onChange: (page) => {
+          updatePageSearchParameters({ page });
+        },
+      }}
+      isLoading={isLoading}
+      errorMessage={error?.body?.message ?? error?.message}
+      onRetry={async () => mutate(undefined, true)}
+    />
   );
 };
 

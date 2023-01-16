@@ -8,9 +8,7 @@ const AuditLogs = () => {
       <div className={resourcesStyles.headline}>
         <CardTitle title="logs.title" subtitle="logs.subtitle" />
       </div>
-      <div className={resourcesStyles.table}>
-        <AuditLogTable />
-      </div>
+      <AuditLogTable className={resourcesStyles.table} />
     </div>
   );
 };

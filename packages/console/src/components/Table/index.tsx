@@ -99,14 +99,14 @@ const Table = <
               {!hasData && errorMessage && (
                 <TableError columns={columns.length} content={errorMessage} onRetry={onRetry} />
               )}
-              {!isLoading && !hasData && placeholder && (
+              {!isLoading && !hasData && (
                 <TableEmpty
                   columns={columns.length}
-                  title={placeholder.title}
-                  description={placeholder.description}
-                  image={placeholder.image}
+                  title={placeholder?.title}
+                  description={placeholder?.description}
+                  image={placeholder?.image}
                 >
-                  {placeholder.content}
+                  {placeholder?.content}
                 </TableEmpty>
               )}
               {rowGroups.map(({ key, label, labelClassName, data }) => (
