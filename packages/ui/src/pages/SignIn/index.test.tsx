@@ -8,7 +8,6 @@ import {
   emailSignInMethod,
   phoneSignInMethod,
 } from '@/__mocks__/logto';
-import { defaultSize } from '@/containers/SocialSignIn/SocialSignInList';
 import SignIn from '@/pages/SignIn';
 
 jest.mock('i18next', () => ({
@@ -32,7 +31,9 @@ describe('<SignIn />', () => {
     expect(queryByText('secondary.sign_in_with')).not.toBeNull();
 
     // Social
-    expect(queryAllByText('action.sign_in_with')).toHaveLength(defaultSize);
+    expect(queryAllByText('action.sign_in_with')).toHaveLength(
+      mockSignInExperienceSettings.socialConnectors.length
+    );
   });
 
   test('renders with email passwordless as primary', async () => {

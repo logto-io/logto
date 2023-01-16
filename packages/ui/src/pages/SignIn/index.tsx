@@ -42,11 +42,7 @@ const SignIn = () => {
         signInMethods.length > 0 && socialConnectors.length > 0 && (
           <>
             <Divider label="description.or" className={styles.divider} />
-            <SocialSignInList
-              isCollapseEnabled
-              socialConnectors={socialConnectors}
-              className={styles.main}
-            />
+            <SocialSignInList socialConnectors={socialConnectors} className={styles.main} />
           </>
         )
       }

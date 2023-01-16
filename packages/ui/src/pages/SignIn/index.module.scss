@@ -17,12 +17,6 @@
 }
 
 
-:global(body.mobile) {
-  .createAccount {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-}
-
 :global(body.desktop) {
   .placeHolder {
     flex: 0;
