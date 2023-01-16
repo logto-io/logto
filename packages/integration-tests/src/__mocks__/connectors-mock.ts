@@ -111,8 +111,12 @@ export const mockSmsConnectorConfig = {
       content: 'This is for forgot-password purposes only. Your passcode is {{code}}.',
     },
     {
-      content: 'This is for testing purposes only. Your passcode is {{code}}.',
+      usageType: 'Generic',
+      content: 'This is for Management API call only. Your passcode is {{code}}.',
+    },
+    {
       usageType: 'Test',
+      content: 'This is for testing purposes only. Your passcode is {{code}}.',
     },
   ],
 };
@@ -140,6 +144,12 @@ export const mockEmailConnectorConfig = {
       type: 'text/plain',
       subject: 'Logto Forgot Password Template',
       content: 'This is for forgot-password purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'Generic',
+      type: 'text/plain',
+      subject: 'Logto Generic Template',
+      content: 'This is for Management API call only. Your passcode is {{code}}.',
     },
     {
       usageType: 'Test',

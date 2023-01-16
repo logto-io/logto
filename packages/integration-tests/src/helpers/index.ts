@@ -8,6 +8,8 @@ import { RequestError } from 'got';
 import { createUser } from '#src/api/index.js';
 import { generateUsername } from '#src/utils.js';
 
+const temporaryVerificationCodeFilePath = path.join('/tmp', 'logto_mock_passcode_record.txt');
+
 export const createUserByAdmin = (
   username?: string,
   password?: string,
@@ -26,20 +28,28 @@ export const createUserByAdmin = (
   }).json<User>();
 };
 
-type PasscodeRecord = {
+type VerificationCodeRecord = {
   phone?: string;
   address?: string;
   code: string;
   type: string;
 };
 
-export const readPasscode = async (): Promise<PasscodeRecord> => {
-  const buffer = await fs.readFile(path.join('/tmp', 'logto_mock_passcode_record.txt'));
+export const readVerificationCode = async (): Promise<VerificationCodeRecord> => {
+  const buffer = await fs.readFile(temporaryVerificationCodeFilePath);
   const content = buffer.toString();
 
   // For test use only
   // eslint-disable-next-line no-restricted-syntax
-  return JSON.parse(content) as PasscodeRecord;
+  return JSON.parse(content) as VerificationCodeRecord;
+};
+
+export const removeVerificationCode = async (): Promise<void> => {
+  try {
+    await fs.unlink(temporaryVerificationCodeFilePath);
+  } catch {
+    // Do nothing
+  }
 };
 
 export const expectRejects = async (

@@ -17,7 +17,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
-import { readPasscode, expectRejects } from '#src/helpers/index.js';
+import { readVerificationCode, expectRejects } from '#src/helpers/index.js';
 import {
   enableAllVerificationCodeSignInMethods,
   enableAllPasswordSignInMethods,
@@ -79,7 +79,7 @@ describe('Register with passwordless identifier', () => {
       email: primaryEmail,
     });
 
-    const verificationCodeRecord = await readPasscode();
+    const verificationCodeRecord = await readVerificationCode();
 
     expect(verificationCodeRecord).toMatchObject({
       address: primaryEmail,
@@ -125,7 +125,7 @@ describe('Register with passwordless identifier', () => {
       email: primaryEmail,
     });
 
-    const verificationCodeRecord = await readPasscode();
+    const verificationCodeRecord = await readVerificationCode();
 
     const { code } = verificationCodeRecord;
 
@@ -183,7 +183,7 @@ describe('Register with passwordless identifier', () => {
       phone: primaryPhone,
     });
 
-    const verificationCodeRecord = await readPasscode();
+    const verificationCodeRecord = await readVerificationCode();
 
     expect(verificationCodeRecord).toMatchObject({
       phone: primaryPhone,
@@ -229,7 +229,7 @@ describe('Register with passwordless identifier', () => {
       phone: primaryPhone,
     });
 
-    const { code } = await readPasscode();
+    const { code } = await readVerificationCode();
 
     await client.successSend(patchInteractionIdentifiers, {
       phone: primaryPhone,
@@ -290,7 +290,7 @@ describe('Register with passwordless identifier', () => {
       email: primaryEmail,
     });
 
-    const verificationCodeRecord = await readPasscode();
+    const verificationCodeRecord = await readVerificationCode();
 
     expect(verificationCodeRecord).toMatchObject({
       address: primaryEmail,
@@ -342,7 +342,7 @@ describe('Register with passwordless identifier', () => {
       phone: primaryPhone,
     });
 
-    const verificationCodeRecord = await readPasscode();
+    const verificationCodeRecord = await readVerificationCode();
 
     expect(verificationCodeRecord).toMatchObject({
       phone: primaryPhone,

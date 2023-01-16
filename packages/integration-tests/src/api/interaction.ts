@@ -1,4 +1,9 @@
-import type { InteractionEvent, IdentifierPayload, Profile } from '@logto/schemas';
+import type {
+  InteractionEvent,
+  IdentifierPayload,
+  Profile,
+  RequestVerificationCodePayload,
+} from '@logto/schemas';
 
 import api from './api.js';
 
@@ -66,13 +71,10 @@ export const submitInteraction = async (cookie: string) =>
     .post('interaction/submit', { headers: { cookie }, followRedirect: false })
     .json<RedirectResponse>();
 
-export type SendVerificationCodePayload =
-  | {
-      email: string;
-    }
-  | { phone: string };
-
-export const sendVerificationCode = async (cookie: string, payload: SendVerificationCodePayload) =>
+export const sendVerificationCode = async (
+  cookie: string,
+  payload: RequestVerificationCodePayload
+) =>
   api.post('interaction/verification/verification-code', {
     headers: { cookie },
     json: payload,
