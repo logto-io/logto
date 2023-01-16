@@ -9,6 +9,7 @@ const users = {
   create_form_password: '비밀번호',
   create_form_name: '이름',
   unnamed: '이름없음',
+  search: 'Search by name, email, phone or username', // UNTRANSLATED
 };
 
 export default users;

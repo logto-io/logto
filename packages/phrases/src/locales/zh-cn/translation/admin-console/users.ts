@@ -9,6 +9,7 @@ const users = {
   create_form_password: '密码',
   create_form_name: '姓名',
   unnamed: '未命名',
+  search: 'Search by name, email, phone or username', // UNTRANSLATED
 };
 
 export default users;

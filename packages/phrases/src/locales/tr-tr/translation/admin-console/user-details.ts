@@ -55,6 +55,7 @@ const user_details = {
     assigned_user_count: '{{value, number}} users', // UNTRANSLATED
     confirm_assign: 'Assign roles', // UNTRANSLATED
     role_assigned: 'Successfully assigned role(s)', // UNTRANSLATED
+    search: 'Search by role name, description or ID', // UNTRANSLATED
   },
 };
 

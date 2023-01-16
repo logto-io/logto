@@ -85,6 +85,8 @@ const Users = () => {
       <div className={classNames(resourcesStyles.table, styles.tableLayout)}>
         <div className={styles.filter}>
           <Search
+            inputClassName={styles.searchInput}
+            placeholder={t('users.search')}
             defaultValue={keyword}
             isClearable={Boolean(keyword)}
             onSearch={(value) => {

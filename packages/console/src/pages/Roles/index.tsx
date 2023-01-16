@@ -17,6 +17,7 @@ import { buildUrl } from '@/utilities/url';
 
 import AssignedUsers from './components/AssignedUsers';
 import CreateRoleModal from './components/CreateRoleModal';
+import * as styles from './index.module.scss';
 
 const rolesPathname = '/roles';
 const createRolePathname = `${rolesPathname}/create`;
@@ -92,6 +93,8 @@ const Roles = () => {
         }}
         filter={
           <Search
+            inputClassName={styles.search}
+            placeholder={t('roles.search')}
             defaultValue={keyword}
             isClearable={Boolean(keyword)}
             onSearch={(value) => {

@@ -10,6 +10,7 @@ const users = {
   create_form_password: 'Password',
   create_form_name: 'Full name',
   unnamed: 'Unnamed',
+  search: 'Search by name, email, phone or username',
 };
 
 export default users;
