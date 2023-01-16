@@ -96,10 +96,10 @@ const Table = <
           <table>
             <tbody>
               {isLoading && <TableLoading columns={columns.length} />}
-              {!hasData && errorMessage && (
+              {!isLoading && !hasData && errorMessage && (
                 <TableError columns={columns.length} content={errorMessage} onRetry={onRetry} />
               )}
-              {!isLoading && !hasData && (
+              {!isLoading && !hasData && !errorMessage && (
                 <TableEmpty
                   columns={columns.length}
                   title={placeholder?.title}
