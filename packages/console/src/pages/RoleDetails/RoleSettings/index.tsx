@@ -50,8 +50,11 @@ const RoleSettings = () => {
           <FormField isRequired title="role_details.field_name">
             <TextInput {...register('name', { required: true })} hasError={Boolean(errors.name)} />
           </FormField>
-          <FormField title="role_details.field_description">
-            <TextInput {...register('description')} hasError={Boolean(errors.description)} />
+          <FormField isRequired title="role_details.field_description">
+            <TextInput
+              {...register('description', { required: true })}
+              hasError={Boolean(errors.description)}
+            />
           </FormField>
         </FormCard>
       </DetailsForm>
