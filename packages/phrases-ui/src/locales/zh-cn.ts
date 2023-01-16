@@ -34,7 +34,7 @@ const translation = {
     switch_to: '切换到{{method}}',
     sign_in_via_passcode: '用验证码登录',
     sign_in_via_password: '密码登录',
-    change: '更改 {{method}}',
+    change: '更改{{method}}',
   },
   description: {
     email: '邮箱',

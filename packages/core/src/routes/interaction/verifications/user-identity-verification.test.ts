@@ -112,7 +112,7 @@ describe('verifyUserAccount', () => {
           code: 'user.identity_not_exist',
           status: 422,
         },
-        { email: 'email@logto.io' }
+        {}
       )
     );
 
