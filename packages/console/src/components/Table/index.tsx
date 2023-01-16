@@ -28,6 +28,7 @@ type Props<
   columns: Array<Column<TFieldValues>>;
   rowIndexKey: TName;
   filter?: ReactNode;
+  isRowHoverEffectDisabled?: boolean;
   isRowClickable?: (row: TFieldValues) => boolean;
   rowClickHandler?: (row: TFieldValues) => void;
   className?: string;
@@ -48,6 +49,7 @@ const Table = <
   columns,
   rowIndexKey,
   filter,
+  isRowHoverEffectDisabled = false,
   rowClickHandler,
   isRowClickable = () => Boolean(rowClickHandler),
   className,
@@ -130,7 +132,10 @@ const Table = <
                     return (
                       <tr
                         key={row[rowIndexKey]}
-                        className={classNames(rowClickable && styles.clickable)}
+                        className={classNames(
+                          rowClickable && styles.clickable,
+                          !isRowHoverEffectDisabled && styles.hoverEffect
+                        )}
                         onClick={onClick}
                       >
                         {columns.map(({ dataIndex, colSpan, className, render }) => (
