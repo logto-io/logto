@@ -36,6 +36,8 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
   const isLoading =
     (!allResources && !fetchAllResourcesError) || (!roleScopes && !fetchRoleScopesError);
 
+  const hasError = Boolean(fetchAllResourcesError) || Boolean(fetchRoleScopesError);
+
   const [keyword, setKeyword] = useState('');
 
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -126,7 +128,7 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
         />
       </div>
       <div className={transferLayout.boxContent}>
-        {!isLoading && dataSource.length === 0 && (
+        {!isLoading && !hasError && dataSource.length === 0 && (
           <DataEmpty
             imageClassName={styles.emptyImage}
             title={t('role_details.permission.empty')}

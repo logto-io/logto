@@ -67,7 +67,7 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
         />
       </div>
       <div className={transferLayout.boxContent}>
-        {!isLoading && dataSource.length === 0 && (
+        {!isLoading && !error && dataSource.length === 0 && (
           <DataEmpty imageClassName={styles.emptyImage} title={t('role_details.users.empty')} />
         )}
         {dataSource.length > 0 &&
