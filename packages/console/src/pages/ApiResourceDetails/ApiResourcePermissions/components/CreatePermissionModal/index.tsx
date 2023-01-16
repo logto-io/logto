@@ -82,10 +82,10 @@ const CreatePermissionModal = ({ resourceId, onClose }: Props) => {
               errorMessage={errors.name?.message}
             />
           </FormField>
-          <FormField title="api_resource_details.permission.description">
+          <FormField isRequired title="api_resource_details.permission.description">
             <TextInput
               placeholder={t('api_resource_details.permission.description_placeholder')}
-              {...register('description')}
+              {...register('description', { required: true })}
             />
           </FormField>
         </form>
