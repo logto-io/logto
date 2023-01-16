@@ -45,7 +45,6 @@ const useSendVerificationCode = <T extends SignInIdentifier.Email | SignInIdenti
       navigate(
         {
           pathname: `/${flow}/${method}/verification-code`,
-          search: location.search,
         },
         {
           state: payload,

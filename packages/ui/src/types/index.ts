@@ -13,7 +13,6 @@ export enum UserFlow {
 }
 
 export enum SearchParameters {
-  bindWithSocial = 'bind_with',
   nativeCallbackLink = 'native_callback',
   redirectTo = 'redirect_to',
 }

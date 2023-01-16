@@ -14,8 +14,6 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
-import { SearchParameters } from '@/types';
-import { getSearchParameters } from '@/utils';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
@@ -42,13 +40,11 @@ const useSignInFlowCodeVerification = (
     requiredProfileErrorHandlers
   );
 
-  const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
-
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
 
   const identifierNotExistErrorHandler = useCallback(async () => {
     // Should not redirect user to register if is sign-in only mode or bind social flow
-    if (signInMode === SignInMode.SignIn || socialToBind) {
+    if (signInMode === SignInMode.SignIn) {
       void showIdentifierErrorAlert(IdentifierErrorType.IdentifierNotExist, method, target);
 
       return;
@@ -85,7 +81,6 @@ const useSignInFlowCodeVerification = (
     show,
     showIdentifierErrorAlert,
     signInMode,
-    socialToBind,
     t,
     target,
   ]);
@@ -118,9 +113,9 @@ const useSignInFlowCodeVerification = (
 
   const onSubmit = useCallback(
     async (payload: EmailVerificationCodePayload | PhoneVerificationCodePayload) => {
-      return asyncSignInWithVerificationCodeIdentifier(payload, socialToBind);
+      return asyncSignInWithVerificationCodeIdentifier(payload);
     },
-    [asyncSignInWithVerificationCodeIdentifier, socialToBind]
+    [asyncSignInWithVerificationCodeIdentifier]
   );
 
   return {

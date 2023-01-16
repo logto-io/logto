@@ -55,7 +55,7 @@ describe('EmailSignIn', () => {
       expect(putInteraction).not.toBeCalled();
       expect(sendVerificationCode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/email/password', search: '' },
+        { pathname: '/sign-in/email/password' },
         { state: { email } }
       );
     });
@@ -90,7 +90,7 @@ describe('EmailSignIn', () => {
       expect(putInteraction).not.toBeCalled();
       expect(sendVerificationCode).not.toBeCalled();
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/email/password', search: '' },
+        { pathname: '/sign-in/email/password' },
         { state: { email } }
       );
     });
@@ -126,7 +126,7 @@ describe('EmailSignIn', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
       expect(sendVerificationCode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/email/verification-code', search: '' },
+        { pathname: '/sign-in/email/verification-code' },
         { state: { email } }
       );
     });
@@ -162,7 +162,7 @@ describe('EmailSignIn', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
       expect(sendVerificationCode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/email/verification-code', search: '' },
+        { pathname: '/sign-in/email/verification-code' },
         { state: { email } }
       );
     });

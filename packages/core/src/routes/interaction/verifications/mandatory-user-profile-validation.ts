@@ -8,8 +8,17 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { WithInteractionSieContext } from '../middleware/koa-interaction-sie.js';
-import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
+import type {
+  SocialIdentifier,
+  VerifiedSignInInteractionResult,
+  VerifiedRegisterInteractionResult,
+} from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
+import { mergeIdentifiers } from '../utils/interaction.js';
+
+type MandatoryProfileValidationInteraction =
+  | VerifiedSignInInteractionResult
+  | VerifiedRegisterInteractionResult;
 
 // eslint-disable-next-line complexity
 const getMissingProfileBySignUpIdentifiers = ({
@@ -75,7 +84,7 @@ const getMissingProfileBySignUpIdentifiers = ({
   return missingProfile;
 };
 
-// This is a fallback logic make sure the user has a valid identifier for register should be guarded by the SIE already
+// This is a fallback logic make sure the user has a valid identifier for sign-up. Should be guarded by the SIE already
 const validateRegisterMandatoryUserProfile = (profile?: Profile) => {
   assertThat(
     profile && (profile.username ?? profile.email ?? profile.phone ?? profile.connectorId),
@@ -83,20 +92,99 @@ const validateRegisterMandatoryUserProfile = (profile?: Profile) => {
   );
 };
 
+// Fill the missing email or phone from the social identity if any
+const fillMissingProfileWithSocialIdentity = async (
+  missingProfile: Set<MissingProfile>,
+  interaction: MandatoryProfileValidationInteraction,
+  userQueries: Queries['users']
+): Promise<[Set<MissingProfile>, MandatoryProfileValidationInteraction]> => {
+  const { identifiers = [], profile } = interaction;
+
+  const socialIdentifier = identifiers.find(
+    (identifier): identifier is SocialIdentifier => identifier.key === 'social'
+  );
+
+  if (!socialIdentifier) {
+    return [missingProfile, interaction];
+  }
+
+  const {
+    userInfo: { email, phone },
+  } = socialIdentifier;
+
+  if (
+    (missingProfile.has(MissingProfile.email) || missingProfile.has(MissingProfile.emailOrPhone)) &&
+    email &&
+    // Email taken
+    !(await userQueries.hasUserWithEmail(email))
+  ) {
+    missingProfile.delete(MissingProfile.email);
+    missingProfile.delete(MissingProfile.emailOrPhone);
+
+    // Assign social verified email to the interaction
+    return [
+      missingProfile,
+      {
+        ...interaction,
+        identifiers: mergeIdentifiers({ key: 'emailVerified', value: email }, identifiers),
+        profile: {
+          ...profile,
+          email,
+        },
+      },
+    ];
+  }
+
+  if (
+    (missingProfile.has(MissingProfile.phone) || missingProfile.has(MissingProfile.emailOrPhone)) &&
+    phone &&
+    // Phone taken
+    !(await userQueries.hasUserWithPhone(phone))
+  ) {
+    missingProfile.delete(MissingProfile.phone);
+    missingProfile.delete(MissingProfile.emailOrPhone);
+
+    // Assign social verified phone to the interaction
+    return [
+      missingProfile,
+      {
+        ...interaction,
+        identifiers: mergeIdentifiers({ key: 'phoneVerified', value: phone }, identifiers),
+        profile: {
+          ...profile,
+          phone,
+        },
+      },
+    ];
+  }
+
+  return [missingProfile, interaction];
+};
+
 export default async function validateMandatoryUserProfile(
   userQueries: Queries['users'],
   ctx: WithInteractionSieContext<Context>,
-  interaction: IdentifierVerifiedInteractionResult
+  interaction: MandatoryProfileValidationInteraction
 ) {
   const { signUp } = ctx.signInExperience;
-  const { event, accountId, profile } = interaction;
+  const { event, profile } = interaction;
 
   const user =
-    event === InteractionEvent.Register ? null : await userQueries.findUserById(accountId);
+    event === InteractionEvent.Register
+      ? null
+      : // eslint-disable-next-line unicorn/consistent-destructuring -- have to infer the accountId existence by event !== register
+        await userQueries.findUserById(interaction.accountId);
+
   const missingProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
 
+  const [updatedMissingProfileSet, updatedInteraction] = await fillMissingProfileWithSocialIdentity(
+    missingProfileSet,
+    interaction,
+    userQueries
+  );
+
   assertThat(
-    missingProfileSet.size === 0,
+    updatedMissingProfileSet.size === 0,
     new RequestError(
       { code: 'user.missing_profile', status: 422 },
       { missingProfile: Array.from(missingProfileSet) }
@@ -106,4 +194,6 @@ export default async function validateMandatoryUserProfile(
   if (event === InteractionEvent.Register) {
     validateRegisterMandatoryUserProfile(profile);
   }
+
+  return updatedInteraction;
 }

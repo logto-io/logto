@@ -4,10 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/Button';
 import useBindSocial from '@/hooks/use-bind-social';
 import { useSieMethods } from '@/hooks/use-sie';
-import { SearchParameters, UserFlow } from '@/types';
-import { queryStringify } from '@/utils';
 
-import OtherMethodsLink from '../OtherMethodsLink';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -17,19 +14,29 @@ type Props = {
 
 const SocialCreateAccount = ({ connectorId, className }: Props) => {
   const { t } = useTranslation();
-  const { relatedUser, registerWithSocial, bindSocialRelatedUser } = useBindSocial();
+
+  const { relatedUser, socialIdentity, registerWithSocial, bindSocialRelatedUser } =
+    useBindSocial();
+
   const { signInMethods } = useSieMethods();
+
+  const relatedIdentifier = relatedUser && socialIdentity?.[relatedUser.type];
 
   return (
     <div className={classNames(styles.container, className)}>
-      {relatedUser && (
+      {relatedIdentifier && (
         <>
           <div className={styles.desc}>{t('description.social_bind_with_existing')}</div>
           <Button
             title="action.bind"
             i18nProps={{ address: relatedUser.value }}
             onClick={() => {
-              bindSocialRelatedUser({ connectorId, identityType: relatedUser.type });
+              bindSocialRelatedUser({
+                connectorId,
+                ...(relatedUser.type === 'email'
+                  ? { email: relatedIdentifier }
+                  : { phone: relatedIdentifier }),
+              });
             }}
           />
         </>
@@ -41,13 +48,6 @@ const SocialCreateAccount = ({ connectorId, className }: Props) => {
         onClick={() => {
           registerWithSocial(connectorId);
         }}
-      />
-      <OtherMethodsLink
-        methods={signInMethods.map(({ identifier }) => identifier)}
-        template="social_bind_with"
-        flow={UserFlow.signIn}
-        className={styles.desc}
-        search={queryStringify({ [SearchParameters.bindWithSocial]: connectorId })}
       />
     </div>
   );

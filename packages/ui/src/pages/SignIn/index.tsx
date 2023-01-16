@@ -33,7 +33,6 @@ const SignIn = () => {
             methods={otherMethods}
             template="sign_in_with"
             flow={UserFlow.signIn}
-            search={location.search}
           />
         )
       }

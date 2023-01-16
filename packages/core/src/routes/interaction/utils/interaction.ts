@@ -1,6 +1,7 @@
 import type { ConnectorSession } from '@logto/connector-kit';
 import { connectorSessionGuard } from '@logto/connector-kit';
-import type { Profile, InteractionEvent } from '@logto/schemas';
+import type { Profile } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import type { Context } from 'koa';
 import type { InteractionResults } from 'oidc-provider';
 import type Provider from 'oidc-provider';
@@ -14,6 +15,8 @@ import type {
   Identifier,
   AnonymousInteractionResult,
   AccountVerifiedInteractionResult,
+  VerifiedForgotPasswordInteractionResult,
+  VerifiedInteractionResult,
 } from '../types/index.js';
 
 const isProfileIdentifier = (identifier: Identifier, profile?: Profile) => {
@@ -83,6 +86,11 @@ export const categorizeIdentifiers = (
 export const isAccountVerifiedInteractionResult = (
   interaction: AnonymousInteractionResult
 ): interaction is AccountVerifiedInteractionResult => Boolean(interaction.accountId);
+
+export const isForgotPasswordInteractionResult = (
+  interaction: VerifiedInteractionResult
+): interaction is VerifiedForgotPasswordInteractionResult =>
+  interaction.event === InteractionEvent.ForgotPassword;
 
 export const storeInteractionResult = async (
   interaction: Omit<AnonymousInteractionResult, 'event'> & { event?: InteractionEvent },

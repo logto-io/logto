@@ -14,7 +14,6 @@ const useContinueSignInWithPassword = <T extends SignInIdentifier.Email | SignIn
     navigate(
       {
         pathname: `/${UserFlow.signIn}/${method}/password`,
-        search: location.search,
       },
       { state: payload }
     );

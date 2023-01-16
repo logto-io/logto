@@ -1,4 +1,4 @@
-import type { SocialIdentityPayload } from '@logto/schemas';
+import type { SocialEmailPayload, SocialPhonePayload } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -12,6 +12,7 @@ import useRequiredProfileErrorHandler from './use-required-profile-error-handler
 
 const useBindSocial = () => {
   const { state } = useLocation();
+
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler();
 
   const { result: registerResult, run: asyncRegisterWithSocial } = useApi(
@@ -31,7 +32,7 @@ const useBindSocial = () => {
   );
 
   const bindRelatedUserHandler = useCallback(
-    (payload: SocialIdentityPayload) => {
+    (payload: SocialEmailPayload | SocialPhonePayload) => {
       void asyncBindSocialRelatedUser(payload);
     },
     [asyncBindSocialRelatedUser]
@@ -51,6 +52,12 @@ const useBindSocial = () => {
 
   return {
     relatedUser: conditional(is(state, bindSocialStateGuard) && state.relatedUser),
+    socialIdentity: conditional(
+      is(state, bindSocialStateGuard) && {
+        email: state.email,
+        phone: state.phone,
+      }
+    ),
     registerWithSocial: createAccountHandler,
     bindSocialRelatedUser: bindRelatedUserHandler,
   };

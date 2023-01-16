@@ -11,7 +11,9 @@ const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
-  useLocation: () => ({ state: { relatedUser: { type: 'email', value: 'foo@logto.io' } } }),
+  useLocation: () => ({
+    state: { relatedUser: { type: 'email', value: 'foo@logto.io' }, email: 'email@logto.io' },
+  }),
 }));
 
 jest.mock('@/apis/interaction', () => ({
@@ -28,7 +30,6 @@ describe('SocialCreateAccount', () => {
     );
     expect(queryByText('description.social_create_account')).not.toBeNull();
     expect(queryByText('description.social_bind_with_existing')).not.toBeNull();
-    expect(queryByText('secondary.social_bind_with')).not.toBeNull();
   });
 
   it('should call registerWithVerifiedSocial when click create button', async () => {
@@ -48,6 +49,9 @@ describe('SocialCreateAccount', () => {
     await waitFor(() => {
       fireEvent.click(bindButton);
     });
-    expect(bindSocialRelatedUser).toBeCalledWith({ connectorId: 'github', identityType: 'email' });
+    expect(bindSocialRelatedUser).toBeCalledWith({
+      connectorId: 'github',
+      email: 'email@logto.io',
+    });
   });
 });

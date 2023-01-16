@@ -8,6 +8,8 @@ export const bindSocialStateGuard = s.object({
     type: s.union([s.literal('email'), s.literal('phone')]),
     value: s.string(),
   }),
+  email: s.optional(s.string()),
+  phone: s.optional(s.string()),
 });
 
 export const verificationCodeStateGuard = s.object({
