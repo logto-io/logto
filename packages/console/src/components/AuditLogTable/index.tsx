@@ -103,7 +103,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
             <EventSelector
               value={event}
               onChange={(event) => {
-                updateSearchParameters({ event, page: 1 });
+                updateSearchParameters({ event, page: undefined });
               }}
             />
           </div>
@@ -111,7 +111,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
             <ApplicationSelector
               value={applicationId}
               onChange={(applicationId) => {
-                updateSearchParameters({ applicationId, page: 1 });
+                updateSearchParameters({ applicationId, page: undefined });
               }}
             />
           </div>

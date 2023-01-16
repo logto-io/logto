@@ -1,6 +1,6 @@
 import { conditional } from '@silverhand/essentials';
-
-import useSearchParametersState from './use-search-parameters-state';
+import { useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 type Parameters = Record<string, string | number>;
 
@@ -20,7 +20,27 @@ type UsePageSearchParametersReturn<T extends Parameters = Parameters> = [
 const usePageSearchParameters = <T extends Parameters>(
   config: T
 ): UsePageSearchParametersReturn<T> => {
-  const [searchParameters, setSearchParameters] = useSearchParametersState();
+  const [searchParameters, setSearchParameters] = useSearchParams();
+
+  const updateSearchParameters = useCallback(
+    (parameters: Partial<T>) => {
+      const baseParameters = new URLSearchParams(searchParameters);
+
+      for (const key of Object.keys(parameters)) {
+        // eslint-disable-next-line no-restricted-syntax
+        const value = parameters[key as keyof Partial<T>];
+
+        if (value === undefined) {
+          baseParameters.delete(key);
+        } else {
+          baseParameters.set(key, String(value));
+        }
+      }
+
+      setSearchParameters(baseParameters);
+    },
+    [searchParameters, setSearchParameters]
+  );
 
   return [
     // eslint-disable-next-line no-restricted-syntax
@@ -35,24 +55,7 @@ const usePageSearchParameters = <T extends Parameters>(
         return [parameterKey, parameterValue];
       })
     ) as UsePageSearchParametersReturn<T>[0],
-    (parameters: Partial<T>) => {
-      setSearchParameters((previous) => {
-        const baseParameters = new URLSearchParams(previous);
-
-        for (const key of Object.keys(parameters)) {
-          // eslint-disable-next-line no-restricted-syntax
-          const value = parameters[key as keyof Partial<T>];
-
-          if (value === undefined) {
-            baseParameters.delete(key);
-          } else {
-            baseParameters.set(key, String(value));
-          }
-        }
-
-        return baseParameters;
-      });
-    },
+    updateSearchParameters,
   ];
 };
 
