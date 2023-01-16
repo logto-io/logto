@@ -93,10 +93,11 @@ const validateRegisterMandatoryUserProfile = (profile?: Profile) => {
 };
 
 // Fill the missing email or phone from the social identity if any
-const fillMissingProfileWithSocialIdentity = (
+const fillMissingProfileWithSocialIdentity = async (
   missingProfile: Set<MissingProfile>,
-  interaction: MandatoryProfileValidationInteraction
-): [Set<MissingProfile>, MandatoryProfileValidationInteraction] => {
+  interaction: MandatoryProfileValidationInteraction,
+  userQueries: Queries['users']
+): Promise<[Set<MissingProfile>, MandatoryProfileValidationInteraction]> => {
   const { identifiers = [], profile } = interaction;
 
   const socialIdentifier = identifiers.find(
@@ -113,7 +114,9 @@ const fillMissingProfileWithSocialIdentity = (
 
   if (
     (missingProfile.has(MissingProfile.email) || missingProfile.has(MissingProfile.emailOrPhone)) &&
-    email
+    email &&
+    // Email taken
+    !(await userQueries.hasUserWithEmail(email))
   ) {
     missingProfile.delete(MissingProfile.email);
     missingProfile.delete(MissingProfile.emailOrPhone);
@@ -134,7 +137,9 @@ const fillMissingProfileWithSocialIdentity = (
 
   if (
     (missingProfile.has(MissingProfile.phone) || missingProfile.has(MissingProfile.emailOrPhone)) &&
-    phone
+    phone &&
+    // Phone taken
+    !(await userQueries.hasUserWithPhone(phone))
   ) {
     missingProfile.delete(MissingProfile.phone);
     missingProfile.delete(MissingProfile.emailOrPhone);
@@ -172,9 +177,10 @@ export default async function validateMandatoryUserProfile(
 
   const missingProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
 
-  const [updatedMissingProfileSet, updatedInteraction] = fillMissingProfileWithSocialIdentity(
+  const [updatedMissingProfileSet, updatedInteraction] = await fillMissingProfileWithSocialIdentity(
     missingProfileSet,
-    interaction
+    interaction,
+    userQueries
   );
 
   assertThat(

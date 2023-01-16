@@ -13,7 +13,10 @@ const { jest } = import.meta;
 const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const findUserById = jest.fn();
-const { users } = new MockQueries({ users: { findUserById } });
+const hasUserWithEmail = jest.fn();
+const hasUserWithPhone = jest.fn();
+
+const { users } = new MockQueries({ users: { findUserById, hasUserWithEmail, hasUserWithPhone } });
 
 const { isUserPasswordSet } = mockEsm('../utils/index.js', () => ({
   isUserPasswordSet: jest.fn(),
@@ -121,7 +124,28 @@ describe('validateMandatoryUserProfile', () => {
       ).resolves.not.toThrow();
     });
 
+    it('identifier includes social with verified email but email occupied should throw', async () => {
+      hasUserWithEmail.mockResolvedValueOnce(true);
+
+      await expect(
+        validateMandatoryUserProfile(users, emailRequiredCtx, {
+          ...interaction,
+          identifiers: [
+            ...interaction.identifiers,
+            { key: 'social', userInfo: { email: 'email', id: 'foo' }, connectorId: 'logto' },
+          ],
+        })
+      ).rejects.toMatchError(
+        new RequestError(
+          { code: 'user.missing_profile', status: 422 },
+          { missingProfile: [MissingProfile.email] }
+        )
+      );
+    });
+
     it('identifier includes social with verified email should not throw', async () => {
+      hasUserWithEmail.mockResolvedValueOnce(false);
+
       const updatedInteraction = await validateMandatoryUserProfile(users, emailRequiredCtx, {
         ...interaction,
         identifiers: [
@@ -175,7 +199,28 @@ describe('validateMandatoryUserProfile', () => {
       ).resolves.not.toThrow();
     });
 
-    it('identifier includes social with verified email should not throw', async () => {
+    it('identifier includes social with verified phone but phone occupied should throw', async () => {
+      hasUserWithPhone.mockResolvedValueOnce(true);
+
+      await expect(
+        validateMandatoryUserProfile(users, phoneRequiredCtx, {
+          ...interaction,
+          identifiers: [
+            ...interaction.identifiers,
+            { key: 'social', userInfo: { phone: '123456', id: 'foo' }, connectorId: 'logto' },
+          ],
+        })
+      ).rejects.toMatchError(
+        new RequestError(
+          { code: 'user.missing_profile', status: 422 },
+          { missingProfile: [MissingProfile.phone] }
+        )
+      );
+    });
+
+    it('identifier includes social with verified phone should not throw', async () => {
+      hasUserWithPhone.mockResolvedValueOnce(false);
+
       const updatedInteraction = await validateMandatoryUserProfile(users, phoneRequiredCtx, {
         ...interaction,
         identifiers: [
