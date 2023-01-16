@@ -24,6 +24,7 @@ const translation = {
     confirm: '确认',
     save_password: '保存密码',
     bind: '绑定到 {{address}}',
+    bind_and_continue: 'Link and continue', // UNTRANSLATED
     back: '返回',
     nav_back: '返回',
     agree: '同意',
@@ -33,6 +34,7 @@ const translation = {
     switch_to: '切换到{{method}}',
     sign_in_via_passcode: '用验证码登录',
     sign_in_via_password: '密码登录',
+    change: '更改 {{method}}',
   },
   description: {
     email: '邮箱',
@@ -49,6 +51,8 @@ const translation = {
     resend_after_seconds: '在 <span>{{ seconds }}</span> 秒后重发',
     resend_passcode: '重发验证码',
     create_account_id_exists: '{{ type }}为 {{ value }} 的帐号已存在，你要登录吗？',
+    link_account_id_exists:
+      'The account with {{type}} {{value}} already exists, would you like to link?', // UNTRANSLATED
     sign_in_id_does_not_exist: '{{ type }}为 {{ value }} 的帐号不存在，你要创建一个新帐号吗？',
     sign_in_id_does_not_exist_alert: '{{ type }}为 {{ value }} 的帐号不存在。',
     create_account_id_exists_alert: '{{ type }}为 {{ value }} 的帐号已存在',

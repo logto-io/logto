@@ -22,6 +22,7 @@ const translation = {
     cancel: 'Cancel',
     save_password: 'Save',
     bind: 'Link with {{address}}',
+    bind_and_continue: 'Link and continue',
     back: 'Go back',
     nav_back: 'Back',
     agree: 'Agree',
@@ -31,6 +32,7 @@ const translation = {
     switch_to: 'Switch to {{method}}',
     sign_in_via_passcode: 'Sign in with verification code',
     sign_in_via_password: 'Sign in with password',
+    change: 'Change {{method}}',
   },
   description: {
     email: 'email',
@@ -48,6 +50,8 @@ const translation = {
     resend_passcode: 'Resend verification code',
     create_account_id_exists:
       'The account with {{type}} {{value}} already exists, would you like to sign in?',
+    link_account_id_exists:
+      'The account with {{type}} {{value}} already exists, would you like to link?',
     sign_in_id_does_not_exist:
       'The account with {{type}} {{value}} does not exist, would you like to create a new account?',
     sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.',

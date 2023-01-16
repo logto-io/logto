@@ -40,7 +40,8 @@ const useIdentifierErrorAlert = () => {
                 : formatPhoneNumberWithCountryCallingCode(identifier),
           }
         ),
-        cancelText: 'action.got_it',
+        cancelText: 'action.change',
+        cancelTextI18nProps: { method: identifierType },
       });
       navigate(-1);
     },

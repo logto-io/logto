@@ -12,12 +12,11 @@
 .desc {
   @include _.text-hint;
   text-align: left;
-
-  &:not(:first-child) {
-    margin-top: _.unit(8);
-  }
 }
 
+.divider {
+  margin: _.unit(5) 0;
+}
 
 :global(body.mobile) {
   .desc {

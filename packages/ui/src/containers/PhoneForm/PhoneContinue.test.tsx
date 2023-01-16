@@ -51,7 +51,7 @@ describe('PhoneContinue', () => {
       expect(putInteraction).not.toBeCalled();
       expect(sendVerificationCode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/continue/phone/verification-code' },
+        { pathname: '/continue/phone/verification-code', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });

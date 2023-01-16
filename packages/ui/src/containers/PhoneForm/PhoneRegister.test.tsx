@@ -52,7 +52,7 @@ describe('PhoneRegister', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.Register);
       expect(sendVerificationCode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/register/phone/verification-code' },
+        { pathname: '/register/phone/verification-code', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });

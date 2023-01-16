@@ -24,6 +24,7 @@ const translation = {
     cancel: 'İptal Et',
     save_password: 'Save', // UNTRANSLATED
     bind: '{{address}} ile birleştir',
+    bind_and_continue: 'Link and continue', // UNTRANSLATED
     back: 'Geri Dön',
     nav_back: 'Geri',
     agree: 'Kabul Et',
@@ -33,6 +34,7 @@ const translation = {
     switch_to: 'Switch to {{method}}', // UNTRANSLATED
     sign_in_via_passcode: 'Sign in with verification code', // UNTRANSLATED
     sign_in_via_password: 'Sign in with password', // UNTRANSLATED
+    change: 'Change {{method}}', // UNTRANSLATED
   },
   description: {
     email: 'e-posta adresi',
@@ -49,6 +51,8 @@ const translation = {
     resend_after_seconds: '<span>{{seconds}}</span> saniye sonra tekrar gönder',
     resend_passcode: 'Kodu Yeniden Gönder',
     create_account_id_exists: '{{type}} {{value}} ile hesap mevcut, giriş yapmak ister misiniz?',
+    link_account_id_exists:
+      'The account with {{type}} {{value}} already exists, would you like to link?', // UNTRANSLATED
     sign_in_id_does_not_exist:
       '{{type}} {{value}} ile hesap mevcut değil, yeni bir hesap oluşturmak ister misiniz?',
     sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED

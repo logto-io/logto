@@ -126,7 +126,7 @@ describe('EmailSignIn', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
       expect(sendVerificationCode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/email/verification-code' },
+        { pathname: '/sign-in/email/verification-code', search: '' },
         { state: { email } }
       );
     });
@@ -162,7 +162,7 @@ describe('EmailSignIn', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
       expect(sendVerificationCode).toBeCalledWith({ email });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/email/verification-code' },
+        { pathname: '/sign-in/email/verification-code', search: '' },
         { state: { email } }
       );
     });

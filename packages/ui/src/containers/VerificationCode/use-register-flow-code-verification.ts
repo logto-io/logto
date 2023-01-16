@@ -32,7 +32,7 @@ const useRegisterFlowCodeVerification = (
 
   const { signInMode } = useSieMethods();
 
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler(true);
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({ replace: true });
 
   const { run: signInWithIdentifierAsync } = useApi(
     signInWithVerifiedIdentifier,

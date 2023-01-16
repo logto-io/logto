@@ -1,9 +1,12 @@
+import type { RequestErrorBody } from '@logto/schemas';
 import { SignInMode } from '@logto/schemas';
 import { useEffect, useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { validate } from 'superstruct';
 
 import { signInWithSocial } from '@/apis/interaction';
+import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
 import { stateValidation } from '@/utils/social-connectors';
 
@@ -11,41 +14,59 @@ import type { ErrorHandlers } from './use-api';
 import useApi from './use-api';
 import { PageContext } from './use-page-context';
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
+import { useSieMethods } from './use-sie';
+import useSocialRegister from './use-social-register';
 
-const useSocialSignInListener = () => {
-  const { setToast, experienceSettings } = useContext(PageContext);
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler();
-
+const useSocialSignInListener = (connectorId?: string) => {
+  const { setToast } = useContext(PageContext);
+  const { signInMode, signUpMethods } = useSieMethods();
   const { t } = useTranslation();
-  const parameters = useParams();
+
   const navigate = useNavigate();
+
+  const registerWithSocial = useSocialRegister(connectorId);
+
+  const accountNotExistErrorHandler = useCallback(
+    async (error: RequestErrorBody) => {
+      const [, data] = validate(error.data, socialAccountNotExistErrorDataGuard);
+      const { relatedUser } = data ?? {};
+
+      if (!connectorId) {
+        return;
+      }
+
+      if (relatedUser) {
+        navigate(`/social/link/${connectorId}`, {
+          replace: true,
+          state: { relatedUser },
+        });
+
+        return;
+      }
+
+      // Register with social
+      await registerWithSocial(connectorId);
+    },
+    [connectorId, navigate, registerWithSocial]
+  );
+
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler();
 
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.identity_not_exist': (error) => {
-        // Should not let user register under sign-in only mode
-        if (experienceSettings?.signInMode === SignInMode.SignIn) {
+      'user.identity_not_exist': async (error) => {
+        // Should not let user register new social account under sign-in only mode
+        if (signInMode === SignInMode.SignIn) {
           setToast(error.message);
 
           return;
         }
 
-        if (parameters.connector) {
-          navigate(`/social/register/${parameters.connector}`, {
-            replace: true,
-            state: error.data,
-          });
-        }
+        await accountNotExistErrorHandler(error);
       },
       ...requiredProfileErrorHandlers,
     }),
-    [
-      experienceSettings?.signInMode,
-      navigate,
-      parameters.connector,
-      requiredProfileErrorHandlers,
-      setToast,
-    ]
+    [requiredProfileErrorHandlers, signInMode, accountNotExistErrorHandler, setToast]
   );
 
   const { result, run: asyncSignInWithSocial } = useApi(
@@ -58,7 +79,8 @@ const useSocialSignInListener = () => {
       void asyncSignInWithSocial({
         connectorId,
         connectorData: {
-          redirectUri: `${window.location.origin}/callback/${connectorId}`, // For validation use only
+          // For validation use only
+          redirectUri: `${window.location.origin}/callback/${connectorId}`,
           ...data,
         },
       });
@@ -74,20 +96,20 @@ const useSocialSignInListener = () => {
 
   // Social Sign-In Callback Handler
   useEffect(() => {
-    if (!parameters.connector) {
+    if (!connectorId) {
       return;
     }
 
     const { state, ...rest } = parseQueryParameters(window.location.search);
 
-    if (!state || !stateValidation(state, parameters.connector)) {
+    if (!state || !stateValidation(state, connectorId)) {
       setToast(t('error.invalid_connector_auth'));
 
       return;
     }
 
-    void signInWithSocialHandler(parameters.connector, rest);
-  }, [parameters.connector, setToast, signInWithSocialHandler, t]);
+    void signInWithSocialHandler(connectorId, rest);
+  }, [connectorId, setToast, signInWithSocialHandler, t]);
 };
 
 export default useSocialSignInListener;
