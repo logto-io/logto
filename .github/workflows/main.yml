@@ -85,19 +85,73 @@ jobs:
         with:
           context: .
   
-  main-alteration-sequence:
+  main-alteration:
     runs-on: ubuntu-latest
 
     steps:
+      # ** Checkout fresh and alteration ref **
       - uses: actions/checkout@v3
         with:
           fetch-depth: 2
+          path: ./fresh
+
+      - uses: actions/checkout@v3
+        with:
+          ref: v1.0.0-beta.11
+          path: ./alteration
+      # ** End **
+
+      - name: Copy lockfile # Make setup workflow happy
+        run: cp ./fresh/pnpm-lock.yaml ./
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        with:
+          run-install: false
 
-      - name: Build
-        run: pnpm prepack
-      
+      # ** Prepack packages **
+      - name: Prepack fresh
+        working-directory: ./fresh
+        run: pnpm i && pnpm prepack
+
+      - name: Prepack alteration
+        working-directory: ./alteration
+        run: pnpm i && pnpm prepack
+      # ** End **
+
       - name: Check alteration sequence
+        working-directory: ./fresh
         run: node .scripts/check-alterations-sequence.js
+
+      - name: Setup Postgres
+        uses: ikalnytskyi/action-setup-postgres@v4
+
+      # ** Setup up-to-date databases and compare (test `up`) **
+      - name: Setup fresh database
+        working-directory: ./fresh
+        run: pnpm cli db seed
+        env:
+          DB_URL: postgres://postgres:postgres@localhost:5432/fresh
+
+      - name: Setup alteration database
+        working-directory: ./alteration
+        run: |
+          cd packages/cli
+          pnpm start db seed
+        env:
+          DB_URL: postgres://postgres:postgres@localhost:5432/alteration
+
+      - name: Run alteration scripts
+        working-directory: ./fresh
+        run: pnpm cli db alt deploy next
+        env:
+          DB_URL: postgres://postgres:postgres@localhost:5432/alteration
+
+      - name: Compare manifests
+        working-directory: ./fresh
+        run: node .scripts/compare-database.js fresh alteration
+      # ** End **
+
+      # ** Setup old databases and compare (test `down`) **
+      # TBD
+      # ** End **
