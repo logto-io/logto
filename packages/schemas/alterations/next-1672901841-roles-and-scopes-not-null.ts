@@ -11,10 +11,12 @@ const alteration: AlterationScript = {
   },
   down: async (pool) => {
     await pool.query(sql`
-      alter table roles_scopes drop constraint roles_permissison_pkey;
+      alter table roles_scopes
+        drop constraint if exists roles_permissison_pkey,
+        drop constraint if exists roles_scopes_pkey;
       alter table roles_scopes alter column role_id drop not null;
       alter table roles_scopes alter column scope_id drop not null;
-      alter table roles_scopes add constraint roles_permissison_pkey primary key (role_id, scope_id)
+      alter table roles_scopes add primary key (role_id, scope_id)
     `);
   },
 };
