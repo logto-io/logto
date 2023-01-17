@@ -86,6 +86,7 @@ const CreatePermissionModal = ({ resourceId, onClose }: Props) => {
             <TextInput
               placeholder={t('api_resource_details.permission.description_placeholder')}
               {...register('description', { required: true })}
+              hasError={Boolean(errors.description)}
             />
           </FormField>
         </form>

@@ -28,7 +28,7 @@ const CreateRoleForm = ({ onClose }: Props) => {
     control,
     handleSubmit,
     register,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<CreateRoleFormData>();
 
   const api = useApi();
@@ -72,12 +72,14 @@ const CreateRoleForm = ({ onClose }: Props) => {
             autoFocus
             {...register('name', { required: true })}
             placeholder={t('roles.role_name_placeholder')}
+            hasError={Boolean(errors.name)}
           />
         </FormField>
         <FormField isRequired title="roles.role_description">
           <TextInput
             {...register('description', { required: true })}
             placeholder={t('roles.role_description_placeholder')}
+            hasError={Boolean(errors.description)}
           />
         </FormField>
         <FormField title="roles.assign_permissions">
