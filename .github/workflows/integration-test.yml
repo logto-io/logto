@@ -78,7 +78,7 @@ jobs:
       - name: Extract
         working-directory: tests
         run: |
-          npm run cli init -- -p ../logto --db postgres://postgres:postgres@localhost:5432/postgres --no-oc --du ../logto.tar.gz
+          npm run cli init -- -p ../logto --db postgres://postgres:postgres@localhost:5432/postgres --du ../logto.tar.gz
       
       - name: Check and add mock connectors
         working-directory: tests

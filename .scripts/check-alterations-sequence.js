@@ -1,7 +1,6 @@
 /**
- * This script runs a task to check alteration files seqence:
- * new files should come last
- *
+ * This script runs a task to check alteration files sequence:
+ * Newest files should come last.
  */
 
 import { execSync } from "child_process";
