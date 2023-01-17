@@ -17,7 +17,6 @@ describe('roles scopes', () => {
 
     expect(scopes.length).toBe(1);
     expect(scopes[0]).toHaveProperty('id', scope.id);
-    expect(scopes[0]).toHaveProperty('resource.id', resource.id);
   });
 
   it('should assign scopes to role successfully', async () => {

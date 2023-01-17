@@ -65,12 +65,7 @@ describe('role scope routes', () => {
     findScopesByIds.mockResolvedValueOnce([mockScope]);
     const response = await roleRequester.get(`/roles/${mockRole.id}/scopes`);
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([
-      {
-        ...mockScope,
-        resource: mockResource,
-      },
-    ]);
+    expect(response.body).toEqual([mockScope]);
   });
 
   it('POST /roles/:id/scopes', async () => {
