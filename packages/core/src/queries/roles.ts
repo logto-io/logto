@@ -29,7 +29,7 @@ export const defaultUserSearch = { matches: [], isCaseSensitive: false, joint: S
 export const createRolesQueries = (pool: CommonQueryMethods) => {
   const countRoles = async (
     search: Search = defaultUserSearch,
-    { excludeRoleIds = [], roleIds = [] }: { excludeRoleIds?: string[]; roleIds?: string[] } = {}
+    { excludeRoleIds = [], roleIds }: { excludeRoleIds?: string[]; roleIds?: string[] } = {}
   ) =>
     pool.one<{ count: number }>(sql`
       select count(*)
