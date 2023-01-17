@@ -92,12 +92,17 @@ jobs:
       # ** Checkout fresh and alteration ref **
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 2
+          fetch-depth: 0
           path: ./fresh
+
+      # Fetch the current version by finding the latest tag starts with "v", e.g. "v1.0.0-beta.19"
+      - id: version
+        working-directory: ./fresh
+        run: echo "current=$(git describe --match "v*" --abbrev=0)" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
         with:
-          ref: v1.0.0-beta.11
+          ref: ${{ steps.version.outputs.current }}
           path: ./alteration
       # ** End **
 
@@ -159,7 +164,7 @@ jobs:
 
       - name: Revert fresh database to old
         working-directory: ./fresh
-        run: pnpm cli db alt r v1.0.0-beta.11
+        run: pnpm cli db alt r ${{ steps.version.outputs.current }}
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/fresh
 
@@ -169,6 +174,5 @@ jobs:
       # ** End **
 
       - name: Check alteration sequence
-        continue-on-error: true # Temporarily skip this as we are fixing previous down scripts
         working-directory: ./fresh
         run: node .scripts/check-alterations-sequence.js
