@@ -37,7 +37,7 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
   const isLoading =
     (!allResources && !fetchAllResourcesError) || (roleId && !roleScopes && !fetchRoleScopesError);
 
-  const hasError = Boolean(fetchAllResourcesError) || Boolean(fetchRoleScopesError);
+  const hasError = Boolean(fetchAllResourcesError) || Boolean(roleId && fetchRoleScopesError);
 
   const [keyword, setKeyword] = useState('');
 
