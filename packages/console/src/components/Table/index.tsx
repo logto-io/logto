@@ -95,7 +95,9 @@ const Table = <
         <div className={classNames(styles.bodyTable, bodyClassName)}>
           <table>
             <tbody>
-              {isLoading && <TableLoading columns={columns.length} />}
+              {isLoading && (
+                <TableLoading columnSpans={columns.map(({ colSpan }) => colSpan ?? 1)} />
+              )}
               {!isLoading && !hasData && errorMessage && (
                 <TableError columns={columns.length} content={errorMessage} onRetry={onRetry} />
               )}
@@ -109,45 +111,47 @@ const Table = <
                   {placeholder?.content}
                 </TableEmpty>
               )}
-              {rowGroups.map(({ key, label, labelClassName, data }) => (
-                <Fragment key={key}>
-                  {label && (
-                    <tr>
-                      <td colSpan={totalColspan} className={labelClassName}>
-                        {label}
-                      </td>
-                    </tr>
-                  )}
-                  {data?.map((row) => {
-                    const rowClickable = isRowClickable(row);
-
-                    const onClick = conditional(
-                      rowClickable &&
-                        rowClickHandler &&
-                        (() => {
-                          rowClickHandler(row);
-                        })
-                    );
-
-                    return (
-                      <tr
-                        key={row[rowIndexKey]}
-                        className={classNames(
-                          rowClickable && styles.clickable,
-                          !isRowHoverEffectDisabled && styles.hoverEffect
-                        )}
-                        onClick={onClick}
-                      >
-                        {columns.map(({ dataIndex, colSpan, className, render }) => (
-                          <td key={dataIndex} colSpan={colSpan} className={className}>
-                            {render(row)}
-                          </td>
-                        ))}
+              {!isLoading &&
+                hasData &&
+                rowGroups.map(({ key, label, labelClassName, data }) => (
+                  <Fragment key={key}>
+                    {label && (
+                      <tr>
+                        <td colSpan={totalColspan} className={labelClassName}>
+                          {label}
+                        </td>
                       </tr>
-                    );
-                  })}
-                </Fragment>
-              ))}
+                    )}
+                    {data?.map((row) => {
+                      const rowClickable = isRowClickable(row);
+
+                      const onClick = conditional(
+                        rowClickable &&
+                          rowClickHandler &&
+                          (() => {
+                            rowClickHandler(row);
+                          })
+                      );
+
+                      return (
+                        <tr
+                          key={row[rowIndexKey]}
+                          className={classNames(
+                            rowClickable && styles.clickable,
+                            !isRowHoverEffectDisabled && styles.hoverEffect
+                          )}
+                          onClick={onClick}
+                        >
+                          {columns.map(({ dataIndex, colSpan, className, render }) => (
+                            <td key={dataIndex} colSpan={colSpan} className={className}>
+                              {render(row)}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </Fragment>
+                ))}
             </tbody>
           </table>
         </div>
