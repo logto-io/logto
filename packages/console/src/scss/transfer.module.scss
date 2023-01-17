@@ -28,6 +28,12 @@
   overflow-y: auto;
 }
 
+.emptyBoxContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .boxPagination {
   height: 40px;
   padding-right: _.unit(4);
