@@ -1,4 +1,5 @@
 import type { ResourceResponse, Scope, ScopeResponse } from '@logto/schemas';
+import { managementResourceScopeId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { ChangeEvent } from 'react';
 import { useMemo, useState } from 'react';
@@ -34,9 +35,9 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
   );
 
   const isLoading =
-    (!allResources && !fetchAllResourcesError) || (!roleScopes && !fetchRoleScopesError);
+    (!allResources && !fetchAllResourcesError) || (roleId && !roleScopes && !fetchRoleScopesError);
 
-  const hasError = Boolean(fetchAllResourcesError) || Boolean(fetchRoleScopesError);
+  const hasError = Boolean(fetchAllResourcesError) || Boolean(roleId && fetchRoleScopesError);
 
   const [keyword, setKeyword] = useState('');
 
@@ -72,11 +73,12 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
     scopes.filter((scope) => selectedScopes.findIndex(({ id }) => id === scope.id) >= 0);
 
   const resources: DetailedResourceResponse[] = useMemo(() => {
-    if (!allResources || !roleScopes) {
+    if (!allResources || (roleId && !roleScopes)) {
       return [];
     }
 
-    const excludeScopeIds = new Set(roleScopes.map(({ id }) => id));
+    const existingScopeIds = roleScopes?.map(({ id }) => id) ?? [];
+    const excludeScopeIds = new Set([...existingScopeIds, managementResourceScopeId]);
 
     return allResources
       .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.has(id)))
@@ -89,7 +91,7 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
             resource,
           })),
       }));
-  }, [allResources, roleScopes]);
+  }, [allResources, roleId, roleScopes]);
 
   const dataSource = useMemo(() => {
     const lowerCasedKeyword = keyword.toLowerCase();
