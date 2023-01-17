@@ -11,6 +11,7 @@ const alteration: AlterationScript = {
   down: async (pool) => {
     await pool.query(sql`
       alter table sign_in_experiences add column sign_in_methods jsonb not null default '{}'::jsonb;
+      alter table sign_in_experiences alter column sign_in_methods drop default;
     `);
   },
 };

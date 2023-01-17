@@ -30,7 +30,7 @@ const { getCurrentDatabaseAlterationTimestamp } = await mockEsmWithActual(
 
 const { getAvailableAlterations } = await import('./index.js');
 
-describe('getUndeployedAlterations()', () => {
+describe('getAvailableAlterations()', () => {
   it('returns all files if database timestamp is 0', async () => {
     getCurrentDatabaseAlterationTimestamp.mockResolvedValue(0);
 

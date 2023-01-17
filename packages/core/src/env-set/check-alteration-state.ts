@@ -1,9 +1,9 @@
-import { getUndeployedAlterations } from '@logto/cli/lib/commands/database/alteration/index.js';
+import { getAvailableAlterations } from '@logto/cli/lib/commands/database/alteration/index.js';
 import chalk from 'chalk';
 import type { DatabasePool } from 'slonik';
 
 export const checkAlterationState = async (pool: DatabasePool) => {
-  const alterations = await getUndeployedAlterations(pool);
+  const alterations = await getAvailableAlterations(pool);
 
   if (alterations.length === 0) {
     return;

@@ -72,7 +72,8 @@ const alteration: AlterationScript = {
     const rows = await pool.many<SignInExperience>(sql`select * from sign_in_experiences`);
 
     await pool.query(sql`
-      alter table sign_in_experiences add column terms_of_use jsonb not null default '{}'::jsonb
+      alter table sign_in_experiences add column terms_of_use jsonb not null default '{}'::jsonb;
+      alter table sign_in_experiences alter column terms_of_use drop default;
     `);
 
     await Promise.all(rows.map(async (row) => rollbackTermsOfUse(row, pool)));
