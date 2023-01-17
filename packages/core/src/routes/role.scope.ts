@@ -22,7 +22,7 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
 
   router.get(
     '/roles/:id/scopes',
-    koaPagination(),
+    koaPagination({ isOptional: true }),
     koaGuard({
       params: object({ id: string().min(1) }),
     }),
@@ -30,7 +30,7 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
       const {
         params: { id },
       } = ctx.guard;
-      const { limit, offset } = ctx.pagination;
+      const { limit, offset, disabled } = ctx.pagination;
       const { searchParams } = ctx.request.URL;
       await findRoleById(id);
 
@@ -40,6 +40,12 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
 
           const rolesScopes = await findRolesScopesByRoleId(id);
           const scopeIds = rolesScopes.map(({ scopeId }) => scopeId);
+
+          if (disabled) {
+            ctx.body = await searchScopesByScopeIds(scopeIds, search);
+
+            return next();
+          }
 
           const [{ count }, scopes] = await Promise.all([
             countScopesByScopeIds(scopeIds, search),
