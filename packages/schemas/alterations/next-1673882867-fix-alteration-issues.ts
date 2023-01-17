@@ -34,7 +34,36 @@ const alteration: AlterationScript = {
     `);
   },
   down: async (pool) => {
-    throw new Error('Not implemented');
+    await pool.query(sql`
+      alter table roles_scopes
+      drop constraint roles_scopes_role_id_fkey;
+    `);
+    await pool.query(sql`
+      alter table users_roles
+      drop constraint users_roles_role_id_fkey;
+    `);
+    await pool.query(sql`
+      alter table roles
+      drop constraint roles_pkey;
+    `);
+    await pool.query(sql`
+      create unique index roles_pkey on roles using btree(id);
+    `);
+
+    await pool.query(sql`
+      alter table roles_scopes
+      drop constraint roles_scopes_pkey,
+      add constraint roles_permissison_pkey primary key (role_id, scope_id);
+    `);
+
+    await pool.query(sql`
+      alter table users_roles
+      add foreign key (role_id) references roles (id) on update cascade on delete cascade;
+    `);
+    await pool.query(sql`
+      alter table roles_scopes
+      add foreign key (role_id) references roles (id) on update cascade on delete cascade;
+    `);
   },
 };
 

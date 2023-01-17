@@ -31,10 +31,12 @@ const alteration: AlterationScript = {
   },
   down: async (pool) => {
     await pool.query(sql`
-      drop table permissions;
+      drop table roles_scopes;
+      drop table scopes;
       alter index roles_pkey rename to roles_pkey_1;
-      create unique index roles_pkey on roles using btree(name)
+      alter table roles add primary key (name);
       drop index roles_pkey_1;
+      drop index roles__name;
       alter table roles drop column id;
     `);
   },

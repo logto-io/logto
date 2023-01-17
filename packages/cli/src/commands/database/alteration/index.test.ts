@@ -28,19 +28,19 @@ const { getCurrentDatabaseAlterationTimestamp } = await mockEsmWithActual(
   })
 );
 
-const { getUndeployedAlterations } = await import('./index.js');
+const { getAvailableAlterations } = await import('./index.js');
 
 describe('getUndeployedAlterations()', () => {
   it('returns all files if database timestamp is 0', async () => {
     getCurrentDatabaseAlterationTimestamp.mockResolvedValue(0);
 
-    await expect(getUndeployedAlterations(pool)).resolves.toEqual(files);
+    await expect(getAvailableAlterations(pool)).resolves.toEqual(files);
   });
 
   it('returns files whose timestamp is greater then database timestamp', async () => {
     getCurrentDatabaseAlterationTimestamp.mockResolvedValue(1_663_923_770);
 
-    await expect(getUndeployedAlterations(pool)).resolves.toEqual([files[1], files[2]]);
+    await expect(getAvailableAlterations(pool)).resolves.toEqual([files[1], files[2]]);
   });
 });
 
