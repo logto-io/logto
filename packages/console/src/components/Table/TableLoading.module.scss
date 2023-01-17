@@ -11,10 +11,11 @@
       height: 40px;
       margin-right: _.unit(4);
       border-radius: 12px;
+      flex-shrink: 0;
     }
 
     .content {
-      width: 135px;
+      width: 100%;
 
       .title {
         @include _.shimmering-animation;

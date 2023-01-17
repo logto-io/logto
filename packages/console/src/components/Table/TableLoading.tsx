@@ -1,16 +1,16 @@
 import * as styles from './TableLoading.module.scss';
 
 type Props = {
-  columns: number;
+  columnSpans: number[];
 };
 
-const TableLoading = ({ columns }: Props) => {
+const TableLoading = ({ columnSpans }: Props) => {
   return (
     <>
       {Array.from({ length: 8 }).map((_, rowIndex) => (
         // eslint-disable-next-line react/no-array-index-key
         <tr key={`row-${rowIndex}`} className={styles.loading}>
-          <td>
+          <td colSpan={columnSpans[0]}>
             <div className={styles.itemPreview}>
               <div className={styles.avatar} />
               <div className={styles.content}>
@@ -19,9 +19,9 @@ const TableLoading = ({ columns }: Props) => {
               </div>
             </div>
           </td>
-          {Array.from({ length: columns - 1 }).map((_, index) => (
+          {columnSpans.slice(1).map((colSpan, index) => (
             // eslint-disable-next-line react/no-array-index-key
-            <td key={index}>
+            <td key={index} colSpan={colSpan}>
               <div className={styles.rect} />
             </td>
           ))}
