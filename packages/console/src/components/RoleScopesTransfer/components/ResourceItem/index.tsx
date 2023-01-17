@@ -48,7 +48,7 @@ const ResourceItem = ({ resource, selectedScopes, onSelectResource, onSelectScop
             setIsScopesInvisible(!isScopesInvisible);
           }}
         >
-          <IconButton className={styles.caret}>
+          <IconButton size="small" className={styles.caret}>
             {isScopesInvisible ? <CaretFolded /> : <CaretExpanded />}
           </IconButton>
           <div className={styles.name}>{name}</div>
