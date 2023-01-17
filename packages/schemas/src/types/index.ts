@@ -9,3 +9,4 @@ export * from './resource.js';
 export * from './scope.js';
 export * from './role.js';
 export * from './verification-code.js';
+export * from './application.js';

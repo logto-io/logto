@@ -127,7 +127,10 @@ describe('application route', () => {
     const response = await applicationRequest.get('/applications/foo');
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual(mockApplication);
+    expect(response.body).toEqual({
+      ...mockApplication,
+      isAdmin: false,
+    });
   });
 
   it('PATCH /applications/:applicationId', async () => {

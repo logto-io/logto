@@ -4,8 +4,7 @@ import { readFileSync } from 'fs';
 
 import { userClaims } from '@logto/core-kit';
 import { CustomClientMetadataKey } from '@logto/schemas';
-import { tryThat } from '@logto/shared';
-import Provider, { errors } from 'oidc-provider';
+import Provider, { errors, ResourceServer } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
 import type { EnvSet } from '#src/env-set/index.js';
@@ -16,7 +15,6 @@ import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.j
 import { routes } from '#src/routes/consts.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
-import assertThat from '#src/utils/assert-that.js';
 
 import { claimToUserKey, getUserClaims } from './scope.js';
 
@@ -33,10 +31,10 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
     defaultRefreshTokenTtl,
   } = envSet.oidc;
   const {
-    applications: { findApplicationById },
     resources: { findResourceByIndicator },
   } = queries;
   const { findUserByIdWithRoles, findUserScopesForResourceId } = libraries.users;
+  const { findApplicationScopesForResourceId } = libraries.applications;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
 
   const cookieConfig = Object.freeze({
@@ -91,19 +89,40 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
             throw new errors.InvalidTarget();
           }
 
-          const userId = ctx.oidc.session?.accountId;
-          const scopes = userId ? await findUserScopesForResourceId(userId, resourceServer.id) : [];
-
-          const { accessTokenTtl: accessTokenTTL } = resourceServer;
-
-          return {
+          const { accessTokenTtl: accessTokenTTL, id } = resourceServer;
+          const result = {
             accessTokenFormat: 'jwt',
-            scope: scopes.map(({ name }) => name).join(' '),
             accessTokenTTL,
             jwt: {
               sign: { alg: jwkSigningAlg },
             },
-          };
+            scope: '',
+          } satisfies ResourceServer;
+
+          const userId = ctx.oidc.session?.accountId;
+
+          if (userId) {
+            const scopes = await findUserScopesForResourceId(userId, id);
+
+            return {
+              ...result,
+              scope: scopes.map(({ name }) => name).join(' '),
+            };
+          }
+
+          const clientId = ctx.oidc.entities.Client?.clientId;
+
+          // Machine to machine app
+          if (clientId) {
+            const scopes = await findApplicationScopesForResourceId(clientId, id);
+
+            return {
+              ...result,
+              scope: scopes.map(({ name }) => name).join(' '),
+            };
+          }
+
+          return result;
         },
       },
     },
@@ -185,30 +204,6 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
       Interaction: 3600 /* 1 hour in seconds */,
       Session: 1_209_600 /* 14 days in seconds */,
       Grant: 1_209_600 /* 14 days in seconds */,
-    },
-    extraTokenClaims: async (_ctx, token) => {
-      if (token.kind === 'AccessToken') {
-        const { accountId } = token;
-        const { roleNames } = await tryThat(
-          findUserByIdWithRoles(accountId),
-          new errors.InvalidClient(`invalid user ${accountId}`)
-        );
-
-        return snakecaseKeys({
-          roleNames,
-        });
-      }
-
-      // `token.kind === 'ClientCredentials'`
-      const { clientId } = token;
-      assertThat(clientId, 'oidc.invalid_grant');
-
-      const { roleNames } = await tryThat(
-        findApplicationById(clientId),
-        new errors.InvalidClient(`invalid client ${clientId}`)
-      );
-
-      return snakecaseKeys({ roleNames });
     },
   });
 

@@ -1,6 +1,7 @@
 import type { CommonQueryMethods } from 'slonik';
 
 import { createApplicationQueries } from '#src/queries/application.js';
+import { createApplicationsRolesQueries } from '#src/queries/applications-roles.js';
 import { createConnectorQueries } from '#src/queries/connector.js';
 import { createCustomPhraseQueries } from '#src/queries/custom-phrase.js';
 import { createLogQueries } from '#src/queries/log.js';
@@ -30,6 +31,7 @@ export default class Queries {
   signInExperiences = createSignInExperienceQueries(this.pool);
   users = createUserQueries(this.pool);
   usersRoles = createUsersRolesQueries(this.pool);
+  applicationsRoles = createApplicationsRolesQueries(this.pool);
 
   constructor(public readonly pool: CommonQueryMethods) {}
 }

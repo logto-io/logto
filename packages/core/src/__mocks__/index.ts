@@ -21,7 +21,6 @@ export const mockApplication: Application = {
     idTokenTtl: 5000,
     refreshTokenTtl: 6_000_000,
   },
-  roleNames: [],
   createdAt: 1_645_334_775_356,
 };
 
