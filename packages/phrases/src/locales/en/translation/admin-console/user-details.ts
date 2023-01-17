@@ -56,6 +56,7 @@ const user_details = {
     confirm_assign: 'Assign roles',
     role_assigned: 'Successfully assigned role(s)',
     search: 'Search by role name, description or ID',
+    empty: 'No role available',
   },
 };
 

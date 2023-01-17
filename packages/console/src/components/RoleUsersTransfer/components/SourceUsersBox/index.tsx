@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Search from '@/assets/images/search.svg';
+import DataEmpty from '@/components/DataEmpty';
 import Pagination from '@/components/Pagination';
 import TextInput from '@/components/TextInput';
 import { defaultPageSize } from '@/consts';
@@ -40,7 +41,9 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
     ...conditional(keyword && { search: formatKeyword(keyword) }),
   });
 
-  const { data } = useSWR<[User[], number], RequestError>(url);
+  const { data, error } = useSWR<[User[], number], RequestError>(url);
+
+  const isLoading = !data && !error;
 
   const [dataSource = [], totalCount] = data ?? [];
 
@@ -64,24 +67,28 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
         />
       </div>
       <div className={transferLayout.boxContent}>
-        {dataSource.map((user) => {
-          const isSelected = isUserAdded(user);
+        {!isLoading && !error && dataSource.length === 0 && (
+          <DataEmpty imageClassName={styles.emptyImage} title={t('role_details.users.empty')} />
+        )}
+        {dataSource.length > 0 &&
+          dataSource.map((user) => {
+            const isSelected = isUserAdded(user);
 
-          return (
-            <SourceUserItem
-              key={user.id}
-              user={user}
-              isSelected={isSelected}
-              onSelect={() => {
-                onChange(
-                  isSelected
-                    ? selectedUsers.filter(({ id }) => user.id !== id)
-                    : [user, ...selectedUsers]
-                );
-              }}
-            />
-          );
-        })}
+            return (
+              <SourceUserItem
+                key={user.id}
+                user={user}
+                isSelected={isSelected}
+                onSelect={() => {
+                  onChange(
+                    isSelected
+                      ? selectedUsers.filter(({ id }) => user.id !== id)
+                      : [user, ...selectedUsers]
+                  );
+                }}
+              />
+            );
+          })}
       </div>
       <Pagination
         mode="pico"

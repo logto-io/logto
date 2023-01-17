@@ -56,6 +56,7 @@ const user_details = {
     confirm_assign: 'Assign roles', // UNTRANSLATED
     role_assigned: 'Successfully assigned role(s)', // UNTRANSLATED
     search: 'Search by role name, description or ID', // UNTRANSLATED
+    empty: 'No role available', // UNTRANSLATED
   },
 };
 
