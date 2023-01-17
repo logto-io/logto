@@ -1,7 +1,7 @@
 const roles = {
   title: 'Roles', // UNTRANSLATED
   subtitle:
-    'Manage user identities including creating users, editing user information, viewing user logs, password resets and deleting users.', // UNTRANSLATED
+    'Roles include permissions that determine what a user can do. RBAC uses roles to give users access to resources and actions.', // UNTRANSLATED
   create: 'Add Roles', // UNTRANSLATED
   role_name: 'Role', // UNTRANSLATED
   role_description: 'Description', // UNTRANSLATED

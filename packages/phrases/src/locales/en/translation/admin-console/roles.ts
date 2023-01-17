@@ -1,7 +1,7 @@
 const roles = {
   title: 'Roles',
   subtitle:
-    'Manage user identities including creating users, editing user information, viewing user logs, password resets and deleting users.',
+    'Roles include permissions that determine what a user can do. RBAC uses roles to give users access to resources and actions.',
   create: 'Add Roles',
   role_name: 'Role',
   role_description: 'Description',
