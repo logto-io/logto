@@ -109,6 +109,7 @@ const UserRoles = () => {
         filter={
           <div className={styles.filter}>
             <Search
+              inputClassName={styles.searchInput}
               defaultValue={keyword}
               isClearable={Boolean(keyword)}
               placeholder={t('user_details.roles.search')}
