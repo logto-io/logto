@@ -33,13 +33,11 @@ const alteration: AlterationScript = {
     await pool.query(sql`
       drop table roles_scopes cascade;
       drop table scopes cascade;
-      alter index roles_pkey rename to roles_pkey_1;
       alter table roles
         drop constraint if exists roles_pkey,
+        drop column id,
         add primary key (name);
-      drop index roles_pkey_1;
       drop index roles__name;
-      alter table roles drop column id;
     `);
   },
 };
