@@ -48,7 +48,7 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
 
           const resources = await findResourcesByIds(scopes.map(({ resourceId }) => resourceId));
           const result: ScopeResponse[] = scopes.map((scope) => {
-            const resource = resources.find(({ id }) => scope.resourceId);
+            const resource = resources.find(({ id }) => id === scope.resourceId);
 
             assertThat(resource, new Error(`Cannot find resource for id ${scope.resourceId}`));
 
