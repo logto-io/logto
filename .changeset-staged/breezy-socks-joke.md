@@ -2,4 +2,4 @@
 "@logto/cli": minor
 ---
 
-Add `logto database alteration revert-to` command for running `down()` alteration scripts
+Add `logto database alteration rollback` command for running `down()` alteration scripts

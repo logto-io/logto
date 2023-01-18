@@ -92,7 +92,7 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
   builder: (yargs) =>
     yargs
       .positional('action', {
-        describe: 'The action to perform, accepts `list`, `deploy`, and `revert-to` (or `r`).',
+        describe: 'The action to perform, accepts `list`, `deploy`, and `rollback` (or `r`).',
         type: 'string',
         demandOption: true,
       })
@@ -127,7 +127,7 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
       }
 
       await pool.end();
-    } else if (['revert-to', 'r'].includes(action)) {
+    } else if (['rollback', 'r'].includes(action)) {
       const pool = await createPoolFromConfig();
       const alterations = await chooseRevertAlterationsByVersion(
         await getAvailableAlterations(pool, 'lte'),
