@@ -15,6 +15,7 @@ export enum UserFlow {
 export enum SearchParameters {
   nativeCallbackLink = 'native_callback',
   redirectTo = 'redirect_to',
+  linkSocial = 'link_social',
 }
 
 export type Platform = 'web' | 'mobile';

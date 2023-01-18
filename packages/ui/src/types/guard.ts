@@ -3,15 +3,6 @@ import * as s from 'superstruct';
 
 import { UserFlow } from '.';
 
-export const bindSocialStateGuard = s.object({
-  relatedUser: s.object({
-    type: s.union([s.literal('email'), s.literal('phone')]),
-    value: s.string(),
-  }),
-  email: s.optional(s.string()),
-  phone: s.optional(s.string()),
-});
-
 export const verificationCodeStateGuard = s.object({
   email: s.optional(s.string()),
   phone: s.optional(s.string()),
@@ -57,3 +48,14 @@ export const missingProfileErrorDataGuard = s.object({
     ])
   ),
 });
+
+export const socialAccountNotExistErrorDataGuard = s.object({
+  relatedUser: s.object({
+    type: s.union([s.literal('email'), s.literal('phone')]),
+    value: s.string(),
+  }),
+});
+
+export type SocialRelatedUserInfo = s.Infer<
+  typeof socialAccountNotExistErrorDataGuard
+>['relatedUser'];

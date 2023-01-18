@@ -22,7 +22,7 @@ import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
 import SignInPassword from './pages/SignInPassword';
 import SocialLanding from './pages/SocialLanding';
-import SocialRegister from './pages/SocialRegister';
+import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignIn from './pages/SocialSignInCallback';
 import VerificationCode from './pages/VerificationCode';
 import { getSignInExperienceSettings } from './utils/sign-in-experience';
@@ -104,7 +104,7 @@ const App = () => {
 
                 {/* Social sign-in pages */}
                 <Route path="/callback/:connector" element={<Callback />} />
-                <Route path="/social/register/:connector" element={<SocialRegister />} />
+                <Route path="/social/link/:connector" element={<SocialLinkAccount />} />
                 <Route path="/social/landing/:connector" element={<SocialLanding />} />
 
                 {/* Always keep route path with param as the last one */}

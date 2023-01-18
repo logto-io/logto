@@ -52,7 +52,7 @@ const VerificationCode = () => {
       description="description.enter_passcode"
       descriptionProps={{
         address: t(`description.${method === 'email' ? 'email' : 'phone_number'}`),
-        target: method === 'email' ? target : formatPhoneNumberWithCountryCallingCode(target),
+        target: method === 'phone' ? formatPhoneNumberWithCountryCallingCode(target) : target,
       }}
     >
       <VerificationCodeContainer

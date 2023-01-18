@@ -3,7 +3,6 @@ import { deduplicate } from '@silverhand/essentials';
 import RequestError from '#src/errors/RequestError/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
-import { maskUserInfo } from '#src/utils/format.js';
 
 import type {
   SocialIdentifier,
@@ -55,9 +54,7 @@ const identifyUserBySocialIdentifier = async (
         status: 422,
       },
       {
-        ...(relatedInfo && { relatedUser: maskUserInfo(relatedInfo[0]) }),
-        ...(userInfo.email && { email: userInfo.email }),
-        ...(userInfo.phone && { phone: userInfo.phone }),
+        ...(relatedInfo && { relatedUser: relatedInfo[0] }),
       }
     );
   }

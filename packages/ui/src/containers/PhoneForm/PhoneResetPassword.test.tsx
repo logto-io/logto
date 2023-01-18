@@ -55,6 +55,7 @@ describe('PhoneRegister', () => {
       expect(mockedNavigate).toBeCalledWith(
         {
           pathname: `/${UserFlow.forgotPassword}/${SignInIdentifier.Phone}/verification-code`,
+          search: '',
         },
         { state: { phone: fullPhoneNumber } }
       );

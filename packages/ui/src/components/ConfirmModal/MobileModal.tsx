@@ -13,6 +13,8 @@ const MobileModal = ({
   children,
   cancelText = 'action.cancel',
   confirmText = 'action.confirm',
+  cancelTextI18nProps,
+  confirmTextI18nProps,
   onConfirm,
   onClose,
 }: ModalProps) => {
@@ -28,8 +30,15 @@ const MobileModal = ({
       <div className={styles.container}>
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>
-          <Button title={cancelText} type="secondary" onClick={onClose} />
-          {onConfirm && <Button title={confirmText} onClick={onConfirm} />}
+          <Button
+            title={cancelText}
+            i18nProps={cancelTextI18nProps}
+            type="secondary"
+            onClick={onClose}
+          />
+          {onConfirm && (
+            <Button title={confirmText} i18nProps={confirmTextI18nProps} onClick={onConfirm} />
+          )}
         </div>
       </div>
     </ReactModal>

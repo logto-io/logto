@@ -24,6 +24,7 @@ const translation = {
     cancel: '취소',
     save_password: '저장',
     bind: '{{address}}로 연동',
+    bind_and_continue: 'Link and continue', // UNTRANSLATED
     back: '뒤로 가기',
     nav_back: '뒤로',
     agree: '동의',
@@ -33,6 +34,7 @@ const translation = {
     switch_to: '{{method}}로 전환',
     sign_in_via_passcode: '인증번호로 로그인',
     sign_in_via_password: '비밀번호로 로그인',
+    change: 'Change {{change}}', // UNTRANSLATED,
   },
   description: {
     email: '이메일',
@@ -49,6 +51,8 @@ const translation = {
     resend_after_seconds: '<span>{{seconds}}</span> 초 후에 재전송',
     resend_passcode: '비밀번호 재전송',
     create_account_id_exists: '{{type}} {{value}} 계정이 이미 존재해요. 로그인하시겠어요?',
+    link_account_id_exists:
+      'The account with {{type}} {{value}} already exists, would you like to link?', // UNTRANSLATED
     sign_in_id_does_not_exist: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
     sign_in_id_does_not_exist_alert: '{{type}} {{value}} 계정이 존재하지 않아요.',
     create_account_id_exists_alert: '{{type}} {{value}} 이미 존재해요.',

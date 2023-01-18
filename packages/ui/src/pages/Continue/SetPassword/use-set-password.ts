@@ -11,7 +11,7 @@ const useSetPassword = () => {
   const navigate = useNavigate();
   const { show } = useConfirmModal();
 
-  const requiredProfileErrorHandler = useRequiredProfileErrorHandler(true);
+  const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({

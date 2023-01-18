@@ -3,13 +3,19 @@ import { useMemo, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { validate } from 'superstruct';
 
-import { UserFlow } from '@/types';
+import { UserFlow, SearchParameters } from '@/types';
 import { missingProfileErrorDataGuard } from '@/types/guard';
+import { queryStringify } from '@/utils';
 
 import type { ErrorHandlers } from './use-api';
 import { PageContext } from './use-page-context';
 
-const useRequiredProfileErrorHandler = (replace?: boolean) => {
+type Options = {
+  replace?: boolean;
+  linkSocial?: string;
+};
+
+const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) => {
   const navigate = useNavigate();
   const { setToast } = useContext(PageContext);
 
@@ -19,10 +25,13 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
         const [, data] = validate(error.data, missingProfileErrorDataGuard);
         const missingProfile = data?.missingProfile[0];
 
+        const linkSocialQueryString = linkSocial
+          ? `?${queryStringify({ [SearchParameters.linkSocial]: linkSocial })}`
+          : undefined;
+
         switch (missingProfile) {
           case MissingProfile.password:
           case MissingProfile.username:
-          case MissingProfile.email:
             navigate(
               {
                 pathname: `/${UserFlow.continue}/${missingProfile}`,
@@ -30,10 +39,12 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
               { replace }
             );
             break;
+          case MissingProfile.email:
           case MissingProfile.phone:
             navigate(
               {
-                pathname: `/${UserFlow.continue}/phone`,
+                pathname: `/${UserFlow.continue}/${missingProfile}`,
+                search: linkSocialQueryString,
               },
               { replace }
             );
@@ -42,6 +53,7 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
             navigate(
               {
                 pathname: `/${UserFlow.continue}/email-or-phone/email`,
+                search: linkSocialQueryString,
               },
               { replace }
             );
@@ -54,7 +66,7 @@ const useRequiredProfileErrorHandler = (replace?: boolean) => {
         }
       },
     }),
-    [navigate, replace, setToast]
+    [linkSocial, navigate, replace, setToast]
   );
 
   return requiredProfileErrorHandler;

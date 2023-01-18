@@ -3,12 +3,19 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import SocialRegister from '.';
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useLocation: jest.fn(() => ({
+    state: { relatedUser: { type: 'email', value: 'foo@logto.io' } },
+  })),
+}));
+
 describe('SocialRegister', () => {
   it('render', () => {
     const { queryByText } = render(
-      <MemoryRouter initialEntries={['/social/register/github']}>
+      <MemoryRouter initialEntries={['/social/link/github']}>
         <Routes>
-          <Route path="/social/register/:connector" element={<SocialRegister />} />
+          <Route path="/social/link/:connector" element={<SocialRegister />} />
         </Routes>
       </MemoryRouter>
     );

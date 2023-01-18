@@ -24,6 +24,7 @@ const translation = {
     cancel: 'Annuler',
     save_password: 'Save', // UNTRANSLATED
     bind: 'Lier avec {{address}}',
+    bind_and_continue: 'Link and continue', // UNTRANSLATED
     back: 'Aller en arrière',
     nav_back: 'Retour',
     agree: 'Accepter',
@@ -33,6 +34,7 @@ const translation = {
     switch_to: 'Passer au {{method}}',
     sign_in_via_passcode: 'Sign in with verification code', // UNTRANSLATED
     sign_in_via_password: 'Sign in with password', // UNTRANSLATED
+    change: 'Change {{method}}', // UNTRANSLATED
   },
   description: {
     email: 'email',
@@ -50,6 +52,8 @@ const translation = {
     resend_passcode: 'Renvoyer le code',
     create_account_id_exists:
       'Le compte avec {{type}} {{value}} existe déjà, voulez-vous vous connecter ?',
+    link_account_id_exists:
+      'The account with {{type}} {{value}} already exists, would you like to link?', // UNTRANSLATED
     sign_in_id_does_not_exist:
       "Le compte avec {{type}} {{value}} n'existe pas, voulez-vous créer un nouveau compte ?",
     sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED

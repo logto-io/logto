@@ -34,13 +34,14 @@ const useIdentifierErrorAlert = () => {
             type: t(
               `description.${identifierType === SignInIdentifier.Email ? 'email' : 'phone_number'}`
             ),
-            identifier:
-              identifierType === SignInIdentifier.Email
-                ? identifier
-                : formatPhoneNumberWithCountryCallingCode(identifier),
+            value:
+              identifierType === SignInIdentifier.Phone
+                ? formatPhoneNumberWithCountryCallingCode(identifier)
+                : identifier,
           }
         ),
-        cancelText: 'action.got_it',
+        cancelText: 'action.change',
+        cancelTextI18nProps: { method: identifierType },
       });
       navigate(-1);
     },

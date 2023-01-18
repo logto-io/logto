@@ -200,3 +200,21 @@ export const bindSocialRelatedUser = async (payload: SocialEmailPayload | Social
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
+
+export const linkWithSocial = async (connectorId: string) => {
+  // Sign-in with pre-verified email/phone identifier instead and replace the email/phone profile with connectorId.
+
+  await api.put(`${interactionPrefix}/event`, {
+    json: {
+      event: InteractionEvent.SignIn,
+    },
+  });
+
+  await api.put(`${interactionPrefix}/profile`, {
+    json: {
+      connectorId,
+    },
+  });
+
+  return api.post(`${interactionPrefix}/submit`).json<Response>();
+};

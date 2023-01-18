@@ -1,5 +1,6 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import {
@@ -272,7 +273,13 @@ describe('<VerificationCode />', () => {
       }));
 
       const { container } = renderWithPageContext(
-        <VerificationCode type={UserFlow.continue} method={SignInIdentifier.Email} target={email} />
+        <MemoryRouter>
+          <VerificationCode
+            type={UserFlow.continue}
+            method={SignInIdentifier.Email}
+            target={email}
+          />
+        </MemoryRouter>
       );
 
       const inputs = container.querySelectorAll('input');
@@ -301,7 +308,13 @@ describe('<VerificationCode />', () => {
       }));
 
       const { container } = renderWithPageContext(
-        <VerificationCode type={UserFlow.continue} method={SignInIdentifier.Phone} target={phone} />
+        <MemoryRouter>
+          <VerificationCode
+            type={UserFlow.continue}
+            method={SignInIdentifier.Phone}
+            target={phone}
+          />
+        </MemoryRouter>
       );
 
       const inputs = container.querySelectorAll('input');

@@ -134,7 +134,7 @@ describe('PhoneSignIn', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
       expect(sendVerificationCode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/phone/verification-code' },
+        { pathname: '/sign-in/phone/verification-code', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });
@@ -170,7 +170,7 @@ describe('PhoneSignIn', () => {
       expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
       expect(sendVerificationCode).toBeCalledWith({ phone: fullPhoneNumber });
       expect(mockedNavigate).toBeCalledWith(
-        { pathname: '/sign-in/phone/verification-code' },
+        { pathname: '/sign-in/phone/verification-code', search: '' },
         { state: { phone: fullPhoneNumber } }
       );
     });
