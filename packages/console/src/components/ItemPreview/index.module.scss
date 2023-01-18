@@ -14,6 +14,8 @@
     max-width: 100%;
 
     .title {
+      display: inline-block;
+      width: 100%;
       font: var(--font-body-medium);
       color: var(--color-text-link);
       text-decoration: none;

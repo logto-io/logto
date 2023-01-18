@@ -77,7 +77,7 @@ const Roles = () => {
             title: t('roles.role_description'),
             dataIndex: 'description',
             colSpan: 6,
-            render: ({ description }) => description,
+            render: ({ description }) => <div className={styles.description}>{description}</div>,
           },
           {
             title: <span>{t('roles.assigned_users')}</span>,
