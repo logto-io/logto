@@ -2,17 +2,11 @@ import path from 'path';
 
 import type { AllConnector, CreateConnector } from '@logto/connector-kit';
 import connectorKitMeta from '@logto/connector-kit/package.json' assert { type: 'json' };
+import { isKeyInObject } from '@logto/shared';
 import { satisfies } from 'semver';
 
 const connectorKit = '@logto/connector-kit';
 const { version: currentVersion } = connectorKitMeta;
-
-const isKeyInObject = <Key extends string>(
-  object: unknown,
-  key: Key
-  // eslint-disable-next-line @typescript-eslint/ban-types
-): object is object & Record<Key, unknown> =>
-  object !== null && typeof object === 'object' && key in object;
 
 const checkConnectorKitVersion = (dependencies: unknown) => {
   if (isKeyInObject(dependencies, connectorKit)) {

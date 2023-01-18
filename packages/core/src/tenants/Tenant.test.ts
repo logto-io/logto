@@ -3,6 +3,8 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { emptyMiddleware } from '#src/utils/test-utils.js';
 
+import { defaultTenant } from './consts.js';
+
 const { jest } = import.meta;
 const { mockEsm, mockEsmDefault } = createMockUtils(jest);
 
@@ -30,7 +32,7 @@ const Tenant = await pickDefault(import('./Tenant.js'));
 
 describe('Tenant', () => {
   it('should call middleware factories', async () => {
-    await Tenant.create('foo');
+    await Tenant.create(defaultTenant);
 
     for (const middleware of middlewareList) {
       expect(middleware).toBeCalled();
