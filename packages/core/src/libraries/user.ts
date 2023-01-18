@@ -195,6 +195,13 @@ export const createUserLibrary = (queries: Queries) => {
     return scopes;
   };
 
+  const findUserRoles = async (userId: string) => {
+    const usersRoles = await findUsersRolesByUserId(userId);
+    const roles = await findRolesByRoleIds(usersRoles.map(({ roleId }) => roleId));
+
+    return roles;
+  };
+
   return {
     findUserByIdWithRoles,
     generateUserId,
@@ -202,5 +209,6 @@ export const createUserLibrary = (queries: Queries) => {
     checkIdentifierCollision,
     findUsersByRoleName,
     findUserScopesForResourceId,
+    findUserRoles,
   };
 };

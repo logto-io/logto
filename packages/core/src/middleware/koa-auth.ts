@@ -43,7 +43,6 @@ type TokenInfo = {
   sub: string;
   clientId: unknown;
   scopes: string[];
-  roleNames?: string[];
 };
 
 export const verifyBearerTokenFromRequest = async (
