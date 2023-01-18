@@ -35,6 +35,9 @@ const translation = {
     sign_in_via_passcode: 'Entrar com código de verificação',
     sign_in_via_password: 'Entrar com senha',
     change: 'Change {{change}}', // UNTRANSLATED,
+    link_another_email: 'Link another email', // UNTRANSLATED
+    link_another_phone: 'Link another phone', // UNTRANSLATED
+    link_another_email_or_phone: 'Link another email or phone', // UNTRANSLATED
   },
   description: {
     email: 'e-mail',
@@ -57,9 +60,13 @@ const translation = {
       'A conta com {{type}} {{value}} não existe, gostaria de criar uma nova conta?',
     sign_in_id_does_not_exist_alert: 'A conta com {{type}} {{value}} não existe.',
     create_account_id_exists_alert: 'A conta com {{type}} {{value}} já existe',
-    bind_account_title: 'Link da conta',
+    social_identity_exist:
+      'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
+    bind_account_title: 'Link or create account', // UNTRANSLATED
     social_create_account: 'Sem conta? Você pode criar uma nova conta e link.',
-    social_bind_account: 'Já tinha uma conta? Faça login para vinculá-lo à sua identidade social.',
+    social_link_email: 'You can link another email', // UNTRANSLATED,
+    social_link_phone: 'You can link another phone', // UNTRANSLATED,
+    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing:
       'Encontramos uma conta relacionada, você pode vinculá-la diretamente.',
     reset_password: 'Redefinir senha',

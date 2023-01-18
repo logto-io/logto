@@ -35,6 +35,9 @@ const translation = {
     sign_in_via_passcode: 'Sign in with verification code', // UNTRANSLATED
     sign_in_via_password: 'Sign in with password', // UNTRANSLATED
     change: 'Change {{method}}', // UNTRANSLATED
+    link_another_email: 'Link another email', // UNTRANSLATED
+    link_another_phone: 'Link another phone', // UNTRANSLATED
+    link_another_email_or_phone: 'Link another email or phone', // UNTRANSLATED
   },
   description: {
     email: 'Email',
@@ -58,11 +61,13 @@ const translation = {
       'Das Konto mit {{type}} {{value}} existiert nicht, möchtest du ein neues Konto erstellen?',
     sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
     create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
-    forgot_password_id_does_not_exits: 'Das Konto mit {{type}} {{value}} existiert nicht.',
-    bind_account_title: 'Konto verknüpfen',
+    social_identity_exist:
+      'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
+    bind_account_title: 'Link or create account', // UNTRANSLATED
     social_create_account: 'Kein Konto? Du kannst ein neues Konto erstellen und es verknüpfen.',
-    social_bind_account:
-      'Besitzt du schon ein Konto? Melde dich an, um die Identität zu verknüpfen.',
+    social_link_email: 'You can link another email', // UNTRANSLATED,
+    social_link_phone: 'You can link another phone', // UNTRANSLATED,
+    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing: 'Wir haben ein Konto gefunden, das du verknüpfen kannst.',
     reset_password: 'Passwort zurücksetzen',
     reset_password_description_email:

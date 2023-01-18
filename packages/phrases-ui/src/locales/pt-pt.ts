@@ -35,6 +35,9 @@ const translation = {
     sign_in_via_passcode: 'Sign in with verification code', // UNTRANSLATED
     sign_in_via_password: 'Sign in with password', // UNTRANSLATED
     change: 'Change {{method}}', // UNTRANSLATED
+    link_another_email: 'Link another email', // UNTRANSLATED
+    link_another_phone: 'Link another phone', // UNTRANSLATED
+    link_another_email_or_phone: 'Link another email or phone', // UNTRANSLATED
   },
   description: {
     email: 'email',
@@ -56,9 +59,13 @@ const translation = {
     sign_in_id_does_not_exist: 'A conta com {{type}} {{value}} não existe, gostaria de criar uma?',
     sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
     create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
-    bind_account_title: 'Agregar conta',
+    social_identity_exist:
+      'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
+    bind_account_title: 'Link or create account', // UNTRANSLATED
     social_create_account: 'Sem conta? Pode criar uma nova e agregar.',
-    social_bind_account: 'Já tem uma conta? Faça login para agregar a sua identidade social.',
+    social_link_email: 'You can link another email', // UNTRANSLATED,
+    social_link_phone: 'You can link another phone', // UNTRANSLATED,
+    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing: 'Encontramos uma conta relacionada, pode agrega-la diretamente.',
     reset_password: 'Redefinir Password',
     reset_password_description_email:

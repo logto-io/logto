@@ -35,6 +35,9 @@ const translation = {
     sign_in_via_passcode: '인증번호로 로그인',
     sign_in_via_password: '비밀번호로 로그인',
     change: 'Change {{change}}', // UNTRANSLATED,
+    link_another_email: 'Link another email', // UNTRANSLATED
+    link_another_phone: 'Link another phone', // UNTRANSLATED
+    link_another_email_or_phone: 'Link another email or phone', // UNTRANSLATED
   },
   description: {
     email: '이메일',
@@ -56,9 +59,13 @@ const translation = {
     sign_in_id_does_not_exist: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
     sign_in_id_does_not_exist_alert: '{{type}} {{value}} 계정이 존재하지 않아요.',
     create_account_id_exists_alert: '{{type}} {{value}} 이미 존재해요.',
-    bind_account_title: '계정 연동',
+    social_identity_exist:
+      'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
+    bind_account_title: 'Link or create account', // UNTRANSLATED
     social_create_account: '계정이 없으신가요? 새로운 계정을 만들고 연동해보세요.',
-    social_bind_account: '계정이 이미 있으신가요? 로그인하여 다른 계정과 연동해보세요.',
+    social_link_email: 'You can link another email', // UNTRANSLATED,
+    social_link_phone: 'You can link another phone', // UNTRANSLATED,
+    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing: '관련된 계정을 찾았어요. 해당 계정과 연동할 수 있습니다.',
     reset_password: '암호를 재설정',
     reset_password_description_email:
