@@ -114,27 +114,29 @@ export const verifyForgotPasswordVerificationCodeIdentifier = async (
 };
 
 export const signInWithVerifiedIdentifier = async () => {
-  await api.delete(`${interactionPrefix}/profile`);
-
-  await api.put(`${interactionPrefix}/event`, {
-    json: {
-      event: InteractionEvent.SignIn,
-    },
-  });
+  await Promise.all([
+    api.delete(`${interactionPrefix}/profile`),
+    api.put(`${interactionPrefix}/event`, {
+      json: {
+        event: InteractionEvent.SignIn,
+      },
+    }),
+  ]);
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
 
 export const registerWithVerifiedIdentifier = async (payload: SendVerificationCodePayload) => {
-  await api.put(`${interactionPrefix}/event`, {
-    json: {
-      event: InteractionEvent.Register,
-    },
-  });
-
-  await api.put(`${interactionPrefix}/profile`, {
-    json: payload,
-  });
+  await Promise.all([
+    api.put(`${interactionPrefix}/event`, {
+      json: {
+        event: InteractionEvent.Register,
+      },
+    }),
+    api.put(`${interactionPrefix}/profile`, {
+      json: payload,
+    }),
+  ]);
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
@@ -172,31 +174,33 @@ export const signInWithSocial = async (payload: SocialConnectorPayload) => {
 };
 
 export const registerWithVerifiedSocial = async (connectorId: string) => {
-  await api.put(`${interactionPrefix}/event`, {
-    json: {
-      event: InteractionEvent.Register,
-    },
-  });
-
-  await api.patch(`${interactionPrefix}/profile`, {
-    json: {
-      connectorId,
-    },
-  });
+  await Promise.all([
+    api.put(`${interactionPrefix}/event`, {
+      json: {
+        event: InteractionEvent.Register,
+      },
+    }),
+    api.patch(`${interactionPrefix}/profile`, {
+      json: {
+        connectorId,
+      },
+    }),
+  ]);
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
 
 export const bindSocialRelatedUser = async (payload: SocialEmailPayload | SocialPhonePayload) => {
-  await api.patch(`${interactionPrefix}/identifiers`, {
-    json: payload,
-  });
-
-  await api.patch(`${interactionPrefix}/profile`, {
-    json: {
-      connectorId: payload.connectorId,
-    },
-  });
+  await Promise.all([
+    api.patch(`${interactionPrefix}/identifiers`, {
+      json: payload,
+    }),
+    api.patch(`${interactionPrefix}/profile`, {
+      json: {
+        connectorId: payload.connectorId,
+      },
+    }),
+  ]);
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
@@ -204,17 +208,18 @@ export const bindSocialRelatedUser = async (payload: SocialEmailPayload | Social
 export const linkWithSocial = async (connectorId: string) => {
   // Sign-in with pre-verified email/phone identifier instead and replace the email/phone profile with connectorId.
 
-  await api.put(`${interactionPrefix}/event`, {
-    json: {
-      event: InteractionEvent.SignIn,
-    },
-  });
-
-  await api.put(`${interactionPrefix}/profile`, {
-    json: {
-      connectorId,
-    },
-  });
+  await Promise.all([
+    api.put(`${interactionPrefix}/event`, {
+      json: {
+        event: InteractionEvent.SignIn,
+      },
+    }),
+    api.put(`${interactionPrefix}/profile`, {
+      json: {
+        connectorId,
+      },
+    }),
+  ]);
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
