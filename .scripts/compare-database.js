@@ -49,6 +49,7 @@ const queryDatabaseManifest = async (database) => {
     order by tablename, indexname asc;
   `);
 
+  // Omit generated ids and values
   return {
     tables: omitArray(tables, 'table_catalog'),
     columns: omitArray(columns, 'table_catalog', 'udt_catalog', 'ordinal_position', 'dtd_identifier'),

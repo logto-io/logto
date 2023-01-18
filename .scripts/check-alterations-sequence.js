@@ -29,7 +29,7 @@ for (const alteration of committedAlterations) {
 
   if (index < allAlterations.length - committedAlterations.length) {
     throw new Error(
-      `Wrong alteration sequence for commited file: ${alteration}\nAll timestamps of committed alteration files should be greater than the biggest one in the base branch.`
+      `Wrong alteration sequence for committed file: ${alteration}\nAll timestamps of committed alteration files should be greater than the biggest one in the base branch.`
     );
   }
 }

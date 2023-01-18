@@ -12,7 +12,7 @@ import {
 import { log } from '../../../utilities.js';
 import type { AlterationFile } from './type.js';
 import { getAlterationFiles, getTimestampFromFilename } from './utils.js';
-import { chooseAlterationsByVersion } from './version.js';
+import { chooseAlterationsByVersion, chooseRevertAlterationsByVersion } from './version.js';
 
 const importAlterationScript = async (filePath: string): Promise<AlterationScript> => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -33,24 +33,44 @@ export const getLatestAlterationTimestamp = async () => {
   return getTimestampFromFilename(lastFile.filename);
 };
 
-export const getUndeployedAlterations = async (pool: DatabasePool) => {
+export const getAvailableAlterations = async (
+  pool: DatabasePool,
+  compareMode: 'gt' | 'lte' = 'gt'
+) => {
   const databaseTimestamp = await getCurrentDatabaseAlterationTimestamp(pool);
 
   const files = await getAlterationFiles();
 
-  return files.filter(({ filename }) => getTimestampFromFilename(filename) > databaseTimestamp);
+  return files.filter(({ filename }) =>
+    compareMode === 'gt'
+      ? getTimestampFromFilename(filename) > databaseTimestamp
+      : getTimestampFromFilename(filename) <= databaseTimestamp
+  );
 };
 
 const deployAlteration = async (
   pool: DatabasePool,
-  { path: filePath, filename }: AlterationFile
+  { path: filePath, filename }: AlterationFile,
+  action: 'up' | 'down' = 'up'
 ) => {
-  const { up } = await importAlterationScript(filePath);
+  const { up, down } = await importAlterationScript(filePath);
 
   try {
     await pool.transaction(async (connection) => {
-      await up(connection);
-      await updateDatabaseTimestamp(connection, getTimestampFromFilename(filename));
+      if (action === 'up') {
+        await up(connection);
+        await updateDatabaseTimestamp(connection, getTimestampFromFilename(filename));
+      }
+
+      if (action === 'down') {
+        await down(connection);
+
+        const newTimestamp = getTimestampFromFilename(filename) - 1;
+
+        if (newTimestamp > 0) {
+          await updateDatabaseTimestamp(connection, newTimestamp);
+        }
+      }
     });
   } catch (error: unknown) {
     console.error(error);
@@ -63,7 +83,7 @@ const deployAlteration = async (
     );
   }
 
-  log.info(`Run alteration ${filename} succeeded`);
+  log.info(`Run alteration ${filename} \`${action}()\` function succeeded`);
 };
 
 const alteration: CommandModule<unknown, { action: string; target?: string }> = {
@@ -72,7 +92,7 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
   builder: (yargs) =>
     yargs
       .positional('action', {
-        describe: 'The action to perform, now it only accepts `deploy` and `list`',
+        describe: 'The action to perform, accepts `list`, `deploy`, and `rollback` (or `r`).',
         type: 'string',
         demandOption: true,
       })
@@ -90,7 +110,7 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
     } else if (action === 'deploy') {
       const pool = await createPoolFromConfig();
       const alterations = await chooseAlterationsByVersion(
-        await getUndeployedAlterations(pool),
+        await getAvailableAlterations(pool),
         target
       );
 
@@ -104,6 +124,27 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
       for (const alteration of alterations) {
         // eslint-disable-next-line no-await-in-loop
         await deployAlteration(pool, alteration);
+      }
+
+      await pool.end();
+    } else if (['rollback', 'r'].includes(action)) {
+      const pool = await createPoolFromConfig();
+      const alterations = await chooseRevertAlterationsByVersion(
+        await getAvailableAlterations(pool, 'lte'),
+        target ?? ''
+      );
+
+      log.info(
+        `Found ${alterations.length} alteration${conditionalString(
+          alterations.length > 1 && 's'
+        )} to revert`
+      );
+
+      // The await inside the loop is intended, alterations should run in order
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      for (const alteration of alterations.slice().reverse()) {
+        // eslint-disable-next-line no-await-in-loop
+        await deployAlteration(pool, alteration, 'down');
       }
 
       await pool.end();

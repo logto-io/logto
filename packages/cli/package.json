@@ -86,6 +86,9 @@
   },
   "eslintConfig": {
     "extends": "@silverhand",
+    "rules": {
+      "complexity": ["error", 11]
+    },
     "ignorePatterns": [
       "src/package-json.ts"
     ]

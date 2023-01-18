@@ -62,7 +62,9 @@ const alteration: AlterationScript = {
 
       // eslint-disable-next-line no-await-in-loop
       await pool.query(sql`
-        update users set role_names = role_names || '[${role.name}]'::jsonb where id = ${relation.userId}
+        update users 
+        set role_names = role_names || ${sql.jsonb([role.name])}
+        where id = ${relation.userId}
       `);
     }
 
