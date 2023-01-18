@@ -1,6 +1,5 @@
 import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
-import { ApplicationType, UserRole } from '@logto/schemas';
-import { deduplicate } from '@silverhand/essentials';
+import { ApplicationType } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -18,7 +17,7 @@ type Props = {
 };
 
 const AdvancedSettings = ({ applicationType, oidcConfig }: Props) => {
-  const { control } = useFormContext<Application>();
+  const { control } = useFormContext<Application & { isAdmin: boolean }>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -68,19 +67,14 @@ const AdvancedSettings = ({ applicationType, oidcConfig }: Props) => {
       {applicationType === ApplicationType.MachineToMachine && (
         <FormField title="application_details.enable_admin_access">
           <Controller
-            name="roleNames"
+            name="isAdmin"
             control={control}
-            defaultValue={[]}
             render={({ field: { onChange, value } }) => (
               <Switch
                 label={t('application_details.enable_admin_access_label')}
-                checked={value.includes(UserRole.Admin)}
+                checked={value}
                 onChange={({ currentTarget: { checked } }) => {
-                  if (checked) {
-                    onChange(deduplicate(value.concat(UserRole.Admin)));
-                  } else {
-                    onChange(value.filter((value) => value !== UserRole.Admin));
-                  }
+                  onChange(checked);
                 }}
               />
             )}

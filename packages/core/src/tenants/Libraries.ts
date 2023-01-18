@@ -1,3 +1,4 @@
+import { createApplicationLibrary } from '#src/libraries/application.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import { createHookLibrary } from '#src/libraries/hook.js';
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
@@ -19,6 +20,7 @@ export default class Libraries {
   hooks = createHookLibrary(this.queries, this.modelRouters);
   socials = createSocialLibrary(this.queries, this.connectors);
   passcodes = createPasscodeLibrary(this.queries, this.connectors);
+  applications = createApplicationLibrary(this.queries);
 
   constructor(private readonly queries: Queries, private readonly modelRouters: ModelRouters) {}
 }

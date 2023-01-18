@@ -1,6 +1,6 @@
 import { generateStandardId, buildIdGenerator } from '@logto/core-kit';
-import { Applications } from '@logto/schemas';
-import { object, string } from 'zod';
+import { adminConsoleAdminRoleId, Applications } from '@logto/schemas';
+import { boolean, object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -21,6 +21,8 @@ export default function applicationRoutes<T extends AuthedRouter>(
     updateApplicationById,
     findTotalNumberOfApplications,
   } = queries.applications;
+  const { findApplicationsRolesByApplicationId, insertApplicationsRoles, deleteApplicationRole } =
+    queries.applicationsRoles;
 
   router.get('/applications', koaPagination(), async (ctx, next) => {
     const { limit, offset } = ctx.pagination;
@@ -69,7 +71,13 @@ export default function applicationRoutes<T extends AuthedRouter>(
         params: { id },
       } = ctx.guard;
 
-      ctx.body = await findApplicationById(id);
+      const application = await findApplicationById(id);
+      const applicationsRoles = await findApplicationsRolesByApplicationId(id);
+
+      ctx.body = {
+        ...application,
+        isAdmin: applicationsRoles.some(({ roleId }) => roleId === adminConsoleAdminRoleId),
+      };
 
       return next();
     }
@@ -79,7 +87,14 @@ export default function applicationRoutes<T extends AuthedRouter>(
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Applications.createGuard.omit({ id: true, createdAt: true }).deepPartial(),
+      body: Applications.createGuard
+        .omit({ id: true, createdAt: true })
+        .deepPartial()
+        .merge(
+          object({
+            isAdmin: boolean().optional(),
+          })
+        ),
     }),
     async (ctx, next) => {
       const {
@@ -87,9 +102,23 @@ export default function applicationRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
-      ctx.body = await updateApplicationById(id, {
-        ...body,
-      });
+      const { isAdmin, ...rest } = body;
+
+      // FIXME @sijie temp solution to set admin access to machine to machine app
+      if (isAdmin !== undefined) {
+        const applicationsRoles = await findApplicationsRolesByApplicationId(id);
+        const originalIsAdmin = applicationsRoles.some(
+          ({ roleId }) => roleId === adminConsoleAdminRoleId
+        );
+
+        if (isAdmin && !originalIsAdmin) {
+          await insertApplicationsRoles([{ applicationId: id, roleId: adminConsoleAdminRoleId }]);
+        } else if (!isAdmin && originalIsAdmin) {
+          await deleteApplicationRole(id, adminConsoleAdminRoleId);
+        }
+      }
+
+      ctx.body = await updateApplicationById(id, rest);
 
       return next();
     }

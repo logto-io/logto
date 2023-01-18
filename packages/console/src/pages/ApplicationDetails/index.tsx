@@ -1,4 +1,4 @@
-import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
+import type { Application, ApplicationResponse, SnakeCaseOidcConfig } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -42,7 +42,7 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
 const ApplicationDetails = () => {
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, mutate } = useSWR<Application, RequestError>(
+  const { data, error, mutate } = useSWR<ApplicationResponse, RequestError>(
     id && `/api/applications/${id}`
   );
   const { data: oidcConfig, error: fetchOidcConfigError } = useSWR<
@@ -56,7 +56,7 @@ const ApplicationDetails = () => {
   const [isDeleted, setIsDeleted] = useState(false);
   const api = useApi();
   const navigate = useNavigate();
-  const formMethods = useForm<Application>();
+  const formMethods = useForm<Application & { isAdmin: boolean }>();
   const documentationUrl = useDocumentationUrl();
 
   const {
@@ -78,7 +78,7 @@ const ApplicationDetails = () => {
       return;
     }
 
-    const updatedApplication = await api
+    await api
       .patch(`/api/applications/${data.id}`, {
         json: {
           ...formData,
@@ -98,7 +98,7 @@ const ApplicationDetails = () => {
         },
       })
       .json<Application>();
-    void mutate(updatedApplication);
+    void mutate();
     toast.success(t('general.saved'));
   });
 
