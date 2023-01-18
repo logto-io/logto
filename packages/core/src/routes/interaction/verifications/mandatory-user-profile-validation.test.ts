@@ -33,6 +33,7 @@ describe('validateMandatoryUserProfile', () => {
     interactionDetails: {} as Awaited<ReturnType<Provider['interactionDetails']>>,
     signInExperience: mockSignInExperience,
   };
+
   const interaction: IdentifierVerifiedInteractionResult = {
     event: InteractionEvent.SignIn,
     identifiers: [{ key: 'accountId', value: 'foo' }],

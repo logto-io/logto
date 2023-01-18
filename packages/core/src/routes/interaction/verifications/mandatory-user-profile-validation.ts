@@ -1,7 +1,6 @@
 import type { Profile, SignInExperience, User } from '@logto/schemas';
 import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
-import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -13,6 +12,7 @@ import type {
   SocialIdentifier,
   VerifiedSignInInteractionResult,
   VerifiedRegisterInteractionResult,
+  Identifier,
 } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
 import { mergeIdentifiers } from '../utils/interaction.js';
@@ -93,29 +93,43 @@ const validateRegisterMandatoryUserProfile = (profile?: Profile) => {
   );
 };
 
+const getSocialUserInfo = (identifiers: Identifier[] = []) => {
+  const socialIdentifier = identifiers.find(
+    (identifier): identifier is SocialIdentifier => identifier.key === 'social'
+  );
+
+  return socialIdentifier?.userInfo;
+};
+
+const missingProfileAssertion = (missingProfileSet: Set<MissingProfile>) => {
+  assertThat(
+    missingProfileSet.size === 0,
+    new RequestError(
+      { code: 'user.missing_profile', status: 422 },
+      {
+        missingProfile: Array.from(missingProfileSet),
+      }
+    )
+  );
+};
+
 // Fill the missing email or phone from the social identity if any
 const fillMissingProfileWithSocialIdentity = async (
   missingProfileSet: Set<MissingProfile>,
   interaction: MandatoryProfileValidationInteraction,
   userQueries: Queries['users']
-): Promise<{
-  missingProfileSet: Set<MissingProfile>;
-  interaction: MandatoryProfileValidationInteraction;
-  registeredSocialIdentity?: { email?: string; phone?: string };
-}> => {
-  const { identifiers = [], profile } = interaction;
+): Promise<MandatoryProfileValidationInteraction> => {
+  const { identifiers, profile } = interaction;
 
-  const socialIdentifier = identifiers.find(
-    (identifier): identifier is SocialIdentifier => identifier.key === 'social'
-  );
+  const socialUserInfo = getSocialUserInfo(identifiers);
 
-  if (!socialIdentifier) {
-    return { missingProfileSet, interaction };
+  if (!socialUserInfo) {
+    missingProfileAssertion(missingProfileSet);
+
+    return interaction;
   }
 
-  const {
-    userInfo: { email, phone },
-  } = socialIdentifier;
+  const { email, phone } = socialUserInfo;
 
   // Email Required
   if (
@@ -123,24 +137,30 @@ const fillMissingProfileWithSocialIdentity = async (
       missingProfileSet.has(MissingProfile.emailOrPhone)) &&
     email
   ) {
-    // Email taken
-    if (await userQueries.hasUserWithEmail(email)) {
-      return { missingProfileSet, interaction, registeredSocialIdentity: { email } };
-    }
+    // Check email not taken
+    assertThat(
+      !(await userQueries.hasUserWithEmail(email)),
+      new RequestError(
+        { code: 'user.missing_profile', status: 422 },
+        {
+          missingProfile: Array.from(missingProfileSet),
+          registeredSocialIdentity: { email },
+        }
+      )
+    );
 
     // Assign social verified email to the interaction and remove from missingProfile
     missingProfileSet.delete(MissingProfile.email);
     missingProfileSet.delete(MissingProfile.emailOrPhone);
 
+    missingProfileAssertion(missingProfileSet);
+
     return {
-      missingProfileSet,
-      interaction: {
-        ...interaction,
-        identifiers: mergeIdentifiers({ key: 'emailVerified', value: email }, identifiers),
-        profile: {
-          ...profile,
-          email,
-        },
+      ...interaction,
+      identifiers: mergeIdentifiers({ key: 'emailVerified', value: email }, identifiers),
+      profile: {
+        ...profile,
+        email,
       },
     };
   }
@@ -151,29 +171,37 @@ const fillMissingProfileWithSocialIdentity = async (
       missingProfileSet.has(MissingProfile.emailOrPhone)) &&
     phone
   ) {
-    // Phone taken
-    if (await userQueries.hasUserWithPhone(phone)) {
-      return { missingProfileSet, interaction, registeredSocialIdentity: { phone } };
-    }
+    // Check Phone not taken
+    assertThat(
+      !(await userQueries.hasUserWithPhone(phone)),
+      new RequestError(
+        { code: 'user.missing_profile', status: 422 },
+        {
+          missingProfile: Array.from(missingProfileSet),
+          registeredSocialIdentity: { phone },
+        }
+      )
+    );
 
     // Assign social verified phone to the interaction and remove from missingProfile
     missingProfileSet.delete(MissingProfile.phone);
     missingProfileSet.delete(MissingProfile.emailOrPhone);
 
+    missingProfileAssertion(missingProfileSet);
+
     return {
-      missingProfileSet,
-      interaction: {
-        ...interaction,
-        identifiers: mergeIdentifiers({ key: 'phoneVerified', value: phone }, identifiers),
-        profile: {
-          ...profile,
-          phone,
-        },
+      ...interaction,
+      identifiers: mergeIdentifiers({ key: 'phoneVerified', value: phone }, identifiers),
+      profile: {
+        ...profile,
+        phone,
       },
     };
   }
 
-  return { missingProfileSet, interaction };
+  missingProfileAssertion(missingProfileSet);
+
+  return interaction;
 };
 
 export default async function validateMandatoryUserProfile(
@@ -192,25 +220,14 @@ export default async function validateMandatoryUserProfile(
 
   const requiredProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
 
-  const {
-    missingProfileSet,
-    interaction: updatedInteraction,
-    registeredSocialIdentity,
-  } = await fillMissingProfileWithSocialIdentity(requiredProfileSet, interaction, userQueries);
-
-  assertThat(
-    missingProfileSet.size === 0,
-    new RequestError(
-      { code: 'user.missing_profile', status: 422 },
-      {
-        missingProfile: Array.from(missingProfileSet),
-        ...conditional(registeredSocialIdentity && { registeredSocialIdentity }),
-      }
-    )
+  const updatedInteraction = await fillMissingProfileWithSocialIdentity(
+    requiredProfileSet,
+    interaction,
+    userQueries
   );
 
   if (event === InteractionEvent.Register) {
-    validateRegisterMandatoryUserProfile(profile);
+    validateRegisterMandatoryUserProfile(updatedInteraction.profile);
   }
 
   return updatedInteraction;
