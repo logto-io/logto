@@ -11,7 +11,7 @@
 
   .content {
     padding-right: _.unit(4);
-    overflow: hidden;
+    max-width: 100%;
 
     .title {
       display: block;
