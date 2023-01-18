@@ -1,6 +1,6 @@
 import { buildIdGenerator } from '@logto/core-kit';
-import type { User, CreateUser, Scope, UserWithRoleNames } from '@logto/schemas';
-import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import type { User, CreateUser, Scope } from '@logto/schemas';
+import { Users, UsersPasswordEncryptionMethod, defaultRole } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';
@@ -65,20 +65,6 @@ export const createUserLibrary = (queries: Queries) => {
     scopes: { findScopesByIdsAndResourceId },
   } = queries;
 
-  // TODO: @sijie remove this if no need for `UserWithRoleNames` anymore
-  const findUserByIdWithRoles = async (id: string): Promise<UserWithRoleNames> => {
-    const user = await findUserById(id);
-    const userRoles = await findUsersRolesByUserId(user.id);
-
-    const roles =
-      userRoles.length > 0 ? await findRolesByRoleIds(userRoles.map(({ roleId }) => roleId)) : [];
-
-    return {
-      ...user,
-      roleNames: roles.map(({ name }) => name),
-    };
-  };
-
   const generateUserId = async (retries = 500) =>
     pRetry(
       async () => {
@@ -97,47 +83,20 @@ export const createUserLibrary = (queries: Queries) => {
     returning: true,
   });
 
-  // Temp solution since Hasura requires a role to proceed authn.
-  // The source of default roles should be guarded and moved to database once we implement RBAC.
-  const insertUser = async ({
-    roleNames,
-    ...rest
-  }: OmitAutoSetFields<CreateUser> & { roleNames?: string[] }) => {
-    const computedRoleNames = deduplicate(
-      (roleNames ?? []).concat(EnvSet.values.userDefaultRoleNames)
-    );
-
-    if (computedRoleNames.length > 0) {
-      const existingRoles = await findRolesByRoleNames(computedRoleNames);
-      const missingRoleNames = computedRoleNames.filter(
-        (roleName) => !existingRoles.some(({ name }) => roleName === name)
-      );
-
-      if (missingRoleNames.length > 0) {
-        await insertRoles(
-          missingRoleNames.map((name) => ({
-            id: roleId(),
-            name,
-            description: 'User default role.',
-          }))
-        );
-      }
-    }
-
-    const user = await insertUserQuery(rest);
-
-    await Promise.all([
-      computedRoleNames.map(async (roleName) => {
-        const role = await findRoleByRoleName(roleName);
-
-        if (!role) {
-          // Not expected to happen, just inserted above, so is 500
-          throw new Error(`Can not find role: ${roleName}`);
-        }
-
-        await insertUsersRoles([{ userId: user.id, roleId: role.id }]);
-      }),
+  const insertUser = async (data: OmitAutoSetFields<CreateUser>, isAdmin = false) => {
+    const roleNames = deduplicate([
+      ...EnvSet.values.userDefaultRoleNames,
+      ...(isAdmin ? [defaultRole.name] : []),
     ]);
+    const roles = await findRolesByRoleNames(roleNames);
+
+    assertThat(roles.length === roleNames.length, 'role.default_role_missing');
+
+    const user = await insertUserQuery(data);
+
+    if (roles.length > 0) {
+      await insertUsersRoles(roles.map(({ id }) => ({ userId: user.id, roleId: id })));
+    }
 
     return user;
   };
@@ -203,7 +162,6 @@ export const createUserLibrary = (queries: Queries) => {
   };
 
   return {
-    findUserByIdWithRoles,
     generateUserId,
     insertUser,
     checkIdentifierCollision,

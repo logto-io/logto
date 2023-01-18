@@ -11,14 +11,12 @@ describe('OIDC getUserClaims()', () => {
       'name',
       'picture',
       'username',
-      'role_names',
     ]);
 
     expect(getUserClaims(use.idToken, 'openid profile email phone', {}, [])).toEqual([
       'name',
       'picture',
       'username',
-      'role_names',
       'email',
       'email_verified',
       'phone_number',
@@ -29,14 +27,12 @@ describe('OIDC getUserClaims()', () => {
       'name',
       'picture',
       'username',
-      'role_names',
     ]);
 
     expect(getUserClaims(use.idToken, 'openid profile email', {}, ['email_verified'])).toEqual([
       'name',
       'picture',
       'username',
-      'role_names',
       'email',
     ]);
   });
@@ -46,7 +42,6 @@ describe('OIDC getUserClaims()', () => {
       'name',
       'picture',
       'username',
-      'role_names',
       'custom_data',
       'identities',
     ]);
@@ -58,7 +53,6 @@ describe('OIDC getUserClaims()', () => {
       'name',
       'picture',
       'username',
-      'role_names',
     ]);
   });
 });

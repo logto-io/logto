@@ -32,8 +32,9 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
   } = envSet.oidc;
   const {
     resources: { findResourceByIndicator },
+    users: { findUserById },
   } = queries;
-  const { findUserByIdWithRoles, findUserScopesForResourceId } = libraries.users;
+  const { findUserScopesForResourceId } = libraries.users;
   const { findApplicationScopesForResourceId } = libraries.applications;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
 
@@ -153,7 +154,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
     claims: userClaims,
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
     findAccount: async (_ctx, sub) => {
-      const user = await findUserByIdWithRoles(sub);
+      const user = await findUserById(sub);
 
       return {
         accountId: sub,

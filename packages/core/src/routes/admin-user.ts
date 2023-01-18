@@ -31,16 +31,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(
       hasUserWithEmail,
       hasUserWithPhone,
     },
-    usersRoles: { deleteUsersRolesByUserIdAndRoleId, findUsersRolesByRoleId, insertUsersRoles },
+    usersRoles: { findUsersRolesByRoleId },
   } = queries;
   const {
-    users: {
-      checkIdentifierCollision,
-      generateUserId,
-      insertUser,
-      findUsersByRoleName,
-      findUserByIdWithRoles,
-    },
+    users: { checkIdentifierCollision, generateUserId, insertUser, findUsersByRoleName },
   } = libraries;
 
   router.get('/users', koaPagination(), async (ctx, next) => {
@@ -87,9 +81,9 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         params: { userId },
       } = ctx.guard;
 
-      const user = await findUserByIdWithRoles(userId);
+      const user = await findUserById(userId);
 
-      ctx.body = pick(user, 'roleNames', ...userInfoSelectFields);
+      ctx.body = pick(user, ...userInfoSelectFields);
 
       return next();
     }
@@ -174,15 +168,17 @@ export default function adminUserRoutes<T extends AuthedRouter>(
 
       const id = await generateUserId();
 
-      const user = await insertUser({
-        id,
-        primaryEmail,
-        primaryPhone,
-        username,
-        name,
-        roleNames: conditional(isAdmin && [UserRole.Admin]),
-        ...conditional(password && (await encryptUserPassword(password))),
-      });
+      const user = await insertUser(
+        {
+          id,
+          primaryEmail,
+          primaryPhone,
+          username,
+          name,
+          ...conditional(password && (await encryptUserPassword(password))),
+        },
+        isAdmin
+      );
 
       ctx.body = pick(user, ...userInfoSelectFields);
 
@@ -201,7 +197,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         name: string().or(literal('')).nullable(),
         avatar: string().url().or(literal('')).nullable(),
         customData: arbitraryObjectGuard,
-        roleNames: string().array(),
       }).partial(),
     }),
     async (ctx, next) => {
@@ -210,56 +205,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
-      const user = await findUserByIdWithRoles(userId);
+      await findUserById(userId);
       await checkIdentifierCollision(body, userId);
 
-      const { roleNames, ...userUpdates } = body;
-
-      // Temp solution to validate the existence of input roleNames
-      if (roleNames) {
-        const roles = await findRolesByRoleNames(roleNames);
-
-        // Insert new roles
-        const newRoles = roleNames.filter((roleName) => !user.roleNames.includes(roleName));
-
-        if (newRoles.length > 0) {
-          await insertUsersRoles(
-            newRoles.map((roleName) => {
-              const role = roles.find(({ name }) => name === roleName);
-
-              if (!role) {
-                throw new RequestError({
-                  status: 400,
-                  code: 'user.invalid_role_names',
-                  data: {
-                    roleNames: roleName,
-                  },
-                });
-              }
-
-              return {
-                userId: user.id,
-                roleId: role.id,
-              };
-            })
-          );
-        }
-
-        // Remove old roles
-        const oldRoles = user.roleNames.filter((roleName) => !roleNames.includes(roleName));
-
-        await Promise.all(
-          oldRoles.map(async (roleName) => {
-            const role = roles.find(({ name }) => name === roleName);
-
-            if (role) {
-              await deleteUsersRolesByUserIdAndRoleId(user.id, role.id);
-            }
-          })
-        );
-      }
-
-      const updatedUser = await updateUserById(userId, userUpdates, 'replace');
+      const updatedUser = await updateUserById(userId, body, 'replace');
       ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
@@ -363,8 +312,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(
       ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
-      // TODO: @sijie break into smaller files
-      // eslint-disable-next-line max-lines
     }
   );
 }

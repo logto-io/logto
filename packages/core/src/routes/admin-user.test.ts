@@ -82,7 +82,6 @@ const mockHasUserWithPhone = jest.fn(async () => false);
 const { revokeInstanceByUserId } = mockedQueries.oidcModelInstances;
 const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserById } =
   mockedQueries.users;
-const { findRolesByRoleNames } = mockedQueries.roles;
 
 const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
   encryptUserPassword: jest.fn(() => ({
@@ -92,7 +91,6 @@ const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js'
 }));
 
 const usersLibraries = {
-  findUserByIdWithRoles: jest.fn(async (id: string) => mockUser),
   generateUserId: jest.fn(async () => 'fooId'),
   insertUser: jest.fn(
     async (user: CreateUser): Promise<User> => ({
@@ -101,7 +99,6 @@ const usersLibraries = {
     })
   ),
 } satisfies Partial<Libraries['users']>;
-const { findUserByIdWithRoles } = usersLibraries;
 
 const adminUserRoutes = await pickDefault(import('./admin-user.js'));
 
@@ -136,7 +133,7 @@ describe('adminUserRoutes', () => {
   it('GET /users/:userId', async () => {
     const response = await userRequest.get('/users/foo');
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ ...mockUserResponse, roleNames: ['admin'] });
+    expect(response.body).toEqual(mockUserResponse);
   });
 
   it('POST /users', async () => {
@@ -154,7 +151,6 @@ describe('adminUserRoutes', () => {
       id: 'fooId',
       username,
       name,
-      roleNames: undefined, // API will call `insertUser()` with `roleNames` specified
     });
   });
 
@@ -281,7 +277,7 @@ describe('adminUserRoutes', () => {
     const name = 'Michael';
     const avatar = 'http://www.michael.png';
 
-    findUserByIdWithRoles.mockImplementationOnce(() => {
+    findUserById.mockImplementationOnce(() => {
       throw new Error(' ');
     });
 
@@ -314,28 +310,6 @@ describe('adminUserRoutes', () => {
     await expect(
       userRequest.patch('/users/foo').send({ primaryPhone: '18688886666' })
     ).resolves.toHaveProperty('status', 422);
-  });
-
-  it('PATCH /users/:userId should throw if role names are invalid', async () => {
-    findRolesByRoleNames.mockImplementationOnce(
-      async (): Promise<Role[]> => [
-        { id: 'role_id1', name: 'worker', description: 'none' },
-        { id: 'role_id2', name: 'cleaner', description: 'none' },
-      ]
-    );
-    await expect(
-      userRequest.patch('/users/foo').send({ roleNames: ['superadmin'] })
-    ).resolves.toHaveProperty('status', 400);
-    expect(findUserByIdWithRoles).toHaveBeenCalledTimes(1);
-    expect(updateUserById).not.toHaveBeenCalled();
-  });
-
-  it('PATCH /users/:userId should update if roleNames field is an empty array', async () => {
-    const roleNames: string[] = [];
-
-    const response = await userRequest.patch('/users/foo').send({ roleNames });
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual(mockUserResponse);
   });
 
   it('PATCH /users/:userId/password', async () => {

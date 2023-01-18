@@ -45,7 +45,6 @@ const errors = {
     phone_not_exist: 'Die Telefonnummer wurde noch nicht registriert.',
     identity_not_exist: 'Die Identität wurde noch nicht registriert.',
     identity_already_in_use: 'Die Identität wurde registriert.',
-    invalid_role_names: 'Rollennamen ({{roleNames}}) sind ungültig',
     cannot_delete_self: 'Du kannst dich nicht selbst löschen.',
     sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
     sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED
@@ -180,6 +179,8 @@ const errors = {
     name_in_use: 'This role name {{name}} is already in use', // UNTRANSLATED
     scope_exists: 'The scope id {{scopeId}} has already been added to this role', // UNTRANSLATED
     user_exists: 'The user id {{userId}} is already been added to this role', // UNTRANSLATED
+    default_role_missing:
+      'Some of the default roleNames does not exist in database, please ensure to create roles first', // UNTRANSLATED
   },
   scope: {
     name_exists: 'The scope name {{name}} is already in use', // UNTRANSLATED

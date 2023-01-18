@@ -1,4 +1,4 @@
-import { InteractionEvent, adminConsoleApplicationId, UserRole } from '@logto/schemas';
+import { InteractionEvent, adminConsoleApplicationId } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
@@ -110,10 +110,13 @@ describe('submit action', () => {
     expect(encryptUserPassword).toBeCalledWith('password');
     expect(getLogtoConnectorById).toBeCalledWith('logto');
 
-    expect(insertUser).toBeCalledWith({
-      id: 'uid',
-      ...upsertProfile,
-    });
+    expect(insertUser).toBeCalledWith(
+      {
+        id: 'uid',
+        ...upsertProfile,
+      },
+      false
+    );
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'uid' },
     });
@@ -145,11 +148,13 @@ describe('submit action', () => {
     expect(encryptUserPassword).toBeCalledWith('password');
     expect(getLogtoConnectorById).toBeCalledWith('logto');
 
-    expect(insertUser).toBeCalledWith({
-      id: 'uid',
-      roleNames: [UserRole.Admin],
-      ...upsertProfile,
-    });
+    expect(insertUser).toBeCalledWith(
+      {
+        id: 'uid',
+        ...upsertProfile,
+      },
+      true
+    );
     expect(assignInteractionResults).toBeCalledWith(adminConsoleCtx, tenant.provider, {
       login: { accountId: 'uid' },
     });

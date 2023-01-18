@@ -7,7 +7,6 @@ export type UserClaim =
   | 'name'
   | 'picture'
   | 'username'
-  | 'role_names'
   | 'email'
   | 'email_verified'
   | 'phone_number'
@@ -55,7 +54,7 @@ export enum UserScope {
  * Mapped claims that ID Token includes.
  */
 export const idTokenClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.freeze({
-  [UserScope.Profile]: ['name', 'picture', 'username', 'role_names'],
+  [UserScope.Profile]: ['name', 'picture', 'username'],
   [UserScope.Email]: ['email', 'email_verified'],
   [UserScope.Phone]: ['phone_number', 'phone_number_verified'],
   [UserScope.CustomData]: [],

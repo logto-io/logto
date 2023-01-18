@@ -43,7 +43,6 @@ const errors = {
     phone_not_exist: '手机号码尚未注册。',
     identity_not_exist: '该社交帐号尚未注册。',
     identity_already_in_use: '该社交帐号已被注册。',
-    invalid_role_names: '角色名称（{{roleNames}}）无效。',
     cannot_delete_self: '无法删除自己的账户。',
     sign_up_method_not_enabled: '注册方式尚未启用。',
     sign_in_method_not_enabled: '登录方式尚未启用。',
@@ -162,6 +161,8 @@ const errors = {
     name_in_use: 'This role name {{name}} is already in use', // UNTRANSLATED
     scope_exists: 'The scope id {{scopeId}} has already been added to this role', // UNTRANSLATED
     user_exists: 'The user id {{userId}} is already been added to this role', // UNTRANSLATED
+    default_role_missing:
+      'Some of the default roleNames does not exist in database, please ensure to create roles first', // UNTRANSLATED
   },
   scope: {
     name_exists: 'The scope name {{name}} is already in use', // UNTRANSLATED
