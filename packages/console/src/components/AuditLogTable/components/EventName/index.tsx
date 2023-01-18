@@ -21,20 +21,18 @@ const EventName = ({ eventKey, isSuccess, to }: Props) => {
       <div className={classNames(styles.icon, isSuccess ? styles.success : styles.fail)}>
         {isSuccess ? <Success /> : <Failed />}
       </div>
-      <div>
-        {to && (
-          <Link
-            className={styles.title}
-            to={to}
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-          >
-            {title}
-          </Link>
-        )}
-        {!to && <div className={styles.title}>{title}</div>}
-      </div>
+      {to && (
+        <Link
+          className={styles.title}
+          to={to}
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+        >
+          {title}
+        </Link>
+      )}
+      {!to && <div className={styles.title}>{title}</div>}
     </div>
   );
 };
