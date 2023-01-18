@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
 
-concurrency: master-codecov-report
+concurrency: ${{ github.workflow }}
 
 jobs:
   report-coverage:
