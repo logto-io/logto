@@ -32,7 +32,7 @@ export default class Tenant implements TenantContext {
     if (!EnvSet.values.isMultiTenancy) {
       if (id !== defaultTenant) {
         throw new Error(
-          `Trying to create a tenant instance with ID ${id} in single-tenancy mode. This is a non-op.`
+          `Trying to create a tenant instance with ID ${id} in single-tenancy mode. This is a no-op.`
         );
       }
 

@@ -63,7 +63,7 @@ const loadEnvValues = () => {
     console.warn(
       '[warn]',
       `Multi-tenancy is enabled but the endpoint is an IP address: ${endpoint.toString()}.\n\n` +
-        `Logto will use \`${developmentTenantIdKey}\` env (current value: ${developmentTenantId}) for tenant recognition which is not supported in production.`
+        `Logto is using \`${developmentTenantIdKey}\` env (current value: ${developmentTenantId}) for tenant recognition which is not supported in production.`
     );
   }
 

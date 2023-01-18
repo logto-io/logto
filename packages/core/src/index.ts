@@ -10,10 +10,7 @@ dotenv.config({ path: await findUp('.env', {}) });
 const { loadConnectorFactories } = await import('./utils/connectors/factories.js');
 const { EnvSet } = await import('./env-set/index.js');
 const { default: initI18n } = await import('./i18n/init.js');
-const [{ tenantPool }, { checkRowLevelSecurity }] = await Promise.all([
-  import('./tenants/index.js'),
-  import('./tenants/utils.js'),
-]);
+const { tenantPool, checkRowLevelSecurity } = await import('./tenants/index.js');
 
 try {
   const app = new Koa({
