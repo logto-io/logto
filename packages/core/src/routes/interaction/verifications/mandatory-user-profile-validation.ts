@@ -1,6 +1,7 @@
 import type { Profile, SignInExperience, User } from '@logto/schemas';
 import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -94,10 +95,14 @@ const validateRegisterMandatoryUserProfile = (profile?: Profile) => {
 
 // Fill the missing email or phone from the social identity if any
 const fillMissingProfileWithSocialIdentity = async (
-  missingProfile: Set<MissingProfile>,
+  missingProfileSet: Set<MissingProfile>,
   interaction: MandatoryProfileValidationInteraction,
   userQueries: Queries['users']
-): Promise<[Set<MissingProfile>, MandatoryProfileValidationInteraction]> => {
+): Promise<{
+  missingProfileSet: Set<MissingProfile>;
+  interaction: MandatoryProfileValidationInteraction;
+  registeredSocialIdentity?: { email?: string; phone?: string };
+}> => {
   const { identifiers = [], profile } = interaction;
 
   const socialIdentifier = identifiers.find(
@@ -105,26 +110,31 @@ const fillMissingProfileWithSocialIdentity = async (
   );
 
   if (!socialIdentifier) {
-    return [missingProfile, interaction];
+    return { missingProfileSet, interaction };
   }
 
   const {
     userInfo: { email, phone },
   } = socialIdentifier;
 
+  // Email Required
   if (
-    (missingProfile.has(MissingProfile.email) || missingProfile.has(MissingProfile.emailOrPhone)) &&
-    email &&
-    // Email taken
-    !(await userQueries.hasUserWithEmail(email))
+    (missingProfileSet.has(MissingProfile.email) ||
+      missingProfileSet.has(MissingProfile.emailOrPhone)) &&
+    email
   ) {
-    missingProfile.delete(MissingProfile.email);
-    missingProfile.delete(MissingProfile.emailOrPhone);
+    // Email taken
+    if (await userQueries.hasUserWithEmail(email)) {
+      return { missingProfileSet, interaction, registeredSocialIdentity: { email } };
+    }
 
-    // Assign social verified email to the interaction
-    return [
-      missingProfile,
-      {
+    // Assign social verified email to the interaction and remove from missingProfile
+    missingProfileSet.delete(MissingProfile.email);
+    missingProfileSet.delete(MissingProfile.emailOrPhone);
+
+    return {
+      missingProfileSet,
+      interaction: {
         ...interaction,
         identifiers: mergeIdentifiers({ key: 'emailVerified', value: email }, identifiers),
         profile: {
@@ -132,22 +142,27 @@ const fillMissingProfileWithSocialIdentity = async (
           email,
         },
       },
-    ];
+    };
   }
 
+  // Phone required
   if (
-    (missingProfile.has(MissingProfile.phone) || missingProfile.has(MissingProfile.emailOrPhone)) &&
-    phone &&
-    // Phone taken
-    !(await userQueries.hasUserWithPhone(phone))
+    (missingProfileSet.has(MissingProfile.phone) ||
+      missingProfileSet.has(MissingProfile.emailOrPhone)) &&
+    phone
   ) {
-    missingProfile.delete(MissingProfile.phone);
-    missingProfile.delete(MissingProfile.emailOrPhone);
+    // Phone taken
+    if (await userQueries.hasUserWithPhone(phone)) {
+      return { missingProfileSet, interaction, registeredSocialIdentity: { phone } };
+    }
 
-    // Assign social verified phone to the interaction
-    return [
-      missingProfile,
-      {
+    // Assign social verified phone to the interaction and remove from missingProfile
+    missingProfileSet.delete(MissingProfile.phone);
+    missingProfileSet.delete(MissingProfile.emailOrPhone);
+
+    return {
+      missingProfileSet,
+      interaction: {
         ...interaction,
         identifiers: mergeIdentifiers({ key: 'phoneVerified', value: phone }, identifiers),
         profile: {
@@ -155,10 +170,10 @@ const fillMissingProfileWithSocialIdentity = async (
           phone,
         },
       },
-    ];
+    };
   }
 
-  return [missingProfile, interaction];
+  return { missingProfileSet, interaction };
 };
 
 export default async function validateMandatoryUserProfile(
@@ -175,19 +190,22 @@ export default async function validateMandatoryUserProfile(
       : // eslint-disable-next-line unicorn/consistent-destructuring -- have to infer the accountId existence by event !== register
         await userQueries.findUserById(interaction.accountId);
 
-  const missingProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
+  const requiredProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
 
-  const [updatedMissingProfileSet, updatedInteraction] = await fillMissingProfileWithSocialIdentity(
+  const {
     missingProfileSet,
-    interaction,
-    userQueries
-  );
+    interaction: updatedInteraction,
+    registeredSocialIdentity,
+  } = await fillMissingProfileWithSocialIdentity(requiredProfileSet, interaction, userQueries);
 
   assertThat(
-    updatedMissingProfileSet.size === 0,
+    missingProfileSet.size === 0,
     new RequestError(
       { code: 'user.missing_profile', status: 422 },
-      { missingProfile: Array.from(missingProfileSet) }
+      {
+        missingProfile: Array.from(missingProfileSet),
+        ...conditional(registeredSocialIdentity && { registeredSocialIdentity }),
+      }
     )
   );
 

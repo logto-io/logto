@@ -24,6 +24,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
       'user.missing_profile': (error) => {
         const [, data] = validate(error.data, missingProfileErrorDataGuard);
         const missingProfile = data?.missingProfile[0];
+        const registeredSocialIdentity = data?.registeredSocialIdentity;
 
         const linkSocialQueryString = linkSocial
           ? `?${queryStringify({ [SearchParameters.linkSocial]: linkSocial })}`
@@ -46,7 +47,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
                 pathname: `/${UserFlow.continue}/${missingProfile}`,
                 search: linkSocialQueryString,
               },
-              { replace }
+              { replace, state: { registeredSocialIdentity } }
             );
             break;
           case MissingProfile.emailOrPhone:

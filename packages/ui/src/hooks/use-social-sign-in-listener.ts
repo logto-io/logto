@@ -19,7 +19,7 @@ import useSocialRegister from './use-social-register';
 
 const useSocialSignInListener = (connectorId?: string) => {
   const { setToast } = useContext(PageContext);
-  const { signInMode, signUpMethods } = useSieMethods();
+  const { signInMode } = useSieMethods();
   const { t } = useTranslation();
 
   const navigate = useNavigate();

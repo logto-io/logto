@@ -7,11 +7,7 @@ import VerificationCodeContainer from '@/containers/VerificationCode';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserFlow } from '@/types';
-import {
-  verificationCodeStateGuard,
-  verificationCodeMethodGuard,
-  userFlowGuard,
-} from '@/types/guard';
+import { emailOrPhoneStateGuard, verificationCodeMethodGuard, userFlowGuard } from '@/types/guard';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 type Parameters = {
@@ -25,7 +21,7 @@ const VerificationCode = () => {
   const { state } = useLocation();
 
   const invalidMethod = !is(method, verificationCodeMethodGuard);
-  const invalidState = !is(state, verificationCodeStateGuard);
+  const invalidState = !is(state, emailOrPhoneStateGuard);
 
   const [, flow] = validate(type, userFlowGuard);
 

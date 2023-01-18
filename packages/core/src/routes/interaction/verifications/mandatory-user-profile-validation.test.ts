@@ -138,7 +138,7 @@ describe('validateMandatoryUserProfile', () => {
       ).rejects.toMatchError(
         new RequestError(
           { code: 'user.missing_profile', status: 422 },
-          { missingProfile: [MissingProfile.email] }
+          { missingProfile: [MissingProfile.email], registeredSocialIdentity: { email: 'email' } }
         )
       );
     });
@@ -213,7 +213,7 @@ describe('validateMandatoryUserProfile', () => {
       ).rejects.toMatchError(
         new RequestError(
           { code: 'user.missing_profile', status: 422 },
-          { missingProfile: [MissingProfile.phone] }
+          { missingProfile: [MissingProfile.phone], registeredSocialIdentity: { phone: '123456' } }
         )
       );
     });
