@@ -81,13 +81,17 @@ const UserRoles = () => {
             title: t('user_details.roles.name_column'),
             dataIndex: 'name',
             colSpan: 6,
-            render: ({ id, name }) => <TextLink to={`/roles/${id}`}>{name}</TextLink>,
+            render: ({ id, name }) => (
+              <TextLink className={styles.name} to={`/roles/${id}`}>
+                {name}
+              </TextLink>
+            ),
           },
           {
             title: t('user_details.roles.name_column'),
             dataIndex: 'description',
             colSpan: 9,
-            render: ({ description }) => description,
+            render: ({ description }) => <div className={styles.description}>{description}</div>,
           },
           {
             title: null,
