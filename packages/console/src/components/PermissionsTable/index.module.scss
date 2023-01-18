@@ -24,6 +24,7 @@
   .name {
     display: inline-block;
     max-width: 100%;
+    vertical-align: bottom;
     padding: _.unit(1) _.unit(2);
     border-radius: 6px;
     background: var(--color-neutral-95);
@@ -35,8 +36,7 @@
   }
 
   .link {
-    display: inline-block;
-    width: 100%;
+    display: block;
     @include _.text-ellipsis;
   }
 }
