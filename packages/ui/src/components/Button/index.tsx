@@ -1,6 +1,6 @@
-import type { I18nKey } from '@logto/phrases-ui';
 import classNames from 'classnames';
 import type { HTMLProps } from 'react';
+import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
@@ -17,7 +17,7 @@ type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> &
 };
 
 type Props = BaseProps & {
-  title: I18nKey;
+  title: TFuncKey;
   i18nProps?: Record<string, string>;
 };
 

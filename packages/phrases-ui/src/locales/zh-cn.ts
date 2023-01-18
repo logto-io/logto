@@ -35,6 +35,9 @@ const translation = {
     sign_in_via_passcode: '用验证码登录',
     sign_in_via_password: '密码登录',
     change: '更改{{method}}',
+    link_another_email: 'Link another email', // UNTRANSLATED
+    link_another_phone: 'Link another phone', // UNTRANSLATED
+    link_another_email_or_phone: 'Link another email or phone', // UNTRANSLATED
   },
   description: {
     email: '邮箱',
@@ -56,9 +59,13 @@ const translation = {
     sign_in_id_does_not_exist: '{{ type }}为 {{ value }} 的帐号不存在，你要创建一个新帐号吗？',
     sign_in_id_does_not_exist_alert: '{{ type }}为 {{ value }} 的帐号不存在。',
     create_account_id_exists_alert: '{{ type }}为 {{ value }} 的帐号已存在',
-    bind_account_title: '绑定帐号',
+    social_identity_exist:
+      'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
+    bind_account_title: '绑定或创建帐号',
     social_create_account: '没有帐号？你可以创建一个帐号并绑定。',
-    social_bind_account: '已有帐号？登录以绑定社交身份。',
+    social_link_email: 'You can link another email', // UNTRANSLATED,
+    social_link_phone: 'You can link another phone', // UNTRANSLATED,
+    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing: '找到了一个匹配的帐号，你可以直接绑定。',
     reset_password: '重设密码',
     reset_password_description_email: '输入邮件地址，领取验证码以重设密码。',

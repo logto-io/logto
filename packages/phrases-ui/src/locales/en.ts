@@ -33,6 +33,9 @@ const translation = {
     sign_in_via_passcode: 'Sign in with verification code',
     sign_in_via_password: 'Sign in with password',
     change: 'Change {{method}}',
+    link_another_email: 'Link another email',
+    link_another_phone: 'Link another phone',
+    link_another_email_or_phone: 'Link another email or phone',
   },
   description: {
     email: 'email',
@@ -56,9 +59,13 @@ const translation = {
       'The account with {{type}} {{value}} does not exist, would you like to create a new account?',
     sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.',
     create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists',
-    bind_account_title: 'Link account',
-    social_create_account: 'No account? You can create a new account and link.',
-    social_bind_account: 'Already had an account? Sign in to link it with your social identity.',
+    social_identity_exist:
+      'The {{type}} {{value}} is linked to another account. Please try another {{type}}',
+    bind_account_title: 'Link or create account',
+    social_create_account: 'You can create a new account and link.',
+    social_link_email: 'You can link another email',
+    social_link_phone: 'You can link another phone',
+    social_link_email_or_phone: 'You can link another email or phone',
     social_bind_with_existing: 'We find a related account, you can link it directly.',
     reset_password: 'Reset password',
     reset_password_description_email:

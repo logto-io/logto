@@ -1,8 +1,11 @@
+import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
+import type { TFuncKey } from 'react-i18next';
 
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
+import { useSieMethods } from '@/hooks/use-sie';
 import useBindSocialRelatedUser from '@/hooks/use-social-link-related-user';
 import useSocialRegister from '@/hooks/use-social-register';
 import type { SocialRelatedUserInfo } from '@/types/guard';
@@ -16,11 +19,47 @@ type Props = {
   relatedUser: SocialRelatedUserInfo;
 };
 
+const getCreateAccountContent = (
+  signUpMethods: string[]
+): { desc: TFuncKey; buttonText: TFuncKey } => {
+  if (
+    signUpMethods.includes(SignInIdentifier.Email) &&
+    signUpMethods.includes(SignInIdentifier.Phone)
+  ) {
+    return {
+      desc: 'description.social_link_email_or_phone',
+      buttonText: 'action.link_another_email_or_phone',
+    };
+  }
+
+  if (signUpMethods.includes(SignInIdentifier.Email)) {
+    return {
+      desc: 'description.social_link_email',
+      buttonText: 'action.link_another_email',
+    };
+  }
+
+  if (signUpMethods.includes(SignInIdentifier.Phone)) {
+    return {
+      desc: 'description.social_link_phone',
+      buttonText: 'action.link_another_phone',
+    };
+  }
+
+  return {
+    desc: 'description.social_create_account',
+    buttonText: 'action.create',
+  };
+};
+
 const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
   const { t } = useTranslation();
+  const { signUpMethods } = useSieMethods();
 
   const bindSocialRelatedUser = useBindSocialRelatedUser();
   const registerWithSocial = useSocialRegister(connectorId);
+
+  const content = getCreateAccountContent(signUpMethods);
 
   const { type, value } = relatedUser;
 
@@ -41,10 +80,10 @@ const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
 
       <Divider label="description.or" className={styles.divider} />
 
-      <div className={styles.desc}>{t('description.social_create_account')}</div>
+      <div className={styles.desc}>{t(content.desc)}</div>
 
       <Button
-        title="action.create"
+        title={content.buttonText}
         type="secondary"
         onClick={() => {
           void registerWithSocial(connectorId);
