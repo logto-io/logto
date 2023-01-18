@@ -12,6 +12,7 @@ import type {
   SocialIdentifier,
   VerifiedSignInInteractionResult,
   VerifiedRegisterInteractionResult,
+  Identifier,
 } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
 import { mergeIdentifiers } from '../utils/interaction.js';
@@ -92,73 +93,115 @@ const validateRegisterMandatoryUserProfile = (profile?: Profile) => {
   );
 };
 
-// Fill the missing email or phone from the social identity if any
-const fillMissingProfileWithSocialIdentity = async (
-  missingProfile: Set<MissingProfile>,
-  interaction: MandatoryProfileValidationInteraction,
-  userQueries: Queries['users']
-): Promise<[Set<MissingProfile>, MandatoryProfileValidationInteraction]> => {
-  const { identifiers = [], profile } = interaction;
-
+const getSocialUserInfo = (identifiers: Identifier[] = []) => {
   const socialIdentifier = identifiers.find(
     (identifier): identifier is SocialIdentifier => identifier.key === 'social'
   );
 
-  if (!socialIdentifier) {
-    return [missingProfile, interaction];
-  }
+  return socialIdentifier?.userInfo;
+};
 
-  const {
-    userInfo: { email, phone },
-  } = socialIdentifier;
-
-  if (
-    (missingProfile.has(MissingProfile.email) || missingProfile.has(MissingProfile.emailOrPhone)) &&
-    email &&
-    // Email taken
-    !(await userQueries.hasUserWithEmail(email))
-  ) {
-    missingProfile.delete(MissingProfile.email);
-    missingProfile.delete(MissingProfile.emailOrPhone);
-
-    // Assign social verified email to the interaction
-    return [
-      missingProfile,
+const assertMissingProfile = (missingProfileSet: Set<MissingProfile>) => {
+  assertThat(
+    missingProfileSet.size === 0,
+    new RequestError(
+      { code: 'user.missing_profile', status: 422 },
       {
-        ...interaction,
-        identifiers: mergeIdentifiers({ key: 'emailVerified', value: email }, identifiers),
-        profile: {
-          ...profile,
-          email,
-        },
-      },
-    ];
+        missingProfile: Array.from(missingProfileSet),
+      }
+    )
+  );
+};
+
+// Fill the missing email or phone from the social identity if any
+const fillMissingProfileWithSocialIdentity = async (
+  missingProfileSet: Set<MissingProfile>,
+  interaction: MandatoryProfileValidationInteraction,
+  userQueries: Queries['users']
+): Promise<MandatoryProfileValidationInteraction> => {
+  const { identifiers, profile } = interaction;
+
+  const socialUserInfo = getSocialUserInfo(identifiers);
+
+  if (!socialUserInfo) {
+    assertMissingProfile(missingProfileSet);
+
+    return interaction;
   }
 
+  const { email, phone } = socialUserInfo;
+
+  // Email Required
   if (
-    (missingProfile.has(MissingProfile.phone) || missingProfile.has(MissingProfile.emailOrPhone)) &&
-    phone &&
-    // Phone taken
-    !(await userQueries.hasUserWithPhone(phone))
+    (missingProfileSet.has(MissingProfile.email) ||
+      missingProfileSet.has(MissingProfile.emailOrPhone)) &&
+    email
   ) {
-    missingProfile.delete(MissingProfile.phone);
-    missingProfile.delete(MissingProfile.emailOrPhone);
+    // Check email not taken
+    assertThat(
+      !(await userQueries.hasUserWithEmail(email)),
+      new RequestError(
+        { code: 'user.missing_profile', status: 422 },
+        {
+          missingProfile: Array.from(missingProfileSet),
+          registeredSocialIdentity: { email },
+        }
+      )
+    );
 
-    // Assign social verified phone to the interaction
-    return [
-      missingProfile,
-      {
-        ...interaction,
-        identifiers: mergeIdentifiers({ key: 'phoneVerified', value: phone }, identifiers),
-        profile: {
-          ...profile,
-          phone,
-        },
+    // Assign social verified email to the interaction and remove from missingProfile
+    missingProfileSet.delete(MissingProfile.email);
+    missingProfileSet.delete(MissingProfile.emailOrPhone);
+
+    assertMissingProfile(missingProfileSet);
+
+    return {
+      ...interaction,
+      identifiers: mergeIdentifiers({ key: 'emailVerified', value: email }, identifiers),
+      profile: {
+        ...profile,
+        email,
       },
-    ];
+    };
   }
 
-  return [missingProfile, interaction];
+  // Phone required
+  if (
+    (missingProfileSet.has(MissingProfile.phone) ||
+      missingProfileSet.has(MissingProfile.emailOrPhone)) &&
+    phone
+  ) {
+    // Check Phone not taken
+    assertThat(
+      !(await userQueries.hasUserWithPhone(phone)),
+      new RequestError(
+        { code: 'user.missing_profile', status: 422 },
+        {
+          missingProfile: Array.from(missingProfileSet),
+          registeredSocialIdentity: { phone },
+        }
+      )
+    );
+
+    // Assign social verified phone to the interaction and remove from missingProfile
+    missingProfileSet.delete(MissingProfile.phone);
+    missingProfileSet.delete(MissingProfile.emailOrPhone);
+
+    assertMissingProfile(missingProfileSet);
+
+    return {
+      ...interaction,
+      identifiers: mergeIdentifiers({ key: 'phoneVerified', value: phone }, identifiers),
+      profile: {
+        ...profile,
+        phone,
+      },
+    };
+  }
+
+  assertMissingProfile(missingProfileSet);
+
+  return interaction;
 };
 
 export default async function validateMandatoryUserProfile(
@@ -177,22 +220,14 @@ export default async function validateMandatoryUserProfile(
 
   const missingProfileSet = getMissingProfileBySignUpIdentifiers({ signUp, user, profile });
 
-  const [updatedMissingProfileSet, updatedInteraction] = await fillMissingProfileWithSocialIdentity(
+  const updatedInteraction = await fillMissingProfileWithSocialIdentity(
     missingProfileSet,
     interaction,
     userQueries
   );
 
-  assertThat(
-    updatedMissingProfileSet.size === 0,
-    new RequestError(
-      { code: 'user.missing_profile', status: 422 },
-      { missingProfile: Array.from(missingProfileSet) }
-    )
-  );
-
   if (event === InteractionEvent.Register) {
-    validateRegisterMandatoryUserProfile(profile);
+    validateRegisterMandatoryUserProfile(updatedInteraction.profile);
   }
 
   return updatedInteraction;

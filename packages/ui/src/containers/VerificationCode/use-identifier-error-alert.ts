@@ -19,11 +19,7 @@ const useIdentifierErrorAlert = () => {
 
   // Have to wrap up in a useCallback hook otherwise the handler updates on every cycle
   return useCallback(
-    async (
-      errorType: IdentifierErrorType,
-      identifierType: VerificationCodeIdentifier,
-      identifier: string
-    ) => {
+    async (errorType: IdentifierErrorType, method: VerificationCodeIdentifier, value: string) => {
       await show({
         type: 'alert',
         ModalContent: t(
@@ -31,17 +27,17 @@ const useIdentifierErrorAlert = () => {
             ? 'description.create_account_id_exists_alert'
             : 'description.sign_in_id_does_not_exist_alert',
           {
-            type: t(
-              `description.${identifierType === SignInIdentifier.Email ? 'email' : 'phone_number'}`
-            ),
+            type: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
             value:
-              identifierType === SignInIdentifier.Phone
-                ? formatPhoneNumberWithCountryCallingCode(identifier)
-                : identifier,
+              method === SignInIdentifier.Phone
+                ? formatPhoneNumberWithCountryCallingCode(value)
+                : value,
           }
         ),
         cancelText: 'action.change',
-        cancelTextI18nProps: { method: identifierType },
+        cancelTextI18nProps: {
+          method: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
+        },
       });
       navigate(-1);
     },

@@ -3,7 +3,7 @@ import * as s from 'superstruct';
 
 import { UserFlow } from '.';
 
-export const verificationCodeStateGuard = s.object({
+export const emailOrPhoneStateGuard = s.object({
   email: s.optional(s.string()),
   phone: s.optional(s.string()),
 });
@@ -37,6 +37,13 @@ export const usernameGuard = s.object({
   username: s.string(),
 });
 
+const registeredSocialIdentity = s.optional(
+  s.object({
+    email: s.optional(s.string()),
+    phone: s.optional(s.string()),
+  })
+);
+
 export const missingProfileErrorDataGuard = s.object({
   missingProfile: s.array(
     s.union([
@@ -47,6 +54,11 @@ export const missingProfileErrorDataGuard = s.object({
       s.literal(MissingProfile.emailOrPhone),
     ])
   ),
+  registeredSocialIdentity,
+});
+
+export const registeredSocialIdentityStateGuard = s.object({
+  registeredSocialIdentity,
 });
 
 export const socialAccountNotExistErrorDataGuard = s.object({

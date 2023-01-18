@@ -7,7 +7,7 @@ import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import PasswordSignInForm from '@/containers/PasswordSignInForm';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
-import { verificationCodeStateGuard } from '@/types/guard';
+import { emailOrPhoneStateGuard } from '@/types/guard';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 import { isEmailOrPhoneMethod } from '@/utils/sign-in-experience';
 
@@ -31,7 +31,7 @@ const SignInPassword = () => {
     return <ErrorPage />;
   }
 
-  const invalidState = !is(state, verificationCodeStateGuard);
+  const invalidState = !is(state, emailOrPhoneStateGuard);
   const value = !invalidState && state[methodSetting.identifier];
 
   if (!value) {
