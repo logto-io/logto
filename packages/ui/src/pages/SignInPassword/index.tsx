@@ -49,9 +49,9 @@ const SignInPassword = () => {
       descriptionProps={{
         method: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
         value:
-          method === SignInIdentifier.Email
-            ? value
-            : formatPhoneNumberWithCountryCallingCode(value),
+          method === SignInIdentifier.Phone
+            ? formatPhoneNumberWithCountryCallingCode(value)
+            : value,
       }}
     >
       <PasswordSignInForm

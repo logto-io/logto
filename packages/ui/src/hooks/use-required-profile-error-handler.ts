@@ -25,6 +25,10 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
         const [, data] = validate(error.data, missingProfileErrorDataGuard);
         const missingProfile = data?.missingProfile[0];
 
+        const linkSocialQueryString = linkSocial
+          ? `?${queryStringify({ [SearchParameters.linkSocial]: linkSocial })}`
+          : undefined;
+
         switch (missingProfile) {
           case MissingProfile.password:
           case MissingProfile.username:
@@ -40,9 +44,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
             navigate(
               {
                 pathname: `/${UserFlow.continue}/${missingProfile}`,
-                search: linkSocial
-                  ? `?${queryStringify({ [SearchParameters.linkSocial]: linkSocial })}`
-                  : undefined,
+                search: linkSocialQueryString,
               },
               { replace }
             );
@@ -51,9 +53,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
             navigate(
               {
                 pathname: `/${UserFlow.continue}/email-or-phone/email`,
-                search: linkSocial
-                  ? `?${queryStringify({ [SearchParameters.linkSocial]: linkSocial })}`
-                  : undefined,
+                search: linkSocialQueryString,
               },
               { replace }
             );

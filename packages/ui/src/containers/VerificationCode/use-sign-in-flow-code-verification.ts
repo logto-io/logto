@@ -55,9 +55,9 @@ const useSignInFlowCodeVerification = (
       ModalContent: t('description.sign_in_id_does_not_exist', {
         ype: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
         value:
-          method === SignInIdentifier.Email
-            ? target
-            : formatPhoneNumberWithCountryCallingCode(target),
+          method === SignInIdentifier.Phone
+            ? formatPhoneNumberWithCountryCallingCode(target)
+            : target,
       }),
     });
 

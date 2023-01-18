@@ -54,9 +54,9 @@ const useRegisterFlowCodeVerification = (
       ModalContent: t('description.create_account_id_exists', {
         type: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
         value:
-          method === SignInIdentifier.Email
-            ? target
-            : formatPhoneNumberWithCountryCallingCode(target),
+          method === SignInIdentifier.Phone
+            ? formatPhoneNumberWithCountryCallingCode(target)
+            : target,
       }),
     });
 

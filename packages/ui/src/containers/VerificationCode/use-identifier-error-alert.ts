@@ -34,10 +34,10 @@ const useIdentifierErrorAlert = () => {
             type: t(
               `description.${identifierType === SignInIdentifier.Email ? 'email' : 'phone_number'}`
             ),
-            identifier:
-              identifierType === SignInIdentifier.Email
-                ? identifier
-                : formatPhoneNumberWithCountryCallingCode(identifier),
+            value:
+              identifierType === SignInIdentifier.Phone
+                ? formatPhoneNumberWithCountryCallingCode(identifier)
+                : identifier,
           }
         ),
         cancelText: 'action.change',

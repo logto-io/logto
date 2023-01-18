@@ -25,9 +25,9 @@ const useLinkSocialConfirmModal = () => {
         ModalContent: t('description.link_account_id_exists', {
           type: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
           value:
-            method === SignInIdentifier.Email
-              ? target
-              : formatPhoneNumberWithCountryCallingCode(target),
+            method === SignInIdentifier.Phone
+              ? formatPhoneNumberWithCountryCallingCode(target)
+              : target,
         }),
       });
 
