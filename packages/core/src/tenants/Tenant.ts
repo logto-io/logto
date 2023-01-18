@@ -24,10 +24,23 @@ import initRouter from '#src/routes/init.js';
 import Libraries from './Libraries.js';
 import Queries from './Queries.js';
 import type TenantContext from './TenantContext.js';
+import { defaultTenant } from './consts.js';
+import { getTenantDatabaseDsn } from './utils.js';
 
 export default class Tenant implements TenantContext {
-  static async create(id: string) {
-    const envSet = new EnvSet();
+  static async create(id: string): Promise<Tenant> {
+    if (!EnvSet.values.isMultiTenancy) {
+      if (id !== defaultTenant) {
+        throw new Error(
+          `Trying to create a tenant instance with ID ${id} in single-tenancy mode. This is a no-op.`
+        );
+      }
+
+      return new Tenant(EnvSet.default, id);
+    }
+
+    // In multi-tenancy mode, treat the default database URL as the management URL
+    const envSet = new EnvSet(await getTenantDatabaseDsn(EnvSet.default, id));
     await envSet.load();
 
     return new Tenant(envSet, id);

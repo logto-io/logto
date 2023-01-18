@@ -6,20 +6,39 @@ import chalk from 'chalk';
 import type Koa from 'koa';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { tenantPool, defaultTenant } from '#src/tenants/index.js';
+import { defaultTenant, tenantPool } from '#src/tenants/index.js';
 
 const logListening = () => {
   const { localhostUrl, endpoint } = EnvSet.values;
 
-  for (const url of deduplicate([localhostUrl, endpoint])) {
+  for (const url of deduplicate([localhostUrl, endpoint.toString()])) {
     console.log(chalk.bold(chalk.green(`App is running at ${url}`)));
   }
 };
 
+const getTenantId = () => {
+  if (!EnvSet.values.isMultiTenancy) {
+    return defaultTenant;
+  }
+
+  if (EnvSet.values.multiTenancyMode === 'domain') {
+    throw new Error('Not implemented');
+  }
+
+  return !EnvSet.values.isProduction && EnvSet.values.developmentTenantId;
+};
+
 export default async function initApp(app: Koa): Promise<void> {
   app.use(async (ctx, next) => {
-    // TODO: add multi-tenancy logic
-    const tenant = await tenantPool.get(defaultTenant);
+    const tenantId = getTenantId();
+
+    if (!tenantId) {
+      ctx.status = 404;
+
+      return next();
+    }
+
+    const tenant = await tenantPool.get(tenantId);
 
     return tenant.run(ctx, next);
   });
