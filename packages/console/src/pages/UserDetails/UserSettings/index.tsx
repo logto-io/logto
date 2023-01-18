@@ -17,7 +17,7 @@ import { uriValidator } from '@/utilities/validator';
 
 import type { UserDetailsForm, UserDetailsOutletContext } from '../types';
 import { userDetailsParser } from '../utils';
-import UserConnectors from './components/UserConnectors';
+import UserSocialIdentities from './components/UserSocialIdentities';
 
 const UserSettings = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -119,9 +119,9 @@ const UserSettings = () => {
             />
           </FormField>
           <FormField title="user_details.field_connectors">
-            <UserConnectors
+            <UserSocialIdentities
               userId={user.id}
-              connectors={user.identities}
+              identities={user.identities}
               onDelete={() => {
                 onUserUpdated();
               }}

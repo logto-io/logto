@@ -1,0 +1,37 @@
+@use '@/scss/underscore' as _;
+
+.empty {
+  color: var(--color-text-secondary);
+  font: var(--font-body-medium);
+}
+
+.connectorName {
+  display: flex;
+  align-items: center;
+
+  .icon {
+    width: 32px;
+    height: 32px;
+    border-radius: _.unit(2);
+    flex-shrink: 0;
+  }
+
+  .name {
+    margin-left: _.unit(3);
+  }
+}
+
+.connectorId {
+  display: flex;
+  align-items: center;
+  font: var(--font-body-medium);
+  font-family: 'Roboto Mono', monospace;
+  line-height: 32px;
+
+  span {
+    max-width: 220px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}

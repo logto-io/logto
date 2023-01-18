@@ -15,7 +15,7 @@ const ImageWithErrorFallback = ({ src, alt, className }: ImgHTMLAttributes<HTMLI
     setHasError(true);
   };
 
-  if (hasError) {
+  if (!src || hasError) {
     return <Fallback className={className} />;
   }
 
