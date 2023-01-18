@@ -101,7 +101,7 @@ const getSocialUserInfo = (identifiers: Identifier[] = []) => {
   return socialIdentifier?.userInfo;
 };
 
-const missingProfileAssertion = (missingProfileSet: Set<MissingProfile>) => {
+const assertMissingProfile = (missingProfileSet: Set<MissingProfile>) => {
   assertThat(
     missingProfileSet.size === 0,
     new RequestError(
@@ -124,7 +124,7 @@ const fillMissingProfileWithSocialIdentity = async (
   const socialUserInfo = getSocialUserInfo(identifiers);
 
   if (!socialUserInfo) {
-    missingProfileAssertion(missingProfileSet);
+    assertMissingProfile(missingProfileSet);
 
     return interaction;
   }
@@ -153,7 +153,7 @@ const fillMissingProfileWithSocialIdentity = async (
     missingProfileSet.delete(MissingProfile.email);
     missingProfileSet.delete(MissingProfile.emailOrPhone);
 
-    missingProfileAssertion(missingProfileSet);
+    assertMissingProfile(missingProfileSet);
 
     return {
       ...interaction,
@@ -187,7 +187,7 @@ const fillMissingProfileWithSocialIdentity = async (
     missingProfileSet.delete(MissingProfile.phone);
     missingProfileSet.delete(MissingProfile.emailOrPhone);
 
-    missingProfileAssertion(missingProfileSet);
+    assertMissingProfile(missingProfileSet);
 
     return {
       ...interaction,
@@ -199,7 +199,7 @@ const fillMissingProfileWithSocialIdentity = async (
     };
   }
 
-  missingProfileAssertion(missingProfileSet);
+  assertMissingProfile(missingProfileSet);
 
   return interaction;
 };
