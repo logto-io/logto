@@ -24,5 +24,6 @@
     font: var(--font-body-medium);
     color: var(--color-text-link);
     text-decoration: none;
+    @include _.text-ellipsis;
   }
 }
