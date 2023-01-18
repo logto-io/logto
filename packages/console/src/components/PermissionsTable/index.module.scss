@@ -17,16 +17,26 @@
 
   tbody {
     td {
-      max-width: 100%;
-      @include _.text-ellipsis;
       font: var(--font-body-medium);
     }
   }
 
   .name {
     display: inline-block;
+    max-width: 100%;
     padding: _.unit(1) _.unit(2);
     border-radius: 6px;
     background: var(--color-neutral-95);
+    @include _.text-ellipsis;
+  }
+
+  .description {
+    @include _.text-ellipsis;
+  }
+
+  .link {
+    display: inline-block;
+    width: 100%;
+    @include _.text-ellipsis;
   }
 }
