@@ -17,9 +17,16 @@
 
   tbody {
     td {
-      max-width: 100%;
-      @include _.text-ellipsis;
       font: var(--font-body-medium);
     }
+  }
+
+  .name {
+    display: block;
+    @include _.text-ellipsis;
+  }
+
+  .description {
+    @include _.text-ellipsis;
   }
 }
