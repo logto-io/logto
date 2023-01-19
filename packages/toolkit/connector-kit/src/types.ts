@@ -172,11 +172,11 @@ export type SendMessageFunction = (
 export type SocialConnector = BaseConnector<ConnectorType.Social> & {
   getAuthorizationUri: GetAuthorizationUri;
   getUserInfo: GetUserInfo;
-  validateAssertion?: ValidateAssertion;
+  validateSamlAssertion?: ValidateSamlAssertion;
 };
 
 // This type definition is for SAML connector
-export type ValidateAssertion = (
+export type ValidateSamlAssertion = (
   assertion: Record<string, unknown>,
   getSession: GetSession,
   setSession: SetSession

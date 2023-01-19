@@ -1,5 +1,5 @@
 ---
-"@logto/connector-kit": minor
+"@logto/connector-kit": patch
 ---
 
 1. Add `connectorId`, `connectorFactoryId` and `jti` to `GetAuthorizationUri`.
