@@ -13,7 +13,7 @@ import {
   managementResourceScope,
   defaultRoleScopeRelation,
 } from '@logto/schemas';
-import { Hooks } from '@logto/schemas/models';
+import { Hooks, Tenants } from '@logto/schemas/models';
 import chalk from 'chalk';
 import type { DatabasePool, DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
@@ -33,6 +33,31 @@ import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
 import { oidcConfigReaders } from './oidc-config.js';
 
+const getExplicitOrder = (query: string) => {
+  const matched = /\/\*\s*init_order\s*=\s*(\d+)\s*\*\//.exec(query)?.[1];
+
+  return matched ? Number(matched) : undefined;
+};
+
+const compareQuery = ([t1, q1]: [string, string], [t2, q2]: [string, string]) => {
+  const o1 = getExplicitOrder(q1);
+  const o2 = getExplicitOrder(q2);
+
+  if (o1 === undefined && o2 === undefined) {
+    return t1.localeCompare(t2);
+  }
+
+  if (o1 === undefined) {
+    return 1;
+  }
+
+  if (o2 === undefined) {
+    return -1;
+  }
+
+  return o1 - o2;
+};
+
 const createTables = async (connection: DatabaseTransactionConnection) => {
   const tableDirectory = getPathInModule('@logto/schemas', 'tables');
   const directoryFiles = await readdir(tableDirectory);
@@ -44,15 +69,18 @@ const createTables = async (connection: DatabaseTransactionConnection) => {
     ])
   );
 
-  // Await in loop is intended for better error handling
-  for (const [, query] of queries) {
+  console.log(Tenants.raw, getExplicitOrder(Tenants.raw));
+
+  const allQueries: Array<[string, string]> = [
+    [Hooks.tableName, Hooks.raw],
+    [Tenants.tableName, Tenants.raw],
+    ...queries,
+  ];
+  const sorted = allQueries.slice().sort(compareQuery);
+
+  for (const [, query] of sorted) {
     // eslint-disable-next-line no-await-in-loop
     await connection.query(sql`${raw(query)}`);
-  }
-
-  for (const table of [Hooks]) {
-    // eslint-disable-next-line no-await-in-loop
-    await connection.query(sql`${raw(table.raw)}`);
   }
 };
 
@@ -133,6 +161,7 @@ export const seedByPool = async (pool: DatabasePool, type: SeedChoice) => {
         );
       }
 
+      await createTables(connection);
       await oraPromise(createTables(connection), {
         text: 'Create tables',
         prefixText: chalk.blue('[info]'),

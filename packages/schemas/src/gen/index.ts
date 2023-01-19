@@ -44,8 +44,8 @@ const generate = async () => {
         // Get statements
         const statements = paragraph
           .split(';')
-          .map((value) => normalizeWhitespaces(value))
-          .map((value) => removeUnrecognizedComments(value));
+          .map((value) => removeUnrecognizedComments(value))
+          .map((value) => normalizeWhitespaces(value));
 
         // Parse Table statements
         const tables = statements

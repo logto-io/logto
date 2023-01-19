@@ -1,4 +1,6 @@
 create table passcodes (
+  tenant_id varchar(21) not null
+    references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
   interaction_jti varchar(128),
   phone varchar(32),
@@ -11,20 +13,14 @@ create table passcodes (
   primary key (id)
 );
 
+create index passcodes__id
+  on passcodes (tenant_id, id);
+
 create index passcodes__interaction_jti_type
-on passcodes (
-  interaction_jti,
-  type
-);
+  on passcodes (tenant_id, interaction_jti, type);
 
 create index passcodes__email_type
-on passcodes (
-  email,
-  type
-);
+  on passcodes (tenant_id, email, type);
 
 create index passcodes__phone_type
-on passcodes (
-  phone,
-  type
-);
+  on passcodes (tenant_id, phone, type);

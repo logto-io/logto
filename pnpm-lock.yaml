@@ -590,7 +590,9 @@ importers:
       lint-staged: ^13.0.0
       pluralize: ^8.0.0
       prettier: ^2.8.1
+      roarr: ^7.11.0
       slonik: ^30.0.0
+      slonik-sql-tag-raw: ^1.1.4
       typescript: ^4.9.4
       zod: ^3.20.2
     dependencies:
@@ -614,7 +616,9 @@ importers:
       lint-staged: 13.0.0
       pluralize: 8.0.0
       prettier: 2.8.1
+      roarr: 7.11.0
       slonik: 30.1.2
+      slonik-sql-tag-raw: 1.1.4_roarr@7.11.0+slonik@30.1.2
       typescript: 4.9.4
 
   packages/shared:
@@ -5893,19 +5897,12 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /define-properties/1.1.3:
-    resolution: {integrity: sha512-3MqfYKj2lLzdMSf8ZIZE/V+Zuy+BgD6f164e8K2w7dgnpKArBDerGYpM46IYYcjnkdPNMjPk9A6VFB8+3SKlXQ==}
-    engines: {node: '>= 0.4'}
-    dependencies:
-      object-keys: 1.1.1
-
   /define-properties/1.1.4:
     resolution: {integrity: sha512-uckOqKcfaVvtBdsVkdPv3XjveQJsNQqmhXgRi8uhvWWuPYZCNlzT8qAyblUgNoXdHdjMTzAqeGjAoli8f+bzPA==}
     engines: {node: '>= 0.4'}
     dependencies:
       has-property-descriptors: 1.0.0
       object-keys: 1.1.1
-    dev: true
 
   /delay/4.4.1:
     resolution: {integrity: sha512-aL3AhqtfhOlT/3ai6sWXeqwnw63ATNpnUiN4HL7x9q+My5QtHlO3OIkasmug9LKzpheLdmUKGRKnYXYAS7FQkQ==}
@@ -7388,7 +7385,7 @@ packages:
     resolution: {integrity: sha512-ZQnSFO1la8P7auIOQECnm0sSuoMeaSq0EEdXMBFF2QJO4uNcwbyhSgG3MruWNbFTqCLmxVwGOl7LZ9kASvHdeQ==}
     engines: {node: '>= 0.4'}
     dependencies:
-      define-properties: 1.1.3
+      define-properties: 1.1.4
 
   /globalyzer/0.1.0:
     resolution: {integrity: sha512-40oNTM9UfG6aBmuKxk/giHn5nQ8RVz/SS4Ir6zgzOv9/qC3kKZ9v4etGTcJbEl/NyVQH7FGU7d+X1egr57Md2Q==}
@@ -7486,7 +7483,6 @@ packages:
     resolution: {integrity: sha512-62DVLZGoiEBDHQyqG4w9xCuZ7eJEwNmJRWw2VY84Oedb7WFcA27fiEVe8oUQx9hAUJ4ekurquucTGwsyO1XGdQ==}
     dependencies:
       get-intrinsic: 1.1.3
-    dev: true
 
   /has-symbols/1.0.3:
     resolution: {integrity: sha512-l3LCuF6MgDNwTDKkdYGEihYjt5pRPbEg46rtlmnSPlUbgmB8LOIrKJbYYFBSbnPaJexMKtiPO8hmeRjRz2Td+A==}
@@ -13177,7 +13173,6 @@ packages:
       roarr: 7.11.0
       serialize-error: 8.1.0
       slonik: 30.1.2
-    dev: false
 
   /slonik/22.7.1:
     resolution: {integrity: sha512-88GidNOWv4Bg0CqYLXajqcD0bbLip2soY6B4JzHP7EGDrWUb1WSlu7mIppTJVfcK99mx+jnX3xQq3FJ0DoOXag==}

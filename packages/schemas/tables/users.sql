@@ -1,6 +1,10 @@
+/* init_order = 1 */
+
 create type users_password_encryption_method as enum ('Argon2i');
 
 create table users (
+  tenant_id varchar(21) not null
+    references tenants (id) on update cascade on delete cascade,
   id varchar(12) not null,
   username varchar(128) unique,
   primary_email varchar(128) unique,
@@ -18,5 +22,8 @@ create table users (
   primary key (id)
 );
 
-create index users__created_at on users (created_at);
-create index users__name on users (name);
+create index users__id
+  on users (tenant_id, id);
+
+create index users__name
+  on users (tenant_id, name);
