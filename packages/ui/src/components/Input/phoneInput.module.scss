@@ -20,10 +20,6 @@
     height: 100%;
     font-size: 0;
   }
-
-  + input {
-    padding-left: _.unit(1);
-  }
 }
 
 :global(body.mobile) {
