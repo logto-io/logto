@@ -17,6 +17,7 @@
 
   .message {
     font: var(--font-body-2);
+    color: var(--color-type-secondary);
   }
 
   .message,
@@ -28,17 +29,5 @@
 
   .switch {
     margin-top: _.unit(3);
-  }
-}
-
-:global(body.mobile) {
-  .message {
-    color: var(--color-type-primary);
-  }
-}
-
-:global(body.desktop) {
-  .message {
-    color: var(--color-type-secondary);
   }
 }
