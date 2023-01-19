@@ -63,7 +63,7 @@ const PermissionsTable = ({
     title: t('permissions.description_column'),
     dataIndex: 'description',
     colSpan: isApiColumnVisible ? 5 : 9,
-    render: ({ description }) => description,
+    render: ({ description }) => <div className={styles.description}>{description}</div>,
   };
 
   const apiColumn: Column<ScopeResponse> = {
@@ -71,7 +71,10 @@ const PermissionsTable = ({
     dataIndex: 'resource',
     colSpan: 5,
     render: ({ resource }) => (
-      <TextLink to={`/api-resources/${resource.id}/${ApiResourceDetailsTabs.Settings}`}>
+      <TextLink
+        className={styles.link}
+        to={`/api-resources/${resource.id}/${ApiResourceDetailsTabs.Settings}`}
+      >
         {resource.name}
       </TextLink>
     ),
