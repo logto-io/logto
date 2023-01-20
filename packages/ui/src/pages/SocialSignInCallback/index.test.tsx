@@ -35,7 +35,7 @@ describe('SocialCallbackPage with code', () => {
       <SettingsProvider>
         <MemoryRouter initialEntries={['/sign-in/social/github']}>
           <Routes>
-            <Route path="/sign-in/social/:connector" element={<SocialCallback />} />
+            <Route path="/sign-in/social/:connectorId" element={<SocialCallback />} />
           </Routes>
         </MemoryRouter>
       </SettingsProvider>

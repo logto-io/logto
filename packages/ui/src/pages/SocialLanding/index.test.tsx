@@ -33,7 +33,7 @@ describe(`SocialLanding Page`, () => {
       <SettingsProvider>
         <MemoryRouter initialEntries={['/social/landing/github']}>
           <Routes>
-            <Route path="/social/landing/:connector" element={<SocialLanding />} />
+            <Route path="/social/landing/:connectorId" element={<SocialLanding />} />
           </Routes>
         </MemoryRouter>
       </SettingsProvider>
