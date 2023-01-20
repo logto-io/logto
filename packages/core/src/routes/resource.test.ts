@@ -174,6 +174,17 @@ describe('resource routes', () => {
     });
   });
 
+  it('POST /resources/:id/scopes should throw with spaces in name', async () => {
+    const name = 'write users';
+    const description = 'description';
+
+    const response = await resourceRequest
+      .post('/resources/foo/scopes')
+      .send({ name, description });
+
+    expect(response.status).toEqual(400);
+  });
+
   it('PATCH /resources/:id/scopes/:scopeId', async () => {
     const name = 'write:users';
     const description = 'description';
