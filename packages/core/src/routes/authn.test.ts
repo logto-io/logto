@@ -1,6 +1,9 @@
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
+import { mockRole } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import Libraries from '#src/tenants/Libraries.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -12,14 +15,20 @@ const { verifyBearerTokenFromRequest } = await mockEsmWithActual(
   })
 );
 
+const usersLibraries = {
+  findUserRoles: jest.fn(async () => [mockRole]),
+} satisfies Partial<Libraries['users']>;
+
+const tenantContext = new MockTenant(undefined, {}, { users: usersLibraries });
 const { createRequester } = await import('#src/utils/test-utils.js');
 const request = createRequester({
   anonymousRoutes: await pickDefault(import('#src/routes/authn.js')),
+  tenantContext,
 });
 
 describe('authn route for Hasura', () => {
   const mockUserId = 'foo';
-  const mockExpectedRole = 'some_role';
+  const mockExpectedRole = mockRole.name;
   const mockUnauthorizedRole = 'V';
   const keys = Object.freeze({
     expectedRole: 'Expected-Role',
@@ -32,7 +41,6 @@ describe('authn route for Hasura', () => {
       verifyBearerTokenFromRequest.mockResolvedValue({
         clientId: 'ok',
         sub: mockUserId,
-        roleNames: [mockExpectedRole],
       });
     });
 

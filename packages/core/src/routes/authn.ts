@@ -13,8 +13,10 @@ import type { AnonymousRouter, RouterInitArgs } from './types.js';
  * For now, we only implement the API for Hasura authentication.
  */
 export default function authnRoutes<T extends AnonymousRouter>(
-  ...[router, { envSet }]: RouterInitArgs<T>
+  ...[router, { envSet, libraries }]: RouterInitArgs<T>
 ) {
+  const { findUserRoles } = libraries.users;
+
   router.get(
     '/authn/hasura',
     koaGuard({
@@ -36,9 +38,11 @@ export default function authnRoutes<T extends AnonymousRouter>(
         }
       };
 
-      const { sub, roleNames } = await verifyToken(resource);
+      const { sub } = await verifyToken(resource);
+      const roles = sub ? await findUserRoles(sub) : [];
+      const roleNames = new Set(roles.map(({ name }) => name));
 
-      if (unauthorizedRole && (!expectedRole || !roleNames?.includes(expectedRole))) {
+      if (unauthorizedRole && (!expectedRole || !roleNames.has(expectedRole))) {
         ctx.body = {
           'X-Hasura-User-Id':
             sub ??
@@ -54,7 +58,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
 
       if (expectedRole) {
         assertThat(
-          roleNames?.includes(expectedRole),
+          roleNames.has(expectedRole),
           new RequestError({ code: 'auth.expected_role_not_found', status: 401 })
         );
       }
