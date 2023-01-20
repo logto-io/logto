@@ -23,7 +23,7 @@ const role_details = {
     confirm_assign: 'Assign Permission', // UNTRANSLATED
     permission_assigned: 'The selected permissions were successfully assigned to this role!', // UNTRANSLATED
     deletion_description:
-      'If this permission is deleted, the affected user with this role will lose the access granted by this permission.', // UNTRANSLATED
+      'If this permission is removed, the affected user with this role will lose the access granted by this permission.', // UNTRANSLATED
     permission_deleted: 'The permission "{{name}}" was successfully removed from this role!', // UNTRANSLATED
     empty: 'No permission available', // UNTRANSLATED
   },

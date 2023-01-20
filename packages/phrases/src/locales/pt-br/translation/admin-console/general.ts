@@ -43,6 +43,7 @@ const general = {
   learn_more: 'Saber mais',
   tab_errors: '{{count, number}} erros',
   skip_for_now: 'Skip for now', // UNTRANSLATED
+  remove: 'Remove', // UNTRANSLATED
 };
 
 export default general;

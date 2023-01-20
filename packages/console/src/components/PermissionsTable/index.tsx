@@ -28,6 +28,7 @@ type Props = {
   isLoading: boolean;
   errorMessage?: string;
   createButtonTitle: AdminConsoleKey;
+  deleteButtonTitle?: AdminConsoleKey;
   isReadOnly?: boolean;
   isApiColumnVisible?: boolean;
   pagination?: PaginationProps;
@@ -42,6 +43,7 @@ const PermissionsTable = ({
   isLoading,
   errorMessage,
   createButtonTitle,
+  deleteButtonTitle = 'general.delete',
   isReadOnly = false,
   isApiColumnVisible = false,
   pagination,
@@ -89,7 +91,7 @@ const PermissionsTable = ({
        * When the table is read-only, hide the delete button rather than the whole column to keep the table column spaces.
        */
       isReadOnly ? null : (
-        <Tooltip content={t('general.delete')}>
+        <Tooltip content={<div>{t(deleteButtonTitle)}</div>}>
           <IconButton
             onClick={() => {
               deleteHandler(scope);

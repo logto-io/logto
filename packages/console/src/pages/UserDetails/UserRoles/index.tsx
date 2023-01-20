@@ -98,7 +98,7 @@ const UserRoles = () => {
             dataIndex: 'delete',
             colSpan: 1,
             render: (role) => (
-              <Tooltip content={t('general.delete')}>
+              <Tooltip content={t('general.remove')}>
                 <IconButton
                   onClick={() => {
                     setRoleToBeDeleted(role);
@@ -161,7 +161,7 @@ const UserRoles = () => {
         <ConfirmModal
           isOpen
           isLoading={isDeleting}
-          confirmButtonText="general.delete"
+          confirmButtonText="general.remove"
           onCancel={() => {
             setRoleToBeDeleted(undefined);
           }}

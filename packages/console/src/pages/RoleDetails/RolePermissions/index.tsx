@@ -72,6 +72,7 @@ const RolePermissions = () => {
         scopes={scopes}
         isLoading={isLoading}
         createButtonTitle="role_details.permission.assign_button"
+        deleteButtonTitle="general.remove"
         createHandler={() => {
           setIsAssignPermissionsModalOpen(true);
         }}
@@ -100,7 +101,7 @@ const RolePermissions = () => {
         <ConfirmModal
           isOpen
           isLoading={isDeleting}
-          confirmButtonText="general.delete"
+          confirmButtonText="general.remove"
           onCancel={() => {
             setScopeToBeDeleted(undefined);
           }}
