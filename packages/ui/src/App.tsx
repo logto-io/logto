@@ -76,7 +76,7 @@ const App = () => {
                   path="/sign-in"
                   element={isRegisterOnly ? <Navigate replace to="/register" /> : <SignIn />}
                 />
-                <Route path="/sign-in/social/:connector" element={<SocialSignIn />} />
+                <Route path="/sign-in/social/:connectorId" element={<SocialSignIn />} />
                 <Route path="/sign-in/:method" element={<SecondarySignIn />} />
                 <Route path="/sign-in/:method/password" element={<SignInPassword />} />
 
@@ -103,9 +103,9 @@ const App = () => {
                 <Route path="/continue/:method" element={<Continue />} />
 
                 {/* Social sign-in pages */}
-                <Route path="/callback/:connector" element={<Callback />} />
-                <Route path="/social/link/:connector" element={<SocialLinkAccount />} />
-                <Route path="/social/landing/:connector" element={<SocialLanding />} />
+                <Route path="/callback/:connectorId" element={<Callback />} />
+                <Route path="/social/link/:connectorId" element={<SocialLinkAccount />} />
+                <Route path="/social/landing/:connectorId" element={<SocialLanding />} />
 
                 {/* Always keep route path with param as the last one */}
                 <Route path="/:type/:method/verification-code" element={<VerificationCode />} />

@@ -10,7 +10,7 @@ import ErrorPage from '@/pages/ErrorPage';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 
 type Parameters = {
-  connector: string;
+  connectorId: string;
 };
 
 const getPageTitle = (signUpMethods: SignInIdentifier[]): TFuncKey => {
@@ -33,7 +33,7 @@ const getPageTitle = (signUpMethods: SignInIdentifier[]): TFuncKey => {
 };
 
 const SocialLinkAccount = () => {
-  const { connector } = useParams<Parameters>();
+  const { connectorId } = useParams<Parameters>();
   const { state } = useLocation();
   const { signUpMethods } = useSieMethods();
 
@@ -41,7 +41,7 @@ const SocialLinkAccount = () => {
     return <ErrorPage rawMessage="Missing relate account info" />;
   }
 
-  if (!connector) {
+  if (!connectorId) {
     return <ErrorPage rawMessage="Connector not found" />;
   }
 
@@ -49,7 +49,7 @@ const SocialLinkAccount = () => {
 
   return (
     <SecondaryPageWrapper title={getPageTitle(signUpMethods)}>
-      <SocialLinkAccountContainer connectorId={connector} relatedUser={relatedUser} />
+      <SocialLinkAccountContainer connectorId={connectorId} relatedUser={relatedUser} />
     </SecondaryPageWrapper>
   );
 };

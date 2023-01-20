@@ -20,7 +20,7 @@ describe('SocialRegister', () => {
       <SettingsProvider>
         <MemoryRouter initialEntries={['/social/link/github']}>
           <Routes>
-            <Route path="/social/link/:connector" element={<SocialRegister />} />
+            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
           </Routes>
         </MemoryRouter>
       </SettingsProvider>
@@ -43,7 +43,7 @@ describe('SocialRegister', () => {
       >
         <MemoryRouter initialEntries={['/social/link/github']}>
           <Routes>
-            <Route path="/social/link/:connector" element={<SocialRegister />} />
+            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
           </Routes>
         </MemoryRouter>
       </SettingsProvider>
@@ -66,7 +66,7 @@ describe('SocialRegister', () => {
       >
         <MemoryRouter initialEntries={['/social/link/github']}>
           <Routes>
-            <Route path="/social/link/:connector" element={<SocialRegister />} />
+            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
           </Routes>
         </MemoryRouter>
       </SettingsProvider>
@@ -89,7 +89,7 @@ describe('SocialRegister', () => {
       >
         <MemoryRouter initialEntries={['/social/link/github']}>
           <Routes>
-            <Route path="/social/link/:connector" element={<SocialRegister />} />
+            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
           </Routes>
         </MemoryRouter>
       </SettingsProvider>

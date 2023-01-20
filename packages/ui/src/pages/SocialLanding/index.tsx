@@ -7,11 +7,11 @@ import useSocialLandingHandler from '@/hooks/use-social-landing-handler';
 import * as styles from './index.module.scss';
 
 type Parameters = {
-  connector: string;
+  connectorId: string;
 };
 
 const SocialLanding = () => {
-  const { connector: connectorId } = useParams<Parameters>();
+  const { connectorId } = useParams<Parameters>();
   const { loading, socialLandingHandler } = useSocialLandingHandler();
 
   // SocialSignIn Callback Handler

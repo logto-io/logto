@@ -5,9 +5,9 @@ import useSocialSignInListener from '@/hooks/use-social-sign-in-listener';
 import SignIn from '../SignIn';
 
 const SocialSignInCallback = () => {
-  const parameters = useParams<{ connector: string }>();
+  const parameters = useParams<{ connectorId: string }>();
 
-  useSocialSignInListener(parameters.connector);
+  useSocialSignInListener(parameters.connectorId);
 
   return <SignIn />;
 };
