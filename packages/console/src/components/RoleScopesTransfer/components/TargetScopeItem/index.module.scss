@@ -13,6 +13,8 @@
     overflow: hidden;
 
     .name {
+      flex-shrink: 0;
+      max-width: 204px;
       padding: _.unit(1) _.unit(2);
       border-radius: 6px;
       background: var(--color-neutral-95);
