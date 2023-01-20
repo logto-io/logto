@@ -25,7 +25,7 @@ const useSocialSignInListener = (connectorId?: string) => {
 
   const navigate = useNavigate();
 
-  const registerWithSocial = useSocialRegister(connectorId);
+  const registerWithSocial = useSocialRegister(connectorId, true);
 
   const accountNotExistErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
@@ -51,7 +51,10 @@ const useSocialSignInListener = (connectorId?: string) => {
     [connectorId, navigate, registerWithSocial]
   );
 
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({ flow: UserFlow.signIn });
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({
+    replace: true,
+    flow: UserFlow.signIn,
+  });
 
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
