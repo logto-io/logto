@@ -45,7 +45,6 @@ const errors = {
     phone_not_exist: 'Telefon numarası henüz kaydedilmedi',
     identity_not_exist: 'Sosyal platform hesabı henüz kaydedilmedi.',
     identity_already_in_use: 'Sosyal platform hesabı kaydedildi.',
-    invalid_role_names: '({{roleNames}}) rol adları geçerli değil.',
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
     sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
     sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED
@@ -181,6 +180,8 @@ const errors = {
     name_in_use: 'This role name {{name}} is already in use', // UNTRANSLATED
     scope_exists: 'The scope id {{scopeId}} has already been added to this role', // UNTRANSLATED
     user_exists: 'The user id {{userId}} is already been added to this role', // UNTRANSLATED
+    default_role_missing:
+      'Some of the default roleNames does not exist in database, please ensure to create roles first', // UNTRANSLATED
   },
   scope: {
     name_exists: 'The scope name {{name}} is already in use', // UNTRANSLATED

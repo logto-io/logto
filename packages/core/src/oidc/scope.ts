@@ -1,14 +1,13 @@
 import type { UserClaim } from '@logto/core-kit';
 import { idTokenClaims, userinfoClaims, UserScope } from '@logto/core-kit';
-import type { UserWithRoleNames } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { ClaimsParameterMember } from 'oidc-provider';
 
-export const claimToUserKey: Readonly<Record<UserClaim, keyof UserWithRoleNames>> = Object.freeze({
+export const claimToUserKey: Readonly<Record<UserClaim, keyof User>> = Object.freeze({
   name: 'name',
   picture: 'avatar',
   username: 'username',
-  role_names: 'roleNames',
   email: 'primaryEmail',
   // LOG-4165: Change to proper key/function once profile fulfilling implemented
   email_verified: 'primaryEmail',

@@ -1,13 +1,12 @@
-import type { UserWithRoleNames } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import { userInfoSelectFields, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 
-export const mockUser: UserWithRoleNames = {
+export const mockUser: User = {
   id: 'foo',
   username: 'foo',
   primaryEmail: 'foo@logto.io',
   primaryPhone: '111111',
-  roleNames: ['admin'],
   passwordEncrypted: 'password',
   passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
   name: null,
@@ -25,12 +24,11 @@ export const mockUser: UserWithRoleNames = {
 export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);
 
 export const mockPasswordEncrypted = 'a1b2c3';
-export const mockUserWithPassword: UserWithRoleNames = {
+export const mockUserWithPassword: User = {
   id: 'id',
   username: 'username',
   primaryEmail: 'foo@logto.io',
   primaryPhone: '111111',
-  roleNames: ['admin'],
   passwordEncrypted: mockPasswordEncrypted,
   passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
   name: null,
@@ -45,13 +43,12 @@ export const mockUserWithPassword: UserWithRoleNames = {
   isSuspended: false,
 };
 
-export const mockUserList: UserWithRoleNames[] = [
+export const mockUserList: User[] = [
   {
     id: '1',
     username: 'foo1',
     primaryEmail: 'foo1@logto.io',
     primaryPhone: '111111',
-    roleNames: ['admin'],
     passwordEncrypted: null,
     passwordEncryptionMethod: null,
     name: null,
@@ -68,7 +65,6 @@ export const mockUserList: UserWithRoleNames[] = [
     username: 'foo2',
     primaryEmail: 'foo2@logto.io',
     primaryPhone: '111111',
-    roleNames: ['admin'],
     passwordEncrypted: null,
     passwordEncryptionMethod: null,
     name: null,
@@ -85,7 +81,6 @@ export const mockUserList: UserWithRoleNames[] = [
     username: 'foo3',
     primaryEmail: 'foo3@logto.io',
     primaryPhone: '111111',
-    roleNames: ['admin'],
     passwordEncrypted: null,
     passwordEncryptionMethod: null,
     name: null,
@@ -102,7 +97,6 @@ export const mockUserList: UserWithRoleNames[] = [
     username: 'bar1',
     primaryEmail: 'bar1@logto.io',
     primaryPhone: '111111',
-    roleNames: ['admin'],
     passwordEncrypted: null,
     passwordEncryptionMethod: null,
     name: null,
@@ -119,7 +113,6 @@ export const mockUserList: UserWithRoleNames[] = [
     username: 'bar2',
     primaryEmail: 'bar2@logto.io',
     primaryPhone: '111111',
-    roleNames: ['admin'],
     passwordEncrypted: null,
     passwordEncryptionMethod: null,
     name: null,

@@ -80,8 +80,6 @@ export type CustomClientMetadata = z.infer<typeof customClientMetadataGuard>;
  */
 export const roleNamesGuard = z.string().array();
 
-export type RoleNames = z.infer<typeof roleNamesGuard>;
-
 const identityGuard = z.object({
   userId: z.string(),
   details: z.object({}).optional(), // Connector's userinfo details, schemaless

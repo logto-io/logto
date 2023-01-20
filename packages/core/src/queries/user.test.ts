@@ -37,7 +37,6 @@ describe('user query', () => {
   const { table, fields } = convertToIdentifiers(Users);
   const databaseValue = {
     ...mockUser,
-    roleNames: JSON.stringify(mockUser.roleNames),
     identities: JSON.stringify(mockUser.identities),
     customData: JSON.stringify(mockUser.customData),
   };
@@ -276,7 +275,6 @@ describe('user query', () => {
     const { connector1, ...restIdentities } = mockUser.identities;
     const finalDbvalue = {
       ...mockUser,
-      roleNames: JSON.stringify(mockUser.roleNames),
       identities: JSON.stringify(restIdentities),
       customData: JSON.stringify(mockUser.customData),
     };

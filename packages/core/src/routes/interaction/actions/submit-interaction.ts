@@ -1,5 +1,5 @@
 import type { User, Profile } from '@logto/schemas';
-import { InteractionEvent, UserRole, adminConsoleApplicationId } from '@logto/schemas';
+import { InteractionEvent, adminConsoleApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
@@ -143,6 +143,7 @@ export default async function submitInteraction(
   log?: LogEntry
 ) {
   const { hasActiveUsers, findUserById, updateUserById } = queries.users;
+  const { insertUsersRoles } = queries.usersRoles;
 
   const {
     users: { generateUserId, insertUser },
@@ -158,13 +159,14 @@ export default async function submitInteraction(
 
     const createAdminUser =
       String(client_id) === adminConsoleApplicationId && !(await hasActiveUsers());
-    const roleNames = createAdminUser ? [UserRole.Admin] : undefined;
 
-    await insertUser({
-      id,
-      ...conditional(roleNames && { roleNames }),
-      ...upsertProfile,
-    });
+    await insertUser(
+      {
+        id,
+        ...upsertProfile,
+      },
+      createAdminUser
+    );
 
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
