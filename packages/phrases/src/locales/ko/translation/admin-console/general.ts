@@ -42,6 +42,7 @@ const general = {
   learn_more: '더 알아보기',
   tab_errors: '{{count, number}} 오류',
   skip_for_now: 'Skip for now', // UNTRANSLATED
+  remove: 'Remove', // UNTRANSLATED
 };
 
 export default general;

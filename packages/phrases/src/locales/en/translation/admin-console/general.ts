@@ -42,6 +42,7 @@ const general = {
   learn_more: 'Learn more',
   tab_errors: '{{count, number}} errors',
   skip_for_now: 'Skip for now',
+  remove: 'Remove',
 };
 
 export default general;
