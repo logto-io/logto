@@ -46,12 +46,10 @@ const useContinueFlowCodeVerification = (
 
   const verifyVerificationCodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.phone_already_in_use': () => {
-        void identifierExistErrorHandler(SignInIdentifier.Phone, target);
-      },
-      'user.email_already_in_use': () => {
-        void identifierExistErrorHandler(SignInIdentifier.Email, target);
-      },
+      'user.phone_already_in_use': async () =>
+        identifierExistErrorHandler(SignInIdentifier.Phone, target),
+      'user.email_already_in_use': async () =>
+        identifierExistErrorHandler(SignInIdentifier.Email, target),
       ...requiredProfileErrorHandler,
       ...generalVerificationCodeErrorHandlers,
       callback: errorCallback,

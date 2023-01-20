@@ -24,9 +24,8 @@ const useForgotPasswordFlowCodeVerification = (
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.user_not_exist': () => {
-        void identifierErrorHandler(IdentifierErrorType.IdentifierNotExist, method, target);
-      },
+      'user.user_not_exist': async () =>
+        identifierErrorHandler(IdentifierErrorType.IdentifierNotExist, method, target),
       'user.new_password_required_in_profile': () => {
         navigate(`/${UserFlow.forgotPassword}/reset`, { replace: true });
       },
