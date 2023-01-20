@@ -186,6 +186,8 @@ export default function resourceRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
+      assertThat(!/\s/.test(body.name), 'scope.name_with_space');
+
       assertThat(
         !(await findScopeByNameAndResourceId(body.name, resourceId)),
         new RequestError({
@@ -218,6 +220,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
       } = ctx.guard;
 
       if (body.name) {
+        assertThat(!/\s/.test(body.name), 'scope.name_with_space');
         assertThat(
           !(await findScopeByNameAndResourceId(body.name, resourceId, scopeId)),
           new RequestError({
