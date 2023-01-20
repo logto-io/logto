@@ -1,5 +1,6 @@
 import type { RoleResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -57,6 +58,8 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
     }, searchDelay);
   };
 
+  const isEmpty = !isLoading && !error && dataSource.length === 0;
+
   return (
     <div className={transferLayout.box}>
       <div className={transferLayout.boxTopBar}>
@@ -67,11 +70,12 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
           onChange={handleSearchInput}
         />
       </div>
-      <div className={transferLayout.boxContent}>
-        {!isLoading && !error && dataSource.length === 0 && (
+      <div
+        className={classNames(transferLayout.boxContent, isEmpty && transferLayout.emptyBoxContent)}
+      >
+        {isEmpty ? (
           <DataEmpty imageClassName={styles.emptyImage} title={t('user_details.roles.empty')} />
-        )}
-        {dataSource.length > 0 &&
+        ) : (
           dataSource.map((role) => {
             const isSelected = isRoleSelected(role);
 
@@ -89,7 +93,8 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
                 }}
               />
             );
-          })}
+          })
+        )}
       </div>
       <Pagination
         mode="pico"

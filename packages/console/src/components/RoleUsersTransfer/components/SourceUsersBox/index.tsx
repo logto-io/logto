@@ -1,5 +1,6 @@
 import type { User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -56,6 +57,8 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
 
   const isUserAdded = (user: User) => selectedUsers.findIndex(({ id }) => id === user.id) >= 0;
 
+  const isEmpty = !isLoading && !error && dataSource.length === 0;
+
   return (
     <div className={transferLayout.box}>
       <div className={transferLayout.boxTopBar}>
@@ -66,11 +69,12 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
           onChange={handleSearchInput}
         />
       </div>
-      <div className={transferLayout.boxContent}>
-        {!isLoading && !error && dataSource.length === 0 && (
+      <div
+        className={classNames(transferLayout.boxContent, isEmpty && transferLayout.emptyBoxContent)}
+      >
+        {isEmpty ? (
           <DataEmpty imageClassName={styles.emptyImage} title={t('role_details.users.empty')} />
-        )}
-        {dataSource.length > 0 &&
+        ) : (
           dataSource.map((user) => {
             const isSelected = isUserAdded(user);
 
@@ -88,7 +92,8 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
                 }}
               />
             );
-          })}
+          })
+        )}
       </div>
       <Pagination
         mode="pico"

@@ -1,6 +1,7 @@
 import type { ResourceResponse, Scope, ScopeResponse } from '@logto/schemas';
 import { managementResourceScopeId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -119,6 +120,8 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
     );
   }, [keyword, resources]);
 
+  const isEmpty = !isLoading && !hasError && dataSource.length === 0;
+
   return (
     <div className={transferLayout.box}>
       <div className={transferLayout.boxTopBar}>
@@ -129,14 +132,15 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
           onChange={handleSearchInput}
         />
       </div>
-      <div className={transferLayout.boxContent}>
-        {!isLoading && !hasError && dataSource.length === 0 && (
+      <div
+        className={classNames(transferLayout.boxContent, isEmpty && transferLayout.emptyBoxContent)}
+      >
+        {isEmpty ? (
           <DataEmpty
             imageClassName={styles.emptyImage}
             title={t('role_details.permission.empty')}
           />
-        )}
-        {dataSource.length > 0 &&
+        ) : (
           dataSource.map((resource) => (
             <ResourceItem
               key={resource.id}
@@ -145,7 +149,8 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
               onSelectResource={onSelectResource}
               onSelectScope={onSelectScope}
             />
-          ))}
+          ))
+        )}
       </div>
     </div>
   );
