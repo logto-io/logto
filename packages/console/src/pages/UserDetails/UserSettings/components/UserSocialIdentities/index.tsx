@@ -115,7 +115,7 @@ const UserSocialIdentities = ({ userId, identities, onDelete }: Props) => {
               ),
             },
             {
-              title: '',
+              title: null,
               dataIndex: 'action',
               colSpan: 3,
               render: (connector) => (

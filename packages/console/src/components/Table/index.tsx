@@ -70,7 +70,7 @@ const Table = <
   const hasData = rowGroups.some(({ data }) => data?.length);
 
   return (
-    <div className={classNames(styles.container, hasBorder && styles.hasBorder, className)}>
+    <div className={classNames(styles.container, className)}>
       <div className={classNames(styles.tableContainer, hasBorder && styles.hasBorder)}>
         {filter && (
           <div className={styles.filterContainer}>
