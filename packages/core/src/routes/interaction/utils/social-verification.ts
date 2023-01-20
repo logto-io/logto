@@ -31,9 +31,25 @@ export const createSocialAuthorizationUrl = async (
   const {
     headers: { 'user-agent': userAgent },
   } = ctx.request;
+  const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
   return connector.getAuthorizationUri(
-    { state, redirectUri, headers: { userAgent } },
+    {
+      state,
+      redirectUri,
+      /**
+       * For upcoming POST /interaction/verification/assertion API, we need to block requests
+       * for non-SAML connector (relies on connectorFactoryId) and use `connectorId`
+       * to find correct connector config.
+       *
+       * TODO @darcy : add check on `connectorId` and `connectorFactoryId` existence and save logic
+       * in SAML connector `getAuthorizationUri` method.
+       */
+      connectorId,
+      connectorFactoryId: connector.metadata.id,
+      jti,
+      headers: { userAgent },
+    },
     async (connectorStorage: ConnectorSession) =>
       assignConnectorSessionResult(ctx, provider, connectorStorage)
   );
