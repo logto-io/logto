@@ -9,6 +9,8 @@
   left: 20px;
   right: 20px;
   top: 50%;
+  max-width: var(--max-width);
+  margin: 0 auto;
   transform: translate(0, -50%);
   outline: none;
   border-radius: var(--radius);
