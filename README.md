@@ -44,9 +44,11 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 ### Launch Logto
 
-#### Online demo (GitPod)
+#### Live demo (Uffizzi)
 
-[Click here](https://gitpod.io/#https://github.com/logto-io/demo) to launch Logto via GitPod. Once you see the message like `App is running at https://3001-...gitpod.io` in the terminal, press Cmd (or Ctrl) and click the URL to continue your Logto journey.
+Click the button below to try a live demo of Logto:
+
+[![Preview](https://cdn.uffizzi.com/demo-button.svg)](https://uffizzi.com)
 
 #### Docker Compose
 
