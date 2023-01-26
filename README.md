@@ -48,7 +48,7 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 Click the button below to try a live demo of Logto:
 
-[![Preview](https://cdn.uffizzi.com/demo-button.svg)](https://app.uffizzi.com/demo)
+[![Demo](https://cdn.uffizzi.com/demo-button.svg)](https://app.uffizzi.com/demo)
 
 #### Docker Compose
 
