@@ -1,0 +1,41 @@
+# This compose file is for demonstration only, do not use in prod.
+version: "3.9"
+
+x-uffizzi:
+  ingress:
+    service: app
+    port: 3001
+  continuous_previews:
+    deploy_preview_when_pull_request_is_opened: true
+    delete_preview_when_pull_request_is_closed: true
+    share_to_github: true
+
+services:
+  app:
+    depends_on:
+      - "postgres"
+    image: ttl.sh/f35196a6-b38a-4785-83d6-03ffbb756b01:48h
+    ports:
+      - 3001:3001
+    environment:
+      TRUST_PROXY_HEADER: 1
+      DB_URL: postgres://postgres:p0stgr3s@localhost:5432/logto
+    deploy:
+      resources:
+        limits:
+          memory: 2000M
+    entrypoint: /bin/sh
+    command:
+      - "-c"
+      - "npm run cli db seed -- --swe && ENDPOINT=$$UFFIZZI_URL npm start"
+
+  postgres:
+    image: postgres:14-alpine
+    user: postgres
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "p0stgr3s"
+    deploy:
+      resources:
+        limits:
+          memory: 500M
