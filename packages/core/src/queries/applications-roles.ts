@@ -1,4 +1,4 @@
-import type { ApplicationsRole } from '@logto/schemas';
+import type { ApplicationsRole, CreateApplicationsRole } from '@logto/schemas';
 import { ApplicationsRoles, RolesScopes } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -16,7 +16,7 @@ export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
       where ${fields.applicationId}=${applicationId}
     `);
 
-  const insertApplicationsRoles = async (applicationsRoles: ApplicationsRole[]) =>
+  const insertApplicationsRoles = async (applicationsRoles: CreateApplicationsRole[]) =>
     pool.query(sql`
       insert into ${table} (${fields.applicationId}, ${fields.roleId}) values
       ${sql.join(

@@ -1,4 +1,4 @@
-import type { UsersRole } from '@logto/schemas';
+import type { CreateUsersRole, UsersRole } from '@logto/schemas';
 import { RolesScopes, UsersRoles } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -42,7 +42,7 @@ export const createUsersRolesQueries = (pool: CommonQueryMethods) => {
       ${conditionalSql(limit, (value) => sql`limit ${value}`)}
     `);
 
-  const insertUsersRoles = async (usersRoles: UsersRole[]) =>
+  const insertUsersRoles = async (usersRoles: CreateUsersRole[]) =>
     pool.query(sql`
       insert into ${table} (${fields.userId}, ${fields.roleId}) values
       ${sql.join(

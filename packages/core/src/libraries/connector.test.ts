@@ -5,6 +5,7 @@ import { MockQueries } from '#src/test-utils/tenant.js';
 
 const connectors: Connector[] = [
   {
+    tenantId: 'fake_tenant',
     id: 'id',
     config: { foo: 'bar' },
     createdAt: 0,

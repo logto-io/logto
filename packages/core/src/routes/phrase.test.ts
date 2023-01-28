@@ -32,7 +32,12 @@ const { default: detectLanguageSpy } = mockEsm('#src/i18n/detect-language.js', (
 const customPhrases = {
   findAllCustomLanguageTags: jest.fn(async () => [customizedLanguage]),
   findCustomPhraseByLanguageTag: jest.fn(
-    async (tag: string): Promise<CustomPhrase> => ({ languageTag: tag, translation: {} })
+    async (tag: string): Promise<CustomPhrase> => ({
+      tenantId: 'fake_tenant',
+      id: 'fake_id',
+      languageTag: tag,
+      translation: {},
+    })
   ),
 } satisfies Partial<Queries['customPhrases']>;
 const { findAllCustomLanguageTags } = customPhrases;

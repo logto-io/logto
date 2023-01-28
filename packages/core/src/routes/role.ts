@@ -1,4 +1,4 @@
-import { buildIdGenerator } from '@logto/core-kit';
+import { buildIdGenerator, generateStandardId } from '@logto/core-kit';
 import type { RoleResponse } from '@logto/schemas';
 import { userInfoSelectFields, Roles } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
@@ -113,7 +113,9 @@ export default function roleRoutes<T extends AuthedRouter>(
 
       if (scopeIds) {
         await Promise.all(scopeIds.map(async (scopeId) => findScopeById(scopeId)));
-        await insertRolesScopes(scopeIds.map((scopeId) => ({ roleId: role.id, scopeId })));
+        await insertRolesScopes(
+          scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: role.id, scopeId }))
+        );
       }
 
       ctx.body = role;
@@ -250,7 +252,9 @@ export default function roleRoutes<T extends AuthedRouter>(
       }
 
       await Promise.all(userIds.map(async (userId) => findUserById(userId)));
-      await insertUsersRoles(userIds.map((userId) => ({ roleId: id, userId })));
+      await insertUsersRoles(
+        userIds.map((userId) => ({ id: generateStandardId(), roleId: id, userId }))
+      );
       ctx.status = 201;
 
       return next();

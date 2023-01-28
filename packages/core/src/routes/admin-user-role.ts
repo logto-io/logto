@@ -1,3 +1,4 @@
+import { generateStandardId } from '@logto/core-kit';
 import { tryThat } from '@logto/shared';
 import { object, string } from 'zod';
 
@@ -89,7 +90,9 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
       }
 
       await Promise.all(roleIds.map(async (roleId) => findRoleById(roleId)));
-      await insertUsersRoles(roleIds.map((roleId) => ({ userId, roleId })));
+      await insertUsersRoles(
+        roleIds.map((roleId) => ({ id: generateStandardId(), userId, roleId }))
+      );
       ctx.status = 201;
 
       return next();

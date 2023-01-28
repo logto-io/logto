@@ -148,6 +148,7 @@ describe('createPasscode', () => {
 describe('sendPasscode', () => {
   it('should throw error when email and phone are both empty', async () => {
     const passcode: Passcode = {
+      tenantId: 'fake_tenant',
       id: 'id',
       interactionJti: 'jti',
       phone: null,
@@ -181,6 +182,7 @@ describe('sendPasscode', () => {
       },
     ]);
     const passcode: Passcode = {
+      tenantId: 'fake_tenant',
       id: 'id',
       interactionJti: 'jti',
       phone: 'phone',
@@ -232,6 +234,7 @@ describe('sendPasscode', () => {
       },
     ]);
     const passcode: Passcode = {
+      tenantId: 'fake_tenant',
       id: 'passcode_id',
       interactionJti: 'jti',
       phone: 'phone',
@@ -255,6 +258,7 @@ describe('sendPasscode', () => {
 
 describe('verifyPasscode', () => {
   const passcode = {
+    tenantId: 'fake_tenant',
     id: 'id',
     interactionJti: 'jti',
     phone: 'phone',

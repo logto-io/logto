@@ -1,5 +1,5 @@
 import resource from '@logto/phrases-ui';
-import type { CustomPhrase } from '@logto/schemas';
+import { CustomPhrase } from '@logto/schemas';
 import deepmerge from 'deepmerge';
 
 import {
@@ -57,6 +57,8 @@ it('should ignore empty string values from the custom phrase', async () => {
     confirm_password: 'Confirm password 5',
   };
   const mockEnCustomPhraseWithEmptyStringValues = {
+    tenantId: 'fake_tenant',
+    id: 'fake_id',
     languageTag: enTag,
     translation: {
       input: {
@@ -66,7 +68,7 @@ it('should ignore empty string values from the custom phrase', async () => {
         password: '',
       },
     },
-  };
+  } satisfies CustomPhrase;
 
   findCustomPhraseByLanguageTag.mockResolvedValueOnce(mockEnCustomPhraseWithEmptyStringValues);
   await expect(getPhrases(enTag, [enTag])).resolves.toEqual(

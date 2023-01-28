@@ -1,5 +1,6 @@
 import en from '@logto/phrases-ui/lib/locales/en.js';
-import type { CustomPhrase, SignInExperience } from '@logto/schemas';
+import { CustomPhrase } from '@logto/schemas';
+import type { SignInExperience } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockZhCnCustomPhrase, trTrTag, zhCnTag } from '#src/__mocks__/custom-phrase.js';
@@ -78,11 +79,13 @@ describe('customPhraseRoutes', () => {
 
     it('should return all custom phrases', async () => {
       const mockCustomPhrase = {
+        tenantId: 'fake_tenant',
+        id: 'fake_id',
         languageTag: 'zh-HK',
         translation: {
           input: { username: '用戶名', password: '密碼' },
         },
-      };
+      } satisfies CustomPhrase;
       findAllCustomPhrases.mockImplementationOnce(async () => [mockCustomPhrase]);
       const response = await customPhraseRequest.get('/custom-phrases');
       expect(response.status).toEqual(200);

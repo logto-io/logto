@@ -1,4 +1,4 @@
-import { buildIdGenerator } from '@logto/core-kit';
+import { buildIdGenerator, generateStandardId } from '@logto/core-kit';
 import type { User, CreateUser, Scope } from '@logto/schemas';
 import { Users, UsersPasswordEncryptionMethod, defaultRole } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
@@ -95,7 +95,9 @@ export const createUserLibrary = (queries: Queries) => {
     const user = await insertUserQuery(data);
 
     if (roles.length > 0) {
-      await insertUsersRoles(roles.map(({ id }) => ({ userId: user.id, roleId: id })));
+      await insertUsersRoles(
+        roles.map(({ id }) => ({ id: generateStandardId(), userId: user.id, roleId: id }))
+      );
     }
 
     return user;

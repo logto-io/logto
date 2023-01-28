@@ -99,7 +99,7 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
       ${conditionalSql(excludeRoleId, (id) => sql`and ${fields.id}<>${id}`)}
     `);
 
-  const insertRoles = async (roles: Role[]) =>
+  const insertRoles = async (roles: CreateRole[]) =>
     pool.query(sql`
       insert into ${table} (${fields.id}, ${fields.name}, ${fields.description}) values
       ${sql.join(

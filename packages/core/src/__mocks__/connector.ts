@@ -36,6 +36,7 @@ export {
 const { jest } = import.meta;
 
 export const mockConnector: Connector = {
+  tenantId: 'fake_tenant',
   id: 'id',
   config: {},
   createdAt: 1_234_567_890_123,
@@ -235,6 +236,7 @@ export const socialTarget02 = 'socialTarget-id02';
 export const mockSocialConnectors: LogtoConnector[] = [
   {
     dbEntry: {
+      tenantId: 'fake_tenant',
       id: 'id0',
       config: {},
       createdAt: 1_234_567_890_123,
@@ -251,6 +253,7 @@ export const mockSocialConnectors: LogtoConnector[] = [
   },
   {
     dbEntry: {
+      tenantId: 'fake_tenant',
       id: 'id1',
       config: {},
       createdAt: 1_234_567_890_123,
