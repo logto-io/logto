@@ -43,7 +43,7 @@ export const createCustomPhraseQueries = (pool: CommonQueryMethods) => {
     {
       returning: true,
       onConflict: {
-        fields: [fields.languageTag],
+        fields: [fields.tenantId, fields.languageTag],
         setExcludedFields: [fields.translation],
       },
     }

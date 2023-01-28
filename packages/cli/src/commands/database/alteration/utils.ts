@@ -9,7 +9,7 @@ import { getPathInModule } from '../../../utilities.js';
 import type { AlterationFile } from './type.js';
 
 const currentDirname = path.dirname(fileURLToPath(import.meta.url));
-const alterationFilenameRegex = /-(\d+)-?.*\.js$/;
+const alterationFilenameRegex = /-([\d.]+)-?.*\.js$/;
 
 export const getTimestampFromFilename = (filename: string) => {
   const match = alterationFilenameRegex.exec(filename);

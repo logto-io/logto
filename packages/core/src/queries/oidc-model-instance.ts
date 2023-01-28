@@ -63,7 +63,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     OidcModelInstances,
     {
       onConflict: {
-        fields: [fields.modelName, fields.id],
+        fields: [fields.tenantId, fields.modelName, fields.id],
         setExcludedFields: [fields.payload, fields.expiresAt],
       },
     }

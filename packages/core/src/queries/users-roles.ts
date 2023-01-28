@@ -44,9 +44,9 @@ export const createUsersRolesQueries = (pool: CommonQueryMethods) => {
 
   const insertUsersRoles = async (usersRoles: CreateUsersRole[]) =>
     pool.query(sql`
-      insert into ${table} (${fields.userId}, ${fields.roleId}) values
+      insert into ${table} (${fields.id}, ${fields.userId}, ${fields.roleId}) values
       ${sql.join(
-        usersRoles.map(({ userId, roleId }) => sql`(${userId}, ${roleId})`),
+        usersRoles.map(({ id, userId, roleId }) => sql`(${id}, ${userId}, ${roleId})`),
         sql`, `
       )}
     `);

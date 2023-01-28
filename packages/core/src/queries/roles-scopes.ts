@@ -11,9 +11,9 @@ const { table, fields } = convertToIdentifiers(RolesScopes);
 export const createRolesScopesQueries = (pool: CommonQueryMethods) => {
   const insertRolesScopes = async (rolesScopes: CreateRolesScope[]) =>
     pool.query(sql`
-      insert into ${table} (${fields.scopeId}, ${fields.roleId}) values
+      insert into ${table} (${fields.id}, ${fields.scopeId}, ${fields.roleId}) values
       ${sql.join(
-        rolesScopes.map(({ scopeId, roleId }) => sql`(${scopeId}, ${roleId})`),
+        rolesScopes.map(({ id, scopeId, roleId }) => sql`(${id}, ${scopeId}, ${roleId})`),
         sql`, `
       )}
     `);

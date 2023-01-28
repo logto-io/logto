@@ -24,3 +24,6 @@ create index passcodes__email_type
 
 create index passcodes__phone_type
   on passcodes (tenant_id, phone, type);
+
+create trigger set_tenant_id before insert on passcodes
+  for each row execute procedure set_tenant_id();

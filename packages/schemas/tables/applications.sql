@@ -17,4 +17,7 @@ create table applications (
 );
 
 create index applications__id
-  on applications (tenant_id, id)
+  on applications (tenant_id, id);
+
+create trigger set_tenant_id before insert on applications
+  for each row execute procedure set_tenant_id();

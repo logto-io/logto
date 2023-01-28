@@ -7,19 +7,16 @@ const alteration: AlterationScript = {
     await pool.query(sql`
       alter table oidc_model_instances
         drop constraint oidc_model_instances_pkey,
-        add primary key (id);
-    `);
-
-    await pool.query(sql`
-      create index oidc_model_instances__model_name_id
-        on oidc_model_instances (model_name, id);
+        add primary key (id),
+        add constraint oidc_model_instances__model_name_id
+          unique (model_name, id);
     `);
   },
   down: async (pool) => {
-    await pool.query(sql`drop index oidc_model_instances__model_name_id;`);
     await pool.query(sql`
       alter table oidc_model_instances
         drop constraint oidc_model_instances_pkey,
+        drop constraint oidc_model_instances__model_name_id,
         add primary key (model_name, id);
     `);
   },

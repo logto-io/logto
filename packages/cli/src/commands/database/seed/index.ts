@@ -35,7 +35,7 @@ import { getAlterationDirectory } from '../alteration/utils.js';
 import { oidcConfigReaders } from './oidc-config.js';
 
 const getExplicitOrder = (query: string) => {
-  const matched = /\/\*\s*init_order\s*=\s*(\d+)\s*\*\//.exec(query)?.[1];
+  const matched = /\/\*\s*init_order\s*=\s*([\d.]+)\s*\*\//.exec(query)?.[1];
 
   return matched ? Number(matched) : undefined;
 };

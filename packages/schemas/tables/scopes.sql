@@ -16,3 +16,6 @@ create table scopes (
 
 create index scopes__id
   on scopes (tenant_id, id);
+
+create trigger set_tenant_id before insert on scopes
+  for each row execute procedure set_tenant_id();

@@ -27,3 +27,6 @@ create index users__id
 
 create index users__name
   on users (tenant_id, name);
+
+create trigger set_tenant_id before insert on users
+  for each row execute procedure set_tenant_id();

@@ -7,8 +7,8 @@ const getId = (value: string) => sql.identifier([value]);
 const tenantId = sql.identifier(['tenant_id']);
 
 const tables: string[] = [
-  'applications_roles',
   'applications',
+  'applications_roles',
   'connectors',
   'custom_phrases',
   'logs',
@@ -42,7 +42,6 @@ const indexes: IndexInfo[] = [
   {
     table: 'oidc_model_instances',
     indexes: [
-      { columns: ['model_name', 'id'] },
       { name: 'model_name_payload_user_code', columns: ['model_name', "(payload->>'userCode')"] },
       { name: 'model_name_payload_uid', columns: ['model_name', "(payload->>'uid')"] },
       { name: 'model_name_payload_grant_id', columns: ['model_name', "(payload->>'grantId')"] },
@@ -71,6 +70,7 @@ type ConstraintInfo = {
 const constraints: ConstraintInfo[] = [
   { table: 'applications_roles', columns: ['application_id', 'role_id'] },
   { table: 'custom_phrases', columns: ['language_tag'] },
+  { table: 'oidc_model_instances', columns: ['model_name', 'id'] },
   { table: 'roles_scopes', columns: ['role_id', 'scope_id'] },
   { table: 'users_roles', columns: ['user_id', 'role_id'] },
   { table: 'resources', columns: ['indicator'], original: 'index' },

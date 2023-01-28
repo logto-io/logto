@@ -6,11 +6,10 @@ create table oidc_model_instances (
   payload jsonb /* @use OidcModelInstancePayload */ not null,
   expires_at timestamptz not null,
   consumed_at timestamptz,
-  primary key (id)
+  primary key (id),
+  constraint oidc_model_instances__model_name_id
+    unique (tenant_id, model_name, id)
 );
-
-create index oidc_model_instances__model_name_id
-  on oidc_model_instances (tenant_id, model_name, id);
 
 create index oidc_model_instances__model_name_payload_user_code
   on oidc_model_instances (
@@ -32,3 +31,6 @@ create index oidc_model_instances__model_name_payload_grant_id
     model_name,
     (payload->>'grantId')
   );
+
+create trigger set_tenant_id before insert on oidc_model_instances
+  for each row execute procedure set_tenant_id();

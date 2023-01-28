@@ -19,3 +19,6 @@ create index logs__user_id
 
 create index logs__application_id
   on logs (tenant_id, (payload->>'application_id') nulls last);
+
+create trigger set_tenant_id before insert on logs
+  for each row execute procedure set_tenant_id();
