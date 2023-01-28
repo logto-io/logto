@@ -14,6 +14,7 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
+import { UserFlow } from '@/types';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
@@ -33,7 +34,10 @@ const useSignInFlowCodeVerification = (
 
   const { signInMode } = useSieMethods();
 
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({ replace: true });
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({
+    replace: true,
+    flow: UserFlow.signIn,
+  });
 
   const { run: registerWithIdentifierAsync } = useApi(
     registerWithVerifiedIdentifier,
