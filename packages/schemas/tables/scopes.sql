@@ -1,3 +1,5 @@
+/* init_order = 2 */
+
 create table scopes (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,

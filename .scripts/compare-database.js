@@ -46,7 +46,7 @@ const queryDatabaseManifest = async (database) => {
     select *
     from pg_indexes
     where schemaname='${schema}'
-    order by tablename, indexname asc;
+    order by indexname asc;
   `);
 
   // Omit generated ids and values

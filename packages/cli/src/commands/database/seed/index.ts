@@ -12,6 +12,7 @@ import {
   defaultRole,
   managementResourceScope,
   defaultRoleScopeRelation,
+  defaultTenant,
 } from '@logto/schemas';
 import { Hooks, Tenants } from '@logto/schemas/models';
 import chalk from 'chalk';
@@ -69,8 +70,6 @@ const createTables = async (connection: DatabaseTransactionConnection) => {
     ])
   );
 
-  console.log(Tenants.raw, getExplicitOrder(Tenants.raw));
-
   const allQueries: Array<[string, string]> = [
     [Hooks.tableName, Hooks.raw],
     [Tenants.tableName, Tenants.raw],
@@ -85,6 +84,8 @@ const createTables = async (connection: DatabaseTransactionConnection) => {
 };
 
 const seedTables = async (connection: DatabaseTransactionConnection, latestTimestamp: number) => {
+  await connection.query(insertInto(defaultTenant, 'tenants'));
+
   await Promise.all([
     connection.query(insertInto(managementResource, 'resources')),
     connection.query(insertInto(managementResourceScope, 'scopes')),
@@ -161,7 +162,6 @@ export const seedByPool = async (pool: DatabasePool, type: SeedChoice) => {
         );
       }
 
-      await createTables(connection);
       await oraPromise(createTables(connection), {
         text: 'Create tables',
         prefixText: chalk.blue('[info]'),

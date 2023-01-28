@@ -1,3 +1,5 @@
+import { generateStandardId } from '@logto/core-kit';
+
 import type { CreateRole, CreateRolesScope } from '../db-entries/index.js';
 import { UserRole } from '../types/index.js';
 import { managementResourceScopeId } from './scope.js';
@@ -16,6 +18,7 @@ export const defaultRole: Readonly<CreateRole> = {
 };
 
 export const defaultRoleScopeRelation: Readonly<CreateRolesScope> = {
+  id: generateStandardId(),
   tenantId: defaultTenantId,
   roleId: adminConsoleAdminRoleId,
   scopeId: managementResourceScopeId,
