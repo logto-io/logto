@@ -1,4 +1,4 @@
-import { buildIdGenerator, generateStandardId } from '@logto/core-kit';
+import { generateStandardId } from '@logto/core-kit';
 import type { RoleResponse } from '@logto/schemas';
 import { userInfoSelectFields, Roles } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
@@ -12,8 +12,6 @@ import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
-
-const roleId = buildIdGenerator(21);
 
 export default function roleRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
@@ -108,7 +106,7 @@ export default function roleRoutes<T extends AuthedRouter>(
 
       const role = await insertRole({
         ...roleBody,
-        id: roleId(),
+        id: generateStandardId(),
       });
 
       if (scopeIds) {

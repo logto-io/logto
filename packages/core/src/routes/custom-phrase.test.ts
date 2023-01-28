@@ -6,11 +6,14 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { mockZhCnCustomPhrase, trTrTag, zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
+
+await mockStandardId();
 
 const mockLanguageTag = zhCnTag;
 const mockPhrase = mockZhCnCustomPhrase;
@@ -126,6 +129,7 @@ describe('customPhraseRoutes', () => {
         input: { ...inputTranslation, password: '' },
       });
       expect(upsertCustomPhrase).toBeCalledWith({
+        id: mockId,
         languageTag: mockLanguageTag,
         translation: { input: inputTranslation },
       });
@@ -146,7 +150,9 @@ describe('customPhraseRoutes', () => {
 
     it('should call upsertCustomPhrase with specified language tag', async () => {
       await customPhraseRequest.put(`/custom-phrases/${mockLanguageTag}`).send(translation);
-      expect(upsertCustomPhrase).toBeCalledWith(mockCustomPhrases[mockLanguageTag]);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { tenantId, ...phrase } = mockCustomPhrases[mockLanguageTag]!;
+      expect(upsertCustomPhrase).toBeCalledWith(phrase);
     });
 
     it('should return custom phrase after upserting', async () => {

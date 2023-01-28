@@ -1,6 +1,8 @@
 import en from '@logto/phrases-ui/lib/locales/en.js';
 import { CustomPhrase } from '@logto/schemas';
 
+import { mockId } from '#src/test-utils/nanoid.js';
+
 export const enTag = 'en';
 export const trTrTag = 'tr-TR';
 export const zhCnTag = 'zh-CN';
@@ -8,7 +10,7 @@ export const zhHkTag = 'zh-HK';
 
 export const mockEnCustomPhrase = {
   tenantId: 'fake_tenant',
-  id: 'fake_id',
+  id: mockId,
   languageTag: enTag,
   translation: {
     input: {
@@ -23,7 +25,7 @@ export const mockEnCustomPhrase = {
 
 export const mockEnPhrase = {
   tenantId: 'fake_tenant',
-  id: 'fake_id',
+  id: mockId,
   languageTag: enTag,
   translation: {
     ...en.translation,
@@ -33,7 +35,7 @@ export const mockEnPhrase = {
 
 export const mockTrTrCustomPhrase = {
   tenantId: 'fake_tenant',
-  id: 'fake_id',
+  id: mockId,
   languageTag: trTrTag,
   translation: {
     input: {
@@ -48,7 +50,7 @@ export const mockTrTrCustomPhrase = {
 
 export const mockZhCnCustomPhrase = {
   tenantId: 'fake_tenant',
-  id: 'fake_id',
+  id: mockId,
   languageTag: zhCnTag,
   translation: {
     input: {
@@ -63,7 +65,7 @@ export const mockZhCnCustomPhrase = {
 
 export const mockZhHkCustomPhrase = {
   tenantId: 'fake_tenant',
-  id: 'fake_id',
+  id: mockId,
   languageTag: zhHkTag,
   translation: {
     input: {

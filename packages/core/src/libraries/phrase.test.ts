@@ -73,6 +73,8 @@ it('should ignore empty string values from the custom phrase', async () => {
   findCustomPhraseByLanguageTag.mockResolvedValueOnce(mockEnCustomPhraseWithEmptyStringValues);
   await expect(getPhrases(enTag, [enTag])).resolves.toEqual(
     deepmerge(englishBuiltInPhrase, {
+      id: 'fake_id',
+      tenantId: 'fake_tenant',
       languageTag: enTag,
       translation: {
         input: {

@@ -37,6 +37,7 @@ describe('settings routes', () => {
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
+      tenantId: 'fake_tenant',
       adminConsole,
     });
   });

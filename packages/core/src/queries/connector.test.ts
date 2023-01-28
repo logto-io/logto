@@ -191,7 +191,8 @@ describe('connector queries', () => {
       return createMockQueryResult([connector]);
     });
 
-    await expect(insertConnector(mockConnector)).resolves.toEqual(connector);
+    const { tenantId, ...data } = mockConnector;
+    await expect(insertConnector(data)).resolves.toEqual(connector);
   });
 
   it('updateConnector (with id)', async () => {

@@ -2,10 +2,13 @@ import type { Role } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockRole, mockScope, mockUser, mockResource } from '#src/__mocks__/index.js';
+import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+await mockStandardId();
 
 const roles = {
   findRoles: jest.fn(async (): Promise<Role[]> => [mockRole]),
@@ -15,12 +18,14 @@ const roles = {
   insertRole: jest.fn(async (data) => ({
     ...data,
     id: mockRole.id,
+    tenantId: 'fake_tenant',
   })),
   deleteRoleById: jest.fn(),
   findRoleById: jest.fn(),
   updateRoleById: jest.fn(async (id, data) => ({
     ...mockRole,
     ...data,
+    tenantId: 'fake_tenant',
   })),
   findRolesByRoleIds: jest.fn(),
 };
@@ -172,7 +177,9 @@ describe('role routes', () => {
       userIds: [mockUser.id],
     });
     expect(response.status).toEqual(201);
-    expect(insertUsersRoles).toHaveBeenCalledWith([{ userId: mockUser.id, roleId: mockRole.id }]);
+    expect(insertUsersRoles).toHaveBeenCalledWith([
+      { id: mockId, userId: mockUser.id, roleId: mockRole.id },
+    ]);
   });
 
   it('DELETE /roles/:id/users/:userId', async () => {
