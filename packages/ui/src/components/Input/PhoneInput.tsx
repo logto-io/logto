@@ -91,7 +91,7 @@ const PhoneInput = ({
             setOnFocus(false);
           }}
           onChange={({ target: { value } }) => {
-            onChange({ nationalNumber: value.replaceAll(/\D/g, '') });
+            onChange({ nationalNumber: value.replace(/\D/g, '') });
           }}
         />
         {nationalNumber && onFocus && (
