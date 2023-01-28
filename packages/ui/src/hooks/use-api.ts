@@ -13,9 +13,9 @@ type UseApi<T extends unknown[], U> = {
 };
 
 export type ErrorHandlers = {
-  [key in LogtoErrorCode]?: (error: RequestErrorBody) => void;
+  [key in LogtoErrorCode]?: (error: RequestErrorBody) => void | Promise<void>;
 } & {
-  global?: (error: RequestErrorBody) => void; // Overwrite default global error handle logic
+  global?: (error: RequestErrorBody) => void | Promise<void>; // Overwrite default global error handle logic
   callback?: (error: RequestErrorBody) => void; // Callback method
 };
 
@@ -77,15 +77,15 @@ function useApi<Args extends unknown[], Response>(
     const { code, message } = error;
     const handler = errorHandlers?.[code] ?? errorHandlers?.global;
 
-    errorHandlers?.callback?.(error);
+    (async () => {
+      if (handler) {
+        await handler(error);
+      } else {
+        setToast(message);
+      }
 
-    if (handler) {
-      handler(error);
-
-      return;
-    }
-
-    setToast(message);
+      errorHandlers?.callback?.(error);
+    })();
   }, [error, errorHandlers, setToast, t]);
 
   return {
