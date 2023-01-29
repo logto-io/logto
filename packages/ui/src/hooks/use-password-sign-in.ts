@@ -4,6 +4,7 @@ import type { PasswordSignInPayload } from '@/apis/interaction';
 import { signInWithPasswordIdentifier } from '@/apis/interaction';
 import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import { UserFlow } from '@/types';
 
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 
@@ -14,7 +15,7 @@ const usePasswordSignIn = () => {
     setErrorMessage('');
   }, []);
 
-  const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
+  const requiredProfileErrorHandler = useRequiredProfileErrorHandler({ flow: UserFlow.signIn });
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({

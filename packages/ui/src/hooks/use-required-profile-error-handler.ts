@@ -13,9 +13,10 @@ import { PageContext } from './use-page-context';
 type Options = {
   replace?: boolean;
   linkSocial?: string;
+  flow?: UserFlow;
 };
 
-const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) => {
+const useRequiredProfileErrorHandler = ({ replace, linkSocial, flow }: Options = {}) => {
   const navigate = useNavigate();
   const { setToast } = useContext(PageContext);
 
@@ -37,7 +38,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
               {
                 pathname: `/${UserFlow.continue}/${missingProfile}`,
               },
-              { replace }
+              { replace, state: { flow } }
             );
             break;
           case MissingProfile.email:
@@ -47,7 +48,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
                 pathname: `/${UserFlow.continue}/${missingProfile}`,
                 search: linkSocialQueryString,
               },
-              { replace, state: { registeredSocialIdentity } }
+              { replace, state: { registeredSocialIdentity, flow } }
             );
             break;
           case MissingProfile.emailOrPhone:
@@ -56,7 +57,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
                 pathname: `/${UserFlow.continue}/email-or-phone/email`,
                 search: linkSocialQueryString,
               },
-              { replace }
+              { replace, state: { registeredSocialIdentity, flow } }
             );
             break;
 
@@ -67,7 +68,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
         }
       },
     }),
-    [linkSocial, navigate, replace, setToast]
+    [flow, linkSocial, navigate, replace, setToast]
   );
 
   return requiredProfileErrorHandler;

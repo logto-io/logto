@@ -26,6 +26,12 @@ export const userFlowGuard = s.enums([
   UserFlow.continue,
 ]);
 
+export const continueFlowStateGuard = s.optional(
+  s.type({
+    flow: userFlowGuard,
+  })
+);
+
 export const continueMethodGuard = s.union([
   s.literal('password'),
   s.literal('username'),
@@ -57,7 +63,7 @@ export const missingProfileErrorDataGuard = s.object({
   registeredSocialIdentity,
 });
 
-export const registeredSocialIdentityStateGuard = s.object({
+export const registeredSocialIdentityStateGuard = s.type({
   registeredSocialIdentity,
 });
 
