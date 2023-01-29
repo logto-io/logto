@@ -156,6 +156,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
         )}
         from ${table}
         ${buildUserConditions(search, excludeUserIds, userIds)}
+        order by ${fields.createdAt} desc
         limit ${limit}
         offset ${offset}
       `
