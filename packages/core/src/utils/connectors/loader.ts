@@ -19,18 +19,15 @@ const checkConnectorKitVersion = (dependencies: unknown) => {
         return;
       }
 
+      const message = `Connector requires ${connectorKit} to be ${value}, but the version here is ${currentVersion}.`;
+
       if (EnvSet.values.isIntegrationTest) {
-        console.warn(
-          `[warn] Connector requires ${connectorKit} to be ${value}, but the version here is ${currentVersion}.\n\n` +
-            'This will result an error in production.'
-        );
+        console.warn(`[warn] ${message}\n\nThis will result an error in production.`);
 
         return;
       }
 
-      throw new Error(
-        `Connector requires ${connectorKit} to be ${value}, but the version here is ${currentVersion}.`
-      );
+      throw new Error(message);
     }
   }
 
