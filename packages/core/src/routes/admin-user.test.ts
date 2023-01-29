@@ -67,7 +67,9 @@ const mockedQueries = {
   },
   roles: {
     findRolesByRoleNames: jest.fn(
-      async (): Promise<Role[]> => [{ id: 'role_id', name: 'admin', description: 'none' }]
+      async (): Promise<Role[]> => [
+        { tenantId: 'fake_tenant', id: 'role_id', name: 'admin', description: 'none' },
+      ]
     ),
   },
   usersRoles: {

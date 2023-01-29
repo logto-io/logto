@@ -3,10 +3,12 @@ import { generateDarkColor } from '@logto/core-kit';
 import type { CreateSignInExperience } from '../db-entries/index.js';
 import { SignInMode } from '../db-entries/index.js';
 import { BrandingStyle, SignInIdentifier } from '../foundations/index.js';
+import { defaultTenantId } from './tenant.js';
 
 const defaultPrimaryColor = '#6139F6';
 
 export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
+  tenantId: defaultTenantId,
   id: 'default',
   color: {
     primaryColor: defaultPrimaryColor,
@@ -52,5 +54,6 @@ export const adminConsoleSignInExperience: CreateSignInExperience = {
     style: BrandingStyle.Logo_Slogan,
     logoUrl: 'https://logto.io/logo.svg',
     darkLogoUrl: 'https://logto.io/logo-dark.svg',
+    slogan: 'admin_console.welcome.title', // TODO: @simeng should we programmatically support an i18n key for slogan?
   },
 };

@@ -1,10 +1,13 @@
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockRole, mockUser } from '#src/__mocks__/index.js';
+import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+await mockStandardId();
 
 const users = { findUserById: jest.fn() };
 
@@ -14,7 +17,6 @@ const roles = {
   countRoles: jest.fn(async () => ({ count: 1 })),
   findRoles: jest.fn(async () => [mockRole]),
 };
-const { findRolesByRoleIds } = roles;
 
 const usersRoles = {
   findUsersRolesByUserId: jest.fn(),
@@ -43,7 +45,9 @@ describe('user role routes', () => {
       roleIds: [mockRole.id],
     });
     expect(response.status).toEqual(201);
-    expect(insertUsersRoles).toHaveBeenCalledWith([{ userId: mockUser.id, roleId: mockRole.id }]);
+    expect(insertUsersRoles).toHaveBeenCalledWith([
+      { id: mockId, userId: mockUser.id, roleId: mockRole.id },
+    ]);
   });
 
   it('DELETE /users/:id/roles/:roleId', async () => {

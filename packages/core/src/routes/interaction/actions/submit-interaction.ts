@@ -143,7 +143,6 @@ export default async function submitInteraction(
   log?: LogEntry
 ) {
   const { hasActiveUsers, findUserById, updateUserById } = queries.users;
-  const { insertUsersRoles } = queries.usersRoles;
 
   const {
     users: { generateUserId, insertUser },

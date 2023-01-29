@@ -21,7 +21,7 @@ const { findDefaultSignInExperience, updateDefaultSignInExperience } =
 describe('sign-in-experience query', () => {
   const id = 'default';
 
-  const dbvalue = {
+  const databaseValue = {
     ...mockSignInExperience,
     color: JSON.stringify(mockSignInExperience.color),
     branding: JSON.stringify(mockSignInExperience.branding),
@@ -35,7 +35,7 @@ describe('sign-in-experience query', () => {
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
-      select "id", "color", "branding", "language_info", "terms_of_use_url", "sign_in", "sign_up", "social_sign_in_connector_targets", "sign_in_mode"
+      select "tenant_id", "id", "color", "branding", "language_info", "terms_of_use_url", "sign_in", "sign_up", "social_sign_in_connector_targets", "sign_in_mode"
       from "sign_in_experiences"
       where "id"=$1
     `;
@@ -45,10 +45,10 @@ describe('sign-in-experience query', () => {
       expectSqlAssert(sql, expectSql);
       expect(values).toEqual([id]);
 
-      return createMockQueryResult([dbvalue]);
+      return createMockQueryResult([databaseValue]);
     });
 
-    await expect(findDefaultSignInExperience()).resolves.toEqual(dbvalue);
+    await expect(findDefaultSignInExperience()).resolves.toEqual(databaseValue);
   });
 
   it('updateDefaultSignInExperience', async () => {
@@ -67,9 +67,9 @@ describe('sign-in-experience query', () => {
       expectSqlAssert(sql, expectSql);
       expect(values).toEqual([termsOfUseUrl, id]);
 
-      return createMockQueryResult([dbvalue]);
+      return createMockQueryResult([databaseValue]);
     });
 
-    await expect(updateDefaultSignInExperience({ termsOfUseUrl })).resolves.toEqual(dbvalue);
+    await expect(updateDefaultSignInExperience({ termsOfUseUrl })).resolves.toEqual(databaseValue);
   });
 });

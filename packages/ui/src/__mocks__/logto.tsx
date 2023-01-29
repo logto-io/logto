@@ -181,6 +181,7 @@ export const usernameSignInMethod = {
 };
 
 export const mockSignInExperience: SignInExperience = {
+  tenantId: 'default',
   id: 'foo',
   color: {
     primaryColor: '#000',
@@ -210,6 +211,7 @@ export const mockSignInExperience: SignInExperience = {
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
+  tenantId: 'default',
   id: mockSignInExperience.id,
   color: mockSignInExperience.color,
   branding: mockSignInExperience.branding,

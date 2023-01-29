@@ -1,4 +1,4 @@
-import type { RolesScope } from '@logto/schemas';
+import type { CreateRolesScope, RolesScope } from '@logto/schemas';
 import { RolesScopes } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -9,11 +9,11 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 const { table, fields } = convertToIdentifiers(RolesScopes);
 
 export const createRolesScopesQueries = (pool: CommonQueryMethods) => {
-  const insertRolesScopes = async (rolesScopes: RolesScope[]) =>
+  const insertRolesScopes = async (rolesScopes: CreateRolesScope[]) =>
     pool.query(sql`
-      insert into ${table} (${fields.scopeId}, ${fields.roleId}) values
+      insert into ${table} (${fields.id}, ${fields.scopeId}, ${fields.roleId}) values
       ${sql.join(
-        rolesScopes.map(({ scopeId, roleId }) => sql`(${scopeId}, ${roleId})`),
+        rolesScopes.map(({ id, scopeId, roleId }) => sql`(${id}, ${scopeId}, ${roleId})`),
         sql`, `
       )}
     `);

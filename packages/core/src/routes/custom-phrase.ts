@@ -1,3 +1,4 @@
+import { generateStandardId } from '@logto/core-kit';
 import { languageTagGuard } from '@logto/language-kit';
 import resource from '@logto/phrases-ui';
 import type { Translation } from '@logto/schemas';
@@ -79,7 +80,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
         new RequestError('localization.invalid_translation_structure')
       );
 
-      ctx.body = await upsertCustomPhrase({ languageTag, translation });
+      ctx.body = await upsertCustomPhrase({ id: generateStandardId(), languageTag, translation });
 
       return next();
     }

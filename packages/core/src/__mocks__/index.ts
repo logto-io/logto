@@ -7,6 +7,7 @@ export * from './sign-in-experience.js';
 export * from './user.js';
 
 export const mockApplication: Application = {
+  tenantId: 'fake_tenant',
   id: 'foo',
   secret: 'randomId',
   name: 'foo',
@@ -25,6 +26,7 @@ export const mockApplication: Application = {
 };
 
 export const mockResource: Resource = {
+  tenantId: 'fake_tenant',
   id: 'logto_api',
   name: 'management api',
   indicator: 'logto.dev/api',
@@ -32,6 +34,7 @@ export const mockResource: Resource = {
 };
 
 export const mockResource2: Resource = {
+  tenantId: 'fake_tenant',
   id: 'logto_api2',
   name: 'management api',
   indicator: 'logto.dev/api',
@@ -39,6 +42,7 @@ export const mockResource2: Resource = {
 };
 
 export const mockResource3: Resource = {
+  tenantId: 'fake_tenant',
   id: 'logto_api3',
   name: 'management api',
   indicator: 'logto.dev/api',
@@ -46,6 +50,7 @@ export const mockResource3: Resource = {
 };
 
 export const mockScope: Scope = {
+  tenantId: 'fake_tenant',
   id: 'scope_id',
   name: 'read:users',
   description: 'read users',
@@ -54,12 +59,14 @@ export const mockScope: Scope = {
 };
 
 export const mockRole: Role = {
+  tenantId: 'fake_tenant',
   id: 'role_id',
   name: 'admin',
   description: 'admin',
 };
 
 export const mockSetting: Setting = {
+  tenantId: 'fake_tenant',
   id: 'foo setting',
   adminConsole: {
     demoChecked: false,
@@ -72,6 +79,7 @@ export const mockSetting: Setting = {
 };
 
 export const mockPasscode: Passcode = {
+  tenantId: 'fake_tenant',
   id: 'foo',
   interactionJti: 'jti',
   phone: '888 888 8888',

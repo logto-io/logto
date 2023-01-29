@@ -2,10 +2,13 @@ import type { Role } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockRole, mockScope, mockResource } from '#src/__mocks__/index.js';
+import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+await mockStandardId();
 
 const roles = {
   findRoles: jest.fn(async (): Promise<Role[]> => [mockRole]),
@@ -77,7 +80,7 @@ describe('role scope routes', () => {
     });
     expect(response.status).toEqual(200);
     expect(insertRolesScopes).toHaveBeenCalledWith([
-      { roleId: mockRole.id, scopeId: mockScope.id },
+      { id: mockId, roleId: mockRole.id, scopeId: mockScope.id },
     ]);
   });
 

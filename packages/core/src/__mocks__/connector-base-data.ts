@@ -76,6 +76,7 @@ export const mockMetadata6: ConnectorMetadata = {
 };
 
 export const mockConnector0: Connector = {
+  tenantId: 'fake_tenant',
   id: 'id0',
   config: {},
   createdAt: 1_234_567_890_123,
@@ -85,6 +86,7 @@ export const mockConnector0: Connector = {
 };
 
 export const mockConnector1: Connector = {
+  tenantId: 'fake_tenant',
   id: 'id1',
   config: {},
   createdAt: 1_234_567_890_234,
@@ -94,6 +96,7 @@ export const mockConnector1: Connector = {
 };
 
 export const mockConnector2: Connector = {
+  tenantId: 'fake_tenant',
   id: 'id2',
   config: {},
   createdAt: 1_234_567_890_345,
@@ -103,6 +106,7 @@ export const mockConnector2: Connector = {
 };
 
 export const mockConnector3: Connector = {
+  tenantId: 'fake_tenant',
   id: 'id3',
   config: {},
   createdAt: 1_234_567_890_456,
@@ -112,6 +116,7 @@ export const mockConnector3: Connector = {
 };
 
 export const mockConnector4: Connector = {
+  tenantId: 'fake_tenant',
   id: 'id4',
   config: {},
   createdAt: 1_234_567_890_567,
@@ -121,6 +126,7 @@ export const mockConnector4: Connector = {
 };
 
 export const mockConnector5: Connector = {
+  tenantId: 'fake_tenant',
   id: 'id5',
   config: {},
   createdAt: 1_234_567_890_567,
@@ -130,6 +136,7 @@ export const mockConnector5: Connector = {
 };
 
 export const mockConnector6: Connector = {
+  tenantId: 'fake_tenant',
   id: 'id6',
   config: {},
   createdAt: 1_234_567_890_567,

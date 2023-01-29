@@ -45,6 +45,7 @@ export const mockSignIn = {
 };
 
 export const mockSignInExperience: SignInExperience = {
+  tenantId: 'fake_tenant',
   id: 'foo',
   color: {
     primaryColor: '#000',

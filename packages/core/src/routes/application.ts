@@ -112,7 +112,9 @@ export default function applicationRoutes<T extends AuthedRouter>(
         );
 
         if (isAdmin && !originalIsAdmin) {
-          await insertApplicationsRoles([{ applicationId: id, roleId: adminConsoleAdminRoleId }]);
+          await insertApplicationsRoles([
+            { id: generateStandardId(), applicationId: id, roleId: adminConsoleAdminRoleId },
+          ]);
         } else if (!isAdmin && originalIsAdmin) {
           await deleteApplicationRole(id, adminConsoleAdminRoleId);
         }

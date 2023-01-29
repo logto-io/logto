@@ -1,3 +1,4 @@
+import { generateStandardId } from '@logto/core-kit';
 import type { ScopeResponse } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
 import { object, string } from 'zod';
@@ -110,7 +111,9 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
       }
 
       await Promise.all(scopeIds.map(async (scopeId) => findScopeById(scopeId)));
-      await insertRolesScopes(scopeIds.map((scopeId) => ({ roleId: id, scopeId })));
+      await insertRolesScopes(
+        scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: id, scopeId }))
+      );
 
       const newRolesScopes = await findRolesScopesByRoleId(id);
       const scopes = await findScopesByIds(newRolesScopes.map(({ scopeId }) => scopeId));

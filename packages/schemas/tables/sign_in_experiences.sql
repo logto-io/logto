@@ -1,6 +1,8 @@
 create type sign_in_mode as enum ('SignIn', 'Register', 'SignInAndRegister');
 
 create table sign_in_experiences (
+  tenant_id varchar(21) not null
+    references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
   color jsonb /* @use Color */ not null,
   branding jsonb /* @use Branding */ not null,
@@ -12,3 +14,9 @@ create table sign_in_experiences (
   sign_in_mode sign_in_mode not null default 'SignInAndRegister',
   primary key (id)
 );
+
+create index sign_in_experiences__id
+  on sign_in_experiences (tenant_id, id);
+
+create trigger set_tenant_id before insert on sign_in_experiences
+  for each row execute procedure set_tenant_id();
