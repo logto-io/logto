@@ -52,7 +52,7 @@
     "dotenv": "^16.0.0",
     "got": "^12.5.3",
     "hpagent": "^1.2.0",
-    "inquirer": "^8.2.2",
+    "inquirer": "^9.0.0",
     "nanoid": "^4.0.0",
     "ora": "^6.1.2",
     "p-limit": "^4.0.0",
@@ -69,7 +69,7 @@
   "devDependencies": {
     "@silverhand/eslint-config": "1.3.0",
     "@silverhand/ts-config": "1.2.1",
-    "@types/inquirer": "^8.2.1",
+    "@types/inquirer": "^9.0.0",
     "@types/jest": "^29.1.2",
     "@types/node": "^18.11.18",
     "@types/semver": "^7.3.12",
