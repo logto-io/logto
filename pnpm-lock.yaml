@@ -813,6 +813,7 @@ importers:
       react: ^18.0.0
       react-device-detect: ^2.2.2
       react-dom: ^18.0.0
+      react-hook-form: ^7.34.0
       react-i18next: ^11.18.3
       react-modal: ^3.15.1
       react-router-dom: ^6.2.2
@@ -868,6 +869,7 @@ importers:
       react: 18.2.0
       react-device-detect: 2.2.2_biqbaboplfbrettd7655fr4n2y
       react-dom: 18.2.0_react@18.2.0
+      react-hook-form: 7.34.0_react@18.2.0
       react-i18next: 11.18.3_shxxmfhtk2bc4pbx5cyq3uoph4
       react-modal: 3.15.1_biqbaboplfbrettd7655fr4n2y
       react-router-dom: 6.2.2_biqbaboplfbrettd7655fr4n2y

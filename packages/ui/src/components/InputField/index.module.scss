@@ -1,0 +1,90 @@
+@use '@/scss/underscore' as _;
+
+.inputField {
+  position: relative;
+  @include _.flex-row;
+  border: _.border(var(--color-line-border));
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+
+  // fix in safari input field line-height issue
+  height: 44px;
+
+  input {
+    padding: 0 _.unit(4);
+    flex: 1;
+    background: none;
+    caret-color: var(--color-brand-default);
+    font: var(--font-body-1);
+    color: var(--color-type-primary);
+    align-self: stretch;
+
+    &::placeholder {
+      color: var(--color-type-secondary);
+    }
+
+    &:not(:last-child) {
+      padding-right: 40px;
+    }
+  }
+
+  .actionButton {
+    position: absolute;
+    right: _.unit(4);
+    top: 50%;
+    transform: translateY(-50%);
+    width: _.unit(8);
+    height: _.unit(8);
+    display: none;
+
+    &.visible {
+      display: 'flex';
+    }
+  }
+
+  &:focus-within {
+    border: _.border(var(--color-brand-default));
+
+    input {
+      outline: none;
+    }
+
+    .focusVisible {
+      display: flex;
+    }
+  }
+
+  &.danger {
+    border: _.border(var(--color-danger-default));
+
+    input {
+      caret-color: var(--color-danger-default);
+    }
+  }
+}
+
+.errorMessage {
+  margin-top: _.unit(1);
+  margin-left: _.unit(0.5);
+}
+
+:global(body.desktop) {
+  .inputField {
+    outline: 3px solid transparent;
+
+    input {
+      font: var(--font-body-2);
+    }
+
+    &:focus-within {
+      outline-color: var(--color-overlay-brand-focused);
+    }
+
+    &.danger:focus-within {
+      outline-color: var(--color-overlay-danger-focused);
+    }
+  }
+}

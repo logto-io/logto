@@ -28,7 +28,7 @@ describe('ForgotPassword', () => {
     );
 
     expect(container.querySelector('input[name="new-password"]')).not.toBeNull();
-    expect(container.querySelector('input[name="confirm-new-password"]')).not.toBeNull();
+    expect(container.querySelector('input[name="confirm-password"]')).not.toBeNull();
     expect(queryByText('action.save_password')).not.toBeNull();
   });
 
@@ -36,7 +36,7 @@ describe('ForgotPassword', () => {
     const { getByText, container } = renderWithPageContext(<ResetPassword />);
     const submitButton = getByText('action.save_password');
     const passwordInput = container.querySelector('input[name="new-password"]');
-    const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirm-password"]');
 
     act(() => {
       if (passwordInput) {

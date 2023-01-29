@@ -8,12 +8,26 @@
   }
 
   .inputField,
-  .formErrors {
+  .formErrors,
+  .passwordSwitch {
     margin-bottom: _.unit(4);
   }
 
   .formErrors {
     margin-left: _.unit(0.5);
     margin-top: _.unit(-3);
+  }
+}
+
+.passwordSwitch {
+  @include _.flex-row;
+  width: 100%;
+  user-select: none;
+  cursor: pointer;
+
+  .checkBox {
+    margin-right: _.unit(2);
+    fill: var(--color-type-secondary);
+    cursor: pointer;
   }
 }

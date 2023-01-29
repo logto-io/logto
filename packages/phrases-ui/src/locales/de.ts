@@ -38,6 +38,7 @@ const translation = {
     link_another_email: 'Link another email', // UNTRANSLATED
     link_another_phone: 'Link another phone', // UNTRANSLATED
     link_another_email_or_phone: 'Link another email or phone', // UNTRANSLATED
+    show_password: 'Show password', // UNTRANSLATED
   },
   description: {
     email: 'Email',

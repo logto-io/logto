@@ -15,24 +15,32 @@ describe('<SetPassword />', () => {
       <SetPassword errorMessage="error" onSubmit={submit} />
     );
     expect(container.querySelector('input[name="new-password"]')).not.toBeNull();
-    expect(container.querySelector('input[name="confirm-new-password"]')).not.toBeNull();
+    expect(container.querySelector('input[name="confirm-password"]')).not.toBeNull();
     expect(queryByText('error')).not.toBeNull();
     expect(queryByText('action.save_password')).not.toBeNull();
   });
 
-  test('password are required', () => {
+  test('password are required', async () => {
     const { queryByText, getByText } = render(
       <SetPassword clearErrorMessage={clearError} onSubmit={submit} />
     );
+
     const submitButton = getByText('action.save_password');
-    fireEvent.click(submitButton);
+
+    act(() => {
+      fireEvent.click(submitButton);
+    });
 
     expect(clearError).toBeCalled();
-    expect(queryByText('password_required')).not.toBeNull();
+
+    await waitFor(() => {
+      expect(queryByText('password_required')).not.toBeNull();
+    });
+
     expect(submit).not.toBeCalled();
   });
 
-  test('password less than 6 chars should throw', () => {
+  test('password less than 6 chars should throw', async () => {
     const { queryByText, getByText, container } = render(<SetPassword onSubmit={submit} />);
     const submitButton = getByText('action.save_password');
     const passwordInput = container.querySelector('input[name="new-password"]');
@@ -45,7 +53,9 @@ describe('<SetPassword />', () => {
       fireEvent.click(submitButton);
     });
 
-    expect(queryByText('password_min_length')).not.toBeNull();
+    await waitFor(() => {
+      expect(queryByText('password_min_length')).not.toBeNull();
+    });
 
     expect(submit).not.toBeCalled();
 
@@ -56,14 +66,16 @@ describe('<SetPassword />', () => {
       }
     });
 
-    expect(queryByText('password_min_length')).toBeNull();
+    await waitFor(() => {
+      expect(queryByText('password_min_length')).toBeNull();
+    });
   });
 
-  test('password mismatch with confirmPassword should throw', () => {
+  test('password mismatch with confirmPassword should throw', async () => {
     const { queryByText, getByText, container } = render(<SetPassword onSubmit={submit} />);
     const submitButton = getByText('action.save_password');
     const passwordInput = container.querySelector('input[name="new-password"]');
-    const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirm-password"]');
 
     act(() => {
       if (passwordInput) {
@@ -77,7 +89,9 @@ describe('<SetPassword />', () => {
       fireEvent.click(submitButton);
     });
 
-    expect(queryByText('passwords_do_not_match')).not.toBeNull();
+    await waitFor(() => {
+      expect(queryByText('passwords_do_not_match')).not.toBeNull();
+    });
 
     expect(submit).not.toBeCalled();
 
@@ -88,14 +102,16 @@ describe('<SetPassword />', () => {
       }
     });
 
-    expect(queryByText('passwords_do_not_match')).toBeNull();
+    await waitFor(() => {
+      expect(queryByText('passwords_do_not_match')).toBeNull();
+    });
   });
 
   test('should submit properly', async () => {
     const { queryByText, getByText, container } = render(<SetPassword onSubmit={submit} />);
     const submitButton = getByText('action.save_password');
     const passwordInput = container.querySelector('input[name="new-password"]');
-    const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirm-password"]');
 
     act(() => {
       if (passwordInput) {
