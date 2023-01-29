@@ -5,6 +5,8 @@ import connectorKitMeta from '@logto/connector-kit/package.json' assert { type: 
 import { isKeyInObject } from '@logto/shared';
 import { satisfies } from 'semver';
 
+import { EnvSet } from '#src/env-set/index.js';
+
 const connectorKit = '@logto/connector-kit';
 const { version: currentVersion } = connectorKitMeta;
 
@@ -14,6 +16,15 @@ const checkConnectorKitVersion = (dependencies: unknown) => {
 
     if (typeof value === 'string') {
       if (satisfies(currentVersion, value)) {
+        return;
+      }
+
+      if (EnvSet.values.isIntegrationTest) {
+        console.warn(
+          `[warn] Connector requires ${connectorKit} to be ${value}, but the version here is ${currentVersion}.\n\n` +
+            'This will result an error in production.'
+        );
+
         return;
       }
 
