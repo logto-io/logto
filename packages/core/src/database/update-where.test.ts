@@ -52,7 +52,7 @@ describe('buildUpdateWhere()', () => {
 
   it('return query with jsonb partial update if input data type is jsonb', async () => {
     const pool = createTestPool(
-      'update "applications"\nset\n"custom_client_metadata"=\ncoalesce("custom_client_metadata",\'{}\'::jsonb)|| $1\nwhere "id"=$2\nreturning *',
+      'update "applications"\nset\n"custom_client_metadata"=\ncoalesce("custom_client_metadata",\'{}\'::jsonb) || $1\nwhere "id"=$2\nreturning *',
       (_, [customClientMetadata, id]) => ({
         id: String(id),
         customClientMetadata: String(customClientMetadata),

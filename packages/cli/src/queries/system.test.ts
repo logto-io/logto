@@ -17,10 +17,11 @@ const pool = createMockPool({
 });
 const { table, fields } = convertToIdentifiers(Systems);
 const timestamp = 1_663_923_776;
+const systemsTableExists = async () => createMockQueryResult([{ regclass: true }]);
 
 describe('getCurrentDatabaseAlterationTimestamp()', () => {
   it('returns 0 if query failed (table not found)', async () => {
-    mockQuery.mockRejectedValueOnce({ code: '42P01' });
+    mockQuery.mockImplementationOnce(systemsTableExists).mockRejectedValueOnce({ code: '42P01' });
 
     await expect(getCurrentDatabaseAlterationTimestamp(pool)).resolves.toBe(0);
   });
@@ -30,12 +31,14 @@ describe('getCurrentDatabaseAlterationTimestamp()', () => {
       select * from ${table} where ${fields.key}=$1
     `;
 
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([AlterationStateKey.AlterationState]);
+    mockQuery
+      .mockImplementationOnce(systemsTableExists)
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, expectSql.sql);
+        expect(values).toEqual([AlterationStateKey.AlterationState]);
 
-      return createMockQueryResult([]);
-    });
+        return createMockQueryResult([]);
+      });
 
     await expect(getCurrentDatabaseAlterationTimestamp(pool)).resolves.toBe(0);
   });
@@ -45,12 +48,14 @@ describe('getCurrentDatabaseAlterationTimestamp()', () => {
       select * from ${table} where ${fields.key}=$1
     `;
 
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([AlterationStateKey.AlterationState]);
+    mockQuery
+      .mockImplementationOnce(systemsTableExists)
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, expectSql.sql);
+        expect(values).toEqual([AlterationStateKey.AlterationState]);
 
-      return createMockQueryResult([{ value: 'some_value' }]);
-    });
+        return createMockQueryResult([{ value: 'some_value' }]);
+      });
 
     await expect(getCurrentDatabaseAlterationTimestamp(pool)).resolves.toBe(0);
   });
@@ -60,13 +65,15 @@ describe('getCurrentDatabaseAlterationTimestamp()', () => {
       select * from ${table} where ${fields.key}=$1
     `;
 
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([AlterationStateKey.AlterationState]);
+    mockQuery
+      .mockImplementationOnce(systemsTableExists)
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, expectSql.sql);
+        expect(values).toEqual([AlterationStateKey.AlterationState]);
 
-      // @ts-expect-error createMockQueryResult doesn't support jsonb
-      return createMockQueryResult([{ value: { timestamp, updatedAt: 'now' } }]);
-    });
+        // @ts-expect-error createMockQueryResult doesn't support jsonb
+        return createMockQueryResult([{ value: { timestamp, updatedAt: 'now' } }]);
+      });
 
     await expect(getCurrentDatabaseAlterationTimestamp(pool)).resolves.toEqual(timestamp);
   });
@@ -90,15 +97,17 @@ describe('updateDatabaseTimestamp()', () => {
   });
 
   it('sends upsert sql with timestamp and updatedAt', async () => {
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([
-        AlterationStateKey.AlterationState,
-        JSON.stringify({ timestamp, updatedAt }),
-      ]);
+    mockQuery
+      .mockImplementationOnce(systemsTableExists)
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, expectSql.sql);
+        expect(values).toEqual([
+          AlterationStateKey.AlterationState,
+          JSON.stringify({ timestamp, updatedAt }),
+        ]);
 
-      return createMockQueryResult([]);
-    });
+        return createMockQueryResult([]);
+      });
 
     await updateDatabaseTimestamp(pool, timestamp);
   });

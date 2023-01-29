@@ -4,6 +4,7 @@ import type { AlterationScript } from '../lib/types/alteration.js';
 
 const alteration: AlterationScript = {
   up: async (pool) => {
+    /* Drop settings table */
     await pool.query(sql`
       insert into _logto_configs (key, value)
         select 'adminConsole', admin_console from settings
@@ -22,8 +23,45 @@ const alteration: AlterationScript = {
         alter column tenant_id drop default;
     `);
     await pool.query(sql`drop table settings cascade;`);
+
+    /* Create systems table */
+    await pool.query(sql`
+      create table systems (
+        key varchar(256) not null,
+        value jsonb not null default '{}'::jsonb,
+        primary key (key)
+      );
+
+      alter table _logto_configs rename to logto_configs;
+      alter table logto_configs
+        drop constraint _logto_configs_pkey,
+        add primary key (tenant_id, key);
+      alter table logto_configs
+        rename constraint _logto_configs_tenant_id_fkey to logto_configs_tenant_id_fkey;
+    `);
+
+    await pool.query(sql`
+      insert into systems (key, value)
+        select key, value from logto_configs
+          where key='alterationState';
+    `);
+
+    await pool.query(sql`
+      delete from logto_configs
+        where key='alterationState';
+    `);
   },
   down: async (pool) => {
+    /* Drop systems table */
+    await pool.query(sql`
+      insert into logto_configs (key, value)
+        select key, value from systems
+          where key='alterationState';
+      drop table systems;
+      alter table logto_configs rename to _logto_configs;
+    `);
+
+    /* Restore settings table */
     await pool.query(sql`
       create table settings (
         tenant_id varchar(21) not null
@@ -52,9 +90,12 @@ const alteration: AlterationScript = {
     `);
 
     await pool.query(sql`
+      drop trigger set_tenant_id on _logto_configs; 
+
       alter table _logto_configs
-        drop column tenant_id,
-        drop trigger set_tenant_id;
+        drop constraint logto_configs_pkey,
+        drop column tenant_id cascade,
+        add primary key (key);
     `);
   },
 };

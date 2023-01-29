@@ -31,6 +31,7 @@ export const updateValueByKey = async <T extends LogtoConfigKey>(
     sql`
       insert into ${table} (${fields.key}, ${fields.value}) 
         values (${key}, ${sql.jsonb(value)})
-        on conflict (${fields.key}) do update set ${fields.value}=excluded.${fields.value}
+        on conflict (${fields.tenantId}, ${fields.key})
+          do update set ${fields.value}=excluded.${fields.value}
     `
   );

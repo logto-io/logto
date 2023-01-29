@@ -13,7 +13,8 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     '/configs/admin-console',
     koaGuard({ response: adminConsoleDataGuard, status: 200 }),
     async (ctx, next) => {
-      ctx.body = await getAdminConsoleConfig();
+      const { value } = await getAdminConsoleConfig();
+      ctx.body = value;
 
       return next();
     }
@@ -27,7 +28,8 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
       status: 200,
     }),
     async (ctx, next) => {
-      ctx.body = await updateAdminConsoleConfig(ctx.guard.body);
+      const { value } = await updateAdminConsoleConfig(ctx.guard.body);
+      ctx.body = value;
 
       return next();
     }

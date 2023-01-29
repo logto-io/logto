@@ -16,7 +16,7 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
   const updateAdminConsoleConfig = async (value: Partial<AdminConsoleData>) =>
     pool.one<Record<string, unknown>>(sql`
       update ${table}
-      set ${fields.value}=coalesce(${fields.value},'{}'::jsonb) || ${sql.jsonb(value)}
+      set ${fields.value} = coalesce(${fields.value},'{}'::jsonb) || ${sql.jsonb(value)}
       where ${fields.key} = ${AdminConsoleConfigKey.AdminConsole}
       returning ${fields.value}
     `);
