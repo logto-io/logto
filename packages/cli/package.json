@@ -61,7 +61,7 @@
     "semver": "^7.3.8",
     "slonik": "^30.0.0",
     "slonik-interceptor-preset": "^1.2.10",
-    "slonik-sql-tag-raw": "^1.1.4",
+    "slonik-sql-tag-raw": "^2.0.0",
     "tar": "^6.1.11",
     "yargs": "^17.6.0",
     "zod": "^3.20.2"

@@ -60,7 +60,7 @@ importers:
       sinon: ^15.0.0
       slonik: ^30.0.0
       slonik-interceptor-preset: ^1.2.10
-      slonik-sql-tag-raw: ^1.1.4
+      slonik-sql-tag-raw: ^2.0.0
       tar: ^6.1.11
       typescript: ^4.9.4
       yargs: ^17.6.0
@@ -84,7 +84,7 @@ importers:
       semver: 7.3.8
       slonik: 30.1.2
       slonik-interceptor-preset: 1.2.10
-      slonik-sql-tag-raw: 1.1.4_roarr@7.11.0+slonik@30.1.2
+      slonik-sql-tag-raw: 2.0.0_roarr@7.11.0+slonik@30.1.2
       tar: 6.1.11
       yargs: 17.6.0
       zod: 3.20.2
@@ -317,7 +317,7 @@ importers:
       sinon: ^15.0.0
       slonik: ^30.0.0
       slonik-interceptor-preset: ^1.2.10
-      slonik-sql-tag-raw: ^1.1.4
+      slonik-sql-tag-raw: ^2.0.0
       snake-case: ^3.0.4
       snakecase-keys: ^5.4.4
       supertest: ^6.2.2
@@ -365,7 +365,7 @@ importers:
       semver: 7.3.8
       slonik: 30.1.2
       slonik-interceptor-preset: 1.2.10
-      slonik-sql-tag-raw: 1.1.4_roarr@7.11.0+slonik@30.1.2
+      slonik-sql-tag-raw: 2.0.0_roarr@7.11.0+slonik@30.1.2
       snake-case: 3.0.4
       snakecase-keys: 5.4.4
       zod: 3.20.2
@@ -592,7 +592,7 @@ importers:
       prettier: ^2.8.1
       roarr: ^7.11.0
       slonik: ^30.0.0
-      slonik-sql-tag-raw: ^1.1.4
+      slonik-sql-tag-raw: ^2.0.0
       typescript: ^4.9.4
       zod: ^3.20.2
     dependencies:
@@ -618,7 +618,7 @@ importers:
       prettier: 2.8.1
       roarr: 7.11.0
       slonik: 30.1.2
-      slonik-sql-tag-raw: 1.1.4_roarr@7.11.0+slonik@30.1.2
+      slonik-sql-tag-raw: 2.0.0_roarr@7.11.0+slonik@30.1.2
       typescript: 4.9.4
 
   packages/shared:
@@ -13162,12 +13162,12 @@ packages:
       - pg-native
     dev: false
 
-  /slonik-sql-tag-raw/1.1.4_roarr@7.11.0+slonik@30.1.2:
-    resolution: {integrity: sha512-os6iRAkQgKNoVzudRtLBlxjqmyQHJdPHw/eMIBJDnUfD5dle5uIyEKtblayW7eBr5x7blkzUg4BgvRkeDZeZPA==}
+  /slonik-sql-tag-raw/2.0.0_roarr@7.11.0+slonik@30.1.2:
+    resolution: {integrity: sha512-wL43ADUUpL05NI2UpBsgjnWaLpoA5/VM7isoXphAe43DT4CyV62Qlthm6dIv/yChV/CaTYv8Gc2LjN18MPATtA==}
     engines: {node: '>=10.0'}
     peerDependencies:
       roarr: '>=7.0.3'
-      slonik: '>=27.0.0'
+      slonik: '>=33.0.0'
     dependencies:
       lodash: 4.17.21
       roarr: 7.11.0
