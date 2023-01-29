@@ -163,18 +163,6 @@ export enum AppearanceMode {
   DarkMode = 'dark',
 }
 
-export const adminConsoleConfigGuard = z.object({
-  // Get started challenges
-  demoChecked: z.boolean(),
-  applicationCreated: z.boolean(),
-  signInExperienceCustomized: z.boolean(),
-  passwordlessConfigured: z.boolean(),
-  socialSignInConfigured: z.boolean(),
-  furtherReadingsChecked: z.boolean(),
-});
-
-export type AdminConsoleConfig = z.infer<typeof adminConsoleConfigGuard>;
-
 /**
  * Phrases
  */

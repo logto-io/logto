@@ -1,5 +1,12 @@
 import { VerificationCodeType } from '@logto/connector-kit';
-import type { Application, Passcode, Resource, Role, Scope, Setting } from '@logto/schemas';
+import type {
+  AdminConsoleData,
+  Application,
+  Passcode,
+  Resource,
+  Role,
+  Scope,
+} from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 
 export * from './connector.js';
@@ -65,17 +72,13 @@ export const mockRole: Role = {
   description: 'admin',
 };
 
-export const mockSetting: Setting = {
-  tenantId: 'fake_tenant',
-  id: 'foo setting',
-  adminConsole: {
-    demoChecked: false,
-    applicationCreated: false,
-    signInExperienceCustomized: false,
-    passwordlessConfigured: false,
-    socialSignInConfigured: false,
-    furtherReadingsChecked: false,
-  },
+export const mockAdminConsoleData: AdminConsoleData = {
+  demoChecked: false,
+  applicationCreated: false,
+  signInExperienceCustomized: false,
+  passwordlessConfigured: false,
+  socialSignInConfigured: false,
+  furtherReadingsChecked: false,
 };
 
 export const mockPasscode: Passcode = {

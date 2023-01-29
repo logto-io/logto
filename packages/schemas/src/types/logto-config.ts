@@ -39,17 +39,48 @@ export const logtoOidcConfigGuard: Readonly<{
   [LogtoOidcConfigKey.CookieKeys]: z.string().array(),
 });
 
+// Admin console config
+export const adminConsoleDataGuard = z.object({
+  // Get started challenges
+  demoChecked: z.boolean(),
+  applicationCreated: z.boolean(),
+  signInExperienceCustomized: z.boolean(),
+  passwordlessConfigured: z.boolean(),
+  socialSignInConfigured: z.boolean(),
+  furtherReadingsChecked: z.boolean(),
+});
+
+export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;
+
+export enum AdminConsoleConfigKey {
+  AdminConsole = 'adminConsole',
+}
+
+export type AdminConsoleConfigType = {
+  [AdminConsoleConfigKey.AdminConsole]: AdminConsoleData;
+};
+
+export const adminConsoleConfigGuard: Readonly<{
+  [key in AdminConsoleConfigKey]: ZodType<AdminConsoleConfigType[key]>;
+}> = Object.freeze({
+  [AdminConsoleConfigKey.AdminConsole]: adminConsoleDataGuard,
+});
+
 // Summary
-export type LogtoConfigKey = AlterationStateKey | LogtoOidcConfigKey;
-export type LogtoConfigType = AlterationStateType | LogtoOidcConfigType;
-export type LogtoConfigGuard = typeof alterationStateGuard & typeof logtoOidcConfigGuard;
+export type LogtoConfigKey = AlterationStateKey | LogtoOidcConfigKey | AdminConsoleConfigKey;
+export type LogtoConfigType = AlterationStateType | LogtoOidcConfigType | AdminConsoleConfigType;
+export type LogtoConfigGuard = typeof alterationStateGuard &
+  typeof logtoOidcConfigGuard &
+  typeof adminConsoleConfigGuard;
 
 export const logtoConfigKeys: readonly LogtoConfigKey[] = Object.freeze([
   ...Object.values(AlterationStateKey),
   ...Object.values(LogtoOidcConfigKey),
+  ...Object.values(AdminConsoleConfigKey),
 ]);
 
 export const logtoConfigGuards: LogtoConfigGuard = Object.freeze({
   ...alterationStateGuard,
   ...logtoOidcConfigGuard,
+  ...adminConsoleConfigGuard,
 });

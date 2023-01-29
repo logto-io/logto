@@ -7,7 +7,7 @@ import {
   LogtoOidcConfigKey,
   managementResource,
   defaultSignInExperience,
-  createDefaultSetting,
+  createDefaultAdminConsoleConfig,
   createDemoAppApplication,
   defaultRole,
   managementResourceScope,
@@ -26,9 +26,9 @@ import { createPoolAndDatabaseIfNeeded, insertInto } from '../../../database.js'
 import {
   getRowsByKeys,
   doesConfigsTableExist,
-  updateDatabaseTimestamp,
   updateValueByKey,
 } from '../../../queries/logto-config.js';
+import { updateDatabaseTimestamp } from '../../../queries/system.js';
 import { getPathInModule, log, oraPromise } from '../../../utilities.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
@@ -89,7 +89,7 @@ const seedTables = async (connection: DatabaseTransactionConnection, latestTimes
   await Promise.all([
     connection.query(insertInto(managementResource, 'resources')),
     connection.query(insertInto(managementResourceScope, 'scopes')),
-    connection.query(insertInto(createDefaultSetting(), 'settings')),
+    connection.query(insertInto(createDefaultAdminConsoleConfig(), 'logto_configs')),
     connection.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
     connection.query(insertInto(createDemoAppApplication(generateStandardId()), 'applications')),
     connection.query(insertInto(defaultRole, 'roles')),

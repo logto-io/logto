@@ -48,7 +48,7 @@ export const buildUpdateWhereWithPool =
              */
             return sql`
               ${fields[key]}=
-                coalesce(${fields[key]},'{}'::jsonb)|| ${convertToPrimitiveOrSql(key, value)}
+                coalesce(${fields[key]},'{}'::jsonb) || ${convertToPrimitiveOrSql(key, value)}
             `;
           }
 

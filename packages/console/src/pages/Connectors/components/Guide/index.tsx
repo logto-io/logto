@@ -16,7 +16,7 @@ import IconButton from '@/components/IconButton';
 import Markdown from '@/components/Markdown';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import useApi from '@/hooks/use-api';
-import useSettings from '@/hooks/use-settings';
+import useConfigs from '@/hooks/use-configs';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
 import { safeParseJson } from '@/utilities/json';
 
@@ -33,7 +33,7 @@ type Props = {
 const Guide = ({ connector, onClose }: Props) => {
   const api = useApi();
   const navigate = useNavigate();
-  const { updateSettings } = useSettings();
+  const { updateConfigs } = useConfigs();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { id: connectorId, type: connectorType, name, readme, isStandard } = connector;
   const { language } = i18next;
@@ -89,7 +89,7 @@ const Guide = ({ connector, onClose }: Props) => {
       })
       .json<ConnectorResponse>();
 
-    await updateSettings({
+    await updateConfigs({
       ...conditional(!isSocialConnector && { passwordlessConfigured: true }),
       ...conditional(isSocialConnector && { socialSignInConfigured: true }),
     });

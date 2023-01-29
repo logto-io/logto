@@ -12,7 +12,7 @@ import CardTitle from '@/components/CardTitle';
 import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
 import useApi from '@/hooks/use-api';
-import useSettings from '@/hooks/use-settings';
+import useConfigs from '@/hooks/use-configs';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -34,7 +34,7 @@ type Props = {
 const GuideModal = ({ isOpen, onClose }: Props) => {
   const { data } = useSWR<SignInExperience>('/api/sign-in-exp');
   const { data: preferences, update: updatePreferences } = useUserPreferences();
-  const { updateSettings } = useSettings();
+  const { updateConfigs } = useConfigs();
   const methods = useForm<SignInExperienceForm>();
   const {
     reset,
@@ -68,7 +68,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
       api.patch('/api/sign-in-exp', {
         json: signInExperienceParser.toRemoteModel(formData),
       }),
-      updateSettings({ signInExperienceCustomized: true }),
+      updateConfigs({ signInExperienceCustomized: true }),
     ]);
 
     onClose();
@@ -76,7 +76,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
 
   const onSkip = async () => {
     setIsLoading(true);
-    await updateSettings({ signInExperienceCustomized: true });
+    await updateConfigs({ signInExperienceCustomized: true });
     setIsLoading(false);
     onClose();
   };

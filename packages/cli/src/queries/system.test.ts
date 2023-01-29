@@ -1,10 +1,10 @@
-import { AlterationStateKey, LogtoConfigs } from '@logto/schemas';
+import { AlterationStateKey, Systems } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import type { QueryType } from '../test-utilities.js';
 import { expectSqlAssert } from '../test-utilities.js';
-import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './logto-config.js';
+import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './system.js';
 
 const { jest } = import.meta;
 
@@ -15,7 +15,7 @@ const pool = createMockPool({
     return mockQuery(sql, values);
   },
 });
-const { table, fields } = convertToIdentifiers(LogtoConfigs);
+const { table, fields } = convertToIdentifiers(Systems);
 const timestamp = 1_663_923_776;
 
 describe('getCurrentDatabaseAlterationTimestamp()', () => {
