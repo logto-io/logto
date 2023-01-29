@@ -2,7 +2,9 @@ import type { ConnectorSession } from '@logto/connector-kit';
 import { connectorSessionGuard } from '@logto/connector-kit';
 import type { Profile } from '@logto/schemas';
 import { InteractionEvent } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 import type { Context } from 'koa';
+import { errors } from 'oidc-provider';
 import type { InteractionResults } from 'oidc-provider';
 import type Provider from 'oidc-provider';
 import { z } from 'zod';
@@ -165,4 +167,46 @@ export const getConnectorSessionResult = async (
   });
 
   return signInResult.data.connectorSession;
+};
+
+/**
+ * The following three methods (`getInteractionFromProviderByJti`, `assignResultToInteraction`
+ * and `epochTime`) refer to implementation in
+ * https://github.com/panva/node-oidc-provider/blob/main/lib/provider.js
+ */
+type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
+
+const epochTime = (date = Date.now()) => Math.floor(date / 1000);
+
+export const getInteractionFromProviderByJti = async (
+  jti: string,
+  provider: Provider
+): Promise<Interaction> => {
+  const interaction = await provider.Interaction.find(jti);
+
+  assert(interaction, new errors.SessionNotFound('interaction session not found'));
+
+  if (interaction.session?.uid) {
+    const session = await provider.Session.findByUid(interaction.session.uid);
+
+    assert(session, new errors.SessionNotFound('session not found'));
+
+    assert(
+      interaction.session.accountId === session.accountId,
+      new errors.SessionNotFound('session principal changed')
+    );
+  }
+
+  return interaction;
+};
+
+export const assignResultToInteraction = async (
+  interaction: Interaction,
+  result: InteractionResults
+) => {
+  const { lastSubmission, exp } = interaction;
+
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  interaction.result = { ...lastSubmission, ...result };
+  await interaction.save(exp - epochTime());
 };

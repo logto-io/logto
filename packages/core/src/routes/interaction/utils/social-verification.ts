@@ -4,8 +4,8 @@ import { ConnectorType } from '@logto/schemas';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
-  getConnectorSessionResult,
   assignConnectorSessionResult,
+  getConnectorSessionResult,
 } from '#src/routes/interaction/utils/interaction.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -31,6 +31,7 @@ export const createSocialAuthorizationUrl = async (
   const {
     headers: { 'user-agent': userAgent },
   } = ctx.request;
+
   const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
   return connector.getAuthorizationUri(
@@ -38,12 +39,9 @@ export const createSocialAuthorizationUrl = async (
       state,
       redirectUri,
       /**
-       * For upcoming POST /interaction/verification/assertion API, we need to block requests
+       * For POST /saml-assertion-handler/:connectorId API, we need to block requests
        * for non-SAML connector (relies on connectorFactoryId) and use `connectorId`
        * to find correct connector config.
-       *
-       * TODO @darcy : add check on `connectorId` and `connectorFactoryId` existence and save logic
-       * in SAML connector `getAuthorizationUri` method.
        */
       connectorId,
       connectorFactoryId: connector.metadata.id,
