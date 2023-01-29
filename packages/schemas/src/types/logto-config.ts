@@ -1,26 +1,6 @@
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
-// Alteration state
-export enum AlterationStateKey {
-  AlterationState = 'alterationState',
-}
-
-export type AlterationState = { timestamp: number; updatedAt?: string };
-
-export type AlterationStateType = {
-  [AlterationStateKey.AlterationState]: AlterationState;
-};
-
-export const alterationStateGuard: Readonly<{
-  [key in AlterationStateKey]: ZodType<AlterationStateType[key]>;
-}> = Object.freeze({
-  [AlterationStateKey.AlterationState]: z.object({
-    timestamp: z.number(),
-    updatedAt: z.string().optional(),
-  }),
-});
-
 // Logto OIDC config
 export enum LogtoOidcConfigKey {
   PrivateKeys = 'oidc.privateKeys',
@@ -67,20 +47,16 @@ export const adminConsoleConfigGuard: Readonly<{
 });
 
 // Summary
-export type LogtoConfigKey = AlterationStateKey | LogtoOidcConfigKey | AdminConsoleConfigKey;
-export type LogtoConfigType = AlterationStateType | LogtoOidcConfigType | AdminConsoleConfigType;
-export type LogtoConfigGuard = typeof alterationStateGuard &
-  typeof logtoOidcConfigGuard &
-  typeof adminConsoleConfigGuard;
+export type LogtoConfigKey = LogtoOidcConfigKey | AdminConsoleConfigKey;
+export type LogtoConfigType = LogtoOidcConfigType | AdminConsoleConfigType;
+export type LogtoConfigGuard = typeof logtoOidcConfigGuard & typeof adminConsoleConfigGuard;
 
 export const logtoConfigKeys: readonly LogtoConfigKey[] = Object.freeze([
-  ...Object.values(AlterationStateKey),
   ...Object.values(LogtoOidcConfigKey),
   ...Object.values(AdminConsoleConfigKey),
 ]);
 
 export const logtoConfigGuards: LogtoConfigGuard = Object.freeze({
-  ...alterationStateGuard,
   ...logtoOidcConfigGuard,
   ...adminConsoleConfigGuard,
 });

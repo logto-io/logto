@@ -1,5 +1,5 @@
 import type { AlterationState, System } from '@logto/schemas';
-import { Systems, logtoConfigGuards, AlterationStateKey } from '@logto/schemas';
+import { systemGuards, Systems, AlterationStateKey } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import type { CommonQueryMethods, DatabaseTransactionConnection } from 'slonik';
@@ -31,7 +31,7 @@ export const getCurrentDatabaseAlterationTimestamp = async (pool: CommonQueryMet
     const result = await pool.maybeOne<System>(
       sql`select * from ${table} where ${fields.key}=${AlterationStateKey.AlterationState}`
     );
-    const parsed = logtoConfigGuards[AlterationStateKey.AlterationState].safeParse(result?.value);
+    const parsed = systemGuards[AlterationStateKey.AlterationState].safeParse(result?.value);
 
     return (parsed.success && parsed.data.timestamp) || 0;
   } catch (error: unknown) {
