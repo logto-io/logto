@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-beta.33
+
+### Patch Changes
+
+- 69af8a38: 1. Add `connectorId`, `connectorFactoryId` and `jti` to `GetAuthorizationUri`. 2. Make `ConnectorSession` compatible for arbitrary keys.
+
 ## 1.0.0-beta.32
 
 ### Minor Changes
