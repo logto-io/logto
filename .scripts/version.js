@@ -29,7 +29,8 @@ const getIgnoreGroup = () => {
   });
 }
 
-const ignoreCmd = getIgnoreGroup()
+const ignoreGroup = getIgnoreGroup();
+const ignoreCmd = ignoreGroup
   .map(({ name }) => ` \\\n  --ignore ${name}`)
   .join('');
 const cmd = ('pnpm changeset version' + ignoreCmd);
@@ -44,8 +45,11 @@ console.log(cmd);
 
 await execAsync(cmd).catch(catchCmdError);
 
+const filterCmd = ignoreGroup
+  .map(({ name }) => ` \\\n  --filter \\!${name}`)
+  .join('');
 // Manually run lifecycle script since changesets didn't
-await execAsync('pnpm -r version').catch(catchCmdError);
+await execAsync(`pnpm -r ${filterCmd} version`).catch(catchCmdError);
 
 // Sanity check for prepublish scripts
-await execAsync('pnpm -r prepublishOnly').catch(catchCmdError);
+await execAsync(`pnpm -r ${filterCmd} prepublishOnly`).catch(catchCmdError);
