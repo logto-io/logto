@@ -85,6 +85,7 @@ const loadEnvValues = () => {
     developmentTenantId,
     trustProxyHeader: isTrue(getEnv('TRUST_PROXY_HEADER')),
     adminConsoleUrl: appendPath(endpoint, '/console'),
+    ignoreConnectorVersionCheck: isTrue(getEnv('IGNORE_CONNECTOR_VERSION_CHECK')),
   });
 };
 
