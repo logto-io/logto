@@ -64,6 +64,7 @@ const connectors = {
   add_multi_platform: ' supporte plusieurs plateformes, sélectionnez une plateforme pour continuer',
   drawer_title: 'Guide des connecteurs',
   drawer_subtitle: 'Suivez les instructions pour intégrer votre connecteur',
+  unknown: 'Unknown Connector', // UNTRANSLATED
 };
 
 export default connectors;

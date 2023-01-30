@@ -55,42 +55,73 @@
     background-color: var(--color-layer-1);
     border-radius: 0 0 12px 12px;
 
-    table {
-      tbody {
-        tr {
-          td {
-            font: var(--font-body-medium);
-            border-top: 1px solid var(--color-divider);
-            border-bottom: unset;
-            padding: _.unit(3);
-          }
-
-          &.clickable {
-            cursor: pointer;
-          }
+    tbody {
+      tr {
+        td {
+          font: var(--font-body-medium);
+          border-top: 1px solid var(--color-divider);
+          border-bottom: unset;
+          padding: _.unit(3);
         }
 
-        tr.hoverEffect:hover {
-          background: var(--color-hover);
-
-          td {
-            border-top: 1px solid transparent;
-          }
-
-          + tr {
-            td {
-              border-top: 1px solid transparent;
-            }
-          }
-
-          td:first-child {
-            border-radius: 8px 0 0 8px;
-          }
-
-          td:last-child {
-            border-radius: 0 8px 8px 0;
-          }
+        &.clickable {
+          cursor: pointer;
         }
+      }
+    }
+  }
+
+  tr.hoverEffect:hover {
+    background: var(--color-hover);
+
+    td {
+      border-top: 1px solid transparent;
+    }
+
+    + tr {
+      td {
+        border-top: 1px solid transparent;
+      }
+    }
+
+    td:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+
+    td:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+  }
+
+  &.hasBorder {
+    .filterContainer {
+      border: 1px solid var(--color-divider);
+      border-bottom: unset;
+
+      .filter {
+        border-bottom: unset;
+      }
+    }
+
+    .headerTable {
+      padding: 0;
+      border: 1px solid var(--color-divider);
+    }
+
+    .bodyTable {
+      padding: 0;
+      border: 1px solid var(--color-divider);
+      border-top: unset;
+
+      tr:first-child td {
+        border-top: 1px solid transparent;
+      }
+    }
+
+    tr.hoverEffect:hover {
+      td:first-child,
+      td:last-child {
+        border-radius: 0;
       }
     }
   }

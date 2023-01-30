@@ -61,6 +61,7 @@ const connectors = {
   add_multi_platform: ' 다양한 플랫폼 지원, 플랫폼을 선택해주세요.',
   drawer_title: '연동 가이드',
   drawer_subtitle: '연동하기 위해 가이드를 따라주세요.',
+  unknown: '알수없는 연동',
 };
 
 export default connectors;

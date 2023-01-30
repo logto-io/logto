@@ -64,6 +64,7 @@ const connectors = {
   add_multi_platform: ' birden fazla platformu destekler, devam etmek için bir platform seçin',
   drawer_title: 'Connector Kılavuzu',
   drawer_subtitle: 'Connectorı entegre etmek için yönergeleri izleyin',
+  unknown: 'Bilinmeyen connector',
 };
 
 export default connectors;

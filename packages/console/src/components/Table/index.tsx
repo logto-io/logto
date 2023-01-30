@@ -38,6 +38,7 @@ type Props<
   pagination?: PaginationProps;
   placeholder?: TablePlaceholder;
   errorMessage?: string;
+  hasBorder?: boolean;
   onRetry?: () => void;
 };
 
@@ -59,6 +60,7 @@ const Table = <
   pagination,
   placeholder,
   errorMessage,
+  hasBorder,
   onRetry,
 }: Props<TFieldValues, TName>) => {
   const totalColspan = columns.reduce((result, { colSpan }) => {
@@ -69,7 +71,7 @@ const Table = <
 
   return (
     <div className={classNames(styles.container, className)}>
-      <div className={styles.tableContainer}>
+      <div className={classNames(styles.tableContainer, hasBorder && styles.hasBorder)}>
         {filter && (
           <div className={styles.filterContainer}>
             <div className={styles.filter}>{filter}</div>
