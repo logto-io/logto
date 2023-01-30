@@ -116,6 +116,7 @@ const SetPassword = ({
       <TogglePassword isChecked={showPassword} onChange={setShowPassword} />
 
       <Button
+        name="submit"
         title="action.save_password"
         onClick={async () => {
           onSubmitHandler();

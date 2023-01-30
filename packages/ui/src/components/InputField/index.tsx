@@ -17,7 +17,7 @@ type Props = HTMLProps<HTMLInputElement> & {
 };
 
 const InputField = (
-  { className, error, isDanger, suffix, isSuffixFocusVisible, ...props }: Props,
+  { className, error, isDanger, suffix, isSuffixFocusVisible, isSuffixVisible, ...props }: Props,
   reference: ForwardedRef<HTMLInputElement>
 ) => (
   <div className={className}>
@@ -27,8 +27,9 @@ const InputField = (
         cloneElement(suffix, {
           className: classNames([
             suffix.props.className,
-            styles.actionButton,
+            styles.suffix,
             isSuffixFocusVisible && styles.focusVisible,
+            isSuffixVisible && styles.visible,
           ]),
         })}
     </div>
