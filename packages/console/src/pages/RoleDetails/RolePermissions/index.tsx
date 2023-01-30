@@ -8,13 +8,16 @@ import useSWR from 'swr';
 
 import ConfirmModal from '@/components/ConfirmModal';
 import PermissionsTable from '@/components/PermissionsTable';
+import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import useTableSearchParams, { formatKeyword } from '@/hooks/use-table-search-params';
-import { buildUrl } from '@/utilities/url';
+import useSearchParameters from '@/hooks/use-search-parameters';
+import { buildUrl, formatSearchKeyword } from '@/utilities/url';
 
 import type { RoleDetailsOutletContext } from '../types';
 import AssignPermissionsModal from './components/AssignPermissionsModal';
+
+const pageSize = defaultPageSize;
 
 const RolePermissions = () => {
   const {
@@ -23,17 +26,17 @@ const RolePermissions = () => {
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const {
-    pagination: { pageIndex, pageSize, setPageIndex },
-    search: { keyword, setKeyword },
-  } = useTableSearchParams();
+  const [{ page, keyword }, updateSearchParameters] = useSearchParameters({
+    page: 1,
+    keyword: '',
+  });
 
   const { data, error, mutate } = useSWR<[ScopeResponse[], number], RequestError>(
     roleId &&
       buildUrl(`/api/roles/${roleId}/scopes`, {
-        page: String(pageIndex),
+        page: String(page),
         page_size: String(pageSize),
-        ...conditional(keyword && { search: formatKeyword(keyword) }),
+        ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
       })
   );
 
@@ -80,20 +83,20 @@ const RolePermissions = () => {
         errorMessage={error?.body?.message ?? error?.message}
         retryHandler={async () => mutate(undefined, true)}
         pagination={{
-          pageIndex,
+          page,
           pageSize,
           totalCount,
-          onChange: setPageIndex,
+          onChange: (page) => {
+            updateSearchParameters({ page });
+          },
         }}
         search={{
           keyword,
-          searchHandler: (value) => {
-            setKeyword(value);
-            setPageIndex(1);
+          searchHandler: (keyword) => {
+            updateSearchParameters({ keyword, page: 1 });
           },
           clearSearchHandler: () => {
-            setKeyword('');
-            setPageIndex(1);
+            updateSearchParameters({ keyword: '', page: 1 });
           },
         }}
       />

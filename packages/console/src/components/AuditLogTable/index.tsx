@@ -9,7 +9,7 @@ import ApplicationName from '@/components/ApplicationName';
 import UserName from '@/components/UserName';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
-import usePageSearchParameters from '@/hooks/use-page-search-parameters';
+import useSearchParameters from '@/hooks/use-search-parameters';
 import { buildUrl } from '@/utilities/url';
 
 import Table from '../Table';
@@ -28,7 +28,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
   const pageSize = defaultPageSize;
-  const [{ page, event, applicationId }, updatePageSearchParameters] = usePageSearchParameters({
+  const [{ page, event, applicationId }, updateSearchParameters] = useSearchParameters({
     page: 1,
     event: '',
     applicationId: '',
@@ -103,7 +103,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
             <EventSelector
               value={event}
               onChange={(event) => {
-                updatePageSearchParameters({ event, page: undefined });
+                updateSearchParameters({ event, page: undefined });
               }}
             />
           </div>
@@ -111,18 +111,18 @@ const AuditLogTable = ({ userId, className }: Props) => {
             <ApplicationSelector
               value={applicationId}
               onChange={(applicationId) => {
-                updatePageSearchParameters({ applicationId, page: undefined });
+                updateSearchParameters({ applicationId, page: undefined });
               }}
             />
           </div>
         </div>
       }
       pagination={{
-        pageIndex: Number(page),
+        page,
         totalCount,
         pageSize,
         onChange: (page) => {
-          updatePageSearchParameters({ page });
+          updateSearchParameters({ page });
         },
       }}
       isLoading={isLoading}

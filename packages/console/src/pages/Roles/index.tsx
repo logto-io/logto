@@ -10,10 +10,11 @@ import CardTitle from '@/components/CardTitle';
 import ItemPreview from '@/components/ItemPreview';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
+import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
-import useTableSearchParams, { formatKeyword } from '@/hooks/use-table-search-params';
+import useSearchParameters from '@/hooks/use-search-parameters';
 import * as pageStyles from '@/scss/resources.module.scss';
-import { buildUrl } from '@/utilities/url';
+import { buildUrl, formatSearchKeyword } from '@/utilities/url';
 
 import AssignedUsers from './components/AssignedUsers';
 import CreateRoleModal from './components/CreateRoleModal';
@@ -23,21 +24,23 @@ const rolesPathname = '/roles';
 const createRolePathname = `${rolesPathname}/create`;
 const buildDetailsPathname = (id: string) => `${rolesPathname}/${id}`;
 
+const pageSize = defaultPageSize;
+
 const Roles = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
   const isOnCreatePage = pathname === createRolePathname;
 
-  const {
-    pagination: { pageIndex, pageSize, setPageIndex },
-    search: { keyword, setKeyword },
-  } = useTableSearchParams();
+  const [{ page, keyword }, updateSearchParameters] = useSearchParameters({
+    page: 1,
+    keyword: '',
+  });
 
   const url = buildUrl('/api/roles', {
-    page: String(pageIndex),
+    page: String(page),
     page_size: String(pageSize),
-    ...conditional(keyword && { search: formatKeyword(keyword) }),
+    ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
   });
 
   const { data, error, mutate } = useSWR<[RoleResponse[], number], RequestError>(url);
@@ -97,21 +100,21 @@ const Roles = () => {
             placeholder={t('roles.search')}
             defaultValue={keyword}
             isClearable={Boolean(keyword)}
-            onSearch={(value) => {
-              setKeyword(value);
-              setPageIndex(1);
+            onSearch={(keyword) => {
+              updateSearchParameters({ keyword, page: 1 });
             }}
             onClearSearch={() => {
-              setKeyword('');
-              setPageIndex(1);
+              updateSearchParameters({ keyword: '', page: 1 });
             }}
           />
         }
         pagination={{
-          pageIndex,
+          page,
           totalCount,
           pageSize,
-          onChange: setPageIndex,
+          onChange: (page) => {
+            updateSearchParameters({ page });
+          },
         }}
         placeholder={{
           content: (

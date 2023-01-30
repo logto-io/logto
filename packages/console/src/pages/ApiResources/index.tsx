@@ -3,7 +3,7 @@ import { AppearanceMode } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
@@ -15,8 +15,10 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
+import { defaultPageSize } from '@/consts';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
+import useSearchParameters from '@/hooks/use-search-parameters';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
@@ -25,23 +27,23 @@ import { buildUrl } from '@/utilities/url';
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
+const pageSize = defaultPageSize;
 const apiResourcesPathname = '/api-resources';
 const createApiResourcePathname = `${apiResourcesPathname}/create`;
 const buildDetailsPathname = (id: string) =>
   `${apiResourcesPathname}/${id}/${ApiResourceDetailsTabs.Settings}`;
 
-const pageSize = 20;
-
 const ApiResources = () => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const isCreateNew = pathname.endsWith('/create');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [query, setQuery] = useSearchParams();
-  const search = query.toString();
-  const pageIndex = Number(query.get('page') ?? '1');
+
+  const [{ page }, updateSearchParameters] = useSearchParameters({
+    page: 1,
+  });
 
   const url = buildUrl('/api/resources', {
-    page: String(pageIndex),
+    page: String(page),
     page_size: String(pageSize),
   });
 
@@ -146,12 +148,12 @@ const ApiResources = () => {
         onRetry={async () => mutate(undefined, true)}
       />
       <Pagination
-        pageIndex={pageIndex}
+        page={page}
         totalCount={totalCount}
         pageSize={pageSize}
         className={styles.pagination}
         onChange={(page) => {
-          setQuery({ page: String(page) });
+          updateSearchParameters({ page });
         }}
       />
     </div>
