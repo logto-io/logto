@@ -7,15 +7,14 @@
   .title {
     display: inline-block;
     max-width: 100%;
-    overflow: hidden;
     @include _.text-ellipsis;
+    margin-right: _.unit(1);
   }
 
   .id {
     display: inline-block;
     font: var(--body-small);
     color: var(--color-text-secondary);
-    margin-left: _.unit(1);
     @include _.text-ellipsis;
   }
 
