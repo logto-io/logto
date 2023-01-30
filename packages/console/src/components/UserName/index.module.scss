@@ -4,13 +4,23 @@
   font: var(--body-medium);
   color: var(--color-text);
 
-  .userId {
+  .title {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    @include _.text-ellipsis;
+  }
+
+  .id {
+    display: inline-block;
     font: var(--body-small);
     color: var(--color-text-secondary);
     margin-left: _.unit(1);
+    @include _.text-ellipsis;
   }
 
   .link {
+    display: inline-block;
     text-decoration: none;
     color: var(--color-text-link);
   }

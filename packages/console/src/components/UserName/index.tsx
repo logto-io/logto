@@ -1,4 +1,5 @@
 import type { User } from '@logto/schemas';
+import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
@@ -26,13 +27,17 @@ const UserName = ({ userId, isLink = false }: Props) => {
   return (
     <div className={styles.userName}>
       {isLink ? (
-        <Link to={`/users/${userId}`} target="_blank" className={styles.link}>
+        <Link
+          to={`/users/${userId}`}
+          target="_blank"
+          className={classNames(styles.title, styles.link)}
+        >
           {name}
         </Link>
       ) : (
-        <span>{name}</span>
+        <div className={styles.title}>{name}</div>
       )}
-      <span className={styles.userId}>{userId}</span>
+      <div className={styles.id}>{userId}</div>
     </div>
   );
 };
