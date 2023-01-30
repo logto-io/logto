@@ -1,25 +1,30 @@
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
-import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
-import { appendPath } from '#src/utils/url.js';
 
-export default function koaWelcomeProxy<
+export default function koaConsoleRedirectProxy<
   StateT,
   ContextT extends IRouterParamContext,
   ResponseBodyT
 >(queries: Queries): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   const { hasActiveUsers } = queries.users;
-  const { adminConsoleUrl } = EnvSet.values;
 
-  return async (ctx) => {
-    if (await hasActiveUsers()) {
-      ctx.redirect(adminConsoleUrl.toString());
+  return async (ctx, next) => {
+    const hasUser = await hasActiveUsers();
+
+    if ((ctx.path === '/' || ctx.path === '/console') && !hasUser) {
+      ctx.redirect('/console/welcome');
 
       return;
     }
 
-    ctx.redirect(appendPath(adminConsoleUrl, '/welcome').toString());
+    if (ctx.path === '/console/welcome' && hasUser) {
+      ctx.redirect('/console');
+
+      return;
+    }
+
+    return next();
   };
 }
