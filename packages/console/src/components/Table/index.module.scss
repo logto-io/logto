@@ -25,6 +25,9 @@
 
   table {
     border: none;
+    border-spacing: 0;
+    table-layout: fixed;
+    width: 100%;
   }
 
   .headerTable {

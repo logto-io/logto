@@ -15,7 +15,6 @@
     td {
       max-width: 100%;
       @include _.text-ellipsis;
-      font: var(--font-body-medium);
     }
   }
 
