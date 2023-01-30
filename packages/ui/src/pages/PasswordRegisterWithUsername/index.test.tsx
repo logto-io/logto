@@ -36,8 +36,8 @@ describe('<PasswordRegisterWithUsername />', () => {
       </SettingsProvider>
     );
 
-    expect(container.querySelector('input[name="new-password"]')).not.toBeNull();
-    expect(container.querySelector('input[name="confirm-password"]')).not.toBeNull();
+    expect(container.querySelector('input[name="newPassword"]')).not.toBeNull();
+    expect(container.querySelector('input[name="confirmPassword"]')).not.toBeNull();
     expect(queryByText('action.save_password')).not.toBeNull();
   });
 
@@ -56,7 +56,7 @@ describe('<PasswordRegisterWithUsername />', () => {
       </SettingsProvider>
     );
 
-    expect(container.querySelector('input[name="new-password"]')).toBeNull();
+    expect(container.querySelector('input[name="newPassword"]')).toBeNull();
     expect(queryByText('description.not_found')).not.toBeNull();
   });
 
@@ -68,8 +68,8 @@ describe('<PasswordRegisterWithUsername />', () => {
     );
 
     const submitButton = getByText('action.save_password');
-    const passwordInput = container.querySelector('input[name="new-password"]');
-    const confirmPasswordInput = container.querySelector('input[name="confirm-password"]');
+    const passwordInput = container.querySelector('input[name="newPassword"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirmPassword"]');
 
     act(() => {
       if (passwordInput) {

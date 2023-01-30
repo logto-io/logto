@@ -14,8 +14,8 @@ describe('<SetPassword />', () => {
     const { queryByText, container } = render(
       <SetPassword errorMessage="error" onSubmit={submit} />
     );
-    expect(container.querySelector('input[name="new-password"]')).not.toBeNull();
-    expect(container.querySelector('input[name="confirm-password"]')).not.toBeNull();
+    expect(container.querySelector('input[name="newPassword"]')).not.toBeNull();
+    expect(container.querySelector('input[name="confirmPassword"]')).not.toBeNull();
     expect(queryByText('error')).not.toBeNull();
     expect(queryByText('action.save_password')).not.toBeNull();
   });
@@ -43,7 +43,7 @@ describe('<SetPassword />', () => {
   test('password less than 6 chars should throw', async () => {
     const { queryByText, getByText, container } = render(<SetPassword onSubmit={submit} />);
     const submitButton = getByText('action.save_password');
-    const passwordInput = container.querySelector('input[name="new-password"]');
+    const passwordInput = container.querySelector('input[name="newPassword"]');
 
     if (passwordInput) {
       fireEvent.change(passwordInput, { target: { value: '12345' } });
@@ -74,8 +74,8 @@ describe('<SetPassword />', () => {
   test('password mismatch with confirmPassword should throw', async () => {
     const { queryByText, getByText, container } = render(<SetPassword onSubmit={submit} />);
     const submitButton = getByText('action.save_password');
-    const passwordInput = container.querySelector('input[name="new-password"]');
-    const confirmPasswordInput = container.querySelector('input[name="confirm-password"]');
+    const passwordInput = container.querySelector('input[name="newPassword"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirmPassword"]');
 
     act(() => {
       if (passwordInput) {
@@ -110,8 +110,8 @@ describe('<SetPassword />', () => {
   test('should submit properly', async () => {
     const { queryByText, getByText, container } = render(<SetPassword onSubmit={submit} />);
     const submitButton = getByText('action.save_password');
-    const passwordInput = container.querySelector('input[name="new-password"]');
-    const confirmPasswordInput = container.querySelector('input[name="confirm-password"]');
+    const passwordInput = container.querySelector('input[name="newPassword"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirmPassword"]');
 
     act(() => {
       if (passwordInput) {

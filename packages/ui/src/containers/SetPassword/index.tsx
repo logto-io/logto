@@ -23,8 +23,8 @@ type Props = {
 };
 
 type FieldState = {
-  ['new-password']: string;
-  ['confirm-password']: string;
+  newPassword: string;
+  confirmPassword: string;
 };
 
 const SetPassword = ({
@@ -46,7 +46,7 @@ const SetPassword = ({
     formState: { errors },
   } = useForm<FieldState>({
     reValidateMode: 'onChange',
-    defaultValues: { 'new-password': '', 'confirm-password': '' },
+    defaultValues: { newPassword: '', confirmPassword: '' },
   });
 
   const onSubmitHandler = useCallback(
@@ -54,14 +54,14 @@ const SetPassword = ({
       clearErrorMessage?.();
 
       void handleSubmit((data, event) => {
-        onSubmit(data['new-password']);
+        onSubmit(data.newPassword);
         event?.preventDefault();
       })(event);
     },
     [clearErrorMessage, handleSubmit, onSubmit]
   );
 
-  const newPasswordError = passwordErrorWatcher(errors['new-password']);
+  const newPasswordError = passwordErrorWatcher(errors.newPassword);
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
@@ -75,12 +75,12 @@ const SetPassword = ({
         isDanger={!!newPasswordError}
         error={newPasswordError}
         aria-invalid={!!newPasswordError}
-        {...register('new-password', { required: true, minLength: 6 })}
-        isSuffixFocusVisible={!!watch('new-password')}
+        {...register('newPassword', { required: true, minLength: 6 })}
+        isSuffixFocusVisible={!!watch('newPassword')}
         suffix={
           <IconButton
             onClick={() => {
-              resetField('new-password');
+              resetField('newPassword');
             }}
           >
             <ClearIcon />
@@ -94,16 +94,16 @@ const SetPassword = ({
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
         placeholder={t('input.confirm_password')}
-        error={errors['confirm-password'] && 'passwords_do_not_match'}
-        aria-invalid={!!errors['confirm-password']}
-        {...register('confirm-password', {
-          validate: (value) => value === watch('new-password'),
+        error={errors.confirmPassword && 'passwords_do_not_match'}
+        aria-invalid={!!errors.confirmPassword}
+        {...register('confirmPassword', {
+          validate: (value) => value === watch('newPassword'),
         })}
-        isSuffixFocusVisible={!!watch('confirm-password')}
+        isSuffixFocusVisible={!!watch('confirmPassword')}
         suffix={
           <IconButton
             onClick={() => {
-              resetField('confirm-password');
+              resetField('confirmPassword');
             }}
           >
             <ClearIcon />
