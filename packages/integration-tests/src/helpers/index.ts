@@ -2,13 +2,14 @@ import fs from 'fs/promises';
 import { createServer } from 'http';
 import path from 'path';
 
+import { mockSmsVerificationCodeFileName } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
 import { RequestError } from 'got';
 
 import { createUser } from '#src/api/index.js';
 import { generateUsername } from '#src/utils.js';
 
-const temporaryVerificationCodeFilePath = path.join('/tmp', 'logto_mock_passcode_record.txt');
+const temporaryVerificationCodeFilePath = path.join('/tmp', mockSmsVerificationCodeFileName);
 
 export const createUserByAdmin = (
   username?: string,

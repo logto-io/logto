@@ -24,3 +24,5 @@ export const parseJson = (
     throw new ConnectorError(errorCode, errorPayload ?? jsonString);
   }
 };
+
+export const mockSmsVerificationCodeFileName = 'logto_mock_verification_code_record.txt';
