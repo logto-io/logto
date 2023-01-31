@@ -1,8 +1,8 @@
 const roles = {
   title: 'Roles', // UNTRANSLATED
   subtitle:
-    'Roles include permissions that determine what a user can do. RBAC uses roles to give users access to resources and actions.', // UNTRANSLATED
-  create: 'Add Roles', // UNTRANSLATED
+    'Roles include permissions that determine what a user can do. RBAC uses roles to give users access to resources for specific actions.', // UNTRANSLATED
+  create: 'Create Role', // UNTRANSLATED
   role_name: 'Role', // UNTRANSLATED
   role_description: 'Description', // UNTRANSLATED
   role_name_placeholder: 'Enter your role name', // UNTRANSLATED
@@ -11,7 +11,7 @@ const roles = {
   assign_permissions: 'Assign permissions', // UNTRANSLATED
   create_role_title: 'Create a role', // UNTRANSLATED
   create_role_description:
-    'Create and manage Roles for your applications. Roles contain collections of Permissions and can be assigned to Users.', // UNTRANSLATED
+    'Create and manage roles for your applications. Roles contain collections of permissions and can be assigned to users.', // UNTRANSLATED
   create_role_button: 'Create role', // UNTRANSLATED
   role_created: 'The role {{name}} has been successfully created!', // UNTRANSLATED
   search: 'Search by role name, description or ID', // UNTRANSLATED

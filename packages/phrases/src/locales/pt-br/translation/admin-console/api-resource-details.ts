@@ -1,7 +1,7 @@
 const api_resource_details = {
   back_to_api_resources: 'Voltar para os recursos da API',
   settings_tab: 'Settings', // UNTRANSLATED
-  permission_tab: 'Permission', // UNTRANSLATED
+  permissions_tab: 'Permissions', // UNTRANSLATED
   settings: 'Configurações',
   settings_description:
     'Os recursos da API, também conhecidos como Indicadores de recursos, indicam os serviços ou recursos de destino a serem solicitados, geralmente uma variável de formato de URI que representa a identidade do recurso.',
@@ -17,7 +17,7 @@ const api_resource_details = {
     create_subtitle: 'Define the permissions (scopes) needed by this API.', // UNTRANSLATED
     confirm_create: 'Create permission', // UNTRANSLATED
     name: 'Permission name', // UNTRANSLATED
-    name_placeholder: 'Read:Resources', // UNTRANSLATED
+    name_placeholder: 'read:resource', // UNTRANSLATED
     forbidden_space_in_name: 'The permission name must not contain any spaces.', // UNTRANSLATED
     description: 'Description', // UNTRANSLATED
     description_placeholder: 'Able to read the resources', // UNTRANSLATED

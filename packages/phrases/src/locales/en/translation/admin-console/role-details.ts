@@ -13,14 +13,16 @@ const role_details = {
   field_name: 'Name', // UNTRANSLATED
   field_description: 'Description', // UNTRANSLATED
   permission: {
-    assign_button: 'Assign Permission',
-    assign_title: 'Assign permission',
+    assign_button: 'Assign Permissions',
+    assign_title: 'Assign permissions',
     assign_subtitle:
       'Assign permissions to this role. The role will gain the added permissions, and users with this role will inherit these permissions.',
-    assign_form_filed: 'Assign permissions',
-    added_text: '{{value, number}} permissions added',
-    api_permission_count: '{{value, number}} permissions',
-    confirm_assign: 'Assign Permission',
+    assign_form_field: 'Assign permissions',
+    added_text_one: '{{count, number}} permission added',
+    added_text_other: '{{count, number}} permissions added',
+    api_permission_count_one: '{{count, number}} permission',
+    api_permission_count_other: '{{count, number}} permissions',
+    confirm_assign: 'Assign Permissions',
     permission_assigned: 'The selected permissions were successfully assigned to this role!',
     deletion_description:
       'If this permission is removed, the affected user with this role will lose the access granted by this permission.',

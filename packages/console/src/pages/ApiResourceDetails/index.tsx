@@ -127,7 +127,7 @@ const ApiResourceDetails = () => {
               {t('api_resource_details.settings_tab')}
             </TabNavItem>
             <TabNavItem href={`/api-resources/${data.id}/${ApiResourceDetailsTabs.Permissions}`}>
-              {t('api_resource_details.permission_tab')}
+              {t('api_resource_details.permissions_tab')}
             </TabNavItem>
           </TabNav>
           <Outlet

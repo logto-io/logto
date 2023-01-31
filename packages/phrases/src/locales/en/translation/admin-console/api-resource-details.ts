@@ -1,7 +1,7 @@
 const api_resource_details = {
   back_to_api_resources: 'Back to API resources',
   settings_tab: 'Settings',
-  permission_tab: 'Permission',
+  permissions_tab: 'Permissions',
   settings: 'Settings',
   settings_description:
     'API resources, a.k.a. Resource Indicators, indicate the target services or resources to be requested, usually, a URI format variable representing the resource‘s identity.',
@@ -17,7 +17,7 @@ const api_resource_details = {
     create_subtitle: 'Define the permissions (scopes) needed by this API.',
     confirm_create: 'Create permission',
     name: 'Permission name',
-    name_placeholder: 'Read:Resources',
+    name_placeholder: 'read:resource',
     forbidden_space_in_name: 'The permission name must not contain any spaces.',
     description: 'Description',
     description_placeholder: 'Able to read the resources',

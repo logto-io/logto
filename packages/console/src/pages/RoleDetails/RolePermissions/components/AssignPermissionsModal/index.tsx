@@ -69,7 +69,7 @@ const AssignPermissionsModal = ({ roleId, onClose }: Props) => {
         }
         onClose={onClose}
       >
-        <FormField title="role_details.permission.assign_form_filed">
+        <FormField title="role_details.permission.assign_form_field">
           <RoleScopesTransfer
             roleId={roleId}
             value={scopes}
