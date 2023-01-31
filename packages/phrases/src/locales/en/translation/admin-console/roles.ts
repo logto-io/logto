@@ -9,10 +9,10 @@ const roles = {
   role_description_placeholder: 'Enter your role description',
   assigned_users: 'Assigned users',
   assign_permissions: 'Assign permissions',
-  create_role_title: 'Create a role',
+  create_role_title: 'Create Role',
   create_role_description:
     'Create and manage roles for your applications. Roles contain collections of permissions and can be assigned to users.',
-  create_role_button: 'Create role',
+  create_role_button: 'Create Role',
   role_created: 'The role {{name}} has been successfully created!', // UNTRANSLATED
   search: 'Search by role name, description or ID',
 };
