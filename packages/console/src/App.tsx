@@ -111,10 +111,9 @@ const Main = () => {
                   <Route index element={<Navigate replace to={UserDetailsTabs.Settings} />} />
                   <Route path={UserDetailsTabs.Settings} element={<UserSettings />} />
                   <Route path={UserDetailsTabs.Roles} element={<UserRoles />} />
-                  <Route path={UserDetailsTabs.Logs} element={<UserLogs />}>
-                    <Route path=":logId" element={<AuditLogDetails />} />
-                  </Route>
+                  <Route path={UserDetailsTabs.Logs} element={<UserLogs />} />
                 </Route>
+                <Route path={`:id/${UserDetailsTabs.Logs}/:logId`} element={<AuditLogDetails />} />
               </Route>
               <Route path="audit-logs">
                 <Route index element={<AuditLogs />} />
