@@ -19,10 +19,12 @@ const doesTableExist = async (pool: CommonQueryMethods, table: string) => {
 export const doesSystemsTableExist = async (pool: CommonQueryMethods) =>
   doesTableExist(pool, Systems.table);
 
+const legacyLogtoConfigsTable = '_logto_configs';
+
 const getAlterationStateTable = async (pool: CommonQueryMethods) =>
   (await doesSystemsTableExist(pool))
     ? sql.identifier([Systems.table])
-    : sql.identifier(['_logto_configs']); // Fall back to the old config table
+    : sql.identifier([legacyLogtoConfigsTable]); // Fall back to the old config table
 
 export const getCurrentDatabaseAlterationTimestamp = async (pool: CommonQueryMethods) => {
   const table = await getAlterationStateTable(pool);
