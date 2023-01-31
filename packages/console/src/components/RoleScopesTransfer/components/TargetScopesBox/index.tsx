@@ -18,7 +18,7 @@ const TargetScopesBox = ({ selectedScopes, onChange }: Props) => {
     <div className={transferLayout.box}>
       <div className={transferLayout.boxTopBar}>
         <span className={styles.added}>
-          {t('role_details.permission.added_text', { value: selectedScopes.length })}
+          {t('role_details.permission.added_text', { count: selectedScopes.length })}
         </span>
       </div>
       <div className={transferLayout.boxContent}>

@@ -1,7 +1,7 @@
 const api_resource_details = {
   back_to_api_resources: 'API 리소스로 돌아가기',
   settings_tab: 'Settings', // UNTRANSLATED
-  permission_tab: 'Permission', // UNTRANSLATED
+  permissions_tab: 'Permissions', // UNTRANSLATED
   settings: '설정',
   settings_description:
     'API 리소스(리소스 표시기) - 요청할 대상 서비스 또는 리소스(일반적으로 리소스의 ID를 나타내는 URI 형식 변수)를 나타냅니다.',
@@ -17,7 +17,7 @@ const api_resource_details = {
     create_subtitle: 'Define the permissions (scopes) needed by this API.', // UNTRANSLATED
     confirm_create: 'Create permission', // UNTRANSLATED
     name: 'Permission name', // UNTRANSLATED
-    name_placeholder: 'Read:Resources', // UNTRANSLATED
+    name_placeholder: 'read:resource', // UNTRANSLATED
     forbidden_space_in_name: 'The permission name must not contain any spaces.', // UNTRANSLATED
     description: 'Description', // UNTRANSLATED
     description_placeholder: 'Able to read the resources', // UNTRANSLATED

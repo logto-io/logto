@@ -53,7 +53,7 @@ const ResourceItem = ({ resource, selectedScopes, onSelectResource, onSelectScop
           </IconButton>
           <div className={styles.name}>{name}</div>
           <div className={styles.scopeInfo}>
-            ({t('role_details.permission.api_permission_count', { value: scopes.length })})
+            ({t('role_details.permission.api_permission_count', { count: scopes.length })})
           </div>
         </div>
       </div>
