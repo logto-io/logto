@@ -8,7 +8,7 @@ import { createPoolFromConfig } from '../../../database.js';
 import {
   getCurrentDatabaseAlterationTimestamp,
   updateDatabaseTimestamp,
-} from '../../../queries/logto-config.js';
+} from '../../../queries/system.js';
 import { log } from '../../../utilities.js';
 import type { AlterationFile } from './type.js';
 import { getAlterationFiles, getTimestampFromFilename } from './utils.js';

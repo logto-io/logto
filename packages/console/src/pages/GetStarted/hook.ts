@@ -19,8 +19,8 @@ import SocialDark from '@/assets/images/social-dark.svg';
 import Social from '@/assets/images/social.svg';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import { RequestError } from '@/hooks/use-api';
+import useConfigs from '@/hooks/use-configs';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import useSettings from '@/hooks/use-settings';
 import { useTheme } from '@/hooks/use-theme';
 
 type GetStartedMetadata = {
@@ -36,7 +36,7 @@ type GetStartedMetadata = {
 
 const useGetStartedMetadata = () => {
   const documentationUrl = useDocumentationUrl();
-  const { settings, updateSettings } = useSettings();
+  const { configs, updateConfigs } = useConfigs();
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
   const { data: demoApp, error } = useSWR<Application, RequestError>(
@@ -63,10 +63,10 @@ const useGetStartedMetadata = () => {
         subtitle: 'get_started.card1_subtitle',
         icon: isLightMode ? CheckDemo : CheckDemoDark,
         buttonText: 'general.check_out',
-        isComplete: settings?.demoChecked,
+        isComplete: configs?.demoChecked,
         isHidden: hideDemo,
         onClick: async () => {
-          void updateSettings({ demoChecked: true });
+          void updateConfigs({ demoChecked: true });
           window.open('/demo-app', '_blank');
         },
       },
@@ -76,7 +76,7 @@ const useGetStartedMetadata = () => {
         subtitle: 'get_started.card2_subtitle',
         icon: isLightMode ? CreateApp : CreateAppDark,
         buttonText: 'general.create',
-        isComplete: settings?.applicationCreated,
+        isComplete: configs?.applicationCreated,
         onClick: () => {
           navigate('/applications/create');
         },
@@ -87,7 +87,7 @@ const useGetStartedMetadata = () => {
         subtitle: 'get_started.card3_subtitle',
         icon: isLightMode ? Customize : CustomizeDark,
         buttonText: 'general.customize',
-        isComplete: settings?.signInExperienceCustomized,
+        isComplete: configs?.signInExperienceCustomized,
         onClick: () => {
           navigate('/sign-in-experience');
         },
@@ -98,7 +98,7 @@ const useGetStartedMetadata = () => {
         subtitle: 'get_started.card4_subtitle',
         icon: isLightMode ? Passwordless : PasswordlessDark,
         buttonText: 'general.set_up',
-        isComplete: settings?.passwordlessConfigured,
+        isComplete: configs?.passwordlessConfigured,
         onClick: () => {
           navigate(`/connectors/${ConnectorsTabs.Passwordless}`);
         },
@@ -109,7 +109,7 @@ const useGetStartedMetadata = () => {
         subtitle: 'get_started.card5_subtitle',
         icon: isLightMode ? Social : SocialDark,
         buttonText: 'general.add',
-        isComplete: settings?.socialSignInConfigured,
+        isComplete: configs?.socialSignInConfigured,
         onClick: () => {
           navigate(`/connectors/${ConnectorsTabs.Social}`);
         },
@@ -120,9 +120,9 @@ const useGetStartedMetadata = () => {
         subtitle: 'get_started.card6_subtitle',
         icon: isLightMode ? FurtherReadings : FurtherReadingsDark,
         buttonText: 'general.check_out',
-        isComplete: settings?.furtherReadingsChecked,
+        isComplete: configs?.furtherReadingsChecked,
         onClick: () => {
-          void updateSettings({ furtherReadingsChecked: true });
+          void updateConfigs({ furtherReadingsChecked: true });
           window.open(`${documentationUrl}/docs/tutorials/get-started/further-readings/`, '_blank');
         },
       },
@@ -134,13 +134,13 @@ const useGetStartedMetadata = () => {
     hideDemo,
     isLightMode,
     navigate,
-    settings?.applicationCreated,
-    settings?.demoChecked,
-    settings?.furtherReadingsChecked,
-    settings?.passwordlessConfigured,
-    settings?.signInExperienceCustomized,
-    settings?.socialSignInConfigured,
-    updateSettings,
+    configs?.applicationCreated,
+    configs?.demoChecked,
+    configs?.furtherReadingsChecked,
+    configs?.passwordlessConfigured,
+    configs?.signInExperienceCustomized,
+    configs?.socialSignInConfigured,
+    updateConfigs,
   ]);
 
   return {

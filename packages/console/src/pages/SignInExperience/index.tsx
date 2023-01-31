@@ -15,7 +15,7 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { SignInExperiencePage } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import useSettings from '@/hooks/use-settings';
+import useConfigs from '@/hooks/use-configs';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
 import Preview from './components/Preview';
@@ -40,7 +40,7 @@ const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
-  const { settings, error: settingsError, updateSettings, mutate: mutateSettings } = useSettings();
+  const { configs, error: configsError, updateConfigs, mutate: mutateConfigs } = useConfigs();
   const { error: languageError, isLoading: isLoadingLanguages } = useUiLanguages();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
 
@@ -79,7 +79,7 @@ const SignInExperience = () => {
       .json<SignInExperienceType>();
     void mutate(updatedData);
     setDataToCompare(undefined);
-    await updateSettings({ signInExperienceCustomized: true });
+    await updateConfigs({ signInExperienceCustomized: true });
     toast.success(t('general.saved'));
   };
 
@@ -100,23 +100,23 @@ const SignInExperience = () => {
     await saveData();
   });
 
-  if ((!settings && !settingsError) || (!data && !error) || isLoadingLanguages) {
+  if ((!configs && !configsError) || (!data && !error) || isLoadingLanguages) {
     return <Skeleton />;
   }
 
-  if (!settings && settingsError) {
-    return <div>{settingsError.body?.message ?? settingsError.message}</div>;
+  if (!configs && configsError) {
+    return <div>{configsError.body?.message ?? configsError.message}</div>;
   }
 
   if (languageError) {
     return <div>{languageError.body?.message ?? languageError.message}</div>;
   }
 
-  if (!settings?.signInExperienceCustomized) {
+  if (!configs?.signInExperienceCustomized) {
     return (
       <Welcome
         mutate={() => {
-          void mutateSettings();
+          void mutateConfigs();
           void mutate();
         }}
       />

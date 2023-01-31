@@ -7,8 +7,8 @@ import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
 import SessionExpired from '@/components/SessionExpired';
+import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
-import useSettings from '@/hooks/use-settings';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 import Sidebar, { getPath } from './components/Sidebar';
@@ -20,8 +20,8 @@ const AppContent = () => {
   const { isAuthenticated, isLoading: isLogtoLoading, error, signIn } = useLogto();
   const href = useHref('/callback');
   const { isLoading: isPreferencesLoading } = useUserPreferences();
-  const { isLoading: isSettingsLoading } = useSettings();
-  const isLoading = isPreferencesLoading || isSettingsLoading;
+  const { isLoading: isConfigsLoading } = useConfigs();
+  const isLoading = isPreferencesLoading || isConfigsLoading;
 
   const location = useLocation();
   const navigate = useNavigate();

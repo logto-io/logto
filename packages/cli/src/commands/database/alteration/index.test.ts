@@ -22,7 +22,7 @@ await mockEsmWithActual('./utils.js', () => ({
 }));
 
 const { getCurrentDatabaseAlterationTimestamp } = await mockEsmWithActual(
-  '../../../queries/logto-config.js',
+  '../../../queries/system.js',
   () => ({
     getCurrentDatabaseAlterationTimestamp: jest.fn(),
   })

@@ -1,10 +1,10 @@
-import type { AlterationState, LogtoConfig, LogtoConfigKey } from '@logto/schemas';
-import { logtoConfigGuards, LogtoConfigs, AlterationStateKey } from '@logto/schemas';
+import type { LogtoConfig, LogtoConfigKey, logtoConfigGuards } from '@logto/schemas';
+import { LogtoConfigs } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
-import type { CommonQueryMethods, DatabaseTransactionConnection } from 'slonik';
+import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
@@ -31,39 +31,7 @@ export const updateValueByKey = async <T extends LogtoConfigKey>(
     sql`
       insert into ${table} (${fields.key}, ${fields.value}) 
         values (${key}, ${sql.jsonb(value)})
-        on conflict (${fields.key}) do update set ${fields.value}=excluded.${fields.value}
+        on conflict (${fields.tenantId}, ${fields.key})
+          do update set ${fields.value}=excluded.${fields.value}
     `
   );
-
-export const getCurrentDatabaseAlterationTimestamp = async (pool: CommonQueryMethods) => {
-  try {
-    const result = await pool.maybeOne<LogtoConfig>(
-      sql`select * from ${table} where ${fields.key}=${AlterationStateKey.AlterationState}`
-    );
-    const parsed = logtoConfigGuards[AlterationStateKey.AlterationState].safeParse(result?.value);
-
-    return (parsed.success && parsed.data.timestamp) || 0;
-  } catch (error: unknown) {
-    const result = z.object({ code: z.string() }).safeParse(error);
-
-    // Relation does not exist, treat as 0
-    // https://www.postgresql.org/docs/14/errcodes-appendix.html
-    if (result.success && result.data.code === '42P01') {
-      return 0;
-    }
-
-    throw error;
-  }
-};
-
-export const updateDatabaseTimestamp = async (
-  connection: DatabaseTransactionConnection,
-  timestamp: number
-) => {
-  const value: AlterationState = {
-    timestamp,
-    updatedAt: new Date().toISOString(),
-  };
-
-  return updateValueByKey(connection, AlterationStateKey.AlterationState, value);
-};

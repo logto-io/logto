@@ -11,7 +11,7 @@ import ModalLayout from '@/components/ModalLayout';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
-import useSettings from '@/hooks/use-settings';
+import useConfigs from '@/hooks/use-configs';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
@@ -30,7 +30,7 @@ type Props = {
 };
 
 const CreateForm = ({ onClose }: Props) => {
-  const { updateSettings } = useSettings();
+  const { updateConfigs } = useConfigs();
   const [createdApp, setCreatedApp] = useState<Application>();
   const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
   const {
@@ -58,7 +58,7 @@ const CreateForm = ({ onClose }: Props) => {
     const createdApp = await api.post('/api/applications', { json: data }).json<Application>();
     setCreatedApp(createdApp);
     setIsGetStartedModalOpen(true);
-    void updateSettings({ applicationCreated: true });
+    void updateConfigs({ applicationCreated: true });
   });
 
   return (
