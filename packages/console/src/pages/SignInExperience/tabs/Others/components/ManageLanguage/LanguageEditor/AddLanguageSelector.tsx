@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Plus from '@/assets/images/plus.svg';
 import SearchIcon from '@/assets/images/search.svg';
 import Button from '@/components/Button';
+import OverlayScrollbar from '@/components/OverlayScrollbar';
 import TextInput from '@/components/TextInput';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
@@ -89,9 +90,9 @@ const AddLanguageSelector = ({ options, onSelect }: Props) => {
         )}
       </div>
       {isDropDownOpen && filteredOptions.length > 0 && (
-        <ul className={style.dropDown}>
+        <OverlayScrollbar className={style.dropDown}>
           {filteredOptions.map((languageTag) => (
-            <li
+            <div
               key={languageTag}
               role="tab"
               tabIndex={0}
@@ -105,9 +106,9 @@ const AddLanguageSelector = ({ options, onSelect }: Props) => {
             >
               <div className={style.languageName}>{uiLanguageNameMapping[languageTag]}</div>
               <div className={style.languageTag}>{languageTag}</div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </OverlayScrollbar>
       )}
     </div>
   );
