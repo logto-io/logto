@@ -8,7 +8,10 @@ import {
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
+import 'overlayscrollbars/styles/overlayscrollbars.css';
 import './scss/normalized.scss';
+import './scss/overlayscrollbars.scss';
+
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
 import AppBoundary from '@/components/AppBoundary';

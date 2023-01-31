@@ -1,0 +1,21 @@
+/* stylelint-disable selector-class-pattern */
+.os-scrollbar {
+  &.os-theme-dark,
+  &.os-theme-light {
+    &.os-scrollbar-vertical {
+      width: 12px;
+
+      > .os-scrollbar-track {
+        > .os-scrollbar-handle {
+          background: var(--color-neutral-variant-80);
+          min-height: 40px;
+
+          &:hover {
+            background: var(--color-neutral-variant-80);
+          }
+        }
+      }
+    }
+  }
+}
+/* stylelint-enable selector-class-pattern */
