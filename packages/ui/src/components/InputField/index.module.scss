@@ -27,7 +27,7 @@
     }
 
     &:not(:last-child) {
-      padding-right: 40px;
+      padding-right: _.unit(10);
     }
   }
 
@@ -41,7 +41,7 @@
     display: none;
 
     &.visible {
-      display: 'flex';
+      display: flex;
     }
   }
 

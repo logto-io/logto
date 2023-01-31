@@ -32,7 +32,7 @@ const TogglePassword = ({ isChecked, onChange }: Props) => {
         ' ': toggle,
       })}
     >
-      <Checkbox name="toggle-password" checked={isChecked} className={styles.checkBox} />
+      <Checkbox name="toggle-password" checked={isChecked} className={styles.checkbox} />
       <div>{t('action.show_password')}</div>
     </div>
   );

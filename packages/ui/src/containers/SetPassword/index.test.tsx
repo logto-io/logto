@@ -20,7 +20,7 @@ describe('<SetPassword />', () => {
     expect(queryByText('action.save_password')).not.toBeNull();
   });
 
-  test('password are required', async () => {
+  test('password is required', async () => {
     const { queryByText, getByText } = render(
       <SetPassword clearErrorMessage={clearError} onSubmit={submit} />
     );

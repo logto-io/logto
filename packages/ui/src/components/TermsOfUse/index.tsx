@@ -40,7 +40,7 @@ const TermsOfUse = ({ name, className, termsUrl, isChecked, onChange, onTermsCli
         ' ': toggle,
       })}
     >
-      <Checkbox name={name} checked={isChecked} className={styles.checkBox} />
+      <Checkbox name={name} checked={isChecked} className={styles.checkbox} />
       <div className={styles.content}>
         {prefix}
         <TextLink
