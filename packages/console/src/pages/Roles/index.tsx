@@ -12,7 +12,7 @@ import Search from '@/components/Search';
 import Table from '@/components/Table';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
-import useSearchParameters from '@/hooks/use-search-parameters';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as pageStyles from '@/scss/resources.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utilities/url';
 
@@ -32,7 +32,7 @@ const Roles = () => {
   const navigate = useNavigate();
   const isOnCreatePage = pathname === createRolePathname;
 
-  const [{ page, keyword }, updateSearchParameters] = useSearchParameters({
+  const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
     keyword: '',
   });

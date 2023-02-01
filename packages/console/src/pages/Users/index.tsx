@@ -16,7 +16,7 @@ import UserAvatar from '@/components/UserAvatar';
 import { defaultPageSize } from '@/consts';
 import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
-import useSearchParameters from '@/hooks/use-search-parameters';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utilities/url';
 
@@ -33,7 +33,7 @@ const Users = () => {
   const isCreateNew = pathname === createUserPathname;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const [{ page, keyword }, updateSearchParameters] = useSearchParameters({
+  const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
     keyword: '',
   });

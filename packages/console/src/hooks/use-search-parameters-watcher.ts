@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 
 type Parameters = Record<string, string | number>;
 
-type UseSearchParametersReturn<T extends Parameters = Parameters> = [
+type UseSearchParametersWatcherReturn<T extends Parameters = Parameters> = [
   {
     [K in keyof T]: T[K];
   },
@@ -12,12 +12,14 @@ type UseSearchParametersReturn<T extends Parameters = Parameters> = [
 ];
 
 /**
- * Manage search parameters
+ * Watch search parameters
  *
  * @param config Define search parameter keys and their default value. E.g., `{ page: 1, keyword: '' }`
  * @returns [searchParams, updateSearchParams]
  */
-const useSearchParameters = <T extends Parameters>(config: T): UseSearchParametersReturn<T> => {
+const useSearchParametersWatcher = <T extends Parameters>(
+  config: T
+): UseSearchParametersWatcherReturn<T> => {
   const [searchParameters, setSearchParameters] = useSearchParams();
 
   const updateSearchParameters = useCallback(
@@ -52,9 +54,9 @@ const useSearchParameters = <T extends Parameters>(config: T): UseSearchParamete
 
         return [parameterKey, parameterValue];
       })
-    ) as UseSearchParametersReturn<T>[0],
+    ) as UseSearchParametersWatcherReturn<T>[0],
     updateSearchParameters,
   ];
 };
 
-export default useSearchParameters;
+export default useSearchParametersWatcher;

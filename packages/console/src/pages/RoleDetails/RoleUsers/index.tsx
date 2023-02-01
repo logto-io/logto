@@ -21,7 +21,7 @@ import UserAvatar from '@/components/UserAvatar';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import useSearchParameters from '@/hooks/use-search-parameters';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utilities/url';
 
 import type { RoleDetailsOutletContext } from '../types';
@@ -37,7 +37,7 @@ const RoleUsers = () => {
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const [{ page, keyword }, updateSearchParameters] = useSearchParameters({
+  const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
     keyword: '',
   });

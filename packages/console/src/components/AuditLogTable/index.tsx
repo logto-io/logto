@@ -9,7 +9,7 @@ import ApplicationName from '@/components/ApplicationName';
 import UserName from '@/components/UserName';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
-import useSearchParameters from '@/hooks/use-search-parameters';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl } from '@/utilities/url';
 
 import Table from '../Table';
@@ -28,7 +28,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
   const pageSize = defaultPageSize;
-  const [{ page, event, applicationId }, updateSearchParameters] = useSearchParameters({
+  const [{ page, event, applicationId }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
     event: '',
     applicationId: '',

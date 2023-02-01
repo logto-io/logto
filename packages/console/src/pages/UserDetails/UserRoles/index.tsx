@@ -18,7 +18,7 @@ import { Tooltip } from '@/components/Tip';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import useSearchParameters from '@/hooks/use-search-parameters';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utilities/url';
 
 import type { UserDetailsOutletContext } from '../types';
@@ -33,7 +33,7 @@ const UserRoles = () => {
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const [{ page, keyword }, updateSearchParameters] = useSearchParameters({
+  const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
     keyword: '',
   });

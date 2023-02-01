@@ -18,7 +18,7 @@ import Table from '@/components/Table';
 import { defaultPageSize } from '@/consts';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
-import useSearchParameters from '@/hooks/use-search-parameters';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
@@ -38,7 +38,7 @@ const ApiResources = () => {
   const isCreateNew = pathname.endsWith('/create');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const [{ page }, updateSearchParameters] = useSearchParameters({
+  const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
 
