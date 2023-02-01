@@ -18,14 +18,17 @@ import Search from '@/components/Search';
 import Table from '@/components/Table';
 import { Tooltip } from '@/components/Tip';
 import UserAvatar from '@/components/UserAvatar';
+import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import useTableSearchParams, { formatKeyword } from '@/hooks/use-table-search-params';
-import { buildUrl } from '@/utilities/url';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import { buildUrl, formatSearchKeyword } from '@/utilities/url';
 
 import type { RoleDetailsOutletContext } from '../types';
 import AssignUsersModal from './components/AssignUsersModal';
 import * as styles from './index.module.scss';
+
+const pageSize = defaultPageSize;
 
 const RoleUsers = () => {
   const {
@@ -34,17 +37,17 @@ const RoleUsers = () => {
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const {
-    pagination: { pageIndex, pageSize, setPageIndex },
-    search: { keyword, setKeyword },
-  } = useTableSearchParams();
+  const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
+    page: 1,
+    keyword: '',
+  });
 
   const { data, error, mutate } = useSWR<[User[], number], RequestError>(
     roleId &&
       buildUrl(`/api/roles/${roleId}/users`, {
-        page: String(pageIndex),
+        page: String(page),
         page_size: String(pageSize),
-        ...conditional(keyword && { search: formatKeyword(keyword) }),
+        ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
       })
   );
 
@@ -132,13 +135,11 @@ const RoleUsers = () => {
               defaultValue={keyword}
               isClearable={Boolean(keyword)}
               placeholder={t('general.search_placeholder')}
-              onSearch={(value) => {
-                setKeyword(value);
-                setPageIndex(1);
+              onSearch={(keyword) => {
+                updateSearchParameters({ keyword, page: 1 });
               }}
               onClearSearch={() => {
-                setKeyword('');
-                setPageIndex(1);
+                updateSearchParameters({ keyword: '', page: 1 });
               }}
             />
             <Button
@@ -153,10 +154,12 @@ const RoleUsers = () => {
           </div>
         }
         pagination={{
-          pageIndex,
+          page,
           pageSize,
           totalCount,
-          onChange: setPageIndex,
+          onChange: (page) => {
+            updateSearchParameters({ page });
+          },
         }}
         placeholder={{
           content: (

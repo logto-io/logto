@@ -2,7 +2,7 @@ import type { Application } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
@@ -13,7 +13,9 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
+import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
@@ -22,22 +24,23 @@ import { buildUrl } from '@/utilities/url';
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
-const pageSize = 20;
-
+const pageSize = defaultPageSize;
 const applicationsPathname = '/applications';
 const createApplicationPathname = `${applicationsPathname}/create`;
 const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
 
 const Applications = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const isCreateNew = pathname === createApplicationPathname;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [query, setQuery] = useSearchParams();
-  const search = query.toString();
-  const pageIndex = Number(query.get('page') ?? '1');
+
+  const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
+    page: 1,
+  });
+
   const url = buildUrl('/api/applications', {
-    page: String(pageIndex),
+    page: String(page),
     page_size: String(pageSize),
   });
 
@@ -137,12 +140,12 @@ const Applications = () => {
         onRetry={async () => mutate(undefined, true)}
       />
       <Pagination
-        pageIndex={pageIndex}
+        page={page}
         totalCount={totalCount}
         pageSize={pageSize}
         className={styles.pagination}
         onChange={(page) => {
-          setQuery({ page: String(page) });
+          updateSearchParameters({ page });
         }}
       />
     </div>

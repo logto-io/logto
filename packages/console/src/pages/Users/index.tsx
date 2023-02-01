@@ -13,15 +13,17 @@ import ItemPreview from '@/components/ItemPreview';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
 import UserAvatar from '@/components/UserAvatar';
+import { defaultPageSize } from '@/consts';
 import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
-import useTableSearchParams from '@/hooks/use-table-search-params';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import { buildUrl } from '@/utilities/url';
+import { buildUrl, formatSearchKeyword } from '@/utilities/url';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
+const pageSize = defaultPageSize;
 const usersPathname = '/users';
 const createUserPathname = `${usersPathname}/create`;
 const buildDetailsPathname = (id: string) => `${usersPathname}/${id}/${UserDetailsTabs.Settings}`;
@@ -30,16 +32,17 @@ const Users = () => {
   const { pathname, search } = useLocation();
   const isCreateNew = pathname === createUserPathname;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const {
-    pagination: { pageIndex, pageSize, setPageIndex },
-    search: { keyword, setKeyword },
-  } = useTableSearchParams();
+
+  const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
+    page: 1,
+    keyword: '',
+  });
 
   const url = buildUrl('/api/users', {
     hideAdminUser: String(true),
-    page: String(pageIndex),
+    page: String(page),
     page_size: String(pageSize),
-    ...conditional(keyword && { search: `%${keyword}%` }),
+    ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
   });
 
   const { data, error, mutate } = useSWR<[User[], number], RequestError>(url);
@@ -115,13 +118,11 @@ const Users = () => {
             placeholder={t('users.search')}
             defaultValue={keyword}
             isClearable={Boolean(keyword)}
-            onSearch={(value) => {
-              setKeyword(value);
-              setPageIndex(1);
+            onSearch={(keyword) => {
+              updateSearchParameters({ keyword, page: 1 });
             }}
             onClearSearch={() => {
-              setKeyword('');
-              setPageIndex(1);
+              updateSearchParameters({ keyword: '', page: 1 });
             }}
           />
         }
@@ -143,10 +144,12 @@ const Users = () => {
           navigate(buildDetailsPathname(id));
         }}
         pagination={{
-          pageIndex,
+          page,
           pageSize,
           totalCount,
-          onChange: setPageIndex,
+          onChange: (page) => {
+            updateSearchParameters({ page });
+          },
         }}
         onRetry={async () => mutate(undefined, true)}
       />

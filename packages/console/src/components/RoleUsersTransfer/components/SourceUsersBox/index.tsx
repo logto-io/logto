@@ -13,9 +13,8 @@ import TextInput from '@/components/TextInput';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useDebounce from '@/hooks/use-debounce';
-import { formatKeyword } from '@/hooks/use-table-search-params';
 import * as transferLayout from '@/scss/transfer.module.scss';
-import { buildUrl } from '@/utilities/url';
+import { buildUrl, formatSearchKeyword } from '@/utilities/url';
 
 import SourceUserItem from '../SourceUserItem';
 import * as styles from './index.module.scss';
@@ -26,20 +25,21 @@ type Props = {
   selectedUsers: User[];
 };
 
+const pageSize = defaultPageSize;
 const searchDelay = 500;
 
 const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [pageIndex, setPageIndex] = useState(1);
+  const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const debounce = useDebounce();
 
   const url = buildUrl('/api/users', {
     excludeRoleId: roleId,
     hideAdminUser: String(true),
-    page: String(pageIndex),
-    page_size: String(defaultPageSize),
-    ...conditional(keyword && { search: formatKeyword(keyword) }),
+    page: String(page),
+    page_size: String(pageSize),
+    ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
   });
 
   const { data, error } = useSWR<[User[], number], RequestError>(url);
@@ -50,7 +50,7 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
 
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
     debounce(() => {
-      setPageIndex(1);
+      setPage(1);
       setKeyword(event.target.value);
     }, searchDelay);
   };
@@ -97,12 +97,12 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
       </div>
       <Pagination
         mode="pico"
-        pageIndex={pageIndex}
+        page={page}
         totalCount={totalCount}
-        pageSize={defaultPageSize}
+        pageSize={pageSize}
         className={transferLayout.boxPagination}
         onChange={(page) => {
-          setPageIndex(page);
+          setPage(page);
         }}
       />
     </div>

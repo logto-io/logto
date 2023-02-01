@@ -10,6 +10,7 @@ import Search from '@/assets/images/search.svg';
 import DataEmpty from '@/components/DataEmpty';
 import Pagination from '@/components/Pagination';
 import TextInput from '@/components/TextInput';
+import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useDebounce from '@/hooks/use-debounce';
 import * as transferLayout from '@/scss/transfer.module.scss';
@@ -24,20 +25,20 @@ type Props = {
   onChange: (value: RoleResponse[]) => void;
 };
 
-const pageSize = 20;
+const pageSize = defaultPageSize;
 const searchDelay = 500;
 
 const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const [pageIndex, setPageIndex] = useState(1);
+  const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
 
   const debounce = useDebounce();
 
   const url = buildUrl('/api/roles', {
     excludeUserId: userId,
-    page: String(pageIndex),
+    page: String(page),
     page_size: String(pageSize),
     ...conditional(keyword && { search: `%${keyword}%` }),
   });
@@ -53,7 +54,7 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
 
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
     debounce(() => {
-      setPageIndex(1);
+      setPage(1);
       setKeyword(event.target.value);
     }, searchDelay);
   };
@@ -98,12 +99,12 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
       </div>
       <Pagination
         mode="pico"
-        pageIndex={pageIndex}
+        page={page}
         totalCount={totalCount}
         pageSize={pageSize}
         className={transferLayout.boxPagination}
         onChange={(page) => {
-          setPageIndex(page);
+          setPage(page);
         }}
       />
     </div>
