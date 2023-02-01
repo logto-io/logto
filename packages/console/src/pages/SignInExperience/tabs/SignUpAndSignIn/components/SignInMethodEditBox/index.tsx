@@ -145,7 +145,7 @@ const SignInMethodEditBox = () => {
           append({
             identifier,
             password: getSignInMethodPasswordCheckState(identifier, isSignUpPasswordRequired),
-            verificationCode: getSignInMethodVerificationCodeCheckState(identifier),
+            verificationCode: getSignInMethodVerificationCodeCheckState(identifier, signUp, true),
             isPasswordPrimary: true,
           });
           revalidate();

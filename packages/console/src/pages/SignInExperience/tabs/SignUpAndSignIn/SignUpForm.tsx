@@ -35,11 +35,13 @@ const SignUpForm = () => {
   } = useFormContext<SignInExperienceForm>();
   const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
-  const { identifier: signUpIdentifier } = watch('signUp') ?? {};
+  const signUp = watch('signUp');
 
-  if (!signUpIdentifier) {
+  if (!signUp) {
     return null;
   }
+
+  const { identifier: signUpIdentifier } = signUp;
 
   const isUsernamePasswordSignUp = signUpIdentifier === SignUpIdentifier.Username;
 
@@ -64,9 +66,8 @@ const SignUpForm = () => {
   };
 
   const refreshSignInMethods = () => {
-    const signUpIdentifier = getValues('signUp.identifier');
     const signInMethods = getValues('signIn.methods');
-    const isSignUpPasswordRequired = getValues('signUp.password');
+    const { identifier: signUpIdentifier, password: isSignUpPasswordRequired } = signUp;
 
     // Note: append required sign-in methods according to the sign-up identifier config
     const requiredSignInIdentifiers = signUpIdentifiersMapping[signUpIdentifier];
@@ -80,7 +81,11 @@ const SignUpForm = () => {
         {
           identifier: requiredIdentifier,
           password: getSignInMethodPasswordCheckState(requiredIdentifier, isSignUpPasswordRequired),
-          verificationCode: getSignInMethodVerificationCodeCheckState(requiredIdentifier),
+          verificationCode: getSignInMethodVerificationCodeCheckState(
+            requiredIdentifier,
+            signUp,
+            true
+          ),
           isPasswordPrimary: true,
         },
       ];
@@ -90,7 +95,7 @@ const SignUpForm = () => {
       'signIn.methods',
       // Note: refresh sign-in authentications according to the sign-up authentications config
       allSignInMethods.map((method) => {
-        const { identifier, password } = method;
+        const { identifier, password, verificationCode } = method;
 
         return {
           ...method,
@@ -99,7 +104,11 @@ const SignUpForm = () => {
             isSignUpPasswordRequired,
             password
           ),
-          verificationCode: getSignInMethodVerificationCodeCheckState(identifier),
+          verificationCode: getSignInMethodVerificationCodeCheckState(
+            identifier,
+            signUp,
+            verificationCode
+          ),
         };
       })
     );
