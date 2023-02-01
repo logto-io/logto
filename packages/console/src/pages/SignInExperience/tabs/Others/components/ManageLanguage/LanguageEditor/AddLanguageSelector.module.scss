@@ -27,12 +27,10 @@
     overflow-y: auto;
     box-shadow: var(--shadow-2);
 
-
     .dropDownItem {
       width: 100%;
       border-radius: _.unit(2);
       padding: _.unit(2);
-      list-style: none;
       cursor: pointer;
       font: var(--font-body-medium);
 

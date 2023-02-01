@@ -55,7 +55,9 @@ describe('smoke testing', () => {
     // Try awaiting for 500ms before clicking sign-out button
     await page.waitForTimeout(500);
 
-    const signOutButton = await page.waitForSelector('.ReactModalPortal ul li');
+    const signOutButton = await page.waitForSelector(
+      '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownItem]'
+    );
     const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
     await signOutButton.click();
     await navigation;

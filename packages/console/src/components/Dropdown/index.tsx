@@ -7,6 +7,7 @@ import usePosition from '@/hooks/use-position';
 import type { HorizontalAlignment } from '@/types/positioning';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
+import OverlayScrollbar from '../OverlayScrollbar';
 import * as styles from './index.module.scss';
 
 export { default as DropdownItem } from './DropdownItem';
@@ -65,15 +66,15 @@ const Dropdown = ({
     >
       <div ref={overlayRef} className={styles.dropdownContainer}>
         {title && <div className={classNames(styles.title, titleClassName)}>{title}</div>}
-        <ul
-          className={classNames(styles.list, className)}
+        <OverlayScrollbar
+          className={className}
           role="menu"
           tabIndex={0}
           onClick={onClose}
           onKeyDown={onKeyDownHandler({ Enter: onClose, Esc: onClose })}
         >
           {children}
-        </ul>
+        </OverlayScrollbar>
       </div>
     </ReactModal>
   );

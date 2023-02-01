@@ -6,7 +6,7 @@ import { onKeyDownHandler } from '@/utilities/a11y';
 import * as styles from './DropdownItem.module.scss';
 
 type Props = {
-  onClick?: (event: MouseEvent<HTMLLIElement> | KeyboardEvent<HTMLLIElement>) => void;
+  onClick?: (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;
   className?: string;
   children: ReactNode | Record<string, unknown>;
   icon?: ReactNode;
@@ -22,16 +22,16 @@ const DropdownItem = ({
   iconClassName,
   type = 'default',
 }: Props) => (
-  <li
+  <div
+    className={classNames(styles.item, styles[type], className)}
     role="menuitem"
     tabIndex={0}
-    className={classNames(styles.item, styles[type], className)}
     onKeyDown={onKeyDownHandler(onClick)}
     onClick={onClick}
   >
     {icon && <span className={classNames(styles.icon, iconClassName)}>{icon}</span>}
     {children}
-  </li>
+  </div>
 );
 
 export default DropdownItem;
