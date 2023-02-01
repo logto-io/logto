@@ -132,7 +132,7 @@ const ConnectorDetails = () => {
               </Status>
               <div className={styles.verticalBar} />
               <div className={styles.text}>ID</div>
-              <CopyToClipboard value={data.id} />
+              <CopyToClipboard size="small" value={data.id} />
             </div>
           </div>
           <div className={styles.operations}>
