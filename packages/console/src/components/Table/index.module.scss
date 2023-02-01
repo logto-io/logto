@@ -38,7 +38,7 @@
     thead {
       tr {
         th {
-          font: var(--font-subhead-2);
+          font: var(--font-label-2);
           color: var(--color-text);
           border-bottom: unset;
           padding: _.unit(3);
@@ -61,7 +61,7 @@
     tbody {
       tr {
         td {
-          font: var(--font-body-medium);
+          font: var(--font-body-2);
           border-top: 1px solid var(--color-divider);
           border-bottom: unset;
           padding: _.unit(3);

@@ -12,7 +12,7 @@
   margin-bottom: _.unit(1);
 
   .title {
-    font: var(--font-subhead-2);
+    font: var(--font-label-2);
     color: var(--color-text);
   }
 
@@ -21,7 +21,7 @@
   }
 
   .required {
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
     color: var(--color-text-secondary);
   }
 }

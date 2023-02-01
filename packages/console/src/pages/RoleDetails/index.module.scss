@@ -18,7 +18,7 @@
 
     .info {
       .name {
-        font: var(--font-title-large);
+        font: var(--font-title-1);
         color: var(--color-text);
       }
 
@@ -27,7 +27,7 @@
         align-items: center;
 
         .idText {
-          font: var(--font-label-large);
+          font: var(--font-label-2);
           color: var(--color-text-secondary);
           margin-right: _.unit(1);
         }

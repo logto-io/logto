@@ -22,7 +22,7 @@
   }
 
   label {
-    font: var(--font-title-large);
+    font: var(--font-title-1);
   }
 
   .summary {
@@ -30,7 +30,7 @@
     align-items: center;
     margin-top: _.unit(4);
     max-width: 470px;
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
     text-align: center;
 
     .expander {
@@ -52,7 +52,7 @@
     width: 470px;
     background-color: var(--color-layer-1);
     border-radius: 16px;
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
     padding: _.unit(6);
     white-space: pre-wrap;
     word-break: break-all;

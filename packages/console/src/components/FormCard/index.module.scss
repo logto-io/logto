@@ -16,12 +16,12 @@
   }
 
   .title {
-    @include _.subhead-cap;
+    @include _.section-head-1;
     color: var(--color-neutral-variant-60);
   }
 
   .description {
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
     color: var(--color-text-secondary);
   }
 }

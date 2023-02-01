@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .title {
-  @include _.subhead-cap-small;
+  @include _.section-head-2;
   color: var(--color-neutral-variant-70);
   padding: _.unit(2) _.unit(6);
 }

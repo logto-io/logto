@@ -1,11 +1,11 @@
 @use '@/scss/underscore' as _;
 
 .number {
-  font: var(--font-headline-small);
+  font: var(--font-headline-3);
 }
 
 .delta {
-  font: var(--font-title-medium);
+  font: var(--font-title-2);
   color: var(--color-success-50);
   display: flex;
   align-items: center;
@@ -29,7 +29,7 @@
   }
 
   .title {
-    font: var(--font-title-medium);
+    font: var(--font-title-2);
     margin-bottom: 24px;
     display: flex;
     align-items: center;
@@ -52,7 +52,7 @@
     padding: 0;
 
     .title {
-      font: var(--font-title-medium);
+      font: var(--font-title-2);
       margin-bottom: _.unit(6);
     }
 

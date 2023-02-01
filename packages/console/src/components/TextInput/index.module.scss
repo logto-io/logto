@@ -9,7 +9,7 @@
   transition-duration: 0.2s;
   padding: _.unit(2) _.unit(3);
   background: var(--color-layer-1);
-  font: var(--font-body-medium);
+  font: var(--font-body-2);
 
   &.withIcon {
     display: flex;
@@ -31,7 +31,7 @@
     width: 100%;
     appearance: none;
     color: var(--color-text);
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
     background: transparent;
     padding: 0;
 
@@ -87,7 +87,7 @@
 }
 
 .errorMessage {
-  font: var(--font-body-medium);
+  font: var(--font-body-2);
   color: var(--color-error);
   margin-top: _.unit(1);
 }

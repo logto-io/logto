@@ -7,7 +7,7 @@
   border: none;
   outline: none;
   border-radius: _.unit(2);
-  font: var(--font-button);
+  font: var(--font-label-2);
   transition: background-color 0.2s ease-in-out;
   white-space: nowrap;
   user-select: none;
@@ -74,7 +74,7 @@
     padding: 0 _.unit(4);
 
     &.text {
-      font: var(--font-subhead-1);
+      font: var(--font-label-1);
       height: 28px;
     }
   }
@@ -85,7 +85,7 @@
 
     &.text {
       // same as medium
-      font: var(--font-subhead-1);
+      font: var(--font-label-1);
       height: 28px;
     }
   }
@@ -210,7 +210,7 @@
   &.text {
     background: none;
     border-color: none;
-    font: var(--font-label-large);
+    font: var(--font-label-2);
     color: var(--color-text-link);
     padding: _.unit(0.5) _.unit(1);
     border-radius: 4px;

@@ -18,7 +18,7 @@
 
     .eventName {
       color: var(--color-text);
-      font: var(--font-title-large);
+      font: var(--font-title-1);
     }
 
     .basicInfo {
@@ -35,11 +35,11 @@
 
     .infoItem {
       color: var(--color-text);
-      font: var(--font-body-medium);
+      font: var(--font-body-2);
 
       .label {
         color: var(--color-text-secondary);
-        font: var(--font-subhead-2);
+        font: var(--font-label-2);
         margin-bottom: _.unit(2);
       }
     }
