@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 
-const useDebounce = () => {
+const defaultDelay = 500;
+
+const useDebounce = (delay: number = defaultDelay) => {
   const timerRef = useRef<NodeJS.Timeout>();
 
   const clearTimer = () => {
@@ -15,13 +17,13 @@ const useDebounce = () => {
     };
   }, []);
 
-  return (callback: () => void, wait: number) => {
+  return (callback: () => void) => {
     clearTimer();
     // eslint-disable-next-line @silverhand/fp/no-mutation
     timerRef.current = setTimeout(() => {
       callback();
       clearTimer();
-    }, wait);
+    }, delay);
   };
 };
 
