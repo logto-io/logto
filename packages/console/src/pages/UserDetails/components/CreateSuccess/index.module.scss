@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .content {
-  font: var(--font-body-medium);
+  font: var(--font-body-2);
 
   .info {
     margin-top: _.unit(6);

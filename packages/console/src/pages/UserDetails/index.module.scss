@@ -40,25 +40,25 @@
     }
 
     .name {
-      font: var(--font-title-large);
+      font: var(--font-title-1);
       color: var(--color-text);
     }
 
     .suspended {
       background: var(--color-error-container);
       color: var(--color-text);
-      font: var(--font-label-medium);
+      font: var(--font-label-3);
       padding: _.unit(0.5) _.unit(1.5);
       border-radius: 10px;
     }
 
     .username {
       color: var(--color-text-secondary);
-      font: var(--font-subhead-2);
+      font: var(--font-label-2);
     }
 
     .text {
-      font: var(--font-subhead-2);
+      font: var(--font-label-2);
       color: var(--color-text-secondary);
     }
 

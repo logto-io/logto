@@ -61,7 +61,7 @@
     }
 
     .name {
-      font: var(--font-title-large);
+      font: var(--font-title-1);
       color: var(--color-text);
     }
 
@@ -70,11 +70,11 @@
       border-radius: 10px;
       padding: _.unit(0.5) _.unit(2);
       color: var(--color-text);
-      font: var(--font-label-medium);
+      font: var(--font-label-3);
     }
 
     .text {
-      font: var(--font-subhead-2);
+      font: var(--font-label-2);
       color: var(--color-text-secondary);
     }
 

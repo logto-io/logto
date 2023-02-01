@@ -40,7 +40,7 @@
     }
 
     .connector {
-      font: var(--font-body-medium);
+      font: var(--font-body-2);
       display: flex;
 
       .logo {
@@ -60,18 +60,18 @@
         flex: 1;
 
         .name {
-          font: var(--font-subhead-2);
+          font: var(--font-label-2);
           @include _.multi-line-ellipsis(1);
         }
 
         .connectorId {
           margin-top: _.unit(1);
-          font: var(--font-body-small);
+          font: var(--font-body-3);
           color: var(--color-text-secondary);
         }
 
         .description {
-          font: var(--font-body-small);
+          font: var(--font-body-3);
           color: var(--color-text-secondary);
           margin-top: _.unit(1);
           @include _.multi-line-ellipsis(4);

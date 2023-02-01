@@ -2,14 +2,14 @@
 
 .container {
   .description {
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
   }
 
   .content {
     display: flex;
     margin-top: _.unit(3);
     border-radius: 8px;
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
     justify-content: space-between;
     align-items: stretch;
     column-gap: _.unit(3);
@@ -22,7 +22,7 @@
       color: var(--color-text);
 
       .title {
-        font: var(--font-title-medium);
+        font: var(--font-title-2);
         margin: _.unit(1) 0;
       }
     }

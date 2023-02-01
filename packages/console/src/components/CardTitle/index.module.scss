@@ -15,31 +15,31 @@
 
   &.large {
     .title {
-      font: var(--font-title-large);
+      font: var(--font-title-1);
     }
 
     .subtitle {
-      font: var(--font-body-medium);
+      font: var(--font-body-2);
     }
   }
 
   &.medium {
     .title {
-      font: var(--font-title-medium);
+      font: var(--font-title-2);
     }
 
     .subtitle {
-      font: var(--font-body-medium);
+      font: var(--font-body-2);
     }
   }
 
   &.small {
     .title {
-      font: var(--font-title-medium);
+      font: var(--font-title-2);
     }
 
     .subtitle {
-      font: var(--font-body-small);
+      font: var(--font-body-3);
       margin-top: 0;
     }
   }

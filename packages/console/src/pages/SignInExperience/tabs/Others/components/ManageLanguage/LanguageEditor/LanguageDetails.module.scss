@@ -7,7 +7,7 @@
   .title {
     flex-shrink: 0;
     padding: _.unit(6) _.unit(5);
-    font: var(--font-title-large);
+    font: var(--font-title-1);
     color: var(--color-text);
     display: flex;
     justify-content: space-between;
@@ -18,13 +18,13 @@
 
       > span {
         margin-left: _.unit(2);
-        font: var(--font-body-medium);
+        font: var(--font-body-2);
         color: var(--color-text-secondary);
       }
 
       .builtInFlag {
         display: inline-block;
-        font: var(--font-label-medium);
+        font: var(--font-label-3);
         color: var(--color-text);
         background-color: var(--color-surface-variant);
         padding: _.unit(0.5) _.unit(2);
@@ -62,14 +62,14 @@
       }
 
       .sectionTitle {
-        @include _.subhead-cap-small;
+        @include _.section-head-2;
         color: var(--color-neutral-variant-60);
         background-color: var(--color-layer-light);
       }
 
       .sectionDataKey {
         padding: _.unit(4) _.unit(5);
-        font: var(--font-body-medium);
+        font: var(--font-body-2);
         color: var(--color-text);
       }
 
@@ -96,7 +96,7 @@
         thead {
           tr > th {
             padding: _.unit(1) _.unit(5);
-            font: var(--font-label-large);
+            font: var(--font-label-2);
             color: var(--color-text);
             background-color: var(--color-layer-1);
             border-bottom: 1px solid var(--color-divider);

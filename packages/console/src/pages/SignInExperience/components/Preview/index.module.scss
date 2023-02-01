@@ -13,7 +13,7 @@
     margin: _.unit(6) _.unit(6) _.unit(1);
 
     .title {
-      font: var(--font-subhead-1);
+      font: var(--font-label-1);
       flex: 1;
     }
 
@@ -88,7 +88,7 @@
 
             .time {
               flex: 1;
-              font: var(--font-subhead-2);
+              font: var(--font-label-2);
             }
           }
 

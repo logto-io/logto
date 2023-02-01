@@ -24,7 +24,7 @@
   }
 
   span {
-    font: var(--font-subhead-2);
+    font: var(--font-label-2);
     color: var(--color-text);
   }
 }
@@ -34,7 +34,7 @@
 }
 
 .dropdownTitle {
-  @include _.subhead-cap;
+  @include _.section-head-1;
   padding: _.unit(3) _.unit(5) _.unit(3) _.unit(4);
 }
 
@@ -42,7 +42,7 @@
   .index {
     width: 20px;
     height: 20px;
-    font: var(--font-subhead-cap);
+    font: var(--font-section-head-1);
 
     > svg {
       width: 16px;

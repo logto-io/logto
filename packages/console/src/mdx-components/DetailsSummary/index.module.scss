@@ -12,7 +12,7 @@
     align-items: center;
     padding: _.unit(4);
     color: var(--color-text-secondary);
-    font: var(--font-subhead-2);
+    font: var(--font-label-2);
     user-select: none;
     cursor: pointer;
 
@@ -25,7 +25,7 @@
 
   .details {
     color: var(--color-text);
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
     padding: _.unit(4);
     border-top: 1px solid var(--color-divider);
 

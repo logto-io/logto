@@ -2,7 +2,7 @@
 
 .empty {
   color: var(--color-text-secondary);
-  font: var(--font-body-medium);
+  font: var(--font-body-2);
 }
 
 .connectorName {
@@ -24,7 +24,7 @@
 .connectorId {
   display: flex;
   align-items: center;
-  font: var(--font-body-medium);
+  font: var(--font-body-2);
   font-family: 'Roboto Mono', monospace;
   line-height: 32px;
 

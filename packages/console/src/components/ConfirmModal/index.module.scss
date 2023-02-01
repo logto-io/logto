@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .content {
-  font: var(--font-body-medium);
+  font: var(--font-body-2);
 
   > :not(:first-child) {
     margin: _.unit(6) 0 0;

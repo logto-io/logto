@@ -7,7 +7,7 @@
   color: var(--color-tooltip-text);
   box-shadow: var(--shadow-2);
   padding: _.unit(2) _.unit(3);
-  font: var(--font-body-medium);
+  font: var(--font-body-2);
   max-width: 300px;
 
   &.successful {

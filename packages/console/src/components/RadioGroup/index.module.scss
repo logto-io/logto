@@ -52,7 +52,7 @@
         background: var(--color-neutral-90);
         padding: _.unit(0.5) _.unit(2);
         border-radius: 10px;
-        font: var(--font-label-medium);
+        font: var(--font-label-3);
         color: var(--color-text);
       }
     }
@@ -71,7 +71,7 @@
 }
 
 .plain {
-  font: var(--font-body-medium);
+  font: var(--font-body-2);
 
   /* stylelint-disable-next-line no-descending-specificity */
   > .radio {

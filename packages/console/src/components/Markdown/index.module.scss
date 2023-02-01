@@ -2,7 +2,7 @@
 
 .markdown {
   li {
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
 
     ul,
     ol {
@@ -31,7 +31,7 @@
   }
 
   a {
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
     color: var(--color-text-link);
     text-decoration: none;
     text-underline-offset: 2px;
@@ -46,18 +46,18 @@
   }
 
   h1 {
-    font: var(--font-title-large);
+    font: var(--font-title-1);
     margin: _.unit(6) 0;
   }
 
   h2 {
-    font: var(--font-title-medium);
+    font: var(--font-title-2);
     color: var(--color-text-secondary);
     margin: _.unit(6) 0 _.unit(3);
   }
 
   p {
-    font: var(--font-body-medium);
+    font: var(--font-body-2);
     margin: _.unit(3) 0;
   }
 
@@ -68,7 +68,7 @@
 
 .inlineCode {
   background: var(--color-layer-2);
-  font: var(--font-body-medium);
+  font: var(--font-body-2);
   padding: _.unit(1) _.unit(1);
   border-radius: 4px;
 }

@@ -32,16 +32,16 @@
   width: 0;
 }
 
-@mixin subhead-cap {
+@mixin section-head-1 {
   color: var(--color-text-secondary);
-  font: var(--font-subhead-cap);
+  font: var(--font-section-head-1);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-@mixin subhead-cap-small {
-  @include subhead-cap;
-  font: var(--font-subhead-cap-small);
+@mixin section-head-2 {
+  @include section-head-1;
+  font: var(--font-section-head-2);
 }
 
 @mixin rotating-animation {
