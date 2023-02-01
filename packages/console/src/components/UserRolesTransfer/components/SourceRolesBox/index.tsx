@@ -26,7 +26,6 @@ type Props = {
 };
 
 const pageSize = defaultPageSize;
-const searchDelay = 500;
 
 const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -56,7 +55,7 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
     debounce(() => {
       setPage(1);
       setKeyword(event.target.value);
-    }, searchDelay);
+    });
   };
 
   const isEmpty = !isLoading && !error && dataSource.length === 0;
