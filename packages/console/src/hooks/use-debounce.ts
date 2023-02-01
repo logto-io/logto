@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 const defaultDelay = 500;
 
 const useDebounce = (delay: number = defaultDelay) => {
-  const timerRef = useRef<NodeJS.Timeout>();
+  const timerRef = useRef<number>();
 
   const clearTimer = () => {
     if (timerRef.current) {
@@ -20,7 +20,7 @@ const useDebounce = (delay: number = defaultDelay) => {
   return (callback: () => void) => {
     clearTimer();
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    timerRef.current = setTimeout(() => {
+    timerRef.current = window.setTimeout(() => {
       callback();
       clearTimer();
     }, delay);
