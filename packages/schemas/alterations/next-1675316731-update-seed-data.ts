@@ -18,7 +18,7 @@ const alteration: AlterationScript = {
       update roles_scopes
         set id = 'admin-role-scope'
         where role_id = 'admin-role'
-        and scope_id = 'management-scope-all';
+        and scope_id = 'management-api-all';
     `);
   },
   down: async (pool) => {

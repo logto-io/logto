@@ -11,29 +11,29 @@ const alteration: AlterationScript = {
     // Fix role id
     const newRole = await pool.maybeOne(sql`
       select * from roles
-      where id = ${adminConsoleAdminRoleId}
+       where id = ${adminConsoleAdminRoleId}
     `);
 
     if (!newRole) {
       await pool.query(sql`
         update roles
-        set id = ${adminConsoleAdminRoleId}
-        where name = ${adminRoleName}
+          set id = ${adminConsoleAdminRoleId}
+          where name = ${adminRoleName}
       `);
     }
 
     // Fix scope role
     const relation = await pool.maybeOne(sql`
       select * from roles_scopes
-      where scope_id = ${managementResourceScopeId}
-      and role_id = ${adminConsoleAdminRoleId}
+        where scope_id = ${managementResourceScopeId}
+        and role_id = ${adminConsoleAdminRoleId}
     `);
 
     if (!relation) {
       await pool.query(sql`
         insert into roles_scopes
-        (role_id, scope_id)
-        values (${adminConsoleAdminRoleId}, ${managementResourceScopeId})
+          (role_id, scope_id)
+          values (${adminConsoleAdminRoleId}, ${managementResourceScopeId})
       `);
     }
   },
