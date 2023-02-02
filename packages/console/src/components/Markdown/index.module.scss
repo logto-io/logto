@@ -61,6 +61,32 @@
     margin: _.unit(3) 0;
   }
 
+  table {
+    border: 1px solid var(--color-divider);
+    border-spacing: 0;
+    width: 100%;
+    table-layout: fixed;
+    word-break: break-word;
+
+    thead {
+      th {
+        font: var(--font-subhead-2);
+        color: var(--color-text);
+        padding: _.unit(3);
+        border-bottom: 1px solid var(--color-divider);
+        text-align: left;
+      }
+    }
+
+    tbody {
+      td {
+        font: var(--font-body-2);
+        border-bottom: 1px solid var(--color-divider);
+        padding: _.unit(3);
+      }
+    }
+  }
+
   table + table {
     margin-top: _.unit(3);
   }
