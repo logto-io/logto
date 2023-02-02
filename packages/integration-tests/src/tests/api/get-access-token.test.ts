@@ -4,7 +4,7 @@ import { fetchTokenByRefreshToken } from '@logto/js';
 import {
   managementResource,
   InteractionEvent,
-  adminConsoleAdminRoleId,
+  adminRoleId,
   managementResourceScope,
 } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
@@ -27,7 +27,7 @@ describe('get access token', () => {
   beforeAll(async () => {
     await createUserByAdmin(guestUsername, password);
     const user = await createUserByAdmin(username, password);
-    await assignUsersToRole([user.id], adminConsoleAdminRoleId);
+    await assignUsersToRole([user.id], adminRoleId);
     await enableAllPasswordSignInMethods();
   });
 

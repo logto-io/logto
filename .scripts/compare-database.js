@@ -105,9 +105,31 @@ const queryDatabaseManifest = async (database) => {
 
 const [,, database1, database2] = process.argv;
 
-console.log('Compare database manifest between', database1, 'and', database2)
+console.log('Compare database manifest between', database1, 'and', database2);
 
-assert.deepStrictEqual(
+const manifests = [
   await queryDatabaseManifest(database1),
   await queryDatabaseManifest(database2),
+];
+
+assert.deepStrictEqual(...manifests);
+
+const queryDatabaseData = async (database) => {
+  const pool = new pg.Pool({ database, user: 'postgres', password: 'postgres' });
+  const result = await Promise.all(manifests[0].tables
+    .filter(({ table_name }) => table_name !== 'logto_configs')
+    .map(async ({ table_name }) => {
+      const { rows } = await pool.query(/* sql */`select * from ${table_name};`);
+      return [table_name, omitArray(rows, 'created_at', 'updated_at')];
+    })
+  );
+
+  return Object.fromEntries(result);
+};
+
+console.log('Compare database data between', database1, 'and', database2);
+
+assert.deepStrictEqual(
+  await queryDatabaseData(database1),
+  await queryDatabaseData(database2),
 );
