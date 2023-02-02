@@ -1,5 +1,34 @@
 # Change Log
 
+## 1.0.0-rc.0
+
+### Major Changes
+
+- f41fd3f0: drop settings table and add systems table
+
+  **BREAKING CHANGES**
+
+  - core: removed `GET /settings` and `PATCH /settings` API
+  - core: added `GET /configs/admin-console` and `PATCH /configs/admin-console` API
+    - `/configs/*` APIs are config/key-specific now. they may have different logic per key
+  - cli: change valid `logto db config` keys by removing `alterationState` and adding `adminConsole` since:
+    - OIDC configs and admin console configs are tenant-level configs (the concept of "tenant" can be ignored until we officially announce it)
+    - alteration state is still a system-wide config
+
+### Minor Changes
+
+- f41fd3f0: Add `logto database alteration rollback` command for running `down()` alteration scripts
+- f41fd3f0: - cli: use `ec` with `secp384r1` as the default key generation type
+  - core: use `ES384` as the signing algorithm for EC keys
+
+### Patch Changes
+
+- Updated dependencies [f41fd3f0]
+- Updated dependencies [f41fd3f0]
+- Updated dependencies [f41fd3f0]
+  - @logto/schemas@1.0.0-rc.0
+  - @logto/shared@1.0.0-rc.0
+
 ## 1.0.0-beta.19
 
 ### Patch Changes
