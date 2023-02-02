@@ -5,38 +5,39 @@ import { SignUpIdentifier } from '@/pages/SignInExperience/types';
 
 export const getSignInMethodPasswordCheckState = (
   signInIdentifier: SignInIdentifier,
-  isSignUpPasswordRequired: boolean,
-  defaultCheckState = true
+  signUpConfig: SignUpForm,
+  currentCheckState: boolean
 ) => {
   if (signInIdentifier === SignInIdentifier.Username) {
-    return true;
+    return currentCheckState;
   }
 
-  return isSignUpPasswordRequired || defaultCheckState;
+  const { password: isSignUpPasswordRequired } = signUpConfig;
+
+  return isSignUpPasswordRequired || currentCheckState;
 };
 
 export const getSignInMethodVerificationCodeCheckState = (
   signInIdentifier: SignInIdentifier,
   signUpConfig: SignUpForm,
-  currentCheckState?: boolean
+  currentCheckState: boolean
 ) => {
   if (signInIdentifier === SignInIdentifier.Username) {
-    return false;
+    return currentCheckState;
   }
 
-  const {
-    identifier: signUpIdentifier,
-    password: isSignUpPasswordRequired,
-    verify: isSignUpVerificationCodeRequired,
-  } = signUpConfig;
+  const { identifier: signUpIdentifier, password: isSignUpPasswordRequired } = signUpConfig;
 
-  const keepCurrentState =
-    [SignUpIdentifier.Username, SignUpIdentifier.None].includes(signUpIdentifier) ||
-    (isSignUpPasswordRequired && isSignUpVerificationCodeRequired);
-
-  if (keepCurrentState) {
-    return currentCheckState ?? isSignUpVerificationCodeRequired;
+  if (SignUpIdentifier.None !== signUpIdentifier && !isSignUpPasswordRequired) {
+    return true;
   }
 
-  return isSignUpVerificationCodeRequired;
+  return currentCheckState;
 };
+
+export const createSignInMethod = (identifier: SignInIdentifier) => ({
+  identifier,
+  password: true,
+  verificationCode: identifier !== SignInIdentifier.Username,
+  isPasswordPrimary: true,
+});

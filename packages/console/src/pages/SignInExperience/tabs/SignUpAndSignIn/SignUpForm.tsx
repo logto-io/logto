@@ -19,6 +19,7 @@ import {
 import * as styles from '../index.module.scss';
 import ConnectorSetupWarning from './components/ConnectorSetupWarning';
 import {
+  createSignInMethod,
   getSignInMethodPasswordCheckState,
   getSignInMethodVerificationCodeCheckState,
 } from './components/SignInMethodEditBox/utilities';
@@ -67,7 +68,7 @@ const SignUpForm = () => {
 
   const refreshSignInMethods = () => {
     const signInMethods = getValues('signIn.methods');
-    const { identifier: signUpIdentifier, password: isSignUpPasswordRequired } = signUp;
+    const { identifier: signUpIdentifier } = signUp;
 
     // Note: append required sign-in methods according to the sign-up identifier config
     const requiredSignInIdentifiers = signUpIdentifiersMapping[signUpIdentifier];
@@ -76,19 +77,7 @@ const SignUpForm = () => {
         return methods;
       }
 
-      return [
-        ...methods,
-        {
-          identifier: requiredIdentifier,
-          password: getSignInMethodPasswordCheckState(requiredIdentifier, isSignUpPasswordRequired),
-          verificationCode: getSignInMethodVerificationCodeCheckState(
-            requiredIdentifier,
-            signUp,
-            true
-          ),
-          isPasswordPrimary: true,
-        },
-      ];
+      return [...methods, createSignInMethod(requiredIdentifier)];
     }, signInMethods);
 
     setValue(
@@ -99,11 +88,7 @@ const SignUpForm = () => {
 
         return {
           ...method,
-          password: getSignInMethodPasswordCheckState(
-            identifier,
-            isSignUpPasswordRequired,
-            password
-          ),
+          password: getSignInMethodPasswordCheckState(identifier, signUp, password),
           verificationCode: getSignInMethodVerificationCodeCheckState(
             identifier,
             signUp,

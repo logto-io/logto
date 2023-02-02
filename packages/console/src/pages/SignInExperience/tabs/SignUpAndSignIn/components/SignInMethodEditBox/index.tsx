@@ -16,10 +16,7 @@ import { getSignUpRequiredConnectorTypes } from '@/pages/SignInExperience/utils/
 import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
 import * as styles from './index.module.scss';
-import {
-  getSignInMethodPasswordCheckState,
-  getSignInMethodVerificationCodeCheckState,
-} from './utilities';
+import { createSignInMethod } from './utilities';
 
 const SignInMethodEditBox = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -142,12 +139,7 @@ const SignInMethodEditBox = () => {
         options={signInIdentifierOptions}
         hasSelectedIdentifiers={fields.length > 0}
         onSelected={(identifier) => {
-          append({
-            identifier,
-            password: getSignInMethodPasswordCheckState(identifier, isSignUpPasswordRequired),
-            verificationCode: getSignInMethodVerificationCodeCheckState(identifier, signUp, true),
-            isPasswordPrimary: true,
-          });
+          append(createSignInMethod(identifier));
           revalidate();
         }}
       />
