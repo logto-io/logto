@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
@@ -27,10 +27,12 @@ type CreatedUserInfo = {
 
 type Props = {
   onClose: () => void;
+  onCreate: () => void;
 };
 
-const CreateForm = ({ onClose }: Props) => {
+const CreateForm = ({ onClose, onCreate }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { search } = useLocation();
   const navigate = useNavigate();
   const [createdUserInfo, setCreatedUserInfo] = useState<CreatedUserInfo>();
 
@@ -55,6 +57,8 @@ const CreateForm = ({ onClose }: Props) => {
       user: createdUser,
       password,
     });
+
+    onCreate();
   });
 
   return createdUserInfo ? (
@@ -62,7 +66,11 @@ const CreateForm = ({ onClose }: Props) => {
       title="user_details.created_title"
       username={createdUserInfo.user.username ?? '-'}
       password={createdUserInfo.password}
+      confirmButtonTitle="users.check_user_detail"
       onClose={() => {
+        navigate({ pathname: '/users', search });
+      }}
+      onConfirm={() => {
         navigate(`/users/${createdUserInfo.user.id}`, { replace: true });
       }}
     />

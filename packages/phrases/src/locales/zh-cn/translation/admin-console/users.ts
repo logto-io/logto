@@ -10,6 +10,7 @@ const users = {
   create_form_name: '姓名',
   unnamed: '未命名',
   search: 'Search by name, email, phone or username', // UNTRANSLATED
+  check_user_detail: '查看用户详情',
 };
 
 export default users;

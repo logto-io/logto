@@ -17,10 +17,20 @@ type Props = {
   password: string;
   title: AdminConsoleKey;
   onClose: () => void;
+  onConfirm?: () => void;
   passwordLabel?: string;
+  confirmButtonTitle?: AdminConsoleKey;
 };
 
-const CreateSuccess = ({ username, password, title, onClose, passwordLabel }: Props) => {
+const CreateSuccess = ({
+  username,
+  password,
+  title,
+  onClose,
+  onConfirm,
+  passwordLabel,
+  confirmButtonTitle,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -52,7 +62,7 @@ const CreateSuccess = ({ username, password, title, onClose, passwordLabel }: Pr
         title={title}
         footer={
           <>
-            <Button title="general.done" onClick={onClose} />
+            <Button title={confirmButtonTitle ?? 'general.done'} onClick={onConfirm ?? onClose} />
             <Button type="primary" title="general.copy" onClick={handleCopy} />
           </>
         }

@@ -74,6 +74,9 @@ const Users = () => {
                 search,
               });
             }}
+            onCreate={() => {
+              void mutate();
+            }}
           />
         )}
       </div>

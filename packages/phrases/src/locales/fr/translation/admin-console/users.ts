@@ -11,6 +11,7 @@ const users = {
   create_form_name: 'Nom complet',
   unnamed: 'Sans nom',
   search: 'Search by name, email, phone or username', // UNTRANSLATED
+  check_user_detail: 'Check user detail', // UNTRANSLATED
 };
 
 export default users;
