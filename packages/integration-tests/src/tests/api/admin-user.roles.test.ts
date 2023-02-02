@@ -1,4 +1,4 @@
-import { adminConsoleAdminRoleId } from '@logto/schemas';
+import { adminRoleId } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { assignRolesToUser, getUserRoles, deleteRoleFromUser } from '#src/api/index.js';
@@ -25,8 +25,8 @@ describe('admin console user management (roles)', () => {
   it('should delete role from user successfully', async () => {
     const user = await createUserByAdmin();
 
-    await assignRolesToUser(user.id, [adminConsoleAdminRoleId]);
-    await deleteRoleFromUser(user.id, adminConsoleAdminRoleId);
+    await assignRolesToUser(user.id, [adminRoleId]);
+    await deleteRoleFromUser(user.id, adminRoleId);
 
     const roles = await getUserRoles(user.id);
     expect(roles.length).toBe(0);
@@ -35,7 +35,7 @@ describe('admin console user management (roles)', () => {
   it('should delete non-exist-role from user failed', async () => {
     const user = await createUserByAdmin();
 
-    const response = await deleteRoleFromUser(user.id, adminConsoleAdminRoleId).catch(
+    const response = await deleteRoleFromUser(user.id, adminRoleId).catch(
       (error: unknown) => error
     );
     expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);

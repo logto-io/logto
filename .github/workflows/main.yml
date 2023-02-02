@@ -148,7 +148,7 @@ jobs:
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/alteration
 
-      - name: Compare manifests
+      - name: Compare databases
         working-directory: ./fresh
         run: node .scripts/compare-database.js fresh alteration
       # ** End **
@@ -173,6 +173,6 @@ jobs:
         run: node .scripts/compare-database.js fresh old
       # ** End **
 
-      - name: Check alteration sequence
+      - name: Check alteration databases
         working-directory: ./fresh
         run: node .scripts/check-alterations-sequence.js

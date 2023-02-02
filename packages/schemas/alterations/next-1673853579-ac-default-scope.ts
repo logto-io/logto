@@ -25,8 +25,10 @@ const alteration: AlterationScript = {
       `);
     }
   },
-  down: async () => {
-    // This is a hotfix for seed, down script is not needed
+  down: async (pool) => {
+    await pool.query(sql`
+      delete from scopes where id = ${managementResourceScope.id};
+    `);
   },
 };
 
