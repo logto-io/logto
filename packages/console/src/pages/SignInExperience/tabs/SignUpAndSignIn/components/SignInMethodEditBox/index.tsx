@@ -13,10 +13,10 @@ import {
 import type { SignInExperienceForm } from '@/pages/SignInExperience/types';
 import { getSignUpRequiredConnectorTypes } from '@/pages/SignInExperience/utils/identifier';
 
+import { createSignInMethod } from '../../utilities';
 import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
 import * as styles from './index.module.scss';
-import { createSignInMethod } from './utilities';
 
 const SignInMethodEditBox = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
