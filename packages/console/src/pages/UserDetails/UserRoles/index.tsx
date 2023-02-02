@@ -91,7 +91,7 @@ const UserRoles = () => {
             ),
           },
           {
-            title: t('user_details.roles.name_column'),
+            title: t('user_details.roles.description_column'),
             dataIndex: 'description',
             colSpan: 9,
             render: ({ description }) => <div className={styles.description}>{description}</div>,
