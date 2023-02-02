@@ -18,11 +18,14 @@
     "@logto/language-kit": "1.0.0-rc.0"
   },
   "changesets": [
+    "breezy-socks-joke",
     "clever-panthers-lay",
+    "cyan-buses-trade",
     "fifty-balloons-taste",
     "good-feet-own",
     "green-geese-train",
     "grumpy-clocks-refuse",
+    "large-windows-scream",
     "lovely-rivers-sniff",
     "moody-timers-grin",
     "neat-snakes-smash",
@@ -30,11 +33,16 @@
     "quick-turtles-joke",
     "quiet-shrimps-flow",
     "silly-rules-laugh",
+    "six-falcons-sin",
     "six-mayflies-tan",
     "slow-meals-enjoy",
     "small-knives-swim",
+    "sweet-dolphins-own",
+    "tender-maps-burn",
     "thin-oranges-act",
+    "three-ducks-yell",
     "tricky-mirrors-act",
-    "unlucky-lizards-agree"
+    "unlucky-lizards-agree",
+    "unlucky-months-clap"
   ]
 }

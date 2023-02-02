@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.0.0-rc.0
+
+### Patch Changes
+
+- Updated dependencies [f41fd3f0]
+- Updated dependencies [f41fd3f0]
+- Updated dependencies [f41fd3f0]
+  - @logto/cli@1.0.0-rc.0
+
 ## 1.0.0-beta.19
 
 ### Patch Changes

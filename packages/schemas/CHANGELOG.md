@@ -1,5 +1,25 @@
 # Change Log
 
+## 1.0.0-rc.0
+
+### Major Changes
+
+- f41fd3f0: drop settings table and add systems table
+
+  **BREAKING CHANGES**
+
+  - core: removed `GET /settings` and `PATCH /settings` API
+  - core: added `GET /configs/admin-console` and `PATCH /configs/admin-console` API
+    - `/configs/*` APIs are config/key-specific now. they may have different logic per key
+  - cli: change valid `logto db config` keys by removing `alterationState` and adding `adminConsole` since:
+    - OIDC configs and admin console configs are tenant-level configs (the concept of "tenant" can be ignored until we officially announce it)
+    - alteration state is still a system-wide config
+
+### Minor Changes
+
+- f41fd3f0: Replace `passcode` naming convention in the interaction APIs and main flow ui with `verificationCode`.
+- f41fd3f0: Replace the `sms` naming convention using `phone` cross logto codebase. Including Sign-in Experience types, API paths, API payload and internal variable names.
+
 ## 1.0.0-beta.18
 
 ### Patch Changes

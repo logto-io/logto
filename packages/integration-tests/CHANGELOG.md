@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.0.0-rc.0
+
+### Minor Changes
+
+- f41fd3f0: Replace `passcode` naming convention in the interaction APIs and main flow ui with `verificationCode`.
+- f41fd3f0: Officially cleanup all deprecated `/session` APIs in core and all the related integration tests.
+- f41fd3f0: Replace the `sms` naming convention using `phone` cross logto codebase. Including Sign-in Experience types, API paths, API payload and internal variable names.
+
 ## 1.0.0-beta.19
 
 ## 1.0.0-beta.18
