@@ -11,8 +11,8 @@ import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
+import UserAccountInformation from '@/components/UserAccountInformation';
 import useApi from '@/hooks/use-api';
-import CreateSuccess from '@/pages/UserDetails/components/CreateSuccess';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 type FormData = {
@@ -62,7 +62,7 @@ const CreateForm = ({ onClose, onCreate }: Props) => {
   });
 
   return createdUserInfo ? (
-    <CreateSuccess
+    <UserAccountInformation
       title="user_details.created_title"
       username={createdUserInfo.user.username ?? '-'}
       password={createdUserInfo.password}

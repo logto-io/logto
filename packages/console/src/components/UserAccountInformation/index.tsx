@@ -22,7 +22,7 @@ type Props = {
   confirmButtonTitle?: AdminConsoleKey;
 };
 
-const CreateSuccess = ({
+const UserAccountInformation = ({
   username,
   password,
   title,
@@ -96,4 +96,4 @@ const CreateSuccess = ({
   );
 };
 
-export default CreateSuccess;
+export default UserAccountInformation;

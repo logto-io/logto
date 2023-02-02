@@ -25,7 +25,7 @@ import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import CreateSuccess from './components/CreateSuccess';
+import UserAccountInformation from '../../components/UserAccountInformation';
 import ResetPasswordForm from './components/ResetPasswordForm';
 import * as styles from './index.module.scss';
 import { UserDetailsOutletContext } from './types';
@@ -173,7 +173,7 @@ const UserDetails = () => {
             }
           />
           {resetResult && (
-            <CreateSuccess
+            <UserAccountInformation
               title="user_details.reset_password.congratulations"
               username={data.username ?? '-'}
               password={resetResult}
