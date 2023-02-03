@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.0.0-rc.1
+
+### Patch Changes
+
+- 51f527b0: bug fixes
+
+  - core: fix 500 error when enabling app admin access in console
+  - ui: handle required profile errors on social binding flow
+  - @logto/cli@1.0.0-rc.1
+
 ## 1.0.0-rc.0
 
 ### Major Changes
