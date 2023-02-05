@@ -19,9 +19,10 @@ import {
 import * as styles from '../index.module.scss';
 import ConnectorSetupWarning from './components/ConnectorSetupWarning';
 import {
+  createSignInMethod,
   getSignInMethodPasswordCheckState,
   getSignInMethodVerificationCodeCheckState,
-} from './components/SignInMethodEditBox/utilities';
+} from './utilities';
 
 const SignUpForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -35,11 +36,13 @@ const SignUpForm = () => {
   } = useFormContext<SignInExperienceForm>();
   const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
-  const { identifier: signUpIdentifier } = watch('signUp') ?? {};
+  const signUp = watch('signUp');
 
-  if (!signUpIdentifier) {
+  if (!signUp) {
     return null;
   }
+
+  const { identifier: signUpIdentifier } = signUp;
 
   const isUsernamePasswordSignUp = signUpIdentifier === SignUpIdentifier.Username;
 
@@ -64,9 +67,8 @@ const SignUpForm = () => {
   };
 
   const refreshSignInMethods = () => {
-    const signUpIdentifier = getValues('signUp.identifier');
     const signInMethods = getValues('signIn.methods');
-    const isSignUpPasswordRequired = getValues('signUp.password');
+    const { identifier: signUpIdentifier } = signUp;
 
     // Note: append required sign-in methods according to the sign-up identifier config
     const requiredSignInIdentifiers = signUpIdentifiersMapping[signUpIdentifier];
@@ -75,31 +77,23 @@ const SignUpForm = () => {
         return methods;
       }
 
-      return [
-        ...methods,
-        {
-          identifier: requiredIdentifier,
-          password: getSignInMethodPasswordCheckState(requiredIdentifier, isSignUpPasswordRequired),
-          verificationCode: getSignInMethodVerificationCodeCheckState(requiredIdentifier),
-          isPasswordPrimary: true,
-        },
-      ];
+      return [...methods, createSignInMethod(requiredIdentifier)];
     }, signInMethods);
 
     setValue(
       'signIn.methods',
       // Note: refresh sign-in authentications according to the sign-up authentications config
       allSignInMethods.map((method) => {
-        const { identifier, password } = method;
+        const { identifier, password, verificationCode } = method;
 
         return {
           ...method,
-          password: getSignInMethodPasswordCheckState(
+          password: getSignInMethodPasswordCheckState(identifier, signUp, password),
+          verificationCode: getSignInMethodVerificationCodeCheckState(
             identifier,
-            isSignUpPasswordRequired,
-            password
+            signUp,
+            verificationCode
           ),
-          verificationCode: getSignInMethodVerificationCodeCheckState(identifier),
         };
       })
     );
