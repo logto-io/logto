@@ -22,8 +22,8 @@
   "devDependencies": {
     "@jest/types": "^29.1.2",
     "@logto/connector-kit": "workspace:*",
-    "@logto/js": "1.0.0-beta.14",
-    "@logto/node": "1.0.0-beta.15",
+    "@logto/js": "1.0.0-rc.0",
+    "@logto/node": "1.0.0-rc.0",
     "@logto/schemas": "workspace:*",
     "@peculiar/webcrypto": "^1.3.3",
     "@silverhand/eslint-config": "1.3.0",
