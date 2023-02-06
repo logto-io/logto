@@ -53,25 +53,30 @@ export default async function initApp(app: Koa): Promise<void> {
       );
 
     const coreServer = await createHttp2Server();
-    const adminServer = await createHttp2Server();
-
     coreServer.listen(urlSet.port, () => {
       logListening();
     });
 
-    adminServer.listen(adminUrlSet.port, () => {
-      logListening('admin');
-    });
+    // Create another server if admin localhost enabled
+    if (!adminUrlSet.isLocalhostDisabled) {
+      const adminServer = await createHttp2Server();
+      adminServer.listen(adminUrlSet.port, () => {
+        logListening('admin');
+      });
+    }
 
     return;
   }
 
-  // Chrome doesn't allow insecure http/2 servers
+  // Chrome doesn't allow insecure HTTP/2 servers, stick with HTTP for localhost.
   app.listen(urlSet.port, () => {
     logListening();
   });
 
-  app.listen(adminUrlSet.port, () => {
-    logListening('admin');
-  });
+  // Create another server if admin localhost enabled
+  if (!adminUrlSet.isLocalhostDisabled) {
+    app.listen(adminUrlSet.port, () => {
+      logListening('admin');
+    });
+  }
 }

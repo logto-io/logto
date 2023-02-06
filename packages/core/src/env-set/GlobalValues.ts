@@ -1,8 +1,9 @@
 import net from 'net';
 
 import { tryThat } from '@logto/shared';
-import { assertEnv, deduplicate, getEnv, getEnvAsStringArray } from '@silverhand/essentials';
+import { assertEnv, getEnv, getEnvAsStringArray } from '@silverhand/essentials';
 
+import UrlSet from './UrlSet.js';
 import { isTrue } from './parameters.js';
 import { throwErrorWithDsnMessage } from './throw-errors.js';
 
@@ -10,25 +11,6 @@ const enableMultiTenancyKey = 'ENABLE_MULTI_TENANCY';
 const developmentTenantIdKey = 'DEVELOPMENT_TENANT_ID';
 
 type MultiTenancyMode = 'domain' | 'env';
-
-export class UrlSet {
-  public readonly port = Number(getEnv(this.envPrefix + 'PORT') || this.defaultPort);
-  public readonly localhostUrl = `${this.isHttpsEnabled ? 'https' : 'http'}://localhost:${
-    this.port
-  }`;
-
-  public readonly endpoint = getEnv(this.envPrefix + 'ENDPOINT', this.localhostUrl);
-
-  constructor(
-    public readonly isHttpsEnabled: boolean,
-    protected readonly defaultPort: number,
-    protected readonly envPrefix: string = ''
-  ) {}
-
-  public deduplicated(): string[] {
-    return deduplicate([this.localhostUrl, this.endpoint]);
-  }
-}
 
 export default class GlobalValues {
   public readonly isProduction = getEnv('NODE_ENV') === 'production';

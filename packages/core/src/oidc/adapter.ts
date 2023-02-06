@@ -30,10 +30,7 @@ const buildDemoAppUris = (
   oidcClientMetadata: OidcClientMetadata
 ): Pick<OidcClientMetadata, 'redirectUris' | 'postLogoutRedirectUris'> => {
   const { urlSet } = EnvSet.values;
-  const urls = [
-    appendPath(urlSet.localhostUrl, MountedApps.DemoApp).toString(),
-    appendPath(urlSet.endpoint, MountedApps.DemoApp).toString(),
-  ];
+  const urls = urlSet.deduplicated().map((url) => appendPath(url, MountedApps.DemoApp).toString());
 
   const data = {
     redirectUris: deduplicate([...urls, ...oidcClientMetadata.redirectUris]),

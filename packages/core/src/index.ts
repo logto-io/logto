@@ -5,8 +5,7 @@ import Koa from 'koa';
 
 dotenv.config({ path: await findUp('.env', {}) });
 
-// Import after env has configured
-
+// Import after env has been configured
 const { loadConnectorFactories } = await import('./utils/connectors/factories.js');
 const { EnvSet } = await import('./env-set/index.js');
 const { default: initI18n } = await import('./i18n/init.js');
