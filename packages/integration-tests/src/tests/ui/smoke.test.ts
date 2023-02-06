@@ -35,9 +35,9 @@ describe('smoke testing', () => {
 
     expect(page.url()).toBe(new URL('register/username/password', logtoUrl).href);
 
-    const passwordField = await page.waitForSelector('input[name=new-password]');
-    const confirmPasswordField = await page.waitForSelector('input[name=confirm-new-password]');
-    const saveButton = await page.waitForSelector('button');
+    const passwordField = await page.waitForSelector('input[name=newPassword]');
+    const confirmPasswordField = await page.waitForSelector('input[name=confirmPassword]');
+    const saveButton = await page.waitForSelector('button[name=submit]');
     await passwordField.type(consolePassword);
     await confirmPasswordField.type(consolePassword);
 

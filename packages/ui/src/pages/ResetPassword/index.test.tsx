@@ -27,16 +27,16 @@ describe('ForgotPassword', () => {
       </MemoryRouter>
     );
 
-    expect(container.querySelector('input[name="new-password"]')).not.toBeNull();
-    expect(container.querySelector('input[name="confirm-new-password"]')).not.toBeNull();
+    expect(container.querySelector('input[name="newPassword"]')).not.toBeNull();
+    expect(container.querySelector('input[name="confirmPassword"]')).not.toBeNull();
     expect(queryByText('action.save_password')).not.toBeNull();
   });
 
   test('should submit properly', async () => {
     const { getByText, container } = renderWithPageContext(<ResetPassword />);
     const submitButton = getByText('action.save_password');
-    const passwordInput = container.querySelector('input[name="new-password"]');
-    const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
+    const passwordInput = container.querySelector('input[name="newPassword"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirmPassword"]');
 
     act(() => {
       if (passwordInput) {

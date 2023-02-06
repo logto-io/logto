@@ -1,13 +1,16 @@
 import classNames from 'classnames';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import ClearIcon from '@/assets/icons/clear-icon.svg';
 import Button from '@/components/Button';
+import IconButton from '@/components/Button/IconButton';
 import ErrorMessage from '@/components/ErrorMessage';
-import Input from '@/components/Input';
-import useForm from '@/hooks/use-form';
-import { passwordValidation, confirmPasswordValidation } from '@/utils/field-validations';
+import InputField from '@/components/InputField';
+import { passwordErrorWatcher } from '@/utils/form';
 
+import TogglePassword from './TogglePassword';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -20,13 +23,8 @@ type Props = {
 };
 
 type FieldState = {
-  password: string;
+  newPassword: string;
   confirmPassword: string;
-};
-
-const defaultState: FieldState = {
-  password: '',
-  confirmPassword: '',
 };
 
 const SetPassword = ({
@@ -37,53 +35,93 @@ const SetPassword = ({
   clearErrorMessage,
 }: Props) => {
   const { t } = useTranslation();
-  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const {
+    register,
+    watch,
+    resetField,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FieldState>({
+    reValidateMode: 'onChange',
+    defaultValues: { newPassword: '', confirmPassword: '' },
+  });
 
   const onSubmitHandler = useCallback(
-    async (event?: React.FormEvent<HTMLFormElement>) => {
-      event?.preventDefault();
-
+    (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage?.();
 
-      if (!validateForm()) {
-        return;
-      }
-
-      onSubmit(fieldValue.password);
+      void handleSubmit((data, event) => {
+        onSubmit(data.newPassword);
+        event?.preventDefault();
+      })(event);
     },
-    [clearErrorMessage, validateForm, onSubmit, fieldValue.password]
+    [clearErrorMessage, handleSubmit, onSubmit]
   );
+
+  const newPasswordError = passwordErrorWatcher(errors.newPassword);
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <Input
+      <InputField
+        required
         className={styles.inputField}
-        name="new-password"
-        type="password"
+        type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
         placeholder={t('input.password')}
         autoFocus={autoFocus}
-        {...register('password', passwordValidation)}
-        onClear={() => {
-          setFieldValue((state) => ({ ...state, password: '' }));
-        }}
+        isDanger={!!newPasswordError}
+        error={newPasswordError}
+        aria-invalid={!!newPasswordError}
+        {...register('newPassword', { required: true, minLength: 6 })}
+        isSuffixFocusVisible={!!watch('newPassword')}
+        suffix={
+          <IconButton
+            onClick={() => {
+              resetField('newPassword');
+            }}
+          >
+            <ClearIcon />
+          </IconButton>
+        }
       />
-      <Input
+
+      <InputField
+        required
         className={styles.inputField}
-        name="confirm-new-password"
-        type="password"
+        type={showPassword ? 'text' : 'password'}
+        autoComplete="new-password"
         placeholder={t('input.confirm_password')}
-        {...register('confirmPassword', (confirmPassword) =>
-          confirmPasswordValidation(fieldValue.password, confirmPassword)
-        )}
-        isErrorStyling={false}
-        onClear={() => {
-          setFieldValue((state) => ({ ...state, confirmPassword: '' }));
-        }}
+        error={errors.confirmPassword && 'passwords_do_not_match'}
+        aria-invalid={!!errors.confirmPassword}
+        {...register('confirmPassword', {
+          validate: (value) => value === watch('newPassword'),
+        })}
+        isSuffixFocusVisible={!!watch('confirmPassword')}
+        suffix={
+          <IconButton
+            onClick={() => {
+              resetField('confirmPassword');
+            }}
+          >
+            <ClearIcon />
+          </IconButton>
+        }
       />
+
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <Button title="action.save_password" onClick={async () => onSubmitHandler()} />
+      <TogglePassword isChecked={showPassword} onChange={setShowPassword} />
+
+      <Button
+        name="submit"
+        title="action.save_password"
+        onClick={async () => {
+          onSubmitHandler();
+        }}
+      />
 
       <input hidden type="submit" />
     </form>

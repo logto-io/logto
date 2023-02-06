@@ -36,6 +36,7 @@ const translation = {
     link_another_email: 'Link another email',
     link_another_phone: 'Link another phone',
     link_another_email_or_phone: 'Link another email or phone',
+    show_password: 'Show password',
   },
   description: {
     email: 'email',
