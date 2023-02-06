@@ -779,6 +779,7 @@ importers:
       '@parcel/transformer-sass': 2.8.3
       '@parcel/transformer-svg-react': 2.8.3
       '@peculiar/webcrypto': ^1.3.3
+      '@react-spring/web': ^9.6.1
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/eslint-config-react': 1.3.0
       '@silverhand/essentials': 2.1.0
@@ -835,6 +836,7 @@ importers:
       '@parcel/transformer-sass': 2.8.3_@parcel+core@2.8.3
       '@parcel/transformer-svg-react': 2.8.3_@parcel+core@2.8.3
       '@peculiar/webcrypto': 1.3.3
+      '@react-spring/web': 9.6.1_biqbaboplfbrettd7655fr4n2y
       '@silverhand/eslint-config': 1.3.0_k3lfx77tsvurbevhk73p7ygch4
       '@silverhand/eslint-config-react': 1.3.0_kvwdjz5hpaxioiksuaratzdsqy
       '@silverhand/essentials': 2.1.0
@@ -3319,6 +3321,60 @@ packages:
 
   /@react-dnd/shallowequal/4.0.0:
     resolution: {integrity: sha512-Yykovind6xzqAqd0t5umrdAGPlGLTE80cy80UkEnbt8Zv5zEYTFzJSNPQ81TY8BSpRreubu1oE54iHBv2UVnTQ==}
+    dev: true
+
+  /@react-spring/animated/9.6.1_react@18.2.0:
+    resolution: {integrity: sha512-ls/rJBrAqiAYozjLo5EPPLLOb1LM0lNVQcXODTC1SMtS6DbuBCPaKco5svFUQFMP2dso3O+qcC4k9FsKc0KxMQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@react-spring/shared': 9.6.1_react@18.2.0
+      '@react-spring/types': 9.6.1
+      react: 18.2.0
+    dev: true
+
+  /@react-spring/core/9.6.1_react@18.2.0:
+    resolution: {integrity: sha512-3HAAinAyCPessyQNNXe5W0OHzRfa8Yo5P748paPcmMowZ/4sMfaZ2ZB6e5x5khQI8NusOHj8nquoutd6FRY5WQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@react-spring/animated': 9.6.1_react@18.2.0
+      '@react-spring/rafz': 9.6.1
+      '@react-spring/shared': 9.6.1_react@18.2.0
+      '@react-spring/types': 9.6.1
+      react: 18.2.0
+    dev: true
+
+  /@react-spring/rafz/9.6.1:
+    resolution: {integrity: sha512-v6qbgNRpztJFFfSE3e2W1Uz+g8KnIBs6SmzCzcVVF61GdGfGOuBrbjIcp+nUz301awVmREKi4eMQb2Ab2gGgyQ==}
+    dev: true
+
+  /@react-spring/shared/9.6.1_react@18.2.0:
+    resolution: {integrity: sha512-PBFBXabxFEuF8enNLkVqMC9h5uLRBo6GQhRMQT/nRTnemVENimgRd+0ZT4yFnAQ0AxWNiJfX3qux+bW2LbG6Bw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@react-spring/rafz': 9.6.1
+      '@react-spring/types': 9.6.1
+      react: 18.2.0
+    dev: true
+
+  /@react-spring/types/9.6.1:
+    resolution: {integrity: sha512-POu8Mk0hIU3lRXB3bGIGe4VHIwwDsQyoD1F394OK7STTiX9w4dG3cTLljjYswkQN+hDSHRrj4O36kuVa7KPU8Q==}
+    dev: true
+
+  /@react-spring/web/9.6.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-X2zR6q2Z+FjsWfGAmAXlQaoUHbPmfuCaXpuM6TcwXPpLE1ZD4A1eys/wpXboFQmDkjnrlTmKvpVna1MjWpZ5Hw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@react-spring/animated': 9.6.1_react@18.2.0
+      '@react-spring/core': 9.6.1_react@18.2.0
+      '@react-spring/shared': 9.6.1_react@18.2.0
+      '@react-spring/types': 9.6.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: true
 
   /@sideway/address/4.1.4:

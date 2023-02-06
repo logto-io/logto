@@ -1,6 +1,6 @@
 import { render, fireEvent } from '@testing-library/react';
 
-import PasswordInputField from './PasswordInputField';
+import PasswordInputField from '.';
 
 describe('Input Field UI Component', () => {
   const text = 'foo';

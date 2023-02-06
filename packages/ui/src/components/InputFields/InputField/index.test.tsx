@@ -1,6 +1,6 @@
 import { render, fireEvent } from '@testing-library/react';
 
-import InputField from './InputField';
+import InputField from '.';
 
 describe('InputField Component', () => {
   const text = 'foo';

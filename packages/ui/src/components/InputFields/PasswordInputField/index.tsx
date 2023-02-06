@@ -8,8 +8,8 @@ import IconButton from '@/components/Button/IconButton';
 import useToggle from '@/hooks/use-toggle';
 import useUpdateEffect from '@/hooks/use-update-effect';
 
-import type { Props as InputFieldProps } from './InputField';
-import InputField from './InputField';
+import InputField from '../InputField';
+import type { Props as InputFieldProps } from '../InputField';
 
 type Props = Omit<InputFieldProps, 'type' | 'suffix' | 'isSuffixFocusVisible'>;
 

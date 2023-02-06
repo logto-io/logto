@@ -9,25 +9,22 @@
   transition-property: outline, border;
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
+  align-items: stretch;
 
   // fix in safari input field line-height issue
   height: 44px;
 
   input {
+    transition: width 0.3s ease-in;
     padding: 0 _.unit(4);
     flex: 1;
     background: none;
     caret-color: var(--color-brand-default);
     font: var(--font-body-1);
     color: var(--color-type-primary);
-    align-self: stretch;
 
     &::placeholder {
       color: var(--color-type-secondary);
-    }
-
-    &:not(:last-child) {
-      padding-right: _.unit(10);
     }
   }
 
@@ -39,21 +36,14 @@
     width: _.unit(8);
     height: _.unit(8);
     display: none;
-
-    &.visible {
-      display: flex;
-    }
   }
+
 
   &:focus-within {
     border: _.border(var(--color-brand-default));
 
     input {
       outline: none;
-    }
-
-    .focusVisible {
-      display: flex;
     }
   }
 
@@ -62,6 +52,23 @@
 
     input {
       caret-color: var(--color-danger-default);
+    }
+  }
+
+  &.isPrefixVisible {
+    input {
+      padding-left: _.unit(1);
+    }
+  }
+
+  &.isSuffixVisible,
+  &.isSuffixFocusVisible:focus-within {
+    input {
+      padding-right: _.unit(10);
+    }
+
+    .suffix {
+      display: flex;
     }
   }
 }
@@ -75,6 +82,7 @@
   .inputField {
     outline: 3px solid transparent;
 
+    /* stylelint-disable-next-line no-descending-specificity */
     input {
       font: var(--font-body-2);
     }
