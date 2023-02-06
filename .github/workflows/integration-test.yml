@@ -101,5 +101,3 @@ jobs:
           cd tests/packages/integration-tests
           pnpm build
           pnpm test:${{ matrix.test_target }}
-        env:
-          INTEGRATION_TESTS_LOGTO_URL: http://localhost:3001
