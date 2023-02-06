@@ -7,7 +7,7 @@ import ClearIcon from '@/assets/icons/clear-icon.svg';
 import Button from '@/components/Button';
 import IconButton from '@/components/Button/IconButton';
 import ErrorMessage from '@/components/ErrorMessage';
-import InputField from '@/components/InputField';
+import { InputField } from '@/components/InputFields';
 import { passwordErrorWatcher } from '@/utils/form';
 
 import TogglePassword from './TogglePassword';

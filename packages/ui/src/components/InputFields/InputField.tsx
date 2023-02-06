@@ -5,9 +5,9 @@ import { forwardRef, cloneElement } from 'react';
 import type { ErrorType } from '@/components/ErrorMessage';
 import ErrorMessage from '@/components/ErrorMessage';
 
-import * as styles from './index.module.scss';
+import * as styles from './InputField.module.scss';
 
-type Props = HTMLProps<HTMLInputElement> & {
+export type Props = HTMLProps<HTMLInputElement> & {
   className?: string;
   error?: ErrorType;
   isDanger?: boolean;
