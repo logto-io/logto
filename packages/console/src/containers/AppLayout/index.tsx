@@ -27,8 +27,8 @@ const AppLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { firstItem } = useSidebarMenuItems();
-  const mainRef = useRef<HTMLDivElement>(null);
-  const { scrollTop } = useScroll(mainRef.current);
+  const scrollableContent = useRef<HTMLDivElement>(null);
+  const { scrollTop } = useScroll(scrollableContent.current);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const AppLayout = () => {
   return (
     <div className={styles.app}>
       <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
-      <Outlet context={{ mainRef } satisfies AppLayoutOutletContext} />
+      <Outlet context={{ scrollableContent } satisfies AppLayoutOutletContext} />
     </div>
   );
 };
