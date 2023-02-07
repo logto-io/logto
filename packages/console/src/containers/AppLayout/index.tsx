@@ -63,9 +63,7 @@ const AppLayout = () => {
   return (
     <div className={styles.app}>
       <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
-      <div className={styles.content}>
-        <Outlet context={{ mainRef } satisfies AppLayoutOutletContext} />
-      </div>
+      <Outlet context={{ mainRef } satisfies AppLayoutOutletContext} />
     </div>
   );
 };

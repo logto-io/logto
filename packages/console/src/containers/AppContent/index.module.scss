@@ -1,5 +1,11 @@
 @use '@/scss/underscore' as _;
 
+.content {
+  flex-grow: 1;
+  display: flex;
+  overflow: hidden;
+}
+
 .main {
   flex-grow: 1;
   padding: 0 _.unit(2);
