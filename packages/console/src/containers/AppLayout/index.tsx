@@ -11,12 +11,13 @@ import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
-import Sidebar, { getPath } from './components/Sidebar';
+import { getPath } from './components/Sidebar';
 import { useSidebarMenuItems } from './components/Sidebar/hook';
 import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
+import { AppLayoutOutletContext } from './types';
 
-const AppContent = () => {
+const AppLayout = () => {
   const { isAuthenticated, isLoading: isLogtoLoading, error, signIn } = useLogto();
   const href = useHref('/callback');
   const { isLoading: isPreferencesLoading } = useUserPreferences();
@@ -63,13 +64,10 @@ const AppContent = () => {
     <div className={styles.app}>
       <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
       <div className={styles.content}>
-        <Sidebar />
-        <div ref={mainRef} className={styles.main}>
-          <Outlet />
-        </div>
+        <Outlet context={{ mainRef } satisfies AppLayoutOutletContext} />
       </div>
     </div>
   );
 };
 
-export default AppContent;
+export default AppLayout;

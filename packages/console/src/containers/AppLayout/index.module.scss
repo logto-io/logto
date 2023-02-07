@@ -17,13 +17,3 @@
   display: flex;
   overflow: hidden;
 }
-
-.main {
-  flex-grow: 1;
-  padding: 0 _.unit(2);
-  overflow-y: scroll;
-
-  > * {
-    @include _.main-content-width;
-  }
-}
