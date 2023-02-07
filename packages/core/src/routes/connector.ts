@@ -1,14 +1,15 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, ConnectorFactoryResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
-import { object, string } from 'zod';
+import { string, object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
+import { buildRawConnector } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
@@ -182,6 +183,11 @@ export default function connectorRoutes<T extends AuthedRouter>(
             ),
           new RequestError({ code: 'connector.multiple_target_with_same_platform', status: 422 })
         );
+      }
+
+      if (config) {
+        const { rawConnector } = await buildRawConnector(connectorFactory);
+        validateConfig(config, rawConnector.configGuard);
       }
 
       const insertConnectorId = generateConnectorId();

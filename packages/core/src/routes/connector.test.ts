@@ -1,6 +1,11 @@
 /* eslint-disable max-lines */
 import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
-import { ConnectorPlatform, VerificationCodeType } from '@logto/connector-kit';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  ConnectorPlatform,
+  VerificationCodeType,
+} from '@logto/connector-kit';
 import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
@@ -26,7 +31,7 @@ import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 mockEsm('#src/utils/connectors/platform.js', () => ({
   checkSocialConnectorTargetAndPlatformUniqueness: jest.fn(),
@@ -54,6 +59,14 @@ const getLogtoConnectors = jest.fn<Promise<LogtoConnector[]>, []>();
 
 const { loadConnectorFactories } = mockEsm('#src/utils/connectors/factories.js', () => ({
   loadConnectorFactories: jest.fn(),
+}));
+
+const { buildRawConnector } = await mockEsmWithActual('#src/utils/connectors/index.js', () => ({
+  buildRawConnector: jest.fn(),
+}));
+
+const { validateConfig } = await mockEsmWithActual('@logto/connector-kit', () => ({
+  validateConfig: jest.fn(),
 }));
 
 const tenantContext = new MockTenant(
@@ -178,6 +191,8 @@ describe('connector route', () => {
           ...mockLogtoConnector,
         },
       ]);
+      validateConfig.mockReturnValueOnce(null);
+      buildRawConnector.mockResolvedValueOnce({ rawConnector: { configGuard: any() } });
       await connectorRequest.post('/connectors').send({
         connectorId: 'connectorId',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
@@ -188,6 +203,33 @@ describe('connector route', () => {
           config: { cliend_id: 'client_id', client_secret: 'client_secret' },
         })
       );
+    });
+
+    it('throw when post a new connector record with wrong config', async () => {
+      loadConnectorFactories.mockResolvedValueOnce([
+        {
+          ...mockConnectorFactory,
+          metadata: { ...mockConnectorFactory.metadata, id: 'connectorId' },
+        },
+      ]);
+      countConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
+      getLogtoConnectors.mockResolvedValueOnce([
+        {
+          dbEntry: { ...mockConnector, connectorId: 'id0' },
+          metadata: { ...mockMetadata, id: 'id0' },
+          type: ConnectorType.Sms,
+          ...mockLogtoConnector,
+        },
+      ]);
+      validateConfig.mockImplementationOnce((config: unknown) => {
+        throw new ConnectorError(ConnectorErrorCodes.General);
+      });
+      buildRawConnector.mockResolvedValueOnce({ rawConnector: { configGuard: any() } });
+      const response = await connectorRequest.post('/connectors').send({
+        connectorId: 'connectorId',
+        config: { cliend_id: 'client_id', client_secret: 'client_secret' },
+      });
+      expect(response).toHaveProperty('statusCode', 500);
     });
 
     it('throws when connector factory not found', async () => {
@@ -225,6 +267,8 @@ describe('connector route', () => {
           ...mockLogtoConnector,
         },
       ]);
+      validateConfig.mockReturnValueOnce(null);
+      buildRawConnector.mockResolvedValueOnce({ rawConnector: { configGuard: any() } });
       await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
@@ -293,6 +337,8 @@ describe('connector route', () => {
         },
       ]);
       countConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
+      validateConfig.mockReturnValueOnce(null);
+      buildRawConnector.mockResolvedValueOnce({ rawConnector: { configGuard: any() } });
       await connectorRequest.post('/connectors').send({
         connectorId: 'id1',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
@@ -335,6 +381,8 @@ describe('connector route', () => {
           ...mockLogtoConnector,
         },
       ]);
+      validateConfig.mockReturnValueOnce(null);
+      buildRawConnector.mockResolvedValueOnce({ rawConnector: { configGuard: any() } });
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         metadata: { target: 'target' },
