@@ -26,7 +26,7 @@ import { useTheme } from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import * as styles from './index.module.scss';
-import type { ApiResourceDetailsOutletContext } from './types';
+import { ApiResourceDetailsOutletContext } from './types';
 
 const ApiResourceDetails = () => {
   const { pathname } = useLocation();
@@ -132,7 +132,6 @@ const ApiResourceDetails = () => {
           </TabNav>
           <Outlet
             context={
-              // eslint-disable-next-line no-restricted-syntax
               {
                 resource: data,
                 isDeleting,
@@ -140,7 +139,7 @@ const ApiResourceDetails = () => {
                 onResourceUpdated: (resource: Resource) => {
                   void mutate(resource);
                 },
-              } as ApiResourceDetailsOutletContext
+              } satisfies ApiResourceDetailsOutletContext
             }
           />
         </>
