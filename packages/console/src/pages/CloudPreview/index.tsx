@@ -1,5 +1,5 @@
 const CloudPreview = () => {
-  return <div>CloudPreview(TBD)</div>;
+  return <div>CloudPreview(WIP)</div>;
 };
 
 export default CloudPreview;
