@@ -31,7 +31,7 @@ const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Elemen
   vanilla: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vanilla.mdx')),
   express: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/express.mdx')),
   next: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/next.mdx')),
-  'go web': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go-web.mdx')),
+  go: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go.mdx')),
   'ios_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/ios_zh-cn.mdx')),
   'android_zh-cn': lazy(
     async () => import('@/assets/docs/tutorial/integrate-sdk/android_zh-cn.mdx')
@@ -45,7 +45,7 @@ const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Elemen
     async () => import('@/assets/docs/tutorial/integrate-sdk/express_zh-cn.mdx')
   ),
   'next_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/next_zh-cn.mdx')),
-  'go web_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go-web_zh-cn.mdx')),
+  'go_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go_zh-cn.mdx')),
 };
 
 const Guide = ({ app, isCompact, onClose }: Props) => {
