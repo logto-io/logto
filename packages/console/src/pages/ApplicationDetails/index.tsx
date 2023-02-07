@@ -57,7 +57,7 @@ const ApplicationDetails = () => {
   const api = useApi();
   const navigate = useNavigate();
   const formMethods = useForm<Application & { isAdmin: boolean }>();
-  const documentationUrl = useDocumentationUrl();
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const {
     handleSubmit,
@@ -150,7 +150,7 @@ const ApplicationDetails = () => {
                 onClick={() => {
                   if (data.type === ApplicationType.MachineToMachine) {
                     window.open(
-                      `${documentationUrl}/docs/recipes/integrate-logto/machine-to-machine/`,
+                      getDocumentationUrl('/docs/recipes/integrate-logto/machine-to-machine'),
                       '_blank'
                     );
 

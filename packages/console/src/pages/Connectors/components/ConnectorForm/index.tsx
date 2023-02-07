@@ -12,6 +12,7 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { uriValidator, jsonValidator } from '@/utilities/validator';
 
 import type { ConnectorFormType } from '../../types';
@@ -34,6 +35,7 @@ const ConnectorForm = ({
   connectorType,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
   const {
     control,
     register,
@@ -110,7 +112,7 @@ const ConnectorForm = ({
                 components={{
                   a: (
                     <TextLink
-                      href="https://docs.logto.io/docs/references/connectors/#target"
+                      href={getDocumentationUrl('/docs/references/connectors/#target')}
                       target="_blank"
                       onClick={closeTipHandler}
                     />

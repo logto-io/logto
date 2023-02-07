@@ -48,7 +48,7 @@ export const useSidebarMenuItems = (): {
   const {
     data: { getStartedHidden },
   } = useUserPreferences();
-  const documentationUrl = useDocumentationUrl();
+  const { documentationSiteUrl } = useDocumentationUrl();
 
   const sections: SidebarSection[] = [
     {
@@ -119,7 +119,7 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Document,
           title: 'docs',
-          externalLink: documentationUrl,
+          externalLink: documentationSiteUrl,
         },
       ],
     },

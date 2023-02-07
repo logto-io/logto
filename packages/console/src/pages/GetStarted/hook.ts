@@ -35,7 +35,7 @@ type GetStartedMetadata = {
 };
 
 const useGetStartedMetadata = () => {
-  const documentationUrl = useDocumentationUrl();
+  const { getDocumentationUrl } = useDocumentationUrl();
   const { configs, updateConfigs } = useConfigs();
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
@@ -123,14 +123,17 @@ const useGetStartedMetadata = () => {
         isComplete: configs?.furtherReadingsChecked,
         onClick: () => {
           void updateConfigs({ furtherReadingsChecked: true });
-          window.open(`${documentationUrl}/docs/tutorials/get-started/further-readings/`, '_blank');
+          window.open(
+            getDocumentationUrl('/docs/tutorials/get-started/further-readings'),
+            '_blank'
+          );
         },
       },
     ];
 
     return metadataItems.filter(({ isHidden }) => !isHidden);
   }, [
-    documentationUrl,
+    getDocumentationUrl,
     hideDemo,
     isLightMode,
     navigate,

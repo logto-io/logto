@@ -8,20 +8,23 @@ enum DocumentationLanguage {
   Chinese = 'zh-CN',
 }
 
-const documentationSiteUrl = 'https://docs.logto.io';
+const documentationSiteRoot = 'https://docs.logto.io';
 
 const useDocumentationUrl = () => {
   const {
     i18n: { language },
   } = useTranslation();
 
-  const documentationUrl = Object.values<string>(DocumentationLanguage)
+  const documentationSiteUrl = Object.values<string>(DocumentationLanguage)
     .filter((language) => language !== DocumentationLanguage.English)
     .includes(language)
-    ? `${documentationSiteUrl}/${language.toLocaleLowerCase()}`
-    : documentationSiteUrl;
+    ? `${documentationSiteRoot}/${language.toLocaleLowerCase()}`
+    : documentationSiteRoot;
 
-  return documentationUrl;
+  return {
+    documentationSiteUrl,
+    getDocumentationUrl: (pagePath: string) => `${documentationSiteUrl}${pagePath}`,
+  };
 };
 
 export default useDocumentationUrl;

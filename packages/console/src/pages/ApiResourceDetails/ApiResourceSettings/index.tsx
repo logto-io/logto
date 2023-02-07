@@ -10,6 +10,7 @@ import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import type { ApiResourceDetailsOutletContext } from '../types';
 
@@ -18,6 +19,8 @@ const ApiResourceSettings = () => {
     useOutletContext<ApiResourceDetailsOutletContext>();
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
+
   const {
     handleSubmit,
     register,
@@ -53,7 +56,7 @@ const ApiResourceSettings = () => {
         <FormCard
           title="api_resource_details.settings"
           description="api_resource_details.settings_description"
-          learnMoreLink="https://docs.logto.io/docs/recipes/protect-your-api"
+          learnMoreLink={getDocumentationUrl('/docs/recipes/protect-your-api')}
         >
           <FormField isRequired title="api_resources.api_name">
             <TextInput

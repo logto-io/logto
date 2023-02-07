@@ -12,6 +12,7 @@ import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { safeParseJson } from '@/utilities/json';
 import { uriValidator } from '@/utilities/validator';
 
@@ -21,6 +22,7 @@ import UserSocialIdentities from './components/UserSocialIdentities';
 
 const UserSettings = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const { user, isDeleting, onUserUpdated } = useOutletContext<UserDetailsOutletContext>();
 
@@ -87,7 +89,7 @@ const UserSettings = () => {
         <FormCard
           title="user_details.settings"
           description="user_details.settings_description"
-          learnMoreLink="https://docs.logto.io/docs/references/users"
+          learnMoreLink={getDocumentationUrl('/docs/references/users')}
         >
           {getValues('primaryEmail') && (
             <FormField title="user_details.field_email">

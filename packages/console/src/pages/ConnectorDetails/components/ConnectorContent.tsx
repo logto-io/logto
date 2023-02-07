@@ -9,6 +9,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import ConnectorForm from '@/pages/Connectors/components/ConnectorForm';
 import type { ConnectorFormType } from '@/pages/Connectors/types';
 import { SyncProfileMode } from '@/pages/Connectors/types';
@@ -25,6 +26,7 @@ type Props = {
 
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',
@@ -101,7 +103,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
         <FormCard
           title="connector_details.settings"
           description="connector_details.settings_description"
-          learnMoreLink="https://docs.logto.io/docs/references/connectors"
+          learnMoreLink={getDocumentationUrl('/docs/references/connectors')}
         >
           <ConnectorForm
             connectorType={connectorData.type}
