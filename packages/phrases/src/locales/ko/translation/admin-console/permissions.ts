@@ -1,9 +1,9 @@
 const permissions = {
-  search_placeholder: 'Search by API or permission name', // UNTRANSLATED
-  search_placeholder_without_api: 'Search by permission name', // UNTRANSLATED
-  name_column: 'Permission', // UNTRANSLATED
-  description_column: 'Description', // UNTRANSLATED
-  api_column: 'API', // UNTRANSLATED
+  search_placeholder: 'API 또는 권한 이름으로 검색',
+  search_placeholder_without_api: '권한 이름으로 검색',
+  name_column: '권한',
+  description_column: '설명',
+  api_column: 'API',
 };
 
 export default permissions;

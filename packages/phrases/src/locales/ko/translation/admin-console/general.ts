@@ -41,8 +41,8 @@ const general = {
   page_info: '{{min, number}}-{{max, number}} / {{total, number}}',
   learn_more: '더 알아보기',
   tab_errors: '{{count, number}} 오류',
-  skip_for_now: 'Skip for now', // UNTRANSLATED
-  remove: 'Remove', // UNTRANSLATED
+  skip_for_now: '지금은 건너뛰기',
+  remove: '삭제',
 };
 
 export default general;
