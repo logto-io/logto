@@ -14,10 +14,10 @@ import './scss/overlayscrollbars.scss';
 
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
-import AppBoundary from '@/components/AppBoundary';
-import AppContent from '@/components/AppContent';
-import ErrorBoundary from '@/components/ErrorBoundary';
 import Toast from '@/components/Toast';
+import AppBoundary from '@/containers/AppBoundary';
+import AppLayout from '@/containers/AppLayout';
+import ErrorBoundary from '@/containers/ErrorBoundary';
 import useSwrOptions from '@/hooks/use-swr-options';
 import initI18n from '@/i18n/init';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
@@ -47,8 +47,10 @@ import {
   SignInExperiencePage,
   UserDetailsTabs,
 } from './consts/page-tabs';
+import AppContent from './containers/AppContent';
 import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
+import CloudPreview from './pages/CloudPreview';
 import RolePermissions from './pages/RoleDetails/RolePermissions';
 import RoleSettings from './pages/RoleDetails/RoleSettings';
 import RoleUsers from './pages/RoleDetails/RoleUsers';
@@ -70,66 +72,78 @@ const Main = () => {
           <Routes>
             <Route path="callback" element={<Callback />} />
             <Route path="welcome" element={<Welcome />} />
-            <Route element={<AppContent />}>
-              <Route path="*" element={<NotFound />} />
-              <Route path="get-started" element={<GetStarted />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="applications">
-                <Route index element={<Applications />} />
-                <Route path="create" element={<Applications />} />
-                <Route path=":id" element={<ApplicationDetails />} />
-              </Route>
-              <Route path="api-resources">
-                <Route index element={<ApiResources />} />
-                <Route path="create" element={<ApiResources />} />
-                <Route path=":id" element={<ApiResourceDetails />}>
+            <Route element={<AppLayout />}>
+              <Route path="/cloud-preview" element={<CloudPreview />} />
+              <Route element={<AppContent />}>
+                <Route path="*" element={<NotFound />} />
+                <Route path="get-started" element={<GetStarted />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="applications">
+                  <Route index element={<Applications />} />
+                  <Route path="create" element={<Applications />} />
+                  <Route path=":id" element={<ApplicationDetails />} />
+                </Route>
+                <Route path="api-resources">
+                  <Route index element={<ApiResources />} />
+                  <Route path="create" element={<ApiResources />} />
+                  <Route path=":id" element={<ApiResourceDetails />}>
+                    <Route
+                      index
+                      element={<Navigate replace to={ApiResourceDetailsTabs.Settings} />}
+                    />
+                    <Route
+                      path={ApiResourceDetailsTabs.Settings}
+                      element={<ApiResourceSettings />}
+                    />
+                    <Route
+                      path={ApiResourceDetailsTabs.Permissions}
+                      element={<ApiResourcePermissions />}
+                    />
+                  </Route>
+                </Route>
+                <Route path="sign-in-experience">
                   <Route
                     index
-                    element={<Navigate replace to={ApiResourceDetailsTabs.Settings} />}
+                    element={<Navigate replace to={SignInExperiencePage.BrandingTab} />}
                   />
-                  <Route path={ApiResourceDetailsTabs.Settings} element={<ApiResourceSettings />} />
+                  <Route path=":tab" element={<SignInExperience />} />
+                </Route>
+                <Route path="connectors">
+                  <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
+                  <Route path=":tab" element={<Connectors />} />
+                  <Route path=":tab/create/:createType" element={<Connectors />} />
+                  <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
+                </Route>
+                <Route path="users">
+                  <Route index element={<Users />} />
+                  <Route path="create" element={<Users />} />
+                  <Route path=":id" element={<UserDetails />}>
+                    <Route index element={<Navigate replace to={UserDetailsTabs.Settings} />} />
+                    <Route path={UserDetailsTabs.Settings} element={<UserSettings />} />
+                    <Route path={UserDetailsTabs.Roles} element={<UserRoles />} />
+                    <Route path={UserDetailsTabs.Logs} element={<UserLogs />} />
+                  </Route>
                   <Route
-                    path={ApiResourceDetailsTabs.Permissions}
-                    element={<ApiResourcePermissions />}
+                    path={`:id/${UserDetailsTabs.Logs}/:logId`}
+                    element={<AuditLogDetails />}
                   />
                 </Route>
-              </Route>
-              <Route path="sign-in-experience">
-                <Route index element={<Navigate replace to={SignInExperiencePage.BrandingTab} />} />
-                <Route path=":tab" element={<SignInExperience />} />
-              </Route>
-              <Route path="connectors">
-                <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
-                <Route path=":tab" element={<Connectors />} />
-                <Route path=":tab/create/:createType" element={<Connectors />} />
-                <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
-              </Route>
-              <Route path="users">
-                <Route index element={<Users />} />
-                <Route path="create" element={<Users />} />
-                <Route path=":id" element={<UserDetails />}>
-                  <Route index element={<Navigate replace to={UserDetailsTabs.Settings} />} />
-                  <Route path={UserDetailsTabs.Settings} element={<UserSettings />} />
-                  <Route path={UserDetailsTabs.Roles} element={<UserRoles />} />
-                  <Route path={UserDetailsTabs.Logs} element={<UserLogs />} />
+                <Route path="audit-logs">
+                  <Route index element={<AuditLogs />} />
+                  <Route path=":logId" element={<AuditLogDetails />} />
                 </Route>
-                <Route path={`:id/${UserDetailsTabs.Logs}/:logId`} element={<AuditLogDetails />} />
-              </Route>
-              <Route path="audit-logs">
-                <Route index element={<AuditLogs />} />
-                <Route path=":logId" element={<AuditLogDetails />} />
-              </Route>
-              <Route path="roles">
-                <Route index element={<Roles />} />
-                <Route path="create" element={<Roles />} />
-                <Route path=":id" element={<RoleDetails />}>
-                  <Route index element={<Navigate replace to={RoleDetailsTabs.Settings} />} />
-                  <Route path={RoleDetailsTabs.Settings} element={<RoleSettings />} />
-                  <Route path={RoleDetailsTabs.Permissions} element={<RolePermissions />} />
-                  <Route path={RoleDetailsTabs.Users} element={<RoleUsers />} />
+                <Route path="roles">
+                  <Route index element={<Roles />} />
+                  <Route path="create" element={<Roles />} />
+                  <Route path=":id" element={<RoleDetails />}>
+                    <Route index element={<Navigate replace to={RoleDetailsTabs.Settings} />} />
+                    <Route path={RoleDetailsTabs.Settings} element={<RoleSettings />} />
+                    <Route path={RoleDetailsTabs.Permissions} element={<RolePermissions />} />
+                    <Route path={RoleDetailsTabs.Users} element={<RoleUsers />} />
+                  </Route>
                 </Route>
+                <Route path="settings" element={<Settings />} />
               </Route>
-              <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>
         </AppBoundary>

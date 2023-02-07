@@ -11,12 +11,13 @@ import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
-import Sidebar, { getPath } from './components/Sidebar';
-import { useSidebarMenuItems } from './components/Sidebar/hook';
+import { getPath } from '../AppContent/Sidebar';
+import { useSidebarMenuItems } from '../AppContent/Sidebar/hook';
 import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
+import { AppLayoutOutletContext } from './types';
 
-const AppContent = () => {
+const AppLayout = () => {
   const { isAuthenticated, isLoading: isLogtoLoading, error, signIn } = useLogto();
   const href = useHref('/callback');
   const { isLoading: isPreferencesLoading } = useUserPreferences();
@@ -26,8 +27,8 @@ const AppContent = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { firstItem } = useSidebarMenuItems();
-  const mainRef = useRef<HTMLDivElement>(null);
-  const { scrollTop } = useScroll(mainRef.current);
+  const scrollableContent = useRef<HTMLDivElement>(null);
+  const { scrollTop } = useScroll(scrollableContent.current);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   useEffect(() => {
@@ -62,14 +63,9 @@ const AppContent = () => {
   return (
     <div className={styles.app}>
       <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
-      <div className={styles.content}>
-        <Sidebar />
-        <div ref={mainRef} className={styles.main}>
-          <Outlet />
-        </div>
-      </div>
+      <Outlet context={{ scrollableContent } satisfies AppLayoutOutletContext} />
     </div>
   );
 };
 
-export default AppContent;
+export default AppLayout;

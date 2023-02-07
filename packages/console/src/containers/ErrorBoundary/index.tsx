@@ -2,7 +2,7 @@ import { conditional } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { Component } from 'react';
 
-import AppError from '../AppError';
+import AppError from '../../components/AppError';
 
 type Props = {
   children: ReactNode;
