@@ -11,6 +11,7 @@ import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/Mult
 import MultiTextInputField from '@/components/MultiTextInputField';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { uriOriginValidator } from '@/utilities/validator';
 
 import * as styles from '../index.module.scss';
@@ -21,6 +22,7 @@ type Props = {
 
 const Settings = ({ data }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
   const {
     control,
     register,
@@ -41,7 +43,7 @@ const Settings = ({ data }: Props) => {
     <FormCard
       title="application_details.settings"
       description="application_details.settings_description"
-      learnMoreLink="https://docs.logto.io/docs/references/applications"
+      learnMoreLink={getDocumentationUrl('/docs/references/applications')}
     >
       <FormField isRequired title="application_details.application_name">
         <TextInput
