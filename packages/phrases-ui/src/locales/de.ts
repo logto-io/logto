@@ -10,7 +10,7 @@ const translation = {
   },
   secondary: {
     sign_in_with: 'Anmelden mit {{methods, list(type: disjunction;)}}',
-    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
+    register_with: 'Konto mit {{methods, list(type: disjunction;)}} erstellen',
     social_bind_with:
       'Besitzt du schon ein Konto? Melde dich an, um {{methods, list(type: disjunction;)}} mit deiner Identität zu verbinden.',
   },
@@ -24,7 +24,7 @@ const translation = {
     cancel: 'Abbrechen',
     save_password: 'Speichern',
     bind: 'Mit {{address}} verknüpfen',
-    bind_and_continue: 'Link and continue', // UNTRANSLATED
+    bind_and_continue: 'Verknüpfen und weiter',
     back: 'Gehe zurück',
     nav_back: 'Zurück',
     agree: 'Zustimmen',
@@ -32,13 +32,13 @@ const translation = {
     sign_in_with: 'Mit {{name}} anmelden',
     forgot_password: 'Passwort vergessen?',
     switch_to: 'Zu {{method}} wechseln',
-    sign_in_via_passcode: 'Sign in with verification code', // UNTRANSLATED
-    sign_in_via_password: 'Sign in with password', // UNTRANSLATED
-    change: 'Change {{method}}', // UNTRANSLATED
-    link_another_email: 'Link another email', // UNTRANSLATED
-    link_another_phone: 'Link another phone', // UNTRANSLATED
-    link_another_email_or_phone: 'Link another email or phone', // UNTRANSLATED
-    show_password: 'Show password', // UNTRANSLATED
+    sign_in_via_passcode: 'Mit Bestätigungscode anmelden',
+    sign_in_via_password: 'Mit Passwort anmelden',
+    change: '{{method}} ändern',
+    link_another_email: 'Andere Email verknüpfen',
+    link_another_phone: 'Andere Telefonnummer verknüpfen',
+    link_another_email_or_phone: 'Andere Email oder Telefonnummer verknüpfen',
+    show_password: 'Passwort anzeigen',
   },
   description: {
     email: 'Email',
@@ -57,18 +57,18 @@ const translation = {
     create_account_id_exists:
       'Das Konto mit {{type}} {{value}} existiert bereits, möchtest du dich anmelden?',
     link_account_id_exists:
-      'The account with {{type}} {{value}} already exists, would you like to link?', // UNTRANSLATED
+      'Das Konto mit {{type}} {{value}} existiert bereits, möchtest du es mit deinem Konto verknüpfen?',
     sign_in_id_does_not_exist:
       'Das Konto mit {{type}} {{value}} existiert nicht, möchtest du ein neues Konto erstellen?',
-    sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
-    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
+    sign_in_id_does_not_exist_alert: 'Das Konto mit {{type}} {{value}} existiert nicht',
+    create_account_id_exists_alert: 'Das Konto mit {{type}} {{value}} existiert bereits',
     social_identity_exist:
-      'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
-    bind_account_title: 'Link or create account', // UNTRANSLATED
+      '{{type}} {{value}} ist mit einem anderen Konto verknüpft. Bitte versuche ein(e(n)) andere(n/s) {{type}}',
+    bind_account_title: 'Link or create account',
     social_create_account: 'Kein Konto? Du kannst ein neues Konto erstellen und es verknüpfen.',
-    social_link_email: 'You can link another email', // UNTRANSLATED,
-    social_link_phone: 'You can link another phone', // UNTRANSLATED,
-    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
+    social_link_email: 'Du kannst eine weitere Email verknüpfen',
+    social_link_phone: 'Du kannst eine weitere Telefonnummer verknüpfen',
+    social_link_email_or_phone: 'Du kannst eine weitere Email oder Telefonnummer verknüpfen',
     social_bind_with_existing: 'Wir haben ein Konto gefunden, das du verknüpfen kannst.',
     reset_password: 'Passwort zurücksetzen',
     reset_password_description_email:
@@ -76,54 +76,57 @@ const translation = {
     reset_password_description_phone:
       'Gib die Telefonnummer deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
     new_password: 'Neues Passwort',
-    set_password: 'Set password', // UNTRANSLATED
+    set_password: 'Passwort setzen',
     password_changed: 'Passwort geändert',
-    no_account: 'No account yet? ', // UNTRANSLATED
-    have_account: 'Already had an account?', // UNTRANSLATED
-    enter_password: 'Enter Password', // UNTRANSLATED
-    enter_password_for: 'Sign in with the password to {{method}} {{value}}', // UNTRANSLATED
-    enter_username: 'Set username', // UNTRANSLATED
+    no_account: 'Noch kein Konto? ',
+    have_account: 'Hast du schon ein Konto?',
+    enter_password: 'Passwort eingeben',
+    enter_password_for: 'Passwort für {{method}} {{value}} eingeben',
+    enter_username: 'Benutzernamen eingeben',
     enter_username_description:
-      'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.', // UNTRANSLATED
-    link_email: 'Link email', // UNTRANSLATED
-    link_phone: 'Link phone', // UNTRANSLATED
-    link_email_or_phone: 'Link email or phone', // UNTRANSLATED
-    link_email_description: 'For added security, please link your email with the account.', // UNTRANSLATED
-    link_phone_description: 'For added security, please link your phone with the account.', // UNTRANSLATED
+      'Der Benutzername kann für die Anmeldung verwendet werden. Der Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.',
+    link_email: 'Email verknüpfen',
+    link_phone: 'Telefonnummer verknüpfen',
+    link_email_or_phone: 'Email oder Telefonnummer verknüpfen',
+    link_email_description:
+      'Für zusätzliche Sicherheit, verknüpfe bitte deine Email mit dem Konto.',
+    link_phone_description:
+      'Für zusätzliche Sicherheit, verknüpfe bitte deine Telefonnummer mit dem Konto.',
     link_email_or_phone_description:
-      'For added security, please link your email or phone with the account.', // UNTRANSLATED
-    continue_with_more_information: 'For added security, please complete below account details.', // UNTRANSLATED
+      'Für zusätzliche Sicherheit, verknüpfe bitte deine Email oder Telefonnummer mit dem Konto.',
+    continue_with_more_information:
+      'Für zusätzliche Sicherheit, vervollständige bitte deine Informationen.',
   },
   profile: {
-    title: 'Account Settings', // UNTRANSLATED
+    title: 'Konto Einstellungen',
     description:
-      'Change your account settings and manage your personal information here to ensure your account security.', // UNTRANSLATED
+      'Ändere hier deine Konto Einstellungen und verwalte deine persönlichen Informationen, um die Sicherheit deines Kontos zu gewährleisten.',
     settings: {
-      title: 'PROFILE SETTINGS', // UNTRANSLATED
-      profile_information: 'Profile Information', // UNTRANSLATED
-      avatar: 'Avatar', // UNTRANSLATED
-      name: 'Name', // UNTRANSLATED
-      username: 'Username', // UNTRANSLATED
+      title: 'PROFIL EINSTELLUNGEN',
+      profile_information: 'Profil Informationen',
+      avatar: 'Avatar',
+      name: 'Name',
+      username: 'Benutzername',
     },
     password: {
-      title: 'PASSWORD', // UNTRANSLATED
-      reset_password: 'Reset Password', // UNTRANSLATED
-      reset_password_sc: 'Reset password', // UNTRANSLATED
+      title: 'PASSWORT',
+      reset_password: 'Passwort zurücksetzen',
+      reset_password_sc: 'Passwort zurücksetzen',
     },
     link_account: {
-      title: 'LINK ACCOUNT', // UNTRANSLATED
-      email_phone_sign_in: 'Email / Phone Sign-In', // UNTRANSLATED
-      email: 'Email', // UNTRANSLATED
-      phone: 'Phone', // UNTRANSLATED
-      phone_sc: 'Phone number', // UNTRANSLATED
-      social: 'Social Sign-In', // UNTRANSLATED
-      social_sc: 'Social accounts', // UNTRANSLATED
+      title: 'KONTO VERKNÜPFEN',
+      email_phone_sign_in: 'Anmeldung mit Email oder Telefonnummer',
+      email: 'Email',
+      phone: 'Telefonnummer',
+      phone_sc: 'Telefonnummer',
+      social: 'Social Anmeldung',
+      social_sc: 'Social Konten',
     },
-    not_set: 'Not set', // UNTRANSLATED
-    edit: 'Edit', // UNTRANSLATED
-    change: 'Change', // UNTRANSLATED
-    link: 'Link', // UNTRANSLATED
-    unlink: 'Unlink', // UNTRANSLATED
+    not_set: 'Nicht gesetzt',
+    edit: 'Bearbeiten',
+    change: 'Ändern',
+    link: 'Verknüpfen',
+    unlink: 'Verknüpfung aufheben',
   },
   error: {
     username_password_mismatch: 'Benutzername oder Passwort ist falsch',
