@@ -1,4 +1,4 @@
-import { logtoUrl } from '#src/constants.js';
+import { logtoConsoleUrl } from '#src/constants.js';
 import { generatePassword } from '#src/utils.js';
 
 describe('smoke testing', () => {
@@ -7,11 +7,11 @@ describe('smoke testing', () => {
 
   it('opens with app element and navigates to welcome page', async () => {
     const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
-    await page.goto(logtoUrl);
+    await page.goto(logtoConsoleUrl);
     await navigation;
 
     await expect(page.waitForSelector('#app')).resolves.not.toBeNull();
-    expect(page.url()).toBe(new URL('console/welcome', logtoUrl).href);
+    expect(page.url()).toBe(new URL('console/welcome', logtoConsoleUrl).href);
   });
 
   it('registers a new admin account and automatically signs in', async () => {
@@ -22,7 +22,7 @@ describe('smoke testing', () => {
     await createAccountButton.click();
     await navigateToRegister;
 
-    expect(page.url()).toBe(new URL('register', logtoUrl).href);
+    expect(page.url()).toBe(new URL('register', logtoConsoleUrl).href);
 
     const usernameField = await page.waitForSelector('input[name=new-username]');
     const submitButton = await page.waitForSelector('button');
@@ -33,7 +33,7 @@ describe('smoke testing', () => {
     await submitButton.click();
     await navigateToSignIn;
 
-    expect(page.url()).toBe(new URL('register/username/password', logtoUrl).href);
+    expect(page.url()).toBe(new URL('register/username/password', logtoConsoleUrl).href);
 
     const passwordField = await page.waitForSelector('input[name=newPassword]');
     const confirmPasswordField = await page.waitForSelector('input[name=confirmPassword]');
@@ -45,7 +45,7 @@ describe('smoke testing', () => {
     await saveButton.click();
     await navigateToGetStarted;
 
-    expect(page.url()).toBe(new URL('console/get-started', logtoUrl).href);
+    expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
   });
 
   it('signs out of admin console', async () => {
@@ -62,7 +62,7 @@ describe('smoke testing', () => {
     await signOutButton.click();
     await navigation;
 
-    expect(page.url()).toBe(new URL('sign-in', logtoUrl).href);
+    expect(page.url()).toBe(new URL('sign-in', logtoConsoleUrl).href);
   });
 
   it('signs in to admin console', async () => {
@@ -77,7 +77,7 @@ describe('smoke testing', () => {
     await submitButton.click();
     await navigation;
 
-    expect(page.url()).toBe(new URL('console/get-started', logtoUrl).href);
+    expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
 
     const userElement = await page.waitForSelector('div[class$=topbar] > div:last-child');
     const usernameString = await userElement.$eval('div > div', (element) => element.textContent);

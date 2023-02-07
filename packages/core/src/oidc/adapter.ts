@@ -14,11 +14,8 @@ import { appendPath } from '#src/utils/url.js';
 import { getConstantClientMetadata } from './utils.js';
 
 const buildAdminConsoleClientMetadata = (envSet: EnvSet): AllClientMetadata => {
-  const { localhostUrl, adminConsoleUrl } = EnvSet.values;
-  const urls = deduplicate([
-    appendPath(localhostUrl, '/console').toString(),
-    adminConsoleUrl.toString(),
-  ]);
+  const { adminUrlSet } = EnvSet.values;
+  const urls = adminUrlSet.deduplicated().map((url) => appendPath(url, '/console').toString());
 
   return {
     ...getConstantClientMetadata(envSet, ApplicationType.SPA),
@@ -32,11 +29,8 @@ const buildAdminConsoleClientMetadata = (envSet: EnvSet): AllClientMetadata => {
 const buildDemoAppUris = (
   oidcClientMetadata: OidcClientMetadata
 ): Pick<OidcClientMetadata, 'redirectUris' | 'postLogoutRedirectUris'> => {
-  const { localhostUrl, endpoint } = EnvSet.values;
-  const urls = [
-    appendPath(localhostUrl, MountedApps.DemoApp).toString(),
-    appendPath(endpoint, MountedApps.DemoApp).toString(),
-  ];
+  const { urlSet } = EnvSet.values;
+  const urls = urlSet.deduplicated().map((url) => appendPath(url, MountedApps.DemoApp).toString());
 
   const data = {
     redirectUris: deduplicate([...urls, ...oidcClientMetadata.redirectUris]),
