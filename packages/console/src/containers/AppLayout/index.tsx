@@ -11,8 +11,8 @@ import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
-import { getPath } from './components/Sidebar';
-import { useSidebarMenuItems } from './components/Sidebar/hook';
+import { getPath } from '../AppContent/Sidebar';
+import { useSidebarMenuItems } from '../AppContent/Sidebar/hook';
 import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
 import { AppLayoutOutletContext } from './types';

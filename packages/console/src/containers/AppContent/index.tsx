@@ -1,7 +1,7 @@
 import { Outlet, useOutletContext } from 'react-router-dom';
 
-import Sidebar from '../AppLayout/components/Sidebar';
 import type { AppLayoutOutletContext } from '../AppLayout/types';
+import Sidebar from './Sidebar';
 import * as styles from './index.module.scss';
 
 const AppContent = () => {
