@@ -17,10 +17,7 @@ try {
   });
   await initI18n();
   await loadConnectorFactories();
-
-  if (EnvSet.values.isMultiTenancy) {
-    await checkRowLevelSecurity(EnvSet.default.queryClient);
-  }
+  await checkRowLevelSecurity(EnvSet.default.queryClient);
 
   // Import last until init completed
   const { default: initApp } = await import('./app/init.js');

@@ -1,5 +1,3 @@
-import net from 'net';
-
 import { tryThat } from '@logto/shared';
 import { assertEnv, getEnv, getEnvAsStringArray } from '@silverhand/essentials';
 
@@ -7,7 +5,6 @@ import UrlSet from './UrlSet.js';
 import { isTrue } from './parameters.js';
 import { throwErrorWithDsnMessage } from './throw-errors.js';
 
-const enableMultiTenancyKey = 'ENABLE_MULTI_TENANCY';
 const developmentTenantIdKey = 'DEVELOPMENT_TENANT_ID';
 
 type MultiTenancyMode = 'domain' | 'env';
@@ -21,10 +18,10 @@ export default class GlobalValues {
   public readonly httpsKey = process.env.HTTPS_KEY_PATH;
   public readonly isHttpsEnabled = Boolean(this.httpsCert && this.httpsKey);
 
-  public readonly isMultiTenancy = isTrue(getEnv(enableMultiTenancyKey));
-
   public readonly urlSet = new UrlSet(this.isHttpsEnabled, 3001);
   public readonly adminUrlSet = new UrlSet(this.isHttpsEnabled, 3002, 'ADMIN_');
+
+  public readonly isDomainBasedMultiTenancy = this.urlSet.endpoint.includes('*');
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   public readonly databaseUrl = tryThat(() => assertEnv('DB_URL'), throwErrorWithDsnMessage);
@@ -40,13 +37,5 @@ export default class GlobalValues {
 
   public get endpoint(): string {
     return this.urlSet.endpoint;
-  }
-
-  public get multiTenancyMode(): MultiTenancyMode {
-    const { hostname } = new URL(this.endpoint);
-
-    return this.isMultiTenancy && !net.isIP(hostname) && hostname !== 'localhost'
-      ? 'domain'
-      : 'env';
   }
 }

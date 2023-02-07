@@ -19,7 +19,7 @@ export default function koaConsoleRedirectProxy<
       return;
     }
 
-    if (ctx.path === '/console/welcome' && hasUser) {
+    if ((ctx.path === '/' || ctx.path === '/console/welcome') && hasUser) {
       ctx.redirect('/console');
 
       return;

@@ -17,15 +17,11 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
 };
 
 const getTenantId = () => {
-  if (!EnvSet.values.isMultiTenancy) {
-    return defaultTenant;
+  if (!EnvSet.values.isDomainBasedMultiTenancy) {
+    return (!EnvSet.values.isProduction && EnvSet.values.developmentTenantId) || defaultTenant;
   }
 
-  if (EnvSet.values.multiTenancyMode === 'domain') {
-    throw new Error('Not implemented');
-  }
-
-  return !EnvSet.values.isProduction && EnvSet.values.developmentTenantId;
+  throw new Error('Not implemented');
 };
 
 export default async function initApp(app: Koa): Promise<void> {
