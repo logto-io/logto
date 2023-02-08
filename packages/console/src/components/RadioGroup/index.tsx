@@ -19,7 +19,7 @@ type Props = {
   name: string;
   children: RadioElement | RadioElement[];
   value?: string;
-  type?: 'card' | 'plain';
+  type?: 'card' | 'plain' | 'compact';
   className?: string;
   onChange?: (value: string) => void;
 };
