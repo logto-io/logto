@@ -27,11 +27,7 @@ import { getTenantDatabaseDsn } from './utils.js';
 
 export default class Tenant implements TenantContext {
   static async create(id: string): Promise<Tenant> {
-    if (!EnvSet.values.isDomainBasedMultiTenancy) {
-      return new Tenant(EnvSet.default, id);
-    }
-
-    // In multi-tenancy mode, treat the default database URL as the management URL
+    // Treat the default database URL as the management URL
     const envSet = new EnvSet(await getTenantDatabaseDsn(EnvSet.default, id));
     await envSet.load();
 

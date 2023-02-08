@@ -17,6 +17,3 @@ create table sign_in_experiences (
 
 create index sign_in_experiences__id
   on sign_in_experiences (tenant_id, id);
-
-create trigger set_tenant_id before insert on sign_in_experiences
-  for each row execute procedure set_tenant_id();

@@ -1,102 +1,20 @@
-import { readdir, readFile } from 'fs/promises';
-import path from 'path';
-
-import { generateStandardId } from '@logto/core-kit';
-import {
-  logtoConfigGuards,
-  LogtoOidcConfigKey,
-  managementResource,
-  defaultSignInExperience,
-  createDefaultAdminConsoleConfig,
-  createDemoAppApplication,
-  defaultRole,
-  managementResourceScope,
-  defaultRoleScopeRelation,
-  defaultTenant,
-} from '@logto/schemas';
-import { Hooks, Tenants } from '@logto/schemas/models';
+import { logtoConfigGuards, LogtoOidcConfigKey } from '@logto/schemas';
 import chalk from 'chalk';
 import type { DatabasePool, DatabaseTransactionConnection } from 'slonik';
-import { sql } from 'slonik';
-import { raw } from 'slonik-sql-tag-raw';
 import type { CommandModule } from 'yargs';
 import { z } from 'zod';
 
-import { createPoolAndDatabaseIfNeeded, insertInto } from '../../../database.js';
+import { createPoolAndDatabaseIfNeeded } from '../../../database.js';
 import {
   getRowsByKeys,
   doesConfigsTableExist,
   updateValueByKey,
 } from '../../../queries/logto-config.js';
-import { updateDatabaseTimestamp } from '../../../queries/system.js';
-import { getPathInModule, log, oraPromise } from '../../../utilities.js';
+import { log, oraPromise } from '../../../utilities.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
 import { oidcConfigReaders } from './oidc-config.js';
-
-const getExplicitOrder = (query: string) => {
-  const matched = /\/\*\s*init_order\s*=\s*([\d.]+)\s*\*\//.exec(query)?.[1];
-
-  return matched ? Number(matched) : undefined;
-};
-
-const compareQuery = ([t1, q1]: [string, string], [t2, q2]: [string, string]) => {
-  const o1 = getExplicitOrder(q1);
-  const o2 = getExplicitOrder(q2);
-
-  if (o1 === undefined && o2 === undefined) {
-    return t1.localeCompare(t2);
-  }
-
-  if (o1 === undefined) {
-    return 1;
-  }
-
-  if (o2 === undefined) {
-    return -1;
-  }
-
-  return o1 - o2;
-};
-
-const createTables = async (connection: DatabaseTransactionConnection) => {
-  const tableDirectory = getPathInModule('@logto/schemas', 'tables');
-  const directoryFiles = await readdir(tableDirectory);
-  const tableFiles = directoryFiles.filter((file) => file.endsWith('.sql'));
-  const queries = await Promise.all(
-    tableFiles.map<Promise<[string, string]>>(async (file) => [
-      file,
-      await readFile(path.join(tableDirectory, file), 'utf8'),
-    ])
-  );
-
-  const allQueries: Array<[string, string]> = [
-    [Hooks.tableName, Hooks.raw],
-    [Tenants.tableName, Tenants.raw],
-    ...queries,
-  ];
-  const sorted = allQueries.slice().sort(compareQuery);
-
-  for (const [, query] of sorted) {
-    // eslint-disable-next-line no-await-in-loop
-    await connection.query(sql`${raw(query)}`);
-  }
-};
-
-const seedTables = async (connection: DatabaseTransactionConnection, latestTimestamp: number) => {
-  await connection.query(insertInto(defaultTenant, 'tenants'));
-
-  await Promise.all([
-    connection.query(insertInto(managementResource, 'resources')),
-    connection.query(insertInto(managementResourceScope, 'scopes')),
-    connection.query(insertInto(createDefaultAdminConsoleConfig(), 'logto_configs')),
-    connection.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
-    connection.query(insertInto(createDemoAppApplication(generateStandardId()), 'applications')),
-    connection.query(insertInto(defaultRole, 'roles')),
-    connection.query(insertInto(defaultRoleScopeRelation, 'roles_scopes')),
-    updateDatabaseTimestamp(connection, latestTimestamp),
-  ]);
-};
+import { createTables, seedTables } from './tables.js';
 
 const seedOidcConfigs = async (pool: DatabaseTransactionConnection) => {
   const configGuard = z.object({

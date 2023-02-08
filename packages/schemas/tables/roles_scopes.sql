@@ -13,6 +13,3 @@ create table roles_scopes (
 
 create index roles_scopes__id
   on roles_scopes (tenant_id, id);
-
-create trigger set_tenant_id before insert on roles_scopes
-  for each row execute procedure set_tenant_id();

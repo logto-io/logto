@@ -173,6 +173,10 @@ jobs:
         run: node .scripts/compare-database.js fresh old
       # ** End **
 
+      - name: Check database
+        working-directory: ./fresh
+        run: node .scripts/check-database.js fresh
+
       - name: Check alteration databases
         working-directory: ./fresh
         run: node .scripts/check-alterations-sequence.js

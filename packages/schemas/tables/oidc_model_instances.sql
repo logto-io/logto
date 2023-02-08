@@ -31,6 +31,3 @@ create index oidc_model_instances__model_name_payload_grant_id
     model_name,
     (payload->>'grantId')
   );
-
-create trigger set_tenant_id before insert on oidc_model_instances
-  for each row execute procedure set_tenant_id();

@@ -3,3 +3,5 @@ create table systems (
   value jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,
   primary key (key)
 );
+
+/* no_after_each */

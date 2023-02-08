@@ -12,6 +12,3 @@ create table connectors (
 
 create index connectors__id
   on connectors (tenant_id, id);
-
-create trigger set_tenant_id before insert on connectors
-  for each row execute procedure set_tenant_id();
