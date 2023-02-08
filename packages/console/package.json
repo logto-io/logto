@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@fontsource/roboto-mono": "^4.5.7",
+    "@logto/connector-kit": "workspace:*",
     "@logto/core-kit": "workspace:*",
     "@logto/language-kit": "workspace:*",
     "@logto/phrases": "workspace:*",
