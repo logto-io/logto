@@ -205,7 +205,7 @@ describe('connector route', () => {
       );
     });
 
-    it('throw when post a new connector record with wrong config', async () => {
+    it('throw when create a new connector record with wrong config', async () => {
       loadConnectorFactories.mockResolvedValueOnce([
         {
           ...mockConnectorFactory,

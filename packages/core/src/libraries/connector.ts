@@ -42,7 +42,7 @@ export const createConnectorLibrary = (queries: Queries) => {
         try {
           const { rawConnector, rawMetadata } = await buildRawConnector(
             connectorFactory,
-            async (_id: string) => getConnectorConfig(id)
+            async () => getConnectorConfig(id)
           );
 
           const connector: AllConnector = {
