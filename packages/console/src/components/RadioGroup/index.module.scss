@@ -10,7 +10,79 @@
   }
 }
 
+.compact {
+  display: flex;
+  flex-wrap: nowrap;
+  font: var(--font-body-2);
+  align-items: center;
+
+  > .radio {
+    position: relative;
+    border: 1px solid var(--color-border);
+    user-select: none;
+    cursor: pointer;
+    flex: 1;
+
+    &:first-child {
+      border-radius: 12px 0 0 12px;
+    }
+
+    &:last-child {
+      border-radius: 0 12px 12px 0;
+    }
+
+    &:not(:first-child) {
+      border-left: none;
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      background-color: var(--color-layer-2);
+    }
+
+    &:not(.disabled):focus {
+      border-color: var(--color-primary);
+    }
+
+    &:not(.disabled):hover {
+      color: var(--color-text-link);
+      font: var(--font-label-2);
+      border-color: var(--color-primary);
+      background-color: var(--color-hover-variant);
+
+      &:not(:first-child)::before {
+        position: absolute;
+        content: '';
+        width: 1px;
+        top: -1px;
+        left: -1px;
+        bottom: -1px;
+        background-color: var(--color-primary);
+      }
+    }
+
+    .content {
+      padding: _.unit(5);
+    }
+
+    &.checked {
+      border-color: var(--color-primary);
+
+      &:not(:first-child)::before {
+        position: absolute;
+        content: '';
+        width: 1px;
+        top: -1px;
+        left: -1px;
+        bottom: -1px;
+        background-color: var(--color-primary);
+      }
+    }
+  }
+}
+
 .card {
+  /* stylelint-disable-next-line no-descending-specificity */
   > .radio {
     padding: _.unit(3);
     border-radius: _.unit(4);

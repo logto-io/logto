@@ -24,7 +24,7 @@ export type Props = {
   isChecked?: boolean;
   onClick?: () => void;
   tabIndex?: number;
-  type?: 'card' | 'plain';
+  type?: 'card' | 'plain' | 'compact';
   isDisabled?: boolean;
   disabledLabel?: AdminConsoleKey;
 };
