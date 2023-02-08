@@ -14,12 +14,14 @@
   display: flex;
   flex-wrap: nowrap;
   font: var(--font-body-2);
+  align-items: center;
 
   > .radio {
     position: relative;
     border: 1px solid var(--color-border);
     user-select: none;
     cursor: pointer;
+    flex: 1;
 
     &:first-child {
       border-radius: 12px 0 0 12px;
@@ -44,6 +46,7 @@
 
     &:not(.disabled):hover {
       color: var(--color-text-link);
+      font: var(--font-label-2);
       border-color: var(--color-primary);
       background-color: var(--color-hover-variant);
 
