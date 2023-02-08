@@ -40,8 +40,29 @@
       background-color: var(--color-layer-2);
     }
 
+    .content {
+      padding: _.unit(5);
+      display: flex;
+      align-items: center;
+
+      .icon {
+        margin-right: _.unit(4);
+        color: var(--color-text-secondary);
+
+        > svg {
+          display: block;
+        }
+      }
+    }
+
     &:not(.disabled):focus {
       border-color: var(--color-primary);
+
+      .content {
+        .icon {
+          color: var(--color-primary);
+        }
+      }
     }
 
     &:not(.disabled):hover {
@@ -49,6 +70,12 @@
       font: var(--font-label-2);
       border-color: var(--color-primary);
       background-color: var(--color-hover-variant);
+
+      .content {
+        .icon {
+          color: var(--color-primary);
+        }
+      }
 
       &:not(:first-child)::before {
         position: absolute;
@@ -59,10 +86,6 @@
         bottom: -1px;
         background-color: var(--color-primary);
       }
-    }
-
-    .content {
-      padding: _.unit(5);
     }
 
     &.checked {
@@ -107,6 +130,7 @@
       box-shadow: var(--shadow-2);
     }
 
+    /* stylelint-disable-next-line no-descending-specificity */
     .content {
       position: relative;
 
@@ -118,6 +142,13 @@
         svg {
           opacity: 0%;
         }
+      }
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      .icon {
+        margin-right: _.unit(2);
+        vertical-align: middle;
+        color: var(--color-text-secondary);
       }
 
       .disabledLabel {
@@ -154,9 +185,20 @@
       margin-bottom: _.unit(2);
     }
 
+    /* stylelint-disable-next-line no-descending-specificity */
     .content {
       display: flex;
       align-items: center;
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      .icon {
+        margin-right: _.unit(2);
+        color: var(--color-text-secondary);
+
+        > svg {
+          display: block;
+        }
+      }
 
       .indicator {
         border-radius: 50%;
@@ -177,6 +219,7 @@
     }
 
     &.checked {
+      /* stylelint-disable-next-line no-descending-specificity */
       .content {
         .indicator {
           border-color: var(--color-primary);
@@ -192,6 +235,7 @@
       cursor: not-allowed;
       color: var(--color-disabled);
 
+      /* stylelint-disable-next-line no-descending-specificity */
       .content {
         .indicator {
           border-color: var(--color-disabled);

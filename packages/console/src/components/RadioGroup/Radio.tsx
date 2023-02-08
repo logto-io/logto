@@ -27,6 +27,7 @@ export type Props = {
   type?: 'card' | 'plain' | 'compact';
   isDisabled?: boolean;
   disabledLabel?: AdminConsoleKey;
+  icon?: ReactNode;
 };
 
 const Radio = ({
@@ -41,6 +42,7 @@ const Radio = ({
   type,
   isDisabled,
   disabledLabel,
+  icon,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -81,6 +83,7 @@ const Radio = ({
         )}
         {children}
         {type === 'plain' && <div className={styles.indicator} />}
+        {icon && <span className={styles.icon}>{icon}</span>}
         {title && t(title)}
         {isDisabled && disabledLabel && (
           <div className={classNames(styles.indicator, styles.disabledLabel)}>
