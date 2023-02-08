@@ -6,7 +6,7 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { defaultConnectorMethods } from '#src/utils/connectors/consts.js';
 import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
-import { validateConnectorModule, parseMetadata } from '#src/utils/connectors/index.js';
+import { buildRawConnector } from '#src/utils/connectors/index.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 export type ConnectorLibrary = ReturnType<typeof createConnectorLibrary>;
@@ -39,16 +39,11 @@ export const createConnectorLibrary = (queries: Queries) => {
           return;
         }
 
-        const { createConnector, path: packagePath } = connectorFactory;
-
         try {
-          const rawConnector = await createConnector({
-            getConfig: async () => {
-              return getConnectorConfig(id);
-            },
-          });
-          validateConnectorModule(rawConnector);
-          const rawMetadata = await parseMetadata(rawConnector.metadata, packagePath);
+          const { rawConnector, rawMetadata } = await buildRawConnector(
+            connectorFactory,
+            async () => getConnectorConfig(id)
+          );
 
           const connector: AllConnector = {
             ...defaultConnectorMethods,
