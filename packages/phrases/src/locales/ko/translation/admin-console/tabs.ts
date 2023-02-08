@@ -7,7 +7,7 @@ const tabs = {
   connectors: '연동',
   users: '사용자 관리',
   audit_logs: 'Audit 기록',
-  roles: 'Roles', // UNTRANSLATED
+  roles: '역할',
   docs: '문서',
   contact_us: '연락처',
   settings: '설정',
