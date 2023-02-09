@@ -71,6 +71,14 @@ npm init @logto
 const languages = ['Deutsch', 'English', 'Français', 'Português', '简体中文', 'Türkçe', '한국어'];
 ```
 
+## Web compatibility
+
+Logto uses the [default browserlist config](https://github.com/browserslist/browserslist#full-list) to compiling frontend projects, which is:
+
+```
+> 0.5%, last 2 versions, Firefox ESR, not dead
+```
+
 ## Bug report, feature request, feedback
 
 - Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@logto.io](mailto:security@logto.io).
