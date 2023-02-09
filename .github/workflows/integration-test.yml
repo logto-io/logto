@@ -88,7 +88,7 @@ jobs:
 
       - name: Run Logto
         working-directory: logto/
-        run: npm start &
+        run: nohup npm start > nohup.out 2> nohup.err < /dev/null &
         env:
           INTEGRATION_TEST: true
 
@@ -101,3 +101,11 @@ jobs:
           cd tests/packages/integration-tests
           pnpm build
           pnpm test:${{ matrix.test_target }}
+
+      - name: Show logs
+        working-directory: logto/
+        run: cat nohup.out
+
+      - name: Show error logs
+        working-directory: logto/
+        run: cat nohup.err

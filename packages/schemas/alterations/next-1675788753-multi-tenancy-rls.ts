@@ -44,15 +44,34 @@ const alteration: AlterationScript = {
     await pool.query(sql`
       alter table hooks
         add column tenant_id varchar(21) not null default 'default'
-          references tenants (id) on update cascade on delete cascade;
+          references tenants (id) on update cascade on delete cascade,
+        alter column id type varchar(21); -- OK to downsize since we use length 21 for ID generation in core
+
       alter table hooks
         alter column tenant_id drop default;
+
       create index hooks__id on hooks (tenant_id, id);
+
+      drop index hooks__event;
+      create index hooks__event on hooks (tenant_id, event);
+
+      create trigger set_tenant_id before insert on hooks
+        for each row execute procedure set_tenant_id();
+    `);
+
+    // Add db_user column to tenants table
+    await pool.query(sql`
+      alter table tenants
+        add column db_user varchar(128),
+        add constraint tenants__db_user
+          unique (db_user);
     `);
 
     // Create role and setup privileges
     const baseRole = `logto_tenant_${database}`;
     const baseRoleId = getId(baseRole);
+
+    // See `_after_all.sql` for comments
     await pool.query(sql`
       create role ${baseRoleId} noinherit;
 
@@ -65,17 +84,19 @@ const alteration: AlterationScript = {
         on table tenants
         from ${baseRoleId};
 
+      grant select (id, db_user)
+        on table tenants
+        to ${baseRoleId};
+
+      alter table tenants enable row level security;
+
+      create policy tenants_tenant_id on tenants
+        to ${baseRoleId}
+        using (db_user = current_user);
+
       revoke all privileges
         on table systems
         from ${baseRoleId};
-    `);
-
-    // Add db_user column to tenants table
-    await pool.query(sql`
-      alter table tenants
-        add column db_user varchar(128),
-        add constraint tenants__db_user
-          unique (db_user);
     `);
 
     // Enable RLS
@@ -130,6 +151,9 @@ const alteration: AlterationScript = {
         in schema public
         from ${baseRoleId};
 
+      drop policy tenants_tenant_id on tenants;
+      alter table tenants disable row level security;
+
       drop role ${baseRoleId};
     `);
 
@@ -139,13 +163,17 @@ const alteration: AlterationScript = {
         drop column db_user;
     `);
 
-    console.log('3');
     // Revert hooks table from multi-tenancy
     await pool.query(sql`
       drop index hooks__id;
 
       alter table hooks
-        drop column tenant_id;
+        drop column tenant_id,
+        alter column id type varchar(32);
+
+      create index hooks__event on hooks (event);
+
+      drop trigger set_tenant_id on hooks;
     `);
   },
 };

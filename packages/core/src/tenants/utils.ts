@@ -6,20 +6,21 @@ import { identifier, sql } from '@withtyped/postgres';
 import type { QueryClient } from '@withtyped/server';
 import { parseDsn, stringifyDsn } from 'slonik';
 
-import type { EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 
 /**
  * This function is to fetch the tenant password for the corresponding Postgres user.
  *
  * In multi-tenancy mode, Logto should ALWAYS use a restricted user with RLS enforced to ensure data isolation between tenants.
  */
-export const getTenantDatabaseDsn = async (defaultEnvSet: EnvSet, tenantId: string) => {
+export const getTenantDatabaseDsn = async (tenantId: string) => {
+  const { queryClient, dbUrl } = EnvSet;
   const {
     tableName,
     rawKeys: { id, dbUser, dbUserPassword },
   } = Tenants;
 
-  const { rows } = await defaultEnvSet.queryClient.query(sql`
+  const { rows } = await queryClient.query(sql`
     select ${identifier(dbUser)}, ${identifier(dbUserPassword)}
     from ${identifier(tableName)}
     where ${identifier(id)} = ${tenantId}
@@ -29,14 +30,14 @@ export const getTenantDatabaseDsn = async (defaultEnvSet: EnvSet, tenantId: stri
     throw new Error(`Cannot find valid tenant credentials for ID ${tenantId}`);
   }
 
-  const options = parseDsn(defaultEnvSet.databaseUrl);
+  const options = parseDsn(dbUrl);
   const username = rows[0][dbUser];
   const password = rows[0][dbUserPassword];
 
   return stringifyDsn({
     ...options,
-    username: conditional(!username && String(username)),
-    password: conditional(!password && String(password)),
+    username: conditional(typeof username === 'string' && username),
+    password: conditional(typeof password === 'string' && password),
   });
 };
 
@@ -48,9 +49,7 @@ export const checkRowLevelSecurity = async (client: QueryClient) => {
     and rowsecurity=false
   `);
 
-  if (
-    rows.some(({ tablename }) => tablename !== Systems.table && tablename !== Tenants.tableName)
-  ) {
+  if (rows.some(({ tablename }) => tablename !== Systems.table)) {
     throw new Error(
       'Row-level security has to be enforced on EVERY business table when starting Logto.\n' +
         `Found following table(s) without RLS: ${rows

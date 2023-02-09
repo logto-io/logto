@@ -28,7 +28,7 @@ import { getTenantDatabaseDsn } from './utils.js';
 export default class Tenant implements TenantContext {
   static async create(id: string): Promise<Tenant> {
     // Treat the default database URL as the management URL
-    const envSet = new EnvSet(await getTenantDatabaseDsn(EnvSet.default, id));
+    const envSet = new EnvSet(await getTenantDatabaseDsn(id));
     await envSet.load();
 
     return new Tenant(envSet, id);

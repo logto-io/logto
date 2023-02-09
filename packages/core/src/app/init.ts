@@ -17,8 +17,15 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
 };
 
 const getTenantId = () => {
-  if (!EnvSet.values.isDomainBasedMultiTenancy) {
-    return (!EnvSet.values.isProduction && EnvSet.values.developmentTenantId) || defaultTenant;
+  const { isDomainBasedMultiTenancy, isProduction, isIntegrationTest, developmentTenantId } =
+    EnvSet.values;
+
+  if (!isDomainBasedMultiTenancy) {
+    if ((!isProduction || isIntegrationTest) && developmentTenantId) {
+      return developmentTenantId;
+    }
+
+    return defaultTenant;
   }
 
   throw new Error('Not implemented');

@@ -25,6 +25,10 @@ const middlewareList = [
   return mock;
 });
 
+mockEsm('./utils.js', () => ({
+  getTenantDatabaseDsn: async () => 'postgres://mock.db.url',
+}));
+
 // eslint-disable-next-line unicorn/consistent-function-scoping
 mockEsmDefault('#src/oidc/init.js', () => () => createMockProvider());
 

@@ -10,6 +10,5 @@ export const Tenants = createModel(/* sql */ `
     constraint tenants__db_user
       unique (db_user)
   );
-
   /* no_after_each */
 `);

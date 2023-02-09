@@ -58,7 +58,7 @@ export const Hooks = createModel(/* sql */ `
 
   create index hooks__event on hooks (tenant_id, event);
 `)
-  .extend('tenantId', z.string().optional())
   .extend('id', { default: () => generateStandardId(), readonly: true })
   .extend('event', z.nativeEnum(HookEvent)) // Tried to use `.refine()` to show the correct error path, but not working.
-  .extend('config', hookConfigGuard);
+  .extend('config', hookConfigGuard)
+  .exclude('tenantId');

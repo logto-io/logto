@@ -1,6 +1,6 @@
 import { ApplicationType, CustomClientMetadataKey, GrantType } from '@logto/schemas';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { mockEnvSet } from '#src/test-utils/env-set.js';
 
 import {
   isOriginAllowed,
@@ -10,22 +10,22 @@ import {
 } from './utils.js';
 
 describe('getConstantClientMetadata()', () => {
-  expect(getConstantClientMetadata(EnvSet.default, ApplicationType.SPA)).toEqual({
+  expect(getConstantClientMetadata(mockEnvSet, ApplicationType.SPA)).toEqual({
     application_type: 'web',
     grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
     token_endpoint_auth_method: 'none',
   });
-  expect(getConstantClientMetadata(EnvSet.default, ApplicationType.Native)).toEqual({
+  expect(getConstantClientMetadata(mockEnvSet, ApplicationType.Native)).toEqual({
     application_type: 'native',
     grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
     token_endpoint_auth_method: 'none',
   });
-  expect(getConstantClientMetadata(EnvSet.default, ApplicationType.Traditional)).toEqual({
+  expect(getConstantClientMetadata(mockEnvSet, ApplicationType.Traditional)).toEqual({
     application_type: 'web',
     grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
     token_endpoint_auth_method: 'client_secret_basic',
   });
-  expect(getConstantClientMetadata(EnvSet.default, ApplicationType.MachineToMachine)).toEqual({
+  expect(getConstantClientMetadata(mockEnvSet, ApplicationType.MachineToMachine)).toEqual({
     application_type: 'web',
     grant_types: [GrantType.ClientCredentials],
     token_endpoint_auth_method: 'client_secret_basic',

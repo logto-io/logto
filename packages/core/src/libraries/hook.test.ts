@@ -27,7 +27,6 @@ const queryFunction = jest.fn();
 
 const url = 'https://logto.gg';
 const hook: InferModelType<ModelRouters['hook']['model']> = {
-  tenantId: undefined,
   id: 'foo',
   event: HookEvent.PostSignIn,
   config: { headers: { bar: 'baz' }, url, retries: 3 },

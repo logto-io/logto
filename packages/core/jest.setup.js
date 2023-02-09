@@ -3,7 +3,6 @@
  */
 
 import { createMockUtils } from '@logto/shared/esm';
-import { createMockQueryResult, createMockPool } from 'slonik';
 
 const { jest } = import.meta;
 const { mockEsm, mockEsmWithActual, mockEsmDefault } = createMockUtils(jest);
@@ -12,6 +11,7 @@ process.env.DB_URL = 'postgres://mock.db.url';
 process.env.ENDPOINT = 'https://logto.test';
 process.env.NODE_ENV = 'test';
 
+/* Mock for EnvSet */
 mockEsm('#src/libraries/logto-config.js', () => ({
   createLogtoConfigLibrary: () => ({ getOidcConfigs: () => ({}) }),
 }));
@@ -24,6 +24,7 @@ mockEsm('#src/env-set/check-alteration-state.js', () => ({
 mockEsmDefault('#src/env-set/oidc.js', () => () => ({
   issuer: 'https://logto.test/oidc',
 }));
+/* End */
 
 await mockEsmWithActual('#src/env-set/index.js', () => ({
   MountedApps: {
@@ -32,18 +33,6 @@ await mockEsmWithActual('#src/env-set/index.js', () => ({
     Console: 'console',
     DemoApp: 'demo-app',
     Welcome: 'welcome',
-  },
-  // TODO: Remove after clean up of default env sets
-  default: {
-    get oidc() {
-      return {
-        issuer: 'https://logto.test/oidc',
-      };
-    },
-    get pool() {
-      return createMockPool({ query: async () => createMockQueryResult([]) });
-    },
-    load: jest.fn(),
   },
 }));
 
