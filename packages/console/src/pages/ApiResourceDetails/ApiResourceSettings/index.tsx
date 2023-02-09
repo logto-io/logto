@@ -38,7 +38,7 @@ const ApiResourceSettings = () => {
     }
 
     const updatedApiResource = await api
-      .patch(`/api/resources/${resource.id}`, { json: formData })
+      .patch(`api/resources/${resource.id}`, { json: formData })
       .json<Resource>();
     reset(updatedApiResource);
     onResourceUpdated(updatedApiResource);

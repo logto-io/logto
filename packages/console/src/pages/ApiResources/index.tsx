@@ -42,7 +42,7 @@ const ApiResources = () => {
     page: 1,
   });
 
-  const url = buildUrl('/api/resources', {
+  const url = buildUrl('api/resources', {
     page: String(page),
     page_size: String(pageSize),
   });

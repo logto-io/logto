@@ -44,6 +44,7 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
   const api = useMemo(
     () =>
       ky.create({
+        prefixUrl: window.location.origin,
         timeout: requestTimeout,
         hooks: {
           beforeError: hideErrorToast

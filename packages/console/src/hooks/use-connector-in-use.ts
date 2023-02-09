@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import type { RequestError } from './use-api';
 
 const useConnectorInUse = () => {
-  const { data } = useSWR<SignInExperience, RequestError>('/api/sign-in-exp');
+  const { data } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
 
   const isConnectorInUse = useCallback(
     (connector?: ConnectorResponse) => {

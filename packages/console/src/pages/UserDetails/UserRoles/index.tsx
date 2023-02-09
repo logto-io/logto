@@ -39,7 +39,7 @@ const UserRoles = () => {
   });
 
   const { data, error, mutate } = useSWR<[Role[], number], RequestError>(
-    buildUrl(`/api/users/${userId}/roles`, {
+    buildUrl(`api/users/${userId}/roles`, {
       page: String(page),
       page_size: String(pageSize),
       ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
@@ -63,7 +63,7 @@ const UserRoles = () => {
     setIsDeleting(true);
 
     try {
-      await api.delete(`/api/users/${userId}/roles/${roleToBeDeleted.id}`);
+      await api.delete(`api/users/${userId}/roles/${roleToBeDeleted.id}`);
       toast.success(t('user_details.roles.deleted', { name: roleToBeDeleted.name }));
       await mutate();
       setRoleToBeDeleted(undefined);

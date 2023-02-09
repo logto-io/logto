@@ -83,7 +83,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
     const body = connectorData.isStandard ? standardConnectorPayload : payload;
 
     const updatedConnector = await api
-      .patch(`/api/connectors/${connectorData.id}`, {
+      .patch(`api/connectors/${connectorData.id}`, {
         json: body,
       })
       .json<ConnectorResponse>();

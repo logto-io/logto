@@ -30,8 +30,8 @@ const AuditLogDetails = () => {
   const { id, logId } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error } = useSWR<Log, RequestError>(logId && `/api/logs/${logId}`);
-  const { data: userData } = useSWR<User, RequestError>(id && `/api/users/${id}`);
+  const { data, error } = useSWR<Log, RequestError>(logId && `api/logs/${logId}`);
+  const { data: userData } = useSWR<User, RequestError>(id && `api/users/${id}`);
 
   const isLoading = !data && !error;
 

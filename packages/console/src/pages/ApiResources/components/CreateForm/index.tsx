@@ -33,7 +33,7 @@ const CreateForm = ({ onClose }: Props) => {
       return;
     }
 
-    const createdApiResource = await api.post('/api/resources', { json: data }).json<Resource>();
+    const createdApiResource = await api.post('api/resources', { json: data }).json<Resource>();
     onClose?.(createdApiResource);
   });
 

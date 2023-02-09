@@ -12,12 +12,12 @@ const useConfigs = () => {
     data: configs,
     error,
     mutate,
-  } = useSWR<AdminConsoleData, RequestError>(shouldFetch && '/api/configs/admin-console');
+  } = useSWR<AdminConsoleData, RequestError>(shouldFetch && 'api/configs/admin-console');
   const api = useApi();
 
   const updateConfigs = async (json: Partial<AdminConsoleData>) => {
     const updatedConfigs = await api
-      .patch('/api/configs/admin-console', {
+      .patch('api/configs/admin-console', {
         json,
       })
       .json<AdminConsoleData>();

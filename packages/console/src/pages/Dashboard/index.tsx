@@ -38,13 +38,13 @@ const tickFormatter = new Intl.NumberFormat('en-US', {
 const Dashboard = () => {
   const [date, setDate] = useState<string>(format(Date.now(), 'yyyy-MM-dd'));
   const { data: totalData, error: totalError } = useSWR<TotalUsersResponse, RequestError>(
-    '/api/dashboard/users/total'
+    'api/dashboard/users/total'
   );
   const { data: newData, error: newError } = useSWR<NewUsersResponse, RequestError>(
-    '/api/dashboard/users/new'
+    'api/dashboard/users/new'
   );
   const { data: activeData, error: activeError } = useSWR<ActiveUsersResponse, RequestError>(
-    `/api/dashboard/users/active?date=${date}`
+    `api/dashboard/users/active?date=${date}`
   );
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 

@@ -32,7 +32,7 @@ const RoleSettings = () => {
       return;
     }
 
-    const updatedRole = await api.patch(`/api/roles/${role.id}`, { json: formData }).json<Role>();
+    const updatedRole = await api.patch(`api/roles/${role.id}`, { json: formData }).json<Role>();
     reset(updatedRole);
     onRoleUpdated(updatedRole);
     toast.success(t('general.saved'));

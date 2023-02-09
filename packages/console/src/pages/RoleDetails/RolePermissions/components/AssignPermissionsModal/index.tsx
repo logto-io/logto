@@ -32,7 +32,7 @@ const AssignPermissionsModal = ({ roleId, onClose }: Props) => {
     setIsSubmitting(true);
 
     try {
-      await api.post(`/api/roles/${roleId}/scopes`, {
+      await api.post(`api/roles/${roleId}/scopes`, {
         json: { scopeIds: scopes.map(({ id }) => id) },
       });
       toast.success(t('role_details.permission.permission_assigned'));

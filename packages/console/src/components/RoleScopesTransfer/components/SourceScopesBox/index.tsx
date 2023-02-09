@@ -29,10 +29,10 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
   const { data: allResources, error: fetchAllResourcesError } = useSWR<
     ResourceResponse[],
     RequestError
-  >('/api/resources?includeScopes=true');
+  >('api/resources?includeScopes=true');
 
   const { data: roleScopes, error: fetchRoleScopesError } = useSWR<Scope[], RequestError>(
-    roleId && `/api/roles/${roleId}/scopes`
+    roleId && `api/roles/${roleId}/scopes`
   );
 
   const isLoading =

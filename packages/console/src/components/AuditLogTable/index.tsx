@@ -34,7 +34,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
     applicationId: '',
   });
 
-  const url = buildUrl('/api/logs', {
+  const url = buildUrl('api/logs', {
     page: String(page),
     page_size: String(pageSize),
     ...conditional(event && { logType: event }),

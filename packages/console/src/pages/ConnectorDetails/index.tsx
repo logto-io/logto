@@ -47,10 +47,10 @@ const ConnectorDetails = () => {
   const [isSetupOpen, setIsSetupOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<ConnectorResponse, RequestError>(
-    connectorId && `/api/connectors/${connectorId}`
+    connectorId && `api/connectors/${connectorId}`
   );
   const { data: connectorFactory } = useSWR<ConnectorFactoryResponse>(
-    data?.isStandard && `/api/connector-factories/${data.connectorId}`
+    data?.isStandard && `api/connector-factories/${data.connectorId}`
   );
   const { isConnectorInUse } = useConnectorInUse();
   const inUse = isConnectorInUse(data);
@@ -79,12 +79,12 @@ const ConnectorDetails = () => {
       return;
     }
 
-    await api.delete(`/api/connectors/${connectorId}`).json<ConnectorResponse>();
+    await api.delete(`api/connectors/${connectorId}`).json<ConnectorResponse>();
 
     setIsDeleted(true);
 
     toast.success(t('connector_details.connector_deleted'));
-    await mutateGlobal('/api/connectors');
+    await mutateGlobal('api/connectors');
 
     navigate(getConnectorsPathname(isSocial), {
       replace: true,

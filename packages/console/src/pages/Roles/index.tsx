@@ -37,7 +37,7 @@ const Roles = () => {
     keyword: '',
   });
 
-  const url = buildUrl('/api/roles', {
+  const url = buildUrl('api/roles', {
     page: String(page),
     page_size: String(pageSize),
     ...conditional(keyword && { search: formatSearchKeyword(keyword) }),

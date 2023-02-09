@@ -44,7 +44,7 @@ const CreateRoleForm = ({ onClose }: Props) => {
       scopeIds: conditional(scopes.length > 0 && scopes.map(({ id }) => id)),
     };
 
-    const createdRole = await api.post('/api/roles', { json: payload }).json<Role>();
+    const createdRole = await api.post('api/roles', { json: payload }).json<Role>();
     onClose(createdRole);
   });
 

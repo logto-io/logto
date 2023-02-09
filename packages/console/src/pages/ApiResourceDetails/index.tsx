@@ -33,7 +33,7 @@ const ApiResourceDetails = () => {
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
-  const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
+  const { data, error, mutate } = useSWR<Resource, RequestError>(id && `api/resources/${id}`);
   const isLoading = !data && !error;
   const theme = useTheme();
   const Icon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
@@ -59,7 +59,7 @@ const ApiResourceDetails = () => {
     setIsDeleting(true);
 
     try {
-      await api.delete(`/api/resources/${data.id}`);
+      await api.delete(`api/resources/${data.id}`);
       toast.success(t('api_resource_details.api_resource_deleted', { name: data.name }));
       navigate(`/api-resources`);
     } finally {

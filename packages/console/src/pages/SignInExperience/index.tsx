@@ -39,7 +39,7 @@ import {
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
-  const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
+  const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('api/sign-in-exp');
   const { configs, error: configsError, updateConfigs, mutate: mutateConfigs } = useConfigs();
   const { error: languageError, isLoading: isLoadingLanguages } = useUiLanguages();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
@@ -73,7 +73,7 @@ const SignInExperience = () => {
 
   const saveData = async () => {
     const updatedData = await api
-      .patch('/api/sign-in-exp', {
+      .patch('api/sign-in-exp', {
         json: signInExperienceParser.toRemoteModel(getValues()),
       })
       .json<SignInExperienceType>();

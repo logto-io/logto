@@ -33,7 +33,7 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
   const [keyword, setKeyword] = useState('');
   const debounce = useDebounce();
 
-  const url = buildUrl('/api/users', {
+  const url = buildUrl('api/users', {
     excludeRoleId: roleId,
     hideAdminUser: String(true),
     page: String(page),
