@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: _.unit(4);
+}
+
+.option {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  min-height: 80px;
+  padding: _.unit(5);
+  font: var(--font-body-2);
+  cursor: pointer;
+  user-select: none;
+  background-color: var(--color-layer-1);
+  color: var(--color-text);
+
+  &.selected {
+    border-color: var(--color-primary);
+    color: var(--color-text-link);
+  }
+
+  &:hover {
+    background-color: var(--color-hover-variant);
+    color: var(--color-text-link);
+  }
+}
