@@ -4,7 +4,7 @@ import type { KeyboardEventHandler, ReactNode } from 'react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import * as styles from './index.module.scss';
+import * as styles from './Radio.module.scss';
 
 const Check = () => (
   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -39,7 +39,7 @@ const Radio = ({
   isChecked,
   onClick,
   tabIndex,
-  type,
+  type = 'plain',
   isDisabled,
   disabledLabel,
   icon,
@@ -64,6 +64,7 @@ const Radio = ({
     <div
       className={classNames(
         styles.radio,
+        styles[type],
         isChecked && styles.checked,
         isDisabled && styles.disabled,
         className
