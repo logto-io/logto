@@ -1,12 +1,12 @@
 import type { ConnectorSession, SocialUserInfo } from '@logto/connector-kit';
+import { connectorSessionGuard } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import type { Context } from 'koa';
+import type Provider from 'oidc-provider';
+import { z } from 'zod';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
-import {
-  assignConnectorSessionResult,
-  getConnectorSessionResult,
-} from '#src/routes/interaction/utils/interaction.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -72,4 +72,38 @@ export const verifySocialIdentity = async (
   log.append(userInfo);
 
   return userInfo;
+};
+
+const assignConnectorSessionResult = async (
+  ctx: Context,
+  provider: Provider,
+  connectorSession: ConnectorSession
+) => {
+  const details = await provider.interactionDetails(ctx.req, ctx.res);
+  await provider.interactionResult(ctx.req, ctx.res, {
+    ...details.result,
+    connectorSession,
+  });
+};
+
+const getConnectorSessionResult = async (
+  ctx: Context,
+  provider: Provider
+): Promise<ConnectorSession> => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  const signInResult = z
+    .object({
+      connectorSession: connectorSessionGuard,
+    })
+    .safeParse(result);
+
+  assertThat(result && signInResult.success, 'session.connector_validation_session_not_found');
+
+  const { connectorSession, ...rest } = result;
+  await provider.interactionResult(ctx.req, ctx.res, {
+    ...rest,
+  });
+
+  return signInResult.data.connectorSession;
 };
