@@ -77,8 +77,8 @@ const SmartInputField = (
         <IconButton
           onMouseDown={(event) => {
             event.preventDefault();
-            onInputValueClear();
           }}
+          onClick={onInputValueClear}
         >
           <ClearIcon />
         </IconButton>
