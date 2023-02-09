@@ -20,7 +20,6 @@ import phraseRoutes from './phrase.js';
 import resourceRoutes from './resource.js';
 import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
-import samlAssertionHandlerRoutes from './saml-assertion-handler.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
 import statusRoutes from './status.js';
 import swaggerRoutes from './swagger.js';
@@ -50,7 +49,6 @@ const createRouters = (tenant: TenantContext) => {
   verificationCodeRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
-  samlAssertionHandlerRoutes(anonymousRouter, tenant);
   phraseRoutes(anonymousRouter, tenant);
   wellKnownRoutes(anonymousRouter, tenant);
   statusRoutes(anonymousRouter, tenant);
