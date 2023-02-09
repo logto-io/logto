@@ -17,13 +17,28 @@
   background-color: var(--color-layer-1);
   color: var(--color-text);
 
+  .icon {
+    color: var(--color-text-secondary);
+    margin-right: _.unit(4);
+    vertical-align: middle;
+  }
+
   &.selected {
     border-color: var(--color-primary);
     color: var(--color-text-link);
+
+    .icon {
+      color: var(--color-primary);
+    }
   }
 
   &:hover {
     background-color: var(--color-hover-variant);
     color: var(--color-text-link);
+
+    .icon {
+      color: var(--color-primary);
+    }
   }
 }
+
