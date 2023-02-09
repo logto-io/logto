@@ -191,7 +191,7 @@ export type GetAuthorizationUri = (
     jti: string;
     headers: { userAgent?: string };
   },
-  setSession?: SetSession
+  setSession: SetSession
 ) => Promise<string>;
 
 export const socialUserInfoGuard = z.object({
@@ -206,5 +206,5 @@ export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
 
 export type GetUserInfo = (
   data: unknown,
-  getSession?: GetSession
+  getSession: GetSession
 ) => Promise<SocialUserInfo & Record<string, string | boolean | number | undefined>>;
