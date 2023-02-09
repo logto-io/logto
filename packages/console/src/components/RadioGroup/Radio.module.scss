@@ -1,8 +1,10 @@
 @use '@/scss/underscore' as _;
 
+// Default Styles
 .radio {
   user-select: none;
   cursor: pointer;
+  font: var(--font-body-2);
 
   &:not(:last-child) {
     margin-bottom: _.unit(2);
@@ -96,6 +98,7 @@
   position: relative;
   border: 1px solid var(--color-border);
   flex: 1;
+  font: var(--font-label-2);
 
   &:first-child {
     border-radius: 12px 0 0 12px;
@@ -115,8 +118,6 @@
 
   .content {
     padding: _.unit(5);
-    display: flex;
-    align-items: center;
   }
 
   .content .icon {
@@ -124,74 +125,7 @@
   }
 }
 
-.radio.disabled {
-  cursor: not-allowed;
-  color: var(--color-disabled);
-
-  .content .indicator {
-    border-color: var(--color-disabled);
-
-    &::before {
-      background: var(--color-layer-1);
-    }
-  }
-}
-
-.card.disabled {
-  background-color: var(--color-layer-2);
-  border-color: var(--color-layer-2);
-  outline: unset;
-}
-
-.card:not(.disabled) {
-  &:focus {
-    outline: 1px solid var(--color-primary);
-    box-shadow: var(--shadow-2);
-  }
-
-  &:hover {
-    box-shadow: var(--shadow-2);
-  }
-}
-
-.compact.disabled {
-  cursor: not-allowed;
-  background-color: var(--color-layer-2);
-}
-
-.compact:not(.disabled) {
-  &:focus {
-    border-color: var(--color-primary);
-
-    .content .icon {
-      color: var(--color-primary);
-    }
-  }
-
-  &:hover {
-    color: var(--color-text-link);
-    font: var(--font-label-2);
-    border-color: var(--color-primary);
-    background-color: var(--color-hover-variant);
-
-    .content {
-      .icon {
-        color: var(--color-primary);
-      }
-    }
-
-    &:not(:first-child)::before {
-      position: absolute;
-      content: '';
-      width: 1px;
-      top: -1px;
-      left: -1px;
-      bottom: -1px;
-      background-color: var(--color-primary);
-    }
-  }
-}
-
+// Checked Styles
 .radio.checked {
   .content .indicator {
     border-color: var(--color-primary);
@@ -214,7 +148,12 @@
 }
 
 .compact.checked {
+  color: var(--color-text-link);
   border-color: var(--color-primary);
+
+  .content .icon {
+    color: var(--color-primary);
+  }
 
   &:not(:first-child)::before {
     position: absolute;
@@ -224,5 +163,78 @@
     left: -1px;
     bottom: -1px;
     background-color: var(--color-primary);
+  }
+}
+
+
+// Disabled Styles
+.radio.disabled {
+  cursor: not-allowed;
+  color: var(--color-disabled);
+
+  .content .indicator {
+    border-color: var(--color-disabled);
+
+    &::before {
+      background: var(--color-layer-1);
+    }
+  }
+}
+
+.card.disabled {
+  background-color: var(--color-layer-2);
+  border-color: var(--color-layer-2);
+  outline: unset;
+}
+
+.compact.disabled {
+  cursor: not-allowed;
+  background-color: var(--color-layer-2);
+
+  .content .icon {
+    color: var(--color-text-secondary);
+  }
+}
+
+// Not Disabled Behaviors
+.card:not(.disabled) {
+  &:focus {
+    outline: 1px solid var(--color-primary);
+    box-shadow: var(--shadow-2);
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-2);
+  }
+}
+
+.compact:not(.disabled) {
+  &:focus {
+    color: var(--color-text-link);
+    border-color: var(--color-primary);
+
+    .content .icon {
+      color: var(--color-primary);
+    }
+  }
+
+  &:hover {
+    color: var(--color-text-link);
+    border-color: var(--color-primary);
+    background-color: var(--color-hover-variant);
+
+    .content .icon {
+      color: var(--color-primary);
+    }
+
+    &:not(:first-child)::before {
+      position: absolute;
+      content: '';
+      width: 1px;
+      top: -1px;
+      left: -1px;
+      bottom: -1px;
+      background-color: var(--color-primary);
+    }
   }
 }

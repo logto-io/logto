@@ -1,8 +1,6 @@
 @use '@/scss/underscore' as _;
 
 .radioGroup {
-  font: var(--font-body-2);
-
   input[type='radio'] {
     appearance: none;
     position: absolute;
@@ -12,13 +10,8 @@
   }
 }
 
-.card {
-  font: inherit;
-}
-
 .compact {
   display: flex;
   flex-wrap: nowrap;
-  font: var(--font-body-2);
   align-items: center;
 }
