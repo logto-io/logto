@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 
 export type Option = {
-  icon: ReactNode;
+  icon?: ReactNode;
   title: AdminConsoleKey;
   value: string;
 };
