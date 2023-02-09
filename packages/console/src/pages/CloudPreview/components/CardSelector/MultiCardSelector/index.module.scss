@@ -11,16 +11,22 @@
   border-radius: 12px;
   min-height: 80px;
   padding: _.unit(5);
-  font: var(--font-body-2);
+  font: var(--font-label-2);
   cursor: pointer;
   user-select: none;
   background-color: var(--color-layer-1);
   color: var(--color-text);
+  display: flex;
+  align-items: center;
 
   .icon {
     color: var(--color-text-secondary);
     margin-right: _.unit(4);
     vertical-align: middle;
+
+    > svg {
+      display: block;
+    }
   }
 
   &.selected {
