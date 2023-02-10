@@ -59,7 +59,8 @@ export const parseMetadata = async (
     logo: await readUrl(metadata.logo, packagePath, 'svg'),
     logoDark: metadata.logoDark && (await readUrl(metadata.logoDark, packagePath, 'svg')),
     readme: await readUrl(metadata.readme, packagePath, 'text'),
-    configTemplate: await readUrl(metadata.configTemplate, packagePath, 'text'),
+    configTemplate:
+      metadata.configTemplate && (await readUrl(metadata.configTemplate, packagePath, 'text')),
   };
 };
 

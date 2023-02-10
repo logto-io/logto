@@ -6,11 +6,15 @@ import * as styles from './index.module.scss';
 
 type Props = HTMLProps<HTMLTextAreaElement> & {
   className?: string;
+  hasError?: boolean;
 };
 
-const Textarea = ({ className, ...rest }: Props, reference: ForwardedRef<HTMLTextAreaElement>) => {
+const Textarea = (
+  { className, hasError, ...rest }: Props,
+  reference: ForwardedRef<HTMLTextAreaElement>
+) => {
   return (
-    <div className={classNames(styles.container, className)}>
+    <div className={classNames(styles.container, hasError && styles.error, className)}>
       <textarea {...rest} ref={reference} />
     </div>
   );

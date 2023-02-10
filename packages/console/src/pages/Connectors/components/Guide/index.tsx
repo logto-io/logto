@@ -18,11 +18,12 @@ import { ConnectorsTabs } from '@/consts/page-tabs';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
-import { safeParseJson } from '@/utilities/json';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
 import ConnectorForm from '../ConnectorForm';
+import { useConfigParser } from '../ConnectorForm/hooks';
+import { initFormData, parseFormConfig } from '../ConnectorForm/utils';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -34,8 +35,9 @@ const Guide = ({ connector, onClose }: Props) => {
   const api = useApi();
   const navigate = useNavigate();
   const { updateConfigs } = useConfigs();
+  const parseJsonConfig = useConfigParser();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { id: connectorId, type: connectorType, name, readme, isStandard } = connector;
+  const { id: connectorId, type: connectorType, name, readme, isStandard, formItems } = connector;
   const { language } = i18next;
   const connectorName = conditional(isLanguageTag(language) && name[language]) ?? name.en;
   const isSocialConnector =
@@ -43,6 +45,7 @@ const Guide = ({ connector, onClose }: Props) => {
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',
     defaultValues: {
+      ...(formItems ? initFormData(formItems) : {}),
       syncProfile: SyncProfileMode.OnlyAtRegister,
     },
   });
@@ -57,23 +60,18 @@ const Guide = ({ connector, onClose }: Props) => {
       return;
     }
 
-    const { config, name, syncProfile, ...otherData } = data;
-    const result = safeParseJson(config);
-
-    if (!result.success) {
-      toast.error(result.error);
-
-      return;
-    }
-
-    const { id: connectorId } = connector;
+    const { formItems, isStandard, id: connectorId } = connector;
+    const config = formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
+    const { syncProfile, name, logo, logoDark, target } = data;
 
     const basePayload = {
-      config: result.data,
+      config,
       connectorId,
       metadata: conditional(
         isStandard && {
-          ...otherData,
+          logo,
+          logoDark,
+          target,
           name: { en: name },
         }
       ),
@@ -127,6 +125,7 @@ const Guide = ({ connector, onClose }: Props) => {
                 connectorType={connector.type}
                 configTemplate={connector.configTemplate}
                 isStandard={connector.isStandard}
+                formItems={connector.formItems}
               />
               {!isSocialConnector && (
                 <SenderTester

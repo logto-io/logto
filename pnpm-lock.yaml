@@ -107,6 +107,7 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
+      '@logto/connector-kit': workspace:*
       '@logto/core-kit': workspace:*
       '@logto/language-kit': workspace:*
       '@logto/phrases': workspace:*
@@ -178,6 +179,7 @@ importers:
       zod: ^3.20.2
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
+      '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/language-kit': link:../toolkit/language-kit
       '@logto/phrases': link:../phrases
