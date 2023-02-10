@@ -11,7 +11,7 @@ import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import useTerms from '@/hooks/use-terms';
 import {
-  usernameValidation,
+  validateUsername,
   passwordValidation,
   confirmPasswordValidation,
 } from '@/utils/field-validations';
@@ -94,7 +94,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
         className={styles.inputField}
         name="new-username"
         placeholder={t('input.username')}
-        {...fieldRegister('username', usernameValidation)}
+        {...fieldRegister('username', validateUsername)}
         onClear={() => {
           setFieldValue((state) => ({ ...state, username: '' }));
         }}

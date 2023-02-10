@@ -41,6 +41,7 @@ const translation = {
   description: {
     email: 'email',
     phone_number: 'phone number',
+    username: 'username',
     reminder: 'Reminder',
     not_found: '404 Not Found',
     agree_with_terms: 'I have read and agree to the ',
@@ -93,12 +94,13 @@ const translation = {
     continue_with_more_information: 'For added security, please complete below account details.',
   },
   error: {
-    username_password_mismatch: 'Username and password do not match',
+    general_required: `{{types, list(type: disjunction;)}} is required`,
+    general_invalid: `The {{types, list(type: disjunction;)}} is invalid`,
     username_required: 'Username is required',
     password_required: 'Password is required',
     username_exists: 'Username already exists',
     username_should_not_start_with_number: 'Username should not start with a number',
-    username_valid_charset: 'Username should only contain letters, numbers, or underscores.',
+    username_invalid_charset: 'Username should only contain letters, numbers, or underscores.',
     invalid_email: 'The email is invalid',
     invalid_phone: 'The phone number is invalid',
     password_min_length: 'Password requires a minimum of {{min}} characters',

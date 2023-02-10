@@ -1,51 +1,39 @@
-import { SignInIdentifier } from '@logto/schemas';
-import type { SignIn as SignInType, ConnectorMetadata } from '@logto/schemas';
+import type { ConnectorMetadata, SignInExperience } from '@logto/schemas';
 
-import { EmailSignIn } from '@/containers/EmailForm';
-import EmailPassword from '@/containers/EmailPassword';
-import { PhoneSignIn } from '@/containers/PhoneForm';
-import PhonePassword from '@/containers/PhonePassword';
 import SocialSignIn from '@/containers/SocialSignIn';
-import UsernameSignIn from '@/containers/UsernameSignIn';
-import type { ArrayElement } from '@/types';
 
+import PasswordSignInForm from './PasswordSignInForm';
 import * as styles from './index.module.scss';
 
 type Props = {
-  signInMethod?: ArrayElement<SignInType['methods']>;
+  signInMethods: SignInExperience['signIn']['methods'];
   socialConnectors: ConnectorMetadata[];
 };
 
-const Main = ({ signInMethod, socialConnectors }: Props) => {
-  switch (signInMethod?.identifier) {
-    case SignInIdentifier.Email: {
-      if (signInMethod.password && !signInMethod.verificationCode) {
-        return <EmailPassword className={styles.main} />;
-      }
-
-      return <EmailSignIn signInMethod={signInMethod} className={styles.main} />;
-    }
-
-    case SignInIdentifier.Phone: {
-      if (signInMethod.password && !signInMethod.verificationCode) {
-        return <PhonePassword className={styles.main} />;
-      }
-
-      return <PhoneSignIn signInMethod={signInMethod} className={styles.main} />;
-    }
-
-    case SignInIdentifier.Username: {
-      return <UsernameSignIn className={styles.main} />;
-    }
-
-    default: {
-      if (socialConnectors.length > 0) {
-        return <SocialSignIn />;
-      }
-
-      return null;
-    }
+const Main = ({ signInMethods, socialConnectors }: Props) => {
+  if (signInMethods.length === 0 && socialConnectors.length > 0) {
+    return <SocialSignIn className={styles.main} />;
   }
+
+  const isPasswordOnly =
+    signInMethods.length > 0 &&
+    signInMethods.every(({ password, verificationCode }) => password && !verificationCode);
+
+  if (isPasswordOnly) {
+    return (
+      <PasswordSignInForm
+        className={styles.main}
+        signInMethods={signInMethods.map(({ identifier }) => identifier)}
+      />
+    );
+  }
+
+  if (signInMethods.length > 0) {
+    // TODO: password or validation code signIn
+    return <div>Working In Progress</div>;
+  }
+
+  return null;
 };
 
 export default Main;

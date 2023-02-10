@@ -118,7 +118,7 @@ const SetPassword = ({
       <Button
         name="submit"
         title="action.save_password"
-        onClick={async () => {
+        onClick={() => {
           onSubmitHandler();
         }}
       />

@@ -43,6 +43,7 @@ const translation = {
   description: {
     email: 'Email',
     phone_number: 'Telefonnummer',
+    username: 'benutzername',
     reminder: 'Erinnerung',
     not_found: '404 Nicht gefunden',
     agree_with_terms: 'Ich akzeptiere die ',
@@ -98,12 +99,13 @@ const translation = {
       'Für zusätzliche Sicherheit, vervollständige bitte deine Informationen.',
   },
   error: {
-    username_password_mismatch: 'Benutzername oder Passwort ist falsch',
+    general_required: `{{types, list(type: disjunction;)}} ist erforderlich`,
+    general_invalid: `Die {{types, list(type: disjunction;)}} is ungültig`,
     username_required: 'Benutzername ist erforderlich',
     password_required: 'Passwort ist erforderlich',
     username_exists: 'Benutzername existiert bereits',
     username_should_not_start_with_number: 'Benutzername darf nicht mit einer Zahl beginnen',
-    username_valid_charset: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten',
+    username_invalid_charset: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten',
     invalid_email: 'Die Email ist ungültig',
     invalid_phone: 'Die Telefonnummer ist ungültig',
     password_min_length: 'Passwort muss mindestens {{min}} Zeichen lang sein',

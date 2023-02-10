@@ -1,10 +1,11 @@
+/** To Be Deprecated */
+
 import { SignInMode, SignInIdentifier } from '@logto/schemas';
 import { useParams } from 'react-router-dom';
 
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import { EmailSignIn } from '@/containers/EmailForm';
 import { PhoneSignIn } from '@/containers/PhoneForm';
-import UsernameSignIn from '@/containers/UsernameSignIn';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
 
@@ -31,9 +32,7 @@ const SecondarySignIn = () => {
         <PhoneSignIn autoFocus signInMethod={signInMethod} />
       ) : signInMethod.identifier === SignInIdentifier.Email ? (
         <EmailSignIn autoFocus signInMethod={signInMethod} />
-      ) : (
-        <UsernameSignIn autoFocus />
-      )}
+      ) : null}
     </SecondaryPageWrapper>
   );
 };

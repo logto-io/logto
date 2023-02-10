@@ -66,9 +66,9 @@ describe('smoke testing', () => {
   });
 
   it('signs in to admin console', async () => {
-    const usernameField = await page.waitForSelector('input[name=username]');
+    const usernameField = await page.waitForSelector('input[name=identifier]');
     const passwordField = await page.waitForSelector('input[name=password]');
-    const submitButton = await page.waitForSelector('button');
+    const submitButton = await page.waitForSelector('button[name=submit]');
 
     await usernameField.type(consoleUsername);
     await passwordField.type(consolePassword);

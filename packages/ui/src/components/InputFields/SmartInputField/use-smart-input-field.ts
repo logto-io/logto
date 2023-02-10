@@ -26,7 +26,12 @@ const useSmartInputField = ({ onChange, currentType, enabledTypes, onTypeChange 
   const [inputValue, setInputValue] = useState<string>('');
   const enabledTypeSet = useMemo(() => new Set(enabledTypes), [enabledTypes]);
 
-  assert(enabledTypeSet.has(currentType), new Error('Invalid input type'));
+  assert(
+    enabledTypeSet.has(currentType),
+    new Error(
+      `Invalid input type. Current inputType ${currentType} is detected but missing in enabledTypes`
+    )
+  );
 
   const detectInputType = useCallback(
     (value: string) => {

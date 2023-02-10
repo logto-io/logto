@@ -97,7 +97,7 @@ describe('<UsernameRegister />', () => {
 
     fireEvent.click(submitButton);
 
-    expect(queryByText('username_valid_charset')).not.toBeNull();
+    expect(queryByText('username_invalid_charset')).not.toBeNull();
 
     expect(onSubmit).not.toBeCalled();
 
@@ -106,7 +106,7 @@ describe('<UsernameRegister />', () => {
       fireEvent.change(usernameInput, { target: { value: 'username' } });
     }
 
-    expect(queryByText('username_valid_charset')).toBeNull();
+    expect(queryByText('username_invalid_charset')).toBeNull();
   });
 
   test('submit form properly with terms settings enabled', async () => {
