@@ -1,14 +1,10 @@
 import classNames from 'classnames';
-import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { onKeyDownHandler } from '@/utilities/a11y';
 
+import type { Option } from '../types';
 import * as styles from './index.module.scss';
-
-type Option = {
-  title: ReactNode;
-  value: string;
-};
 
 type Props = {
   options: Option[];
@@ -17,6 +13,8 @@ type Props = {
 };
 
 const MultiCardSelector = ({ options, value: selectedValues, onChange }: Props) => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
   const onToggle = (value: string) => {
     onChange(
       selectedValues.includes(value)
@@ -27,23 +25,21 @@ const MultiCardSelector = ({ options, value: selectedValues, onChange }: Props) 
 
   return (
     <div className={styles.selector}>
-      {options.map((option) => (
+      {options.map(({ icon, title, value }) => (
         <div
-          key={option.value}
+          key={value}
           role="button"
           tabIndex={0}
-          className={classNames(
-            styles.option,
-            selectedValues.includes(option.value) && styles.selected
-          )}
+          className={classNames(styles.option, selectedValues.includes(value) && styles.selected)}
           onClick={() => {
-            onToggle(option.value);
+            onToggle(value);
           }}
           onKeyDown={onKeyDownHandler(() => {
-            onToggle(option.value);
+            onToggle(value);
           })}
         >
-          {option.title}
+          {icon && <span className={styles.icon}>{icon}</span>}
+          {t(title)}
         </div>
       ))}
     </div>
