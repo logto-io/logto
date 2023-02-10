@@ -61,7 +61,10 @@ export const setUserPassword = async (password: string) => {
   return result || { success: true };
 };
 
-export type SendVerificationCodePayload = { email: string } | { phone: string };
+export type SendVerificationCodePayload = {
+  email?: string;
+  phone?: string;
+};
 
 export const putInteraction = async (event: InteractionEvent) =>
   api.put(`${interactionPrefix}`, { json: { event } });

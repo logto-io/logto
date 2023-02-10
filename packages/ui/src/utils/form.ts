@@ -17,6 +17,12 @@ export const identifierInputPlaceholderMap: { [K in IdentifierInputType]: TFuncK
   [SignInIdentifier.Username]: 'input.username',
 };
 
+export const identifierInputDescriptionMap: { [K in IdentifierInputType]: TFuncKey } = {
+  [SignInIdentifier.Phone]: 'description.phone_number',
+  [SignInIdentifier.Email]: 'description.email',
+  [SignInIdentifier.Username]: 'description.username',
+};
+
 export const passwordErrorWatcher = (error?: FieldError): ErrorType | undefined => {
   switch (error?.type) {
     case 'required':
@@ -31,7 +37,7 @@ export const identifierErrorWatcher = (
   enabledFields: IdentifierInputType[],
   error?: FieldError
 ): ErrorType | undefined => {
-  const data = { types: enabledFields.map((field) => t(identifierInputPlaceholderMap[field])) };
+  const data = { types: enabledFields.map((field) => t(identifierInputDescriptionMap[field])) };
 
   switch (error?.type) {
     case 'required':

@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { mockSignInExperienceSettings } from '@/__mocks__/logto';
+import { mockSignInExperienceSettings, mockSignInMethodSettingsTestCases } from '@/__mocks__/logto';
 import SignIn from '@/pages/SignIn';
 
 jest.mock('i18next', () => ({
@@ -51,6 +51,22 @@ describe('<SignIn />', () => {
         mockSignInExperienceSettings.socialConnectors.length
       );
     });
+  });
+
+  describe('renders with identifier code only SignIn method settings', () => {
+    test.each(mockSignInMethodSettingsTestCases)(
+      'renders with [%p %p %p] SignIn Methods only mode',
+      async (...methods) => {
+        const { container } = renderSignIn({
+          signIn: {
+            methods,
+          },
+        });
+
+        expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
+        expect(container.querySelector('input[name="password"]')).toBeNull();
+      }
+    );
   });
 
   test('renders with social as primary', async () => {

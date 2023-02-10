@@ -1,6 +1,6 @@
 import { SignInIdentifier } from '@logto/schemas';
 
-import useSendVerificationCode from '@/hooks/use-send-verification-code';
+import useSendVerificationCode from '@/hooks/use-send-verification-code-legacy';
 import { UserFlow } from '@/types';
 
 import PhoneForm from './PhoneForm';

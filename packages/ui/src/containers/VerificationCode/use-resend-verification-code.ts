@@ -3,7 +3,7 @@ import { t } from 'i18next';
 import { useCallback, useContext } from 'react';
 import { useTimer } from 'react-timer-hook';
 
-import { getSendVerificationCodeApi } from '@/apis/utils';
+import { sendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import { PageContext } from '@/hooks/use-page-context';
@@ -31,11 +31,11 @@ const useResendVerificationCode = (
   });
 
   const handleError = useErrorHandler();
-  const sendVerificationCode = useApi(getSendVerificationCodeApi(type));
+  const sendVerificationCode = useApi(sendVerificationCodeApi);
 
   const onResendVerificationCode = useCallback(async () => {
     const payload = method === SignInIdentifier.Email ? { email: target } : { phone: target };
-    const [error, result] = await sendVerificationCode(payload);
+    const [error, result] = await sendVerificationCode(type, payload);
 
     if (error) {
       await handleError(error);
@@ -47,7 +47,7 @@ const useResendVerificationCode = (
       setToast(t('description.passcode_sent'));
       restart(getTimeout(), true);
     }
-  }, [handleError, method, restart, sendVerificationCode, setToast, target]);
+  }, [handleError, method, restart, sendVerificationCode, setToast, target, type]);
 
   return {
     seconds,

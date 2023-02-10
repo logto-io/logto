@@ -20,6 +20,7 @@ const usePasswordSignIn = () => {
   const asyncSignIn = useApi(signInWithPasswordIdentifier);
 
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler({ flow: UserFlow.signIn });
+
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.invalid_credentials': (error) => {
