@@ -69,14 +69,13 @@ const PasswordForm = ({
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <PasswordInputField
-        required
         autoFocus={autoFocus}
         className={styles.inputField}
         autoComplete="current-password"
         placeholder={t('input.password')}
         isDanger={!!errors.password}
-        error={errors.password && 'password_required'}
-        {...register('password', { required: true })}
+        errorMessage={errors.password?.message}
+        {...register('password', { required: t('error.password_required') })}
       />
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}

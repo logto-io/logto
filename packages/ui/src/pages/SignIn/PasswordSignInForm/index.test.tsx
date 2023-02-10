@@ -22,6 +22,7 @@ jest.mock('react-device-detect', () => ({
 jest.mock('i18next', () => ({
   ...jest.requireActual('i18next'),
   language: 'en',
+  t: (key: string) => key,
 }));
 
 describe('UsernamePasswordSignInForm', () => {
@@ -77,8 +78,8 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('general_required')).not.toBeNull();
-      expect(queryByText('password_required')).not.toBeNull();
+      expect(queryByText('error.general_required')).not.toBeNull();
+      expect(queryByText('error.password_required')).not.toBeNull();
     });
 
     const identifierInput = container.querySelector('input[name="identifier"]');
@@ -96,8 +97,8 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('general_required')).toBeNull();
-      expect(queryByText('password_required')).toBeNull();
+      expect(queryByText('error.general_required')).toBeNull();
+      expect(queryByText('error.password_required')).toBeNull();
     });
   });
 
@@ -122,7 +123,7 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('general_invalid')).not.toBeNull();
+      expect(queryByText('error.general_invalid')).not.toBeNull();
     });
 
     act(() => {
@@ -130,7 +131,7 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('general_invalid')).toBeNull();
+      expect(queryByText('error.general_invalid')).toBeNull();
     });
   });
 

@@ -15,6 +15,7 @@ import IdentifierSignInForm from './index';
 jest.mock('i18next', () => ({
   ...jest.requireActual('i18next'),
   language: 'en',
+  t: (key: string) => key,
 }));
 
 const mockedNavigate = jest.fn();
@@ -54,7 +55,7 @@ describe('IdentifierSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('general_required')).not.toBeNull();
+      expect(getByText('error.general_required')).not.toBeNull();
     });
   });
 
@@ -78,7 +79,7 @@ describe('IdentifierSignInForm', () => {
       });
 
       await waitFor(() => {
-        expect(getByText('general_invalid')).not.toBeNull();
+        expect(getByText('error.general_invalid')).not.toBeNull();
       });
     }
   );

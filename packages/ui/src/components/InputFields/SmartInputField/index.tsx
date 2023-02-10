@@ -6,7 +6,6 @@ import { useImperativeHandle, useRef, forwardRef } from 'react';
 
 import ClearIcon from '@/assets/icons/clear-icon.svg';
 import IconButton from '@/components/Button/IconButton';
-import type { ErrorType } from '@/components/ErrorMessage';
 
 import InputField from '../InputField';
 import AnimatedPrefix from './AnimatedPrefix';
@@ -19,7 +18,7 @@ export type { IdentifierInputType, EnabledIdentifierTypes } from './use-smart-in
 
 type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix'> & {
   className?: string;
-  error?: ErrorType;
+  errorMessage?: string;
   isDanger?: boolean;
 
   enabledTypes?: EnabledIdentifierTypes;

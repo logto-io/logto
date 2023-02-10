@@ -11,7 +11,7 @@ import type { IdentifierInputType } from '@/components/InputFields';
 import { SmartInputField } from '@/components/InputFields';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useTerms from '@/hooks/use-terms';
-import { identifierErrorWatcher, validateIdentifierField } from '@/utils/form';
+import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
 import useOnSubmit from './use-on-submit';
@@ -68,32 +68,25 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     [clearErrorMessage, handleSubmit, inputType, onSubmit, termsValidation]
   );
 
-  const identifierError = identifierErrorWatcher(enabledSignInMethods, errors.identifier);
-
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <SmartInputField
-        required
         autoComplete="identifier"
         autoFocus={autoFocus}
         className={styles.inputField}
         currentType={inputType}
-        isDanger={!!identifierError || !!errorMessage}
-        error={identifierError}
+        isDanger={!!errors.identifier || !!errorMessage}
+        errorMessage={errors.identifier?.message}
         enabledTypes={enabledSignInMethods}
         onTypeChange={setInputType}
         {...register('identifier', {
-          required: true,
+          required: getGeneralIdentifierErrorMessage(enabledSignInMethods, 'required'),
           validate: (value) => {
             const errorMessage = validateIdentifierField(inputType, value);
 
-            if (errorMessage) {
-              return typeof errorMessage === 'string'
-                ? t(`error.${errorMessage}`)
-                : t(`error.${errorMessage.code}`, errorMessage.data);
-            }
-
-            return true;
+            return errorMessage
+              ? getGeneralIdentifierErrorMessage(enabledSignInMethods, 'invalid')
+              : true;
           },
         })}
         /* Overwrite default input onChange handler  */

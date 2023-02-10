@@ -1,15 +1,12 @@
 import { SignInIdentifier } from '@logto/schemas';
 import i18next from 'i18next';
-import type { FieldError } from 'react-hook-form';
 import type { TFuncKey } from 'react-i18next';
 
-import type { ErrorType } from '@/components/ErrorMessage';
 import type { IdentifierInputType } from '@/components/InputFields';
 
 import { validateUsername, validateEmail, validatePhone } from './field-validations';
 
-// eslint-disable-next-line id-length
-const t = (key: TFuncKey) => i18next.t<'translation', TFuncKey>(key);
+const { t } = i18next;
 
 export const identifierInputPlaceholderMap: { [K in IdentifierInputType]: TFuncKey } = {
   [SignInIdentifier.Phone]: 'input.phone_number',
@@ -23,35 +20,19 @@ export const identifierInputDescriptionMap: { [K in IdentifierInputType]: TFuncK
   [SignInIdentifier.Username]: 'description.username',
 };
 
-export const passwordErrorWatcher = (error?: FieldError): ErrorType | undefined => {
-  switch (error?.type) {
-    case 'required':
-      return 'password_required';
-    case 'minLength':
-      return { code: 'password_min_length', data: { min: 6 } };
-    default:
-  }
-};
-
-export const identifierErrorWatcher = (
+export const getGeneralIdentifierErrorMessage = (
   enabledFields: IdentifierInputType[],
-  error?: FieldError
-): ErrorType | undefined => {
-  const data = { types: enabledFields.map((field) => t(identifierInputDescriptionMap[field])) };
+  type: 'required' | 'invalid'
+) => {
+  const data = {
+    types: enabledFields.map((field) =>
+      t<'translation', TFuncKey>(identifierInputDescriptionMap[field])
+    ),
+  };
 
-  switch (error?.type) {
-    case 'required':
-      return {
-        code: 'general_required',
-        data,
-      };
-    case 'validate':
-      return {
-        code: 'general_invalid',
-        data,
-      };
-    default:
-  }
+  const code = type === 'required' ? 'error.general_required' : 'error.general_invalid';
+
+  return t<'translation', TFuncKey>(code, data);
 };
 
 export const validateIdentifierField = (type: IdentifierInputType, value: string) => {
