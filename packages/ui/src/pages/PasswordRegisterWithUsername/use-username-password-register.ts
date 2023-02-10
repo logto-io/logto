@@ -1,20 +1,20 @@
-import { useMemo, useContext, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { setUserPassword } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
-import type { ErrorHandlers } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
-import { PageContext } from '@/hooks/use-page-context';
+import useErrorHandler from '@/hooks/use-error-handler';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
 
 const useUsernamePasswordRegister = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { setToast } = useContext(PageContext);
   const { show } = useConfirmModal();
 
-  const resetPasswordErrorHandlers: ErrorHandlers = useMemo(
+  const handleError = useErrorHandler();
+  const asyncSetPassword = useApi(setUserPassword);
+
+  const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.username_already_in_use': async (error) => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
@@ -24,17 +24,20 @@ const useUsernamePasswordRegister = () => {
     [navigate, show]
   );
 
-  const { result, run: asyncSetPassword } = useApi(setUserPassword, resetPasswordErrorHandlers);
+  return useCallback(
+    async (password: string) => {
+      const [error, result] = await asyncSetPassword(password);
 
-  useEffect(() => {
-    if (result && 'redirectTo' in result) {
-      window.location.replace(result.redirectTo);
-    }
-  }, [result, setToast, t]);
+      if (error) {
+        await handleError(error, errorHandlers);
+      }
 
-  return {
-    setPassword: asyncSetPassword,
-  };
+      if (result && 'redirectTo' in result) {
+        window.location.replace(result.redirectTo);
+      }
+    },
+    [asyncSetPassword, errorHandlers, handleError]
+  );
 };
 
 export default useUsernamePasswordRegister;

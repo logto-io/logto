@@ -1,28 +1,36 @@
-import { useEffect } from 'react';
+import { useCallback } from 'react';
 
 import { registerWithVerifiedSocial } from '@/apis/interaction';
 
 import useApi from './use-api';
+import useErrorHandler from './use-error-handler';
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 
 const useSocialRegister = (connectorId?: string, replace?: boolean) => {
+  const handleError = useErrorHandler();
+  const asyncRegisterWithSocial = useApi(registerWithVerifiedSocial);
+
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({
     linkSocial: connectorId,
     replace,
   });
 
-  const { result: registerResult, run: asyncRegisterWithSocial } = useApi(
-    registerWithVerifiedSocial,
-    requiredProfileErrorHandlers
+  return useCallback(
+    async (connectorId: string) => {
+      const [error, result] = await asyncRegisterWithSocial(connectorId);
+
+      if (error) {
+        await handleError(error, requiredProfileErrorHandlers);
+
+        return;
+      }
+
+      if (result?.redirectTo) {
+        window.location.replace(result.redirectTo);
+      }
+    },
+    [asyncRegisterWithSocial, handleError, requiredProfileErrorHandlers]
   );
-
-  useEffect(() => {
-    if (registerResult?.redirectTo) {
-      window.location.replace(registerResult.redirectTo);
-    }
-  }, [registerResult]);
-
-  return asyncRegisterWithSocial;
 };
 
 export default useSocialRegister;

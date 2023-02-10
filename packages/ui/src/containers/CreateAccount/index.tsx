@@ -1,13 +1,14 @@
 import classNames from 'classnames';
-import { useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { registerWithUsernamePassword } from '@/apis/interaction';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
-import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useErrorHandler from '@/hooks/use-error-handler';
 import useForm from '@/hooks/use-form';
 import useTerms from '@/hooks/use-terms';
 import {
@@ -47,6 +48,9 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
     validateForm,
   } = useForm(defaultState);
 
+  const asyncRegister = useApi(registerWithUsernamePassword);
+  const handleError = useErrorHandler();
+
   const registerErrorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.username_already_in_use': () => {
@@ -57,11 +61,6 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
       },
     }),
     [setFieldErrors]
-  );
-
-  const { result, run: asyncRegister } = useApi(
-    registerWithUsernamePassword,
-    registerErrorHandlers
   );
 
   const onSubmitHandler = useCallback(
@@ -76,16 +75,20 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
         return;
       }
 
-      void asyncRegister(fieldValue.username, fieldValue.password);
-    },
-    [validateForm, termsValidation, asyncRegister, fieldValue]
-  );
+      const [error, result] = await asyncRegister(fieldValue.username, fieldValue.password);
 
-  useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
-    }
-  }, [result]);
+      if (error) {
+        await handleError(error, registerErrorHandlers);
+
+        return;
+      }
+
+      if (result?.redirectTo) {
+        window.location.replace(result.redirectTo);
+      }
+    },
+    [validateForm, termsValidation, asyncRegister, fieldValue, handleError, registerErrorHandlers]
+  );
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>

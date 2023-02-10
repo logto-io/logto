@@ -1,18 +1,30 @@
-import { useEffect } from 'react';
+import { useCallback } from 'react';
 
 import { linkWithSocial } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 
+import useErrorHandler from './use-error-handler';
+
 const useLinkSocial = () => {
-  const { result: linkResult, run: asyncLinkWithSocial } = useApi(linkWithSocial);
+  const handleError = useErrorHandler();
+  const asyncLinkWithSocial = useApi(linkWithSocial);
 
-  useEffect(() => {
-    if (linkResult?.redirectTo) {
-      window.location.replace(linkResult.redirectTo);
-    }
-  }, [linkResult]);
+  return useCallback(
+    async (connectorId: string) => {
+      const [error, result] = await asyncLinkWithSocial(connectorId);
 
-  return asyncLinkWithSocial;
+      if (error) {
+        await handleError(error);
+
+        return;
+      }
+
+      if (result?.redirectTo) {
+        window.location.replace(result.redirectTo);
+      }
+    },
+    [asyncLinkWithSocial, handleError]
+  );
 };
 
 export default useLinkSocial;

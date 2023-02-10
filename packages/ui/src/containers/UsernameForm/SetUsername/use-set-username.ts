@@ -1,19 +1,20 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useMemo } from 'react';
 
 import { addProfile } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
-import type { ErrorHandlers } from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useErrorHandler from '@/hooks/use-error-handler';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 
 const useSetUsername = () => {
-  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const clearErrorMessage = useCallback(() => {
     setErrorMessage('');
   }, []);
 
+  const asyncAddProfile = useApi(addProfile);
+  const handleError = useErrorHandler();
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
 
   const errorHandlers: ErrorHandlers = useMemo(
@@ -26,20 +27,22 @@ const useSetUsername = () => {
     [requiredProfileErrorHandler]
   );
 
-  const { result, run: asyncAddProfile } = useApi(addProfile, errorHandlers);
-
   const onSubmit = useCallback(
     async (username: string) => {
-      await asyncAddProfile({ username });
-    },
-    [asyncAddProfile]
-  );
+      const [error, result] = await asyncAddProfile({ username });
 
-  useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
-    }
-  }, [navigate, result]);
+      if (error) {
+        await handleError(error, errorHandlers);
+
+        return;
+      }
+
+      if (result?.redirectTo) {
+        window.location.replace(result.redirectTo);
+      }
+    },
+    [asyncAddProfile, errorHandlers, handleError]
+  );
 
   return { errorMessage, clearErrorMessage, onSubmit };
 };

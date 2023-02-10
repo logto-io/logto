@@ -3,8 +3,9 @@ import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { registerWithUsernamePassword } from '@/apis/interaction';
-import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useErrorHandler from '@/hooks/use-error-handler';
 import { UserFlow } from '@/types';
 
 const useUsernameRegister = () => {
@@ -27,13 +28,18 @@ const useUsernameRegister = () => {
     [navigate]
   );
 
-  const { run: asyncRegister } = useApi(registerWithUsernamePassword, errorHandlers);
+  const handleError = useErrorHandler();
+  const asyncRegister = useApi(registerWithUsernamePassword);
 
   const onSubmit = useCallback(
     async (username: string) => {
-      await asyncRegister(username);
+      const [error] = await asyncRegister(username);
+
+      if (error) {
+        await handleError(error, errorHandlers);
+      }
     },
-    [asyncRegister]
+    [asyncRegister, errorHandlers, handleError]
   );
 
   return { errorMessage, clearErrorMessage, onSubmit };

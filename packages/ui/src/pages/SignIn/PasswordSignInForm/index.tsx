@@ -130,13 +130,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
 
       <TermsOfUse className={styles.terms} />
 
-      <Button
-        name="submit"
-        title="action.sign_in"
-        onClick={() => {
-          void onSubmitHandler();
-        }}
-      />
+      <Button name="submit" title="action.sign_in" htmlType="submit" />
 
       <input hidden type="submit" />
     </form>
