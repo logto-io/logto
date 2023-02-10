@@ -73,7 +73,7 @@ const languages = ['Deutsch', 'English', 'Français', 'Português', '简体中�
 
 ## Web compatibility
 
-Logto uses the [default browserlist config](https://github.com/browserslist/browserslist#full-list) to compiling frontend projects, which is:
+Logto uses the [default browserlist config](https://github.com/browserslist/browserslist#full-list) to compile frontend projects, which is:
 
 ```
 > 0.5%, last 2 versions, Firefox ESR, not dead
