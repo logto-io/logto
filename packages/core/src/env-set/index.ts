@@ -4,6 +4,7 @@ import type { QueryClient } from '@withtyped/server';
 import type { DatabasePool } from 'slonik';
 
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import { appendPath } from '#src/utils/url.js';
 
 import GlobalValues from './GlobalValues.js';
@@ -82,7 +83,7 @@ export class EnvSet {
     this.#pool = pool;
     this.#queryClient = createQueryClient(this.databaseUrl, EnvSet.isTest);
 
-    const { getOidcConfigs } = createLogtoConfigLibrary(pool);
+    const { getOidcConfigs } = createLogtoConfigLibrary(createLogtoConfigQueries(pool));
 
     const oidcConfigs = await getOidcConfigs();
     this.#oidc = await loadOidcValues(

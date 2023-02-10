@@ -1,7 +1,7 @@
 import { builtInLanguages } from '@logto/phrases-ui';
 import type { Branding, LanguageInfo, SignInExperience } from '@logto/schemas';
 import {
-  defaultTenantId,
+  adminTenantId,
   SignInMode,
   ConnectorType,
   BrandingStyle,
@@ -72,25 +72,26 @@ export const createSignInExperienceLibrary = (
   const getSignInExperienceForApplication = async (
     applicationId?: string
   ): Promise<SignInExperience & { notification?: string }> => {
-    const signInExperience = await findDefaultSignInExperience();
-
     // Hard code Admin Console sign-in methods settings.
     if (applicationId === adminConsoleApplicationId) {
       return {
-        // If we need to hard code, it implies Logto is running in the single-tenant mode;
-        // Thus we can hard code Tenant ID as well.
-        tenantId: defaultTenantId,
         ...adminConsoleSignInExperience,
+        tenantId: adminTenantId,
         branding: {
           ...adminConsoleSignInExperience.branding,
           slogan: i18next.t('admin_console.welcome.title'),
         },
-        termsOfUseUrl: signInExperience.termsOfUseUrl,
-        languageInfo: signInExperience.languageInfo,
+        termsOfUseUrl: null,
+        languageInfo: {
+          autoDetect: true,
+          fallbackLanguage: 'en',
+        },
         signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
         socialSignInConnectorTargets: [],
       };
     }
+
+    const signInExperience = await findDefaultSignInExperience();
 
     // Insert Demo App Notification
     if (applicationId === demoAppApplicationId) {

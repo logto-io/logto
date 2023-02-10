@@ -8,10 +8,10 @@ export const createApplicationLibrary = (queries: Queries) => {
   const {
     applicationsRoles: { findApplicationsRolesByApplicationId },
     rolesScopes: { findRolesScopesByRoleIds },
-    scopes: { findScopesByIdsAndResourceId },
+    scopes: { findScopesByIdsAndResourceIndicator },
   } = queries;
 
-  const findApplicationScopesForResourceId = async (
+  const findApplicationScopesForResourceIndicator = async (
     applicationId: string,
     resourceId: string
   ): Promise<readonly Scope[]> => {
@@ -19,7 +19,7 @@ export const createApplicationLibrary = (queries: Queries) => {
     const rolesScopes = await findRolesScopesByRoleIds(
       applicationsRoles.map(({ roleId }) => roleId)
     );
-    const scopes = await findScopesByIdsAndResourceId(
+    const scopes = await findScopesByIdsAndResourceIndicator(
       rolesScopes.map(({ scopeId }) => scopeId),
       resourceId
     );
@@ -28,6 +28,6 @@ export const createApplicationLibrary = (queries: Queries) => {
   };
 
   return {
-    findApplicationScopesForResourceId,
+    findApplicationScopesForResourceIndicator,
   };
 };

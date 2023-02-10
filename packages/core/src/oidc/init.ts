@@ -34,8 +34,8 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
     resources: { findResourceByIndicator },
     users: { findUserById },
   } = queries;
-  const { findUserScopesForResourceId } = libraries.users;
-  const { findApplicationScopesForResourceId } = libraries.applications;
+  const { findUserScopesForResourceIndicator } = libraries.users;
+  const { findApplicationScopesForResourceIndicator } = libraries.applications;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
 
   const cookieConfig = Object.freeze({
@@ -90,7 +90,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
             throw new errors.InvalidTarget();
           }
 
-          const { accessTokenTtl: accessTokenTTL, id } = resourceServer;
+          const { accessTokenTtl: accessTokenTTL } = resourceServer;
           const result = {
             accessTokenFormat: 'jwt',
             accessTokenTTL,
@@ -103,7 +103,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
           const userId = ctx.oidc.session?.accountId;
 
           if (userId) {
-            const scopes = await findUserScopesForResourceId(userId, id);
+            const scopes = await findUserScopesForResourceIndicator(userId, indicator);
 
             return {
               ...result,
@@ -115,7 +115,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
 
           // Machine to machine app
           if (clientId) {
-            const scopes = await findApplicationScopesForResourceId(clientId, id);
+            const scopes = await findApplicationScopesForResourceIndicator(clientId, indicator);
 
             return {
               ...result,

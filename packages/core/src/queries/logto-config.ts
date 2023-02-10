@@ -1,4 +1,4 @@
-import type { AdminConsoleData } from '@logto/schemas';
+import type { AdminConsoleData, LogtoConfig, LogtoConfigKey } from '@logto/schemas';
 import { AdminConsoleConfigKey, LogtoConfigs } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -21,5 +21,11 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
       returning ${fields.value}
     `);
 
-  return { getAdminConsoleConfig, updateAdminConsoleConfig };
+  const getRowsByKeys = async (keys: LogtoConfigKey[]) =>
+    pool.query<LogtoConfig>(sql`
+      select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
+        where ${fields.key} in (${sql.join(keys, sql`,`)})
+    `);
+
+  return { getAdminConsoleConfig, updateAdminConsoleConfig, getRowsByKeys };
 };

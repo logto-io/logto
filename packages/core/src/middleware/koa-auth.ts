@@ -1,6 +1,6 @@
 import type { IncomingHttpHeaders } from 'http';
 
-import { managementResource, managementResourceScope } from '@logto/schemas';
+import { defaultManagementApi } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { jwtVerify } from 'jose';
 import type { MiddlewareType, Request } from 'koa';
@@ -54,7 +54,9 @@ export const verifyBearerTokenFromRequest = async (
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
 
   if ((!isProduction || isIntegrationTest) && userId) {
-    return { sub: userId, clientId: undefined, scopes: [managementResourceScope.name] };
+    console.log(`Found dev user ID ${userId}, skip token validation.`);
+
+    return { sub: userId, clientId: undefined, scopes: [defaultManagementApi.scope.name] };
   }
 
   try {
@@ -79,22 +81,19 @@ export const verifyBearerTokenFromRequest = async (
 };
 
 export default function koaAuth<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
-  envSet: EnvSet,
-  forScope?: string
+  envSet: EnvSet
 ): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     const { sub, clientId, scopes } = await verifyBearerTokenFromRequest(
       envSet,
       ctx.request,
-      managementResource.indicator
+      defaultManagementApi.resource.indicator
     );
 
-    if (forScope) {
-      assertThat(
-        scopes.includes(forScope),
-        new RequestError({ code: 'auth.forbidden', status: 403 })
-      );
-    }
+    assertThat(
+      scopes.includes(defaultManagementApi.scope.name),
+      new RequestError({ code: 'auth.forbidden', status: 403 })
+    );
 
     ctx.auth = {
       type: sub === clientId ? 'app' : 'user',

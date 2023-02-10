@@ -1,10 +1,7 @@
 import { UserScope } from '@logto/core-kit';
 import { LogtoProvider } from '@logto/react';
-import {
-  adminConsoleApplicationId,
-  managementResource,
-  managementResourceScope,
-} from '@logto/schemas';
+import { adminConsoleApplicationId } from '@logto/schemas';
+import { useContext } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
@@ -14,7 +11,9 @@ import './scss/overlayscrollbars.scss';
 
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
+import AppLoading from '@/components/AppLoading';
 import Toast from '@/components/Toast';
+import { managementApi } from '@/consts/management-api';
 import AppBoundary from '@/containers/AppBoundary';
 import AppLayout from '@/containers/AppLayout';
 import ErrorBoundary from '@/containers/ErrorBoundary';
@@ -48,6 +47,7 @@ import {
   UserDetailsTabs,
 } from './consts/page-tabs';
 import AppContent from './containers/AppContent';
+import AppEndpointProvider, { AppEndpointContext } from './containers/AppEndpointProvider';
 import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
 import CloudPreview from './pages/CloudPreview';
@@ -63,6 +63,11 @@ void initI18n();
 
 const Main = () => {
   const swrOptions = useSwrOptions();
+  const { endpoint } = useContext(AppEndpointContext);
+
+  if (!endpoint) {
+    return <AppLoading />;
+  }
 
   return (
     <ErrorBoundary>
@@ -154,16 +159,18 @@ const Main = () => {
 
 const App = () => (
   <BrowserRouter basename={getBasename('console', '5002')}>
-    <LogtoProvider
-      config={{
-        endpoint: window.location.origin,
-        appId: adminConsoleApplicationId,
-        resources: [managementResource.indicator],
-        scopes: [UserScope.Identities, UserScope.CustomData, managementResourceScope.name],
-      }}
-    >
-      <Main />
-    </LogtoProvider>
+    <AppEndpointProvider>
+      <LogtoProvider
+        config={{
+          endpoint: window.location.origin,
+          appId: adminConsoleApplicationId,
+          resources: [managementApi.indicator],
+          scopes: [UserScope.Identities, UserScope.CustomData, managementApi.scopeAll],
+        }}
+      >
+        <Main />
+      </LogtoProvider>
+    </AppEndpointProvider>
   </BrowserRouter>
 );
 

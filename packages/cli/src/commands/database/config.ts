@@ -1,5 +1,10 @@
 import type { LogtoConfigKey } from '@logto/schemas';
-import { LogtoOidcConfigKey, logtoConfigGuards, logtoConfigKeys } from '@logto/schemas';
+import {
+  defaultTenantId,
+  LogtoOidcConfigKey,
+  logtoConfigGuards,
+  logtoConfigKeys,
+} from '@logto/schemas';
 import { deduplicate, noop } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
@@ -45,7 +50,7 @@ const validateRotateKey: ValidateRotateKeyFunction = (key) => {
   }
 };
 
-const getConfig: CommandModule<unknown, { key: string; keys: string[] }> = {
+const getConfig: CommandModule<unknown, { key: string; keys: string[]; tenantId: string }> = {
   command: 'get <key> [keys...]',
   describe: 'Get config value(s) of the given key(s) in Logto database',
   builder: (yargs) =>
@@ -60,13 +65,18 @@ const getConfig: CommandModule<unknown, { key: string; keys: string[] }> = {
         type: 'string',
         array: true,
         default: [],
+      })
+      .option('tenantId', {
+        describe: 'The tenant to operate',
+        type: 'string',
+        default: defaultTenantId,
       }),
-  handler: async ({ key, keys }) => {
+  handler: async ({ key, keys, tenantId }) => {
     const queryKeys = deduplicate([key, ...keys]);
     validateKeys(queryKeys);
 
     const pool = await createPoolFromConfig();
-    const { rows } = await getRowsByKeys(pool, queryKeys);
+    const { rows } = await getRowsByKeys(pool, tenantId, queryKeys);
     await pool.end();
 
     console.log(
@@ -85,7 +95,7 @@ const getConfig: CommandModule<unknown, { key: string; keys: string[] }> = {
   },
 };
 
-const setConfig: CommandModule<unknown, { key: string; value: string }> = {
+const setConfig: CommandModule<unknown, { key: string; value: string; tenantId: string }> = {
   command: 'set <key> <value>',
   describe: 'Set config value of the given key in Logto database',
   builder: (yargs) =>
@@ -99,35 +109,46 @@ const setConfig: CommandModule<unknown, { key: string; value: string }> = {
         describe: 'The value to set, should be a valid JSON string',
         type: 'string',
         demandOption: true,
+      })
+      .option('tenantId', {
+        describe: 'The tenant to operate',
+        type: 'string',
+        default: defaultTenantId,
       }),
-  handler: async ({ key, value }) => {
+  handler: async ({ key, value, tenantId }) => {
     validateKeys(key);
 
     const guarded = logtoConfigGuards[key].parse(JSON.parse(value));
 
     const pool = await createPoolFromConfig();
-    await updateValueByKey(pool, key, guarded);
+    await updateValueByKey(pool, tenantId, key, guarded);
     await pool.end();
 
     log.info(`Update ${chalk.green(key)} succeeded`);
   },
 };
 
-const rotateConfig: CommandModule<unknown, { key: string }> = {
+const rotateConfig: CommandModule<unknown, { key: string; tenantId: string }> = {
   command: 'rotate <key>',
   describe:
     'Generate a new private or secret key for the given config key and prepend to the key array',
   builder: (yargs) =>
-    yargs.positional('key', {
-      describe: `The key to rotate, one of ${chalk.green(validRotateKeys.join(', '))}`,
-      type: 'string',
-      demandOption: true,
-    }),
-  handler: async ({ key }) => {
+    yargs
+      .positional('key', {
+        describe: `The key to rotate, one of ${chalk.green(validRotateKeys.join(', '))}`,
+        type: 'string',
+        demandOption: true,
+      })
+      .option('tenantId', {
+        describe: 'The tenant to operate',
+        type: 'string',
+        default: defaultTenantId,
+      }),
+  handler: async ({ key, tenantId }) => {
     validateRotateKey(key);
 
     const pool = await createPoolFromConfig();
-    const { rows } = await getRowsByKeys(pool, [key]);
+    const { rows } = await getRowsByKeys(pool, tenantId, [key]);
 
     if (!rows[0]) {
       log.warn('No key found, create a new one');
@@ -147,14 +168,14 @@ const rotateConfig: CommandModule<unknown, { key: string }> = {
       }
     };
     const rotated = await getValue();
-    await updateValueByKey(pool, key, rotated);
+    await updateValueByKey(pool, tenantId, key, rotated);
     await pool.end();
 
     log.info(`Rotate ${chalk.green(key)} succeeded, now it has ${rotated.length} keys`);
   },
 };
 
-const trimConfig: CommandModule<unknown, { key: string; length: number }> = {
+const trimConfig: CommandModule<unknown, { key: string; length: number; tenantId: string }> = {
   command: 'trim <key> [length]',
   describe: 'Remove the last [length] number of private or secret keys for the given config key',
   builder: (yargs) =>
@@ -169,8 +190,13 @@ const trimConfig: CommandModule<unknown, { key: string; length: number }> = {
         type: 'number',
         default: 1,
         demandOption: true,
+      })
+      .option('tenantId', {
+        describe: 'The tenant to operate',
+        type: 'string',
+        default: defaultTenantId,
       }),
-  handler: async ({ key, length }) => {
+  handler: async ({ key, length, tenantId }) => {
     validateRotateKey(key);
 
     if (length < 1) {
@@ -178,7 +204,7 @@ const trimConfig: CommandModule<unknown, { key: string; length: number }> = {
     }
 
     const pool = await createPoolFromConfig();
-    const { rows } = await getRowsByKeys(pool, [key]);
+    const { rows } = await getRowsByKeys(pool, tenantId, [key]);
 
     if (!rows[0]) {
       log.warn('No key found, create a new one');
@@ -195,7 +221,7 @@ const trimConfig: CommandModule<unknown, { key: string; length: number }> = {
       return value.slice(0, -length);
     };
     const trimmed = await getValue();
-    await updateValueByKey(pool, key, trimmed);
+    await updateValueByKey(pool, tenantId, key, trimmed);
     await pool.end();
 
     log.info(`Trim ${chalk.green(key)} succeeded, now it has ${trimmed.length} keys`);

@@ -1,7 +1,8 @@
 import {
   adminConsoleApplicationId,
-  managementResourceId,
-  managementResourceScope,
+  defaultTenantId,
+  getManagementApiResourceIndicator,
+  managementApiScopeAll,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
@@ -35,13 +36,13 @@ export default function consentRoutes<T>(
 
     // Block non-admin user from consenting to admin console
     if (String(client_id) === adminConsoleApplicationId) {
-      const scopes = await libraries.users.findUserScopesForResourceId(
+      const scopes = await libraries.users.findUserScopesForResourceIndicator(
         accountId,
-        managementResourceId
+        getManagementApiResourceIndicator(defaultTenantId)
       );
 
       assertThat(
-        scopes.some(({ name }) => name === managementResourceScope.name),
+        scopes.some(({ name }) => name === managementApiScopeAll),
         new RequestError({ code: 'auth.forbidden', status: 401 })
       );
     }

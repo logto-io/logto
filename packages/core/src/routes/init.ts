@@ -1,7 +1,8 @@
-import { managementResourceScope } from '@logto/schemas';
+import cors from '@koa/cors';
 import Koa from 'koa';
 import Router from 'koa-router';
 
+import { EnvSet } from '#src/env-set/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import koaAuth from '../middleware/koa-auth.js';
@@ -33,7 +34,7 @@ const createRouters = (tenant: TenantContext) => {
   interactionRoutes(interactionRouter, tenant);
 
   const managementRouter: AuthedRouter = new Router();
-  managementRouter.use(koaAuth(tenant.envSet, managementResourceScope.name));
+  managementRouter.use(koaAuth(tenant.envSet));
   applicationRoutes(managementRouter, tenant);
   logtoConfigRoutes(managementRouter, tenant);
   connectorRoutes(managementRouter, tenant);
@@ -63,6 +64,19 @@ const createRouters = (tenant: TenantContext) => {
 
 export default function initRouter(tenant: TenantContext): Koa {
   const apisApp = new Koa();
+
+  apisApp.use(
+    cors({
+      origin: (ctx) => {
+        const { origin } = ctx.request.headers;
+
+        return origin &&
+          EnvSet.values.adminUrlSet.deduplicated().some((value) => new URL(value).origin === origin)
+          ? origin
+          : '';
+      },
+    })
+  );
 
   for (const router of createRouters(tenant)) {
     apisApp.use(router.routes()).use(router.allowedMethods());

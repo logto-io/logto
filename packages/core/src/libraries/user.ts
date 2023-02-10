@@ -1,6 +1,6 @@
 import { buildIdGenerator, generateStandardId } from '@logto/core-kit';
 import type { User, CreateUser, Scope } from '@logto/schemas';
-import { Users, UsersPasswordEncryptionMethod, defaultRole } from '@logto/schemas';
+import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';
@@ -15,7 +15,6 @@ import assertThat from '#src/utils/assert-that.js';
 import { encryptPassword } from '#src/utils/password.js';
 
 const userId = buildIdGenerator(12);
-const roleId = buildIdGenerator(21);
 
 export const encryptUserPassword = async (
   password: string
@@ -51,18 +50,11 @@ export type UserLibrary = ReturnType<typeof createUserLibrary>;
 export const createUserLibrary = (queries: Queries) => {
   const {
     pool,
-    roles: { findRolesByRoleNames, insertRoles, findRoleByRoleName, findRolesByRoleIds },
-    users: {
-      hasUser,
-      hasUserWithEmail,
-      hasUserWithId,
-      hasUserWithPhone,
-      findUsersByIds,
-      findUserById,
-    },
+    roles: { findRolesByRoleNames, findRoleByRoleName, findRolesByRoleIds },
+    users: { hasUser, hasUserWithEmail, hasUserWithId, hasUserWithPhone, findUsersByIds },
     usersRoles: { insertUsersRoles, findUsersRolesByRoleId, findUsersRolesByUserId },
     rolesScopes: { findRolesScopesByRoleIds },
-    scopes: { findScopesByIdsAndResourceId },
+    scopes: { findScopesByIdsAndResourceIndicator },
   } = queries;
 
   const generateUserId = async (retries = 500) =>
@@ -83,11 +75,8 @@ export const createUserLibrary = (queries: Queries) => {
     returning: true,
   });
 
-  const insertUser = async (data: OmitAutoSetFields<CreateUser>, isAdmin = false) => {
-    const roleNames = deduplicate([
-      ...EnvSet.values.userDefaultRoleNames,
-      ...(isAdmin ? [defaultRole.name] : []),
-    ]);
+  const insertUser = async (data: OmitAutoSetFields<CreateUser>, additionalRoleNames: string[]) => {
+    const roleNames = deduplicate([...EnvSet.values.userDefaultRoleNames, ...additionalRoleNames]);
     const roles = await findRolesByRoleNames(roleNames);
 
     assertThat(roles.length === roleNames.length, 'role.default_role_missing');
@@ -142,15 +131,16 @@ export const createUserLibrary = (queries: Queries) => {
     return findUsersByIds(usersRoles.map(({ userId }) => userId));
   };
 
-  const findUserScopesForResourceId = async (
+  const findUserScopesForResourceIndicator = async (
     userId: string,
-    resourceId: string
+    resourceIndicator: string
   ): Promise<readonly Scope[]> => {
     const usersRoles = await findUsersRolesByUserId(userId);
     const rolesScopes = await findRolesScopesByRoleIds(usersRoles.map(({ roleId }) => roleId));
-    const scopes = await findScopesByIdsAndResourceId(
+
+    const scopes = await findScopesByIdsAndResourceIndicator(
       rolesScopes.map(({ scopeId }) => scopeId),
-      resourceId
+      resourceIndicator
     );
 
     return scopes;
@@ -168,7 +158,7 @@ export const createUserLibrary = (queries: Queries) => {
     insertUser,
     checkIdentifierCollision,
     findUsersByRoleName,
-    findUserScopesForResourceId,
+    findUserScopesForResourceIndicator,
     findUserRoles,
   };
 };

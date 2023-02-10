@@ -140,12 +140,11 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         primaryEmail: string().regex(emailRegEx),
         username: string().regex(usernameRegEx),
         password: string().regex(passwordRegEx),
-        isAdmin: boolean(),
         name: string(),
       }).partial(),
     }),
     async (ctx, next) => {
-      const { primaryEmail, primaryPhone, username, password, name, isAdmin } = ctx.guard.body;
+      const { primaryEmail, primaryPhone, username, password, name } = ctx.guard.body;
 
       assertThat(
         !username || !(await hasUser(username)),
@@ -177,7 +176,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
           name,
           ...conditional(password && (await encryptUserPassword(password))),
         },
-        isAdmin
+        []
       );
 
       ctx.body = pick(user, ...userInfoSelectFields);

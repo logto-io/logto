@@ -1,4 +1,4 @@
-import { managementResourceScope, UserRole } from '@logto/schemas';
+import { defaultManagementApi } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
@@ -17,7 +17,7 @@ const { mockEsm } = createMockUtils(jest);
 const { jwtVerify } = mockEsm('jose', () => ({
   jwtVerify: jest
     .fn()
-    .mockReturnValue({ payload: { sub: 'fooUser', scope: managementResourceScope.name } }),
+    .mockReturnValue({ payload: { sub: 'fooUser', scope: defaultManagementApi.scope.name } }),
 }));
 
 const koaAuth = await pickDefault(import('./koa-auth.js'));
@@ -181,9 +181,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet, UserRole.Admin)(ctx, next)).rejects.toMatchError(
-      forbiddenError
-    );
+    await expect(koaAuth(mockEnvSet)(ctx, next)).rejects.toMatchError(forbiddenError);
   });
 
   it('expect to throw if jwt scope does not include management resource scope', async () => {
@@ -198,9 +196,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet, UserRole.Admin)(ctx, next)).rejects.toMatchError(
-      forbiddenError
-    );
+    await expect(koaAuth(mockEnvSet)(ctx, next)).rejects.toMatchError(forbiddenError);
   });
 
   it('expect to throw unauthorized error if unknown error occurs', async () => {

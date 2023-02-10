@@ -2,13 +2,13 @@
 
 create function set_tenant_id() returns trigger as
 $$ begin
-  select tenants.id into new.tenant_id
-      from tenants
-      where ('tenant_user_' || tenants.id) = current_user;
-
-  if new.tenant_id is null then
-      new.tenant_id := 'default';
+  if new.tenant_id is not null then
+    return new;
   end if;
+
+  select tenants.id into new.tenant_id
+    from tenants
+    where tenants.db_user = current_user;
 
   return new;
 end; $$ language plpgsql;

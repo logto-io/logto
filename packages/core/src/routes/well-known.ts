@@ -3,6 +3,7 @@ import { ConnectorType } from '@logto/connector-kit';
 import { adminConsoleApplicationId } from '@logto/schemas';
 import etag from 'etag';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { getApplicationIdFromInteraction } from '#src/libraries/session.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
@@ -14,6 +15,15 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
     signInExperiences: { getSignInExperienceForApplication },
     connectors: { getLogtoConnectors },
   } = libraries;
+
+  router.get('/.well-known/endpoints', async (ctx, next) => {
+    ctx.body = {
+      console: EnvSet.values.adminUrlSet.endpoint,
+      app: EnvSet.values.urlSet.endpoint,
+    };
+
+    return next();
+  });
 
   router.get(
     '/.well-known/sign-in-exp',

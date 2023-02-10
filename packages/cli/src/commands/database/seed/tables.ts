@@ -3,14 +3,13 @@ import path from 'path';
 
 import { generateStandardId } from '@logto/core-kit';
 import {
-  managementResource,
   defaultSignInExperience,
   createDefaultAdminConsoleConfig,
   createDemoAppApplication,
-  defaultRole,
-  managementResourceScope,
-  defaultRoleScopeRelation,
   defaultTenantId,
+  adminTenantId,
+  defaultManagementApi,
+  createManagementApiInAdminTenant,
 } from '@logto/schemas';
 import { Hooks, Tenants } from '@logto/schemas/models';
 import type { DatabaseTransactionConnection } from 'slonik';
@@ -21,7 +20,8 @@ import { insertInto } from '../../../database.js';
 import { getDatabaseName } from '../../../queries/database.js';
 import { updateDatabaseTimestamp } from '../../../queries/system.js';
 import { getPathInModule } from '../../../utilities.js';
-import { createTenant } from './tenant.js';
+import { seedOidcConfigs } from './oidc-config.js';
+import { createTenant, seedAdminData } from './tenant.js';
 
 const getExplicitOrder = (query: string) => {
   const matched = /\/\*\s*init_order\s*=\s*([\d.]+)\s*\*\//.exec(query)?.[1];
@@ -114,14 +114,17 @@ export const seedTables = async (
   latestTimestamp: number
 ) => {
   await createTenant(connection, defaultTenantId);
+  await seedOidcConfigs(connection, defaultTenantId);
+  await seedAdminData(connection, defaultManagementApi);
+
+  await createTenant(connection, adminTenantId);
+  await seedOidcConfigs(connection, adminTenantId);
+  await seedAdminData(connection, createManagementApiInAdminTenant(defaultTenantId));
+
   await Promise.all([
-    connection.query(insertInto(managementResource, 'resources')),
-    connection.query(insertInto(managementResourceScope, 'scopes')),
     connection.query(insertInto(createDefaultAdminConsoleConfig(), 'logto_configs')),
     connection.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
     connection.query(insertInto(createDemoAppApplication(generateStandardId()), 'applications')),
-    connection.query(insertInto(defaultRole, 'roles')),
-    connection.query(insertInto(defaultRoleScopeRelation, 'roles_scopes')),
     updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
 };

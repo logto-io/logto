@@ -250,6 +250,7 @@ importers:
 
   packages/core:
     specifiers:
+      '@koa/cors': ^4.0.0
       '@logto/cli': workspace:*
       '@logto/connector-kit': workspace:*
       '@logto/core-kit': workspace:*
@@ -271,6 +272,7 @@ importers:
       '@types/koa-logger': ^3.1.1
       '@types/koa-mount': ^4.0.0
       '@types/koa-send': ^4.1.3
+      '@types/koa__cors': ^3.3.0
       '@types/node': ^18.11.18
       '@types/oidc-provider': ^8.0.0
       '@types/semver': ^7.3.12
@@ -326,6 +328,7 @@ importers:
       typescript: ^4.9.4
       zod: ^3.20.2
     dependencies:
+      '@koa/cors': 4.0.0
       '@logto/cli': link:../cli
       '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
@@ -384,6 +387,7 @@ importers:
       '@types/koa-logger': 3.1.2
       '@types/koa-mount': 4.0.1
       '@types/koa-send': 4.1.3
+      '@types/koa__cors': 3.3.0
       '@types/node': 18.11.18
       '@types/oidc-provider': 8.0.0
       '@types/semver': 7.3.12
@@ -4097,6 +4101,12 @@ packages:
       '@types/keygrip': 1.0.2
       '@types/koa-compose': 3.2.5
       '@types/node': 18.11.18
+    dev: true
+
+  /@types/koa__cors/3.3.0:
+    resolution: {integrity: sha512-FUN8YxcBakIs+walVe3+HcNP+Bxd0SB8BJHBWkglZ5C1XQWljlKcEFDG/dPiCIqwVCUbc5X0nYDlH62uEhdHMA==}
+    dependencies:
+      '@types/koa': 2.13.4
     dev: true
 
   /@types/mdast/3.0.10:

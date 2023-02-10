@@ -6,7 +6,8 @@ import chalk from 'chalk';
 import type Koa from 'koa';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { defaultTenant, tenantPool } from '#src/tenants/index.js';
+import { tenantPool } from '#src/tenants/index.js';
+import { getTenantId } from '#src/utils/tenant.js';
 
 const logListening = (type: 'core' | 'admin' = 'core') => {
   const urlSet = type === 'core' ? EnvSet.values.urlSet : EnvSet.values.adminUrlSet;
@@ -16,24 +17,9 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
   }
 };
 
-const getTenantId = () => {
-  const { isDomainBasedMultiTenancy, isProduction, isIntegrationTest, developmentTenantId } =
-    EnvSet.values;
-
-  if (!isDomainBasedMultiTenancy) {
-    if ((!isProduction || isIntegrationTest) && developmentTenantId) {
-      return developmentTenantId;
-    }
-
-    return defaultTenant;
-  }
-
-  throw new Error('Not implemented');
-};
-
 export default async function initApp(app: Koa): Promise<void> {
   app.use(async (ctx, next) => {
-    const tenantId = getTenantId();
+    const tenantId = getTenantId(ctx.URL);
 
     if (!tenantId) {
       ctx.status = 404;
