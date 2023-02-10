@@ -45,6 +45,7 @@ export type DeepPartial<T> = T extends object
 export type Partial2<T> = { [key in keyof T]?: Partial<T[key]> };
 
 export class MockTenant implements TenantContext {
+  public id = 'mock_id';
   public envSet = mockEnvSet;
   public queries: Queries;
   public libraries: Libraries;

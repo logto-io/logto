@@ -6,7 +6,8 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { managementApi, requestTimeout } from '@/consts';
-import { AppEndpointContext } from '@/containers/AppEndpointProvider';
+import type { AppEndpointKey } from '@/containers/AppEndpointsProvider';
+import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
 
 export class RequestError extends Error {
   status: number;
@@ -20,11 +21,17 @@ export class RequestError extends Error {
 }
 
 type Props = {
+  endpointKey?: AppEndpointKey;
   hideErrorToast?: boolean;
+  resourceIndicator?: string;
 };
 
-const useApi = ({ hideErrorToast }: Props = {}) => {
-  const { endpoint } = useContext(AppEndpointContext);
+const useApi = ({
+  hideErrorToast,
+  endpointKey = 'app',
+  resourceIndicator = managementApi.indicator,
+}: Props = {}) => {
+  const endpoints = useContext(AppEndpointsContext);
   const { isAuthenticated, getAccessToken } = useLogto();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -45,7 +52,7 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
   const api = useMemo(
     () =>
       ky.create({
-        prefixUrl: endpoint,
+        prefixUrl: endpoints[endpointKey],
         timeout: requestTimeout,
         hooks: {
           beforeError: hideErrorToast
@@ -60,7 +67,7 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
           beforeRequest: [
             async (request) => {
               if (isAuthenticated) {
-                const accessToken = await getAccessToken(managementApi.indicator);
+                const accessToken = await getAccessToken(resourceIndicator);
                 request.headers.set('Authorization', `Bearer ${accessToken ?? ''}`);
                 request.headers.set('Accept-Language', i18n.language);
               }
@@ -68,7 +75,16 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
           ],
         },
       }),
-    [endpoint, hideErrorToast, toastError, isAuthenticated, getAccessToken, i18n.language]
+    [
+      endpoints,
+      endpointKey,
+      hideErrorToast,
+      toastError,
+      isAuthenticated,
+      getAccessToken,
+      resourceIndicator,
+      i18n.language,
+    ]
   );
 
   return api;

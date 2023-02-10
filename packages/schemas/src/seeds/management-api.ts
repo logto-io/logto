@@ -1,7 +1,7 @@
 import { generateStandardId } from '@logto/core-kit';
 
 import type { CreateResource, CreateRole, CreateScope } from '../db-entries/index.js';
-import { UserRole } from '../types/index.js';
+import { PredefinedScope, UserRole } from '../types/index.js';
 import { adminTenantId, defaultTenantId } from './tenant.js';
 
 export type AdminData = {
@@ -9,8 +9,6 @@ export type AdminData = {
   scope: CreateScope;
   role: CreateRole;
 };
-
-export const managementApiScopeAll = 'all';
 
 // Consider remove the dependency of IDs
 const defaultResourceId = 'management-api';
@@ -28,14 +26,14 @@ export const defaultManagementApi = Object.freeze({
      *
      * Admin Console requires the access token of this resource to be functional.
      */
-    indicator: 'https://logto.app/api',
+    indicator: `https://${defaultTenantId}.logto.app/api`,
     name: 'Logto Management API',
   },
   scope: {
     tenantId: defaultTenantId,
     /** @deprecated You should not rely on this constant. Change to something else. */
     id: defaultScopeAllId,
-    name: managementApiScopeAll,
+    name: PredefinedScope.All,
     description: 'Default scope for Management API, allows all permissions.',
     /** @deprecated You should not rely on this constant. Change to something else. */
     resourceId: defaultResourceId,
@@ -49,8 +47,8 @@ export const defaultManagementApi = Object.freeze({
   },
 }) satisfies AdminData;
 
-export const getManagementApiResourceIndicator = (tenantId: string) =>
-  `https://${tenantId}.logto.app/api`;
+export const getManagementApiResourceIndicator = (tenantId: string, path = 'api') =>
+  `https://${tenantId}.logto.app/${path}`;
 
 export const getManagementApiAdminName = (tenantId: string) => `${tenantId}:${UserRole.Admin}`;
 
@@ -68,7 +66,7 @@ export const createManagementApiInAdminTenant = (tenantId: string): AdminData =>
     scope: {
       tenantId: adminTenantId,
       id: generateStandardId(),
-      name: managementApiScopeAll,
+      name: PredefinedScope.All,
       description: 'Default scope for Management API, allows all permissions.',
       resourceId,
     },
@@ -77,6 +75,32 @@ export const createManagementApiInAdminTenant = (tenantId: string): AdminData =>
       id: generateStandardId(),
       name: getManagementApiAdminName(tenantId),
       description: 'Admin role for Logto.',
+    },
+  });
+};
+
+export const createMeApiInAdminTenant = (): AdminData => {
+  const resourceId = generateStandardId();
+
+  return Object.freeze({
+    resource: {
+      tenantId: adminTenantId,
+      id: resourceId,
+      indicator: getManagementApiResourceIndicator(adminTenantId, 'me'),
+      name: `Logto Me API`,
+    },
+    scope: {
+      tenantId: adminTenantId,
+      id: generateStandardId(),
+      name: PredefinedScope.All,
+      description: 'Default scope for Me API, allows all permissions.',
+      resourceId,
+    },
+    role: {
+      tenantId: adminTenantId,
+      id: generateStandardId(),
+      name: UserRole.User,
+      description: 'Default role for admin tenant.',
     },
   });
 };

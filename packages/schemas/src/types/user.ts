@@ -24,4 +24,10 @@ export type UserProfileResponse = UserInfo & { hasPasswordSet: boolean };
 
 export enum UserRole {
   Admin = 'admin',
+  /** Common user role in admin tenant. */
+  User = 'user',
+}
+
+export enum PredefinedScope {
+  All = 'all',
 }

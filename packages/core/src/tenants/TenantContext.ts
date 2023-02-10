@@ -7,6 +7,7 @@ import type Libraries from './Libraries.js';
 import type Queries from './Queries.js';
 
 export default abstract class TenantContext {
+  public abstract readonly id: string;
   public abstract readonly envSet: EnvSet;
   public abstract readonly provider: Provider;
   public abstract readonly queries: Queries;

@@ -1,5 +1,6 @@
 import type { User, Profile } from '@logto/schemas';
 import {
+  UserRole,
   getManagementApiAdminName,
   defaultTenantId,
   adminTenantId,
@@ -173,7 +174,7 @@ export default async function submitInteraction(
         id,
         ...upsertProfile,
       },
-      createAdminUser ? [getManagementApiAdminName(defaultTenantId)] : []
+      createAdminUser ? [getManagementApiAdminName(defaultTenantId), UserRole.User] : []
     );
 
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });

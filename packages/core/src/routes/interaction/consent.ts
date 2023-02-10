@@ -2,7 +2,7 @@ import {
   adminConsoleApplicationId,
   defaultTenantId,
   getManagementApiResourceIndicator,
-  managementApiScopeAll,
+  PredefinedScope,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
@@ -42,7 +42,7 @@ export default function consentRoutes<T>(
       );
 
       assertThat(
-        scopes.some(({ name }) => name === managementApiScopeAll),
+        scopes.some(({ name }) => name === PredefinedScope.All),
         new RequestError({ code: 'auth.forbidden', status: 401 })
       );
     }

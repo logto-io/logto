@@ -19,7 +19,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(
 ) {
   const {
     oidcModelInstances: { revokeInstanceByUserId },
-    roles: { findRolesByRoleNames },
     users: {
       deleteUserById,
       deleteUserIdentity,

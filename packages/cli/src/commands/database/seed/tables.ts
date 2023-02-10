@@ -10,6 +10,7 @@ import {
   adminTenantId,
   defaultManagementApi,
   createManagementApiInAdminTenant,
+  createMeApiInAdminTenant,
 } from '@logto/schemas';
 import { Hooks, Tenants } from '@logto/schemas/models';
 import type { DatabaseTransactionConnection } from 'slonik';
@@ -120,6 +121,7 @@ export const seedTables = async (
   await createTenant(connection, adminTenantId);
   await seedOidcConfigs(connection, adminTenantId);
   await seedAdminData(connection, createManagementApiInAdminTenant(defaultTenantId));
+  await seedAdminData(connection, createMeApiInAdminTenant());
 
   await Promise.all([
     connection.query(insertInto(createDefaultAdminConsoleConfig(), 'logto_configs')),

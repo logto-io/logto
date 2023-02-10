@@ -1,4 +1,6 @@
+import { adminTenantId } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
+import { trySafe } from '@silverhand/essentials';
 import type { PostgreSql } from '@withtyped/postgres';
 import type { QueryClient } from '@withtyped/server';
 import type { DatabasePool } from 'slonik';
@@ -13,13 +15,34 @@ import createQueryClient from './create-query-client.js';
 import loadOidcValues from './oidc.js';
 import { throwNotLoadedError } from './throw-errors.js';
 
-export enum MountedApps {
+/** Apps (also paths) for user tenants. */
+export enum UserApps {
   Api = 'api',
   Oidc = 'oidc',
   Console = 'console',
   DemoApp = 'demo-app',
   Welcome = 'welcome',
 }
+
+/** Apps (also paths) ONLY for the admin tenant. */
+export enum AdminApps {
+  Me = 'me',
+}
+
+const getTenantEndpoint = (id: string) => {
+  const { urlSet, adminUrlSet, isDomainBasedMultiTenancy } = EnvSet.values;
+  const adminUrl = trySafe(() => adminUrlSet.endpoint);
+
+  if (adminUrl && id === adminTenantId) {
+    return adminUrl;
+  }
+
+  if (!isDomainBasedMultiTenancy) {
+    return urlSet.endpoint;
+  }
+
+  return urlSet.endpoint.replace('*', id);
+};
 
 export class EnvSet {
   static values = new GlobalValues();
@@ -43,7 +66,7 @@ export class EnvSet {
   #queryClient: Optional<QueryClient<PostgreSql>>;
   #oidc: Optional<Awaited<ReturnType<typeof loadOidcValues>>>;
 
-  constructor(public readonly databaseUrl: string) {}
+  constructor(public readonly tenantId: string, public readonly databaseUrl: string) {}
 
   get pool() {
     if (!this.#pool) {
@@ -86,9 +109,7 @@ export class EnvSet {
     const { getOidcConfigs } = createLogtoConfigLibrary(createLogtoConfigQueries(pool));
 
     const oidcConfigs = await getOidcConfigs();
-    this.#oidc = await loadOidcValues(
-      appendPath(EnvSet.values.endpoint, '/oidc').toString(),
-      oidcConfigs
-    );
+    const endpoint = getTenantEndpoint(this.tenantId);
+    this.#oidc = await loadOidcValues(appendPath(endpoint, '/oidc').toString(), oidcConfigs);
   }
 }

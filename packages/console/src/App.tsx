@@ -13,7 +13,7 @@ import './scss/overlayscrollbars.scss';
 import '@fontsource/roboto-mono';
 import AppLoading from '@/components/AppLoading';
 import Toast from '@/components/Toast';
-import { managementApi } from '@/consts/management-api';
+import { managementApi, meApi } from '@/consts/management-api';
 import AppBoundary from '@/containers/AppBoundary';
 import AppLayout from '@/containers/AppLayout';
 import ErrorBoundary from '@/containers/ErrorBoundary';
@@ -47,7 +47,7 @@ import {
   UserDetailsTabs,
 } from './consts/page-tabs';
 import AppContent from './containers/AppContent';
-import AppEndpointProvider, { AppEndpointContext } from './containers/AppEndpointProvider';
+import AppEndpointsProvider, { AppEndpointsContext } from './containers/AppEndpointsProvider';
 import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
 import CloudPreview from './pages/CloudPreview';
@@ -63,9 +63,9 @@ void initI18n();
 
 const Main = () => {
   const swrOptions = useSwrOptions();
-  const { endpoint } = useContext(AppEndpointContext);
+  const { app, console } = useContext(AppEndpointsContext);
 
-  if (!endpoint) {
+  if (!app || !console) {
     return <AppLoading />;
   }
 
@@ -159,18 +159,18 @@ const Main = () => {
 
 const App = () => (
   <BrowserRouter basename={getBasename('console', '5002')}>
-    <AppEndpointProvider>
+    <AppEndpointsProvider>
       <LogtoProvider
         config={{
           endpoint: window.location.origin,
           appId: adminConsoleApplicationId,
-          resources: [managementApi.indicator],
+          resources: [managementApi.indicator, meApi.indicator],
           scopes: [UserScope.Identities, UserScope.CustomData, managementApi.scopeAll],
         }}
       >
         <Main />
       </LogtoProvider>
-    </AppEndpointProvider>
+    </AppEndpointsProvider>
   </BrowserRouter>
 );
 

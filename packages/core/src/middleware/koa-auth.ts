@@ -1,14 +1,16 @@
 import type { IncomingHttpHeaders } from 'http';
 
-import { defaultManagementApi } from '@logto/schemas';
+import { adminTenantId, defaultManagementApi } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
-import { jwtVerify } from 'jose';
+import type { JWK } from 'jose';
+import { createLocalJWKSet, jwtVerify } from 'jose';
 import type { MiddlewareType, Request } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { tenantPool } from '#src/tenants/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 export type Auth = {
@@ -23,7 +25,7 @@ export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamC
 
 const bearerTokenIdentifier = 'Bearer';
 
-const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) => {
+export const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) => {
   assertThat(
     authorization,
     new RequestError({ code: 'auth.authorization_header_missing', status: 401 })
@@ -48,7 +50,7 @@ type TokenInfo = {
 export const verifyBearerTokenFromRequest = async (
   envSet: EnvSet,
   request: Request,
-  resourceIndicator: Optional<string>
+  audience: Optional<string>
 ): Promise<TokenInfo> => {
   const { isProduction, isIntegrationTest, developmentUserId } = EnvSet.values;
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
@@ -59,14 +61,35 @@ export const verifyBearerTokenFromRequest = async (
     return { sub: userId, clientId: undefined, scopes: [defaultManagementApi.scope.name] };
   }
 
+  const getKeysAndIssuer = async (): Promise<[JWK[], string[]]> => {
+    const { publicJwks, issuer } = envSet.oidc;
+
+    if (envSet.tenantId === adminTenantId) {
+      return [publicJwks, [issuer]];
+    }
+
+    const {
+      envSet: { oidc: adminOidc },
+    } = await tenantPool.get(adminTenantId);
+
+    return [
+      [...publicJwks, ...adminOidc.publicJwks],
+      [issuer, adminOidc.issuer],
+    ];
+  };
+
   try {
-    const { localJWKSet, issuer } = envSet.oidc;
+    const [keys, issuer] = await getKeysAndIssuer();
     const {
       payload: { sub, client_id: clientId, scope = '' },
-    } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), localJWKSet, {
-      issuer,
-      audience: resourceIndicator,
-    });
+    } = await jwtVerify(
+      extractBearerTokenFromHeaders(request.headers),
+      createLocalJWKSet({ keys }),
+      {
+        issuer,
+        audience,
+      }
+    );
 
     assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
 
@@ -81,17 +104,19 @@ export const verifyBearerTokenFromRequest = async (
 };
 
 export default function koaAuth<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
-  envSet: EnvSet
+  envSet: EnvSet,
+  audience: string,
+  expectScopes = [defaultManagementApi.scope.name]
 ): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     const { sub, clientId, scopes } = await verifyBearerTokenFromRequest(
       envSet,
       ctx.request,
-      defaultManagementApi.resource.indicator
+      audience
     );
 
     assertThat(
-      scopes.includes(defaultManagementApi.scope.name),
+      expectScopes.every((scope) => scopes.includes(scope)),
       new RequestError({ code: 'auth.forbidden', status: 403 })
     );
 

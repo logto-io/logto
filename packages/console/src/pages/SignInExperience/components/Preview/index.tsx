@@ -5,13 +5,14 @@ import { ConnectorType, AppearanceMode } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { format } from 'date-fns';
-import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import PhoneInfo from '@/assets/images/phone-info.svg';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
@@ -29,9 +30,8 @@ const Preview = ({ signInExperience, className }: Props) => {
   const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
-  const { customPhrases } = useUiLanguages();
-
-  const { languages } = useUiLanguages();
+  const { customPhrases, languages } = useUiLanguages();
+  const { app: appEndpoint } = useContext(AppEndpointsContext);
 
   const modeOptions = useMemo(() => {
     const light = { value: AppearanceMode.LightMode, title: t('sign_in_exp.preview.light') };
@@ -120,9 +120,9 @@ const Preview = ({ signInExperience, className }: Props) => {
 
     previewRef.current?.contentWindow?.postMessage(
       { sender: 'ac_preview', config },
-      window.location.origin
+      appEndpoint?.origin ?? ''
     );
-  }, [config, customPhrases]);
+  }, [appEndpoint?.origin, config, customPhrases]);
 
   useEffect(() => {
     postPreviewMessage();
@@ -210,7 +210,7 @@ const Preview = ({ signInExperience, className }: Props) => {
               ref={previewRef}
               // Allow all sandbox rules
               sandbox={undefined}
-              src="/sign-in?preview=true"
+              src={new URL('/sign-in?preview=true', appEndpoint).toString()}
               tabIndex={-1}
               title={t('sign_in_exp.preview.title')}
             />
