@@ -7,7 +7,7 @@ import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '../ErrorPage';
 import useUsernamePasswordRegister from './use-username-password-register';
 
-const PasswordRegisterWithUsername = () => {
+const RegisterPassword = () => {
   const { signUpMethods } = useSieMethods();
   const setPassword = useUsernamePasswordRegister();
 
@@ -27,4 +27,4 @@ const PasswordRegisterWithUsername = () => {
   );
 };
 
-export default PasswordRegisterWithUsername;
+export default RegisterPassword;

@@ -9,8 +9,6 @@ const translation = {
     confirm_password: 'Confirme a senha',
   },
   secondary: {
-    sign_in_with: 'Entrar com {{methods, list(type: disjunction;)}}',
-    register_with: 'Criar conta com {{methods, list(type: disjunction;)}}',
     social_bind_with:
       'Já tinha uma conta? Faça login no link {{methods, list(type: disjunction;)}} com sua identidade social.',
   },

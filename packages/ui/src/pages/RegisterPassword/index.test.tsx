@@ -7,7 +7,7 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import { setUserPassword } from '@/apis/interaction';
 
-import PasswordRegisterWithUsername from '.';
+import RegisterPassword from '.';
 
 const mockedNavigate = jest.fn();
 
@@ -23,7 +23,7 @@ jest.mock('@/apis/interaction', () => ({
 
 const useLocationMock = useLocation as jest.Mock;
 
-describe('<PasswordRegisterWithUsername />', () => {
+describe('<RegisterPassword />', () => {
   afterEach(() => {
     jest.clearAllMocks();
     useLocationMock.mockImplementation(() => ({ state: { username: 'username' } }));
@@ -32,7 +32,7 @@ describe('<PasswordRegisterWithUsername />', () => {
   it('render PasswordRegister page properly', () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <PasswordRegisterWithUsername />
+        <RegisterPassword />
       </SettingsProvider>
     );
 
@@ -52,7 +52,7 @@ describe('<PasswordRegisterWithUsername />', () => {
           },
         }}
       >
-        <PasswordRegisterWithUsername />
+        <RegisterPassword />
       </SettingsProvider>
     );
 
@@ -63,7 +63,7 @@ describe('<PasswordRegisterWithUsername />', () => {
   it('submit properly', async () => {
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <PasswordRegisterWithUsername />
+        <RegisterPassword />
       </SettingsProvider>
     );
 

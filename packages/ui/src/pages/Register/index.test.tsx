@@ -1,3 +1,4 @@
+import type { SignUp } from '@logto/schemas';
 import { SignInMode, SignInIdentifier } from '@logto/schemas';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -5,22 +6,39 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import Register from '@/pages/Register';
+import type { SignInExperienceResponse } from '@/types';
 
 jest.mock('i18next', () => ({
   language: 'en',
+  t: (key: string) => key,
 }));
 
 describe('<Register />', () => {
-  test('renders with username as primary', async () => {
-    const { queryAllByText, container } = renderWithPageContext(
-      <SettingsProvider>
+  const renderRegisterPage = (settings?: Partial<SignInExperienceResponse>) =>
+    renderWithPageContext(
+      <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
         <MemoryRouter>
           <Register />
         </MemoryRouter>
       </SettingsProvider>
     );
 
-    expect(container.querySelector('input[name="new-username"]')).not.toBeNull();
+  const signUpTestCases: SignUp[] = [
+    [SignInIdentifier.Username],
+    [SignInIdentifier.Email],
+    [SignInIdentifier.Phone],
+    [SignInIdentifier.Phone, SignInIdentifier.Email],
+  ].map((identifiers) => ({
+    identifiers,
+    password: true,
+    verify: true,
+  }));
+
+  test.each(signUpTestCases)('renders with %o sign up settings', async (...signUp) => {
+    const { queryByText, queryAllByText, container } = renderRegisterPage();
+
+    expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
+    expect(queryByText('action.create_account')).not.toBeNull();
 
     // Social
     expect(queryAllByText('action.sign_in_with')).toHaveLength(
@@ -28,96 +46,21 @@ describe('<Register />', () => {
     );
   });
 
-  test('renders with email passwordless as primary', async () => {
-    const { queryByText, container } = renderWithPageContext(
-      <SettingsProvider
-        settings={{
-          ...mockSignInExperienceSettings,
-          signUp: {
-            ...mockSignInExperienceSettings.signUp,
-            identifiers: [SignInIdentifier.Email],
-          },
-        }}
-      >
-        <MemoryRouter>
-          <Register />
-        </MemoryRouter>
-      </SettingsProvider>
-    );
-    expect(container.querySelector('input[name="email"]')).not.toBeNull();
-    expect(queryByText('action.create_account')).not.toBeNull();
-  });
-
-  test('renders with phone passwordless as primary', async () => {
-    const { queryByText, container } = renderWithPageContext(
-      <SettingsProvider
-        settings={{
-          ...mockSignInExperienceSettings,
-          signUp: {
-            ...mockSignInExperienceSettings.signUp,
-            identifiers: [SignInIdentifier.Phone],
-          },
-        }}
-      >
-        <MemoryRouter>
-          <Register />
-        </MemoryRouter>
-      </SettingsProvider>
-    );
-    expect(container.querySelector('input[name="phone"]')).not.toBeNull();
-    expect(queryByText('action.create_account')).not.toBeNull();
-  });
-
-  test('render with email and phone passwordless', async () => {
-    const { queryByText, container } = renderWithPageContext(
-      <SettingsProvider
-        settings={{
-          ...mockSignInExperienceSettings,
-          signUp: {
-            ...mockSignInExperienceSettings.signUp,
-            identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
-          },
-        }}
-      >
-        <MemoryRouter>
-          <Register />
-        </MemoryRouter>
-      </SettingsProvider>
-    );
-    expect(queryByText('secondary.register_with')).not.toBeNull();
-    expect(container.querySelector('input[name="email"]')).not.toBeNull();
-  });
-
   test('renders with social as primary', async () => {
-    const { queryAllByText } = renderWithPageContext(
-      <SettingsProvider
-        settings={{
-          ...mockSignInExperienceSettings,
-          signUp: { ...mockSignInExperienceSettings.signUp, identifiers: [] },
-        }}
-      >
-        <MemoryRouter>
-          <Register />
-        </MemoryRouter>
-      </SettingsProvider>
-    );
+    const { queryByText, queryAllByText, container } = renderRegisterPage({
+      signUp: { ...mockSignInExperienceSettings.signUp, identifiers: [] },
+    });
 
     expect(queryAllByText('action.sign_in_with')).toHaveLength(
       mockSignInExperienceSettings.socialConnectors.length
     );
+
+    expect(container.querySelector('input[name="identifier"]')).toBeNull();
+    expect(queryByText('action.create_account')).toBeNull();
   });
 
   test('render with sign-in only mode should return ErrorPage', () => {
-    const { queryByText } = renderWithPageContext(
-      <SettingsProvider
-        settings={{ ...mockSignInExperienceSettings, signInMode: SignInMode.SignIn }}
-      >
-        <MemoryRouter>
-          <Register />
-        </MemoryRouter>
-      </SettingsProvider>
-    );
-
+    const { queryByText } = renderRegisterPage({ signInMode: SignInMode.SignIn });
     expect(queryByText('description.not_found')).not.toBeNull();
   });
 });

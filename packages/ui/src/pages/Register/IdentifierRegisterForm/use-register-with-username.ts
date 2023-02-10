@@ -1,4 +1,3 @@
-import { SignInIdentifier } from '@logto/schemas';
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,9 +5,8 @@ import { registerWithUsernamePassword } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
-import { UserFlow } from '@/types';
 
-const useUsernameRegister = () => {
+const useRegisterWithUsername = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -22,7 +20,7 @@ const useUsernameRegister = () => {
         setErrorMessage(error.message);
       },
       'user.missing_profile': () => {
-        navigate(`/${UserFlow.register}/${SignInIdentifier.Username}/password`);
+        navigate('password');
       },
     }),
     [navigate]
@@ -45,4 +43,4 @@ const useUsernameRegister = () => {
   return { errorMessage, clearErrorMessage, onSubmit };
 };
 
-export default useUsernameRegister;
+export default useRegisterWithUsername;

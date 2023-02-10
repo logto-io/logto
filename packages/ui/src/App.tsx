@@ -14,10 +14,9 @@ import Continue from './pages/Continue';
 import ContinueWithEmailOrPhone from './pages/Continue/EmailOrPhone';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
-import PasswordRegisterWithUsername from './pages/PasswordRegisterWithUsername';
 import Register from './pages/Register';
+import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
-import SecondaryRegister from './pages/SecondaryRegister';
 import SignIn from './pages/SignIn';
 import SignInPassword from './pages/SignInPassword';
 import SocialLanding from './pages/SocialLanding';
@@ -88,8 +87,7 @@ const App = () => {
                     index
                     element={isSignInOnly ? <Navigate replace to="/sign-in" /> : <Register />}
                   />
-                  <Route path="username/password" element={<PasswordRegisterWithUsername />} />
-                  <Route path=":method" element={<SecondaryRegister />} />
+                  <Route path="password" element={<RegisterPassword />} />
                 </Route>
 
                 {/* Forgot password */}

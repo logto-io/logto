@@ -1,8 +1,8 @@
 import { SignInIdentifier } from '@logto/schemas';
-import type { SignIn } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -19,25 +19,21 @@ type Props = {
   className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   autoFocus?: boolean;
-  signInMethods: SignIn['methods'];
+  signUpMethods: SignInIdentifier[];
 };
 
 type FormState = {
   identifier: string;
 };
 
-const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
+const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) => {
+  const { t } = useTranslation();
   const { termsValidation } = useTerms();
-  const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
-
-  const enabledSignInMethods = useMemo(
-    () => signInMethods.map(({ identifier }) => identifier),
-    [signInMethods]
-  );
-
   const [inputType, setInputType] = useState<IdentifierInputType>(
-    enabledSignInMethods[0] ?? SignInIdentifier.Username
+    signUpMethods[0] ?? SignInIdentifier.Username
   );
+
+  const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
   const {
     register,
@@ -69,22 +65,27 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <SmartInputField
+        required
         autoComplete="new-identifier"
         autoFocus={autoFocus}
         className={styles.inputField}
         currentType={inputType}
         isDanger={!!errors.identifier || !!errorMessage}
         errorMessage={errors.identifier?.message}
-        enabledTypes={enabledSignInMethods}
+        enabledTypes={signUpMethods}
         onTypeChange={setInputType}
         {...register('identifier', {
-          required: getGeneralIdentifierErrorMessage(enabledSignInMethods, 'required'),
+          required: getGeneralIdentifierErrorMessage(signUpMethods, 'required'),
           validate: (value) => {
             const errorMessage = validateIdentifierField(inputType, value);
 
-            return errorMessage
-              ? getGeneralIdentifierErrorMessage(enabledSignInMethods, 'invalid')
-              : true;
+            if (errorMessage) {
+              return typeof errorMessage === 'string'
+                ? t(`error.${errorMessage}`)
+                : t(`error.${errorMessage.code}`, errorMessage.data);
+            }
+
+            return true;
           },
         })}
         /* Overwrite default input onChange handler  */
@@ -97,11 +98,11 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
 
       <TermsOfUse className={styles.terms} />
 
-      <Button title="action.sign_in" htmlType="submit" />
+      <Button name="submit" title="action.create_account" htmlType="submit" />
 
       <input hidden type="submit" />
     </form>
   );
 };
 
-export default IdentifierSignInForm;
+export default IdentifierRegisterForm;

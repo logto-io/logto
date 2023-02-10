@@ -7,8 +7,6 @@ const translation = {
     confirm_password: 'Confirm password',
   },
   secondary: {
-    sign_in_with: 'Sign in with {{methods, list(type: disjunction;)}}',
-    register_with: 'Create account with {{methods, list(type: disjunction;)}}',
     social_bind_with:
       'Already had an account? Sign in to link {{methods, list(type: disjunction;)}} with your social identity.',
   },
