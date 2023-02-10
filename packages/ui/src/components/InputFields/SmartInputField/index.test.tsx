@@ -8,6 +8,7 @@ import SmartInputField from '.';
 
 jest.mock('i18next', () => ({
   language: 'en',
+  t: (key: string) => key,
 }));
 
 describe('SmartInputField Component', () => {
