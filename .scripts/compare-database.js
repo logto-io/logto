@@ -122,7 +122,23 @@ const queryDatabaseData = async (database) => {
     .map(async ({ table_name }) => {
       const { rows } = await pool.query(/* sql */`select * from ${table_name};`);
 
-      return [table_name, omitArray(rows, 'created_at', 'updated_at', 'secret', 'db_user', 'db_user_password')];
+      // check config rows except the value column
+      if (['logto_configs', '_logto_configs', 'systems'].includes(table_name)) {
+        return [table_name, omitArray(rows, 'value')];
+      }
+
+      return [table_name, omitArray(
+        rows,
+        'id',
+        'resource_id',
+        'role_id',
+        'scope_id',
+        'created_at',
+        'updated_at',
+        'secret',
+        'db_user',
+        'db_user_password'
+      )];
     })
   );
 
