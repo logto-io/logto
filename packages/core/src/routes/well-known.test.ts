@@ -111,11 +111,12 @@ describe('GET /.well-known/sign-in-exp', () => {
 
     expect(response.body).toMatchObject({
       ...adminConsoleSignInExperience,
+      tenantId: 'admin',
       branding: {
         ...adminConsoleSignInExperience.branding,
         slogan: 'admin_console.welcome.title',
       },
-      termsOfUseUrl: mockSignInExperience.termsOfUseUrl,
+      termsOfUseUrl: null,
       languageInfo: mockSignInExperience.languageInfo,
       socialConnectors: [],
       signInMode: SignInMode.SignIn,

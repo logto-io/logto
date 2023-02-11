@@ -174,7 +174,7 @@ export default async function submitInteraction(
         id,
         ...upsertProfile,
       },
-      createAdminUser ? [getManagementApiAdminName(defaultTenantId), UserRole.User] : []
+      createAdminUser ? [UserRole.User, getManagementApiAdminName(defaultTenantId)] : []
     );
 
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });

@@ -9,18 +9,24 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import type { WithAuthContext } from './koa-auth.js';
+import type { WithAuthContext } from './index.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
+mockEsm('./utils.js', () => ({
+  getAdminTenantTokenValidationSet: jest.fn().mockResolvedValue({ keys: [], issuer: [] }),
+}));
+
 const { jwtVerify } = mockEsm('jose', () => ({
+  createLocalJWKSet: jest.fn(),
   jwtVerify: jest
     .fn()
     .mockReturnValue({ payload: { sub: 'fooUser', scope: defaultManagementApi.scope.name } }),
 }));
 
-const koaAuth = await pickDefault(import('./koa-auth.js'));
+const audience = defaultManagementApi.resource.indicator;
+const koaAuth = await pickDefault(import('./index.js'));
 
 describe('koaAuth middleware', () => {
   const baseCtx = createContextWithRouteParameters();
@@ -64,7 +70,7 @@ describe('koaAuth middleware', () => {
       developmentUserId: 'foo',
     });
 
-    await koaAuth(mockEnvSet)(ctx, next);
+    await koaAuth(mockEnvSet, audience)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'user', id: 'foo' });
 
     stub.restore();
@@ -79,7 +85,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await koaAuth(mockEnvSet)(mockCtx, next);
+    await koaAuth(mockEnvSet, audience)(mockCtx, next);
     expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo' });
   });
 
@@ -91,7 +97,7 @@ describe('koaAuth middleware', () => {
       isIntegrationTest: true,
     });
 
-    await koaAuth(mockEnvSet)(ctx, next);
+    await koaAuth(mockEnvSet, audience)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'user', id: 'foo' });
 
     stub.restore();
@@ -112,7 +118,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await koaAuth(mockEnvSet)(mockCtx, next);
+    await koaAuth(mockEnvSet, audience)(mockCtx, next);
     expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo' });
 
     stub.restore();
@@ -125,12 +131,14 @@ describe('koaAuth middleware', () => {
         authorization: 'Bearer access_token',
       },
     };
-    await koaAuth(mockEnvSet)(ctx, next);
+    await koaAuth(mockEnvSet, audience)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'user', id: 'fooUser' });
   });
 
   it('expect to throw if authorization header is missing', async () => {
-    await expect(koaAuth(mockEnvSet)(ctx, next)).rejects.toMatchError(authHeaderMissingError);
+    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(
+      authHeaderMissingError
+    );
   });
 
   it('expect to throw if authorization header token type not recognized ', async () => {
@@ -141,7 +149,9 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet)(ctx, next)).rejects.toMatchError(tokenNotSupportedError);
+    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(
+      tokenNotSupportedError
+    );
   });
 
   it('expect to throw if jwt sub is missing', async () => {
@@ -154,11 +164,13 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet)(ctx, next)).rejects.toMatchError(jwtSubMissingError);
+    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(jwtSubMissingError);
   });
 
   it('expect to have `client` type per jwt verify result', async () => {
-    jwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'bar', client_id: 'bar' } }));
+    jwtVerify.mockImplementationOnce(() => ({
+      payload: { sub: 'bar', client_id: 'bar', scope: 'all' },
+    }));
 
     ctx.request = {
       ...ctx.request,
@@ -167,7 +179,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await koaAuth(mockEnvSet)(ctx, next);
+    await koaAuth(mockEnvSet, audience)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'app', id: 'bar' });
   });
 
@@ -181,7 +193,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet)(ctx, next)).rejects.toMatchError(forbiddenError);
+    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(forbiddenError);
   });
 
   it('expect to throw if jwt scope does not include management resource scope', async () => {
@@ -196,7 +208,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet)(ctx, next)).rejects.toMatchError(forbiddenError);
+    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(forbiddenError);
   });
 
   it('expect to throw unauthorized error if unknown error occurs', async () => {
@@ -210,7 +222,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet)(ctx, next)).rejects.toMatchError(
+    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(
       new RequestError({ code: 'auth.unauthorized', status: 401 }, new Error('unknown error'))
     );
   });

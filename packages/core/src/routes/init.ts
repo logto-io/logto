@@ -1,12 +1,12 @@
 import cors from '@koa/cors';
-import { getManagementApiResourceIndicator, PredefinedScope } from '@logto/schemas';
+import { getManagementApiResourceIndicator } from '@logto/schemas';
 import Koa from 'koa';
 import Router from 'koa-router';
 
 import { EnvSet } from '#src/env-set/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
-import koaAuth from '../middleware/koa-auth.js';
+import koaAuth from '../middleware/koa-auth/index.js';
 import adminUserRoleRoutes from './admin-user-role.js';
 import adminUserRoutes from './admin-user.js';
 import applicationRoutes from './application.js';
@@ -35,9 +35,7 @@ const createRouters = (tenant: TenantContext) => {
   interactionRoutes(interactionRouter, tenant);
 
   const managementRouter: AuthedRouter = new Router();
-  managementRouter.use(
-    koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id), [PredefinedScope.All])
-  );
+  managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));
   applicationRoutes(managementRouter, tenant);
   logtoConfigRoutes(managementRouter, tenant);
   connectorRoutes(managementRouter, tenant);

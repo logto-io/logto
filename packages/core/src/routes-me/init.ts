@@ -2,14 +2,13 @@ import {
   adminTenantId,
   arbitraryObjectGuard,
   getManagementApiResourceIndicator,
-  PredefinedScope,
 } from '@logto/schemas';
 import Koa from 'koa';
 import Router from 'koa-router';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import type { WithAuthContext } from '#src/middleware/koa-auth.js';
-import koaAuth from '#src/middleware/koa-auth.js';
+import type { WithAuthContext } from '#src/middleware/koa-auth/index.js';
+import koaAuth from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -25,9 +24,7 @@ export default function initMeApis(tenant: TenantContext): Koa {
   console.log('????', getManagementApiResourceIndicator(adminTenantId, 'me'));
 
   meRouter.use(
-    koaAuth(tenant.envSet, getManagementApiResourceIndicator(adminTenantId, 'me'), [
-      PredefinedScope.All,
-    ]),
+    koaAuth(tenant.envSet, getManagementApiResourceIndicator(adminTenantId, 'me')),
     async (ctx, next) => {
       assertThat(
         ctx.auth.type === 'user',

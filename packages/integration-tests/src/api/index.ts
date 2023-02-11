@@ -5,7 +5,6 @@ export * from './sign-in-experience.js';
 export * from './admin-user.js';
 export * from './logs.js';
 export * from './dashboard.js';
-export * from './me.js';
 export * from './wellknown.js';
 export * from './interaction.js';
 

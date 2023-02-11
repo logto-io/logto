@@ -1,12 +1,7 @@
 import path from 'path';
 
 import { fetchTokenByRefreshToken } from '@logto/js';
-import {
-  managementResource,
-  InteractionEvent,
-  adminRoleId,
-  managementResourceScope,
-} from '@logto/schemas';
+import { defaultManagementApi, InteractionEvent } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import fetch from 'node-fetch';
 
@@ -27,14 +22,14 @@ describe('get access token', () => {
   beforeAll(async () => {
     await createUserByAdmin(guestUsername, password);
     const user = await createUserByAdmin(username, password);
-    await assignUsersToRole([user.id], adminRoleId);
+    await assignUsersToRole([user.id], defaultManagementApi.role.id);
     await enableAllPasswordSignInMethods();
   });
 
   it('sign-in and getAccessToken with admin user', async () => {
     const client = new MockClient({
-      resources: [managementResource.indicator],
-      scopes: [managementResourceScope.name],
+      resources: [defaultManagementApi.resource.indicator],
+      scopes: [defaultManagementApi.scope.name],
     });
     await client.initSession();
     await client.successSend(putInteraction, {
@@ -43,11 +38,11 @@ describe('get access token', () => {
     });
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
-    const accessToken = await client.getAccessToken(managementResource.indicator);
+    const accessToken = await client.getAccessToken(defaultManagementApi.resource.indicator);
     expect(accessToken).not.toBeNull();
     expect(getAccessTokenPayload(accessToken)).toHaveProperty(
       'scope',
-      managementResourceScope.name
+      defaultManagementApi.scope.name
     );
 
     // Request for invalid resource should throw
@@ -56,8 +51,8 @@ describe('get access token', () => {
 
   it('sign-in and getAccessToken with guest user', async () => {
     const client = new MockClient({
-      resources: [managementResource.indicator],
-      scopes: [managementResourceScope.name],
+      resources: [defaultManagementApi.resource.indicator],
+      scopes: [defaultManagementApi.scope.name],
     });
     await client.initSession();
     await client.successSend(putInteraction, {
@@ -66,16 +61,16 @@ describe('get access token', () => {
     });
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
-    const accessToken = await client.getAccessToken(managementResource.indicator);
+    const accessToken = await client.getAccessToken(defaultManagementApi.resource.indicator);
 
     expect(getAccessTokenPayload(accessToken)).not.toHaveProperty(
       'scope',
-      managementResourceScope.name
+      defaultManagementApi.scope.name
     );
   });
 
   it('sign-in and get multiple Access Token by the same Refresh Token within refreshTokenReuseInterval', async () => {
-    const client = new MockClient({ resources: [managementResource.indicator] });
+    const client = new MockClient({ resources: [defaultManagementApi.resource.indicator] });
 
     await client.initSession();
 
@@ -98,7 +93,7 @@ describe('get access token', () => {
           clientId: defaultConfig.appId,
           tokenEndpoint: path.join(logtoUrl, '/oidc/token'),
           refreshToken,
-          resource: managementResource.indicator,
+          resource: defaultManagementApi.resource.indicator,
         },
         async <T>(...args: Parameters<typeof fetch>): Promise<T> => {
           const response = await fetch(...args);

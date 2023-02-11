@@ -1,7 +1,7 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
 import { AppearanceMode, demoAppApplicationId } from '@logto/schemas';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -18,6 +18,7 @@ import Passwordless from '@/assets/images/passwordless.svg';
 import SocialDark from '@/assets/images/social-dark.svg';
 import Social from '@/assets/images/social.svg';
 import { ConnectorsTabs } from '@/consts/page-tabs';
+import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
 import { RequestError } from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -37,6 +38,7 @@ type GetStartedMetadata = {
 const useGetStartedMetadata = () => {
   const { getDocumentationUrl } = useDocumentationUrl();
   const { configs, updateConfigs } = useConfigs();
+  const { app } = useContext(AppEndpointsContext);
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
   const { data: demoApp, error } = useSWR<Application, RequestError>(
@@ -67,7 +69,7 @@ const useGetStartedMetadata = () => {
         isHidden: hideDemo,
         onClick: async () => {
           void updateConfigs({ demoChecked: true });
-          window.open('/demo-app', '_blank');
+          window.open(new URL('/demo-app', app), '_blank');
         },
       },
       {

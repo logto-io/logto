@@ -79,20 +79,20 @@ export default class Tenant implements TenantContext {
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
 
-    // Mount `/me` APIs for admin tenant
+    // Mount admin tenant APIs and app
     if (id === adminTenantId) {
-      console.log('111111111111122221');
+      // Mount `/me` APIs for admin tenant
       app.use(mount('/me', initMeApis(tenantContext)));
-    }
 
-    // Mount Admin Console
-    app.use(koaConsoleRedirectProxy(queries));
-    app.use(
-      mount(
-        '/' + UserApps.Console,
-        koaSpaProxy(mountedApps, UserApps.Console, 5002, UserApps.Console)
-      )
-    );
+      // Mount Admin Console
+      app.use(koaConsoleRedirectProxy(queries));
+      app.use(
+        mount(
+          '/' + UserApps.Console,
+          koaSpaProxy(mountedApps, UserApps.Console, 5002, UserApps.Console)
+        )
+      );
+    }
 
     // Mount demo app
     app.use(

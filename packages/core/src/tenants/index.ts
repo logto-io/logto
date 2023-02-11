@@ -2,7 +2,7 @@ import LRUCache from 'lru-cache';
 
 import Tenant from './Tenant.js';
 
-class TenantPool {
+export class TenantPool {
   protected cache = new LRUCache<string, Tenant>({ max: 500 });
 
   async get(tenantId: string): Promise<Tenant> {

@@ -23,6 +23,9 @@ mockEsm('#src/env-set/check-alteration-state.js', () => ({
 // eslint-disable-next-line unicorn/consistent-function-scoping
 mockEsmDefault('#src/env-set/oidc.js', () => () => ({
   issuer: 'https://logto.test/oidc',
+  cookieKeys: [],
+  privateJwks: [],
+  publicJwks: [],
 }));
 /* End */
 
