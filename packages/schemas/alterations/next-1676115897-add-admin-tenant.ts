@@ -5,25 +5,6 @@ import { raw } from 'slonik-sql-tag-raw';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 
-const tables: string[] = [
-  'applications_roles',
-  'applications',
-  'connectors',
-  'custom_phrases',
-  'logs',
-  'logto_configs',
-  'oidc_model_instances',
-  'passcodes',
-  'resources',
-  'roles_scopes',
-  'roles',
-  'scopes',
-  'sign_in_experiences',
-  'users_roles',
-  'users',
-  'hooks',
-];
-
 const adminTenantId = 'admin';
 
 const getId = (value: string) => sql.identifier([value]);

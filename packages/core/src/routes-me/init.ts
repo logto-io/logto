@@ -21,8 +21,6 @@ export default function initMeApis(tenant: TenantContext): Koa {
   const { findUserById, updateUserById } = tenant.queries.users;
   const meRouter = new Router<unknown, WithAuthContext>();
 
-  console.log('????', getManagementApiResourceIndicator(adminTenantId, 'me'));
-
   meRouter.use(
     koaAuth(tenant.envSet, getManagementApiResourceIndicator(adminTenantId, 'me')),
     async (ctx, next) => {

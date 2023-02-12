@@ -1,7 +1,7 @@
 import { generateKeyPair } from 'crypto';
 import { promisify } from 'util';
 
-import { nanoid } from 'nanoid';
+import { generateStandardId } from '@logto/core-kit';
 
 export const generateOidcPrivateKey = async (type: 'rsa' | 'ec' = 'ec') => {
   if (type === 'rsa') {
@@ -41,4 +41,4 @@ export const generateOidcPrivateKey = async (type: 'rsa' | 'ec' = 'ec') => {
   throw new Error(`Unsupported private key ${String(type)}`);
 };
 
-export const generateOidcCookieKey = () => nanoid();
+export const generateOidcCookieKey = () => generateStandardId();

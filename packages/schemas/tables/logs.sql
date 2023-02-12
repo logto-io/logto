@@ -15,7 +15,7 @@ create index logs__key
   on logs (tenant_id, key);
 
 create index logs__user_id
-  on logs (tenant_id, (payload->>'user_id') nulls last);
+  on logs (tenant_id, (payload->>'userId'));
 
 create index logs__application_id
-  on logs (tenant_id, (payload->>'application_id') nulls last);
+  on logs (tenant_id, (payload->>'applicationId'));
