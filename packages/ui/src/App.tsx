@@ -63,7 +63,6 @@ const App = () => {
         <AppBoundary>
           <Routes>
             <Route element={<AppContent />}>
-              <Route path="/" element={<Navigate replace to="/sign-in" />} />
               <Route path="/sign-in/consent" element={<Consent />} />
               <Route
                 path="/unknown-session"

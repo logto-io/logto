@@ -45,7 +45,8 @@ import {
   RoleDetailsTabs,
   SignInExperiencePage,
   UserDetailsTabs,
-} from './consts/page-tabs';
+  adminTenantEndpoint,
+} from './consts';
 import AppContent from './containers/AppContent';
 import AppEndpointsProvider, { AppEndpointsContext } from './containers/AppEndpointsProvider';
 import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
@@ -63,9 +64,9 @@ void initI18n();
 
 const Main = () => {
   const swrOptions = useSwrOptions();
-  const { app, console } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppEndpointsContext);
 
-  if (!app || !console) {
+  if (!userEndpoint) {
     return <AppLoading />;
   }
 
@@ -162,7 +163,7 @@ const App = () => (
     <AppEndpointsProvider>
       <LogtoProvider
         config={{
-          endpoint: window.location.origin,
+          endpoint: adminTenantEndpoint,
           appId: adminConsoleApplicationId,
           resources: [managementApi.indicator, meApi.indicator],
           scopes: [UserScope.Identities, UserScope.CustomData, managementApi.scopeAll],

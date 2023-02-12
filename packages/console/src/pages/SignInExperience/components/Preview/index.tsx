@@ -31,7 +31,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
   const { customPhrases, languages } = useUiLanguages();
-  const { app: appEndpoint } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppEndpointsContext);
 
   const modeOptions = useMemo(() => {
     const light = { value: AppearanceMode.LightMode, title: t('sign_in_exp.preview.light') };
@@ -120,9 +120,9 @@ const Preview = ({ signInExperience, className }: Props) => {
 
     previewRef.current?.contentWindow?.postMessage(
       { sender: 'ac_preview', config },
-      appEndpoint?.origin ?? ''
+      userEndpoint?.origin ?? ''
     );
-  }, [appEndpoint?.origin, config, customPhrases]);
+  }, [userEndpoint?.origin, config, customPhrases]);
 
   useEffect(() => {
     postPreviewMessage();
@@ -210,7 +210,7 @@ const Preview = ({ signInExperience, className }: Props) => {
               ref={previewRef}
               // Allow all sandbox rules
               sandbox={undefined}
-              src={new URL('/sign-in?preview=true', appEndpoint).toString()}
+              src={new URL('/sign-in?preview=true', userEndpoint).toString()}
               tabIndex={-1}
               title={t('sign_in_exp.preview.title')}
             />

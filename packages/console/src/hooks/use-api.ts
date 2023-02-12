@@ -6,7 +6,6 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { managementApi, requestTimeout } from '@/consts';
-import type { AppEndpointKey } from '@/containers/AppEndpointsProvider';
 import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
 
 export class RequestError extends Error {
@@ -20,18 +19,17 @@ export class RequestError extends Error {
   }
 }
 
-type Props = {
-  endpointKey?: AppEndpointKey;
+type StaticApiProps = {
+  prefixUrl: string;
   hideErrorToast?: boolean;
   resourceIndicator?: string;
 };
 
-const useApi = ({
+export const useStaticApi = ({
+  prefixUrl,
   hideErrorToast,
-  endpointKey = 'app',
   resourceIndicator = managementApi.indicator,
-}: Props = {}) => {
-  const endpoints = useContext(AppEndpointsContext);
+}: StaticApiProps) => {
   const { isAuthenticated, getAccessToken } = useLogto();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -52,7 +50,7 @@ const useApi = ({
   const api = useMemo(
     () =>
       ky.create({
-        prefixUrl: endpoints[endpointKey],
+        prefixUrl,
         timeout: requestTimeout,
         hooks: {
           beforeError: hideErrorToast
@@ -76,8 +74,7 @@ const useApi = ({
         },
       }),
     [
-      endpoints,
-      endpointKey,
+      prefixUrl,
       hideErrorToast,
       toastError,
       isAuthenticated,
@@ -88,6 +85,12 @@ const useApi = ({
   );
 
   return api;
+};
+
+const useApi = (props: Omit<StaticApiProps, 'prefixUrl'> = {}) => {
+  const { userEndpoint } = useContext(AppEndpointsContext);
+
+  return useStaticApi({ ...props, prefixUrl: userEndpoint?.toString() ?? '' });
 };
 
 export default useApi;

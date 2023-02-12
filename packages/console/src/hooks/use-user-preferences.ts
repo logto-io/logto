@@ -9,10 +9,10 @@ import type { BareFetcher } from 'swr';
 import useSWR from 'swr';
 import { z } from 'zod';
 
-import { meApi, themeStorageKey } from '@/consts';
+import { meApi, themeStorageKey, adminTenantEndpoint } from '@/consts';
 
 import type { RequestError } from './use-api';
-import useApi from './use-api';
+import { useStaticApi } from './use-api';
 import useLogtoUserId from './use-logto-user-id';
 
 const userPreferencesGuard = z.object({
@@ -36,7 +36,7 @@ const useUserPreferences = () => {
   const { isAuthenticated, error: authError } = useLogto();
   const userId = useLogtoUserId();
   const shouldFetch = isAuthenticated && !authError && userId;
-  const api = useApi({ endpointKey: 'console', resourceIndicator: meApi.indicator });
+  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
   const fetcher = useCallback<BareFetcher>(
     async (resource, init) => {
       const response = await api.get(resource, init);

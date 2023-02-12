@@ -38,7 +38,7 @@ type GetStartedMetadata = {
 const useGetStartedMetadata = () => {
   const { getDocumentationUrl } = useDocumentationUrl();
   const { configs, updateConfigs } = useConfigs();
-  const { app } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppEndpointsContext);
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
   const { data: demoApp, error } = useSWR<Application, RequestError>(
@@ -69,7 +69,7 @@ const useGetStartedMetadata = () => {
         isHidden: hideDemo,
         onClick: async () => {
           void updateConfigs({ demoChecked: true });
-          window.open(new URL('/demo-app', app), '_blank');
+          window.open(new URL('/demo-app', userEndpoint), '_blank');
         },
       },
       {
@@ -135,17 +135,18 @@ const useGetStartedMetadata = () => {
 
     return metadataItems.filter(({ isHidden }) => !isHidden);
   }, [
-    getDocumentationUrl,
-    hideDemo,
     isLightMode,
-    navigate,
-    configs?.applicationCreated,
     configs?.demoChecked,
-    configs?.furtherReadingsChecked,
-    configs?.passwordlessConfigured,
+    configs?.applicationCreated,
     configs?.signInExperienceCustomized,
+    configs?.passwordlessConfigured,
     configs?.socialSignInConfigured,
+    configs?.furtherReadingsChecked,
+    hideDemo,
     updateConfigs,
+    userEndpoint,
+    navigate,
+    getDocumentationUrl,
   ]);
 
   return {

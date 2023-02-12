@@ -2,13 +2,15 @@ import ky from 'ky';
 import type { ReactNode } from 'react';
 import { useMemo, useEffect, createContext, useState } from 'react';
 
+import { adminTenantEndpoint, userTenantId } from '@/consts';
+
 type Props = {
   children: ReactNode;
 };
 
 export type AppEndpoints = {
-  app?: URL;
-  console?: URL;
+  userEndpoint?: URL;
+  adminEndpoint?: URL;
 };
 
 export type AppEndpointKey = keyof AppEndpoints;
@@ -21,10 +23,10 @@ const AppEndpointsProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const getEndpoint = async () => {
-      const { app, console } = await ky
-        .get(new URL('api/.well-known/endpoints', window.location.origin))
-        .json<{ app: string; console: string }>();
-      setEndpoints({ app: new URL(app), console: new URL(console) });
+      const { user } = await ky
+        .get(new URL(`api/.well-known/endpoints/${userTenantId}`, adminTenantEndpoint))
+        .json<{ user: string }>();
+      setEndpoints({ userEndpoint: new URL(user) });
     };
 
     void getEndpoint();
