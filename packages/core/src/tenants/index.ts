@@ -32,5 +32,4 @@ export class TenantPool {
 
 export const tenantPool = new TenantPool();
 
-export * from './consts.js';
 export * from './utils.js';

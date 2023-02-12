@@ -92,18 +92,18 @@ export default class Tenant implements TenantContext {
           koaSpaProxy(mountedApps, UserApps.Console, 5002, UserApps.Console)
         )
       );
+    } else {
+      // Mount demo app
+      app.use(
+        mount(
+          '/' + UserApps.DemoApp,
+          compose([
+            koaCheckDemoApp(this.queries),
+            koaSpaProxy(mountedApps, UserApps.DemoApp, 5003, UserApps.DemoApp),
+          ])
+        )
+      );
     }
-
-    // Mount demo app
-    app.use(
-      mount(
-        '/' + UserApps.DemoApp,
-        compose([
-          koaCheckDemoApp(this.queries),
-          koaSpaProxy(mountedApps, UserApps.DemoApp, 5003, UserApps.DemoApp),
-        ])
-      )
-    );
 
     // Mount UI
     app.use(compose([koaSpaSessionGuard(provider), koaSpaProxy(mountedApps)]));

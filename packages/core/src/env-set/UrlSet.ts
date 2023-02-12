@@ -2,8 +2,6 @@ import { deduplicate, getEnv, trySafe } from '@silverhand/essentials';
 
 import { isTrue } from './parameters.js';
 
-const localhostDisabledMessage = 'Localhost has been disabled in this URL Set.';
-
 export default class UrlSet {
   readonly #port = Number(getEnv(this.envPrefix + 'PORT') || this.defaultPort);
   readonly #endpoint = getEnv(this.envPrefix + 'ENDPOINT');
@@ -16,27 +14,35 @@ export default class UrlSet {
     protected readonly envPrefix: string = ''
   ) {}
 
-  public deduplicated(): string[] {
+  public deduplicated(): URL[] {
     return deduplicate(
-      [trySafe(() => this.localhostUrl), trySafe(() => this.endpoint)].filter(
+      [trySafe(() => this.localhostUrl.toString()), trySafe(() => this.endpoint.toString())].filter(
         (value): value is string => typeof value === 'string'
       )
-    );
+    ).map((value) => new URL(value));
   }
 
-  public get port() {
+  public get port(): number {
     if (this.isLocalhostDisabled) {
-      throw new Error(localhostDisabledMessage);
+      throw new Error('Localhost has been disabled in this URL Set.');
     }
 
     return this.#port;
   }
 
-  public get localhostUrl() {
-    return `${this.isHttpsEnabled ? 'https' : 'http'}://localhost:${this.port}`;
+  public get localhostUrl(): URL {
+    return new URL(`${this.isHttpsEnabled ? 'https' : 'http'}://localhost:${this.port}`);
   }
 
-  public get endpoint() {
-    return this.#endpoint || this.localhostUrl;
+  public get endpoint(): URL {
+    if (!this.#endpoint) {
+      if (this.isLocalhostDisabled) {
+        throw new Error('No available endpoint in this URL Set.');
+      }
+
+      return this.localhostUrl;
+    }
+
+    return new URL(this.#endpoint);
   }
 }

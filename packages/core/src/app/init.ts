@@ -13,7 +13,7 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
   const urlSet = type === 'core' ? EnvSet.values.urlSet : EnvSet.values.adminUrlSet;
 
   for (const url of urlSet.deduplicated()) {
-    console.log(chalk.bold(chalk.green(`${toTitle(type)} app is running at ${url}`)));
+    console.log(chalk.bold(chalk.green(`${toTitle(type)} app is running at ${url.toString()}`)));
   }
 };
 
