@@ -97,37 +97,6 @@ const translation = {
     continue_with_more_information:
       'Für zusätzliche Sicherheit, vervollständige bitte deine Informationen.',
   },
-  profile: {
-    title: 'Konto Einstellungen',
-    description:
-      'Ändere hier deine Konto Einstellungen und verwalte deine persönlichen Informationen, um die Sicherheit deines Kontos zu gewährleisten.',
-    settings: {
-      title: 'PROFIL EINSTELLUNGEN',
-      profile_information: 'Profil Informationen',
-      avatar: 'Avatar',
-      name: 'Name',
-      username: 'Benutzername',
-    },
-    password: {
-      title: 'PASSWORT',
-      reset_password: 'Passwort zurücksetzen',
-      reset_password_sc: 'Passwort zurücksetzen',
-    },
-    link_account: {
-      title: 'KONTO VERKNÜPFEN',
-      email_phone_sign_in: 'Anmeldung mit Email oder Telefonnummer',
-      email: 'Email',
-      phone: 'Telefonnummer',
-      phone_sc: 'Telefonnummer',
-      social: 'Social Anmeldung',
-      social_sc: 'Social Konten',
-    },
-    not_set: 'Nicht gesetzt',
-    edit: 'Bearbeiten',
-    change: 'Ändern',
-    link: 'Verknüpfen',
-    unlink: 'Verknüpfung aufheben',
-  },
   error: {
     username_password_mismatch: 'Benutzername oder Passwort ist falsch',
     username_required: 'Benutzername ist erforderlich',

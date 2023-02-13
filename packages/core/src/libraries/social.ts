@@ -65,7 +65,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
   const getUserInfoByAuthCode = async (
     connectorId: string,
     data: unknown,
-    getConnectorSession?: GetSession
+    getConnectorSession: GetSession
   ): Promise<SocialUserInfo> => {
     const connector = await getConnector(connectorId);
 

@@ -14,8 +14,8 @@ const user_details = {
     congratulations: '해당 사용자의 비밀번호가 성공적으로 초기화 되었어요.',
     new_password: '새로운 비밀번호:',
   },
-  tab_settings: 'Settings', // UNTRANSLATED
-  tab_roles: 'Roles', // UNTRANSLATED
+  tab_settings: '설정',
+  tab_roles: '역할',
   tab_logs: '사용자 기록',
   settings: '설정',
   settings_description:
@@ -40,22 +40,22 @@ const user_details = {
   },
   suspended: '정지됨',
   roles: {
-    name_column: 'Role', // UNTRANSLATED
-    description_column: 'Description', // UNTRANSLATED
-    assign_button: 'Assign Roles', // UNTRANSLATED
+    name_column: '역할',
+    description_column: '설명',
+    assign_button: '역할 할당',
     delete_description:
-      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.', // UNTRANSLATED
-    deleted: '{{name}} was successfully removed from this user!', // UNTRANSLATED
-    assign_title: 'Assign roles to {{name}}', // UNTRANSLATED
-    assign_subtitle: 'Authorize {{name}} one or more roles', // UNTRANSLATED
-    assign_role_field: 'Assign roles', // UNTRANSLATED
-    role_search_placeholder: 'Search by role name', // UNTRANSLATED
-    added_text: '{{value, number}} added', // UNTRANSLATED
-    assigned_user_count: '{{value, number}} users', // UNTRANSLATED
-    confirm_assign: 'Assign roles', // UNTRANSLATED
-    role_assigned: 'Successfully assigned role(s)', // UNTRANSLATED
-    search: 'Search by role name, description or ID', // UNTRANSLATED
-    empty: 'No role available', // UNTRANSLATED
+      '이 행동은 사용자에게서 이 역할을 삭제할 거예요. 역할은 그대로 존재하지만, 이 사용자에게 더 이상 할당되지 않아요.',
+    deleted: '{{name}}이/가 성공적으로 이 사용자에게서 제거되었어요!',
+    assign_title: '{{name}}에게 역할 할당',
+    assign_subtitle: '{{name}}에게 하나 이상의 역할을 할당하세요',
+    assign_role_field: '역할 할당',
+    role_search_placeholder: '역할 이름으로 검색',
+    added_text: '{{value, number}}이/가 추가되었어요',
+    assigned_user_count: '사용자 {{value, number}}명',
+    confirm_assign: '역할 할당',
+    role_assigned: '역할을 성공적으로 할당했어요',
+    search: '역할 이름, 설명, ID로 검색',
+    empty: '역할 없음',
   },
 };
 
