@@ -128,16 +128,18 @@ export default function connectorRoutes<T extends AuthedRouter>(
   router.post(
     '/connectors',
     koaGuard({
-      body: Connectors.createGuard.pick({
-        config: true,
-        connectorId: true,
-        metadata: true,
-        syncProfile: true,
-      }),
+      body: Connectors.createGuard
+        .pick({
+          config: true,
+          connectorId: true,
+          metadata: true,
+          syncProfile: true,
+        })
+        .merge(Connectors.createGuard.pick({ id: true }).partial()), // `id` is optional
     }),
     async (ctx, next) => {
       const {
-        body: { connectorId, metadata, config, syncProfile },
+        body: { id: proposedId, connectorId, metadata, config, syncProfile },
       } = ctx.guard;
 
       const connectorFactories = await loadConnectorFactories();
@@ -190,7 +192,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
         validateConfig(config, rawConnector.configGuard);
       }
 
-      const insertConnectorId = generateConnectorId();
+      const insertConnectorId = proposedId ?? generateConnectorId();
       await insertConnector({
         id: insertConnectorId,
         connectorId,
