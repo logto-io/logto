@@ -18,6 +18,7 @@
     "@logto/language-kit": "1.0.0-rc.0"
   },
   "changesets": [
+    "big-turkeys-invite",
     "breezy-socks-joke",
     "clever-panthers-lay",
     "curly-hornets-end",
