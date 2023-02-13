@@ -74,7 +74,7 @@ describe('<CreateAccount/>', () => {
 
     fireEvent.click(submitButton);
 
-    expect(queryByText('username_valid_charset')).not.toBeNull();
+    expect(queryByText('username_invalid_charset')).not.toBeNull();
 
     expect(registerWithUsernamePassword).not.toBeCalled();
 
@@ -83,7 +83,7 @@ describe('<CreateAccount/>', () => {
       fireEvent.change(usernameInput, { target: { value: 'username' } });
     }
 
-    expect(queryByText('username_valid_charset')).toBeNull();
+    expect(queryByText('username_invalid_charset')).toBeNull();
   });
 
   test('password less than 6 chars should throw', () => {

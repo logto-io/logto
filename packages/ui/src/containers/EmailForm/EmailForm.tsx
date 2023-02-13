@@ -10,7 +10,7 @@ import PasswordlessSwitch from '@/containers/PasswordlessSwitch';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useForm from '@/hooks/use-form';
 import useTerms from '@/hooks/use-terms';
-import { emailValidation } from '@/utils/field-validations';
+import { validateEmail } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
 
@@ -64,7 +64,7 @@ const EmailForm = ({
     [validateForm, hasTerms, termsValidation, onSubmit, fieldValue]
   );
 
-  const { onChange, ...rest } = register('email', emailValidation);
+  const { onChange, ...rest } = register('email', validateEmail);
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>

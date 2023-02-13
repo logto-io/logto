@@ -9,7 +9,7 @@ import Input from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useForm from '@/hooks/use-form';
 import useTerms from '@/hooks/use-terms';
-import { usernameValidation } from '@/utils/field-validations';
+import { validateUsername } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
 
@@ -73,7 +73,7 @@ const UsernameForm = ({
         name="new-username"
         className={styles.inputField}
         placeholder={t('input.username')}
-        {...fieldRegister('username', usernameValidation)}
+        {...fieldRegister('username', validateUsername)}
         onClear={() => {
           setFieldValue((state) => ({ ...state, username: '' }));
         }}

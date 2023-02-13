@@ -43,6 +43,7 @@ const translation = {
   description: {
     email: '이메일',
     phone_number: '휴대전화번호',
+    username: '사용자 이름',
     reminder: '리마인더',
     not_found: '404 찾을 수 없음',
     agree_with_terms: '나는 내용을 읽었으며, 이에 동의합니다.',
@@ -92,12 +93,13 @@ const translation = {
     continue_with_more_information: '더 나은 보안을 위해 아래 자세한 내용을 따라 주세요.',
   },
   error: {
-    username_password_mismatch: '사용자 이름 또는 비밀번호가 일치하지 않아요.',
+    general_required: `{{types, list(type: disjunction;)}} 필수예요.`,
+    general_invalid: `{{types, list(type: disjunction;)}} 유효하지 않아요.`,
     username_required: '사용자 이름은 필수예요.',
     password_required: '비밀번호는 필수예요.',
     username_exists: '사용자 이름이 이미 존재해요.',
     username_should_not_start_with_number: '사용자 이름은 숫자로 시작하면 안 돼요.',
-    username_valid_charset: '사용자 이름은 문자, 숫자, _(밑줄 문자) 로만 이루어져야 해요.',
+    username_invalid_charset: '사용자 이름은 문자, 숫자, _(밑줄 문자) 로만 이루어져야 해요.',
     invalid_email: '이메일이 유효하지 않아요.',
     invalid_phone: '휴대전화번호가 유효하지 않아요.',
     password_min_length: '비밀번호는 최소 {{min}} 자리로 이루어져야 해요.',

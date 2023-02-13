@@ -3,13 +3,9 @@ import i18next from 'i18next';
 import type { HTMLProps } from 'react';
 import type { TFuncKey } from 'react-i18next';
 
-import type { IdentifierInputType, EnabledIdentifierTypes } from './use-smart-input-field';
+import { identifierInputPlaceholderMap } from '@/utils/form';
 
-const identifierInputPlaceholderMap: { [K in IdentifierInputType]: TFuncKey } = {
-  [SignInIdentifier.Phone]: 'input.phone_number',
-  [SignInIdentifier.Email]: 'input.email',
-  [SignInIdentifier.Username]: 'input.username',
-};
+import type { IdentifierInputType, EnabledIdentifierTypes } from './use-smart-input-field';
 
 export const getInputHtmlProps = (
   currentType: IdentifierInputType,

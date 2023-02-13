@@ -11,24 +11,6 @@ jest.mock('i18next', () => ({
 }));
 
 describe('<SecondarySignIn />', () => {
-  test('renders without exploding', async () => {
-    const { queryAllByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/username']}>
-        <Routes>
-          <Route
-            path="/sign-in/:method"
-            element={
-              <SettingsProvider>
-                <SecondarySignIn />
-              </SettingsProvider>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
-    );
-    expect(queryAllByText('action.sign_in')).toHaveLength(2);
-  });
-
   test('renders phone', async () => {
     const { queryAllByText, container } = renderWithPageContext(
       <MemoryRouter initialEntries={['/sign-in/phone']}>

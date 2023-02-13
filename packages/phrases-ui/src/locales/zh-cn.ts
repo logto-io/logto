@@ -43,6 +43,7 @@ const translation = {
   description: {
     email: '邮箱',
     phone_number: '手机',
+    username: '用户名',
     reminder: '提示',
     not_found: '404 页面不存在',
     agree_with_terms: '我已阅读并同意 ',
@@ -89,12 +90,13 @@ const translation = {
     continue_with_more_information: '为保障您的账号安全，需要您补充以下信息。',
   },
   error: {
-    username_password_mismatch: '用户名和密码不匹配',
+    general_required: `{{types, list(type: disjunction;)}}必填`,
+    general_invalid: `无效的{{types, list(type: disjunction;)}}`,
     username_required: '用户名必填',
     password_required: '密码必填',
     username_exists: '用户名已存在',
     username_should_not_start_with_number: '用户名不能以数字开头',
-    username_valid_charset: '用户名只能包含英文字母、数字或下划线。',
+    username_invalid_charset: '用户名只能包含英文字母、数字或下划线。',
     invalid_email: '无效的邮箱',
     invalid_phone: '无效的手机号',
     password_min_length: '密码最少需要{{min}}个字符',

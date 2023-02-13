@@ -43,6 +43,7 @@ const translation = {
   description: {
     email: 'email',
     phone_number: 'telefone',
+    username: 'utilizador',
     reminder: 'Lembrete',
     not_found: '404 Não encontrado',
     agree_with_terms: 'Eu li e concordo com os ',
@@ -93,12 +94,13 @@ const translation = {
     continue_with_more_information: 'For added security, please complete below account details.', // UNTRANSLATED
   },
   error: {
-    username_password_mismatch: 'O Utilizador e a password não correspondem',
+    general_required: `{{types, list(type: disjunction;)}} is necessário`,
+    general_invalid: `O {{types, list(type: disjunction;)}} é inválido`,
     username_required: 'Utilizador necessário',
     password_required: 'Password necessária',
     username_exists: 'O nome de utilizador já existe',
     username_should_not_start_with_number: 'O nome de utilizador não deve começar com um número',
-    username_valid_charset:
+    username_invalid_charset:
       'O nome de utilizador deve conter apenas letras, números ou underscores.',
     invalid_email: 'O email é inválido',
     invalid_phone: 'O número de telefone é inválido',

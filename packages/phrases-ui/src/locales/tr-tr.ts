@@ -43,6 +43,7 @@ const translation = {
   description: {
     email: 'e-posta adresi',
     phone_number: 'telefon numarası',
+    username: 'kullanıcı Adı',
     reminder: 'Hatırlatıcı',
     not_found: '404 Bulunamadı',
     agree_with_terms: 'Okudum ve anladım',
@@ -94,12 +95,13 @@ const translation = {
     continue_with_more_information: 'For added security, please complete below account details.', // UNTRANSLATED
   },
   error: {
-    username_password_mismatch: 'Kullanıcı adı ve şifre eşleşmiyor.',
+    general_required: `{{types, list(type: disjunction;)}} is required`, // UNTRANSLATED
+    general_invalid: `The {{types, list(type: disjunction;)}} is invalid`, // UNTRANSLATED
     username_required: 'Kullanıcı adı gerekli.',
     password_required: 'Şifre gerekli.',
     username_exists: 'Kullanıcı adı mevcut.',
     username_should_not_start_with_number: 'Kullanıcı adı sayı ile başlayamaz.',
-    username_valid_charset: 'Kullanıcı adı yalnızca harf,sayı veya alt çizgi içermeli.',
+    username_invalid_charset: 'Kullanıcı adı yalnızca harf,sayı veya alt çizgi içermeli.',
     invalid_email: 'E-posta adresi geçersiz',
     invalid_phone: 'Telefon numarası geçersiz',
     password_min_length: 'Şifre en az {{min}} karakterden oluşmalıdır',
