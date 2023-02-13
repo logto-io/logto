@@ -28,7 +28,7 @@ describe('<SetPassword />', () => {
     const submitButton = getByText('action.save_password');
 
     act(() => {
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     expect(clearError).toBeCalled();
@@ -50,7 +50,7 @@ describe('<SetPassword />', () => {
     }
 
     act(() => {
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     await waitFor(() => {
@@ -86,7 +86,7 @@ describe('<SetPassword />', () => {
         fireEvent.change(confirmPasswordInput, { target: { value: '012345' } });
       }
 
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     await waitFor(() => {
@@ -122,7 +122,7 @@ describe('<SetPassword />', () => {
         fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
       }
 
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     expect(queryByText('passwords_do_not_match')).toBeNull();

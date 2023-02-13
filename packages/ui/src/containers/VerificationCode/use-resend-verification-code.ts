@@ -5,6 +5,7 @@ import { useTimer } from 'react-timer-hook';
 
 import { getSendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
+import useErrorHandler from '@/hooks/use-error-handler';
 import { PageContext } from '@/hooks/use-page-context';
 import type { UserFlow } from '@/types';
 
@@ -29,17 +30,24 @@ const useResendVerificationCode = (
     expiryTimestamp: getTimeout(),
   });
 
-  const { run: sendVerificationCode } = useApi(getSendVerificationCodeApi(type));
+  const handleError = useErrorHandler();
+  const sendVerificationCode = useApi(getSendVerificationCodeApi(type));
 
   const onResendVerificationCode = useCallback(async () => {
     const payload = method === SignInIdentifier.Email ? { email: target } : { phone: target };
-    const result = await sendVerificationCode(payload);
+    const [error, result] = await sendVerificationCode(payload);
+
+    if (error) {
+      await handleError(error);
+
+      return;
+    }
 
     if (result) {
       setToast(t('description.passcode_sent'));
       restart(getTimeout(), true);
     }
-  }, [method, restart, sendVerificationCode, setToast, target]);
+  }, [handleError, method, restart, sendVerificationCode, setToast, target]);
 
   return {
     seconds,

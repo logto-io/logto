@@ -9,7 +9,7 @@ import useUsernamePasswordRegister from './use-username-password-register';
 
 const PasswordRegisterWithUsername = () => {
   const { signUpMethods } = useSieMethods();
-  const { setPassword } = useUsernamePasswordRegister();
+  const setPassword = useUsernamePasswordRegister();
 
   if (!signUpMethods.includes(SignInIdentifier.Username)) {
     return <ErrorPage />;

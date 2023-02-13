@@ -73,7 +73,7 @@ describe('UsernamePasswordSignInForm', () => {
     const submitButton = getByText('action.sign_in');
 
     act(() => {
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     await waitFor(() => {
@@ -118,7 +118,7 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     act(() => {
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     await waitFor(() => {
@@ -153,7 +153,7 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     act(() => {
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     await waitFor(() => {
@@ -186,7 +186,7 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     act(() => {
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     act(() => {

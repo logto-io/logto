@@ -3,8 +3,9 @@ import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { getSendVerificationCodeApi } from '@/apis/utils';
-import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useErrorHandler from '@/hooks/use-error-handler';
 import type { UserFlow } from '@/types';
 
 const useSendVerificationCode = <T extends SignInIdentifier.Email | SignInIdentifier.Phone>(
@@ -15,6 +16,13 @@ const useSendVerificationCode = <T extends SignInIdentifier.Email | SignInIdenti
   const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigate();
 
+  const handleError = useErrorHandler();
+  const asyncSendVerificationCode = useApi(getSendVerificationCodeApi(flow));
+
+  const clearErrorMessage = useCallback(() => {
+    setErrorMessage('');
+  }, []);
+
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'guard.invalid_input': () => {
@@ -24,36 +32,40 @@ const useSendVerificationCode = <T extends SignInIdentifier.Email | SignInIdenti
     [method]
   );
 
-  const clearErrorMessage = useCallback(() => {
-    setErrorMessage('');
-  }, []);
-
-  const api = getSendVerificationCodeApi(flow);
-
-  const { run: asyncSendVerificationCode } = useApi(api, errorHandlers);
-
   type Payload = T extends SignInIdentifier.Email ? { email: string } : { phone: string };
 
   const onSubmit = useCallback(
     async (payload: Payload) => {
-      const result = await asyncSendVerificationCode(payload);
+      const [error, result] = await asyncSendVerificationCode(payload);
 
-      if (!result) {
+      if (error) {
+        await handleError(error, errorHandlers);
+
         return;
       }
 
-      navigate(
-        {
-          pathname: `/${flow}/${method}/verification-code`,
-          search: location.search,
-        },
-        {
-          state: payload,
-          replace: replaceCurrentPage,
-        }
-      );
+      if (result) {
+        navigate(
+          {
+            pathname: `/${flow}/${method}/verification-code`,
+            search: location.search,
+          },
+          {
+            state: payload,
+            replace: replaceCurrentPage,
+          }
+        );
+      }
     },
-    [asyncSendVerificationCode, flow, method, navigate, replaceCurrentPage]
+    [
+      asyncSendVerificationCode,
+      errorHandlers,
+      flow,
+      handleError,
+      method,
+      navigate,
+      replaceCurrentPage,
+    ]
   );
 
   return {

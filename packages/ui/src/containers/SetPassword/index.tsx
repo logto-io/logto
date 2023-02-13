@@ -115,13 +115,7 @@ const SetPassword = ({
 
       <TogglePassword isChecked={showPassword} onChange={setShowPassword} />
 
-      <Button
-        name="submit"
-        title="action.save_password"
-        onClick={() => {
-          onSubmitHandler();
-        }}
-      />
+      <Button name="submit" title="action.save_password" htmlType="submit" />
 
       <input hidden type="submit" />
     </form>

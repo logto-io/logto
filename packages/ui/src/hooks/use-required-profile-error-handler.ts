@@ -7,7 +7,7 @@ import { UserFlow, SearchParameters } from '@/types';
 import { missingProfileErrorDataGuard } from '@/types/guard';
 import { queryStringify } from '@/utils';
 
-import type { ErrorHandlers } from './use-api';
+import type { ErrorHandlers } from './use-error-handler';
 import { PageContext } from './use-page-context';
 
 type Options = {

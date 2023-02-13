@@ -1,6 +1,6 @@
 import type { EmailVerificationCodePayload, PhoneVerificationCodePayload } from '@logto/schemas';
 import { SignInIdentifier, SignInMode } from '@logto/schemas';
-import { useMemo, useCallback, useEffect } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,9 +8,10 @@ import {
   addProfileWithVerificationCodeIdentifier,
   signInWithVerifiedIdentifier,
 } from '@/apis/interaction';
-import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useErrorHandler from '@/hooks/use-error-handler';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
@@ -27,20 +28,18 @@ const useRegisterFlowCodeVerification = (
   const { t } = useTranslation();
   const { show } = useConfirmModal();
   const navigate = useNavigate();
-  const { errorMessage, clearErrorMessage, generalVerificationCodeErrorHandlers } =
-    useGeneralVerificationCodeErrorHandler();
 
   const { signInMode } = useSieMethods();
 
+  const handleError = useErrorHandler();
+  const signInWithIdentifierAsync = useApi(signInWithVerifiedIdentifier);
+  const verifyVerificationCode = useApi(addProfileWithVerificationCodeIdentifier);
+
+  const { errorMessage, clearErrorMessage, generalVerificationCodeErrorHandlers } =
+    useGeneralVerificationCodeErrorHandler();
+
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({ replace: true });
-
-  const { run: signInWithIdentifierAsync } = useApi(
-    signInWithVerifiedIdentifier,
-    requiredProfileErrorHandlers
-  );
-
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
-
   const identifierExistErrorHandler = useCallback(async () => {
     // Should not redirect user to sign-in if is register-only mode
     if (signInMode === SignInMode.Register) {
@@ -66,14 +65,22 @@ const useRegisterFlowCodeVerification = (
       return;
     }
 
-    const result = await signInWithIdentifierAsync();
+    const [error, result] = await signInWithIdentifierAsync();
+
+    if (error) {
+      await handleError(error, requiredProfileErrorHandlers);
+
+      return;
+    }
 
     if (result?.redirectTo) {
       window.location.replace(result.redirectTo);
     }
   }, [
+    handleError,
     method,
     navigate,
+    requiredProfileErrorHandlers,
     show,
     showIdentifierErrorAlert,
     signInMode,
@@ -98,23 +105,23 @@ const useRegisterFlowCodeVerification = (
     ]
   );
 
-  const { result, run: verifyVerificationCode } = useApi(
-    addProfileWithVerificationCodeIdentifier,
-    errorHandlers
-  );
-
   const onSubmit = useCallback(
     async (payload: EmailVerificationCodePayload | PhoneVerificationCodePayload) => {
-      return verifyVerificationCode(payload);
-    },
-    [verifyVerificationCode]
-  );
+      const [error, result] = await verifyVerificationCode(payload);
 
-  useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
-    }
-  }, [result]);
+      if (error) {
+        await handleError(error, errorHandlers);
+        errorCallback?.();
+
+        return;
+      }
+
+      if (result?.redirectTo) {
+        window.location.replace(result.redirectTo);
+      }
+    },
+    [errorCallback, errorHandlers, handleError, verifyVerificationCode]
+  );
 
   return {
     errorMessage,

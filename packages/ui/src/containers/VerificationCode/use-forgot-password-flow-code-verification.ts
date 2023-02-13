@@ -1,10 +1,11 @@
 import type { EmailVerificationCodePayload, PhoneVerificationCodePayload } from '@logto/schemas';
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { verifyForgotPasswordVerificationCodeIdentifier } from '@/apis/interaction';
-import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useErrorHandler from '@/hooks/use-error-handler';
 import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
 
@@ -17,9 +18,11 @@ const useForgotPasswordFlowCodeVerification = (
   errorCallback?: () => void
 ) => {
   const navigate = useNavigate();
+  const handleError = useErrorHandler();
+  const verifyVerificationCode = useApi(verifyForgotPasswordVerificationCodeIdentifier);
+
   const { generalVerificationCodeErrorHandlers, errorMessage, clearErrorMessage } =
     useGeneralVerificationCodeErrorHandler();
-
   const identifierErrorHandler = useIdentifierErrorAlert();
 
   const errorHandlers: ErrorHandlers = useMemo(
@@ -30,35 +33,27 @@ const useForgotPasswordFlowCodeVerification = (
         navigate(`/${UserFlow.forgotPassword}/reset`, { replace: true });
       },
       ...generalVerificationCodeErrorHandlers,
-      callback: errorCallback,
     }),
-    [
-      generalVerificationCodeErrorHandlers,
-      errorCallback,
-      identifierErrorHandler,
-      method,
-      target,
-      navigate,
-    ]
-  );
-
-  const { result, run: verifyVerificationCode } = useApi(
-    verifyForgotPasswordVerificationCodeIdentifier,
-    errorHandlers
+    [generalVerificationCodeErrorHandlers, identifierErrorHandler, method, target, navigate]
   );
 
   const onSubmit = useCallback(
     async (payload: EmailVerificationCodePayload | PhoneVerificationCodePayload) => {
-      return verifyVerificationCode(payload);
-    },
-    [verifyVerificationCode]
-  );
+      const [error, result] = await verifyVerificationCode(payload);
 
-  useEffect(() => {
-    if (result) {
-      navigate(`/${UserFlow.signIn}`, { replace: true });
-    }
-  }, [navigate, result]);
+      if (error) {
+        await handleError(error, errorHandlers);
+        errorCallback?.();
+
+        return;
+      }
+
+      if (result) {
+        navigate(`/${UserFlow.signIn}`, { replace: true });
+      }
+    },
+    [errorCallback, errorHandlers, handleError, navigate, verifyVerificationCode]
+  );
 
   return {
     errorMessage,
