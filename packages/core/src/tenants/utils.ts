@@ -49,10 +49,12 @@ export const checkRowLevelSecurity = async (client: QueryClient) => {
     and rowsecurity=false
   `);
 
-  if (rows.some(({ tablename }) => tablename !== Systems.table)) {
+  const rlsDisabled = rows.filter(({ tablename }) => tablename !== Systems.table);
+
+  if (rlsDisabled.length > 0) {
     throw new Error(
       'Row-level security has to be enforced on EVERY business table when starting Logto.\n' +
-        `Found following table(s) without RLS: ${rows
+        `Found following table(s) without RLS: ${rlsDisabled
           .map((row) => conditionalString(isKeyInObject(row, 'tablename') && String(row.tablename)))
           .join(', ')}\n\n` +
         'Did you forget to run `npm cli db multi-tenancy enable`?'
