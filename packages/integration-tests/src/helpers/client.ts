@@ -1,10 +1,11 @@
+import type { LogtoConfig } from '@logto/node';
 import { assert } from '@silverhand/essentials';
 
 import MockClient from '#src/client/index.js';
 
-export const initClient = async () => {
-  const client = new MockClient();
-  await client.initSession();
+export const initClient = async (config?: Partial<LogtoConfig>, redirectUri?: string) => {
+  const client = new MockClient(config);
+  await client.initSession(redirectUri);
   assert(client.interactionCookie, new Error('Session not found'));
 
   return client;

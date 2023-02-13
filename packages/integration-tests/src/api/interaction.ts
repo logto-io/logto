@@ -4,6 +4,7 @@ import type {
   Profile,
   RequestVerificationCodePayload,
 } from '@logto/schemas';
+import type { Got } from 'got';
 
 import api from './api.js';
 
@@ -11,13 +12,13 @@ export type RedirectResponse = {
   redirectTo: string;
 };
 
-export type interactionPayload = {
+export type InteractionPayload = {
   event: InteractionEvent;
   identifier?: IdentifierPayload;
   profile?: Profile;
 };
 
-export const putInteraction = async (cookie: string, payload: interactionPayload) =>
+export const putInteraction = async (cookie: string, payload: InteractionPayload) =>
   api
     .put('interaction', {
       headers: { cookie },
@@ -66,7 +67,7 @@ export const deleteInteractionProfile = async (cookie: string) =>
     })
     .json();
 
-export const submitInteraction = async (cookie: string) =>
+export const submitInteraction = async (api: Got, cookie: string) =>
   api
     .post('interaction/submit', { headers: { cookie }, followRedirect: false })
     .json<RedirectResponse>();
@@ -97,7 +98,7 @@ export const createSocialAuthorizationUri = async (
     followRedirect: false,
   });
 
-export const consent = async (cookie: string) =>
+export const consent = async (api: Got, cookie: string) =>
   api
     .post('interaction/consent', {
       headers: {
