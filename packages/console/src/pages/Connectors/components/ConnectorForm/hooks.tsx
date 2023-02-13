@@ -21,6 +21,6 @@ export const useConfigParser = () => {
       return;
     }
 
-    return result;
+    return result.data;
   };
 };
