@@ -13,6 +13,3 @@ create table roles (
 
 create index roles__id
   on roles (tenant_id, id);
-
-create trigger set_tenant_id before insert on roles
-  for each row execute procedure set_tenant_id();

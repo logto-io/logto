@@ -12,6 +12,7 @@ class TenantPool {
       return tenant;
     }
 
+    console.log('Init tenant:', tenantId);
     const newTenant = await Tenant.create(tenantId);
     this.cache.set(tenantId, newTenant);
 

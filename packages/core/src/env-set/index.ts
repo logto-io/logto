@@ -7,7 +7,6 @@ import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { appendPath } from '#src/utils/url.js';
 
 import GlobalValues from './GlobalValues.js';
-import { checkAlterationState } from './check-alteration-state.js';
 import createPool from './create-pool.js';
 import createQueryClient from './create-query-client.js';
 import loadOidcValues from './oidc.js';
@@ -23,11 +22,19 @@ export enum MountedApps {
 
 export class EnvSet {
   static values = new GlobalValues();
-  static default = new EnvSet(EnvSet.values.dbUrl);
 
   static get isTest() {
     return this.values.isTest;
   }
+
+  static get dbUrl() {
+    return this.values.dbUrl;
+  }
+
+  static queryClient = createQueryClient(this.dbUrl, this.isTest);
+
+  /** @deprecated Only for backward compatibility; Will be replaced soon. */
+  static pool = createPool(this.dbUrl, this.isTest);
 
   #pool: Optional<DatabasePool>;
   // Use another pool for `withtyped` while adopting the new model,
@@ -76,12 +83,11 @@ export class EnvSet {
     this.#queryClient = createQueryClient(this.databaseUrl, EnvSet.isTest);
 
     const { getOidcConfigs } = createLogtoConfigLibrary(pool);
-    const [, oidcConfigs] = await Promise.all([checkAlterationState(pool), getOidcConfigs()]);
+
+    const oidcConfigs = await getOidcConfigs();
     this.#oidc = await loadOidcValues(
       appendPath(EnvSet.values.endpoint, '/oidc').toString(),
       oidcConfigs
     );
   }
 }
-
-await EnvSet.default.load();

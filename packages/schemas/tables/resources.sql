@@ -14,6 +14,3 @@ create table resources (
 
 create index resources__id
   on resources (tenant_id, id);
-
-create trigger set_tenant_id before insert on resources
-  for each row execute procedure set_tenant_id();

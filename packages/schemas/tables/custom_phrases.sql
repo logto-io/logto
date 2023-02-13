@@ -11,6 +11,3 @@ create table custom_phrases (
 
 create index custom_phrases__id
   on custom_phrases (tenant_id, id);
-
-create trigger set_tenant_id before insert on custom_phrases
-  for each row execute procedure set_tenant_id();

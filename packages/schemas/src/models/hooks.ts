@@ -45,15 +45,20 @@ export const hookConfigGuard: z.ZodType<HookConfig> = z.object({
 
 export const Hooks = createModel(/* sql */ `
   create table hooks (
-    id varchar(32) not null,
+    tenant_id varchar(21) not null
+      references tenants (id) on update cascade on delete cascade,
+    id varchar(21) not null,
     event varchar(128) not null,
     config jsonb /* @use HookConfig */ not null,
     created_at timestamptz not null default(now()),
     primary key (id)
   );
 
-  create index hooks__event on hooks (event);
+  create index hooks__id on hooks (tenant_id, id);
+
+  create index hooks__event on hooks (tenant_id, event);
 `)
   .extend('id', { default: () => generateStandardId(), readonly: true })
   .extend('event', z.nativeEnum(HookEvent)) // Tried to use `.refine()` to show the correct error path, but not working.
-  .extend('config', hookConfigGuard);
+  .extend('config', hookConfigGuard)
+  .exclude('tenantId');

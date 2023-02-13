@@ -12,3 +12,5 @@ $$ begin
 
   return new;
 end; $$ language plpgsql;
+
+/* no_after_each */
