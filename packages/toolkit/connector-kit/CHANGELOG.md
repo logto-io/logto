@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.0.0-rc.1
+
+### Minor Changes
+
+- 8658827c: Add optional `formItems` to connector's metadata.
+
+  If set, the admin console's connector page (both create and update) will use it to generate a form to input config instead of raw JSON.
+
 ## 1.0.0-beta.33
 
 ### Patch Changes
