@@ -1,7 +1,7 @@
 import { VerificationCodeType } from '@logto/connector-kit';
 import { InteractionEvent } from '@logto/schemas';
 
-import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.test.js';
 
 const { jest } = import.meta;
 

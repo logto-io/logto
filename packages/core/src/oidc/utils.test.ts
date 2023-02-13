@@ -1,6 +1,6 @@
 import { ApplicationType, CustomClientMetadataKey, GrantType } from '@logto/schemas';
 
-import { mockEnvSet } from '#src/test-utils/env-set.js';
+import { mockEnvSet } from '#src/test-utils/env-set.test.js';
 
 import {
   isOriginAllowed,

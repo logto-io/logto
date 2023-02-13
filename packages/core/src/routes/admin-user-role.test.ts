@@ -1,9 +1,9 @@
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockRole, mockUser } from '#src/__mocks__/index.js';
-import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { mockId, mockStandardId } from '#src/test-utils/nanoid.test.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 

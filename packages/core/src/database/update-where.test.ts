@@ -3,7 +3,7 @@ import { Users, Applications } from '@logto/schemas';
 import type { UpdateWhereData } from '@logto/shared';
 
 import { UpdateError } from '#src/errors/SlonikError/index.js';
-import { createTestPool } from '#src/utils/test-utils.js';
+import { createTestPool } from '#src/utils/test-utils.test.js';
 
 const { buildUpdateWhereWithPool } = await import('./update-where.js');
 

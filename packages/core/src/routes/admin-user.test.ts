@@ -11,8 +11,8 @@ import {
 } from '#src/__mocks__/index.js';
 import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
-import { MockTenant, Partial2 } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { MockTenant, Partial2 } from '#src/test-utils/tenant.test.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);

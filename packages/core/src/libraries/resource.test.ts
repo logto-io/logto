@@ -1,5 +1,5 @@
 import { mockResource, mockResource2, mockResource3, mockScope } from '#src/__mocks__/index.js';
-import { MockQueries } from '#src/test-utils/tenant.js';
+import { MockQueries } from '#src/test-utils/tenant.test.js';
 
 const { jest } = import.meta;
 

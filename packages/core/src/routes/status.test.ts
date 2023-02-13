@@ -1,4 +1,4 @@
-import { createRequester } from '#src/utils/test-utils.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 import statusRoutes from './status.js';
 

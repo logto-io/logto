@@ -2,8 +2,8 @@ import { LogResult } from '@logto/schemas';
 import type { Log } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 

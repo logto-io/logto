@@ -12,9 +12,9 @@ import request from 'supertest';
 
 import type { AuthedRouter, AnonymousRouter } from '#src/routes/types.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
-import type { Options } from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
-import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import type { Options } from '#src/test-utils/jest-koa-mocks/create-mock-context.test.js';
+import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.test.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 
 /**
  *  Slonik Query Mock Utils

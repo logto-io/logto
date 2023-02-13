@@ -4,7 +4,7 @@ import { any } from 'zod';
 
 import { mockConnector, mockMetadata } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { MockQueries } from '#src/test-utils/tenant.js';
+import { MockQueries } from '#src/test-utils/tenant.test.js';
 import { defaultConnectorMethods } from '#src/utils/connectors/consts.js';
 
 import {

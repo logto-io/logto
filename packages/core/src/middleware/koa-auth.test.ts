@@ -6,8 +6,8 @@ import Sinon from 'sinon';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockEnvSet } from '#src/test-utils/env-set.js';
-import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+import { mockEnvSet } from '#src/test-utils/env-set.test.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.test.js';
 
 import type { WithAuthContext } from './koa-auth.js';
 

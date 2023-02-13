@@ -2,7 +2,7 @@ import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockLanguageInfo, mockSignInExperience } from '#src/__mocks__/index.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 
 const { jest } = import.meta;
 
@@ -28,7 +28,7 @@ const tenantContext = new MockTenant(
 );
 
 const signInExperiencesRoutes = await pickDefault(import('./index.js'));
-const { createRequester } = await import('#src/utils/test-utils.js');
+const { createRequester } = await import('#src/utils/test-utils.test.js');
 const signInExperienceRequester = createRequester({
   authedRoutes: signInExperiencesRoutes,
   tenantContext,

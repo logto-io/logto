@@ -2,9 +2,9 @@ import { InteractionEvent, adminConsoleApplicationId } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
-import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.test.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.test.js';
 
 import type {
   Identifier,

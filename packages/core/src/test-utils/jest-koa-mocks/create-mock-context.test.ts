@@ -8,8 +8,8 @@ import Koa from 'koa';
 import type { RequestMethod } from 'node-mocks-http';
 import httpMocks from 'node-mocks-http';
 
-import type { MockCookies } from './create-mock-cookies.js';
-import createMockCookies from './create-mock-cookies.js';
+import type { MockCookies } from './create-mock-cookies.test.js';
+import createMockCookies from './create-mock-cookies.test.js';
 
 const { jest } = import.meta;
 

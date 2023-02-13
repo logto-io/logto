@@ -17,8 +17,8 @@ await mockEsmWithActual('@logto/core-kit', () => ({
 }));
 
 const { default: RequestError } = await import('#src/errors/RequestError/index.js');
-const { MockQueries } = await import('#src/test-utils/tenant.js');
-const { createContextWithRouteParameters } = await import('#src/utils/test-utils.js');
+const { MockQueries } = await import('#src/test-utils/tenant.test.js');
+const { createContextWithRouteParameters } = await import('#src/utils/test-utils.test.js');
 
 const insertLog = jest.fn();
 const queries = new MockQueries({ logs: { insertLog } });

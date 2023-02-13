@@ -3,7 +3,7 @@ import { NotFoundError, SlonikError } from 'slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { DeletionError, InsertionError, UpdateError } from '#src/errors/SlonikError/index.js';
-import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.test.js';
 
 import koaSlonikErrorHandler from './koa-slonik-error-handler.js';
 

@@ -1,6 +1,6 @@
 import { pickDefault } from '@logto/shared/esm';
 
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 
 const { jest } = import.meta;
 

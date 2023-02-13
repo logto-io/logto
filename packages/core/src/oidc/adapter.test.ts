@@ -3,8 +3,8 @@ import { createMockUtils } from '@logto/shared/esm';
 import snakecaseKeys from 'snakecase-keys';
 
 import { mockApplication } from '#src/__mocks__/index.js';
-import { mockEnvSet } from '#src/test-utils/env-set.js';
-import { MockQueries } from '#src/test-utils/tenant.js';
+import { mockEnvSet } from '#src/test-utils/env-set.test.js';
+import { MockQueries } from '#src/test-utils/tenant.test.js';
 
 import { getConstantClientMetadata } from './utils.js';
 

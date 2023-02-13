@@ -4,8 +4,8 @@ import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockConnector } from '#src/__mocks__/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
-import type { QueryType } from '#src/utils/test-utils.js';
-import { expectSqlAssert } from '#src/utils/test-utils.js';
+import type { QueryType } from '#src/utils/test-utils.test.js';
+import { expectSqlAssert } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 

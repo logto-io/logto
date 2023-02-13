@@ -1,7 +1,7 @@
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import i18next from 'i18next';
 
-import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 const { mockEsmDefault } = createMockUtils(jest);

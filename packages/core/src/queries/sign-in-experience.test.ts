@@ -1,8 +1,8 @@
 import { createMockPool, createMockQueryResult } from 'slonik';
 
 import { mockSignInExperience } from '#src/__mocks__/index.js';
-import type { QueryType } from '#src/utils/test-utils.js';
-import { expectSqlAssert } from '#src/utils/test-utils.js';
+import type { QueryType } from '#src/utils/test-utils.test.js';
+import { expectSqlAssert } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 

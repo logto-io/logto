@@ -1,4 +1,4 @@
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.test.js';
 
 import { grantListener, grantRevocationListener } from './grant.js';
 import { addOidcEventListeners } from './index.js';

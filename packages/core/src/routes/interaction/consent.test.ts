@@ -3,10 +3,10 @@ import { createMockUtils } from '@logto/shared/esm';
 
 import { mockUser } from '#src/__mocks__/index.js';
 import type Queries from '#src/tenants/Queries.js';
-import { createMockProvider, GrantMock } from '#src/test-utils/oidc-provider.js';
-import type { Partial2 } from '#src/test-utils/tenant.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { createMockProvider, GrantMock } from '#src/test-utils/oidc-provider.test.js';
+import type { Partial2 } from '#src/test-utils/tenant.test.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 import { interactionPrefix } from './const.js';
 

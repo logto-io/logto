@@ -5,10 +5,10 @@ import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
-import { mockEnvSet } from './env-set.js';
-import type { GrantMock } from './oidc-provider.js';
-import { createMockProvider } from './oidc-provider.js';
-import { MockQueryClient } from './query-client.js';
+import { mockEnvSet } from './env-set.test.js';
+import type { GrantMock } from './oidc-provider.test.js';
+import { createMockProvider } from './oidc-provider.test.js';
+import { MockQueryClient } from './query-client.test.js';
 
 export class MockQueries extends Queries {
   constructor(queriesOverride?: Partial2<Queries>) {
@@ -28,7 +28,6 @@ export class MockQueries extends Queries {
       this[key] = { ...this[key], ...queriesOverride[key] };
     };
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const key of Object.keys(queriesOverride) as Array<keyof Queries>) {
       overrideKey(key);
     }
@@ -73,7 +72,6 @@ export class MockTenant implements TenantContext {
       return;
     }
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const key of Object.keys(value) as Array<keyof this[Type]>) {
       this.setPartialKey(type, key, { ...this[type][key], ...value[key] });
     }

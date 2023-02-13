@@ -4,8 +4,8 @@ import { pickDefault } from '@logto/shared/esm';
 import { endOfDay, subDays } from 'date-fns';
 import { format } from 'date-fns/fp';
 
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 /* eslint-enable import/no-duplicates */
 
 const { jest } = import.meta;

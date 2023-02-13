@@ -4,8 +4,8 @@ import type Provider from 'oidc-provider';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { MockQueries } from '#src/test-utils/tenant.js';
-import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+import { MockQueries } from '#src/test-utils/tenant.test.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.test.js';
 
 import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
 

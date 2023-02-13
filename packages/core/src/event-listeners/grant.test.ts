@@ -1,9 +1,9 @@
 import type { LogKey } from '@logto/schemas';
 import { LogResult, token } from '@logto/schemas';
 
-import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.test.js';
 import { stringifyError } from '#src/utils/format.js';
-import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.test.js';
 
 import { grantListener, grantRevocationListener } from './grant.js';
 

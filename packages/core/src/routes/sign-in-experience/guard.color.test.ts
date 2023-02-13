@@ -2,8 +2,8 @@ import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockColor, mockSignInExperience } from '#src/__mocks__/index.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 const { mockEsm } = createMockUtils(import.meta.jest);
 

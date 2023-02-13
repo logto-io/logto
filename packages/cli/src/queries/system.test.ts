@@ -2,8 +2,8 @@ import { AlterationStateKey, Systems } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import type { QueryType } from '../test-utils.js';
-import { expectSqlAssert } from '../test-utils.js';
+import type { QueryType } from '../test-utils.test.js';
+import { expectSqlAssert } from '../test-utils.test.js';
 import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './system.js';
 
 const { jest } = import.meta;

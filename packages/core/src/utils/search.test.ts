@@ -5,7 +5,7 @@ import { sql } from 'slonik';
 // Will add `params` to the exception list
 // eslint-disable-next-line unicorn/prevent-abbreviations
 import { buildConditionsFromSearch, parseSearchParamsForSearch } from './search.js';
-import { expectSqlAssert, expectSqlTokenAssert } from './test-utils.js';
+import { expectSqlAssert, expectSqlTokenAssert } from './test-utils.test.js';
 
 describe('parseSearchParamsForSearch()', () => {
   it('should throw when input is not valid', () => {

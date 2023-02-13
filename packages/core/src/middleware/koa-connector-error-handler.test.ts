@@ -1,7 +1,7 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.test.js';
 
 import koaConnectorErrorHandler from './koa-connector-error-handler.js';
 

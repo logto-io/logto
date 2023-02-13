@@ -9,10 +9,10 @@ import {
   mockLogtoConnector,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 

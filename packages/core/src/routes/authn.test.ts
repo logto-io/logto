@@ -4,8 +4,8 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { mockRole } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import Libraries from '#src/tenants/Libraries.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.test.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 
 import { mockConnector, mockMetadata, mockLogtoConnector } from '../__mocks__/connector.js';
 
@@ -64,7 +64,7 @@ const tenantContext = new MockTenant(
   undefined,
   { users: usersLibraries, socials: socialsLibraries }
 );
-const { createRequester } = await import('#src/utils/test-utils.js');
+const { createRequester } = await import('#src/utils/test-utils.test.js');
 const request = createRequester({
   anonymousRoutes: await pickDefault(import('#src/routes/authn.js')),
   tenantContext,

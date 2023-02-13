@@ -6,9 +6,9 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { mockZhCnCustomPhrase, trTrTag, zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { mockId, mockStandardId } from '#src/test-utils/nanoid.test.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);

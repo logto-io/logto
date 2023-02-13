@@ -3,7 +3,7 @@ import { ApplicationType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockApplication } from '#src/__mocks__/index.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -41,7 +41,7 @@ const tenantContext = new MockTenant(undefined, {
   },
 });
 
-const { createRequester } = await import('#src/utils/test-utils.js');
+const { createRequester } = await import('#src/utils/test-utils.test.js');
 const applicationRoutes = await pickDefault(import('./application.js'));
 
 const customClientMetadata = {

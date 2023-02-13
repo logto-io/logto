@@ -1,6 +1,6 @@
 import type { Context } from 'koa';
 
-import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
+import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.test.js';
 
 import type { WithPaginationContext } from './koa-pagination.js';
 import koaPagination from './koa-pagination.js';

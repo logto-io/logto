@@ -1,7 +1,7 @@
 import type { Connector } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { MockQueries } from '#src/test-utils/tenant.js';
+import { MockQueries } from '#src/test-utils/tenant.test.js';
 
 const connectors: Connector[] = [
   {

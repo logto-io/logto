@@ -1,5 +1,5 @@
-import { mockEnvSet } from '#src/test-utils/env-set.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { mockEnvSet } from '#src/test-utils/env-set.test.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 
 import initOidc from './init.js';
 

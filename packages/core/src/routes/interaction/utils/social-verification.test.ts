@@ -2,9 +2,9 @@ import { ConnectorType } from '@logto/connector-kit';
 import { createMockUtils } from '@logto/shared/esm';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
-import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
-import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.test.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.test.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);

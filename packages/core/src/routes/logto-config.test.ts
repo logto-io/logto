@@ -2,8 +2,8 @@ import type { AdminConsoleData } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockAdminConsoleData } from '#src/__mocks__/index.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 const logtoConfigs = {
   getAdminConsoleConfig: async () => ({ value: mockAdminConsoleData }),

@@ -5,11 +5,11 @@ import { createMockUtils } from '@logto/shared/esm';
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type koaAuditLog from '#src/middleware/koa-audit-log.js';
-import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.test.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.test.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 import { verificationPath, interactionPrefix } from './const.js';
 

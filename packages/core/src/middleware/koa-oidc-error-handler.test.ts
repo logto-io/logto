@@ -1,7 +1,7 @@
 import { errors } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.test.js';
 
 import koaOIDCErrorHandler from './koa-oidc-error-handler.js';
 

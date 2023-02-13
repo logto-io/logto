@@ -3,8 +3,8 @@ import { OidcModelInstances } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import type { QueryType } from '#src/utils/test-utils.js';
-import { expectSqlAssert } from '#src/utils/test-utils.js';
+import type { QueryType } from '#src/utils/test-utils.test.js';
+import { expectSqlAssert } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 

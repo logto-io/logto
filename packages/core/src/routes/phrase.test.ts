@@ -6,8 +6,8 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
 import Queries from '#src/tenants/Queries.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.test.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 
 const { jest } = import.meta;
 
@@ -53,7 +53,7 @@ const tenantContext = new MockTenant(
 
 const phraseRoutes = await pickDefault(import('./phrase.js'));
 
-const { createRequester } = await import('#src/utils/test-utils.js');
+const { createRequester } = await import('#src/utils/test-utils.test.js');
 const phraseRequest = createRequester({
   anonymousRoutes: phraseRoutes,
   tenantContext,

@@ -2,7 +2,7 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import Sinon from 'sinon';
 
 import { EnvSet, MountedApps } from '#src/env-set/index.js';
-import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+import { createContextWithRouteParameters } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 

@@ -19,8 +19,8 @@ await mockEsmWithActual('@logto/core-kit', () => ({
 }));
 
 const { createModelRouters } = await import('#src/model-routers/index.js');
-const { MockQueryClient } = await import('#src/test-utils/query-client.js');
-const { MockQueries } = await import('#src/test-utils/tenant.js');
+const { MockQueryClient } = await import('#src/test-utils/query-client.test.js');
+const { MockQueries } = await import('#src/test-utils/tenant.test.js');
 
 const queryClient = new MockQueryClient();
 const queryFunction = jest.fn();

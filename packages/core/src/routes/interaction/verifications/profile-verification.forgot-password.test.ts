@@ -2,7 +2,7 @@ import { InteractionEvent } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
 
 import type { Identifier } from '../types/index.js';
 

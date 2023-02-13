@@ -1,7 +1,7 @@
 import en from '@logto/phrases-ui/lib/locales/en.js';
 import { CustomPhrase } from '@logto/schemas';
 
-import { mockId } from '#src/test-utils/nanoid.js';
+import { mockId } from '#src/test-utils/nanoid.test.js';
 
 export const enTag = 'en';
 export const trTrTag = 'tr-TR';

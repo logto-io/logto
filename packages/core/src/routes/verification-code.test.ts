@@ -1,8 +1,8 @@
 import { VerificationCodeType } from '@logto/connector-kit';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);

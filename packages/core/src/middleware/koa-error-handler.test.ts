@@ -1,7 +1,7 @@
 import createHttpError from 'http-errors';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
+import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.test.js';
 
 import koaErrorHandler from './koa-error-handler.js';
 

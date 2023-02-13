@@ -32,9 +32,9 @@ const sieQueries = {
 const { findDefaultSignInExperience } = sieQueries;
 
 const wellKnownRoutes = await pickDefault(import('#src/routes/well-known.js'));
-const { createMockProvider } = await import('#src/test-utils/oidc-provider.js');
-const { MockTenant } = await import('#src/test-utils/tenant.js');
-const { createRequester } = await import('#src/utils/test-utils.js');
+const { createMockProvider } = await import('#src/test-utils/oidc-provider.test.js');
+const { MockTenant } = await import('#src/test-utils/tenant.test.js');
+const { createRequester } = await import('#src/utils/test-utils.test.js');
 
 describe('GET /.well-known/sign-in-exp', () => {
   afterEach(() => {

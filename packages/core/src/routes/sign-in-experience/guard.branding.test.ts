@@ -3,8 +3,8 @@ import { BrandingStyle } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockBranding, mockSignInExperience } from '#src/__mocks__/index.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
+import { MockTenant } from '#src/test-utils/tenant.test.js';
+import { createRequester } from '#src/utils/test-utils.test.js';
 
 const tenantContext = new MockTenant(undefined, {
   signInExperiences: {

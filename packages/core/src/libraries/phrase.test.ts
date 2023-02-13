@@ -12,7 +12,7 @@ import {
   zhHkTag,
 } from '#src/__mocks__/custom-phrase.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { MockQueries } from '#src/test-utils/tenant.js';
+import { MockQueries } from '#src/test-utils/tenant.test.js';
 
 const { jest } = import.meta;
 

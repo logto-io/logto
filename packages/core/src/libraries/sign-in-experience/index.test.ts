@@ -34,7 +34,7 @@ const signInExperiences = {
 };
 const { findDefaultSignInExperience, updateDefaultSignInExperience } = signInExperiences;
 
-const { MockQueries } = await import('#src/test-utils/tenant.js');
+const { MockQueries } = await import('#src/test-utils/tenant.test.js');
 const queries = new MockQueries({
   customPhrases,
   signInExperiences,

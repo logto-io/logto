@@ -4,7 +4,7 @@ import { convertToIdentifiers } from '@logto/shared';
 import decamelize from 'decamelize';
 
 import { InsertionError } from '#src/errors/SlonikError/index.js';
-import { createTestPool } from '#src/utils/test-utils.js';
+import { createTestPool } from '#src/utils/test-utils.test.js';
 
 const { buildInsertIntoWithPool } = await import('./insert-into.js');
 

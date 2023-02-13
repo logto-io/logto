@@ -1,7 +1,7 @@
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
-import { emptyMiddleware } from '#src/utils/test-utils.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.test.js';
+import { emptyMiddleware } from '#src/utils/test-utils.test.js';
 
 import { defaultTenant } from './consts.js';
 
