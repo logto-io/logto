@@ -32,7 +32,7 @@ const AssignUsersModal = ({ roleId, isRemindSkip = false, onClose }: Props) => {
     setIsLoading(true);
 
     try {
-      await api.post(`/api/roles/${roleId}/users`, {
+      await api.post(`api/roles/${roleId}/users`, {
         json: { userIds: users.map(({ id }) => id) },
       });
       toast.success(t('role_details.users.users_assigned'));

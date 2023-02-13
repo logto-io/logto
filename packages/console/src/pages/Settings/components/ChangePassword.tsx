@@ -38,7 +38,7 @@ const ChangePassword = () => {
     }
 
     setIsLoading(true);
-    await api.patch(`/api/users/${userId}/password`, { json: { password } }).json();
+    await api.patch(`api/users/${userId}/password`, { json: { password } }).json();
     setIsLoading(false);
     setIsOpen(false);
     toast.success(t('settings.password_changed'));

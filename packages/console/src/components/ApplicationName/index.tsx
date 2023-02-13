@@ -14,7 +14,7 @@ type Props = {
 const ApplicationName = ({ applicationId, isLink = false }: Props) => {
   const isAdminConsole = applicationId === adminConsoleApplicationId;
 
-  const { data } = useSWR<Application>(!isAdminConsole && `/api/applications/${applicationId}`);
+  const { data } = useSWR<Application>(!isAdminConsole && `api/applications/${applicationId}`);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const name = (isAdminConsole ? <>Admin Console ({t('system_app')})</> : data?.name) ?? '-';

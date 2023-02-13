@@ -34,7 +34,7 @@ const AssignRolesModal = ({ user, onClose }: Props) => {
     setIsSubmitting(true);
 
     try {
-      await api.post(`/api/users/${user.id}/roles`, {
+      await api.post(`api/users/${user.id}/roles`, {
         json: { roleIds: roles.map(({ id }) => id) },
       });
       toast.success(t('user_details.roles.role_assigned'));

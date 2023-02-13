@@ -27,7 +27,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const [language, setLanguage] = useState<LanguageTag>('en');
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
   const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
-  const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
+  const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
   const { customPhrases } = useUiLanguages();
 

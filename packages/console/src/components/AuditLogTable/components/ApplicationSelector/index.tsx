@@ -12,7 +12,7 @@ type Props = {
 
 const ApplicationSelector = ({ value, onChange }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data } = useSWR<Application[]>('/api/applications');
+  const { data } = useSWR<Application[]>('api/applications');
   const options =
     data?.map(({ id, name }) => ({
       value: id,

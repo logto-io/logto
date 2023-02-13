@@ -29,11 +29,11 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
   const { data: existingConnectors, error: connectorsError } = useSWR<
     ConnectorResponse[],
     RequestError
-  >('/api/connectors');
+  >('api/connectors');
   const { data: factories, error: factoriesError } = useSWR<
     ConnectorFactoryResponse[],
     RequestError
-  >('/api/connector-factories');
+  >('api/connector-factories');
   const isLoading = !factories && !existingConnectors && !connectorsError && !factoriesError;
   const [activeGroupId, setActiveGroupId] = useState<string>();
   const [activeFactoryId, setActiveFactoryId] = useState<string>();

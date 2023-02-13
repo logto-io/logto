@@ -14,7 +14,7 @@ const useUiLanguages = () => {
     data: customPhraseList,
     error,
     mutate,
-  } = useSWR<CustomPhraseResponse[], RequestError>('/api/custom-phrases');
+  } = useSWR<CustomPhraseResponse[], RequestError>('api/custom-phrases');
 
   const languages = useMemo(
     () =>
@@ -31,7 +31,7 @@ const useUiLanguages = () => {
 
   const addLanguage = useCallback(
     async (languageTag: LanguageTag) => {
-      await api.put(`/api/custom-phrases/${languageTag}`, { json: {} });
+      await api.put(`api/custom-phrases/${languageTag}`, { json: {} });
       await mutate();
     },
     [api, mutate]

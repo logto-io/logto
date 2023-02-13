@@ -35,7 +35,7 @@ const emptyUiTranslation = createEmptyUiTranslation();
 const LanguageDetails = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { data: signInExperience } = useSWR<SignInExperience, RequestError>('/api/sign-in-exp');
+  const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
 
   const { languages } = useUiLanguages();
 
@@ -53,7 +53,7 @@ const LanguageDetails = () => {
   );
 
   const { data: customPhrase, mutate } = useSWR<CustomPhraseResponse, RequestError>(
-    `/api/custom-phrases/${selectedLanguage}`,
+    `api/custom-phrases/${selectedLanguage}`,
     {
       shouldRetryOnError: (error: unknown) => {
         if (error instanceof RequestError) {
@@ -104,14 +104,14 @@ const LanguageDetails = () => {
   const upsertCustomPhrase = useCallback(
     async (languageTag: LanguageTag, translation: Translation) => {
       const updatedCustomPhrase = await api
-        .put(`/api/custom-phrases/${languageTag}`, {
+        .put(`api/custom-phrases/${languageTag}`, {
           json: {
             ...cleanDeep(translation),
           },
         })
         .json<CustomPhraseResponse>();
 
-      void globalMutate('/api/custom-phrases');
+      void globalMutate('api/custom-phrases');
 
       return updatedCustomPhrase;
     },
@@ -125,9 +125,9 @@ const LanguageDetails = () => {
       return;
     }
 
-    await api.delete(`/api/custom-phrases/${selectedLanguage}`);
+    await api.delete(`api/custom-phrases/${selectedLanguage}`);
 
-    await globalMutate('/api/custom-phrases');
+    await globalMutate('api/custom-phrases');
 
     setSelectedLanguage(languages.find((languageTag) => languageTag !== selectedLanguage) ?? 'en');
   }, [api, globalMutate, isDefaultLanguage, languages, selectedLanguage, setSelectedLanguage]);

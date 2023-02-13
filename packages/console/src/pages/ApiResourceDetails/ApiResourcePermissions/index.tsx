@@ -34,7 +34,7 @@ const ApiResourcePermissions = () => {
 
   const { data, error, mutate } = useSWR<[ScopeResponse[], number], RequestError>(
     resourceId &&
-      buildUrl(`/api/resources/${resourceId}/scopes`, {
+      buildUrl(`api/resources/${resourceId}/scopes`, {
         page: String(page),
         page_size: String(pageSize),
         ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
@@ -57,7 +57,7 @@ const ApiResourcePermissions = () => {
     setIsDeleting(true);
 
     try {
-      await api.delete(`/api/resources/${resourceId}/scopes/${scopeToBeDeleted.id}`);
+      await api.delete(`api/resources/${resourceId}/scopes/${scopeToBeDeleted.id}`);
       toast.success(t('api_resource_details.permission.deleted', { name: scopeToBeDeleted.name }));
       await mutate();
       setScopeToBeDeleted(undefined);

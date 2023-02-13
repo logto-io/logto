@@ -36,7 +36,7 @@ const useUserPreferences = () => {
   const userId = useLogtoUserId();
   const shouldFetch = isAuthenticated && !authError && userId;
   const { data, mutate, error } = useSWR<unknown, RequestError>(
-    shouldFetch && `/api/users/${userId}/custom-data`
+    shouldFetch && `api/users/${userId}/custom-data`
   );
   const api = useApi();
 
@@ -62,7 +62,7 @@ const useUserPreferences = () => {
     }
 
     const updated = await api
-      .patch(`/api/users/${userId}/custom-data`, {
+      .patch(`api/users/${userId}/custom-data`, {
         json: {
           customData: {
             [key]: {

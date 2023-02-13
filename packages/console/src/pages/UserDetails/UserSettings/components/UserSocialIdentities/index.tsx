@@ -34,7 +34,7 @@ const ConnectorName = ({ name }: { name: DisplayConnector['name'] }) =>
 const UserSocialIdentities = ({ userId, identities, onDelete }: Props) => {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, mutate } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
+  const { data, error, mutate } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
   const [deletingConnector, setDeletingConnector] = useState<DisplayConnector>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -56,7 +56,7 @@ const UserSocialIdentities = ({ userId, identities, onDelete }: Props) => {
     setIsSubmitting(true);
 
     try {
-      await api.delete(`/api/users/${userId}/identities/${target}`);
+      await api.delete(`api/users/${userId}/identities/${target}`);
       onDelete?.(target);
     } finally {
       setIsSubmitting(false);

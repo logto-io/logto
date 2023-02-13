@@ -41,7 +41,7 @@ const UserDetails = () => {
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
   const [resetResult, setResetResult] = useState<string>();
 
-  const { data, error, mutate } = useSWR<User, RequestError>(id && `/api/users/${id}`);
+  const { data, error, mutate } = useSWR<User, RequestError>(id && `api/users/${id}`);
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ const UserDetails = () => {
     setIsDeleting(true);
 
     try {
-      await api.delete(`/api/users/${data.id}`);
+      await api.delete(`api/users/${data.id}`);
       toast.success(t('user_details.deleted', { name: data.name }));
       navigate('/users');
     } finally {

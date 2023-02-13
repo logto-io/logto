@@ -22,7 +22,7 @@ const ConnectorTypeColumn = ({ connectorGroup: { type, connectors } }: Props) =>
   const firstStandardConnector = standardConnectors[0];
 
   const { data: connectorFactory } = useSWR<ConnectorFactoryResponse>(
-    firstStandardConnector && `/api/connector-factories/${firstStandardConnector.connectorId}`
+    firstStandardConnector && `api/connector-factories/${firstStandardConnector.connectorId}`
   );
 
   if (!firstStandardConnector) {

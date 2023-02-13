@@ -34,7 +34,7 @@ const CreatePermissionModal = ({ resourceId, onClose }: Props) => {
     }
 
     const createdScope = await api
-      .post(`/api/resources/${resourceId}/scopes`, { json: formData })
+      .post(`api/resources/${resourceId}/scopes`, { json: formData })
       .json<Scope>();
 
     onClose(createdScope);

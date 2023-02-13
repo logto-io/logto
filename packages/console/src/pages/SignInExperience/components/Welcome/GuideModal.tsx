@@ -32,7 +32,7 @@ type Props = {
 };
 
 const GuideModal = ({ isOpen, onClose }: Props) => {
-  const { data } = useSWR<SignInExperience>('/api/sign-in-exp');
+  const { data } = useSWR<SignInExperience>('api/sign-in-exp');
   const { data: preferences, update: updatePreferences } = useUserPreferences();
   const { updateConfigs } = useConfigs();
   const methods = useForm<SignInExperienceForm>();
@@ -65,7 +65,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
     }
 
     await Promise.all([
-      api.patch('/api/sign-in-exp', {
+      api.patch('api/sign-in-exp', {
         json: signInExperienceParser.toRemoteModel(formData),
       }),
       updateConfigs({ signInExperienceCustomized: true }),

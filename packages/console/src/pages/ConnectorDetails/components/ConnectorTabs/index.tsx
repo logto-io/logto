@@ -18,7 +18,7 @@ type Props = {
 
 const ConnectorTabs = ({ target, connectorId }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data: connectors } = useSWR<ConnectorResponse[]>(`/api/connectors?target=${target}`);
+  const { data: connectors } = useSWR<ConnectorResponse[]>(`api/connectors?target=${target}`);
 
   if (!connectors) {
     return null;

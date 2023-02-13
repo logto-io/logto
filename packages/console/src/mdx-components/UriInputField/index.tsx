@@ -36,7 +36,7 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
     formState: { isSubmitting },
   } = methods;
 
-  const { data, mutate } = useSWR<Application, RequestError>(`/api/applications/${appId}`);
+  const { data, mutate } = useSWR<Application, RequestError>(`api/applications/${appId}`);
 
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -44,7 +44,7 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
 
   const onSubmit = async (value: string[]) => {
     const updatedApp = await api
-      .patch(`/api/applications/${appId}`, {
+      .patch(`api/applications/${appId}`, {
         json: {
           oidcClientMetadata: {
             [name]: value.filter(Boolean),

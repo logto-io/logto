@@ -33,7 +33,7 @@ const RolePermissions = () => {
 
   const { data, error, mutate } = useSWR<[ScopeResponse[], number], RequestError>(
     roleId &&
-      buildUrl(`/api/roles/${roleId}/scopes`, {
+      buildUrl(`api/roles/${roleId}/scopes`, {
         page: String(page),
         page_size: String(pageSize),
         ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
@@ -57,7 +57,7 @@ const RolePermissions = () => {
     setIsDeleting(true);
 
     try {
-      await api.delete(`/api/roles/${roleId}/scopes/${scopeToBeDeleted.id}`);
+      await api.delete(`api/roles/${roleId}/scopes/${scopeToBeDeleted.id}`);
       toast.success(
         t('role_details.permission.permission_deleted', { name: scopeToBeDeleted.name })
       );

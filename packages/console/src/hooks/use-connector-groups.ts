@@ -7,7 +7,7 @@ import { getConnectorGroups } from '@/pages/Connectors/utils';
 
 // Group connectors by target
 const useConnectorGroups = () => {
-  const { data, ...rest } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
+  const { data, ...rest } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
 
   const groups = useMemo(() => {
     if (!data) {

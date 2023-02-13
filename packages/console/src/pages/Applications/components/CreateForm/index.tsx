@@ -55,7 +55,7 @@ const CreateForm = ({ onClose }: Props) => {
       return;
     }
 
-    const createdApp = await api.post('/api/applications', { json: data }).json<Application>();
+    const createdApp = await api.post('api/applications', { json: data }).json<Application>();
     setCreatedApp(createdApp);
     setIsGetStartedModalOpen(true);
     void updateConfigs({ applicationCreated: true });

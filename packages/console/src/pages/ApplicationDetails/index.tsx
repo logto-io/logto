@@ -43,7 +43,7 @@ const ApplicationDetails = () => {
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<ApplicationResponse, RequestError>(
-    id && `/api/applications/${id}`
+    id && `api/applications/${id}`
   );
   const { data: oidcConfig, error: fetchOidcConfigError } = useSWR<
     SnakeCaseOidcConfig,
@@ -79,7 +79,7 @@ const ApplicationDetails = () => {
     }
 
     await api
-      .patch(`/api/applications/${data.id}`, {
+      .patch(`api/applications/${data.id}`, {
         json: {
           ...formData,
           oidcClientMetadata: {
@@ -108,7 +108,7 @@ const ApplicationDetails = () => {
     }
 
     try {
-      await api.delete(`/api/applications/${data.id}`);
+      await api.delete(`api/applications/${data.id}`);
       setIsDeleted(true);
       setIsDeleting(false);
       setIsDeleteFormOpen(false);

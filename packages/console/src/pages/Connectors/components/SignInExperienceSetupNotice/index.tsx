@@ -10,7 +10,7 @@ import * as styles from './index.module.scss';
 
 const SignInExperienceSetupNotice = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data: connectors } = useSWR<ConnectorResponse[]>('/api/connectors');
+  const { data: connectors } = useSWR<ConnectorResponse[]>('api/connectors');
   const {
     data: { connectorSieNoticeConfirmed },
     update,

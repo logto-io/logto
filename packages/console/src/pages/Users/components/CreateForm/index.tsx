@@ -51,7 +51,7 @@ const CreateForm = ({ onClose, onCreate }: Props) => {
 
     const password = nanoid(8);
 
-    const createdUser = await api.post('/api/users', { json: { ...data, password } }).json<User>();
+    const createdUser = await api.post('api/users', { json: { ...data, password } }).json<User>();
 
     setCreatedUserInfo({
       user: createdUser,

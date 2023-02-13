@@ -39,7 +39,7 @@ const Applications = () => {
     page: 1,
   });
 
-  const url = buildUrl('/api/applications', {
+  const url = buildUrl('api/applications', {
     page: String(page),
     page_size: String(pageSize),
   });

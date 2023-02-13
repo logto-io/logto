@@ -38,7 +38,7 @@ const Users = () => {
     keyword: '',
   });
 
-  const url = buildUrl('/api/users', {
+  const url = buildUrl('api/users', {
     hideAdminUser: String(true),
     page: String(page),
     page_size: String(pageSize),

@@ -72,7 +72,7 @@ const UserSettings = () => {
       customData: guardResult.data,
     };
 
-    const updatedUser = await api.patch(`/api/users/${user.id}`, { json: payload }).json<User>();
+    const updatedUser = await api.patch(`api/users/${user.id}`, { json: payload }).json<User>();
     reset(userDetailsParser.toLocalForm(updatedUser));
     onUserUpdated(updatedUser);
     toast.success(t('general.saved'));

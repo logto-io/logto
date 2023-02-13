@@ -40,7 +40,7 @@ const useGetStartedMetadata = () => {
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
   const { data: demoApp, error } = useSWR<Application, RequestError>(
-    `/api/applications/${demoAppApplicationId}`,
+    `api/applications/${demoAppApplicationId}`,
     {
       shouldRetryOnError: (error: unknown) => {
         if (error instanceof RequestError) {

@@ -82,7 +82,7 @@ const Guide = ({ connector, onClose }: Props) => {
       : basePayload;
 
     const createdConnector = await api
-      .post('/api/connectors', {
+      .post('api/connectors', {
         json: payload,
       })
       .json<ConnectorResponse>();

@@ -33,7 +33,7 @@ const RoleDetails = () => {
   const isPageHasTable =
     pathname.endsWith(RoleDetailsTabs.Permissions) || pathname.endsWith(RoleDetailsTabs.Users);
 
-  const { data, error, mutate } = useSWR<Role, RequestError>(id && `/api/roles/${id}`);
+  const { data, error, mutate } = useSWR<Role, RequestError>(id && `api/roles/${id}`);
   const { mutate: mutateGlobal } = useSWRConfig();
   const isLoading = !data && !error;
 
@@ -55,9 +55,9 @@ const RoleDetails = () => {
     setIsDeleting(true);
 
     try {
-      await api.delete(`/api/roles/${data.id}`);
+      await api.delete(`api/roles/${data.id}`);
       toast.success(t('role_details.role_deleted', { name: data.name }));
-      await mutateGlobal('/api/roles');
+      await mutateGlobal('api/roles');
       navigate('/roles', { replace: true });
     } finally {
       setIsDeleting(false);

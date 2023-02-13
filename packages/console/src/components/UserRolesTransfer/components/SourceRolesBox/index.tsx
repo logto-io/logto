@@ -35,7 +35,7 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
 
   const debounce = useDebounce();
 
-  const url = buildUrl('/api/roles', {
+  const url = buildUrl('api/roles', {
     excludeUserId: userId,
     page: String(page),
     page_size: String(pageSize),
