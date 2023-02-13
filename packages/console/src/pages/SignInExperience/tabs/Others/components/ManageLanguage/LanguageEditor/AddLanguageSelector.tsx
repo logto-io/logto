@@ -9,7 +9,7 @@ import SearchIcon from '@/assets/images/search.svg';
 import Button from '@/components/Button';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import TextInput from '@/components/TextInput';
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as style from './AddLanguageSelector.module.scss';
 

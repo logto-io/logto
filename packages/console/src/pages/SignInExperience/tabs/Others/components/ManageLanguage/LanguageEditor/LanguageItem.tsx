@@ -3,7 +3,7 @@ import { languages } from '@logto/language-kit';
 import classNames from 'classnames';
 import { useEffect, useRef } from 'react';
 
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as style from './LanguageItem.module.scss';
 

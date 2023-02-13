@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
 import { getDatabaseUrlFromConfig } from '../../database.js';
-import { log } from '../../utilities.js';
+import { log } from '../../utils.js';
 import {
   validateNodeVersion,
   inquireInstancePath,

@@ -8,7 +8,7 @@ import SignOut from '@/assets/images/sign-out.svg';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import { Ring as Spinner } from '@/components/Spinner';
 import UserAvatar from '@/components/UserAvatar';
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import UserInfoSkeleton from '../UserInfoSkeleton';
 import * as styles from './index.module.scss';

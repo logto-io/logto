@@ -9,7 +9,7 @@ import {
   getCurrentDatabaseAlterationTimestamp,
   updateDatabaseTimestamp,
 } from '../../../queries/system.js';
-import { log } from '../../../utilities.js';
+import { log } from '../../../utils.js';
 import type { AlterationFile } from './type.js';
 import { getAlterationFiles, getTimestampFromFilename } from './utils.js';
 import { chooseAlterationsByVersion, chooseRevertAlterationsByVersion } from './version.js';

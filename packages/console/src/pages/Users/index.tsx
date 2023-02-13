@@ -18,7 +18,7 @@ import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import { buildUrl, formatSearchKeyword } from '@/utilities/url';
+import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';

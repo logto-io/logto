@@ -14,7 +14,7 @@ import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as pageStyles from '@/scss/resources.module.scss';
-import { buildUrl, formatSearchKeyword } from '@/utilities/url';
+import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import AssignedUsers from './components/AssignedUsers';
 import CreateRoleModal from './components/CreateRoleModal';

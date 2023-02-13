@@ -10,7 +10,7 @@ import UserName from '@/components/UserName';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
-import { buildUrl } from '@/utilities/url';
+import { buildUrl } from '@/utils/url';
 
 import Table from '../Table';
 import type { Column } from '../Table/types';

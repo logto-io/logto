@@ -10,7 +10,7 @@ import {
   doesConfigsTableExist,
   updateValueByKey,
 } from '../../../queries/logto-config.js';
-import { log, oraPromise } from '../../../utilities.js';
+import { log, oraPromise } from '../../../utils.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
 import { oidcConfigReaders } from './oidc-config.js';

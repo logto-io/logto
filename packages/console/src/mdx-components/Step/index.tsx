@@ -12,7 +12,7 @@ import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Index from '@/components/Index';
 import Spacer from '@/components/Spacer';
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';
 

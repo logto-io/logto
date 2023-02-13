@@ -15,7 +15,7 @@ import TextInput from '@/components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import type { GuideForm } from '@/types/guide';
-import { uriValidator } from '@/utilities/validator';
+import { uriValidator } from '@/utils/validator';
 
 import * as styles from './index.module.scss';
 

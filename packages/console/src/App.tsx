@@ -57,7 +57,7 @@ import RoleUsers from './pages/RoleDetails/RoleUsers';
 import UserLogs from './pages/UserDetails/UserLogs';
 import UserRoles from './pages/UserDetails/UserRoles';
 import UserSettings from './pages/UserDetails/UserSettings';
-import { getBasename } from './utilities/router';
+import { getBasename } from './utils/router';
 
 void initI18n();
 

@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 
-import { safeParseJson } from '@/utilities/json';
+import { safeParseJson } from '@/utils/json';
 
 import type { MultiTextInputError, MultiTextInputRule } from './types';
 import { multiTextInputErrorGuard } from './types';

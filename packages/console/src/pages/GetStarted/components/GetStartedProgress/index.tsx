@@ -9,7 +9,7 @@ import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import Index from '@/components/Index';
 import { useTheme } from '@/hooks/use-theme';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import useGetStartedMetadata from '../../hook';
 import * as styles from './index.module.scss';

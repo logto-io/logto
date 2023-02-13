@@ -1,7 +1,7 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 
-import { safeParseJson } from '@/utilities/json';
+import { safeParseJson } from '@/utils/json';
 
 import type { ConnectorFormType } from '../../types';
 

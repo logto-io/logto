@@ -6,7 +6,7 @@ import Card from '@/components/Card';
 import FormField from '@/components/FormField';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
-import { uriValidator } from '@/utilities/validator';
+import { uriValidator } from '@/utils/validator';
 
 import type { SignInExperienceForm } from '../../types';
 import * as styles from '../index.module.scss';

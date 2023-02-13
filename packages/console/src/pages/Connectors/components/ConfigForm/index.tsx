@@ -11,7 +11,7 @@ import Select from '@/components/Select';
 import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
 import Textarea from '@/components/Textarea';
-import { jsonValidator } from '@/utilities/validator';
+import { jsonValidator } from '@/utils/validator';
 
 import type { ConnectorFormType } from '../../types';
 

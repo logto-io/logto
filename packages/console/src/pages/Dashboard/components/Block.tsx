@@ -10,7 +10,7 @@ import Card from '@/components/Card';
 import IconButton from '@/components/IconButton';
 import { ToggleTip } from '@/components/Tip';
 import type { Props as ToggleTipProps } from '@/components/Tip/ToggleTip';
-import { formatNumberWithComma } from '@/utilities/number';
+import { formatNumberWithComma } from '@/utils/number';
 
 import * as styles from './Block.module.scss';
 

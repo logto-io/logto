@@ -7,7 +7,7 @@ import type { SignInMethod, SignInMethodsObject } from '@/pages/SignInExperience
 
 import DiffSegment from './DiffSegment';
 import * as styles from './index.module.scss';
-import { convertToSignInMethodsObject } from './utilities';
+import { convertToSignInMethodsObject } from './utils';
 
 type Props = {
   before: SignInMethod[];

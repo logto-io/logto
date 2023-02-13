@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import type { MouseEvent, KeyboardEvent, ReactNode } from 'react';
 
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './DropdownItem.module.scss';
 
