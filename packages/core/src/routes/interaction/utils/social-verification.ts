@@ -1,4 +1,4 @@
-import type { ConnectorSession, SocialUserInfo } from '@logto/connector-kit';
+import type { ConnectorSession, SocialUserInfo, StorageValue } from '@logto/connector-kit';
 import { connectorSessionGuard } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
@@ -56,17 +56,26 @@ export const createSocialAuthorizationUrl = async (
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
   ctx: WithLogContext,
-  { provider, libraries }: TenantContext
+  { provider, queries, libraries }: TenantContext
 ): Promise<SocialUserInfo> => {
   const {
     socials: { getUserInfoByAuthCode },
   } = libraries;
+  const {
+    connectors: { setValueByIdAndKey, getValueByIdAndKey },
+  } = queries;
 
   const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 
-  const userInfo = await getUserInfoByAuthCode(connectorId, connectorData, async () =>
-    getConnectorSessionResult(ctx, provider)
+  const userInfo = await getUserInfoByAuthCode(
+    connectorId,
+    connectorData,
+    async () => getConnectorSessionResult(ctx, provider),
+    {
+      set: async (key: string, value: StorageValue) => setValueByIdAndKey(connectorId, key, value),
+      get: async (key: string) => getValueByIdAndKey(connectorId, key),
+    }
   );
 
   log.append(userInfo);

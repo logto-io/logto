@@ -1,6 +1,8 @@
+import type { StorageValue, Storage } from '@logto/connector-kit';
 import type { Connector, CreateConnector } from '@logto/schemas';
 import { Connectors } from '@logto/schemas';
 import { manyRows, convertToIdentifiers } from '@logto/shared';
+import type { Nullable } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -31,6 +33,36 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
       from ${table}
       where ${fields.connectorId}=${connectorId}
     `);
+
+  const setValueByIdAndKey = async (
+    id: string,
+    key: string,
+    value: StorageValue
+  ): Promise<Storage> => {
+    const { storage } = await pool.one<Connector>(sql`
+      update ${table}
+      set ${fields.storage} = coalesce(${fields.storage}, '{}'::jsonb) || ${sql.jsonb({
+      [key]: sql.jsonb(value).value,
+    })}
+      where ${fields.id} = ${id}
+      returning *;
+    `);
+
+    return storage;
+  };
+
+  const getValueByIdAndKey = async <T = Nullable<StorageValue>>(
+    id: string,
+    key: string
+  ): Promise<T> => {
+    const { value } = await pool.one<{ value: T }>(sql`
+      select ${fields.storage}->${key} as value
+      from ${table}
+      where ${fields.id} = ${id};
+    `);
+
+    return value;
+  };
 
   const deleteConnectorById = async (id: string) => {
     const { rowCount } = await pool.query(sql`
@@ -65,6 +97,8 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
     findAllConnectors,
     findConnectorById,
     countConnectorByConnectorId,
+    setValueByIdAndKey,
+    getValueByIdAndKey,
     deleteConnectorById,
     deleteConnectorByIds,
     insertConnector,

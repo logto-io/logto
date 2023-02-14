@@ -4,7 +4,9 @@ import { z } from 'zod';
 
 export {
   configurableConnectorMetadataGuard,
+  storageGuard,
   type ConfigurableConnectorMetadata,
+  type Storage,
 } from '@logto/connector-kit';
 
 /**
