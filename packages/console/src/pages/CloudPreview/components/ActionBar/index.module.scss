@@ -1,0 +1,12 @@
+.container {
+  height: 92px;
+  background-color: var(--color-layer-1);
+
+  > div {
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+  }
+}

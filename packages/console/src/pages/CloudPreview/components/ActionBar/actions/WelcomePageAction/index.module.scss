@@ -1,0 +1,5 @@
+@use '@/pages/CloudPreview/cloud-page-size.scss' as size;
+
+.container {
+  max-width: size.$questionnaire-content-width;
+}

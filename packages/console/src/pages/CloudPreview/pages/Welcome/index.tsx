@@ -1,4 +1,5 @@
-import { Controller, useForm } from 'react-hook-form';
+import { useContext } from 'react';
+import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Congrats from '@/assets/images/congrats.svg';
@@ -6,14 +7,17 @@ import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 
 import { CardSelector } from '../../components/CardSelector';
-import type { Questionnaire } from '../../types';
+import { CloudPreviewPageContext } from '../../containers/CloudPreviewPageProvider';
 import * as styles from './index.module.scss';
 import { deploymentTypeOptions, projectOptions } from './options';
 
 const Welcome = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    questionForm: { getControl },
+  } = useContext(CloudPreviewPageContext);
 
-  const { control } = useForm<Questionnaire>({ mode: 'onChange' });
+  const control = getControl();
 
   return (
     <OverlayScrollbar className={styles.welcome}>

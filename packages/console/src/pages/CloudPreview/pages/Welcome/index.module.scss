@@ -1,5 +1,5 @@
 @use '@/scss/underscore' as _;
-@use '../../cloud-page-size.scss' as size;
+@use '@/pages/CloudPreview/cloud-page-size.scss' as size;
 
 .welcome {
   flex: 1;
