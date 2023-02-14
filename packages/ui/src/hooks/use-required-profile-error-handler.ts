@@ -24,7 +24,11 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial, flow }: Options =
     () => ({
       'user.missing_profile': (error) => {
         const [, data] = validate(error.data, missingProfileErrorDataGuard);
+
+        // Required as a sign up method but missing in the user profile
         const missingProfile = data?.missingProfile[0];
+
+        // Required as a sign up method can be found in Social Identity (email / phone), but registered with a different account
         const registeredSocialIdentity = data?.registeredSocialIdentity;
 
         const linkSocialQueryString = linkSocial
@@ -43,18 +47,10 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial, flow }: Options =
             break;
           case MissingProfile.email:
           case MissingProfile.phone:
-            navigate(
-              {
-                pathname: `/${UserFlow.continue}/${missingProfile}`,
-                search: linkSocialQueryString,
-              },
-              { replace, state: { registeredSocialIdentity, flow } }
-            );
-            break;
           case MissingProfile.emailOrPhone:
             navigate(
               {
-                pathname: `/${UserFlow.continue}/email-or-phone/email`,
+                pathname: `/${UserFlow.continue}/${missingProfile}`,
                 search: linkSocialQueryString,
               },
               { replace, state: { registeredSocialIdentity, flow } }

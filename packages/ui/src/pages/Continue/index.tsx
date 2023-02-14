@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { MissingProfile } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useLocation, useParams } from 'react-router-dom';
 import { validate } from 'superstruct';
@@ -7,9 +7,8 @@ import ErrorPage from '@/pages/ErrorPage';
 import { UserFlow } from '@/types';
 import { continueFlowStateGuard } from '@/types/guard';
 
-import SetEmail from './SetEmail';
+import SetEmailOrPhone from './SetEmailOrPhone';
 import SetPassword from './SetPassword';
-import SetPhone from './SetPhone';
 import SetUsername from './SetUsername';
 
 type Parameters = {
@@ -26,20 +25,20 @@ const Continue = () => {
     data?.flow === UserFlow.signIn && 'description.continue_with_more_information'
   );
 
-  if (method === 'password') {
+  if (method === MissingProfile.password) {
     return <SetPassword notification={notification} />;
   }
 
-  if (method === SignInIdentifier.Username) {
+  if (method === MissingProfile.username) {
     return <SetUsername notification={notification} />;
   }
 
-  if (method === SignInIdentifier.Email) {
-    return <SetEmail notification={notification} />;
-  }
-
-  if (method === SignInIdentifier.Phone) {
-    return <SetPhone notification={notification} />;
+  if (
+    method === MissingProfile.email ||
+    method === MissingProfile.phone ||
+    method === MissingProfile.emailOrPhone
+  ) {
+    return <SetEmailOrPhone notification={notification} missingProfile={method} />;
   }
 
   return <ErrorPage />;
