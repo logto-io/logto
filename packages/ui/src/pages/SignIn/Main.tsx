@@ -1,12 +1,13 @@
-import type { ConnectorMetadata, SignInExperience } from '@logto/schemas';
+import type { SignIn, ConnectorMetadata } from '@logto/schemas';
 
 import SocialSignIn from '@/containers/SocialSignIn';
 
+import IdentifierSignInForm from './IdentifierSignInForm';
 import PasswordSignInForm from './PasswordSignInForm';
 import * as styles from './index.module.scss';
 
 type Props = {
-  signInMethods: SignInExperience['signIn']['methods'];
+  signInMethods: SignIn['methods'];
   socialConnectors: ConnectorMetadata[];
 };
 
@@ -29,8 +30,7 @@ const Main = ({ signInMethods, socialConnectors }: Props) => {
   }
 
   if (signInMethods.length > 0) {
-    // TODO: password or validation code signIn
-    return <div>Working In Progress</div>;
+    return <IdentifierSignInForm className={styles.main} signInMethods={signInMethods} />;
   }
 
   return null;

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
 
-import useSendVerificationCode from '@/hooks/use-send-verification-code';
+import useSendVerificationCode from '@/hooks/use-send-verification-code-legacy';
 import { UserFlow } from '@/types';
 import { registeredSocialIdentityStateGuard } from '@/types/guard';
 import { maskEmail } from '@/utils/format';

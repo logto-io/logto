@@ -4,9 +4,6 @@ import type {
   AppearanceMode,
   SignInIdentifier,
 } from '@logto/schemas';
-import type * as s from 'superstruct';
-
-import type { emailOrPhoneStateGuard } from './guard';
 
 export enum UserFlow {
   signIn = 'sign-in',
@@ -27,8 +24,6 @@ export type Platform = 'web' | 'mobile';
 export type Theme = 'dark' | 'light';
 
 export type VerificationCodeIdentifier = SignInIdentifier.Email | SignInIdentifier.Phone;
-
-export type EmailOrPhoneState = s.Infer<typeof emailOrPhoneStateGuard>;
 
 // Omit socialSignInConnectorTargets since it is being translated into socialConnectors
 export type SignInExperienceResponse = Omit<SignInExperience, 'socialSignInConnectorTargets'> & {

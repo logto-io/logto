@@ -1,4 +1,4 @@
-import type { SignInExperience } from '@logto/schemas';
+import type { SignInExperience, SignIn } from '@logto/schemas';
 import {
   BrandingStyle,
   ConnectorPlatform,
@@ -11,6 +11,7 @@ import type { SignInExperienceResponse } from '@/types';
 
 export const appLogo = 'https://avatars.githubusercontent.com/u/88327661?s=200&v=4';
 export const appHeadline = 'Build user identity in a modern way';
+
 export const socialConnectors = [
   {
     id: 'BE8QXN0VsrOH7xdWFDJZ9',
@@ -230,3 +231,58 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
     phone: true,
   },
 };
+
+const usernameSettings = {
+  identifier: SignInIdentifier.Username,
+  password: true,
+  verificationCode: false,
+  isPasswordPrimary: true,
+};
+
+export const mockSignInMethodSettingsTestCases: Array<SignIn['methods']> = [
+  [
+    usernameSettings,
+    {
+      identifier: SignInIdentifier.Email,
+      password: true,
+      verificationCode: true,
+      isPasswordPrimary: true,
+    },
+    {
+      identifier: SignInIdentifier.Phone,
+      password: true,
+      verificationCode: true,
+      isPasswordPrimary: true,
+    },
+  ],
+  [
+    usernameSettings,
+    {
+      identifier: SignInIdentifier.Email,
+      password: true,
+      verificationCode: true,
+      isPasswordPrimary: false,
+    },
+    {
+      identifier: SignInIdentifier.Phone,
+      password: true,
+      verificationCode: false,
+      isPasswordPrimary: false,
+    },
+  ],
+  [
+    usernameSettings,
+    {
+      identifier: SignInIdentifier.Email,
+      password: false,
+      verificationCode: true,
+      isPasswordPrimary: false,
+    },
+    {
+      identifier: SignInIdentifier.Phone,
+      password: false,
+      verificationCode: true,
+      isPasswordPrimary: false,
+    },
+  ],
+];

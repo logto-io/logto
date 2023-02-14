@@ -18,7 +18,6 @@ import PasswordRegisterWithUsername from './pages/PasswordRegisterWithUsername';
 import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 import SecondaryRegister from './pages/SecondaryRegister';
-import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
 import SignInPassword from './pages/SignInPassword';
 import SocialLanding from './pages/SocialLanding';
@@ -63,52 +62,57 @@ const App = () => {
         <AppBoundary>
           <Routes>
             <Route element={<AppContent />}>
-              <Route path="/" element={<Navigate replace to="/sign-in" />} />
-              <Route path="/sign-in/consent" element={<Consent />} />
+              <Route index element={<Navigate replace to="/sign-in" />} />
+
               <Route
-                path="/unknown-session"
+                path="unknown-session"
                 element={<ErrorPage message="error.invalid_session" />}
               />
 
+              <Route path="sign-in/consent" element={<Consent />} />
+
               <Route element={<LoadingLayerProvider />}>
                 {/* Sign-in */}
-                <Route
-                  path="/sign-in"
-                  element={isRegisterOnly ? <Navigate replace to="/register" /> : <SignIn />}
-                />
-                <Route path="/sign-in/social/:connectorId" element={<SocialSignIn />} />
-                <Route path="/sign-in/:method" element={<SecondarySignIn />} />
-                <Route path="/sign-in/:method/password" element={<SignInPassword />} />
+                <Route path="sign-in">
+                  <Route
+                    index
+                    element={isRegisterOnly ? <Navigate replace to="/register" /> : <SignIn />}
+                  />
+                  <Route path="password" element={<SignInPassword />} />
+                  <Route path="social/:connectorId" element={<SocialSignIn />} />
+                </Route>
 
                 {/* Register */}
-                <Route
-                  path="/register"
-                  element={isSignInOnly ? <Navigate replace to="/sign-in" /> : <Register />}
-                />
-                <Route
-                  path="/register/username/password"
-                  element={<PasswordRegisterWithUsername />}
-                />
-                <Route path="/register/:method" element={<SecondaryRegister />} />
+                <Route path="register">
+                  <Route
+                    index
+                    element={isSignInOnly ? <Navigate replace to="/sign-in" /> : <Register />}
+                  />
+                  <Route path="username/password" element={<PasswordRegisterWithUsername />} />
+                  <Route path=":method" element={<SecondaryRegister />} />
+                </Route>
 
                 {/* Forgot password */}
-                <Route path="/forgot-password/reset" element={<ResetPassword />} />
-                <Route path="/forgot-password/:method" element={<ForgotPassword />} />
+                <Route path="forgot-password">
+                  <Route path="reset" element={<ResetPassword />} />
+                  <Route path=":method" element={<ForgotPassword />} />
+                </Route>
 
                 {/* Continue set up missing profile */}
-                <Route
-                  path="/continue/email-or-phone/:method"
-                  element={<ContinueWithEmailOrPhone />}
-                />
-                <Route path="/continue/:method" element={<Continue />} />
+                <Route path="continue">
+                  <Route path="email-or-phone/:method" element={<ContinueWithEmailOrPhone />} />
+                  <Route path=":method" element={<Continue />} />
+                </Route>
+
+                {/* Passwordless verification code */}
+                <Route path=":flow/verification-code" element={<VerificationCode />} />
 
                 {/* Social sign-in pages */}
-                <Route path="/callback/:connectorId" element={<Callback />} />
-                <Route path="/social/link/:connectorId" element={<SocialLinkAccount />} />
-                <Route path="/social/landing/:connectorId" element={<SocialLanding />} />
-
-                {/* Always keep route path with param as the last one */}
-                <Route path="/:type/:method/verification-code" element={<VerificationCode />} />
+                <Route path="social">
+                  <Route path="link/:connectorId" element={<SocialLinkAccount />} />
+                  <Route path="landing/:connectorId" element={<SocialLanding />} />
+                </Route>
+                <Route path="callback/:connectorId" element={<Callback />} />
               </Route>
 
               <Route path="*" element={<ErrorPage />} />
