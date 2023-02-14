@@ -69,10 +69,8 @@ const translation = {
     social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing: 'İlgili bir hesap bulduk, hemen bağlayabilirsiniz.',
     reset_password: 'Şifre yenile',
-    reset_password_description_email:
-      'Hesabınızla ilişkili e-posta adresini girin, şifrenizi sıfırlamak için size doğrulama kodunu e-posta ile gönderelim.',
-    reset_password_description_phone:
-      'Hesabınızla ilişkili telefon numarasını girin, şifrenizi sıfırlamak için size doğrulama kodunu kısa mesajla gönderelim.',
+    reset_password_description:
+      'Enter the {{types, list(type: disjunction;)}} associated with your account, and we’ll send you the verification code to reset your password.', // UNTRANSLATED
     new_password: 'Yeni Şifre',
     set_password: 'Set password', // UNTRANSLATED
     password_changed: 'Password Changed', // UNTRANSLATED

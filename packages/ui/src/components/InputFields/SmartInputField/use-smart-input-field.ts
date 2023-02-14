@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo } from 'react';
 import type { ChangeEventHandler } from 'react';
 
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
+import { parseIdentifierValue } from '@/utils/form';
 
 export type IdentifierInputType =
   | SignInIdentifier.Email
@@ -15,15 +16,30 @@ export type EnabledIdentifierTypes = IdentifierInputType[];
 const digitsRegex = /^\d*$/;
 
 type Props = {
+  defaultValue?: string;
   onChange?: (value: string) => void;
   enabledTypes: EnabledIdentifierTypes;
   currentType: IdentifierInputType;
   onTypeChange?: (type: IdentifierInputType) => void;
 };
 
-const useSmartInputField = ({ onChange, currentType, enabledTypes, onTypeChange }: Props) => {
-  const [countryCode, setCountryCode] = useState<string>(getDefaultCountryCallingCode());
-  const [inputValue, setInputValue] = useState<string>('');
+const useSmartInputField = ({
+  onChange,
+  currentType,
+  enabledTypes,
+  onTypeChange,
+  defaultValue,
+}: Props) => {
+  const { countryCode: defaultCountryCode, inputValue: defaultInputValue } = parseIdentifierValue(
+    currentType,
+    defaultValue
+  );
+
+  const [countryCode, setCountryCode] = useState<string>(
+    defaultCountryCode ?? getDefaultCountryCallingCode()
+  );
+
+  const [inputValue, setInputValue] = useState<string>(defaultInputValue ?? '');
   const enabledTypeSet = useMemo(() => new Set(enabledTypes), [enabledTypes]);
 
   assert(

@@ -92,8 +92,8 @@ const App = () => {
 
                 {/* Forgot password */}
                 <Route path="forgot-password">
+                  <Route index element={<ForgotPassword />} />
                   <Route path="reset" element={<ResetPassword />} />
-                  <Route path=":method" element={<ForgotPassword />} />
                 </Route>
 
                 {/* Continue set up missing profile */}

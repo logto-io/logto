@@ -4,14 +4,18 @@ import TextLink from '@/components/TextLink';
 import { UserFlow } from '@/types';
 
 type Props = {
-  method: SignInIdentifier.Email | SignInIdentifier.Phone;
+  identifier: SignInIdentifier;
+  value: string;
   className?: string;
 };
 
-const ForgotPasswordLink = ({ method, className }: Props) => (
+const ForgotPasswordLink = ({ className, ...identifierData }: Props) => (
   <TextLink
     className={className}
-    to={`/${UserFlow.forgotPassword}/${method}`}
+    to={{
+      pathname: `/${UserFlow.forgotPassword}`,
+    }}
+    state={identifierData}
     text="action.forgot_password"
   />
 );

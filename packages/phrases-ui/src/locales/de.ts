@@ -70,10 +70,8 @@ const translation = {
     social_link_email_or_phone: 'Du kannst eine weitere Email oder Telefonnummer verknüpfen',
     social_bind_with_existing: 'Wir haben ein Konto gefunden, das du verknüpfen kannst.',
     reset_password: 'Passwort zurücksetzen',
-    reset_password_description_email:
-      'Gib die Email Adresse deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
-    reset_password_description_phone:
-      'Gib die Telefonnummer deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
+    reset_password_description:
+      'Gib die {{types, list(type: disjunction;)}} deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
     new_password: 'Neues Passwort',
     set_password: 'Passwort setzen',
     password_changed: 'Passwort geändert',

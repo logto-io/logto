@@ -67,10 +67,8 @@ const translation = {
     social_link_email_or_phone: '다른 이메일이나 휴대전화를 연동할 수 있어요',
     social_bind_with_existing: '관련된 계정을 찾았어요. 해당 계정과 연동할 수 있어요.',
     reset_password: '암호를 재설정',
-    reset_password_description_email:
-      '계정과 연결된 이메일 주소를 입력하면 비밀번호 재설정을 위한 인증 코드를 이메일로 보내드립니다.',
-    reset_password_description_phone:
-      '계정과 연결된 전화번호를 입력하면 비밀번호 재설정을 위한 인증 코드를 문자로 보내드립니다.',
+    reset_password_description:
+      'Enter the {{types, list(type: disjunction;)}} associated with your account, and we’ll send you the verification code to reset your password.', // UNTRANSLATED
     new_password: '새 비밀번호',
     set_password: '비밀번호 설정',
     password_changed: '비밀번호 변경됨',

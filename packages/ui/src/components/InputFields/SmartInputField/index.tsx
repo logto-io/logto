@@ -24,12 +24,15 @@ type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix' | 'value'> 
   enabledTypes?: EnabledIdentifierTypes;
   currentType?: IdentifierInputType;
   onTypeChange?: (type: IdentifierInputType) => void;
+
   value?: string;
+  defaultValue?: string;
   onChange?: (value: string) => void;
 };
 
 const SmartInputField = (
   {
+    defaultValue,
     onChange,
     currentType = SignInIdentifier.Username,
     enabledTypes = [currentType],
@@ -43,6 +46,7 @@ const SmartInputField = (
 
   const { countryCode, onCountryCodeChange, inputValue, onInputValueChange, onInputValueClear } =
     useSmartInputField({
+      defaultValue,
       onChange,
       enabledTypes,
       currentType,

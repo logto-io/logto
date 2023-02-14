@@ -106,9 +106,5 @@ export const parsePhoneNumber = (value: string) => {
       countryCallingCode: phoneNumber.countryCallingCode,
       nationalNumber: phoneNumber.nationalNumber,
     };
-  } catch {
-    return {
-      nationalNumber: value,
-    };
-  }
+  } catch {}
 };

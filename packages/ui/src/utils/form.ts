@@ -4,6 +4,7 @@ import type { TFuncKey } from 'react-i18next';
 
 import type { IdentifierInputType } from '@/components/InputFields';
 
+import { parsePhoneNumber } from './country-code';
 import { validateUsername, validateEmail, validatePhone } from './field-validations';
 
 const { t } = i18next;
@@ -37,13 +38,29 @@ export const getGeneralIdentifierErrorMessage = (
 
 export const validateIdentifierField = (type: IdentifierInputType, value: string) => {
   switch (type) {
-    case 'username':
+    case SignInIdentifier.Username:
       return validateUsername(value);
-
-    case 'email':
+    case SignInIdentifier.Email:
       return validateEmail(value);
-    case 'phone':
+    case SignInIdentifier.Phone:
       return validatePhone(value);
     default:
   }
+};
+
+export const parseIdentifierValue = (type: IdentifierInputType, value?: string) => {
+  if (type === SignInIdentifier.Phone && value) {
+    const validPhoneNumber = parsePhoneNumber(value);
+
+    if (validPhoneNumber) {
+      return {
+        countryCode: validPhoneNumber.countryCallingCode,
+        inputValue: validPhoneNumber.nationalNumber,
+      };
+    }
+  }
+
+  return {
+    inputValue: value,
+  };
 };
