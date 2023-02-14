@@ -2,7 +2,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import type { SignIn } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState, useCallback, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -40,9 +40,9 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   );
 
   const {
-    register,
     setValue,
     handleSubmit,
+    control,
     formState: { errors, isSubmitted },
   } = useForm<FormState>({
     reValidateMode: 'onChange',
@@ -68,16 +68,10 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <SmartInputField
-        autoComplete="new-identifier"
-        autoFocus={autoFocus}
-        className={styles.inputField}
-        currentType={inputType}
-        isDanger={!!errors.identifier || !!errorMessage}
-        errorMessage={errors.identifier?.message}
-        enabledTypes={enabledSignInMethods}
-        onTypeChange={setInputType}
-        {...register('identifier', {
+      <Controller
+        control={control}
+        name="identifier"
+        rules={{
           required: getGeneralIdentifierErrorMessage(enabledSignInMethods, 'required'),
           validate: (value) => {
             const errorMessage = validateIdentifierField(inputType, value);
@@ -86,11 +80,24 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
               ? getGeneralIdentifierErrorMessage(enabledSignInMethods, 'invalid')
               : true;
           },
-        })}
-        /* Overwrite default input onChange handler  */
-        onChange={(value) => {
-          setValue('identifier', value, { shouldValidate: isSubmitted, shouldDirty: true });
         }}
+        render={({ field }) => (
+          <SmartInputField
+            autoComplete="identifier"
+            autoFocus={autoFocus}
+            className={styles.inputField}
+            {...field}
+            currentType={inputType}
+            isDanger={!!errors.identifier || !!errorMessage}
+            errorMessage={errors.identifier?.message}
+            enabledTypes={enabledSignInMethods}
+            onTypeChange={setInputType}
+            /* Overwrite default input onChange handler  */
+            onChange={(value) => {
+              setValue('identifier', value, { shouldValidate: isSubmitted, shouldDirty: true });
+            }}
+          />
+        )}
       />
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
