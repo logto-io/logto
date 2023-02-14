@@ -4,19 +4,31 @@ import type { User } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { ClaimsParameterMember } from 'oidc-provider';
 
-export const claimToUserKey: Readonly<Record<UserClaim, keyof User>> = Object.freeze({
+export const claimToUserKey: Readonly<
+  Record<Exclude<UserClaim, 'email_verified' | 'phone_number_verified'>, keyof User>
+> = Object.freeze({
   name: 'name',
   picture: 'avatar',
   username: 'username',
   email: 'primaryEmail',
-  // LOG-4165: Change to proper key/function once profile fulfilling implemented
-  email_verified: 'primaryEmail',
   phone_number: 'primaryPhone',
-  // LOG-4165: Change to proper key/function once profile fulfilling implemented
-  phone_number_verified: 'primaryPhone',
   custom_data: 'customData',
   identities: 'identities',
 });
+
+export const getUserClaimData = (user: User, claim: UserClaim): unknown => {
+  // LOG-4165: Change to proper key/function once profile fulfilling implemented
+  if (claim === 'email_verified') {
+    return Boolean(user.primaryEmail);
+  }
+
+  // LOG-4165: Change to proper key/function once profile fulfilling implemented
+  if (claim === 'phone_number_verified') {
+    return Boolean(user.primaryPhone);
+  }
+
+  return user[claimToUserKey[claim]];
+};
 
 // Ignore `_claims` since [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter) is not enabled
 export const getUserClaims = (
