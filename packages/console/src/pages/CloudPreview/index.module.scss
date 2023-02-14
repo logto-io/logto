@@ -1,8 +1,16 @@
-@use '@/scss/underscore' as _;
-
 .cloudPreview {
   flex-grow: 1;
   overflow: hidden;
+}
+
+.page {
+  height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+
+.contentContainer {
+  flex: 1;
+  overflow-y: auto;
 }

@@ -1,11 +1,6 @@
 @use '@/scss/underscore' as _;
 @use '@/pages/CloudPreview/cloud-page-size.scss' as size;
 
-.welcome {
-  flex: 1;
-  overflow-y: auto;
-}
-
 .content {
   margin: 0 auto;
   max-width: size.$questionnaire-content-width;
