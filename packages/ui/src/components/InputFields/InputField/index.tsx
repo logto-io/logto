@@ -2,14 +2,13 @@ import classNames from 'classnames';
 import type { ForwardedRef, HTMLProps, ReactElement } from 'react';
 import { forwardRef, cloneElement } from 'react';
 
-import type { ErrorType } from '@/components/ErrorMessage';
 import ErrorMessage from '@/components/ErrorMessage';
 
 import * as styles from './index.module.scss';
 
 export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
   className?: string;
-  error?: ErrorType;
+  errorMessage?: string;
   isDanger?: boolean;
   prefix?: ReactElement;
   isPrefixVisible?: boolean;
@@ -21,7 +20,7 @@ export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
 const InputField = (
   {
     className,
-    error,
+    errorMessage,
     isDanger,
     prefix,
     suffix,
@@ -49,7 +48,7 @@ const InputField = (
           className: classNames([suffix.props.className, styles.suffix]),
         })}
     </div>
-    {error && <ErrorMessage error={error} className={styles.errorMessage} />}
+    {errorMessage && <ErrorMessage className={styles.errorMessage}>{errorMessage}</ErrorMessage>}
   </div>
 );
 

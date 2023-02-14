@@ -76,8 +76,6 @@ const useSocialSignInListener = (connectorId?: string) => {
 
   const signInWithSocialHandler = useCallback(
     async (connectorId: string, data: Record<string, unknown>) => {
-      console.log('triggered');
-
       const [error, result] = await asyncSignInWithSocial({
         connectorId,
         connectorData: {

@@ -34,7 +34,7 @@ describe('<SetPassword />', () => {
     expect(clearError).toBeCalled();
 
     await waitFor(() => {
-      expect(queryByText('password_required')).not.toBeNull();
+      expect(queryByText('error.password_required')).not.toBeNull();
     });
 
     expect(submit).not.toBeCalled();
@@ -54,7 +54,7 @@ describe('<SetPassword />', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('password_min_length')).not.toBeNull();
+      expect(queryByText('error.password_min_length')).not.toBeNull();
     });
 
     expect(submit).not.toBeCalled();
@@ -67,7 +67,7 @@ describe('<SetPassword />', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('password_min_length')).toBeNull();
+      expect(queryByText('error.password_min_length')).toBeNull();
     });
   });
 
@@ -90,7 +90,7 @@ describe('<SetPassword />', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('passwords_do_not_match')).not.toBeNull();
+      expect(queryByText('error.passwords_do_not_match')).not.toBeNull();
     });
 
     expect(submit).not.toBeCalled();
@@ -103,7 +103,7 @@ describe('<SetPassword />', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('passwords_do_not_match')).toBeNull();
+      expect(queryByText('error.passwords_do_not_match')).toBeNull();
     });
   });
 
@@ -125,7 +125,7 @@ describe('<SetPassword />', () => {
       fireEvent.submit(submitButton);
     });
 
-    expect(queryByText('passwords_do_not_match')).toBeNull();
+    expect(queryByText('error.passwords_do_not_match')).toBeNull();
 
     await waitFor(() => {
       expect(submit).toBeCalledWith('123456');

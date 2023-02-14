@@ -56,7 +56,7 @@ describe('PasswordSignInForm', () => {
 
       await waitFor(() => {
         expect(signInWithPasswordIdentifier).not.toBeCalled();
-        expect(queryByText('password_required')).not.toBeNull();
+        expect(queryByText('error.password_required')).not.toBeNull();
       });
 
       const passwordInput = container.querySelector('input[name="password"]');

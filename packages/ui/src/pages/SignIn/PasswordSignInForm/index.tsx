@@ -13,11 +13,7 @@ import TermsOfUse from '@/containers/TermsOfUse';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
-import {
-  identifierErrorWatcher,
-  passwordErrorWatcher,
-  validateIdentifierField,
-} from '@/utils/form';
+import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
 
@@ -76,33 +72,23 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     [clearErrorMessage, handleSubmit, inputType, onSubmit, termsValidation]
   );
 
-  const identifierError = identifierErrorWatcher(signInMethods, errors.identifier);
-  const passwordError = passwordErrorWatcher(errors.password);
-
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <SmartInputField
-        required
         autoComplete="identifier"
         autoFocus={autoFocus}
         className={styles.inputField}
         currentType={inputType}
-        isDanger={!!identifierError}
-        error={identifierError}
+        isDanger={!!errors.identifier}
+        errorMessage={errors.identifier?.message}
         enabledTypes={signInMethods}
         onTypeChange={setInputType}
         {...register('identifier', {
-          required: true,
+          required: getGeneralIdentifierErrorMessage(signInMethods, 'required'),
           validate: (value) => {
             const errorMessage = validateIdentifierField(inputType, value);
 
-            if (errorMessage) {
-              return typeof errorMessage === 'string'
-                ? t(`error.${errorMessage}`)
-                : t(`error.${errorMessage.code}`, errorMessage.data);
-            }
-
-            return true;
+            return errorMessage ? getGeneralIdentifierErrorMessage(signInMethods, 'invalid') : true;
           },
         })}
         /* Overwrite default input onChange handler  */
@@ -112,13 +98,12 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
       />
 
       <PasswordInputField
-        required
         className={styles.inputField}
         autoComplete="current-password"
         placeholder={t('input.password')}
-        isDanger={!!passwordError}
-        error={passwordError}
-        {...register('password', { required: true })}
+        isDanger={!!errors.password}
+        errorMessage={errors.password?.message}
+        {...register('password', { required: t('error.password_required') })}
       />
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
