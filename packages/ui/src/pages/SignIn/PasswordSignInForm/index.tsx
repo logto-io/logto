@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState, useCallback } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
@@ -46,6 +46,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     register,
     setValue,
     handleSubmit,
+    control,
     formState: { errors, isSubmitted },
   } = useForm<FormState>({
     reValidateMode: 'onChange',
@@ -72,27 +73,34 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <SmartInputField
-        autoComplete="identifier"
-        autoFocus={autoFocus}
-        className={styles.inputField}
-        currentType={inputType}
-        isDanger={!!errors.identifier}
-        errorMessage={errors.identifier?.message}
-        enabledTypes={signInMethods}
-        onTypeChange={setInputType}
-        {...register('identifier', {
+      <Controller
+        control={control}
+        name="identifier"
+        rules={{
           required: getGeneralIdentifierErrorMessage(signInMethods, 'required'),
           validate: (value) => {
             const errorMessage = validateIdentifierField(inputType, value);
 
             return errorMessage ? getGeneralIdentifierErrorMessage(signInMethods, 'invalid') : true;
           },
-        })}
-        /* Overwrite default input onChange handler  */
-        onChange={(value) => {
-          setValue('identifier', value, { shouldValidate: isSubmitted, shouldDirty: true });
         }}
+        render={({ field }) => (
+          <SmartInputField
+            autoComplete="identifier"
+            autoFocus={autoFocus}
+            className={styles.inputField}
+            {...field}
+            currentType={inputType}
+            isDanger={!!errors.identifier}
+            errorMessage={errors.identifier?.message}
+            enabledTypes={signInMethods}
+            onTypeChange={setInputType}
+            /* Overwrite default input onChange handler  */
+            onChange={(value) => {
+              setValue('identifier', value, { shouldValidate: isSubmitted, shouldDirty: true });
+            }}
+          />
+        )}
       />
 
       <PasswordInputField

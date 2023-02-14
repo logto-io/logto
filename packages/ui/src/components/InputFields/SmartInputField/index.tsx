@@ -16,7 +16,7 @@ import { getInputHtmlProps } from './utils';
 
 export type { IdentifierInputType, EnabledIdentifierTypes } from './use-smart-input-field';
 
-type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix'> & {
+type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix' | 'value'> & {
   className?: string;
   errorMessage?: string;
   isDanger?: boolean;
@@ -24,12 +24,12 @@ type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix'> & {
   enabledTypes?: EnabledIdentifierTypes;
   currentType?: IdentifierInputType;
   onTypeChange?: (type: IdentifierInputType) => void;
+  value?: string;
   onChange?: (value: string) => void;
 };
 
 const SmartInputField = (
   {
-    value,
     onChange,
     currentType = SignInIdentifier.Username,
     enabledTypes = [currentType],
