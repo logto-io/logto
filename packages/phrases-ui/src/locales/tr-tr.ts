@@ -9,8 +9,6 @@ const translation = {
     confirm_password: 'Şifreyi Doğrula',
   },
   secondary: {
-    sign_in_with: '{{methods, list(type: disjunction;)}} ile giriş yapınız',
-    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       'Hesabınız zaten var mı? {{methods, list(type: disjunction;)}} bağlantısına tıklayarak giriş yapabilirsiniz',
   },

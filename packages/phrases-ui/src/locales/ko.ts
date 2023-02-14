@@ -9,8 +9,6 @@ const translation = {
     confirm_password: '비밀번호 확인',
   },
   secondary: {
-    sign_in_with: '{{methods, list(type: disjunction;)}} 로그인',
-    register_with: '{{methods, list(type: disjunction;)}} 회원가입',
     social_bind_with:
       '이미 계정이 있으신가요? {{methods, list(type: disjunction;)}}로 로그인 해보세요!',
   },

@@ -6,41 +6,34 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
-import ForgotPasswordLink from '@/components/ForgotPasswordLink';
 import type { IdentifierInputType } from '@/components/InputFields';
-import { SmartInputField, PasswordInputField } from '@/components/InputFields';
+import { SmartInputField } from '@/components/InputFields';
 import TermsOfUse from '@/containers/TermsOfUse';
-import usePasswordSignIn from '@/hooks/use-password-sign-in';
-import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
+import useOnSubmit from './use-on-submit';
 
 type Props = {
   className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   autoFocus?: boolean;
-  signInMethods: SignInIdentifier[];
+  signUpMethods: SignInIdentifier[];
 };
 
 type FormState = {
   identifier: string;
-  password: string;
 };
 
-const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
+const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) => {
   const { t } = useTranslation();
-
   const { termsValidation } = useTerms();
-  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
-  const { getEnabledRetrievePasswordIdentifier } = useForgotPasswordSettings();
-
   const [inputType, setInputType] = useState<IdentifierInputType>(
-    signInMethods[0] ?? SignInIdentifier.Username
+    signUpMethods[0] ?? SignInIdentifier.Username
   );
 
-  const forgotPasswordIdentifier = getEnabledRetrievePasswordIdentifier(inputType);
+  const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
   const {
     register,
@@ -49,22 +42,19 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     formState: { errors, isSubmitted },
   } = useForm<FormState>({
     reValidateMode: 'onChange',
-    defaultValues: { identifier: '', password: '' },
+    defaultValues: { identifier: '' },
   });
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ identifier, password }, event) => {
+      void handleSubmit(async ({ identifier }, event) => {
         if (!(await termsValidation())) {
           return;
         }
 
-        await onSubmit({
-          [inputType]: identifier,
-          password,
-        });
+        await onSubmit(inputType, identifier);
       })(event);
     },
     [clearErrorMessage, handleSubmit, inputType, onSubmit, termsValidation]
@@ -73,20 +63,27 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <SmartInputField
-        autoComplete="identifier"
+        required
+        autoComplete="new-identifier"
         autoFocus={autoFocus}
         className={styles.inputField}
         currentType={inputType}
-        isDanger={!!errors.identifier}
+        isDanger={!!errors.identifier || !!errorMessage}
         errorMessage={errors.identifier?.message}
-        enabledTypes={signInMethods}
+        enabledTypes={signUpMethods}
         onTypeChange={setInputType}
         {...register('identifier', {
-          required: getGeneralIdentifierErrorMessage(signInMethods, 'required'),
+          required: getGeneralIdentifierErrorMessage(signUpMethods, 'required'),
           validate: (value) => {
             const errorMessage = validateIdentifierField(inputType, value);
 
-            return errorMessage ? getGeneralIdentifierErrorMessage(signInMethods, 'invalid') : true;
+            if (errorMessage) {
+              return typeof errorMessage === 'string'
+                ? t(`error.${errorMessage}`)
+                : t(`error.${errorMessage.code}`, errorMessage.data);
+            }
+
+            return true;
           },
         })}
         /* Overwrite default input onChange handler  */
@@ -95,28 +92,15 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         }}
       />
 
-      <PasswordInputField
-        className={styles.inputField}
-        autoComplete="current-password"
-        placeholder={t('input.password')}
-        isDanger={!!errors.password}
-        errorMessage={errors.password?.message}
-        {...register('password', { required: t('error.password_required') })}
-      />
-
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
-
-      {forgotPasswordIdentifier && (
-        <ForgotPasswordLink className={styles.link} method={forgotPasswordIdentifier} />
-      )}
 
       <TermsOfUse className={styles.terms} />
 
-      <Button name="submit" title="action.sign_in" htmlType="submit" />
+      <Button name="submit" title="action.create_account" htmlType="submit" />
 
       <input hidden type="submit" />
     </form>
   );
 };
 
-export default PasswordSignInForm;
+export default IdentifierRegisterForm;

@@ -7,8 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { sendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import type { VerificationCodeIdentifier } from '@/types';
-import { UserFlow } from '@/types';
+import type { VerificationCodeIdentifier, UserFlow } from '@/types';
 
 const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) => {
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -28,7 +27,7 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
 
   const onSubmit = useCallback(
     async ({ identifier, value }: Payload) => {
-      const [error, result] = await asyncSendVerificationCode(UserFlow.signIn, {
+      const [error, result] = await asyncSendVerificationCode(flow, {
         [identifier]: value,
       });
 
@@ -57,7 +56,7 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
         );
       }
     },
-    [asyncSendVerificationCode, handleError, navigate, replaceCurrentPage]
+    [asyncSendVerificationCode, flow, handleError, navigate, replaceCurrentPage]
   );
 
   return {

@@ -54,7 +54,6 @@ const SetPassword = ({
 
       void handleSubmit((data, event) => {
         onSubmit(data.newPassword);
-        event?.preventDefault();
       })(event);
     },
     [clearErrorMessage, handleSubmit, onSubmit]

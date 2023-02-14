@@ -3,7 +3,6 @@ import type { SignIn } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -28,7 +27,6 @@ type FormState = {
 };
 
 const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
-  const { t } = useTranslation();
   const { termsValidation } = useTerms();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
 
@@ -53,10 +51,10 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
+      clearErrorMessage();
+
       void handleSubmit(async ({ identifier }, event) => {
         event?.preventDefault();
-
-        clearErrorMessage();
 
         if (!(await termsValidation())) {
           return;
@@ -71,7 +69,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <SmartInputField
-        autoComplete="identifier"
+        autoComplete="new-identifier"
         autoFocus={autoFocus}
         className={styles.inputField}
         currentType={inputType}

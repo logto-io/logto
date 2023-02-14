@@ -9,8 +9,6 @@ const translation = {
     confirm_password: '确认密码',
   },
   secondary: {
-    sign_in_with: '通过 {{methods, list(type: disjunction;), zhOrSpaces}} 登录',
-    register_with: '通过 {{methods, list(type: disjunction;)}} 注册',
     social_bind_with:
       '绑定到已有账户? 使用 {{methods, list(type: disjunction;), zhOrSpaces}} 登录并绑定。',
   },
