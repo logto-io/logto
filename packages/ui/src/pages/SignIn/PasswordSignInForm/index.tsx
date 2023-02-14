@@ -57,8 +57,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
       clearErrorMessage();
 
       void handleSubmit(async ({ identifier, password }, event) => {
-        event?.preventDefault();
-
         if (!(await termsValidation())) {
           return;
         }

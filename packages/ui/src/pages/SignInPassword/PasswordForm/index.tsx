@@ -50,8 +50,6 @@ const PasswordForm = ({
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
-      event?.preventDefault();
-
       clearErrorMessage();
 
       void handleSubmit(async ({ password }, event) => {

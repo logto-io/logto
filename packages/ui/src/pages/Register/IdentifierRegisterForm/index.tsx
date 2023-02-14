@@ -50,8 +50,6 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
       clearErrorMessage();
 
       void handleSubmit(async ({ identifier }, event) => {
-        event?.preventDefault();
-
         if (!(await termsValidation())) {
           return;
         }
