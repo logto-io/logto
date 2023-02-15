@@ -5,7 +5,7 @@ import Congrats from '@/assets/images/congrats.svg';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
-import * as pageLayout from '@/pages/CloudPreview/index.module.scss';
+import * as pageLayout from '@/pages/CloudPreview/layout.module.scss';
 
 import ActionBar from '../../components/ActionBar';
 import { CardSelector } from '../../components/CardSelector';
