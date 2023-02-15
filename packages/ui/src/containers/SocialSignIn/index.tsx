@@ -1,5 +1,4 @@
 import TermsOfUse from '@/containers/TermsOfUse';
-import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import useSocial from '@/hooks/use-social';
 
 import SocialSignInList from './SocialSignInList';
@@ -11,7 +10,6 @@ type Props = {
 
 const SocialSignIn = ({ className }: Props) => {
   const { socialConnectors } = useSocial();
-  useNativeMessageListener();
 
   return (
     <>
