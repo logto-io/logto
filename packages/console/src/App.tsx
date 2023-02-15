@@ -12,28 +12,20 @@ import './scss/overlayscrollbars.scss';
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
 import AppLoading from '@/components/AppLoading';
-
 import Toast from '@/components/Toast';
-
 import { managementApi, meApi } from '@/consts/management-api';
-
 import AppBoundary from '@/containers/AppBoundary';
-
 import AppLayout from '@/containers/AppLayout';
 import ErrorBoundary from '@/containers/ErrorBoundary';
 import useSwrOptions from '@/hooks/use-swr-options';
-
 import initI18n from '@/i18n/init';
-
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
 import ApiResources from '@/pages/ApiResources';
 import ApplicationDetails from '@/pages/ApplicationDetails';
 import Applications from '@/pages/Applications';
 import AuditLogDetails from '@/pages/AuditLogDetails';
 import AuditLogs from '@/pages/AuditLogs';
-
 import Callback from '@/pages/Callback';
-
 import ConnectorDetails from '@/pages/ConnectorDetails';
 import Connectors from '@/pages/Connectors';
 import Dashboard from '@/pages/Dashboard';

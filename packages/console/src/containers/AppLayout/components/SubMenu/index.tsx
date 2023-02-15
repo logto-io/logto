@@ -47,10 +47,7 @@ const SubMenu = <T extends string>({
       onKeyDown={onKeyDownHandler(() => {
         setShowMenu(true);
       })}
-      onMouseEnter={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-
+      onMouseEnter={() => {
         window.clearTimeout(mouseLeaveTimeoutRef.current);
         // eslint-disable-next-line @silverhand/fp/no-mutation
         mouseEnterTimeoutRef.current = window.setTimeout(() => {

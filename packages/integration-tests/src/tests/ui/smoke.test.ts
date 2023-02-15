@@ -80,7 +80,13 @@ describe('smoke testing', () => {
     expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
 
     const userElement = await page.waitForSelector('div[class$=topbar] > div:last-child');
-    const usernameString = await userElement.$eval('div > div', (element) => element.textContent);
+    await userElement.click();
+
+    const userMenu = await page.waitForSelector('.ReactModalPortal div[class$=dropdownContainer]');
+    const usernameString = await userMenu.$eval(
+      'div[class$=nameWrapper] > div[class$=name]',
+      (element) => element.textContent
+    );
     expect(usernameString).toBe(consoleUsername);
   });
 
