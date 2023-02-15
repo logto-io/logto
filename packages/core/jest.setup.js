@@ -5,7 +5,7 @@
 import { createMockUtils } from '@logto/shared/esm';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual, mockEsmDefault } = createMockUtils(jest);
+const { mockEsm, mockEsmDefault } = createMockUtils(jest);
 
 process.env.DB_URL = 'postgres://mock.db.url';
 process.env.ENDPOINT = 'https://logto.test';
@@ -28,16 +28,6 @@ mockEsmDefault('#src/env-set/oidc.js', () => () => ({
   publicJwks: [],
 }));
 /* End */
-
-await mockEsmWithActual('#src/env-set/index.js', () => ({
-  MountedApps: {
-    Api: 'api',
-    Oidc: 'oidc',
-    Console: 'console',
-    DemoApp: 'demo-app',
-    Welcome: 'welcome',
-  },
-}));
 
 // Logger is not considered in all test cases
 // eslint-disable-next-line unicorn/consistent-function-scoping

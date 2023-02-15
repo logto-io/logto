@@ -1,6 +1,4 @@
-import { adminTenantId } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
-import { trySafe } from '@silverhand/essentials';
 import type { PostgreSql } from '@withtyped/postgres';
 import type { QueryClient } from '@withtyped/server';
 import type { DatabasePool } from 'slonik';
@@ -14,6 +12,7 @@ import createPool from './create-pool.js';
 import createQueryClient from './create-query-client.js';
 import loadOidcValues from './oidc.js';
 import { throwNotLoadedError } from './throw-errors.js';
+import { getTenantEndpoint } from './utils.js';
 
 /** Apps (also paths) for user tenants. */
 export enum UserApps {
@@ -28,21 +27,6 @@ export enum AdminApps {
   Console = 'console',
   Welcome = 'welcome',
 }
-
-const getTenantEndpoint = (id: string) => {
-  const { urlSet, adminUrlSet, isDomainBasedMultiTenancy } = EnvSet.values;
-  const adminUrl = trySafe(() => adminUrlSet.endpoint);
-
-  if (adminUrl && id === adminTenantId) {
-    return adminUrl;
-  }
-
-  if (!isDomainBasedMultiTenancy) {
-    return urlSet.endpoint;
-  }
-
-  return urlSet.endpoint.replace('*', id);
-};
 
 export class EnvSet {
   static values = new GlobalValues();
@@ -109,7 +93,9 @@ export class EnvSet {
     const { getOidcConfigs } = createLogtoConfigLibrary(createLogtoConfigQueries(pool));
 
     const oidcConfigs = await getOidcConfigs();
-    const endpoint = getTenantEndpoint(this.tenantId);
+    const endpoint = getTenantEndpoint(this.tenantId, EnvSet.values);
     this.#oidc = await loadOidcValues(appendPath(endpoint, '/oidc').toString(), oidcConfigs);
   }
 }
+
+export { getTenantEndpoint } from './utils.js';

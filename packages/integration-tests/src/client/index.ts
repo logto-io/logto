@@ -3,6 +3,7 @@ import LogtoClient from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
 import { assert } from '@silverhand/essentials';
+import type { Got } from 'got';
 import { got } from 'got';
 
 import { consent, submitInteraction } from '#src/api/index.js';
@@ -18,22 +19,24 @@ export const defaultConfig = {
 export default class MockClient {
   public rawCookies: string[] = [];
 
+  protected readonly config: LogtoConfig;
+
   private navigateUrl?: string;
   private readonly storage: MemoryStorage;
   private readonly logto: LogtoClient;
+  private readonly api: Got;
 
   constructor(config?: Partial<LogtoConfig>) {
     this.storage = new MemoryStorage();
+    this.config = { ...defaultConfig, ...config };
+    this.api = got.extend({ prefixUrl: this.config.endpoint + '/api' });
 
-    this.logto = new LogtoClient(
-      { ...defaultConfig, ...config },
-      {
-        navigate: (url: string) => {
-          this.navigateUrl = url;
-        },
-        storage: this.storage,
-      }
-    );
+    this.logto = new LogtoClient(this.config, {
+      navigate: (url: string) => {
+        this.navigateUrl = url;
+      },
+      storage: this.storage,
+    });
   }
 
   // TODO: Rename to sessionCookies or something accurate
@@ -62,7 +65,7 @@ export default class MockClient {
 
     assert(this.navigateUrl, new Error('Unable to navigate to sign in uri'));
     assert(
-      this.navigateUrl.startsWith(`${logtoUrl}/oidc/auth`),
+      this.navigateUrl.startsWith(`${this.config.endpoint}/oidc/auth`),
       new Error('Unable to navigate to sign in uri')
     );
 
@@ -84,7 +87,10 @@ export default class MockClient {
 
   public async processSession(redirectTo: string) {
     // Note: should redirect to OIDC auth endpoint
-    assert(redirectTo.startsWith(`${logtoUrl}/oidc/auth`), new Error('SignIn or Register failed'));
+    assert(
+      redirectTo.startsWith(`${this.config.endpoint}/oidc/auth`),
+      new Error('SignIn or Register failed')
+    );
 
     const authResponse = await got.get(redirectTo, {
       headers: {
@@ -149,7 +155,7 @@ export default class MockClient {
   }
 
   public async submitInteraction() {
-    return submitInteraction(this.interactionCookie);
+    return submitInteraction(this.api, this.interactionCookie);
   }
 
   private readonly consent = async () => {
@@ -157,10 +163,10 @@ export default class MockClient {
     assert(this.interactionCookie, new Error('Session not found'));
     assert(this.interactionCookie.includes('_session.sig'), new Error('Session not found'));
 
-    const { redirectTo } = await consent(this.interactionCookie);
+    const { redirectTo } = await consent(this.api, this.interactionCookie);
 
     // Note: should redirect to oidc auth endpoint
-    assert(redirectTo.startsWith(`${logtoUrl}/oidc/auth`), new Error('Consent failed'));
+    assert(redirectTo.startsWith(`${this.config.endpoint}/oidc/auth`), new Error('Consent failed'));
 
     const authCodeResponse = await got.get(redirectTo, {
       headers: {

@@ -3,7 +3,8 @@ import { ConnectorType } from '@logto/connector-kit';
 import { adminConsoleApplicationId, adminTenantId } from '@logto/schemas';
 import etag from 'etag';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { getApplicationIdFromInteraction } from '#src/libraries/session.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
@@ -18,8 +19,12 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
 
   if (id === adminTenantId) {
     router.get('/.well-known/endpoints/:tenantId', async (ctx, next) => {
+      if (!ctx.params.tenantId) {
+        throw new RequestError('request.invalid_input');
+      }
+
       ctx.body = {
-        user: EnvSet.values.urlSet.endpoint.replace('*', ctx.params.tenantId ?? '*'),
+        user: getTenantEndpoint(ctx.params.tenantId, EnvSet.values),
       };
 
       return next();

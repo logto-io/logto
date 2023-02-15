@@ -719,7 +719,6 @@ importers:
       color: ^4.2.3
       eslint: ^8.21.0
       jest: ^29.0.3
-      jest-matcher-specific-error: ^1.0.0
       lint-staged: ^13.0.0
       nanoid: ^4.0.0
       postcss: ^8.4.6
@@ -746,7 +745,6 @@ importers:
       '@types/react': 18.0.26
       eslint: 8.21.0
       jest: 29.3.1_@types+node@18.11.18
-      jest-matcher-specific-error: 1.0.0
       lint-staged: 13.0.0
       postcss: 8.4.18
       prettier: 2.8.1
