@@ -95,13 +95,13 @@ const App = () => {
                   <Route path="reset" element={<ResetPassword />} />
                 </Route>
 
+                {/* Passwordless verification code */}
+                <Route path=":flow/verification-code" element={<VerificationCode />} />
+
                 {/* Continue set up missing profile */}
                 <Route path="continue">
                   <Route path=":method" element={<Continue />} />
                 </Route>
-
-                {/* Passwordless verification code */}
-                <Route path=":flow/verification-code" element={<VerificationCode />} />
 
                 {/* Social sign-in pages */}
                 <Route path="social">
