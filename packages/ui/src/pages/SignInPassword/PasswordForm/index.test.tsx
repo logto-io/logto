@@ -7,6 +7,7 @@ import {
   putInteraction,
   sendVerificationCode,
 } from '@/apis/interaction';
+import { UserFlow } from '@/types';
 
 import PasswordForm from '.';
 
@@ -89,7 +90,7 @@ describe('PasswordSignInForm', () => {
 
         expect(mockedNavigate).toBeCalledWith(
           {
-            pathname: 'verification-code',
+            pathname: `/${UserFlow.signIn}/verification-code`,
             search: '',
           },
           {
