@@ -12,20 +12,28 @@ import './scss/overlayscrollbars.scss';
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
 import AppLoading from '@/components/AppLoading';
+
 import Toast from '@/components/Toast';
+
 import { managementApi, meApi } from '@/consts/management-api';
+
 import AppBoundary from '@/containers/AppBoundary';
+
 import AppLayout from '@/containers/AppLayout';
 import ErrorBoundary from '@/containers/ErrorBoundary';
 import useSwrOptions from '@/hooks/use-swr-options';
+
 import initI18n from '@/i18n/init';
+
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
 import ApiResources from '@/pages/ApiResources';
 import ApplicationDetails from '@/pages/ApplicationDetails';
 import Applications from '@/pages/Applications';
 import AuditLogDetails from '@/pages/AuditLogDetails';
 import AuditLogs from '@/pages/AuditLogs';
+
 import Callback from '@/pages/Callback';
+
 import ConnectorDetails from '@/pages/ConnectorDetails';
 import Connectors from '@/pages/Connectors';
 import Dashboard from '@/pages/Dashboard';
@@ -54,6 +62,7 @@ import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings'
 import CloudPreview from './pages/CloudPreview';
 import CloudPreviewWelcome from './pages/CloudPreview/pages/Welcome';
 import { CloudPreviewPage } from './pages/CloudPreview/types';
+import Profile from './pages/Profile';
 import RolePermissions from './pages/RoleDetails/RolePermissions';
 import RoleSettings from './pages/RoleDetails/RoleSettings';
 import RoleUsers from './pages/RoleDetails/RoleUsers';
@@ -154,6 +163,7 @@ const Main = () => {
                   </Route>
                 </Route>
                 <Route path="settings" element={<Settings />} />
+                <Route path="profile" element={<Profile />} />
               </Route>
             </Route>
           </Routes>
@@ -171,7 +181,12 @@ const App = () => (
           endpoint: adminTenantEndpoint,
           appId: adminConsoleApplicationId,
           resources: [managementApi.indicator, meApi.indicator],
-          scopes: [UserScope.Identities, UserScope.CustomData, managementApi.scopeAll],
+          scopes: [
+            UserScope.Email,
+            UserScope.Identities,
+            UserScope.CustomData,
+            managementApi.scopeAll,
+          ],
         }}
       >
         <Main />

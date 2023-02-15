@@ -56,7 +56,7 @@ describe('smoke testing', () => {
     await page.waitForTimeout(500);
 
     const signOutButton = await page.waitForSelector(
-      '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownItem]'
+      '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownItem]:last-child'
     );
     const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
     await signOutButton.click();

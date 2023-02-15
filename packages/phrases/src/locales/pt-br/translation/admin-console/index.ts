@@ -12,6 +12,7 @@ import general from './general.js';
 import get_started from './get-started.js';
 import log_details from './log-details.js';
 import logs from './logs.js';
+import menu from './menu.js';
 import permissions from './permissions.js';
 import role_details from './role-details.js';
 import roles from './roles.js';
@@ -26,10 +27,10 @@ import welcome from './welcome.js';
 
 const admin_console = {
   title: 'Admin Console',
-  sign_out: 'Sair',
   profile: 'Perfil',
   admin_user: 'Administrador',
   system_app: 'Sistema',
+  menu,
   general,
   errors,
   tab_sections,

@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  padding: _.unit(5) 0;
+}

@@ -1,0 +1,57 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: _.unit(2.5) _.unit(4);
+  font: var(--font-body-2);
+  border-radius: _.unit(2);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-hover);
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-secondary);
+}
+
+.title {
+  font: var(--font-body-2);
+  margin-left: _.unit(4);
+}
+
+.menu {
+  position: absolute;
+  top: -4px;
+  right: calc(100% + 5px);
+  display: none;
+  background: var(--color-float);
+  border: 1px solid var(--color-divider);
+  border-radius: _.unit(2);
+
+  &.visible {
+    display: block;
+  }
+}
+
+.menuOption {
+  position: relative;
+  min-width: 200px;
+  padding: _.unit(2.5) _.unit(5.5) _.unit(2.5) _.unit(8);
+  margin: _.unit(1);
+
+  &.selected {
+    color: var(--color-text-link);
+  }
+
+  .tick {
+    position: absolute;
+    left: 8px;
+    top: 10px;
+  }
+}

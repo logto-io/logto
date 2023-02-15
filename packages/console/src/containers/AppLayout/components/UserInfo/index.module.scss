@@ -17,37 +17,46 @@
   &.active {
     background-color: var(--color-focused-variant);
   }
+}
 
-  .avatar {
-    width: 36px;
-    height: 36px;
-    margin-right: _.unit(2);
-    border-radius: 6px;
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+}
+
+.nameWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: _.unit(3);
+
+  .name {
+    font: var(--font-label-2);
+    color: var(--color-text);
   }
 
-  .wrapper {
-    display: flex;
-    flex-direction: column;
-
-    .name {
-      font: var(--font-label-2);
-      color: var(--color-text);
-    }
-
-    .role {
-      font: var(--font-body-3);
-      color: var(--color-text-secondary);
-    }
+  .email {
+    font: var(--font-body-3);
+    color: var(--color-text-secondary);
   }
 }
 
 .dropdown {
-  padding: _.unit(1);
+  min-width: 320px;
+
+  .userInfo {
+    display: flex;
+    align-items: center;
+    padding: _.unit(4) _.unit(5);
+    user-select: none;
+    cursor: default;
+  }
 }
 
 .dropdownItem {
   min-width: 170px;
-  padding: _.unit(2.5) _.unit(2);
+  padding: _.unit(2.5) _.unit(4);
+  margin: _.unit(1);
 
   &.loading {
     opacity: 60%;
@@ -58,11 +67,16 @@
     }
   }
 
-  .signOutIcon {
+  .icon {
     color: var(--color-text-secondary);
   }
 
   .spinner {
     margin-left: _.unit(6);
   }
+}
+
+.divider {
+  height: 0;
+  border-bottom: 1px solid var(--color-divider);
 }
