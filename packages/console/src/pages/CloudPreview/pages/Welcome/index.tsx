@@ -1,5 +1,6 @@
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import Congrats from '@/assets/images/congrats.svg';
 import Button from '@/components/Button';
@@ -10,11 +11,14 @@ import * as pageLayout from '@/pages/CloudPreview/layout.module.scss';
 import ActionBar from '../../components/ActionBar';
 import { CardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
+import { CloudPreviewPage } from '../../types';
+import { getPreviewPagePathname } from '../../utils';
 import * as styles from './index.module.scss';
 import { deploymentTypeOptions, projectOptions } from './options';
 
 const Welcome = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -24,14 +28,17 @@ const Welcome = () => {
   const onSubmit = handleSubmit(async (formData) => {
     // TODO @xiaoyijun send data to the backend
     console.log(formData);
-
-    // TODO @xiaoyijun navigate to the about users page
   });
+
+  const onNext = async () => {
+    await onSubmit();
+    navigate(getPreviewPagePathname(CloudPreviewPage.About));
+  };
 
   return (
     <div className={pageLayout.page}>
       <OverlayScrollbar className={pageLayout.contentContainer}>
-        <div className={styles.content}>
+        <div className={pageLayout.content}>
           <Congrats className={styles.congrats} />
           <div className={styles.title}>{t('cloud_preview.welcome.title')}</div>
           <div className={styles.description}>{t('cloud_preview.welcome.description')}</div>
@@ -80,7 +87,7 @@ const Welcome = () => {
           title="general.next"
           type="primary"
           disabled={isSubmitting || !isValid}
-          onClick={onSubmit}
+          onClick={onNext}
         />
       </ActionBar>
     </div>

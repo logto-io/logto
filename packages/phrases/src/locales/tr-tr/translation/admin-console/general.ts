@@ -2,6 +2,7 @@ const general = {
   placeholder: 'Placeholder',
   skip: 'Geç',
   next: 'Sonraki',
+  back: 'Back', // UNTRANSLATED
   retry: 'Tekrar Deneyin',
   done: 'Bitti',
   search: 'Ara',

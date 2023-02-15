@@ -2,6 +2,7 @@ const general = {
   placeholder: 'Placeholder',
   skip: 'Pular',
   next: 'Próximo',
+  back: 'Back', // UNTRANSLATED
   retry: 'Tente novamente',
   done: 'Feito',
   search: 'Buscar',

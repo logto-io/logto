@@ -9,6 +9,26 @@ const cloud_preview = {
     deployment_type_field: 'Prefer open-source or cloud?', // UNTRANSLATED
     deployment_type_opensource: 'Opensource', // UNTRANSLATED
     deployment_type_cloud: 'Cloud', // UNTRANSLATED
+  },
+  about: {
+    title: 'A little bit about you', // UNTRANSLATED
+    description:
+      'Let‘s make your Logto experience unique to you by getting to know you better. Your information is safe with us.', // UNTRANSLATED
+    title_field: 'Your title', // UNTRANSLATED
+    title_developer: 'Developer', // UNTRANSLATED
+    title_team_lead: 'Team Lead', // UNTRANSLATED
+    title_ceo: 'CEO', // UNTRANSLATED
+    title_cto: 'CTO', // UNTRANSLATED
+    title_product: 'Product', // UNTRANSLATED
+    title_others: 'Others', // UNTRANSLATED
+    company_name_field: 'Company name', // UNTRANSLATED
+    company_name_placeholder: 'Acme.co', // UNTRANSLATED
+    company_size_field: 'How’s your company size?', // UNTRANSLATED
+    company_size_1: '1', // UNTRANSLATED
+    company_size_1_49: '1-49', // UNTRANSLATED
+    company_size_50_199: '50-199', // UNTRANSLATED
+    company_size_200_999: '200-999', // UNTRANSLATED
+    company_size_1000_plus: '1000+', // UNTRANSLATED
     reason_field: 'I’m signing up because', // UNTRANSLATED
     reason_adoption: 'Implementing new tech infra for early projects', // UNTRANSLATED
     reason_replacement: 'Seeking a replacement for the current authentication system', // UNTRANSLATED

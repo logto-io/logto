@@ -2,6 +2,7 @@ const general = {
   placeholder: '플레이스홀더',
   skip: '건너뛰기',
   next: '다음',
+  back: 'Back', // UNTRANSLATED
   retry: '재시도',
   done: '완료',
   search: '검색',

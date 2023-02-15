@@ -2,6 +2,7 @@ const general = {
   placeholder: 'Placeholder',
   skip: 'Skip',
   next: 'Next',
+  back: 'Back',
   retry: 'Try Again',
   done: 'Done',
   search: 'Search',

@@ -51,6 +51,7 @@ import AppContent from './containers/AppContent';
 import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
 import CloudPreview from './pages/CloudPreview';
+import CloudPreviewAbout from './pages/CloudPreview/pages/About';
 import CloudPreviewWelcome from './pages/CloudPreview/pages/Welcome';
 import { CloudPreviewPage } from './pages/CloudPreview/types';
 import RolePermissions from './pages/RoleDetails/RolePermissions';
@@ -78,6 +79,7 @@ const Main = () => {
               <Route path="cloud-preview" element={<CloudPreview />}>
                 <Route index element={<Navigate replace to={CloudPreviewPage.Welcome} />} />
                 <Route path={CloudPreviewPage.Welcome} element={<CloudPreviewWelcome />} />
+                <Route path={CloudPreviewPage.About} element={<CloudPreviewAbout />} />
               </Route>
               <Route element={<AppContent />}>
                 <Route path="*" element={<NotFound />} />
