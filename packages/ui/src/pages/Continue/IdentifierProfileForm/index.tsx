@@ -40,10 +40,9 @@ const IdentifierProfileForm = ({
   const [inputType, setInputType] = useState<IdentifierInputType>(defaultType);
 
   const {
-    setValue,
     handleSubmit,
     control,
-    formState: { errors, isSubmitted },
+    formState: { errors },
   } = useForm<FormState>({
     reValidateMode: 'onChange',
     defaultValues: { identifier: '' },
@@ -92,10 +91,6 @@ const IdentifierProfileForm = ({
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledTypes}
             onTypeChange={setInputType}
-            /* Overwrite default input onChange handler  */
-            onChange={(value) => {
-              setValue('identifier', value, { shouldValidate: isSubmitted, shouldDirty: true });
-            }}
           />
         )}
       />

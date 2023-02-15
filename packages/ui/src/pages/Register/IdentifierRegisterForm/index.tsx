@@ -36,9 +36,8 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
   const {
-    setValue,
     handleSubmit,
-    formState: { errors, isSubmitted },
+    formState: { errors },
     control,
   } = useForm<FormState>({
     reValidateMode: 'onChange',
@@ -89,10 +88,6 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             errorMessage={errors.identifier?.message}
             enabledTypes={signUpMethods}
             onTypeChange={setInputType}
-            /* Overwrite default input onChange handler  */
-            onChange={(value) => {
-              setValue('identifier', value, { shouldValidate: isSubmitted, shouldDirty: true });
-            }}
           />
         )}
       />
