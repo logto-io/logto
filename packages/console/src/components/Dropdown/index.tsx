@@ -5,7 +5,7 @@ import ReactModal from 'react-modal';
 
 import usePosition from '@/hooks/use-position';
 import type { HorizontalAlignment } from '@/types/positioning';
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import OverlayScrollbar from '../OverlayScrollbar';
 import * as styles from './index.module.scss';

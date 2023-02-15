@@ -5,7 +5,7 @@ import path from 'path';
 
 import { findPackage } from '@logto/shared';
 
-import { getPathInModule } from '../../../utilities.js';
+import { getPathInModule } from '../../../utils.js';
 import type { AlterationFile } from './type.js';
 
 const currentDirname = path.dirname(fileURLToPath(import.meta.url));

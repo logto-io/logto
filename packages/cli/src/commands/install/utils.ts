@@ -20,7 +20,7 @@ import {
   log,
   oraPromise,
   safeExecSync,
-} from '../../utilities.js';
+} from '../../utils.js';
 import { seedByPool } from '../database/seed/index.js';
 
 export const defaultPath = path.join(os.homedir(), 'logto');

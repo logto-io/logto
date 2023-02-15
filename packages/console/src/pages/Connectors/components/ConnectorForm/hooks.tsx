@@ -1,7 +1,7 @@
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { safeParseJson } from '@/utilities/json';
+import { safeParseJson } from '@/utils/json';
 
 export const useConfigParser = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

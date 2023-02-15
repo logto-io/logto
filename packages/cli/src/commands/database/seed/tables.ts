@@ -20,7 +20,7 @@ import { raw } from 'slonik-sql-tag-raw';
 import { insertInto } from '../../../database.js';
 import { getDatabaseName } from '../../../queries/database.js';
 import { updateDatabaseTimestamp } from '../../../queries/system.js';
-import { getPathInModule } from '../../../utilities.js';
+import { getPathInModule } from '../../../utils.js';
 import { createTenant } from './tenant.js';
 
 const getExplicitOrder = (query: string) => {

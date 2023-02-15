@@ -12,8 +12,8 @@ import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import { Tooltip } from '@/components/Tip';
 import useApi from '@/hooks/use-api';
-import { onKeyDownHandler } from '@/utilities/a11y';
-import { safeParseJson } from '@/utilities/json';
+import { onKeyDownHandler } from '@/utils/a11y';
+import { safeParseJson } from '@/utils/json';
 
 import * as styles from './index.module.scss';
 

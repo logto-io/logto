@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 import Close from '@/assets/images/close.svg';
 import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/images/keyboard-arrow-up.svg';
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import Dropdown, { DropdownItem } from '../Dropdown';
 import IconButton from '../IconButton';

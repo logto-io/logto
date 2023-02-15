@@ -12,7 +12,7 @@ import MultiTextInputField from '@/components/MultiTextInputField';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import { uriOriginValidator } from '@/utilities/validator';
+import { uriOriginValidator } from '@/utils/validator';
 
 import * as styles from '../index.module.scss';
 

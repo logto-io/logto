@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { SemVer, compare, eq, gt } from 'semver';
 
-import { findLastIndex, isTty, log } from '../../../utilities.js';
+import { findLastIndex, isTty, log } from '../../../utils.js';
 import type { AlterationFile } from './type.js';
 
 const getVersionStringFromFilename = (filename: string) =>

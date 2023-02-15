@@ -14,7 +14,7 @@ import tar from 'tar';
 import { z } from 'zod';
 
 import { connectorDirectory } from '../../constants.js';
-import { getConnectorPackagesFromDirectory, isTty, log, oraPromise } from '../../utilities.js';
+import { getConnectorPackagesFromDirectory, isTty, log, oraPromise } from '../../utils.js';
 import { defaultPath } from '../install/utils.js';
 
 const coreDirectory = 'packages/core';

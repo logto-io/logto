@@ -7,7 +7,7 @@ import CaretExpanded from '@/assets/images/caret-expanded.svg';
 import CaretFolded from '@/assets/images/caret-folded.svg';
 import Checkbox from '@/components/Checkbox';
 import IconButton from '@/components/IconButton';
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import type { DetailedResourceResponse } from '../../types';
 import SourceScopeItem from '../SourceScopeItem';

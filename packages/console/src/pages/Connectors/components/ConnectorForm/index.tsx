@@ -14,7 +14,7 @@ import Select from '@/components/Select';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import { uriValidator, jsonValidator } from '@/utilities/validator';
+import { uriValidator, jsonValidator } from '@/utils/validator';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';

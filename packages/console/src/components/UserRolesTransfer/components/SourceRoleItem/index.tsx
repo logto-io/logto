@@ -2,7 +2,7 @@ import type { RoleResponse } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import Checkbox from '@/components/Checkbox';
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';
 

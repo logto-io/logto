@@ -13,8 +13,8 @@ import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import { safeParseJson } from '@/utilities/json';
-import { uriValidator } from '@/utilities/validator';
+import { safeParseJson } from '@/utils/json';
+import { uriValidator } from '@/utils/validator';
 
 import type { UserDetailsForm, UserDetailsOutletContext } from '../types';
 import { userDetailsParser } from '../utils';

@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useLayoutEffect, useState } from 'react';
 
-import { onKeyDownHandler } from '@/utilities/a11y';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import { Tooltip } from '../Tip';
 import * as styles from './index.module.scss';

@@ -7,7 +7,7 @@ import connector from './commands/connector/index.js';
 import database from './commands/database/index.js';
 import install from './commands/install/index.js';
 import { packageJson } from './package-json.js';
-import { cliConfig, ConfigKey } from './utilities.js';
+import { cliConfig, ConfigKey } from './utils.js';
 
 void yargs(hideBin(process.argv))
   .version(false)
