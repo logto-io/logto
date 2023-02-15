@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { putInteraction, sendVerificationCode } from '@/apis/interaction';
-import { VerificationCodeIdentifier } from '@/types';
+import { UserFlow, VerificationCodeIdentifier } from '@/types';
 
 import ForgotPasswordForm from '.';
 
@@ -81,7 +81,7 @@ describe('ForgotPasswordForm', () => {
           expect(sendVerificationCode).toBeCalledWith({ email });
           expect(mockedNavigate).toBeCalledWith(
             {
-              pathname: 'verification-code',
+              pathname: `/${UserFlow.forgotPassword}/verification-code`,
               search: '',
             },
             { state: { identifier, value }, replace: undefined }
