@@ -9,8 +9,6 @@ const translation = {
     confirm_password: 'Şifreyi Doğrula',
   },
   secondary: {
-    sign_in_with: '{{methods, list(type: disjunction;)}} ile giriş yapınız',
-    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       'Hesabınız zaten var mı? {{methods, list(type: disjunction;)}} bağlantısına tıklayarak giriş yapabilirsiniz',
   },
@@ -43,6 +41,7 @@ const translation = {
   description: {
     email: 'e-posta adresi',
     phone_number: 'telefon numarası',
+    username: 'kullanıcı Adı',
     reminder: 'Hatırlatıcı',
     not_found: '404 Bulunamadı',
     agree_with_terms: 'Okudum ve anladım',
@@ -70,10 +69,8 @@ const translation = {
     social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing: 'İlgili bir hesap bulduk, hemen bağlayabilirsiniz.',
     reset_password: 'Şifre yenile',
-    reset_password_description_email:
-      'Hesabınızla ilişkili e-posta adresini girin, şifrenizi sıfırlamak için size doğrulama kodunu e-posta ile gönderelim.',
-    reset_password_description_phone:
-      'Hesabınızla ilişkili telefon numarasını girin, şifrenizi sıfırlamak için size doğrulama kodunu kısa mesajla gönderelim.',
+    reset_password_description:
+      'Enter the {{types, list(type: disjunction;)}} associated with your account, and we’ll send you the verification code to reset your password.', // UNTRANSLATED
     new_password: 'Yeni Şifre',
     set_password: 'Set password', // UNTRANSLATED
     password_changed: 'Password Changed', // UNTRANSLATED
@@ -93,44 +90,14 @@ const translation = {
       'For added security, please link your email or phone with the account.', // UNTRANSLATED
     continue_with_more_information: 'For added security, please complete below account details.', // UNTRANSLATED
   },
-  profile: {
-    title: 'Account Settings', // UNTRANSLATED
-    description:
-      'Change your account settings and manage your personal information here to ensure your account security.', // UNTRANSLATED
-    settings: {
-      title: 'PROFILE SETTINGS', // UNTRANSLATED
-      profile_information: 'Profile Information', // UNTRANSLATED
-      avatar: 'Avatar', // UNTRANSLATED
-      name: 'Name', // UNTRANSLATED
-      username: 'Username', // UNTRANSLATED
-    },
-    password: {
-      title: 'PASSWORD', // UNTRANSLATED
-      reset_password: 'Reset Password', // UNTRANSLATED
-      reset_password_sc: 'Reset password', // UNTRANSLATED
-    },
-    link_account: {
-      title: 'LINK ACCOUNT', // UNTRANSLATED
-      email_phone_sign_in: 'Email / Phone Sign-In', // UNTRANSLATED
-      email: 'Email', // UNTRANSLATED
-      phone: 'Phone', // UNTRANSLATED
-      phone_sc: 'Phone number', // UNTRANSLATED
-      social: 'Social Sign-In', // UNTRANSLATED
-      social_sc: 'Social accounts', // UNTRANSLATED
-    },
-    not_set: 'Not set', // UNTRANSLATED
-    edit: 'Edit', // UNTRANSLATED
-    change: 'Change', // UNTRANSLATED
-    link: 'Link', // UNTRANSLATED
-    unlink: 'Unlink', // UNTRANSLATED
-  },
   error: {
-    username_password_mismatch: 'Kullanıcı adı ve şifre eşleşmiyor.',
+    general_required: `{{types, list(type: disjunction;)}} is required`, // UNTRANSLATED
+    general_invalid: `The {{types, list(type: disjunction;)}} is invalid`, // UNTRANSLATED
     username_required: 'Kullanıcı adı gerekli.',
     password_required: 'Şifre gerekli.',
     username_exists: 'Kullanıcı adı mevcut.',
     username_should_not_start_with_number: 'Kullanıcı adı sayı ile başlayamaz.',
-    username_valid_charset: 'Kullanıcı adı yalnızca harf,sayı veya alt çizgi içermeli.',
+    username_invalid_charset: 'Kullanıcı adı yalnızca harf,sayı veya alt çizgi içermeli.',
     invalid_email: 'E-posta adresi geçersiz',
     invalid_phone: 'Telefon numarası geçersiz',
     password_min_length: 'Şifre en az {{min}} karakterden oluşmalıdır',

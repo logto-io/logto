@@ -9,8 +9,6 @@ const translation = {
     confirm_password: 'Passwort bestätigen',
   },
   secondary: {
-    sign_in_with: 'Anmelden mit {{methods, list(type: disjunction;)}}',
-    register_with: 'Konto mit {{methods, list(type: disjunction;)}} erstellen',
     social_bind_with:
       'Besitzt du schon ein Konto? Melde dich an, um {{methods, list(type: disjunction;)}} mit deiner Identität zu verbinden.',
   },
@@ -43,6 +41,7 @@ const translation = {
   description: {
     email: 'Email',
     phone_number: 'Telefonnummer',
+    username: 'benutzername',
     reminder: 'Erinnerung',
     not_found: '404 Nicht gefunden',
     agree_with_terms: 'Ich akzeptiere die ',
@@ -71,10 +70,8 @@ const translation = {
     social_link_email_or_phone: 'Du kannst eine weitere Email oder Telefonnummer verknüpfen',
     social_bind_with_existing: 'Wir haben ein Konto gefunden, das du verknüpfen kannst.',
     reset_password: 'Passwort zurücksetzen',
-    reset_password_description_email:
-      'Gib die Email Adresse deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
-    reset_password_description_phone:
-      'Gib die Telefonnummer deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
+    reset_password_description:
+      'Gib die {{types, list(type: disjunction;)}} deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
     new_password: 'Neues Passwort',
     set_password: 'Passwort setzen',
     password_changed: 'Passwort geändert',
@@ -97,44 +94,14 @@ const translation = {
     continue_with_more_information:
       'Für zusätzliche Sicherheit, vervollständige bitte deine Informationen.',
   },
-  profile: {
-    title: 'Konto Einstellungen',
-    description:
-      'Ändere hier deine Konto Einstellungen und verwalte deine persönlichen Informationen, um die Sicherheit deines Kontos zu gewährleisten.',
-    settings: {
-      title: 'PROFIL EINSTELLUNGEN',
-      profile_information: 'Profil Informationen',
-      avatar: 'Avatar',
-      name: 'Name',
-      username: 'Benutzername',
-    },
-    password: {
-      title: 'PASSWORT',
-      reset_password: 'Passwort zurücksetzen',
-      reset_password_sc: 'Passwort zurücksetzen',
-    },
-    link_account: {
-      title: 'KONTO VERKNÜPFEN',
-      email_phone_sign_in: 'Anmeldung mit Email oder Telefonnummer',
-      email: 'Email',
-      phone: 'Telefonnummer',
-      phone_sc: 'Telefonnummer',
-      social: 'Social Anmeldung',
-      social_sc: 'Social Konten',
-    },
-    not_set: 'Nicht gesetzt',
-    edit: 'Bearbeiten',
-    change: 'Ändern',
-    link: 'Verknüpfen',
-    unlink: 'Verknüpfung aufheben',
-  },
   error: {
-    username_password_mismatch: 'Benutzername oder Passwort ist falsch',
+    general_required: `{{types, list(type: disjunction;)}} ist erforderlich`,
+    general_invalid: `Die {{types, list(type: disjunction;)}} is ungültig`,
     username_required: 'Benutzername ist erforderlich',
     password_required: 'Passwort ist erforderlich',
     username_exists: 'Benutzername existiert bereits',
     username_should_not_start_with_number: 'Benutzername darf nicht mit einer Zahl beginnen',
-    username_valid_charset: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten',
+    username_invalid_charset: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten',
     invalid_email: 'Die Email ist ungültig',
     invalid_phone: 'Die Telefonnummer ist ungültig',
     password_min_length: 'Passwort muss mindestens {{min}} Zeichen lang sein',

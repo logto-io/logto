@@ -28,13 +28,13 @@ describe('<SetPassword />', () => {
     const submitButton = getByText('action.save_password');
 
     act(() => {
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     expect(clearError).toBeCalled();
 
     await waitFor(() => {
-      expect(queryByText('password_required')).not.toBeNull();
+      expect(queryByText('error.password_required')).not.toBeNull();
     });
 
     expect(submit).not.toBeCalled();
@@ -50,11 +50,11 @@ describe('<SetPassword />', () => {
     }
 
     act(() => {
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     await waitFor(() => {
-      expect(queryByText('password_min_length')).not.toBeNull();
+      expect(queryByText('error.password_min_length')).not.toBeNull();
     });
 
     expect(submit).not.toBeCalled();
@@ -67,7 +67,7 @@ describe('<SetPassword />', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('password_min_length')).toBeNull();
+      expect(queryByText('error.password_min_length')).toBeNull();
     });
   });
 
@@ -86,11 +86,11 @@ describe('<SetPassword />', () => {
         fireEvent.change(confirmPasswordInput, { target: { value: '012345' } });
       }
 
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
     await waitFor(() => {
-      expect(queryByText('passwords_do_not_match')).not.toBeNull();
+      expect(queryByText('error.passwords_do_not_match')).not.toBeNull();
     });
 
     expect(submit).not.toBeCalled();
@@ -103,7 +103,7 @@ describe('<SetPassword />', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('passwords_do_not_match')).toBeNull();
+      expect(queryByText('error.passwords_do_not_match')).toBeNull();
     });
   });
 
@@ -122,10 +122,10 @@ describe('<SetPassword />', () => {
         fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
       }
 
-      fireEvent.click(submitButton);
+      fireEvent.submit(submitButton);
     });
 
-    expect(queryByText('passwords_do_not_match')).toBeNull();
+    expect(queryByText('error.passwords_do_not_match')).toBeNull();
 
     await waitFor(() => {
       expect(submit).toBeCalledWith('123456');

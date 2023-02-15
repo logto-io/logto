@@ -1,5 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { Routes, Route, MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -16,156 +16,85 @@ describe('SignInPassword', () => {
   const mockUseLocation = useLocation as jest.Mock;
   const email = 'email@logto.io';
   const phone = '18571111111';
+  const username = 'foo';
+
+  const renderPasswordSignInPage = (settings?: Partial<typeof mockSignInExperienceSettings>) =>
+    renderWithPageContext(
+      <MemoryRouter>
+        <SettingsProvider
+          settings={{
+            ...mockSignInExperienceSettings,
+            ...settings,
+          }}
+        >
+          <SignInPassword />
+        </SettingsProvider>
+      </MemoryRouter>
+    );
 
   beforeEach(() => {
-    mockUseLocation.mockImplementation(() => ({ state: { email, phone } }));
+    jest.clearAllMocks();
   });
 
-  test('Show error page with unknown method', () => {
-    const { queryByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/test/password']}>
-        <Routes>
-          <Route
-            path="/sign-in/:method/password"
-            element={
-              <SettingsProvider>
-                <SignInPassword />
-              </SettingsProvider>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
-    );
+  test('Show invalid session error page with invalid state', () => {
+    const { queryByText } = renderPasswordSignInPage();
+    expect(queryByText('description.enter_password')).toBeNull();
+    expect(queryByText('error.invalid_session')).not.toBeNull();
+  });
+
+  test('Show 404 error page with invalid method', () => {
+    mockUseLocation.mockImplementation(() => ({
+      state: { identifier: SignInIdentifier.Username, value: username },
+    }));
+
+    const { queryByText } = renderPasswordSignInPage({
+      signIn: {
+        methods: [
+          {
+            identifier: SignInIdentifier.Email,
+            password: true,
+            verificationCode: true,
+            isPasswordPrimary: true,
+          },
+        ],
+      },
+    });
 
     expect(queryByText('description.enter_password')).toBeNull();
     expect(queryByText('description.not_found')).not.toBeNull();
   });
 
-  test('Show error page with unsupported method', () => {
-    const { queryByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/email/password']}>
-        <Routes>
-          <Route
-            path="/sign-in/:method/password"
-            element={
-              <SettingsProvider
-                settings={{
-                  ...mockSignInExperienceSettings,
-                  signIn: {
-                    methods: mockSignInExperienceSettings.signIn.methods.filter(
-                      ({ identifier }) => identifier !== SignInIdentifier.Email
-                    ),
-                  },
-                }}
-              >
-                <SignInPassword />
-              </SettingsProvider>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
-    );
+  test.each([
+    { identifier: SignInIdentifier.Email, value: email, verificationCode: true },
+    { identifier: SignInIdentifier.Phone, value: phone, verificationCode: false },
+  ])(
+    'render password page with %variable.identifier',
+    ({ identifier, value, verificationCode }) => {
+      mockUseLocation.mockImplementation(() => ({
+        state: { identifier, value },
+      }));
 
-    expect(queryByText('description.enter_password')).toBeNull();
-    expect(queryByText('description.not_found')).not.toBeNull();
-  });
+      const { queryByText, container } = renderPasswordSignInPage({
+        signIn: {
+          methods: [
+            {
+              identifier,
+              password: true,
+              verificationCode,
+              isPasswordPrimary: true,
+            },
+          ],
+        },
+      });
 
-  test('Show error page if no address value found', () => {
-    mockUseLocation.mockClear();
-    mockUseLocation.mockImplementation(() => ({}));
-    const { queryByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/email/password']}>
-        <Routes>
-          <Route
-            path="/sign-in/:method/password"
-            element={
-              <SettingsProvider>
-                <SignInPassword />
-              </SettingsProvider>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
-    );
+      expect(queryByText('description.enter_password')).not.toBeNull();
+      expect(container.querySelector('input[name="password"]')).not.toBeNull();
 
-    expect(queryByText('description.enter_password')).toBeNull();
-    expect(queryByText('error.invalid_email')).not.toBeNull();
-  });
-
-  test('/sign-in/email/password', () => {
-    const { queryByText, container } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/email/password']}>
-        <Routes>
-          <Route
-            path="/sign-in/:method/password"
-            element={
-              <SettingsProvider>
-                <SignInPassword />
-              </SettingsProvider>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
-    );
-
-    expect(queryByText('description.enter_password')).not.toBeNull();
-    expect(container.querySelector('input[name="password"]')).not.toBeNull();
-    expect(queryByText('action.sign_in_via_passcode')).not.toBeNull();
-  });
-
-  test('/sign-in/phone/password', () => {
-    const { queryByText, container } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/phone/password']}>
-        <Routes>
-          <Route
-            path="/sign-in/:method/password"
-            element={
-              <SettingsProvider>
-                <SignInPassword />
-              </SettingsProvider>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
-    );
-
-    expect(queryByText('description.enter_password')).not.toBeNull();
-    expect(container.querySelector('input[name="password"]')).not.toBeNull();
-    expect(queryByText('action.sign_in_via_passcode')).not.toBeNull();
-  });
-
-  test('should not render passwordless link if verificationCode is disabled', () => {
-    const { queryByText, container } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/email/password']}>
-        <Routes>
-          <Route
-            path="/sign-in/:method/password"
-            element={
-              <SettingsProvider
-                settings={{
-                  ...mockSignInExperienceSettings,
-                  signIn: {
-                    methods: [
-                      {
-                        identifier: SignInIdentifier.Email,
-                        password: true,
-                        verificationCode: false,
-                        isPasswordPrimary: true,
-                      },
-                    ],
-                  },
-                }}
-              >
-                <SignInPassword />
-              </SettingsProvider>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
-    );
-
-    expect(queryByText('description.enter_password')).not.toBeNull();
-    expect(container.querySelector('input[name="password"]')).not.toBeNull();
-    expect(queryByText('action.sign_in_via_passcode')).toBeNull();
-  });
+      if (verificationCode) {
+        expect(queryByText('action.sign_in_via_passcode')).not.toBeNull();
+      } else {
+        expect(queryByText('action.sign_in_via_passcode')).toBeNull();
+      }
+    }
+  );
 });

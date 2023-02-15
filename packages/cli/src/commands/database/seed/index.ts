@@ -4,7 +4,7 @@ import type { CommandModule } from 'yargs';
 
 import { createPoolAndDatabaseIfNeeded } from '../../../database.js';
 import { doesConfigsTableExist } from '../../../queries/logto-config.js';
-import { log, oraPromise } from '../../../utilities.js';
+import { log, oraPromise } from '../../../utils.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
 import { createTables, seedTables } from './tables.js';

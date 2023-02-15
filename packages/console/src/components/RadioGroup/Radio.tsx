@@ -4,7 +4,7 @@ import type { KeyboardEventHandler, ReactNode } from 'react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import * as styles from './index.module.scss';
+import * as styles from './Radio.module.scss';
 
 const Check = () => (
   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,9 +24,10 @@ export type Props = {
   isChecked?: boolean;
   onClick?: () => void;
   tabIndex?: number;
-  type?: 'card' | 'plain';
+  type?: 'card' | 'plain' | 'compact';
   isDisabled?: boolean;
   disabledLabel?: AdminConsoleKey;
+  icon?: ReactNode;
 };
 
 const Radio = ({
@@ -38,9 +39,10 @@ const Radio = ({
   isChecked,
   onClick,
   tabIndex,
-  type,
+  type = 'plain',
   isDisabled,
   disabledLabel,
+  icon,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -62,6 +64,7 @@ const Radio = ({
     <div
       className={classNames(
         styles.radio,
+        styles[type],
         isChecked && styles.checked,
         isDisabled && styles.disabled,
         className
@@ -81,6 +84,7 @@ const Radio = ({
         )}
         {children}
         {type === 'plain' && <div className={styles.indicator} />}
+        {icon && <span className={styles.icon}>{icon}</span>}
         {title && t(title)}
         {isDisabled && disabledLabel && (
           <div className={classNames(styles.indicator, styles.disabledLabel)}>

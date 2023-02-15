@@ -1,122 +1,72 @@
-import { SignInMode } from '@logto/schemas';
+import { SignInIdentifier, SignInMode } from '@logto/schemas';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import {
-  mockSignInExperienceSettings,
-  emailSignInMethod,
-  phoneSignInMethod,
-} from '@/__mocks__/logto';
+import { mockSignInExperienceSettings, mockSignInMethodSettingsTestCases } from '@/__mocks__/logto';
 import SignIn from '@/pages/SignIn';
 
 jest.mock('i18next', () => ({
+  ...jest.requireActual('i18next'),
   language: 'en',
 }));
 
 describe('<SignIn />', () => {
-  test('renders with username as primary', async () => {
-    const { queryByText, queryAllByText, container } = renderWithPageContext(
-      <SettingsProvider>
+  const renderSignIn = (settings?: Partial<typeof mockSignInExperienceSettings>) =>
+    renderWithPageContext(
+      <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
         <MemoryRouter>
           <SignIn />
         </MemoryRouter>
       </SettingsProvider>
     );
 
-    expect(container.querySelector('input[name="username"]')).not.toBeNull();
-    expect(queryByText('action.sign_in')).not.toBeNull();
+  describe('renders with password only SignIn method settings', () => {
+    test.each([
+      [SignInIdentifier.Username],
+      [SignInIdentifier.Email],
+      [SignInIdentifier.Phone],
+      [SignInIdentifier.Username, SignInIdentifier.Email],
+      [SignInIdentifier.Username, SignInIdentifier.Phone],
+      [SignInIdentifier.Email, SignInIdentifier.Phone],
+      [SignInIdentifier.Username, SignInIdentifier.Email, SignInIdentifier.Phone],
+    ])('renders with %p password only mode', async (...methods) => {
+      const { queryByText, queryAllByText, container } = renderSignIn({
+        signIn: {
+          methods: methods.map((method) => ({
+            identifier: method,
+            password: true,
+            verificationCode: false,
+            isPasswordPrimary: true,
+          })),
+        },
+      });
 
-    // Other sign-in methods
-    expect(queryByText('secondary.sign_in_with')).not.toBeNull();
+      expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
 
-    // Social
-    expect(queryAllByText('action.sign_in_with')).toHaveLength(
-      mockSignInExperienceSettings.socialConnectors.length
-    );
+      expect(queryByText('action.sign_in')).not.toBeNull();
+
+      // Social
+      expect(queryAllByText('action.sign_in_with')).toHaveLength(
+        mockSignInExperienceSettings.socialConnectors.length
+      );
+    });
   });
 
-  test('renders with email passwordless as primary', async () => {
-    const { queryByText, container } = renderWithPageContext(
-      <SettingsProvider
-        settings={{
-          ...mockSignInExperienceSettings,
-          signIn: { methods: [emailSignInMethod] },
-        }}
-      >
-        <MemoryRouter>
-          <SignIn />
-        </MemoryRouter>
-      </SettingsProvider>
-    );
-    expect(container.querySelector('input[name="email"]')).not.toBeNull();
-    expect(queryByText('action.sign_in')).not.toBeNull();
-  });
-
-  test('render with email password as primary', async () => {
-    const { queryByText, container } = renderWithPageContext(
-      <SettingsProvider
-        settings={{
-          ...mockSignInExperienceSettings,
+  describe('renders with identifier code only SignIn method settings', () => {
+    test.each(mockSignInMethodSettingsTestCases)(
+      'renders with [%p %p %p] SignIn Methods only mode',
+      async (...methods) => {
+        const { container } = renderSignIn({
           signIn: {
-            methods: [
-              {
-                ...emailSignInMethod,
-                verificationCode: false,
-                password: true,
-              },
-            ],
+            methods,
           },
-        }}
-      >
-        <MemoryRouter>
-          <SignIn />
-        </MemoryRouter>
-      </SettingsProvider>
-    );
-    expect(container.querySelector('input[name="email"]')).not.toBeNull();
-    expect(container.querySelector('input[name="password"]')).not.toBeNull();
-    expect(queryByText('action.sign_in')).not.toBeNull();
-  });
+        });
 
-  test('renders with phone passwordless as primary', async () => {
-    const { queryByText, container } = renderWithPageContext(
-      <SettingsProvider
-        settings={{ ...mockSignInExperienceSettings, signIn: { methods: [phoneSignInMethod] } }}
-      >
-        <MemoryRouter>
-          <SignIn />
-        </MemoryRouter>
-      </SettingsProvider>
+        expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
+        expect(container.querySelector('input[name="password"]')).toBeNull();
+      }
     );
-    expect(container.querySelector('input[name="phone"]')).not.toBeNull();
-    expect(queryByText('action.sign_in')).not.toBeNull();
-  });
-
-  test('renders with phone password as primary', async () => {
-    const { queryByText, container } = renderWithPageContext(
-      <SettingsProvider
-        settings={{
-          ...mockSignInExperienceSettings,
-          signIn: {
-            methods: [
-              {
-                ...phoneSignInMethod,
-                verificationCode: false,
-                password: true,
-              },
-            ],
-          },
-        }}
-      >
-        <MemoryRouter>
-          <SignIn />
-        </MemoryRouter>
-      </SettingsProvider>
-    );
-    expect(container.querySelector('input[name="phone"]')).not.toBeNull();
-    expect(container.querySelector('input[name="password"]')).not.toBeNull();
-    expect(queryByText('action.sign_in')).not.toBeNull();
   });
 
   test('renders with social as primary', async () => {

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 
-import type { ErrorHandlers } from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
 
 const useGeneralVerificationCodeErrorHandler = () => {
   const [errorMessage, setErrorMessage] = useState<string>();

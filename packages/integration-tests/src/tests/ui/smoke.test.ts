@@ -24,8 +24,8 @@ describe('smoke testing', () => {
 
     expect(page.url()).toBe(new URL('register', logtoConsoleUrl).href);
 
-    const usernameField = await page.waitForSelector('input[name=new-username]');
-    const submitButton = await page.waitForSelector('button');
+    const usernameField = await page.waitForSelector('input[name=identifier]');
+    const submitButton = await page.waitForSelector('button[name=submit]');
 
     await usernameField.type(consoleUsername);
 
@@ -33,7 +33,7 @@ describe('smoke testing', () => {
     await submitButton.click();
     await navigateToSignIn;
 
-    expect(page.url()).toBe(new URL('register/username/password', logtoConsoleUrl).href);
+    expect(page.url()).toBe(new URL('register/password', logtoConsoleUrl).href);
 
     const passwordField = await page.waitForSelector('input[name=newPassword]');
     const confirmPasswordField = await page.waitForSelector('input[name=confirmPassword]');
@@ -66,9 +66,9 @@ describe('smoke testing', () => {
   });
 
   it('signs in to admin console', async () => {
-    const usernameField = await page.waitForSelector('input[name=username]');
+    const usernameField = await page.waitForSelector('input[name=identifier]');
     const passwordField = await page.waitForSelector('input[name=password]');
-    const submitButton = await page.waitForSelector('button');
+    const submitButton = await page.waitForSelector('button[name=submit]');
 
     await usernameField.type(consoleUsername);
     await passwordField.type(consolePassword);

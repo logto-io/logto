@@ -1,0 +1,39 @@
+@use '@/scss/underscore' as _;
+@use '@/pages/CloudPreview/cloud-page-size.scss' as size;
+
+.content {
+  margin: 0 auto;
+  max-width: size.$questionnaire-content-width;
+  border-radius: 16px;
+  padding: _.unit(12);
+  background-color: var(--color-layer-1);
+  margin-bottom: _.unit(4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.congrats {
+  width: 160px;
+  height: 160px;
+}
+
+.title {
+  margin-top: _.unit(6);
+  font: var(--font-title-1);
+}
+
+.description {
+  margin-top: _.unit(3);
+  text-align: center;
+  font: var(--font-body-2);
+}
+
+.form {
+  width: 100%;
+  margin-top: _.unit(6);
+
+  .cardFieldHeadline {
+    margin-bottom: _.unit(2);
+  }
+}

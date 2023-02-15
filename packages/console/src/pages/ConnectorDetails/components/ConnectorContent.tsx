@@ -11,9 +11,10 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import ConnectorForm from '@/pages/Connectors/components/ConnectorForm';
+import { useConfigParser } from '@/pages/Connectors/components/ConnectorForm/hooks';
+import { initFormData, parseFormConfig } from '@/pages/Connectors/components/ConnectorForm/utils';
 import type { ConnectorFormType } from '@/pages/Connectors/types';
 import { SyncProfileMode } from '@/pages/Connectors/types';
-import { safeParseJson } from '@/utilities/json';
 
 import * as styles from '../index.module.scss';
 import SenderTester from './SenderTester';
@@ -27,6 +28,7 @@ type Props = {
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
+  const parseJsonConfig = useConfigParser();
   const api = useApi();
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',
@@ -42,9 +44,11 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
   } = methods;
 
   useEffect(() => {
-    const { name, logo, logoDark, target } = connectorData.metadata;
-    const { config, syncProfile } = connectorData;
+    const { formItems, metadata, config, syncProfile } = connectorData;
+    const { name, logo, logoDark, target } = metadata;
+
     reset({
+      ...(formItems ? initFormData(formItems, config) : {}),
       target,
       logo,
       logoDark: logoDark ?? '',
@@ -54,36 +58,26 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
     });
   }, [connectorData, reset]);
 
-  const onSubmit = handleSubmit(async ({ config, syncProfile, ...metadata }) => {
-    if (!config) {
-      toast.error(t('connector_details.save_error_empty_config'));
-
-      return;
-    }
-
-    const result = safeParseJson(config);
-
-    if (!result.success) {
-      toast.error(result.error);
-
-      return;
-    }
+  const onSubmit = handleSubmit(async (data) => {
+    const { formItems, isStandard, id } = connectorData;
+    const config = formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
+    const { syncProfile, name, logo, logoDark, target } = data;
 
     const payload =
       connectorData.type === ConnectorType.Social
         ? {
-            config: result.data,
+            config,
             syncProfile: syncProfile === SyncProfileMode.EachSignIn,
           }
-        : { config: result.data };
+        : { config };
     const standardConnectorPayload = {
       ...payload,
-      metadata: { ...metadata, name: { en: metadata.name } },
+      metadata: { name: { en: name }, logo, logoDark, target },
     };
-    const body = connectorData.isStandard ? standardConnectorPayload : payload;
+    const body = isStandard ? standardConnectorPayload : payload;
 
     const updatedConnector = await api
-      .patch(`api/connectors/${connectorData.id}`, {
+      .patch(`api/connectors/${id}`, {
         json: body,
       })
       .json<ConnectorResponse>();
@@ -109,6 +103,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
             connectorType={connectorData.type}
             isStandard={connectorData.isStandard}
             isDarkDefaultVisible={Boolean(connectorData.metadata.logoDark)}
+            formItems={connectorData.formItems}
           />
           {connectorData.type !== ConnectorType.Social && (
             <SenderTester

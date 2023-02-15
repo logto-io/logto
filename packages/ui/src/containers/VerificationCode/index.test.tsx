@@ -8,13 +8,12 @@ import {
   signInWithVerificationCodeIdentifier,
   addProfileWithVerificationCodeIdentifier,
 } from '@/apis/interaction';
+import { sendVerificationCodeApi } from '@/apis/utils';
 import { UserFlow } from '@/types';
 
 import VerificationCode from '.';
 
 jest.useFakeTimers();
-
-const sendVerificationCodeApi = jest.fn();
 
 const mockedNavigate = jest.fn();
 
@@ -24,7 +23,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/utils', () => ({
-  getSendVerificationCodeApi: () => sendVerificationCodeApi,
+  sendVerificationCodeApi: jest.fn(),
 }));
 
 jest.mock('@/apis/interaction', () => ({
@@ -58,7 +57,7 @@ describe('<VerificationCode />', () => {
 
   it('render counter', () => {
     const { queryByText } = renderWithPageContext(
-      <VerificationCode type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
+      <VerificationCode flow={UserFlow.signIn} identifier={SignInIdentifier.Email} target={email} />
     );
 
     expect(queryByText('description.resend_after_seconds')).not.toBeNull();
@@ -72,7 +71,7 @@ describe('<VerificationCode />', () => {
 
   it('fire resend event', async () => {
     const { getByText } = renderWithPageContext(
-      <VerificationCode type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
+      <VerificationCode flow={UserFlow.signIn} identifier={SignInIdentifier.Email} target={email} />
     );
     act(() => {
       jest.advanceTimersByTime(1e3 * 60);
@@ -83,7 +82,7 @@ describe('<VerificationCode />', () => {
       fireEvent.click(resendButton);
     });
 
-    expect(sendVerificationCodeApi).toBeCalledWith({ email });
+    expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.signIn, { email });
   });
 
   describe('sign-in', () => {
@@ -93,7 +92,11 @@ describe('<VerificationCode />', () => {
       }));
 
       const { container } = renderWithPageContext(
-        <VerificationCode type={UserFlow.signIn} method={SignInIdentifier.Email} target={email} />
+        <VerificationCode
+          flow={UserFlow.signIn}
+          identifier={SignInIdentifier.Email}
+          target={email}
+        />
       );
       const inputs = container.querySelectorAll('input');
 
@@ -121,7 +124,11 @@ describe('<VerificationCode />', () => {
       }));
 
       const { container } = renderWithPageContext(
-        <VerificationCode type={UserFlow.signIn} method={SignInIdentifier.Phone} target={phone} />
+        <VerificationCode
+          flow={UserFlow.signIn}
+          identifier={SignInIdentifier.Phone}
+          target={phone}
+        />
       );
       const inputs = container.querySelectorAll('input');
 
@@ -151,7 +158,11 @@ describe('<VerificationCode />', () => {
       }));
 
       const { container } = renderWithPageContext(
-        <VerificationCode type={UserFlow.register} method={SignInIdentifier.Email} target={email} />
+        <VerificationCode
+          flow={UserFlow.register}
+          identifier={SignInIdentifier.Email}
+          target={email}
+        />
       );
       const inputs = container.querySelectorAll('input');
 
@@ -179,7 +190,11 @@ describe('<VerificationCode />', () => {
       }));
 
       const { container } = renderWithPageContext(
-        <VerificationCode type={UserFlow.register} method={SignInIdentifier.Phone} target={phone} />
+        <VerificationCode
+          flow={UserFlow.register}
+          identifier={SignInIdentifier.Phone}
+          target={phone}
+        />
       );
       const inputs = container.querySelectorAll('input');
 
@@ -210,8 +225,8 @@ describe('<VerificationCode />', () => {
 
       const { container } = renderWithPageContext(
         <VerificationCode
-          type={UserFlow.forgotPassword}
-          method={SignInIdentifier.Email}
+          flow={UserFlow.forgotPassword}
+          identifier={SignInIdentifier.Email}
           target={email}
         />
       );
@@ -241,8 +256,8 @@ describe('<VerificationCode />', () => {
 
       const { container } = renderWithPageContext(
         <VerificationCode
-          type={UserFlow.forgotPassword}
-          method={SignInIdentifier.Phone}
+          flow={UserFlow.forgotPassword}
+          identifier={SignInIdentifier.Phone}
           target={phone}
         />
       );
@@ -275,8 +290,8 @@ describe('<VerificationCode />', () => {
       const { container } = renderWithPageContext(
         <MemoryRouter>
           <VerificationCode
-            type={UserFlow.continue}
-            method={SignInIdentifier.Email}
+            flow={UserFlow.continue}
+            identifier={SignInIdentifier.Email}
             target={email}
           />
         </MemoryRouter>
@@ -310,8 +325,8 @@ describe('<VerificationCode />', () => {
       const { container } = renderWithPageContext(
         <MemoryRouter>
           <VerificationCode
-            type={UserFlow.continue}
-            method={SignInIdentifier.Phone}
+            flow={UserFlow.continue}
+            identifier={SignInIdentifier.Phone}
             target={phone}
           />
         </MemoryRouter>

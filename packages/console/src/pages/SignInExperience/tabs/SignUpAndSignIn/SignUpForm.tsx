@@ -22,7 +22,7 @@ import {
   createSignInMethod,
   getSignInMethodPasswordCheckState,
   getSignInMethodVerificationCodeCheckState,
-} from './utilities';
+} from './utils';
 
 const SignUpForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

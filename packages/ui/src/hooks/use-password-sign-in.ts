@@ -1,9 +1,10 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 import type { PasswordSignInPayload } from '@/apis/interaction';
 import { signInWithPasswordIdentifier } from '@/apis/interaction';
-import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useErrorHandler from '@/hooks/use-error-handler';
 import { UserFlow } from '@/types';
 
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
@@ -14,6 +15,9 @@ const usePasswordSignIn = () => {
   const clearErrorMessage = useCallback(() => {
     setErrorMessage('');
   }, []);
+
+  const handleError = useErrorHandler();
+  const asyncSignIn = useApi(signInWithPasswordIdentifier);
 
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler({ flow: UserFlow.signIn });
 
@@ -27,19 +31,21 @@ const usePasswordSignIn = () => {
     [requiredProfileErrorHandler]
   );
 
-  const { result, run: asyncSignIn } = useApi(signInWithPasswordIdentifier, errorHandlers);
-
-  useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
-    }
-  }, [result]);
-
   const onSubmit = useCallback(
     async (payload: PasswordSignInPayload) => {
-      await asyncSignIn(payload);
+      const [error, result] = await asyncSignIn(payload);
+
+      if (error) {
+        await handleError(error, errorHandlers);
+
+        return;
+      }
+
+      if (result?.redirectTo) {
+        window.location.replace(result.redirectTo);
+      }
     },
-    [asyncSignIn]
+    [asyncSignIn, errorHandlers, handleError]
   );
 
   return {

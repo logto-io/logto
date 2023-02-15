@@ -9,8 +9,6 @@ const translation = {
     confirm_password: 'Confirmar password',
   },
   secondary: {
-    sign_in_with: 'Entrar com {{methods, list(type: disjunction;)}}',
-    register_with: 'Create account with {{methods, list(type: disjunction;)}}', // UNTRANSLATED
     social_bind_with:
       'Já tem uma conta? Faça login para agregar {{methods, list(type: disjunction;)}} com a sua identidade social.',
   },
@@ -43,6 +41,7 @@ const translation = {
   description: {
     email: 'email',
     phone_number: 'telefone',
+    username: 'utilizador',
     reminder: 'Lembrete',
     not_found: '404 Não encontrado',
     agree_with_terms: 'Eu li e concordo com os ',
@@ -69,10 +68,8 @@ const translation = {
     social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing: 'Encontramos uma conta relacionada, pode agrega-la diretamente.',
     reset_password: 'Redefinir Password',
-    reset_password_description_email:
-      'Digite o endereço de email associado à sua conta e enviaremos um email com o código de verificação para redefinir sua senha.',
-    reset_password_description_phone:
-      'Digite o número de telefone associado à sua conta e enviaremos uma mensagem de texto com o código de verificação para redefinir sua senha.',
+    reset_password_description:
+      'Enter the {{types, list(type: disjunction;)}} associated with your account, and we’ll send you the verification code to reset your password.', // UNTRANSLATED
     new_password: 'Nova Senha',
     set_password: 'Set password', // UNTRANSLATED
     password_changed: 'Password Changed', // UNTRANSLATED
@@ -92,44 +89,14 @@ const translation = {
       'For added security, please link your email or phone with the account.', // UNTRANSLATED
     continue_with_more_information: 'For added security, please complete below account details.', // UNTRANSLATED
   },
-  profile: {
-    title: 'Account Settings', // UNTRANSLATED
-    description:
-      'Change your account settings and manage your personal information here to ensure your account security.', // UNTRANSLATED
-    settings: {
-      title: 'PROFILE SETTINGS', // UNTRANSLATED
-      profile_information: 'Profile Information', // UNTRANSLATED
-      avatar: 'Avatar', // UNTRANSLATED
-      name: 'Name', // UNTRANSLATED
-      username: 'Username', // UNTRANSLATED
-    },
-    password: {
-      title: 'PASSWORD', // UNTRANSLATED
-      reset_password: 'Reset Password', // UNTRANSLATED
-      reset_password_sc: 'Reset password', // UNTRANSLATED
-    },
-    link_account: {
-      title: 'LINK ACCOUNT', // UNTRANSLATED
-      email_phone_sign_in: 'Email / Phone Sign-In', // UNTRANSLATED
-      email: 'Email', // UNTRANSLATED
-      phone: 'Phone', // UNTRANSLATED
-      phone_sc: 'Phone number', // UNTRANSLATED
-      social: 'Social Sign-In', // UNTRANSLATED
-      social_sc: 'Social accounts', // UNTRANSLATED
-    },
-    not_set: 'Not set', // UNTRANSLATED
-    edit: 'Edit', // UNTRANSLATED
-    change: 'Change', // UNTRANSLATED
-    link: 'Link', // UNTRANSLATED
-    unlink: 'Unlink', // UNTRANSLATED
-  },
   error: {
-    username_password_mismatch: 'O Utilizador e a password não correspondem',
+    general_required: `{{types, list(type: disjunction;)}} is necessário`,
+    general_invalid: `O {{types, list(type: disjunction;)}} é inválido`,
     username_required: 'Utilizador necessário',
     password_required: 'Password necessária',
     username_exists: 'O nome de utilizador já existe',
     username_should_not_start_with_number: 'O nome de utilizador não deve começar com um número',
-    username_valid_charset:
+    username_invalid_charset:
       'O nome de utilizador deve conter apenas letras, números ou underscores.',
     invalid_email: 'O email é inválido',
     invalid_phone: 'O número de telefone é inválido',

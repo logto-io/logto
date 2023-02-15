@@ -6,7 +6,7 @@ import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 import { z } from 'zod';
 
-import { ConfigKey, getCliConfigWithPrompt, log } from './utilities.js';
+import { ConfigKey, getCliConfigWithPrompt, log } from './utils.js';
 
 export const defaultDatabaseUrl = 'postgresql://localhost:5432/logto';
 

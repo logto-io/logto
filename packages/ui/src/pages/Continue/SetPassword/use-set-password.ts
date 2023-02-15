@@ -1,15 +1,19 @@
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { addProfile } from '@/apis/interaction';
-import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useErrorHandler from '@/hooks/use-error-handler';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 
 const useSetPassword = () => {
   const navigate = useNavigate();
   const { show } = useConfirmModal();
+
+  const handleError = useErrorHandler();
+  const asyncAddProfile = useApi(addProfile);
 
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
 
@@ -24,20 +28,22 @@ const useSetPassword = () => {
     [navigate, requiredProfileErrorHandler, show]
   );
 
-  const { result, run: asyncAddProfile } = useApi(addProfile, errorHandlers);
-
   const setPassword = useCallback(
     async (password: string) => {
-      await asyncAddProfile({ password });
-    },
-    [asyncAddProfile]
-  );
+      const [error, result] = await asyncAddProfile({ password });
 
-  useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
-    }
-  }, [navigate, result]);
+      if (error) {
+        await handleError(error, errorHandlers);
+
+        return;
+      }
+
+      if (result?.redirectTo) {
+        window.location.replace(result.redirectTo);
+      }
+    },
+    [asyncAddProfile, errorHandlers, handleError]
+  );
 
   return {
     setPassword,

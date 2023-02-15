@@ -30,7 +30,7 @@ describe('Input Field UI Component', () => {
   });
 
   test('render error message', () => {
-    const errorCode = 'username_password_mismatch';
+    const errorCode = 'password_required';
     const { queryByText } = render(<PasswordInput error={errorCode} />);
     expect(queryByText(errorCode)).not.toBeNull();
   });

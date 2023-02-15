@@ -13,44 +13,44 @@ import useResendVerificationCode from './use-resend-verification-code';
 import { getCodeVerificationHookByFlow } from './utils';
 
 type Props = {
-  type: UserFlow;
-  method: SignInIdentifier.Email | SignInIdentifier.Phone;
+  flow: UserFlow;
+  identifier: SignInIdentifier.Email | SignInIdentifier.Phone;
   target: string;
   hasPasswordButton?: boolean;
   className?: string;
 };
 
-const VerificationCode = ({ type, method, className, hasPasswordButton, target }: Props) => {
+const VerificationCode = ({ flow, identifier, className, hasPasswordButton, target }: Props) => {
   const [code, setCode] = useState<string[]>([]);
   const { t } = useTranslation();
 
-  const useVerificationCode = getCodeVerificationHookByFlow(type);
+  const useVerificationCode = getCodeVerificationHookByFlow(flow);
 
   const errorCallback = useCallback(() => {
     setCode([]);
   }, []);
 
   const { errorMessage, clearErrorMessage, onSubmit } = useVerificationCode(
-    method,
+    identifier,
     target,
     errorCallback
   );
 
   const { seconds, isRunning, onResendVerificationCode } = useResendVerificationCode(
-    type,
-    method,
+    flow,
+    identifier,
     target
   );
 
   useEffect(() => {
     if (code.length === defaultLength && code.every(Boolean)) {
       const payload =
-        method === SignInIdentifier.Email
+        identifier === SignInIdentifier.Email
           ? { email: target, verificationCode: code.join('') }
           : { phone: target, verificationCode: code.join('') };
       void onSubmit(payload);
     }
-  }, [code, method, onSubmit, target]);
+  }, [code, identifier, onSubmit, target]);
 
   return (
     <form className={classNames(styles.form, className)}>
@@ -78,8 +78,9 @@ const VerificationCode = ({ type, method, className, hasPasswordButton, target }
           }}
         />
       )}
-      {type === UserFlow.signIn && hasPasswordButton && (
-        <PasswordSignInLink method={method} target={target} className={styles.switch} />
+
+      {flow === UserFlow.signIn && hasPasswordButton && (
+        <PasswordSignInLink method={identifier} target={target} className={styles.switch} />
       )}
     </form>
   );

@@ -7,7 +7,7 @@ import {
   hasSignInMethodsChanged,
   hasSignUpSettingsChanged,
   hasSocialTargetsChanged,
-} from '../components/SignUpAndSignInChangePreview/SignUpAndSignInDiffSection/utilities';
+} from '../components/SignUpAndSignInChangePreview/SignUpAndSignInDiffSection/utils';
 import { signUpIdentifiersMapping } from '../constants';
 import { SignUpIdentifier } from '../types';
 import type { SignInExperienceForm, SignUpForm } from '../types';

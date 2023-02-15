@@ -8,8 +8,8 @@ import type { DatabaseTransactionConnection } from 'slonik';
 import { z } from 'zod';
 
 import { getRowsByKeys, updateValueByKey } from '../../../queries/logto-config.js';
-import { log } from '../../../utilities.js';
-import { generateOidcCookieKey, generateOidcPrivateKey } from '../utilities.js';
+import { log } from '../../../utils.js';
+import { generateOidcCookieKey, generateOidcPrivateKey } from '../utils.js';
 
 const isBase64FormatPrivateKey = (key: string) => !key.includes('-');
 

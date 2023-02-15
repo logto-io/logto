@@ -1,3 +1,4 @@
+import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { useState } from 'react';
@@ -13,10 +14,11 @@ import Select from '@/components/Select';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import { uriValidator, jsonValidator } from '@/utilities/validator';
+import { uriValidator, jsonValidator } from '@/utils/validator';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
+import ConfigForm from '../ConfigForm';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -25,6 +27,7 @@ type Props = {
   configTemplate?: ConnectorFactoryResponse['configTemplate'];
   isAllowEditTarget?: boolean;
   isDarkDefaultVisible?: boolean;
+  formItems?: ConnectorConfigFormItem[];
 };
 
 const ConnectorForm = ({
@@ -33,6 +36,7 @@ const ConnectorForm = ({
   isAllowEditTarget,
   isDarkDefaultVisible,
   connectorType,
+  formItems,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
@@ -132,25 +136,29 @@ const ConnectorForm = ({
           </FormField>
         </>
       )}
-      <FormField title="connectors.guide.config">
-        <Controller
-          name="config"
-          control={control}
-          defaultValue={configTemplate}
-          rules={{
-            validate: (value) => jsonValidator(value) || t('errors.invalid_json_format'),
-          }}
-          render={({ field: { onChange, value } }) => (
-            <CodeEditor
-              hasError={Boolean(errors.config)}
-              errorMessage={errors.config?.message}
-              language="json"
-              value={value}
-              onChange={onChange}
-            />
-          )}
-        />
-      </FormField>
+      {formItems ? (
+        <ConfigForm formItems={formItems} />
+      ) : (
+        <FormField title="connectors.guide.config">
+          <Controller
+            name="config"
+            control={control}
+            defaultValue={configTemplate}
+            rules={{
+              validate: (value) => jsonValidator(value) || t('errors.invalid_json_format'),
+            }}
+            render={({ field: { onChange, value } }) => (
+              <CodeEditor
+                hasError={Boolean(errors.config)}
+                errorMessage={errors.config?.message}
+                language="json"
+                value={value}
+                onChange={onChange}
+              />
+            )}
+          />
+        </FormField>
+      )}
       {connectorType === ConnectorType.Social && (
         <FormField title="connectors.guide.sync_profile">
           <Controller

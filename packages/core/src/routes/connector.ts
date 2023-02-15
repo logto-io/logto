@@ -1,14 +1,15 @@
-import { VerificationCodeType } from '@logto/connector-kit';
+import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, ConnectorFactoryResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
-import { object, string } from 'zod';
+import { string, object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
+import { buildRawConnector } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
@@ -127,16 +128,18 @@ export default function connectorRoutes<T extends AuthedRouter>(
   router.post(
     '/connectors',
     koaGuard({
-      body: Connectors.createGuard.pick({
-        config: true,
-        connectorId: true,
-        metadata: true,
-        syncProfile: true,
-      }),
+      body: Connectors.createGuard
+        .pick({
+          config: true,
+          connectorId: true,
+          metadata: true,
+          syncProfile: true,
+        })
+        .merge(Connectors.createGuard.pick({ id: true }).partial()), // `id` is optional
     }),
     async (ctx, next) => {
       const {
-        body: { connectorId, metadata, config, syncProfile },
+        body: { id: proposedId, connectorId, metadata, config, syncProfile },
       } = ctx.guard;
 
       const connectorFactories = await loadConnectorFactories();
@@ -184,7 +187,12 @@ export default function connectorRoutes<T extends AuthedRouter>(
         );
       }
 
-      const insertConnectorId = generateConnectorId();
+      if (config) {
+        const { rawConnector } = await buildRawConnector(connectorFactory);
+        validateConfig(config, rawConnector.configGuard);
+      }
+
+      const insertConnectorId = proposedId ?? generateConnectorId();
       await insertConnector({
         id: insertConnectorId,
         connectorId,

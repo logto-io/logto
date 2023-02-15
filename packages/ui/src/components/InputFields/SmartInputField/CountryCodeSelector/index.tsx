@@ -28,7 +28,7 @@ const CountryCodeSelector = (
       <span>{`+${countryCode}`}</span>
       <DownArrowIcon />
 
-      <select autoComplete="region" onChange={onChange}>
+      <select name="countryCode" autoComplete="country-code" onChange={onChange}>
         {countryList.map(({ countryCallingCode, countryCode }) => (
           <option key={countryCode} value={countryCallingCode}>
             {`+${countryCallingCode}`}

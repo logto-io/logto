@@ -3,22 +3,6 @@ import * as s from 'superstruct';
 
 import { UserFlow } from '.';
 
-export const emailOrPhoneStateGuard = s.object({
-  email: s.optional(s.string()),
-  phone: s.optional(s.string()),
-});
-
-export const verificationCodeMethodGuard = s.union([
-  s.literal(SignInIdentifier.Email),
-  s.literal(SignInIdentifier.Phone),
-]);
-
-export const SignInMethodGuard = s.union([
-  s.literal(SignInIdentifier.Email),
-  s.literal(SignInIdentifier.Phone),
-  s.literal(SignInIdentifier.Username),
-]);
-
 export const userFlowGuard = s.enums([
   UserFlow.signIn,
   UserFlow.register,
@@ -26,23 +10,30 @@ export const userFlowGuard = s.enums([
   UserFlow.continue,
 ]);
 
+/* Password SignIn Flow */
+export const passwordIdentifierStateGuard = s.object({
+  identifier: s.enums([SignInIdentifier.Email, SignInIdentifier.Phone, SignInIdentifier.Username]),
+  value: s.string(),
+});
+
+/* Continue Flow */
 export const continueFlowStateGuard = s.optional(
   s.type({
     flow: userFlowGuard,
   })
 );
 
-export const continueMethodGuard = s.union([
-  s.literal('password'),
-  s.literal('username'),
+/* Verification Code Flow Guard */
+const verificationCodeMethodGuard = s.union([
   s.literal(SignInIdentifier.Email),
   s.literal(SignInIdentifier.Phone),
 ]);
-
-export const usernameGuard = s.object({
-  username: s.string(),
+export const verificationCodeStateGuard = s.object({
+  identifier: verificationCodeMethodGuard,
+  value: s.string(),
 });
 
+/* Social Flow Guard */
 const registeredSocialIdentity = s.optional(
   s.object({
     email: s.optional(s.string()),

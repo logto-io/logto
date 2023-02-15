@@ -97,3 +97,14 @@ export const formatPhoneNumberWithCountryCallingCode = (number: string) => {
     return number;
   }
 };
+
+export const parsePhoneNumber = (value: string) => {
+  try {
+    const phoneNumber = parsePhoneNumberWithError(parseE164Number(value));
+
+    return {
+      countryCallingCode: phoneNumber.countryCallingCode,
+      nationalNumber: phoneNumber.nationalNumber,
+    };
+  } catch {}
+};

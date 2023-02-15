@@ -1,4 +1,4 @@
-import i18nNext from 'i18next';
+import i18next from 'i18next';
 
 import {
   isValidCountryCode,
@@ -9,7 +9,7 @@ import {
 } from './country-code';
 
 describe('country-code', () => {
-  void i18nNext.init();
+  void i18next.init();
 
   it('isValidCountryCode', () => {
     expect(isValidCountryCode('CN')).toBeTruthy();
@@ -17,47 +17,48 @@ describe('country-code', () => {
   });
 
   it('getDefaultCountryCode', async () => {
-    await i18nNext.changeLanguage('zh');
+    await i18next.changeLanguage('zh');
+
     expect(getDefaultCountryCode()).toEqual('CN');
 
-    await i18nNext.changeLanguage('en');
+    await i18next.changeLanguage('en');
     expect(getDefaultCountryCode()).toEqual('US');
 
-    await i18nNext.changeLanguage('zh-CN');
+    await i18next.changeLanguage('zh-CN');
     expect(getDefaultCountryCode()).toEqual('CN');
 
-    await i18nNext.changeLanguage('zh-TW');
+    await i18next.changeLanguage('zh-TW');
     expect(getDefaultCountryCode()).toEqual('TW');
 
-    await i18nNext.changeLanguage('en-US');
+    await i18next.changeLanguage('en-US');
     expect(getDefaultCountryCode()).toEqual('US');
 
-    await i18nNext.changeLanguage('en-CA');
+    await i18next.changeLanguage('en-CA');
     expect(getDefaultCountryCode()).toEqual('CA');
   });
 
   it('getDefaultCountryCallingCode', async () => {
-    await i18nNext.changeLanguage('zh');
+    await i18next.changeLanguage('zh');
     expect(getDefaultCountryCallingCode()).toEqual('86');
 
-    await i18nNext.changeLanguage('en');
+    await i18next.changeLanguage('en');
     expect(getDefaultCountryCallingCode()).toEqual('1');
 
-    await i18nNext.changeLanguage('zh-CN');
+    await i18next.changeLanguage('zh-CN');
     expect(getDefaultCountryCallingCode()).toEqual('86');
 
-    await i18nNext.changeLanguage('zh-TW');
+    await i18next.changeLanguage('zh-TW');
     expect(getDefaultCountryCallingCode()).toEqual('886');
 
-    await i18nNext.changeLanguage('en-US');
+    await i18next.changeLanguage('en-US');
     expect(getDefaultCountryCallingCode()).toEqual('1');
 
-    await i18nNext.changeLanguage('en-CA');
+    await i18next.changeLanguage('en-CA');
     expect(getDefaultCountryCallingCode()).toEqual('1');
   });
 
   it('getCountryList should sort properly', async () => {
-    await i18nNext.changeLanguage('zh');
+    await i18next.changeLanguage('zh');
     const countryList = getCountryList();
 
     expect(countryList[0]).toEqual({
@@ -69,7 +70,7 @@ describe('country-code', () => {
   });
 
   it('getCountryList should remove duplicate', async () => {
-    await i18nNext.changeLanguage('zh');
+    await i18next.changeLanguage('zh');
     const countryList = getCountryList();
 
     expect(countryList.filter(({ countryCallingCode }) => countryCallingCode === '1')).toHaveLength(

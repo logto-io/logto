@@ -11,8 +11,9 @@ import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
 import { stateValidation } from '@/utils/social-connectors';
 
-import type { ErrorHandlers } from './use-api';
 import useApi from './use-api';
+import useErrorHandler from './use-error-handler';
+import type { ErrorHandlers } from './use-error-handler';
 import { PageContext } from './use-page-context';
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 import { useSieMethods } from './use-sie';
@@ -25,7 +26,9 @@ const useSocialSignInListener = (connectorId?: string) => {
 
   const navigate = useNavigate();
 
+  const handleError = useErrorHandler();
   const registerWithSocial = useSocialRegister(connectorId, true);
+  const asyncSignInWithSocial = useApi(signInWithSocial);
 
   const accountNotExistErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
@@ -50,12 +53,10 @@ const useSocialSignInListener = (connectorId?: string) => {
     },
     [connectorId, navigate, registerWithSocial]
   );
-
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({
     replace: true,
     flow: UserFlow.signIn,
   });
-
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.identity_not_exist': async (error) => {
@@ -73,14 +74,9 @@ const useSocialSignInListener = (connectorId?: string) => {
     [requiredProfileErrorHandlers, signInMode, accountNotExistErrorHandler, setToast]
   );
 
-  const { result, run: asyncSignInWithSocial } = useApi(
-    signInWithSocial,
-    signInWithSocialErrorHandlers
-  );
-
   const signInWithSocialHandler = useCallback(
     async (connectorId: string, data: Record<string, unknown>) => {
-      void asyncSignInWithSocial({
+      const [error, result] = await asyncSignInWithSocial({
         connectorId,
         connectorData: {
           // For validation use only
@@ -88,15 +84,19 @@ const useSocialSignInListener = (connectorId?: string) => {
           ...data,
         },
       });
-    },
-    [asyncSignInWithSocial]
-  );
 
-  useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
-    }
-  }, [result]);
+      if (error) {
+        await handleError(error, signInWithSocialErrorHandlers);
+
+        return;
+      }
+
+      if (result?.redirectTo) {
+        window.location.replace(result.redirectTo);
+      }
+    },
+    [asyncSignInWithSocial, handleError, signInWithSocialErrorHandlers]
+  );
 
   // Social Sign-In Callback Handler
   useEffect(() => {

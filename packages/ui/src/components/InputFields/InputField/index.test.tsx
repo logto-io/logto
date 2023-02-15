@@ -31,7 +31,7 @@ describe('InputField Component', () => {
 
   test('render error message', () => {
     const errorCode = 'invalid_email';
-    const { queryByText } = render(<InputField error={errorCode} />);
+    const { queryByText } = render(<InputField errorMessage={errorCode} />);
     expect(queryByText(errorCode)).not.toBeNull();
   });
 

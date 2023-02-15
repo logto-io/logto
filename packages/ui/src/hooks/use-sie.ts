@@ -1,4 +1,7 @@
+import { SignInIdentifier } from '@logto/schemas';
 import { useContext } from 'react';
+
+import type { VerificationCodeIdentifier } from '@/types';
 
 import { PageContext } from './use-page-context';
 
@@ -24,10 +27,18 @@ export const useForgotPasswordSettings = () => {
   const { experienceSettings } = useContext(PageContext);
   const { forgotPassword } = experienceSettings ?? {};
 
+  const enabledMethodSet = new Set<VerificationCodeIdentifier>();
+
+  if (forgotPassword?.email) {
+    enabledMethodSet.add(SignInIdentifier.Email);
+  }
+
+  if (forgotPassword?.phone) {
+    enabledMethodSet.add(SignInIdentifier.Phone);
+  }
+
   return {
-    isForgotPasswordEnabled: Boolean(
-      forgotPassword && (forgotPassword.email || forgotPassword.phone)
-    ),
-    ...forgotPassword,
+    isForgotPasswordEnabled: enabledMethodSet.size > 0,
+    enabledMethodSet,
   };
 };

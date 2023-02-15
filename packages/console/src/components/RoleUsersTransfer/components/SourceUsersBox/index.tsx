@@ -14,7 +14,7 @@ import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useDebounce from '@/hooks/use-debounce';
 import * as transferLayout from '@/scss/transfer.module.scss';
-import { buildUrl, formatSearchKeyword } from '@/utilities/url';
+import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import SourceUserItem from '../SourceUserItem';
 import * as styles from './index.module.scss';

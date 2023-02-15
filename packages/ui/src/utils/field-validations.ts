@@ -1,7 +1,12 @@
-import type { ErrorType } from '@/components/ErrorMessage';
+import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/mobile';
 
-const usernameRegex = /^[A-Z_a-z-][\w-]*$/;
-const emailRegex = /^\S+@\S+\.\S+$/;
+import type { ErrorType } from '@/components/ErrorMessage';
+import { parseE164Number } from '@/utils/country-code';
+
+// TODO: clean up this file and merge to form utils
+
+export const usernameRegex = /^[A-Z_a-z-][\w-]*$/;
+export const emailRegex = /^\S+@\S+\.\S+$/;
 
 export const requiredValidation = (
   type: 'username' | 'password',
@@ -12,7 +17,7 @@ export const requiredValidation = (
   }
 };
 
-export const usernameValidation = (username: string): ErrorType | undefined => {
+export const validateUsername = (username: string): ErrorType | undefined => {
   if (!username) {
     return 'username_required';
   }
@@ -22,7 +27,29 @@ export const usernameValidation = (username: string): ErrorType | undefined => {
   }
 
   if (!usernameRegex.test(username)) {
-    return 'username_valid_charset';
+    return 'username_invalid_charset';
+  }
+};
+
+export const validateEmail = (email: string): ErrorType | undefined => {
+  if (!emailRegex.test(email)) {
+    return 'invalid_email';
+  }
+};
+
+export const validatePhone = (value: string): ErrorType | undefined => {
+  try {
+    const phoneNumber = parsePhoneNumberWithError(parseE164Number(value));
+
+    if (!phoneNumber.isValid()) {
+      return 'invalid_phone';
+    }
+  } catch (error: unknown) {
+    if (error instanceof ParseError) {
+      return 'invalid_phone';
+    }
+
+    throw error;
   }
 };
 
@@ -42,11 +69,5 @@ export const confirmPasswordValidation = (
 ): ErrorType | undefined => {
   if (password !== confirmPassword) {
     return { code: 'passwords_do_not_match' };
-  }
-};
-
-export const emailValidation = (email: string): ErrorType | undefined => {
-  if (!emailRegex.test(email)) {
-    return 'invalid_email';
   }
 };

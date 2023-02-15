@@ -12,7 +12,7 @@ import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
-import { buildUrl, formatSearchKeyword } from '@/utilities/url';
+import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import type { RoleDetailsOutletContext } from '../types';
 import AssignPermissionsModal from './components/AssignPermissionsModal';

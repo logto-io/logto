@@ -2,8 +2,11 @@ import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
 import path from 'path';
 
-import type { AllConnector, BaseConnector } from '@logto/connector-kit';
+import type { AllConnector, BaseConnector, GetConnectorConfig } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
+
+import { notImplemented } from './consts.js';
+import type { ConnectorFactory } from './types.js';
 
 export function validateConnectorModule(
   connector: Partial<BaseConnector<ConnectorType>>
@@ -47,12 +50,30 @@ export const readUrl = async (
   return readFile(path.join(baseUrl, url), 'utf8');
 };
 
-export const parseMetadata = async (metadata: AllConnector['metadata'], packagePath: string) => {
+export const parseMetadata = async (
+  metadata: AllConnector['metadata'],
+  packagePath: string
+): Promise<AllConnector['metadata']> => {
   return {
     ...metadata,
     logo: await readUrl(metadata.logo, packagePath, 'svg'),
     logoDark: metadata.logoDark && (await readUrl(metadata.logoDark, packagePath, 'svg')),
     readme: await readUrl(metadata.readme, packagePath, 'text'),
-    configTemplate: await readUrl(metadata.configTemplate, packagePath, 'text'),
+    configTemplate:
+      metadata.configTemplate && (await readUrl(metadata.configTemplate, packagePath, 'text')),
   };
+};
+
+export const buildRawConnector = async (
+  connectorFactory: ConnectorFactory,
+  getConnectorConfig?: GetConnectorConfig
+) => {
+  const { createConnector, path: packagePath } = connectorFactory;
+  const rawConnector = await createConnector({
+    getConfig: getConnectorConfig ?? notImplemented,
+  });
+  validateConnectorModule(rawConnector);
+  const rawMetadata = await parseMetadata(rawConnector.metadata, packagePath);
+
+  return { rawConnector, rawMetadata };
 };

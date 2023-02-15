@@ -2,9 +2,7 @@
 
 import { InteractionEvent } from '@logto/schemas';
 import type {
-  UsernamePasswordPayload,
-  EmailPasswordPayload,
-  PhonePasswordPayload,
+  SignInIdentifier,
   EmailVerificationCodePayload,
   PhoneVerificationCodePayload,
   SocialConnectorPayload,
@@ -22,10 +20,7 @@ type Response = {
   redirectTo: string;
 };
 
-export type PasswordSignInPayload =
-  | UsernamePasswordPayload
-  | EmailPasswordPayload
-  | PhonePasswordPayload;
+export type PasswordSignInPayload = { [K in SignInIdentifier]?: string } & { password: string };
 
 export const signInWithPasswordIdentifier = async (payload: PasswordSignInPayload) => {
   await api.put(`${interactionPrefix}`, {
@@ -66,7 +61,10 @@ export const setUserPassword = async (password: string) => {
   return result || { success: true };
 };
 
-export type SendVerificationCodePayload = { email: string } | { phone: string };
+export type SendVerificationCodePayload = {
+  email?: string;
+  phone?: string;
+};
 
 export const putInteraction = async (event: InteractionEvent) =>
   api.put(`${interactionPrefix}`, { json: { event } });

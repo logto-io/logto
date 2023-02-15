@@ -1,4 +1,4 @@
-import { formatNumberWithComma } from '@/utilities/number';
+import { formatNumberWithComma } from '@/utils/number';
 
 import * as styles from './index.module.scss';
 

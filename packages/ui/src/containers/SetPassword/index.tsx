@@ -8,7 +8,6 @@ import Button from '@/components/Button';
 import IconButton from '@/components/Button/IconButton';
 import ErrorMessage from '@/components/ErrorMessage';
 import { InputField } from '@/components/InputFields';
-import { passwordErrorWatcher } from '@/utils/form';
 
 import TogglePassword from './TogglePassword';
 import * as styles from './index.module.scss';
@@ -55,27 +54,29 @@ const SetPassword = ({
 
       void handleSubmit((data, event) => {
         onSubmit(data.newPassword);
-        event?.preventDefault();
       })(event);
     },
     [clearErrorMessage, handleSubmit, onSubmit]
   );
 
-  const newPasswordError = passwordErrorWatcher(errors.newPassword);
-
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <InputField
-        required
         className={styles.inputField}
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
         placeholder={t('input.password')}
         autoFocus={autoFocus}
-        isDanger={!!newPasswordError}
-        error={newPasswordError}
-        aria-invalid={!!newPasswordError}
-        {...register('newPassword', { required: true, minLength: 6 })}
+        isDanger={!!errors.newPassword}
+        errorMessage={errors.newPassword?.message}
+        aria-invalid={!!errors.newPassword}
+        {...register('newPassword', {
+          required: t('error.password_required'),
+          minLength: {
+            value: 6,
+            message: t('error.password_min_length', { length: 6 }),
+          },
+        })}
         isSuffixFocusVisible={!!watch('newPassword')}
         suffix={
           <IconButton
@@ -89,15 +90,14 @@ const SetPassword = ({
       />
 
       <InputField
-        required
         className={styles.inputField}
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
         placeholder={t('input.confirm_password')}
-        error={errors.confirmPassword && 'passwords_do_not_match'}
+        errorMessage={errors.confirmPassword?.message}
         aria-invalid={!!errors.confirmPassword}
         {...register('confirmPassword', {
-          validate: (value) => value === watch('newPassword'),
+          validate: (value) => value === watch('newPassword') || t('error.passwords_do_not_match'),
         })}
         isSuffixFocusVisible={!!watch('confirmPassword')}
         suffix={
@@ -115,13 +115,7 @@ const SetPassword = ({
 
       <TogglePassword isChecked={showPassword} onChange={setShowPassword} />
 
-      <Button
-        name="submit"
-        title="action.save_password"
-        onClick={async () => {
-          onSubmitHandler();
-        }}
-      />
+      <Button name="submit" title="action.save_password" htmlType="submit" />
 
       <input hidden type="submit" />
     </form>

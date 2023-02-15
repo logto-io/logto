@@ -10,6 +10,11 @@ import SocialCallback from '.';
 
 const origin = 'http://localhost:3000';
 
+jest.mock('i18next', () => ({
+  ...jest.requireActual('i18next'),
+  language: 'en',
+}));
+
 jest.mock('@/apis/interaction', () => ({
   signInWithSocial: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
 }));

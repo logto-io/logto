@@ -1,0 +1,35 @@
+@use '@/scss/underscore' as _;
+
+.form {
+  @include _.flex-column;
+
+  > * {
+    width: 100%;
+  }
+
+  .inputField,
+  .link,
+  .terms,
+  .formErrors {
+    margin-bottom: _.unit(4);
+  }
+
+  .link {
+    margin-top: _.unit(-1);
+    align-self: start;
+    width: auto;
+  }
+
+  .formErrors {
+    margin-left: _.unit(0.5);
+    margin-top: _.unit(-3);
+  }
+}
+
+:global(.desktop) {
+  .form {
+    .link {
+      margin-top: _.unit(-2);
+    }
+  }
+}

@@ -9,8 +9,6 @@ const translation = {
     confirm_password: '确认密码',
   },
   secondary: {
-    sign_in_with: '通过 {{methods, list(type: disjunction;), zhOrSpaces}} 登录',
-    register_with: '通过 {{methods, list(type: disjunction;)}} 注册',
     social_bind_with:
       '绑定到已有账户? 使用 {{methods, list(type: disjunction;), zhOrSpaces}} 登录并绑定。',
   },
@@ -43,6 +41,7 @@ const translation = {
   description: {
     email: '邮箱',
     phone_number: '手机',
+    username: '用户名',
     reminder: '提示',
     not_found: '404 页面不存在',
     agree_with_terms: '我已阅读并同意 ',
@@ -69,8 +68,7 @@ const translation = {
     social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing: '找到了一个匹配的帐号，你可以直接绑定。',
     reset_password: '重设密码',
-    reset_password_description_email: '输入邮件地址，领取验证码以重设密码。',
-    reset_password_description_phone: '输入手机号，领取验证码以重设密码。',
+    reset_password_description: '输入{{types, list(type: disjunction;)}}，领取验证码以重设密码。',
     new_password: '新密码',
     set_password: '设置密码',
     password_changed: '已重置密码！',
@@ -88,44 +86,14 @@ const translation = {
     link_email_or_phone_description: '绑定邮箱或手机号以保障您的账号安全',
     continue_with_more_information: '为保障您的账号安全，需要您补充以下信息。',
   },
-  profile: {
-    title: 'Account Settings', // UNTRANSLATED
-    description:
-      'Change your account settings and manage your personal information here to ensure your account security.', // UNTRANSLATED
-    settings: {
-      title: 'PROFILE SETTINGS', // UNTRANSLATED
-      profile_information: 'Profile Information', // UNTRANSLATED
-      avatar: 'Avatar', // UNTRANSLATED
-      name: 'Name', // UNTRANSLATED
-      username: 'Username', // UNTRANSLATED
-    },
-    password: {
-      title: 'PASSWORD', // UNTRANSLATED
-      reset_password: 'Reset Password', // UNTRANSLATED
-      reset_password_sc: 'Reset password', // UNTRANSLATED
-    },
-    link_account: {
-      title: 'LINK ACCOUNT', // UNTRANSLATED
-      email_phone_sign_in: 'Email / Phone Sign-In', // UNTRANSLATED
-      email: 'Email', // UNTRANSLATED
-      phone: 'Phone', // UNTRANSLATED
-      phone_sc: 'Phone number', // UNTRANSLATED
-      social: 'Social Sign-In', // UNTRANSLATED
-      social_sc: 'Social accounts', // UNTRANSLATED
-    },
-    not_set: 'Not set', // UNTRANSLATED
-    edit: 'Edit', // UNTRANSLATED
-    change: 'Change', // UNTRANSLATED
-    link: 'Link', // UNTRANSLATED
-    unlink: 'Unlink', // UNTRANSLATED
-  },
   error: {
-    username_password_mismatch: '用户名和密码不匹配',
+    general_required: `{{types, list(type: disjunction;)}}必填`,
+    general_invalid: `无效的{{types, list(type: disjunction;)}}`,
     username_required: '用户名必填',
     password_required: '密码必填',
     username_exists: '用户名已存在',
     username_should_not_start_with_number: '用户名不能以数字开头',
-    username_valid_charset: '用户名只能包含英文字母、数字或下划线。',
+    username_invalid_charset: '用户名只能包含英文字母、数字或下划线。',
     invalid_email: '无效的邮箱',
     invalid_phone: '无效的手机号',
     password_min_length: '密码最少需要{{min}}个字符',

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'path';
 
 import { connectorDirectory } from '@logto/cli/lib/constants.js';
-import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utilities.js';
+import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utils.js';
 import { findPackage } from '@logto/shared';
 import chalk from 'chalk';
 

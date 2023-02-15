@@ -7,8 +7,6 @@ const translation = {
     confirm_password: 'Confirm password',
   },
   secondary: {
-    sign_in_with: 'Sign in with {{methods, list(type: disjunction;)}}',
-    register_with: 'Create account with {{methods, list(type: disjunction;)}}',
     social_bind_with:
       'Already had an account? Sign in to link {{methods, list(type: disjunction;)}} with your social identity.',
   },
@@ -41,6 +39,7 @@ const translation = {
   description: {
     email: 'email',
     phone_number: 'phone number',
+    username: 'username',
     reminder: 'Reminder',
     not_found: '404 Not Found',
     agree_with_terms: 'I have read and agree to the ',
@@ -69,10 +68,8 @@ const translation = {
     social_link_email_or_phone: 'You can link another email or phone',
     social_bind_with_existing: 'We find a related account, you can link it directly.',
     reset_password: 'Reset password',
-    reset_password_description_email:
-      'Enter the email address associated with your account, and we’ll email you the verification code to reset your password.',
-    reset_password_description_phone:
-      'Enter the phone number associated with your account, and we’ll message you the verification code to reset your password.',
+    reset_password_description:
+      'Enter the {{types, list(type: disjunction;)}} associated with your account, and we’ll send you the verification code to reset your password.',
     new_password: 'New password',
     set_password: 'Set password',
     password_changed: 'Password Changed',
@@ -92,44 +89,14 @@ const translation = {
       'For added security, please link your email or phone with the account.',
     continue_with_more_information: 'For added security, please complete below account details.',
   },
-  profile: {
-    title: 'Account Settings',
-    description:
-      'Change your account settings and manage your personal information here to ensure your account security.',
-    settings: {
-      title: 'PROFILE SETTINGS',
-      profile_information: 'Profile Information',
-      avatar: 'Avatar',
-      name: 'Name',
-      username: 'Username',
-    },
-    password: {
-      title: 'PASSWORD',
-      reset_password: 'Reset Password',
-      reset_password_sc: 'Reset password',
-    },
-    link_account: {
-      title: 'LINK ACCOUNT',
-      email_phone_sign_in: 'Email / Phone Sign-In',
-      email: 'Email',
-      phone: 'Phone',
-      phone_sc: 'Phone number',
-      social: 'Social Sign-In',
-      social_sc: 'Social accounts',
-    },
-    not_set: 'Not set',
-    edit: 'Edit',
-    change: 'Change',
-    link: 'Link',
-    unlink: 'Unlink',
-  },
   error: {
-    username_password_mismatch: 'Username and password do not match',
+    general_required: `{{types, list(type: disjunction;)}} is required`,
+    general_invalid: `The {{types, list(type: disjunction;)}} is invalid`,
     username_required: 'Username is required',
     password_required: 'Password is required',
     username_exists: 'Username already exists',
     username_should_not_start_with_number: 'Username should not start with a number',
-    username_valid_charset: 'Username should only contain letters, numbers, or underscores.',
+    username_invalid_charset: 'Username should only contain letters, numbers, or underscores.',
     invalid_email: 'The email is invalid',
     invalid_phone: 'The phone number is invalid',
     password_min_length: 'Password requires a minimum of {{min}} characters',

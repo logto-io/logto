@@ -1,6 +1,6 @@
 import type { EmailVerificationCodePayload, PhoneVerificationCodePayload } from '@logto/schemas';
 import { SignInIdentifier, SignInMode } from '@logto/schemas';
-import { useMemo, useCallback, useEffect } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,9 +8,10 @@ import {
   signInWithVerificationCodeIdentifier,
   registerWithVerifiedIdentifier,
 } from '@/apis/interaction';
-import type { ErrorHandlers } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useErrorHandler from '@/hooks/use-error-handler';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
@@ -28,22 +29,19 @@ const useSignInFlowCodeVerification = (
   const { t } = useTranslation();
   const { show } = useConfirmModal();
   const navigate = useNavigate();
+  const { signInMode } = useSieMethods();
+
+  const handleError = useErrorHandler();
+  const registerWithIdentifierAsync = useApi(registerWithVerifiedIdentifier);
+  const asyncSignInWithVerificationCodeIdentifier = useApi(signInWithVerificationCodeIdentifier);
 
   const { errorMessage, clearErrorMessage, generalVerificationCodeErrorHandlers } =
     useGeneralVerificationCodeErrorHandler();
-
-  const { signInMode } = useSieMethods();
 
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({
     replace: true,
     flow: UserFlow.signIn,
   });
-
-  const { run: registerWithIdentifierAsync } = useApi(
-    registerWithVerifiedIdentifier,
-    requiredProfileErrorHandlers
-  );
-
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
 
   const identifierNotExistErrorHandler = useCallback(async () => {
@@ -71,17 +69,25 @@ const useSignInFlowCodeVerification = (
       return;
     }
 
-    const result = await registerWithIdentifierAsync(
+    const [error, result] = await registerWithIdentifierAsync(
       method === SignInIdentifier.Email ? { email: target } : { phone: target }
     );
+
+    if (error) {
+      await handleError(error, requiredProfileErrorHandlers);
+
+      return;
+    }
 
     if (result?.redirectTo) {
       window.location.replace(result.redirectTo);
     }
   }, [
+    handleError,
     method,
     navigate,
     registerWithIdentifierAsync,
+    requiredProfileErrorHandlers,
     show,
     showIdentifierErrorAlert,
     signInMode,
@@ -104,22 +110,21 @@ const useSignInFlowCodeVerification = (
     ]
   );
 
-  const { result, run: asyncSignInWithVerificationCodeIdentifier } = useApi(
-    signInWithVerificationCodeIdentifier,
-    errorHandlers
-  );
-
-  useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
-    }
-  }, [result]);
-
   const onSubmit = useCallback(
     async (payload: EmailVerificationCodePayload | PhoneVerificationCodePayload) => {
-      return asyncSignInWithVerificationCodeIdentifier(payload);
+      const [error, result] = await asyncSignInWithVerificationCodeIdentifier(payload);
+
+      if (error) {
+        await handleError(error, errorHandlers);
+
+        return;
+      }
+
+      if (result?.redirectTo) {
+        window.location.replace(result.redirectTo);
+      }
     },
-    [asyncSignInWithVerificationCodeIdentifier]
+    [asyncSignInWithVerificationCodeIdentifier, errorHandlers, handleError]
   );
 
   return {
