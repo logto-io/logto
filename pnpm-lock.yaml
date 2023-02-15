@@ -254,6 +254,7 @@ importers:
 
   packages/core:
     specifiers:
+      '@koa/cors': ^4.0.0
       '@logto/cli': workspace:*
       '@logto/connector-kit': workspace:*
       '@logto/core-kit': workspace:*
@@ -275,6 +276,7 @@ importers:
       '@types/koa-logger': ^3.1.1
       '@types/koa-mount': ^4.0.0
       '@types/koa-send': ^4.1.3
+      '@types/koa__cors': ^3.3.0
       '@types/node': ^18.11.18
       '@types/oidc-provider': ^8.0.0
       '@types/semver': ^7.3.12
@@ -330,6 +332,7 @@ importers:
       typescript: ^4.9.4
       zod: ^3.20.2
     dependencies:
+      '@koa/cors': 4.0.0
       '@logto/cli': link:../cli
       '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
@@ -388,6 +391,7 @@ importers:
       '@types/koa-logger': 3.1.2
       '@types/koa-mount': 4.0.1
       '@types/koa-send': 4.1.3
+      '@types/koa__cors': 3.3.0
       '@types/node': 18.11.18
       '@types/oidc-provider': 8.0.0
       '@types/semver': 7.3.12
@@ -590,6 +594,7 @@ importers:
       '@silverhand/eslint-config': 1.3.0
       '@silverhand/essentials': 2.1.0
       '@silverhand/ts-config': 1.2.1
+      '@types/inquirer': ^9.0.0
       '@types/jest': ^29.1.2
       '@types/node': ^18.11.18
       '@types/pluralize': ^0.0.29
@@ -617,6 +622,7 @@ importers:
       '@silverhand/eslint-config': 1.3.0_k3lfx77tsvurbevhk73p7ygch4
       '@silverhand/essentials': 2.1.0
       '@silverhand/ts-config': 1.2.1_typescript@4.9.4
+      '@types/inquirer': 9.0.3
       '@types/jest': 29.1.2
       '@types/node': 18.11.18
       '@types/pluralize': 0.0.29
@@ -4008,7 +4014,7 @@ packages:
     resolution: {integrity: sha512-CzNkWqQftcmk2jaCWdBTf9Sm7xSw4rkI1zpU/Udw3HX5//adEZUIm9STtoRP1qgWj0CWQtJ9UTvqmO2NNjhMJw==}
     dependencies:
       '@types/through': 0.0.30
-      rxjs: 7.5.5
+      rxjs: 7.8.0
     dev: true
 
   /@types/is-ci/3.0.0:
@@ -4107,6 +4113,12 @@ packages:
       '@types/keygrip': 1.0.2
       '@types/koa-compose': 3.2.5
       '@types/node': 18.11.18
+    dev: true
+
+  /@types/koa__cors/3.3.0:
+    resolution: {integrity: sha512-FUN8YxcBakIs+walVe3+HcNP+Bxd0SB8BJHBWkglZ5C1XQWljlKcEFDG/dPiCIqwVCUbc5X0nYDlH62uEhdHMA==}
+    dependencies:
+      '@types/koa': 2.13.4
     dev: true
 
   /@types/mdast/3.0.10:
@@ -12925,12 +12937,6 @@ packages:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
     dependencies:
       queue-microtask: 1.2.3
-    dev: true
-
-  /rxjs/7.5.5:
-    resolution: {integrity: sha512-sy+H0pQofO95VDmFLzyaw9xNJU4KTRSwQIGM6+iG3SypAtCiLDzpeG8sJrNCWn2Up9km+KhkvTdbkrdy+yzZdw==}
-    dependencies:
-      tslib: 2.4.1
     dev: true
 
   /rxjs/7.8.0:

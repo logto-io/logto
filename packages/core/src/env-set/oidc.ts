@@ -24,6 +24,7 @@ const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
   return Object.freeze({
     cookieKeys,
     privateJwks,
+    publicJwks,
     jwkSigningAlg,
     localJWKSet,
     issuer,

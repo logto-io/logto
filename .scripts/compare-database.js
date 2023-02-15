@@ -117,12 +117,32 @@ assert.deepStrictEqual(...manifests);
 const queryDatabaseData = async (database) => {
   const pool = new pg.Pool({ database, user: 'postgres', password: 'postgres' });
   const result = await Promise.all(manifests[0].tables
-    // system configs are usually generated or time-relative, ignore for now
-    .filter(({ table_name }) => !['logto_configs', '_logto_configs', 'systems'].includes(table_name))
     .map(async ({ table_name }) => {
       const { rows } = await pool.query(/* sql */`select * from ${table_name};`);
 
-      return [table_name, omitArray(rows, 'created_at', 'updated_at', 'secret', 'db_user', 'db_user_password')];
+      // check config rows except the value column
+      if (['logto_configs', '_logto_configs', 'systems'].includes(table_name)) {
+        return [table_name, omitArray(rows, 'value').sort((a, b) => {
+          if (a.tenant_id === b.tenant_id) {
+            return a.key.localeCompare(b.key);
+          }
+
+          return a.tenant_id.localeCompare(b.tenant_id);
+        })];
+      }
+
+      return [table_name, omitArray(
+        rows,
+        'id',
+        'resource_id',
+        'role_id',
+        'scope_id',
+        'created_at',
+        'updated_at',
+        'secret',
+        'db_user',
+        'db_user_password'
+      )];
     })
   );
 

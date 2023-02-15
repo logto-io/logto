@@ -7,7 +7,7 @@ import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { EnvSet, MountedApps } from '#src/env-set/index.js';
+import { EnvSet, UserApps } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { appendPath } from '#src/utils/url.js';
 
@@ -30,7 +30,7 @@ const buildDemoAppUris = (
   oidcClientMetadata: OidcClientMetadata
 ): Pick<OidcClientMetadata, 'redirectUris' | 'postLogoutRedirectUris'> => {
   const { urlSet } = EnvSet.values;
-  const urls = urlSet.deduplicated().map((url) => appendPath(url, MountedApps.DemoApp).toString());
+  const urls = urlSet.deduplicated().map((url) => appendPath(url, UserApps.DemoApp).toString());
 
   const data = {
     redirectUris: deduplicate([...urls, ...oidcClientMetadata.redirectUris]),

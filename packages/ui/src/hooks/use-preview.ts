@@ -29,9 +29,10 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     document.body.classList.add(conditionalString(styles.preview));
 
     const previewMessageHandler = (event: MessageEvent) => {
-      if (event.origin !== window.location.origin) {
-        return;
-      }
+      // TODO: @simeng: we can check allowed origins via `/.well-known/endpoints`
+      // if (event.origin !== window.location.origin) {
+      //   return;
+      // }
 
       if (event.data.sender === 'ac_preview') {
         // #event.data should be guarded at the provider's side

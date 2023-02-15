@@ -1,5 +1,5 @@
 import { generateStandardId, buildIdGenerator } from '@logto/core-kit';
-import { adminRoleId, Applications } from '@logto/schemas';
+import { defaultManagementApi, Applications } from '@logto/schemas';
 import { boolean, object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -76,7 +76,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
 
       ctx.body = {
         ...application,
-        isAdmin: applicationsRoles.some(({ roleId }) => roleId === adminRoleId),
+        isAdmin: applicationsRoles.some(({ roleId }) => roleId === defaultManagementApi.role.id),
       };
 
       return next();
@@ -107,14 +107,16 @@ export default function applicationRoutes<T extends AuthedRouter>(
       // FIXME @sijie temp solution to set admin access to machine to machine app
       if (isAdmin !== undefined) {
         const applicationsRoles = await findApplicationsRolesByApplicationId(id);
-        const originalIsAdmin = applicationsRoles.some(({ roleId }) => roleId === adminRoleId);
+        const originalIsAdmin = applicationsRoles.some(
+          ({ roleId }) => roleId === defaultManagementApi.role.id
+        );
 
         if (isAdmin && !originalIsAdmin) {
           await insertApplicationsRoles([
-            { id: generateStandardId(), applicationId: id, roleId: adminRoleId },
+            { id: generateStandardId(), applicationId: id, roleId: defaultManagementApi.role.id },
           ]);
         } else if (!isAdmin && originalIsAdmin) {
-          await deleteApplicationRole(id, adminRoleId);
+          await deleteApplicationRole(id, defaultManagementApi.role.id);
         }
       }
 

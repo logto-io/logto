@@ -1,14 +1,14 @@
-import { getRowsByKeys } from '@logto/cli/lib/queries/logto-config.js';
 import type { LogtoOidcConfigType } from '@logto/schemas';
 import { logtoOidcConfigGuard, LogtoOidcConfigKey } from '@logto/schemas';
 import chalk from 'chalk';
-import type { CommonQueryMethods } from 'slonik';
 import { z, ZodError } from 'zod';
 
-export const createLogtoConfigLibrary = (pool: CommonQueryMethods) => {
+import type Queries from '#src/tenants/Queries.js';
+
+export const createLogtoConfigLibrary = ({ getRowsByKeys }: Queries['logtoConfigs']) => {
   const getOidcConfigs = async (): Promise<LogtoOidcConfigType> => {
     try {
-      const { rows } = await getRowsByKeys(pool, Object.values(LogtoOidcConfigKey));
+      const { rows } = await getRowsByKeys(Object.values(LogtoOidcConfigKey));
 
       return z
         .object(logtoOidcConfigGuard)

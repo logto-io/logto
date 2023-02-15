@@ -16,21 +16,27 @@ export const doesConfigsTableExist = async (pool: CommonQueryMethods) => {
   return Boolean(rows[0]?.regclass);
 };
 
-export const getRowsByKeys = async (pool: CommonQueryMethods, keys: LogtoConfigKey[]) =>
+export const getRowsByKeys = async (
+  pool: CommonQueryMethods,
+  tenantId: string,
+  keys: LogtoConfigKey[]
+) =>
   pool.query<LogtoConfig>(sql`
     select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
-      where ${fields.key} in (${sql.join(keys, sql`,`)})
+      where ${fields.tenantId} = ${tenantId}
+      and ${fields.key} in (${sql.join(keys, sql`,`)})
   `);
 
 export const updateValueByKey = async <T extends LogtoConfigKey>(
   pool: CommonQueryMethods,
+  tenantId: string,
   key: T,
   value: z.infer<typeof logtoConfigGuards[T]>
 ) =>
   pool.query(
     sql`
-      insert into ${table} (${fields.key}, ${fields.value}) 
-        values (${key}, ${sql.jsonb(value)})
+      insert into ${table} (${fields.tenantId}, ${fields.key}, ${fields.value}) 
+        values (${tenantId}, ${key}, ${sql.jsonb(value)})
         on conflict (${fields.tenantId}, ${fields.key})
           do update set ${fields.value}=excluded.${fields.value}
     `

@@ -4,7 +4,7 @@ import { arbitraryObjectGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { verifyBearerTokenFromRequest } from '#src/middleware/koa-auth.js';
+import { verifyBearerTokenFromRequest } from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import {

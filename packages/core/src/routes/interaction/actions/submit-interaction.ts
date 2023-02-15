@@ -1,5 +1,12 @@
 import type { User, Profile } from '@logto/schemas';
-import { InteractionEvent, adminConsoleApplicationId } from '@logto/schemas';
+import {
+  UserRole,
+  getManagementApiAdminName,
+  defaultTenantId,
+  adminTenantId,
+  InteractionEvent,
+  adminConsoleApplicationId,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
@@ -7,6 +14,7 @@ import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import type { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import { getTenantId } from '#src/utils/tenant.js';
 
 import type { WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 import type {
@@ -157,14 +165,16 @@ export default async function submitInteraction(
     const { client_id } = ctx.interactionDetails.params;
 
     const createAdminUser =
-      String(client_id) === adminConsoleApplicationId && !(await hasActiveUsers());
+      getTenantId(ctx.URL) === adminTenantId &&
+      String(client_id) === adminConsoleApplicationId &&
+      !(await hasActiveUsers());
 
     await insertUser(
       {
         id,
         ...upsertProfile,
       },
-      createAdminUser
+      createAdminUser ? [UserRole.User, getManagementApiAdminName(defaultTenantId)] : []
     );
 
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });

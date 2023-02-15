@@ -6,17 +6,17 @@ import type { BareFetcher } from 'swr';
 
 import useApi, { RequestError } from './use-api';
 
-type withTotalNumber<T> = Array<Awaited<T> | number>;
+type WithTotalNumber<T> = Array<Awaited<T> | number>;
 
 type useSwrFetcherHook = {
   <T>(): BareFetcher<T>;
-  <T extends unknown[]>(): BareFetcher<withTotalNumber<T>>;
+  <T extends unknown[]>(): BareFetcher<WithTotalNumber<T>>;
 };
 
 const useSwrFetcher: useSwrFetcherHook = <T>() => {
   const api = useApi({ hideErrorToast: true });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const fetcher = useCallback<BareFetcher<T | withTotalNumber<T>>>(
+  const fetcher = useCallback<BareFetcher<T | WithTotalNumber<T>>>(
     async (resource, init) => {
       try {
         const response = await api.get(resource, init);

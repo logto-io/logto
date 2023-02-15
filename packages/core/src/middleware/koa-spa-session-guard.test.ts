@@ -1,7 +1,7 @@
 import { createMockUtils } from '@logto/shared/esm';
 import Provider from 'oidc-provider';
 
-import { MountedApps } from '#src/env-set/index.js';
+import { UserApps } from '#src/env-set/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -34,7 +34,7 @@ describe('koaSpaSessionGuard', () => {
 
   const next = jest.fn();
 
-  for (const app of Object.values(MountedApps)) {
+  for (const app of Object.values(UserApps)) {
     // eslint-disable-next-line @typescript-eslint/no-loop-func
     it(`${app} path should not redirect`, async () => {
       const ctx = createContextWithRouteParameters({

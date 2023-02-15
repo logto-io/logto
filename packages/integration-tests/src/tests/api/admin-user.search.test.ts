@@ -90,16 +90,6 @@ describe('admin console user search params', () => {
         json.length === 10 && json.every((user) => user.username?.startsWith('search_'))
       ).toBeTruthy();
     });
-
-    it('should be able to hide admin users', async () => {
-      const { headers, json } = await getUsers<User[]>([
-        ['search', '%search_tom%'],
-        ['hideAdminUser', 'true'],
-      ]);
-
-      expect(headers['total-number']).toEqual('2');
-      expect(json.length === 2 && json.every((user) => user.name === 'Tom Scott')).toBeTruthy();
-    });
   });
 
   it('should be able to perform case sensitive exact search', async () => {
@@ -145,12 +135,11 @@ describe('admin console user search params', () => {
       ['search.username', 'search_tom%'],
       ['mode.username', 'similar_to'],
       ['isCaseSensitive', 'true'],
-      ['hideAdminUser', 'true'],
     ]);
 
-    expect(headers['total-number']).toEqual('2');
+    expect(headers['total-number']).toEqual('5');
     expect(
-      json.length === 2 && json.every((user) => user.username?.startsWith('search_'))
+      json.length === 5 && json.every((user) => user.username?.startsWith('search_'))
     ).toBeTruthy();
   });
 

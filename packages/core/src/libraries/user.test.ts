@@ -1,5 +1,4 @@
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { createMockPool } from 'slonik';
 
 import { mockResource, mockRole, mockScope } from '#src/__mocks__/index.js';
 import { mockUser } from '#src/__mocks__/user.js';
@@ -7,17 +6,13 @@ import { MockQueries } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
 
-const pool = createMockPool({
-  query: jest.fn(),
-});
-
 const { encryptUserPassword, createUserLibrary } = await import('./user.js');
 
 const hasUserWithId = jest.fn();
 const queries = new MockQueries({
   users: { hasUserWithId },
   roles: { findRolesByRoleIds: async () => [mockRole] },
-  scopes: { findScopesByIdsAndResourceId: async () => [mockScope] },
+  scopes: { findScopesByIdsAndResourceIndicator: async () => [mockScope] },
   usersRoles: { findUsersRolesByUserId: async () => [] },
   rolesScopes: { findRolesScopesByRoleIds: async () => [] },
 });
@@ -73,12 +68,12 @@ describe('encryptUserPassword()', () => {
 });
 
 describe('findUserScopesForResourceId()', () => {
-  const { findUserScopesForResourceId } = createUserLibrary(queries);
+  const { findUserScopesForResourceIndicator } = createUserLibrary(queries);
 
   it('returns scopes that the user has access', async () => {
-    await expect(findUserScopesForResourceId(mockUser.id, mockResource.id)).resolves.toEqual([
-      mockScope,
-    ]);
+    await expect(
+      findUserScopesForResourceIndicator(mockUser.id, mockResource.indicator)
+    ).resolves.toEqual([mockScope]);
   });
 });
 

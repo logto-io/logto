@@ -1,4 +1,4 @@
-import { managementResource, managementResourceScope } from '@logto/schemas';
+import { defaultManagementApi } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { createResource } from '#src/api/index.js';
@@ -7,9 +7,9 @@ import { generateScopeName } from '#src/utils.js';
 
 describe('scopes', () => {
   it('should get management api resource scopes successfully', async () => {
-    const scopes = await getScopes(managementResource.id);
+    const scopes = await getScopes(defaultManagementApi.resource.id);
 
-    expect(scopes[0]).toMatchObject(managementResourceScope);
+    expect(scopes[0]).toMatchObject(defaultManagementApi.scope);
   });
 
   it('should create scope successfully', async () => {

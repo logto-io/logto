@@ -1,5 +1,5 @@
 import type { CreateScope, Scope } from '@logto/schemas';
-import { Scopes } from '@logto/schemas';
+import { Resources, Scopes } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -12,7 +12,8 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 
-const { table, fields } = convertToIdentifiers(Scopes);
+const { table, fields } = convertToIdentifiers(Scopes, true);
+const resources = convertToIdentifiers(Resources, true);
 
 const buildResourceConditions = (search: Search) => {
   const hasSearch = search.matches.length > 0;
@@ -99,16 +100,18 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
       `)
       : [];
 
-  const findScopesByIdsAndResourceId = async (
+  const findScopesByIdsAndResourceIndicator = async (
     scopeIds: string[],
-    resourceId: string
+    resourceIndicator: string
   ): Promise<readonly Scope[]> =>
     scopeIds.length > 0
       ? pool.any<Scope>(sql`
         select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
+        inner join ${resources.table}
+          on ${resources.fields.id} = ${fields.resourceId}
         where ${fields.id} in (${sql.join(scopeIds, sql`, `)})
-        and ${fields.resourceId} = ${resourceId}
+        and ${resources.fields.indicator} = ${resourceIndicator}
       `)
       : [];
 
@@ -152,7 +155,7 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
     findScopesByResourceId,
     findScopesByResourceIds,
     findScopesByIds,
-    findScopesByIdsAndResourceId,
+    findScopesByIdsAndResourceIndicator,
     insertScope,
     findScopeById,
     updateScope,

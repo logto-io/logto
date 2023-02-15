@@ -4,10 +4,11 @@ import type { Optional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import type { MDXProps } from 'mdx/types';
 import type { LazyExoticComponent } from 'react';
-import { cloneElement, lazy, Suspense, useEffect, useState } from 'react';
+import { useContext, cloneElement, lazy, Suspense, useEffect, useState } from 'react';
 
 import CodeEditor from '@/components/CodeEditor';
 import TextLink from '@/components/TextLink';
+import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
 import type { SupportedSdk } from '@/types/applications';
 import { applicationTypeAndSdkTypeMappings } from '@/types/applications';
@@ -53,6 +54,7 @@ const Guide = ({ app, isCompact, onClose }: Props) => {
   const sdks = applicationTypeAndSdkTypeMappings[appType];
   const [selectedSdk, setSelectedSdk] = useState<Optional<SupportedSdk>>(sdks[0]);
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
+  const { userEndpoint } = useContext(AppEndpointsContext);
 
   // Directly close guide if no SDK available
   useEffect(() => {
@@ -110,7 +112,7 @@ const Guide = ({ app, isCompact, onClose }: Props) => {
               <GuideComponent
                 appId={appId}
                 appSecret={appSecret}
-                endpoint={window.location.origin}
+                endpoint={userEndpoint}
                 redirectUris={oidcClientMetadata.redirectUris}
                 postLogoutRedirectUris={oidcClientMetadata.postLogoutRedirectUris}
                 activeStepIndex={activeStepIndex}

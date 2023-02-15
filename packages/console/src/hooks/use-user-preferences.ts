@@ -5,13 +5,14 @@ import type { Nullable, Optional } from '@silverhand/essentials';
 import { t } from 'i18next';
 import { useCallback, useEffect, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
+import type { BareFetcher } from 'swr';
 import useSWR from 'swr';
 import { z } from 'zod';
 
-import { themeStorageKey } from '@/consts';
+import { meApi, themeStorageKey, adminTenantEndpoint } from '@/consts';
 
 import type { RequestError } from './use-api';
-import useApi from './use-api';
+import { useStaticApi } from './use-api';
 import useLogtoUserId from './use-logto-user-id';
 
 const userPreferencesGuard = z.object({
@@ -35,10 +36,19 @@ const useUserPreferences = () => {
   const { isAuthenticated, error: authError } = useLogto();
   const userId = useLogtoUserId();
   const shouldFetch = isAuthenticated && !authError && userId;
-  const { data, mutate, error } = useSWR<unknown, RequestError>(
-    shouldFetch && `api/users/${userId}/custom-data`
+  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
+  const fetcher = useCallback<BareFetcher>(
+    async (resource, init) => {
+      const response = await api.get(resource, init);
+
+      return response.json();
+    },
+    [api]
   );
-  const api = useApi();
+  const { data, mutate, error } = useSWR<unknown, RequestError>(
+    shouldFetch && `me/custom-data`,
+    fetcher
+  );
 
   const parseData = useCallback((): UserPreferences => {
     try {
@@ -62,13 +72,11 @@ const useUserPreferences = () => {
     }
 
     const updated = await api
-      .patch(`api/users/${userId}/custom-data`, {
+      .patch(`me/custom-data`, {
         json: {
-          customData: {
-            [key]: {
-              ...userPreferences,
-              ...data,
-            },
+          [key]: {
+            ...userPreferences,
+            ...data,
           },
         },
       })

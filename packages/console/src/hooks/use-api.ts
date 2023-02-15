@@ -1,12 +1,12 @@
 import { useLogto } from '@logto/react';
 import type { RequestErrorBody } from '@logto/schemas';
-import { managementResource } from '@logto/schemas';
 import ky from 'ky';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { requestTimeout } from '@/consts';
+import { managementApi, requestTimeout } from '@/consts';
+import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
 
 export class RequestError extends Error {
   status: number;
@@ -19,11 +19,17 @@ export class RequestError extends Error {
   }
 }
 
-type Props = {
+type StaticApiProps = {
+  prefixUrl: string;
   hideErrorToast?: boolean;
+  resourceIndicator?: string;
 };
 
-const useApi = ({ hideErrorToast }: Props = {}) => {
+export const useStaticApi = ({
+  prefixUrl,
+  hideErrorToast,
+  resourceIndicator = managementApi.indicator,
+}: StaticApiProps) => {
   const { isAuthenticated, getAccessToken } = useLogto();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -44,7 +50,7 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
   const api = useMemo(
     () =>
       ky.create({
-        prefixUrl: window.location.origin,
+        prefixUrl,
         timeout: requestTimeout,
         hooks: {
           beforeError: hideErrorToast
@@ -59,7 +65,7 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
           beforeRequest: [
             async (request) => {
               if (isAuthenticated) {
-                const accessToken = await getAccessToken(managementResource.indicator);
+                const accessToken = await getAccessToken(resourceIndicator);
                 request.headers.set('Authorization', `Bearer ${accessToken ?? ''}`);
                 request.headers.set('Accept-Language', i18n.language);
               }
@@ -67,10 +73,24 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
           ],
         },
       }),
-    [hideErrorToast, toastError, isAuthenticated, getAccessToken, i18n.language]
+    [
+      prefixUrl,
+      hideErrorToast,
+      toastError,
+      isAuthenticated,
+      getAccessToken,
+      resourceIndicator,
+      i18n.language,
+    ]
   );
 
   return api;
+};
+
+const useApi = (props: Omit<StaticApiProps, 'prefixUrl'> = {}) => {
+  const { userEndpoint } = useContext(AppEndpointsContext);
+
+  return useStaticApi({ ...props, prefixUrl: userEndpoint?.toString() ?? '' });
 };
 
 export default useApi;

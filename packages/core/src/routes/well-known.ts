@@ -1,19 +1,30 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
-import { adminConsoleApplicationId } from '@logto/schemas';
+import { adminConsoleApplicationId, adminTenantId } from '@logto/schemas';
 import etag from 'etag';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { getApplicationIdFromInteraction } from '#src/libraries/session.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(
-  ...[router, { provider, libraries }]: RouterInitArgs<T>
+  ...[router, { provider, libraries, id }]: RouterInitArgs<T>
 ) {
   const {
     signInExperiences: { getSignInExperienceForApplication },
     connectors: { getLogtoConnectors },
   } = libraries;
+
+  if (id === adminTenantId) {
+    router.get('/.well-known/endpoints/:tenantId', async (ctx, next) => {
+      ctx.body = {
+        user: EnvSet.values.urlSet.endpoint.replace('*', ctx.params.tenantId ?? '*'),
+      };
+
+      return next();
+    });
+  }
 
   router.get(
     '/.well-known/sign-in-exp',

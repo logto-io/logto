@@ -60,8 +60,6 @@ const App = () => {
         <AppBoundary>
           <Routes>
             <Route element={<AppContent />}>
-              <Route index element={<Navigate replace to="/sign-in" />} />
-
               <Route
                 path="unknown-session"
                 element={<ErrorPage message="error.invalid_session" />}

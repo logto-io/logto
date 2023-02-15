@@ -1,3 +1,4 @@
+import { adminTenantId } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import Koa from 'koa';
 import compose from 'koa-compose';
@@ -5,7 +6,7 @@ import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 import type Provider from 'oidc-provider';
 
-import { EnvSet, MountedApps } from '#src/env-set/index.js';
+import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import koaCheckDemoApp from '#src/middleware/koa-check-demo-app.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
@@ -18,7 +19,8 @@ import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
 import type { ModelRouters } from '#src/model-routers/index.js';
 import { createModelRouters } from '#src/model-routers/index.js';
 import initOidc from '#src/oidc/init.js';
-import initRouter from '#src/routes/init.js';
+import initMeApis from '#src/routes-me/init.js';
+import initApis from '#src/routes/init.js';
 
 import Libraries from './Libraries.js';
 import Queries from './Queries.js';
@@ -28,7 +30,7 @@ import { getTenantDatabaseDsn } from './utils.js';
 export default class Tenant implements TenantContext {
   static async create(id: string): Promise<Tenant> {
     // Treat the default database URL as the management URL
-    const envSet = new EnvSet(await getTenantDatabaseDsn(id));
+    const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
     await envSet.load();
 
     return new Tenant(envSet, id);
@@ -49,6 +51,11 @@ export default class Tenant implements TenantContext {
     const modelRouters = createModelRouters(envSet.queryClient);
     const queries = new Queries(envSet.pool);
     const libraries = new Libraries(queries, modelRouters);
+    const isAdminTenant = id === adminTenantId;
+    const mountedApps = [
+      ...Object.values(UserApps),
+      ...(isAdminTenant ? Object.values(AdminApps) : []),
+    ];
 
     this.envSet = envSet;
     this.modelRouters = modelRouters;
@@ -68,29 +75,38 @@ export default class Tenant implements TenantContext {
     app.use(koaConnectorErrorHandler());
     app.use(koaI18next());
 
+    const tenantContext: TenantContext = { id, provider, queries, libraries, modelRouters, envSet };
     // Mount APIs
-    const apisApp = initRouter({ provider, queries, libraries, modelRouters, envSet });
-    app.use(mount('/api', apisApp));
+    app.use(mount('/api', initApis(tenantContext)));
 
-    // Mount Admin Console
-    app.use(koaConsoleRedirectProxy(queries));
-    app.use(
-      mount('/' + MountedApps.Console, koaSpaProxy(MountedApps.Console, 5002, MountedApps.Console))
-    );
+    // Mount admin tenant APIs and app
+    if (id === adminTenantId) {
+      // Mount `/me` APIs for admin tenant
+      app.use(mount('/me', initMeApis(tenantContext)));
+
+      // Mount Admin Console
+      app.use(koaConsoleRedirectProxy(queries));
+      app.use(
+        mount(
+          '/' + AdminApps.Console,
+          koaSpaProxy(mountedApps, AdminApps.Console, 5002, AdminApps.Console)
+        )
+      );
+    }
 
     // Mount demo app
     app.use(
       mount(
-        '/' + MountedApps.DemoApp,
+        '/' + UserApps.DemoApp,
         compose([
           koaCheckDemoApp(this.queries),
-          koaSpaProxy(MountedApps.DemoApp, 5003, MountedApps.DemoApp),
+          koaSpaProxy(mountedApps, UserApps.DemoApp, 5003, UserApps.DemoApp),
         ])
       )
     );
 
     // Mount UI
-    app.use(compose([koaSpaSessionGuard(provider), koaSpaProxy()]));
+    app.use(compose([koaSpaSessionGuard(provider), koaSpaProxy(mountedApps)]));
 
     this.app = app;
     this.provider = provider;

@@ -1,5 +1,5 @@
 import type { ResourceResponse, Scope, ScopeResponse } from '@logto/schemas';
-import { managementApiScopeAll } from '@logto/schemas';
+import { PredefinedScope } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
@@ -79,7 +79,7 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
     }
 
     const existingScopeIds = roleScopes?.map(({ id }) => id) ?? [];
-    const excludeScopeIds = new Set([...existingScopeIds, managementApiScopeAll]);
+    const excludeScopeIds = new Set([...existingScopeIds, PredefinedScope.All]);
 
     return allResources
       .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.has(id)))

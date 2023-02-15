@@ -7,7 +7,7 @@ create table passcodes (
   email varchar(128),
   type varchar(32) not null,
   code varchar(6) not null,
-  consumed boolean not null default FALSE,
+  consumed boolean not null default false,
   try_count int2 not null default 0,
   created_at timestamptz not null default(now()),
   primary key (id)

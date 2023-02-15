@@ -37,12 +37,6 @@ export default class UrlSet {
   }
 
   public get endpoint() {
-    const value = this.#endpoint || this.localhostUrl;
-
-    if (this.isLocalhostDisabled && new URL(value).hostname === 'localhost') {
-      throw new Error(localhostDisabledMessage);
-    }
-
-    return value;
+    return this.#endpoint || this.localhostUrl;
   }
 }

@@ -57,7 +57,7 @@ export const checkRowLevelSecurity = async (client: QueryClient) => {
         `Found following table(s) without RLS: ${rlsDisabled
           .map((row) => conditionalString(isKeyInObject(row, 'tablename') && String(row.tablename)))
           .join(', ')}\n\n` +
-        'Did you forget to run `npm cli db multi-tenancy enable`?'
+        'Did you forget to run `npm cli db alteration deploy`?'
     );
   }
 };

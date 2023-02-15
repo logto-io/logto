@@ -35,7 +35,6 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
 
   const url = buildUrl('api/users', {
     excludeRoleId: roleId,
-    hideAdminUser: String(true),
     page: String(page),
     page_size: String(pageSize),
     ...conditional(keyword && { search: formatSearchKeyword(keyword) }),

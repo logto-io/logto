@@ -1,7 +1,7 @@
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import Sinon from 'sinon';
 
-import { EnvSet, MountedApps } from '#src/env-set/index.js';
+import { EnvSet, UserApps } from '#src/env-set/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
@@ -10,6 +10,7 @@ const { mockEsmDefault } = createMockUtils(jest);
 
 const mockProxyMiddleware = jest.fn();
 const mockStaticMiddleware = jest.fn();
+const mountedApps = Object.values(UserApps);
 
 mockEsmDefault('fs/promises', () => ({
   readdir: jest.fn().mockResolvedValue(['sign-in']),
@@ -34,14 +35,14 @@ describe('koaSpaProxy middleware', () => {
 
   const next = jest.fn();
 
-  for (const app of Object.values(MountedApps)) {
+  for (const app of Object.values(mountedApps)) {
     // eslint-disable-next-line @typescript-eslint/no-loop-func
     it(`${app} path should not call dev proxy`, async () => {
       const ctx = createContextWithRouteParameters({
         url: `/${app}/foo`,
       });
 
-      await koaSpaProxy()(ctx, next);
+      await koaSpaProxy(mountedApps)(ctx, next);
 
       expect(mockProxyMiddleware).not.toBeCalled();
     });
@@ -49,7 +50,7 @@ describe('koaSpaProxy middleware', () => {
 
   it('dev env should call dev proxy for SPA paths', async () => {
     const ctx = createContextWithRouteParameters();
-    await koaSpaProxy()(ctx, next);
+    await koaSpaProxy(mountedApps)(ctx, next);
     expect(mockProxyMiddleware).toBeCalled();
   });
 
@@ -63,7 +64,7 @@ describe('koaSpaProxy middleware', () => {
       url: '/foo',
     });
 
-    await koaSpaProxy()(ctx, next);
+    await koaSpaProxy(mountedApps)(ctx, next);
 
     expect(mockStaticMiddleware).toBeCalled();
     expect(ctx.request.path).toEqual('/');
@@ -80,7 +81,7 @@ describe('koaSpaProxy middleware', () => {
       url: '/sign-in',
     });
 
-    await koaSpaProxy()(ctx, next);
+    await koaSpaProxy(mountedApps)(ctx, next);
     expect(mockStaticMiddleware).toBeCalled();
     stub.restore();
   });

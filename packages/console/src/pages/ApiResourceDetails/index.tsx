@@ -1,5 +1,5 @@
 import type { Resource } from '@logto/schemas';
-import { AppearanceMode, managementResource } from '@logto/schemas';
+import { defaultManagementApi, AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -39,7 +39,7 @@ const ApiResourceDetails = () => {
   const Icon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
 
   const isOnPermissionPage = pathname.endsWith(ApiResourceDetailsTabs.Permissions);
-  const isLogtoManagementApiResource = data?.id === managementResource.id;
+  const isLogtoManagementApiResource = data?.indicator === defaultManagementApi.resource.indicator;
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
 

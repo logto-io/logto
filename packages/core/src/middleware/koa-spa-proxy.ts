@@ -5,10 +5,11 @@ import type { MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import type { IRouterParamContext } from 'koa-router';
 
-import { EnvSet, MountedApps } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import serveStatic from '#src/middleware/koa-serve-static.js';
 
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
+  mountedApps: string[],
   packagePath = 'ui',
   port = 5001,
   prefix = ''
@@ -38,10 +39,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
     const requestPath = ctx.request.path;
 
     // Route has been handled by one of mounted apps
-    if (
-      !prefix &&
-      Object.values(MountedApps).some((app) => app !== prefix && requestPath.startsWith(`/${app}`))
-    ) {
+    if (!prefix && mountedApps.some((app) => app !== prefix && requestPath.startsWith(`/${app}`))) {
       return next();
     }
 

@@ -1,10 +1,9 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
-import { arbitraryObjectGuard, userInfoSelectFields, UserRole } from '@logto/schemas';
+import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
-import { conditional, deduplicate, has, pick } from '@silverhand/essentials';
+import { conditional, has, pick } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
 
-import { isTrue } from '#src/env-set/parameters.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -19,7 +18,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(
 ) {
   const {
     oidcModelInstances: { revokeInstanceByUserId },
-    roles: { findRolesByRoleNames },
     users: {
       deleteUserById,
       deleteUserIdentity,
@@ -44,13 +42,9 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     return tryThat(
       async () => {
         const search = parseSearchParamsForSearch(searchParams);
-        const hideAdminUser = isTrue(searchParams.get('hideAdminUser'));
         const excludeRoleId = searchParams.get('excludeRoleId');
         const excludeUsersRoles = excludeRoleId ? await findUsersRolesByRoleId(excludeRoleId) : [];
-        const excludeUserIdsByRole = excludeUsersRoles.map(({ userId }) => userId);
-        const adminUsers = hideAdminUser ? await findUsersByRoleName(UserRole.Admin) : [];
-        const excludeUserIdsByAdmin = adminUsers.map(({ id }) => id);
-        const excludeUserIds = deduplicate([...excludeUserIdsByRole, ...excludeUserIdsByAdmin]);
+        const excludeUserIds = excludeUsersRoles.map(({ userId }) => userId);
 
         const [{ count }, users] = await Promise.all([
           countUsers(search, excludeUserIds),
@@ -140,12 +134,11 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         primaryEmail: string().regex(emailRegEx),
         username: string().regex(usernameRegEx),
         password: string().regex(passwordRegEx),
-        isAdmin: boolean(),
         name: string(),
       }).partial(),
     }),
     async (ctx, next) => {
-      const { primaryEmail, primaryPhone, username, password, name, isAdmin } = ctx.guard.body;
+      const { primaryEmail, primaryPhone, username, password, name } = ctx.guard.body;
 
       assertThat(
         !username || !(await hasUser(username)),
@@ -177,7 +170,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
           name,
           ...conditional(password && (await encryptUserPassword(password))),
         },
-        isAdmin
+        []
       );
 
       ctx.body = pick(user, ...userInfoSelectFields);

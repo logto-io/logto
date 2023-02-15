@@ -1,4 +1,4 @@
-import { InteractionEvent, adminConsoleApplicationId } from '@logto/schemas';
+import { InteractionEvent, adminConsoleApplicationId, adminTenantId } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
@@ -29,6 +29,10 @@ const { encryptUserPassword } = mockEsm('#src/libraries/user.js', () => ({
     passwordEncrypted: 'passwordEncrypted',
     passwordEncryptionMethod: 'plain',
   }),
+}));
+
+mockEsm('#src/utils/tenant.js', () => ({
+  getTenantId: () => adminTenantId,
 }));
 
 const userQueries = {
@@ -115,7 +119,7 @@ describe('submit action', () => {
         id: 'uid',
         ...upsertProfile,
       },
-      false
+      []
     );
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'uid' },
@@ -153,7 +157,7 @@ describe('submit action', () => {
         id: 'uid',
         ...upsertProfile,
       },
-      true
+      ['user', 'default:admin']
     );
     expect(assignInteractionResults).toBeCalledWith(adminConsoleCtx, tenant.provider, {
       login: { accountId: 'uid' },

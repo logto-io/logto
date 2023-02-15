@@ -1,4 +1,4 @@
-import { managementResource } from '@logto/schemas';
+import { defaultManagementApi } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { createResource, getResource, updateResource, deleteResource } from '#src/api/index.js';
@@ -6,9 +6,9 @@ import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
 
 describe('admin console api resources', () => {
   it('should get management api resource details successfully', async () => {
-    const fetchedManagementApiResource = await getResource(managementResource.id);
+    const fetchedManagementApiResource = await getResource(defaultManagementApi.resource.id);
 
-    expect(fetchedManagementApiResource).toMatchObject(managementResource);
+    expect(fetchedManagementApiResource).toMatchObject(defaultManagementApi.resource);
   });
 
   it('should create api resource successfully', async () => {
