@@ -71,10 +71,8 @@ const translation = {
     social_bind_with_existing:
       'Nous trouvons un compte connexe, vous pouvez le relier directement.',
     reset_password: 'Réinitialiser le mot de passe',
-    reset_password_description_email:
-      "Entrez l'adresse e-mail associée à votre compte et nous vous enverrons par e-mail le code de vérification pour réinitialiser votre mot de passe.",
-    reset_password_description_phone:
-      'Entrez le numéro de téléphone associé à votre compte et nous vous enverrons le code de vérification par SMS pour réinitialiser votre mot de passe.',
+    reset_password_description:
+      'Entrez le {{types, list(type: disjunction;)}} associé à votre compte et nous vous enverrons le code de vérification pour réinitialiser votre mot de passe.',
     new_password: 'Nouveau mot de passe',
     set_password: 'Set password', // UNTRANSLATED
     password_changed: 'Password Changed', // UNTRANSLATED

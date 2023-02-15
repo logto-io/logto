@@ -68,10 +68,8 @@ const translation = {
     social_link_email_or_phone: 'You can link another email or phone',
     social_bind_with_existing: 'We find a related account, you can link it directly.',
     reset_password: 'Reset password',
-    reset_password_description_email:
-      'Enter the email address associated with your account, and we’ll email you the verification code to reset your password.',
-    reset_password_description_phone:
-      'Enter the phone number associated with your account, and we’ll message you the verification code to reset your password.',
+    reset_password_description:
+      'Enter the {{types, list(type: disjunction;)}} associated with your account, and we’ll send you the verification code to reset your password.',
     new_password: 'New password',
     set_password: 'Set password',
     password_changed: 'Password Changed',

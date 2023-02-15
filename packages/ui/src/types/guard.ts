@@ -3,18 +3,6 @@ import * as s from 'superstruct';
 
 import { UserFlow } from '.';
 
-/* Password SignIn Flow */
-export const passwordIdentifierStateGuard = s.object({
-  identifier: s.enums([SignInIdentifier.Email, SignInIdentifier.Phone, SignInIdentifier.Username]),
-  value: s.string(),
-});
-
-export const SignInMethodGuard = s.union([
-  s.literal(SignInIdentifier.Email),
-  s.literal(SignInIdentifier.Phone),
-  s.literal(SignInIdentifier.Username),
-]);
-
 export const userFlowGuard = s.enums([
   UserFlow.signIn,
   UserFlow.register,
@@ -22,6 +10,13 @@ export const userFlowGuard = s.enums([
   UserFlow.continue,
 ]);
 
+/* Password SignIn Flow */
+export const passwordIdentifierStateGuard = s.object({
+  identifier: s.enums([SignInIdentifier.Email, SignInIdentifier.Phone, SignInIdentifier.Username]),
+  value: s.string(),
+});
+
+/* Continue Flow */
 export const continueFlowStateGuard = s.optional(
   s.type({
     flow: userFlowGuard,
@@ -29,11 +24,10 @@ export const continueFlowStateGuard = s.optional(
 );
 
 /* Verification Code Flow Guard */
-export const verificationCodeMethodGuard = s.union([
+const verificationCodeMethodGuard = s.union([
   s.literal(SignInIdentifier.Email),
   s.literal(SignInIdentifier.Phone),
 ]);
-
 export const verificationCodeStateGuard = s.object({
   identifier: verificationCodeMethodGuard,
   value: s.string(),

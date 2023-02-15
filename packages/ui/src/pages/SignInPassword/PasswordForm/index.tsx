@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
-import ForgotPasswordLink from '@/components/ForgotPasswordLink';
 import { PasswordInputField } from '@/components/InputFields';
+import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
 
@@ -36,8 +36,7 @@ const PasswordForm = ({
 }: Props) => {
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
-  const { getEnabledRetrievePasswordIdentifier } = useForgotPasswordSettings();
-  const forgotPasswordIdentifier = getEnabledRetrievePasswordIdentifier(identifier);
+  const { isForgotPasswordEnabled } = useForgotPasswordSettings();
 
   const {
     register,
@@ -78,8 +77,8 @@ const PasswordForm = ({
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      {forgotPasswordIdentifier && (
-        <ForgotPasswordLink className={styles.link} method={forgotPasswordIdentifier} />
+      {isForgotPasswordEnabled && (
+        <ForgotPasswordLink className={styles.link} identifier={identifier} value={value} />
       )}
 
       <Button title="action.continue" name="submit" htmlType="submit" />

@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
-import ForgotPasswordLink from '@/components/ForgotPasswordLink';
 import type { IdentifierInputType } from '@/components/InputFields';
 import { SmartInputField, PasswordInputField } from '@/components/InputFields';
+import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import TermsOfUse from '@/containers/TermsOfUse';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
@@ -34,15 +34,14 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
 
   const { termsValidation } = useTerms();
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
-  const { getEnabledRetrievePasswordIdentifier } = useForgotPasswordSettings();
+  const { isForgotPasswordEnabled } = useForgotPasswordSettings();
 
   const [inputType, setInputType] = useState<IdentifierInputType>(
     signInMethods[0] ?? SignInIdentifier.Username
   );
 
-  const forgotPasswordIdentifier = getEnabledRetrievePasswordIdentifier(inputType);
-
   const {
+    watch,
     register,
     setValue,
     handleSubmit,
@@ -114,8 +113,12 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      {forgotPasswordIdentifier && (
-        <ForgotPasswordLink className={styles.link} method={forgotPasswordIdentifier} />
+      {isForgotPasswordEnabled && (
+        <ForgotPasswordLink
+          className={styles.link}
+          identifier={inputType}
+          value={watch('identifier')}
+        />
       )}
 
       <TermsOfUse className={styles.terms} />

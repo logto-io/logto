@@ -1,46 +1,60 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { useParams } from 'react-router-dom';
-import { is } from 'superstruct';
+import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+import { validate } from 'superstruct';
 
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
-import { EmailResetPassword } from '@/containers/EmailForm';
-import { PhoneResetPassword } from '@/containers/PhoneForm';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
-import ErrorPage from '@/pages/ErrorPage';
-import { verificationCodeMethodGuard } from '@/types/guard';
+import { passwordIdentifierStateGuard } from '@/types/guard';
+import { identifierInputDescriptionMap } from '@/utils/form';
 
-type Props = {
-  method?: string;
-};
+import ErrorPage from '../ErrorPage';
+import ForgotPasswordForm from './ForgotPasswordForm';
 
 const ForgotPassword = () => {
-  const { method = '' } = useParams<Props>();
-  const forgotPassword = useForgotPasswordSettings();
+  const { isForgotPasswordEnabled, enabledMethodSet } = useForgotPasswordSettings();
+  const { state } = useLocation();
+  const { t } = useTranslation();
+  const enabledMethods = [...enabledMethodSet];
 
-  if (!is(method, verificationCodeMethodGuard)) {
+  const getDefaultIdentifierType = useCallback(
+    (identifier?: SignInIdentifier) => {
+      if (identifier === SignInIdentifier.Username || identifier === SignInIdentifier.Email) {
+        return enabledMethodSet.has(SignInIdentifier.Email)
+          ? SignInIdentifier.Email
+          : SignInIdentifier.Phone;
+      }
+
+      return enabledMethodSet.has(SignInIdentifier.Phone)
+        ? SignInIdentifier.Phone
+        : SignInIdentifier.Email;
+    },
+    [enabledMethodSet]
+  );
+
+  if (!isForgotPasswordEnabled) {
     return <ErrorPage />;
   }
 
-  // Forgot password with target identifier method is not supported
-  if (!forgotPassword[method]) {
-    return <ErrorPage />;
-  }
+  const [_, identifierState] = validate(state, passwordIdentifierStateGuard);
 
-  const PasswordlessForm =
-    method === SignInIdentifier.Email ? EmailResetPassword : PhoneResetPassword;
+  const defaultType = getDefaultIdentifierType(identifierState?.identifier);
+  const defaultValue = (identifierState?.identifier === defaultType && identifierState.value) || '';
 
   return (
     <SecondaryPageWrapper
       title="description.reset_password"
-      description={`description.reset_password_description_${method}`}
+      description="description.reset_password_description"
+      descriptionProps={{
+        types: enabledMethods.map((method) => t(identifierInputDescriptionMap[method])),
+      }}
     >
-      <PasswordlessForm
+      <ForgotPasswordForm
         autoFocus
-        hasSwitch={
-          forgotPassword[
-            method === SignInIdentifier.Email ? SignInIdentifier.Phone : SignInIdentifier.Email
-          ]
-        }
+        defaultType={defaultType}
+        defaultValue={defaultValue}
+        enabledTypes={enabledMethods}
       />
     </SecondaryPageWrapper>
   );

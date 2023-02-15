@@ -1,5 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { useContext, useCallback } from 'react';
+import { useContext } from 'react';
+
+import type { VerificationCodeIdentifier } from '@/types';
 
 import { PageContext } from './use-page-context';
 
@@ -25,30 +27,18 @@ export const useForgotPasswordSettings = () => {
   const { experienceSettings } = useContext(PageContext);
   const { forgotPassword } = experienceSettings ?? {};
 
-  const getEnabledRetrievePasswordIdentifier = useCallback(
-    (identifier: SignInIdentifier) => {
-      if (identifier === SignInIdentifier.Username || identifier === SignInIdentifier.Email) {
-        return forgotPassword?.email
-          ? SignInIdentifier.Email
-          : forgotPassword?.phone
-          ? SignInIdentifier.Phone
-          : undefined;
-      }
+  const enabledMethodSet = new Set<VerificationCodeIdentifier>();
 
-      return forgotPassword?.phone
-        ? SignInIdentifier.Phone
-        : forgotPassword?.email
-        ? SignInIdentifier.Email
-        : undefined;
-    },
-    [forgotPassword]
-  );
+  if (forgotPassword?.email) {
+    enabledMethodSet.add(SignInIdentifier.Email);
+  }
+
+  if (forgotPassword?.phone) {
+    enabledMethodSet.add(SignInIdentifier.Phone);
+  }
 
   return {
-    getEnabledRetrievePasswordIdentifier,
-    isForgotPasswordEnabled: Boolean(
-      forgotPassword && (forgotPassword.email || forgotPassword.phone)
-    ),
-    ...forgotPassword,
+    isForgotPasswordEnabled: enabledMethodSet.size > 0,
+    enabledMethodSet,
   };
 };
