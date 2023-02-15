@@ -51,11 +51,26 @@ jobs:
           registry: ghcr.io
           username: silverhand-bot
           password: ${{ secrets.BOT_PAT }}
+      
+      - name: Setup Docker Buildx
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Setup Depot
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         uses: depot/setup-action@v1
 
-      - name: Build
+      - name: Build and push
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         uses: depot/build-push-action@v1
         with:
           platforms: linux/amd64, linux/arm64
