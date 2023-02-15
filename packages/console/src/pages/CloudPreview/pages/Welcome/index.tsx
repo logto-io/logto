@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +39,7 @@ const Welcome = () => {
   return (
     <div className={pageLayout.page}>
       <OverlayScrollbar className={pageLayout.contentContainer}>
-        <div className={pageLayout.content}>
+        <div className={classNames(pageLayout.content, styles.content)}>
           <Congrats className={styles.congrats} />
           <div className={styles.title}>{t('cloud_preview.welcome.title')}</div>
           <div className={styles.description}>{t('cloud_preview.welcome.description')}</div>
