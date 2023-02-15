@@ -11,7 +11,6 @@ import initI18n from './i18n/init';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
-import ContinueWithEmailOrPhone from './pages/Continue/EmailOrPhone';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import Register from './pages/Register';
@@ -98,7 +97,6 @@ const App = () => {
 
                 {/* Continue set up missing profile */}
                 <Route path="continue">
-                  <Route path="email-or-phone/:method" element={<ContinueWithEmailOrPhone />} />
                   <Route path=":method" element={<Continue />} />
                 </Route>
 

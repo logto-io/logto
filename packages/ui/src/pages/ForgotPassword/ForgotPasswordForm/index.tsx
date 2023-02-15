@@ -41,7 +41,6 @@ const ForgotPasswordForm = ({
   );
 
   const {
-    setValue,
     handleSubmit,
     control,
     formState: { errors, isSubmitted },
@@ -98,10 +97,6 @@ const ForgotPasswordForm = ({
               if (type !== SignInIdentifier.Username) {
                 setInputType(type);
               }
-            }}
-            /* Overwrite default input onChange handler  */
-            onChange={(value) => {
-              setValue('identifier', value, { shouldValidate: isSubmitted, shouldDirty: true });
             }}
           />
         )}

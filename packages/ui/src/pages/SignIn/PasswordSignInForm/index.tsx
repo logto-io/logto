@@ -43,10 +43,9 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const {
     watch,
     register,
-    setValue,
     handleSubmit,
     control,
-    formState: { errors, isSubmitted },
+    formState: { errors },
   } = useForm<FormState>({
     reValidateMode: 'onChange',
     defaultValues: { identifier: '', password: '' },
@@ -94,10 +93,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
             errorMessage={errors.identifier?.message}
             enabledTypes={signInMethods}
             onTypeChange={setInputType}
-            /* Overwrite default input onChange handler  */
-            onChange={(value) => {
-              setValue('identifier', value, { shouldValidate: isSubmitted, shouldDirty: true });
-            }}
           />
         )}
       />

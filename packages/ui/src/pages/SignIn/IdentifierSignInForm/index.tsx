@@ -40,10 +40,9 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   );
 
   const {
-    setValue,
     handleSubmit,
     control,
-    formState: { errors, isSubmitted },
+    formState: { errors },
   } = useForm<FormState>({
     reValidateMode: 'onChange',
     defaultValues: { identifier: '' },
@@ -92,10 +91,6 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledSignInMethods}
             onTypeChange={setInputType}
-            /* Overwrite default input onChange handler  */
-            onChange={(value) => {
-              setValue('identifier', value, { shouldValidate: isSubmitted, shouldDirty: true });
-            }}
           />
         )}
       />

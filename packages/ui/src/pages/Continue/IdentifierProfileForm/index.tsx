@@ -1,4 +1,3 @@
-import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -8,54 +7,58 @@ import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import type { IdentifierInputType } from '@/components/InputFields';
 import { SmartInputField } from '@/components/InputFields';
-import TermsOfUse from '@/containers/TermsOfUse';
-import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
-import useOnSubmit from './use-on-submit';
 
 type Props = {
   className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   autoFocus?: boolean;
-  signUpMethods: SignInIdentifier[];
+  defaultType: IdentifierInputType;
+  enabledTypes: IdentifierInputType[];
+
+  onSubmit?: (identifier: IdentifierInputType, value: string) => Promise<void> | void;
+  errorMessage?: string;
+  clearErrorMessage?: () => void;
 };
 
 type FormState = {
   identifier: string;
 };
 
-const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) => {
+const IdentifierProfileForm = ({
+  className,
+  autoFocus,
+  defaultType,
+  enabledTypes,
+  onSubmit,
+  errorMessage,
+  clearErrorMessage,
+}: Props) => {
   const { t } = useTranslation();
-  const { termsValidation } = useTerms();
-  const [inputType, setInputType] = useState<IdentifierInputType>(
-    signUpMethods[0] ?? SignInIdentifier.Username
-  );
-
-  const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
+  const [inputType, setInputType] = useState<IdentifierInputType>(defaultType);
 
   const {
     handleSubmit,
-    formState: { errors },
     control,
+    formState: { errors },
   } = useForm<FormState>({
     reValidateMode: 'onChange',
+    defaultValues: { identifier: '' },
   });
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
-      clearErrorMessage();
+      clearErrorMessage?.();
 
       void handleSubmit(async ({ identifier }, event) => {
-        if (!(await termsValidation())) {
-          return;
-        }
+        event?.preventDefault();
 
-        await onSubmit(inputType, identifier);
+        await onSubmit?.(inputType, identifier);
       })(event);
     },
-    [clearErrorMessage, handleSubmit, inputType, onSubmit, termsValidation]
+    [clearErrorMessage, handleSubmit, inputType, onSubmit]
   );
 
   return (
@@ -64,7 +67,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
         control={control}
         name="identifier"
         rules={{
-          required: getGeneralIdentifierErrorMessage(signUpMethods, 'required'),
+          required: getGeneralIdentifierErrorMessage(enabledTypes, 'required'),
           validate: (value) => {
             const errorMessage = validateIdentifierField(inputType, value);
 
@@ -84,9 +87,9 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             className={styles.inputField}
             {...field}
             currentType={inputType}
-            isDanger={!!errors.identifier || !!errorMessage}
+            isDanger={!!errors.identifier}
             errorMessage={errors.identifier?.message}
-            enabledTypes={signUpMethods}
+            enabledTypes={enabledTypes}
             onTypeChange={setInputType}
           />
         )}
@@ -94,13 +97,11 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <TermsOfUse className={styles.terms} />
-
-      <Button name="submit" title="action.create_account" htmlType="submit" />
+      <Button title="action.continue" htmlType="submit" />
 
       <input hidden type="submit" />
     </form>
   );
 };
 
-export default IdentifierRegisterForm;
+export default IdentifierProfileForm;

@@ -8,24 +8,12 @@
   }
 
   .inputField,
-  .terms,
-  .switch,
   .formErrors {
     margin-bottom: _.unit(4);
-  }
-
-  .switch {
-    align-self: start;
-    width: auto;
   }
 
   .formErrors {
     margin-left: _.unit(0.5);
     margin-top: _.unit(-3);
   }
-}
-
-.description {
-  margin-top: _.unit(6);
-  @include _.text-hint;
 }
