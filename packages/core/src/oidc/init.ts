@@ -16,7 +16,7 @@ import { routes } from '#src/routes/consts.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
-import { claimToUserKey, getUserClaims } from './scope.js';
+import { getUserClaimData, getUserClaims } from './scope.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
@@ -170,7 +170,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
               ...Object.fromEntries(
                 getUserClaims(use, scope, claims, rejected).map((claim) => [
                   claim,
-                  user[claimToUserKey[claim]],
+                  getUserClaimData(user, claim),
                 ])
               ),
             },
