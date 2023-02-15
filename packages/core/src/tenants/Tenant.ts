@@ -88,8 +88,8 @@ export default class Tenant implements TenantContext {
       app.use(koaConsoleRedirectProxy(queries));
       app.use(
         mount(
-          '/' + UserApps.Console,
-          koaSpaProxy(mountedApps, UserApps.Console, 5002, UserApps.Console)
+          '/' + AdminApps.Console,
+          koaSpaProxy(mountedApps, AdminApps.Console, 5002, AdminApps.Console)
         )
       );
     }

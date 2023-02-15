@@ -35,7 +35,7 @@ describe('koaSpaProxy middleware', () => {
 
   const next = jest.fn();
 
-  for (const app of Object.values(UserApps)) {
+  for (const app of Object.values(mountedApps)) {
     // eslint-disable-next-line @typescript-eslint/no-loop-func
     it(`${app} path should not call dev proxy`, async () => {
       const ctx = createContextWithRouteParameters({

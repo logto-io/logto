@@ -19,14 +19,14 @@ import { throwNotLoadedError } from './throw-errors.js';
 export enum UserApps {
   Api = 'api',
   Oidc = 'oidc',
-  Console = 'console',
   DemoApp = 'demo-app',
-  Welcome = 'welcome',
 }
 
 /** Apps (also paths) ONLY for the admin tenant. */
 export enum AdminApps {
   Me = 'me',
+  Console = 'console',
+  Welcome = 'welcome',
 }
 
 const getTenantEndpoint = (id: string) => {

@@ -47,6 +47,12 @@ const defaultTenantId = 'default';
 
 const alteration: AlterationScript = {
   up: async (pool) => {
+    // Init admin OIDC configs
+    await updateConfigByKey(pool, adminTenantId, 'oidc.privateKeys', [
+      await generateOidcPrivateKey(),
+    ]);
+    await updateConfigByKey(pool, adminTenantId, 'oidc.cookieKeys', [generateOidcCookieKey()]);
+
     // Skipped tables:
     //   applications_roles, applications, connectors, custom_phrases, logto_configs,
     //   passcodes, resources, roles_scopes, roles, scopes, sign_in_experiences,
@@ -134,12 +140,6 @@ const alteration: AlterationScript = {
           sql`,`
         )};
     `);
-
-    // Init admin OIDC configs
-    await updateConfigByKey(pool, adminTenantId, 'oidc.privateKeys', [
-      await generateOidcPrivateKey(),
-    ]);
-    await updateConfigByKey(pool, adminTenantId, 'oidc.cookieKeys', [generateOidcCookieKey()]);
   },
   down: async (pool) => {
     const { rows } = await pool.query<{ id: string }>(sql`select id from tenants;`);
