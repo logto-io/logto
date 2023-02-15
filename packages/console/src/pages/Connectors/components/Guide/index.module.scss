@@ -46,14 +46,13 @@
     }
 
     .setup {
-      background-color: var(--color-layer-1);
-      border-radius: 16px;
-      padding: 0 _.unit(6) _.unit(6);
       margin: _.unit(6) _.unit(18) _.unit(6) _.unit(3);
 
-      .title {
-        font: var(--font-title-1);
-        margin: _.unit(6) 0;
+      .block {
+        background-color: var(--color-layer-1);
+        border-radius: 16px;
+        padding: _.unit(6);
+        margin-bottom: _.unit(6);
       }
 
       .footer {
@@ -67,8 +66,4 @@
       margin-top: _.unit(6);
     }
   }
-}
-
-.tester {
-  margin-top: _.unit(6);
 }

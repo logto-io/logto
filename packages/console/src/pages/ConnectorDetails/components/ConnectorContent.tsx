@@ -10,13 +10,14 @@ import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import ConnectorForm from '@/pages/Connectors/components/ConnectorForm';
+import BasicForm from '@/pages/Connectors/components/ConnectorForm/BasicForm';
+import ConfigForm from '@/pages/Connectors/components/ConnectorForm/ConfigForm';
 import { useConfigParser } from '@/pages/Connectors/components/ConnectorForm/hooks';
 import { initFormData, parseFormConfig } from '@/pages/Connectors/components/ConnectorForm/utils';
 import type { ConnectorFormType } from '@/pages/Connectors/types';
 import { SyncProfileMode } from '@/pages/Connectors/types';
 
-import * as styles from '../index.module.scss';
+import * as styles from './ConnectorContent.module.scss';
 import SenderTester from './SenderTester';
 
 type Props = {
@@ -99,12 +100,12 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
           description="connector_details.settings_description"
           learnMoreLink={getDocumentationUrl('/docs/references/connectors')}
         >
-          <ConnectorForm
+          <BasicForm
             connectorType={connectorData.type}
             isStandard={connectorData.isStandard}
             isDarkDefaultVisible={Boolean(connectorData.metadata.logoDark)}
-            formItems={connectorData.formItems}
           />
+          <ConfigForm className={styles.configForm} formItems={connectorData.formItems} />
           {connectorData.type !== ConnectorType.Social && (
             <SenderTester
               className={styles.senderTest}

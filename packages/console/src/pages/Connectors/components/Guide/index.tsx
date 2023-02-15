@@ -21,7 +21,8 @@ import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
-import ConnectorForm from '../ConnectorForm';
+import BasicForm from '../ConnectorForm/BasicForm';
+import ConfigForm from '../ConnectorForm/ConfigForm';
 import { useConfigParser } from '../ConnectorForm/hooks';
 import { initFormData, parseFormConfig } from '../ConnectorForm/utils';
 import * as styles from './index.module.scss';
@@ -117,23 +118,31 @@ const Guide = ({ connector, onClose }: Props) => {
       <div className={styles.content}>
         <Markdown className={styles.readme}>{readme}</Markdown>
         <div className={styles.setup}>
-          <div className={styles.title}>{t('connectors.guide.connector_setting')}</div>
           <FormProvider {...methods}>
             <form onSubmit={onSubmit}>
-              <ConnectorForm
-                isAllowEditTarget
-                connectorType={connector.type}
-                configTemplate={connector.configTemplate}
-                isStandard={connector.isStandard}
-                formItems={connector.formItems}
-              />
-              {!isSocialConnector && (
-                <SenderTester
-                  className={styles.tester}
-                  connectorId={connectorId}
-                  connectorType={connectorType}
-                  config={watch('config')}
+              {isSocialConnector && (
+                <div className={styles.block}>
+                  <BasicForm
+                    isAllowEditTarget
+                    connectorType={connector.type}
+                    isStandard={connector.isStandard}
+                  />
+                </div>
+              )}
+              <div className={styles.block}>
+                <ConfigForm
+                  configTemplate={connector.configTemplate}
+                  formItems={connector.formItems}
                 />
+              </div>
+              {!isSocialConnector && (
+                <div className={styles.block}>
+                  <SenderTester
+                    connectorId={connectorId}
+                    connectorType={connectorType}
+                    config={watch('config')}
+                  />
+                </div>
               )}
               <div className={styles.footer}>
                 <Button
