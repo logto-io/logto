@@ -42,6 +42,18 @@
       .copyToolTipAnchor {
         margin-left: _.unit(3);
       }
+
+      .iconButton {
+        height: 24px;
+        width: 24px;
+
+        .icon {
+          svg {
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
     }
   }
 
