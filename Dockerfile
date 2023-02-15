@@ -14,6 +14,7 @@ RUN apk add --no-cache python3 make g++
 COPY . .
 
 # Install dependencies and build
+RUN node .scripts/update-parcelrc.js
 RUN pnpm i
 RUN pnpm -r build
 
@@ -25,7 +26,7 @@ RUN rm -rf node_modules packages/**/node_modules
 RUN NODE_ENV=production pnpm i
 
 # Clean up
-RUN rm -rf .parcel-cache pnpm-*.yaml
+RUN rm -rf .scripts .parcel-cache pnpm-*.yaml
 
 # Seal stage
 FROM node:18-alpine as app
