@@ -48,7 +48,7 @@ const ApplicationDetails = () => {
   const { data: oidcConfig, error: fetchOidcConfigError } = useSWR<
     SnakeCaseOidcConfig,
     RequestError
-  >('/oidc/.well-known/openid-configuration');
+  >('oidc/.well-known/openid-configuration');
   const isLoading = (!data && !error) || (!oidcConfig && !fetchOidcConfigError);
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
