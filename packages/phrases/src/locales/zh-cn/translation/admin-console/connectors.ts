@@ -29,7 +29,9 @@ const connectors = {
   },
   guide: {
     subtitle: '参考以下步骤完成你的连接器设置',
-    connector_setting: '设置连接器',
+    general_setting: '通用设置',
+    parameter_configuaration: '参数配置',
+    test_connection: '连接测试',
     name: '连接器名称',
     name_tip: '按钮上将展示「通过 {{name}} 继续」。名字不宜过长而导致信息无法展示完整。',
     logo: 'Logo 图片链接',

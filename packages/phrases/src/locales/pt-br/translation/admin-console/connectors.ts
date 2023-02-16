@@ -31,7 +31,9 @@ const connectors = {
   },
   guide: {
     subtitle: 'Um guia passo a passo para configurar seu conector',
-    connector_setting: 'Configuração do conector',
+    general_setting: 'General settings', // UNTRANSLATED
+    parameter_configuaration: 'Parameter configuration', // UNTRANSLATED
+    test_connection: 'Test connection', // UNTRANSLATED
     name: 'Nome do conector',
     name_tip: 'O nome do botão do conector será exibido como "Continue com {{Connector Name}}".',
     logo: 'URL do logotipo do conector',
