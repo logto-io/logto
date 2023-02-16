@@ -1,5 +1,11 @@
 import classNames from 'classnames';
-import type { ReactNode, RefObject } from 'react';
+import type {
+  DetailedHTMLProps,
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactNode,
+  RefObject,
+} from 'react';
 import { useRef } from 'react';
 import ReactModal from 'react-modal';
 
@@ -22,7 +28,15 @@ type Props = {
   className?: string;
   titleClassName?: string;
   horizontalAlign?: HorizontalAlignment;
+  hasOverflowContent?: boolean;
 };
+
+const Div = ({
+  children,
+  ...rest
+}: PropsWithChildren<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>>) => (
+  <div {...rest}>{children}</div>
+);
 
 const Dropdown = ({
   children,
@@ -34,6 +48,7 @@ const Dropdown = ({
   className,
   titleClassName,
   horizontalAlign = 'end',
+  hasOverflowContent,
 }: Props) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -44,6 +59,8 @@ const Dropdown = ({
     anchorRef,
     overlayRef,
   });
+
+  const WrapperComponent = hasOverflowContent ? Div : OverlayScrollbar;
 
   return (
     <ReactModal
@@ -66,7 +83,7 @@ const Dropdown = ({
     >
       <div ref={overlayRef} className={styles.dropdownContainer}>
         {title && <div className={classNames(styles.title, titleClassName)}>{title}</div>}
-        <OverlayScrollbar
+        <WrapperComponent
           className={className}
           role="menu"
           tabIndex={0}
@@ -74,7 +91,7 @@ const Dropdown = ({
           onKeyDown={onKeyDownHandler({ Enter: onClose, Esc: onClose })}
         >
           {children}
-        </OverlayScrollbar>
+        </WrapperComponent>
       </div>
     </ReactModal>
   );

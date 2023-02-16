@@ -54,6 +54,7 @@ import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings'
 import CloudPreview from './pages/CloudPreview';
 import CloudPreviewWelcome from './pages/CloudPreview/pages/Welcome';
 import { CloudPreviewPage } from './pages/CloudPreview/types';
+import Profile from './pages/Profile';
 import RolePermissions from './pages/RoleDetails/RolePermissions';
 import RoleSettings from './pages/RoleDetails/RoleSettings';
 import RoleUsers from './pages/RoleDetails/RoleUsers';
@@ -154,6 +155,7 @@ const Main = () => {
                   </Route>
                 </Route>
                 <Route path="settings" element={<Settings />} />
+                <Route path="profile" element={<Profile />} />
               </Route>
             </Route>
           </Routes>
@@ -171,7 +173,12 @@ const App = () => (
           endpoint: adminTenantEndpoint,
           appId: adminConsoleApplicationId,
           resources: [managementApi.indicator, meApi.indicator],
-          scopes: [UserScope.Identities, UserScope.CustomData, managementApi.scopeAll],
+          scopes: [
+            UserScope.Email,
+            UserScope.Identities,
+            UserScope.CustomData,
+            managementApi.scopeAll,
+          ],
         }}
       >
         <Main />

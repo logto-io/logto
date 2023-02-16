@@ -11,7 +11,7 @@ import Dropdown, { DropdownItem } from '../Dropdown';
 import IconButton from '../IconButton';
 import * as styles from './index.module.scss';
 
-type Option<T> = {
+export type Option<T> = {
   value: T;
   title: ReactNode;
 };
