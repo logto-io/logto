@@ -1,6 +1,6 @@
-export enum CloudPreviewPage {
+export enum CloudPage {
   Welcome = 'welcome',
-  About = 'about',
+  AboutUser = 'about-user',
   SignInExperience = 'sign-in-experience',
 }
 

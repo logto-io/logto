@@ -7,13 +7,13 @@ import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import TextInput from '@/components/TextInput';
-import * as pageLayout from '@/pages/CloudPreview/layout.module.scss';
+import * as pageLayout from '@/pages/Cloud/layout.module.scss';
 
 import ActionBar from '../../components/ActionBar';
 import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
-import { CloudPreviewPage } from '../../types';
-import { getPreviewPagePathname } from '../../utils';
+import { CloudPage } from '../../types';
+import { getCloudPagePathname } from '../../utils';
 import * as styles from './index.module.scss';
 import { titleOptions, companySizeOptions, reasonOptions } from './options';
 
@@ -30,11 +30,11 @@ const About = () => {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getPreviewPagePathname(CloudPreviewPage.SignInExperience));
+    navigate(getCloudPagePathname(CloudPage.SignInExperience));
   };
 
   const onBack = async () => {
-    navigate(getPreviewPagePathname(CloudPreviewPage.Welcome));
+    navigate(getCloudPagePathname(CloudPage.Welcome));
   };
 
   return (
@@ -42,13 +42,10 @@ const About = () => {
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={pageLayout.content}>
           <Case />
-          <div className={styles.title}>{t('cloud_preview.about.title')}</div>
-          <div className={styles.description}>{t('cloud_preview.about.description')}</div>
+          <div className={styles.title}>{t('cloud.about.title')}</div>
+          <div className={styles.description}>{t('cloud.about.description')}</div>
           <form className={styles.form}>
-            <FormField
-              title="cloud_preview.about.title_field"
-              headlineClassName={styles.cardFieldHeadline}
-            >
+            <FormField title="cloud.about.title_field" headlineClassName={styles.cardFieldHeadline}>
               <Controller
                 control={control}
                 name="titles"
@@ -64,14 +61,14 @@ const About = () => {
                 )}
               />
             </FormField>
-            <FormField title="cloud_preview.about.company_name_field">
+            <FormField title="cloud.about.company_name_field">
               <TextInput
-                placeholder={t('cloud_preview.about.company_name_placeholder')}
+                placeholder={t('cloud.about.company_name_placeholder')}
                 {...register('companyName')}
               />
             </FormField>
             <FormField
-              title="cloud_preview.about.company_size_field"
+              title="cloud.about.company_size_field"
               headlineClassName={styles.cardFieldHeadline}
             >
               <Controller
@@ -89,7 +86,7 @@ const About = () => {
               />
             </FormField>
             <FormField
-              title="cloud_preview.about.reason_field"
+              title="cloud.about.reason_field"
               headlineClassName={styles.cardFieldHeadline}
             >
               <Controller

@@ -7,13 +7,13 @@ import Congrats from '@/assets/images/congrats.svg';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
-import * as pageLayout from '@/pages/CloudPreview/layout.module.scss';
+import * as pageLayout from '@/pages/Cloud/layout.module.scss';
 
 import ActionBar from '../../components/ActionBar';
 import { CardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
-import { CloudPreviewPage } from '../../types';
-import { getPreviewPagePathname } from '../../utils';
+import { CloudPage } from '../../types';
+import { getCloudPagePathname } from '../../utils';
 import * as styles from './index.module.scss';
 import { deploymentTypeOptions, projectOptions } from './options';
 
@@ -33,7 +33,7 @@ const Welcome = () => {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getPreviewPagePathname(CloudPreviewPage.About));
+    navigate(getCloudPagePathname(CloudPage.AboutUser));
   };
 
   return (
@@ -41,11 +41,11 @@ const Welcome = () => {
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={classNames(pageLayout.content, styles.content)}>
           <Congrats className={styles.congrats} />
-          <div className={styles.title}>{t('cloud_preview.welcome.title')}</div>
-          <div className={styles.description}>{t('cloud_preview.welcome.description')}</div>
+          <div className={styles.title}>{t('cloud.welcome.title')}</div>
+          <div className={styles.description}>{t('cloud.welcome.description')}</div>
           <form className={styles.form}>
             <FormField
-              title="cloud_preview.welcome.project_field"
+              title="cloud.welcome.project_field"
               headlineClassName={styles.cardFieldHeadline}
             >
               <Controller
@@ -63,7 +63,7 @@ const Welcome = () => {
               />
             </FormField>
             <FormField
-              title="cloud_preview.welcome.deployment_type_field"
+              title="cloud.welcome.deployment_type_field"
               headlineClassName={styles.cardFieldHeadline}
             >
               <Controller
