@@ -8,6 +8,21 @@ import type { IRouterParamContext } from 'koa-router';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+const filterSensitiveData = (data: Record<string, unknown>): Record<string, unknown> => {
+  return Object.fromEntries(
+    Object.entries(data).map(([key, value]) => {
+      if (isRecord(value)) {
+        return [key, filterSensitiveData(value)];
+      }
+
+      return [key, key === 'password' ? '******' : value];
+    })
+  );
+};
+
 const removeUndefinedKeys = (object: Record<string, unknown>) =>
   Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
 
@@ -33,7 +48,7 @@ export class LogEntry {
   append(data: Readonly<LogPayload>) {
     this.payload = {
       ...this.payload,
-      ...removeUndefinedKeys(data),
+      ...filterSensitiveData(removeUndefinedKeys(data)),
     };
   }
 }

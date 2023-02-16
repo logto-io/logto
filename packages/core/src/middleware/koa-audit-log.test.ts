@@ -122,6 +122,44 @@ describe('koaAuditLog middleware', () => {
     expect(insertLog).not.toBeCalled();
   });
 
+  it('should filter password sensitive data in log', async () => {
+    // @ts-expect-error for testing
+    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
+    };
+    ctx.request.ip = ip;
+
+    const additionalMockPayload = {
+      password: '123456',
+      interaction: { profile: { password: 123_456 } },
+    };
+
+    const maskedAdditionalMockPayload = {
+      password: '******',
+      interaction: { profile: { password: '******' } },
+    };
+
+    const next = async () => {
+      const log = ctx.createLog(logKey);
+      log.append(mockPayload);
+      log.append(additionalMockPayload);
+    };
+    await koaLog(queries)(ctx, next);
+
+    expect(insertLog).toBeCalledWith({
+      id: nanoIdMock,
+      key: logKey,
+      payload: {
+        ...mockPayload,
+        ...maskedAdditionalMockPayload,
+        key: logKey,
+        result: LogResult.Success,
+        ip,
+        userAgent,
+      },
+    });
+  });
+
   describe('should insert an error log with the error message when next() throws an error', () => {
     it('should log with error message when next throws a normal Error', async () => {
       // @ts-expect-error for testing
