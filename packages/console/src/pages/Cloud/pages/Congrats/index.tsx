@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +9,7 @@ import GetStarted from '@/assets/images/get-started.svg';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
+import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
 import * as pageLayout from '@/pages/Cloud/layout.module.scss';
 import { buildUrl } from '@/utils/url';
 
@@ -18,6 +20,8 @@ import * as styles from './index.module.scss';
 
 const Congrats = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { userEndpoint } = useContext(AppEndpointsContext);
+
   const navigate = useNavigate();
 
   const enterAdminConsole = () => {
@@ -41,7 +45,7 @@ const Congrats = () => {
             title="cloud.congrats.check_out_button"
             icon={<AirPlay className={styles.buttonIcon} />}
             onClick={() => {
-              window.open('/demo-app', '_blank');
+              window.open(new URL('/demo-app', userEndpoint), '_blank');
             }}
           />
           <Divider className={styles.divider} />
