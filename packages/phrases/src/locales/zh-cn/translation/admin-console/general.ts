@@ -2,6 +2,7 @@ const general = {
   placeholder: '占位符',
   skip: '跳过',
   next: '下一步',
+  back: '上一步',
   retry: '重试',
   done: '完成',
   search: '搜索',

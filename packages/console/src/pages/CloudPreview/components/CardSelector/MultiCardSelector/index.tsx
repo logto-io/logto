@@ -10,9 +10,17 @@ type Props = {
   options: Option[];
   value: string[];
   onChange: (value: string[]) => void;
+  className?: string;
+  optionClassName?: string;
 };
 
-const MultiCardSelector = ({ options, value: selectedValues, onChange }: Props) => {
+const MultiCardSelector = ({
+  options,
+  value: selectedValues,
+  onChange,
+  className,
+  optionClassName,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const onToggle = (value: string) => {
@@ -24,13 +32,17 @@ const MultiCardSelector = ({ options, value: selectedValues, onChange }: Props) 
   };
 
   return (
-    <div className={styles.selector}>
+    <div className={classNames(styles.selector, className)}>
       {options.map(({ icon, title, value }) => (
         <div
           key={value}
           role="button"
           tabIndex={0}
-          className={classNames(styles.option, selectedValues.includes(value) && styles.selected)}
+          className={classNames(
+            styles.option,
+            selectedValues.includes(value) && styles.selected,
+            optionClassName
+          )}
           onClick={() => {
             onToggle(value);
           }}

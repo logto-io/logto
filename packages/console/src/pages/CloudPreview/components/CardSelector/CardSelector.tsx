@@ -7,12 +7,19 @@ type Props = {
   value: string;
   options: Option[];
   onChange: (value: string) => void;
+  optionClassName?: string;
 };
 
-const CardSelector = ({ name, value, options, onChange }: Props) => (
+const CardSelector = ({ name, value, options, onChange, optionClassName }: Props) => (
   <RadioGroup type="compact" value={value} name={name} onChange={onChange}>
     {options.map(({ value: optionValue, title, icon }) => (
-      <Radio key={optionValue} icon={icon} title={title} value={optionValue} />
+      <Radio
+        key={optionValue}
+        icon={icon}
+        title={title}
+        value={optionValue}
+        className={optionClassName}
+      />
     ))}
   </RadioGroup>
 );
