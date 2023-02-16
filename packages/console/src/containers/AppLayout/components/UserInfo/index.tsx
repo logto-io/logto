@@ -11,6 +11,7 @@ import Globe from '@/assets/images/globe.svg';
 import Palette from '@/assets/images/palette.svg';
 import Profile from '@/assets/images/profile.svg';
 import SignOut from '@/assets/images/sign-out.svg';
+import Divider from '@/components/Divider';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import Spacer from '@/components/Spacer';
 import { Ring as Spinner } from '@/components/Spinner';
@@ -21,8 +22,6 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import SubMenu from '../SubMenu';
 import UserInfoSkeleton from '../UserInfoSkeleton';
 import * as styles from './index.module.scss';
-
-const Divider = () => <div className={styles.divider} />;
 
 const UserInfo = () => {
   const { isAuthenticated, getIdTokenClaims, signOut } = useLogto();
