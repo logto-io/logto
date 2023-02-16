@@ -10,7 +10,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
 import { buildRawConnector } from '#src/utils/connectors/index.js';
-import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -53,8 +52,6 @@ export default function connectorRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const { target: filterTarget } = ctx.query;
       const connectors = await getLogtoConnectors();
-
-      checkSocialConnectorTargetAndPlatformUniqueness(connectors);
 
       assertThat(
         connectors.filter((connector) => connector.type === ConnectorType.Email).length <= 1,
@@ -171,21 +168,6 @@ export default function connectorRoutes<T extends AuthedRouter>(
           status: 422,
         })
       );
-
-      if (connectorFactory.type === ConnectorType.Social) {
-        const connectors = await getLogtoConnectors();
-        assertThat(
-          !connectors
-            .filter(({ type }) => type === ConnectorType.Social)
-            .some(
-              ({ metadata: { target, platform } }) =>
-                target ===
-                  (metadata ? cleanDeep(metadata).target : connectorFactory.metadata.target) &&
-                platform === connectorFactory.metadata.platform
-            ),
-          new RequestError({ code: 'connector.multiple_target_with_same_platform', status: 422 })
-        );
-      }
 
       if (config) {
         const { rawConnector } = await buildRawConnector(connectorFactory);

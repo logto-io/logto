@@ -33,10 +33,6 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
-mockEsm('#src/utils/connectors/platform.js', () => ({
-  checkSocialConnectorTargetAndPlatformUniqueness: jest.fn(),
-}));
-
 const removeUnavailableSocialConnectorTargets = jest.fn();
 
 const connectorQueries = {
@@ -213,14 +209,6 @@ describe('connector route', () => {
         },
       ]);
       countConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
-      getLogtoConnectors.mockResolvedValueOnce([
-        {
-          dbEntry: { ...mockConnector, connectorId: 'id0' },
-          metadata: { ...mockMetadata, id: 'id0' },
-          type: ConnectorType.Sms,
-          ...mockLogtoConnector,
-        },
-      ]);
       validateConfig.mockImplementationOnce((config: unknown) => {
         throw new ConnectorError(ConnectorErrorCodes.General);
       });
@@ -353,73 +341,6 @@ describe('connector route', () => {
         })
       );
       expect(deleteConnectorByIds).toHaveBeenCalledWith(['id']);
-    });
-
-    it('throws when add more than 1 social connector instance with same target and platform (add from standard connector)', async () => {
-      loadConnectorFactories.mockResolvedValueOnce([
-        {
-          ...mockConnectorFactory,
-          metadata: {
-            ...mockConnectorFactory.metadata,
-            id: 'id0',
-            platform: ConnectorPlatform.Universal,
-            isStandard: true,
-          },
-        },
-      ]);
-      countConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
-      getLogtoConnectors.mockResolvedValueOnce([
-        {
-          dbEntry: { ...mockConnector, connectorId: 'id0', metadata: { target: 'target' } },
-          metadata: {
-            ...mockMetadata,
-            id: 'id0',
-            target: 'target',
-            platform: ConnectorPlatform.Universal,
-          },
-          type: ConnectorType.Social,
-          ...mockLogtoConnector,
-        },
-      ]);
-      validateConfig.mockReturnValueOnce(null);
-      buildRawConnector.mockResolvedValueOnce({ rawConnector: { configGuard: any() } });
-      const response = await connectorRequest.post('/connectors').send({
-        connectorId: 'id0',
-        metadata: { target: 'target' },
-      });
-      expect(response).toHaveProperty('statusCode', 422);
-    });
-
-    it('throws when add more than 1 social connector instance with same target and platform (add social connector)', async () => {
-      loadConnectorFactories.mockResolvedValueOnce([
-        {
-          ...mockConnectorFactory,
-          metadata: {
-            ...mockConnectorFactory.metadata,
-            id: 'id0',
-            platform: ConnectorPlatform.Universal,
-            target: 'target',
-          },
-        },
-      ]);
-      countConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
-      getLogtoConnectors.mockResolvedValueOnce([
-        {
-          dbEntry: { ...mockConnector, connectorId: 'id0', metadata: { target: 'target' } },
-          metadata: {
-            ...mockMetadata,
-            id: 'id0',
-            target: 'target',
-            platform: ConnectorPlatform.Universal,
-          },
-          type: ConnectorType.Social,
-          ...mockLogtoConnector,
-        },
-      ]);
-      const response = await connectorRequest.post('/connectors').send({
-        connectorId: 'id0',
-      });
-      expect(response).toHaveProperty('statusCode', 422);
     });
   });
 

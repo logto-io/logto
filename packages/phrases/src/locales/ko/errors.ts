@@ -115,7 +115,6 @@ const errors = {
     invalid_type_for_syncing_profile: '소셜 연동만 사용자 프로파일을 동기화 할 수 있어요.',
     can_not_modify_target: '연동 목표를 수정할 수 없어요.',
     should_specify_target: "'목표'를 반드시 지정해야 해요.",
-    multiple_target_with_same_platform: '같은 목표와 플랫폼에 여러 소셜 연동을 가질 수 없어요.',
     cannot_overwrite_metadata_for_non_standard_connector:
       '이 연동의 메타데이터를 덮어쓸 수 없어요.',
   },

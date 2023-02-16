@@ -111,7 +111,6 @@ const errors = {
     invalid_type_for_syncing_profile: '只有社交连接器可以开启用户档案同步。',
     can_not_modify_target: '不可修改连接器 target。',
     should_specify_target: '你需要声明 target 的值。',
-    multiple_target_with_same_platform: '同一平台上，多个社交连接器不能重复使用相同的 “Target”。',
     cannot_overwrite_metadata_for_non_standard_connector: '不可覆盖该连接器的 metadata 参数。',
   },
   verification_code: {
