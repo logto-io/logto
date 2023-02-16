@@ -74,6 +74,7 @@ export default function initApis(tenant: TenantContext): Koa {
           ? origin
           : '';
       },
+      exposeHeaders: '*',
     })
   );
 
