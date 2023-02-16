@@ -77,6 +77,7 @@ const CopyToClipboard = ({
           <IconButton
             className={styles.iconButton}
             iconClassName={styles.icon}
+            size="small"
             onClick={toggleHiddenContent}
           >
             {showHiddenContent ? <EyeClosed /> : <Eye />}
@@ -91,6 +92,7 @@ const CopyToClipboard = ({
             ref={copyIconReference}
             className={styles.iconButton}
             iconClassName={styles.icon}
+            size="small"
             onClick={copy}
           >
             <Copy />
