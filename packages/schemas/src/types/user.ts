@@ -15,7 +15,7 @@ export const userInfoSelectFields = Object.freeze([
   'isSuspended',
 ] as const);
 
-export type UserInfo<Keys extends keyof CreateUser = typeof userInfoSelectFields[number]> = Pick<
+export type UserInfo<Keys extends keyof CreateUser = (typeof userInfoSelectFields)[number]> = Pick<
   CreateUser,
   Keys
 >;

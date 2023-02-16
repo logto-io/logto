@@ -28,14 +28,18 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
         case ConnectorErrorCodes.InvalidRequestParameters:
         case ConnectorErrorCodes.InsufficientRequestParameters:
         case ConnectorErrorCodes.InvalidConfig:
-        case ConnectorErrorCodes.InvalidResponse:
+        case ConnectorErrorCodes.InvalidResponse: {
           throw new RequestError({ code: `connector.${code}`, status: 400 }, data);
+        }
+
         case ConnectorErrorCodes.SocialAuthCodeInvalid:
         case ConnectorErrorCodes.SocialAccessTokenInvalid:
         case ConnectorErrorCodes.SocialIdTokenInvalid:
-        case ConnectorErrorCodes.AuthorizationFailed:
+        case ConnectorErrorCodes.AuthorizationFailed: {
           throw new RequestError({ code: `connector.${code}`, status: 401 }, data);
-        case ConnectorErrorCodes.TemplateNotFound:
+        }
+
+        case ConnectorErrorCodes.TemplateNotFound: {
           throw new RequestError(
             {
               code: `connector.${code}`,
@@ -43,10 +47,13 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
             },
             data
           );
-        case ConnectorErrorCodes.NotImplemented:
-          throw new RequestError({ code: `connector.${code}`, status: 501 }, data);
+        }
 
-        default:
+        case ConnectorErrorCodes.NotImplemented: {
+          throw new RequestError({ code: `connector.${code}`, status: 501 }, data);
+        }
+
+        default: {
           throw new RequestError(
             {
               code: `connector.${code}`,
@@ -55,6 +62,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
             },
             data
           );
+        }
       }
     }
   };

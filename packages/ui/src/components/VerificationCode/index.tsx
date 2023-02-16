@@ -138,7 +138,7 @@ const VerificationCode = ({
       const previousTarget = inputReferences.current[targetId - 1];
 
       switch (key) {
-        case 'Backspace':
+        case 'Backspace': {
           event.preventDefault();
 
           if (value) {
@@ -152,24 +152,32 @@ const VerificationCode = ({
           }
 
           break;
-        case 'ArrowLeft':
+        }
+
+        case 'ArrowLeft': {
           event.preventDefault();
           previousTarget?.focus();
           break;
-        case 'ArrowRight':
+        }
+
+        case 'ArrowRight': {
           event.preventDefault();
           nextTarget?.focus();
           break;
+        }
         case '+':
         case '-':
         case 'e':
         case '.':
         case 'ArrowUp':
-        case 'ArrowDown':
+        case 'ArrowDown': {
           event.preventDefault();
           break;
-        default:
+        }
+
+        default: {
           break;
+        }
       }
     },
     [codes, onChange]

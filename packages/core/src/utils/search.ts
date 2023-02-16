@@ -159,28 +159,38 @@ export const parseSearchParamsForSearch = (
 
 const getJointModeSql = (mode: SearchJointMode) => {
   switch (mode) {
-    case SearchJointMode.And:
+    case SearchJointMode.And: {
       return sql` and `;
-    case SearchJointMode.Or:
+    }
+
+    case SearchJointMode.Or: {
       return sql` or `;
+    }
   }
 };
 
 const getMatchModeOperator = (match: SearchMatchMode, isCaseSensitive: boolean) => {
   switch (match) {
-    case SearchMatchMode.Exact:
+    case SearchMatchMode.Exact: {
       return sql`=`;
-    case SearchMatchMode.Like:
+    }
+
+    case SearchMatchMode.Like: {
       return isCaseSensitive ? sql`~~` : sql`~~*`;
-    case SearchMatchMode.SimilarTo:
+    }
+
+    case SearchMatchMode.SimilarTo: {
       assertThat(
         isCaseSensitive,
         new TypeError('Cannot use case-insensitive match for `similar to`.')
       );
 
       return sql`similar to`;
-    case SearchMatchMode.Posix:
+    }
+
+    case SearchMatchMode.Posix: {
       return isCaseSensitive ? sql`~` : sql`~*`;
+    }
   }
 };
 

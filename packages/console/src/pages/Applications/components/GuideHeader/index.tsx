@@ -23,24 +23,41 @@ const getSampleProjectUrl = (sdk: SupportedSdk) => {
   const githubUrlPrefix = 'https://github.com/logto-io';
 
   switch (sdk) {
-    case SupportedSdk.iOS:
+    case SupportedSdk.iOS: {
       return `${githubUrlPrefix}/swift/tree/master/Demos/SwiftUI%20Demo`;
-    case SupportedSdk.Android:
+    }
+
+    case SupportedSdk.Android: {
       return `${githubUrlPrefix}/kotlin/tree/master/android-sample-kotlin`;
-    case SupportedSdk.React:
+    }
+
+    case SupportedSdk.React: {
       return `${githubUrlPrefix}/js/tree/master/packages/react-sample`;
-    case SupportedSdk.Vue:
+    }
+
+    case SupportedSdk.Vue: {
       return `${githubUrlPrefix}/js/tree/master/packages/vue-sample`;
-    case SupportedSdk.Vanilla:
+    }
+
+    case SupportedSdk.Vanilla: {
       return `${githubUrlPrefix}/js/tree/master/packages/browser-sample`;
-    case SupportedSdk.Next:
+    }
+
+    case SupportedSdk.Next: {
       return `${githubUrlPrefix}/js/tree/master/packages/next-sample`;
-    case SupportedSdk.Express:
+    }
+
+    case SupportedSdk.Express: {
       return `${githubUrlPrefix}/js/tree/master/packages/express-sample`;
-    case SupportedSdk.Go:
+    }
+
+    case SupportedSdk.Go: {
       return `${githubUrlPrefix}/go/tree/master/gin-sample`;
-    default:
+    }
+
+    default: {
       return '';
+    }
   }
 };
 

@@ -37,7 +37,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial, flow }: Options =
 
         switch (missingProfile) {
           case MissingProfile.password:
-          case MissingProfile.username:
+          case MissingProfile.username: {
             navigate(
               {
                 pathname: `/${UserFlow.continue}/${missingProfile}`,
@@ -45,9 +45,10 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial, flow }: Options =
               { replace, state: { flow } }
             );
             break;
+          }
           case MissingProfile.email:
           case MissingProfile.phone:
-          case MissingProfile.emailOrPhone:
+          case MissingProfile.emailOrPhone: {
             navigate(
               {
                 pathname: `/${UserFlow.continue}/${missingProfile}`,
@@ -56,6 +57,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial, flow }: Options =
               { replace, state: { registeredSocialIdentity, flow } }
             );
             break;
+          }
 
           default: {
             setToast(error.message);

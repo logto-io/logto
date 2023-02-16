@@ -4,12 +4,17 @@ import type { TipBubblePlacement } from '.';
 
 export const getVerticalOffset = (placement: TipBubblePlacement) => {
   switch (placement) {
-    case 'top':
+    case 'top': {
       return -16;
-    case 'bottom':
+    }
+
+    case 'bottom': {
       return 16;
-    default:
+    }
+
+    default: {
       return 0;
+    }
   }
 };
 
@@ -19,12 +24,17 @@ export const getHorizontalOffset = (
 ): number => {
   if (placement === 'top' || placement === 'bottom') {
     switch (horizontalAlignment) {
-      case 'start':
+      case 'start': {
         return -32;
-      case 'end':
+      }
+
+      case 'end': {
         return 32;
-      default:
+      }
+
+      default: {
         return 0;
+      }
     }
   } else {
     return placement === 'left' ? -32 : 32;
@@ -33,12 +43,17 @@ export const getHorizontalOffset = (
 
 export const getVerticalAlignment = (placement: TipBubblePlacement): VerticalAlignment => {
   switch (placement) {
-    case 'top':
+    case 'top': {
       return 'top';
-    case 'bottom':
+    }
+
+    case 'bottom': {
       return 'bottom';
-    default:
+    }
+
+    default: {
       return 'middle';
+    }
   }
 };
 
@@ -47,11 +62,16 @@ export const getHorizontalAlignment = (
   fallback: HorizontalAlignment
 ): HorizontalAlignment => {
   switch (placement) {
-    case 'right':
+    case 'right': {
       return 'start';
-    case 'left':
+    }
+
+    case 'left': {
       return 'end';
-    default:
+    }
+
+    default: {
       return fallback;
+    }
   }
 };

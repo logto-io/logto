@@ -31,7 +31,7 @@ export const updateValueByKey = async <T extends LogtoConfigKey>(
   pool: CommonQueryMethods,
   tenantId: string,
   key: T,
-  value: z.infer<typeof logtoConfigGuards[T]>
+  value: z.infer<(typeof logtoConfigGuards)[T]>
 ) =>
   pool.query(
     sql`

@@ -40,7 +40,7 @@ const validRotateKeys = Object.freeze([
   LogtoOidcConfigKey.CookieKeys,
 ] as const);
 
-type ValidateRotateKeyFunction = (key: string) => asserts key is typeof validRotateKeys[number];
+type ValidateRotateKeyFunction = (key: string) => asserts key is (typeof validRotateKeys)[number];
 
 const validateRotateKey: ValidateRotateKeyFunction = (key) => {
   // Using `.includes()` will result a type error
@@ -159,12 +159,14 @@ const rotateConfig: CommandModule<unknown, { key: string; tenantId: string }> = 
       const original = parsed.success ? parsed.data : [];
 
       // No need for default. It's already exhaustive
-      // eslint-disable-next-line default-case
       switch (key) {
-        case LogtoOidcConfigKey.PrivateKeys:
+        case LogtoOidcConfigKey.PrivateKeys: {
           return [await generateOidcPrivateKey(), ...original];
-        case LogtoOidcConfigKey.CookieKeys:
+        }
+
+        case LogtoOidcConfigKey.CookieKeys: {
           return [generateOidcCookieKey(), ...original];
+        }
       }
     };
     const rotated = await getValue();

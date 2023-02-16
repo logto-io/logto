@@ -11,7 +11,7 @@ import { createTables, seedTables } from './tables.js';
 
 const seedChoices = Object.freeze(['all', 'oidc'] as const);
 
-type SeedChoice = typeof seedChoices[number];
+type SeedChoice = (typeof seedChoices)[number];
 
 export const seedByPool = async (pool: DatabasePool, type: SeedChoice) => {
   await pool.transaction(async (connection) => {
