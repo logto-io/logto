@@ -111,6 +111,8 @@ const baseConfigFormItem = {
   showConditions: z
     .array(z.object({ targetKey: z.string(), expectValue: z.unknown().optional() }))
     .optional(),
+  description: z.string().optional(),
+  tooltip: z.string().optional(),
 };
 
 const connectorConfigFormItemGuard = z.discriminatedUnion('type', [
