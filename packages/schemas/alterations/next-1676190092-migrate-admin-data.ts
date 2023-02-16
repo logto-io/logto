@@ -64,7 +64,7 @@ const alteration: AlterationScript = {
     const { rows } = await pool.query<{ userId: string; count: number }>(sql`
       select
         users.id as "userId",
-        (select count(*) from users_roles where user_id = user_id) 
+        (select count(*) from users_roles where users.id = user_id) 
       from users
         inner join users_roles on users.id = users_roles.user_id
         inner join roles on roles.id = users_roles.role_id
@@ -75,7 +75,7 @@ const alteration: AlterationScript = {
 
     if (invalidUsers.length > 0) {
       throw new Error(
-        'Some of your current admin users has extra roles. Either remove their `admin` role to become a normal user, or remove all other roles to migrate them to the new Admin Tenant.\n\n' +
+        'Some of your current admin users have extra roles. Either remove their `admin` role to become a normal user, or remove all other roles to migrate them to the new Admin Tenant.\n\n' +
           'Invalid user IDs: ' +
           invalidUsers.map(({ userId }) => userId).join(', ')
       );
