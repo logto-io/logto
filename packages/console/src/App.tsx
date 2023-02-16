@@ -51,10 +51,10 @@ import AppContent from './containers/AppContent';
 import AppEndpointsProvider, { AppEndpointsContext } from './containers/AppEndpointsProvider';
 import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
-import CloudPreview from './pages/CloudPreview';
-import CloudPreviewAbout from './pages/CloudPreview/pages/About';
-import CloudPreviewWelcome from './pages/CloudPreview/pages/Welcome';
-import { CloudPreviewPage } from './pages/CloudPreview/types';
+import Cloud from './pages/Cloud';
+import CloudAboutUser from './pages/Cloud/pages/About';
+import CloudWelcome from './pages/Cloud/pages/Welcome';
+import { CloudPage } from './pages/Cloud/types';
 import Profile from './pages/Profile';
 import RolePermissions from './pages/RoleDetails/RolePermissions';
 import RoleSettings from './pages/RoleDetails/RoleSettings';
@@ -83,10 +83,10 @@ const Main = () => {
             <Route path="callback" element={<Callback />} />
             <Route path="welcome" element={<Welcome />} />
             <Route element={<AppLayout />}>
-              <Route path="cloud-preview" element={<CloudPreview />}>
-                <Route index element={<Navigate replace to={CloudPreviewPage.Welcome} />} />
-                <Route path={CloudPreviewPage.Welcome} element={<CloudPreviewWelcome />} />
-                <Route path={CloudPreviewPage.About} element={<CloudPreviewAbout />} />
+              <Route path="cloud" element={<Cloud />}>
+                <Route index element={<Navigate replace to={CloudPage.Welcome} />} />
+                <Route path={CloudPage.Welcome} element={<CloudWelcome />} />
+                <Route path={CloudPage.AboutUser} element={<CloudAboutUser />} />
               </Route>
               <Route element={<AppContent />}>
                 <Route path="*" element={<NotFound />} />
