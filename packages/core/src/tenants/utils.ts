@@ -8,6 +8,8 @@ import { parseDsn, stringifyDsn } from 'slonik';
 
 import { EnvSet } from '#src/env-set/index.js';
 
+export class TenantNotFoundError extends Error {}
+
 /**
  * This function is to fetch the tenant password for the corresponding Postgres user.
  *
@@ -27,7 +29,7 @@ export const getTenantDatabaseDsn = async (tenantId: string) => {
   `);
 
   if (!rows[0]) {
-    throw new Error(`Cannot find valid tenant credentials for ID ${tenantId}`);
+    throw new TenantNotFoundError(`Cannot find valid tenant credentials for ID ${tenantId}`);
   }
 
   const options = parseDsn(dbUrl);

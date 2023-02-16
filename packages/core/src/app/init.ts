@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import type Koa from 'koa';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { tenantPool } from '#src/tenants/index.js';
+import { TenantNotFoundError, tenantPool } from '#src/tenants/index.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 const logListening = (type: 'core' | 'admin' = 'core') => {
@@ -27,9 +27,20 @@ export default async function initApp(app: Koa): Promise<void> {
       return next();
     }
 
-    const tenant = await tenantPool.get(tenantId);
+    try {
+      const tenant = await tenantPool.get(tenantId);
+      await tenant.run(ctx, next);
 
-    return tenant.run(ctx, next);
+      return;
+    } catch (error: unknown) {
+      if (error instanceof TenantNotFoundError) {
+        ctx.status = 404;
+
+        return next();
+      }
+
+      throw error;
+    }
   });
 
   const { isHttpsEnabled, httpsCert, httpsKey, urlSet, adminUrlSet } = EnvSet.values;
