@@ -18,7 +18,7 @@ const PasswordSignInLink = ({ className, method, target }: Props) => {
       icon={<SwitchIcon />}
       text="action.sign_in_via_password"
       to={`/${UserFlow.signIn}/password`}
-      state={{ [method]: target }}
+      state={{ identifier: method, value: target }}
     />
   );
 };
