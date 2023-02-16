@@ -47,6 +47,18 @@ const cloud = {
       others: 'Others',
     },
   },
+  congrats: {
+    title: 'Congratulations! You’ve customized and built your own sign-in experience',
+    description: 'Check out the live preview and get through end to end flow',
+    check_out_button: 'Check out the live preview',
+    reserve_title: 'Reserve your time with Logto team',
+    reserve_description:
+      'Book a one-on-one session with our team for SaaS early credit and use case sharing.',
+    book_button: 'Book',
+    join_description: 'Join our public <a>{{link}}</a> to connect and chat with other developers.',
+    discord_link: 'discord channel',
+    enter_admin_console: 'Enter Admin Console',
+  },
 };
 
 export default cloud;

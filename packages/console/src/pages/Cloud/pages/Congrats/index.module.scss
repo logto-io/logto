@@ -1,0 +1,55 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  align-items: center;
+}
+
+.title {
+  margin-top: _.unit(6);
+  font: var(--font-title-2);
+  text-align: center;
+}
+
+.description {
+  margin: _.unit(1) 0 _.unit(6) 0;
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.buttonIcon {
+  opacity: 70%;
+}
+
+.divider {
+  width: 100%;
+  margin: _.unit(8) 0;
+}
+
+.reservation {
+  width: 100%;
+  padding: _.unit(3) _.unit(4);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .reservationInfo {
+    display: flex;
+    align-items: center;
+
+    .reservationIcon {
+      margin-right: _.unit(4);
+      flex-shrink: 0;
+    }
+
+    .reservationTitle {
+      font: var(--font-title-3);
+    }
+
+    .reservationDescription {
+      font: var(--font-body-2);
+      color: var(--color-text-secondary);
+    }
+  }
+}

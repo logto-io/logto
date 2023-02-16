@@ -53,6 +53,7 @@ import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermis
 import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
 import Cloud from './pages/Cloud';
 import CloudAboutUser from './pages/Cloud/pages/About';
+import CloudCongrats from './pages/Cloud/pages/Congrats';
 import CloudWelcome from './pages/Cloud/pages/Welcome';
 import { CloudPage } from './pages/Cloud/types';
 import Profile from './pages/Profile';
@@ -87,6 +88,8 @@ const Main = () => {
                 <Route index element={<Navigate replace to={CloudPage.Welcome} />} />
                 <Route path={CloudPage.Welcome} element={<CloudWelcome />} />
                 <Route path={CloudPage.AboutUser} element={<CloudAboutUser />} />
+                <Route path={CloudPage.Congrats} element={<CloudCongrats />} />
+                <Route path="*" element={<NotFound />} />
               </Route>
               <Route element={<AppContent />}>
                 <Route path="*" element={<NotFound />} />

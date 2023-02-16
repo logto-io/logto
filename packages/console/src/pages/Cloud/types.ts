@@ -2,6 +2,7 @@ export enum CloudPage {
   Welcome = 'welcome',
   AboutUser = 'about-user',
   SignInExperience = 'sign-in-experience',
+  Congrats = 'congrats',
 }
 
 export enum Project {
