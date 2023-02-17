@@ -74,7 +74,7 @@ const Congrats = () => {
           </div>
         </div>
       </OverlayScrollbar>
-      <ActionBar>
+      <ActionBar step={4}>
         <Button
           type="primary"
           title="cloud.congrats.enter_admin_console"

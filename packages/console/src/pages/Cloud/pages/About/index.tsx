@@ -101,7 +101,7 @@ const About = () => {
           </form>
         </div>
       </OverlayScrollbar>
-      <ActionBar>
+      <ActionBar step={2}>
         <Button title="general.next" type="primary" onClick={onNext} />
         <Button title="general.back" onClick={onBack} />
       </ActionBar>

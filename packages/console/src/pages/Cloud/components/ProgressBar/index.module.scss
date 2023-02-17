@@ -1,0 +1,16 @@
+@use '@/scss/underscore' as _;
+
+.progressBar {
+  display: flex;
+  gap: _.unit(1);
+
+  .stepIndicator {
+    height: 4px;
+    background-color: var(--color-neutral-variant-80);
+    flex: 1;
+
+    &.active {
+      background-color: var(--color-text-link);
+    }
+  }
+}
