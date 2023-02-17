@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, ConnectorFactoryResponse } from '@logto/schemas';
@@ -360,3 +361,4 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }
   );
 }
+/* eslint-enable max-lines */
