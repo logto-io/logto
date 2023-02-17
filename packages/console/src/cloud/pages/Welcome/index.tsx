@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import Congrats from '@/assets/images/congrats.svg';
+import ActionBar from '@/cloud/components/ActionBar';
+import { CardSelector } from '@/cloud/components/CardSelector';
+import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
-import * as pageLayout from '@/pages/Cloud/layout.module.scss';
 
-import ActionBar from '../../components/ActionBar';
-import { CardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
 import { CloudPage } from '../../types';
 import { getCloudPagePathname } from '../../utils';
