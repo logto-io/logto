@@ -34,7 +34,7 @@
     "@silverhand/jest-config": "1.2.2",
     "@silverhand/ts-config": "2.0.3",
     "@silverhand/ts-config-react": "2.0.3",
-    "@testing-library/react": "^13.3.0",
+    "@testing-library/react": "^14.0.0",
     "@types/color": "^3.0.3",
     "@types/jest": "^29.1.2",
     "@types/react": "^18.0.0",
