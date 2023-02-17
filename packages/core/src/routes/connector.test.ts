@@ -166,6 +166,28 @@ describe('connector route', () => {
     });
   });
 
+  describe('GET /connectors/:target/:platform/uniqueness', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('return truthy `isTargetPlatformUnique` if target and platform combination is unique', async () => {
+      getLogtoConnectors.mockResolvedValueOnce(mockLogtoConnectorList.slice(4));
+      const response = await connectorRequest
+        .get(`/connectors/connector_0/${ConnectorPlatform.Universal}/uniqueness`)
+        .send({});
+      expect(response.body).toMatchObject({ isTargetPlatformUnique: true });
+    });
+
+    it('return falsy `isTargetPlatformUnique` if target and platform combination is not unique', async () => {
+      getLogtoConnectors.mockResolvedValueOnce(mockLogtoConnectorList);
+      const response = await connectorRequest
+        .get(`/connectors/connector_0/${ConnectorPlatform.Universal}/uniqueness`)
+        .send({});
+      expect(response.body).toMatchObject({ isTargetPlatformUnique: false });
+    });
+  });
+
   describe('POST /connectors', () => {
     afterEach(() => {
       jest.clearAllMocks();

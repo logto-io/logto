@@ -1,9 +1,9 @@
-import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
+import { VerificationCodeType, validateConfig, ConnectorPlatform } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, ConnectorFactoryResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
-import { string, object } from 'zod';
+import { string, object, nativeEnum } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -117,6 +117,30 @@ export default function connectorRoutes<T extends AuthedRouter>(
       } = ctx.guard;
       const connector = await getLogtoConnectorById(id);
       ctx.body = transpileLogtoConnector(connector);
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/connectors/:target/:platform/uniqueness',
+    koaGuard({
+      // `platform` should not be nullable since connectors with `null` platform (passwordless connectors) do not have `target`.
+      params: object({ target: string().min(1), platform: nativeEnum(ConnectorPlatform) }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { target, platform },
+      } = ctx.guard;
+
+      const connectors = await getLogtoConnectors();
+      const isTargetPlatformUnique = !connectors
+        .filter(({ type }) => type === ConnectorType.Social)
+        .some(
+          ({ metadata: { target: existingTarget, platform: existingPlatform } }) =>
+            target === existingTarget && platform === existingPlatform
+        );
+      ctx.body = { isTargetPlatformUnique };
 
       return next();
     }

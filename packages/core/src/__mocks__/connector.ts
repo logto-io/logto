@@ -73,7 +73,7 @@ export const mockConnectorList: Connector[] = [
 export const mockLogtoConnectorList: LogtoConnector[] = [
   {
     dbEntry: mockConnector0,
-    metadata: { ...mockMetadata0 },
+    metadata: mockMetadata0,
     type: ConnectorType.Social,
     ...mockLogtoConnector,
   },
