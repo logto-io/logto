@@ -19,11 +19,16 @@ const transpileLogtoConnector = ({
   dbEntry,
   metadata,
   type,
-}: LogtoConnector): ConnectorResponse => ({
-  type,
-  ...metadata,
-  ...dbEntry,
-});
+}: LogtoConnector): ConnectorResponse => {
+  // `storage` is for BE use and should not be exposed to FE.
+  const { storage, ...rest } = dbEntry;
+
+  return {
+    type,
+    ...metadata,
+    ...rest,
+  };
+};
 
 const generateConnectorId = buildIdGenerator(12);
 

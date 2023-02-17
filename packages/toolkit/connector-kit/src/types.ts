@@ -1,6 +1,5 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { isLanguageTag } from '@logto/language-kit';
-import type { Nullable } from '@silverhand/essentials';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -182,31 +181,24 @@ export type GetSession = () => Promise<ConnectorSession>;
 
 export type SetSession = (storage: ConnectorSession) => Promise<void>;
 
-export const baseStorageValueGuard = z.union([
-  z.number(),
-  z.number().array(),
-  z.string(),
-  z.string().array(),
-  z.boolean(),
-]);
+// https://github.com/colinhacks/zod#json-type
+const literalGuard = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 
-export type StorageValue =
-  | z.infer<typeof baseStorageValueGuard>
-  | {
-      [key: string]: StorageValue;
-    };
+type Literal = z.infer<typeof literalGuard>;
 
-export const storageValueGuard: z.ZodType<StorageValue> = baseStorageValueGuard.or(
-  z.record(z.lazy(() => storageValueGuard))
+export type JsonStorageValue = Literal | { [key: string]: JsonStorageValue } | JsonStorageValue[];
+
+export const jsonStorageValueGuard: z.ZodType<JsonStorageValue> = z.lazy(() =>
+  z.union([literalGuard, z.array(jsonStorageValueGuard), z.record(jsonStorageValueGuard)])
 );
 
-export const storageGuard = z.record(storageValueGuard);
+export const storageGuard = z.record(jsonStorageValueGuard);
 
 export type Storage = z.infer<typeof storageGuard>;
 
-export type GetStorageValue = (key: string) => Promise<Nullable<StorageValue>>;
+export type GetStorageValue = (key: string) => Promise<JsonStorageValue>;
 
-export type SetStorageValue = (key: string, value: StorageValue) => Promise<Storage>;
+export type SetStorageValue = (key: string, value: JsonStorageValue) => Promise<Storage>;
 
 export type BaseConnector<Type extends ConnectorType> = {
   type: Type;

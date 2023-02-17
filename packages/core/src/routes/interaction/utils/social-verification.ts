@@ -1,4 +1,4 @@
-import type { ConnectorSession, SocialUserInfo, StorageValue } from '@logto/connector-kit';
+import type { ConnectorSession, SocialUserInfo, JsonStorageValue } from '@logto/connector-kit';
 import { connectorSessionGuard } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
@@ -39,7 +39,7 @@ export const createSocialAuthorizationUrl = async (
       state,
       redirectUri,
       /**
-       * For POST /saml-assertion-handler/:connectorId API, we need to block requests
+       * For POST /authn/saml/:connectorId API, we need to block requests
        * for non-SAML connector (relies on connectorFactoryId) and use `connectorId`
        * to find correct connector config.
        */
@@ -73,7 +73,8 @@ export const verifySocialIdentity = async (
     connectorData,
     async () => getConnectorSessionResult(ctx, provider),
     {
-      set: async (key: string, value: StorageValue) => setValueByIdAndKey(connectorId, key, value),
+      set: async (key: string, value: JsonStorageValue) =>
+        setValueByIdAndKey(connectorId, key, value),
       get: async (key: string) => getValueByIdAndKey(connectorId, key),
     }
   );

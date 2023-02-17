@@ -104,11 +104,13 @@ describe('connector queries', () => {
     const rowData = { id, storage: { [key]: value } };
     const expectSql = sql`
       update ${table}
-      set ${fields.storage} = coalesce(${fields.storage}, '{}'::jsonb) || ${sql.jsonb({
-      [key]: JSON.stringify(value),
+      set
+      ${fields.storage}=
+      coalesce(${fields.storage},'{}'::jsonb) || ${JSON.stringify({
+      [key]: value,
     })}
-      where ${fields.id} = $2
-      returning *;
+      where ${fields.id}=$2
+      returning *
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {

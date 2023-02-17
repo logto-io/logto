@@ -1,8 +1,7 @@
-import type { StorageValue, Storage } from '@logto/connector-kit';
+import type { JsonStorageValue, Storage } from '@logto/connector-kit';
 import type { Connector, CreateConnector } from '@logto/schemas';
 import { Connectors } from '@logto/schemas';
 import { manyRows, convertToIdentifiers } from '@logto/shared';
-import type { Nullable } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -37,24 +36,18 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
   const setValueByIdAndKey = async (
     id: string,
     key: string,
-    value: StorageValue
+    value: JsonStorageValue
   ): Promise<Storage> => {
-    const { storage } = await pool.one<Connector>(sql`
-      update ${table}
-      set ${fields.storage} = coalesce(${fields.storage}, '{}'::jsonb) || ${sql.jsonb({
-      [key]: sql.jsonb(value).value,
-    })}
-      where ${fields.id} = ${id}
-      returning *;
-    `);
+    const { storage } = await updateConnector({
+      set: { storage: { [key]: value } },
+      where: { id },
+      jsonbMode: 'merge',
+    });
 
     return storage;
   };
 
-  const getValueByIdAndKey = async <T = Nullable<StorageValue>>(
-    id: string,
-    key: string
-  ): Promise<T> => {
+  const getValueByIdAndKey = async <T = JsonStorageValue>(id: string, key: string): Promise<T> => {
     const { value } = await pool.one<{ value: T }>(sql`
       select ${fields.storage}->${key} as value
       from ${table}
