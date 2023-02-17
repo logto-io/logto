@@ -55,7 +55,6 @@ describe('user query', () => {
       return createMockQueryResult([databaseValue]);
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expect(findUserByUsername(mockUser.username!)).resolves.toEqual(databaseValue);
   });
 
@@ -73,7 +72,6 @@ describe('user query', () => {
       return createMockQueryResult([databaseValue]);
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expect(findUserByEmail(mockUser.primaryEmail!)).resolves.toEqual(databaseValue);
   });
 
@@ -91,7 +89,6 @@ describe('user query', () => {
       return createMockQueryResult([databaseValue]);
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expect(findUserByPhone(mockUser.primaryPhone!)).resolves.toEqual(databaseValue);
   });
 
@@ -130,7 +127,6 @@ describe('user query', () => {
       return createMockQueryResult([{ exists: true }]);
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expect(hasUser(mockUser.username!)).resolves.toEqual(true);
   });
 
@@ -169,7 +165,6 @@ describe('user query', () => {
       return createMockQueryResult([{ exists: true }]);
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expect(hasUserWithEmail(mockUser.primaryEmail!)).resolves.toEqual(true);
   });
 
@@ -189,7 +184,6 @@ describe('user query', () => {
       return createMockQueryResult([{ exists: true }]);
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expect(hasUserWithPhone(mockUser.primaryPhone!)).resolves.toEqual(true);
   });
 

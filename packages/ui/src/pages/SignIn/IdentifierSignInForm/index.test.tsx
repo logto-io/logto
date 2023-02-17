@@ -46,7 +46,6 @@ describe('IdentifierSignInForm', () => {
   });
 
   test('should show required error message when input is empty', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { getByText, container } = renderForm(mockSignInMethodSettingsTestCases[0]!);
     const submitButton = getByText('action.sign_in');
 
@@ -62,7 +61,6 @@ describe('IdentifierSignInForm', () => {
   test.each(['0foo', ' foo@', '85711'])(
     `should show error message when with invalid input %p`,
     async (input) => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const { getByText, container } = renderForm(mockSignInMethodSettingsTestCases[0]!);
 
       const inputField = container.querySelector('input[name="identifier"]');

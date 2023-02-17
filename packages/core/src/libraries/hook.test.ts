@@ -35,7 +35,7 @@ const hook: InferModelType<ModelRouters['hook']['model']> = {
 
 const post = jest
   .spyOn(got, 'post')
-  // @ts-expect-error for testing
+  // @ts-expect-error
   .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
 
 const insertLog = jest.fn();
@@ -79,7 +79,7 @@ describe('triggerInteractionHooksIfNeeded()', () => {
 
     await triggerInteractionHooksIfNeeded(
       InteractionEvent.SignIn,
-      // @ts-expect-error for testing
+      // @ts-expect-error
       {
         jti: 'some_jti',
         result: { login: { accountId: '123' } },

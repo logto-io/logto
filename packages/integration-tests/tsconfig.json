@@ -1,8 +1,6 @@
 {
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
-    "moduleResolution": "nodenext",
-    "module": "esnext",
     "isolatedModules": false,
     "allowJs": true,
     "outDir": "lib",

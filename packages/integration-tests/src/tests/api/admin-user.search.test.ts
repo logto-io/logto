@@ -36,8 +36,6 @@ describe('admin console user search params', () => {
     const emailSuffix = ['@gmail.com', '@foo.bar', '@geek.best'];
     const phonePrefix = ['101', '102', '202'];
 
-    // We can make sure this
-    /* eslint-disable @typescript-eslint/no-non-null-assertion */
     // eslint-disable-next-line @silverhand/fp/no-mutation
     users = await Promise.all(
       rawNames.map((raw, index) => {
@@ -61,7 +59,6 @@ describe('admin console user search params', () => {
         );
       })
     );
-    /* eslint-enable @typescript-eslint/no-non-null-assertion */
   });
 
   afterAll(async () => {
@@ -158,8 +155,6 @@ describe('admin console user search params', () => {
   });
 
   it('should accept multiple value for exact match 2', async () => {
-    // We can make sure this
-    /* eslint-disable @typescript-eslint/no-non-null-assertion */
     const { headers, json } = await getUsers<User[]>([
       ['search.id', users[0]!.id],
       ['search.id', users[1]!.id],
@@ -169,7 +164,6 @@ describe('admin console user search params', () => {
       ['mode.id', 'exact'],
       ['isCaseSensitive', 'true'],
     ]);
-    /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
     expect(headers['total-number']).toEqual('3');
     expect(

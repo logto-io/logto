@@ -38,12 +38,17 @@ export const getGeneralIdentifierErrorMessage = (
 
 export const validateIdentifierField = (type: IdentifierInputType, value: string) => {
   switch (type) {
-    case SignInIdentifier.Username:
+    case SignInIdentifier.Username: {
       return validateUsername(value);
-    case SignInIdentifier.Email:
+    }
+
+    case SignInIdentifier.Email: {
       return validateEmail(value);
-    case SignInIdentifier.Phone:
+    }
+
+    case SignInIdentifier.Phone: {
       return validatePhone(value);
+    }
     default:
   }
 };

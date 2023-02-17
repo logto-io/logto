@@ -19,7 +19,7 @@ type Props = {
 // A very rough duck type, but good enough to guard against mistakes while
 // allowing customization
 function isTabItem(comp: ReactElement): comp is ReactElement<TabItemProps> {
-  return typeof comp.props.value !== 'undefined';
+  return comp.props.value !== undefined;
 }
 
 const Tabs = ({ className, children }: Props): JSX.Element => {
@@ -63,8 +63,10 @@ const Tabs = ({ className, children }: Props): JSX.Element => {
           null;
         break;
       }
-      default:
+
+      default: {
         break;
+      }
     }
 
     focusElement?.focus();

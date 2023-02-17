@@ -66,7 +66,7 @@ describe('koaSpaSessionGuard', () => {
   });
 
   it('should not redirect if session found', async () => {
-    // @ts-expect-error for testing
+    // @ts-expect-error
     interactionDetails.mockResolvedValue({});
     const ctx = createContextWithRouteParameters({
       url: `/sign-in`,

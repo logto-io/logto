@@ -26,9 +26,7 @@ export type SystemKey = AlterationStateKey;
 export type SystemType = AlterationStateType;
 export type SystemGuard = typeof alterationStateGuard;
 
-export const systemKeys: readonly SystemKey[] = Object.freeze([
-  ...Object.values(AlterationStateKey),
-]);
+export const systemKeys: readonly SystemKey[] = Object.freeze(Object.values(AlterationStateKey));
 
 export const systemGuards: SystemGuard = Object.freeze({
   ...alterationStateGuard,

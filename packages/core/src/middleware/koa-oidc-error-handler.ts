@@ -44,7 +44,7 @@ export default function koaOIDCErrorHandler<StateT, ContextT>(): Middleware<Stat
         case errors.UnsupportedGrantType:
         case errors.UnsupportedResponseMode:
         case errors.UnsupportedResponseType:
-        case errors.InvalidGrant:
+        case errors.InvalidGrant: {
           throw new RequestError(
             {
               // Manually mapped all OIDC error name to the LogtoErrorCode
@@ -56,7 +56,9 @@ export default function koaOIDCErrorHandler<StateT, ContextT>(): Middleware<Stat
             },
             data
           );
-        case errors.SessionNotFound:
+        }
+
+        case errors.SessionNotFound: {
           throw new RequestError(
             {
               code: 'session.not_found',
@@ -66,7 +68,9 @@ export default function koaOIDCErrorHandler<StateT, ContextT>(): Middleware<Stat
             },
             data
           );
-        case errors.InsufficientScope:
+        }
+
+        case errors.InsufficientScope: {
           throw new RequestError(
             {
               code: 'oidc.insufficient_scope',
@@ -76,7 +80,9 @@ export default function koaOIDCErrorHandler<StateT, ContextT>(): Middleware<Stat
             },
             data
           );
-        default:
+        }
+
+        default: {
           throw new RequestError(
             {
               code: 'oidc.provider_error',
@@ -86,6 +92,7 @@ export default function koaOIDCErrorHandler<StateT, ContextT>(): Middleware<Stat
             },
             data
           );
+        }
       }
     }
   };

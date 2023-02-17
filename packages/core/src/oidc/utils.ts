@@ -15,10 +15,13 @@ export const getConstantClientMetadata = (
   const getTokenEndpointAuthMethod = (): ClientAuthMethod => {
     switch (type) {
       case ApplicationType.Native:
-      case ApplicationType.SPA:
+      case ApplicationType.SPA: {
         return 'none';
-      default:
+      }
+
+      default: {
         return 'client_secret_basic';
+      }
     }
   };
 

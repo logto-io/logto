@@ -130,12 +130,17 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
     interactions: {
       url: (_, interaction) => {
         switch (interaction.prompt.name) {
-          case 'login':
+          case 'login': {
             return routes.signIn.credentials;
-          case 'consent':
+          }
+
+          case 'consent': {
             return routes.signIn.consent;
-          default:
+          }
+
+          default: {
             throw new Error(`Prompt not supported: ${interaction.prompt.name}`);
+          }
         }
       },
     },

@@ -10,25 +10,30 @@ import { exportJWK as joseExportJWK } from 'jose';
 
 const getCalculateKidComponents = (jwk: JWK) => {
   switch (jwk.kty) {
-    case 'RSA':
+    case 'RSA': {
       return {
         e: jwk.e,
         kty: 'RSA',
         n: jwk.n,
       };
-    case 'EC':
+    }
+
+    case 'EC': {
       return {
         crv: jwk.crv,
         kty: 'EC',
         x: jwk.x,
         y: jwk.y,
       };
-    case 'OKP':
+    }
+
+    case 'OKP': {
       return {
         crv: jwk.crv,
         kty: 'OKP',
         x: jwk.x,
       };
+    }
     default:
   }
 };

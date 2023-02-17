@@ -121,8 +121,10 @@ export const getType = (
     case 'time':
     case 'timetz':
     case 'interval':
-    case 'name':
+    case 'name': {
       return 'string';
+    }
+
     case 'int2':
     case 'int4':
     case 'int8':
@@ -134,13 +136,19 @@ export const getType = (
     case 'oid':
     case 'date':
     case 'timestamp':
-    case 'timestamptz':
+    case 'timestamptz': {
       return 'number';
-    case 'boolean': // https://www.postgresql.org/docs/14/datatype-boolean.html
+    }
+
+    case 'boolean': {
+      // https://www.postgresql.org/docs/14/datatype-boolean.html
       return 'boolean';
+    }
+
     case 'json':
-    case 'jsonb':
+    case 'jsonb': {
       return 'Record<string, unknown>';
+    }
     default:
   }
 };

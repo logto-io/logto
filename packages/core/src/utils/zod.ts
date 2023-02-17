@@ -63,16 +63,19 @@ const zodStringCheckToSwaggerFormat = (zodStringCheck: ZodStringCheck) => {
     case 'url':
     case 'uuid':
     case 'cuid':
-    case 'regex':
+    case 'regex': {
       return kind;
+    }
 
     case 'min':
-    case 'max':
+    case 'max': {
       // Do nothing here
       return;
+    }
 
-    default:
+    default: {
       throw new RequestError('swagger.invalid_zod_type', zodStringCheck);
+    }
   }
 };
 
@@ -107,23 +110,30 @@ const zodLiteralToSwagger = (zodLiteral: ZodLiteral<unknown>): OpenAPIV3.SchemaO
   const { value } = zodLiteral;
 
   switch (typeof value) {
-    case 'boolean':
+    case 'boolean': {
       return {
         type: 'boolean',
         format: String(value),
       };
-    case 'number':
+    }
+
+    case 'number': {
       return {
         type: 'number',
         format: String(value),
       };
-    case 'string':
+    }
+
+    case 'string': {
       return {
         type: 'string',
         format: value === '' ? 'empty' : `"${value}"`,
       };
-    default:
+    }
+
+    default: {
       throw new RequestError('swagger.invalid_zod_type', zodLiteral);
+    }
   }
 };
 
