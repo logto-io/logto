@@ -36,7 +36,7 @@ const useSmartInputField = ({ defaultType, defaultValue, enabledTypes }: Props) 
     );
   }
 
-  // Parse default value from enabled types if default type is not provided and only one type is enabled
+  // Parse default type from enabled types if default type is not provided and only one type is enabled
   const _defaultType = useMemo(
     () => defaultType ?? (enabledTypes.length === 1 ? enabledTypes[0] : undefined),
     [defaultType, enabledTypes]
