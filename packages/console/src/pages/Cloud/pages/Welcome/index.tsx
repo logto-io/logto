@@ -83,7 +83,7 @@ const Welcome = () => {
           </form>
         </div>
       </OverlayScrollbar>
-      <ActionBar>
+      <ActionBar step={1}>
         <Button
           title="general.next"
           type="primary"

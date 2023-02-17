@@ -1,11 +1,15 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  height: 92px;
-  background-color: var(--color-layer-1);
-  padding: 0 _.unit(17);
-  display: flex;
-  align-items: center;
-  flex-direction: row-reverse;
-  justify-content: space-between;
+  height: 80px;
+
+  .actions {
+    height: 100%;
+    background-color: var(--color-layer-1);
+    padding: 0 _.unit(17);
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
 }
