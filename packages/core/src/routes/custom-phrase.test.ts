@@ -150,7 +150,7 @@ describe('customPhraseRoutes', () => {
 
     it('should call upsertCustomPhrase with specified language tag', async () => {
       await customPhraseRequest.put(`/custom-phrases/${mockLanguageTag}`).send(translation);
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       const { tenantId, ...phrase } = mockCustomPhrases[mockLanguageTag]!;
       expect(upsertCustomPhrase).toBeCalledWith(phrase);
     });

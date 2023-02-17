@@ -32,7 +32,7 @@ importers:
       '@logto/shared': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0
+      '@silverhand/ts-config': 2.0.3
       '@types/inquirer': ^9.0.0
       '@types/jest': ^29.1.2
       '@types/node': ^18.11.18
@@ -89,7 +89,7 @@ importers:
       zod: 3.20.2
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/inquirer': 9.0.3
       '@types/jest': 29.1.2
       '@types/node': 18.11.18
@@ -122,8 +122,8 @@ importers:
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/eslint-config-react': 2.0.1
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0
-      '@silverhand/ts-config-react': 2.0.0
+      '@silverhand/ts-config': 2.0.3
+      '@silverhand/ts-config-react': 2.0.3
       '@tsconfig/docusaurus': ^1.0.5
       '@types/color': ^3.0.3
       '@types/mdx': ^2.0.1
@@ -195,8 +195,8 @@ importers:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
       '@silverhand/eslint-config-react': 2.0.1_kz2ighe3mj4zdkvq5whtl3dq4u
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
-      '@silverhand/ts-config-react': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
+      '@silverhand/ts-config-react': 2.0.3_typescript@4.9.4
       '@tsconfig/docusaurus': 1.0.5
       '@types/color': 3.0.3
       '@types/mdx': 2.0.1
@@ -265,7 +265,7 @@ importers:
       '@logto/shared': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0
+      '@silverhand/ts-config': 2.0.3
       '@types/debug': ^4.1.7
       '@types/etag': ^1.8.1
       '@types/http-errors': ^1.8.2
@@ -380,7 +380,7 @@ importers:
       zod: 3.20.2
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/debug': 4.1.7
       '@types/etag': 1.8.1
       '@types/http-errors': 1.8.2
@@ -428,8 +428,8 @@ importers:
       '@parcel/transformer-sass': 2.8.3
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/eslint-config-react': 2.0.1
-      '@silverhand/ts-config': 2.0.0
-      '@silverhand/ts-config-react': 2.0.0
+      '@silverhand/ts-config': 2.0.3
+      '@silverhand/ts-config-react': 2.0.3
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
       buffer: ^5.7.1
@@ -457,8 +457,8 @@ importers:
       '@parcel/transformer-sass': 2.8.3_@parcel+core@2.8.3
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
       '@silverhand/eslint-config-react': 2.0.1_4hpkokbqyihqjkzrjggsgvbrga
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
-      '@silverhand/ts-config-react': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
+      '@silverhand/ts-config-react': 2.0.3_typescript@4.9.4
       '@types/react': 18.0.15
       '@types/react-dom': 18.0.6
       buffer: 5.7.1
@@ -487,7 +487,7 @@ importers:
       '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0
+      '@silverhand/ts-config': 2.0.3
       '@types/jest': ^29.1.2
       '@types/jest-environment-puppeteer': ^5.0.2
       '@types/node': ^18.11.18
@@ -515,7 +515,7 @@ importers:
       '@peculiar/webcrypto': 1.3.3
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/jest': 29.1.2
       '@types/jest-environment-puppeteer': 5.0.2
       '@types/node': 18.11.18
@@ -538,7 +538,7 @@ importers:
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0
+      '@silverhand/ts-config': 2.0.3
       eslint: ^8.34.0
       lint-staged: ^13.0.0
       prettier: ^2.8.2
@@ -551,7 +551,7 @@ importers:
       zod: 3.20.2
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       eslint: 8.34.0
       lint-staged: 13.0.0
       prettier: 2.8.4
@@ -563,7 +563,7 @@ importers:
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0
+      '@silverhand/ts-config': 2.0.3
       buffer: ^5.7.1
       eslint: ^8.34.0
       lint-staged: ^13.0.0
@@ -577,7 +577,7 @@ importers:
       zod: 3.20.2
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       buffer: 5.7.1
       eslint: 8.34.0
       lint-staged: 13.0.0
@@ -593,7 +593,7 @@ importers:
       '@logto/phrases-ui': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0
+      '@silverhand/ts-config': 2.0.3
       '@types/inquirer': ^9.0.0
       '@types/jest': ^29.1.2
       '@types/node': ^18.11.18
@@ -621,7 +621,7 @@ importers:
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/inquirer': 9.0.3
       '@types/jest': 29.1.2
       '@types/node': 18.11.18
@@ -644,7 +644,7 @@ importers:
       '@logto/schemas': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0
+      '@silverhand/ts-config': 2.0.3
       '@types/jest': ^29.1.2
       '@types/node': ^18.11.18
       eslint: ^8.34.0
@@ -665,7 +665,7 @@ importers:
       '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/jest': 29.1.2
       '@types/node': 18.11.18
       eslint: 8.34.0
@@ -680,7 +680,7 @@ importers:
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0
+      '@silverhand/ts-config': 2.0.3
       '@types/node': ^18.11.18
       eslint: ^8.34.0
       lint-staged: ^13.0.0
@@ -696,7 +696,7 @@ importers:
       zod: 3.20.2
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/node': 18.11.18
       eslint: 8.34.0
       lint-staged: 13.0.0
@@ -711,7 +711,7 @@ importers:
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/eslint-config-react': 2.0.1
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0
+      '@silverhand/ts-config': 2.0.3
       '@types/color': ^3.0.3
       '@types/jest': ^29.0.3
       '@types/node': ^18.11.18
@@ -738,7 +738,7 @@ importers:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
       '@silverhand/eslint-config-react': 2.0.1_wfldc7mlde5bb3fdzap5arn6me
       '@silverhand/essentials': 2.1.0
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/color': 3.0.3
       '@types/jest': 29.1.2
       '@types/node': 18.11.18
@@ -756,7 +756,7 @@ importers:
     specifiers:
       '@jest/types': ^29.0.3
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/ts-config': 2.0.0
+      '@silverhand/ts-config': 2.0.3
       '@types/jest': ^29.0.3
       '@types/node': ^18.11.18
       eslint: ^8.34.0
@@ -771,7 +771,7 @@ importers:
     devDependencies:
       '@jest/types': 29.3.1
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/jest': 29.1.2
       '@types/node': 18.11.18
       eslint: 8.34.0
@@ -798,8 +798,8 @@ importers:
       '@silverhand/eslint-config-react': 2.0.1
       '@silverhand/essentials': 2.1.0
       '@silverhand/jest-config': 1.2.2
-      '@silverhand/ts-config': 2.0.0
-      '@silverhand/ts-config-react': 2.0.0
+      '@silverhand/ts-config': 2.0.3
+      '@silverhand/ts-config-react': 2.0.3
       '@testing-library/react': ^13.3.0
       '@types/color': ^3.0.3
       '@types/jest': ^29.1.2
@@ -855,8 +855,8 @@ importers:
       '@silverhand/eslint-config-react': 2.0.1_kz2ighe3mj4zdkvq5whtl3dq4u
       '@silverhand/essentials': 2.1.0
       '@silverhand/jest-config': 1.2.2_ky6c64xxalg2hsll4xx3evq2dy
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
-      '@silverhand/ts-config-react': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
+      '@silverhand/ts-config-react': 2.0.3_typescript@4.9.4
       '@testing-library/react': 13.3.0_biqbaboplfbrettd7655fr4n2y
       '@types/color': 3.0.3
       '@types/jest': 29.1.2
@@ -3603,18 +3603,18 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/ts-config-react/2.0.0_typescript@4.9.4:
-    resolution: {integrity: sha512-tyRiFeWg9+lnlp2L4NAF/XZfj6+w2ZZHp89iw99cDgfLLHilNq+nw33GFw3kDNUzHgYLBdZrFStF1KFasL4vpQ==}
+  /@silverhand/ts-config-react/2.0.3_typescript@4.9.4:
+    resolution: {integrity: sha512-qJk601yt4pQThr8LMknIYm/53MmrD40k9LvJUxlEnjIlQqEat4rp8+Q7Ebmy5IA53U22m42k5nJeAtDpQxhKAg==}
     engines: {node: ^18.12.0}
     peerDependencies:
       typescript: ^4.9.4
     dependencies:
-      '@silverhand/ts-config': 2.0.0_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       typescript: 4.9.4
     dev: true
 
-  /@silverhand/ts-config/2.0.0_typescript@4.9.4:
-    resolution: {integrity: sha512-NkfWrz+zkAEchQ7+46miRK+cmB7H9KNTwuclI1dB4FNG+2F3CQSMlQXWzTAriMSUW6sGJYwoBGEa9dJ8iAxOoQ==}
+  /@silverhand/ts-config/2.0.3_typescript@4.9.4:
+    resolution: {integrity: sha512-98m+7b2gUIkV5AgpwiMRbnYjclkZYGZnNrLioTtvYtKWz3TZZ6EFTVPK1isSrCwSUuYzx38+QNSVi89t4G1IDA==}
     engines: {node: ^18.12.0}
     peerDependencies:
       typescript: ^4.9.4

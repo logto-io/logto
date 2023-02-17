@@ -104,7 +104,7 @@ describe('GET /.well-known/sign-in-exp', () => {
   it('should return admin console settings', async () => {
     jest
       .spyOn(provider, 'interactionDetails')
-      // @ts-expect-error for testing
+      // @ts-expect-error
       .mockResolvedValue({ params: { client_id: adminConsoleApplicationId } });
     const response = await sessionRequest.get('/.well-known/sign-in-exp');
     expect(response.status).toEqual(200);

@@ -1,8 +1,6 @@
 {
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
-    "moduleResolution": "nodenext",
-    "module": "esnext",
     "declaration": false,
     "outDir": "build",
     "baseUrl": ".",

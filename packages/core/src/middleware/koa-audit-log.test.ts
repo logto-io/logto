@@ -41,7 +41,7 @@ describe('koaAuditLog middleware', () => {
   });
 
   it('should insert a success log when next() does not throw an error', async () => {
-    // @ts-expect-error for testing
+    // @ts-expect-error
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
     };
@@ -70,7 +70,7 @@ describe('koaAuditLog middleware', () => {
   });
 
   it('should insert multiple success logs when needed', async () => {
-    // @ts-expect-error for testing
+    // @ts-expect-error
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
     };
@@ -110,7 +110,7 @@ describe('koaAuditLog middleware', () => {
   });
 
   it('should not log when there is no log type', async () => {
-    // @ts-expect-error for testing
+    // @ts-expect-error
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
     };
@@ -123,7 +123,7 @@ describe('koaAuditLog middleware', () => {
   });
 
   it('should filter password sensitive data in log', async () => {
-    // @ts-expect-error for testing
+    // @ts-expect-error
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
     };
@@ -162,7 +162,7 @@ describe('koaAuditLog middleware', () => {
 
   describe('should insert an error log with the error message when next() throws an error', () => {
     it('should log with error message when next throws a normal Error', async () => {
-      // @ts-expect-error for testing
+      // @ts-expect-error
       const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
         ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       };
@@ -193,7 +193,7 @@ describe('koaAuditLog middleware', () => {
     });
 
     it('should update all logs with error result when next() throws a RequestError', async () => {
-      // @ts-expect-error for testing
+      // @ts-expect-error
       const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
         ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       };
