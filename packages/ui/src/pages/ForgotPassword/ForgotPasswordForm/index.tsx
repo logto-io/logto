@@ -1,6 +1,5 @@
-import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -24,7 +23,10 @@ type Props = {
 };
 
 type FormState = {
-  identifier: string;
+  identifier: {
+    type?: VerificationCodeIdentifier;
+    value: string;
+  };
 };
 
 const ForgotPasswordForm = ({
@@ -35,7 +37,6 @@ const ForgotPasswordForm = ({
   enabledTypes,
 }: Props) => {
   const { t } = useTranslation();
-  const [inputType, setInputType] = useState<VerificationCodeIdentifier>(defaultType);
   const { errorMessage, clearErrorMessage, onSubmit } = useSendVerificationCode(
     UserFlow.forgotPassword
   );
@@ -43,23 +44,30 @@ const ForgotPasswordForm = ({
   const {
     handleSubmit,
     control,
-    formState: { errors, isSubmitted },
+    formState: { errors },
   } = useForm<FormState>({
     reValidateMode: 'onChange',
-    defaultValues: { identifier: defaultValue },
+    defaultValues: {
+      identifier: {
+        type: defaultType,
+        value: defaultValue,
+      },
+    },
   });
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ identifier }, event) => {
-        event?.preventDefault();
+      void handleSubmit(async ({ identifier: { type, value } }) => {
+        if (!type) {
+          return;
+        }
 
-        await onSubmit({ identifier: inputType, value: identifier });
+        await onSubmit({ identifier: type, value });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, inputType, onSubmit]
+    [clearErrorMessage, handleSubmit, onSubmit]
   );
 
   return (
@@ -68,9 +76,14 @@ const ForgotPasswordForm = ({
         control={control}
         name="identifier"
         rules={{
-          required: getGeneralIdentifierErrorMessage(enabledTypes, 'required'),
-          validate: (value) => {
-            const errorMessage = validateIdentifierField(inputType, value);
+          validate: (identifier) => {
+            const { type, value } = identifier;
+
+            if (!type || !value) {
+              return getGeneralIdentifierErrorMessage(enabledTypes, 'required');
+            }
+
+            const errorMessage = validateIdentifierField(type, value);
 
             if (errorMessage) {
               return typeof errorMessage === 'string'
@@ -87,17 +100,11 @@ const ForgotPasswordForm = ({
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
+            defaultType={defaultType}
             defaultValue={defaultValue}
-            currentType={inputType}
             isDanger={!!errors.identifier}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledTypes}
-            onTypeChange={(type) => {
-              // The enabledTypes is restricted to be VerificationCodeIdentifier, need this check to make TS happy
-              if (type !== SignInIdentifier.Username) {
-                setInputType(type);
-              }
-            }}
           />
         )}
       />

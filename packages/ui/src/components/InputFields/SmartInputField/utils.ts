@@ -5,11 +5,11 @@ import type { TFuncKey } from 'react-i18next';
 
 import { identifierInputPlaceholderMap } from '@/utils/form';
 
-import type { IdentifierInputType, EnabledIdentifierTypes } from './use-smart-input-field';
+import type { IdentifierInputType } from './use-smart-input-field';
 
 export const getInputHtmlProps = (
-  currentType: IdentifierInputType,
-  enabledTypes: EnabledIdentifierTypes
+  enabledTypes: IdentifierInputType[],
+  currentType?: IdentifierInputType
 ): Pick<HTMLProps<HTMLInputElement>, 'type' | 'pattern' | 'inputMode' | 'placeholder'> => {
   if (currentType === SignInIdentifier.Phone && enabledTypes.length === 1) {
     return {

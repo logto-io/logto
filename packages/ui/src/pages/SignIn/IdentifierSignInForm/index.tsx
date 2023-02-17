@@ -1,13 +1,12 @@
-import { SignInIdentifier } from '@logto/schemas';
 import type { SignIn } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
-import type { IdentifierInputType } from '@/components/InputFields';
 import { SmartInputField } from '@/components/InputFields';
+import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
@@ -23,7 +22,7 @@ type Props = {
 };
 
 type FormState = {
-  identifier: string;
+  identifier: IdentifierInputValue;
 };
 
 const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
@@ -35,34 +34,31 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     [signInMethods]
   );
 
-  const [inputType, setInputType] = useState<IdentifierInputType>(
-    enabledSignInMethods[0] ?? SignInIdentifier.Username
-  );
-
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<FormState>({
     reValidateMode: 'onChange',
-    defaultValues: { identifier: '' },
   });
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ identifier }, event) => {
-        event?.preventDefault();
+      void handleSubmit(async ({ identifier: { type, value } }) => {
+        if (!type) {
+          return;
+        }
 
         if (!(await termsValidation())) {
           return;
         }
 
-        await onSubmit(inputType, identifier);
+        await onSubmit(type, value);
       })(event);
     },
-    [clearErrorMessage, handleSubmit, inputType, onSubmit, termsValidation]
+    [clearErrorMessage, handleSubmit, onSubmit, termsValidation]
   );
 
   return (
@@ -71,9 +67,12 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
         control={control}
         name="identifier"
         rules={{
-          required: getGeneralIdentifierErrorMessage(enabledSignInMethods, 'required'),
-          validate: (value) => {
-            const errorMessage = validateIdentifierField(inputType, value);
+          validate: ({ type, value }) => {
+            if (!type || !value) {
+              return getGeneralIdentifierErrorMessage(enabledSignInMethods, 'required');
+            }
+
+            const errorMessage = validateIdentifierField(type, value);
 
             return errorMessage
               ? getGeneralIdentifierErrorMessage(enabledSignInMethods, 'invalid')
@@ -86,11 +85,9 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            currentType={inputType}
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledSignInMethods}
-            onTypeChange={setInputType}
           />
         )}
       />

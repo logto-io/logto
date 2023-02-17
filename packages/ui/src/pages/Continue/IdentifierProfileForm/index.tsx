@@ -1,12 +1,15 @@
 import classNames from 'classnames';
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
-import type { IdentifierInputType } from '@/components/InputFields';
 import { SmartInputField } from '@/components/InputFields';
+import type {
+  IdentifierInputType,
+  IdentifierInputValue,
+} from '@/components/InputFields/SmartInputField';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
@@ -15,7 +18,7 @@ type Props = {
   className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   autoFocus?: boolean;
-  defaultType: IdentifierInputType;
+  defaultType?: IdentifierInputType;
   enabledTypes: IdentifierInputType[];
 
   onSubmit?: (identifier: IdentifierInputType, value: string) => Promise<void> | void;
@@ -24,7 +27,7 @@ type Props = {
 };
 
 type FormState = {
-  identifier: string;
+  identifier: IdentifierInputValue;
 };
 
 const IdentifierProfileForm = ({
@@ -37,28 +40,33 @@ const IdentifierProfileForm = ({
   clearErrorMessage,
 }: Props) => {
   const { t } = useTranslation();
-  const [inputType, setInputType] = useState<IdentifierInputType>(defaultType);
-
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<FormState>({
     reValidateMode: 'onChange',
-    defaultValues: { identifier: '' },
+    defaultValues: {
+      identifier: {
+        type: defaultType,
+        value: '',
+      },
+    },
   });
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage?.();
 
-      void handleSubmit(async ({ identifier }, event) => {
-        event?.preventDefault();
+      void handleSubmit(async ({ identifier: { type, value } }) => {
+        if (!type) {
+          return;
+        }
 
-        await onSubmit?.(inputType, identifier);
+        await onSubmit?.(type, value);
       })(event);
     },
-    [clearErrorMessage, handleSubmit, inputType, onSubmit]
+    [clearErrorMessage, handleSubmit, onSubmit]
   );
 
   return (
@@ -67,9 +75,14 @@ const IdentifierProfileForm = ({
         control={control}
         name="identifier"
         rules={{
-          required: getGeneralIdentifierErrorMessage(enabledTypes, 'required'),
-          validate: (value) => {
-            const errorMessage = validateIdentifierField(inputType, value);
+          validate: (identifier) => {
+            const { type, value } = identifier;
+
+            if (!type || !value) {
+              return getGeneralIdentifierErrorMessage(enabledTypes, 'required');
+            }
+
+            const errorMessage = validateIdentifierField(type, value);
 
             if (errorMessage) {
               return typeof errorMessage === 'string'
@@ -86,11 +99,10 @@ const IdentifierProfileForm = ({
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            currentType={inputType}
+            defaultType={defaultType}
             isDanger={!!errors.identifier}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledTypes}
-            onTypeChange={setInputType}
           />
         )}
       />

@@ -50,7 +50,7 @@ describe('<IdentifierRegisterForm />', () => {
     [SignInIdentifier.Email],
     [SignInIdentifier.Phone],
     [SignInIdentifier.Email, SignInIdentifier.Phone],
-  ])('username %o register form', (...signUpMethods) => {
+  ])('%p %p register form', (...signUpMethods) => {
     test('default render', () => {
       const { queryByText, container } = renderForm(signUpMethods);
       expect(container.querySelector('input[name="identifier"]')).not.toBeNull();

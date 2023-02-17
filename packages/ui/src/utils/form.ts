@@ -2,7 +2,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import i18next from 'i18next';
 import type { TFuncKey } from 'react-i18next';
 
-import type { IdentifierInputType } from '@/components/InputFields';
+import type { IdentifierInputType } from '@/components/InputFields/SmartInputField';
 
 import { parsePhoneNumber } from './country-code';
 import { validateUsername, validateEmail, validatePhone } from './field-validations';
@@ -48,7 +48,7 @@ export const validateIdentifierField = (type: IdentifierInputType, value: string
   }
 };
 
-export const parseIdentifierValue = (type: IdentifierInputType, value?: string) => {
+export const parseIdentifierValue = (type?: IdentifierInputType, value?: string) => {
   if (type === SignInIdentifier.Phone && value) {
     const validPhoneNumber = parsePhoneNumber(value);
 
