@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -43,9 +43,9 @@ const IdentifierProfileForm = ({
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormState>({
-    reValidateMode: 'onChange',
+    reValidateMode: 'onBlur',
     defaultValues: {
       identifier: {
         type: defaultType,
@@ -53,6 +53,12 @@ const IdentifierProfileForm = ({
       },
     },
   });
+
+  useEffect(() => {
+    if (!isValid) {
+      clearErrorMessage?.();
+    }
+  }, [clearErrorMessage, isValid]);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
