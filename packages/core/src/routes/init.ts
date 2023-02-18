@@ -1,9 +1,9 @@
-import cors from '@koa/cors';
 import { getManagementApiResourceIndicator } from '@logto/schemas';
 import Koa from 'koa';
 import Router from 'koa-router';
 
 import { EnvSet } from '#src/env-set/index.js';
+import koaCors from '#src/middleware/koa-cors.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import koaAuth from '../middleware/koa-auth/index.js';
@@ -64,19 +64,8 @@ const createRouters = (tenant: TenantContext) => {
 export default function initApis(tenant: TenantContext): Koa {
   const apisApp = new Koa();
 
-  apisApp.use(
-    cors({
-      origin: (ctx) => {
-        const { origin } = ctx.request.headers;
-
-        return origin &&
-          EnvSet.values.adminUrlSet.deduplicated().some((value) => new URL(value).origin === origin)
-          ? origin
-          : '';
-      },
-      exposeHeaders: '*',
-    })
-  );
+  const { adminUrlSet, cloudUrlSet } = EnvSet.values;
+  apisApp.use(koaCors(adminUrlSet, cloudUrlSet));
 
   for (const router of createRouters(tenant)) {
     apisApp.use(router.routes()).use(router.allowedMethods());

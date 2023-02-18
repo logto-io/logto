@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "2.0.1",
-    "@silverhand/essentials": "2.1.0",
+    "@silverhand/essentials": "2.2.0",
     "@silverhand/ts-config": "2.0.3",
     "@types/inquirer": "^9.0.0",
     "@types/jest": "^29.1.2",
@@ -84,7 +84,7 @@
     "@logto/language-kit": "workspace:*",
     "@logto/phrases": "workspace:*",
     "@logto/phrases-ui": "workspace:*",
-    "@withtyped/server": "^0.5.1",
+    "@withtyped/server": "^0.6.0",
     "zod": "^3.20.2"
   }
 }
