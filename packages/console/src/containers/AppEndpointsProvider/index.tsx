@@ -2,7 +2,7 @@ import ky from 'ky';
 import type { ReactNode } from 'react';
 import { useMemo, useEffect, createContext, useState } from 'react';
 
-import { adminTenantEndpoint, userTenantId } from '@/consts';
+import { adminTenantEndpoint, getUserTenantId } from '@/consts';
 
 type Props = {
   children: ReactNode;
@@ -23,8 +23,14 @@ const AppEndpointsProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const getEndpoint = async () => {
+      const tenantId = getUserTenantId();
+
+      if (!tenantId) {
+        return;
+      }
+
       const { user } = await ky
-        .get(new URL(`api/.well-known/endpoints/${userTenantId}`, adminTenantEndpoint))
+        .get(new URL(`api/.well-known/endpoints/${tenantId}`, adminTenantEndpoint))
         .json<{ user: string }>();
       setEndpoints({ userEndpoint: new URL(user) });
     };

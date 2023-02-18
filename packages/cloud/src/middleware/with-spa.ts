@@ -22,6 +22,10 @@ export type WithSpaConfig = {
    */
   pathname?: string;
   /**
+   * An array of pathname prefixes to ignore.
+   */
+  ignorePathnames?: string[];
+  /**
    * The path to file to serve when the given path cannot be found in the file system.
    * @default 'index.html'
    */
@@ -32,6 +36,7 @@ export default function withSpa<InputContext extends RequestContext>({
   maxAge = 604_800,
   root,
   pathname: rootPathname = '/',
+  ignorePathnames,
   indexPath: index = 'index.html',
 }: WithSpaConfig) {
   assert(root, new Error('Root directory is required to serve files.'));
@@ -44,7 +49,7 @@ export default function withSpa<InputContext extends RequestContext>({
 
     const pathname = matchPathname(rootPathname, url.pathname);
 
-    if (!pathname) {
+    if (!pathname || ignorePathnames?.some((prefix) => matchPathname(prefix, url.pathname))) {
       return next(context);
     }
 

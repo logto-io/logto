@@ -46,6 +46,7 @@ import {
   SignInExperiencePage,
   UserDetailsTabs,
   adminTenantEndpoint,
+  getUserTenantId,
 } from './consts';
 import AppContent from './containers/AppContent';
 import AppEndpointsProvider, { AppEndpointsContext } from './containers/AppEndpointsProvider';
@@ -63,7 +64,6 @@ import RoleUsers from './pages/RoleDetails/RoleUsers';
 import UserLogs from './pages/UserDetails/UserLogs';
 import UserRoles from './pages/UserDetails/UserRoles';
 import UserSettings from './pages/UserDetails/UserSettings';
-import { getBasename } from './utils/router';
 
 void initI18n();
 
@@ -171,7 +171,7 @@ const Main = () => {
 };
 
 const App = () => (
-  <BrowserRouter basename={getBasename('console', '5002')}>
+  <BrowserRouter basename={`/${getUserTenantId() ?? ''}`}>
     <AppEndpointsProvider>
       <LogtoProvider
         config={{
