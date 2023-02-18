@@ -1,4 +1,5 @@
 import type { HttpContext, NextFunction, RequestContext } from '@withtyped/server';
+import chalk from 'chalk';
 import type { ServerOptions } from 'http-proxy';
 import HttpProxy from 'http-proxy';
 
@@ -11,6 +12,13 @@ export default function withHttpProxy<InputContext extends RequestContext>(
   options: ServerOptions
 ) {
   const proxy = createProxy(options);
+
+  proxy.on('start', (request, __, target) => {
+    console.log(
+      `\t${chalk.italic(chalk.gray('proxy ->'))}`,
+      new URL(request.url ?? '/', typeof target === 'object' ? target.href : target).toString()
+    );
+  });
 
   return async (
     context: InputContext,
@@ -28,10 +36,8 @@ export default function withHttpProxy<InputContext extends RequestContext>(
     }
 
     await new Promise<void>((resolve) => {
+      response.once('finish', resolve);
       proxy.web(request, response, options);
-      proxy.on('proxyRes', (_, __, response) => {
-        response.on('end', resolve);
-      });
     });
 
     return next({ ...context, status: 'ignore' });
