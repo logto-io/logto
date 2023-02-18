@@ -28,7 +28,8 @@
     "dotenv": "^16.0.0",
     "find-up": "^6.3.0",
     "http-proxy": "^1.18.1",
-    "mime-types": "^2.1.35"
+    "mime-types": "^2.1.35",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "2.0.1",
