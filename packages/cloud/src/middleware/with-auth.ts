@@ -2,6 +2,7 @@ import assert from 'node:assert';
 import type { IncomingHttpHeaders } from 'node:http';
 import path from 'node:path/posix';
 
+import { tryThat } from '@logto/shared';
 import type { NextFunction, RequestContext } from '@withtyped/server';
 import { RequestError } from '@withtyped/server';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
@@ -57,31 +58,26 @@ export default function withAuth<InputContext extends RequestContext>({
   return async (context: InputContext, next: NextFunction<WithAuthContext<InputContext>>) => {
     const [getKey, issuer] = await getJwkSet;
 
-    try {
-      const {
-        payload: { sub, scope },
-      } = await jwtVerify(extractBearerTokenFromHeaders(context.request.headers), getKey, {
+    const {
+      payload: { sub, scope },
+    } = await tryThat(
+      jwtVerify(extractBearerTokenFromHeaders(context.request.headers), getKey, {
         issuer,
         audience,
-      });
-
-      assert(sub, new RequestError('"sub" is missing in JWT.', 401));
-
-      const scopes = typeof scope === 'string' ? scope.split(' ') : [];
-      assert(
-        expectScopes.every((scope) => scopes.includes(scope)),
-        new RequestError('Forbidden. Please check your permissions.', 403)
-      );
-
-      await next({ ...context, auth: { id: sub, scopes } });
-
-      return;
-    } catch (error: unknown) {
-      if (error instanceof RequestError) {
+      }),
+      (error) => {
         throw error;
       }
+    );
 
-      throw new RequestError('Unauthorized.', 401);
-    }
+    assert(sub, new RequestError('"sub" is missing in JWT.', 401));
+
+    const scopes = typeof scope === 'string' ? scope.split(' ') : [];
+    assert(
+      expectScopes.every((scope) => scopes.includes(scope)),
+      new RequestError('Forbidden. Please check your permissions.', 403)
+    );
+
+    return next({ ...context, auth: { id: sub, scopes } });
   };
 }

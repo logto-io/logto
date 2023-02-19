@@ -1,7 +1,6 @@
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
-import { generateStandardId } from '@logto/core-kit';
 import {
   defaultSignInExperience,
   createDefaultAdminConsoleConfig,
@@ -9,7 +8,7 @@ import {
   defaultTenantId,
   adminTenantId,
   defaultManagementApi,
-  createManagementApiInAdminTenant,
+  createAdminDataInAdminTenant,
   createMeApiInAdminTenant,
 } from '@logto/schemas';
 import { Hooks, Tenants } from '@logto/schemas/models';
@@ -120,13 +119,14 @@ export const seedTables = async (
 
   await createTenant(connection, adminTenantId);
   await seedOidcConfigs(connection, adminTenantId);
-  await seedAdminData(connection, createManagementApiInAdminTenant(defaultTenantId));
+  await seedAdminData(connection, createAdminDataInAdminTenant(defaultTenantId));
   await seedAdminData(connection, createMeApiInAdminTenant());
 
   await Promise.all([
-    connection.query(insertInto(createDefaultAdminConsoleConfig(), 'logto_configs')),
+    connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),
     connection.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
-    connection.query(insertInto(createDemoAppApplication(generateStandardId()), 'applications')),
+    // TODO: @gao remove demo app
+    connection.query(insertInto(createDemoAppApplication(defaultTenantId), 'applications')),
     updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
 };

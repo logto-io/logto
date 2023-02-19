@@ -1,6 +1,7 @@
 import { generateStandardId } from '@logto/core-kit';
 import { CreateRolesScope } from '@logto/schemas';
 import type { TenantModel, AdminData } from '@logto/schemas';
+import { createTenantMetadata } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
@@ -11,9 +12,7 @@ import { getDatabaseName } from '../../../queries/database.js';
 
 export const createTenant = async (pool: CommonQueryMethods, tenantId: string) => {
   const database = await getDatabaseName(pool, true);
-  const parentRole = `logto_tenant_${database}`;
-  const role = `logto_tenant_${database}_${tenantId}`;
-  const password = generateStandardId(32);
+  const { parentRole, role, password } = createTenantMetadata(database, tenantId);
   const tenantModel: TenantModel = { id: tenantId, dbUser: role, dbUserPassword: password };
 
   await pool.query(insertInto(tenantModel, 'tenants'));

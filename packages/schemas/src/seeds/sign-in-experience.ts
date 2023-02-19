@@ -7,8 +7,10 @@ import { defaultTenantId } from './tenant.js';
 
 const defaultPrimaryColor = '#6139F6';
 
-export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
-  tenantId: defaultTenantId,
+export const createDefaultSignInExperience = (
+  forTenantId: string
+): Readonly<CreateSignInExperience> => ({
+  tenantId: forTenantId,
   id: 'default',
   color: {
     primaryColor: defaultPrimaryColor,
@@ -42,7 +44,10 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   },
   socialSignInConnectorTargets: [],
   signInMode: SignInMode.SignInAndRegister,
-};
+});
+
+/** @deprecated Use `createDefaultSignInExperience()` instead. */
+export const defaultSignInExperience = createDefaultSignInExperience(defaultTenantId);
 
 export const adminConsoleSignInExperience: CreateSignInExperience = {
   ...defaultSignInExperience,
