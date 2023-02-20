@@ -1,4 +1,4 @@
-import type { ConnectorSession, SocialUserInfo, JsonStorageValue } from '@logto/connector-kit';
+import type { ConnectorSession, SocialUserInfo } from '@logto/connector-kit';
 import { connectorSessionGuard } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
@@ -73,8 +73,7 @@ export const verifySocialIdentity = async (
     connectorData,
     async () => getConnectorSessionResult(ctx, provider),
     {
-      set: async (key: string, value: JsonStorageValue) =>
-        setValueByIdAndKey(connectorId, key, value),
+      set: async (key: string, value: unknown) => setValueByIdAndKey(connectorId, key, value),
       get: async (key: string) => getValueByIdAndKey(connectorId, key),
     }
   );

@@ -1,7 +1,7 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { isLanguageTag } from '@logto/language-kit';
 import type { ZodType } from 'zod';
-import { z } from 'zod';
+import { z, unknown } from 'zod';
 
 // MARK: Foundation
 export enum ConnectorType {
@@ -181,24 +181,13 @@ export type GetSession = () => Promise<ConnectorSession>;
 
 export type SetSession = (storage: ConnectorSession) => Promise<void>;
 
-// https://github.com/colinhacks/zod#json-type
-const literalGuard = z.union([z.string(), z.number(), z.boolean(), z.null()]);
-
-type Literal = z.infer<typeof literalGuard>;
-
-export type JsonStorageValue = Literal | { [key: string]: JsonStorageValue } | JsonStorageValue[];
-
-export const jsonStorageValueGuard: z.ZodType<JsonStorageValue> = z.lazy(() =>
-  z.union([literalGuard, z.array(jsonStorageValueGuard), z.record(jsonStorageValueGuard)])
-);
-
-export const storageGuard = z.record(jsonStorageValueGuard);
+export const storageGuard = z.record(unknown());
 
 export type Storage = z.infer<typeof storageGuard>;
 
-export type GetStorageValue = (key: string) => Promise<JsonStorageValue>;
+export type GetStorageValue = (key: string) => Promise<unknown>;
 
-export type SetStorageValue = (key: string, value: JsonStorageValue) => Promise<Storage>;
+export type SetStorageValue = (key: string, value: unknown) => Promise<Storage>;
 
 export type BaseConnector<Type extends ConnectorType> = {
   type: Type;

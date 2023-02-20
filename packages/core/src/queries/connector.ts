@@ -1,4 +1,4 @@
-import type { JsonStorageValue, Storage } from '@logto/connector-kit';
+import type { Storage } from '@logto/connector-kit';
 import type { Connector, CreateConnector } from '@logto/schemas';
 import { Connectors } from '@logto/schemas';
 import { manyRows, convertToIdentifiers } from '@logto/shared';
@@ -33,11 +33,7 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
       where ${fields.connectorId}=${connectorId}
     `);
 
-  const setValueByIdAndKey = async (
-    id: string,
-    key: string,
-    value: JsonStorageValue
-  ): Promise<Storage> => {
+  const setValueByIdAndKey = async (id: string, key: string, value: unknown): Promise<Storage> => {
     const { storage } = await updateConnector({
       set: { storage: { [key]: value } },
       where: { id },
@@ -47,7 +43,7 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
     return storage;
   };
 
-  const getValueByIdAndKey = async <T = JsonStorageValue>(id: string, key: string): Promise<T> => {
+  const getValueByIdAndKey = async <T = unknown>(id: string, key: string): Promise<T> => {
     const { value } = await pool.one<{ value: T }>(sql`
       select ${fields.storage}->${key} as value
       from ${table}
