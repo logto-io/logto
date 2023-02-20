@@ -114,13 +114,14 @@ importers:
       '@types/http-proxy': ^1.17.9
       '@types/mime-types': ^2.1.1
       '@types/node': ^18.11.18
-      '@withtyped/postgres': ^0.6.0
-      '@withtyped/server': ^0.6.0
+      '@withtyped/postgres': ^0.7.0
+      '@withtyped/server': ^0.7.0
       chalk: ^5.0.0
       dotenv: ^16.0.0
       eslint: ^8.21.0
       find-up: ^6.3.0
       http-proxy: ^1.18.1
+      jose: ^4.11.0
       lint-staged: ^13.0.0
       mime-types: ^2.1.35
       nodemon: ^2.0.19
@@ -131,12 +132,13 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 2.2.0
-      '@withtyped/postgres': 0.6.0_@withtyped+server@0.6.0
-      '@withtyped/server': 0.6.0
+      '@withtyped/postgres': 0.7.0_@withtyped+server@0.7.0
+      '@withtyped/server': 0.7.0
       chalk: 5.1.2
       dotenv: 16.0.0
       find-up: 6.3.0
       http-proxy: 1.18.1
+      jose: 4.11.1
       mime-types: 2.1.35
       zod: 3.20.2
     devDependencies:
@@ -329,8 +331,8 @@ importers:
       '@types/semver': ^7.3.12
       '@types/sinon': ^10.0.13
       '@types/supertest': ^2.0.11
-      '@withtyped/postgres': ^0.6.0
-      '@withtyped/server': ^0.6.0
+      '@withtyped/postgres': ^0.7.0
+      '@withtyped/server': ^0.7.0
       chalk: ^5.0.0
       clean-deep: ^3.4.0
       copyfiles: ^2.4.1
@@ -389,8 +391,8 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 2.2.0
-      '@withtyped/postgres': 0.6.0_@withtyped+server@0.6.0
-      '@withtyped/server': 0.6.0
+      '@withtyped/postgres': 0.7.0_@withtyped+server@0.7.0
+      '@withtyped/server': 0.7.0
       chalk: 5.1.2
       clean-deep: 3.4.0
       date-fns: 2.29.3
@@ -538,7 +540,7 @@ importers:
       '@types/jest': ^29.1.2
       '@types/jest-environment-puppeteer': ^5.0.2
       '@types/node': ^18.11.18
-      '@withtyped/server': ^0.6.0
+      '@withtyped/server': ^0.7.0
       dotenv: ^16.0.0
       eslint: ^8.34.0
       got: ^12.5.3
@@ -552,7 +554,7 @@ importers:
       text-encoder: ^0.0.4
       typescript: ^4.9.4
     dependencies:
-      '@withtyped/server': 0.6.0
+      '@withtyped/server': 0.7.0
     devDependencies:
       '@jest/types': 29.1.2
       '@logto/connector-kit': link:../toolkit/connector-kit
@@ -645,7 +647,7 @@ importers:
       '@types/jest': ^29.1.2
       '@types/node': ^18.11.18
       '@types/pluralize': ^0.0.29
-      '@withtyped/server': ^0.6.0
+      '@withtyped/server': ^0.7.0
       camelcase: ^7.0.0
       eslint: ^8.34.0
       jest: ^29.1.2
@@ -663,7 +665,7 @@ importers:
       '@logto/language-kit': link:../toolkit/language-kit
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
-      '@withtyped/server': 0.6.0
+      '@withtyped/server': 0.7.0
       zod: 3.20.2
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
@@ -4569,21 +4571,21 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@withtyped/postgres/0.6.0_@withtyped+server@0.6.0:
-    resolution: {integrity: sha512-Mq4/beT7vqtaxbNeFpP2mananch9OauwbQdvNR8YVaoolgPycxGuTB0LvnsLa4/7r4KQORQJcCxj+fckqkOFwA==}
+  /@withtyped/postgres/0.7.0_@withtyped+server@0.7.0:
+    resolution: {integrity: sha512-D6bI+ols0mtNvaTUp4IzNHAQtbqdakNTZgQ0E0KbVMvdfq0fhOFUaTKANRPjMs4rsyfAETfPzjt3B/Ij47ZiMA==}
     peerDependencies:
-      '@withtyped/server': ^0.6.0
+      '@withtyped/server': ^0.7.0
     dependencies:
       '@types/pg': 8.6.6
-      '@withtyped/server': 0.6.0
+      '@withtyped/server': 0.7.0
       '@withtyped/shared': 0.2.0
       pg: 8.8.0
     transitivePeerDependencies:
       - pg-native
     dev: false
 
-  /@withtyped/server/0.6.0:
-    resolution: {integrity: sha512-p4rlk2EIq1zjQnwDe6cDNGl3VYJQL+sSxgoCfn9wqinExQ1ReegwujOBXaBuk/LQZ0HtSqDV0ayIE/NB8AQZew==}
+  /@withtyped/server/0.7.0:
+    resolution: {integrity: sha512-UVW6cOJyOBDfGiSoMg2asYsKqmzL7+UPaYwqW+oxZtvlUabaCekVKTBH3l8tm7zhiOluZg9FD78t0DVuEyQTMw==}
     dependencies:
       '@withtyped/shared': 0.2.0
     dev: false

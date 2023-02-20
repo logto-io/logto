@@ -21,9 +21,7 @@ export type WithSpaConfig = {
    * @default '/'
    */
   pathname?: string;
-  /**
-   * An array of pathname prefixes to ignore.
-   */
+  /** An array of pathname prefixes to ignore. */
   ignorePathnames?: string[];
   /**
    * The path to file to serve when the given path cannot be found in the file system.
@@ -47,9 +45,9 @@ export default function withSpa<InputContext extends RequestContext>({
       request: { url },
     } = context;
 
-    const pathname = matchPathname(rootPathname, url.pathname);
+    const pathname = matchPathname(rootPathname, url.pathname, ignorePathnames);
 
-    if (!pathname || ignorePathnames?.some((prefix) => matchPathname(prefix, url.pathname))) {
+    if (!pathname) {
       return next(context);
     }
 

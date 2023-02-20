@@ -8,9 +8,7 @@ import { matchPathname } from '#src/utils/url.js';
 const { createProxy } = HttpProxy;
 
 export type WithHttpProxyOptions = ServerOptions & {
-  /**
-   * An array of pathname prefixes to ignore.
-   */
+  /** An array of pathname prefixes to ignore. */
   ignorePathnames?: string[];
 };
 
@@ -36,9 +34,9 @@ export default function withHttpProxy<InputContext extends RequestContext>(
       request: { url },
     } = context;
 
-    const matched = matchPathname(pathname, url.pathname);
+    const matched = matchPathname(pathname, url.pathname, ignorePathnames);
 
-    if (!matched || ignorePathnames?.some((prefix) => matchPathname(prefix, url.pathname))) {
+    if (!matched) {
       return next(context);
     }
 
