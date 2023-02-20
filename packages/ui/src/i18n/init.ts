@@ -5,8 +5,6 @@ import { initReactI18next } from 'react-i18next';
 
 import { getI18nResource, detectLanguage } from '@/i18n/utils';
 
-const storageKey = 'i18nextLogtoUiLng';
-
 const initI18n = async (languageSettings?: LanguageInfo) => {
   // Get language settings from the SIE
   const locale = detectLanguage(languageSettings);
