@@ -3,6 +3,7 @@ import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, ConnectorFactoryResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
+import { pick } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
@@ -21,10 +22,13 @@ const transpileLogtoConnector = ({
   metadata,
   type,
 }: LogtoConnector): ConnectorResponse => {
+  // `storage` is for BE use and should not be exposed to FE.
+  const remainingKeys = Connectors.fieldKeys.filter((key) => key !== 'storage');
+
   return {
     type,
     ...metadata,
-    ...dbEntry,
+    ...pick(dbEntry, ...remainingKeys),
   };
 };
 

@@ -5,7 +5,8 @@ import type { Connector } from '../db-entries/index.js';
 export type { ConnectorMetadata } from '@logto/connector-kit';
 export { ConnectorType, ConnectorPlatform } from '@logto/connector-kit';
 
-export type ConnectorResponse = Connector &
+// `storage` is used for BE only and should not be exposed to FE.
+export type ConnectorResponse = Omit<Connector, 'storage'> &
   Omit<BaseConnector<ConnectorType>, 'configGuard' | 'metadata'> &
   ConnectorMetadata;
 
