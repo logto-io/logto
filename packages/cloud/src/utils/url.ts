@@ -14,6 +14,10 @@ export const matchPathname = (toMatch: string, pathname: string) => {
     return '/';
   }
 
+  if (toMatchPathname === '/') {
+    return normalized;
+  }
+
   if (normalized.startsWith(toMatchPathname + '/')) {
     return normalized.slice(toMatchPathname.length);
   }

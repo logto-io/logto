@@ -19,13 +19,17 @@
     "start": "NODE_ENV=production node build/index.js"
   },
   "dependencies": {
+    "@logto/schemas": "workspace:*",
     "@logto/shared": "workspace:*",
     "@silverhand/essentials": "2.2.0",
     "@withtyped/postgres": "^0.6.0",
     "@withtyped/server": "^0.6.0",
     "chalk": "^5.0.0",
+    "dotenv": "^16.0.0",
+    "find-up": "^6.3.0",
     "http-proxy": "^1.18.1",
-    "mime-types": "^2.1.35"
+    "mime-types": "^2.1.35",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "2.0.1",

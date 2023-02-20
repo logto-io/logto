@@ -7,7 +7,7 @@ module.exports = {
   extends: ['@commitlint/config-conventional'],
   rules: {
     'type-enum': [2, 'always', [...rules['type-enum'][2], 'api', 'release']],
-    'scope-enum': [2, 'always', ['connector', 'console', 'core', 'demo-app', 'test', 'phrases', 'schemas', 'shared', 'ui', 'deps','cli', 'toolkit']],
+    'scope-enum': [2, 'always', ['connector', 'console', 'core', 'demo-app', 'test', 'phrases', 'schemas', 'shared', 'ui', 'deps','cli', 'toolkit', 'cloud']],
     // Slightly increase the tolerance to allow the appending PR number
     ...(isCi && { 'header-max-length': [2, 'always', 110] })
   },
