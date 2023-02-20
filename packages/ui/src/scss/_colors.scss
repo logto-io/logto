@@ -136,6 +136,10 @@
     linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)),
     linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)),
     #191c1d;
+  --color-surface-3:
+    linear-gradient(0deg, rgba(202, 190, 255, 11%), rgba(202, 190, 255, 11%)),
+    linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)),
+    #191c1d;
   --color-surface-4:
     linear-gradient(0deg, rgba(202, 190, 255, 14%), rgba(202, 190, 255, 14%)),
     linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)),
@@ -165,7 +169,7 @@
     #191c1d;
   --color-bg-layer-2: var(--color-surface-4);
   --color-bg-float-base: var(--color-neutral-100);
-  --color-bg-float: var(--color-surface-2);
+  --color-bg-float: var(--color-surface-3);
   --color-bg-float-overlay: var(--color-surface-4);
   --color-bg-mask: rgba(0, 0, 0, 60%); // 60% --color-neutral-100;
   --color-bg-toast: var(--color-neutral-80);

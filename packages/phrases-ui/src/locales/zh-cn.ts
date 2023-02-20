@@ -40,7 +40,7 @@ const translation = {
   },
   description: {
     email: '邮箱',
-    phone_number: '手机',
+    phone_number: '手机号',
     username: '用户名',
     reminder: '提示',
     not_found: '404 页面不存在',
@@ -75,7 +75,7 @@ const translation = {
     no_account: '还没有账号？',
     have_account: ' 已有账号？',
     enter_password: '输入密码',
-    enter_password_for: '输入 {{method}} {{value}} 对应的密码进行登录',
+    enter_password_for: '输入{{method}} {{value}} 对应的密码进行登录',
     enter_username: '设置用户名',
     enter_username_description: '用户名可以用来进行登录。用户名仅可以包含字母、数字和下划线。',
     link_email: '绑定邮箱',
