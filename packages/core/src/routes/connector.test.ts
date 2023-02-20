@@ -12,6 +12,7 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { any } from 'zod';
 
 import {
+  mockConnector0,
   mockMetadata,
   mockMetadata0,
   mockMetadata1,
@@ -166,25 +167,27 @@ describe('connector route', () => {
     });
   });
 
-  describe('GET /connectors/:target/:platform/uniqueness', () => {
+  describe('GET /connectors/:target/:platform', () => {
     afterEach(() => {
       jest.clearAllMocks();
     });
 
-    it('return truthy `isTargetPlatformUnique` if target and platform combination is unique', async () => {
+    it('return empty list', async () => {
       getLogtoConnectors.mockResolvedValueOnce(mockLogtoConnectorList.slice(4));
       const response = await connectorRequest
-        .get(`/connectors/connector_0/${ConnectorPlatform.Universal}/uniqueness`)
+        .get(`/connectors/connector_0/${ConnectorPlatform.Universal}`)
         .send({});
-      expect(response.body).toMatchObject({ isTargetPlatformUnique: true });
+      expect(response.body).toMatchObject([]);
     });
 
-    it('return falsy `isTargetPlatformUnique` if target and platform combination is not unique', async () => {
+    it('return connectors with given target and platform', async () => {
       getLogtoConnectors.mockResolvedValueOnce(mockLogtoConnectorList);
       const response = await connectorRequest
-        .get(`/connectors/connector_0/${ConnectorPlatform.Universal}/uniqueness`)
+        .get(`/connectors/connector_0/${ConnectorPlatform.Universal}`)
         .send({});
-      expect(response.body).toMatchObject({ isTargetPlatformUnique: false });
+      expect(response.body).toMatchObject([
+        { type: ConnectorType.Social, ...mockMetadata0, ...mockConnector0 },
+      ]);
     });
   });
 

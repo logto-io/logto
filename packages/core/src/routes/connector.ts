@@ -124,24 +124,23 @@ export default function connectorRoutes<T extends AuthedRouter>(
   );
 
   router.get(
-    '/connectors/:target/:platform/uniqueness',
+    '/connectors/:target/:platform',
     koaGuard({
       // `platform` should not be nullable since connectors with `null` platform (passwordless connectors) do not have `target`.
       params: object({ target: string().min(1), platform: nativeEnum(ConnectorPlatform) }),
     }),
     async (ctx, next) => {
-      const {
-        params: { target, platform },
-      } = ctx.guard;
+      const { params } = ctx.guard;
 
       const connectors = await getLogtoConnectors();
-      const isTargetPlatformUnique = !connectors
-        .filter(({ type }) => type === ConnectorType.Social)
-        .some(
-          ({ metadata: { target: existingTarget, platform: existingPlatform } }) =>
-            target === existingTarget && platform === existingPlatform
-        );
-      ctx.body = { isTargetPlatformUnique };
+      const connectorsWithSpecificTargetAndPlatform = connectors.filter(
+        ({ type, metadata: { target, platform } }) =>
+          type === ConnectorType.Social && target === params.target && platform === params.platform
+      );
+
+      ctx.body = connectorsWithSpecificTargetAndPlatform.map((connector) =>
+        transpileLogtoConnector(connector)
+      );
 
       return next();
     }
