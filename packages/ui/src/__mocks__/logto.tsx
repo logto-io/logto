@@ -208,6 +208,7 @@ export const mockSignInExperience: SignInExperience = {
   },
   socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
   signInMode: SignInMode.SignInAndRegister,
+  customCss: null,
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -229,4 +230,5 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
     email: true,
     phone: true,
   },
+  customCss: null,
 };

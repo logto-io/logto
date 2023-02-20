@@ -1,7 +1,6 @@
 import { builtInLanguages } from '@logto/phrases-ui';
 import type { Branding, LanguageInfo, SignInExperience } from '@logto/schemas';
 import {
-  defaultTenantId,
   SignInMode,
   ConnectorType,
   BrandingStyle,
@@ -77,9 +76,6 @@ export const createSignInExperienceLibrary = (
     // Hard code Admin Console sign-in methods settings.
     if (applicationId === adminConsoleApplicationId) {
       return {
-        // If we need to hard code, it implies Logto is running in the single-tenant mode;
-        // Thus we can hard code Tenant ID as well.
-        tenantId: defaultTenantId,
         ...adminConsoleSignInExperience,
         branding: {
           ...adminConsoleSignInExperience.branding,

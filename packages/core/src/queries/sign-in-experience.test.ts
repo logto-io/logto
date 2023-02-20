@@ -35,7 +35,7 @@ describe('sign-in-experience query', () => {
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
-      select "tenant_id", "id", "color", "branding", "language_info", "terms_of_use_url", "sign_in", "sign_up", "social_sign_in_connector_targets", "sign_in_mode"
+      select "tenant_id", "id", "color", "branding", "language_info", "terms_of_use_url", "sign_in", "sign_up", "social_sign_in_connector_targets", "sign_in_mode", "custom_css"
       from "sign_in_experiences"
       where "id"=$1
     `;
