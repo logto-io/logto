@@ -1,6 +1,6 @@
 import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -41,11 +41,17 @@ const PasswordForm = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormState>({
-    reValidateMode: 'onChange',
+    reValidateMode: 'onBlur',
     defaultValues: { password: '' },
   });
+
+  useEffect(() => {
+    if (!isValid) {
+      clearErrorMessage();
+    }
+  }, [clearErrorMessage, isValid]);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {

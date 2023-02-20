@@ -20,7 +20,11 @@ const ForgotPassword = () => {
 
   const getDefaultIdentifierType = useCallback(
     (identifier?: SignInIdentifier) => {
-      if (identifier === SignInIdentifier.Username || identifier === SignInIdentifier.Email) {
+      if (
+        identifier === SignInIdentifier.Username ||
+        identifier === SignInIdentifier.Email ||
+        !identifier
+      ) {
         return enabledMethodSet.has(SignInIdentifier.Email)
           ? SignInIdentifier.Email
           : SignInIdentifier.Phone;

@@ -90,10 +90,12 @@ describe('UsernamePasswordSignInForm', () => {
 
     act(() => {
       fireEvent.change(identifierInput, { target: { value: 'username' } });
+      fireEvent.blur(identifierInput);
     });
 
     act(() => {
       fireEvent.change(passwordInput, { target: { value: 'password' } });
+      fireEvent.blur(passwordInput);
     });
 
     await waitFor(() => {
@@ -128,6 +130,7 @@ describe('UsernamePasswordSignInForm', () => {
 
     act(() => {
       fireEvent.change(identifierInput, { target: { value: validInput } });
+      fireEvent.blur(identifierInput);
     });
 
     await waitFor(() => {

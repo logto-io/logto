@@ -1,9 +1,10 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 import { fireEvent, render } from '@testing-library/react';
 
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
-import type { EnabledIdentifierTypes, IdentifierInputType } from '.';
+import type { IdentifierInputType } from '.';
 import SmartInputField from '.';
 
 jest.mock('i18next', () => ({
@@ -13,23 +14,23 @@ jest.mock('i18next', () => ({
 
 describe('SmartInputField Component', () => {
   const onChange = jest.fn();
-  const onTypeChange = jest.fn();
   const defaultCountryCallingCode = getDefaultCountryCallingCode();
 
   const renderInputField = (props: {
-    currentType: IdentifierInputType;
-    enabledTypes?: EnabledIdentifierTypes;
-  }) => render(<SmartInputField {...props} onTypeChange={onTypeChange} onChange={onChange} />);
+    defaultValue?: string;
+    defaultType?: IdentifierInputType;
+    enabledTypes?: IdentifierInputType[];
+  }) => render(<SmartInputField {...props} onChange={onChange} />);
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   describe('standard input field', () => {
-    it.each([SignInIdentifier.Username, SignInIdentifier.Email])(
+    test.each([SignInIdentifier.Username, SignInIdentifier.Email])(
       `should render %s input field`,
       (currentType) => {
-        const { container } = renderInputField({ currentType });
+        const { container } = renderInputField({ enabledTypes: [currentType] });
 
         // Country code should not be rendered
         expect(container.querySelector('select')).toBeNull();
@@ -38,23 +39,20 @@ describe('SmartInputField Component', () => {
 
         if (input) {
           fireEvent.change(input, { target: { value: 'foo' } });
-          expect(onChange).toBeCalledWith('foo');
-          expect(onTypeChange).not.toBeCalled();
+          expect(onChange).toBeCalledWith({ type: currentType, value: 'foo' });
 
           fireEvent.change(input, { target: { value: 'foo@' } });
-          expect(onChange).toBeCalledWith('foo@');
-          expect(onTypeChange).not.toBeCalled();
+          expect(onChange).toBeCalledWith({ type: currentType, value: 'foo@' });
 
           fireEvent.change(input, { target: { value: '12315' } });
-          expect(onChange).toBeCalledWith('12315');
-          expect(onTypeChange).not.toBeCalled();
+          expect(onChange).toBeCalledWith({ type: currentType, value: '12315' });
         }
       }
     );
 
-    it('phone', async () => {
+    test('phone', async () => {
       const { container, queryAllByText } = renderInputField({
-        currentType: SignInIdentifier.Phone,
+        enabledTypes: [SignInIdentifier.Phone],
       });
 
       const countryCode = queryAllByText(`+${defaultCountryCallingCode}`);
@@ -67,26 +65,30 @@ describe('SmartInputField Component', () => {
 
       if (selector) {
         fireEvent.change(selector, { target: { value: newCountryCode } });
-        expect(onChange).toBeCalledWith(newCountryCode);
+        expect(onChange).toBeCalledWith({
+          type: SignInIdentifier.Phone,
+          value: '',
+        });
       }
 
       const input = container.querySelector('input');
 
       if (input) {
         fireEvent.change(input, { target: { value: '12315' } });
-        expect(onChange).toBeCalledWith(`${newCountryCode}12315`);
-        expect(onTypeChange).not.toBeCalled();
+        expect(onChange).toBeCalledWith({
+          type: SignInIdentifier.Phone,
+          value: `${newCountryCode}12315`,
+        });
       }
     });
   });
 
   describe('username with email', () => {
     const config = {
-      currentType: SignInIdentifier.Username,
       enabledTypes: [SignInIdentifier.Email, SignInIdentifier.Username],
     };
 
-    it('should not update inputType if no @ char present', () => {
+    test('should  return username type if no @ char present', () => {
       const { container } = renderInputField(config);
 
       // Country code should not be rendered
@@ -96,12 +98,11 @@ describe('SmartInputField Component', () => {
 
       if (input) {
         fireEvent.change(input, { target: { value: 'foo' } });
-        expect(onChange).toBeCalledWith('foo');
-        expect(onTypeChange).not.toBeCalled();
+        expect(onChange).toBeCalledWith({ type: SignInIdentifier.Username, value: 'foo' });
       }
     });
 
-    it('should not update inputType to phone as phone is not enabled', () => {
+    test('should return username type with all digits input', () => {
       const { container } = renderInputField(config);
 
       // Country code should not be rendered
@@ -111,12 +112,11 @@ describe('SmartInputField Component', () => {
 
       if (input) {
         fireEvent.change(input, { target: { value: '12315' } });
-        expect(onChange).toBeCalledWith('12315');
-        expect(onTypeChange).not.toBeCalled();
+        expect(onChange).toBeCalledWith({ type: SignInIdentifier.Username, value: '12315' });
       }
     });
 
-    it('should update inputType to email with @ char', () => {
+    test('should return email type with @ char', () => {
       const { container } = renderInputField(config);
 
       // Country code should not be rendered
@@ -126,209 +126,137 @@ describe('SmartInputField Component', () => {
 
       if (input) {
         fireEvent.change(input, { target: { value: 'foo@' } });
-        expect(onChange).toBeCalledWith('foo@');
-        expect(onTypeChange).toBeCalledWith(SignInIdentifier.Email);
+        expect(onChange).toBeCalledWith({ type: SignInIdentifier.Email, value: 'foo@' });
       }
     });
   });
 
   describe('username with phone', () => {
     const config = {
-      currentType: SignInIdentifier.Username,
       enabledTypes: [SignInIdentifier.Username, SignInIdentifier.Phone],
     };
 
-    it('should not update inputType if non digit chars present', () => {
+    test('should return username type if non digit chars present', () => {
       const { container } = renderInputField(config);
       const input = container.querySelector('input');
 
       if (input) {
         fireEvent.change(input, { target: { value: '12345@' } });
-        expect(onChange).toBeCalledWith('12345@');
-        expect(onTypeChange).not.toBeCalled();
+        expect(onChange).toBeCalledWith({ type: SignInIdentifier.Username, value: '12345@' });
       }
     });
 
-    it('should not update inputType if less than 3 digits', () => {
+    test('should return username type if less than 3 digits', () => {
       const { container } = renderInputField(config);
       const input = container.querySelector('input');
 
       if (input) {
         fireEvent.change(input, { target: { value: '12' } });
-        expect(onChange).toBeCalledWith('12');
-        expect(onTypeChange).not.toBeCalled();
+        expect(onChange).toBeCalledWith({ type: SignInIdentifier.Username, value: '12' });
       }
     });
 
-    it('should update inputType to phone with more than 3 digits', () => {
+    test('should return phone type with more than 3 digits', () => {
       const { container } = renderInputField(config);
       const input = container.querySelector('input');
 
       if (input) {
         fireEvent.change(input, { target: { value: '12315' } });
-        expect(onChange).toBeCalledWith(`${defaultCountryCallingCode}12315`);
-        expect(onTypeChange).toBeCalledWith(SignInIdentifier.Phone);
+        expect(onChange).toBeCalledWith({
+          type: SignInIdentifier.Phone,
+          value: `${defaultCountryCallingCode}12315`,
+        });
       }
     });
   });
 
   describe('email with phone', () => {
     const config = {
-      currentType: SignInIdentifier.Email,
       enabledTypes: [SignInIdentifier.Email, SignInIdentifier.Phone],
     };
 
-    it('should not update inputType non digit char present', () => {
+    test('should return email type if non digit char present', () => {
       const { container } = renderInputField(config);
       const input = container.querySelector('input');
 
       if (input) {
-        fireEvent.change(input, { target: { value: '12315@' } });
-        expect(onChange).toBeCalledWith('12315@');
-        expect(onTypeChange).not.toBeCalled();
+        fireEvent.change(input, { target: { value: '12315a' } });
+        expect(onChange).toBeCalledWith({ type: SignInIdentifier.Email, value: '12315a' });
       }
     });
 
-    it('should not update inputType if less than 3 digits', () => {
+    test('should return email type if less than 3 digits', () => {
       const { container } = renderInputField(config);
       const input = container.querySelector('input');
 
       if (input) {
         fireEvent.change(input, { target: { value: '12' } });
-        expect(onChange).toBeCalledWith('12');
-        expect(onTypeChange).not.toBeCalled();
+        expect(onChange).toBeCalledWith({ type: SignInIdentifier.Email, value: '12' });
       }
     });
 
-    it('should update inputType to phone with more than 3 digits', () => {
+    test('should update inputType to phone with more than 3 digits', () => {
       const { container } = renderInputField(config);
       const input = container.querySelector('input');
 
       if (input) {
         fireEvent.change(input, { target: { value: '12315' } });
-        expect(onChange).toBeCalledWith(`${defaultCountryCallingCode}12315`);
-        expect(onTypeChange).toBeCalledWith(SignInIdentifier.Phone);
+        expect(onChange).toBeCalledWith({
+          type: SignInIdentifier.Phone,
+          value: `${defaultCountryCallingCode}12315`,
+        });
       }
     });
 
-    it('should not update inputType if @ present', () => {
+    test('should return email type if @ present', () => {
       const { container } = renderInputField(config);
       const input = container.querySelector('input');
 
       if (input) {
         fireEvent.change(input, { target: { value: '12315@' } });
-        expect(onChange).toBeCalledWith('12315@');
-        expect(onTypeChange).not.toBeCalled();
+        expect(onChange).toBeCalledWith({ type: SignInIdentifier.Email, value: '12315@' });
       }
     });
   });
 
-  describe('email with username', () => {
+  describe('username, email and phone', () => {
     const config = {
-      currentType: SignInIdentifier.Email,
-      enabledTypes: [SignInIdentifier.Email, SignInIdentifier.Username],
+      enabledTypes: [SignInIdentifier.Username, SignInIdentifier.Email, SignInIdentifier.Phone],
     };
 
-    it('should not update inputType if @ present', () => {
+    test('should call onChange properly based on different inputs', () => {
       const { container } = renderInputField(config);
       const input = container.querySelector('input');
 
-      if (input) {
-        fireEvent.change(input, { target: { value: 'foo@' } });
-        expect(onChange).toBeCalledWith('foo@');
-        expect(onTypeChange).not.toBeCalled();
-      }
-    });
+      assert(input, new Error('Input field not found'));
+      expect(onChange).toBeCalledWith({ type: undefined, value: '' });
 
-    it('should update inputType to username with pure digits as phone is not enabled', () => {
-      const { container } = renderInputField(config);
-      const input = container.querySelector('input');
+      fireEvent.change(input, { target: { value: 'foo' } });
+      expect(onChange).toBeCalledWith({ type: SignInIdentifier.Username, value: 'foo' });
 
-      if (input) {
-        fireEvent.change(input, { target: { value: '12315' } });
-        expect(onChange).toBeCalledWith('12315');
-        expect(onTypeChange).toBeCalledWith(SignInIdentifier.Username);
-      }
-    });
+      fireEvent.change(input, { target: { value: 'foo@' } });
+      expect(onChange).toBeCalledWith({ type: SignInIdentifier.Email, value: 'foo@' });
 
-    it('should update inputType to username with no @ present', () => {
-      const { container } = renderInputField(config);
-      const input = container.querySelector('input');
+      fireEvent.change(input, { target: { value: '11' } });
+      expect(onChange).toBeCalledWith({ type: SignInIdentifier.Username, value: '11' });
 
-      if (input) {
-        fireEvent.change(input, { target: { value: 'foo' } });
-        expect(onChange).toBeCalledWith('foo');
-        expect(onTypeChange).toBeCalledWith(SignInIdentifier.Username);
-      }
-    });
-  });
+      fireEvent.change(input, { target: { value: '110' } });
+      expect(onChange).toBeCalledWith({
+        type: SignInIdentifier.Phone,
+        value: `${defaultCountryCallingCode}110`,
+      });
 
-  describe('phone with username', () => {
-    const config = {
-      currentType: SignInIdentifier.Phone,
-      enabledTypes: [SignInIdentifier.Phone, SignInIdentifier.Username],
-    };
+      fireEvent.change(input, { target: { value: '11' } });
+      expect(onChange).toBeCalledWith({
+        type: SignInIdentifier.Phone,
+        value: `${defaultCountryCallingCode}11`,
+      });
 
-    it('should not update inputType if all chars are digits', () => {
-      const { container } = renderInputField(config);
-      const input = container.querySelector('input');
-
-      if (input) {
-        fireEvent.change(input, { target: { value: '123' } });
-        expect(onChange).toBeCalledWith(`${defaultCountryCallingCode}123`);
-        expect(onTypeChange).not.toBeCalled();
-      }
-    });
-
-    it('should update inputType if non digit char found', () => {
-      const { container } = renderInputField(config);
-      const input = container.querySelector('input');
-
-      if (input) {
-        fireEvent.change(input, { target: { value: '123@' } });
-        expect(onChange).toBeCalledWith('123@');
-        expect(onTypeChange).toBeCalledWith(SignInIdentifier.Username);
-      }
-    });
-  });
-
-  describe('phone with email', () => {
-    const config = {
-      currentType: SignInIdentifier.Phone,
-      enabledTypes: [SignInIdentifier.Phone, SignInIdentifier.Email],
-    };
-
-    it('should not update inputType if all chars are digits', () => {
-      const { container } = renderInputField(config);
-      const input = container.querySelector('input');
-
-      if (input) {
-        fireEvent.change(input, { target: { value: '123' } });
-        expect(onChange).toBeCalledWith(`${defaultCountryCallingCode}123`);
-        expect(onTypeChange).not.toBeCalled();
-      }
-    });
-
-    it('should not update inputType if no all chars are digits and no @', () => {
-      const { container } = renderInputField(config);
-      const input = container.querySelector('input');
-
-      if (input) {
-        fireEvent.change(input, { target: { value: '123a' } });
-        expect(onChange).toBeCalledWith(`${defaultCountryCallingCode}123a`);
-        expect(onTypeChange).not.toBeCalled();
-      }
-    });
-
-    it('should update inputType if @ char found', () => {
-      const { container } = renderInputField(config);
-      const input = container.querySelector('input');
-
-      if (input) {
-        fireEvent.change(input, { target: { value: '12315@' } });
-        expect(onChange).toBeCalledWith('12315@');
-        expect(onTypeChange).toBeCalledWith(SignInIdentifier.Email);
-      }
+      fireEvent.change(input, { target: { value: '11@' } });
+      expect(onChange).toBeCalledWith({
+        type: SignInIdentifier.Email,
+        value: `11@`,
+      });
     });
   });
 });

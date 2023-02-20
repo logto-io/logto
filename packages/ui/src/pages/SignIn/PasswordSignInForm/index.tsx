@@ -1,13 +1,13 @@
-import { SignInIdentifier } from '@logto/schemas';
+import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
-import type { IdentifierInputType } from '@/components/InputFields';
 import { SmartInputField, PasswordInputField } from '@/components/InputFields';
+import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import TermsOfUse from '@/containers/TermsOfUse';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
@@ -25,7 +25,7 @@ type Props = {
 };
 
 type FormState = {
-  identifier: string;
+  identifier: IdentifierInputValue;
   password: string;
 };
 
@@ -36,38 +36,47 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
 
-  const [inputType, setInputType] = useState<IdentifierInputType>(
-    signInMethods[0] ?? SignInIdentifier.Username
-  );
-
   const {
     watch,
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormState>({
-    reValidateMode: 'onChange',
-    defaultValues: { identifier: '', password: '' },
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      identifier: {},
+      password: '',
+    },
   });
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ identifier, password }, event) => {
+      void handleSubmit(async ({ identifier: { type, value }, password }) => {
+        if (!type) {
+          return;
+        }
+
         if (!(await termsValidation())) {
           return;
         }
 
         await onSubmit({
-          [inputType]: identifier,
+          [type]: value,
           password,
         });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, inputType, onSubmit, termsValidation]
+    [clearErrorMessage, handleSubmit, onSubmit, termsValidation]
   );
+
+  useEffect(() => {
+    if (!isValid) {
+      clearErrorMessage();
+    }
+  }, [clearErrorMessage, isValid]);
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
@@ -75,9 +84,12 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         control={control}
         name="identifier"
         rules={{
-          required: getGeneralIdentifierErrorMessage(signInMethods, 'required'),
-          validate: (value) => {
-            const errorMessage = validateIdentifierField(inputType, value);
+          validate: ({ type, value }) => {
+            if (!type || !value) {
+              return getGeneralIdentifierErrorMessage(signInMethods, 'required');
+            }
+
+            const errorMessage = validateIdentifierField(type, value);
 
             return errorMessage ? getGeneralIdentifierErrorMessage(signInMethods, 'invalid') : true;
           },
@@ -88,11 +100,9 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            currentType={inputType}
             isDanger={!!errors.identifier}
             errorMessage={errors.identifier?.message}
             enabledTypes={signInMethods}
-            onTypeChange={setInputType}
           />
         )}
       />
@@ -111,8 +121,8 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
       {isForgotPasswordEnabled && (
         <ForgotPasswordLink
           className={styles.link}
-          identifier={inputType}
-          value={watch('identifier')}
+          identifier={watch('identifier').type}
+          value={watch('identifier').value}
         />
       )}
 

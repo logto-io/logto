@@ -11,85 +11,88 @@ export type IdentifierInputType =
   | SignInIdentifier.Phone
   | SignInIdentifier.Username;
 
-export type EnabledIdentifierTypes = IdentifierInputType[];
+export type IdentifierInputValue = {
+  type: IdentifierInputType | undefined;
+  value: string;
+};
 
 const digitsRegex = /^\d*$/;
 
 type Props = {
   defaultValue?: string;
-  onChange?: (value: string) => void;
-  enabledTypes: EnabledIdentifierTypes;
-  currentType: IdentifierInputType;
-  onTypeChange?: (type: IdentifierInputType) => void;
+  _defaultType?: IdentifierInputType;
+  enabledTypes: IdentifierInputType[];
 };
 
-const useSmartInputField = ({
-  onChange,
-  currentType,
-  enabledTypes,
-  onTypeChange,
-  defaultValue,
-}: Props) => {
-  const { countryCode: defaultCountryCode, inputValue: defaultInputValue } = parseIdentifierValue(
-    currentType,
-    defaultValue
+const useSmartInputField = ({ _defaultType, defaultValue, enabledTypes }: Props) => {
+  const enabledTypeSet = useMemo(() => new Set(enabledTypes), [enabledTypes]);
+
+  assert(
+    !_defaultType || enabledTypeSet.has(_defaultType),
+    new Error(
+      `Invalid input type. Current inputType ${
+        _defaultType ?? ''
+      } is detected but missing in enabledTypes`
+    )
   );
+
+  // Parse default type from enabled types if default type is not provided and only one type is enabled
+  const defaultType = useMemo(
+    () => _defaultType ?? (enabledTypes.length === 1 ? enabledTypes[0] : undefined),
+    [_defaultType, enabledTypes]
+  );
+
+  // Parse default value if provided
+  const { countryCode: defaultCountryCode, inputValue: defaultInputValue } = useMemo(
+    () => parseIdentifierValue(defaultType, defaultValue),
+    [defaultType, defaultValue]
+  );
+
+  const [currentType, setCurrentType] = useState(defaultType);
 
   const [countryCode, setCountryCode] = useState<string>(
     defaultCountryCode ?? getDefaultCountryCallingCode()
   );
 
   const [inputValue, setInputValue] = useState<string>(defaultInputValue ?? '');
-  const enabledTypeSet = useMemo(() => new Set(enabledTypes), [enabledTypes]);
-
-  assert(
-    enabledTypeSet.has(currentType),
-    new Error(
-      `Invalid input type. Current inputType ${currentType} is detected but missing in enabledTypes`
-    )
-  );
 
   const detectInputType = useCallback(
     (value: string) => {
-      if (!value || enabledTypeSet.size === 1) {
-        return currentType;
+      // Reset InputType
+      if (!value && enabledTypeSet.size > 1) {
+        return;
+      }
+
+      if (enabledTypeSet.size === 1) {
+        return defaultType;
       }
 
       const hasAtSymbol = value.includes('@');
       const isAllDigits = digitsRegex.test(value);
 
-      const isEmailDetected = enabledTypeSet.has(SignInIdentifier.Email) && hasAtSymbol;
-
-      const isPhoneDetected =
-        enabledTypeSet.has(SignInIdentifier.Phone) && value.length > 3 && isAllDigits;
-
-      if (isPhoneDetected) {
+      if (enabledTypeSet.has(SignInIdentifier.Phone) && value.length >= 3 && isAllDigits) {
         return SignInIdentifier.Phone;
       }
 
-      if (isEmailDetected) {
+      if (enabledTypeSet.has(SignInIdentifier.Email) && hasAtSymbol) {
         return SignInIdentifier.Email;
       }
 
-      if (
-        currentType === SignInIdentifier.Email &&
-        enabledTypeSet.has(SignInIdentifier.Username) &&
-        !hasAtSymbol
-      ) {
+      if (currentType === SignInIdentifier.Phone && isAllDigits) {
+        return SignInIdentifier.Phone;
+      }
+
+      if (enabledTypeSet.has(SignInIdentifier.Username)) {
         return SignInIdentifier.Username;
       }
 
-      if (
-        currentType === SignInIdentifier.Phone &&
-        enabledTypeSet.has(SignInIdentifier.Username) &&
-        !isAllDigits
-      ) {
-        return SignInIdentifier.Username;
+      if (enabledTypeSet.has(SignInIdentifier.Email)) {
+        return SignInIdentifier.Email;
       }
 
       return currentType;
     },
-    [currentType, enabledTypeSet]
+    [defaultType, currentType, enabledTypeSet]
   );
 
   const onCountryCodeChange = useCallback<ChangeEventHandler<HTMLSelectElement>>(
@@ -97,10 +100,9 @@ const useSmartInputField = ({
       if (currentType === SignInIdentifier.Phone) {
         const code = value.replace(/\D/g, '');
         setCountryCode(code);
-        onChange?.(`${code}${inputValue}`);
       }
     },
-    [currentType, inputValue, onChange]
+    [currentType]
   );
 
   const onInputValueChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
@@ -109,20 +111,15 @@ const useSmartInputField = ({
       setInputValue(trimValue);
 
       const type = detectInputType(trimValue);
-
-      if (type !== currentType) {
-        onTypeChange?.(type);
-      }
-
-      onChange?.(type === SignInIdentifier.Phone ? `${countryCode}${trimValue}` : trimValue);
+      setCurrentType(type);
     },
-    [countryCode, currentType, detectInputType, onChange, onTypeChange]
+    [detectInputType]
   );
 
   const onInputValueClear = useCallback(() => {
     setInputValue('');
-    onChange?.('');
-  }, [onChange]);
+    setCurrentType(enabledTypeSet.size === 1 ? defaultType : undefined);
+  }, [defaultType, enabledTypeSet.size]);
 
   return {
     countryCode,
@@ -130,6 +127,7 @@ const useSmartInputField = ({
     inputValue,
     onInputValueChange,
     onInputValueClear,
+    identifierType: currentType,
   };
 };
 

@@ -4,8 +4,8 @@ import TextLink from '@/components/TextLink';
 import { UserFlow } from '@/types';
 
 type Props = {
-  identifier: SignInIdentifier;
-  value: string;
+  identifier?: SignInIdentifier;
+  value?: string;
   className?: string;
 };
 

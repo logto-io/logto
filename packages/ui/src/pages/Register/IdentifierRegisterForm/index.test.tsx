@@ -50,7 +50,7 @@ describe('<IdentifierRegisterForm />', () => {
     [SignInIdentifier.Email],
     [SignInIdentifier.Phone],
     [SignInIdentifier.Email, SignInIdentifier.Phone],
-  ])('username %o register form', (...signUpMethods) => {
+  ])('%p %p register form', (...signUpMethods) => {
     test('default render', () => {
       const { queryByText, container } = renderForm(signUpMethods);
       expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
@@ -94,6 +94,7 @@ describe('<IdentifierRegisterForm />', () => {
 
       act(() => {
         fireEvent.change(usernameInput, { target: { value: 'username' } });
+        fireEvent.blur(usernameInput);
       });
 
       await waitFor(() => {
@@ -120,6 +121,7 @@ describe('<IdentifierRegisterForm />', () => {
 
       act(() => {
         fireEvent.change(usernameInput, { target: { value: 'username' } });
+        fireEvent.blur(usernameInput);
       });
 
       await waitFor(() => {
@@ -179,6 +181,7 @@ describe('<IdentifierRegisterForm />', () => {
 
         act(() => {
           fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
+          fireEvent.blur(emailInput);
         });
 
         await waitFor(() => {
@@ -235,6 +238,7 @@ describe('<IdentifierRegisterForm />', () => {
 
         act(() => {
           fireEvent.change(phoneInput, { target: { value: '8573333333' } });
+          fireEvent.blur(phoneInput);
         });
 
         await waitFor(() => {
