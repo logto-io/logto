@@ -109,7 +109,7 @@ importers:
       '@logto/shared': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.2.0
-      '@silverhand/ts-config': 2.0.2
+      '@silverhand/ts-config': 2.0.3
       '@types/http-proxy': ^1.17.9
       '@types/mime-types': ^2.1.1
       '@types/node': ^18.11.18
@@ -133,7 +133,7 @@ importers:
       mime-types: 2.1.35
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
-      '@silverhand/ts-config': 2.0.2_typescript@4.9.4
+      '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/http-proxy': 1.17.9
       '@types/mime-types': 2.1.1
       '@types/node': 18.11.18
@@ -3633,15 +3633,6 @@ packages:
       typescript: ^4.9.4
     dependencies:
       '@silverhand/ts-config': 2.0.3_typescript@4.9.4
-      typescript: 4.9.4
-    dev: true
-
-  /@silverhand/ts-config/2.0.2_typescript@4.9.4:
-    resolution: {integrity: sha512-F1Xwlu9w9CMNwKQgRE0HzVSAa4oqMMjl7W6iXCJ74wyKBgP5BDQs5GtklTlhlR9YyYGOfXqRnlTgfXIcjePg0A==}
-    engines: {node: ^18.12.0}
-    peerDependencies:
-      typescript: ^4.9.4
-    dependencies:
       typescript: 4.9.4
     dev: true
 
