@@ -14,6 +14,8 @@ import type { ZodType } from 'zod';
 import { z } from 'zod';
 
 import type { Queries } from '#src/queries/index.js';
+import { createTenantsQueries } from '#src/queries/tenants.js';
+import { createUsersQueries } from '#src/queries/users.js';
 import { getDatabaseName } from '#src/queries/utils.js';
 import { insertInto } from '#src/utils/query.js';
 import { getTenantIdFromManagementApiIndicator } from '#src/utils/tenant.js';
@@ -28,12 +30,11 @@ export const tenantInfoGuard: ZodType<TenantInfo> = z.object({
   indicator: z.string(),
 });
 
-export const createTenantsLibrary = (queries: Queries) => {
-  const { getManagementApiLikeIndicatorsForUser, insertTenant, createTenantRole, insertAdminData } =
-    queries.tenants;
-  const { assignRoleToUser } = queries.users;
+export class TenantsLibrary {
+  constructor(public readonly queries: Queries) {}
 
-  const getAvailableTenants = async (userId: string): Promise<TenantInfo[]> => {
+  async getAvailableTenants(userId: string): Promise<TenantInfo[]> {
+    const { getManagementApiLikeIndicatorsForUser } = this.queries.tenants;
     const { rows } = await getManagementApiLikeIndicatorsForUser(userId);
 
     return rows
@@ -42,24 +43,30 @@ export const createTenantsLibrary = (queries: Queries) => {
         indicator,
       }))
       .filter((tenant): tenant is TenantInfo => Boolean(tenant.id));
-  };
+  }
 
-  const createNewTenant = async (forUserId: string): Promise<TenantInfo> => {
-    const { client } = queries;
-    const databaseName = await getDatabaseName(client);
+  async createNewTenant(forUserId: string): Promise<TenantInfo> {
+    const databaseName = await getDatabaseName(this.queries.client);
     const { id: tenantId, parentRole, role, password } = createTenantMetadata(databaseName);
 
-    // TODO: @gao wrap into transaction
     // Init tenant
     const tenantModel: TenantModel = { id: tenantId, dbUser: role, dbUserPassword: password };
-    await insertTenant(tenantModel);
-    await createTenantRole(parentRole, role, password);
+    const transaction = await this.queries.client.transaction();
+    const tenants = createTenantsQueries(transaction);
+    const users = createUsersQueries(transaction);
+
+    // Start
+    await transaction.start();
+
+    // Init tenant
+    await tenants.insertTenant(tenantModel);
+    await tenants.createTenantRole(parentRole, role, password);
 
     // Create admin data set (resource, roles, etc.)
     const adminDataInAdminTenant = createAdminDataInAdminTenant(tenantId);
-    await insertAdminData(adminDataInAdminTenant);
-    await insertAdminData(createAdminData(tenantId));
-    await assignRoleToUser({
+    await tenants.insertAdminData(adminDataInAdminTenant);
+    await tenants.insertAdminData(createAdminData(tenantId));
+    await users.assignRoleToUser({
       id: generateStandardId(),
       tenantId: adminTenantId,
       userId: forUserId,
@@ -68,12 +75,15 @@ export const createTenantsLibrary = (queries: Queries) => {
 
     // Create initial configs
     await Promise.all([
-      client.query(insertInto(createDefaultAdminConsoleConfig(tenantId), LogtoConfigs.table)),
-      client.query(insertInto(createDefaultSignInExperience(tenantId), SignInExperiences.table)),
+      transaction.query(insertInto(createDefaultAdminConsoleConfig(tenantId), LogtoConfigs.table)),
+      transaction.query(
+        insertInto(createDefaultSignInExperience(tenantId), SignInExperiences.table)
+      ),
     ]);
 
-    return { id: tenantId, indicator: adminDataInAdminTenant.resource.indicator };
-  };
+    // End
+    await transaction.end();
 
-  return { getAvailableTenants, createNewTenant };
-};
+    return { id: tenantId, indicator: adminDataInAdminTenant.resource.indicator };
+  }
+}

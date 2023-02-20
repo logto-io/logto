@@ -14,7 +14,7 @@ export type AdminData = {
 const defaultResourceId = 'management-api';
 const defaultScopeAllId = 'management-api-all';
 
-// Consider combine this with `createAdminData()`
+// Consider combining this with `createAdminData()`
 /** The fixed Management API Resource for `default` tenant. */
 export const defaultManagementApi = Object.freeze({
   resource: {

@@ -8,6 +8,8 @@ import { RequestError } from '@withtyped/server';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
+
 const bearerTokenIdentifier = 'Bearer';
 
 export const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) => {
@@ -56,6 +58,14 @@ export default function withAuth<InputContext extends RequestContext>({
   })();
 
   return async (context: InputContext, next: NextFunction<WithAuthContext<InputContext>>) => {
+    const userId = context.request.headers['development-user-id']?.toString();
+
+    if (!EnvSet.isProduction && userId) {
+      console.log(`Found dev user ID ${userId}, skip token validation.`);
+
+      return next({ ...context, auth: { id: userId, scopes: expectScopes } });
+    }
+
     const [getKey, issuer] = await getJwkSet;
 
     const {

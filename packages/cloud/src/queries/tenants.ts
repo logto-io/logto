@@ -8,14 +8,15 @@ import {
   PredefinedScope,
   CreateRolesScope,
 } from '@logto/schemas';
-import type { PostgresQueryClient } from '@withtyped/postgres';
+import type { PostgreSql } from '@withtyped/postgres';
 import { dangerousRaw, id, sql } from '@withtyped/postgres';
+import type { Queryable } from '@withtyped/server';
 
 import { insertInto } from '#src/utils/query.js';
 
 export type TenantsQueries = ReturnType<typeof createTenantsQueries>;
 
-export const createTenantsQueries = (client: PostgresQueryClient) => {
+export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
   const getManagementApiLikeIndicatorsForUser = async (userId: string) =>
     client.query<{ indicator: string }>(sql`
       select resources.indicator from roles
