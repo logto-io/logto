@@ -732,7 +732,7 @@ importers:
       '@logto/core-kit': workspace:*
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/essentials': 2.1.0
+      '@silverhand/essentials': 2.2.0
       '@silverhand/ts-config': 2.0.3
       '@types/node': ^18.11.18
       eslint: ^8.34.0
@@ -744,7 +744,7 @@ importers:
     dependencies:
       '@logto/core-kit': link:../core-kit
       '@logto/language-kit': link:../language-kit
-      '@silverhand/essentials': 2.1.0
+      '@silverhand/essentials': 2.2.0
     optionalDependencies:
       zod: 3.20.2
     devDependencies:
@@ -3610,11 +3610,6 @@ packages:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
     dev: true
-
-  /@silverhand/essentials/2.1.0:
-    resolution: {integrity: sha512-1/f+FZ+9+fq0GSueTp+8+7dY7SuXGc0b+k6Bsuod7HqMAZdJr42TUy6lphriThshiaAC/I9ZhXyKkphTkHfa9Q==}
-    engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^7}
-    dev: false
 
   /@silverhand/essentials/2.2.0:
     resolution: {integrity: sha512-xoj/wAnPUt9ZAzt7QCHhSKZPweZnNJU7tBYrDTf54db6L+++SiXYIyckKDY+vKkGACn9kTAWPF74qSfYt1OQtA==}
