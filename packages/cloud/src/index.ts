@@ -13,12 +13,14 @@ const { default: withSpa } = await import('./middleware/with-spa.js');
 
 const { EnvSet } = await import('./env-set/index.js');
 const { default: router } = await import('./routes/index.js');
+const { default: anonymousRouter } = await import('./routes-anonymous/index.js');
 
 const ignorePathnames = ['/api'];
 
 const { listen } = createServer({
   port: 3003,
   composer: compose(withRequest())
+    .and(anonymousRouter.routes())
     .and(
       withPathname(
         '/api',
