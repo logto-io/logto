@@ -1,7 +1,9 @@
+/* eslint-disable max-lines */
 import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, ConnectorFactoryResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
+import { pick } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
@@ -19,11 +21,13 @@ const transpileLogtoConnector = ({
   dbEntry,
   metadata,
   type,
-}: LogtoConnector): ConnectorResponse => ({
-  type,
-  ...metadata,
-  ...dbEntry,
-});
+}: LogtoConnector): ConnectorResponse => {
+  return {
+    type,
+    ...metadata,
+    ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'config', 'metadata'),
+  };
+};
 
 const generateConnectorId = buildIdGenerator(12);
 
@@ -355,3 +359,5 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }
   );
 }
+// TODO: @darcy refactor this file, exceed max-lines
+/* eslint-enable max-lines */

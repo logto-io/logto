@@ -32,6 +32,24 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
       where ${fields.connectorId}=${connectorId}
     `);
 
+  const setValueByIdAndKey = async (id: string, key: string, value: unknown): Promise<void> => {
+    await updateConnector({
+      set: { storage: { [key]: value } },
+      where: { id },
+      jsonbMode: 'merge',
+    });
+  };
+
+  const getValueByIdAndKey = async <T = unknown>(id: string, key: string): Promise<T> => {
+    const { value } = await pool.one<{ value: T }>(sql`
+      select ${fields.storage}->${key} as value
+      from ${table}
+      where ${fields.id} = ${id};
+    `);
+
+    return value;
+  };
+
   const deleteConnectorById = async (id: string) => {
     const { rowCount } = await pool.query(sql`
       delete from ${table}
@@ -65,6 +83,8 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
     findAllConnectors,
     findConnectorById,
     countConnectorByConnectorId,
+    setValueByIdAndKey,
+    getValueByIdAndKey,
     deleteConnectorById,
     deleteConnectorByIds,
     insertConnector,

@@ -39,7 +39,7 @@ export const createSocialAuthorizationUrl = async (
       state,
       redirectUri,
       /**
-       * For POST /saml-assertion-handler/:connectorId API, we need to block requests
+       * For POST /authn/saml/:connectorId API, we need to block requests
        * for non-SAML connector (relies on connectorFactoryId) and use `connectorId`
        * to find correct connector config.
        */
@@ -56,17 +56,26 @@ export const createSocialAuthorizationUrl = async (
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
   ctx: WithLogContext,
-  { provider, libraries }: TenantContext
+  { provider, queries, libraries }: TenantContext
 ): Promise<SocialUserInfo> => {
   const {
     socials: { getUserInfoByAuthCode },
   } = libraries;
+  const {
+    connectors: { setValueByIdAndKey, getValueByIdAndKey },
+  } = queries;
 
   const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 
-  const userInfo = await getUserInfoByAuthCode(connectorId, connectorData, async () =>
-    getConnectorSessionResult(ctx, provider)
+  const userInfo = await getUserInfoByAuthCode(
+    connectorId,
+    connectorData,
+    async () => getConnectorSessionResult(ctx, provider),
+    {
+      set: async (key: string, value: unknown) => setValueByIdAndKey(connectorId, key, value),
+      get: async (key: string) => getValueByIdAndKey(connectorId, key),
+    }
   );
 
   log.append(userInfo);
