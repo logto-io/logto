@@ -1,5 +1,6 @@
 import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -43,6 +44,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
     watch,
     reset,
   } = methods;
+  const isSocialConnector = connectorData.type === ConnectorType.Social;
 
   useEffect(() => {
     const { formItems, metadata, config, syncProfile } = connectorData;
@@ -64,13 +66,12 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
     const config = formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
     const { syncProfile, name, logo, logoDark, target } = data;
 
-    const payload =
-      connectorData.type === ConnectorType.Social
-        ? {
-            config,
-            syncProfile: syncProfile === SyncProfileMode.EachSignIn,
-          }
-        : { config };
+    const payload = isSocialConnector
+      ? {
+          config,
+          syncProfile: syncProfile === SyncProfileMode.EachSignIn,
+        }
+      : { config };
     const standardConnectorPayload = {
       ...payload,
       metadata: { name: { en: name }, logo, logoDark, target },
@@ -95,26 +96,39 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
         onDiscard={reset}
         onSubmit={onSubmit}
       >
+        {isSocialConnector && (
+          <FormCard
+            title="connector_details.settings"
+            description="connector_details.settings_description"
+            learnMoreLink={getDocumentationUrl('/docs/references/connectors')}
+          >
+            <BasicForm
+              connectorType={connectorData.type}
+              isStandard={connectorData.isStandard}
+              isDarkDefaultVisible={Boolean(connectorData.metadata.logoDark)}
+            />
+          </FormCard>
+        )}
         <FormCard
-          title="connector_details.settings"
-          description="connector_details.settings_description"
-          learnMoreLink={getDocumentationUrl('/docs/references/connectors')}
+          title="connector_details.parameter_configuaration"
+          description={conditional(!isSocialConnector && 'connector_details.settings_description')}
+          learnMoreLink={conditional(
+            !isSocialConnector && getDocumentationUrl('/docs/references/connectors')
+          )}
         >
-          <BasicForm
-            connectorType={connectorData.type}
-            isStandard={connectorData.isStandard}
-            isDarkDefaultVisible={Boolean(connectorData.metadata.logoDark)}
-          />
-          <ConfigForm className={styles.configForm} formItems={connectorData.formItems} />
-          {connectorData.type !== ConnectorType.Social && (
+          <ConfigForm formItems={connectorData.formItems} />
+        </FormCard>
+        {/* Tell typescript that the connectorType is Email or Sms */}
+        {connectorData.type !== ConnectorType.Social && (
+          <FormCard title="connector_details.test_connection">
             <SenderTester
               className={styles.senderTest}
               connectorId={connectorData.id}
               connectorType={connectorData.type}
               config={watch('config')}
             />
-          )}
-        </FormCard>
+          </FormCard>
+        )}
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </FormProvider>

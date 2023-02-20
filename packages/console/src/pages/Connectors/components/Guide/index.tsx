@@ -21,6 +21,7 @@ import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
+import { splitMarkdownByTitle } from '../../utils';
 import BasicForm from '../ConnectorForm/BasicForm';
 import ConfigForm from '../ConnectorForm/ConfigForm';
 import { useConfigParser } from '../ConnectorForm/hooks';
@@ -38,7 +39,8 @@ const Guide = ({ connector, onClose }: Props) => {
   const { updateConfigs } = useConfigs();
   const parseJsonConfig = useConfigParser();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { id: connectorId, type: connectorType, name, readme, isStandard, formItems } = connector;
+  const { id: connectorId, type: connectorType, name, readme, formItems } = connector;
+  const { title, content } = splitMarkdownByTitle(readme);
   const { language } = i18next;
   const connectorName = conditional(isLanguageTag(language) && name[language]) ?? name.en;
   const isSocialConnector =
@@ -116,12 +118,19 @@ const Guide = ({ connector, onClose }: Props) => {
         />
       </div>
       <div className={styles.content}>
-        <Markdown className={styles.readme}>{readme}</Markdown>
+        <div className={styles.readme}>
+          <div className={styles.readmeTitle}>README: {title}</div>
+          <Markdown className={styles.readmeContent}>{content}</Markdown>
+        </div>
         <div className={styles.setup}>
           <FormProvider {...methods}>
             <form onSubmit={onSubmit}>
               {isSocialConnector && (
                 <div className={styles.block}>
+                  <div className={styles.blockTitle}>
+                    <div className={styles.number}>1</div>
+                    <div>{t('connectors.guide.general_setting')}</div>
+                  </div>
                   <BasicForm
                     isAllowEditTarget
                     connectorType={connector.type}
@@ -130,6 +139,10 @@ const Guide = ({ connector, onClose }: Props) => {
                 </div>
               )}
               <div className={styles.block}>
+                <div className={styles.blockTitle}>
+                  <div className={styles.number}>{isSocialConnector ? 2 : 1}</div>
+                  <div>{t('connectors.guide.parameter_configuaration')}</div>
+                </div>
                 <ConfigForm
                   configTemplate={connector.configTemplate}
                   formItems={connector.formItems}
@@ -137,6 +150,10 @@ const Guide = ({ connector, onClose }: Props) => {
               </div>
               {!isSocialConnector && (
                 <div className={styles.block}>
+                  <div className={styles.blockTitle}>
+                    <div className={styles.number}>2</div>
+                    <div>{t('connectors.guide.general_setting')}</div>
+                  </div>
                   <SenderTester
                     connectorId={connectorId}
                     connectorType={connectorType}

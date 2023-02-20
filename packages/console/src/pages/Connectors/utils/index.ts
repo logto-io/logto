@@ -43,3 +43,14 @@ export const getConnectorGroups = <
     });
   }, []);
 };
+
+export const splitMarkdownByTitle = (markdown: string) => {
+  const match = /# (.*)/.exec(markdown);
+
+  const title = (match ? match[1] : '') ?? '';
+
+  return {
+    title,
+    content: markdown.replace(title, ''),
+  };
+};

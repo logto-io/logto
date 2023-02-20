@@ -1,9 +1,11 @@
 const connector_details = {
   back_to_connectors: 'Voltar para Conectores',
   check_readme: 'Verifique o README',
-  settings: 'Settings', // UNTRANSLATED
+  settings: 'General settings', // UNTRANSLATED
   settings_description:
     'Connectors play a critical role in Logto. With their help, Logto enables end-users to use passwordless registration or sign-in and the capabilities of signing in with social accounts.', // UNTRANSLATED
+  parameter_configuaration: 'Parameter configuration', // UNTRANSLATED
+  test_connection: 'Test connection', // UNTRANSLATED
   save_error_empty_config: 'Por favor, insira a configuração',
   send: 'Enviar',
   send_error_invalid_format: 'Entrada inválida',

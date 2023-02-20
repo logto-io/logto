@@ -9,7 +9,7 @@
   .header {
     display: flex;
     align-items: center;
-    background-color: var(--color-layer-1);
+    background: none;
     height: 64px;
     padding: 0 _.unit(21) 0 _.unit(2);
 
@@ -40,19 +40,51 @@
 
     .readme {
       background-color: var(--color-layer-1);
+      border: 1.5px solid var(--color-focused-variant);
       border-radius: 16px;
-      padding: 0 _.unit(6);
-      margin: _.unit(6) _.unit(3) _.unit(6) _.unit(18);
+      margin: _.unit(2) _.unit(3) _.unit(6) _.unit(18);
+      overflow: hidden;
+
+      .readmeTitle {
+        font: var(--font-title-1);
+        padding: _.unit(5) _.unit(6) _.unit(4);
+        border-bottom: 1px solid var(--color-focused-variant);
+      }
+
+      .readmeContent {
+        padding: 0 _.unit(6);
+        overflow-y: auto;
+        height: 100%;
+      }
     }
 
     .setup {
-      margin: _.unit(6) _.unit(18) _.unit(6) _.unit(3);
+      margin: _.unit(2) _.unit(18) _.unit(6) _.unit(3);
 
       .block {
         background-color: var(--color-layer-1);
         border-radius: 16px;
-        padding: _.unit(6);
+        padding: 0 _.unit(6) _.unit(6);
         margin-bottom: _.unit(6);
+
+        .blockTitle {
+          font: var(--font-title-1);
+          padding: _.unit(5) 0 _.unit(6);
+          display: flex;
+          align-items: center;
+          gap: _.unit(4);
+
+          .number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--color-focused-variant);
+            color: var(--color-primary);
+            font: var(--font-title-2);
+            text-align: center;
+            line-height: 28px;
+          }
+        }
       }
 
       .footer {

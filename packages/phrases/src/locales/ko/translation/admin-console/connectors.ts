@@ -31,7 +31,9 @@ const connectors = {
   },
   guide: {
     subtitle: '단계별 가이드를 따라, 연동해 주세요.',
-    connector_setting: '연동 설정',
+    general_setting: 'General settings', // UNTRANSLATED
+    parameter_configuaration: 'Parameter configuration', // UNTRANSLATED
+    test_connection: 'Test connection', // UNTRANSLATED
     name: '연동 이름',
     name_tip: '다음과 같이 연동 이름이 출력돼요. "{{name}}으로 계속하기".',
     logo: '연동 로고 URL',

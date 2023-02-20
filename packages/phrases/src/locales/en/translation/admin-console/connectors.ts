@@ -30,7 +30,9 @@ const connectors = {
   },
   guide: {
     subtitle: 'A step by step guide to configure your connector',
-    connector_setting: 'Connector setting',
+    general_setting: 'General settings',
+    parameter_configuaration: 'Parameter configuration',
+    test_connection: 'Test connection',
     name: 'Connector name',
     name_tip:
       'The name of the connector button will be displayed as "Continue with {{name}}." Be mindful of the length of the naming in case it gets too long.',

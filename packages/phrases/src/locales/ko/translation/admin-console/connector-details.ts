@@ -1,9 +1,11 @@
 const connector_details = {
   back_to_connectors: '연동으로 돌아가기',
   check_readme: 'README 확인',
-  settings: '설정',
+  settings: 'General settings', // UNTRANSLATED
   settings_description:
     'Logto에서 연동은 중요한 역할을 해요. 연동 시스템을 통하여, 사용자들에게 비밀번호 없이 회원 가입을 하고 로그인을 할 수 있게 하거나, 소셜 계정을 통하여 로그인을 할 수 있게 도와줘요.',
+  parameter_configuaration: 'Parameter configuration', // UNTRANSLATED
+  test_connection: 'Test connection', // UNTRANSLATED
   save_error_empty_config: '설정을 입력해 주세요.',
   send: '보내기',
   send_error_invalid_format: '유효하지 않은 입력',
