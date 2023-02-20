@@ -12,5 +12,6 @@ create table sign_in_experiences (
   sign_up jsonb /* @use SignUp */ not null,
   social_sign_in_connector_targets jsonb /* @use ConnectorTargets */ not null default '[]'::jsonb,
   sign_in_mode sign_in_mode not null default 'SignInAndRegister',
+  custom_css text,
   primary key (tenant_id, id)
 );
