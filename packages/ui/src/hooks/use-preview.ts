@@ -78,11 +78,19 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
 
       setPlatform(platform);
 
-      await changeLanguage(language);
-
       setExperienceSettings(experienceSettings);
     })();
   }, [isPreview, previewConfig, setExperienceSettings, setPlatform, setTheme]);
+
+  useEffect(() => {
+    if (!isPreview || !previewConfig?.language) {
+      return;
+    }
+
+    (async () => {
+      await changeLanguage(previewConfig.language);
+    })();
+  }, [previewConfig?.language, isPreview]);
 
   return [isPreview, previewConfig];
 };
