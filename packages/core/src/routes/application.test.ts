@@ -9,6 +9,7 @@ const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
 const findApplicationById = jest.fn(async () => mockApplication);
+const deleteApplicationById = jest.fn();
 
 await mockEsmWithActual('@logto/core-kit', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
@@ -21,7 +22,7 @@ const tenantContext = new MockTenant(undefined, {
     findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
     findAllApplications: jest.fn(async () => [mockApplication]),
     findApplicationById,
-    deleteApplicationById: jest.fn(),
+    deleteApplicationById,
     insertApplication: jest.fn(
       async (body: CreateApplication): Promise<Application> => ({
         ...mockApplication,
@@ -224,8 +225,7 @@ describe('application route', () => {
   });
 
   it('DELETE /applications/:applicationId should throw if application not found', async () => {
-    const mockFindApplicationById = findApplicationById as jest.Mock;
-    mockFindApplicationById.mockRejectedValueOnce(new Error(' '));
+    deleteApplicationById.mockRejectedValueOnce(new Error(' '));
 
     await expect(applicationRequest.delete('/applications/foo')).resolves.toHaveProperty(
       'status',

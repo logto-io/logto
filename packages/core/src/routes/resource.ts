@@ -127,7 +127,6 @@ export default function resourceRoutes<T extends AuthedRouter>(
     koaGuard({ params: object({ id: string().min(1) }) }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-      await findResourceById(id);
       await deleteResourceById(id);
       ctx.status = 204;
 
