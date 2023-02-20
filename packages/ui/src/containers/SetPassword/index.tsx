@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -42,11 +42,17 @@ const SetPassword = ({
     watch,
     resetField,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FieldState>({
-    reValidateMode: 'onChange',
+    reValidateMode: 'onBlur',
     defaultValues: { newPassword: '', confirmPassword: '' },
   });
+
+  useEffect(() => {
+    if (!isValid) {
+      clearErrorMessage?.();
+    }
+  }, [clearErrorMessage, isValid]);
 
   const onSubmitHandler = useCallback(
     (event?: React.FormEvent<HTMLFormElement>) => {

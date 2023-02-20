@@ -1,6 +1,6 @@
 import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -41,9 +41,9 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormState>({
-    reValidateMode: 'onChange',
+    reValidateMode: 'onBlur',
     defaultValues: {
       identifier: {},
       password: '',
@@ -71,6 +71,12 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     },
     [clearErrorMessage, handleSubmit, onSubmit, termsValidation]
   );
+
+  useEffect(() => {
+    if (!isValid) {
+      clearErrorMessage();
+    }
+  }, [clearErrorMessage, isValid]);
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>

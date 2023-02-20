@@ -1,6 +1,6 @@
 import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -34,11 +34,17 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
 
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     control,
   } = useForm<FormState>({
-    reValidateMode: 'onChange',
+    reValidateMode: 'onBlur',
   });
+
+  useEffect(() => {
+    if (!isValid) {
+      clearErrorMessage();
+    }
+  }, [clearErrorMessage, isValid]);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {

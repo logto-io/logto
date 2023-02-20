@@ -94,6 +94,7 @@ describe('<IdentifierRegisterForm />', () => {
 
       act(() => {
         fireEvent.change(usernameInput, { target: { value: 'username' } });
+        fireEvent.blur(usernameInput);
       });
 
       await waitFor(() => {
@@ -120,6 +121,7 @@ describe('<IdentifierRegisterForm />', () => {
 
       act(() => {
         fireEvent.change(usernameInput, { target: { value: 'username' } });
+        fireEvent.blur(usernameInput);
       });
 
       await waitFor(() => {
@@ -179,6 +181,7 @@ describe('<IdentifierRegisterForm />', () => {
 
         act(() => {
           fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
+          fireEvent.blur(emailInput);
         });
 
         await waitFor(() => {
@@ -235,6 +238,7 @@ describe('<IdentifierRegisterForm />', () => {
 
         act(() => {
           fireEvent.change(phoneInput, { target: { value: '8573333333' } });
+          fireEvent.blur(phoneInput);
         });
 
         await waitFor(() => {

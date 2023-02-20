@@ -63,6 +63,7 @@ describe('<SetPassword />', () => {
       // Clear error
       if (passwordInput) {
         fireEvent.change(passwordInput, { target: { value: '123456' } });
+        fireEvent.blur(passwordInput);
       }
     });
 
@@ -99,6 +100,7 @@ describe('<SetPassword />', () => {
       // Clear Error
       if (confirmPasswordInput) {
         fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
+        fireEvent.blur(confirmPasswordInput);
       }
     });
 
