@@ -4,12 +4,12 @@ import createServer, { compose, withRequest } from '@withtyped/server';
 import dotenv from 'dotenv';
 import { findUp } from 'find-up';
 
-import withAuth from './middleware/with-auth.js';
-import withHttpProxy from './middleware/with-http-proxy.js';
-import withPathname from './middleware/with-pathname.js';
-import withSpa from './middleware/with-spa.js';
-
 dotenv.config({ path: await findUp('.env', {}) });
+
+const { default: withAuth } = await import('./middleware/with-auth.js');
+const { default: withHttpProxy } = await import('./middleware/with-http-proxy.js');
+const { default: withPathname } = await import('./middleware/with-pathname.js');
+const { default: withSpa } = await import('./middleware/with-spa.js');
 
 const { EnvSet } = await import('./env-set/index.js');
 const { default: router } = await import('./routes/index.js');

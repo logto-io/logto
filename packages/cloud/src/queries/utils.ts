@@ -1,8 +1,9 @@
-import type { PostgresQueryClient } from '@withtyped/postgres';
+import type { PostgreSql } from '@withtyped/postgres';
 import { sql } from '@withtyped/postgres';
+import type { Queryable } from '@withtyped/server';
 import { RequestError } from '@withtyped/server';
 
-export const getDatabaseName = async (client: PostgresQueryClient) => {
+export const getDatabaseName = async (client: Queryable<PostgreSql>) => {
   const {
     rows: [first],
   } = await client.query<{ currentDatabase: string }>(sql`
