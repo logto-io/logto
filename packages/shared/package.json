@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@logto/connector-kit": "workspace:*",
-    "@logto/core-kit": "workspace:*",
     "@silverhand/eslint-config": "2.0.1",
     "@silverhand/ts-config": "2.0.3",
     "@types/jest": "^29.1.2",
@@ -55,6 +54,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
+    "@logto/core-kit": "workspace:*",
     "@logto/schemas": "workspace:*",
     "@silverhand/essentials": "2.2.0",
     "find-up": "^6.3.0",
