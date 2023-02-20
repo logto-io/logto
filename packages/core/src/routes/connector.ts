@@ -22,13 +22,10 @@ const transpileLogtoConnector = ({
   metadata,
   type,
 }: LogtoConnector): ConnectorResponse => {
-  // `storage` is for BE use and should not be exposed to FE.
-  const remainingKeys = Connectors.fieldKeys.filter((key) => key !== 'storage');
-
   return {
     type,
     ...metadata,
-    ...pick(dbEntry, ...remainingKeys),
+    ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'config', 'metadata'),
   };
 };
 
