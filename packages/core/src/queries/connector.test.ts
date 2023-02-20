@@ -121,7 +121,7 @@ describe('connector queries', () => {
       return createMockQueryResult([rowData]);
     });
 
-    await expect(setValueByIdAndKey(id, key, value)).resolves.toEqual(rowData.storage);
+    await expect(setValueByIdAndKey(id, key, value)).resolves.toEqual(undefined);
   });
 
   it('getValueByIdAndKey', async () => {

@@ -187,7 +187,7 @@ export type Storage = z.infer<typeof storageGuard>;
 
 export type GetStorageValue = (key: string) => Promise<unknown>;
 
-export type SetStorageValue = (key: string, value: unknown) => Promise<Storage>;
+export type SetStorageValue = (key: string, value: unknown) => Promise<void>;
 
 export type BaseConnector<Type extends ConnectorType> = {
   type: Type;
