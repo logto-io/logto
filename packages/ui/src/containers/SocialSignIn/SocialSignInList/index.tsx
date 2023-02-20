@@ -2,6 +2,7 @@ import type { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
+import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import useSocial from '@/hooks/use-social';
 import { getLogoUrl } from '@/utils/logo';
 
@@ -14,6 +15,7 @@ type Props = {
 
 const SocialSignInList = ({ className, socialConnectors = [] }: Props) => {
   const { invokeSocialSignIn, theme } = useSocial();
+  useNativeMessageListener();
 
   return (
     <div className={classNames(styles.socialLinkList, className)}>
