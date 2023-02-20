@@ -1,7 +1,9 @@
 import { isBuiltInLanguageTag } from '@logto/phrases-ui';
 import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas';
+import { object, string } from 'zod';
 
 import detectLanguage from '#src/i18n/detect-language.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
@@ -24,26 +26,41 @@ export default function phraseRoutes<T extends AnonymousRouter>(
     return languageInfo;
   };
 
-  router.get('/phrase', async (ctx, next) => {
-    const interaction = await provider
-      .interactionDetails(ctx.req, ctx.res)
-      // Should not block when failed to get interaction
-      .catch(() => null);
+  router.get(
+    '/phrase',
+    koaGuard({
+      query: object({
+        lng: string().optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const interaction = await provider
+        .interactionDetails(ctx.req, ctx.res)
+        // Should not block when failed to get interaction
+        .catch(() => null);
 
-    const applicationId = interaction?.params.client_id;
-    const { autoDetect, fallbackLanguage } = await getLanguageInfo(applicationId);
+      const {
+        query: { lng },
+      } = ctx.guard;
 
-    const detectedLanguages = autoDetect ? detectLanguage(ctx) : [];
-    const acceptableLanguages = [...detectedLanguages, fallbackLanguage];
-    const customLanguages = await findAllCustomLanguageTags();
-    const language =
-      acceptableLanguages.find(
-        (tag) => isBuiltInLanguageTag(tag) || customLanguages.includes(tag)
-      ) ?? 'en';
+      const applicationId = interaction?.params.client_id;
+      const { autoDetect, fallbackLanguage } = await getLanguageInfo(applicationId);
 
-    ctx.set('Content-Language', language);
-    ctx.body = await getPhrases(language, customLanguages);
+      const targetLanguage = lng ? [lng] : [];
+      const detectedLanguages = autoDetect ? detectLanguage(ctx) : [];
+      const acceptableLanguages = [...targetLanguage, ...detectedLanguages, fallbackLanguage];
+      const customLanguages = await findAllCustomLanguageTags();
+      const language =
+        acceptableLanguages.find(
+          (tag) => isBuiltInLanguageTag(tag) || customLanguages.includes(tag)
+        ) ?? 'en';
 
-    return next();
-  });
+      console.log(language);
+
+      ctx.set('Content-Language', language);
+      ctx.body = await getPhrases(language, customLanguages);
+
+      return next();
+    }
+  );
 }
