@@ -26,23 +26,19 @@ const Register = () => {
       )}
       {signUpMethods.length === 0 && socialConnectors.length > 0 && <SocialSignIn />}
       {
+        // SignIn footer
+        signInMode === SignInMode.SignInAndRegister && signInMethods.length > 0 && (
+          <div className={styles.createAccount}>
+            {t('description.have_account')} <TextLink replace to="/sign-in" text="action.sign_in" />
+          </div>
+        )
+      }
+      {
         // Social sign-in methods
         signUpMethods.length > 0 && socialConnectors.length > 0 && (
           <>
             <Divider label="description.or" className={styles.divider} />
             <SocialSignInList socialConnectors={socialConnectors} className={styles.main} />
-          </>
-        )
-      }
-      {
-        // SignIn footer
-        signInMode === SignInMode.SignInAndRegister && signInMethods.length > 0 && (
-          <>
-            <div className={styles.placeHolder} />
-            <div className={styles.createAccount}>
-              {t('description.have_account')}{' '}
-              <TextLink replace to="/sign-in" text="action.sign_in" />
-            </div>
           </>
         )
       }
