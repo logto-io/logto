@@ -20,35 +20,35 @@ const digitsRegex = /^\d*$/;
 
 type Props = {
   defaultValue?: string;
-  defaultType?: IdentifierInputType;
+  _defaultType?: IdentifierInputType;
   enabledTypes: IdentifierInputType[];
 };
 
-const useSmartInputField = ({ defaultType, defaultValue, enabledTypes }: Props) => {
+const useSmartInputField = ({ _defaultType, defaultValue, enabledTypes }: Props) => {
   const enabledTypeSet = useMemo(() => new Set(enabledTypes), [enabledTypes]);
 
-  if (defaultType) {
-    assert(
-      enabledTypeSet.has(defaultType),
-      new Error(
-        `Invalid input type. Current inputType ${defaultType} is detected but missing in enabledTypes`
-      )
-    );
-  }
+  assert(
+    !_defaultType || enabledTypeSet.has(_defaultType),
+    new Error(
+      `Invalid input type. Current inputType ${
+        _defaultType ?? ''
+      } is detected but missing in enabledTypes`
+    )
+  );
 
   // Parse default type from enabled types if default type is not provided and only one type is enabled
-  const _defaultType = useMemo(
-    () => defaultType ?? (enabledTypes.length === 1 ? enabledTypes[0] : undefined),
-    [defaultType, enabledTypes]
+  const defaultType = useMemo(
+    () => _defaultType ?? (enabledTypes.length === 1 ? enabledTypes[0] : undefined),
+    [_defaultType, enabledTypes]
   );
 
   // Parse default value if provided
   const { countryCode: defaultCountryCode, inputValue: defaultInputValue } = useMemo(
-    () => parseIdentifierValue(_defaultType, defaultValue),
-    [_defaultType, defaultValue]
+    () => parseIdentifierValue(defaultType, defaultValue),
+    [defaultType, defaultValue]
   );
 
-  const [currentType, setCurrentType] = useState(_defaultType);
+  const [currentType, setCurrentType] = useState(defaultType);
 
   const [countryCode, setCountryCode] = useState<string>(
     defaultCountryCode ?? getDefaultCountryCallingCode()
@@ -64,7 +64,7 @@ const useSmartInputField = ({ defaultType, defaultValue, enabledTypes }: Props) 
       }
 
       if (enabledTypeSet.size === 1) {
-        return _defaultType;
+        return defaultType;
       }
 
       const hasAtSymbol = value.includes('@');
@@ -92,7 +92,7 @@ const useSmartInputField = ({ defaultType, defaultValue, enabledTypes }: Props) 
 
       return currentType;
     },
-    [_defaultType, currentType, enabledTypeSet]
+    [defaultType, currentType, enabledTypeSet]
   );
 
   const onCountryCodeChange = useCallback<ChangeEventHandler<HTMLSelectElement>>(
@@ -118,8 +118,8 @@ const useSmartInputField = ({ defaultType, defaultValue, enabledTypes }: Props) 
 
   const onInputValueClear = useCallback(() => {
     setInputValue('');
-    setCurrentType(enabledTypeSet.size === 1 ? _defaultType : undefined);
-  }, [_defaultType, enabledTypeSet.size]);
+    setCurrentType(enabledTypeSet.size === 1 ? defaultType : undefined);
+  }, [defaultType, enabledTypeSet.size]);
 
   return {
     countryCode,

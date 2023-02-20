@@ -43,7 +43,7 @@ const SmartInputField = (
     onInputValueClear,
     identifierType,
   } = useSmartInputField({
-    defaultType,
+    _defaultType: defaultType,
     defaultValue,
     enabledTypes,
   });
