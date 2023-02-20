@@ -1,0 +1,15 @@
+{
+  "extends": "@silverhand/ts-config/tsconfig.base",
+  "compilerOptions": {
+    "types": ["node"],
+    "declaration": false,
+    "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "#src/*": [
+        "src/*"
+      ]
+    }
+  },
+  "include": ["src"]
+}

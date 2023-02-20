@@ -1,0 +1,14 @@
+{
+  "exec": "tsc -p tsconfig.build.json --incremental && node ./build/index.js || exit 1",
+  "ignore": [
+    "node_modules/**/node_modules",
+    "../integration-tests/"
+  ],
+  "watch": [
+    "./src/",
+    "./node_modules/",
+    "../../.env"
+  ],
+  "ext": "json,js,jsx,ts,tsx",
+  "delay": 500
+}

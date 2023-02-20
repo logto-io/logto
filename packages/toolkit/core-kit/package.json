@@ -50,7 +50,7 @@
     "@jest/types": "^29.0.3",
     "@silverhand/eslint-config": "2.0.1",
     "@silverhand/eslint-config-react": "2.0.1",
-    "@silverhand/essentials": "2.1.0",
+    "@silverhand/essentials": "2.2.0",
     "@silverhand/ts-config": "2.0.3",
     "@types/color": "^3.0.3",
     "@types/jest": "^29.0.3",

@@ -16,6 +16,7 @@ export default class GlobalValues {
 
   public readonly urlSet = new UrlSet(this.isHttpsEnabled, 3001);
   public readonly adminUrlSet = new UrlSet(this.isHttpsEnabled, 3002, 'ADMIN_');
+  public readonly cloudUrlSet = new UrlSet(this.isHttpsEnabled, 3003, 'CLOUD_');
 
   public readonly isDomainBasedMultiTenancy = this.urlSet.endpoint.hostname.includes('*');
 

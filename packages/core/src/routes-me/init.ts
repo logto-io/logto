@@ -6,9 +6,11 @@ import {
 import Koa from 'koa';
 import Router from 'koa-router';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { WithAuthContext } from '#src/middleware/koa-auth/index.js';
 import koaAuth from '#src/middleware/koa-auth/index.js';
+import koaCors from '#src/middleware/koa-cors.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -65,6 +67,7 @@ export default function initMeApis(tenant: TenantContext): Koa {
   );
 
   const meApp = new Koa();
+  meApp.use(koaCors(EnvSet.values.cloudUrlSet));
   meApp.use(meRouter.routes()).use(meRouter.allowedMethods());
 
   return meApp;

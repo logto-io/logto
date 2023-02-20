@@ -14,8 +14,10 @@ import { appendPath } from '#src/utils/url.js';
 import { getConstantClientMetadata } from './utils.js';
 
 const buildAdminConsoleClientMetadata = (envSet: EnvSet): AllClientMetadata => {
-  const { adminUrlSet } = EnvSet.values;
-  const urls = adminUrlSet.deduplicated().map((url) => appendPath(url, '/console').toString());
+  const { adminUrlSet, cloudUrlSet } = EnvSet.values;
+  const urls = [...adminUrlSet.deduplicated(), ...cloudUrlSet.deduplicated()].map((url) =>
+    appendPath(url, '/console').toString()
+  );
 
   return {
     ...getConstantClientMetadata(envSet, ApplicationType.SPA),
