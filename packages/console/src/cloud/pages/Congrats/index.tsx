@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import AirPlay from '@/assets/images/air-play.svg';
 import Calendar from '@/assets/images/calendar.svg';
 import GetStarted from '@/assets/images/get-started.svg';
+import ActionBar from '@/cloud/components/ActionBar';
+import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
-import * as pageLayout from '@/pages/Cloud/layout.module.scss';
 import { buildUrl } from '@/utils/url';
 
-import ActionBar from '../../components/ActionBar';
 import { CloudPage } from '../../types';
 import { getCloudPagePathname } from '../../utils';
 import * as styles from './index.module.scss';

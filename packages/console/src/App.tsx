@@ -39,6 +39,7 @@ import UserDetails from '@/pages/UserDetails';
 import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
+import Cloud from './cloud/pages/Cloud';
 import {
   ApiResourceDetailsTabs,
   ConnectorsTabs,
@@ -48,15 +49,11 @@ import {
   adminTenantEndpoint,
   getUserTenantId,
 } from './consts';
+import { isCloud } from './consts/cloud';
 import AppContent from './containers/AppContent';
 import AppEndpointsProvider, { AppEndpointsContext } from './containers/AppEndpointsProvider';
 import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from './pages/ApiResourceDetails/ApiResourceSettings';
-import Cloud from './pages/Cloud';
-import CloudAboutUser from './pages/Cloud/pages/About';
-import CloudCongrats from './pages/Cloud/pages/Congrats';
-import CloudWelcome from './pages/Cloud/pages/Welcome';
-import { CloudPage } from './pages/Cloud/types';
 import Profile from './pages/Profile';
 import RolePermissions from './pages/RoleDetails/RolePermissions';
 import RoleSettings from './pages/RoleDetails/RoleSettings';
@@ -84,13 +81,7 @@ const Main = () => {
             <Route path="callback" element={<Callback />} />
             <Route path="welcome" element={<Welcome />} />
             <Route element={<AppLayout />}>
-              <Route path="cloud" element={<Cloud />}>
-                <Route index element={<Navigate replace to={CloudPage.Welcome} />} />
-                <Route path={CloudPage.Welcome} element={<CloudWelcome />} />
-                <Route path={CloudPage.AboutUser} element={<CloudAboutUser />} />
-                <Route path={CloudPage.Congrats} element={<CloudCongrats />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
+              {isCloud && <Route path="cloud/*" element={<Cloud />} />}
               <Route element={<AppContent />}>
                 <Route path="*" element={<NotFound />} />
                 <Route path="get-started" element={<GetStarted />} />
