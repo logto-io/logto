@@ -4,14 +4,14 @@ const application_details = {
   settings: 'Settings',
   settings_description:
     'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.',
-  advanced_settings: 'Advanced settings',
+  advanced_settings: 'Advanced Settings',
   advanced_settings_description:
     'Advanced settings include OIDC related terms. You can check out the Token Endpoint for more information.',
   application_name: 'Application name',
   application_name_placeholder: 'My App',
   description: 'Description',
   description_placeholder: 'Enter your application description',
-  authorization_endpoint: 'Authorization endpoint',
+  authorization_endpoint: 'Authorization Endpoint',
   authorization_endpoint_tip:
     "The endpoint to perform authentication and authorization. It's used for OpenID Connect <a>Authentication</a>.",
   application_id: 'App ID',
@@ -36,7 +36,7 @@ const application_details = {
   id_token_expiration: 'ID Token expiration',
   refresh_token_expiration: 'Refresh Token expiration',
   token_endpoint: 'Token Endpoint',
-  user_info_endpoint: 'Userinfo endpoint',
+  user_info_endpoint: 'Userinfo Endpoint',
   enable_admin_access: 'Enable admin access',
   enable_admin_access_label:
     'Enable or disable the access to Management API. Once enabled, you can use access tokens to call Management API on behalf on this application.',

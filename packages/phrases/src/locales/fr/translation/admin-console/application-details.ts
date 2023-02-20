@@ -11,7 +11,7 @@ const application_details = {
   application_name_placeholder: 'Mon App',
   description: 'Description',
   description_placeholder: 'Entrez la description de votre application',
-  authorization_endpoint: 'Authorization endpoint',
+  authorization_endpoint: 'Authorization Endpoint',
   authorization_endpoint_tip:
     "Le point de terminaison pour effectuer l'authentification et l'autorisation. Il est utilisé pour <a>l'authentification</a> OpenID Connect.",
   application_id: 'App ID',

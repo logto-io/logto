@@ -36,7 +36,7 @@ const application_details = {
   id_token_expiration: 'Expiração do token de ID',
   refresh_token_expiration: 'Expiração Refresh Token',
   token_endpoint: 'Token Endpoint',
-  user_info_endpoint: 'Userinfo endpoint',
+  user_info_endpoint: 'Userinfo Endpoint',
   enable_admin_access: 'Ativar acesso de administrador',
   enable_admin_access_label:
     'Ative ou desative o acesso à API de gerenciamento. Uma vez ativado, você pode usar tokens de acesso para chamar a API de gerenciamento em nome deste aplicativo.',
