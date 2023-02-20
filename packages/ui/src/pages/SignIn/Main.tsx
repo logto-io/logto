@@ -13,7 +13,7 @@ type Props = {
 
 const Main = ({ signInMethods, socialConnectors }: Props) => {
   if (signInMethods.length === 0 && socialConnectors.length > 0) {
-    return <SocialSignIn className={styles.main} />;
+    return <SocialSignIn className={styles.main} socialConnectors={socialConnectors} />;
   }
 
   const isPasswordOnly =

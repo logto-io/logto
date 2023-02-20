@@ -24,7 +24,9 @@ const Register = () => {
       {signUpMethods.length > 0 && (
         <IdentifierRegisterForm signUpMethods={signUpMethods} className={styles.main} />
       )}
-      {signUpMethods.length === 0 && socialConnectors.length > 0 && <SocialSignIn />}
+      {signUpMethods.length === 0 && socialConnectors.length > 0 && (
+        <SocialSignIn className={styles.main} socialConnectors={socialConnectors} />
+      )}
       {
         // SignIn footer
         signInMode === SignInMode.SignInAndRegister && signInMethods.length > 0 && (

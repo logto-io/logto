@@ -1,16 +1,16 @@
+import type { ConnectorMetadata } from '@logto/schemas';
+
 import TermsOfUse from '@/containers/TermsOfUse';
-import useSocial from '@/hooks/use-social';
 
 import SocialSignInList from './SocialSignInList';
 import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
+  socialConnectors: ConnectorMetadata[];
 };
 
-const SocialSignIn = ({ className }: Props) => {
-  const { socialConnectors } = useSocial();
-
+const SocialSignIn = ({ className, socialConnectors }: Props) => {
   return (
     <>
       <TermsOfUse className={styles.terms} />
