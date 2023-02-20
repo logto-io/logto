@@ -132,7 +132,6 @@ export default function applicationRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       // Note: will need delete cascade when application is joint with other tables
-      await findApplicationById(id);
       await deleteApplicationById(id);
       ctx.status = 204;
 

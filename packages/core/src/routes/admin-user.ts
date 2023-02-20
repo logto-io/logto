@@ -277,8 +277,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         throw new RequestError('user.cannot_delete_self');
       }
 
-      await findUserById(userId);
-
       await deleteUserById(userId);
 
       ctx.status = 204;

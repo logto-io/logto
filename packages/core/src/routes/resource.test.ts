@@ -150,6 +150,13 @@ describe('resource routes', () => {
     await expect(resourceRequest.delete('/resources/foo')).resolves.toHaveProperty('status', 204);
   });
 
+  it('DELETE /resources/:id should throw with invalid id', async () => {
+    const { deleteResourceById } = resources;
+    deleteResourceById.mockRejectedValueOnce(new Error('not found'));
+
+    await expect(resourceRequest.delete('/resources/foo')).resolves.toHaveProperty('status', 500);
+  });
+
   it('GET /resources/:id/scopes', async () => {
     const response = await resourceRequest.get('/resources/foo/scopes');
     expect(response.status).toEqual(200);

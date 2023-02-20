@@ -374,17 +374,17 @@ describe('adminUserRoutes', () => {
 
   it('DELETE /users/:userId should throw if user cannot be found', async () => {
     const notExistedUserId = 'notExistedUserId';
-    const mockedFindUserById = findUserById as jest.Mock;
-    mockedFindUserById.mockImplementationOnce((userId) => {
+
+    deleteUserById.mockImplementationOnce((userId) => {
       if (userId === notExistedUserId) {
         throw new Error(' ');
       }
     });
+
     await expect(userRequest.delete(`/users/${notExistedUserId}`)).resolves.toHaveProperty(
       'status',
       500
     );
-    expect(deleteUserById).not.toHaveBeenCalled();
   });
 
   it('DELETE /users/:userId/identities/:target should throw if user cannot be found', async () => {
