@@ -76,7 +76,7 @@ export default class MockClient {
 
     // Note: should redirect to sign-in page
     assert(
-      response.statusCode === 303 && response.headers.location === '/sign-in',
+      response.statusCode === 303 && response.headers.location?.startsWith('/sign-in'),
       new Error('Visit sign in uri failed')
     );
 

@@ -55,7 +55,7 @@ jest.useFakeTimers().setSystemTime(now);
 describe('submit action', () => {
   const tenant = new MockTenant(
     undefined,
-    { users: userQueries },
+    { users: userQueries, signInExperiences: { updateDefaultSignInExperience: jest.fn() } },
     { users: userLibraries, connectors: { getLogtoConnectorById } }
   );
   const ctx = {

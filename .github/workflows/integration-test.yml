@@ -97,6 +97,7 @@ jobs:
 
       # Test
       - name: Run tests
+        # continue-on-error: true # Uncomment this line to debug
         run: |
           cd tests/packages/integration-tests
           pnpm build

@@ -142,7 +142,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
           }
 
           case 'consent': {
-            return appendParameters(routes.signIn.consent);
+            return routes.signIn.consent;
           }
 
           default: {

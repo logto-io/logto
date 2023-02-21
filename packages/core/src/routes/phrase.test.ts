@@ -43,9 +43,8 @@ const { findAllCustomLanguageTags } = customPhrases;
 
 const getPhrases = jest.fn(async () => zhCN);
 
-const interactionDetails = jest.fn();
 const tenantContext = new MockTenant(
-  createMockProvider(interactionDetails),
+  createMockProvider(),
   { customPhrases, signInExperiences: { findDefaultSignInExperience } },
   { phrases: { getPhrases } }
 );
@@ -59,21 +58,8 @@ const phraseRequest = createRequester({
 });
 
 describe('when the application is not admin-console', () => {
-  beforeEach(() => {
-    interactionDetails.mockResolvedValue({
-      params: {},
-      jti: 'jti',
-      client_id: 'mockApplicationId',
-    });
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  it('should call interactionDetails', async () => {
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
-    expect(interactionDetails).toBeCalledTimes(1);
   });
 
   it('should call findDefaultSignInExperience', async () => {

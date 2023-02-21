@@ -7,7 +7,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 export default function phraseRoutes<T extends AnonymousRouter>(
-  ...[router, { provider, queries, libraries }]: RouterInitArgs<T>
+  ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
     customPhrases: { findAllCustomLanguageTags },
@@ -15,7 +15,7 @@ export default function phraseRoutes<T extends AnonymousRouter>(
   } = queries;
   const { getPhrases } = libraries.phrases;
 
-  const getLanguageInfo = async (applicationId: unknown) => {
+  const getLanguageInfo = async () => {
     const { languageInfo } = await findDefaultSignInExperience();
 
     return languageInfo;
@@ -29,17 +29,11 @@ export default function phraseRoutes<T extends AnonymousRouter>(
       }),
     }),
     async (ctx, next) => {
-      const interaction = await provider
-        .interactionDetails(ctx.req, ctx.res)
-        // Should not block when failed to get interaction
-        .catch(() => null);
-
       const {
         query: { lng },
       } = ctx.guard;
 
-      const applicationId = interaction?.params.client_id;
-      const { autoDetect, fallbackLanguage } = await getLanguageInfo(applicationId);
+      const { autoDetect, fallbackLanguage } = await getLanguageInfo();
 
       const targetLanguage = lng ? [lng] : [];
       const detectedLanguages = autoDetect ? detectLanguage(ctx) : [];
