@@ -1,6 +1,9 @@
+import { conditional } from '@silverhand/essentials';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
+import useUserCloudData from '@/cloud/hooks/use-user-cloud-data';
 import { CloudPage } from '@/cloud/types';
+import { getCloudPagePathname } from '@/cloud/utils';
 import NotFound from '@/pages/NotFound';
 
 import About from '../About';
@@ -8,16 +11,39 @@ import Congrats from '../Congrats';
 import Welcome from '../Welcome';
 import * as styles from './index.module.scss';
 
-const Cloud = () => (
-  <div className={styles.cloud}>
-    <Routes>
-      <Route index element={<Navigate replace to={CloudPage.Welcome} />} />
-      <Route path={CloudPage.Welcome} element={<Welcome />} />
-      <Route path={CloudPage.AboutUser} element={<About />} />
-      <Route path={CloudPage.Congrats} element={<Congrats />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  </div>
-);
+const welcomePathname = getCloudPagePathname(CloudPage.Welcome);
+
+const Cloud = () => {
+  const {
+    data: { questionnaire },
+    isLoaded,
+  } = useUserCloudData();
+
+  if (!isLoaded) {
+    return null;
+  }
+
+  return (
+    <div className={styles.cloud}>
+      <Routes>
+        <Route index element={<Navigate replace to={welcomePathname} />} />
+        <Route path={CloudPage.Welcome} element={<Welcome />} />
+        <Route
+          path={CloudPage.AboutUser}
+          element={
+            conditional(questionnaire && <About />) ?? <Navigate replace to={welcomePathname} />
+          }
+        />
+        <Route
+          path={CloudPage.Congrats}
+          element={
+            conditional(questionnaire && <Congrats />) ?? <Navigate replace to={welcomePathname} />
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
+  );
+};
 
 export default Cloud;

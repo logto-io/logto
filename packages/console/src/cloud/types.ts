@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export enum CloudPage {
   Welcome = 'welcome',
   AboutUser = 'about-user',
@@ -41,11 +43,19 @@ export enum Reason {
   Others = 'others',
 }
 
-export type Questionnaire = {
-  project: Project;
-  deploymentType: DeploymentType;
-  titles: string[];
-  companyName: string;
-  companySize: string;
-  reasons: string[];
-};
+export const questionnaireGuard = z.object({
+  project: z.nativeEnum(Project),
+  deploymentType: z.nativeEnum(DeploymentType),
+  titles: z.array(z.nativeEnum(Title)).optional(),
+  companyName: z.string().optional(),
+  companySize: z.nativeEnum(CompanySize).optional(),
+  reasons: z.array(z.nativeEnum(Reason)).optional(),
+});
+
+export type Questionnaire = z.infer<typeof questionnaireGuard>;
+
+export const userCloudDataGuard = z.object({
+  questionnaire: questionnaireGuard.optional(),
+});
+
+export type UserCloudData = z.infer<typeof userCloudDataGuard>;
