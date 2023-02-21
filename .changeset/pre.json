@@ -15,12 +15,14 @@
     "@logto/ui": "1.0.0-rc.0",
     "@logto/connector-kit": "1.0.0-rc.0",
     "@logto/core-kit": "1.0.0-rc.0",
-    "@logto/language-kit": "1.0.0-rc.0"
+    "@logto/language-kit": "1.0.0-rc.0",
+    "@logto/cloud": "0.1.0"
   },
   "changesets": [
     "big-turkeys-invite",
     "breezy-socks-joke",
     "clever-panthers-lay",
+    "curly-apes-tease",
     "curly-hornets-end",
     "cyan-buses-trade",
     "fifty-balloons-taste",

@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-rc.2
+
+### Patch Changes
+
+- 69ac13e3: Add description and tooltip for connector config's formItems.
+
 ## 1.0.0-rc.1
 
 ### Minor Changes
