@@ -25,7 +25,6 @@ const middlewareList = Object.freeze(
     'oidc-error-handler',
     'slonik-error-handler',
     'spa-proxy',
-    'check-demo-app',
     'console-redirect-proxy',
   ].map((name) => [name, buildMockMiddleware(name)] as const)
 );
