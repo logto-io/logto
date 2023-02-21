@@ -84,6 +84,12 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+
+      - name: Build cloud
+        uses: docker/build-push-action@v4
+        with:
+          file: Dockerfile.cloud
+          context: .
   
   main-alteration:
     runs-on: ubuntu-latest
