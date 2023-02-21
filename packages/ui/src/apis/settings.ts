@@ -11,17 +11,23 @@ export const getSignInExperience = async <T extends SignInExperienceResponse>():
   return ky.get('/api/.well-known/sign-in-exp').json<T>();
 };
 
-export const getPhrases = async (lng?: string) =>
+export const getPhrases = async ({
+  localLanguage,
+  language,
+}: {
+  localLanguage?: string;
+  language?: string;
+}) =>
   ky
     .extend({
       hooks: {
         beforeRequest: [
           (request) => {
-            if (lng) {
-              request.headers.set('Accept-Language', lng);
+            if (localLanguage) {
+              request.headers.set('Accept-Language', localLanguage);
             }
           },
         ],
       },
     })
-    .get('/api/phrase');
+    .get(`/api/phrase${language ? `?lng=${language}` : ''}`);

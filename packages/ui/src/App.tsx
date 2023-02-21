@@ -40,7 +40,7 @@ const App = () => {
       const settings = await getSignInExperienceSettings();
 
       // Note: i18n must be initialized ahead of page render
-      await initI18n(settings.languageInfo);
+      await initI18n();
 
       // Init the page settings and render
       setExperienceSettings(settings);

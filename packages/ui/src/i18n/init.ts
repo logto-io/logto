@@ -1,15 +1,11 @@
-import type { LanguageInfo } from '@logto/schemas';
 import type { InitOptions } from 'i18next';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import { getI18nResource, detectLanguage } from '@/i18n/utils';
+import { getI18nResource } from '@/i18n/utils';
 
-const initI18n = async (languageSettings?: LanguageInfo) => {
-  // Get language settings from the SIE
-  const locale = detectLanguage(languageSettings);
-
-  const { resources, lng } = await getI18nResource(locale);
+const initI18n = async () => {
+  const { resources, lng } = await getI18nResource();
 
   const options: InitOptions = {
     resources,
