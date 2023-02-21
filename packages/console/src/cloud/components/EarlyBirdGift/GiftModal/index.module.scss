@@ -1,0 +1,16 @@
+@use '@/scss/underscore' as _;
+
+.title {
+  white-space: normal;
+}
+
+.content {
+  margin-top: _.unit(-5);
+
+  .description {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+    margin-bottom: _.unit(6);
+  }
+}
+

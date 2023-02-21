@@ -18,6 +18,8 @@ type Props = {
   onClose?: () => void;
   className?: string;
   size?: 'medium' | 'large' | 'xlarge';
+  // eslint-disable-next-line react/boolean-prop-naming
+  enableTitleWordWrap?: boolean;
 };
 
 const ModalLayout = ({
@@ -28,11 +30,12 @@ const ModalLayout = ({
   onClose,
   className,
   size = 'medium',
+  enableTitleWordWrap = false,
 }: Props) => {
   return (
     <Card className={classNames(styles.container, styles[size])}>
       <div className={styles.header}>
-        <CardTitle title={title} subtitle={subtitle} />
+        <CardTitle title={title} subtitle={subtitle} enableWordWrap={enableTitleWordWrap} />
         {onClose && (
           <IconButton
             onClick={() => {

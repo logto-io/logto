@@ -59,6 +59,14 @@ const cloud = {
     discord_link: 'discord channel', // UNTRANSLATED
     enter_admin_console: 'Enter Admin Console', // UNTRANSLATED
   },
+  gift: {
+    title: 'Secure early credit for Logto SaaS join the front-runners now !', // UNTRANSLATED
+    description: 'Book a one-on-one session with our team for early credit and use case sharing.', // UNTRANSLATED
+    reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
+    reserve_description:
+      'You can also save the calendar link. We’re always available to assist you.', // UNTRANSLATED
+    book_button: 'Book', // UNTRANSLATED
+  },
 };
 
 export default cloud;

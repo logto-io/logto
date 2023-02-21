@@ -4,15 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import AirPlay from '@/assets/images/air-play.svg';
-import Calendar from '@/assets/images/calendar.svg';
 import GetStarted from '@/assets/images/get-started.svg';
 import ActionBar from '@/cloud/components/ActionBar';
+import Reservation from '@/cloud/components/Reservation';
 import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
-import { buildUrl } from '@/utils/url';
 
 import { CloudPage } from '../../types';
 import { getCloudPagePathname } from '../../utils';
@@ -49,29 +48,11 @@ const Congrats = () => {
             }}
           />
           <Divider className={styles.divider} />
-          <div className={styles.reservation}>
-            <div className={styles.reservationInfo}>
-              <Calendar className={styles.reservationIcon} />
-              <div>
-                <div className={styles.reservationTitle}>{t('cloud.congrats.reserve_title')}</div>
-                <div className={styles.reservationDescription}>
-                  {t('cloud.congrats.reserve_description')}
-                </div>
-              </div>
-            </div>
-            <Button
-              type="outline"
-              title="cloud.congrats.book_button"
-              onClick={() => {
-                const bookLink = buildUrl('https://calendly.com/logto/30min', {
-                  // Note: month format is YYYY-MM
-                  month: new Date().toISOString().slice(0, 7),
-                });
-
-                window.open(bookLink, '_blank');
-              }}
-            />
-          </div>
+          <Reservation
+            title="cloud.congrats.reserve_title"
+            description="cloud.congrats.reserve_description"
+            reservationButtonTitle="cloud.congrats.book_button"
+          />
         </div>
       </OverlayScrollbar>
       <ActionBar step={4}>
