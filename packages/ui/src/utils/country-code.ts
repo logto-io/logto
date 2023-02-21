@@ -29,10 +29,16 @@ export const getDefaultCountryCode = (): CountryCode => {
   const { language } = i18next;
 
   // Extract the country code from language tag suffix
-  const [, countryCode] = language.split('-');
+  const [languageCode, countryCode] = language.split('-');
 
   if (countryCode && isValidCountryCode(countryCode)) {
     return countryCode;
+  }
+
+  const upperCaseLanguageCode = languageCode?.toUpperCase();
+
+  if (upperCaseLanguageCode && isValidCountryCode(upperCaseLanguageCode)) {
+    return upperCaseLanguageCode;
   }
 
   return countryCallingCodeMap[language] ?? fallbackCountryCode;
