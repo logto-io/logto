@@ -15,9 +15,11 @@ import { getConstantClientMetadata } from './utils.js';
 
 const buildAdminConsoleClientMetadata = (envSet: EnvSet): AllClientMetadata => {
   const { adminUrlSet, cloudUrlSet } = EnvSet.values;
-  const urls = [...adminUrlSet.deduplicated(), ...cloudUrlSet.deduplicated()].map((url) =>
-    appendPath(url, '/console').toString()
-  );
+  const urls = [
+    ...adminUrlSet.deduplicated().map((url) => appendPath(url, '/console').toString()),
+    // Logto Cloud uses `https://some.cloud.endpoint/[tenantId]` to serve Admin Console for specific Tenant ID
+    ...cloudUrlSet.deduplicated().map((url) => appendPath(url, '/' + envSet.tenantId).toString()),
+  ];
 
   return {
     ...getConstantClientMetadata(envSet, ApplicationType.SPA),
