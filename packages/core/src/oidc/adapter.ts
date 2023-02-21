@@ -1,13 +1,13 @@
-import type { CreateApplication, OidcClientMetadata } from '@logto/schemas';
+import type { CreateApplication } from '@logto/schemas';
 import { ApplicationType, adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
-import { deduplicate } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
 import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { EnvSet, UserApps } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
+import { getTenantUrls } from '#src/env-set/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 import { appendPath } from '#src/utils/url.js';
 
@@ -28,18 +28,18 @@ const buildAdminConsoleClientMetadata = (envSet: EnvSet): AllClientMetadata => {
   };
 };
 
-const buildDemoAppUris = (
-  oidcClientMetadata: OidcClientMetadata
-): Pick<OidcClientMetadata, 'redirectUris' | 'postLogoutRedirectUris'> => {
-  const { urlSet } = EnvSet.values;
-  const urls = urlSet.deduplicated().map((url) => appendPath(url, UserApps.DemoApp).toString());
+const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
+  const urls = getTenantUrls(envSet.tenantId, EnvSet.values).map((url) =>
+    appendPath(url, '/demo-app').toString()
+  );
 
-  const data = {
-    redirectUris: deduplicate([...urls, ...oidcClientMetadata.redirectUris]),
-    postLogoutRedirectUris: deduplicate([...urls, ...oidcClientMetadata.postLogoutRedirectUris]),
+  return {
+    ...getConstantClientMetadata(envSet, ApplicationType.SPA),
+    client_id: demoAppApplicationId,
+    client_name: 'Demo App',
+    redirect_uris: urls,
+    post_logout_redirect_uris: urls,
   };
-
-  return data;
 };
 
 export default function postgresAdapter(
@@ -76,8 +76,6 @@ export default function postgresAdapter(
       client_name,
       ...getConstantClientMetadata(envSet, type),
       ...snakecaseKeys(oidcClientMetadata),
-      ...(client_id === demoAppApplicationId &&
-        snakecaseKeys(buildDemoAppUris(oidcClientMetadata))),
       // `node-oidc-provider` won't camelCase custom parameter keys, so we need to keep the keys camelCased
       ...customClientMetadata,
     });
@@ -88,6 +86,10 @@ export default function postgresAdapter(
         // Directly return client metadata since Admin Console does not belong to any tenant in the OSS version.
         if (id === adminConsoleApplicationId) {
           return buildAdminConsoleClientMetadata(envSet);
+        }
+
+        if (id === demoAppApplicationId) {
+          return buildDemoAppClientMetadata(envSet);
         }
 
         return transpileClient(

@@ -4,7 +4,6 @@ import path from 'path';
 import {
   defaultSignInExperience,
   createDefaultAdminConsoleConfig,
-  createDemoAppApplication,
   defaultTenantId,
   adminTenantId,
   defaultManagementApi,
@@ -125,8 +124,6 @@ export const seedTables = async (
   await Promise.all([
     connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),
     connection.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
-    // TODO: @gao remove demo app
-    connection.query(insertInto(createDemoAppApplication(defaultTenantId), 'applications')),
     updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
 };

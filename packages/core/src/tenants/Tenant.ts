@@ -7,7 +7,6 @@ import mount from 'koa-mount';
 import type Provider from 'oidc-provider';
 
 import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
-import koaCheckDemoApp from '#src/middleware/koa-check-demo-app.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
@@ -97,10 +96,7 @@ export default class Tenant implements TenantContext {
       app.use(
         mount(
           '/' + UserApps.DemoApp,
-          compose([
-            koaCheckDemoApp(this.queries),
-            koaSpaProxy(mountedApps, UserApps.DemoApp, 5003, UserApps.DemoApp),
-          ])
+          koaSpaProxy(mountedApps, UserApps.DemoApp, 5003, UserApps.DemoApp)
         )
       );
     }

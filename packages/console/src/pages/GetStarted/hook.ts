@@ -1,9 +1,7 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import type { Application } from '@logto/schemas';
-import { AppearanceMode, demoAppApplicationId } from '@logto/schemas';
+import { AppearanceMode } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useSWR from 'swr';
 
 import CheckDemoDark from '@/assets/images/check-demo-dark.svg';
 import CheckDemo from '@/assets/images/check-demo.svg';
@@ -19,7 +17,6 @@ import SocialDark from '@/assets/images/social-dark.svg';
 import Social from '@/assets/images/social.svg';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
-import { RequestError } from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { useTheme } from '@/hooks/use-theme';
@@ -41,21 +38,7 @@ const useGetStartedMetadata = () => {
   const { userEndpoint } = useContext(AppEndpointsContext);
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
-  const { data: demoApp, error } = useSWR<Application, RequestError>(
-    `api/applications/${demoAppApplicationId}`,
-    {
-      shouldRetryOnError: (error: unknown) => {
-        if (error instanceof RequestError) {
-          return error.status !== 404;
-        }
-
-        return true;
-      },
-    }
-  );
   const navigate = useNavigate();
-  const isLoadingDemoApp = !demoApp && !error;
-  const hideDemo = error?.status === 404;
 
   const data = useMemo(() => {
     const metadataItems: GetStartedMetadata[] = [
@@ -66,7 +49,6 @@ const useGetStartedMetadata = () => {
         icon: isLightMode ? CheckDemo : CheckDemoDark,
         buttonText: 'general.check_out',
         isComplete: configs?.demoChecked,
-        isHidden: hideDemo,
         onClick: async () => {
           void updateConfigs({ demoChecked: true });
           window.open(new URL('/demo-app', userEndpoint), '_blank');
@@ -142,7 +124,6 @@ const useGetStartedMetadata = () => {
     configs?.passwordlessConfigured,
     configs?.socialSignInConfigured,
     configs?.furtherReadingsChecked,
-    hideDemo,
     updateConfigs,
     userEndpoint,
     navigate,
@@ -153,7 +134,7 @@ const useGetStartedMetadata = () => {
     data,
     completedCount: data.filter(({ isComplete }) => isComplete).length,
     totalCount: data.length,
-    isLoading: isLoadingDemoApp,
+    isLoading: false,
   };
 };
 

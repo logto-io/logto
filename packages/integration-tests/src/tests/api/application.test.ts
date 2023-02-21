@@ -1,4 +1,4 @@
-import { ApplicationType, demoAppApplicationId } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import {
@@ -9,12 +9,6 @@ import {
 } from '#src/api/index.js';
 
 describe('admin console application', () => {
-  it('should get demo app details successfully', async () => {
-    const demoApp = await getApplication(demoAppApplicationId);
-
-    expect(demoApp.id).toBe(demoAppApplicationId);
-  });
-
   it('should create application successfully', async () => {
     const applicationName = 'test-create-app';
     const applicationType = ApplicationType.SPA;
