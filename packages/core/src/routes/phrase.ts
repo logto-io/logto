@@ -55,8 +55,6 @@ export default function phraseRoutes<T extends AnonymousRouter>(
           (tag) => isBuiltInLanguageTag(tag) || customLanguages.includes(tag)
         ) ?? 'en';
 
-      console.log(language);
-
       ctx.set('Content-Language', language);
       ctx.body = await getPhrases(language, customLanguages);
 
