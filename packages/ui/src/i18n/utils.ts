@@ -8,10 +8,18 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { getPhrases } from '@/apis/settings';
 
 export const getI18nResource = async (
-  locale?: string | string[]
+  language?: string
 ): Promise<{ resources: Resource; lng: string }> => {
+  const detectedLanguage = detectLanguage();
+
   try {
-    const response = await getPhrases(Array.isArray(locale) ? locale.join(' ') : locale);
+    const response = await getPhrases({
+      localLanguage: Array.isArray(detectedLanguage)
+        ? detectedLanguage.join(' ')
+        : detectedLanguage,
+      language,
+    });
+
     const phrases = await response.json<LocalePhrase>();
     const lng = response.headers.get('Content-Language');
 
@@ -53,8 +61,8 @@ export const detectLanguage = (languageSettings?: LanguageInfo) => {
 };
 
 // Must be called after i18n's initialization
-export const changeLanguage = async (targetLanguage: string) => {
-  const { resources, lng } = await getI18nResource(targetLanguage);
+export const changeLanguage = async (language: string) => {
+  const { resources, lng } = await getI18nResource(language);
 
   for (const [namespace, resource] of Object.entries(resources[lng] ?? {})) {
     i18next.addResourceBundle(lng, namespace, resource);

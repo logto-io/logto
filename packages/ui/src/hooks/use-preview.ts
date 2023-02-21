@@ -23,12 +23,12 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     }
 
     // Init i18n
-    void initI18n();
+    const i18nInit = initI18n();
 
     // Block pointer event
     document.body.classList.add(conditionalString(styles.preview));
 
-    const previewMessageHandler = (event: MessageEvent) => {
+    const previewMessageHandler = async (event: MessageEvent) => {
       // TODO: @simeng: we can check allowed origins via `/.well-known/endpoints`
       // if (event.origin !== window.location.origin) {
       //   return;
@@ -36,6 +36,8 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
 
       if (event.data.sender === 'ac_preview') {
         // #event.data should be guarded at the provider's side
+        await i18nInit;
+
         // eslint-disable-next-line no-restricted-syntax
         setPreviewConfig(event.data.config as PreviewConfig);
       }
@@ -78,11 +80,19 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
 
       setPlatform(platform);
 
-      await changeLanguage(language);
-
       setExperienceSettings(experienceSettings);
     })();
   }, [isPreview, previewConfig, setExperienceSettings, setPlatform, setTheme]);
+
+  useEffect(() => {
+    if (!isPreview || !previewConfig?.language) {
+      return;
+    }
+
+    (async () => {
+      await changeLanguage(previewConfig.language);
+    })();
+  }, [previewConfig?.language, isPreview]);
 
   return [isPreview, previewConfig];
 };

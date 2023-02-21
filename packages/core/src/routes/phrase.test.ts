@@ -163,4 +163,16 @@ describe('when the application is not admin-console', () => {
     expect(getPhrases).toBeCalledTimes(1);
     expect(getPhrases).toBeCalledWith(customizedLanguage, [customizedLanguage]);
   });
+
+  it('should call getPhrases with specific language is provided in params', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      languageInfo: {
+        autoDetect: true,
+        fallbackLanguage: customizedLanguage,
+      },
+    });
+    await expect(phraseRequest.get('/phrase?lng=fr')).resolves.toHaveProperty('status', 200);
+    expect(getPhrases).toBeCalledWith('fr', [customizedLanguage]);
+  });
 });
