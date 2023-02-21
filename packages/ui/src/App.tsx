@@ -1,5 +1,5 @@
 import { SignInMode } from '@logto/schemas';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 
 import AppBoundary from './containers/AppBoundary';
@@ -29,7 +29,12 @@ import './scss/normalized.scss';
 const App = () => {
   const { context, Provider } = usePageContext();
   const { experienceSettings, setLoading, setExperienceSettings } = context;
+  const customCssRef = useRef(document.createElement('style'));
   const [isPreview] = usePreview(context);
+
+  useEffect(() => {
+    document.head.append(customCssRef.current);
+  }, []);
 
   useEffect(() => {
     if (isPreview) {
@@ -38,6 +43,8 @@ const App = () => {
 
     (async () => {
       const settings = await getSignInExperienceSettings();
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      customCssRef.current.textContent = settings.customCss;
 
       // Note: i18n must be initialized ahead of page render
       await initI18n(settings.languageInfo);
