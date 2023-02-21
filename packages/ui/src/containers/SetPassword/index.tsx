@@ -80,7 +80,7 @@ const SetPassword = ({
           required: t('error.password_required'),
           minLength: {
             value: 6,
-            message: t('error.password_min_length', { length: 6 }),
+            message: t('error.password_min_length', { min: 6 }),
           },
         })}
         isSuffixFocusVisible={!!watch('newPassword')}
