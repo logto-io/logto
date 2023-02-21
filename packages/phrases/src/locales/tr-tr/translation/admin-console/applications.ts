@@ -1,7 +1,7 @@
 const applications = {
   title: 'Uygulamalar',
   subtitle:
-    'Kimlik doğrulaması için Logtoyu kullanmak üzere mobil, tek sayfa veya geleneksel bir uygulama ayarlayınız',
+    'Kimlik doğrulaması için Logtoyu kullanmak üzere mobil, tek sayfa, machine to machine veya geleneksel bir uygulama ayarlayınız',
   create: 'Uygulama oluştur',
   application_name: 'Uygulama adı',
   application_name_placeholder: 'Uygulamam',

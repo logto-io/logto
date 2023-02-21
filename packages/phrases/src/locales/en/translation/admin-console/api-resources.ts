@@ -1,6 +1,6 @@
 const api_resources = {
   title: 'API Resources',
-  subtitle: 'Define APIs that you can consume from your authorized applications',
+  subtitle: 'Define APIs that your authorized applications can utilize',
   create: 'Create API Resource',
   api_name: 'API name',
   api_name_placeholder: 'Enter your API name',

@@ -10,7 +10,7 @@ const get_started = {
   card1_subtitle: 'Try Logto sign-in experience now to see how it works',
   card2_title: 'Create and integrate the first application',
   card2_subtitle:
-    'Set up a mobile, single page or traditional application to use Logto for authentication',
+    'Set up Logto authentication for your native, single page, M2M, or traditional application',
   card3_title: 'Customize sign-in experience',
   card3_subtitle: 'Customize the sign in UI to match your brand and view in real time',
   card4_title: 'Set up SMS and email connector',
