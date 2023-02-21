@@ -108,6 +108,9 @@ const translation = {
     unknown: 'Bilinmeyen hata. Lütfen daha sonra tekrar deneyiniz.',
     invalid_session: 'Oturum bulunamadı. Lütfen geri dönüp tekrar giriş yapınız.',
   },
+  demo_app: {
+    notification: 'Demo uygulamaya giriş yapmak için yönetici konsolunu kullanınız.',
+  },
 };
 
 const trTR: LocalePhrase = Object.freeze({

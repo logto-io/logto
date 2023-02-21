@@ -1,5 +1,4 @@
 import { isBuiltInLanguageTag } from '@logto/phrases-ui';
-import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import detectLanguage from '#src/i18n/detect-language.js';
@@ -17,10 +16,6 @@ export default function phraseRoutes<T extends AnonymousRouter>(
   const { getPhrases } = libraries.phrases;
 
   const getLanguageInfo = async (applicationId: unknown) => {
-    if (applicationId === adminConsoleApplicationId) {
-      return adminConsoleSignInExperience.languageInfo;
-    }
-
     const { languageInfo } = await findDefaultSignInExperience();
 
     return languageInfo;

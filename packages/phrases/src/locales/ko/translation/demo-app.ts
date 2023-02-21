@@ -1,5 +1,4 @@
 const demo_app = {
-  notification: '체험 App에 로그인 하기 위해 관리자 정보 또는 게정을 새로 생성하여 로그인해보세요.',
   title: '성공적으로 체험 App에 로그인되었어요!',
   subtitle: '여기 로그인 정보가 있어요:',
   username: '사용자 이름: ',

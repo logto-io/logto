@@ -108,6 +108,10 @@ const translation = {
     unknown: 'Erro desconhecido. Por favor, tente novamente mais tarde.',
     invalid_session: 'Sessão não encontrada. Volte e faça login novamente.',
   },
+  demo_app: {
+    notification:
+      'Use a sua conta de administrador padrão ou crie uma nova conta para entrar na app de demonstração.',
+  },
 };
 
 const ptPT: LocalePhrase = Object.freeze({

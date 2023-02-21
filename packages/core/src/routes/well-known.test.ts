@@ -1,8 +1,3 @@
-import {
-  SignInMode,
-  adminConsoleApplicationId,
-  adminConsoleSignInExperience,
-} from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import {
@@ -98,28 +93,6 @@ describe('GET /.well-known/sign-in-exp', () => {
           id: mockWechatNativeConnector.dbEntry.id,
         },
       ],
-    });
-  });
-
-  it('should return admin console settings', async () => {
-    jest
-      .spyOn(provider, 'interactionDetails')
-      // @ts-expect-error
-      .mockResolvedValue({ params: { client_id: adminConsoleApplicationId } });
-    const response = await sessionRequest.get('/.well-known/sign-in-exp');
-    expect(response.status).toEqual(200);
-
-    expect(response.body).toMatchObject({
-      ...adminConsoleSignInExperience,
-      tenantId: 'admin',
-      branding: {
-        ...adminConsoleSignInExperience.branding,
-        slogan: 'admin_console.welcome.title',
-      },
-      termsOfUseUrl: null,
-      languageInfo: mockSignInExperience.languageInfo,
-      socialConnectors: [],
-      signInMode: SignInMode.SignIn,
     });
   });
 });

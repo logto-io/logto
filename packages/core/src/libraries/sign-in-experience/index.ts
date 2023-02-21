@@ -1,14 +1,6 @@
 import { builtInLanguages } from '@logto/phrases-ui';
 import type { Branding, LanguageInfo, SignInExperience } from '@logto/schemas';
-import {
-  adminTenantId,
-  SignInMode,
-  ConnectorType,
-  BrandingStyle,
-  adminConsoleApplicationId,
-  adminConsoleSignInExperience,
-  demoAppApplicationId,
-} from '@logto/schemas';
+import { ConnectorType, BrandingStyle } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
 import i18next from 'i18next';
 
@@ -69,49 +61,20 @@ export const createSignInExperienceLibrary = (
     });
   };
 
-  const getSignInExperienceForApplication = async (
-    applicationId?: string
-  ): Promise<SignInExperience & { notification?: string }> => {
-    // Hard code Admin Console sign-in methods settings.
-    if (applicationId === adminConsoleApplicationId) {
-      return {
-        ...adminConsoleSignInExperience,
-        tenantId: adminTenantId,
-        branding: {
-          ...adminConsoleSignInExperience.branding,
-          slogan: i18next.t('admin_console.welcome.title'),
-        },
-        termsOfUseUrl: null,
-        languageInfo: {
-          autoDetect: true,
-          fallbackLanguage: 'en',
-        },
-        signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
-        socialSignInConnectorTargets: [],
-      };
-    }
+  const getSignInExperience = async (): Promise<SignInExperience> => {
+    const raw = await findDefaultSignInExperience();
+    const { branding } = raw;
 
-    const signInExperience = await findDefaultSignInExperience();
-
-    // Insert Demo App Notification
-    if (applicationId === demoAppApplicationId) {
-      const { socialSignInConnectorTargets } = signInExperience;
-
-      const notification = i18next.t('demo_app.notification');
-
-      return {
-        ...signInExperience,
-        socialSignInConnectorTargets,
-        notification,
-      };
-    }
-
-    return signInExperience;
+    // Alter sign-in experience dynamic configs
+    return Object.freeze({
+      ...raw,
+      branding: { ...branding, slogan: branding.slogan && i18next.t(branding.slogan) },
+    });
   };
 
   return {
     validateLanguageInfo,
     removeUnavailableSocialConnectorTargets,
-    getSignInExperienceForApplication,
+    getSignInExperience,
   };
 };

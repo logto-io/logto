@@ -1,6 +1,4 @@
 const demo_app = {
-  notification:
-    'Nutze dein existierendes Admin Konto oder erstelle ein neues Konto um dich in die Demo App einzuloggen.',
   title: 'Du hast dich erfolgreich in der Demo App angemeldet!',
   subtitle: 'Here is your log in information:',
   username: 'Benutzername: ',

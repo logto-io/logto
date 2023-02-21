@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import type { CSSProperties, ForwardedRef } from 'react';
+import type { CSSProperties, ForwardedRef, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import InfoIcon from '@/assets/icons/info-icon.svg';
@@ -10,7 +10,7 @@ import * as styles from './index.module.scss';
 /* eslint-disable react/require-default-props */
 type Props = {
   className?: string;
-  message: string;
+  message: ReactNode;
   onClose: () => void;
   style?: CSSProperties;
 };

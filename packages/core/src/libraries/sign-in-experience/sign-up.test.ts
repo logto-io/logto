@@ -9,10 +9,6 @@ const { mockEsmWithActual } = createMockUtils(jest);
 
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 
-await mockEsmWithActual('#src/libraries/session.js', () => ({
-  getApplicationIdFromInteraction: jest.fn(),
-}));
-
 const { validateSignUp } = await import('./sign-up.js');
 
 describe('validate sign-up', () => {

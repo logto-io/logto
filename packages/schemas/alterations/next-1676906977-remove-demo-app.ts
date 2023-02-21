@@ -5,8 +5,6 @@ import { sql } from 'slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 
-const defaultTenantId = 'default';
-
 const alteration: AlterationScript = {
   up: async (pool) => {
     const isCi = process.env.CI;
@@ -44,7 +42,7 @@ const alteration: AlterationScript = {
           'Logto demo app.',
           'SPA',
           '{ "redirectUris": [], "postLogoutRedirectUris": [] }'::jsonb
-        )
+        );
     `);
   },
 };

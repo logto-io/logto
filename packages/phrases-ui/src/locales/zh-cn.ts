@@ -104,6 +104,10 @@ const translation = {
     unknown: '未知错误，请稍后重试。',
     invalid_session: '未找到会话，请返回并重新登录。',
   },
+  demo_app: {
+    notification:
+      '管理控制台的用户名和密码是 demo app 的默认登录方式。点击下方创建账号或用现有账号登录。',
+  },
 };
 
 const zhCN: LocalePhrase = Object.freeze({

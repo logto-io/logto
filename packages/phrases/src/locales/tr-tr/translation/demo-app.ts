@@ -1,5 +1,4 @@
 const demo_app = {
-  notification: 'Demo uygulamaya giriş yapmak için yönetici konsolunu kullanınız.',
   title: 'Demo uygulamaya başarıyla giriş yaptınız!',
   subtitle: 'Sisteme giriş bilgileriniz:',
   username: 'Kullanıcı Adı: ',

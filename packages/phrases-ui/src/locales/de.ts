@@ -112,6 +112,10 @@ const translation = {
     unknown: 'Unbekannter Fehler. Versuche es später noch einmal.',
     invalid_session: 'Die Sitzung ist ungültig. Bitte melde dich erneut an.',
   },
+  demo_app: {
+    notification:
+      'Nutze dein existierendes Admin Konto oder erstelle ein neues Konto um dich in die Demo App einzuloggen.',
+  },
 };
 
 const de: LocalePhrase = Object.freeze({

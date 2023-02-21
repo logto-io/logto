@@ -1,6 +1,5 @@
 import zhCN from '@logto/phrases-ui/lib/locales/zh-cn.js';
 import type { CustomPhrase, SignInExperience } from '@logto/schemas';
-import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
@@ -57,46 +56,6 @@ const { createRequester } = await import('#src/utils/test-utils.js');
 const phraseRequest = createRequester({
   anonymousRoutes: phraseRoutes,
   tenantContext,
-});
-
-describe('when the application is admin-console', () => {
-  beforeEach(() => {
-    interactionDetails.mockResolvedValueOnce({
-      params: { client_id: adminConsoleApplicationId },
-    });
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should call interactionDetails', async () => {
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
-    expect(interactionDetails).toBeCalledTimes(1);
-  });
-
-  it('should not call findDefaultSignInExperience', async () => {
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
-    expect(findDefaultSignInExperience).not.toBeCalled();
-  });
-
-  it('should call detectLanguage', async () => {
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
-    expect(detectLanguageSpy).toBeCalledTimes(1);
-  });
-
-  it('should call findAllCustomLanguageTags', async () => {
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
-    expect(findAllCustomLanguageTags).toBeCalledTimes(1);
-  });
-
-  it('should call getPhrases with fallback language from Admin Console sign-in experience', async () => {
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
-    expect(getPhrases).toBeCalledTimes(1);
-    expect(getPhrases).toBeCalledWith(adminConsoleSignInExperience.languageInfo.fallbackLanguage, [
-      customizedLanguage,
-    ]);
-  });
 });
 
 describe('when the application is not admin-console', () => {
