@@ -8,7 +8,10 @@ import type {
 import { matchPathname } from '#src/utils/url.js';
 
 /**
- * Build a middleware function that conditionally runs the given middleware function based on pathname prefix.
+ * Build a middleware function that conditionally runs the given middleware function when:
+ *
+ * - The current pathname matches the given pathname prefix; and
+ * - `context.status` is unset (i.e. `undefined`).
  *
  * @param pathname The pathname prefix to match.
  * @param run The middleware function to run with the prefix matches.
@@ -22,7 +25,7 @@ export default function withPathname<
     next: NextFunction<InputContext | OutputContext>,
     httpContext: HttpContext
   ) => {
-    if (!matchPathname(pathname, context.request.url.pathname)) {
+    if (context.status ?? !matchPathname(pathname, context.request.url.pathname)) {
       return next(context);
     }
 
