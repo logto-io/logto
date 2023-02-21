@@ -96,7 +96,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         }}
         render={({ field }) => (
           <SmartInputField
-            autoComplete="identifier"
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}

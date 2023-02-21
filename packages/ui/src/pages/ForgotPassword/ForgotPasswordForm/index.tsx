@@ -102,7 +102,6 @@ const ForgotPasswordForm = ({
         }}
         render={({ field }) => (
           <SmartInputField
-            autoComplete="identifier"
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
