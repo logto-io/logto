@@ -1,12 +1,20 @@
-<p align="right">
-  <a href="https://www.producthunt.com/posts/logto?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-logto" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=352638&theme=neutral" alt="Logto | Product Hunt" width="200" /></a>
-</p>
-
 <p align="center">
   <a href="https://logto.io" target="_blank" align="center" alt="Logto Logo">
     <img src="./logo.png" height="100">
   </a>
 </p>
+
+---
+
+<p align="center">
+Logto is going to lauch Cloud (Preview) and OSS General Availabilty on <a href="https://www.producthunt.com/products/logto" target="_blank">Product Hunt!</a><br/>
+Click the “Notify me” button on the page in order to receive a notification when our launch is live.
+</p>
+<p align="center">
+😊 See you on the cloud!
+</p>
+
+---
 
 [![discord](https://img.shields.io/discord/965845662535147551?color=5865f2&label=discord)](https://discord.gg/vRvwuwgpVX)
 [![checks](https://img.shields.io/github/checks-status/logto-io/logto/master)](https://github.com/logto-io/logto/actions?query=branch%3Amaster)
@@ -99,8 +107,8 @@ We have a [contributing guideline](https://github.com/logto-io/logto/blob/master
 
 ## Resources
 
-- [📖 Logto docs](https://docs.logto.io)
-- ✍️ Silverhand blog [Notion](https://silverhand.notion.site/Silverhand-Blog-68e122832cfb413ca8786e08152d00ac) [Substack](https://silverhand.substack.com/)
+- [📖 Logto docs](https://docs.logto.io?utm_source=github)
+- [✍️ Silverhand blog](https://docs.logto.io/blog?utm_source=github)
 
 <br/>
 
