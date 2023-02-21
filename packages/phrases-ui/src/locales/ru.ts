@@ -111,6 +111,10 @@ const translation = {
     unknown: 'Неизвестная ошибка. Пожалуйста, повторите попытку позднее.',
     invalid_session: 'Сессия не найдена. Пожалуйста, войдите снова.',
   },
+  demo_app: {
+    notification:
+      'Nutze dein existierendes Admin Konto oder erstelle ein neues Konto um dich in die Demo App einzuloggen.',
+  },
 };
 
 const ru: LocalePhrase = Object.freeze({

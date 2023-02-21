@@ -3,7 +3,7 @@ import { generateDarkColor } from '@logto/core-kit';
 import type { SignInExperience } from '../db-entries/index.js';
 import { SignInMode } from '../db-entries/index.js';
 import { BrandingStyle, SignInIdentifier } from '../foundations/index.js';
-import { defaultTenantId } from './tenant.js';
+import { adminTenantId, defaultTenantId } from './tenant.js';
 
 const defaultPrimaryColor = '#6139F6';
 
@@ -49,16 +49,19 @@ export const createDefaultSignInExperience = (forTenantId: string): Readonly<Sig
 /** @deprecated Use `createDefaultSignInExperience()` instead. */
 export const defaultSignInExperience = createDefaultSignInExperience(defaultTenantId);
 
-export const adminConsoleSignInExperience: Readonly<SignInExperience> = Object.freeze({
-  ...defaultSignInExperience,
-  color: {
-    ...defaultSignInExperience.color,
-    isDarkModeEnabled: true,
-  },
-  branding: {
-    style: BrandingStyle.Logo_Slogan,
-    logoUrl: 'https://logto.io/logo.svg',
-    darkLogoUrl: 'https://logto.io/logo-dark.svg',
-    slogan: 'admin_console.welcome.title', // TODO: @simeng should we programmatically support an i18n key for slogan?
-  },
-});
+export const createAdminTenantSignInExperience = (): Readonly<SignInExperience> =>
+  Object.freeze({
+    ...defaultSignInExperience,
+    tenantId: adminTenantId,
+    color: {
+      ...defaultSignInExperience.color,
+      isDarkModeEnabled: true,
+    },
+    signInMode: SignInMode.Register,
+    branding: {
+      style: BrandingStyle.Logo_Slogan,
+      logoUrl: 'https://logto.io/logo.svg',
+      darkLogoUrl: 'https://logto.io/logo-dark.svg',
+      slogan: 'admin_console.welcome.title',
+    },
+  });

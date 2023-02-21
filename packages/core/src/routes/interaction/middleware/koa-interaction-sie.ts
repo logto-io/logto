@@ -1,5 +1,4 @@
 import type { SignInExperience } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 
 import type { SignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
@@ -11,21 +10,14 @@ export type WithInteractionSieContext<ContextT> = WithInteractionDetailsContext<
 };
 
 export default function koaInteractionSie<StateT, ContextT, ResponseT>({
-  getSignInExperienceForApplication,
+  getSignInExperience,
 }: SignInExperienceLibrary): MiddlewareType<
   StateT,
   WithInteractionSieContext<ContextT>,
   ResponseT
 > {
   return async (ctx, next) => {
-    const { interactionDetails } = ctx;
-
-    const signInExperience = await getSignInExperienceForApplication(
-      conditional(
-        typeof interactionDetails.params.client_id === 'string' &&
-          interactionDetails.params.client_id
-      )
-    );
+    const signInExperience = await getSignInExperience();
 
     ctx.signInExperience = signInExperience;
 

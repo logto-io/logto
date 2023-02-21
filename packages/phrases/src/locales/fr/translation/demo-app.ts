@@ -1,6 +1,4 @@
 const demo_app = {
-  notification:
-    'Utilisez votre compte administrateur par défaut ou créez un nouveau compte pour vous connecter à la démo.',
   title: 'Vous avez réussi à vous connecter à la démo !',
   subtitle: 'Voici vos informations de connexion :',
   username: "Nom d'utilisateur : ",

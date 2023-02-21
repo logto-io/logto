@@ -3,7 +3,7 @@
 import { readFileSync } from 'fs';
 
 import { userClaims } from '@logto/core-kit';
-import { CustomClientMetadataKey } from '@logto/schemas';
+import { CustomClientMetadataKey, demoAppApplicationId } from '@logto/schemas';
 import Provider, { errors, ResourceServer } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -129,9 +129,16 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
     },
     interactions: {
       url: (_, interaction) => {
+        const appendParameters = (path: string) => {
+          // `notification` is for showing a text banner on the homepage
+          return interaction.params.client_id === demoAppApplicationId
+            ? path + `?notification=demo_app.notification`
+            : path;
+        };
+
         switch (interaction.prompt.name) {
           case 'login': {
-            return routes.signIn.credentials;
+            return appendParameters(routes.signIn.credentials);
           }
 
           case 'consent': {

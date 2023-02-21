@@ -117,7 +117,7 @@ const tenantContext = new MockTenant(
       },
     },
     signInExperiences: {
-      getSignInExperienceForApplication: jest.fn().mockResolvedValue(mockSignInExperience),
+      getSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
     },
   }
 );

@@ -106,6 +106,10 @@ const translation = {
     unknown: '알 수 없는 오류가 발생했어요. 잠시 후에 시도해 주세요.',
     invalid_session: '세션을 찾을 수 없어요. 다시 로그인해 주세요.',
   },
+  demo_app: {
+    notification:
+      '체험 App에 로그인 하기 위해 관리자 정보 또는 게정을 새로 생성하여 로그인해보세요.',
+  },
 };
 
 const ko: LocalePhrase = Object.freeze({

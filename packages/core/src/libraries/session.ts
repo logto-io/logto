@@ -1,7 +1,6 @@
 import type { Context } from 'koa';
 import type { InteractionResults } from 'oidc-provider';
 import type Provider from 'oidc-provider';
-import { errors } from 'oidc-provider';
 
 import type Queries from '#src/tenants/Queries.js';
 
@@ -44,28 +43,4 @@ export const saveUserFirstConsentedAppId = async (
     // Save application id that the user first consented
     await updateUserById(userId, { applicationId });
   }
-};
-
-export const getApplicationIdFromInteraction = async (
-  ctx: Context,
-  provider: Provider
-): Promise<string | undefined> => {
-  const interaction = await provider
-    .interactionDetails(ctx.req, ctx.res)
-    .catch((error: unknown) => {
-      // Should not block if interaction is not found
-      if (error instanceof errors.SessionNotFound) {
-        return null;
-      }
-
-      throw error;
-    });
-
-  if (!interaction?.params) {
-    return;
-  }
-
-  return typeof interaction.params.client_id === 'string'
-    ? interaction.params.client_id
-    : undefined;
 };

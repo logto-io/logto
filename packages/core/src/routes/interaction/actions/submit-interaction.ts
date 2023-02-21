@@ -1,5 +1,6 @@
 import type { User, Profile } from '@logto/schemas';
 import {
+  SignInMode,
   UserRole,
   getManagementApiAdminName,
   defaultTenantId,
@@ -151,6 +152,7 @@ export default async function submitInteraction(
   log?: LogEntry
 ) {
   const { hasActiveUsers, findUserById, updateUserById } = queries.users;
+  const { updateDefaultSignInExperience } = queries.signInExperiences;
 
   const {
     users: { generateUserId, insertUser },
@@ -164,7 +166,7 @@ export default async function submitInteraction(
 
     const { client_id } = ctx.interactionDetails.params;
 
-    const createAdminUser =
+    const isCreatingFirstAdminUser =
       getTenantId(ctx.URL) === adminTenantId &&
       String(client_id) === adminConsoleApplicationId &&
       !(await hasActiveUsers());
@@ -174,8 +176,14 @@ export default async function submitInteraction(
         id,
         ...upsertProfile,
       },
-      createAdminUser ? [UserRole.User, getManagementApiAdminName(defaultTenantId)] : []
+      isCreatingFirstAdminUser ? [UserRole.User, getManagementApiAdminName(defaultTenantId)] : []
     );
+
+    // In OSS, we need to limit sign-in experience to "sign-in only" once
+    // the first admin has been create since we don't want other unexpected registrations
+    if (isCreatingFirstAdminUser) {
+      await updateDefaultSignInExperience({ signInMode: SignInMode.SignIn });
+    }
 
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 

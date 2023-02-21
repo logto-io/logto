@@ -113,6 +113,10 @@ const translation = {
     invalid_session:
       'Session non trouvée. Veuillez revenir en arrière et vous connecter à nouveau.',
   },
+  demo_app: {
+    notification:
+      'Utilisez votre compte administrateur par défaut ou créez un nouveau compte pour vous connecter à la démo.',
+  },
 };
 
 const fr: LocalePhrase = Object.freeze({

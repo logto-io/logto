@@ -107,6 +107,10 @@ const translation = {
     unknown: 'Unknown error. Please try again later.',
     invalid_session: 'Session not found. Please go back and sign in again.',
   },
+  demo_app: {
+    notification:
+      'Use your default admin account or create a new account to sign in to the demo app.',
+  },
 };
 
 const en = Object.freeze({

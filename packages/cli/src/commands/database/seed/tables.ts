@@ -2,13 +2,14 @@ import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
 import {
-  defaultSignInExperience,
   createDefaultAdminConsoleConfig,
   defaultTenantId,
   adminTenantId,
   defaultManagementApi,
   createAdminDataInAdminTenant,
   createMeApiInAdminTenant,
+  createDefaultSignInExperience,
+  createAdminTenantSignInExperience,
 } from '@logto/schemas';
 import { Hooks, Tenants } from '@logto/schemas/models';
 import type { DatabaseTransactionConnection } from 'slonik';
@@ -123,7 +124,10 @@ export const seedTables = async (
 
   await Promise.all([
     connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),
-    connection.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
+    connection.query(
+      insertInto(createDefaultSignInExperience(defaultTenantId), 'sign_in_experiences')
+    ),
+    connection.query(insertInto(createAdminTenantSignInExperience(), 'sign_in_experiences')),
     updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
 };

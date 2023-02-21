@@ -1,19 +1,18 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
-import { adminConsoleApplicationId, adminTenantId } from '@logto/schemas';
+import { adminTenantId } from '@logto/schemas';
 import etag from 'etag';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { getApplicationIdFromInteraction } from '#src/libraries/session.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(
-  ...[router, { provider, libraries, id }]: RouterInitArgs<T>
+  ...[router, { libraries, id }]: RouterInitArgs<T>
 ) {
   const {
-    signInExperiences: { getSignInExperienceForApplication },
+    signInExperiences: { getSignInExperience },
     connectors: { getLogtoConnectors },
   } = libraries;
 
@@ -34,10 +33,8 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
   router.get(
     '/.well-known/sign-in-exp',
     async (ctx, next) => {
-      const applicationId = await getApplicationIdFromInteraction(ctx, provider);
-
       const [signInExperience, logtoConnectors] = await Promise.all([
-        getSignInExperienceForApplication(applicationId),
+        getSignInExperience(),
         getLogtoConnectors(),
       ]);
 
@@ -46,21 +43,18 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
         email: logtoConnectors.some(({ type }) => type === ConnectorType.Email),
       };
 
-      const socialConnectors =
-        applicationId === adminConsoleApplicationId
-          ? []
-          : signInExperience.socialSignInConnectorTargets.reduce<
-              Array<ConnectorMetadata & { id: string }>
-            >((previous, connectorTarget) => {
-              const connectors = logtoConnectors.filter(
-                ({ metadata: { target } }) => target === connectorTarget
-              );
+      const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
+        Array<ConnectorMetadata & { id: string }>
+      >((previous, connectorTarget) => {
+        const connectors = logtoConnectors.filter(
+          ({ metadata: { target } }) => target === connectorTarget
+        );
 
-              return [
-                ...previous,
-                ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
-              ];
-            }, []);
+        return [
+          ...previous,
+          ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
+        ];
+      }, []);
 
       ctx.body = {
         ...signInExperience,

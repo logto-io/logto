@@ -1,6 +1,4 @@
 const demo_app = {
-  notification:
-    'Use sua conta de administrador padrão ou crie uma nova conta para entrar no aplicativo de demonstração.',
   title: 'Você se inscreveu com sucesso no aplicativo de demonstração!',
   subtitle: 'Aqui estão suas informações de login:',
   username: 'Nome de usuário: ',
