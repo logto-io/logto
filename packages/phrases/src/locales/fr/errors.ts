@@ -118,6 +118,8 @@ const errors = {
       "Impossible d'obtenir le jeton d'accès, veuillez vérifier le code d'autorisation.",
     more_than_one_sms: 'Le nombre de connecteurs SMS est supérieur à 1.',
     more_than_one_email: 'Le nombre de connecteurs Email est supérieur à 1.',
+    more_than_one_connector_factory:
+      'Found multiple connector factories (with id {{connectorIds}}), you may uninstall unnecessary ones.', // UNTRANSLATED
     db_connector_type_mismatch:
       'Il y a un connecteur dans la base de donnée qui ne correspond pas au type.',
     not_found_with_connector_id: 'Can not find connector with given standard connector id.', // UNTRANSLATED

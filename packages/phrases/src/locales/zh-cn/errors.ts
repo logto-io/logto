@@ -105,6 +105,7 @@ const errors = {
     social_auth_code_invalid: '无法获取 access_token，请检查授权 code 是否有效',
     more_than_one_sms: '同时存在超过 1 个短信连接器',
     more_than_one_email: '同时存在超过 1 个邮件连接器',
+    more_than_one_connector_factory: '找到多个连接器工厂（id 为 {{connectorIds}}），请删除多余项。',
     db_connector_type_mismatch: '数据库中存在一个类型不匹配的连接。',
     not_found_with_connector_id: '找不到所给 connector id 对应的连接器',
     multiple_instances_not_supported: '你选择的连接器不支持创建多实例。',

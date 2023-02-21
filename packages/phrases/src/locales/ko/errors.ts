@@ -109,6 +109,8 @@ const errors = {
     social_auth_code_invalid: 'Access 토큰을 가져올 수 없어요. Authorization 코드를 확인해 주세요.',
     more_than_one_sms: 'SMS 서비스는 1개만 연동되어야 해요.',
     more_than_one_email: '이메일 서비스는 1개만 연동되어야 해요.',
+    more_than_one_connector_factory:
+      'Found multiple connector factories (with id {{connectorIds}}), you may uninstall unnecessary ones.', // UNTRANSLATED
     db_connector_type_mismatch: '종류가 일치하지 않은 연동 서비스가 DB에 존재해요.',
     not_found_with_connector_id: '주어진 연동 ID로 연동 설정을 찾을 수 없어요.',
     multiple_instances_not_supported: '선택된 연동 기준으로 여러 인스턴스를 생성할 수 없어요.',

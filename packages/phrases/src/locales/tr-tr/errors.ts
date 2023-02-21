@@ -113,6 +113,8 @@ const errors = {
     social_auth_code_invalid: 'Erişim tokenı alınamıyor, lütfen yetkilendirme kodunu kontrol edin.',
     more_than_one_sms: 'SMS bağlayıcılarının sayısı 1den fazla.',
     more_than_one_email: 'E-posta adresi bağlayıcılarının sayısı 1den fazla.',
+    more_than_one_connector_factory:
+      'Found multiple connector factories (with id {{connectorIds}}), you may uninstall unnecessary ones.', // UNTRANSLATED
     db_connector_type_mismatch: 'Dbde türle eşleşmeyen bir bağlayıcı var.',
     not_found_with_connector_id: 'Can not find connector with given standard connector id.', // UNTRANSLATED
     multiple_instances_not_supported:
