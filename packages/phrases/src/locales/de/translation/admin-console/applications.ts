@@ -1,7 +1,7 @@
 const applications = {
   title: 'Anwendungen',
   subtitle:
-    'Richte eine native, Single Page oder herkömmliche Anwendung ein, die Logto zur Authentifizierung nutzt.',
+    'Richte eine native, single page, machine to machine oder herkömmliche Anwendung ein, die Logto zur Authentifizierung nutzt.',
   create: 'Anwendung erstellen',
   application_name: 'Anwendungsname',
   application_name_placeholder: 'Meine App',

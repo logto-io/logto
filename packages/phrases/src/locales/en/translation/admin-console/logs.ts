@@ -1,6 +1,6 @@
 const logs = {
   title: 'Audit Logs',
-  subtitle: 'View log data of authentication events made by your admin and users',
+  subtitle: 'View log data of authentication events made by your users',
   event: 'Event',
   user: 'User',
   application: 'Application',
