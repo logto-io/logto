@@ -62,11 +62,11 @@ const SmartInputField = (
 
   return (
     <InputField
+      {...getInputHtmlProps(enabledTypes, identifierType)}
       {...rest}
       ref={innerRef}
       isSuffixFocusVisible={Boolean(inputValue)}
       isPrefixVisible={identifierType === SignInIdentifier.Phone}
-      {...getInputHtmlProps(enabledTypes, identifierType)}
       value={inputValue}
       prefix={conditional(
         isPhoneEnabled && (

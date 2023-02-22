@@ -10,12 +10,16 @@ import type { IdentifierInputType } from './use-smart-input-field';
 export const getInputHtmlProps = (
   enabledTypes: IdentifierInputType[],
   currentType?: IdentifierInputType
-): Pick<HTMLProps<HTMLInputElement>, 'type' | 'pattern' | 'inputMode' | 'placeholder'> => {
+): Pick<
+  HTMLProps<HTMLInputElement>,
+  'type' | 'pattern' | 'inputMode' | 'placeholder' | 'autoComplete'
+> => {
   if (currentType === SignInIdentifier.Phone && enabledTypes.length === 1) {
     return {
       type: 'tel',
       pattern: '[0-9]*',
       inputMode: 'numeric',
+      autoComplete: 'tel',
       placeholder: i18next.t<'translation', TFuncKey>('input.phone_number'),
     };
   }
@@ -24,12 +28,16 @@ export const getInputHtmlProps = (
     return {
       type: 'email',
       inputMode: 'email',
+      autoComplete: 'email',
       placeholder: i18next.t<'translation', TFuncKey>('input.email'),
     };
   }
 
   return {
     type: 'text',
+    autoComplete: enabledTypes
+      .map((type) => (type === SignInIdentifier.Phone ? 'tel' : type))
+      .join(' '),
     placeholder: enabledTypes
       .map((type) => i18next.t<'translation', TFuncKey>(identifierInputPlaceholderMap[type]))
       .join(' / '),

@@ -101,7 +101,7 @@ const IdentifierProfileForm = ({
         }}
         render={({ field }) => (
           <SmartInputField
-            autoComplete="new-identifier"
+            autoComplete="off"
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
