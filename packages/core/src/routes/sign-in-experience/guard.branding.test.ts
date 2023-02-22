@@ -39,9 +39,14 @@ describe('branding', () => {
       }
     );
 
-    test.each([undefined, null, '', 'invalid'])('%p should fail', async (logoUrl) => {
+    test.each([null, '', 'invalid'])('%p should fail', async (logoUrl) => {
       const signInExperience = { branding: { ...mockBranding, logoUrl } };
       await expectPatchResponseStatus(signInExperience, 400);
+    });
+
+    it('should success when logoUrl is not provided', async () => {
+      const signInExperience = { branding: { ...mockBranding, logoUrl: undefined } };
+      await expectPatchResponseStatus(signInExperience, 200);
     });
   });
 
