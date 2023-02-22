@@ -40,12 +40,17 @@ const data = {
     ],
   },
   socialSignInConnectorTargets: [],
-  signInMode: 'Register',
   customCss: null,
-};
+} as const;
 
 const alteration: AlterationScript = {
   up: async (pool) => {
+    const hasActiveUsers = await pool.exists(sql`
+      select id
+      from users
+      where tenant_id = 'default'
+      limit 1
+    `);
     await pool.query(sql`
       insert into sign_in_experiences (
         tenant_id,
@@ -69,7 +74,7 @@ const alteration: AlterationScript = {
         ${sql.jsonb(data.signUp)},
         ${sql.jsonb(data.signIn)},
         ${sql.jsonb(data.socialSignInConnectorTargets)},
-        ${data.signInMode},
+        ${hasActiveUsers ? 'SignIn' : 'Register'},
         ${data.customCss}
       );
     `);

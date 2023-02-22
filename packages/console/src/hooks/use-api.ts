@@ -5,7 +5,7 @@ import { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { managementApi, requestTimeout } from '@/consts';
+import { getManagementApi, getUserTenantId, requestTimeout } from '@/consts';
 import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
 
 export class RequestError extends Error {
@@ -28,7 +28,7 @@ type StaticApiProps = {
 export const useStaticApi = ({
   prefixUrl,
   hideErrorToast,
-  resourceIndicator = managementApi.indicator,
+  resourceIndicator = getManagementApi(getUserTenantId()).indicator,
 }: StaticApiProps) => {
   const { isAuthenticated, getAccessToken } = useLogto();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });

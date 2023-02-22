@@ -83,14 +83,17 @@ export default class Tenant implements TenantContext {
       // Mount `/me` APIs for admin tenant
       app.use(mount('/me', initMeApis(tenantContext)));
 
-      // Mount Admin Console
-      app.use(koaConsoleRedirectProxy(queries));
-      app.use(
-        mount(
-          '/' + AdminApps.Console,
-          koaSpaProxy(mountedApps, AdminApps.Console, 5002, AdminApps.Console)
-        )
-      );
+      // Mount Admin Console when needed
+      // Skip in domain-based multi-tenancy since Logto Cloud serves Admin Console in this case
+      if (!EnvSet.values.isDomainBasedMultiTenancy) {
+        app.use(koaConsoleRedirectProxy(queries));
+        app.use(
+          mount(
+            '/' + AdminApps.Console,
+            koaSpaProxy(mountedApps, AdminApps.Console, 5002, AdminApps.Console)
+          )
+        );
+      }
     } else {
       // Mount demo app
       app.use(
