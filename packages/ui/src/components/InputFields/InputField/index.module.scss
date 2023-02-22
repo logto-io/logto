@@ -18,7 +18,7 @@
     transition: width 0.3s ease-in;
     padding: 0 _.unit(4);
     flex: 1;
-    background: none;
+    background: var(--color-bg-float); // TODO: @simeng update to proper value
     caret-color: var(--color-brand-default);
     font: var(--font-body-1);
     color: var(--color-type-primary);
@@ -52,12 +52,6 @@
 
     input {
       caret-color: var(--color-danger-default);
-    }
-  }
-
-  &.isPrefixVisible {
-    input {
-      padding-left: _.unit(1);
     }
   }
 

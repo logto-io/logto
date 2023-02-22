@@ -11,7 +11,6 @@ export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
   errorMessage?: string;
   isDanger?: boolean;
   prefix?: ReactElement;
-  isPrefixVisible?: boolean;
   suffix?: ReactElement;
   isSuffixVisible?: boolean;
   isSuffixFocusVisible?: boolean;
@@ -24,7 +23,6 @@ const InputField = (
     isDanger,
     prefix,
     suffix,
-    isPrefixVisible,
     isSuffixFocusVisible,
     isSuffixVisible,
     ...props
@@ -36,7 +34,6 @@ const InputField = (
       className={classNames(
         styles.inputField,
         isDanger && styles.danger,
-        isPrefixVisible && styles.isPrefixVisible,
         isSuffixFocusVisible && styles.isSuffixFocusVisible,
         isSuffixVisible && styles.isSuffixVisible
       )}
