@@ -1,3 +1,4 @@
+import { conditional } from '@silverhand/essentials';
 import { useEffect, useContext, useState } from 'react';
 
 import { consent } from '@/apis/consent';
@@ -5,7 +6,7 @@ import { LoadingIcon } from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import { PageContext } from '@/hooks/use-page-context';
-import { getLogoUrl } from '@/utils/logo';
+import { getBrandingLogoUrl } from '@/utils/logo';
 
 import * as styles from './index.module.scss';
 
@@ -14,6 +15,15 @@ const Consent = () => {
   const handleError = useErrorHandler();
   const asyncConsent = useApi(consent);
   const branding = experienceSettings?.branding;
+  const brandingLogo = conditional(
+    branding &&
+      getBrandingLogoUrl({
+        theme,
+        logoUrl: branding.logoUrl,
+        darkLogoUrl: branding.darkLogoUrl,
+      })
+  );
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,12 +45,7 @@ const Consent = () => {
 
   return (
     <div className={styles.wrapper}>
-      {branding && (
-        <img
-          alt="logo"
-          src={getLogoUrl({ theme, logoUrl: branding.logoUrl, darkLogoUrl: branding.darkLogoUrl })}
-        />
-      )}
+      {brandingLogo && <img alt="logo" src={brandingLogo} />}
       {loading && <LoadingIcon />}
     </div>
   );

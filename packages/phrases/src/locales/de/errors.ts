@@ -138,9 +138,6 @@ const errors = {
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:
       'Leere "Nutzungsbedingungen" URL. Bitte füge die URL hinzu, wenn "Nutzungsbedingungen" aktiviert ist.',
-    empty_logo: 'Bitte füge eine Logo URL hinzu.',
-    empty_slogan:
-      'Leerer Branding-Slogan. Bitte füge einen Branding-Slogan hinzu, wenn ein UI-Stil ausgewählt wird, der den Slogan enthält.',
     empty_social_connectors:
       'Leere Social Connectors. Bitte füge aktivierte Social Connectoren hinzu, wenn Social Anmeldung aktiviert ist.',
     enabled_connector_not_found: 'Aktivierter {{type}} Connector nicht gefunden.',

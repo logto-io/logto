@@ -83,17 +83,10 @@ const sign_in_exp = {
   },
   branding: {
     title: 'BRANDING',
-    ui_style: 'Stil',
-    styles: {
-      logo_slogan: 'App logo mit Slogan',
-      logo: 'Nur App logo',
-    },
     logo_image_url: 'App logo URL',
     logo_image_url_placeholder: 'https://dein.cdn.domain/logo.png',
     dark_logo_image_url: 'App logo URL (Dunkler Modus)',
     dark_logo_image_url_placeholder: 'https://dein.cdn.domain/logo-dark.png',
-    slogan: 'Slogan',
-    slogan_placeholder: 'Entfessle deine Kreativität',
   },
   others: {
     terms_of_use: {

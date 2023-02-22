@@ -1,5 +1,3 @@
-import { BrandingStyle } from '@logto/schemas';
-
 import { getSignInExperience, updateSignInExperience } from '#src/api/index.js';
 
 describe('admin console sign-in experience', () => {
@@ -17,7 +15,6 @@ describe('admin console sign-in experience', () => {
         isDarkModeEnabled: true,
       },
       branding: {
-        style: BrandingStyle.Logo_Slogan,
         slogan: 'Logto Slogan',
         logoUrl: 'https://logto.io/new-logo.png',
         darkLogoUrl: 'https://logto.io/new-dark-logo.png',

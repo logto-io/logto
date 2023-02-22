@@ -26,17 +26,10 @@ const sign_in_exp = {
   },
   branding: {
     title: 'MARKA ALANI',
-    ui_style: 'Stil',
-    styles: {
-      logo_slogan: 'Sloganlı şekilde uygulama logosu',
-      logo: 'Yalnızca uygulama logosu',
-    },
     logo_image_url: 'Uygulama logosu resim URLi',
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'Uygulama logosu resim URLi (Koyu)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    slogan: 'Slogan',
-    slogan_placeholder: 'Yaratıcılığınızı açığa çıkarın',
   },
   sign_up_and_sign_in: {
     identifiers: 'Sign-up identifiers', // UNTRANSLATED

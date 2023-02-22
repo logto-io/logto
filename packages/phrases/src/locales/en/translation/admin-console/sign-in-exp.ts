@@ -25,17 +25,10 @@ const sign_in_exp = {
   },
   branding: {
     title: 'BRANDING AREA',
-    ui_style: 'Style',
-    styles: {
-      logo_slogan: 'App logo with slogan',
-      logo: 'App logo only',
-    },
     logo_image_url: 'App logo image URL',
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'App logo image URL (Dark)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    slogan: 'Slogan',
-    slogan_placeholder: 'Unleash your creativity',
   },
   sign_up_and_sign_in: {
     identifiers: 'Sign-up identifiers',

@@ -5,7 +5,7 @@ import type { TFuncKey } from 'react-i18next';
 
 import BrandingHeader from '@/components/BrandingHeader';
 import { PageContext } from '@/hooks/use-page-context';
-import { getLogoUrl } from '@/utils/logo';
+import { getBrandingLogoUrl } from '@/utils/logo';
 
 import AppNotification from '../AppNotification';
 import * as styles from './index.module.scss';
@@ -32,7 +32,7 @@ const LandingPageContainer = ({ children, className, title }: Props) => {
         <BrandingHeader
           className={styles.header}
           headline={title}
-          logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
+          logo={getBrandingLogoUrl({ theme, logoUrl, darkLogoUrl })}
         />
         {children}
       </div>

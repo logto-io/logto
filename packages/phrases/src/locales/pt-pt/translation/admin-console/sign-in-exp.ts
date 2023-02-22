@@ -25,17 +25,10 @@ const sign_in_exp = {
   },
   branding: {
     title: 'ÁREA DE MARCA',
-    ui_style: 'Estilo',
-    styles: {
-      logo_slogan: 'Logo da app com slogan',
-      logo: 'Apenas o logo da app',
-    },
     logo_image_url: 'URL do logotipo da app',
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'URL do logotipo da app (tema escuro)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    slogan: 'Slogan',
-    slogan_placeholder: 'Liberte a sua criatividade',
   },
   sign_up_and_sign_in: {
     identifiers: 'Sign-up identifiers', // UNTRANSLATED

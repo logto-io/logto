@@ -125,8 +125,6 @@ const errors = {
   },
   sign_in_experiences: {
     empty_content_url_of_terms_of_use: '你启用了“使用条款”，请添加使用条款 URL。',
-    empty_logo: '请输入 logo URL',
-    empty_slogan: '你选择了 App logo + 标语的布局。请输入你的标语。',
     empty_social_connectors: '你启用了社交登录的方式。请至少选择一个社交连接器。',
     enabled_connector_not_found: '未找到已启用的 {{type}} 连接器',
     not_one_and_only_one_primary_sign_in_method: '主要的登录方式必须有且仅有一个，请检查你的输入。',

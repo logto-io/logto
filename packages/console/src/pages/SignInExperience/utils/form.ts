@@ -47,8 +47,8 @@ export const signInExperienceParser = {
       branding: {
         ...branding,
         // Transform empty string to undefined
+        logoUrl: conditional(branding.logoUrl?.length && branding.logoUrl),
         darkLogoUrl: conditional(branding.darkLogoUrl?.length && branding.darkLogoUrl),
-        slogan: conditional(branding.slogan?.length && branding.slogan),
       },
       signUp: signUp
         ? signInExperienceParser.toRemoteSignUp(signUp)

@@ -1,11 +1,5 @@
 import type { SignInExperience, SignIn } from '@logto/schemas';
-import {
-  BrandingStyle,
-  ConnectorPlatform,
-  ConnectorType,
-  SignInIdentifier,
-  SignInMode,
-} from '@logto/schemas';
+import { ConnectorPlatform, ConnectorType, SignInIdentifier, SignInMode } from '@logto/schemas';
 
 import type { SignInExperienceResponse } from '@/types';
 
@@ -190,9 +184,7 @@ export const mockSignInExperience: SignInExperience = {
     darkPrimaryColor: '#fff',
   },
   branding: {
-    style: BrandingStyle.Logo_Slogan,
     logoUrl: 'http://logto.png',
-    slogan: 'logto',
   },
   termsOfUseUrl: 'http://terms.of.use/',
   languageInfo: {

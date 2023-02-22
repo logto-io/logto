@@ -1,11 +1,7 @@
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
 import { literal, object, string } from 'zod';
 
-import {
-  validateBranding,
-  validateSignUp,
-  validateSignIn,
-} from '#src/libraries/sign-in-experience/index.js';
+import { validateSignUp, validateSignIn } from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
@@ -43,11 +39,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
     }),
     async (ctx, next) => {
       const { socialSignInConnectorTargets, ...rest } = ctx.guard.body;
-      const { branding, languageInfo, signUp, signIn } = rest;
-
-      if (branding) {
-        validateBranding(branding);
-      }
+      const { languageInfo, signUp, signIn } = rest;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);

@@ -29,10 +29,9 @@ const logtoConnectors = [
   mockAliyunSmsConnector,
 ];
 
-const { validateBranding, validateSignIn, validateSignUp } = await mockEsmWithActual(
+const { validateSignIn, validateSignUp } = await mockEsmWithActual(
   '#src/libraries/sign-in-experience/index.js',
   () => ({
-    validateBranding: jest.fn(),
     validateSignIn: jest.fn(),
     validateSignUp: jest.fn(),
   })
@@ -123,7 +122,6 @@ describe('PATCH /sign-in-exp', () => {
       signIn: mockSignIn,
     });
 
-    expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateLanguageInfo).toHaveBeenCalledWith(mockLanguageInfo);
     expect(validateSignUp).toHaveBeenCalledWith(mockSignUp, logtoConnectors);
     expect(validateSignIn).toHaveBeenCalledWith(mockSignIn, mockSignUp, logtoConnectors);

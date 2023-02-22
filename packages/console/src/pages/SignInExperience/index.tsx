@@ -13,8 +13,8 @@ import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar'
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { SignInExperiencePage } from '@/consts/page-tabs';
-import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
