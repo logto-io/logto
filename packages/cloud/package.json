@@ -16,7 +16,7 @@
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "dev": "rm -rf build/ && nodemon",
-    "start": "NODE_ENV=production node build/index.js"
+    "start": "NODE_ENV=production node ."
   },
   "dependencies": {
     "@logto/core-kit": "workspace:*",

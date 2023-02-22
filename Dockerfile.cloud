@@ -1,31 +1,40 @@
-# Build stage
+###### [STAGE] Build ######
 FROM node:18-alpine as builder
 WORKDIR /etc/logto
 ENV CI=true
 
-# No need for build
+# No need for Docker build
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# Install toolchain
+### Install toolchain ###
 RUN npm add --location=global pnpm@^7.14.0
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#node-gyp-alpine
 RUN apk add --no-cache python3 make g++
 
 COPY . .
 
-# Install dependencies and build
+### Install dependencies ###
 RUN node .scripts/update-parcelrc.js
 RUN pnpm i
-RUN pnpm prepack
-RUN cd packages/cloud && pnpm build
 
-# Prune dependencies for production
+### Build ###
+# Admin Console build env
+ENV CONSOLE_PUBLIC_URL=/
+# Temporarily use it for Admin Console build, will try to use runtime technique later
+ENV ADMIN_TENANT_ENDPOINT=https://admin.app.logto.dev/
+RUN pnpm prepack
+RUN pnpm -r --filter @logto/console --filter @logto/cloud build
+
+### Prune dependencies for production ###
 RUN rm -rf node_modules packages/**/node_modules
 RUN NODE_ENV=production pnpm i
 
-# Seal stage
+### Clean up ###
+RUN rm -rf .scripts .parcel-cache pnpm-*.yaml
+
+###### [STAGE] Seal ######
 FROM node:18-alpine as app
-WORKDIR /etc/logto
-COPY --from=builder /etc/logto/packages/cloud .
+WORKDIR /etc/logto-cloud
+COPY --from=builder /etc/logto .
 EXPOSE 3003
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["npm", "run", "start:cloud"]

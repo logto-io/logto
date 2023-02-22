@@ -12,6 +12,7 @@
     "start:dev": "pnpm -r --parallel --filter=!@logto/integration-tests --filter=!@logto/cloud dev",
     "start:dev:cloud": "CONSOLE_PUBLIC_URL=/ pnpm -r --parallel --filter=!@logto/integration-tests dev",
     "start": "cd packages/core && NODE_ENV=production node .",
+    "start:cloud": "cd packages/cloud && NODE_ENV=production node .",
     "cli": "logto",
     "alteration": "logto db alt",
     "//": "# `changeset version` won't run version lifecycle scripts, see https://github.com/changesets/changesets/issues/860",
