@@ -5,6 +5,7 @@ import path from 'path';
 import { connectorDirectory } from '@logto/cli/lib/constants.js';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utils.js';
 import { findPackage } from '@logto/shared';
+import { deduplicate } from '@silverhand/essentials';
 import chalk from 'chalk';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -15,12 +16,12 @@ import { parseMetadata, validateConnectorModule } from './index.js';
 import { loadConnector } from './loader.js';
 
 const checkDuplicateConnectorFactoriesId = (connectorFactories: ConnectorFactory[]) => {
-  const connectorFactoriesId = connectorFactories.map(({ metadata }) => metadata.id);
-  const connectorFactoriesIdSet = new Set(connectorFactoriesId);
+  const connectorFactoryIds = connectorFactories.map(({ metadata }) => metadata.id);
+  const deduplicatedConnectorFactoryIds = deduplicate(connectorFactoryIds);
 
-  if (connectorFactoriesId.length !== connectorFactoriesIdSet.size) {
-    const duplicatedConnectorFactoryIds = connectorFactoriesId.filter(
-      (id, index) => connectorFactoriesId.indexOf(id) !== index
+  if (connectorFactoryIds.length !== deduplicatedConnectorFactoryIds.length) {
+    const duplicatedConnectorFactoryIds = deduplicatedConnectorFactoryIds.filter(
+      (deduplicateId) => connectorFactoryIds.filter((id) => id === deduplicateId).length > 1
     );
     throw new RequestError({
       code: 'connector.more_than_one_connector_factory',
