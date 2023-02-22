@@ -45,6 +45,7 @@ const errors = {
     phone_not_exist: 'The phone number has not been registered yet.',
     identity_not_exist: 'The social account has not been registered yet.',
     identity_already_in_use: 'The social account has been associated with an existing account.',
+    social_account_exists_in_profile: 'You have already associated this social account.',
     cannot_delete_self: 'You cannot delete yourself.',
     sign_up_method_not_enabled: 'This sign-up method is not enabled.',
     sign_in_method_not_enabled: 'This sign-in method is not enabled.',

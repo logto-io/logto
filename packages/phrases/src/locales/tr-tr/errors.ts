@@ -45,6 +45,7 @@ const errors = {
     phone_not_exist: 'Telefon numarası henüz kaydedilmedi',
     identity_not_exist: 'Sosyal platform hesabı henüz kaydedilmedi.',
     identity_already_in_use: 'Sosyal platform hesabı kaydedildi.',
+    social_account_exists_in_profile: 'You have already associated this social account.', // UNTRANSLATED
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
     sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
     sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED

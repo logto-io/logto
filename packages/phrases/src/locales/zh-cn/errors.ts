@@ -43,6 +43,7 @@ const errors = {
     phone_not_exist: '手机号码尚未注册。',
     identity_not_exist: '该社交帐号尚未注册。',
     identity_already_in_use: '该社交帐号已被注册。',
+    social_account_exists_in_profile: '你已绑定当前社交账号，无需重复操作。',
     cannot_delete_self: '无法删除自己的账户。',
     sign_up_method_not_enabled: '注册方式尚未启用。',
     sign_in_method_not_enabled: '登录方式尚未启用。',
