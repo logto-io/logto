@@ -103,16 +103,9 @@ export const colorGuard = z.object({
 
 export type Color = z.infer<typeof colorGuard>;
 
-export enum BrandingStyle {
-  Logo = 'Logo',
-  Logo_Slogan = 'Logo_Slogan',
-}
-
 export const brandingGuard = z.object({
-  style: z.nativeEnum(BrandingStyle),
-  logoUrl: z.string().url(),
+  logoUrl: z.string().url().optional(),
   darkLogoUrl: z.string().url().optional(),
-  slogan: z.string().optional(),
   favicon: z.string().url().optional(),
 });
 

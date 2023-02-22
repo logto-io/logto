@@ -143,9 +143,6 @@ const errors = {
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:
       'Empty "Terms of use" content URL. Please add the content URL if "Terms of use" is enabled.',
-    empty_logo: 'Please enter your logo URL',
-    empty_slogan:
-      'Empty branding slogan. Please add a branding slogan if a UI style containing the slogan is selected.',
     empty_social_connectors:
       'Empty social connectors. Please add enabled social connectors when the social sign-in method is enabled.',
     enabled_connector_not_found: 'Enabled {{type}} connector not found.',

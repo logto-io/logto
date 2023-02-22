@@ -1,12 +1,10 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-ui';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
-import { BrandingStyle } from '@logto/schemas';
 
 import {
   socialTarget01,
   socialTarget02,
-  mockBranding,
   mockSignInExperience,
   mockSocialConnectors,
 } from '#src/__mocks__/index.js';
@@ -42,54 +40,12 @@ const queries = new MockQueries({
 const connectorLibrary = createConnectorLibrary(queries);
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
-const { validateBranding, createSignInExperienceLibrary } = await import('./index.js');
+const { createSignInExperienceLibrary } = await import('./index.js');
 const { validateLanguageInfo, removeUnavailableSocialConnectorTargets } =
   createSignInExperienceLibrary(queries, connectorLibrary);
 
 beforeEach(() => {
   jest.clearAllMocks();
-});
-
-describe('validate branding', () => {
-  it('should throw when the UI style contains the slogan and slogan is empty', () => {
-    expect(() => {
-      validateBranding({
-        ...mockBranding,
-        style: BrandingStyle.Logo_Slogan,
-        slogan: '',
-      });
-    }).toMatchError(new RequestError('sign_in_experiences.empty_slogan'));
-  });
-
-  it('should throw when the logo is empty', () => {
-    expect(() => {
-      validateBranding({
-        ...mockBranding,
-        style: BrandingStyle.Logo,
-        logoUrl: ' ',
-        slogan: '',
-      });
-    }).toMatchError(new RequestError('sign_in_experiences.empty_logo'));
-  });
-
-  it('should throw when the UI style contains the slogan and slogan is blank', () => {
-    expect(() => {
-      validateBranding({
-        ...mockBranding,
-        style: BrandingStyle.Logo_Slogan,
-        slogan: ' \t\n',
-      });
-    }).toMatchError(new RequestError('sign_in_experiences.empty_slogan'));
-  });
-
-  it('should not throw when the UI style does not contain the slogan and slogan is empty', () => {
-    expect(() => {
-      validateBranding({
-        ...mockBranding,
-        style: BrandingStyle.Logo,
-      });
-    }).not.toThrow();
-  });
 });
 
 describe('validate language info', () => {

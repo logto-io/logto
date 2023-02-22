@@ -137,8 +137,6 @@ const errors = {
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:
       '이용 약관 URL이 비어 있어요. 이용 약관이 활성화되어 있다면, 이용 약관 URL를 설정해 주세요.',
-    empty_logo: '로고 URL을 입력해 주세요.',
-    empty_slogan: '브랜딩 슬로건이 비어 있어요. 슬로건을 사용한다면, 내용을 설정해 주세요.',
     empty_social_connectors: '연동된 소셜이 없어요. 소셜 로그인을 사용한다면, 연동해 주세요.',
     enabled_connector_not_found: '활성된 {{type}} 연동을 찾을 수 없어요.',
     not_one_and_only_one_primary_sign_in_method:

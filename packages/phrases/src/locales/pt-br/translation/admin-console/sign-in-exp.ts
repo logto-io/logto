@@ -29,16 +29,10 @@ const sign_in_exp = {
     title: 'ÁREA DE MARCA',
     ui_style: 'Estilo',
     favicon: 'Browser favicon', // UNTRANSLATED
-    styles: {
-      logo_slogan: 'Logo do aplicativo com slogan',
-      logo: 'Somente logotipo do aplicativo',
-    },
     logo_image_url: 'URL da imagem do logotipo do aplicativo',
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'URL da imagem do logotipo do aplicativo (Escuro)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    slogan: 'Slogan',
-    slogan_placeholder: 'Use sua criatividade',
   },
   sign_up_and_sign_in: {
     identifiers_email: 'Endereço de e-mail',

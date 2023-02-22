@@ -150,9 +150,6 @@ const errors = {
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:
       'URL de contenu "Conditions d\'utilisation" vide. Veuillez ajouter l\'URL du contenu si les "Conditions d\'utilisation" sont activées.',
-    empty_logo: "Veuillez entrer l'URL de votre logo",
-    empty_slogan:
-      "Un slogan vide. Veuillez ajouter un slogan si un style d'interface utilisateur contenant le slogan est sélectionné.",
     empty_social_connectors:
       'Connecteurs sociaux vides. Veuillez ajouter des connecteurs sociaux activés lorsque la méthode de connexion sociale est activée.',
     enabled_connector_not_found: 'Le connecteur {{type}} activé est introuvable.',

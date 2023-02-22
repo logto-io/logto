@@ -6,7 +6,7 @@ import type {
   SignUp,
   SignIn,
 } from '@logto/schemas';
-import { BrandingStyle, SignInMode, SignInIdentifier } from '@logto/schemas';
+import { SignInMode, SignInIdentifier } from '@logto/schemas';
 
 export const mockColor: Color = {
   primaryColor: '#000',
@@ -15,9 +15,7 @@ export const mockColor: Color = {
 };
 
 export const mockBranding: Branding = {
-  style: BrandingStyle.Logo_Slogan,
   logoUrl: 'http://silverhand.png',
-  slogan: 'Silverhand.',
 };
 
 export const mockTermsOfUseUrl = 'http://silverhand.com/terms';
@@ -54,9 +52,7 @@ export const mockSignInExperience: SignInExperience = {
     darkPrimaryColor: '#fff',
   },
   branding: {
-    style: BrandingStyle.Logo,
     logoUrl: 'http://logto.png',
-    slogan: 'logto',
   },
   termsOfUseUrl: mockTermsOfUseUrl,
   privacyPolicyUrl: mockPrivacyPolicyUrl,

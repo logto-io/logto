@@ -144,9 +144,6 @@ const errors = {
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:
       '"Kullanım Koşulları" İçerik URLi yok. Lütfen "Kullanım Koşulları" etkinse içerik URLi ekleyiniz.',
-    empty_logo: 'Lütfen logo URLini giriniz',
-    empty_slogan:
-      'Marka sloganı yok. Eğer UI stili slogan içeriyorsa, lütfen bir marka sloganı ekleyin.',
     empty_social_connectors:
       'Social connectors yok. Sosyal oturum açma yöntemi etkinleştirildiğinde lütfen etkin social connectorları ekleyiniz.',
     enabled_connector_not_found: 'Etkin {{type}} bağlayıcı bulunamadı.',

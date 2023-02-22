@@ -30,16 +30,10 @@ const sign_in_exp = {
     title: 'ZONE DE MARQUE',
     ui_style: 'Style',
     favicon: 'Browser favicon', // UNTRANSLATED
-    styles: {
-      logo_slogan: "Logo de l'application avec slogan",
-      logo: "Logo de l'application seulement",
-    },
     logo_image_url: "URL de l'image du logo de l'application",
     logo_image_url_placeholder: 'https://votre.domaine.cdn/logo.png',
     dark_logo_image_url: "URL de l'image du logo de l'application (Sombre)",
     dark_logo_image_url_placeholder: 'https://votre.domaine.cdn/logo-dark.png',
-    slogan: 'Slogan',
-    slogan_placeholder: 'Libérez votre créativité',
   },
   sign_up_and_sign_in: {
     identifiers_email: 'Email address', // UNTRANSLATED
