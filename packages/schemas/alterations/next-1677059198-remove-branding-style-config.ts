@@ -8,8 +8,6 @@ enum DeprecatedBrandingStyle {
   Logo_Slogan = 'Logo_Slogan',
 }
 
-const deprecatedDefaultSlogan = 'admin_console.welcome.title';
-
 const deprecatedDefaultBrandingStyle = DeprecatedBrandingStyle.Logo;
 
 type DeprecatedBranding = {
@@ -70,7 +68,6 @@ const rollbackBranding = async (
     style: deprecatedDefaultBrandingStyle,
     logoUrl,
     darkLogoUrl,
-    slogan: deprecatedDefaultSlogan,
   };
 
   await pool.query(
