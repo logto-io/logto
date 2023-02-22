@@ -15,7 +15,6 @@ describe('admin console sign-in experience', () => {
         isDarkModeEnabled: true,
       },
       branding: {
-        slogan: 'Logto Slogan',
         logoUrl: 'https://logto.io/new-logo.png',
         darkLogoUrl: 'https://logto.io/new-dark-logo.png',
       },
