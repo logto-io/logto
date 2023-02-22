@@ -114,6 +114,8 @@ const errors = {
       'Não foi possível obter o token de acesso, verifique o código de autorização.',
     more_than_one_sms: 'O número de conectores SMS é maior que 1.',
     more_than_one_email: 'O número de conectores de e-mail é maior que 1.',
+    more_than_one_connector_factory:
+      'Found multiple connector factories (with id {{connectorIds}}), you may uninstall unnecessary ones.', // UNTRANSLATED
     db_connector_type_mismatch: 'Existe um conector no banco de dados que não corresponde ao tipo.',
     not_found_with_connector_id:
       'Não é possível encontrar o conector com o ID de conector padrão fornecido.',

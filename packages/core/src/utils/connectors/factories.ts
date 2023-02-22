@@ -5,19 +5,39 @@ import path from 'path';
 import { connectorDirectory } from '@logto/cli/lib/constants.js';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utils.js';
 import { findPackage } from '@logto/shared';
+import { deduplicate } from '@silverhand/essentials';
 import chalk from 'chalk';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorFactory } from '#src/utils/connectors/types.js';
 
 import { notImplemented } from './consts.js';
 import { parseMetadata, validateConnectorModule } from './index.js';
 import { loadConnector } from './loader.js';
 
+const checkDuplicateConnectorFactoriesId = (connectorFactories: ConnectorFactory[]) => {
+  const connectorFactoryIds = connectorFactories.map(({ metadata }) => metadata.id);
+  const deduplicatedConnectorFactoryIds = deduplicate(connectorFactoryIds);
+
+  if (connectorFactoryIds.length !== deduplicatedConnectorFactoryIds.length) {
+    const duplicatedConnectorFactoryIds = deduplicatedConnectorFactoryIds.filter(
+      (deduplicateId) => connectorFactoryIds.filter((id) => id === deduplicateId).length > 1
+    );
+    throw new RequestError({
+      code: 'connector.more_than_one_connector_factory',
+      status: 422,
+      connectorIds: duplicatedConnectorFactoryIds.map((id) => `${id}`).join(', '),
+    });
+  }
+};
+
 // eslint-disable-next-line @silverhand/fp/no-let
 let cachedConnectorFactories: ConnectorFactory[] | undefined;
 
 export const loadConnectorFactories = async () => {
   if (cachedConnectorFactories) {
+    checkDuplicateConnectorFactoriesId(cachedConnectorFactories);
+
     return cachedConnectorFactories;
   }
 
@@ -64,6 +84,8 @@ export const loadConnectorFactories = async () => {
   cachedConnectorFactories = connectorFactories.filter(
     (connectorFactory): connectorFactory is ConnectorFactory => connectorFactory !== undefined
   );
+
+  checkDuplicateConnectorFactoriesId(cachedConnectorFactories);
 
   return cachedConnectorFactories;
 };

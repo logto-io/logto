@@ -113,6 +113,8 @@ const errors = {
     social_auth_code_invalid: 'Unable to get access token, please check authorization code.',
     more_than_one_sms: 'The number of SMS connectors is larger then 1.',
     more_than_one_email: 'The number of Email connectors is larger then 1.',
+    more_than_one_connector_factory:
+      'Found multiple connector factories (with id {{connectorIds}}), you may uninstall unnecessary ones.', // UNTRANSLATED
     db_connector_type_mismatch: 'There is a connector in the DB that does not match the type.',
     not_found_with_connector_id: 'Can not find connector with given standard connector id.',
     multiple_instances_not_supported:

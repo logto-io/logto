@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, ConnectorFactoryResponse } from '@logto/schemas';
@@ -13,7 +12,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
 import { buildRawConnector } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
-import type { LogtoConnector } from '#src/utils/connectors/types.js';
+import type { ConnectorFactory, LogtoConnector } from '#src/utils/connectors/types.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
@@ -27,6 +26,13 @@ const transpileLogtoConnector = ({
     ...metadata,
     ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'config', 'metadata'),
   };
+};
+
+const transpileConnectorFactory = ({
+  metadata,
+  type,
+}: ConnectorFactory): ConnectorFactoryResponse => {
+  return { type, ...metadata };
 };
 
 const generateConnectorId = buildIdGenerator(12);
@@ -81,13 +87,9 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
   router.get('/connector-factories', async (ctx, next) => {
     const connectorFactories = await loadConnectorFactories();
-    const formatedFactories: ConnectorFactoryResponse[] = connectorFactories.map(
-      ({ metadata, type }) => ({
-        type,
-        ...metadata,
-      })
+    ctx.body = connectorFactories.map((connectorFactory) =>
+      transpileConnectorFactory(connectorFactory)
     );
-    ctx.body = formatedFactories;
 
     return next();
   });
@@ -100,16 +102,11 @@ export default function connectorRoutes<T extends AuthedRouter>(
         params: { id },
       } = ctx.guard;
       const connectorFactories = await loadConnectorFactories();
-      const connectorFactory = connectorFactories.find((factory) => factory.metadata.id === id);
 
+      const connectorFactory = connectorFactories.find((factory) => factory.metadata.id === id);
       assertThat(connectorFactory, 'entity.not_found');
 
-      const { metadata, type } = connectorFactory;
-      const response: ConnectorFactoryResponse = {
-        type,
-        ...metadata,
-      };
-      ctx.body = response;
+      ctx.body = transpileConnectorFactory(connectorFactory);
 
       return next();
     }
@@ -147,6 +144,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
       } = ctx.guard;
 
       const connectorFactories = await loadConnectorFactories();
+
       const connectorFactory = connectorFactories.find(
         ({ metadata: { id } }) => id === connectorId
       );
@@ -343,6 +341,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
       const { connectorId } = await findConnectorById(id);
       const connectorFactories = await loadConnectorFactories();
+
       const connectorFactory = connectorFactories.find(
         ({ metadata }) => metadata.id === connectorId
       );
@@ -359,5 +358,3 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }
   );
 }
-// TODO: @darcy refactor this file, exceed max-lines
-/* eslint-enable max-lines */
