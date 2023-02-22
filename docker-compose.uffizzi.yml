@@ -3,14 +3,22 @@ version: "3.9"
 
 x-uffizzi:
   ingress:
-    service: app
-    port: 3001
+    service: nginx
+    port: 8081
   continuous_previews:
     deploy_preview_when_pull_request_is_opened: true
     delete_preview_when_pull_request_is_closed: true
     share_to_github: true
 
 services:
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./uffizzi/nginx:/etc/nginx
+
   app:
     depends_on:
       - "postgres"
