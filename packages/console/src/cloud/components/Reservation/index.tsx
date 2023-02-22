@@ -2,6 +2,7 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import { useTranslation } from 'react-i18next';
 
 import Calendar from '@/assets/images/calendar.svg';
+import { reservationLink } from '@/cloud/constants';
 import Button from '@/components/Button';
 import { buildUrl } from '@/utils/url';
 
@@ -29,7 +30,7 @@ const Reservation = ({ title, description, reservationButtonTitle }: Props) => {
         type="outline"
         title={reservationButtonTitle}
         onClick={() => {
-          const bookLink = buildUrl('https://calendly.com/logto/30min', {
+          const bookLink = buildUrl(reservationLink, {
             // Note: month format is YYYY-MM
             month: new Date().toISOString().slice(0, 7),
           });

@@ -10,8 +10,7 @@ type Props = {
   title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   size?: 'small' | 'medium' | 'large';
-  // eslint-disable-next-line react/boolean-prop-naming
-  enableWordWrap?: boolean;
+  isWordWrapEnabled?: boolean;
   className?: string;
 };
 
@@ -22,14 +21,14 @@ const CardTitle = ({
   title,
   subtitle,
   size = 'large',
-  enableWordWrap = false,
+  isWordWrapEnabled = false,
   className,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <div className={classNames(styles.container, styles[size], className)}>
-      <div className={classNames(styles.title, !enableWordWrap && styles.titleEllipsis)}>
+      <div className={classNames(styles.title, !isWordWrapEnabled && styles.titleEllipsis)}>
         {typeof title === 'string' ? t(title) : title}
       </div>
       {subtitle && (
