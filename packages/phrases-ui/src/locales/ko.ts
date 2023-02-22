@@ -87,6 +87,8 @@ const translation = {
     link_email_or_phone_description:
       '더 나은 보안을 위해 이메일 또는 휴대전화번호를 연동해 주세요.',
     continue_with_more_information: '더 나은 보안을 위해 아래 자세한 내용을 따라 주세요.',
+    create_your_account: 'Create your account', // UNTRANSLATED
+    welcome_to_sign_in: 'Welcome to sign in', // UNTRANSLATED
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} 필수예요.`,
