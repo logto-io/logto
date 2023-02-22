@@ -13,7 +13,7 @@ import './scss/overlayscrollbars.scss';
 import '@fontsource/roboto-mono';
 import AppLoading from '@/components/AppLoading';
 import Toast from '@/components/Toast';
-import { managementApi, meApi } from '@/consts/management-api';
+import { getManagementApi, meApi } from '@/consts/management-api';
 import AppBoundary from '@/containers/AppBoundary';
 import AppLayout from '@/containers/AppLayout';
 import ErrorBoundary from '@/containers/ErrorBoundary';
@@ -48,6 +48,7 @@ import {
   UserDetailsTabs,
   adminTenantEndpoint,
   getUserTenantId,
+  getBasename,
 } from './consts';
 import { isCloud } from './consts/cloud';
 import AppContent from './containers/AppContent';
@@ -161,26 +162,29 @@ const Main = () => {
   );
 };
 
-const App = () => (
-  <BrowserRouter basename={`/${getUserTenantId() ?? ''}`}>
-    <AppEndpointsProvider>
-      <LogtoProvider
-        config={{
-          endpoint: adminTenantEndpoint,
-          appId: adminConsoleApplicationId,
-          resources: [managementApi.indicator, meApi.indicator],
-          scopes: [
-            UserScope.Email,
-            UserScope.Identities,
-            UserScope.CustomData,
-            managementApi.scopeAll,
-          ],
-        }}
-      >
-        <Main />
-      </LogtoProvider>
-    </AppEndpointsProvider>
-  </BrowserRouter>
-);
+const App = () => {
+  const managementApi = getManagementApi(getUserTenantId());
 
+  return (
+    <BrowserRouter basename={getBasename()}>
+      <AppEndpointsProvider>
+        <LogtoProvider
+          config={{
+            endpoint: adminTenantEndpoint,
+            appId: adminConsoleApplicationId,
+            resources: [managementApi.indicator, meApi.indicator],
+            scopes: [
+              UserScope.Email,
+              UserScope.Identities,
+              UserScope.CustomData,
+              managementApi.scopeAll,
+            ],
+          }}
+        >
+          <Main />
+        </LogtoProvider>
+      </AppEndpointsProvider>
+    </BrowserRouter>
+  );
+};
 export default App;

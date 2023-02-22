@@ -10,6 +10,7 @@ import {
   createMeApiInAdminTenant,
   createDefaultSignInExperience,
   createAdminTenantSignInExperience,
+  createDefaultAdminConsoleApplication,
 } from '@logto/schemas';
 import { Hooks, Tenants } from '@logto/schemas/models';
 import type { DatabaseTransactionConnection } from 'slonik';
@@ -128,6 +129,7 @@ export const seedTables = async (
       insertInto(createDefaultSignInExperience(defaultTenantId), 'sign_in_experiences')
     ),
     connection.query(insertInto(createAdminTenantSignInExperience(), 'sign_in_experiences')),
+    connection.query(insertInto(createDefaultAdminConsoleApplication(), 'applications')),
     updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
 };

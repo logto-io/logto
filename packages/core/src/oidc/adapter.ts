@@ -13,21 +13,26 @@ import { appendPath } from '#src/utils/url.js';
 
 import { getConstantClientMetadata } from './utils.js';
 
-const buildAdminConsoleClientMetadata = (envSet: EnvSet): AllClientMetadata => {
-  const { adminUrlSet, cloudUrlSet } = EnvSet.values;
-  const urls = [
-    ...adminUrlSet.deduplicated().map((url) => appendPath(url, '/console').toString()),
-    // Logto Cloud uses `https://some.cloud.endpoint/[tenantId]` to serve Admin Console for specific Tenant ID
-    ...cloudUrlSet.deduplicated().map((url) => appendPath(url, '/' + envSet.tenantId).toString()),
-  ];
+/**
+ * Append `redirect_uris` and `post_logout_redirect_uris` for Admin Console
+ * as Admin Console is attached to the admin tenant in OSS and its endpoints are dynamic (from env variable).
+ */
+const transpileMetadata = (clientId: string, data: AllClientMetadata): AllClientMetadata => {
+  const { adminUrlSet } = EnvSet.values;
+  const urls = adminUrlSet.deduplicated().map((url) => appendPath(url, '/console').toString());
 
-  return {
-    ...getConstantClientMetadata(envSet, ApplicationType.SPA),
-    client_id: adminConsoleApplicationId,
-    client_name: 'Admin Console',
-    redirect_uris: urls.map((url) => appendPath(url, '/callback').toString()),
-    post_logout_redirect_uris: urls,
-  };
+  if (clientId === adminConsoleApplicationId) {
+    return {
+      ...data,
+      redirect_uris: [
+        ...(data.redirect_uris ?? []),
+        ...urls.map((url) => appendPath(url, '/callback').toString()),
+      ],
+      post_logout_redirect_uris: [...(data.post_logout_redirect_uris ?? []), ...urls],
+    };
+  }
+
+  return data;
 };
 
 const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
@@ -77,7 +82,7 @@ export default function postgresAdapter(
       client_secret,
       client_name,
       ...getConstantClientMetadata(envSet, type),
-      ...snakecaseKeys(oidcClientMetadata),
+      ...transpileMetadata(client_id, snakecaseKeys(oidcClientMetadata)),
       // `node-oidc-provider` won't camelCase custom parameter keys, so we need to keep the keys camelCased
       ...customClientMetadata,
     });
@@ -85,11 +90,6 @@ export default function postgresAdapter(
     return {
       upsert: reject,
       find: async (id) => {
-        // Directly return client metadata since Admin Console does not belong to any tenant in the OSS version.
-        if (id === adminConsoleApplicationId) {
-          return buildAdminConsoleClientMetadata(envSet);
-        }
-
         if (id === demoAppApplicationId) {
           return buildDemoAppClientMetadata(envSet);
         }

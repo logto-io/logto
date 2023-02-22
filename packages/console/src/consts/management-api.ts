@@ -1,14 +1,10 @@
-import {
-  adminTenantId,
-  defaultTenantId,
-  getManagementApiResourceIndicator,
-  PredefinedScope,
-} from '@logto/schemas';
+import { adminTenantId, getManagementApiResourceIndicator, PredefinedScope } from '@logto/schemas';
 
-export const managementApi = Object.freeze({
-  indicator: getManagementApiResourceIndicator(defaultTenantId),
-  scopeAll: PredefinedScope.All,
-});
+export const getManagementApi = (tenantId: string) =>
+  Object.freeze({
+    indicator: getManagementApiResourceIndicator(tenantId),
+    scopeAll: PredefinedScope.All,
+  });
 
 export const meApi = Object.freeze({
   indicator: getManagementApiResourceIndicator(adminTenantId, 'me'),
