@@ -1,8 +1,11 @@
+import { conditional } from '@silverhand/essentials';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import Case from '@/assets/images/case.svg';
+import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
@@ -20,12 +23,22 @@ import { titleOptions, companySizeOptions, reasonOptions } from './options';
 const About = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
-  const { control, register, handleSubmit } = useForm<Questionnaire>({
+
+  const {
+    data: { questionnaire },
+    update,
+  } = useUserOnboardingData();
+
+  const { control, register, handleSubmit, reset } = useForm<Questionnaire>({
     mode: 'onChange',
   });
 
+  useEffect(() => {
+    reset(questionnaire);
+  }, [questionnaire, reset]);
+
   const onSubmit = handleSubmit(async (formData) => {
-    console.log(formData);
+    await update({ questionnaire: formData });
   });
 
   const onNext = async () => {
@@ -49,14 +62,15 @@ const About = () => {
               <Controller
                 control={control}
                 name="titles"
-                defaultValue={[]}
                 render={({ field: { onChange, value } }) => (
                   <MultiCardSelector
                     className={styles.titleSelector}
                     optionClassName={styles.option}
-                    value={value}
+                    value={value ?? []}
                     options={titleOptions}
-                    onChange={onChange}
+                    onChange={(value) => {
+                      onChange(value.length === 0 ? undefined : value);
+                    }}
                   />
                 )}
               />
@@ -77,10 +91,12 @@ const About = () => {
                 render={({ field: { onChange, value, name } }) => (
                   <CardSelector
                     name={name}
-                    value={value}
+                    value={value ?? ''}
                     options={companySizeOptions}
                     optionClassName={styles.option}
-                    onChange={onChange}
+                    onChange={(value) => {
+                      onChange(conditional(value && value));
+                    }}
                   />
                 )}
               />
@@ -92,9 +108,14 @@ const About = () => {
               <Controller
                 control={control}
                 name="reasons"
-                defaultValue={[]}
                 render={({ field: { onChange, value } }) => (
-                  <MultiCardSelector value={value} options={reasonOptions} onChange={onChange} />
+                  <MultiCardSelector
+                    value={value ?? []}
+                    options={reasonOptions}
+                    onChange={(value) => {
+                      onChange(value.length === 0 ? undefined : value);
+                    }}
+                  />
                 )}
               />
             </FormField>

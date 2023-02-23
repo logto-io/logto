@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Congrats from '@/assets/images/congrats.svg';
 import ActionBar from '@/cloud/components/ActionBar';
 import { CardSelector } from '@/cloud/components/CardSelector';
+import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
@@ -20,15 +22,25 @@ import { deploymentTypeOptions, projectOptions } from './options';
 const Welcome = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
+
+  const {
+    data: { questionnaire },
+    update,
+  } = useUserOnboardingData();
+
   const {
     control,
     handleSubmit,
     formState: { isSubmitting, isValid },
-  } = useForm<Questionnaire>({ mode: 'onChange' });
+    reset,
+  } = useForm<Questionnaire>({ defaultValues: questionnaire, mode: 'onChange' });
+
+  useEffect(() => {
+    reset(questionnaire);
+  }, [questionnaire, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
-    // TODO @xiaoyijun send data to the backend
-    console.log(formData);
+    await update({ questionnaire: formData });
   });
 
   const onNext = async () => {
