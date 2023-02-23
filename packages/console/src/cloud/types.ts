@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+export enum CloudRoute {
+  Onboard = 'onboard',
+}
+
 export enum CloudPage {
   Welcome = 'welcome',
   AboutUser = 'about-user',

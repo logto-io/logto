@@ -11,6 +11,7 @@ import './scss/overlayscrollbars.scss';
 
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
+import CloudApp from '@/cloud/App';
 import AppLoading from '@/components/AppLoading';
 import Toast from '@/components/Toast';
 import { getManagementApi, meApi } from '@/consts/management-api';
@@ -39,7 +40,6 @@ import UserDetails from '@/pages/UserDetails';
 import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
-import Cloud from './cloud/pages/Cloud';
 import {
   ApiResourceDetailsTabs,
   ConnectorsTabs,
@@ -50,7 +50,6 @@ import {
   getUserTenantId,
   getBasename,
 } from './consts';
-import { isCloud } from './consts/cloud';
 import AppContent from './containers/AppContent';
 import AppEndpointsProvider, { AppEndpointsContext } from './containers/AppEndpointsProvider';
 import ApiResourcePermissions from './pages/ApiResourceDetails/ApiResourcePermissions';
@@ -82,7 +81,6 @@ const Main = () => {
             <Route path="callback" element={<Callback />} />
             <Route path="welcome" element={<Welcome />} />
             <Route element={<AppLayout />}>
-              {isCloud && <Route path="cloud/*" element={<Cloud />} />}
               <Route element={<AppContent />}>
                 <Route path="*" element={<NotFound />} />
                 <Route path="get-started" element={<GetStarted />} />
@@ -163,7 +161,13 @@ const Main = () => {
 };
 
 const App = () => {
-  const managementApi = getManagementApi(getUserTenantId());
+  const tenantId = getUserTenantId();
+
+  if (!tenantId) {
+    return <CloudApp />;
+  }
+
+  const managementApi = getManagementApi(tenantId);
 
   return (
     <BrowserRouter basename={getBasename()}>
