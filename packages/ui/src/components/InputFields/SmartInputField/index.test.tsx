@@ -1,4 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { Globals } from '@react-spring/web';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, render } from '@testing-library/react';
 
@@ -22,6 +23,12 @@ describe('SmartInputField Component', () => {
     enabledTypes?: IdentifierInputType[];
   }) => render(<SmartInputField {...props} onChange={onChange} />);
 
+  beforeAll(() => {
+    Globals.assign({
+      skipAnimation: true,
+    });
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -29,11 +36,11 @@ describe('SmartInputField Component', () => {
   describe('standard input field', () => {
     test.each([SignInIdentifier.Username, SignInIdentifier.Email])(
       `should render %s input field`,
-      (currentType) => {
-        const { container } = renderInputField({ enabledTypes: [currentType] });
+      async (currentType) => {
+        const { container, queryByTestId } = renderInputField({ enabledTypes: [currentType] });
 
-        // Country code should not be rendered
-        expect(container.querySelector('select')).toBeNull();
+        // Country code select should have a 0 width
+        expect(queryByTestId('prefix')?.style.width).toBe('0px');
 
         const input = container.querySelector('input');
 
@@ -51,35 +58,37 @@ describe('SmartInputField Component', () => {
     );
 
     test('phone', async () => {
-      const { container, queryAllByText } = renderInputField({
+      const { container, queryAllByText, queryByTestId } = renderInputField({
         enabledTypes: [SignInIdentifier.Phone],
       });
 
       const countryCode = queryAllByText(`+${defaultCountryCallingCode}`);
       expect(countryCode).toHaveLength(2);
 
+      // Country code select should have a >0 width.
+      // The React Spring acquires the child element's width ahead of elementRef is properly set.
+      // So the value returns null. Assert style is null to represent the width is >0.
+      expect(queryByTestId('prefix')?.getAttribute('style')).toBe(null);
+
       const selector = container.querySelector('select');
-      expect(selector).not.toBeNull();
+      assert(selector, new Error('selector should not be null'));
 
       const newCountryCode = '86';
 
-      if (selector) {
-        fireEvent.change(selector, { target: { value: newCountryCode } });
-        expect(onChange).toBeCalledWith({
-          type: SignInIdentifier.Phone,
-          value: '',
-        });
-      }
+      fireEvent.change(selector, { target: { value: newCountryCode } });
+      expect(onChange).toBeCalledWith({
+        type: SignInIdentifier.Phone,
+        value: '',
+      });
 
       const input = container.querySelector('input');
+      assert(input, new Error('input should not be null'));
 
-      if (input) {
-        fireEvent.change(input, { target: { value: '12315' } });
-        expect(onChange).toBeCalledWith({
-          type: SignInIdentifier.Phone,
-          value: `${newCountryCode}12315`,
-        });
-      }
+      fireEvent.change(input, { target: { value: '12315' } });
+      expect(onChange).toBeCalledWith({
+        type: SignInIdentifier.Phone,
+        value: `${newCountryCode}12315`,
+      });
     });
   });
 
@@ -88,11 +97,11 @@ describe('SmartInputField Component', () => {
       enabledTypes: [SignInIdentifier.Email, SignInIdentifier.Username],
     };
 
-    test('should  return username type if no @ char present', () => {
-      const { container } = renderInputField(config);
+    test('should  return username type if no @ char present', async () => {
+      const { container, queryByTestId } = renderInputField(config);
 
-      // Country code should not be rendered
-      expect(container.querySelector('select')).toBeNull();
+      // Country code select should have a 0 width
+      expect(queryByTestId('prefix')?.style.width).toBe('0px');
 
       const input = container.querySelector('input');
 
@@ -102,11 +111,11 @@ describe('SmartInputField Component', () => {
       }
     });
 
-    test('should return username type with all digits input', () => {
-      const { container } = renderInputField(config);
+    test('should return username type with all digits input', async () => {
+      const { container, queryByTestId } = renderInputField(config);
 
-      // Country code should not be rendered
-      expect(container.querySelector('select')).toBeNull();
+      // Country code select should have a 0 width
+      expect(queryByTestId('prefix')?.style.width).toBe('0px');
 
       const input = container.querySelector('input');
 
@@ -116,11 +125,11 @@ describe('SmartInputField Component', () => {
       }
     });
 
-    test('should return email type with @ char', () => {
-      const { container } = renderInputField(config);
+    test('should return email type with @ char', async () => {
+      const { container, queryByTestId } = renderInputField(config);
 
-      // Country code should not be rendered
-      expect(container.querySelector('select')).toBeNull();
+      // Country code select should have a 0 width
+      expect(queryByTestId('prefix')?.style.width).toBe('0px');
 
       const input = container.querySelector('input');
 

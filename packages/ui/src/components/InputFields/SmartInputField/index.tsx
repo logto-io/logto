@@ -1,6 +1,6 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { animated, config, useSpring } from '@react-spring/web';
 import type { Nullable } from '@silverhand/essentials';
-import { conditional } from '@silverhand/essentials';
 import type { HTMLProps, Ref } from 'react';
 import { useEffect, useImperativeHandle, useRef, forwardRef } from 'react';
 
@@ -28,6 +28,8 @@ type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix' | 'value'> 
   onChange?: (data: IdentifierInputValue) => void;
 };
 
+const AnimatedInputField = animated(InputField);
+
 const SmartInputField = (
   { defaultValue, defaultType, enabledTypes = [], onChange, ...rest }: Props,
   ref: Ref<Nullable<HTMLInputElement>>
@@ -48,39 +50,38 @@ const SmartInputField = (
     enabledTypes,
   });
 
-  const isPhoneEnabled = enabledTypes.includes(SignInIdentifier.Phone);
+  const isPrefixVisible = identifierType === SignInIdentifier.Phone;
+  const { paddingLeft } = useSpring({
+    paddingLeft: isPrefixVisible ? 4 : 16,
+    config: { ...config.default, clamp: true },
+  });
 
   useEffect(() => {
     onChange?.({
       type: identifierType,
-      value:
-        identifierType === SignInIdentifier.Phone && inputValue
-          ? `${countryCode}${inputValue}`
-          : inputValue,
+      value: isPrefixVisible && inputValue ? `${countryCode}${inputValue}` : inputValue,
     });
-  }, [countryCode, identifierType, inputValue, onChange]);
+  }, [countryCode, identifierType, inputValue, isPrefixVisible, onChange]);
 
   return (
-    <InputField
-      {...getInputHtmlProps(enabledTypes, identifierType)}
+    <AnimatedInputField
       {...rest}
+      {...getInputHtmlProps(enabledTypes, identifierType)}
       ref={innerRef}
       isSuffixFocusVisible={Boolean(inputValue)}
-      isPrefixVisible={identifierType === SignInIdentifier.Phone}
+      style={{ zIndex: 1, paddingLeft }} // Give <input /> z-index to override country selector
       value={inputValue}
-      prefix={conditional(
-        isPhoneEnabled && (
-          <AnimatedPrefix isVisible={identifierType === SignInIdentifier.Phone}>
-            <CountryCodeSelector
-              value={countryCode}
-              onChange={(event) => {
-                onCountryCodeChange(event);
-                innerRef.current?.focus();
-              }}
-            />
-          </AnimatedPrefix>
-        )
-      )}
+      prefix={
+        <AnimatedPrefix isVisible={isPrefixVisible}>
+          <CountryCodeSelector
+            value={countryCode}
+            onChange={(event) => {
+              onCountryCodeChange(event);
+              innerRef.current?.focus();
+            }}
+          />
+        </AnimatedPrefix>
+      }
       suffix={
         <IconButton
           onMouseDown={(event) => {

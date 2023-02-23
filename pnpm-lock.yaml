@@ -848,6 +848,7 @@ importers:
       '@parcel/transformer-sass': 2.8.3
       '@parcel/transformer-svg-react': 2.8.3
       '@peculiar/webcrypto': ^1.3.3
+      '@react-spring/shared': ^9.6.1
       '@react-spring/web': ^9.6.1
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/eslint-config-react': 2.0.1
@@ -905,6 +906,7 @@ importers:
       '@parcel/transformer-sass': 2.8.3_@parcel+core@2.8.3
       '@parcel/transformer-svg-react': 2.8.3_@parcel+core@2.8.3
       '@peculiar/webcrypto': 1.3.3
+      '@react-spring/shared': 9.6.1_react@18.2.0
       '@react-spring/web': 9.6.1_biqbaboplfbrettd7655fr4n2y
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
       '@silverhand/eslint-config-react': 2.0.1_kz2ighe3mj4zdkvq5whtl3dq4u
