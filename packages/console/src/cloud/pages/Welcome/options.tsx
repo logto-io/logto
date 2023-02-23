@@ -22,8 +22,8 @@ export const projectOptions: SelectorOption[] = [
 export const deploymentTypeOptions: SelectorOption[] = [
   {
     icon: <Database />,
-    title: 'cloud.welcome.deployment_type_options.opensource',
-    value: DeploymentType.Opensource,
+    title: 'cloud.welcome.deployment_type_options.open_source',
+    value: DeploymentType.OpenSource,
   },
   {
     icon: <Cloud />,
