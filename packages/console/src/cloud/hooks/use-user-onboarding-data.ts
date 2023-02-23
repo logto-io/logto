@@ -11,7 +11,7 @@ const userOnboardingDataKey = 'onboarding';
 const useUserOnboardingData = () => {
   const { data, error, isLoading, isLoaded, update: updateMeCustomData } = useMeCustomData();
 
-  const userCloudData = useMemo(() => {
+  const userOnboardingData = useMemo(() => {
     const parsed = z.object({ [userOnboardingDataKey]: userOnboardingDataGuard }).safeParse(data);
 
     return parsed.success ? parsed.data[userOnboardingDataKey] : {};
@@ -21,15 +21,15 @@ const useUserOnboardingData = () => {
     async (data: Partial<UserOnboardingData>) => {
       await updateMeCustomData({
         [userOnboardingDataKey]: {
-          ...userCloudData,
+          ...userOnboardingData,
           ...data,
         },
       });
     },
-    [updateMeCustomData, userCloudData]
+    [updateMeCustomData, userOnboardingData]
   );
 
-  return { data: userCloudData, error, isLoading, isLoaded, update };
+  return { data: userOnboardingData, error, isLoading, isLoaded, update };
 };
 
 export default useUserOnboardingData;
