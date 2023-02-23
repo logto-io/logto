@@ -20,6 +20,7 @@ RUN pnpm i
 ### Build ###
 # Admin Console build env
 ENV CONSOLE_PUBLIC_URL=/
+ENV IS_CLOUD=1
 # Temporarily use it for Admin Console build, will try to use runtime technique later
 ENV ADMIN_TENANT_ENDPOINT=https://admin.app.logto.dev/
 RUN pnpm prepack

@@ -16,6 +16,7 @@ import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import Spacer from '@/components/Spacer';
 import { Ring as Spinner } from '@/components/Spinner';
 import UserAvatar from '@/components/UserAvatar';
+import { getBasename } from '@/consts';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -144,7 +145,7 @@ const UserInfo = () => {
               return;
             }
             setIsLoading(true);
-            void signOut(`${window.location.origin}/console`);
+            void signOut(new URL(getBasename(), window.location.origin).toString());
           }}
         >
           {t('menu.sign_out')}
