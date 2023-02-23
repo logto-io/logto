@@ -1,6 +1,7 @@
 import type { Profile, SignInExperience, User } from '@logto/schemas';
 import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -119,7 +120,7 @@ const fillMissingProfileWithSocialIdentity = async (
   interaction: MandatoryProfileValidationInteraction,
   userQueries: Queries['users']
 ): Promise<MandatoryProfileValidationInteraction> => {
-  const { identifiers, profile } = interaction;
+  const { identifiers, profile, event } = interaction;
 
   const socialUserInfo = getSocialUserInfo(identifiers);
 
@@ -144,7 +145,10 @@ const fillMissingProfileWithSocialIdentity = async (
         { code: 'user.missing_profile', status: 422 },
         {
           missingProfile: Array.from(missingProfileSet),
-          registeredSocialIdentity: { email },
+          // Throw taken email when it's sign-in event
+          ...conditional(
+            event === InteractionEvent.SignIn && { registeredSocialIdentity: { email } }
+          ),
         }
       )
     );
@@ -178,7 +182,10 @@ const fillMissingProfileWithSocialIdentity = async (
         { code: 'user.missing_profile', status: 422 },
         {
           missingProfile: Array.from(missingProfileSet),
-          registeredSocialIdentity: { phone },
+          // Throw taken phone when it's sign-in event
+          ...conditional(
+            event === InteractionEvent.SignIn && { registeredSocialIdentity: { phone } }
+          ),
         }
       )
     );

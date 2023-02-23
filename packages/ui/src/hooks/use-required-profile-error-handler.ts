@@ -27,7 +27,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
         // Required as a sign up method but missing in the user profile
         const missingProfile = data?.missingProfile[0];
 
-        // Required as a sign up method can be found in Social Identity (email / phone), but registered with a different account
+        // Required as a sign up method, verified email or phone can be found in Social Identity, but registered with a different account
         const registeredSocialIdentity = data?.registeredSocialIdentity;
 
         const linkSocialQueryString = linkSocial
