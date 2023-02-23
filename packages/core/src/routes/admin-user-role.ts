@@ -99,6 +99,44 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
     }
   );
 
+  router.patch(
+    '/users/:userId/roles',
+    koaGuard({
+      params: object({ userId: string() }),
+      body: object({ roleIds: string().min(1).array() }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { roleIds },
+      } = ctx.guard;
+
+      await findUserById(userId);
+      const usersRoles = await findUsersRolesByUserId(userId);
+
+      // Only add the ones that doesn't exist
+      const roleIdsToAdd = roleIds.filter(
+        (roleId) => !usersRoles.some(({ roleId: _roleId }) => _roleId === roleId)
+      );
+      // Remove existing roles that isn't wanted by user anymore
+      const roleIdsToRemove = usersRoles
+        .filter(({ roleId }) => !roleIds.includes(roleId))
+        .map(({ roleId }) => roleId);
+
+      await Promise.all(roleIdsToAdd.map(async (roleId) => findRoleById(roleId)));
+      await Promise.all(
+        roleIdsToRemove.map(async (roleId) => deleteUsersRolesByUserIdAndRoleId(userId, roleId))
+      );
+      await insertUsersRoles(
+        roleIdsToAdd.map((roleId) => ({ id: generateStandardId(), userId, roleId }))
+      );
+
+      ctx.status = 200;
+
+      return next();
+    }
+  );
+
   router.delete(
     '/users/:userId/roles/:roleId',
     koaGuard({

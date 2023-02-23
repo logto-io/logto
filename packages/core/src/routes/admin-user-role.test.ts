@@ -1,6 +1,6 @@
 import { pickDefault } from '@logto/shared/esm';
 
-import { mockRole, mockUser } from '#src/__mocks__/index.js';
+import { mockRole, mockUser, mockRole2, mockUserRole } from '#src/__mocks__/index.js';
 import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -47,6 +47,18 @@ describe('user role routes', () => {
     expect(response.status).toEqual(201);
     expect(insertUsersRoles).toHaveBeenCalledWith([
       { id: mockId, userId: mockUser.id, roleId: mockRole.id },
+    ]);
+  });
+
+  it('PATCH /users/:id/roles', async () => {
+    findUsersRolesByUserId.mockResolvedValueOnce([mockUserRole]);
+    const response = await roleRequester.patch(`/users/${mockUser.id}/roles`).send({
+      roleIds: [mockRole2.id],
+    });
+    expect(response.status).toEqual(200);
+    expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(mockUser.id, mockRole.id);
+    expect(insertUsersRoles).toHaveBeenCalledWith([
+      { id: mockId, userId: mockUser.id, roleId: mockRole2.id },
     ]);
   });
 

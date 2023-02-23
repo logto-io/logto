@@ -6,6 +6,7 @@ import type {
   Resource,
   Role,
   Scope,
+  UsersRole,
 } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 
@@ -72,6 +73,13 @@ export const mockRole: Role = {
   description: 'admin',
 };
 
+export const mockRole2: Role = {
+  tenantId: 'fake_tenant',
+  id: 'role_id2',
+  name: 'admin2',
+  description: 'admin2',
+};
+
 export const mockAdminConsoleData: AdminConsoleData = {
   demoChecked: false,
   applicationCreated: false,
@@ -92,4 +100,11 @@ export const mockPasscode: Passcode = {
   consumed: false,
   tryCount: 2,
   createdAt: 10,
+};
+
+export const mockUserRole: UsersRole = {
+  tenantId: 'fake_tenant',
+  id: 'user_role_id',
+  userId: 'foo',
+  roleId: 'role_id',
 };
