@@ -2,7 +2,9 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import Logo from '@/assets/images/logo.svg';
+import EarlyBirdGift from '@/cloud/components/EarlyBirdGift';
 import Spacer from '@/components/Spacer';
+import { isCloud } from '@/consts/cloud';
 import GetStartedProgress from '@/pages/GetStarted/components/GetStartedProgress';
 
 import UserInfo from '../UserInfo';
@@ -22,6 +24,7 @@ const Topbar = ({ className }: Props) => {
       <div className={styles.text}>{t('title')}</div>
       <Spacer />
       <GetStartedProgress />
+      {isCloud && <EarlyBirdGift />}
       <UserInfo />
     </div>
   );

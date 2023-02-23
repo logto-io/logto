@@ -5,6 +5,9 @@
 
   .title {
     color: var(--color-text);
+  }
+
+  .titleEllipsis {
     @include _.text-ellipsis;
   }
 
