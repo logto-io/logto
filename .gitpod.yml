@@ -15,6 +15,7 @@ tasks:
       gp ports await 5432
       sleep 3
       export ENDPOINT=$(gp url 3001)
+      export ADMIN_ENDPOINT=$(gp url 3002)
       pnpm cli db seed
       pnpm start:dev
     env:
@@ -25,6 +26,10 @@ ports:
   - name: Logto
     description: The Logto core service
     port: 3001
+    visibility: public
+  - name: Admin Console
+    description: The Admin Console for Logto core service
+    port: 3002
     visibility: public
   - name: Postgres
     port: 5432
