@@ -9,8 +9,9 @@ const sign_in_exp = {
     others: 'Andere',
   },
   welcome: {
-    title:
-      'Dies ist das erste Mal, dass du deine Anmeldeoberfläche anpasst. Diese Anleitung hilft dir, alle notwendigen Einstellungen vorzunehmen und schnell loszulegen.',
+    title: 'Customize sign-in experience', // UNTRANSLATED
+    description:
+      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.', // UNTRANSLATED
     get_started: 'Erste Schritte',
     apply_remind:
       'Bitte beachte, dass die Anmeldeoberfläche für alle Anwendungen unter diesem Konto gilt.',

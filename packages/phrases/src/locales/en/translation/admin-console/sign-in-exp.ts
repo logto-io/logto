@@ -7,8 +7,9 @@ const sign_in_exp = {
     others: 'Others',
   },
   welcome: {
-    title:
-      'This is the first time you define sign-in experience. This guide will help you go through all necessary settings and quickly get started.',
+    title: 'Customize sign-in experience',
+    description:
+      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.',
     get_started: 'Get Started',
     apply_remind:
       'Please note that sign-in experience will apply to all applications under this account.',

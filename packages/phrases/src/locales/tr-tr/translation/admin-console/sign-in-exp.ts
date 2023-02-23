@@ -8,8 +8,9 @@ const sign_in_exp = {
     others: 'Diğerleri',
   },
   welcome: {
-    title:
-      'Bu oturum açma deneyimini ilk kez tanımlıyorsunuz. Bu kılavuz, gerekli tüm ayarları yapmanıza ve hızlı bir şekilde başlamanıza yardımcı olacaktır.',
+    title: 'Customize sign-in experience', // UNTRANSLATED
+    description:
+      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.', // UNTRANSLATED
     get_started: 'Başla',
     apply_remind:
       'Lütfen oturum açma deneyiminin bu hesap altındaki tüm uygulamalar için geçerli olacağını unutmayınız.',

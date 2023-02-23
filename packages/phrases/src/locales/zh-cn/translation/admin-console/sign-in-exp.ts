@@ -7,7 +7,9 @@ const sign_in_exp = {
     others: '其它',
   },
   welcome: {
-    title: '这是你首次定义登录体验。跟随引导，完成登录体验的必要设置项。',
+    title: 'Customize sign-in experience', // UNTRANSLATED
+    description:
+      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.', // UNTRANSLATED
     get_started: '开始',
     apply_remind: '请注意，登录体验将会应用到当前帐户下的所有应用。',
   },

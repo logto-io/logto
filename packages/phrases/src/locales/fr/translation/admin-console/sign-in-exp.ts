@@ -8,8 +8,9 @@ const sign_in_exp = {
     others: 'Autres',
   },
   welcome: {
-    title:
-      "C'est la première fois que vous définissez l'expérience de connexion. Ce guide vous aidera à passer par tous les paramètres nécessaires et à démarrer rapidement.",
+    title: 'Customize sign-in experience', // UNTRANSLATED
+    description:
+      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.', // UNTRANSLATED
     get_started: 'Commencez',
     apply_remind:
       "Veuillez noter que l'expérience de connexion s'appliquera à toutes les applications sous ce compte.",
