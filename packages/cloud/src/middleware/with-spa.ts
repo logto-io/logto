@@ -73,18 +73,13 @@ export default function withSpa<InputContext extends RequestContext>({
         'Content-Type': mime.lookup(pathLike),
         'Last-Modified': stat.mtime.toUTCString(),
         'Cache-Control': `max-age=${maxAge}`,
+        ETag: `"${stat.size.toString(16)}-${stat.mtimeMs.toString(16)}"`,
       },
       stream: createReadStream(pathLike),
       status: 200,
     });
   };
 }
-
-const normalize = (pathLike: string) => {
-  const value = path.normalize(pathLike);
-
-  return value.length > 1 && value.endsWith('/') ? value.slice(0, -1) : value;
-};
 
 const tryStat = async (pathLike: string) => {
   try {
