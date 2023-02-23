@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import { signInWithSocial } from '@/apis/interaction';
-import { UserFlow } from '@/types';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
 import { stateValidation } from '@/utils/social-connectors';
@@ -55,7 +54,6 @@ const useSocialSignInListener = (connectorId?: string) => {
   );
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({
     replace: true,
-    flow: UserFlow.signIn,
   });
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
