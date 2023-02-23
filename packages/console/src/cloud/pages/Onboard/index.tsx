@@ -13,7 +13,7 @@ import * as styles from './index.module.scss';
 
 const welcomePathname = getCloudPagePathname(CloudPage.Welcome);
 
-const Cloud = () => {
+const Onboard = () => {
   const {
     data: { questionnaire },
     isLoaded,
@@ -24,7 +24,7 @@ const Cloud = () => {
   }
 
   return (
-    <div className={styles.cloud}>
+    <div className={styles.onBoard}>
       <Routes>
         <Route index element={<Navigate replace to={welcomePathname} />} />
         <Route path={CloudPage.Welcome} element={<Welcome />} />
@@ -46,4 +46,4 @@ const Cloud = () => {
   );
 };
 
-export default Cloud;
+export default Onboard;
