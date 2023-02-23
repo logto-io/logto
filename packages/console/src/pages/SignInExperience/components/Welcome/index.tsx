@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 import WelcomeImageDark from '@/assets/images/sign-in-experience-welcome-dark.svg';
 import WelcomeImage from '@/assets/images/sign-in-experience-welcome.svg';
 import Button from '@/components/Button';
-import Card from '@/components/Card';
-import CardTitle from '@/components/CardTitle';
 import { useTheme } from '@/hooks/use-theme';
 
 import GuideModal from './GuideModal';
@@ -23,15 +21,15 @@ const Welcome = ({ mutate }: Props) => {
 
   return (
     <div className={styles.container}>
-      <Card className={styles.welcome}>
-        <CardTitle
-          title="sign_in_exp.title"
-          subtitle="sign_in_exp.description"
-          className={styles.cardTitle}
-        />
-        <div className={styles.content}>
-          {theme === AppearanceMode.LightMode ? <WelcomeImage /> : <WelcomeImageDark />}
-          <div className={styles.text}>{t('sign_in_exp.welcome.title')}</div>
+      <div className={styles.content}>
+        {theme === AppearanceMode.LightMode ? (
+          <WelcomeImage className={styles.icon} />
+        ) : (
+          <WelcomeImageDark className={styles.icon} />
+        )}
+        <div className={styles.contentRight}>
+          <div className={styles.title}>{t('sign_in_exp.welcome.title')}</div>
+          <div className={styles.description}>{t('sign_in_exp.welcome.description')}</div>
           <Button
             title="sign_in_exp.welcome.get_started"
             type="primary"
@@ -40,7 +38,7 @@ const Welcome = ({ mutate }: Props) => {
             }}
           />
         </div>
-      </Card>
+      </div>
       <GuideModal
         isOpen={isOpen}
         onClose={() => {

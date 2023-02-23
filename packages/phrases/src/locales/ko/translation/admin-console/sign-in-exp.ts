@@ -7,7 +7,9 @@ const sign_in_exp = {
     others: '기타',
   },
   welcome: {
-    title: '가이드를 따라, 필수 설정을 빠르게 수정해 보세요.',
+    title: 'Customize sign-in experience', // UNTRANSLATED
+    description:
+      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.', // UNTRANSLATED
     get_started: '시작하기',
     apply_remind: '이 계정이 관리하는 모든 앱의 로그인 경험이 수정되는 것을 주의해 주세요.',
   },
