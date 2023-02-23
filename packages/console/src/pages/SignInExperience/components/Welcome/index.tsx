@@ -27,7 +27,7 @@ const Welcome = ({ mutate }: Props) => {
         ) : (
           <WelcomeImageDark className={styles.icon} />
         )}
-        <div className={styles.contentRight}>
+        <div className={styles.wrapper}>
           <div className={styles.title}>{t('sign_in_exp.welcome.title')}</div>
           <div className={styles.description}>{t('sign_in_exp.welcome.description')}</div>
           <Button
