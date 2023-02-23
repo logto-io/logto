@@ -18,7 +18,7 @@
     transition: width 0.3s ease-in;
     padding: 0 _.unit(4);
     flex: 1;
-    background: var(--color-bg-float); // TODO: @simeng update to proper value
+    background: var(--color-bg-body);
     caret-color: var(--color-brand-default);
     font: var(--font-body-1);
     color: var(--color-type-primary);
@@ -79,6 +79,7 @@
     /* stylelint-disable-next-line no-descending-specificity */
     input {
       font: var(--font-body-2);
+      background: var(--color-bg-float);
     }
 
     &:focus-within {

@@ -1,4 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { Globals } from '@react-spring/web';
 import { assert } from '@silverhand/essentials';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
@@ -38,6 +39,12 @@ describe('ForgotPassword', () => {
       </MemoryRouter>
     );
 
+  beforeAll(() => {
+    Globals.assign({
+      skipAnimation: true,
+    });
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -69,9 +76,9 @@ describe('ForgotPassword', () => {
     test.each(stateCases)('render the forgot password page with state %o', async (state) => {
       mockUseLocation.mockImplementation(() => ({ state }));
 
-      const { queryByText, queryAllByText, container } = renderPage(settings);
+      const { queryByText, queryAllByText, container, queryByTestId } = renderPage(settings);
       const inputField = container.querySelector('input[name="identifier"]');
-      const countryCodeSelector = container.querySelector('select[name="countryCode"]');
+      const countryCodeSelectorPrefix = queryByTestId('prefix');
       assert(inputField, new Error('input field not found'));
 
       expect(queryByText('description.reset_password')).not.toBeNull();
@@ -81,27 +88,35 @@ describe('ForgotPassword', () => {
 
       if (state.identifier === SignInIdentifier.Phone && settings.phone) {
         expect(inputField.getAttribute('value')).toBe(phone);
-        expect(countryCodeSelector).not.toBeNull();
+
+        // Country code select should have a >0 width.
+        // The React Spring acquires the child element's width ahead of elementRef is properly set.
+        // So the value returns null. Assert style is null to represent the width is >0.
+        expect(countryCodeSelectorPrefix?.getAttribute('style')).toBeNull();
+
         expect(queryAllByText(`+${countryCode}`)).toHaveLength(2);
       } else if (state.identifier === SignInIdentifier.Phone) {
+        // Phone Number not enabled
         expect(inputField.getAttribute('value')).toBe('');
-        expect(countryCodeSelector).toBeNull();
+        expect(countryCodeSelectorPrefix?.style.width).toBe('0px');
       }
 
       if (state.identifier === SignInIdentifier.Email && settings.email) {
         expect(inputField.getAttribute('value')).toBe(email);
-        expect(countryCodeSelector).toBeNull();
+        expect(countryCodeSelectorPrefix?.style.width).toBe('0px');
       } else if (state.identifier === SignInIdentifier.Email) {
+        // Only PhoneNumber is enabled
         expect(inputField.getAttribute('value')).toBe('');
-        expect(countryCodeSelector).not.toBeNull();
+        expect(countryCodeSelectorPrefix?.getAttribute('style')).toBeNull();
       }
 
       if (state.identifier === SignInIdentifier.Username && settings.email) {
         expect(inputField.getAttribute('value')).toBe('');
-        expect(countryCodeSelector).toBeNull();
+        expect(countryCodeSelectorPrefix?.style.width).toBe('0px');
       } else if (state.identifier === SignInIdentifier.Username) {
+        // Only PhoneNumber is enabled
         expect(inputField.getAttribute('value')).toBe('');
-        expect(countryCodeSelector).not.toBeNull();
+        expect(countryCodeSelectorPrefix?.getAttribute('style')).toBeNull();
       }
     });
   });
