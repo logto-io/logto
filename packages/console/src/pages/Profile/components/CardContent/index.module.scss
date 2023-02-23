@@ -1,0 +1,31 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  width: 100%;
+  font: var(--font-label-2);
+
+  .title {
+    margin-bottom: _.unit(1);
+  }
+
+  table {
+    width: 100%;
+    border-spacing: 0;
+    border: 1px solid var(--color-neutral-variant-90);
+    border-radius: 8px;
+
+    td {
+      height: 64px;
+      padding: 0 _.unit(6);
+      border-bottom: 1px solid var(--color-neutral-variant-90);
+
+      &:first-child {
+        width: 35%;
+      }
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+}
