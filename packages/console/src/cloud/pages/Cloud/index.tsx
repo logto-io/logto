@@ -1,7 +1,7 @@
 import { conditional } from '@silverhand/essentials';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import useUserCloudData from '@/cloud/hooks/use-user-cloud-data';
+import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
 import { CloudPage } from '@/cloud/types';
 import { getCloudPagePathname } from '@/cloud/utils';
 import NotFound from '@/pages/NotFound';
@@ -17,7 +17,7 @@ const Cloud = () => {
   const {
     data: { questionnaire },
     isLoaded,
-  } = useUserCloudData();
+  } = useUserOnboardingData();
 
   if (!isLoaded) {
     return null;

@@ -54,8 +54,8 @@ export const questionnaireGuard = z.object({
 
 export type Questionnaire = z.infer<typeof questionnaireGuard>;
 
-export const userCloudDataGuard = z.object({
+export const userOnboardingDataGuard = z.object({
   questionnaire: questionnaireGuard.optional(),
 });
 
-export type UserCloudData = z.infer<typeof userCloudDataGuard>;
+export type UserOnboardingData = z.infer<typeof userOnboardingDataGuard>;

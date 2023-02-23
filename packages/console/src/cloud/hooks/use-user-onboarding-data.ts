@@ -1,25 +1,26 @@
-import { userCloudDataKey } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import { z } from 'zod';
 
 import useMeCustomData from '@/hooks/use-me-custom-data';
 
-import type { UserCloudData } from '../types';
-import { userCloudDataGuard } from '../types';
+import type { UserOnboardingData } from '../types';
+import { userOnboardingDataGuard } from '../types';
 
-const useUserCloudData = () => {
+const userOnboardingDataKey = 'onboarding';
+
+const useUserOnboardingData = () => {
   const { data, error, isLoading, isLoaded, update: updateMeCustomData } = useMeCustomData();
 
   const userCloudData = useMemo(() => {
-    const parsed = z.object({ [userCloudDataKey]: userCloudDataGuard }).safeParse(data);
+    const parsed = z.object({ [userOnboardingDataKey]: userOnboardingDataGuard }).safeParse(data);
 
-    return parsed.success ? parsed.data.cloud : {};
+    return parsed.success ? parsed.data[userOnboardingDataKey] : {};
   }, [data]);
 
   const update = useCallback(
-    async (data: Partial<UserCloudData>) => {
+    async (data: Partial<UserOnboardingData>) => {
       await updateMeCustomData({
-        [userCloudDataKey]: {
+        [userOnboardingDataKey]: {
           ...userCloudData,
           ...data,
         },
@@ -31,4 +32,4 @@ const useUserCloudData = () => {
   return { data: userCloudData, error, isLoading, isLoaded, update };
 };
 
-export default useUserCloudData;
+export default useUserOnboardingData;

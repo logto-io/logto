@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Congrats from '@/assets/images/congrats.svg';
 import ActionBar from '@/cloud/components/ActionBar';
 import { CardSelector } from '@/cloud/components/CardSelector';
-import useUserCloudData from '@/cloud/hooks/use-user-cloud-data';
+import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
@@ -26,7 +26,7 @@ const Welcome = () => {
   const {
     data: { questionnaire },
     update,
-  } = useUserCloudData();
+  } = useUserOnboardingData();
 
   const {
     control,

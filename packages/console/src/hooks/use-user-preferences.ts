@@ -1,5 +1,5 @@
 import { builtInLanguages as builtInConsoleLanguages } from '@logto/phrases';
-import { adminConsolePreferencesKey, AppearanceMode } from '@logto/schemas';
+import { AppearanceMode } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
 import { useEffect, useMemo } from 'react';
 import { z } from 'zod';
@@ -7,6 +7,8 @@ import { z } from 'zod';
 import { themeStorageKey } from '@/consts';
 
 import useMeCustomData from './use-me-custom-data';
+
+const adminConsolePreferencesKey = 'adminConsolePreferences';
 
 const userPreferencesGuard = z.object({
   language: z.enum(builtInConsoleLanguages).optional(),
@@ -30,7 +32,7 @@ const useUserPreferences = () => {
     const parsed = z.object({ [adminConsolePreferencesKey]: userPreferencesGuard }).safeParse(data);
 
     return parsed.success
-      ? parsed.data.adminConsolePreferences
+      ? parsed.data[adminConsolePreferencesKey]
       : {
           appearanceMode:
             getEnumFromArray(
