@@ -16,6 +16,7 @@ const errors = {
   password_pattern_error: 'Password requires a minimum of 6 characters',
   insecure_contexts: 'Insecure contexts (non-HTTPS) are not supported.',
   unexpected_error: 'An unexpected error occurred',
+  not_found: '404 not found',
 };
 
 export default errors;

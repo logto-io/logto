@@ -16,6 +16,7 @@ const errors = {
   password_pattern_error: 'Das Passwort muss aus mindestens 6 Zeichen lang sein',
   insecure_contexts: 'Unsichere Kontexte (nicht-HTTPS) werden nicht unterstützt.',
   unexpected_error: 'Ein unerwarteter Fehler ist aufgetreten',
+  not_found: '404 not found',
 };
 
 export default errors;

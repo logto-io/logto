@@ -16,6 +16,7 @@ const errors = {
   password_pattern_error: 'Şifre minimum 6 karakter olmalı',
   insecure_contexts: 'Güvenli olmayan bağlamlar (HTTPS olmayan) desteklenmez.',
   unexpected_error: 'Beklenmedik bir hata oluştu',
+  not_found: '404 not found',
 };
 
 export default errors;

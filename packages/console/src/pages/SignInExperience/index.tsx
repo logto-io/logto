@@ -1,5 +1,6 @@
 import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
+import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -9,6 +10,7 @@ import useSWR from 'swr';
 
 import CardTitle from '@/components/CardTitle';
 import ConfirmModal from '@/components/ConfirmModal';
+import RequestDataError from '@/components/RequestDataError';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
@@ -37,6 +39,21 @@ import {
   signInExperienceParser,
 } from './utils/form';
 
+type PageWrapperProps = {
+  children: ReactNode;
+};
+
+const PageWrapper = ({ children }: PageWrapperProps) => (
+  <div className={styles.container}>
+    <CardTitle
+      title="sign_in_exp.title"
+      subtitle="sign_in_exp.description"
+      className={styles.cardTitle}
+    />
+    {children}
+  </div>
+);
+
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
@@ -55,6 +72,8 @@ const SignInExperience = () => {
 
   const { error: languageError, isLoading: isLoadingLanguages } = useUiLanguages();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
+
+  const requestError = error ?? configsError ?? languageError;
 
   const methods = useForm<SignInExperienceForm>();
   const {
@@ -116,95 +135,96 @@ const SignInExperience = () => {
     return <Skeleton />;
   }
 
-  if (configsError) {
-    return <div>{configsError.body?.message ?? configsError.message}</div>;
+  if (requestError) {
+    return (
+      <PageWrapper>
+        <RequestDataError
+          className={styles.error}
+          error={requestError}
+          onRetry={() => {
+            void mutateConfigs();
+            void mutate();
+          }}
+        />
+      </PageWrapper>
+    );
   }
 
-  if (languageError) {
-    return <div>{languageError.body?.message ?? languageError.message}</div>;
-  }
-
-  return (
-    <div className={styles.container}>
-      <CardTitle
-        title="sign_in_exp.title"
-        subtitle="sign_in_exp.description"
-        className={styles.cardTitle}
-      />
-      {shouldDisplayWelcome ? (
+  if (shouldDisplayWelcome) {
+    return (
+      <PageWrapper>
         <Welcome
           mutate={() => {
             void mutateConfigs();
             void mutate();
           }}
         />
-      ) : (
-        <>
-          <TabNav className={styles.tabs}>
-            <TabNavItem
-              href={`/sign-in-experience/${SignInExperiencePage.BrandingTab}`}
-              errorCount={getBrandingErrorCount(errors)}
-            >
-              {t('sign_in_exp.tabs.branding')}
-            </TabNavItem>
-            <TabNavItem
-              href={`/sign-in-experience/${SignInExperiencePage.SignUpAndSignInTab}`}
-              errorCount={getSignUpAndSignInErrorCount(errors, formData)}
-            >
-              {t('sign_in_exp.tabs.sign_up_and_sign_in')}
-            </TabNavItem>
-            <TabNavItem
-              href={`/sign-in-experience/${SignInExperiencePage.OthersTab}`}
-              errorCount={getOthersErrorCount(errors)}
-            >
-              {t('sign_in_exp.tabs.others')}
-            </TabNavItem>
-          </TabNav>
-          {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-          {data && defaultFormData && (
-            <div className={styles.content}>
-              <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
-                <FormProvider {...methods}>
-                  <form className={styles.form}>
-                    <Branding isActive={tab === SignInExperiencePage.BrandingTab} />
-                    <SignUpAndSignIn isActive={tab === SignInExperiencePage.SignUpAndSignInTab} />
-                    <Others isActive={tab === SignInExperiencePage.OthersTab} />
-                  </form>
-                </FormProvider>
-                {formData.id && (
-                  <Preview signInExperience={previewConfigs} className={styles.preview} />
-                )}
-              </div>
-              <SubmitFormChangesActionBar
-                isOpen={isDirty}
-                isSubmitting={isSubmitting}
-                onDiscard={reset}
-                onSubmit={onSubmit}
-              />
-            </div>
-          )}
-          {data && (
-            <ConfirmModal
-              isOpen={Boolean(dataToCompare)}
-              onCancel={() => {
-                setDataToCompare(undefined);
-              }}
-              onConfirm={async () => {
-                await saveData();
-              }}
-            >
-              {dataToCompare && (
-                <SignUpAndSignInChangePreview before={data} after={dataToCompare} />
-              )}
-            </ConfirmModal>
-          )}
-          <UnsavedChangesAlertModal
-            hasUnsavedChanges={isDirty}
-            parentPath="/console/sign-in-experience"
+      </PageWrapper>
+    );
+  }
+
+  return (
+    <PageWrapper>
+      <TabNav className={styles.tabs}>
+        <TabNavItem
+          href={`/sign-in-experience/${SignInExperiencePage.BrandingTab}`}
+          errorCount={getBrandingErrorCount(errors)}
+        >
+          {t('sign_in_exp.tabs.branding')}
+        </TabNavItem>
+        <TabNavItem
+          href={`/sign-in-experience/${SignInExperiencePage.SignUpAndSignInTab}`}
+          errorCount={getSignUpAndSignInErrorCount(errors, formData)}
+        >
+          {t('sign_in_exp.tabs.sign_up_and_sign_in')}
+        </TabNavItem>
+        <TabNavItem
+          href={`/sign-in-experience/${SignInExperiencePage.OthersTab}`}
+          errorCount={getOthersErrorCount(errors)}
+        >
+          {t('sign_in_exp.tabs.others')}
+        </TabNavItem>
+      </TabNav>
+      {data && defaultFormData && (
+        <div className={styles.content}>
+          <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
+            <FormProvider {...methods}>
+              <form className={styles.form}>
+                <Branding isActive={tab === SignInExperiencePage.BrandingTab} />
+                <SignUpAndSignIn isActive={tab === SignInExperiencePage.SignUpAndSignInTab} />
+                <Others isActive={tab === SignInExperiencePage.OthersTab} />
+              </form>
+            </FormProvider>
+            {formData.id && (
+              <Preview signInExperience={previewConfigs} className={styles.preview} />
+            )}
+          </div>
+          <SubmitFormChangesActionBar
+            isOpen={isDirty}
+            isSubmitting={isSubmitting}
+            onDiscard={reset}
+            onSubmit={onSubmit}
           />
-        </>
+        </div>
       )}
-    </div>
+      {data && (
+        <ConfirmModal
+          isOpen={Boolean(dataToCompare)}
+          onCancel={() => {
+            setDataToCompare(undefined);
+          }}
+          onConfirm={async () => {
+            await saveData();
+          }}
+        >
+          {dataToCompare && <SignUpAndSignInChangePreview before={data} after={dataToCompare} />}
+        </ConfirmModal>
+      )}
+      <UnsavedChangesAlertModal
+        hasUnsavedChanges={isDirty}
+        parentPath="/console/sign-in-experience"
+      />
+    </PageWrapper>
   );
 };
 

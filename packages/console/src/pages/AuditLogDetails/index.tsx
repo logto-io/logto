@@ -10,6 +10,7 @@ import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import FormField from '@/components/FormField';
+import RequestDataError from '@/components/RequestDataError';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UserName from '@/components/UserName';
@@ -30,7 +31,7 @@ const AuditLogDetails = () => {
   const { id, logId } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error } = useSWR<Log, RequestError>(logId && `api/logs/${logId}`);
+  const { data, error, mutate } = useSWR<Log, RequestError>(logId && `api/logs/${logId}`);
   const { data: userData } = useSWR<User, RequestError>(id && `api/users/${id}`);
 
   const isLoading = !data && !error;
@@ -50,7 +51,14 @@ const AuditLogDetails = () => {
         {backLinkTitle}
       </TextLink>
       {isLoading && <DetailsSkeleton />}
-      {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
+      {error && (
+        <RequestDataError
+          error={error}
+          onRetry={() => {
+            void mutate();
+          }}
+        />
+      )}
       {data && (
         <>
           <Card className={styles.header}>

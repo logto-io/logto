@@ -6,11 +6,13 @@ import { AppearanceMode } from '@logto/schemas';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useSWRConfig } from 'swr';
 
 import CardTitle from '@/components/CardTitle';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
+import RequestDataError from '@/components/RequestDataError';
 import Select from '@/components/Select';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { UserPreferences } from '@/hooks/use-user-preferences';
@@ -24,6 +26,7 @@ const Settings = () => {
     t,
     i18n: { language },
   } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { mutate: mutateGlobal } = useSWRConfig();
 
   const defaultLanguage = getDefaultLanguageTag(language);
 
@@ -53,7 +56,14 @@ const Settings = () => {
         className={styles.cardTitle}
       />
       {isLoading && <div>loading</div>}
-      {error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
+      {error && (
+        <RequestDataError
+          error={error}
+          onRetry={() => {
+            void mutateGlobal('api/me/custom-data');
+          }}
+        />
+      )}
       {isLoaded && (
         <DetailsForm
           isSubmitting={isSubmitting}

@@ -19,6 +19,7 @@ import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsForm from '@/components/DetailsForm';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
+import RequestDataError from '@/components/RequestDataError';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
@@ -45,11 +46,13 @@ const ApplicationDetails = () => {
   const { data, error, mutate } = useSWR<ApplicationResponse, RequestError>(
     id && `api/applications/${id}`
   );
-  const { data: oidcConfig, error: fetchOidcConfigError } = useSWR<
-    SnakeCaseOidcConfig,
-    RequestError
-  >('oidc/.well-known/openid-configuration');
+  const {
+    data: oidcConfig,
+    error: fetchOidcConfigError,
+    mutate: mutateOidcConfig,
+  } = useSWR<SnakeCaseOidcConfig, RequestError>('oidc/.well-known/openid-configuration');
   const isLoading = (!data && !error) || (!oidcConfig && !fetchOidcConfigError);
+  const requestError = error ?? fetchOidcConfigError;
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -129,6 +132,15 @@ const ApplicationDetails = () => {
         {t('application_details.back_to_applications')}
       </TextLink>
       {isLoading && <DetailsSkeleton />}
+      {requestError && (
+        <RequestDataError
+          error={requestError}
+          onRetry={() => {
+            void mutate();
+            void mutateOidcConfig();
+          }}
+        />
+      )}
       {data && oidcConfig && (
         <>
           <Card className={styles.header}>

@@ -19,6 +19,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import Markdown from '@/components/Markdown';
+import RequestDataError from '@/components/RequestDataError';
 import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
@@ -49,12 +50,21 @@ const ConnectorDetails = () => {
   const { data, error, mutate } = useSWR<ConnectorResponse, RequestError>(
     connectorId && `api/connectors/${connectorId}`
   );
-  const { data: connectorFactory } = useSWR<ConnectorFactoryResponse>(
+  const {
+    data: connectorFactory,
+    error: fetchConnectorFactoryError,
+    mutate: mutateConnectorFactory,
+  } = useSWR<ConnectorFactoryResponse, RequestError>(
     data?.isStandard && `api/connector-factories/${data.connectorId}`
   );
+
+  const requestError = error ?? fetchConnectorFactoryError;
+
   const { isConnectorInUse } = useConnectorInUse();
   const inUse = isConnectorInUse(data);
-  const isLoading = !data && !error;
+  const isLoading =
+    (!data && !error) || (data?.isStandard && !connectorFactory && !fetchConnectorFactoryError);
+
   const api = useApi();
   const navigate = useNavigate();
   const isSocial = data?.type === ConnectorType.Social;
@@ -100,125 +110,131 @@ const ConnectorDetails = () => {
       <TextLink to={getConnectorsPathname(isSocial)} icon={<Back />} className={styles.backLink}>
         {t('connector_details.back_to_connectors')}
       </TextLink>
-      {isLoading && <DetailsSkeleton />}
-      {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-      {isSocial && <ConnectorTabs target={data.target} connectorId={data.id} />}
-      {data && (
-        <Card className={styles.header}>
-          <div className={styles.logoContainer}>
-            <ConnectorLogo data={data} className={styles.logo} />
-          </div>
-          <div className={styles.metadata}>
-            <div>
-              <div className={styles.name}>
-                <UnnamedTrans resource={data.name} />
-              </div>
-            </div>
-            <div>
-              <ConnectorTypeName type={data.type} />
-              <div className={styles.verticalBar} />
-              {connectorFactory && (
-                <>
-                  <div className={styles.factoryName}>
-                    <UnnamedTrans resource={connectorFactory.name} />
-                  </div>
-                  <div className={styles.verticalBar} />
-                </>
-              )}
-              <Status status={inUse ? 'enabled' : 'disabled'} variant="outlined">
-                {t('connectors.connector_status', {
-                  context: inUse ? 'in_use' : 'not_in_use',
-                })}
-              </Status>
-              <div className={styles.verticalBar} />
-              <div className={styles.text}>ID</div>
-              <CopyToClipboard size="small" value={data.id} />
-            </div>
-          </div>
-          <div className={styles.operations}>
-            <Button
-              title="connector_details.check_readme"
-              size="large"
-              onClick={() => {
-                setIsReadMeOpen(true);
-              }}
-            />
-            <Drawer
-              title="connectors.title"
-              subtitle="connectors.subtitle"
-              isOpen={isReadMeOpen}
-              onClose={() => {
-                setIsReadMeOpen(false);
-              }}
-            >
-              <Markdown className={styles.readme}>{data.readme}</Markdown>
-            </Drawer>
-            <ActionMenu
-              buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
-              title={t('general.more_options')}
-            >
-              {!isSocial && (
-                <ActionMenuItem
-                  icon={<Reset />}
-                  iconClassName={styles.resetIcon}
-                  onClick={() => {
-                    setIsSetupOpen(true);
-                  }}
-                >
-                  {t(
-                    data.type === ConnectorType.Sms
-                      ? 'connector_details.options_change_sms'
-                      : 'connector_details.options_change_email'
-                  )}
-                </ActionMenuItem>
-              )}
-              <ActionMenuItem icon={<Delete />} type="danger" onClick={onDeleteClick}>
-                {t('general.delete')}
-              </ActionMenuItem>
-            </ActionMenu>
-            <CreateForm
-              isOpen={isSetupOpen}
-              type={data.type}
-              onClose={(connectorId?: string) => {
-                setIsSetupOpen(false);
-
-                if (connectorId) {
-                  navigate(`${getConnectorsPathname(isSocial)}/${connectorId}`);
-                }
-              }}
-            />
-          </div>
-        </Card>
-      )}
-      <TabNav>
-        <TabNavItem href={`${getConnectorsPathname(isSocial)}/${connectorId}`}>
-          {t('general.settings_nav')}
-        </TabNavItem>
-      </TabNav>
-      {data && (
-        <ConnectorContent
-          isDeleted={isDeleted}
-          connectorData={data}
-          onConnectorUpdated={(connector) => {
-            void mutate(connector);
+      {requestError && (
+        <RequestDataError
+          error={requestError}
+          onRetry={() => {
+            void mutate();
+            void mutateConnectorFactory();
           }}
         />
       )}
-      {data && (
-        <ConfirmModal
-          isOpen={isDeleteAlertOpen}
-          confirmButtonText="general.delete"
-          onCancel={() => {
-            setIsDeleteAlertOpen(false);
-          }}
-          onConfirm={handleDelete}
-        >
-          <Trans
-            t={t}
-            i18nKey="connector_details.in_use_deletion_description"
-            components={{ name: <UnnamedTrans resource={data.name} /> }}
+      {isLoading && !requestError && <DetailsSkeleton />}
+      {isSocial && <ConnectorTabs target={data.target} connectorId={data.id} />}
+      {!requestError && data && (
+        <>
+          <Card className={styles.header}>
+            <div className={styles.logoContainer}>
+              <ConnectorLogo data={data} className={styles.logo} />
+            </div>
+            <div className={styles.metadata}>
+              <div>
+                <div className={styles.name}>
+                  <UnnamedTrans resource={data.name} />
+                </div>
+              </div>
+              <div>
+                <ConnectorTypeName type={data.type} />
+                <div className={styles.verticalBar} />
+                {connectorFactory && (
+                  <>
+                    <div className={styles.factoryName}>
+                      <UnnamedTrans resource={connectorFactory.name} />
+                    </div>
+                    <div className={styles.verticalBar} />
+                  </>
+                )}
+                <Status status={inUse ? 'enabled' : 'disabled'} variant="outlined">
+                  {t('connectors.connector_status', {
+                    context: inUse ? 'in_use' : 'not_in_use',
+                  })}
+                </Status>
+                <div className={styles.verticalBar} />
+                <div className={styles.text}>ID</div>
+                <CopyToClipboard size="small" value={data.id} />
+              </div>
+            </div>
+            <div className={styles.operations}>
+              <Button
+                title="connector_details.check_readme"
+                size="large"
+                onClick={() => {
+                  setIsReadMeOpen(true);
+                }}
+              />
+              <Drawer
+                title="connectors.title"
+                subtitle="connectors.subtitle"
+                isOpen={isReadMeOpen}
+                onClose={() => {
+                  setIsReadMeOpen(false);
+                }}
+              >
+                <Markdown className={styles.readme}>{data.readme}</Markdown>
+              </Drawer>
+              <ActionMenu
+                buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
+                title={t('general.more_options')}
+              >
+                {!isSocial && (
+                  <ActionMenuItem
+                    icon={<Reset />}
+                    iconClassName={styles.resetIcon}
+                    onClick={() => {
+                      setIsSetupOpen(true);
+                    }}
+                  >
+                    {t(
+                      data.type === ConnectorType.Sms
+                        ? 'connector_details.options_change_sms'
+                        : 'connector_details.options_change_email'
+                    )}
+                  </ActionMenuItem>
+                )}
+                <ActionMenuItem icon={<Delete />} type="danger" onClick={onDeleteClick}>
+                  {t('general.delete')}
+                </ActionMenuItem>
+              </ActionMenu>
+              <CreateForm
+                isOpen={isSetupOpen}
+                type={data.type}
+                onClose={(connectorId?: string) => {
+                  setIsSetupOpen(false);
+
+                  if (connectorId) {
+                    navigate(`${getConnectorsPathname(isSocial)}/${connectorId}`);
+                  }
+                }}
+              />
+            </div>
+          </Card>
+          <TabNav>
+            <TabNavItem href={`${getConnectorsPathname(isSocial)}/${connectorId}`}>
+              {t('general.settings_nav')}
+            </TabNavItem>
+          </TabNav>
+          <ConnectorContent
+            isDeleted={isDeleted}
+            connectorData={data}
+            onConnectorUpdated={(connector) => {
+              void mutate(connector);
+            }}
           />
-        </ConfirmModal>
+          <ConfirmModal
+            isOpen={isDeleteAlertOpen}
+            confirmButtonText="general.delete"
+            onCancel={() => {
+              setIsDeleteAlertOpen(false);
+            }}
+            onConfirm={handleDelete}
+          >
+            <Trans
+              t={t}
+              i18nKey="connector_details.in_use_deletion_description"
+              components={{ name: <UnnamedTrans resource={data.name} /> }}
+            />
+          </ConfirmModal>
+        </>
       )}
     </div>
   );

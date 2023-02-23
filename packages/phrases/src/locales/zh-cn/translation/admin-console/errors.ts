@@ -15,6 +15,7 @@ const errors = {
   password_pattern_error: '密码应不少于 6 位',
   insecure_contexts: '不支持不安全的上下文（非 HTTPS）。',
   unexpected_error: '发生未知错误',
+  not_found: '404 not found',
 };
 
 export default errors;
