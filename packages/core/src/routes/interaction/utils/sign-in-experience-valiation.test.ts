@@ -266,6 +266,36 @@ describe('identifier validation', () => {
       });
     }).not.toThrow();
   });
+
+  it('connector phone should not throw', () => {
+    const identifier = { phone: '123456', connectorId: 'logto' };
+
+    expect(() => {
+      verifyIdentifierSettings(identifier, {
+        ...mockSignInExperience,
+        signIn: {
+          methods: mockSignInExperience.signIn.methods.filter(
+            ({ identifier }) => identifier !== SignInIdentifier.Phone
+          ),
+        },
+      });
+    }).not.toThrow();
+  });
+
+  it('connector email should not throw', () => {
+    const identifier = { email: 'foo@logto.io', connectorId: 'logto' };
+
+    expect(() => {
+      verifyIdentifierSettings(identifier, {
+        ...mockSignInExperience,
+        signIn: {
+          methods: mockSignInExperience.signIn.methods.filter(
+            ({ identifier }) => identifier !== SignInIdentifier.Email
+          ),
+        },
+      });
+    }).not.toThrow();
+  });
 });
 
 describe('profile validation', () => {
