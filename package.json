@@ -10,7 +10,7 @@
     "dev": "pnpm -r prepack && pnpm start:dev",
     "dev:cloud": "pnpm -r prepack && pnpm start:dev:cloud",
     "start:dev": "pnpm -r --parallel --filter=!@logto/integration-tests --filter=!@logto/cloud dev",
-    "start:dev:cloud": "CONSOLE_PUBLIC_URL=/ pnpm -r --parallel --filter=!@logto/integration-tests dev",
+    "start:dev:cloud": "CONSOLE_PUBLIC_URL=/ IS_CLOUD=1 pnpm -r --parallel --filter=!@logto/integration-tests dev",
     "start": "cd packages/core && NODE_ENV=production node .",
     "start:cloud": "cd packages/cloud && NODE_ENV=production node .",
     "cli": "logto",
