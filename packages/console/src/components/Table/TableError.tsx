@@ -1,8 +1,8 @@
 import { AppearanceMode } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
-import ErrorDark from '@/assets/images/error-dark.svg';
-import Error from '@/assets/images/error.svg';
+import RequestErrorDarkImage from '@/assets/images/request-error-dark.svg';
+import RequestErrorImage from '@/assets/images/request-error.svg';
 import { useTheme } from '@/hooks/use-theme';
 
 import Button from '../Button';
@@ -23,7 +23,7 @@ const TableError = ({ title, content, onRetry, columns }: Props) => {
     <tr>
       <td colSpan={columns}>
         <div className={styles.tableError}>
-          {theme === AppearanceMode.LightMode ? <Error /> : <ErrorDark />}
+          {theme === AppearanceMode.LightMode ? <RequestErrorImage /> : <RequestErrorDarkImage />}
           <div className={styles.title}>{title ?? t('errors.something_went_wrong')}</div>
           <div className={styles.content}>{content ?? t('errors.unknown_server_error')}</div>
           {onRetry && <Button title="general.retry" onClick={onRetry} />}

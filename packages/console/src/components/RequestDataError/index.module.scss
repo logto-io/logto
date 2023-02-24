@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.error {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: _.unit(6);
+
+  > *:not(:first-child) {
+    margin-top: _.unit(2);
+  }
+
+  .image {
+    width: 200px;
+    height: 200px;
+  }
+
+  .title {
+    text-align: center;
+    font: var(--font-label-2);
+  }
+
+  .content {
+    font: var(--font-body-2);
+    color: var(--color-neutral-50);
+  }
+}

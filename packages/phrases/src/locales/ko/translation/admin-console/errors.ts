@@ -16,6 +16,7 @@ const errors = {
   password_pattern_error: '비밀번호는 최소 6자리로 이루어져야 해요.',
   insecure_contexts: '비보안 연결(non-HTTPS)는 지원하지 않아요.',
   unexpected_error: '알 수 없는 오류가 발생했어요.',
+  not_found: '404 not found', // UNTRANSLATED
 };
 
 export default errors;

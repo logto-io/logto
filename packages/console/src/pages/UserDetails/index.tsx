@@ -16,6 +16,7 @@ import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
+import RequestDataError from '@/components/RequestDataError';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import UserAvatar from '@/components/UserAvatar';
@@ -73,7 +74,14 @@ const UserDetails = () => {
         {t('user_details.back_to_users')}
       </TextLink>
       {isLoading && <DetailsSkeleton />}
-      {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
+      {error && (
+        <RequestDataError
+          error={error}
+          onRetry={() => {
+            void mutate();
+          }}
+        />
+      )}
       {data && (
         <>
           <Card className={styles.header}>

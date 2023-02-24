@@ -14,6 +14,7 @@ import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
+import RequestDataError from '@/components/RequestDataError';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import { RoleDetailsTabs } from '@/consts/page-tabs';
@@ -76,7 +77,14 @@ const RoleDetails = () => {
         {t('role_details.back_to_roles')}
       </TextLink>
       {isLoading && <DetailsSkeleton />}
-      {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
+      {error && (
+        <RequestDataError
+          error={error}
+          onRetry={() => {
+            void mutate();
+          }}
+        />
+      )}
       {data && (
         <>
           <Card className={styles.header}>
