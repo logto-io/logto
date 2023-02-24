@@ -1,11 +1,11 @@
 ---
 "@logto/core": minor
 "@logto/console": minor
-"@logto/phrase": minor
-"@logto/phrase-ui": minor
+"@logto/phrases": minor
+"@logto/phrases-ui": minor
 ---
 
-## Creating your social connector by SAML/OIDC/OAuth 2.0 effortlessly
+## Creating your social connector with ease
 
 We’re excited to announce that Logto now supports standard protocols (SAML, OIDC, and OAuth2.0) for creating social connectors to integrate external identity providers. Each protocol can create multiple social connectors, giving you more control over your access needs.
 

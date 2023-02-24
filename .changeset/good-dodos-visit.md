@@ -14,7 +14,7 @@ From this version, Logto now listens to two ports by default, one for normal use
 
 - Nothing changed for normal users. No adaption is needed.
 - For admin users:
-    - The default Admin Console URL has changed to `http://localhost:3002/console`.
+    - The default Admin Console URL has been changed to `http://localhost:3002/console`.
     - To change the admin port, set the environment variable `ADMIN_PORT`. For instance, `ADMIN_PORT=3456`.
     - You can specify a custom endpoint for admins by setting the environment variable `ADMIN_ENDPOINT`. For example, `ADMIN_ENDPOINT=https://admin.your-domain.com`.
     - You can now completely disable admin endpoints by setting `ADMIN_DISABLE_LOCALHOST=1` and leaving `ADMIN_ENDPOINT` unset.
