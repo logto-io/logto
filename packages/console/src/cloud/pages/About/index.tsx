@@ -15,8 +15,8 @@ import TextInput from '@/components/TextInput';
 import ActionBar from '../../components/ActionBar';
 import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
-import { CloudPage } from '../../types';
-import { getCloudPagePathname } from '../../utils';
+import { OnboardPage } from '../../types';
+import { getOnboardPagePathname } from '../../utils';
 import * as styles from './index.module.scss';
 import { titleOptions, companySizeOptions, reasonOptions } from './options';
 
@@ -43,11 +43,11 @@ const About = () => {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getCloudPagePathname(CloudPage.SignInExperience));
+    navigate(getOnboardPagePathname(OnboardPage.SignInExperience));
   };
 
   const onBack = async () => {
-    navigate(getCloudPagePathname(CloudPage.Welcome));
+    navigate(getOnboardPagePathname(OnboardPage.Welcome));
   };
 
   return (

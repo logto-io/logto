@@ -14,8 +14,8 @@ import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 
 import type { Questionnaire } from '../../types';
-import { CloudPage } from '../../types';
-import { getCloudPagePathname } from '../../utils';
+import { OnboardPage } from '../../types';
+import { getOnboardPagePathname } from '../../utils';
 import * as styles from './index.module.scss';
 import { deploymentTypeOptions, projectOptions } from './options';
 
@@ -45,7 +45,7 @@ const Welcome = () => {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getCloudPagePathname(CloudPage.AboutUser));
+    navigate(getOnboardPagePathname(OnboardPage.AboutUser));
   };
 
   return (

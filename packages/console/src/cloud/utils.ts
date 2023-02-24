@@ -1,3 +1,4 @@
-import type { CloudPage } from './types';
+import type { OnboardPage } from './types';
+import { CloudRoute } from './types';
 
-export const getCloudPagePathname = (page: CloudPage) => `/cloud/${page}`;
+export const getOnboardPagePathname = (page: OnboardPage) => `/${CloudRoute.Onboard}/${page}`;
