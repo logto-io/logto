@@ -33,9 +33,9 @@ describe('configs routes', () => {
     const livePreviewChecked = !mockAdminConsoleData.livePreviewChecked;
     const response = await roleRequester
       .patch('/configs/admin-console')
-      .send({ demoChecked: livePreviewChecked });
+      .send({ livePreviewChecked });
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ ...mockAdminConsoleData, demoChecked: livePreviewChecked });
+    expect(response.body).toEqual({ ...mockAdminConsoleData, livePreviewChecked });
   });
 });
