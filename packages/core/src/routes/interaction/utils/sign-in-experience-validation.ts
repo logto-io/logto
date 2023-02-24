@@ -43,6 +43,12 @@ export const verifyIdentifierSettings = (
     return;
   }
 
+  // Social Identifier  TODO: @darcy, @sijie
+  // should not verify connector related identifier here
+  if ('connectorId' in identifier) {
+    return;
+  }
+
   // Email Identifier
   if ('email' in identifier) {
     assertThat(
@@ -87,7 +93,7 @@ export const verifyIdentifierSettings = (
           return false;
         }
 
-        // Phone verificationCode Verification: SignIn verificationCode enabled or SignUp Email verify enabled
+        // Phone verificationCode Verification: SignIn verificationCode enabled or SignUp Phone verify enabled
         if (
           'verificationCode' in identifier &&
           !verificationCode &&
@@ -102,8 +108,6 @@ export const verifyIdentifierSettings = (
       forbiddenIdentifierError()
     );
   }
-
-  // Social Identifier  TODO: @darcy, @sijie
 };
 
 export const verifyProfileSettings = (profile: Profile, { signUp }: SignInExperience) => {
