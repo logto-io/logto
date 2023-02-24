@@ -113,8 +113,7 @@ const translation = {
     invalid_session: 'Sessão não encontrada. Volte e faça login novamente.',
   },
   demo_app: {
-    notification:
-      'Use sua conta de administrador padrão ou crie uma nova conta para entrar no aplicativo de demonstração.',
+    notification: 'Tip: Create a user in the user pool in order to test the sign-in experience.', // UNTRANSLATED
   },
 };
 
