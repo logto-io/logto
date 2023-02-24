@@ -8,7 +8,8 @@ import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
-import useApi from '@/hooks/use-api';
+import { adminTenantEndpoint, meApi } from '@/consts';
+import { useStaticApi } from '@/hooks/use-api';
 import useLogtoUserId from '@/hooks/use-logto-user-id';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -25,7 +26,7 @@ const ChangePassword = () => {
   const { watch, register, reset } = useForm<FormFields>();
   const [isLoading, setIsLoading] = useState(false);
   const userId = useLogtoUserId();
-  const api = useApi();
+  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
   const password = watch('password');
   const confirmPassword = watch('confirmPassword');
   const isDisabled = !password || password !== confirmPassword;
@@ -38,7 +39,7 @@ const ChangePassword = () => {
     }
 
     setIsLoading(true);
-    await api.patch(`api/users/${userId}/password`, { json: { password } }).json();
+    await api.post(`me/password`, { json: { password } }).json();
     setIsLoading(false);
     setIsOpen(false);
     toast.success(t('settings.password_changed'));
