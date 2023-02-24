@@ -10,7 +10,7 @@ const cloud = {
     },
     deployment_type_field: 'Prefer open-source or cloud?',
     deployment_type_options: {
-      opensource: 'Opensource',
+      open_source: 'Open-Source',
       cloud: 'Cloud',
     },
   },

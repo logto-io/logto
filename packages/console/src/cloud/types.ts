@@ -17,7 +17,7 @@ export enum Project {
 }
 
 export enum DeploymentType {
-  Opensource = 'opensource',
+  OpenSource = 'open-source',
   Cloud = 'cloud',
 }
 
