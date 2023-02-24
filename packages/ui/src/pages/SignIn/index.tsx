@@ -20,7 +20,7 @@ const SignIn = () => {
   }
 
   return (
-    <LandingPageContainer title="description.welcome_to_sign_in">
+    <LandingPageContainer>
       <Main signInMethods={signInMethods} socialConnectors={socialConnectors} />
       {
         // Create Account footer

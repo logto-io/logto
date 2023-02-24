@@ -64,9 +64,9 @@ const translation = {
       'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
     bind_account_title: 'Link or create account', // UNTRANSLATED
     social_create_account: 'Hesabınız yok mu? Yeni bir hesap ve bağlantı oluşturabilirsiniz.',
-    social_link_email: 'You can link another email', // UNTRANSLATED
-    social_link_phone: 'You can link another phone', // UNTRANSLATED
-    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED
+    social_link_email: 'You can link another email', // UNTRANSLATED,
+    social_link_phone: 'You can link another phone', // UNTRANSLATED,
+    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing: 'İlgili bir hesap bulduk, hemen bağlayabilirsiniz.',
     reset_password: 'Şifre yenile',
     reset_password_description:
@@ -89,8 +89,6 @@ const translation = {
     link_email_or_phone_description:
       'For added security, please link your email or phone with the account.', // UNTRANSLATED
     continue_with_more_information: 'For added security, please complete below account details.', // UNTRANSLATED
-    create_your_account: 'Create your account', // UNTRANSLATED
-    welcome_to_sign_in: 'Welcome to sign in', // UNTRANSLATED
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} is required`, // UNTRANSLATED
