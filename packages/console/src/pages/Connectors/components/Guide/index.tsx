@@ -152,7 +152,7 @@ const Guide = ({ connector, onClose }: Props) => {
                 <div className={styles.block}>
                   <div className={styles.blockTitle}>
                     <div className={styles.number}>2</div>
-                    <div>{t('connectors.guide.general_setting')}</div>
+                    <div>{t('connectors.guide.test_connection')}</div>
                   </div>
                   <SenderTester
                     connectorId={connectorId}
