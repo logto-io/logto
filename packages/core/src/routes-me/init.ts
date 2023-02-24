@@ -15,6 +15,8 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import socialRoutes from './social.js';
+
 export default function initMeApis(tenant: TenantContext): Koa {
   if (tenant.id !== adminTenantId) {
     throw new Error('`/me` routes should only be initialized in the admin tenant.');
@@ -65,6 +67,8 @@ export default function initMeApis(tenant: TenantContext): Koa {
       return next();
     }
   );
+
+  socialRoutes(meRouter, tenant);
 
   const meApp = new Koa();
   meApp.use(koaCors(EnvSet.values.cloudUrlSet));

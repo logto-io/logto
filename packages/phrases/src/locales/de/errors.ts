@@ -45,6 +45,7 @@ const errors = {
     phone_not_exist: 'Die Telefonnummer wurde noch nicht registriert.',
     identity_not_exist: 'Die Identität wurde noch nicht registriert.',
     identity_already_in_use: 'Die Identität wurde registriert.',
+    social_account_exists_in_profile: 'You have already associated this social account.', // UNTRANSLATED
     cannot_delete_self: 'Du kannst dich nicht selbst löschen.',
     sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
     sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED

@@ -44,6 +44,7 @@ const errors = {
     phone_not_exist: '휴대전화번호가 아직 등록되지 않았어요.',
     identity_not_exist: '소셜 계정이 아직 등록되지 않았어요.',
     identity_already_in_use: '소셜 계정이 이미 등록되어 있어요.',
+    social_account_exists_in_profile: 'You have already associated this social account.', // UNTRANSLATED
     cannot_delete_self: '자기 자신을 삭제할 수 없어요.',
     sign_up_method_not_enabled: '이 회원가입 방법은 활성화되어있지 않아요.',
     sign_in_method_not_enabled: '이 로그인 방법은 활성화되어있지 않아요.',

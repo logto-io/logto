@@ -46,6 +46,7 @@ const errors = {
     phone_not_exist: "Le numéro de téléphone n'a pas encore été enregistré.",
     identity_not_exist: "Le compte social n'a pas encore été enregistré.",
     identity_already_in_use: 'Le compte social a été enregistré.',
+    social_account_exists_in_profile: 'You have already associated this social account.', // UNTRANSLATED
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
     sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
     sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED
