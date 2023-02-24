@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 
 import Globe from '@/assets/images/globe.svg';
 import Palette from '@/assets/images/palette.svg';
-import Profile from '@/assets/images/profile.svg';
 import SignOut from '@/assets/images/sign-out.svg';
 import Divider from '@/components/Divider';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
@@ -88,16 +87,6 @@ const UserInfo = () => {
             {email && <div className={styles.email}>{email}</div>}
           </div>
         </div>
-        <Divider />
-        <DropdownItem
-          className={classNames(styles.dropdownItem, isLoading && styles.loading)}
-          icon={<Profile className={styles.icon} />}
-          onClick={() => {
-            navigate('/profile');
-          }}
-        >
-          {t('menu.profile')}
-        </DropdownItem>
         <Divider />
         <SubMenu
           className={styles.dropdownItem}
