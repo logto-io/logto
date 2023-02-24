@@ -3,7 +3,9 @@
 import { readFileSync } from 'fs';
 
 import { userClaims } from '@logto/core-kit';
+import type { I18nKey } from '@logto/phrases';
 import { CustomClientMetadataKey, demoAppApplicationId } from '@logto/schemas';
+import i18next from 'i18next';
 import Provider, { errors, ResourceServer } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -37,6 +39,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
   const { findUserScopesForResourceIndicator } = libraries.users;
   const { findApplicationScopesForResourceIndicator } = libraries.applications;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
+  const logoutSuccessSource = readFileSync('static/html/post-logout/index.html', 'utf8');
 
   const cookieConfig = Object.freeze({
     sameSite: 'lax',
@@ -75,6 +78,13 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
           ctx.body = logoutSource.replace('${form}', form);
+        },
+        postLogoutSuccessSource(ctx) {
+          ctx.body = logoutSuccessSource.replace(
+            // eslint-disable-next-line no-template-curly-in-string
+            '${message}',
+            i18next.t<string, I18nKey>('oidc.logout_success')
+          );
         },
       },
       // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#featuresresourceindicators
