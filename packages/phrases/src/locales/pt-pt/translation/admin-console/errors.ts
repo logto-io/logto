@@ -16,7 +16,7 @@ const errors = {
   password_pattern_error: 'A password requer um mínimo de 6 caracteres',
   insecure_contexts: 'Contextos inseguros (não HTTPS) não são compatíveis.',
   unexpected_error: 'Um erro inesperado ocorreu',
-  not_found: '404 not found',
+  not_found: '404 not found', // UNTRANSLATED
 };
 
 export default errors;
