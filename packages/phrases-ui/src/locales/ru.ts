@@ -114,8 +114,7 @@ const translation = {
     invalid_session: 'Сессия не найдена. Пожалуйста, войдите снова.',
   },
   demo_app: {
-    notification:
-      'Nutze dein existierendes Admin Konto oder erstelle ein neues Konto um dich in die Demo App einzuloggen.',
+    notification: 'Tip: Create a user in the user pool in order to test the sign-in experience.', // UNTRANSLATED
   },
 };
 

@@ -109,8 +109,7 @@ const translation = {
     invalid_session: '세션을 찾을 수 없어요. 다시 로그인해 주세요.',
   },
   demo_app: {
-    notification:
-      '체험 App에 로그인 하기 위해 관리자 정보 또는 게정을 새로 생성하여 로그인해보세요.',
+    notification: 'Tip: Create a user in the user pool in order to test the sign-in experience.', // UNTRANSLATED
   },
 };
 

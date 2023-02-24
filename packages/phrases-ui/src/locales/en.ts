@@ -110,8 +110,7 @@ const translation = {
     invalid_session: 'Session not found. Please go back and sign in again.',
   },
   demo_app: {
-    notification:
-      'Use your default admin account or create a new account to sign in to the demo app.',
+    notification: 'Tip: Create a user in the user pool in order to test the sign-in experience.',
   },
 };
 

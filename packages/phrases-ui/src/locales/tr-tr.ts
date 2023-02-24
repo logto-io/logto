@@ -111,7 +111,7 @@ const translation = {
     invalid_session: 'Oturum bulunamadı. Lütfen geri dönüp tekrar giriş yapınız.',
   },
   demo_app: {
-    notification: 'Demo uygulamaya giriş yapmak için yönetici konsolunu kullanınız.',
+    notification: 'Tip: Create a user in the user pool in order to test the sign-in experience.', // UNTRANSLATED
   },
 };
 
