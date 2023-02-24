@@ -14,6 +14,7 @@ import Textarea from '@/components/Textarea';
 import { jsonValidator } from '@/utils/validator';
 
 import type { ConnectorFormType } from '../../types';
+import * as styles from './ConfigForm.module.scss';
 
 type Props = {
   formItems: ConnectorConfigFormItem[];
@@ -142,6 +143,9 @@ const ConfigForm = ({ formItems }: Props) => {
           }
         >
           {renderFormItem(item)}
+          {Boolean(item.description) && (
+            <div className={styles.description}>{item.description}</div>
+          )}
         </FormField>
       ))}
     </>
