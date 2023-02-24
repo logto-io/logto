@@ -1,5 +1,4 @@
 ---
-"@logto/connector-kit": minor
 "@logto/core": minor
 ---
 

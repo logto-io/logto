@@ -7,7 +7,7 @@
 ---
 
 <p align="center">
-Logto is going to lauch Cloud (Preview) and OSS General Availabilty on <a href="https://www.producthunt.com/products/logto" target="_blank">Product Hunt!</a><br/>
+Logto is going to launch Cloud (Preview) and OSS General Availability on <a href="https://www.producthunt.com/products/logto" target="_blank">Product Hunt!</a><br/>
 Click the “Notify me” button on the page in order to receive a notification when our launch is live.
 </p>
 <p align="center">
