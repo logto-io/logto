@@ -22,14 +22,11 @@ const RequestDataError = ({ error, onRetry, className }: Props) => {
   const theme = useTheme();
   const errorMessage = error.body?.message ?? error.message;
   const isNotFoundError = error.status === 404;
+  const ErrorImage = theme === AppearanceMode.LightMode ? RequestErrorImage : RequestErrorDarkImage;
 
   return (
     <Card className={classNames(styles.error, className)}>
-      {theme === AppearanceMode.LightMode ? (
-        <RequestErrorImage className={styles.image} />
-      ) : (
-        <RequestErrorDarkImage className={styles.image} />
-      )}
+      <ErrorImage className={styles.image} />
       <div className={styles.title}>
         {t(isNotFoundError ? 'errors.not_found' : 'errors.something_went_wrong')}
       </div>
