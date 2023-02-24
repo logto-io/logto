@@ -1,7 +1,7 @@
 import { onResize, useIsomorphicLayoutEffect } from '@react-spring/shared';
 import { useSpring, animated, config } from '@react-spring/web';
 import type { Nullable } from '@silverhand/essentials';
-import { cloneElement, useCallback, useRef } from 'react';
+import { cloneElement, useCallback, useRef, useState } from 'react';
 
 import * as styles from './index.module.scss';
 
@@ -11,6 +11,7 @@ type Props = {
 };
 
 const AnimatedPrefix = ({ children, isVisible }: Props) => {
+  const [domReady, setDomReady] = useState(false);
   const elementRef = useRef<Nullable<HTMLElement>>(null);
 
   // Get target width for the children
@@ -21,11 +22,14 @@ const AnimatedPrefix = ({ children, isVisible }: Props) => {
 
   const [animation, api] = useSpring(
     () => ({ width: getTargetWidth(), config: { ...config.default, clamp: true } }),
-    [getTargetWidth]
+    [getTargetWidth, domReady]
   );
 
   useIsomorphicLayoutEffect(() => {
     const { current } = elementRef;
+
+    setDomReady(true);
+
     const cleanup =
       current &&
       onResize(

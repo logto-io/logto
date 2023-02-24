@@ -288,3 +288,17 @@ export const mockSignInMethodSettingsTestCases: Array<SignIn['methods']> = [
     },
   ],
 ];
+
+export const getBoundingClientRectMock = (mock: Partial<DOMRect>) =>
+  jest.fn(() => ({
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    ...mock,
+    toJSON: jest.fn(),
+  }));

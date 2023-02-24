@@ -3,6 +3,7 @@ import { Globals } from '@react-spring/web';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, render } from '@testing-library/react';
 
+import { getBoundingClientRectMock } from '@/__mocks__/logto';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import type { IdentifierInputType } from '.';
@@ -15,6 +16,7 @@ jest.mock('i18next', () => ({
 
 describe('SmartInputField Component', () => {
   const onChange = jest.fn();
+
   const defaultCountryCallingCode = getDefaultCountryCallingCode();
 
   const renderInputField = (props: {
@@ -26,6 +28,11 @@ describe('SmartInputField Component', () => {
   beforeAll(() => {
     Globals.assign({
       skipAnimation: true,
+    });
+
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    window.HTMLDivElement.prototype.getBoundingClientRect = getBoundingClientRectMock({
+      width: 100,
     });
   });
 
@@ -65,10 +72,7 @@ describe('SmartInputField Component', () => {
       const countryCode = queryAllByText(`+${defaultCountryCallingCode}`);
       expect(countryCode).toHaveLength(2);
 
-      // Country code select should have a >0 width.
-      // The React Spring acquires the child element's width ahead of elementRef is properly set.
-      // So the value returns null. Assert style is null to represent the width is >0.
-      expect(queryByTestId('prefix')?.getAttribute('style')).toBe(null);
+      expect(queryByTestId('prefix')?.style.width).toBe('100px');
 
       const selector = container.querySelector('select');
       assert(selector, new Error('selector should not be null'));

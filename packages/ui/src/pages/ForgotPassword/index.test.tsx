@@ -5,7 +5,7 @@ import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { mockSignInExperienceSettings } from '@/__mocks__/logto';
+import { mockSignInExperienceSettings, getBoundingClientRectMock } from '@/__mocks__/logto';
 import type { SignInExperienceResponse } from '@/types';
 
 import ForgotPassword from '.';
@@ -43,6 +43,11 @@ describe('ForgotPassword', () => {
     Globals.assign({
       skipAnimation: true,
     });
+
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    window.HTMLDivElement.prototype.getBoundingClientRect = getBoundingClientRectMock({
+      width: 100,
+    });
   });
 
   afterEach(() => {
@@ -79,6 +84,7 @@ describe('ForgotPassword', () => {
       const { queryByText, queryAllByText, container, queryByTestId } = renderPage(settings);
       const inputField = container.querySelector('input[name="identifier"]');
       const countryCodeSelectorPrefix = queryByTestId('prefix');
+
       assert(inputField, new Error('input field not found'));
 
       expect(queryByText('description.reset_password')).not.toBeNull();
@@ -88,12 +94,7 @@ describe('ForgotPassword', () => {
 
       if (state.identifier === SignInIdentifier.Phone && settings.phone) {
         expect(inputField.getAttribute('value')).toBe(phone);
-
-        // Country code select should have a >0 width.
-        // The React Spring acquires the child element's width ahead of elementRef is properly set.
-        // So the value returns null. Assert style is null to represent the width is >0.
-        expect(countryCodeSelectorPrefix?.getAttribute('style')).toBeNull();
-
+        expect(countryCodeSelectorPrefix?.style.width).toBe('100px');
         expect(queryAllByText(`+${countryCode}`)).toHaveLength(2);
       } else if (state.identifier === SignInIdentifier.Phone) {
         // Phone Number not enabled
@@ -107,7 +108,7 @@ describe('ForgotPassword', () => {
       } else if (state.identifier === SignInIdentifier.Email) {
         // Only PhoneNumber is enabled
         expect(inputField.getAttribute('value')).toBe('');
-        expect(countryCodeSelectorPrefix?.getAttribute('style')).toBeNull();
+        expect(countryCodeSelectorPrefix?.style.width).toBe('100px');
       }
 
       if (state.identifier === SignInIdentifier.Username && settings.email) {
@@ -116,7 +117,7 @@ describe('ForgotPassword', () => {
       } else if (state.identifier === SignInIdentifier.Username) {
         // Only PhoneNumber is enabled
         expect(inputField.getAttribute('value')).toBe('');
-        expect(countryCodeSelectorPrefix?.getAttribute('style')).toBeNull();
+        expect(countryCodeSelectorPrefix?.style.width).toBe('100px');
       }
     });
   });
