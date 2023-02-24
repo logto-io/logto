@@ -125,7 +125,7 @@ describe('validateMandatoryUserProfile', () => {
       ).resolves.not.toThrow();
     });
 
-    it('identifier includes social with verified email but email occupied should throw', async () => {
+    it('sign-in identifier includes social with verified email but email occupied should throw', async () => {
       hasUserWithEmail.mockResolvedValueOnce(true);
 
       await expect(
@@ -140,6 +140,26 @@ describe('validateMandatoryUserProfile', () => {
         new RequestError(
           { code: 'user.missing_profile', status: 422 },
           { missingProfile: [MissingProfile.email], registeredSocialIdentity: { email: 'email' } }
+        )
+      );
+    });
+
+    it('register identifier includes social with verified email but email occupied should throw', async () => {
+      hasUserWithEmail.mockResolvedValueOnce(true);
+
+      await expect(
+        validateMandatoryUserProfile(users, emailRequiredCtx, {
+          ...interaction,
+          event: InteractionEvent.Register,
+          identifiers: [
+            ...interaction.identifiers,
+            { key: 'social', userInfo: { email: 'email', id: 'foo' }, connectorId: 'logto' },
+          ],
+        })
+      ).rejects.toMatchError(
+        new RequestError(
+          { code: 'user.missing_profile', status: 422 },
+          { missingProfile: [MissingProfile.email] }
         )
       );
     });
@@ -200,7 +220,7 @@ describe('validateMandatoryUserProfile', () => {
       ).resolves.not.toThrow();
     });
 
-    it('identifier includes social with verified phone but phone occupied should throw', async () => {
+    it('sign-in identifier includes social with verified phone but phone occupied should throw', async () => {
       hasUserWithPhone.mockResolvedValueOnce(true);
 
       await expect(
@@ -215,6 +235,26 @@ describe('validateMandatoryUserProfile', () => {
         new RequestError(
           { code: 'user.missing_profile', status: 422 },
           { missingProfile: [MissingProfile.phone], registeredSocialIdentity: { phone: '123456' } }
+        )
+      );
+    });
+
+    it('register identifier includes social with verified phone but phone occupied should throw', async () => {
+      hasUserWithPhone.mockResolvedValueOnce(true);
+
+      await expect(
+        validateMandatoryUserProfile(users, phoneRequiredCtx, {
+          ...interaction,
+          event: InteractionEvent.Register,
+          identifiers: [
+            ...interaction.identifiers,
+            { key: 'social', userInfo: { phone: '123456', id: 'foo' }, connectorId: 'logto' },
+          ],
+        })
+      ).rejects.toMatchError(
+        new RequestError(
+          { code: 'user.missing_profile', status: 422 },
+          { missingProfile: [MissingProfile.phone] }
         )
       );
     });
