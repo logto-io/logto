@@ -99,7 +99,7 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
     }
   );
 
-  router.patch(
+  router.put(
     '/users/:userId/roles',
     koaGuard({
       params: object({ userId: string() }),

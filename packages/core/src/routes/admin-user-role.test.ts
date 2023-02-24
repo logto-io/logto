@@ -50,9 +50,9 @@ describe('user role routes', () => {
     ]);
   });
 
-  it('PATCH /users/:id/roles', async () => {
+  it('PUT /users/:id/roles', async () => {
     findUsersRolesByUserId.mockResolvedValueOnce([mockUserRole]);
-    const response = await roleRequester.patch(`/users/${mockUser.id}/roles`).send({
+    const response = await roleRequester.put(`/users/${mockUser.id}/roles`).send({
       roleIds: [mockRole2.id],
     });
     expect(response.status).toEqual(200);
