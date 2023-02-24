@@ -4,7 +4,7 @@ export enum CloudRoute {
   Onboard = 'onboard',
 }
 
-export enum CloudPage {
+export enum OnboardPage {
   Welcome = 'welcome',
   AboutUser = 'about-user',
   SignInExperience = 'sign-in-experience',

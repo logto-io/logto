@@ -13,8 +13,8 @@ import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
 
-import { CloudPage } from '../../types';
-import { getCloudPagePathname } from '../../utils';
+import { OnboardPage } from '../../types';
+import { getOnboardPagePathname } from '../../utils';
 import * as styles from './index.module.scss';
 
 const Congrats = () => {
@@ -28,7 +28,7 @@ const Congrats = () => {
   };
 
   const handleBack = () => {
-    navigate(getCloudPagePathname(CloudPage.SignInExperience));
+    navigate(getOnboardPagePathname(OnboardPage.SignInExperience));
   };
 
   return (
