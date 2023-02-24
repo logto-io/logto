@@ -33,10 +33,10 @@ const translation = {
     sign_in_via_passcode: '用验证码登录',
     sign_in_via_password: '密码登录',
     change: '更改{{method}}',
-    link_another_email: 'Link another email', // UNTRANSLATED
-    link_another_phone: 'Link another phone', // UNTRANSLATED
-    link_another_email_or_phone: 'Link another email or phone', // UNTRANSLATED
-    show_password: 'Show password', // UNTRANSLATED
+    link_another_email: '绑定其它邮箱',
+    link_another_phone: '绑定其它手机',
+    link_another_email_or_phone: '绑定邮箱或手机号',
+    show_password: '显示密码',
   },
   description: {
     email: '邮箱',
@@ -68,7 +68,7 @@ const translation = {
     social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED
     social_bind_with_existing: '找到了一个匹配的帐号，你可以直接绑定。',
     reset_password: '重设密码',
-    reset_password_description: '输入{{types, list(type: disjunction;)}}，领取验证码以重设密码。',
+    reset_password_description: '输入{{types, list(type: disjunction;)}}，获取验证码以重设密码。',
     new_password: '新密码',
     set_password: '设置密码',
     password_changed: '已重置密码！',
