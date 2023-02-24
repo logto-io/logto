@@ -13,10 +13,9 @@ import { PageContext } from './use-page-context';
 type Options = {
   replace?: boolean;
   linkSocial?: string;
-  flow?: UserFlow;
 };
 
-const useRequiredProfileErrorHandler = ({ replace, linkSocial, flow }: Options = {}) => {
+const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) => {
   const navigate = useNavigate();
   const { setToast } = useContext(PageContext);
 
@@ -42,7 +41,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial, flow }: Options =
               {
                 pathname: `/${UserFlow.continue}/${missingProfile}`,
               },
-              { replace, state: { flow } }
+              { replace }
             );
             break;
           }
@@ -54,7 +53,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial, flow }: Options =
                 pathname: `/${UserFlow.continue}/${missingProfile}`,
                 search: linkSocialQueryString,
               },
-              { replace, state: { registeredSocialIdentity, flow } }
+              { replace, state: { registeredSocialIdentity } }
             );
             break;
           }
@@ -66,7 +65,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial, flow }: Options =
         }
       },
     }),
-    [flow, linkSocial, navigate, replace, setToast]
+    [linkSocial, navigate, replace, setToast]
   );
 
   return requiredProfileErrorHandler;

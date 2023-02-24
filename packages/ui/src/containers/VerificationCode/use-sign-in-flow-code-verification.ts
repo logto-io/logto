@@ -15,7 +15,6 @@ import useErrorHandler from '@/hooks/use-error-handler';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
-import { UserFlow } from '@/types';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
@@ -40,7 +39,6 @@ const useSignInFlowCodeVerification = (
 
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({
     replace: true,
-    flow: UserFlow.signIn,
   });
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
 

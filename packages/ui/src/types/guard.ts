@@ -16,13 +16,6 @@ export const passwordIdentifierStateGuard = s.object({
   value: s.string(),
 });
 
-/* Continue Flow */
-export const continueFlowStateGuard = s.optional(
-  s.type({
-    flow: userFlowGuard,
-  })
-);
-
 /* Verification Code Flow Guard */
 const verificationCodeMethodGuard = s.union([
   s.literal(SignInIdentifier.Email),

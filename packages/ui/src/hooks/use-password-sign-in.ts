@@ -5,7 +5,6 @@ import { signInWithPasswordIdentifier } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
-import { UserFlow } from '@/types';
 
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 
@@ -19,7 +18,7 @@ const usePasswordSignIn = () => {
   const handleError = useErrorHandler();
   const asyncSignIn = useApi(signInWithPasswordIdentifier);
 
-  const requiredProfileErrorHandler = useRequiredProfileErrorHandler({ flow: UserFlow.signIn });
+  const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
