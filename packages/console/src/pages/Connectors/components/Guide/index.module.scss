@@ -46,7 +46,7 @@
       overflow: hidden;
 
       .readmeTitle {
-        font: var(--font-title-1);
+        font: var(--font-title-2);
         padding: _.unit(5) _.unit(6) _.unit(4);
         border-bottom: 1px solid var(--color-focused-variant);
       }
@@ -68,7 +68,7 @@
         margin-bottom: _.unit(6);
 
         .blockTitle {
-          font: var(--font-title-1);
+          font: var(--font-title-2);
           padding: _.unit(5) 0 _.unit(6);
           display: flex;
           align-items: center;
