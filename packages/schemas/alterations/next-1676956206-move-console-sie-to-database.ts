@@ -49,6 +49,7 @@ const alteration: AlterationScript = {
       select id
       from users
       where tenant_id = 'admin'
+      and is_suspended = false
       limit 1
     `);
     await pool.query(sql`
