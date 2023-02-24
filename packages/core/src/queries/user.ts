@@ -202,6 +202,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     pool.exists(sql`
       select ${fields.id}
       from ${table}
+      where ${fields.isSuspended} = false
       limit 1
     `);
 

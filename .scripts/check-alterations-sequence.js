@@ -14,7 +14,7 @@ const allAlterations = execSync("pnpm cli db alter list", {
   .filter((filename) => Boolean(filename))
   .map((filename) => filename.replace(".js", ""));
 
-const diffFiles = execSync("git diff --name-only HEAD HEAD~1", {
+const diffFiles = execSync("git diff HEAD~1 HEAD --name-only --diff-filter=ACR", {
   encoding: "utf-8",
 });
 const committedAlterations = diffFiles
