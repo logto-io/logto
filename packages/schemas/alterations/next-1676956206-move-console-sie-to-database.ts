@@ -48,7 +48,7 @@ const alteration: AlterationScript = {
     const hasActiveUsers = await pool.exists(sql`
       select id
       from users
-      where tenant_id = 'default'
+      where tenant_id = 'admin'
       limit 1
     `);
     await pool.query(sql`
