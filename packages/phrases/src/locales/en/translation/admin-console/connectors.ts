@@ -31,24 +31,26 @@ const connectors = {
   guide: {
     subtitle: 'A step by step guide to configure your connector',
     general_setting: 'General settings',
-    parameter_configuaration: 'Parameter configuration',
+    parameter_configuration: 'Parameter configuration',
     test_connection: 'Test connection',
-    name: 'Connector name',
+    name: 'Name for social sign-in button',
+    name_placeholder: 'Enter name for social sign-in button',
     name_tip:
       'The name of the connector button will be displayed as "Continue with {{name}}." Be mindful of the length of the naming in case it gets too long.',
-    logo: 'Logo image URL',
+    logo: 'Logo URL for social sign-in button',
     logo_placeholder: 'https://your.cdn.domain/logo.png',
     logo_tip:
       'Logo image will show on the connector. Get a publicly accessible image link and insert the link here.',
-    logo_dark: 'Connector logo URL for dark mode',
+    logo_dark: 'Logo URL for social sign-in button (Dark mode)',
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
     logo_dark_tip:
       'Set your connector’s logo for dark mode after enabling it in the Sign-in Experience of Admin Console.',
     logo_dark_collapse: 'Collapse',
     logo_dark_show: 'Show logo setting for dark mode',
-    target: 'Connector identity target',
+    target: 'Identity provider name',
+    target_placeholder: 'Enter connector identity provider name',
     target_tip:
-      'If the connector is successfully built, the connector “Target” cannot be modified.',
+      'The value of “IdP name” can be a unique identifier string to distinguish your social identifies. This setting cannot be changed after the connector is built.',
     target_tooltip:
       '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>',
     config: 'Enter your config JSON',

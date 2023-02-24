@@ -32,21 +32,24 @@ const connectors = {
   guide: {
     subtitle: '단계별 가이드를 따라, 연동해 주세요.',
     general_setting: 'General settings', // UNTRANSLATED
-    parameter_configuaration: 'Parameter configuration', // UNTRANSLATED
+    parameter_configuration: 'Parameter configuration', // UNTRANSLATED
     test_connection: 'Test connection', // UNTRANSLATED
-    name: '연동 이름',
+    name: 'Name for social sign-in button', // UNTRANSLATED
+    name_placeholder: 'Enter name for social sign-in button', // UNTRANSLATED
     name_tip: '다음과 같이 연동 이름이 출력돼요. "{{name}}으로 계속하기".',
     logo: '연동 로고 URL',
     logo_placeholder: 'https://your.cdn.domain/logo.png',
     logo_tip: '이 이미지는 연동 버튼에 보여질 거에요.',
-    logo_dark: '연동 로고 URL (다크 모드)',
+    logo_dark: 'Logo URL for social sign-in button (Dark mode)', // UNTRANSLATED
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
     logo_dark_tip:
       'Admin Console의 로그인 경험에서 다크 모드를 위한 로고를 활성화한 후 다크 모드용 연동 로고를 설정해 주세요.',
     logo_dark_collapse: '최소화',
     logo_dark_show: '다크 모드를 위한 로고 설정 보이기',
     target: '연동 ID 대상',
-    target_tip: '연동의 고유 식별자.',
+    target_placeholder: 'Enter connector identity provider name', // UNTRANSLATED
+    target_tip:
+      'The value of “IdP name” can be a unique identifier string to distinguish your social identifies. This setting cannot be changed after the connector is built.', // UNTRANSLATED
     target_tooltip:
       'Logto의 소셜 연동에서의 "목표"는 소셜 정보의 원천을 뜻해요. Logto의 디자인은 충돌을 피하기 위해서 같은 "목표"를 허용하지 않아요. 연동을 추가한 후에는 값을 변경할 수 없으므로 주의해주세요. <a>자세히 알아보기</a>',
     config: '여기에 JSON을 입력',

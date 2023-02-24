@@ -4,7 +4,7 @@ const connector_details = {
   settings: '通用设置',
   settings_description:
     'Connectors play a critical role in Logto. With their help, Logto enables end-users to use passwordless registration or sign-in and the capabilities of signing in with social accounts.', // UNTRANSLATED
-  parameter_configuaration: '参数配置',
+  parameter_configuration: '参数配置',
   test_connection: '连接测试',
   save_error_empty_config: '请输入配置内容',
   send: '发送',
