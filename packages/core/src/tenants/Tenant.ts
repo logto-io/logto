@@ -64,15 +64,16 @@ export default class Tenant implements TenantContext {
     // Init app
     const app = new Koa();
 
-    const provider = initOidc(envSet, queries, libraries);
-    app.use(mount('/oidc', provider.app));
-
     app.use(koaLogger());
     app.use(koaErrorHandler());
     app.use(koaOIDCErrorHandler());
     app.use(koaSlonikErrorHandler());
     app.use(koaConnectorErrorHandler());
     app.use(koaI18next());
+
+    // Mount OIDC
+    const provider = initOidc(envSet, queries, libraries);
+    app.use(mount('/oidc', provider.app));
 
     const tenantContext: TenantContext = { id, provider, queries, libraries, modelRouters, envSet };
     // Mount APIs
