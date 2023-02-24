@@ -52,7 +52,7 @@ const connectors = {
     target_tip:
       'The value of “IdP name” can be a unique identifier string to distinguish your social identifies. This setting cannot be changed after the connector is built.',
     target_tooltip:
-      '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>',
+      '"IdP name" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "IdP name" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>',
     config: 'Enter your config JSON',
     sync_profile: 'Sync profile information',
     sync_profile_only_at_sign_up: 'Only sync at sign-up',
