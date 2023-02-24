@@ -50,9 +50,9 @@ const useGetStartedMetadata = () => {
         subtitle: 'get_started.check_preview_subtitle',
         icon: isLightMode ? CheckPreview : CheckPreviewDark,
         buttonText: 'general.try_now',
-        isComplete: configs?.demoChecked,
+        isComplete: configs?.livePreviewChecked,
         onClick: async () => {
-          void updateConfigs({ demoChecked: true });
+          void updateConfigs({ livePreviewChecked: true });
           window.open(new URL('/demo-app', userEndpoint), '_blank');
         },
       },
@@ -96,7 +96,7 @@ const useGetStartedMetadata = () => {
             subtitle: 'get_started.management_api_subtitle',
             icon: isLightMode ? MachineToMachine : MachineToMachineDark,
             buttonText: 'general.create',
-            isComplete: configs?.socialSignInConfigured,
+            isComplete: configs?.m2mApplicationCreated,
             onClick: () => {
               navigate('/applications/create');
             },
@@ -107,10 +107,9 @@ const useGetStartedMetadata = () => {
             subtitle: 'get_started.self_hosting_subtitle',
             icon: isLightMode ? Github : GithubDark,
             buttonText: 'general.visit',
-            isComplete: configs?.socialSignInConfigured,
+            isComplete: configs?.selfHostingChecked,
             onClick: () => {
-              // TODO @xiaoyijun update configs
-              // void updateConfigs({ furtherReadingsChecked: true });
+              void updateConfigs({ selfHostingChecked: true });
               window.open(githubLink, '_blank');
             },
           },
@@ -120,10 +119,9 @@ const useGetStartedMetadata = () => {
         subtitle: 'get_started.community_subtitle',
         icon: isLightMode ? Discord : DiscordDark,
         buttonText: 'general.join',
-        isComplete: configs?.furtherReadingsChecked,
+        isComplete: configs?.communityChecked,
         onClick: () => {
-          // TODO @xiaoyijun update configs
-          // void updateConfigs({ furtherReadingsChecked: true });
+          void updateConfigs({ communityChecked: true });
           window.open(discordLink, '_blank');
         },
       },
@@ -132,12 +130,13 @@ const useGetStartedMetadata = () => {
     return metadataItems.filter(({ isHidden }) => !isHidden);
   }, [
     isLightMode,
-    configs?.demoChecked,
+    configs?.livePreviewChecked,
     configs?.applicationCreated,
-    configs?.signInExperienceCustomized,
     configs?.passwordlessConfigured,
-    configs?.socialSignInConfigured,
-    configs?.furtherReadingsChecked,
+    configs?.signInExperienceCustomized,
+    configs?.m2mApplicationCreated,
+    configs?.selfHostingChecked,
+    configs?.communityChecked,
     updateConfigs,
     userEndpoint,
     navigate,

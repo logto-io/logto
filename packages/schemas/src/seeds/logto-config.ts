@@ -15,11 +15,12 @@ export const createDefaultAdminConsoleConfig = (
     value: {
       language: 'en',
       appearanceMode: AppearanceMode.SyncWithSystem,
-      demoChecked: false,
+      livePreviewChecked: false,
       applicationCreated: false,
       signInExperienceCustomized: false,
       passwordlessConfigured: false,
-      socialSignInConfigured: false,
-      furtherReadingsChecked: false,
+      selfHostingChecked: false,
+      communityChecked: false,
+      m2mApplicationCreated: false,
     },
   } satisfies CreateLogtoConfig);

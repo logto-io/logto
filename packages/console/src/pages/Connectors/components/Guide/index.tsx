@@ -92,7 +92,6 @@ const Guide = ({ connector, onClose }: Props) => {
 
     await updateConfigs({
       ...conditional(!isSocialConnector && { passwordlessConfigured: true }),
-      ...conditional(isSocialConnector && { socialSignInConfigured: true }),
     });
 
     onClose();

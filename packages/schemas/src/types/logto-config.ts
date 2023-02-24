@@ -22,12 +22,13 @@ export const logtoOidcConfigGuard: Readonly<{
 // Admin console config
 export const adminConsoleDataGuard = z.object({
   // Get started challenges
-  demoChecked: z.boolean(),
+  livePreviewChecked: z.boolean(),
   applicationCreated: z.boolean(),
   signInExperienceCustomized: z.boolean(),
   passwordlessConfigured: z.boolean(),
-  socialSignInConfigured: z.boolean(),
-  furtherReadingsChecked: z.boolean(),
+  selfHostingChecked: z.boolean(),
+  communityChecked: z.boolean(),
+  m2mApplicationCreated: z.boolean(),
 });
 
 export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;
