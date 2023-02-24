@@ -20,7 +20,7 @@ const Register = () => {
   }
 
   return (
-    <LandingPageContainer title="description.create_your_account">
+    <LandingPageContainer>
       {signUpMethods.length > 0 && (
         <IdentifierRegisterForm signUpMethods={signUpMethods} className={styles.main} />
       )}

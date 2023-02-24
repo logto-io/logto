@@ -63,9 +63,9 @@ const translation = {
       'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
     bind_account_title: '绑定或创建帐号',
     social_create_account: '没有帐号？你可以创建一个帐号并绑定。',
-    social_link_email: 'You can link another email', // UNTRANSLATED
-    social_link_phone: 'You can link another phone', // UNTRANSLATED
-    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED
+    social_link_email: 'You can link another email', // UNTRANSLATED,
+    social_link_phone: 'You can link another phone', // UNTRANSLATED,
+    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing: '找到了一个匹配的帐号，你可以直接绑定。',
     reset_password: '重设密码',
     reset_password_description: '输入{{types, list(type: disjunction;)}}，获取验证码以重设密码。',
@@ -81,12 +81,10 @@ const translation = {
     link_email: '绑定邮箱',
     link_phone: '绑定手机',
     link_email_or_phone: '绑定邮箱或手机号',
-    link_email_description: '绑定邮箱以保障你的账号安全',
-    link_phone_description: '绑定手机号以保障你的账号安全',
-    link_email_or_phone_description: '绑定邮箱或手机号以保障你的账号安全',
-    continue_with_more_information: '为保障你的账号安全，需要你补充以下信息。',
-    create_your_account: '注册你的账号',
-    welcome_to_sign_in: '欢迎登录',
+    link_email_description: '绑定邮箱以保障您的账号安全',
+    link_phone_description: '绑定手机号以保障您的账号安全',
+    link_email_or_phone_description: '绑定邮箱或手机号以保障您的账号安全',
+    continue_with_more_information: '为保障您的账号安全，需要您补充以下信息。',
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}}必填`,

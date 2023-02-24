@@ -32,7 +32,7 @@ const translation = {
     switch_to: 'Trocar para {{method}}',
     sign_in_via_passcode: 'Entrar com código de verificação',
     sign_in_via_password: 'Entrar com senha',
-    change: 'Change {{change}}', // UNTRANSLATED
+    change: 'Change {{change}}', // UNTRANSLATED,
     link_another_email: 'Link another email', // UNTRANSLATED
     link_another_phone: 'Link another phone', // UNTRANSLATED
     link_another_email_or_phone: 'Link another email or phone', // UNTRANSLATED
@@ -64,9 +64,9 @@ const translation = {
       'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
     bind_account_title: 'Link or create account', // UNTRANSLATED
     social_create_account: 'Sem conta? Você pode criar uma nova conta e link.',
-    social_link_email: 'You can link another email', // UNTRANSLATED
-    social_link_phone: 'You can link another phone', // UNTRANSLATED
-    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED
+    social_link_email: 'You can link another email', // UNTRANSLATED,
+    social_link_phone: 'You can link another phone', // UNTRANSLATED,
+    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
     social_bind_with_existing:
       'Encontramos uma conta relacionada, você pode vinculá-la diretamente.',
     reset_password: 'Redefinir senha',
@@ -90,8 +90,6 @@ const translation = {
     link_email_or_phone_description:
       'Para maior segurança, vincule seu e-mail ou telefone à conta.',
     continue_with_more_information: 'Para maior segurança, preencha os detalhes da conta abaixo.',
-    create_your_account: 'Create your account', // UNTRANSLATED
-    welcome_to_sign_in: 'Welcome to sign in', // UNTRANSLATED
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} é obrigatório`,
