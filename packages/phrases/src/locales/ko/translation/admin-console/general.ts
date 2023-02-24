@@ -44,6 +44,9 @@ const general = {
   tab_errors: '{{count, number}} 오류',
   skip_for_now: '지금은 건너뛰기',
   remove: '삭제',
+  visit: 'Visit', // UNTRANSLATED
+  join: 'Join', // UNTRANSLATED
+  try_now: 'Try Now', // UNTRANSLATED
 };
 
 export default general;

@@ -6,18 +6,24 @@ const get_started = {
   subtitle_part2: '我已经完成了这些设置。 ',
   hide_this: '隐藏引导',
   confirm_message: '你确认要隐藏该页面吗? 本操作将无法恢复。',
-  card1_title: '看看 Demo',
-  card1_subtitle: '来体验 Logto 登录吧',
-  card2_title: '创建你的第一款应用',
-  card2_subtitle: '创建一个原生、单页或传统应用，并通过 Logto 进行身份验证',
-  card3_title: '自定义你的登录体验',
-  card3_subtitle: '自定义符合品牌形象的登录界面，并实时预览真实效果',
-  card4_title: '配置短信和邮件连接器',
-  card4_subtitle: '通过手机号或邮箱无密码登录以提供一个安全无缝的用户体验',
-  card5_title: '添加社交连接器',
-  card5_subtitle: '让你的用户通过社交帐号一键登录',
-  card6_title: '更多阅读',
-  card6_subtitle: '查看我们一步一步基于场景的文档，没有复杂的概念，深入浅出',
+  check_preview_title: 'Check the live preview', // UNTRANSLATED
+  check_preview_subtitle: '来体验 Logto 登录吧',
+  integration_title: 'Create and integrate the your own application', // UNTRANSLATED
+  integration_subtitle:
+    'Setup a native, single page or traditional application to use Logto for authentication', // UNTRANSLATED
+  custom_sie_title: 'Customize your sign-in experience with advanced options', // UNTRANSLATED
+  custom_sie_subtitle: 'Unlock a vast range of business scenarios with advanced settings', // UNTRANSLATED
+  passwordless_title: 'Scale passwordless sign in by adding your own connectors', // UNTRANSLATED
+  passwordless_subtitle:
+    'Try passwordless sign in and enable a secure and frictionless experience for your customer', // UNTRANSLATED
+  self_hosting_title: 'Check Github for self-hosting options', // UNTRANSLATED
+  self_hosting_subtitle:
+    'Efficiently deploy by visiting the Github homepage in a matter of minutes', // UNTRANSLATED
+  community_title: 'Join our discord community', // UNTRANSLATED
+  community_subtitle: 'Join our public channel to chat with other developers', // UNTRANSLATED
+  management_api_title: 'Interact with Management API', // UNTRANSLATED
+  management_api_subtitle:
+    'Build a machine to machine app for API access and your product tech infrastructure setup', // UNTRANSLATED
 };
 
 export default get_started;
