@@ -4,7 +4,7 @@ const connector_details = {
   settings: 'General settings', // UNTRANSLATED
   settings_description:
     'Os conectores desempenham um papel crítico no Logto. Com a ajuda deles, a Logto permite que os usuários finais usem o registro ou login sem senha e os recursos de login com contas sociais.',
-  parameter_configuaration: 'Parameter configuration', // UNTRANSLATED
+  parameter_configuration: 'Parameter configuration', // UNTRANSLATED
   test_connection: 'Test connection', // UNTRANSLATED
   save_error_empty_config: 'Por favor insira a configuração',
   send: 'Enviar',

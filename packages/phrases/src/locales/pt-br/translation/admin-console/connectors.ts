@@ -32,21 +32,24 @@ const connectors = {
   guide: {
     subtitle: 'Um guia passo a passo para configurar seu conector',
     general_setting: 'General settings', // UNTRANSLATED
-    parameter_configuaration: 'Parameter configuration', // UNTRANSLATED
+    parameter_configuration: 'Parameter configuration', // UNTRANSLATED
     test_connection: 'Test connection', // UNTRANSLATED
-    name: 'Nome do conector',
+    name: 'Name for social sign-in button', // UNTRANSLATED
+    name_placeholder: 'Enter name for social sign-in button', // UNTRANSLATED
     name_tip: 'O nome do botão do conector será exibido como "Continue com {{Connector Name}}".',
-    logo: 'URL do logotipo do conector',
+    logo: 'Logo URL for social sign-in button', // UNTRANSLATED
     logo_placeholder: 'https://your.cdn.domain/logo.png',
     logo_tip: 'A imagem do logotipo também será exibida no botão do conector.',
-    logo_dark: 'URL do logotipo do conector (modo escuro)',
+    logo_dark: 'Logo URL for social sign-in button (Dark mode)', // UNTRANSLATED
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
     logo_dark_tip:
       'Set your connector’s logo for dark mode after enabling it in the Sign-in Experience of Admin Console.', // UNTRANSLATED
     logo_dark_collapse: 'Collapse',
     logo_dark_show: 'Show logo setting for dark mode', // UNTRANSLATED
-    target: 'Destino da identidade do conector',
-    target_tip: 'Um identificador exclusivo para o conector.',
+    target: 'Identity provider name', // UNTRANSLATED
+    target_placeholder: 'Enter connector identity provider name', // UNTRANSLATED
+    target_tip:
+      'The value of “IdP name” can be a unique identifier string to distinguish your social identifies. This setting cannot be changed after the connector is built.', // UNTRANSLATED
     target_tooltip:
       '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>', // UNTRANSLATED
     config: 'Digite seu JSON aqui',

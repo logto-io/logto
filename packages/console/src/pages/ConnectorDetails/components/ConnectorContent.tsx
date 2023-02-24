@@ -110,7 +110,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
           </FormCard>
         )}
         <FormCard
-          title="connector_details.parameter_configuaration"
+          title="connector_details.parameter_configuration"
           description={conditional(!isSocialConnector && 'connector_details.settings_description')}
           learnMoreLink={conditional(
             !isSocialConnector && getDocumentationUrl('/docs/references/connectors')

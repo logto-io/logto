@@ -141,7 +141,7 @@ const Guide = ({ connector, onClose }: Props) => {
               <div className={styles.block}>
                 <div className={styles.blockTitle}>
                   <div className={styles.number}>{isSocialConnector ? 2 : 1}</div>
-                  <div>{t('connectors.guide.parameter_configuaration')}</div>
+                  <div>{t('connectors.guide.parameter_configuration')}</div>
                 </div>
                 <ConfigForm
                   configTemplate={connector.configTemplate}

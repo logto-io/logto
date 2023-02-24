@@ -60,7 +60,7 @@ const BasicForm = ({
         <>
           <FormField isRequired title="connectors.guide.name" tip={t('connectors.guide.name_tip')}>
             <TextInput
-              placeholder={t('connectors.guide.name')}
+              placeholder={t('connectors.guide.name_placeholder')}
               hasError={Boolean(errors.name)}
               {...register('name', { required: true })}
             />
@@ -120,6 +120,7 @@ const BasicForm = ({
             )}
           >
             <TextInput
+              placeholder={t('connectors.guide.target_placeholder')}
               hasError={Boolean(errors.target)}
               disabled={!isAllowEditTarget}
               {...register('target', { required: true })}

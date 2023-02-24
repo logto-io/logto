@@ -31,24 +31,26 @@ const connectors = {
   guide: {
     subtitle: 'Um guia passo a passo para configurar o conector',
     general_setting: 'General settings', // UNTRANSLATED
-    parameter_configuaration: 'Parameter configuration', // UNTRANSLATED
+    parameter_configuration: 'Parameter configuration', // UNTRANSLATED
     test_connection: 'Test connection', // UNTRANSLATED
-    name: 'Connector name', // UNTRANSLATED
+    name: 'Name for social sign-in button', // UNTRANSLATED
+    name_placeholder: 'Enter name for social sign-in button', // UNTRANSLATED
     name_tip:
       'The name of the connector button will be displayed as "Continue with {{name}}." Be mindful of the length of the naming in case it gets too long.', // UNTRANSLATED
-    logo: 'Logo image URL', // UNTRANSLATED
+    logo: 'Logo URL for social sign-in button', // UNTRANSLATED
     logo_placeholder: 'https://your.cdn.domain/logo.png', // UNTRANSLATED
     logo_tip:
       'Logo image will show on the connector. Get a publicly accessible image link and insert the link here.', // UNTRANSLATED
-    logo_dark: 'Connector logo URL for dark mode', // UNTRANSLATED
+    logo_dark: 'Logo URL for social sign-in button (Dark mode)', // UNTRANSLATED
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png', // UNTRANSLATED
     logo_dark_tip:
       'Set your connector’s logo for dark mode after enabling it in the Sign-in Experience of Admin Console.', // UNTRANSLATED
     logo_dark_collapse: 'Collapse', // UNTRANSLATED
     logo_dark_show: 'Show logo setting for dark mode', // UNTRANSLATED
-    target: 'Connector identity target', // UNTRANSLATED
+    target: 'Identity provider name', // UNTRANSLATED
+    target_placeholder: 'Enter connector identity provider name', // UNTRANSLATED
     target_tip:
-      'If the connector is successfully built, the connector “Target” cannot be modified.', // UNTRANSLATED
+      'The value of “IdP name” can be a unique identifier string to distinguish your social identifies. This setting cannot be changed after the connector is built.', // UNTRANSLATED
     target_tooltip:
       '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>', // UNTRANSLATED
     config: 'Enter your config JSON', // UNTRANSLATED
