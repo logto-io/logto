@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-rc.3
+
+### Minor Changes
+
+- c1271741: `getSession` and `setSession` are actually used as REQUIRED parameters, update interface definition.
+
 ## 1.0.0-rc.2
 
 ### Patch Changes
