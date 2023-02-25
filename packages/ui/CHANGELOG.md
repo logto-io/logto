@@ -1,5 +1,28 @@
 # Change Log
 
+## 1.0.0-rc.2
+
+### Minor Changes
+
+- c12717412: ## Smart Identifier Input designed to streamline your sign-in experience
+
+  - Smart Contact Input
+  - Smart Identifier Input
+  - Intelligent Identifier Input Field
+
+  Content:
+  We have integrated the traditional input fields for username, phone number, and email into a single intelligent input box. This advanced input box automatically identifies the type of characters you’re entering, such as an @ sign or consecutive numbers, and provides relevant error feedback. By streamlining the sign-in process, users no longer need to waste time figuring out which button to click to switch their desired login method. This reduces the risk of errors and ensures a smoother sign-in experience.
+
+- c12717412: **Customize CSS for Sign-in Experience**
+
+  We have put a lot of effort into improving the user sign-in experience and have provided a brand color option for the UI. However, we know that fine-tuning UI requirements can be unpredictable. While Logto is still exploring the best options for customization, we want to provide a programmatic method to unblock your development.
+
+  You can now use the Management API `PATCH /api/sign-in-exp` with body `{ "customCss": "arbitrary string" }` to set customized CSS for the sign-in experience. You should see the value of `customCss` attached after `<title>` of the page. If the style has a higher priority, it should be able to override.
+
+  > **Note**
+  >
+  > Since Logto uses CSS Modules, you may see a hash value in the `class` property of DOM elements (e.g. a `<div>` with `vUugRG_container`). To override these, you can use the `$=` CSS selector to match elements that end with a specified value. In this case, it should be `div[class$=container]`.
+
 ## 1.0.0-rc.1
 
 ### Patch Changes

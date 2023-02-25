@@ -1,6 +1,6 @@
 {
   "name": "@logto/cloud",
-  "version": "0.1.0",
+  "version": "0.1.1-rc.0",
   "description": "Logto Cloud service.",
   "main": "build/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
