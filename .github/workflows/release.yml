@@ -168,5 +168,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.BOT_PAT }}
-          body: <Release notes WIP>
+          body: ''
           files: /tmp/logto.tar.gz
+          append_body: true

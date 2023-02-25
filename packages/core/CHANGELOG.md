@@ -1,5 +1,70 @@
 # Change Log
 
+## 1.0.0-rc.2
+
+### Major Changes
+
+- c12717412: **Decouple users and admins**
+
+  ## 💥 BREAKING CHANGES 💥
+
+  Logto was using a single port to serve both normal users and admins, as well as the web console. While we continuously maintain a high level of security, it’ll still be great to decouple these components into two separate parts to keep data isolated and provide a flexible infrastructure.
+
+  From this version, Logto now listens to two ports by default, one for normal users (`3001`), and one for admins (`3002`).
+
+  - Nothing changed for normal users. No adaption is needed.
+  - For admin users:
+    - The default Admin Console URL has been changed to `http://localhost:3002/console`.
+    - To change the admin port, set the environment variable `ADMIN_PORT`. For instance, `ADMIN_PORT=3456`.
+    - You can specify a custom endpoint for admins by setting the environment variable `ADMIN_ENDPOINT`. For example, `ADMIN_ENDPOINT=https://admin.your-domain.com`.
+    - You can now completely disable admin endpoints by setting `ADMIN_DISABLE_LOCALHOST=1` and leaving `ADMIN_ENDPOINT` unset.
+    - Admin Console and admin user data are not accessible via normal user endpoints, including `localhost` and `ENDPOINT` from the environment.
+    - Admin Console no longer displays audit logs of admin users. However, these logs still exist in the database, and Logto still inserts admin user logs. There is just no convenient interface to inspect them.
+    - Due to the data isolation, the numbers on the dashboard may slightly decrease (admins are excluded).
+
+  If you are upgrading from a previous version, simply run the database alteration command as usual, and we'll take care of the rest.
+
+  > **Note** DID YOU KNOW
+  >
+  > Under the hood, we use the powerful Postgres feature Row-Level Security to isolate admin and user data.
+
+### Minor Changes
+
+- c12717412: - mask sensitive password value in audit logs
+- c12717412: ## Creating your social connector with ease
+
+  We’re excited to announce that Logto now supports standard protocols (SAML, OIDC, and OAuth2.0) for creating social connectors to integrate external identity providers. Each protocol can create multiple social connectors, giving you more control over your access needs.
+
+  To simplify the process of configuring social connectors, we’re replacing code-edit with simple forms. SAML already supports form configuration, with other connectors coming soon. This means you don’t need to compare documents or worry about code format.
+
+- c12717412: ## Enable connector method `getUserInfo` read and write access to DB
+
+  Logto connectors are designed to be stateless to the extent possible and practical, but it still has some exceptions at times.
+
+  With the recent addition of database read and write access, connectors can now store persistent information. For example, connectors can now store access tokens and refresh tokens to minimize number of requests to social vendor's APIs.
+
+- c12717412: **Customize CSS for Sign-in Experience**
+
+  We have put a lot of effort into improving the user sign-in experience and have provided a brand color option for the UI. However, we know that fine-tuning UI requirements can be unpredictable. While Logto is still exploring the best options for customization, we want to provide a programmatic method to unblock your development.
+
+  You can now use the Management API `PATCH /api/sign-in-exp` with body `{ "customCss": "arbitrary string" }` to set customized CSS for the sign-in experience. You should see the value of `customCss` attached after `<title>` of the page. If the style has a higher priority, it should be able to override.
+
+  > **Note**
+  >
+  > Since Logto uses CSS Modules, you may see a hash value in the `class` property of DOM elements (e.g. a `<div>` with `vUugRG_container`). To override these, you can use the `$=` CSS selector to match elements that end with a specified value. In this case, it should be `div[class$=container]`.
+
+### Patch Changes
+
+- Updated dependencies [c12717412]
+- Updated dependencies [c12717412]
+- Updated dependencies [c12717412]
+- Updated dependencies [c12717412]
+  - @logto/phrases@1.0.0-rc.1
+  - @logto/phrases-ui@1.0.0-rc.1
+  - @logto/schemas@1.0.0-rc.1
+  - @logto/cli@1.0.0-rc.2
+  - @logto/shared@1.0.0-rc.1
+
 ## 1.0.0-rc.1
 
 ### Patch Changes

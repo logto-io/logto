@@ -104,7 +104,7 @@ jobs:
       # Fetch the current version by finding the latest tag starts with "v", e.g. "v1.0.0-beta.19"
       - id: version
         working-directory: ./fresh
-        run: echo "current=$(git describe --match "v*" --abbrev=0)" >> $GITHUB_OUTPUT
+        run: echo "current=$(git describe --match "@logto/schemas@*" --abbrev=0)" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
         with:
@@ -170,7 +170,7 @@ jobs:
 
       - name: Revert fresh database to old
         working-directory: ./fresh
-        run: pnpm cli db alt r ${{ steps.version.outputs.current }}
+        run: pnpm cli db alt r v$(echo ${{ steps.version.outputs.current }} | cut -d@ -f3)
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/fresh
 
