@@ -52,10 +52,6 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 ### Interactive demo
 
-[![Uffizzi](https://cdn.uffizzi.com/demo-button.svg)](https://app.uffizzi.com/demo/github.com/logto-io/logto)
-
-Recommended. Click and wait for a few seconds to start exploring Logto in your own browser!
-
 [![GitPod](https://raw.githubusercontent.com/gitpod-io/gitpod/30da76375c996109f243491b23e47feefab7217f/components/dashboard/public/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/logto-io/demo)
 
 If you launch Logto via GitPod, please wait until you see the message like `App is running at https://3002-...gitpod.io` in the terminal, press Cmd (or Ctrl on Windows) and click the URL starts with `https://3002-` to continue your Logto journey.
