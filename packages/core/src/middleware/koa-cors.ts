@@ -13,14 +13,22 @@ export default function koaCors<StateT, ContextT, ResponseBodyT>(
 
       if (
         origin &&
-        urlSets.some((set) =>
-          set.deduplicated().some(
+        urlSets.some((set) => {
+          const deduplicated = set.deduplicated();
+
+          // The URL Set has only one endpoint available, just use that endpoint.
+          if (deduplicated.length <= 1) {
+            return deduplicated.some((url) => url.origin === origin);
+          }
+
+          // For multiple endpoints, should filter out localhost in production.
+          return deduplicated.some(
             (url) =>
               url.origin === origin &&
               // Disable localhost CORS in production since it's unsafe
               !(EnvSet.values.isProduction && url.hostname === 'localhost')
-          )
-        )
+          );
+        })
       ) {
         return origin;
       }
