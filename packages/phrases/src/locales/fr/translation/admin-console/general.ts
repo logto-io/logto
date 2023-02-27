@@ -45,6 +45,9 @@ const general = {
   tab_errors: '{{count, number}} errors', // UNTRANSLATED
   skip_for_now: 'Skip for now', // UNTRANSLATED
   remove: 'Remove', // UNTRANSLATED
+  visit: 'Visit', // UNTRANSLATED
+  join: 'Join', // UNTRANSLATED
+  try_now: 'Try Now', // UNTRANSLATED
 };
 
 export default general;

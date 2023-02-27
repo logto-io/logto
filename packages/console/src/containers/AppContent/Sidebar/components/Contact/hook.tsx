@@ -7,6 +7,7 @@ import EmailDark from '@/assets/images/email-dark.svg';
 import Email from '@/assets/images/email.svg';
 import GithubDark from '@/assets/images/github-dark.svg';
 import Github from '@/assets/images/github.svg';
+import { contactEmailLink, discordLink, githubIssuesLink } from '@/consts';
 import { useTheme } from '@/hooks/use-theme';
 
 type ContactItem = {
@@ -27,21 +28,21 @@ export const useContacts = (): ContactItem[] => {
       icon: isLightMode ? Discord : DiscordDark,
       description: 'contact.discord.description',
       label: 'contact.discord.button',
-      link: 'https://discord.gg/UEPaF3j5e6',
+      link: discordLink,
     },
     {
       title: 'contact.github.title',
       icon: isLightMode ? Github : GithubDark,
       description: 'contact.github.description',
       label: 'contact.github.button',
-      link: 'https://github.com/logto-io/logto/issues',
+      link: githubIssuesLink,
     },
     {
       title: 'contact.email.title',
       icon: isLightMode ? Email : EmailDark,
       description: 'contact.email.description',
       label: 'contact.email.button',
-      link: 'mailto:feedback@logto.io',
+      link: contactEmailLink,
     },
   ];
 };

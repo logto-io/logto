@@ -7,22 +7,24 @@ const get_started = {
   hide_this: 'Esconder isso',
   confirm_message:
     'Tem certeza de que deseja ocultar esta página? Essa ação não pode ser desfeita.',
-  card1_title: 'Confira a demonstração',
-  card1_subtitle: 'Experimente a experiência de Logto agora para ver como funciona',
-  card2_title: 'Crie e integre o primeiro aplicativo',
-  card2_subtitle:
-    'Configure um aplicativo móvel, single page ou tradicional para usar o Logto para autenticação',
-  card3_title: 'Personalize a experiência de login',
-  card3_subtitle:
-    'Personalize a interface do usuário de login para corresponder à sua marca e visualize em tempo real',
-  card4_title: 'Configurar SMS e conector de e-mail',
-  card4_subtitle:
-    'Experimente o login sem senha com número de telefone ou e-mail para permitir uma experiência do cliente segura e sem atrito',
-  card5_title: 'Adicionar um conector social',
-  card5_subtitle:
-    'Permita que seus clientes façam login em seu aplicativo com as identidades sociais em um clique',
-  card6_title: 'Leituras adicionais',
-  card6_subtitle: 'Confira nossos documentos de passo a passo baseados em cenários',
+  check_preview_title: 'Check the live preview', // UNTRANSLATED
+  check_preview_subtitle: 'Experimente a experiência de Logto agora para ver como funciona',
+  integration_title: 'Create and integrate the your own application', // UNTRANSLATED
+  integration_subtitle:
+    'Setup a native, single page or traditional application to use Logto for authentication', // UNTRANSLATED
+  custom_sie_title: 'Customize your sign-in experience with advanced options', // UNTRANSLATED
+  custom_sie_subtitle: 'Unlock a vast range of business scenarios with advanced settings', // UNTRANSLATED
+  passwordless_title: 'Scale passwordless sign in by adding your own connectors', // UNTRANSLATED
+  passwordless_subtitle:
+    'Try passwordless sign in and enable a secure and frictionless experience for your customer', // UNTRANSLATED
+  self_hosting_title: 'Check Github for self-hosting options', // UNTRANSLATED
+  self_hosting_subtitle:
+    'Efficiently deploy by visiting the Github homepage in a matter of minutes', // UNTRANSLATED
+  community_title: 'Join our discord community', // UNTRANSLATED
+  community_subtitle: 'Join our public channel to chat with other developers', // UNTRANSLATED
+  management_api_title: 'Interact with Management API', // UNTRANSLATED
+  management_api_subtitle:
+    'Build a machine to machine app for API access and your product tech infrastructure setup', // UNTRANSLATED
 };
 
 export default get_started;

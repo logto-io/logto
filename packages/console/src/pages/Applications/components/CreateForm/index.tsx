@@ -1,5 +1,6 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -58,7 +59,12 @@ const CreateForm = ({ onClose }: Props) => {
     const createdApp = await api.post('api/applications', { json: data }).json<Application>();
     setCreatedApp(createdApp);
     setIsGetStartedModalOpen(true);
-    void updateConfigs({ applicationCreated: true });
+    void updateConfigs({
+      applicationCreated: true,
+      ...conditional(
+        createdApp.type === ApplicationType.MachineToMachine && { applicationM2mCreated: true }
+      ),
+    });
   });
 
   return (

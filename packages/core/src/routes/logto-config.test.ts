@@ -30,10 +30,12 @@ describe('configs routes', () => {
   });
 
   it('PATCH /configs/admin-console', async () => {
-    const demoChecked = !mockAdminConsoleData.demoChecked;
-    const response = await roleRequester.patch('/configs/admin-console').send({ demoChecked });
+    const livePreviewChecked = !mockAdminConsoleData.livePreviewChecked;
+    const response = await roleRequester
+      .patch('/configs/admin-console')
+      .send({ livePreviewChecked });
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ ...mockAdminConsoleData, demoChecked });
+    expect(response.body).toEqual({ ...mockAdminConsoleData, livePreviewChecked });
   });
 });
