@@ -17,7 +17,6 @@ const sign_in_exp = {
       'Bitte beachte, dass die Anmeldeoberfläche für alle Anwendungen unter diesem Konto gilt.',
   },
   sign_up_and_sign_in: {
-    identifiers: 'Sign-up identifiers', // UNTRANSLATED
     identifiers_email: 'Email address', // UNTRANSLATED
     identifiers_phone: 'Phone number', // UNTRANSLATED
     identifiers_username: 'Username', // UNTRANSLATED
@@ -146,7 +145,6 @@ const sign_in_exp = {
     },
   },
   setup_warning: {
-    no_connector: '',
     no_connector_sms:
       'No SMS connector set-up yet. Until you finish configuring your SMS connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"', // UNTRANSLATED
     no_connector_email:

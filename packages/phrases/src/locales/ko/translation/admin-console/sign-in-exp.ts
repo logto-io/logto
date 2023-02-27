@@ -37,7 +37,6 @@ const sign_in_exp = {
     slogan_placeholder: '상상력을 펼쳐 보세요',
   },
   sign_up_and_sign_in: {
-    identifiers: '회원가입 ID',
     identifiers_email: '이메일 주소',
     identifiers_phone: '휴대전화번호',
     identifiers_username: '사용자 이름',
@@ -135,7 +134,6 @@ const sign_in_exp = {
     },
   },
   setup_warning: {
-    no_connector: '',
     no_connector_sms:
       'SMS 연동 설정이 아직 없어요. SMS 연동 구성을 완료할 때까지 로그인할 수 없어요. <a>{{link}}</a> "연동"으로',
     no_connector_email:

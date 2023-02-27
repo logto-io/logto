@@ -39,7 +39,6 @@ const sign_in_exp = {
     slogan_placeholder: 'Unleash your creativity',
   },
   sign_up_and_sign_in: {
-    identifiers: 'Sign-up identifiers',
     identifiers_email: 'Email address',
     identifiers_phone: 'Phone number',
     identifiers_username: 'Username',
@@ -140,7 +139,6 @@ const sign_in_exp = {
     },
   },
   setup_warning: {
-    no_connector: '',
     no_connector_sms:
       'No SMS connector set-up yet. Until you finish configuring your SMS connector, you won’t be able to sign in. <a>{{link}}</a> in "Connectors"',
     no_connector_email:

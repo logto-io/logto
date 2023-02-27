@@ -1,7 +1,6 @@
 import { conditional } from '@silverhand/essentials';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { snakeCase } from 'snake-case';
 
 import Card from '@/components/Card';
 import Checkbox from '@/components/Checkbox';
@@ -9,7 +8,11 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
-import { signUpIdentifiers, signUpIdentifiersMapping } from '../../constants';
+import {
+  signUpIdentifierPhrase,
+  signUpIdentifiers,
+  signUpIdentifiersMapping,
+} from '../../constants';
 import type { SignInExperienceForm } from '../../types';
 import { SignUpIdentifier } from '../../types';
 import {
@@ -129,9 +132,7 @@ const SignUpForm = () => {
                 value: identifier,
                 title: (
                   <div>
-                    {t('sign_in_exp.sign_up_and_sign_in.identifiers', {
-                      context: snakeCase(identifier),
-                    })}
+                    {t(signUpIdentifierPhrase[identifier])}
                     {identifier === SignUpIdentifier.None && (
                       <span className={styles.socialOnlyDescription}>
                         {t(

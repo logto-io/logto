@@ -40,7 +40,6 @@ const sign_in_exp = {
     slogan_placeholder: 'Use sua criatividade',
   },
   sign_up_and_sign_in: {
-    identifiers: 'Identificadores de inscrição',
     identifiers_email: 'Endereço de e-mail',
     identifiers_phone: 'Número de telefone',
     identifiers_username: 'Nome de usuário',
@@ -142,7 +141,6 @@ const sign_in_exp = {
     },
   },
   setup_warning: {
-    no_connector: '',
     no_connector_sms:
       'Nenhum conector SMS configurado ainda. Até terminar de configurar seu conector SMS, você não poderá fazer login. <a>{{link}}</a> em "Conectores"',
     no_connector_email:

@@ -145,9 +145,11 @@ const ConnectorDetails = () => {
                   </>
                 )}
                 <Status status={inUse ? 'enabled' : 'disabled'} variant="outlined">
-                  {t('connectors.connector_status', {
-                    context: inUse ? 'in_use' : 'not_in_use',
-                  })}
+                  {t(
+                    inUse
+                      ? 'connectors.connector_status_in_use'
+                      : 'connectors.connector_status_not_in_use'
+                  )}
                 </Status>
                 <div className={styles.verticalBar} />
                 <div className={styles.text}>ID</div>

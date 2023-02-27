@@ -2,8 +2,8 @@ import type { SignUp } from '@logto/schemas';
 import { getSafe } from '@silverhand/essentials';
 import { diff } from 'deep-object-diff';
 import { useTranslation } from 'react-i18next';
-import { snakeCase } from 'snake-case';
 
+import { signUpIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignUpForm } from '@/pages/SignInExperience/types';
 import { signInExperienceParser } from '@/pages/SignInExperience/utils/form';
 
@@ -34,9 +34,7 @@ const SignUpDiffSection = ({ before, after, isAfter = false }: Props) => {
       <ul className={styles.list}>
         <li>
           <DiffSegment hasChanged={hasChanged('identifier')} isAfter={isAfter}>
-            {t('sign_in_exp.sign_up_and_sign_in.identifiers', {
-              context: snakeCase(identifier),
-            })}
+            {String(t(signUpIdentifierPhrase[identifier]))}
           </DiffSegment>
           {hasAuthentication && ' ('}
           {password && (
