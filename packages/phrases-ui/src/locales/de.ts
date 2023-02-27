@@ -97,6 +97,8 @@ const translation = {
       'Für zusätzliche Sicherheit, verknüpfe bitte deine Email oder Telefonnummer mit dem Konto.',
     continue_with_more_information:
       'Für zusätzliche Sicherheit, vervollständige bitte deine Informationen.',
+    create_your_account: 'Create your account', // UNTRANSLATED
+    welcome_to_sign_in: 'Welcome to sign in', // UNTRANSLATED
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} ist erforderlich`,

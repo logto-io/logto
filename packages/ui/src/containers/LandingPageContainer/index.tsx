@@ -1,7 +1,7 @@
-import { BrandingStyle } from '@logto/schemas';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useContext } from 'react';
+import type { TFuncKey } from 'react-i18next';
 
 import BrandingHeader from '@/components/BrandingHeader';
 import { PageContext } from '@/hooks/use-page-context';
@@ -13,16 +13,17 @@ import * as styles from './index.module.scss';
 type Props = {
   children: ReactNode;
   className?: string;
+  title?: TFuncKey;
 };
 
-const LandingPageContainer = ({ children, className }: Props) => {
+const LandingPageContainer = ({ children, className, title }: Props) => {
   const { experienceSettings, theme, platform } = useContext(PageContext);
 
   if (!experienceSettings) {
     return null;
   }
 
-  const { slogan, logoUrl, darkLogoUrl, style } = experienceSettings.branding;
+  const { logoUrl, darkLogoUrl } = experienceSettings.branding;
 
   return (
     <>
@@ -30,7 +31,7 @@ const LandingPageContainer = ({ children, className }: Props) => {
       <div className={classNames(styles.wrapper, className)}>
         <BrandingHeader
           className={styles.header}
-          headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
+          headline={title}
           logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
         />
         {children}
