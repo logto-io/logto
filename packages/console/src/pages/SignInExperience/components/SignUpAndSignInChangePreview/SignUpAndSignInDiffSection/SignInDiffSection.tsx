@@ -3,6 +3,7 @@ import { getSafe } from '@silverhand/essentials';
 import { detailedDiff } from 'deep-object-diff';
 import { useTranslation } from 'react-i18next';
 
+import { signInIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignInMethod, SignInMethodsObject } from '@/pages/SignInExperience/types';
 
 import DiffSegment from './DiffSegment';
@@ -54,9 +55,7 @@ const SignInDiffSection = ({ before, after, isAfter = false }: Props) => {
           return (
             <li key={identifierKey}>
               <DiffSegment hasChanged={hasIdentifierChanged(identifierKey)} isAfter={isAfter}>
-                {t('sign_in_exp.sign_up_and_sign_in.identifiers', {
-                  context: identifierKey.toLocaleLowerCase(),
-                })}
+                {String(t(signInIdentifierPhrase[identifierKey]))}
                 {hasAuthentication && ' ('}
                 {password && (
                   <DiffSegment

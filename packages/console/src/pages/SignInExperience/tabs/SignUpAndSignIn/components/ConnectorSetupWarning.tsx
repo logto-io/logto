@@ -4,6 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import Alert from '@/components/Alert';
 import TextLink from '@/components/TextLink';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
+import { noConnectorWarningPhrase } from '@/pages/SignInExperience/constants';
 
 type Props = {
   requiredConnectors: ConnectorType[];
@@ -35,8 +36,7 @@ const ConnectorSetupWarning = ({ requiredConnectors }: Props) => {
               ),
             }}
           >
-            {t('sign_in_exp.setup_warning.no_connector', {
-              context: connectorType.toLowerCase(),
+            {t(noConnectorWarningPhrase[connectorType], {
               link: t('sign_in_exp.setup_warning.setup_link'),
             })}
           </Trans>

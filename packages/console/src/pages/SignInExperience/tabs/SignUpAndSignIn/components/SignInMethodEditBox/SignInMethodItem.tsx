@@ -3,7 +3,6 @@ import { SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { snakeCase } from 'snake-case';
 
 import Draggable from '@/assets/images/draggable.svg';
 import Minus from '@/assets/images/minus.svg';
@@ -11,6 +10,7 @@ import SwitchArrowIcon from '@/assets/images/switch-arrow.svg';
 import Checkbox from '@/components/Checkbox';
 import IconButton from '@/components/IconButton';
 import { Tooltip } from '@/components/Tip';
+import { signInIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignInMethod } from '@/pages/SignInExperience/types';
 
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
@@ -48,13 +48,11 @@ const SignInMethodItem = ({
 
   return (
     <div>
-      <div key={snakeCase(identifier)} className={styles.signInMethodItem}>
+      <div key={identifier} className={styles.signInMethodItem}>
         <div className={classNames(styles.signInMethod, hasError && styles.error)}>
           <div className={styles.identifier}>
             <Draggable className={styles.draggableIcon} />
-            {t('sign_in_exp.sign_up_and_sign_in.identifiers', {
-              context: snakeCase(identifier),
-            })}
+            {t(signInIdentifierPhrase[identifier])}
           </div>
           <div
             className={classNames(
@@ -105,9 +103,7 @@ const SignInMethodItem = ({
           content={conditional(
             !isDeletable &&
               t('sign_in_exp.sign_up_and_sign_in.tip.delete_sign_in_method', {
-                identifier: t('sign_in_exp.sign_up_and_sign_in.identifiers', {
-                  context: snakeCase(identifier),
-                }).toLocaleLowerCase(),
+                identifier: String(t(signInIdentifierPhrase[identifier])).toLocaleLowerCase(),
               })
           )}
         >

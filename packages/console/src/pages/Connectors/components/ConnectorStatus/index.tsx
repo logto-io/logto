@@ -19,9 +19,7 @@ const ConnectorStatus = ({ connectorGroup }: Props) => {
 
   return firstConnector ? (
     <Status status={inUse ? 'enabled' : 'disabled'}>
-      {t('connectors.connector_status', {
-        context: inUse ? 'in_use' : 'not_in_use',
-      })}
+      {t(inUse ? 'connectors.connector_status_in_use' : 'connectors.connector_status_not_in_use')}
     </Status>
   ) : (
     <span>-</span>

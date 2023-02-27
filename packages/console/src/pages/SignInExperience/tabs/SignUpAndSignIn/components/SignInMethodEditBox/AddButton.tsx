@@ -1,13 +1,13 @@
 import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { snakeCase } from 'snake-case';
 
 import CirclePlus from '@/assets/images/circle-plus.svg';
 import Plus from '@/assets/images/plus.svg';
 import ActionMenu from '@/components/ActionMenu';
 import type { Props as ButtonProps } from '@/components/Button';
 import { DropdownItem } from '@/components/Dropdown';
+import { signInIdentifierPhrase } from '@/pages/SignInExperience/constants';
 
 import * as styles from './index.module.scss';
 
@@ -55,7 +55,7 @@ const AddButton = ({ options, onSelected, hasSelectedIdentifiers }: Props) => {
             onSelected(identifier);
           }}
         >
-          {t('sign_in_exp.sign_up_and_sign_in.identifiers', { context: snakeCase(identifier) })}
+          {t(signInIdentifierPhrase[identifier])}
         </DropdownItem>
       ))}
     </ActionMenu>

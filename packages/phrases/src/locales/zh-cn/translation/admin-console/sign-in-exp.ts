@@ -38,7 +38,6 @@ const sign_in_exp = {
     slogan_placeholder: '释放你的创意',
   },
   sign_up_and_sign_in: {
-    identifiers: '注册标识',
     identifiers_email: '邮件地址',
     identifiers_phone: '手机号码',
     identifiers_username: '用户名',
@@ -132,7 +131,6 @@ const sign_in_exp = {
     },
   },
   setup_warning: {
-    no_connector: '',
     no_connector_sms:
       '你尚未设置 SMS 短信连接器。在完成该配置前，你将无法登录。<a>{{link}}</a>连接器。',
     no_connector_email:
