@@ -14,6 +14,7 @@ import log_details from './log-details.js';
 import logs from './logs.js';
 import menu from './menu.js';
 import permissions from './permissions.js';
+import profile from './profile.js';
 import role_details from './role-details.js';
 import roles from './roles.js';
 import session_expired from './session-expired.js';
@@ -27,7 +28,6 @@ import welcome from './welcome.js';
 
 const admin_console = {
   title: '管理控制台',
-  profile: '帐户管理',
   admin_user: '管理员',
   system_app: '系统应用',
   menu,
@@ -56,6 +56,7 @@ const admin_console = {
   role_details,
   permissions,
   cloud,
+  profile,
 };
 
 export default admin_console;

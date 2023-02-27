@@ -1,6 +1,21 @@
 @use '@/scss/underscore' as _;
 
-.container {
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+}
+
+.deleteAccount {
+  flex: 1;
   display: flex;
-  padding: _.unit(5) 0;
+  align-items: center;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  padding: _.unit(4);
+
+  .description {
+    font: var(--font-body-2);
+    margin-right: _.unit(2);
+  }
 }
