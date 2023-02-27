@@ -57,6 +57,9 @@ const connectors = {
     sync_profile_only_at_sign_up: '회원가입할 때 동기화',
     sync_profile_each_sign_in: '로그인할 때마다 동기화',
     sync_profile_tip: '이름과 아바타와 같은 기본적인 사용자 프로필을 동기화해요.',
+    callback_uri: 'Callback URI', // UNTRANSLATED
+    callback_uri_description:
+      "Also called redirect URI, is the URI in Logto where users will be sent back after social authorization, copy and paste to the social provider's config page.", // UNTRANSLATED
   },
   platform: {
     universal: 'Universal',

@@ -1,8 +1,10 @@
+import { generateStandardId } from '@logto/core-kit';
 import { isLanguageTag } from '@logto/language-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -36,6 +38,7 @@ type Props = {
 const Guide = ({ connector, onClose }: Props) => {
   const api = useApi();
   const navigate = useNavigate();
+  const [callbackConnectorId, setCallbackConnectorId] = useState<string>(generateStandardId());
   const { updateConfigs } = useConfigs();
   const parseJsonConfig = useConfigParser();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -63,13 +66,14 @@ const Guide = ({ connector, onClose }: Props) => {
       return;
     }
 
-    const { formItems, isStandard, id: connectorId } = connector;
+    const { formItems, isStandard, id: connectorId, type } = connector;
     const config = formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
     const { syncProfile, name, logo, logoDark, target } = data;
 
     const basePayload = {
       config,
       connectorId,
+      id: conditional(type === ConnectorType.Social && callbackConnectorId),
       metadata: conditional(
         isStandard && {
           logo,
@@ -144,6 +148,7 @@ const Guide = ({ connector, onClose }: Props) => {
                   <div>{t('connectors.guide.parameter_configuration')}</div>
                 </div>
                 <ConfigForm
+                  connectorId={callbackConnectorId}
                   configTemplate={connector.configTemplate}
                   formItems={connector.formItems}
                 />

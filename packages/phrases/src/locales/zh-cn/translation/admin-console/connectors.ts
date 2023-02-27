@@ -54,6 +54,9 @@ const connectors = {
     sync_profile_only_at_sign_up: '首次注册时同步',
     sync_profile_each_sign_in: '每次登录时同步',
     sync_profile_tip: '同步用户的用户名、头像等个人资料信息',
+    callback_uri: 'Callback URI', // UNTRANSLATED
+    callback_uri_description:
+      "Also called redirect URI, is the URI in Logto where users will be sent back after social authorization, copy and paste to the social provider's config page.", // UNTRANSLATED
   },
   platform: {
     universal: '通用',
