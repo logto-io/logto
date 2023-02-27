@@ -89,17 +89,19 @@ const BasicForm = ({
               />
             </FormField>
           )}
-          <Button
-            size="small"
-            type="text"
-            title={
-              darkVisible
-                ? 'connectors.guide.logo_dark_collapse'
-                : 'connectors.guide.logo_dark_show'
-            }
-            trailingIcon={darkVisible ? <CaretUp /> : <CaretDown />}
-            onClick={toggleDarkVisible}
-          />
+          <div className={styles.fieldButton}>
+            <Button
+              size="small"
+              type="text"
+              title={
+                darkVisible
+                  ? 'connectors.guide.logo_dark_collapse'
+                  : 'connectors.guide.logo_dark_show'
+              }
+              trailingIcon={darkVisible ? <CaretUp /> : <CaretDown />}
+              onClick={toggleDarkVisible}
+            />
+          </div>
           <FormField
             isRequired
             title="connectors.guide.target"
