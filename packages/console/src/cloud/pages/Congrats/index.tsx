@@ -11,7 +11,7 @@ import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
-import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
+import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 
 import { OnboardPage } from '../../types';
 import { getOnboardPagePathname } from '../../utils';

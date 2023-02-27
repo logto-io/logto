@@ -1,6 +1,10 @@
 /** The API Resource Indicator for Logto Cloud. It's only useful when domain-based multi-tenancy is enabled. */
 export const cloudApiIndicator = 'https://cloud.logto.io/api';
 
+export enum CloudScope {
+  CreateTenant = 'create:tenant',
+}
+
 /**
  * In OSS:
  *

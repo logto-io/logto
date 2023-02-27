@@ -12,7 +12,7 @@ import useSWR from 'swr';
 import PhoneInfo from '@/assets/images/phone-info.svg';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
+import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
