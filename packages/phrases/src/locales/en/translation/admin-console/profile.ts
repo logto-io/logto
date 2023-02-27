@@ -33,11 +33,19 @@ const profile = {
     dialog_paragraph_3:
       'Thank you for choosing Logto Cloud. If you have any further questions or concerns, please do not hesitate to reach out to us.',
   },
-  edit: 'Edit',
+  set: 'Set',
   change: 'Change',
   link: 'Link',
   unlink: 'Unlink',
   not_set: 'Not set',
+  change_avatar: 'Change avatar',
+  change_name: 'Change name',
+  change_username: 'Change username',
+  set_name: 'Set name',
+  set_password: 'Set password',
+  link_email: 'Link email',
+  enter_password: 'Enter password',
+  enter_verification_code: 'Enter verification code',
 };
 
 export default profile;

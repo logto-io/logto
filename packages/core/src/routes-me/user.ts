@@ -1,5 +1,6 @@
 import { passwordRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -14,6 +15,34 @@ export default function userRoutes<T extends AuthedMeRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
   const { findUserById, updateUserById } = tenant.queries.users;
+
+  router.patch(
+    '/user',
+    koaGuard({
+      body: object({
+        avatar: string().optional(),
+        name: string().optional(),
+        username: string().optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { id: userId } = ctx.auth;
+      const { avatar, name, username } = ctx.guard.body;
+
+      const user = await findUserById(userId);
+      assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+
+      await updateUserById(userId, {
+        ...conditional(avatar !== undefined && { avatar }),
+        ...conditional(name !== undefined && { name }),
+        ...conditional(username !== undefined && { username }),
+      });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
 
   router.get('/custom-data', async (ctx, next) => {
     const { id: userId } = ctx.auth;

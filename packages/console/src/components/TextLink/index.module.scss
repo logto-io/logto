@@ -8,6 +8,7 @@
   font: var(--font-body-2);
   color: var(--color-text-link);
   gap: _.unit(1);
+  cursor: pointer;
 
   &.trailingIcon {
     flex-direction: row-reverse;
