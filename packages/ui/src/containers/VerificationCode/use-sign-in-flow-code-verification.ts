@@ -53,7 +53,7 @@ const useSignInFlowCodeVerification = (
     const [confirm] = await show({
       confirmText: 'action.create',
       ModalContent: t('description.sign_in_id_does_not_exist', {
-        ype: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
+        type: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
         value:
           method === SignInIdentifier.Phone
             ? formatPhoneNumberWithCountryCallingCode(target)
