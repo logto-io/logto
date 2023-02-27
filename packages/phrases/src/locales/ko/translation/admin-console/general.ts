@@ -47,6 +47,8 @@ const general = {
   visit: 'Visit', // UNTRANSLATED
   join: 'Join', // UNTRANSLATED
   try_now: 'Try Now', // UNTRANSLATED
+  multiple_form_field: '(Multiple)', // UNTRANSLATED
+  cap_limit: 'Cap limit', // UNTRANSLATED
 };
 
 export default general;

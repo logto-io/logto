@@ -16,18 +16,32 @@ export type Props = {
   title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   children: ReactNode;
   isRequired?: boolean;
+  isMultiple?: boolean;
   className?: string;
   headlineClassName?: string;
   tip?: ToggleTipProps['content'];
 };
 
-const FormField = ({ title, children, isRequired, className, tip, headlineClassName }: Props) => {
+const FormField = ({
+  title,
+  children,
+  isRequired,
+  isMultiple,
+  className,
+  tip,
+  headlineClassName,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <div className={classNames(styles.field, className)}>
       <div className={classNames(styles.headline, headlineClassName)}>
-        <div className={styles.title}>{typeof title === 'string' ? t(title) : title}</div>
+        <div className={styles.title}>
+          {typeof title === 'string' ? t(title) : title}
+          {isMultiple && (
+            <span className={styles.multiple}>{t('general.multiple_form_field')}</span>
+          )}
+        </div>
         {tip && (
           <ToggleTip anchorClassName={styles.toggleTipButton} content={tip} horizontalAlign="start">
             <IconButton size="small">

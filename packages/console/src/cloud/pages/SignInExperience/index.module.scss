@@ -1,0 +1,55 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  display: flex;
+  padding: 0 _.unit(17);
+
+  .config {
+    flex: 1;
+    background-color: var(--color-layer-1);
+    border-radius: 8px;
+    padding: _.unit(12);
+    margin-right: _.unit(8);
+
+    .title {
+      margin-top: _.unit(6);
+      font: var(--font-title-1);
+    }
+
+    .inspire {
+      margin-top: _.unit(3);
+      display: flex;
+      padding: _.unit(4) _.unit(5);
+      border-radius: 12px;
+      background-color: var(--color-base);
+      align-items: center;
+
+      .inspireContent {
+        margin-right: _.unit(6);
+        display: flex;
+        flex-direction: column;
+
+        .inspireTitle {
+          font: var(--font-title-2);
+          margin-bottom: _.unit(1);
+        }
+
+        .inspireDescription {
+          font: var(--font-body-2);
+        }
+      }
+    }
+
+    .cardFieldHeadline {
+      margin-bottom: _.unit(2);
+    }
+
+    .authnSelector {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .preview {
+    flex: 1;
+  }
+}
