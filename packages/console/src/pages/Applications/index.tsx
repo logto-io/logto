@@ -10,6 +10,7 @@ import ApplicationIcon from '@/components/ApplicationIcon';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
@@ -120,8 +121,9 @@ const Applications = () => {
             render: ({ id }) => <CopyToClipboard value={id} variant="text" />,
           },
         ]}
-        placeholder={{
-          content: (
+        placeholder={
+          <>
+            <EmptyDataPlaceholder />
             <Button
               title="applications.create"
               type="outline"
@@ -132,8 +134,8 @@ const Applications = () => {
                 });
               }}
             />
-          ),
-        }}
+          </>
+        }
         rowClickHandler={({ id }) => {
           navigate(buildDetailsPathname(id));
         }}

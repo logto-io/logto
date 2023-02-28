@@ -4,6 +4,8 @@ import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 
 import Delete from '@/assets/images/delete.svg';
+import PermissionsEmptyDark from '@/assets/images/permissions-empty-dark.svg';
+import PermissionsEmpty from '@/assets/images/permissions-empty.svg';
 import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
 import IconButton from '@/components/IconButton';
@@ -14,7 +16,9 @@ import TextLink from '@/components/TextLink';
 import { Tooltip } from '@/components/Tip';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 
+import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 import type { Props as PaginationProps } from '../Pagination';
+import TablePlaceholder from '../Table/TablePlaceholder';
 import * as styles from './index.module.scss';
 
 type SearchProps = {
@@ -31,6 +35,7 @@ type Props = {
   deleteButtonTitle?: AdminConsoleKey;
   isReadOnly?: boolean;
   isApiColumnVisible?: boolean;
+  isCreateGuideVisible?: boolean;
   pagination?: PaginationProps;
   search: SearchProps;
   createHandler: () => void;
@@ -46,6 +51,7 @@ const PermissionsTable = ({
   deleteButtonTitle = 'general.delete',
   isReadOnly = false,
   isApiColumnVisible = false,
+  isCreateGuideVisible = false,
   pagination,
   search: { keyword, searchHandler, clearSearchHandler },
   createHandler,
@@ -146,17 +152,29 @@ const PermissionsTable = ({
       }
       isLoading={isLoading}
       pagination={pagination}
-      placeholder={{
-        content: isReadOnly ? undefined : (
-          <Button
-            title={createButtonTitle}
-            type="outline"
-            onClick={() => {
-              createHandler();
-            }}
+      placeholder={
+        !isReadOnly && isCreateGuideVisible ? (
+          <TablePlaceholder
+            image={<PermissionsEmpty />}
+            imageDark={<PermissionsEmptyDark />}
+            title="permissions.placeholder_title"
+            description="permissions.placeholder_description"
+            action={
+              <Button
+                title={createButtonTitle}
+                type="primary"
+                size="large"
+                icon={<Plus />}
+                onClick={() => {
+                  createHandler();
+                }}
+              />
+            }
           />
-        ),
-      }}
+        ) : (
+          <EmptyDataPlaceholder />
+        )
+      }
       errorMessage={errorMessage}
       onRetry={retryHandler}
     />

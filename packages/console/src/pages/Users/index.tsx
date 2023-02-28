@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
+import UsersEmptyDark from '@/assets/images/users-empty-dark.svg';
+import UsersEmpty from '@/assets/images/users-empty.svg';
 import ApplicationName from '@/components/ApplicationName';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
@@ -12,6 +14,7 @@ import DateTime from '@/components/DateTime';
 import ItemPreview from '@/components/ItemPreview';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
+import TablePlaceholder from '@/components/Table/TablePlaceholder';
 import UserAvatar from '@/components/UserAvatar';
 import { defaultPageSize } from '@/consts';
 import { UserDetailsTabs } from '@/consts/page-tabs';
@@ -128,20 +131,28 @@ const Users = () => {
             }}
           />
         }
-        placeholder={{
-          content: (
-            <Button
-              title="users.create"
-              type="outline"
-              onClick={() => {
-                navigate({
-                  pathname: createUserPathname,
-                  search,
-                });
-              }}
-            />
-          ),
-        }}
+        placeholder={
+          <TablePlaceholder
+            image={<UsersEmpty />}
+            imageDark={<UsersEmptyDark />}
+            title="users.placeholder_title"
+            description="users.placeholder_description"
+            action={
+              <Button
+                title="users.create"
+                type="primary"
+                size="large"
+                icon={<Plus />}
+                onClick={() => {
+                  navigate({
+                    pathname: createUserPathname,
+                    search,
+                  });
+                }}
+              />
+            }
+          />
+        }
         rowClickHandler={({ id }) => {
           navigate(buildDetailsPathname(id));
         }}

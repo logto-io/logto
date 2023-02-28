@@ -6,6 +6,12 @@
   align-items: center;
   padding: _.unit(4) 0;
 
+  .image {
+    width: 200px;
+    height: 200px;
+    margin-bottom: _.unit(6);
+  }
+
   .title {
     font: var(--font-label-2);
     margin-bottom: _.unit(2);
@@ -15,5 +21,13 @@
     font: var(--font-body-2);
     color: var(--color-neutral-50);
     margin-bottom: _.unit(2);
+  }
+
+  &.small {
+    .image {
+      width: 128px;
+      height: 128px;
+      margin-bottom: unset;
+    }
   }
 }

@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Search from '@/assets/images/search.svg';
-import DataEmpty from '@/components/DataEmpty';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import type { DetailedResourceResponse } from '@/components/RoleScopesTransfer/types';
 import TextInput from '@/components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
@@ -136,10 +136,7 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
         className={classNames(transferLayout.boxContent, isEmpty && transferLayout.emptyBoxContent)}
       >
         {isEmpty ? (
-          <DataEmpty
-            imageClassName={styles.emptyImage}
-            title={t('role_details.permission.empty')}
-          />
+          <EmptyDataPlaceholder size="small" title={t('role_details.permission.empty')} />
         ) : (
           dataSource.map((resource) => (
             <ResourceItem

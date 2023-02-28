@@ -72,6 +72,18 @@
         }
       }
     }
+
+    &.empty {
+      height: 100%;
+
+      table {
+        height: 100%;
+
+        tbody {
+          height: 100%;
+        }
+      }
+    }
   }
 
   tr.hoverEffect:hover {

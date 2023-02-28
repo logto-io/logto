@@ -16,7 +16,9 @@ const connectors = {
       'Not in use means your sign in experience hasn’t used this sign in method. <a>{{link}}</a> to add this sign in method. ', // UNTRANSLATED
     go_to_sie: 'Go to sign in experience', // UNTRANSLATED
   },
-  social_connector_eg: 'Ex., Google, Facebook, Github',
+  placeholder_title: 'Social connector', // UNTRANSLATED
+  placeholder_description:
+    'Logto has provided many widely used social sign-in connectors meantime you can create your own with standard protocols.', // UNTRANSLATED
   save_and_done: 'Guardar',
   type: {
     email: 'Email',

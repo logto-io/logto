@@ -15,6 +15,9 @@ const roles = {
   create_role_button: 'Create Role', // UNTRANSLATED
   role_created: 'The role {{name}} has been successfully created!', // UNTRANSLATED
   search: 'Search by role name, description or ID', // UNTRANSLATED
+  placeholder_title: 'Roles', // UNTRANSLATED
+  placeholder_description:
+    'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.', // UNTRANSLATED
 };
 
 export default roles;

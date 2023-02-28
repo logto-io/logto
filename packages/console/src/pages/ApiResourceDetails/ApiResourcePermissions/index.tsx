@@ -69,6 +69,7 @@ const ApiResourcePermissions = () => {
   return (
     <>
       <PermissionsTable
+        isCreateGuideVisible
         scopes={scopes}
         isLoading={isLoading}
         isReadOnly={isLogtoManagementApiResource}

@@ -12,6 +12,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl } from '@/utils/url';
 
+import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 import Table from '../Table';
 import type { Column } from '../Table/types';
 import ApplicationSelector from './components/ApplicationSelector';
@@ -117,6 +118,7 @@ const AuditLogTable = ({ userId, className }: Props) => {
           </div>
         </div>
       }
+      placeholder={<EmptyDataPlaceholder />}
       pagination={{
         page,
         totalCount,

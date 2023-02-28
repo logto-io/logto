@@ -17,7 +17,9 @@ const connectors = {
       '사용 중이 아님은 로그인 환경에서 이 로그인 방법을 사용하지 않았음을 의미해요. <a>{{link}}</a> 이 로그인 방법을 추가해주세요.',
     go_to_sie: '로그인 경험으로 가서',
   },
-  social_connector_eg: '예) Google, Facebook, Github',
+  placeholder_title: 'Social connector', // UNTRANSLATED
+  placeholder_description:
+    'Logto has provided many widely used social sign-in connectors meantime you can create your own with standard protocols.', // UNTRANSLATED
   save_and_done: '저장 및 완료',
   type: {
     email: '이메일 연동',

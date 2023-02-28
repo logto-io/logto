@@ -17,7 +17,9 @@ const connectors = {
       'Fora de uso significa que sua experiência de login não usou esse método de login. <a>{{link}}</a> para adicionar este método de login. ',
     go_to_sie: 'Vá para a experiência de login',
   },
-  social_connector_eg: 'Ex: Google, Facebook, Github',
+  placeholder_title: 'Social connector', // UNTRANSLATED
+  placeholder_description:
+    'Logto has provided many widely used social sign-in connectors meantime you can create your own with standard protocols.', // UNTRANSLATED
   save_and_done: 'Salvar e completar',
   type: {
     email: 'Conector de e-mail',
