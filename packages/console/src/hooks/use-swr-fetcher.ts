@@ -1,21 +1,22 @@
 import type { RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
+import type { KyInstance } from 'ky/distribution/types/ky';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { BareFetcher } from 'swr';
 
-import useApi, { RequestError } from './use-api';
+import { RequestError } from './use-api';
 
 type WithTotalNumber<T> = Array<Awaited<T> | number>;
 
 type useSwrFetcherHook = {
-  <T>(): BareFetcher<T>;
-  <T extends unknown[]>(): BareFetcher<WithTotalNumber<T>>;
+  <T>(api: KyInstance): BareFetcher<T>;
+  <T extends unknown[]>(api: KyInstance): BareFetcher<WithTotalNumber<T>>;
 };
 
-const useSwrFetcher: useSwrFetcherHook = <T>() => {
-  const api = useApi({ hideErrorToast: true });
+const useSwrFetcher: useSwrFetcherHook = <T>(api: KyInstance) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
   const fetcher = useCallback<BareFetcher<T | WithTotalNumber<T>>>(
     async (resource, init) => {
       try {

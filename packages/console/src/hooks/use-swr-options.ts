@@ -1,10 +1,11 @@
 import type { SWRConfiguration } from 'swr';
 
-import { RequestError } from './use-api';
+import useApi, { RequestError } from './use-api';
 import useSwrFetcher from './use-swr-fetcher';
 
 const useSwrOptions = (): SWRConfiguration => {
-  const fetcher = useSwrFetcher();
+  const api = useApi({ hideErrorToast: true });
+  const fetcher = useSwrFetcher(api);
 
   return {
     fetcher,
