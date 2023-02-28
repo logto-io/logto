@@ -147,18 +147,7 @@ const UserRoles = () => {
             updateSearchParameters({ page });
           },
         }}
-        placeholder={
-          <>
-            <EmptyDataPlaceholder />
-            <Button
-              title="user_details.roles.assign_button"
-              type="outline"
-              onClick={() => {
-                setIsAssignRolesModalOpen(true);
-              }}
-            />
-          </>
-        }
+        placeholder={<EmptyDataPlaceholder />}
         errorMessage={error?.body?.message ?? error?.message}
         onRetry={async () => mutate(undefined, true)}
       />

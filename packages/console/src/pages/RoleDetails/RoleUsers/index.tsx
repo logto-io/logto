@@ -162,18 +162,7 @@ const RoleUsers = () => {
             updateSearchParameters({ page });
           },
         }}
-        placeholder={
-          <>
-            <EmptyDataPlaceholder />
-            <Button
-              title="role_details.users.assign_button"
-              type="outline"
-              onClick={() => {
-                setIsAssignModalOpen(true);
-              }}
-            />
-          </>
-        }
+        placeholder={<EmptyDataPlaceholder />}
       />
       {userToBeDeleted && (
         <ConfirmModal
