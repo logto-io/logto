@@ -97,6 +97,10 @@ Logto uses the [default browserlist config](https://github.com/browserslist/brow
   - 💬 [join our Discord server](https://discord.gg/vRvwuwgpVX) to have a live chat;
   - Engage in our 🗓️ [public roadmap](https://silverhand.notion.site/Logto-Public-Roadmap-d6a1ad19039946b7b1139811aed82dcc).
 
+## Licensing
+
+See the [LICENSE](LICENSE) file for licensing information as it pertains to files in this repository.
+
 ## Contributing
 
 We have a [contributing guideline](https://github.com/logto-io/logto/blob/master/.github/CONTRIBUTING.md) available. Feel free to contact us before coding.
@@ -108,4 +112,4 @@ We have a [contributing guideline](https://github.com/logto-io/logto/blob/master
 
 <br/>
 
-[^info]: Licensed with MPL-2.0. Designed by Silverhand Inc.
+[^info]: Designed by Silverhand Inc.
