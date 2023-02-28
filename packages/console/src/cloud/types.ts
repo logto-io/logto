@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export enum CloudRoute {
+  Callback = 'callback',
   Onboard = 'onboard',
 }
 

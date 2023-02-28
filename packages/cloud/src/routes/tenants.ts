@@ -1,6 +1,6 @@
+import { CloudScope } from '@logto/schemas';
 import { createRouter, RequestError } from '@withtyped/server';
 
-import { CloudScope } from '#src/consts/rbac.js';
 import { tenantInfoGuard, TenantsLibrary } from '#src/libraries/tenants.js';
 import type { WithAuthContext } from '#src/middleware/with-auth.js';
 import { Queries } from '#src/queries/index.js';

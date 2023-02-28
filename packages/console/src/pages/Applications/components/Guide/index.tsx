@@ -8,7 +8,7 @@ import { useContext, cloneElement, lazy, Suspense, useEffect, useState } from 'r
 
 import CodeEditor from '@/components/CodeEditor';
 import TextLink from '@/components/TextLink';
-import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
+import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
 import type { SupportedSdk } from '@/types/applications';
 import { applicationTypeAndSdkTypeMappings } from '@/types/applications';

@@ -13,8 +13,6 @@ export type AppEndpoints = {
   adminEndpoint?: URL;
 };
 
-export type AppEndpointKey = keyof AppEndpoints;
-
 export const AppEndpointsContext = createContext<AppEndpoints>({});
 
 const AppEndpointsProvider = ({ children }: Props) => {

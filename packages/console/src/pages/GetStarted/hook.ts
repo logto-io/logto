@@ -20,7 +20,7 @@ import Passwordless from '@/assets/images/passwordless.svg';
 import { discordLink, githubLink } from '@/consts';
 import { isCloud } from '@/consts/cloud';
 import { ConnectorsTabs } from '@/consts/page-tabs';
-import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
+import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import useConfigs from '@/hooks/use-configs';
 import { useTheme } from '@/hooks/use-theme';
 

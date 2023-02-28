@@ -1,5 +1,5 @@
 import { generateStandardId } from '@logto/core-kit';
-import type { TenantModel } from '@logto/schemas';
+import type { TenantInfo, TenantModel } from '@logto/schemas';
 import {
   LogtoConfigs,
   SignInExperiences,
@@ -19,11 +19,6 @@ import { createUsersQueries } from '#src/queries/users.js';
 import { getDatabaseName } from '#src/queries/utils.js';
 import { insertInto } from '#src/utils/query.js';
 import { getTenantIdFromManagementApiIndicator } from '#src/utils/tenant.js';
-
-export type TenantInfo = {
-  id: string;
-  indicator: string;
-};
 
 export const tenantInfoGuard: ZodType<TenantInfo> = z.object({
   id: z.string(),

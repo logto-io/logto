@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { getManagementApi, getUserTenantId, requestTimeout } from '@/consts';
-import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
+import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 
 export class RequestError extends Error {
   status: number;
