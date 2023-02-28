@@ -10,29 +10,34 @@ type Props = {
   children: ReactNode;
 };
 
-type Payload = { data?: TenantInfo[]; isSettle: boolean };
-
 export type Tenants = {
-  tenants: Payload;
-  setTenants: (payload: Payload) => void;
+  tenants?: TenantInfo[];
+  isSettle: boolean;
+  setTenants: (tenants: TenantInfo[]) => void;
+  setIsSettle: (isSettle: boolean) => void;
 };
 
 const { tenantId, indicator } = defaultManagementApi.resource;
-const initialPayload: Payload = {
-  data: conditional(!isCloud && [{ id: tenantId, indicator }]),
-  isSettle: true,
-};
+const initialTenants = conditional(!isCloud && [{ id: tenantId, indicator }]);
 
 export const TenantsContext = createContext<Tenants>({
-  tenants: initialPayload,
+  tenants: initialTenants,
   setTenants: () => {
+    throw new Error('Not implemented');
+  },
+  isSettle: false,
+  setIsSettle: () => {
     throw new Error('Not implemented');
   },
 });
 
 const TenantsProvider = ({ children }: Props) => {
-  const [tenants, setTenants] = useState(initialPayload);
-  const memorizedContext = useMemo(() => ({ tenants, setTenants }), [tenants]);
+  const [tenants, setTenants] = useState(initialTenants);
+  const [isSettle, setIsSettle] = useState(false);
+  const memorizedContext = useMemo(
+    () => ({ tenants, setTenants, isSettle, setIsSettle }),
+    [isSettle, tenants]
+  );
 
   return <TenantsContext.Provider value={memorizedContext}>{children}</TenantsContext.Provider>;
 };
