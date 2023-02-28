@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.0.0-rc.3
+
+### Patch Changes
+
+- 5e1466f40: Allow localhost CORS when only one endpoint available
+  - @logto/cli@1.0.0-rc.3
+
 ## 1.0.0-rc.2
 
 ### Major Changes
