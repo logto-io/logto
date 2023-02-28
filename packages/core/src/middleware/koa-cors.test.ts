@@ -23,7 +23,7 @@ const { default: koaCors } = await import('./koa-cors.js');
 const noop = async () => {};
 
 const mockContext = (method: RequestMethod, url: string) => {
-  const ctx = createMockContext({ method, url });
+  const ctx = createMockContext({ method, headers: { origin: new URL(url).origin } });
 
   const setSpy = jest.spyOn(ctx, 'set');
 
