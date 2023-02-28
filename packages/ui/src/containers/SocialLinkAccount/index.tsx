@@ -48,7 +48,7 @@ const getCreateAccountContent = (
 
   return {
     desc: 'description.social_create_account',
-    buttonText: 'action.create',
+    buttonText: 'action.create_account_without_linking',
   };
 };
 

@@ -72,7 +72,7 @@ const errors = {
   },
   session: {
     not_found: 'Session not found. Please go back and sign in again.',
-    invalid_credentials: 'Account and password do not match. Please check your input.',
+    invalid_credentials: 'Incorrect account or password. Please check your input.',
     invalid_sign_in_method: 'Current sign-in method is not available.',
     invalid_connector_id: 'Unable to find available connector with id {{connectorId}}.',
     insufficient_info: 'Insufficient sign-in info.',

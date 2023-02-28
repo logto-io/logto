@@ -16,6 +16,7 @@ const translation = {
     sign_in: 'Entrar',
     continue: 'Continuar',
     create_account: 'Criar uma conta',
+    create_account_without_linking: 'Create account without linking', // UNTRANSLATED
     create: 'Criar',
     enter_passcode: 'Digite a senha',
     confirm: 'Confirmar',
@@ -58,7 +59,8 @@ const translation = {
       'The account with {{type}} {{value}} already exists, would you like to link?', // UNTRANSLATED
     sign_in_id_does_not_exist: 'A conta com {{type}} {{value}} não existe, gostaria de criar uma?',
     sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.', // UNTRANSLATED
-    create_account_id_exists_alert: 'The account with {{type}} {{value}} already exists', // UNTRANSLATED
+    create_account_id_exists_alert:
+      'The account with {{type}} {{value}} is linked to another account. Please try another {{type}}.', // UNTRANSLATED
     social_identity_exist:
       'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
     bind_account_title: 'Link or create account', // UNTRANSLATED

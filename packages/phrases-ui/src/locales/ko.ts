@@ -16,6 +16,7 @@ const translation = {
     sign_in: '로그인',
     continue: '계속',
     create_account: '계정 생성',
+    create_account_without_linking: 'Create account without linking', // UNTRANSLATED
     create: '생성',
     enter_passcode: '비밀번호 입력',
     confirm: '확인',
