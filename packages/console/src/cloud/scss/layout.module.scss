@@ -11,6 +11,7 @@
 .contentContainer {
   flex: 1;
   overflow-y: auto;
+  padding-bottom: _.unit(6);
 }
 
 .content {

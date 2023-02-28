@@ -67,6 +67,30 @@ const cloud = {
       'You can also save the calendar link. We’re always available to assist you.',
     book_button: 'Book',
   },
+  sie: {
+    title: 'Let’s first customize your experience with ease',
+    inspire: {
+      title: 'Create compelling examples',
+      description:
+        'Feeling unsure about sign in experience? Just click the "Inspire Me" and let the magic happen! ',
+      inspire_me: 'Inspire me',
+    },
+    logo_field: 'App Logo',
+    color_field: 'Brand color',
+    identifier_field: 'Identifier',
+    identifier_options: {
+      email: 'Email',
+      phone: 'Phone',
+      user_name: 'Username',
+    },
+    authn_field: 'Authentication',
+    authn_options: {
+      password: 'Password',
+      verification_code: 'Verification code',
+    },
+    social_field: 'Social sign in',
+    finish_and_done: 'Finish and done',
+  },
 };
 
 export default cloud;
