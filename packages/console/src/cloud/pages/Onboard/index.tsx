@@ -1,4 +1,3 @@
-import { conditional } from '@silverhand/essentials';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
@@ -33,23 +32,15 @@ const Onboard = () => {
         <Route path={OnboardPage.Welcome} element={<Welcome />} />
         <Route
           path={OnboardPage.AboutUser}
-          element={
-            conditional(questionnaire && <About />) ?? <Navigate replace to={welcomePathname} />
-          }
+          element={questionnaire ? <About /> : <Navigate replace to={welcomePathname} />}
         />
         <Route
           path={OnboardPage.SignInExperience}
-          element={
-            conditional(questionnaire && <SignInExperience />) ?? (
-              <Navigate replace to={welcomePathname} />
-            )
-          }
+          element={questionnaire ? <SignInExperience /> : <Navigate replace to={welcomePathname} />}
         />
         <Route
           path={OnboardPage.Congrats}
-          element={
-            conditional(questionnaire && <Congrats />) ?? <Navigate replace to={welcomePathname} />
-          }
+          element={questionnaire ? <Congrats /> : <Navigate replace to={welcomePathname} />}
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
