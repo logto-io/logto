@@ -111,7 +111,7 @@ describe('SocialLinkAccount', () => {
         <SocialLinkAccount connectorId="github" relatedUser={relatedUser} />
       </SettingsProvider>
     );
-    const createButton = getByText('action.create');
+    const createButton = getByText('action.create_account_without_linking');
 
     await waitFor(() => {
       fireEvent.click(createButton);
