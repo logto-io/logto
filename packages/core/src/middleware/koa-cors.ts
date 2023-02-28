@@ -9,7 +9,7 @@ export default function koaCors<StateT, ContextT, ResponseBodyT>(
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return cors({
     origin: (ctx) => {
-      const { origin } = ctx;
+      const { origin } = ctx.request.headers;
 
       if (
         origin &&
