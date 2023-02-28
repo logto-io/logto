@@ -1,14 +1,7 @@
-import {
-  adminConsoleApplicationId,
-  defaultTenantId,
-  getManagementApiResourceIndicator,
-  PredefinedScope,
-} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import { assignInteractionResults, saveUserFirstConsentedAppId } from '#src/libraries/session.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -33,19 +26,6 @@ export default function consentRoutes<T>(
     assertThat(session, 'session.not_found');
 
     const { accountId } = session;
-
-    // Block non-admin user from consenting to admin console
-    if (String(client_id) === adminConsoleApplicationId) {
-      const scopes = await libraries.users.findUserScopesForResourceIndicator(
-        accountId,
-        getManagementApiResourceIndicator(defaultTenantId)
-      );
-
-      assertThat(
-        scopes.some(({ name }) => name === PredefinedScope.All),
-        new RequestError({ code: 'auth.forbidden', status: 401 })
-      );
-    }
 
     const grant =
       conditional(grantId && (await provider.Grant.find(grantId))) ??

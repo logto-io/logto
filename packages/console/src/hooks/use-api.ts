@@ -5,8 +5,10 @@ import { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { getManagementApi, getUserTenantId, requestTimeout } from '@/consts';
+import { getBasename, getManagementApi, getUserTenantId, requestTimeout } from '@/consts';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+
+import { useConfirmModal } from './use-confirm-modal';
 
 export class RequestError extends Error {
   status: number;
@@ -30,8 +32,9 @@ export const useStaticApi = ({
   hideErrorToast,
   resourceIndicator = getManagementApi(getUserTenantId()).indicator,
 }: StaticApiProps) => {
-  const { isAuthenticated, getAccessToken } = useLogto();
+  const { isAuthenticated, getAccessToken, signOut } = useLogto();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { show } = useConfirmModal();
 
   const toastError = useCallback(
     async (response: Response) => {
@@ -39,12 +42,26 @@ export const useStaticApi = ({
 
       try {
         const data = await response.json<RequestErrorBody>();
+
+        // Inform and redirect un-authorized users to sign in page.
+        if (data.code === 'auth.forbidden') {
+          await show({
+            ModalContent: data.message,
+            type: 'alert',
+            cancelButtonText: 'general.got_it',
+          });
+
+          await signOut(new URL(getBasename(), window.location.origin).toString());
+
+          return;
+        }
+
         toast.error([data.message, data.details].join('\n') || fallbackErrorMessage);
       } catch {
         toast.error(fallbackErrorMessage);
       }
     },
-    [t]
+    [show, signOut, t]
   );
 
   const api = useMemo(
@@ -56,8 +73,8 @@ export const useStaticApi = ({
           beforeError: hideErrorToast
             ? []
             : [
-                (error) => {
-                  void toastError(error.response);
+                async (error) => {
+                  await toastError(error.response);
 
                   return error;
                 },

@@ -20,8 +20,8 @@ export type ConfirmModalProps = {
   isOpen: boolean;
   isConfirmButtonDisabled?: boolean;
   isLoading?: boolean;
-  onCancel: () => void;
-  onConfirm: () => void;
+  onCancel?: () => void;
+  onConfirm?: () => void;
 };
 
 const ConfirmModal = ({
@@ -49,14 +49,16 @@ const ConfirmModal = ({
         title={title}
         footer={
           <>
-            <Button title={cancelButtonText} onClick={onCancel} />
-            <Button
-              type={confirmButtonType}
-              title={confirmButtonText}
-              disabled={isConfirmButtonDisabled}
-              isLoading={isLoading}
-              onClick={onConfirm}
-            />
+            {onCancel && <Button title={cancelButtonText} onClick={onCancel} />}
+            {onConfirm && (
+              <Button
+                type={confirmButtonType}
+                title={confirmButtonText}
+                disabled={isConfirmButtonDisabled}
+                isLoading={isLoading}
+                onClick={onConfirm}
+              />
+            )}
           </>
         }
         className={classNames(styles.content, className)}
