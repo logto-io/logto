@@ -8,7 +8,6 @@
   border-radius: var(--radius);
   cursor: pointer;
   font: var(--font-label-1);
-  line-height: 16px;
   -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.2s ease-in-out;
@@ -60,7 +59,6 @@
 :global(body.desktop) {
   .button {
     font: var(--font-label-2);
-    line-height: 14px;
   }
 
   .primary {

@@ -21,6 +21,7 @@
 
   span {
     @include _.multi-line-ellipsis(2);
+    line-height: _.unit(5);
   }
 
   .placeHolder {
@@ -29,5 +30,11 @@
     &:first-child {
       min-width: _.unit(10);
     }
+  }
+}
+
+:global(body.desktop) {
+  .name span {
+    line-height: _.unit(4);
   }
 }
