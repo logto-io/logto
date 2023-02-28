@@ -114,6 +114,7 @@ const errors = {
     social_invalid_access_token: "Le jeton d'accès du connecteur n'est pas valide.",
     invalid_auth_code: "Le code d'authentification du connecteur n'est pas valide.",
     social_invalid_id_token: "Le jeton d'identification du connecteur n'est pas valide.",
+    form_item_and_config_guard_inconsistent: 'The form item and config guard are inconsistent.', // UNTRANSALTED
     authorization_failed: "Le processus d'autorisation de l'utilisateur n'a pas abouti.",
     social_auth_code_invalid:
       "Impossible d'obtenir le jeton d'accès, veuillez vérifier le code d'autorisation.",

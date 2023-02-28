@@ -110,6 +110,7 @@ const errors = {
     social_invalid_access_token: 'O token de acesso do conector é inválido.',
     invalid_auth_code: 'O código de autenticação do conector é inválido.',
     social_invalid_id_token: 'O token de id do conector é inválido.',
+    form_item_and_config_guard_inconsistent: 'The form item and config guard are inconsistent.', // UNTRANSALTED
     authorization_failed: 'O processo de autorização do usuário não foi bem-sucedido.',
     social_auth_code_invalid:
       'Não foi possível obter o token de acesso, verifique o código de autorização.',

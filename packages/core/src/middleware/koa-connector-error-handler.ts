@@ -39,6 +39,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
           throw new RequestError({ code: `connector.${code}`, status: 401 }, data);
         }
 
+        case ConnectorErrorCodes.FormItemAndConfigGuardInconsistent:
         case ConnectorErrorCodes.TemplateNotFound: {
           throw new RequestError(
             {

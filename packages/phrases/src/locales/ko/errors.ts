@@ -106,6 +106,7 @@ const errors = {
     social_invalid_access_token: '연동 서비스의 Access 토큰이 유효하지 않아요.',
     invalid_auth_code: '연동 서비스의 Auth 코드가 유효하지 않아요.',
     social_invalid_id_token: '연동 서비스의 ID 토큰이 유효하지 않아요.',
+    form_item_and_config_guard_inconsistent: 'The form item and config guard are inconsistent.', // UNTRANSALTED
     authorization_failed: '사용자의 인증 과정이 성공적으로 마무리되지 않았어요.',
     social_auth_code_invalid: 'Access 토큰을 가져올 수 없어요. Authorization 코드를 확인해 주세요.',
     more_than_one_sms: 'SMS 서비스는 1개만 연동되어야 해요.',

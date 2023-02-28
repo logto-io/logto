@@ -59,6 +59,13 @@ export default class GlobalValues {
   public readonly developmentUserId = getEnv('DEVELOPMENT_USER_ID');
   public readonly trustProxyHeader = yes(getEnv('TRUST_PROXY_HEADER'));
   public readonly ignoreConnectorVersionCheck = yes(getEnv('IGNORE_CONNECTOR_VERSION_CHECK'));
+  public readonly ignoreConnectorFormViewConfigGuardCheck = yes(
+    getEnv('IGNORE_CONNECTOR_FORM_VIEW_CONFIG_GUARD_CHECK')
+  );
+
+  public readonly showConnectorLoadingErrorDetails = yes(
+    getEnv('SHOW_CONNECTOR_LOADING_ERROR_DETAILS')
+  );
 
   public get dbUrl(): string {
     return this.databaseUrl;

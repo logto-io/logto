@@ -102,6 +102,7 @@ const errors = {
     social_invalid_access_token: '当前连接器的 access_token 无效',
     invalid_auth_code: '当前连接器的授权码无效',
     social_invalid_id_token: '当前连接器的 id_token 无效',
+    form_item_and_config_guard_inconsistent: '表单定义和类型定义不符',
     authorization_failed: '用户授权流程失败',
     social_auth_code_invalid: '无法获取 access_token，请检查授权 code 是否有效',
     more_than_one_sms: '同时存在超过 1 个短信连接器',

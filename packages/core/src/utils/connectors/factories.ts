@@ -8,11 +8,16 @@ import { findPackage } from '@logto/shared';
 import { deduplicate } from '@silverhand/essentials';
 import chalk from 'chalk';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorFactory } from '#src/utils/connectors/types.js';
 
 import { notImplemented } from './consts.js';
-import { parseMetadata, validateConnectorModule } from './index.js';
+import {
+  parseMetadata,
+  validateConnectorModule,
+  validateFormItemsAndConfigGuardConsistency,
+} from './index.js';
 import { loadConnector } from './loader.js';
 
 const checkDuplicateConnectorFactoriesId = (connectorFactories: ConnectorFactory[]) => {
@@ -51,12 +56,23 @@ export const loadConnectorFactories = async () => {
 
   const connectorPackages = await getConnectorPackagesFromDirectory(directory);
 
+  if (EnvSet.values.showConnectorLoadingErrorDetails) {
+    console.log(`${chalk.red(`Detailed connector loading error message is enabled.`)}`);
+  }
+
   const connectorFactories = await Promise.all(
     connectorPackages.map(async ({ path: packagePath, name }) => {
       try {
         const createConnector = await loadConnector(packagePath);
         const rawConnector = await createConnector({ getConfig: notImplemented });
         validateConnectorModule(rawConnector);
+
+        if (!EnvSet.values.ignoreConnectorFormViewConfigGuardCheck) {
+          validateFormItemsAndConfigGuardConsistency(
+            rawConnector.configGuard,
+            rawConnector.metadata.formItems
+          );
+        }
 
         return {
           metadata: await parseMetadata(rawConnector.metadata, packagePath),
@@ -65,6 +81,16 @@ export const loadConnectorFactories = async () => {
           path: packagePath,
         };
       } catch (error: unknown) {
+        if (EnvSet.values.showConnectorLoadingErrorDetails) {
+          console.log(
+            `${chalk.red(
+              `[load-connector] skip ${chalk.bold(name)} due to error: ${JSON.stringify(error)}`
+            )}`
+          );
+
+          return;
+        }
+
         if (error instanceof Error) {
           console.log(
             `${chalk.red(

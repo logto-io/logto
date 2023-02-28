@@ -54,6 +54,7 @@ export enum ConnectorErrorCodes {
   SocialAccessTokenInvalid = 'social_invalid_access_token',
   SocialIdTokenInvalid = 'social_invalid_id_token',
   AuthorizationFailed = 'authorization_failed',
+  FormItemAndConfigGuardInconsistent = 'form_item_and_config_guard_inconsistent',
 }
 
 export class ConnectorError extends Error {

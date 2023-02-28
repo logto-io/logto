@@ -110,6 +110,7 @@ const errors = {
     social_invalid_access_token: 'Bağlayıcının erişim tokenı geçersiz.',
     invalid_auth_code: 'Bağlayıcının yetki kodu geçersiz.',
     social_invalid_id_token: 'Bağlayıcının idsi geçersiz.',
+    form_item_and_config_guard_inconsistent: 'The form item and config guard are inconsistent.', // UNTRANSALTED
     authorization_failed: 'Kullanıcının yetkilendirme işlemi başarısız oldu.',
     social_auth_code_invalid: 'Erişim tokenı alınamıyor, lütfen yetkilendirme kodunu kontrol edin.',
     more_than_one_sms: 'SMS bağlayıcılarının sayısı 1den fazla.',

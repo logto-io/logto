@@ -110,6 +110,7 @@ const errors = {
     social_invalid_access_token: "The connector's access token is invalid.",
     invalid_auth_code: "The connector's auth code is invalid.",
     social_invalid_id_token: "The connector's id token is invalid.",
+    form_item_and_config_guard_inconsistent: 'The form item and config guard are inconsistent.', // UNTRANSALTED
     authorization_failed: "The user's authorization process is unsuccessful.",
     social_auth_code_invalid: 'Unable to get access token, please check authorization code.',
     more_than_one_sms: 'The number of SMS connectors is larger then 1.',
