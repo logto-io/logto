@@ -16,6 +16,7 @@ const translation = {
     sign_in: 'Войти',
     continue: 'Продолжить',
     create_account: 'Создать аккаунт',
+    create_account_without_linking: 'Create account without linking', // UNTRANSLATED
     create: 'Создать',
     enter_passcode: 'Введите код подтверждения',
     confirm: 'Подтвердить',

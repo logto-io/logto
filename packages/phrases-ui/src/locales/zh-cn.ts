@@ -16,6 +16,7 @@ const translation = {
     sign_in: '登录',
     continue: '继续',
     create_account: '注册',
+    create_account_without_linking: '注册新的账号',
     create: '注册',
     enter_passcode: '输入验证码',
     cancel: '取消',
@@ -58,14 +59,15 @@ const translation = {
       'The account with {{type}} {{value}} already exists, would you like to link?', // UNTRANSLATED
     sign_in_id_does_not_exist: '{{ type }}为 {{ value }} 的帐号不存在，你要创建一个新帐号吗？',
     sign_in_id_does_not_exist_alert: '{{ type }}为 {{ value }} 的帐号不存在。',
-    create_account_id_exists_alert: '{{ type }}为 {{ value }} 的帐号已存在',
+    create_account_id_exists_alert:
+      '{{ type }}为 {{ value }} 的帐号已绑定其他账号。请尝试其他{{ type }}。',
     social_identity_exist:
       'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
     bind_account_title: '绑定或创建帐号',
-    social_create_account: '没有帐号？你可以创建一个帐号并绑定。',
-    social_link_email: 'You can link another email', // UNTRANSLATED,
-    social_link_phone: 'You can link another phone', // UNTRANSLATED,
-    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED,
+    social_create_account: '你可以注册一个新的账号。',
+    social_link_email: '你可以绑定其他邮箱',
+    social_link_phone: '你可以绑定其他手机号',
+    social_link_email_or_phone: '你可以绑定其他邮箱或手机号',
     social_bind_with_existing: '找到了一个匹配的帐号，你可以直接绑定。',
     reset_password: '重设密码',
     reset_password_description: '输入{{types, list(type: disjunction;)}}，获取验证码以重设密码。',
