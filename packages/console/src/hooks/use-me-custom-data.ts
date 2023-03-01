@@ -2,7 +2,6 @@ import { useLogto } from '@logto/react';
 import { t } from 'i18next';
 import { useCallback } from 'react';
 import { toast } from 'react-hot-toast';
-import type { BareFetcher } from 'swr';
 import useSWR from 'swr';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
@@ -10,20 +9,15 @@ import { adminTenantEndpoint, meApi } from '@/consts';
 import type { RequestError } from './use-api';
 import { useStaticApi } from './use-api';
 import useLogtoUserId from './use-logto-user-id';
+import useSwrFetcher from './use-swr-fetcher';
 
 const useMeCustomData = () => {
   const { isAuthenticated, error: authError } = useLogto();
   const userId = useLogtoUserId();
   const shouldFetch = isAuthenticated && !authError && userId;
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
-  const fetcher = useCallback<BareFetcher>(
-    async (resource, init) => {
-      const response = await api.get(resource, init);
 
-      return response.json();
-    },
-    [api]
-  );
+  const fetcher = useSwrFetcher(api);
 
   const { data, mutate, error } = useSWR<unknown, RequestError>(
     shouldFetch && `me/custom-data`,
