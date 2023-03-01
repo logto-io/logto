@@ -75,7 +75,7 @@ const sign_in_exp = {
       social_sign_in: 'Login social',
       description:
         'Dependendo do identificador obrigatório que você configurou, seu usuário pode ser solicitado a fornecer um identificador ao se inscrever via conector social.',
-      add_social_connector: 'Vincular Conector Social',
+      add_social_connector: 'Adicionar Conector Social',
       set_up_hint: {
         not_in_list: 'Não está na lista?',
         set_up_more: 'Configurar',
