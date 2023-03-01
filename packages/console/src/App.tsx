@@ -23,14 +23,12 @@ import Main from './pages/Main';
 void initI18n();
 
 const Content = () => {
-  const {
-    tenants: { data, isSettle },
-  } = useContext(TenantsContext);
+  const { tenants, isSettle } = useContext(TenantsContext);
   const currentTenantId = getUserTenantId();
 
   const resources = deduplicate([
     ...(currentTenantId && [getManagementApi(currentTenantId).indicator]),
-    ...(data ?? []).map(({ id }) => getManagementApi(id).indicator),
+    ...(tenants ?? []).map(({ id }) => getManagementApi(id).indicator),
     ...(isCloud ? [cloudApi.indicator] : []),
     meApi.indicator,
   ]);
@@ -51,7 +49,7 @@ const Content = () => {
         scopes,
       }}
     >
-      {!isCloud || (data && isSettle && currentTenantId) ? (
+      {!isCloud || isSettle ? (
         <AppEndpointsProvider>
           <Main />
         </AppEndpointsProvider>
