@@ -1,0 +1,11 @@
+@use '@/scss/underscore' as _;
+
+.copyToClipboard {
+  display: block;
+}
+
+.description {
+  color: var(--color-text-secondary);
+  font: var(--font-body-2);
+  margin-top: _.unit(0.5);
+}

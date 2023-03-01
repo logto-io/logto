@@ -59,6 +59,9 @@ const connectors = {
     sync_profile_each_sign_in: 'Always do a sync at each sign-in',
     sync_profile_tip:
       "Sync the basic profile from the social provider, such as users' names and their avatars.",
+    callback_uri: 'Callback URI',
+    callback_uri_description:
+      "Also called redirect URI, is the URI in Logto where users will be sent back after social authorization, copy and paste to the social provider's config page.",
   },
   platform: {
     universal: 'Universal',
