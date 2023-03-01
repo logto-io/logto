@@ -7,7 +7,11 @@ const ResetPassword = () => {
   const { resetPassword, errorMessage, clearErrorMessage } = useResetPassword();
 
   return (
-    <SecondaryPageWrapper title="description.new_password">
+    <SecondaryPageWrapper
+      title="description.new_password"
+      description="error.password_min_length"
+      descriptionProps={{ min: 6 }}
+    >
       <SetPassword
         autoFocus
         errorMessage={errorMessage}

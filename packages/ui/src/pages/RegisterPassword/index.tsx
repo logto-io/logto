@@ -16,7 +16,11 @@ const RegisterPassword = () => {
   }
 
   return (
-    <SecondaryPageWrapper title="description.new_password">
+    <SecondaryPageWrapper
+      title="description.new_password"
+      description="error.password_min_length"
+      descriptionProps={{ min: 6 }}
+    >
       <SetPassword
         autoFocus
         onSubmit={(password) => {
