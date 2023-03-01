@@ -2,11 +2,6 @@ import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-<<<<<<< HEAD
-=======
-import { EnvSet } from '#src/env-set/index.js';
-import RequestError from '#src/errors/RequestError/index.js';
->>>>>>> a73612239 (feat: create tenant for new users)
 import { assignInteractionResults, saveUserFirstConsentedAppId } from '#src/libraries/session.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';

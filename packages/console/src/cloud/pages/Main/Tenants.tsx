@@ -21,12 +21,14 @@ const Tenants = ({ data, onAdd }: Props) => {
   }, [api, onAdd]);
 
   useEffect(() => {
-    if (data.length <= 1) {
-      if (data[0]) {
-        window.location.assign('/' + data[0].id);
-      } else {
-        void createTenant();
-      }
+    if (data.length > 1) {
+      return;
+    }
+
+    if (data[0]) {
+      window.location.assign('/' + data[0].id);
+    } else {
+      void createTenant();
     }
   }, [createTenant, data]);
 
