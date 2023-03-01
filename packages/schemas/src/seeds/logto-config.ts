@@ -6,6 +6,7 @@ import { AdminConsoleConfigKey } from '../types/index.js';
 export const createDefaultAdminConsoleConfig = (
   forTenantId: string
 ): Readonly<{
+  tenantId: string;
   key: AdminConsoleConfigKey;
   value: AdminConsoleData;
 }> =>

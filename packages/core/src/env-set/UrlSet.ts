@@ -1,12 +1,10 @@
-import { deduplicate, getEnv, trySafe } from '@silverhand/essentials';
-
-import { isTrue } from './parameters.js';
+import { deduplicate, getEnv, trySafe, yes } from '@silverhand/essentials';
 
 export default class UrlSet {
   readonly #port = Number(getEnv(this.envPrefix + 'PORT') || this.defaultPort);
   readonly #endpoint = getEnv(this.envPrefix + 'ENDPOINT');
 
-  public readonly isLocalhostDisabled = isTrue(getEnv(this.envPrefix + 'DISABLE_LOCALHOST'));
+  public readonly isLocalhostDisabled = yes(getEnv(this.envPrefix + 'DISABLE_LOCALHOST'));
 
   constructor(
     public readonly isHttpsEnabled: boolean,

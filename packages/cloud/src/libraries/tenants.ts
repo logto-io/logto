@@ -1,6 +1,11 @@
-import { generateStandardId } from '@logto/core-kit';
-import type { TenantInfo, TenantModel } from '@logto/schemas';
 import {
+  generateOidcCookieKey,
+  generateOidcPrivateKey,
+} from '@logto/cli/lib/commands/database/utils.js';
+import { generateStandardId } from '@logto/core-kit';
+import type { LogtoOidcConfigType, TenantInfo, TenantModel } from '@logto/schemas';
+import {
+  LogtoOidcConfigKey,
   LogtoConfigs,
   SignInExperiences,
   createDefaultAdminConsoleConfig,
@@ -24,6 +29,13 @@ export const tenantInfoGuard: ZodType<TenantInfo> = z.object({
   id: z.string(),
   indicator: z.string(),
 });
+
+const oidcConfigBuilders: {
+  [key in LogtoOidcConfigKey]: () => Promise<LogtoOidcConfigType[key]>;
+} = {
+  [LogtoOidcConfigKey.CookieKeys]: async () => [generateOidcCookieKey()],
+  [LogtoOidcConfigKey.PrivateKeys]: async () => [await generateOidcPrivateKey()],
+};
 
 export class TenantsLibrary {
   constructor(public readonly queries: Queries) {}
@@ -50,7 +62,7 @@ export class TenantsLibrary {
     const tenants = createTenantsQueries(transaction);
     const users = createUsersQueries(transaction);
 
-    // Start
+    /* --- Start --- */
     await transaction.start();
 
     // Init tenant
@@ -70,14 +82,24 @@ export class TenantsLibrary {
 
     // Create initial configs
     await Promise.all([
+      ...Object.entries(oidcConfigBuilders).map(async ([key, build]) =>
+        transaction.query(insertInto({ tenantId, key, value: await build() }, LogtoConfigs.table))
+      ),
       transaction.query(insertInto(createDefaultAdminConsoleConfig(tenantId), LogtoConfigs.table)),
       transaction.query(
         insertInto(createDefaultSignInExperience(tenantId), SignInExperiences.table)
       ),
     ]);
 
-    // End
+    // Update Redirect URI for Admin Console
+    await tenants.appendAdminConsoleRedirectUris(
+      ...['http://localhost:3003', 'https://cloud.logto.dev'].map(
+        (endpoint) => new URL(`/${tenantModel.id}/callback`, endpoint)
+      )
+    );
+
     await transaction.end();
+    /* --- End --- */
 
     return { id: tenantId, indicator: adminDataInAdminTenant.resource.indicator };
   }

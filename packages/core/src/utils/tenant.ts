@@ -24,12 +24,14 @@ export const getTenantId = (url: URL) => {
     adminUrlSet,
   } = EnvSet.values;
 
-  if ((!isProduction || isIntegrationTest) && developmentTenantId) {
-    return developmentTenantId;
-  }
-
   if (adminUrlSet.deduplicated().some((endpoint) => isEndpointOf(url, endpoint))) {
     return adminTenantId;
+  }
+
+  if ((!isProduction || isIntegrationTest) && developmentTenantId) {
+    console.log(`Found dev tenant ID ${developmentTenantId}.`);
+
+    return developmentTenantId;
   }
 
   if (
