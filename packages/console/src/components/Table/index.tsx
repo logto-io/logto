@@ -8,18 +8,11 @@ import type { Props as PaginationProps } from '@/components/Pagination';
 import Pagination from '@/components/Pagination';
 
 import OverlayScrollbar from '../OverlayScrollbar';
-import TableEmpty from './TableEmpty';
+import TableEmptyWrapper from './TableEmptyWrapper';
 import TableError from './TableError';
 import TableLoading from './TableLoading';
 import * as styles from './index.module.scss';
 import type { Column, RowGroup } from './types';
-
-export type TablePlaceholder = {
-  title?: string;
-  description?: string;
-  image?: ReactNode;
-  content?: ReactNode;
-};
 
 type Props<
   TFieldValues extends FieldValues = FieldValues,
@@ -37,7 +30,7 @@ type Props<
   bodyClassName?: string;
   isLoading?: boolean;
   pagination?: PaginationProps;
-  placeholder?: TablePlaceholder;
+  placeholder?: ReactNode;
   errorMessage?: string;
   hasBorder?: boolean;
   onRetry?: () => void;
@@ -69,6 +62,9 @@ const Table = <
   }, 0);
 
   const hasData = rowGroups.some(({ data }) => data?.length);
+  const hasError = !isLoading && !hasData && errorMessage;
+  const isEmpty = !isLoading && !hasData && !errorMessage;
+  const isLoaded = !isLoading && hasData;
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -95,27 +91,21 @@ const Table = <
             </tr>
           </thead>
         </table>
-        <OverlayScrollbar className={classNames(styles.bodyTable, bodyClassName)}>
+        <OverlayScrollbar
+          className={classNames(styles.bodyTable, isEmpty && styles.empty, bodyClassName)}
+        >
           <table>
             <tbody>
               {isLoading && (
                 <TableLoading columnSpans={columns.map(({ colSpan }) => colSpan ?? 1)} />
               )}
-              {!isLoading && !hasData && errorMessage && (
+              {hasError && (
                 <TableError columns={columns.length} content={errorMessage} onRetry={onRetry} />
               )}
-              {!isLoading && !hasData && !errorMessage && (
-                <TableEmpty
-                  columns={columns.length}
-                  title={placeholder?.title}
-                  description={placeholder?.description}
-                  image={placeholder?.image}
-                >
-                  {placeholder?.content}
-                </TableEmpty>
+              {isEmpty && (
+                <TableEmptyWrapper columns={columns.length}>{placeholder}</TableEmptyWrapper>
               )}
-              {!isLoading &&
-                hasData &&
+              {isLoaded &&
                 rowGroups.map(({ key, label, labelClassName, data }) => (
                   <Fragment key={key}>
                     {label && (

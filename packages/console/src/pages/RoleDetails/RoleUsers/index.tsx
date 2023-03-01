@@ -12,6 +12,7 @@ import ApplicationName from '@/components/ApplicationName';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import DateTime from '@/components/DateTime';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import IconButton from '@/components/IconButton';
 import ItemPreview from '@/components/ItemPreview';
 import Search from '@/components/Search';
@@ -161,17 +162,7 @@ const RoleUsers = () => {
             updateSearchParameters({ page });
           },
         }}
-        placeholder={{
-          content: (
-            <Button
-              title="role_details.users.assign_button"
-              type="outline"
-              onClick={() => {
-                setIsAssignModalOpen(true);
-              }}
-            />
-          ),
-        }}
+        placeholder={<EmptyDataPlaceholder />}
       />
       {userToBeDeleted && (
         <ConfirmModal

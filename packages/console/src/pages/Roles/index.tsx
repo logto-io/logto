@@ -5,13 +5,17 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
+import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
+import RolesEmpty from '@/assets/images/roles-empty.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import ItemPreview from '@/components/ItemPreview';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
+import TablePlaceholder from '@/components/Table/TablePlaceholder';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as pageStyles from '@/scss/resources.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
@@ -31,6 +35,7 @@ const Roles = () => {
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
   const isOnCreatePage = pathname === createRolePathname;
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
@@ -116,17 +121,28 @@ const Roles = () => {
             updateSearchParameters({ page });
           },
         }}
-        placeholder={{
-          content: (
-            <Button
-              title="roles.create"
-              type="outline"
-              onClick={() => {
-                navigate({ pathname: createRolePathname, search });
-              }}
-            />
-          ),
-        }}
+        placeholder={
+          <TablePlaceholder
+            image={<RolesEmpty />}
+            imageDark={<RolesEmptyDark />}
+            title="roles.placeholder_title"
+            description="roles.placeholder_description"
+            learnMoreLink={getDocumentationUrl(
+              '/docs/recipes/rbac/manage-permissions-and-roles#manage-roles'
+            )}
+            action={
+              <Button
+                title="roles.create"
+                type="primary"
+                size="large"
+                icon={<Plus />}
+                onClick={() => {
+                  navigate({ pathname: createRolePathname, search });
+                }}
+              />
+            }
+          />
+        }
         onRetry={async () => mutate(undefined, true)}
       />
       {isOnCreatePage && (

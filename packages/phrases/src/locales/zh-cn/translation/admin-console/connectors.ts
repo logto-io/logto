@@ -15,7 +15,9 @@ const connectors = {
     content: '未使用意味着你的登录体验并没有使用这个登录方式。<a>{{link}}</a>去添加。',
     go_to_sie: '前往登录体验',
   },
-  social_connector_eg: '如: 微信登录，支付宝登录',
+  placeholder_title: 'Social connector', // UNTRANSLATED
+  placeholder_description:
+    'Logto has provided many widely used social sign-in connectors meantime you can create your own with standard protocols.', // UNTRANSLATED
   save_and_done: '保存并完成',
   type: {
     email: '邮件连接器',

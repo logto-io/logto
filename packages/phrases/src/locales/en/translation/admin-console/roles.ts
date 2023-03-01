@@ -13,8 +13,11 @@ const roles = {
   create_role_description:
     'Create and manage roles for your applications. Roles contain collections of permissions and can be assigned to users.',
   create_role_button: 'Create Role',
-  role_created: 'The role {{name}} has been successfully created!', // UNTRANSLATED
+  role_created: 'The role {{name}} has been successfully created!',
   search: 'Search by role name, description or ID',
+  placeholder_title: 'Roles',
+  placeholder_description:
+    'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.',
 };
 
 export default roles;

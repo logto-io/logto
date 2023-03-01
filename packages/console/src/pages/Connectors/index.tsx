@@ -1,4 +1,4 @@
-import { AppearanceMode, ConnectorType } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useMemo } from 'react';
@@ -11,12 +11,12 @@ import SocialConnectorEmpty from '@/assets/images/social-connector-empty.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import type { TablePlaceholder } from '@/components/Table';
 import Table from '@/components/Table';
+import TablePlaceholder from '@/components/Table/TablePlaceholder';
 import { defaultEmailConnectorGroup, defaultSmsConnectorGroup } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import useConnectorGroups from '@/hooks/use-connector-groups';
-import { useTheme } from '@/hooks/use-theme';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 
 import ConnectorName from './components/ConnectorName';
@@ -49,10 +49,9 @@ const Connectors = () => {
   const navigate = useNavigate();
   const isSocial = tab === ConnectorsTabs.Social;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
   const { data, error, mutate } = useConnectorGroups();
   const isLoading = !data && !error;
-  const theme = useTheme();
-  const isLightMode = theme === AppearanceMode.LightMode;
 
   const passwordlessConnectors = useMemo(() => {
     const smsConnector =
@@ -70,23 +69,6 @@ const Connectors = () => {
   );
 
   const connectors = isSocial ? socialConnectors : passwordlessConnectors;
-
-  const placeholder: TablePlaceholder | undefined = conditional(
-    isSocial && {
-      title: t('connectors.type.social'),
-      description: t('connectors.social_connector_eg'),
-      image: isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />,
-      content: (
-        <Button
-          title="connectors.create"
-          type="outline"
-          onClick={() => {
-            navigate(buildCreatePathname(ConnectorType.Social));
-          }}
-        />
-      ),
-    }
-  );
 
   return (
     <>
@@ -150,7 +132,30 @@ const Connectors = () => {
           }}
           isLoading={isLoading}
           errorMessage={error?.body?.message ?? error?.message}
-          placeholder={placeholder}
+          placeholder={
+            isSocial && (
+              <TablePlaceholder
+                image={<SocialConnectorEmpty />}
+                imageDark={<SocialConnectorEmptyDark />}
+                title="connectors.placeholder_title"
+                description="connectors.placeholder_description"
+                learnMoreLink={getDocumentationUrl(
+                  '/docs/recipes/configure-connectors/connector-setup-tips#social-connector'
+                )}
+                action={
+                  <Button
+                    title="connectors.create"
+                    type="primary"
+                    size="large"
+                    icon={<Plus />}
+                    onClick={() => {
+                      navigate(buildCreatePathname(ConnectorType.Social));
+                    }}
+                  />
+                }
+              />
+            )
+          }
           onRetry={async () => mutate(undefined, true)}
         />
       </div>

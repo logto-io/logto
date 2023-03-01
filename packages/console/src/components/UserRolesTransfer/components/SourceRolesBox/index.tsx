@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Search from '@/assets/images/search.svg';
-import DataEmpty from '@/components/DataEmpty';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import Pagination from '@/components/Pagination';
 import TextInput from '@/components/TextInput';
 import { defaultPageSize } from '@/consts';
@@ -74,7 +74,7 @@ const SourceRolesBox = ({ userId, selectedRoles, onChange }: Props) => {
         className={classNames(transferLayout.boxContent, isEmpty && transferLayout.emptyBoxContent)}
       >
         {isEmpty ? (
-          <DataEmpty imageClassName={styles.emptyImage} title={t('user_details.roles.empty')} />
+          <EmptyDataPlaceholder size="small" title={t('user_details.roles.empty')} />
         ) : (
           dataSource.map((role) => {
             const isSelected = isRoleSelected(role);

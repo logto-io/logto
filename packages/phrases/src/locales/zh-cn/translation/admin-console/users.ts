@@ -11,6 +11,9 @@ const users = {
   unnamed: '未命名',
   search: 'Search by name, email, phone or username', // UNTRANSLATED
   check_user_detail: '查看用户详情',
+  placeholder_title: 'User management', // UNTRANSLATED
+  placeholder_description:
+    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
 };
 
 export default users;

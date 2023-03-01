@@ -15,6 +15,9 @@ const roles = {
   create_role_button: '역할 생성',
   role_created: '역할 {{name}}이 성공적으로 생성되었어요!',
   search: '역할 이름, 설명, ID로 검색',
+  placeholder_title: 'Roles', // UNTRANSLATED
+  placeholder_description:
+    'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.', // UNTRANSLATED
 };
 
 export default roles;

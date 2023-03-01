@@ -1,0 +1,30 @@
+@use '@/scss/underscore' as _;
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .image {
+    > svg {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  .title {
+    font: var(--font-label-2);
+  }
+
+  .description {
+    max-width: 310px;
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+    margin-top: _.unit(1);
+  }
+
+  .action {
+    margin-top: _.unit(6);
+  }
+}

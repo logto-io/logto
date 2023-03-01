@@ -12,6 +12,7 @@ import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
@@ -128,20 +129,7 @@ const ApiResources = () => {
             render: ({ indicator }) => <CopyToClipboard value={indicator} variant="text" />,
           },
         ]}
-        placeholder={{
-          content: (
-            <Button
-              title="api_resources.create"
-              type="outline"
-              onClick={() => {
-                navigate({
-                  pathname: createApiResourcePathname,
-                  search,
-                });
-              }}
-            />
-          ),
-        }}
+        placeholder={<EmptyDataPlaceholder />}
         rowClickHandler={({ id }) => {
           navigate(buildDetailsPathname(id));
         }}

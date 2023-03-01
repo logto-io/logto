@@ -16,4 +16,27 @@
     color: var(--color-neutral-50);
     margin-bottom: _.unit(2);
   }
+
+  &.large {
+    .image {
+      width: 256px;
+      height: 256px;
+      margin-bottom: _.unit(6);
+    }
+  }
+
+  &.medium {
+    .image {
+      width: 200px;
+      height: 200px;
+      margin-bottom: _.unit(6);
+    }
+  }
+
+  &.small {
+    .image {
+      width: 128px;
+      height: 128px;
+    }
+  }
 }

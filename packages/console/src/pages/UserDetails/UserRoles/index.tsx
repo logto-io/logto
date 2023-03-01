@@ -10,6 +10,7 @@ import Delete from '@/assets/images/delete.svg';
 import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import IconButton from '@/components/IconButton';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
@@ -146,17 +147,7 @@ const UserRoles = () => {
             updateSearchParameters({ page });
           },
         }}
-        placeholder={{
-          content: (
-            <Button
-              title="user_details.roles.assign_button"
-              type="outline"
-              onClick={() => {
-                setIsAssignRolesModalOpen(true);
-              }}
-            />
-          ),
-        }}
+        placeholder={<EmptyDataPlaceholder />}
         errorMessage={error?.body?.message ?? error?.message}
         onRetry={async () => mutate(undefined, true)}
       />
