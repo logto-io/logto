@@ -16,6 +16,7 @@ import initI18n from '@/i18n/init';
 
 import { adminTenantEndpoint, getUserTenantId } from './consts';
 import { isCloud } from './consts/cloud';
+import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppEndpointsProvider from './contexts/AppEndpointsProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 import Main from './pages/Main';
@@ -51,7 +52,9 @@ const Content = () => {
     >
       {!isCloud || isSettle ? (
         <AppEndpointsProvider>
-          <Main />
+          <AppConfirmModalProvider>
+            <Main />
+          </AppConfirmModalProvider>
         </AppEndpointsProvider>
       ) : (
         <CloudApp />
