@@ -7,7 +7,7 @@
 ---
 
 <p align="center">
-Logto is going to launch Cloud (Preview) and OSS General Availability on <a href="https://www.producthunt.com/products/logto" target="_blank">Product Hunt!</a><br/>
+Logto is going to launch Cloud (Preview) and OSS General Availability on <a href="https://www.producthunt.com/products/logto" target="_blank">Product Hunt</a>!<br/>
 Click the “Notify me” button on the page in order to receive a notification when our launch is live.
 </p>
 <p align="center">
@@ -23,23 +23,25 @@ Click the “Notify me” button on the page in order to receive a notification 
 [![gitpod](https://img.shields.io/badge/gitpod-available-f09439)](https://gitpod.io/#https://github.com/logto-io/demo)
 [![render](https://img.shields.io/badge/render-deploy-5364e9)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
 
-Logto[^info] helps you build sign-in, auth, and user identity.
+Logto[^info] is a cost-effective open-source alternative to Auth0. It offers a seamless developer experience and is well-suited for individuals and growing companies.
 
 🧑‍💻 **A frontend-to-backend identity solution**
 
-- A delightful sign-in experience for end-users and an OIDC-based identity service.
-- Web and native SDKs that can integrate your apps with Logto quickly.
+- OIDC-based authentication and RBAC authorization.
+- Passwordless sign in and much more diverse options, including Email, Phone number, Username, Google, Facebook and other social sign in methods.
+- Beautiful UI components with customizable CSS to fit your business needs.
 
-📦 **Out-of-box technology and UI support for many things you needed to code before**
+📦 **Out-of-box infrastructure**
 
-- A centralized place to customize the user interface and then LIVE PREVIEW the changes you make.
-- Social sign-in for multiple platforms (GitHub, Google, WeChat, Alipay, etc.).
-- Dynamic passcode sign-in (via SMS or email).
+- A ready-to-use management API can serve as your authentication provider, eliminating the need for extra implementation.
+- SDKs that can integrate your apps with Logto quickly, multi-platform and language compatible, tailored to your development environment.
+- Flexible connectors, scalable with community contributions, customizable with SMAL, OAuth, and OIDC protocols.
 
-💻 **Fully open-sourced, while no identity knowledge is required to use**
+💻 **Enterprise-ready solutions**
 
-- Super easy tryout (less than 1 min via GitPod, not joking), step-by-step tutorials and decent docs.
-- A full-function web admin console to manage the users, identities, and other things you need within a few clicks.
+- RBAC to control your resource through scalable role authorization for diverse use cases.
+- User management and audit Logs to understand identity related user info and keep your security on track.
+- We are currently working on SSO, Organizations and MFA! Stay tuned!
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
 
