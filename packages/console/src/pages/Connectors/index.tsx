@@ -16,6 +16,7 @@ import TablePlaceholder from '@/components/Table/TablePlaceholder';
 import { defaultEmailConnectorGroup, defaultSmsConnectorGroup } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import useConnectorGroups from '@/hooks/use-connector-groups';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 
 import ConnectorName from './components/ConnectorName';
@@ -48,6 +49,7 @@ const Connectors = () => {
   const navigate = useNavigate();
   const isSocial = tab === ConnectorsTabs.Social;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
   const { data, error, mutate } = useConnectorGroups();
   const isLoading = !data && !error;
 
@@ -137,6 +139,9 @@ const Connectors = () => {
                 imageDark={<SocialConnectorEmptyDark />}
                 title="connectors.placeholder_title"
                 description="connectors.placeholder_description"
+                learnMoreLink={getDocumentationUrl(
+                  '/docs/recipes/configure-connectors/connector-setup-tips#social-connector'
+                )}
                 action={
                   <Button
                     title="connectors.create"

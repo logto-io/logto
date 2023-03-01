@@ -15,6 +15,7 @@ import type { Column } from '@/components/Table/types';
 import TextLink from '@/components/TextLink';
 import { Tooltip } from '@/components/Tip';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 import type { Props as PaginationProps } from '../Pagination';
@@ -59,6 +60,7 @@ const PermissionsTable = ({
   retryHandler,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const nameColumn: Column<ScopeResponse> = {
     title: t('permissions.name_column'),
@@ -159,6 +161,7 @@ const PermissionsTable = ({
             imageDark={<PermissionsEmptyDark />}
             title="permissions.placeholder_title"
             description="permissions.placeholder_description"
+            learnMoreLink={getDocumentationUrl('/docs/recipes/rbac/manage-permissions-and-roles')}
             action={
               <Button
                 title={createButtonTitle}

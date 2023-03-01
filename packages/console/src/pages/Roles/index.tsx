@@ -15,6 +15,7 @@ import Table from '@/components/Table';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as pageStyles from '@/scss/resources.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
@@ -34,6 +35,7 @@ const Roles = () => {
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
   const isOnCreatePage = pathname === createRolePathname;
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
@@ -125,6 +127,9 @@ const Roles = () => {
             imageDark={<RolesEmptyDark />}
             title="roles.placeholder_title"
             description="roles.placeholder_description"
+            learnMoreLink={getDocumentationUrl(
+              '/docs/recipes/rbac/manage-permissions-and-roles#manage-roles'
+            )}
             action={
               <Button
                 title="roles.create"
