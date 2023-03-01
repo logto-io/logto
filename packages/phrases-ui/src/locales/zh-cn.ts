@@ -107,7 +107,7 @@ const translation = {
     invalid_session: '未找到会话，请返回并重新登录。',
   },
   demo_app: {
-    notification: 'Tip: Create a user in the user pool in order to test the sign-in experience.', // UNTRANSLATED
+    notification: 'Before trying the sign-in experience, please create an account first.', // UNTRANSLATED
   },
 };
 

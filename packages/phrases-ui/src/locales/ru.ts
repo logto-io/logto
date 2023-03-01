@@ -113,7 +113,7 @@ const translation = {
     invalid_session: 'Сессия не найдена. Пожалуйста, войдите снова.',
   },
   demo_app: {
-    notification: 'Tip: Create a user in the user pool in order to test the sign-in experience.', // UNTRANSLATED
+    notification: 'Before trying the sign-in experience, please create an account first.', // UNTRANSLATED
   },
 };
 
