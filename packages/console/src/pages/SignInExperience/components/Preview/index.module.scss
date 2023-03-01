@@ -21,10 +21,12 @@
       display: flex;
       align-items: center;
 
-      > * {
+      .language {
         width: 112px;
+      }
 
-        &:first-child {
+      > * {
+        &:not(:last-child) {
           margin-right: _.unit(2);
         }
       }

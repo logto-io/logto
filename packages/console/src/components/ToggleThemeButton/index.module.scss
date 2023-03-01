@@ -1,0 +1,32 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  .button {
+    padding: _.unit(2);
+  }
+
+  .icon {
+    color: var(--color-text-secondary);
+  }
+
+  &.large {
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &.medium {
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &.small {
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
