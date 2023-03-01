@@ -1,6 +1,6 @@
 import type { TenantInfo } from '@logto/schemas';
 import { defaultManagementApi } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, noop } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useMemo, createContext, useState } from 'react';
 
@@ -22,13 +22,9 @@ const initialTenants = conditional(!isCloud && [{ id: tenantId, indicator }]);
 
 export const TenantsContext = createContext<Tenants>({
   tenants: initialTenants,
-  setTenants: () => {
-    throw new Error('Not implemented');
-  },
+  setTenants: noop,
   isSettle: false,
-  setIsSettle: () => {
-    throw new Error('Not implemented');
-  },
+  setIsSettle: noop,
 });
 
 const TenantsProvider = ({ children }: Props) => {
