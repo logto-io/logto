@@ -74,7 +74,7 @@ const sign_in_exp = {
       social_sign_in: 'Social sign-in',
       description:
         'Depending on the mandatory identifier you set up, your user may be asked to provide an identifier when signing up via social connector.',
-      add_social_connector: 'Link Social Connector',
+      add_social_connector: 'Add Social Connector',
       set_up_hint: {
         not_in_list: 'Not in the list?',
         set_up_more: 'Set up',

@@ -7,7 +7,7 @@ const demo_app = {
   continue_explore: 'Ou continuar a navegação',
   customize_sign_in_experience: 'Personalize a experiência de login',
   enable_passwordless: 'Ativar sem senha',
-  add_social_connector: 'Adicionar conector login social',
+  add_social_connector: 'Adicionar conector social',
 };
 
 export default demo_app;
