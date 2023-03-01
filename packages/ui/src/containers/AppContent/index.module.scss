@@ -5,6 +5,10 @@
   pointer-events: none;
   user-select: none;
 
+  .viewBox::-webkit-scrollbar {
+    display: none;
+  }
+
   main {
     pointer-events: none;
     user-select: none;
