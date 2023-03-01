@@ -1,15 +1,17 @@
 @use '@/scss/underscore' as _;
 
-.deleteAccount {
-  flex: 1;
-  display: flex;
-  align-items: center;
+.changePassword {
   border: 1px solid var(--color-divider);
   border-radius: 8px;
   padding: _.unit(4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 
   .description {
     font: var(--font-body-2);
-    margin-right: _.unit(2);
+    color: var(--color-text);
+    margin-right: _.unit(4);
   }
 }

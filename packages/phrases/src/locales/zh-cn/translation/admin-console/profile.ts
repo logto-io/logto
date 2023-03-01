@@ -31,11 +31,19 @@ const profile = {
     dialog_paragraph_3:
       '感谢您选择 Logto Cloud。如果您有任何进一步的问题或疑虑，请随时与我们联系。',
   },
-  edit: '编辑',
-  change: '变更',
+  set: '设置',
+  change: '修改',
   link: '关联',
   unlink: '取消关联',
   not_set: '未设置',
+  change_avatar: '修改头像',
+  change_name: '修改姓名',
+  change_username: '修改用户名',
+  set_name: '设置姓名',
+  set_password: '设置密码',
+  link_email: '关联邮件',
+  enter_password: '输入密码',
+  enter_verification_code: '输入验证码',
 };
 
 export default profile;

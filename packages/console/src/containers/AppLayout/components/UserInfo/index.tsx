@@ -1,5 +1,5 @@
 import { builtInLanguageOptions as consoleBuiltInLanguageOptions } from '@logto/phrases';
-import type { IdTokenClaims } from '@logto/react';
+import type { UserInfoResponse } from '@logto/react';
 import { useLogto } from '@logto/react';
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
@@ -25,14 +25,14 @@ import UserInfoSkeleton from '../UserInfoSkeleton';
 import * as styles from './index.module.scss';
 
 const UserInfo = () => {
-  const { isAuthenticated, getIdTokenClaims, signOut } = useLogto();
+  const { isAuthenticated, fetchUserInfo, signOut } = useLogto();
   const navigate = useNavigate();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [user, setUser] =
     useState<
-      Pick<Record<string, unknown> & IdTokenClaims, 'username' | 'name' | 'picture' | 'email'>
+      Pick<Record<string, unknown> & UserInfoResponse, 'username' | 'name' | 'picture' | 'email'>
     >();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -43,11 +43,11 @@ const UserInfo = () => {
   useEffect(() => {
     (async () => {
       if (isAuthenticated) {
-        const userInfo = await getIdTokenClaims();
+        const userInfo = await fetchUserInfo();
         setUser(userInfo ?? { name: '' }); // Provide a fallback to avoid infinite loading state
       }
     })();
-  }, [isAuthenticated, getIdTokenClaims]);
+  }, [isAuthenticated, fetchUserInfo]);
 
   if (!user) {
     return <UserInfoSkeleton />;

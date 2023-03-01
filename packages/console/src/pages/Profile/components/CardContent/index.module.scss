@@ -22,6 +22,11 @@
       &:first-child {
         width: 35%;
       }
+
+      &:last-child {
+        text-align: right;
+        width: 30%;
+      }
     }
 
     tr:last-child td {

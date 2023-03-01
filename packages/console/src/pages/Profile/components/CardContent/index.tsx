@@ -3,12 +3,16 @@ import type { Nullable } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import TextLink from '@/components/TextLink';
+
 import * as styles from './index.module.scss';
 
 export type Row<T> = {
   label: AdminConsoleKey;
   value: T;
   renderer?: (value: T) => ReactNode;
+  action: () => void;
+  actionName: AdminConsoleKey;
 };
 
 type Props<T> = {
@@ -29,10 +33,19 @@ const CardContent = <T extends Nullable<string> | undefined>({ title, data }: Pr
       <div className={styles.title}>{t(title)}</div>
       <table>
         <tbody>
-          {data.map(({ label, value, renderer = defaultRenderer }) => (
+          {data.map(({ label, value, renderer = defaultRenderer, actionName, action }) => (
             <tr key={label}>
               <td>{t(label)}</td>
               <td>{renderer(value)}</td>
+              <td>
+                <TextLink
+                  onClick={() => {
+                    action();
+                  }}
+                >
+                  {t(actionName)}
+                </TextLink>
+              </td>
             </tr>
           ))}
         </tbody>
