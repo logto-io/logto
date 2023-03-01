@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import CodeEditor from '@/components/CodeEditor';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import FormField from '@/components/FormField';
-import { AppEndpointsContext } from '@/containers/AppEndpointsProvider';
+import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import { jsonValidator } from '@/utils/validator';
 
 import type { ConnectorFormType } from '../../types';
