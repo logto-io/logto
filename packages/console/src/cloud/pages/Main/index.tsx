@@ -5,7 +5,6 @@ import { useHref } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { AppLoadingOffline } from '@/components/AppLoading/Offline';
-import { getUserTenantId } from '@/consts/tenants';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import Redirect from './Redirect';
@@ -13,7 +12,7 @@ import Tenants from './Tenants';
 
 const Protected = () => {
   const api = useCloudApi();
-  const { tenants, setTenants } = useContext(TenantsContext);
+  const { tenants, setTenants, currentTenantId } = useContext(TenantsContext);
 
   useEffect(() => {
     const loadTenants = async () => {
@@ -27,8 +26,6 @@ const Protected = () => {
   }, [api, setTenants, tenants]);
 
   if (tenants) {
-    const currentTenantId = getUserTenantId();
-
     if (currentTenantId) {
       return <Redirect tenants={tenants} toTenantId={currentTenantId} />;
     }
@@ -48,7 +45,8 @@ const Protected = () => {
 
 const Main = () => {
   const { isAuthenticated, isLoading, signIn } = useLogto();
-  const href = useHref(getUserTenantId() + '/callback');
+  const { currentTenantId } = useContext(TenantsContext);
+  const href = useHref(currentTenantId + '/callback');
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {

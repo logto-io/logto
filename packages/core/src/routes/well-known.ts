@@ -1,10 +1,10 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
 import { adminTenantId } from '@logto/schemas';
-import etag from 'etag';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
@@ -30,49 +30,38 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
     });
   }
 
-  router.get(
-    '/.well-known/sign-in-exp',
-    async (ctx, next) => {
-      const [signInExperience, logtoConnectors] = await Promise.all([
-        getSignInExperience(),
-        getLogtoConnectors(),
-      ]);
+  router.get('/.well-known/sign-in-exp', async (ctx, next) => {
+    const [signInExperience, logtoConnectors] = await Promise.all([
+      getSignInExperience(),
+      getLogtoConnectors(),
+    ]);
 
-      const forgotPassword = {
-        phone: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
-        email: logtoConnectors.some(({ type }) => type === ConnectorType.Email),
-      };
+    const forgotPassword = {
+      phone: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
+      email: logtoConnectors.some(({ type }) => type === ConnectorType.Email),
+    };
 
-      const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
-        Array<ConnectorMetadata & { id: string }>
-      >((previous, connectorTarget) => {
-        const connectors = logtoConnectors.filter(
-          ({ metadata: { target } }) => target === connectorTarget
-        );
+    const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
+      Array<ConnectorMetadata & { id: string }>
+    >((previous, connectorTarget) => {
+      const connectors = logtoConnectors.filter(
+        ({ metadata: { target } }) => target === connectorTarget
+      );
 
-        return [
-          ...previous,
-          ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
-        ];
-      }, []);
+      return [
+        ...previous,
+        ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
+      ];
+    }, []);
 
-      ctx.body = {
-        ...signInExperience,
-        socialConnectors,
-        forgotPassword,
-      };
+    ctx.body = {
+      ...signInExperience,
+      socialConnectors,
+      forgotPassword,
+    };
 
-      return next();
-    },
-    async (ctx, next) => {
-      await next();
+    return next();
+  });
 
-      ctx.response.etag = etag(JSON.stringify(ctx.body));
-
-      if (ctx.fresh) {
-        ctx.status = 304;
-        ctx.body = null;
-      }
-    }
-  );
+  router.use(koaBodyEtag());
 }

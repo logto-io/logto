@@ -10,6 +10,9 @@ import { getTheme } from '@/utils/theme';
 
 import * as styles from './index.module.scss';
 
+/**
+ * An fullscreen loading component fetches local stored theme without sending request.
+ */
 export const AppLoadingOffline = () => {
   const theme = getTheme(
     trySafe(() => z.nativeEnum(AppearanceMode).parse(localStorage.getItem(themeStorageKey))) ??

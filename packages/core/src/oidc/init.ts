@@ -12,6 +12,7 @@ import snakecaseKeys from 'snakecase-keys';
 import type { EnvSet } from '#src/env-set/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
+import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.js';
 import { routes } from '#src/routes/consts.js';
@@ -234,6 +235,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
+  oidc.use(koaBodyEtag());
 
   return oidc;
 }
