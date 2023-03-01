@@ -1,10 +1,8 @@
 import { SearchJointMode, SearchMatchMode } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
-import { conditionalString } from '@silverhand/essentials';
+import { yes, conditionalString } from '@silverhand/essentials';
 import { sql } from 'slonik';
 import { snakeCase } from 'snake-case';
-
-import { isTrue } from '#src/env-set/parameters.js';
 
 import assertThat from './assert-that.js';
 import { isEnum } from './type.js';
@@ -83,7 +81,7 @@ const getSearchMetadata = (searchParameters: URLSearchParams, allowedFields?: st
   const matchMode = new Map<Optional<string>, SearchMatchMode>();
   const matchValues = new Map<Optional<string>, string[]>();
   const joint = getJointMode(searchParameters.get('joint') ?? searchParameters.get('jointMode'));
-  const isCaseSensitive = isTrue(searchParameters.get('isCaseSensitive') ?? 'false');
+  const isCaseSensitive = yes(searchParameters.get('isCaseSensitive') ?? 'false');
 
   // Parse the following values and return:
   // 1. Search modes per field, if available

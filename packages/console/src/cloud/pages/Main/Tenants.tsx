@@ -1,6 +1,7 @@
 import type { TenantInfo } from '@logto/schemas';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
+import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { AppLoadingOffline } from '@/components/AppLoading/Offline';
 import Button from '@/components/Button';
 import DangerousRaw from '@/components/DangerousRaw';
@@ -9,18 +10,27 @@ import * as styles from './index.module.scss';
 
 type Props = {
   data: TenantInfo[];
+  onAdd: (tenant: TenantInfo) => void;
 };
 
-const Tenants = ({ data }: Props) => {
+const Tenants = ({ data, onAdd }: Props) => {
+  const api = useCloudApi();
+
+  const createTenant = useCallback(async () => {
+    onAdd(await api.post('api/tenants').json<TenantInfo>());
+  }, [api, onAdd]);
+
   useEffect(() => {
-    if (data.length <= 1) {
-      if (data[0]) {
-        window.location.assign('/' + data[0].id);
-      } else {
-        // Todo: create tenant
-      }
+    if (data.length > 1) {
+      return;
     }
-  }, [data]);
+
+    if (data[0]) {
+      window.location.assign('/' + data[0].id);
+    } else {
+      void createTenant();
+    }
+  }, [createTenant, data]);
 
   if (data.length > 1) {
     return (
@@ -31,6 +41,8 @@ const Tenants = ({ data }: Props) => {
             <Button title={<DangerousRaw>{id}</DangerousRaw>} />
           </a>
         ))}
+        <h3>Create a tenant</h3>
+        <Button title={<DangerousRaw>Create New</DangerousRaw>} onClick={createTenant} />
       </div>
     );
   }

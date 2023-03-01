@@ -106,6 +106,7 @@ importers:
 
   packages/cloud:
     specifiers:
+      '@logto/cli': workspace:*
       '@logto/core-kit': workspace:*
       '@logto/schemas': workspace:*
       '@logto/shared': workspace:*
@@ -115,7 +116,7 @@ importers:
       '@types/http-proxy': ^1.17.9
       '@types/mime-types': ^2.1.1
       '@types/node': ^18.11.18
-      '@withtyped/postgres': ^0.8.0
+      '@withtyped/postgres': ^0.8.1
       '@withtyped/server': ^0.8.0
       chalk: ^5.0.0
       decamelize: ^6.0.0
@@ -131,11 +132,12 @@ importers:
       typescript: ^4.9.4
       zod: ^3.20.2
     dependencies:
+      '@logto/cli': link:../cli
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 2.2.0
-      '@withtyped/postgres': 0.8.0_@withtyped+server@0.8.0
+      '@withtyped/postgres': 0.8.1_@withtyped+server@0.8.0
       '@withtyped/server': 0.8.0
       chalk: 5.1.2
       decamelize: 6.0.0
@@ -333,7 +335,7 @@ importers:
       '@types/semver': ^7.3.12
       '@types/sinon': ^10.0.13
       '@types/supertest': ^2.0.11
-      '@withtyped/postgres': ^0.8.0
+      '@withtyped/postgres': ^0.8.1
       '@withtyped/server': ^0.8.0
       chalk: ^5.0.0
       clean-deep: ^3.4.0
@@ -393,7 +395,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 2.2.0
-      '@withtyped/postgres': 0.8.0_@withtyped+server@0.8.0
+      '@withtyped/postgres': 0.8.1_@withtyped+server@0.8.0
       '@withtyped/server': 0.8.0
       chalk: 5.1.2
       clean-deep: 3.4.0
@@ -4563,8 +4565,8 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@withtyped/postgres/0.8.0_@withtyped+server@0.8.0:
-    resolution: {integrity: sha512-cyhHR1lEV1cs0yDfmHvqR4R52kxgI/JCDd2fizOCzgIE6Z9g3GjYjeVtTl/fTaoDz/QDaXKwfkuxd0N7HSY7uw==}
+  /@withtyped/postgres/0.8.1_@withtyped+server@0.8.0:
+    resolution: {integrity: sha512-BkX1SPDV8bZFn1LEI6jzTes+y/4BGuPEBOi8p6jH9ZBySTuaW0/JqgEb1aKk5GtJ0aFGXhgq4Fk+JkLOc6zehA==}
     peerDependencies:
       '@withtyped/server': ^0.8.0
     dependencies:

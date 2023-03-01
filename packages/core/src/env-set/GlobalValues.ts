@@ -1,14 +1,14 @@
 import { tryThat } from '@logto/shared';
-import { assertEnv, getEnv, getEnvAsStringArray } from '@silverhand/essentials';
+import { assertEnv, getEnv, getEnvAsStringArray, yes } from '@silverhand/essentials';
 
 import UrlSet from './UrlSet.js';
-import { isTrue } from './parameters.js';
 import { throwErrorWithDsnMessage } from './throw-errors.js';
 
 export default class GlobalValues {
   public readonly isProduction = getEnv('NODE_ENV') === 'production';
   public readonly isTest = getEnv('NODE_ENV') === 'test';
-  public readonly isIntegrationTest = isTrue(getEnv('INTEGRATION_TEST'));
+  public readonly isIntegrationTest = yes(getEnv('INTEGRATION_TEST'));
+  public readonly isCloud = yes(process.env.IS_CLOUD);
 
   public readonly httpsCert = process.env.HTTPS_CERT_PATH;
   public readonly httpsKey = process.env.HTTPS_KEY_PATH;
@@ -25,8 +25,8 @@ export default class GlobalValues {
   public readonly developmentTenantId = getEnv('DEVELOPMENT_TENANT_ID');
   public readonly userDefaultRoleNames = getEnvAsStringArray('USER_DEFAULT_ROLE_NAMES');
   public readonly developmentUserId = getEnv('DEVELOPMENT_USER_ID');
-  public readonly trustProxyHeader = isTrue(getEnv('TRUST_PROXY_HEADER'));
-  public readonly ignoreConnectorVersionCheck = isTrue(getEnv('IGNORE_CONNECTOR_VERSION_CHECK'));
+  public readonly trustProxyHeader = yes(getEnv('TRUST_PROXY_HEADER'));
+  public readonly ignoreConnectorVersionCheck = yes(getEnv('IGNORE_CONNECTOR_VERSION_CHECK'));
 
   public get dbUrl(): string {
     return this.databaseUrl;

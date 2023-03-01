@@ -33,7 +33,14 @@ const Protected = () => {
       return <Redirect tenants={tenants} toTenantId={currentTenantId} />;
     }
 
-    return <Tenants data={tenants} />;
+    return (
+      <Tenants
+        data={tenants}
+        onAdd={(tenant) => {
+          setTenants([...tenants, tenant]);
+        }}
+      />
+    );
   }
 
   return <AppLoadingOffline />;

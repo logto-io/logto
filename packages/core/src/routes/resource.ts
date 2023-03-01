@@ -1,9 +1,9 @@
 import { buildIdGenerator } from '@logto/core-kit';
 import { Resources, Scopes } from '@logto/schemas';
 import { tryThat } from '@logto/shared';
+import { yes } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
-import { isTrue } from '#src/env-set/parameters.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -54,7 +54,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
 
       if (disabled) {
         const resources = await findAllResources();
-        ctx.body = isTrue(includeScopes) ? await attachScopesToResources(resources) : resources;
+        ctx.body = yes(includeScopes) ? await attachScopesToResources(resources) : resources;
 
         return next();
       }
@@ -65,7 +65,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
       ]);
 
       ctx.pagination.totalCount = count;
-      ctx.body = isTrue(includeScopes) ? await attachScopesToResources(resources) : resources;
+      ctx.body = yes(includeScopes) ? await attachScopesToResources(resources) : resources;
 
       return next();
     }

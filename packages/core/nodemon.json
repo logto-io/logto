@@ -8,7 +8,8 @@
     "../*/lib/",
     "../core/src/",
     "../core/node_modules/",
-    ".env"
+    ".env",
+    "../../.env"
   ],
   "ext": "json,js,jsx,ts,tsx",
   "delay": 500

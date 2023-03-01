@@ -3,13 +3,14 @@ import assert from 'node:assert';
 import { generateStandardId } from '@logto/core-kit';
 import type { AdminData, TenantModel } from '@logto/schemas';
 import {
+  adminConsoleApplicationId,
   adminTenantId,
   getManagementApiResourceIndicator,
   PredefinedScope,
   CreateRolesScope,
 } from '@logto/schemas';
 import type { PostgreSql } from '@withtyped/postgres';
-import { dangerousRaw, id, sql } from '@withtyped/postgres';
+import { jsonb, dangerousRaw, id, sql } from '@withtyped/postgres';
 import type { Queryable } from '@withtyped/server';
 
 import { insertInto } from '#src/utils/query.js';
@@ -72,5 +73,26 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
     );
   };
 
-  return { getManagementApiLikeIndicatorsForUser, insertTenant, createTenantRole, insertAdminData };
+  const appendAdminConsoleRedirectUris = async (...urls: URL[]) => {
+    const metadataKey = id('oidc_client_metadata');
+
+    await client.query(sql`
+      update applications
+      set ${metadataKey} = jsonb_set(
+        ${metadataKey},
+        '{redirectUris}',
+        ${metadataKey}->'redirectUris' || ${jsonb(urls.map(String))}
+      )
+      where id = ${adminConsoleApplicationId}
+      and tenant_id = ${adminTenantId}
+    `);
+  };
+
+  return {
+    getManagementApiLikeIndicatorsForUser,
+    insertTenant,
+    createTenantRole,
+    insertAdminData,
+    appendAdminConsoleRedirectUris,
+  };
 };
