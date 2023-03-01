@@ -44,6 +44,9 @@ const applications = {
     description_by_sdk:
       'This quick start guide demonstrates how to integrate Logto into {{sdk}} app',
   },
+  placeholder_title: 'Select an application type to continue',
+  placeholder_description:
+    'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.',
 };
 
 export default applications;
