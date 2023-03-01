@@ -161,8 +161,6 @@ const sign_in_exp = {
   },
   preview: {
     title: 'Oturum Açma Önizlemesi',
-    dark: 'Koyu',
-    light: 'Açık',
     native: 'Doğal',
     desktop_web: 'Masaüstü Web',
     mobile_web: 'Mobil Web',
