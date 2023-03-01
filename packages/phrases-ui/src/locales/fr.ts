@@ -116,7 +116,7 @@ const translation = {
       'Session non trouvée. Veuillez revenir en arrière et vous connecter à nouveau.',
   },
   demo_app: {
-    notification: 'Before trying the sign-in experience, please create an account first.', // UNTRANSLATED
+    notification: 'Tip: Create a user in the user pool in order to test the sign-in experience.', // UNTRANSLATED
   },
 };
 

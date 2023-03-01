@@ -114,7 +114,7 @@ const translation = {
     invalid_session: 'Die Sitzung ist ungültig. Bitte melde dich erneut an.',
   },
   demo_app: {
-    notification: 'Before trying the sign-in experience, please create an account first.', // UNTRANSLATED
+    notification: 'Tip: Create a user in the user pool in order to test the sign-in experience.', // UNTRANSLATED
   },
 };
 
