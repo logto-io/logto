@@ -27,7 +27,7 @@ export const getAdminTenantTokenValidationSet = async (): Promise<{
   keys: JWK[];
   issuer: string[];
 }> => {
-  const { isDomainBasedMultiTenancy, urlSet, adminUrlSet } = EnvSet.values;
+  const { isDomainBasedMultiTenancy, adminUrlSet } = EnvSet.values;
 
   if (!isDomainBasedMultiTenancy && adminUrlSet.deduplicated().length === 0) {
     return { keys: [], issuer: [] };

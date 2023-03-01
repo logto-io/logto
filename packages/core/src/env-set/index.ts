@@ -29,6 +29,7 @@ export enum AdminApps {
 }
 
 export class EnvSet {
+  /** The value set for global configurations.  */
   static values = new GlobalValues();
 
   static get isTest() {

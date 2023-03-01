@@ -18,24 +18,24 @@ import { getConstantClientMetadata } from './utils.js';
  * as Admin Console is attached to the admin tenant in OSS and its endpoints are dynamic (from env variable).
  */
 const transpileMetadata = (clientId: string, data: AllClientMetadata): AllClientMetadata => {
+  if (clientId !== adminConsoleApplicationId) {
+    return data;
+  }
+
   const { adminUrlSet, cloudUrlSet } = EnvSet.values;
   const urls = [
     ...adminUrlSet.deduplicated().map((url) => appendPath(url, '/console').toString()),
     ...cloudUrlSet.deduplicated().map(String),
   ];
 
-  if (clientId === adminConsoleApplicationId) {
-    return {
-      ...data,
-      redirect_uris: [
-        ...(data.redirect_uris ?? []),
-        ...urls.map((url) => appendPath(url, '/callback').toString()),
-      ],
-      post_logout_redirect_uris: [...(data.post_logout_redirect_uris ?? []), ...urls],
-    };
-  }
-
-  return data;
+  return {
+    ...data,
+    redirect_uris: [
+      ...(data.redirect_uris ?? []),
+      ...urls.map((url) => appendPath(url, '/callback').toString()),
+    ],
+    post_logout_redirect_uris: [...(data.post_logout_redirect_uris ?? []), ...urls],
+  };
 };
 
 const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
