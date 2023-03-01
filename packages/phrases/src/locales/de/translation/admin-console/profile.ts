@@ -14,11 +14,34 @@ const profile = {
     email_sign_in: 'Email sign-In', // UNTRANSLATED
     email: 'Email', // UNTRANSLATED
     social_sign_in: 'Social sign-In', // UNTRANSLATED
+    link_email: 'Link email', // UNTRANSLATED
+    link_email_subtitle: 'Link your email to sign in or help with account recovery.', // UNTRANSLATED
+    email_required: 'Email is required', // UNTRANSLATED
+    invalid_email: 'Invalid email address', // UNTRANSLATED
+    identical_email_address: 'The input email address is identical to the current one', // UNTRANSLATED
   },
   password: {
     title: 'PASSWORD & SECURITY', // UNTRANSLATED
     password: 'Password', // UNTRANSLATED
-    reset_password: 'Reset Password', // UNTRANSLATED
+    password_setting: 'Password setting', // UNTRANSLATED
+    new_password: 'New password', // UNTRANSLATED
+    confirm_password: 'Confirm password', // UNTRANSLATED
+    enter_password: 'Enter password', // UNTRANSLATED
+    enter_password_subtitle: 'Verify it’s you to protect your account security.', // UNTRANSLATED
+    set_password: 'Set password', // UNTRANSLATED
+    verify_via_password: 'Verify via password', // UNTRANSLATED
+    show_password: 'Show password', // UNTRANSLATED
+    required: 'Password is required', // UNTRANSLATED
+    min_length: 'Password requires a minimum of {{min}} characters', // UNTRANSLATED
+    do_not_match: 'Passwords do not match. Please try again.', // UNTRANSLATED
+  },
+  code: {
+    enter_verification_code: 'Enter verification code', // UNTRANSLATED
+    enter_verification_code_subtitle:
+      'The verification code has been sent to <strong>{{target}}</strong>', // UNTRANSLATED
+    verify_via_code: 'Verify via verification code', // UNTRANSLATED
+    resend: 'Resend verification code', // UNTRANSLATED
+    resend_countdown: 'Resend in {{countdown}} seconds', // UNTRANSLATED
   },
   delete_account: {
     title: 'DELETE ACCOUNT', // UNTRANSLATED
@@ -42,10 +65,11 @@ const profile = {
   change_name: 'Change name', // UNTRANSLATED
   change_username: 'Change username', // UNTRANSLATED
   set_name: 'Set name', // UNTRANSLATED
-  set_password: 'Set password', // UNTRANSLATED
-  link_email: 'Link email', // UNTRANSLATED
-  enter_password: 'Enter password', // UNTRANSLATED
-  enter_verification_code: 'Enter verification code', // UNTRANSLATED
+  email_changed: 'Email changed!', // UNTRANSLATED
+  password_changed: 'Password changed!', // UNTRANSLATED
+  updated: '{{target}} updated!', // UNTRANSLATED
+  linked: '{{target}} linked!', // UNTRANSLATED
+  unlinked: '{{target}} unlinked!', // UNTRANSLATED
 };
 
 export default profile;

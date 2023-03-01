@@ -40,6 +40,7 @@ const general = {
   stay_on_page: 'Ficar na página',
   type_to_search: 'Digite para pesquisar',
   got_it: 'Entendi',
+  continue: 'Continue', // UNTRANSLATED
   page_info: '{{min, number}}-{{max, number}} de {{total, number}}',
   learn_more: 'Saber mais',
   tab_errors: '{{count, number}} erros',

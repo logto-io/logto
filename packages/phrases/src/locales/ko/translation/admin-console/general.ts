@@ -39,6 +39,7 @@ const general = {
   stay_on_page: '페이지 유지하기',
   type_to_search: '검색어 입력',
   got_it: '알겠어요',
+  continue: 'Continue', // UNTRANSLATED
   page_info: '{{min, number}}-{{max, number}} / {{total, number}}',
   learn_more: '더 알아보기',
   tab_errors: '{{count, number}} 오류',
