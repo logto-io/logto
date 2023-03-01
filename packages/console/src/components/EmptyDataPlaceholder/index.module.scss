@@ -6,12 +6,6 @@
   align-items: center;
   padding: _.unit(4) 0;
 
-  .image {
-    width: 200px;
-    height: 200px;
-    margin-bottom: _.unit(6);
-  }
-
   .title {
     font: var(--font-label-2);
     margin-bottom: _.unit(2);
@@ -23,11 +17,26 @@
     margin-bottom: _.unit(2);
   }
 
+  &.large {
+    .image {
+      width: 256px;
+      height: 256px;
+      margin-bottom: _.unit(6);
+    }
+  }
+
+  &.medium {
+    .image {
+      width: 200px;
+      height: 200px;
+      margin-bottom: _.unit(6);
+    }
+  }
+
   &.small {
     .image {
       width: 128px;
       height: 128px;
-      margin-bottom: unset;
     }
   }
 }

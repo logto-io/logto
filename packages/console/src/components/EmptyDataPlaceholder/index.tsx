@@ -10,10 +10,10 @@ import * as styles from './index.module.scss';
 
 export type Props = {
   title?: string;
-  size?: 'default' | 'small';
+  size?: 'large' | 'medium' | 'small';
 };
 
-const EmptyDataPlaceholder = ({ title, size = 'default' }: Props) => {
+const EmptyDataPlaceholder = ({ title, size = 'medium' }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
   const EmptyImage = theme === AppearanceMode.LightMode ? Empty : EmptyDark;
