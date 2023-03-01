@@ -1,10 +1,11 @@
 import { generateStandardId } from '@logto/core-kit';
 import { isLanguageTag } from '@logto/language-kit';
-import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
+import type { ConnectorFactoryResponse, ConnectorResponse, RequestErrorBody } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
-import { useState } from 'react';
+import { HTTPError } from 'ky';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -30,19 +31,30 @@ import { useConfigParser } from '../ConnectorForm/hooks';
 import { initFormData, parseFormConfig } from '../ConnectorForm/utils';
 import * as styles from './index.module.scss';
 
+const targetErrorCode = 'connector.multiple_target_with_same_platform';
+
 type Props = {
   connector: ConnectorFactoryResponse;
   onClose: () => void;
 };
 
 const Guide = ({ connector, onClose }: Props) => {
-  const api = useApi();
+  const api = useApi({ hideErrorToast: true });
   const navigate = useNavigate();
   const [callbackConnectorId, setCallbackConnectorId] = useState<string>(generateStandardId());
   const { updateConfigs } = useConfigs();
   const parseJsonConfig = useConfigParser();
+  const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { id: connectorId, type: connectorType, name, readme, formItems } = connector;
+  const {
+    id: connectorId,
+    type: connectorType,
+    name,
+    readme,
+    formItems,
+    target,
+    isStandard,
+  } = connector;
   const { title, content } = splitMarkdownByTitle(readme);
   const { language } = i18next;
   const connectorName = conditional(isLanguageTag(language) && name[language]) ?? name.en;
@@ -59,12 +71,23 @@ const Guide = ({ connector, onClose }: Props) => {
     formState: { isSubmitting },
     handleSubmit,
     watch,
+    setValue,
+    setError,
   } = methods;
+
+  useEffect(() => {
+    if (isSocialConnector && !isStandard) {
+      setValue('target', target);
+    }
+  }, [isSocialConnector, target, isStandard, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
     if (isSubmitting) {
       return;
     }
+
+    // Recover error state
+    setConflictConnectorName(undefined);
 
     const { formItems, isStandard, id: connectorId, type } = connector;
     const config = formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
@@ -88,23 +111,41 @@ const Guide = ({ connector, onClose }: Props) => {
       ? { ...basePayload, syncProfile: syncProfile === SyncProfileMode.EachSignIn }
       : basePayload;
 
-    const createdConnector = await api
-      .post('api/connectors', {
-        json: payload,
-      })
-      .json<ConnectorResponse>();
+    try {
+      const createdConnector = await api
+        .post('api/connectors', {
+          json: payload,
+        })
+        .json<ConnectorResponse>();
 
-    await updateConfigs({
-      ...conditional(!isSocialConnector && { passwordlessConfigured: true }),
-    });
+      await updateConfigs({
+        ...conditional(!isSocialConnector && { passwordlessConfigured: true }),
+      });
 
-    onClose();
-    toast.success(t('general.saved'));
-    navigate(
-      `/connectors/${isSocialConnector ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless}/${
-        createdConnector.id
-      }`
-    );
+      onClose();
+      toast.success(t('general.saved'));
+      navigate(
+        `/connectors/${isSocialConnector ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless}/${
+          createdConnector.id
+        }`
+      );
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        const { response } = error;
+        const metadata = await response.json<
+          RequestErrorBody<{ connectorName: Record<string, string> }>
+        >();
+
+        if (metadata.code === targetErrorCode) {
+          setConflictConnectorName(metadata.data.connectorName);
+          setError('target', {}, { shouldFocus: true });
+
+          return;
+        }
+      }
+
+      throw error;
+    }
   });
 
   return (
@@ -135,9 +176,9 @@ const Guide = ({ connector, onClose }: Props) => {
                     <div>{t('connectors.guide.general_setting')}</div>
                   </div>
                   <BasicForm
-                    isAllowEditTarget
-                    connectorType={connector.type}
+                    isAllowEditTarget={connector.isStandard}
                     isStandard={connector.isStandard}
+                    conflictConnectorName={conflictConnectorName}
                   />
                 </div>
               )}

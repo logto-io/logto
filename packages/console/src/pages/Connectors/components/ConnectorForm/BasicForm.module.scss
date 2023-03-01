@@ -6,6 +6,31 @@
   margin-top: _.unit(0.5);
 }
 
+.error {
+  color: var(--color-text);
+  font: var(--font-body-2);
+  margin-top: _.unit(0.5);
+  background-color: var(--color-danger-toast-background);
+  padding: _.unit(3) _.unit(4);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: _.unit(3);
+  }
+
+  .content {
+    span {
+      font-weight: bold;
+    }
+
+    > ul {
+      padding-left: _.unit(3);
+    }
+  }
+}
+
 .fieldButton {
   margin-top: _.unit(2);
 }
