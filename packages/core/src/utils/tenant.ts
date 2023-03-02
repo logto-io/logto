@@ -17,6 +17,7 @@ const isEndpointOf = (current: URL, endpoint: URL) => {
 export const getTenantId = (url: URL) => {
   const {
     isDomainBasedMultiTenancy,
+    isPathBasedMultiTenancy,
     isProduction,
     isIntegrationTest,
     developmentTenantId,
@@ -34,11 +35,15 @@ export const getTenantId = (url: URL) => {
     return developmentTenantId;
   }
 
-  if (
-    !isDomainBasedMultiTenancy ||
-    (!urlSet.isLocalhostDisabled && isEndpointOf(url, urlSet.localhostUrl))
-  ) {
+  if (!isDomainBasedMultiTenancy && !isPathBasedMultiTenancy) {
     return defaultTenantId;
+  }
+
+  if (isPathBasedMultiTenancy) {
+    const urlSegments = url.pathname.split('/');
+    const endpointSegments = urlSet.endpoint.pathname.split('/');
+
+    return urlSegments[endpointSegments.length - 1];
   }
 
   const toMatch = urlSet.endpoint.hostname.replace('*', '([^.]*)');

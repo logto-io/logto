@@ -8,7 +8,6 @@ export default class GlobalValues {
   public readonly isProduction = getEnv('NODE_ENV') === 'production';
   public readonly isTest = getEnv('NODE_ENV') === 'test';
   public readonly isIntegrationTest = yes(getEnv('INTEGRATION_TEST'));
-  public readonly isCloud = yes(process.env.IS_CLOUD);
 
   public readonly httpsCert = process.env.HTTPS_CERT_PATH;
   public readonly httpsKey = process.env.HTTPS_KEY_PATH;
@@ -51,6 +50,9 @@ export default class GlobalValues {
 
   /** @see urlSet For detailed explanation. */
   public readonly isDomainBasedMultiTenancy = this.urlSet.endpoint.hostname.includes('*');
+
+  public readonly isPathBasedMultiTenancy =
+    !this.isDomainBasedMultiTenancy && yes(getEnv('PATH_BASED_MULTI_TENANCY'));
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   public readonly databaseUrl = tryThat(() => assertEnv('DB_URL'), throwErrorWithDsnMessage);

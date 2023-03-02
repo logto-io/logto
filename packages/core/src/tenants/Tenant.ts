@@ -43,6 +43,14 @@ export default class Tenant implements TenantContext {
   public readonly app: Koa;
 
   get run(): MiddlewareType {
+    if (
+      EnvSet.values.isPathBasedMultiTenancy &&
+      // If admin URL Set is specified, consider that URL first
+      !(EnvSet.values.adminUrlSet.deduplicated().length > 0 && this.id === adminTenantId)
+    ) {
+      return mount('/' + this.id, this.app);
+    }
+
     return mount(this.app);
   }
 
@@ -79,6 +87,8 @@ export default class Tenant implements TenantContext {
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
 
+    const { isDomainBasedMultiTenancy, isPathBasedMultiTenancy } = EnvSet.values;
+
     // Mount admin tenant APIs and app
     if (id === adminTenantId) {
       // Mount `/me` APIs for admin tenant
@@ -86,7 +96,7 @@ export default class Tenant implements TenantContext {
 
       // Mount Admin Console when needed
       // Skip in domain-based multi-tenancy since Logto Cloud serves Admin Console in this case
-      if (!EnvSet.values.isDomainBasedMultiTenancy) {
+      if (!isDomainBasedMultiTenancy && !isPathBasedMultiTenancy) {
         app.use(koaConsoleRedirectProxy(queries));
         app.use(
           mount(
@@ -101,7 +111,7 @@ export default class Tenant implements TenantContext {
     // while distinguishing "demo app from admin tenant" and "demo app from user tenant";
     // on the cloud, we need to configure admin tenant sign-in experience, so a preview is needed for
     // testing without signing out of the admin console.
-    if (id !== adminTenantId || EnvSet.values.isDomainBasedMultiTenancy) {
+    if (id !== adminTenantId || isDomainBasedMultiTenancy || isPathBasedMultiTenancy) {
       // Mount demo app
       app.use(
         mount(

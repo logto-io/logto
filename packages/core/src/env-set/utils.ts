@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { adminTenantId } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { deduplicate, trySafe } from '@silverhand/essentials';
@@ -6,12 +8,16 @@ import type GlobalValues from './GlobalValues.js';
 
 export const getTenantEndpoint = (
   id: string,
-  { urlSet, adminUrlSet, isDomainBasedMultiTenancy }: GlobalValues
+  { urlSet, adminUrlSet, isDomainBasedMultiTenancy, isPathBasedMultiTenancy }: GlobalValues
 ): URL => {
   const adminUrl = trySafe(() => adminUrlSet.endpoint);
 
   if (adminUrl && id === adminTenantId) {
     return adminUrl;
+  }
+
+  if (isPathBasedMultiTenancy) {
+    return new URL(path.join(urlSet.endpoint.pathname, id), urlSet.endpoint);
   }
 
   if (!isDomainBasedMultiTenancy) {
@@ -27,7 +33,7 @@ export const getTenantEndpoint = (
 
 export const getTenantLocalhost = (
   id: string,
-  { urlSet, adminUrlSet, isDomainBasedMultiTenancy }: GlobalValues
+  { urlSet, adminUrlSet, isDomainBasedMultiTenancy, isPathBasedMultiTenancy }: GlobalValues
 ): Optional<URL> => {
   const adminUrl = trySafe(() => adminUrlSet.localhostUrl);
 
@@ -35,8 +41,14 @@ export const getTenantLocalhost = (
     return adminUrl;
   }
 
+  const localhost = trySafe(() => urlSet.localhostUrl);
+
+  if (isPathBasedMultiTenancy && localhost) {
+    return new URL(path.join(localhost.pathname, id), localhost);
+  }
+
   if (!isDomainBasedMultiTenancy) {
-    return trySafe(() => urlSet.localhostUrl);
+    return localhost;
   }
 };
 
