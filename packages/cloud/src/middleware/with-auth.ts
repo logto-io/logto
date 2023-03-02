@@ -76,7 +76,8 @@ export default function withAuth<InputContext extends RequestContext>({
         audience,
       }),
       (error) => {
-        throw error;
+        console.error(error);
+        throw new RequestError('JWT verification failed.', 401);
       }
     );
 

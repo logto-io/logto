@@ -43,7 +43,7 @@ const matchPathBasedTenantId = (urlSet: UrlSet, url: URL) => {
 
 export const getTenantId = (url: URL) => {
   const {
-    isDomainBasedMultiTenancy,
+    isMultiTenancy,
     isPathBasedMultiTenancy,
     isProduction,
     isIntegrationTest,
@@ -62,7 +62,7 @@ export const getTenantId = (url: URL) => {
     return developmentTenantId;
   }
 
-  if (!isDomainBasedMultiTenancy && !isPathBasedMultiTenancy) {
+  if (!isMultiTenancy) {
     return defaultTenantId;
   }
 

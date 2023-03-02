@@ -80,6 +80,11 @@ export default class GlobalValues {
   public readonly isPathBasedMultiTenancy =
     !this.isDomainBasedMultiTenancy && yes(getEnv('PATH_BASED_MULTI_TENANCY'));
 
+  /** Alias for `isDomainBasedMultiTenancy || isPathBasedMultiTenancy`. */
+  public get isMultiTenancy(): boolean {
+    return this.isDomainBasedMultiTenancy || this.isPathBasedMultiTenancy;
+  }
+
   // eslint-disable-next-line unicorn/consistent-function-scoping
   public readonly databaseUrl = tryThat(() => assertEnv('DB_URL'), throwErrorWithDsnMessage);
   public readonly developmentTenantId = getEnv('DEVELOPMENT_TENANT_ID');

@@ -87,7 +87,7 @@ export default class Tenant implements TenantContext {
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
 
-    const { isDomainBasedMultiTenancy, isPathBasedMultiTenancy } = EnvSet.values;
+    const { isMultiTenancy } = EnvSet.values;
 
     // Mount admin tenant APIs and app
     if (id === adminTenantId) {
@@ -95,8 +95,8 @@ export default class Tenant implements TenantContext {
       app.use(mount('/me', initMeApis(tenantContext)));
 
       // Mount Admin Console when needed
-      // Skip in domain-based multi-tenancy since Logto Cloud serves Admin Console in this case
-      if (!isDomainBasedMultiTenancy && !isPathBasedMultiTenancy) {
+      // Skip in multi-tenancy mode since Logto Cloud serves Admin Console in this case
+      if (!isMultiTenancy) {
         app.use(koaConsoleRedirectProxy(queries));
         app.use(
           mount(
@@ -111,7 +111,7 @@ export default class Tenant implements TenantContext {
     // while distinguishing "demo app from admin tenant" and "demo app from user tenant";
     // on the cloud, we need to configure admin tenant sign-in experience, so a preview is needed for
     // testing without signing out of the admin console.
-    if (id !== adminTenantId || isDomainBasedMultiTenancy || isPathBasedMultiTenancy) {
+    if (id !== adminTenantId || isMultiTenancy) {
       // Mount demo app
       app.use(
         mount(

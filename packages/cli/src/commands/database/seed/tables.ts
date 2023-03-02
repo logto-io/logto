@@ -11,6 +11,7 @@ import {
   createDefaultSignInExperience,
   createAdminTenantSignInExperience,
   createDefaultAdminConsoleApplication,
+  createCloudApi,
 } from '@logto/schemas';
 import { Hooks, Tenants } from '@logto/schemas/models';
 import type { DatabaseTransactionConnection } from 'slonik';
@@ -121,13 +122,16 @@ export const seedTables = async (
   await createTenant(connection, adminTenantId);
   await seedOidcConfigs(connection, adminTenantId);
   await seedAdminData(connection, createAdminDataInAdminTenant(defaultTenantId));
+  await seedAdminData(connection, createAdminDataInAdminTenant(adminTenantId));
   await seedAdminData(connection, createMeApiInAdminTenant());
+  await seedAdminData(connection, createCloudApi());
 
   await Promise.all([
     connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),
     connection.query(
       insertInto(createDefaultSignInExperience(defaultTenantId), 'sign_in_experiences')
     ),
+    connection.query(insertInto(createDefaultAdminConsoleConfig(adminTenantId), 'logto_configs')),
     connection.query(insertInto(createAdminTenantSignInExperience(), 'sign_in_experiences')),
     connection.query(insertInto(createDefaultAdminConsoleApplication(), 'applications')),
     updateDatabaseTimestamp(connection, latestTimestamp),
