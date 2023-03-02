@@ -2,7 +2,6 @@ import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
@@ -23,8 +22,8 @@ const ApplicationsPlaceholder = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const [isCreating, setIsCreating] = useState(false);
-  const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
   const [createdApplication, setCreatedApplication] = useState<Application>();
+  const isGetStartedModalOpen = Boolean(createdApplication);
   const api = useApi();
   const { updateConfigs } = useConfigs();
 
@@ -43,7 +42,6 @@ const ApplicationsPlaceholder = () => {
       const createdApp = await api.post('api/applications', { json: payload }).json<Application>();
 
       setCreatedApplication(createdApp);
-      setIsGetStartedModalOpen(true);
 
       void updateConfigs({
         applicationCreated: true,
@@ -61,9 +59,8 @@ const ApplicationsPlaceholder = () => {
       return;
     }
 
-    setIsGetStartedModalOpen(false);
-    toast.success(t('applications.application_created', { name: createdApplication.name }));
     navigate(`/applications/${createdApplication.id}`);
+    setCreatedApplication(undefined);
   };
 
   return (

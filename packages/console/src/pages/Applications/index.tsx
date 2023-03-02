@@ -1,5 +1,4 @@
 import type { Application } from '@logto/schemas';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -81,7 +80,6 @@ const Applications = () => {
           <CreateForm
             onClose={(createdApp) => {
               if (createdApp) {
-                toast.success(t('applications.application_created', { name: createdApp.name }));
                 navigate(buildDetailsPathname(createdApp.id), { replace: true });
 
                 return;
