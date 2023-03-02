@@ -10,11 +10,12 @@ import './scss/overlayscrollbars.scss';
 
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
+
 import CloudApp from '@/cloud/App';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
 import initI18n from '@/i18n/init';
 
-import { adminTenantEndpoint, getUserTenantId } from './consts';
+import { adminTenantEndpoint } from './consts';
 import { isCloud } from './consts/cloud';
 import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppEndpointsProvider from './contexts/AppEndpointsProvider';
@@ -24,10 +25,12 @@ import Main from './pages/Main';
 void initI18n();
 
 const Content = () => {
-  const { tenants, isSettle } = useContext(TenantsContext);
-  const currentTenantId = getUserTenantId();
+  const { tenants, isSettle, currentTenantId } = useContext(TenantsContext);
 
   const resources = deduplicate([
+    // Explicitly add `currentTenantId` and deduplicate since the user may directly
+    // access a URL with Tenant ID, adding the ID from the URL here can possibly remove one
+    // additional redirect.
     ...(currentTenantId && [getManagementApi(currentTenantId).indicator]),
     ...(tenants ?? []).map(({ id }) => getManagementApi(id).indicator),
     ...(isCloud ? [cloudApi.indicator] : []),

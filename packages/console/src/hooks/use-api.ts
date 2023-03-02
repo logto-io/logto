@@ -5,8 +5,9 @@ import { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { getBasename, getManagementApi, getUserTenantId, requestTimeout } from '@/consts';
+import { getBasename, getManagementApi, requestTimeout } from '@/consts';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import { useConfirmModal } from './use-confirm-modal';
 
@@ -30,11 +31,16 @@ type StaticApiProps = {
 export const useStaticApi = ({
   prefixUrl,
   hideErrorToast,
-  resourceIndicator = getManagementApi(getUserTenantId()).indicator,
+  resourceIndicator: resourceInput,
 }: StaticApiProps) => {
   const { isAuthenticated, getAccessToken, signOut } = useLogto();
+  const { currentTenantId } = useContext(TenantsContext);
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show } = useConfirmModal();
+  const resourceIndicator = useMemo(
+    () => resourceInput ?? getManagementApi(currentTenantId).indicator,
+    [currentTenantId, resourceInput]
+  );
 
   const toastError = useCallback(
     async (response: Response) => {

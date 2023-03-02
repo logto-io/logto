@@ -1,10 +1,10 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
 import { adminTenantId } from '@logto/schemas';
-import etag from 'etag';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
@@ -17,17 +17,21 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
   } = libraries;
 
   if (id === adminTenantId) {
-    router.get('/.well-known/endpoints/:tenantId', async (ctx, next) => {
-      if (!ctx.params.tenantId) {
-        throw new RequestError('request.invalid_input');
-      }
+    router.get(
+      '/.well-known/endpoints/:tenantId',
+      async (ctx, next) => {
+        if (!ctx.params.tenantId) {
+          throw new RequestError('request.invalid_input');
+        }
 
-      ctx.body = {
-        user: getTenantEndpoint(ctx.params.tenantId, EnvSet.values),
-      };
+        ctx.body = {
+          user: getTenantEndpoint(ctx.params.tenantId, EnvSet.values),
+        };
 
-      return next();
-    });
+        return next();
+      },
+      koaBodyEtag()
+    );
   }
 
   router.get(
@@ -64,15 +68,6 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
 
       return next();
     },
-    async (ctx, next) => {
-      await next();
-
-      ctx.response.etag = etag(JSON.stringify(ctx.body));
-
-      if (ctx.fresh) {
-        ctx.status = 304;
-        ctx.body = null;
-      }
-    }
+    koaBodyEtag()
   );
 }
