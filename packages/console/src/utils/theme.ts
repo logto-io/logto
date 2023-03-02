@@ -1,4 +1,8 @@
 import { AppearanceMode } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
+import { z } from 'zod';
+
+import { themeStorageKey } from '@/consts';
 
 export const getTheme = (appearanceMode: AppearanceMode) => {
   if (appearanceMode !== AppearanceMode.SyncWithSystem) {
@@ -10,3 +14,9 @@ export const getTheme = (appearanceMode: AppearanceMode) => {
 
   return theme;
 };
+
+export const getThemeFromLocalStorage = () =>
+  getTheme(
+    trySafe(() => z.nativeEnum(AppearanceMode).parse(localStorage.getItem(themeStorageKey))) ??
+      AppearanceMode.SyncWithSystem
+  );

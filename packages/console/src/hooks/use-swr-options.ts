@@ -4,7 +4,7 @@ import useApi, { RequestError } from './use-api';
 import useSwrFetcher from './use-swr-fetcher';
 
 const useSwrOptions = (): SWRConfiguration => {
-  const api = useApi({ hideErrorToast: true });
+  const api = useApi();
   const fetcher = useSwrFetcher(api);
 
   return {
