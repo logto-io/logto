@@ -155,8 +155,6 @@ const sign_in_exp = {
   },
   preview: {
     title: '로그인 화면 미리보기',
-    dark: '다크',
-    light: '라이트',
     native: 'Native',
     desktop_web: 'Desktop 웹',
     mobile_web: 'Mobile 웹',

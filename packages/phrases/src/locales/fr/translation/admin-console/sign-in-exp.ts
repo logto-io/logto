@@ -162,8 +162,6 @@ const sign_in_exp = {
   },
   preview: {
     title: "Aperçu de l'expérience de connexion",
-    dark: 'Sombre',
-    light: 'Clair',
     native: 'Natif',
     desktop_web: 'Web ordinateur',
     mobile_web: 'Web mobile',

@@ -12,6 +12,7 @@ import useSWR from 'swr';
 import PhoneInfo from '@/assets/images/phone-info.svg';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import ToggleThemeButton from '@/components/ToggleThemeButton';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
@@ -26,33 +27,20 @@ type Props = {
 const Preview = ({ signInExperience, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [language, setLanguage] = useState<LanguageTag>('en');
-  const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
+  const [mode, setMode] = useState<Omit<AppearanceMode, AppearanceMode.SyncWithSystem>>(
+    AppearanceMode.LightMode
+  );
   const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
   const { customPhrases, languages } = useUiLanguages();
   const { userEndpoint } = useContext(AppEndpointsContext);
 
-  const modeOptions = useMemo(() => {
-    const light = { value: AppearanceMode.LightMode, title: t('sign_in_exp.preview.light') };
-    const dark = { value: AppearanceMode.DarkMode, title: t('sign_in_exp.preview.dark') };
-
-    if (!signInExperience?.color.isDarkModeEnabled) {
-      return [light];
-    }
-
-    return [light, dark];
-  }, [signInExperience, t]);
-
   useEffect(() => {
-    if (!modeOptions[0]) {
-      return;
+    if (!signInExperience?.color.isDarkModeEnabled) {
+      setMode(AppearanceMode.LightMode);
     }
-
-    if (!modeOptions.some(({ value }) => value === mode)) {
-      setMode(modeOptions[0].value);
-    }
-  }, [modeOptions, mode]);
+  }, [mode, signInExperience]);
 
   const availableLanguageOptions = useMemo(() => {
     const availableLanguageTags =
@@ -141,23 +129,17 @@ const Preview = ({ signInExperience, className }: Props) => {
       <div className={styles.header}>
         <div className={styles.title}>{t('sign_in_exp.preview.title')}</div>
         <div className={styles.selects}>
+          {signInExperience?.color.isDarkModeEnabled && (
+            <ToggleThemeButton value={mode} size="small" onToggle={setMode} />
+          )}
           <Select
+            className={styles.language}
             size="small"
             value={language}
             options={availableLanguageOptions}
             onChange={(value) => {
               if (value) {
                 setLanguage(value);
-              }
-            }}
-          />
-          <Select
-            size="small"
-            value={mode}
-            options={modeOptions}
-            onChange={(value) => {
-              if (value) {
-                setMode(value);
               }
             }}
           />
@@ -199,7 +181,7 @@ const Preview = ({ signInExperience, className }: Props) => {
         )}
       >
         <div className={styles.deviceWrapper}>
-          <div className={classNames(styles.device, styles[mode])}>
+          <div className={classNames(styles.device, styles[String(mode)])}>
             {platform !== 'desktopWeb' && (
               <div className={styles.topBar}>
                 <div className={styles.time}>{format(Date.now(), 'HH:mm')}</div>

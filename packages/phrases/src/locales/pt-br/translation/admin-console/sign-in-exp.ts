@@ -162,8 +162,6 @@ const sign_in_exp = {
   },
   preview: {
     title: 'Visualização de login',
-    dark: 'Escuro',
-    light: 'Claro',
     native: 'Native',
     desktop_web: 'Desktop Web',
     mobile_web: 'Mobile Web',
