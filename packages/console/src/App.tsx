@@ -17,6 +17,7 @@ import initI18n from '@/i18n/init';
 
 import { adminTenantEndpoint } from './consts';
 import { isCloud } from './consts/cloud';
+import ErrorBoundary from './containers/ErrorBoundary';
 import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppEndpointsProvider from './contexts/AppEndpointsProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
@@ -68,9 +69,11 @@ const Content = () => {
 
 const App = () => {
   return (
-    <TenantsProvider>
-      <Content />
-    </TenantsProvider>
+    <ErrorBoundary>
+      <TenantsProvider>
+        <Content />
+      </TenantsProvider>
+    </ErrorBoundary>
   );
 };
 export default App;

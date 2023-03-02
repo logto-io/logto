@@ -16,10 +16,8 @@ type State = {
 };
 
 class ErrorBoundary extends Component<Props, State> {
-  static getDerivedStateFromError(error: Error) {
-    const errorMessage = conditional(
-      typeof error === 'object' && typeof error.message === 'string' && error.message
-    );
+  static getDerivedStateFromError(error: Error): State {
+    const errorMessage = String(error);
 
     const callStack = conditional(
       typeof error === 'object' &&
@@ -35,6 +33,24 @@ class ErrorBoundary extends Component<Props, State> {
     errorMessage: undefined,
     hasError: false,
   };
+
+  promiseRejectionHandler(error: unknown) {
+    this.setState(
+      ErrorBoundary.getDerivedStateFromError(
+        error instanceof Error ? error : new Error(String(error))
+      )
+    );
+  }
+
+  componentDidMount(): void {
+    window.addEventListener('unhandledrejection', (event) => {
+      this.promiseRejectionHandler(event.reason);
+    });
+  }
+
+  componentWillUnmount(): void {
+    window.removeEventListener('unhandledrejection', this.promiseRejectionHandler);
+  }
 
   render() {
     const { children } = this.props;
