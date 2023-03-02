@@ -3,8 +3,8 @@ import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import EmptyState from '@/assets/icons/empty_state.svg';
-import EmptyStateDark from '@/assets/icons/empty_state_dark.svg';
+import EmptyStateDark from '@/assets/icons/empty-state-dark.svg';
+import EmptyState from '@/assets/icons/empty-state.svg';
 import Button from '@/components/Button';
 import NavBar from '@/components/NavBar';
 import { PageContext } from '@/hooks/use-page-context';
