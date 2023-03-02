@@ -62,7 +62,7 @@ const CreateForm = ({ onClose }: Props) => {
     void updateConfigs({
       applicationCreated: true,
       ...conditional(
-        createdApp.type === ApplicationType.MachineToMachine && { applicationM2mCreated: true }
+        createdApp.type === ApplicationType.MachineToMachine && { m2mApplicationCreated: true }
       ),
     });
   });

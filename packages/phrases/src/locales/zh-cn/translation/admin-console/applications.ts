@@ -41,6 +41,9 @@ const applications = {
     subtitle: '参考以下步骤完成你的应用设置。首先，选择你要使用的 SDK 类型：',
     description_by_sdk: '本教程向你演示如何在 {{sdk}} 应用中集成 Logto 登录功能',
   },
+  placeholder_title: 'Select an application type to continue', // UNTRANSLATED
+  placeholder_description:
+    'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.', // UNTRANSLATED
 };
 
 export default applications;

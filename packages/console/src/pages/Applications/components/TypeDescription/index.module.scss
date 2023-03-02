@@ -1,23 +1,37 @@
 @use '@/scss/underscore' as _;
 
-.title {
-  font: var(--font-label-2);
-  color: var(--color-text);
-  padding-right: _.unit(6); /* For check mark */
-}
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 
-.subtitle,
-.description {
-  margin-top: _.unit(3);
-  flex: 2;
-}
+  .title {
+    font: var(--font-label-2);
+    color: var(--color-text);
+    margin-top: _.unit(2.5);
+  }
 
-.subtitle {
-  font: var(--font-body-2);
-  color: var(--color-text);
-}
+  .subtitle,
+  .description {
+    margin-top: _.unit(3);
+    flex: 2;
+    font: var(--font-body-2);
+  }
 
-.description {
-  font: var(--font-body-2);
-  color: var(--color-text-secondary);
+  .subtitle {
+    color: var(--color-text);
+  }
+
+  .description {
+    color: var(--color-text-secondary);
+  }
+
+  &.small {
+    .subtitle,
+    .description {
+      margin-top: _.unit(1);
+      flex: 2;
+      font: var(--font-body-3);
+    }
+  }
 }

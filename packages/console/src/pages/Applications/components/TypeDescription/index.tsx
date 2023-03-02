@@ -1,4 +1,5 @@
 import type { ApplicationType } from '@logto/schemas';
+import classNames from 'classnames';
 
 import ApplicationIcon from '@/components/ApplicationIcon';
 
@@ -9,17 +10,16 @@ type Props = {
   subtitle: string;
   description: string;
   type: ApplicationType;
+  size?: 'large' | 'small';
 };
 
-const TypeDescription = ({ title, subtitle, description, type }: Props) => {
-  return (
-    <>
-      <ApplicationIcon type={type} />
-      <div className={styles.title}>{title}</div>
-      <div className={styles.subtitle}>{subtitle}</div>
-      <div className={styles.description}>{description}</div>
-    </>
-  );
-};
+const TypeDescription = ({ title, subtitle, description, type, size = 'large' }: Props) => (
+  <div className={classNames(styles.container, styles[size])}>
+    <ApplicationIcon type={type} />
+    <div className={styles.title}>{title}</div>
+    <div className={styles.subtitle}>{subtitle}</div>
+    <div className={styles.description}>{description}</div>
+  </div>
+);
 
 export default TypeDescription;
