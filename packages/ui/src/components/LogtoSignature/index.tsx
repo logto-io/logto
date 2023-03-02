@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import { useContext } from 'react';
 
-import LogtoLogtoDark from '@/assets/icons/logto_logo_dark.svg';
-import LogtoLogoLight from '@/assets/icons/logto_logo_light.svg';
-import LogtoLogoShadow from '@/assets/icons/logto_logo_shadow.svg';
+import LogtoLogtoDark from '@/assets/icons/logto-logo-dark.svg';
+import LogtoLogoLight from '@/assets/icons/logto-logo-light.svg';
+import LogtoLogoShadow from '@/assets/icons/logto-logo-shadow.svg';
 import { PageContext } from '@/hooks/use-page-context';
 
 import * as styles from './index.module.scss';
