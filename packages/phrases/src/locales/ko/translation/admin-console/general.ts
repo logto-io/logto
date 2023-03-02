@@ -49,7 +49,6 @@ const general = {
   try_now: 'Try Now', // UNTRANSLATED
   multiple_form_field: '(Multiple)', // UNTRANSLATED
   cap_limit: 'Cap limit', // UNTRANSLATED
-  select: 'Select', // UNTRANSLATED
 };
 
 export default general;

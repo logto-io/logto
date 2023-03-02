@@ -48,7 +48,7 @@ const ApplicationsPlaceholder = () => {
       void updateConfigs({
         applicationCreated: true,
         ...conditional(
-          createdApp.type === ApplicationType.MachineToMachine && { applicationM2mCreated: true }
+          createdApp.type === ApplicationType.MachineToMachine && { m2mApplicationCreated: true }
         ),
       });
     } finally {
@@ -83,7 +83,7 @@ const ApplicationsPlaceholder = () => {
             <Button
               className={styles.createButton}
               disabled={isCreating}
-              title="general.select"
+              title="general.create"
               onClick={async () => {
                 await handleCreate(type);
               }}
