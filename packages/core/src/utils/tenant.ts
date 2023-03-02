@@ -1,6 +1,7 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 
+import type UrlSet from '#src/env-set/UrlSet.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 
 const normalizePathname = (pathname: string) =>
@@ -12,6 +13,32 @@ const isEndpointOf = (current: URL, endpoint: URL) => {
     current.origin === endpoint.origin &&
     normalizePathname(current.pathname).startsWith(normalizePathname(endpoint.pathname))
   );
+};
+
+const matchDomainBasedTenantId = (pattern: URL, url: URL) => {
+  const toMatch = pattern.hostname.replace('*', '([^.]*)');
+  const matchedId = new RegExp(toMatch).exec(url.hostname)?.[1];
+
+  if (!matchedId || matchedId === '*') {
+    return;
+  }
+
+  if (isEndpointOf(url, getTenantEndpoint(matchedId, EnvSet.values))) {
+    return matchedId;
+  }
+};
+
+const matchPathBasedTenantId = (urlSet: UrlSet, url: URL) => {
+  const found = urlSet.deduplicated().find((value) => isEndpointOf(url, value));
+
+  if (!found) {
+    return;
+  }
+
+  const urlSegments = url.pathname.split('/');
+  const endpointSegments = found.pathname.split('/');
+
+  return urlSegments[found.pathname === '/' ? 1 : endpointSegments.length];
 };
 
 export const getTenantId = (url: URL) => {
@@ -40,20 +67,8 @@ export const getTenantId = (url: URL) => {
   }
 
   if (isPathBasedMultiTenancy) {
-    const urlSegments = url.pathname.split('/');
-    const endpointSegments = urlSet.endpoint.pathname.split('/');
-
-    return urlSegments[endpointSegments.length - 1];
+    return matchPathBasedTenantId(urlSet, url);
   }
 
-  const toMatch = urlSet.endpoint.hostname.replace('*', '([^.]*)');
-  const matchedId = new RegExp(toMatch).exec(url.hostname)?.[1];
-
-  if (!matchedId || matchedId === '*') {
-    return;
-  }
-
-  if (isEndpointOf(url, getTenantEndpoint(matchedId, EnvSet.values))) {
-    return matchedId;
-  }
+  return matchDomainBasedTenantId(urlSet.endpoint, url);
 };
