@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
@@ -28,6 +28,7 @@ const defaultValues: FormFields = {
 const ChangePasswordModal = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
+  const { state } = useLocation();
   const {
     watch,
     reset,
@@ -49,9 +50,9 @@ const ChangePasswordModal = () => {
   const onSubmit = () => {
     clearErrors();
     void handleSubmit(async ({ newPassword }) => {
-      await api.post(`me/password`, { json: { password: newPassword } }).json();
+      await api.post(`me/password`, { json: { password: newPassword } });
       toast.success(t('settings.password_changed'));
-      reset({});
+      reset();
       onClose();
     })();
   };
@@ -63,7 +64,13 @@ const ChangePasswordModal = () => {
   };
 
   return (
-    <MainFlowLikeModal title="profile.password.set_password" onClose={onClose}>
+    <MainFlowLikeModal
+      title="profile.password.set_password"
+      onClose={onClose}
+      onGoBack={() => {
+        navigate('../verify-password', { state });
+      }}
+    >
       <TextInput
         placeholder={t('profile.password.password')}
         {...register('newPassword', {

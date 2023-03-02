@@ -35,9 +35,9 @@ const Profile = () => {
               {
                 label: 'profile.link_account.email',
                 value: user.email,
-                actionName: 'profile.link',
+                actionName: 'profile.change',
                 action: () => {
-                  console.log('link email');
+                  navigate('link-email', { state: { email: user.email, action: 'changeEmail' } });
                 },
               },
             ]}
@@ -53,7 +53,9 @@ const Profile = () => {
               value: '******',
               actionName: 'profile.change',
               action: () => {
-                navigate('verify-password');
+                navigate('verify-password', {
+                  state: { email: user.email, action: 'changePassword' },
+                });
               },
             },
           ]}

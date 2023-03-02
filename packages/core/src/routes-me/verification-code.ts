@@ -1,8 +1,6 @@
 import { VerificationCodeType } from '@logto/connector-kit';
-import {
-  requestVerificationCodePayloadGuard,
-  verifyVerificationCodePayloadGuard,
-} from '@logto/schemas';
+import { emailRegEx } from '@logto/core-kit';
+import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
@@ -20,7 +18,7 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
   router.post(
     '/verification-codes',
     koaGuard({
-      body: requestVerificationCodePayloadGuard,
+      body: object({ email: string().regex(emailRegEx) }),
     }),
     async (ctx, next) => {
       const code = await createPasscode(undefined, codeType, ctx.guard.body);
@@ -35,7 +33,7 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
   router.post(
     '/verification-codes/verify',
     koaGuard({
-      body: verifyVerificationCodePayloadGuard,
+      body: object({ email: string().regex(emailRegEx), verificationCode: string().min(1) }),
     }),
     async (ctx, next) => {
       const { verificationCode, ...identifier } = ctx.guard.body;
