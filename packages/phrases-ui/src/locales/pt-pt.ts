@@ -111,7 +111,7 @@ const translation = {
     invalid_session: 'Sessão não encontrada. Volte e faça login novamente.',
   },
   demo_app: {
-    notification: 'Tip: Create a user in the user pool in order to test the sign-in experience.', // UNTRANSLATED
+    notification: 'Tip: Create an account first to test the sign-in experience.', // UNTRANSLATED
   },
 };
 
