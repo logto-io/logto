@@ -166,6 +166,8 @@ const sign_in_exp = {
   },
   preview: {
     title: 'Vorschau',
+    live_preview: 'Live preview', // UNTRANSLATED
+    live_preview_tip: 'Save to preview changes', // UNTRANSLATED
     native: 'Nativ',
     desktop_web: 'Desktop Web',
     mobile_web: 'Mobil Web',

@@ -161,6 +161,8 @@ const sign_in_exp = {
   },
   preview: {
     title: 'Oturum Açma Önizlemesi',
+    live_preview: 'Live preview', // UNTRANSLATED
+    live_preview_tip: 'Save to preview changes', // UNTRANSLATED
     native: 'Doğal',
     desktop_web: 'Masaüstü Web',
     mobile_web: 'Mobil Web',

@@ -162,6 +162,8 @@ const sign_in_exp = {
   },
   preview: {
     title: "Aperçu de l'expérience de connexion",
+    live_preview: 'Live preview', // UNTRANSLATED
+    live_preview_tip: 'Save to preview changes', // UNTRANSLATED
     native: 'Natif',
     desktop_web: 'Web ordinateur',
     mobile_web: 'Web mobile',

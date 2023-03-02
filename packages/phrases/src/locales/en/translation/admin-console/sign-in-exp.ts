@@ -160,6 +160,8 @@ const sign_in_exp = {
   },
   preview: {
     title: 'Sign-in preview',
+    live_preview: 'Live preview',
+    live_preview_tip: 'Save to preview changes',
     native: 'Native',
     desktop_web: 'Desktop Web',
     mobile_web: 'Mobile Web',

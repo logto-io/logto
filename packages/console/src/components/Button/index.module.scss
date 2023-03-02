@@ -48,12 +48,6 @@
     }
   }
 
-  .trailingIcon {
-    display: block;
-    width: 16px;
-    height: 16px;
-  }
-
   &.small {
     height: 30px;
     padding: 0 _.unit(3);
@@ -98,8 +92,8 @@
     border-style: solid;
 
     &:disabled {
-      background: var(--color-neutral-70);
       border-color: var(--color-neutral-70);
+      color: var(--color-neutral-70);
     }
 
     &:focus-visible {

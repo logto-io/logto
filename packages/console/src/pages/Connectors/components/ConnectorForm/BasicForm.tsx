@@ -43,6 +43,12 @@ const BasicForm = ({
     setDarkVisible((previous) => !previous);
   };
 
+  const toggleVisibleButtonTitle = darkVisible
+    ? 'connectors.guide.logo_dark_collapse'
+    : 'connectors.guide.logo_dark_show';
+
+  const ToggleVisibleCaretIcon = darkVisible ? CaretUp : CaretDown;
+
   const syncProfileOptions = [
     {
       value: SyncProfileMode.OnlyAtRegister,
@@ -93,12 +99,8 @@ const BasicForm = ({
             <Button
               size="small"
               type="text"
-              title={
-                darkVisible
-                  ? 'connectors.guide.logo_dark_collapse'
-                  : 'connectors.guide.logo_dark_show'
-              }
-              trailingIcon={darkVisible ? <CaretUp /> : <CaretDown />}
+              title={toggleVisibleButtonTitle}
+              trailingIcon={<ToggleVisibleCaretIcon className={styles.trailingIcon} />}
               onClick={toggleDarkVisible}
             />
           </div>
