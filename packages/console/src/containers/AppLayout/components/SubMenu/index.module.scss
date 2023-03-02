@@ -33,6 +33,7 @@
   background: var(--color-float);
   border: 1px solid var(--color-divider);
   border-radius: _.unit(2);
+  box-shadow: var(--shadow-2);
 
   &.visible {
     display: block;
