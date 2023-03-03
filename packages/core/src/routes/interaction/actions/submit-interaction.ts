@@ -16,6 +16,7 @@ import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import type { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import { conditionalArray } from '#src/utils/array.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 import type { WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
@@ -167,8 +168,10 @@ export default async function submitInteraction(
 
     const { client_id } = ctx.interactionDetails.params;
 
+    const { isCloud } = EnvSet.values;
+    const isInAdminTenant = getTenantId(ctx.URL) === adminTenantId;
     const isCreatingFirstAdminUser =
-      getTenantId(ctx.URL) === adminTenantId &&
+      isInAdminTenant &&
       String(client_id) === adminConsoleApplicationId &&
       !(await hasActiveUsers());
 
@@ -177,20 +180,18 @@ export default async function submitInteraction(
         id,
         ...upsertProfile,
       },
-      isCreatingFirstAdminUser
-        ? [
-            UserRole.User,
-            getManagementApiAdminName(defaultTenantId),
-            ...(EnvSet.values.isCloud ? [getManagementApiAdminName(adminTenantId)] : []),
-          ]
-        : []
+      conditionalArray<string>(
+        isInAdminTenant && UserRole.User,
+        isCreatingFirstAdminUser && getManagementApiAdminName(defaultTenantId),
+        isCreatingFirstAdminUser && isCloud && getManagementApiAdminName(adminTenantId)
+      )
     );
 
     // In OSS, we need to limit sign-in experience to "sign-in only" once
     // the first admin has been create since we don't want other unexpected registrations
     if (isCreatingFirstAdminUser) {
       await updateDefaultSignInExperience({
-        signInMode: EnvSet.values.isCloud ? SignInMode.SignInAndRegister : SignInMode.SignIn,
+        signInMode: isCloud ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       });
     }
 
