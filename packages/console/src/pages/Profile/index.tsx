@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
@@ -8,12 +9,12 @@ import * as resourcesStyles from '@/scss/resources.module.scss';
 
 import BasicUserInfoSection from './components/BasicUserInfoSection';
 import CardContent from './components/CardContent';
-import PasswordSection from './components/PasswordSection';
 import Section from './components/Section';
 import * as styles from './index.module.scss';
 
 const Profile = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const navigate = useNavigate();
   const [user, fetchUser] = useLogtoUserInfo();
 
   if (!user) {
@@ -43,7 +44,21 @@ const Profile = () => {
           />
         </Section>
       )}
-      <PasswordSection />
+      <Section title="profile.password.title">
+        <CardContent
+          title="profile.password.password_setting"
+          data={[
+            {
+              label: 'profile.password.password',
+              value: '******',
+              actionName: 'profile.change',
+              action: () => {
+                navigate('verify-password');
+              },
+            },
+          ]}
+        />
+      </Section>
       {isCloud && (
         <Section title="profile.delete_account.title">
           <div className={styles.deleteAccount}>

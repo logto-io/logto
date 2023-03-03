@@ -1,12 +1,13 @@
-import { passwordRegEx } from '@logto/core-kit';
-import { arbitraryObjectGuard } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
-import { object, string } from 'zod';
+import { emailRegEx, passwordRegEx, usernameRegEx } from '@logto/core-kit';
+import type { PasswordVerificationData } from '@logto/schemas';
+import { passwordVerificationGuard, arbitraryObjectGuard } from '@logto/schemas';
+import { literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { encryptUserPassword, verifyUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
+import { convertCookieToMap } from '#src/utils/cookie.js';
 
 import type { RouterInitArgs } from '../routes/types.js';
 import type { AuthedMeRouter } from './types.js';
@@ -20,24 +21,18 @@ export default function userRoutes<T extends AuthedMeRouter>(
     '/user',
     koaGuard({
       body: object({
-        avatar: string().optional(),
-        name: string().optional(),
-        username: string().optional(),
-      }),
+        username: string().regex(usernameRegEx),
+        primaryEmail: string().regex(emailRegEx),
+        name: string().or(literal('')).nullable(),
+        avatar: string().url().or(literal('')).nullable(),
+      }).partial(),
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
-      const { avatar, name, username } = ctx.guard.body;
-
       const user = await findUserById(userId);
       assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-      await updateUserById(userId, {
-        ...conditional(avatar !== undefined && { avatar }),
-        ...conditional(name !== undefined && { name }),
-        ...conditional(username !== undefined && { username }),
-      });
-
+      await updateUserById(userId, ctx.guard.body);
       ctx.status = 204;
 
       return next();
@@ -83,9 +78,22 @@ export default function userRoutes<T extends AuthedMeRouter>(
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
       const { password } = ctx.guard.body;
+      const cookieMap = convertCookieToMap(ctx.request.headers.cookie);
+      const sessionId = cookieMap.get('_session');
+
+      assertThat(Boolean(sessionId), new RequestError({ code: 'session.not_found', status: 401 }));
 
       const user = await findUserById(userId);
+      assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+
       await verifyUserPassword(user, password);
+
+      const customData: PasswordVerificationData = {
+        passwordVerifiedAt: Date.now(),
+        passwordVerifiedWithSessionId: sessionId,
+      };
+
+      await updateUserById(userId, { customData });
 
       ctx.status = 204;
 
@@ -100,8 +108,23 @@ export default function userRoutes<T extends AuthedMeRouter>(
       const { id: userId } = ctx.auth;
       const { password } = ctx.guard.body;
 
-      const user = await findUserById(userId);
-      assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+      const { customData, isSuspended } = await findUserById(userId);
+      assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+
+      const cookieMap = convertCookieToMap(ctx.request.headers.cookie);
+      const sessionId = cookieMap.get('_session');
+      const parsed = passwordVerificationGuard.safeParse(customData);
+
+      // The password verification status is considered valid if:
+      // 1. The password is verified within 10 minutes.
+      // 2. The password is verified with the same session.
+      const isValid =
+        parsed.success &&
+        Date.now() - parsed.data.passwordVerifiedAt < 1000 * 60 * 10 &&
+        Boolean(sessionId) &&
+        parsed.data.passwordVerifiedWithSessionId === sessionId;
+
+      assertThat(isValid, new RequestError({ code: 'session.verification_failed', status: 401 }));
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
       await updateUserById(userId, { passwordEncrypted, passwordEncryptionMethod });

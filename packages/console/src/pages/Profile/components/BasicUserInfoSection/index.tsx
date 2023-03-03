@@ -5,8 +5,8 @@ import { useState } from 'react';
 import UserAvatar from '@/components/UserAvatar';
 import { isCloud } from '@/consts/cloud';
 
-import type { BasicUserField } from '../../modals/BasicUserInfoUpdateModal';
-import BasicUserInfoUpdateModal from '../../modals/BasicUserInfoUpdateModal';
+import type { BasicUserField } from '../../containers/BasicUserInfoUpdateModal';
+import BasicUserInfoUpdateModal from '../../containers/BasicUserInfoUpdateModal';
 import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 import Section from '../Section';
@@ -38,20 +38,10 @@ const BasicUserInfoSection = ({ user, onUpdate }: Props) => {
       ];
 
   // Get the value of the editing simple field (avatar, username or name)
-  const getSimpleFieldValue = (field?: BasicUserField): string => {
-    if (field === 'avatar') {
-      return avatar ?? '';
-    }
+  const getSimpleFieldValue = (field: BasicUserField): string => {
+    const value = field === 'avatar' ? avatar : user[field];
 
-    if (field === 'name') {
-      return name ?? '';
-    }
-
-    if (field === 'username') {
-      return username ?? '';
-    }
-
-    return '';
+    return value ?? '';
   };
 
   return (
@@ -81,15 +71,17 @@ const BasicUserInfoSection = ({ user, onUpdate }: Props) => {
           ...conditionalUsername,
         ]}
       />
-      <BasicUserInfoUpdateModal
-        value={getSimpleFieldValue(editingField)}
-        field={editingField}
-        isOpen={isUpdateModalOpen}
-        onClose={() => {
-          setIsUpdateModalOpen(false);
-          onUpdate?.();
-        }}
-      />
+      {editingField && (
+        <BasicUserInfoUpdateModal
+          value={getSimpleFieldValue(editingField)}
+          field={editingField}
+          isOpen={isUpdateModalOpen}
+          onClose={() => {
+            setIsUpdateModalOpen(false);
+            onUpdate?.();
+          }}
+        />
+      )}
     </Section>
   );
 };

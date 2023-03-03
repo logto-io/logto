@@ -46,6 +46,9 @@ import UserSettings from '@/pages/UserDetails/UserSettings';
 import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
+import ChangePasswordModal from '../Profile/containers/ChangePasswordModal';
+import VerifyPasswordModal from '../Profile/containers/VerifyPasswordModal';
+
 const Main = () => {
   const swrOptions = useSwrOptions();
   const { userEndpoint } = useContext(AppEndpointsContext);
@@ -132,7 +135,11 @@ const Main = () => {
                   </Route>
                 </Route>
                 <Route path="settings" element={<Settings />} />
-                <Route path="profile" element={<Profile />} />
+                <Route path="profile">
+                  <Route index element={<Profile />} />
+                  <Route path="verify-password" element={<VerifyPasswordModal />} />
+                  <Route path="change-password" element={<ChangePasswordModal />} />
+                </Route>
               </Route>
             </Route>
           </Routes>
