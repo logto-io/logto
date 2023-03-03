@@ -1,0 +1,92 @@
+@use '@/scss/underscore' as _;
+
+.preview {
+  background: var(--color-surface-variant);
+
+  iframe {
+    border: none;
+  }
+
+  &.web {
+    .device {
+      width: 480px;
+      height: 380px;
+      position: relative;
+      background: var(--color-surface-1);
+      margin: 0 auto;
+
+      iframe {
+        width: 960px;
+        height: 760px;
+        transform: scale(0.5);
+        position: absolute;
+        top: -190px;
+        left: -240px;
+        background: var(--color-surface-1);
+      }
+    }
+  }
+
+  &.mobile {
+    padding: _.unit(10) 0;
+    height: 500px;
+    position: relative;
+
+    .deviceWrapper {
+      width: 390px;
+      height: 450px;
+      margin: 0 auto;
+      transform: scale(0.5);
+      transform-origin: top center;
+
+      .device {
+        border-radius: 26px;
+        overflow: hidden;
+
+        .topBar {
+          display: flex;
+          align-items: center;
+          padding: _.unit(3) _.unit(6);
+
+          .time {
+            flex: 1;
+            font: var(--font-label-2);
+          }
+        }
+
+        &.dark {
+          // Sync with iframe's UI color
+          background: #1a1c1d;
+
+          .topBar {
+            color: #fff;
+          }
+        }
+
+        &.light {
+          // Sync with iframe's UI color
+          background: #fff;
+
+          .topBar {
+            color: #000;
+          }
+        }
+
+        iframe {
+          width: 390px;
+          height: 808px;
+        }
+      }
+
+      @media screen and (min-height: 1100px) {
+        transform: unset;
+        height: 900px;
+      }
+
+      @media screen and (min-height: 900px) and (max-height: 1100px) {
+        transform: scale(0.75);
+        height: 675px;
+      }
+    }
+  }
+}
