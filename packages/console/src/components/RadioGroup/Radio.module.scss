@@ -219,17 +219,6 @@
 }
 
 .compact:not(.disabled) {
-  &:focus {
-    color: var(--color-text-link);
-    border-color: var(--color-primary);
-
-    .content {
-      .icon {
-        color: var(--color-primary);
-      }
-    }
-  }
-
   &:hover {
     color: var(--color-text-link);
     border-color: var(--color-primary);

@@ -10,6 +10,7 @@ type Props = {
   options: Option[];
   value: string[];
   onChange: (value: string[]) => void;
+  isNotAllowEmpty?: boolean;
   className?: string;
   optionClassName?: string;
 };
@@ -18,12 +19,17 @@ const MultiCardSelector = ({
   options,
   value: selectedValues,
   onChange,
+  isNotAllowEmpty = false,
   className,
   optionClassName,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const onToggle = (value: string) => {
+    if (selectedValues.includes(value) && selectedValues.length === 1 && isNotAllowEmpty) {
+      return;
+    }
+
     onChange(
       selectedValues.includes(value)
         ? selectedValues.filter((selected) => selected !== value)

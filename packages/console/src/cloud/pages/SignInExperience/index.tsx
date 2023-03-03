@@ -1,6 +1,10 @@
+import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
+import { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import useSWR from 'swr';
 
 import Bulb from '@/assets/images/bulb.svg';
 import Tools from '@/assets/images/tools.svg';
@@ -8,24 +12,50 @@ import ActionBar from '@/cloud/components/ActionBar';
 import { CardSelector, MultiCardSelector } from '@/cloud/components/CardSelector';
 import { defaultOnboardingSieConfig } from '@/cloud/constants';
 import * as pageLayout from '@/cloud/scss/layout.module.scss';
-import type { OnboardingSieConfig } from '@/cloud/types';
+import type { OnboardSieConfig } from '@/cloud/types';
 import { OnboardPage } from '@/cloud/types';
 import { getOnboardPagePathname } from '@/cloud/utils';
 import Button from '@/components/Button';
 import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
+import type { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 
+import Preview from './components/Preview';
 import * as styles from './index.module.scss';
 import { authenticationOptions, identifierOptions } from './options';
+import { parser } from './utils';
 
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
+  const { data: signInExperience, mutate } = useSWR<SignInExperienceType, RequestError>(
+    'api/sign-in-exp'
+  );
+  const api = useApi();
 
-  const { reset, control, handleSubmit } = useForm<OnboardingSieConfig>({
-    defaultValues: defaultOnboardingSieConfig,
-  });
+  const {
+    reset,
+    control,
+    watch,
+    handleSubmit,
+    formState: { isSubmitting, isDirty },
+  } = useForm<OnboardSieConfig>({ defaultValues: defaultOnboardingSieConfig });
+
+  useEffect(() => {
+    if (signInExperience) {
+      reset(parser.signInExperienceToOnboardSieConfig(signInExperience));
+    }
+  }, [reset, signInExperience]);
+
+  const onboardingSieConfig = watch();
+
+  const previewSieConfig = useMemo(() => {
+    if (signInExperience) {
+      return parser.onboardSieConfigToSignInExperience(onboardingSieConfig, signInExperience);
+    }
+  }, [onboardingSieConfig, signInExperience]);
 
   const handleInspireMe = () => {
     // TODO @xiaoyijun
@@ -34,12 +64,26 @@ const SignInExperience = () => {
   };
 
   const onSubmit = handleSubmit(async (formData) => {
-    // TODO @xiaoyijun convert to sign in experience config data and update
-    console.log(formData);
+    if (!signInExperience) {
+      return;
+    }
+
+    const updatedData = await api
+      .patch('api/sign-in-exp', {
+        json: parser.onboardSieConfigToSignInExperience(formData, signInExperience),
+      })
+      .json<SignInExperienceType>();
+
+    void mutate(updatedData);
   });
 
   const handleBack = () => {
     navigate(getOnboardPagePathname(OnboardPage.AboutUser));
+  };
+
+  const handleSave = async () => {
+    await onSubmit();
+    toast.success(t('general.saved'));
   };
 
   const handleNext = async () => {
@@ -49,8 +93,11 @@ const SignInExperience = () => {
 
   return (
     <div className={pageLayout.page}>
-      <OverlayScrollbar className={pageLayout.contentContainer}>
-        <div className={styles.content}>
+      <div className={styles.content}>
+        <OverlayScrollbar
+          options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 500 } }}
+          className={styles.configWrapper}
+        >
           <div className={styles.config}>
             <Tools />
             <div className={styles.title}>{t('cloud.sie.title')}</div>
@@ -102,9 +149,10 @@ const SignInExperience = () => {
               <Controller
                 name="authentications"
                 control={control}
-                defaultValue={[]}
+                defaultValue={defaultOnboardingSieConfig.authentications}
                 render={({ field: { value, onChange } }) => (
                   <MultiCardSelector
+                    isNotAllowEmpty
                     className={styles.authnSelector}
                     value={value}
                     options={authenticationOptions}
@@ -121,12 +169,30 @@ const SignInExperience = () => {
               TBD
             </FormField>
           </div>
-          <div className={styles.preview}>Preview(TBD)</div>
-        </div>
-      </OverlayScrollbar>
+        </OverlayScrollbar>
+        <Preview
+          className={styles.preview}
+          signInExperience={previewSieConfig}
+          isLivePreviewDisabled={isDirty}
+        />
+      </div>
+
       <ActionBar step={3}>
-        <Button type="primary" title="cloud.sie.finish_and_done" onClick={handleNext} />
-        <Button title="general.back" onClick={handleBack} />
+        <div className={styles.continueActions}>
+          <Button
+            type="outline"
+            title="general.save"
+            disabled={isSubmitting}
+            onClick={handleSave}
+          />
+          <Button
+            type="primary"
+            title="cloud.sie.finish_and_done"
+            disabled={isSubmitting}
+            onClick={handleNext}
+          />
+        </div>
+        <Button title="general.back" disabled={isSubmitting} onClick={handleBack} />
       </ActionBar>
     </div>
   );

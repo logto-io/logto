@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.tab {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  font: var(--font-label-2);
+  padding: _.unit(1) _.unit(2);
+  user-select: none;
+  cursor: pointer;
+
+  .icon {
+    color: var(--color-primary);
+    margin-right: _.unit(2);
+
+    > svg {
+      display: block;
+    }
+  }
+
+  &.selected {
+    color: var(--color-layer-1);
+    background-color: var(--color-inverse-primary);
+
+    .icon {
+      color: var(--color-static-white);
+      opacity: 70%;
+    }
+  }
+
+  &:not(.selected):hover {
+    background-color: var(--color-hover-variant);
+  }
+}

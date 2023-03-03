@@ -72,7 +72,7 @@ export enum Authentication {
   VerificationCode = 'verificationCode',
 }
 
-export type OnboardingSieConfig = {
+export type OnboardSieConfig = {
   color: string;
   identifier: SignInIdentifier;
   authentications: Authentication[];

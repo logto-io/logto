@@ -90,6 +90,10 @@ const cloud = {
     },
     social_field: 'Social sign in',
     finish_and_done: 'Finish and done',
+    preview: {
+      mobile_tab: 'Mobile',
+      web_tab: 'Web',
+    },
   },
 };
 
