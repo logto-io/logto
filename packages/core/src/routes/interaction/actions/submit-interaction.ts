@@ -10,6 +10,7 @@ import {
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
@@ -176,13 +177,21 @@ export default async function submitInteraction(
         id,
         ...upsertProfile,
       },
-      isCreatingFirstAdminUser ? [UserRole.User, getManagementApiAdminName(defaultTenantId)] : []
+      isCreatingFirstAdminUser
+        ? [
+            UserRole.User,
+            getManagementApiAdminName(defaultTenantId),
+            ...(EnvSet.values.isCloud ? [getManagementApiAdminName(adminTenantId)] : []),
+          ]
+        : []
     );
 
     // In OSS, we need to limit sign-in experience to "sign-in only" once
     // the first admin has been create since we don't want other unexpected registrations
     if (isCreatingFirstAdminUser) {
-      await updateDefaultSignInExperience({ signInMode: SignInMode.SignIn });
+      await updateDefaultSignInExperience({
+        signInMode: EnvSet.values.isCloud ? SignInMode.SignInAndRegister : SignInMode.SignIn,
+      });
     }
 
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });

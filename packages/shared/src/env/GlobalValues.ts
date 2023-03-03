@@ -57,6 +57,8 @@ export default class GlobalValues {
   public readonly isDomainBasedMultiTenancy = this.urlSet.endpoint.hostname.includes('*');
 
   /**
+   * **NOTE: This is an internal dev-only feature.**
+   *
    * This value indicates path-based multi-tenancy (PBMT) is enabled by setting env variable `PATH_BASED_MULTI_TENANCY` to a truthy value.
    *
    * Note the value will always be `false` if domain-based multi-tenancy is enabled.
@@ -85,6 +87,9 @@ export default class GlobalValues {
     return this.isDomainBasedMultiTenancy || this.isPathBasedMultiTenancy;
   }
 
+  /** If the env explicitly indicates it's in the cloud environment. */
+  public readonly isCloud = yes(getEnv('IS_CLOUD'));
+
   // eslint-disable-next-line unicorn/consistent-function-scoping
   public readonly databaseUrl = tryThat(() => assertEnv('DB_URL'), throwErrorWithDsnMessage);
   public readonly developmentTenantId = getEnv('DEVELOPMENT_TENANT_ID');
@@ -99,5 +104,16 @@ export default class GlobalValues {
 
   public get endpoint(): URL {
     return this.urlSet.endpoint;
+  }
+
+  constructor() {
+    if (this.isPathBasedMultiTenancy) {
+      console.warn(
+        '\n****** WARNING ******\n\n' +
+          'Path-based multi-tenancy is an internal dev-only feature. It is unstable and not intended for production use.\n\n' +
+          'Known issue: Sign-in experience is unavailable in user tenants.\n\n' +
+          '****** WARNING ******\n'
+      );
+    }
   }
 }
