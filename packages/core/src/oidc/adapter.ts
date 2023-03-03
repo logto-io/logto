@@ -1,6 +1,6 @@
 import type { CreateApplication } from '@logto/schemas';
 import { ApplicationType, adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas';
-import { tryThat } from '@logto/shared';
+import { tryThat, appendPath } from '@logto/shared';
 import { addSeconds } from 'date-fns';
 import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import { errors } from 'oidc-provider';
@@ -9,7 +9,6 @@ import snakecaseKeys from 'snakecase-keys';
 import { EnvSet } from '#src/env-set/index.js';
 import { getTenantUrls } from '#src/env-set/utils.js';
 import type Queries from '#src/tenants/Queries.js';
-import { appendPath } from '#src/utils/url.js';
 
 import { getConstantClientMetadata } from './utils.js';
 

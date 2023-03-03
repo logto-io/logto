@@ -1,6 +1,6 @@
-import { tryThat } from '@logto/shared';
 import { assertEnv, getEnv, getEnvAsStringArray, yes } from '@silverhand/essentials';
 
+import { tryThat } from '../utils/index.js';
 import UrlSet from './UrlSet.js';
 import { throwErrorWithDsnMessage } from './throw-errors.js';
 

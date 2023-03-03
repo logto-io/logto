@@ -7,13 +7,12 @@ import {
   LogtoOidcConfigKey,
   LogtoConfigs,
 } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
+import { convertToIdentifiers, appendPath } from '@logto/shared';
 import type { JWK } from 'jose';
 import { sql } from 'slonik';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import { exportJWK } from '#src/utils/jwks.js';
-import { appendPath } from '#src/utils/url.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 

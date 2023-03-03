@@ -1,7 +1,7 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
+import type { UrlSet } from '@logto/shared';
 import { conditionalString } from '@silverhand/essentials';
 
-import type UrlSet from '#src/env-set/UrlSet.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 
 const normalizePathname = (pathname: string) =>

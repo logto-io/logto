@@ -122,6 +122,7 @@ importers:
       decamelize: ^6.0.0
       dotenv: ^16.0.0
       eslint: ^8.21.0
+      fetch-retry: ^5.0.4
       find-up: ^6.3.0
       http-proxy: ^1.18.1
       jose: ^4.11.0
@@ -142,6 +143,7 @@ importers:
       chalk: 5.1.2
       decamelize: 6.0.0
       dotenv: 16.0.0
+      fetch-retry: 5.0.4
       find-up: 6.3.0
       http-proxy: 1.18.1
       jose: 4.11.1
@@ -702,6 +704,7 @@ importers:
       '@silverhand/ts-config': 2.0.3
       '@types/jest': ^29.1.2
       '@types/node': ^18.11.18
+      chalk: ^5.0.0
       eslint: ^8.34.0
       find-up: ^6.3.0
       jest: ^29.1.2
@@ -714,6 +717,7 @@ importers:
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 2.2.0
+      chalk: 5.1.2
       find-up: 6.3.0
       nanoid: 4.0.0
       slonik: 30.1.2
@@ -7124,6 +7128,10 @@ packages:
       node-domexception: 1.0.0
       web-streams-polyfill: 3.2.1
     dev: true
+
+  /fetch-retry/5.0.4:
+    resolution: {integrity: sha512-LXcdgpdcVedccGg0AZqg+S8lX/FCdwXD92WNZ5k5qsb0irRhSFsBOpcJt7oevyqT2/C2nEE0zSFNdBEpj3YOSw==}
+    dev: false
 
   /figures/5.0.0:
     resolution: {integrity: sha512-ej8ksPF4x6e5wvK9yevct0UCXh8TTFlWGVLlgjZuoBH1HwjIfKE/IdL5mq89sFA7zELi1VhKpmtDnrs7zWyeyg==}

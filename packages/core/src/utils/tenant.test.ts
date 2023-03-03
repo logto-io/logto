@@ -1,7 +1,6 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
+import { GlobalValues } from '@logto/shared';
 import { createMockUtils } from '@logto/shared/esm';
-
-import GlobalValues from '#src/env-set/GlobalValues.js';
 
 const { jest } = import.meta;
 

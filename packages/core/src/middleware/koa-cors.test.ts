@@ -1,8 +1,7 @@
+import { GlobalValues, UrlSet } from '@logto/shared';
 import { createMockUtils } from '@logto/shared/esm';
 import type { RequestMethod } from 'node-mocks-http';
 
-import GlobalValues from '#src/env-set/GlobalValues.js';
-import UrlSet from '#src/env-set/UrlSet.js';
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 
 const { jest } = import.meta;

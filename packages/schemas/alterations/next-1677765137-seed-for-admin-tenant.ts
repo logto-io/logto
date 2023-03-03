@@ -15,6 +15,11 @@ const addApiData = async (pool: CommonQueryMethods) => {
     resourceId: generateStandardId(),
     scopeId: generateStandardId(),
   };
+  const adminRole = {
+    id: generateStandardId(),
+    name: 'admin:admin',
+    description: 'Admin role for Logto.',
+  };
 
   await pool.query(sql`
     insert into resources (tenant_id, id, indicator, name)
@@ -27,7 +32,7 @@ const addApiData = async (pool: CommonQueryMethods) => {
         ${adminTenantId},
         ${cloudApi.resourceId},
         'https://cloud.logto.io/api',
-        'Logto Management API for tenant admin'
+        'Logto Cloud API'
       );
   `);
   await pool.query(sql`
@@ -37,17 +42,26 @@ const addApiData = async (pool: CommonQueryMethods) => {
         ${adminApi.scopeId},
         'all',
         'Default scope for Management API, allows all permissions.',
-        ${adminApi.scopeId}
+        ${adminApi.resourceId}
       ), (
         ${adminTenantId},
         ${cloudApi.scopeId},
         'create:tenant',
         'Allow creating new tenants.',
-        ${cloudApi.scopeId}
+        ${cloudApi.resourceId}
+      );
+  `);
+  await pool.query(sql`
+    insert into roles (tenant_id, id, name, description)
+      values (
+        ${adminTenantId},
+        ${adminRole.id},
+        ${adminRole.name},
+        ${adminRole.description}
       );
   `);
 
-  const { id: roleId } = await pool.one<{ id: string }>(sql`
+  const { id: userRoleId } = await pool.one<{ id: string }>(sql`
     select id from roles
     where tenant_id = ${adminTenantId}
     and name = 'user'
@@ -58,13 +72,13 @@ const addApiData = async (pool: CommonQueryMethods) => {
       values (
         ${adminTenantId},
         ${generateStandardId()},
-        ${roleId},
-        ${adminApi.scopeId}
+        ${userRoleId},
+        ${cloudApi.scopeId}
       ), (
         ${adminTenantId},
         ${generateStandardId()},
-        ${roleId},
-        ${cloudApi.scopeId}
+        ${adminRole.id},
+        ${adminApi.scopeId}
       );
   `);
 };
@@ -93,9 +107,19 @@ const alteration: AlterationScript = {
   },
   down: async (pool) => {
     await pool.query(sql`
-      delete from applications
-        where tenant_id = 'admin'
-        and id = 'admin-console';
+      delete from resources
+        where tenant_id = ${adminTenantId}
+        and indicator in ('https://admin.logto.app/api', 'https://cloud.logto.io/api');
+    `);
+    await pool.query(sql`
+      delete from roles
+        where tenant_id = ${adminTenantId}
+        and name = 'admin:admin';
+    `);
+    await pool.query(sql`
+      delete from logto_configs
+        where tenant_id = ${adminTenantId}
+        and key = 'adminConsole';
     `);
   },
 };

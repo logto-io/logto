@@ -57,6 +57,7 @@
     "@logto/core-kit": "workspace:*",
     "@logto/schemas": "workspace:*",
     "@silverhand/essentials": "2.2.0",
+    "chalk": "^5.0.0",
     "find-up": "^6.3.0",
     "nanoid": "^4.0.0",
     "slonik": "^30.0.0"

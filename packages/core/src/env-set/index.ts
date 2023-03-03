@@ -1,3 +1,4 @@
+import { GlobalValues, appendPath } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
 import type { PostgreSql } from '@withtyped/postgres';
 import type { QueryClient } from '@withtyped/server';
@@ -5,9 +6,7 @@ import type { DatabasePool } from 'slonik';
 
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
-import { appendPath } from '#src/utils/url.js';
 
-import GlobalValues from './GlobalValues.js';
 import createPool from './create-pool.js';
 import createQueryClient from './create-query-client.js';
 import loadOidcValues from './oidc.js';

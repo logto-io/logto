@@ -1,10 +1,9 @@
 import path from 'path';
 
 import { adminTenantId } from '@logto/schemas';
+import type { GlobalValues } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
 import { deduplicate, trySafe } from '@silverhand/essentials';
-
-import type GlobalValues from './GlobalValues.js';
 
 export const getTenantEndpoint = (
   id: string,

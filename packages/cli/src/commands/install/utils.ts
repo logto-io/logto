@@ -136,7 +136,7 @@ export const decompress = async (toPath: string, tarPath: string) => {
 export const seedDatabase = async (instancePath: string) => {
   try {
     const pool = await createPoolAndDatabaseIfNeeded();
-    await seedByPool(pool, 'all');
+    await seedByPool(pool);
     await pool.end();
   } catch (error: unknown) {
     console.error(error);
