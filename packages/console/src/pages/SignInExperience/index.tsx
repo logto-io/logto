@@ -14,6 +14,7 @@ import RequestDataError from '@/components/RequestDataError';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { getBasename } from '@/consts';
 import { isCloud } from '@/consts/cloud';
 import { SignInExperiencePage } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
@@ -220,7 +221,10 @@ const SignInExperience = () => {
           {dataToCompare && <SignUpAndSignInChangePreview before={data} after={dataToCompare} />}
         </ConfirmModal>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} parentPath="/sign-in-experience" />
+      <UnsavedChangesAlertModal
+        hasUnsavedChanges={isDirty}
+        parentPath={`${getBasename()}/sign-in-experience`}
+      />
     </PageWrapper>
   );
 };
