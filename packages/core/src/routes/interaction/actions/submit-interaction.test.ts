@@ -119,7 +119,7 @@ describe('submit action', () => {
         id: 'uid',
         ...upsertProfile,
       },
-      []
+      ['user']
     );
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'uid' },

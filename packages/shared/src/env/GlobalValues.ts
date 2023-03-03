@@ -109,10 +109,13 @@ export default class GlobalValues {
   constructor() {
     if (this.isPathBasedMultiTenancy) {
       console.warn(
-        '\n****** WARNING ******\n\n' +
+        '\n****** LOGTO WARNING ******\n\n' +
           'Path-based multi-tenancy is an internal dev-only feature. It is unstable and not intended for production use.\n\n' +
-          'Known issue: Sign-in experience is unavailable in user tenants.\n\n' +
-          '****** WARNING ******\n'
+          'Known issues:\n\n' +
+          '- Sign-in experience is unavailable in user tenants.\n' +
+          '- The Admin Console may display incorrect user endpoints on multiple pages, such as guide, config, etc.' +
+          ' This issue is caused by the native URL constructor new URL(), which overrides the base pathname.\n\n' +
+          '****** END LOGTO WARNING ******\n'
       );
     }
   }

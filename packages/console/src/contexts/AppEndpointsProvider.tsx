@@ -11,8 +11,12 @@ type Props = {
 };
 
 export type AppEndpoints = {
+  /**
+   * The Logto endpoint for the current tenant.
+   *
+   * Always use this value as the base URL when referring to the Logto URL of the current user's tenant.
+   */
   userEndpoint?: URL;
-  adminEndpoint?: URL;
 };
 
 export const AppEndpointsContext = createContext<AppEndpoints>({});
