@@ -16,7 +16,9 @@ import { log } from '../../../utils.js';
 export const appendAdminConsoleRedirectUris = async (pool: CommonQueryMethods) => {
   const redirectUris = new GlobalValues().cloudUrlSet
     .deduplicated()
-    .map((endpoint) => appendPath(endpoint, defaultTenantId, 'callback'));
+    .flatMap((endpoint) =>
+      [defaultTenantId, adminTenantId].map((tenantId) => appendPath(endpoint, tenantId, 'callback'))
+    );
 
   const metadataKey = sql.identifier(['oidc_client_metadata']);
 
