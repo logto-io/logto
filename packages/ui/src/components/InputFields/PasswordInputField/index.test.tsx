@@ -52,7 +52,7 @@ describe('Input Field UI Component', () => {
     expect(visibilityButton).not.toBeNull();
 
     if (visibilityButton) {
-      fireEvent.click(visibilityButton);
+      fireEvent.mouseDown(visibilityButton);
       expect(inputElement.type).toEqual('text');
     }
   });
