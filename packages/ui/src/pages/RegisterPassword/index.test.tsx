@@ -29,9 +29,29 @@ describe('<RegisterPassword />', () => {
     useLocationMock.mockImplementation(() => ({ state: { username: 'username' } }));
   });
 
-  it('render PasswordRegister page properly', () => {
+  it('render PasswordRegister page without confirm password input field properly', () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider>
+        <RegisterPassword />
+      </SettingsProvider>
+    );
+
+    expect(container.querySelector('input[name="newPassword"]')).not.toBeNull();
+    expect(container.querySelector('input[name="confirmPassword"]')).toBeNull();
+    expect(queryByText('action.save_password')).not.toBeNull();
+  });
+
+  it('render PasswordRegister page with confirm password input field properly with forgot password disabled', () => {
+    const { queryByText, container } = renderWithPageContext(
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          forgotPassword: {
+            email: false,
+            phone: false,
+          },
+        }}
+      >
         <RegisterPassword />
       </SettingsProvider>
     );
@@ -62,7 +82,15 @@ describe('<RegisterPassword />', () => {
 
   it('submit properly', async () => {
     const { getByText, container } = renderWithPageContext(
-      <SettingsProvider>
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          forgotPassword: {
+            email: false,
+            phone: false,
+          },
+        }}
+      >
         <RegisterPassword />
       </SettingsProvider>
     );

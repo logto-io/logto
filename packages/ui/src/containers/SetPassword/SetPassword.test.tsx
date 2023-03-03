@@ -1,6 +1,6 @@
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
 
-import SetPassword from '.';
+import SetPassword from './SetPassword';
 
 describe('<SetPassword />', () => {
   const submit = jest.fn();
