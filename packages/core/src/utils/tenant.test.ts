@@ -77,7 +77,7 @@ describe('getTenantId()', () => {
       ADMIN_DISABLE_LOCALHOST: '1',
     };
 
-    expect(getTenantId(new URL('http://localhost:5000/app///asdasd'))).toBe(defaultTenantId);
+    expect(getTenantId(new URL('http://localhost:5000/app///asdasd'))).toBe(undefined);
     expect(getTenantId(new URL('http://localhost:3002/app///asdasd'))).toBe(undefined);
     expect(getTenantId(new URL('https://user.foo.logto.mock/app'))).toBe('foo');
     expect(getTenantId(new URL('https://user.admin.logto.mock/app//'))).toBe(undefined); // Admin endpoint is explicitly set
@@ -91,5 +91,22 @@ describe('getTenantId()', () => {
       ADMIN_DISABLE_LOCALHOST: '1',
     };
     expect(getTenantId(new URL('https://user.admin.logto.mock/app//'))).toBe('admin');
+  });
+
+  it('should resolve proper tenant ID for path-based multi-tenancy', async () => {
+    process.env = {
+      ...backupEnv,
+      NODE_ENV: 'production',
+      PORT: '5000',
+      ENDPOINT: 'https://user.logto.mock/app',
+      PATH_BASED_MULTI_TENANCY: '1',
+    };
+
+    expect(getTenantId(new URL('http://localhost:5000/app///asdasd'))).toBe('app');
+    expect(getTenantId(new URL('http://localhost:3002///bar///asdasd'))).toBe(adminTenantId);
+    expect(getTenantId(new URL('https://user.foo.logto.mock/app'))).toBe(undefined);
+    expect(getTenantId(new URL('https://user.admin.logto.mock/app//'))).toBe(undefined);
+    expect(getTenantId(new URL('https://user.logto.mock/app'))).toBe(undefined);
+    expect(getTenantId(new URL('https://user.logto.mock/app/admin'))).toBe('admin');
   });
 });

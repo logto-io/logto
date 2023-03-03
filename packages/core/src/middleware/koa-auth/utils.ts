@@ -27,9 +27,13 @@ export const getAdminTenantTokenValidationSet = async (): Promise<{
   keys: JWK[];
   issuer: string[];
 }> => {
-  const { isDomainBasedMultiTenancy, adminUrlSet } = EnvSet.values;
+  const { isDomainBasedMultiTenancy, isPathBasedMultiTenancy, adminUrlSet } = EnvSet.values;
 
-  if (!isDomainBasedMultiTenancy && adminUrlSet.deduplicated().length === 0) {
+  if (
+    !isDomainBasedMultiTenancy &&
+    !isPathBasedMultiTenancy &&
+    adminUrlSet.deduplicated().length === 0
+  ) {
     return { keys: [], issuer: [] };
   }
 
@@ -48,7 +52,7 @@ export const getAdminTenantTokenValidationSet = async (): Promise<{
     keys: await Promise.all(publicKeys.map(async (key) => exportJWK(key))),
     issuer: [
       appendPath(
-        isDomainBasedMultiTenancy
+        isDomainBasedMultiTenancy || isPathBasedMultiTenancy
           ? getTenantEndpoint(adminTenantId, EnvSet.values)
           : adminUrlSet.endpoint,
         '/oidc'
