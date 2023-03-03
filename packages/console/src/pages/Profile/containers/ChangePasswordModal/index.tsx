@@ -5,8 +5,10 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import ClearInput from '@/assets/images/clear-input.svg';
 import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
+import IconButton from '@/components/IconButton';
 import TextInput from '@/components/TextInput';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
@@ -35,6 +37,7 @@ const ChangePasswordModal = () => {
     register,
     clearErrors,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     reValidateMode: 'onBlur',
@@ -82,6 +85,16 @@ const ChangePasswordModal = () => {
         })}
         type={showPassword ? 'text' : 'password'}
         errorMessage={errors.newPassword?.message}
+        suffix={
+          <IconButton
+            onMouseDown={(event) => {
+              event.preventDefault();
+              setValue('newPassword', '');
+            }}
+          >
+            <ClearInput />
+          </IconButton>
+        }
         onKeyDown={onKeyDown}
       />
       <TextInput
@@ -91,6 +104,16 @@ const ChangePasswordModal = () => {
         })}
         type={showPassword ? 'text' : 'password'}
         errorMessage={errors.confirmPassword?.message}
+        suffix={
+          <IconButton
+            onMouseDown={(event) => {
+              event.preventDefault();
+              setValue('confirmPassword', '');
+            }}
+          >
+            <ClearInput />
+          </IconButton>
+        }
         onKeyDown={onKeyDown}
       />
       <Checkbox

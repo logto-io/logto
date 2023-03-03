@@ -1,13 +1,22 @@
 @use '@/scss/underscore' as _;
 
+.suffix {
+  width: _.unit(8);
+  height: _.unit(8);
+  display: none;
+}
+
 .container {
+  display: flex;
+  align-items: center;
   border-radius: 6px;
   border: 1px solid var(--color-border);
   outline: 3px solid transparent;
   transition-property: outline, border;
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
-  padding: _.unit(2) _.unit(3);
+  padding: 0 _.unit(3);
+  height: 44px;
   background: var(--color-layer-1);
   font: var(--font-body-2);
 
@@ -25,10 +34,14 @@
   &:focus-within {
     border-color: var(--color-primary);
     outline-color: var(--color-focused-variant);
+
+    .suffix {
+      display: block;
+    }
   }
 
   input {
-    width: 100%;
+    flex: 1;
     appearance: none;
     color: var(--color-text);
     font: var(--font-body-2);

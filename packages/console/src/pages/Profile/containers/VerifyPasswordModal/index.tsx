@@ -1,10 +1,14 @@
 import { conditional } from '@silverhand/essentials';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import ArrowConnection from '@/assets/images/arrow-connection.svg';
+import PasswordHideIcon from '@/assets/images/password-hide.svg';
+import PasswordShowIcon from '@/assets/images/password-show.svg';
 import Button from '@/components/Button';
+import IconButton from '@/components/IconButton';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
 import { adminTenantEndpoint, meApi } from '@/consts';
@@ -31,6 +35,7 @@ const VerifyPasswordModal = () => {
     reValidateMode: 'onBlur',
   });
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
+  const [showPassword, setShowPassword] = useState(false);
   const email = conditional(checkLocationState(state) && state.email);
 
   const onClose = () => {
@@ -62,7 +67,17 @@ const VerifyPasswordModal = () => {
           },
         })}
         errorMessage={errors.password?.message}
-        type="password"
+        type={showPassword ? 'text' : 'password'}
+        suffix={
+          <IconButton
+            onMouseDown={(event) => {
+              event.preventDefault();
+              setShowPassword((flag) => !flag);
+            }}
+          >
+            {showPassword ? <PasswordShowIcon /> : <PasswordHideIcon />}
+          </IconButton>
+        }
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
             onSubmit();
