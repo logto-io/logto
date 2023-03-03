@@ -5,6 +5,14 @@ import { sql } from 'slonik';
 
 import { log } from '../../../utils.js';
 
+/**
+ * Append Redirect URIs for the default tenant callback in cloud Admin Console.
+ * It reads the same env variables as core to construct the cloud `UrlSet`.
+ *
+ * E.g., by default, it will appends `http://localhost:3003/default/callback` to the Redirect URIs.
+ *
+ * For why it is necessary, see the redirect lifecycle of cloud Admin Console.
+ */
 export const appendAdminConsoleRedirectUris = async (pool: CommonQueryMethods) => {
   const redirectUris = new GlobalValues().cloudUrlSet
     .deduplicated()
