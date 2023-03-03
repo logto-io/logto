@@ -5,6 +5,7 @@ import path from 'node:path/posix';
 import { tryThat } from '@logto/shared';
 import type { NextFunction, RequestContext } from '@withtyped/server';
 import { RequestError } from '@withtyped/server';
+import fetchRetry from 'fetch-retry';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import { z } from 'zod';
 
@@ -46,9 +47,13 @@ export default function withAuth<InputContext extends RequestContext>({
   audience,
   scopes: expectScopes = [],
 }: WithAuthConfig) {
+  const fetch = fetchRetry(global.fetch);
   const getJwkSet = (async () => {
     const fetched = await fetch(
-      new URL(path.join(endpoint.pathname, 'oidc/.well-known/openid-configuration'), endpoint)
+      new Request(
+        new URL(path.join(endpoint.pathname, 'oidc/.well-known/openid-configuration'), endpoint)
+      ),
+      { retries: 5, retryDelay: (attempt) => 2 ** attempt * 1000 }
     );
     const { jwks_uri: jwksUri, issuer } = z
       .object({ jwks_uri: z.string(), issuer: z.string() })
@@ -76,7 +81,8 @@ export default function withAuth<InputContext extends RequestContext>({
         audience,
       }),
       (error) => {
-        throw error;
+        console.error(error);
+        throw new RequestError('JWT verification failed.', 401);
       }
     );
 

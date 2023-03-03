@@ -11,6 +11,7 @@ import {
   createDefaultSignInExperience,
   createAdminTenantSignInExperience,
   createDefaultAdminConsoleApplication,
+  createCloudApi,
 } from '@logto/schemas';
 import { Hooks, Tenants } from '@logto/schemas/models';
 import type { DatabaseTransactionConnection } from 'slonik';
@@ -20,7 +21,8 @@ import { raw } from 'slonik-sql-tag-raw';
 import { insertInto } from '../../../database.js';
 import { getDatabaseName } from '../../../queries/database.js';
 import { updateDatabaseTimestamp } from '../../../queries/system.js';
-import { getPathInModule } from '../../../utils.js';
+import { getPathInModule, log } from '../../../utils.js';
+import { appendAdminConsoleRedirectUris } from './cloud.js';
 import { seedOidcConfigs } from './oidc-config.js';
 import { createTenant, seedAdminData } from './tenant.js';
 
@@ -121,15 +123,24 @@ export const seedTables = async (
   await createTenant(connection, adminTenantId);
   await seedOidcConfigs(connection, adminTenantId);
   await seedAdminData(connection, createAdminDataInAdminTenant(defaultTenantId));
+  await seedAdminData(connection, createAdminDataInAdminTenant(adminTenantId));
   await seedAdminData(connection, createMeApiInAdminTenant());
+  await seedAdminData(connection, createCloudApi());
 
   await Promise.all([
     connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),
     connection.query(
       insertInto(createDefaultSignInExperience(defaultTenantId), 'sign_in_experiences')
     ),
+    connection.query(insertInto(createDefaultAdminConsoleConfig(adminTenantId), 'logto_configs')),
     connection.query(insertInto(createAdminTenantSignInExperience(), 'sign_in_experiences')),
     connection.query(insertInto(createDefaultAdminConsoleApplication(), 'applications')),
     updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
+
+  log.succeed('Seed data');
+};
+
+export const seedCloud = async (connection: DatabaseTransactionConnection) => {
+  await appendAdminConsoleRedirectUris(connection);
 };

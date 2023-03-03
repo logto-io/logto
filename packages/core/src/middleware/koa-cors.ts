@@ -1,7 +1,7 @@
 import cors from '@koa/cors';
+import type { UrlSet } from '@logto/shared';
 import type { MiddlewareType } from 'koa';
 
-import type UrlSet from '#src/env-set/UrlSet.js';
 import { EnvSet } from '#src/env-set/index.js';
 
 export default function koaCors<StateT, ContextT, ResponseBodyT>(

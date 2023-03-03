@@ -7,38 +7,33 @@ import { doesConfigsTableExist } from '../../../queries/logto-config.js';
 import { log, oraPromise } from '../../../utils.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
-import { createTables, seedTables } from './tables.js';
+import { createTables, seedCloud, seedTables } from './tables.js';
 
-const seedChoices = Object.freeze(['all', 'oidc'] as const);
-
-type SeedChoice = (typeof seedChoices)[number];
-
-export const seedByPool = async (pool: DatabasePool, type: SeedChoice) => {
+export const seedByPool = async (pool: DatabasePool, cloud = false) => {
   await pool.transaction(async (connection) => {
-    if (type !== 'oidc') {
-      // Check alteration scripts available in order to insert correct timestamp
-      const latestTimestamp = await getLatestAlterationTimestamp();
+    // Check alteration scripts available in order to insert correct timestamp
+    const latestTimestamp = await getLatestAlterationTimestamp();
 
-      if (latestTimestamp < 1) {
-        throw new Error(
-          `No alteration script found when seeding the database.\n` +
-            `Please check \`${getAlterationDirectory()}\` to see if there are alteration scripts available.\n`
-        );
-      }
+    if (latestTimestamp < 1) {
+      throw new Error(
+        `No alteration script found when seeding the database.\n` +
+          `Please check \`${getAlterationDirectory()}\` to see if there are alteration scripts available.\n`
+      );
+    }
 
-      await oraPromise(createTables(connection), {
-        text: 'Create tables',
-        prefixText: chalk.blue('[info]'),
-      });
-      await oraPromise(seedTables(connection, latestTimestamp), {
-        text: 'Seed data',
-        prefixText: chalk.blue('[info]'),
-      });
+    await oraPromise(createTables(connection), {
+      text: 'Create tables',
+      prefixText: chalk.blue('[info]'),
+    });
+    await seedTables(connection, latestTimestamp);
+
+    if (cloud) {
+      await seedCloud(connection);
     }
   });
 };
 
-const seed: CommandModule<Record<string, unknown>, { type: string; swe?: boolean }> = {
+const seed: CommandModule<Record<string, unknown>, { swe?: boolean; cloud?: boolean }> = {
   command: 'seed [type]',
   describe: 'Create database then seed tables and data',
   builder: (yargs) =>
@@ -48,13 +43,12 @@ const seed: CommandModule<Record<string, unknown>, { type: string; swe?: boolean
         alias: 'skip-when-exists',
         type: 'boolean',
       })
-      .positional('type', {
-        describe: 'Optional seed type',
-        type: 'string',
-        choices: seedChoices,
-        default: 'all',
+      .option('cloud', {
+        describe: 'Seed additional cloud data',
+        type: 'boolean',
+        hidden: true,
       }),
-  handler: async ({ type, swe }) => {
+  handler: async ({ swe, cloud }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
 
     if (swe && (await doesConfigsTableExist(pool))) {
@@ -65,10 +59,7 @@ const seed: CommandModule<Record<string, unknown>, { type: string; swe?: boolean
     }
 
     try {
-      // Cannot avoid `as` since the official type definition of `yargs` doesn't work.
-      // The value of `type` can be ensured, so it's safe to use `as` here.
-      // eslint-disable-next-line no-restricted-syntax
-      await seedByPool(pool, type as SeedChoice);
+      await seedByPool(pool, cloud);
     } catch (error: unknown) {
       console.error(error);
       console.log();

@@ -10,6 +10,11 @@ export type AdminData = {
   role: CreateRole;
 };
 
+export type UpdateAdminData = Omit<AdminData, 'role'> & {
+  /** Attach to an existing role instead of creating one. */
+  role: Pick<CreateRole, 'tenantId' | 'name'>;
+};
+
 // Consider remove the dependency of IDs
 const defaultResourceId = 'management-api';
 const defaultScopeAllId = 'management-api-all';

@@ -81,7 +81,9 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
       set ${metadataKey} = jsonb_set(
         ${metadataKey},
         '{redirectUris}',
-        ${metadataKey}->'redirectUris' || ${jsonb(urls.map(String))}
+        (select jsonb_agg(distinct value) from jsonb_array_elements(
+          ${metadataKey}->'redirectUris' || ${jsonb(urls.map(String))}
+        ))
       )
       where id = ${adminConsoleApplicationId}
       and tenant_id = ${adminTenantId}

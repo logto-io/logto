@@ -114,6 +114,19 @@ const manifests = [
 
 assert.deepStrictEqual(...manifests);
 
+const autoCompare = (a, b) => {
+  if (typeof a !== typeof b) {
+    return (typeof a).localeCompare(typeof b);
+  }
+
+  return String(a).localeCompare(String(b));
+};
+
+const buildSortByKeys = (keys) => (a, b) => {
+  const found = keys.find((key) => a[key] !== b[key]);
+  return found ? autoCompare(a[found], b[found]) : 0;
+};
+
 const queryDatabaseData = async (database) => {
   const pool = new pg.Pool({ database, user: 'postgres', password: 'postgres' });
   const result = await Promise.all(manifests[0].tables
@@ -122,16 +135,11 @@ const queryDatabaseData = async (database) => {
 
       // check config rows except the value column
       if (['logto_configs', '_logto_configs', 'systems'].includes(table_name)) {
-        return [table_name, omitArray(rows, 'value').sort((a, b) => {
-          if (a.tenant_id === b.tenant_id) {
-            return a.key.localeCompare(b.key);
-          }
-
-          return a.tenant_id.localeCompare(b.tenant_id);
-        })];
+        const data = omitArray(rows, 'value');
+        return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];
       }
 
-      return [table_name, omitArray(
+      const data = omitArray(
         rows,
         'id',
         'resource_id',
@@ -142,7 +150,9 @@ const queryDatabaseData = async (database) => {
         'secret',
         'db_user',
         'db_user_password'
-      )];
+      );
+
+      return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];
     })
   );
 

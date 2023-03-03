@@ -6,9 +6,10 @@
   ],
   "watch": [
     "./src/",
+    "../core/src/",
     "./node_modules/",
     "../../.env"
   ],
   "ext": "json,js,jsx,ts,tsx",
-  "delay": 500
+  "delay": 1000
 }

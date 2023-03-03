@@ -1,9 +1,9 @@
+import { appendPath } from '@logto/shared';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import type Provider from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { appendPath } from '#src/utils/url.js';
 
 // Need To Align With UI
 export const sessionNotFoundPath = '/unknown-session';

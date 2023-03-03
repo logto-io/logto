@@ -1,6 +1,6 @@
 import { generateStandardId } from '@logto/core-kit';
+import type { TenantModel, AdminData, UpdateAdminData } from '@logto/schemas';
 import { CreateRolesScope } from '@logto/schemas';
-import type { TenantModel, AdminData } from '@logto/schemas';
 import { createTenantMetadata } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
@@ -23,7 +23,10 @@ export const createTenant = async (pool: CommonQueryMethods, tenantId: string) =
   `);
 };
 
-export const seedAdminData = async (pool: CommonQueryMethods, data: AdminData) => {
+export const seedAdminData = async (
+  pool: CommonQueryMethods,
+  data: AdminData | UpdateAdminData
+) => {
   const { resource, scope, role } = data;
 
   assert(
@@ -31,14 +34,32 @@ export const seedAdminData = async (pool: CommonQueryMethods, data: AdminData) =
     new Error('All data should have the same tenant ID')
   );
 
+  const processRole = async () => {
+    if ('id' in role) {
+      await pool.query(insertInto(role, 'roles'));
+
+      return role.id;
+    }
+
+    // Query by role name for existing roles
+    const { id } = await pool.one<{ id: string }>(sql`
+      select id from roles
+      where name=${role.name}
+      and tenant_id=${String(role.tenantId)}
+    `);
+
+    return id;
+  };
+
   await pool.query(insertInto(resource, 'resources'));
   await pool.query(insertInto(scope, 'scopes'));
-  await pool.query(insertInto(role, 'roles'));
+
+  const roleId = await processRole();
   await pool.query(
     insertInto(
       {
         id: generateStandardId(),
-        roleId: role.id,
+        roleId,
         scopeId: scope.id,
         tenantId: resource.tenantId,
       } satisfies CreateRolesScope,

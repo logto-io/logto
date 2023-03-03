@@ -29,6 +29,7 @@
     "chalk": "^5.0.0",
     "decamelize": "^6.0.0",
     "dotenv": "^16.0.0",
+    "fetch-retry": "^5.0.4",
     "find-up": "^6.3.0",
     "http-proxy": "^1.18.1",
     "jose": "^4.11.0",
