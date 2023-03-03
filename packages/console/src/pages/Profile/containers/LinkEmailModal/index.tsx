@@ -1,23 +1,21 @@
-import { conditional } from '@silverhand/essentials';
+import { emailRegEx } from '@logto/core-kit';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import ArrowConnection from '@/assets/images/arrow-connection.svg';
 import Button from '@/components/Button';
 import TextInput from '@/components/TextInput';
-import TextLink from '@/components/TextLink';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { checkLocationState } from '../../utils';
 
-type FormFields = {
-  password: string;
+type EmailForm = {
+  email: string;
 };
 
-const VerifyPasswordModal = () => {
+const LinkEmailModal = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -27,11 +25,10 @@ const VerifyPasswordModal = () => {
     clearErrors,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormFields>({
+  } = useForm<EmailForm>({
     reValidateMode: 'onBlur',
   });
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
-  const email = conditional(checkLocationState(state) && state.email);
 
   const onClose = () => {
     navigate('/profile');
@@ -39,30 +36,28 @@ const VerifyPasswordModal = () => {
 
   const onSubmit = () => {
     clearErrors();
-    void handleSubmit(async ({ password }) => {
-      await api.post(`me/password/verify`, { json: { password } });
-      reset({});
-      navigate('../change-password', { state });
+    void handleSubmit(async ({ email }) => {
+      await api.post(`me/verification-codes`, { json: { email } });
+      reset();
+      navigate('../verification-code', { state: { email, action: 'changeEmail' } });
     })();
   };
 
   return (
     <MainFlowLikeModal
-      title="profile.password.enter_password"
-      subtitle="profile.password.enter_password_subtitle"
+      title="profile.link_account.link_email"
+      subtitle="profile.link_account.link_email_subtitle"
       onClose={onClose}
-      onGoBack={onClose}
     >
       <TextInput
-        {...register('password', {
-          required: t('profile.password.required'),
-          minLength: {
-            value: 6,
-            message: t('profile.password.min_length', { min: 6 }),
-          },
+        {...register('email', {
+          required: t('profile.link_account.email_required'),
+          pattern: { value: emailRegEx, message: t('profile.link_account.invalid_email') },
+          validate: (value) =>
+            (checkLocationState(state) && state.email !== value) ||
+            t('profile.link_account.identical_email_address'),
         })}
-        errorMessage={errors.password?.message}
-        type="password"
+        errorMessage={errors.email?.message}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
             onSubmit();
@@ -76,19 +71,8 @@ const VerifyPasswordModal = () => {
         isLoading={isSubmitting}
         onClick={onSubmit}
       />
-      {email && (
-        <TextLink
-          icon={<ArrowConnection />}
-          onClick={() => {
-            void api.post('me/verification-codes', { json: { email } });
-            navigate('../verification-code', { state });
-          }}
-        >
-          {t('profile.code.verify_via_code')}
-        </TextLink>
-      )}
     </MainFlowLikeModal>
   );
 };
 
-export default VerifyPasswordModal;
+export default LinkEmailModal;

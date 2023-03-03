@@ -47,6 +47,8 @@ import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
 import ChangePasswordModal from '../Profile/containers/ChangePasswordModal';
+import LinkEmailModal from '../Profile/containers/LinkEmailModal';
+import VerificationCodeModal from '../Profile/containers/VerificationCodeModal';
 import VerifyPasswordModal from '../Profile/containers/VerifyPasswordModal';
 
 const Main = () => {
@@ -139,6 +141,8 @@ const Main = () => {
                   <Route index element={<Profile />} />
                   <Route path="verify-password" element={<VerifyPasswordModal />} />
                   <Route path="change-password" element={<ChangePasswordModal />} />
+                  <Route path="link-email" element={<LinkEmailModal />} />
+                  <Route path="verification-code" element={<VerificationCodeModal />} />
                 </Route>
               </Route>
             </Route>

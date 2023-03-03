@@ -83,6 +83,7 @@
     "react-paginate": "^8.1.3",
     "react-router-dom": "6.3.0",
     "react-syntax-highlighter": "^15.5.0",
+    "react-timer-hook": "^3.0.5",
     "recharts": "^2.1.13",
     "remark-gfm": "^3.0.1",
     "stylelint": "^15.0.0",
