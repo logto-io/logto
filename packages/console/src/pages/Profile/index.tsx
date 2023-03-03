@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,12 +11,14 @@ import * as resourcesStyles from '@/scss/resources.module.scss';
 import BasicUserInfoSection from './components/BasicUserInfoSection';
 import CardContent from './components/CardContent';
 import Section from './components/Section';
+import DeleteAccountModal from './containers/DeleteAccountModal';
 import * as styles from './index.module.scss';
 
 const Profile = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const [user, fetchUser] = useLogtoUserInfo();
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
   if (!user) {
     return null;
@@ -66,10 +69,16 @@ const Profile = () => {
             <Button
               title="profile.delete_account.button"
               onClick={() => {
-                console.log('Not implemented.');
+                setShowDeleteAccountModal(true);
               }}
             />
           </div>
+          <DeleteAccountModal
+            isOpen={showDeleteAccountModal}
+            onClose={() => {
+              setShowDeleteAccountModal(false);
+            }}
+          />
         </Section>
       )}
     </div>
