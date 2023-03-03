@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  font: var(--font-body-2);
+}
+
+p {
+  margin: 0;
+}
+
+p + p {
+  margin-top: _.unit(6);
+}
+
+.mail {
+  font-weight: bold;
+}

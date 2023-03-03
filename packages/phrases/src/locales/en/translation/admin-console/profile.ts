@@ -52,7 +52,7 @@ const profile = {
     dialog_paragraph_1:
       "We're sorry to hear that you want to delete your account. Deleting your account will permanently remove all data, including user information, logs, and settings, and this action cannot be undone. So please make sure to backup any important data before proceeding.",
     dialog_paragraph_2:
-      'To proceed with the account deletion process, please email our support team at <a>mail</a> with the subject “Account Deletion Request”. We will assist you and ensure that all of your data is properly deleted from our system.',
+      'To proceed with the account deletion process, please email our support team at <a>{{mail}}</a> with the subject “Account Deletion Request”. We will assist you and ensure that all of your data is properly deleted from our system.',
     dialog_paragraph_3:
       'Thank you for choosing Logto Cloud. If you have any further questions or concerns, please do not hesitate to reach out to us.',
   },
