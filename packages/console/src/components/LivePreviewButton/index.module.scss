@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+.icon {
+  color: var(--color-text-secondary);
+  margin-left: _.unit(1.5);
+
+  &.disabled {
+    color: var(--color-neutral-70);
+  }
+}

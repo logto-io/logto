@@ -196,7 +196,11 @@ const SignInExperience = () => {
               </form>
             </FormProvider>
             {formData.id && (
-              <Preview signInExperience={previewConfigs} className={styles.preview} />
+              <Preview
+                isLivePreviewDisabled={isDirty}
+                signInExperience={previewConfigs}
+                className={styles.preview}
+              />
             )}
           </div>
           <SubmitFormChangesActionBar

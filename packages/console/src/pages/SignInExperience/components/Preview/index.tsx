@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import PhoneInfo from '@/assets/images/phone-info.svg';
+import LivePreviewButton from '@/components/LivePreviewButton';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import ToggleThemeButton from '@/components/ToggleThemeButton';
@@ -20,11 +21,18 @@ import useUiLanguages from '@/hooks/use-ui-languages';
 import * as styles from './index.module.scss';
 
 type Props = {
+  isLivePreviewDisabled?: boolean;
+  isLivePreviewEntryInvisible?: boolean;
   signInExperience?: SignInExperience;
   className?: string;
 };
 
-const Preview = ({ signInExperience, className }: Props) => {
+const Preview = ({
+  isLivePreviewDisabled = false,
+  isLivePreviewEntryInvisible = false,
+  signInExperience,
+  className,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [language, setLanguage] = useState<LanguageTag>('en');
   const [mode, setMode] = useState<Omit<AppearanceMode, AppearanceMode.SyncWithSystem>>(
@@ -143,6 +151,9 @@ const Preview = ({ signInExperience, className }: Props) => {
               }
             }}
           />
+          {!isLivePreviewEntryInvisible && (
+            <LivePreviewButton isDisabled={isLivePreviewDisabled} size="small" />
+          )}
         </div>
       </div>
       <TabNav className={styles.nav}>

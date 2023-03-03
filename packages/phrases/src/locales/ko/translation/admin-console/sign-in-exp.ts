@@ -155,6 +155,8 @@ const sign_in_exp = {
   },
   preview: {
     title: '로그인 화면 미리보기',
+    live_preview: 'Live preview', // UNTRANSLATED
+    live_preview_tip: 'Save to preview changes', // UNTRANSLATED
     native: 'Native',
     desktop_web: 'Desktop 웹',
     mobile_web: 'Mobile 웹',

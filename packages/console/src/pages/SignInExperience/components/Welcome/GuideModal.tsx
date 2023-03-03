@@ -122,7 +122,11 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
                   <LanguagesForm />
                 </div>
                 {formData.id && (
-                  <Preview signInExperience={previewConfigs} className={styles.preview} />
+                  <Preview
+                    isLivePreviewEntryInvisible
+                    signInExperience={previewConfigs}
+                    className={styles.preview}
+                  />
                 )}
               </div>
               <div className={styles.footer}>

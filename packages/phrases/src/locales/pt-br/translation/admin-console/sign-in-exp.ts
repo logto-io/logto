@@ -162,6 +162,8 @@ const sign_in_exp = {
   },
   preview: {
     title: 'Visualização de login',
+    live_preview: 'Live preview', // UNTRANSLATED
+    live_preview_tip: 'Save to preview changes', // UNTRANSLATED
     native: 'Native',
     desktop_web: 'Desktop Web',
     mobile_web: 'Mobile Web',
