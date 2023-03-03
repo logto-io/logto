@@ -220,10 +220,7 @@ const SignInExperience = () => {
           {dataToCompare && <SignUpAndSignInChangePreview before={data} after={dataToCompare} />}
         </ConfirmModal>
       )}
-      <UnsavedChangesAlertModal
-        hasUnsavedChanges={isDirty}
-        parentPath="/console/sign-in-experience"
-      />
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} parentPath="/sign-in-experience" />
     </PageWrapper>
   );
 };
