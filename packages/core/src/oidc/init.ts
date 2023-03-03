@@ -20,6 +20,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import { getUserClaimData, getUserClaims } from './scope.js';
+import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
@@ -139,7 +140,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
       },
     },
     interactions: {
-      url: (_, interaction) => {
+      url: (ctx, interaction) => {
         const appendParameters = (path: string) => {
           // `notification` is for showing a text banner on the homepage
           return interaction.params.client_id === demoAppApplicationId
@@ -149,6 +150,13 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
 
         switch (interaction.prompt.name) {
           case 'login': {
+            if (
+              // Register user experience first
+              ctx.oidc.params?.[OIDCExtraParametersKey.InteractionMode] === InteractionMode.signUp
+            ) {
+              return appendParameters(routes.signUp);
+            }
+
             return appendParameters(routes.signIn.credentials);
           }
 
@@ -162,6 +170,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
         }
       },
     },
+    extraParams: [OIDCExtraParametersKey.InteractionMode],
     extraClientMetadata: {
       properties: Object.values(CustomClientMetadataKey),
       validator: (_, key, value) => {
