@@ -1,4 +1,4 @@
-import { ConnectorType } from '@logto/schemas';
+import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,6 +26,9 @@ const ConnectorName = ({ connectorGroup }: Props) => {
   const { type, connectors } = connectorGroup;
   const connector = connectors[0];
   const navigate = useNavigate();
+  const hasNonUniversalConnector = connectors.some(
+    ({ platform }) => platform !== ConnectorPlatform.Universal
+  );
 
   if (!connector) {
     const PlaceholderIcon = connectorPlaceholderIcon[type];
@@ -60,7 +63,7 @@ const ConnectorName = ({ connectorGroup }: Props) => {
       subtitle={
         <>
           {type !== ConnectorType.Social && connector.id}
-          {type === ConnectorType.Social && connectors.length > 1 && (
+          {type === ConnectorType.Social && hasNonUniversalConnector && (
             <div className={styles.platforms}>
               {connectors.map(
                 ({ id, platform }) =>
