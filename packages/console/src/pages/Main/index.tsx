@@ -47,6 +47,7 @@ import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
 
 import ChangePasswordModal from '../Profile/containers/ChangePasswordModal';
+import HandleSocialCallback from '../Profile/containers/HandleSocialCallback';
 import LinkEmailModal from '../Profile/containers/LinkEmailModal';
 import VerificationCodeModal from '../Profile/containers/VerificationCodeModal';
 import VerifyPasswordModal from '../Profile/containers/VerifyPasswordModal';
@@ -67,6 +68,7 @@ const Main = () => {
           <Routes>
             <Route path="callback" element={<Callback />} />
             <Route path="welcome" element={<Welcome />} />
+            <Route path="handle-social" element={<HandleSocialCallback />} />
             <Route element={<AppLayout />}>
               <Route element={<AppContent />}>
                 <Route path="*" element={<NotFound />} />

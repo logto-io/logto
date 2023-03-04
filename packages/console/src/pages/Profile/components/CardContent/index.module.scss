@@ -8,6 +8,25 @@
     margin-bottom: _.unit(1);
   }
 
+  .actionButton {
+    display: inline-flex;
+
+    + .actionButton {
+      margin-left: _.unit(4);
+    }
+  }
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .icon {
+    width: 32px;
+    height: 32px;
+    margin-right: _.unit(4);
+  }
+
   table {
     width: 100%;
     border-spacing: 0;
@@ -15,17 +34,23 @@
     border-radius: 8px;
 
     td {
+      font: var(--font-body-2);
       height: 64px;
       padding: 0 _.unit(6);
       border-bottom: 1px solid var(--color-neutral-variant-90);
 
       &:first-child {
         width: 35%;
+        font: var(--font-label-2);
       }
 
       &:last-child {
         text-align: right;
         width: 30%;
+
+        .wrapper {
+          justify-content: flex-end;
+        }
       }
     }
 

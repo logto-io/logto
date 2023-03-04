@@ -21,6 +21,7 @@ import SignInPassword from './pages/SignInPassword';
 import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignIn from './pages/SocialSignInCallback';
+import Springboard from './pages/Springboard';
 import VerificationCode from './pages/VerificationCode';
 import { getSignInExperienceSettings } from './utils/sign-in-experience';
 
@@ -71,6 +72,7 @@ const App = () => {
                 path="unknown-session"
                 element={<ErrorPage message="error.invalid_session" />}
               />
+              <Route path="springboard" element={<Springboard />} />
 
               <Route path="sign-in/consent" element={<Consent />} />
 

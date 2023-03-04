@@ -1,8 +1,6 @@
 import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
-import type { ConnectorResponse, ConnectorFactoryResponse } from '@logto/schemas';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
-import { pick } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
@@ -10,30 +8,14 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
-import { buildRawConnector } from '#src/utils/connectors/index.js';
+import {
+  buildRawConnector,
+  transpileConnectorFactory,
+  transpileLogtoConnector,
+} from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
-import type { ConnectorFactory, LogtoConnector } from '#src/utils/connectors/types.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
-
-const transpileLogtoConnector = ({
-  dbEntry,
-  metadata,
-  type,
-}: LogtoConnector): ConnectorResponse => {
-  return {
-    type,
-    ...metadata,
-    ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'config', 'metadata'),
-  };
-};
-
-const transpileConnectorFactory = ({
-  metadata,
-  type,
-}: ConnectorFactory): ConnectorFactoryResponse => {
-  return { type, ...metadata };
-};
 
 const generateConnectorId = buildIdGenerator(12);
 

@@ -1,6 +1,11 @@
 import { emailRegEx, passwordRegEx, usernameRegEx } from '@logto/core-kit';
 import type { PasswordVerificationData } from '@logto/schemas';
-import { passwordVerificationGuard, arbitraryObjectGuard } from '@logto/schemas';
+import {
+  userInfoSelectFields,
+  passwordVerificationGuard,
+  arbitraryObjectGuard,
+} from '@logto/schemas';
+import { pick } from '@silverhand/essentials';
 import { literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -16,6 +21,24 @@ export default function userRoutes<T extends AuthedMeRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
   const { findUserById, updateUserById } = tenant.queries.users;
+
+  router.get(
+    '/users/:userId',
+    koaGuard({
+      params: object({ userId: string() }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+      } = ctx.guard;
+
+      const user = await findUserById(userId);
+
+      ctx.body = pick(user, ...userInfoSelectFields, 'passwordEncrypted');
+
+      return next();
+    }
+  );
 
   router.patch(
     '/user',

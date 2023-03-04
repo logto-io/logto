@@ -1,0 +1,30 @@
+@use '@/scss/underscore' as _;
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  cursor: default;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+}
+
+.nameWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: _.unit(3);
+
+  .name {
+    font: var(--font-label-2);
+    color: var(--color-text);
+  }
+
+  .email {
+    font: var(--font-body-3);
+    color: var(--color-text-secondary);
+  }
+}

@@ -1,4 +1,4 @@
-import type { UserInfoResponse } from '@logto/react';
+import type { User } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import { useState } from 'react';
 
@@ -10,10 +10,9 @@ import BasicUserInfoUpdateModal from '../../containers/BasicUserInfoUpdateModal'
 import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 import Section from '../Section';
-import * as styles from './index.module.scss';
 
 type Props = {
-  user: UserInfoResponse;
+  user: User;
   onUpdate?: () => void;
 };
 
@@ -21,18 +20,21 @@ const BasicUserInfoSection = ({ user, onUpdate }: Props) => {
   const [editingField, setEditingField] = useState<BasicUserField>();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
-  const { name, username, picture: avatar } = user;
+  const { name, username, avatar } = user;
 
   const conditionalUsername: Array<Row<Nullable<string> | undefined>> = isCloud
     ? []
     : [
         {
+          key: 'username',
           label: 'profile.settings.username',
           value: username,
-          actionName: 'profile.change',
-          action: () => {
-            setEditingField('username');
-            setIsUpdateModalOpen(true);
+          action: {
+            name: 'profile.change',
+            handler: () => {
+              setEditingField('username');
+              setIsUpdateModalOpen(true);
+            },
           },
         },
       ];
@@ -50,22 +52,28 @@ const BasicUserInfoSection = ({ user, onUpdate }: Props) => {
         title="profile.settings.profile_information"
         data={[
           {
+            key: 'avatar',
             label: 'profile.settings.avatar',
             value: avatar,
-            renderer: (value) => <UserAvatar className={styles.avatar} url={value} />,
-            actionName: 'profile.change',
-            action: () => {
-              setEditingField('avatar');
-              setIsUpdateModalOpen(true);
+            renderer: (value) => <UserAvatar url={value} size="large" />,
+            action: {
+              name: 'profile.change',
+              handler: () => {
+                setEditingField('avatar');
+                setIsUpdateModalOpen(true);
+              },
             },
           },
           {
+            key: 'name',
             label: 'profile.settings.name',
             value: name,
-            actionName: name ? 'profile.change' : 'profile.set_name',
-            action: () => {
-              setEditingField('name');
-              setIsUpdateModalOpen(true);
+            action: {
+              name: name ? 'profile.change' : 'profile.set_name',
+              handler: () => {
+                setEditingField('name');
+                setIsUpdateModalOpen(true);
+              },
             },
           },
           ...conditionalUsername,
