@@ -24,7 +24,7 @@ import { updateDatabaseTimestamp } from '../../../queries/system.js';
 import { getPathInModule, log } from '../../../utils.js';
 import { appendAdminConsoleRedirectUris } from './cloud.js';
 import { seedOidcConfigs } from './oidc-config.js';
-import { createTenant, seedAdminData } from './tenant.js';
+import { assignScopesToRole, createTenant, seedAdminData } from './tenant.js';
 
 const getExplicitOrder = (query: string) => {
   const matched = /\/\*\s*init_order\s*=\s*([\d.]+)\s*\*\//.exec(query)?.[1];
@@ -123,9 +123,20 @@ export const seedTables = async (
   await createTenant(connection, adminTenantId);
   await seedOidcConfigs(connection, adminTenantId);
   await seedAdminData(connection, createAdminDataInAdminTenant(defaultTenantId));
-  await seedAdminData(connection, createAdminDataInAdminTenant(adminTenantId));
+  const adminAdminData = createAdminDataInAdminTenant(adminTenantId);
+  await seedAdminData(connection, adminAdminData);
   await seedAdminData(connection, createMeApiInAdminTenant());
-  await seedAdminData(connection, createCloudApi());
+
+  const [cloudData, ...cloudAdditionalScopes] = createCloudApi();
+  await seedAdminData(connection, cloudData, ...cloudAdditionalScopes);
+
+  // Assign all cloud API scopes to role `admin:admin`
+  await assignScopesToRole(
+    connection,
+    adminTenantId,
+    adminAdminData.role.id,
+    ...cloudAdditionalScopes.map(({ id }) => id)
+  );
 
   await Promise.all([
     connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),

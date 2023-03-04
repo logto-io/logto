@@ -28,7 +28,7 @@ const Welcome = () => {
 
   if (error) {
     if (error instanceof LogtoClientError) {
-      return <SessionExpired />;
+      return <SessionExpired error={error} callbackHref={href} />;
     }
 
     return <AppError errorMessage={error.message} callStack={error.stack} />;

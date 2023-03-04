@@ -12,13 +12,17 @@ export const tenants = createRouter<WithAuthContext, '/tenants'>('/tenants')
     return next({ ...context, json: await library.getAvailableTenants(context.auth.id) });
   })
   .post('/', { response: tenantInfoGuard }, async (context, next) => {
-    if (!context.auth.scopes.includes(CloudScope.CreateTenant)) {
+    if (
+      ![CloudScope.CreateTenant, CloudScope.ManageTenant].some((scope) =>
+        context.auth.scopes.includes(scope)
+      )
+    ) {
       throw new RequestError('Forbidden due to lack of permission.', 403);
     }
 
     const tenants = await library.getAvailableTenants(context.auth.id);
 
-    if (tenants.length > 0) {
+    if (!context.auth.scopes.includes(CloudScope.ManageTenant) && tenants.length > 0) {
       throw new RequestError('The user already has a tenant.', 409);
     }
 

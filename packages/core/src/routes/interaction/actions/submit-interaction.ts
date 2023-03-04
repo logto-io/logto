@@ -8,7 +8,7 @@ import {
   InteractionEvent,
   adminConsoleApplicationId,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, conditionalArray } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
@@ -16,7 +16,6 @@ import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import type { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
-import { conditionalArray } from '#src/utils/array.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 import type { WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';

@@ -46,7 +46,7 @@ const AppLayout = () => {
 
   if (error) {
     if (error instanceof LogtoClientError) {
-      return <SessionExpired />;
+      return <SessionExpired error={error} callbackHref={href} />;
     }
 
     if (error instanceof LogtoError && error.code === 'crypto_subtle_unavailable') {

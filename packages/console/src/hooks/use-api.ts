@@ -1,5 +1,6 @@
 import { useLogto } from '@logto/react';
 import type { RequestErrorBody } from '@logto/schemas';
+import { conditionalArray } from '@silverhand/essentials';
 import ky from 'ky';
 import { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
@@ -76,15 +77,14 @@ export const useStaticApi = ({
         prefixUrl,
         timeout: requestTimeout,
         hooks: {
-          beforeError: hideErrorToast
-            ? []
-            : [
-                async (error) => {
-                  await toastError(error.response);
+          beforeError: conditionalArray(
+            !hideErrorToast &&
+              (async (error) => {
+                await toastError(error.response);
 
-                  return error;
-                },
-              ],
+                return error;
+              })
+          ),
           beforeRequest: [
             async (request) => {
               if (isAuthenticated) {
