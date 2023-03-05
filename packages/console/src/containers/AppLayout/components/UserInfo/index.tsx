@@ -113,19 +113,19 @@ const UserInfo = () => {
         <SubMenu
           className={styles.dropdownItem}
           icon={<Palette className={styles.icon} />}
-          title="menu.appearance"
+          title="menu.appearance.label"
           options={[
             {
               value: AppearanceMode.SyncWithSystem,
-              title: t('settings.appearance_system'),
+              title: t('menu.appearance.system'),
             },
             {
               value: AppearanceMode.LightMode,
-              title: t('settings.appearance_light'),
+              title: t('menu.appearance.light'),
             },
             {
               value: AppearanceMode.DarkMode,
-              title: t('settings.appearance_dark'),
+              title: t('menu.appearance.dark'),
             },
           ]}
           selectedOption={appearanceMode}

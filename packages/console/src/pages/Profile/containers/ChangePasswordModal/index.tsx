@@ -54,7 +54,7 @@ const ChangePasswordModal = () => {
     clearErrors();
     void handleSubmit(async ({ newPassword }) => {
       await api.post(`me/password`, { json: { password: newPassword } });
-      toast.success(t('settings.password_changed'));
+      toast.success(t('profile.password_changed'));
       reset();
       onClose();
     })();
