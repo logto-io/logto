@@ -1,6 +1,10 @@
 import { logtoConsoleUrl } from '#src/constants.js';
 import { generatePassword } from '#src/utils.js';
 
+/**
+ * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
+ * Parallel execution will lead to errors.
+ */
 describe('smoke testing', () => {
   const consoleUsername = 'admin';
   const consolePassword = generatePassword();

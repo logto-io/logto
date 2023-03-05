@@ -6,6 +6,7 @@ export const logtoConsoleUrl = getEnv(
   'INTEGRATION_TESTS_LOGTO_CONSOLE_URL',
   'http://localhost:3002'
 );
+export const logtoCloudUrl = getEnv('INTEGRATION_TESTS_LOGTO_CLOUD_URL', 'http://localhost:3003');
 
 export const discoveryUrl = `${logtoUrl}/oidc/.well-known/openid-configuration`;
 

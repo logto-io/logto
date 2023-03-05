@@ -15,6 +15,7 @@
     "test": "pnpm build && pnpm test:api && pnpm test:ui",
     "test:api": "pnpm test:only -i ./lib/tests/api",
     "test:ui": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/ui",
+    "test:ui-cloud": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/ui-cloud",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "start": "pnpm test"

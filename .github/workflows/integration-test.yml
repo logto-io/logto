@@ -38,7 +38,7 @@ jobs:
 
     strategy:
       matrix:
-        test_target: [api, ui]
+        test_target: [api, ui, ui-cloud]
 
     runs-on: ubuntu-latest
 
@@ -78,7 +78,11 @@ jobs:
       - name: Extract
         working-directory: tests
         run: |
-          npm run cli init -- -p ../logto --db postgres://postgres:postgres@localhost:5432/postgres --du ../logto.tar.gz
+          npm run cli init -- \
+            -p ../logto \
+            --db postgres://postgres:postgres@localhost:5432/postgres \
+            --du ../logto.tar.gz \
+            ${{ contains(matrix.test_target, 'cloud') && '--cloud' || '' }}
       
       - name: Check and add mock connectors
         working-directory: tests
@@ -89,6 +93,13 @@ jobs:
       - name: Run Logto
         working-directory: logto/
         run: nohup npm start > nohup.out 2> nohup.err < /dev/null &
+        env:
+          INTEGRATION_TEST: true
+
+      - name: Run Logto Cloud
+        working-directory: logto/
+        if: contains(matrix.test_target, 'cloud')
+        run: nohup npm start:cloud > nohup-cloud.out 2> nohup-cloud.err < /dev/null &
         env:
           INTEGRATION_TEST: true
 
