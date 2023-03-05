@@ -15,6 +15,9 @@ const errors = {
   guard: {
     invalid_input: 'O pedido {{type}} é inválido.',
     invalid_pagination: 'O valor de paginação enviado é inválido.',
+    can_not_get_tenant_id: 'Unable to get tenant id from request.', // UNTRANSLATED
+    file_size_exceeded: 'File size exceeded.', // UNTRANSLATED
+    mime_type_not_allowed: 'Mime type is not allowed.', // UNTRANSLATED
   },
   oidc: {
     aborted: 'O utilizador final abortou a interação.',
@@ -189,6 +192,11 @@ const errors = {
   scope: {
     name_exists: 'The scope name {{name}} is already in use', // UNTRANSLATED
     name_with_space: 'The name of the scope cannot contain any spaces.', // UNTRANSLATED
+  },
+  storage: {
+    not_configured: 'Storage provider is not configured.', // UNTRANSLATED
+    missing_parameter: 'Missing parameter {{parameter}} for storage provider.', // UNTRANSLATED
+    upload_error: 'Failed to upload file to the storage provider.', // UNTRANSLATED
   },
 };
 

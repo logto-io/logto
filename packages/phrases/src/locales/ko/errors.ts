@@ -16,6 +16,9 @@ const errors = {
   guard: {
     invalid_input: '{{type}} 요청 타입은 유효하지 않아요.',
     invalid_pagination: '요청의 Pagination 값이 유효하지 않아요.',
+    can_not_get_tenant_id: 'Unable to get tenant id from request.', // UNTRANSLATED
+    file_size_exceeded: 'File size exceeded.', // UNTRANSLATED
+    mime_type_not_allowed: 'Mime type is not allowed.', // UNTRANSLATED
   },
   oidc: {
     aborted: 'End 사용자가 상호 작용을 중단했어요.',
@@ -180,6 +183,11 @@ const errors = {
   scope: {
     name_exists: '범위 이름 {{name}}이/가 이미 사용 중이에요.',
     name_with_space: '범위 이름에 공백을 포함할 수 없어요.',
+  },
+  storage: {
+    not_configured: 'Storage provider is not configured.', // UNTRANSLATED
+    missing_parameter: 'Missing parameter {{parameter}} for storage provider.', // UNTRANSLATED
+    upload_error: 'Failed to upload file to the storage provider.', // UNTRANSLATED
   },
 };
 

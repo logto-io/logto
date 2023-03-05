@@ -44,7 +44,7 @@ describe('koaGuardMiddleware', () => {
     });
 
     // Use to bypass the context type assert
-    const defaultGuard = { body: undefined, query: undefined, params: undefined };
+    const defaultGuard = { body: undefined, query: undefined, params: undefined, files: undefined };
 
     it('invalid body type should throw', async () => {
       const ctx = {
