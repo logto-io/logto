@@ -15,7 +15,14 @@ import type { AuthedMeRouter } from './types.js';
 export default function userRoutes<T extends AuthedMeRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
-  const { findUserById, updateUserById } = tenant.queries.users;
+  const {
+    queries: {
+      users: { findUserById, updateUserById },
+    },
+    libraries: {
+      users: { checkIdentifierCollision },
+    },
+  } = tenant;
 
   router.patch(
     '/user',
@@ -29,10 +36,13 @@ export default function userRoutes<T extends AuthedMeRouter>(
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
+      const { body } = ctx.guard;
+
       const user = await findUserById(userId);
       assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-      await updateUserById(userId, ctx.guard.body);
+      await checkIdentifierCollision(body, userId);
+      await updateUserById(userId, body);
       ctx.status = 204;
 
       return next();
