@@ -16,6 +16,6 @@ describe('smoke testing for cloud', () => {
     await navigation;
 
     await expect(page.waitForSelector('#app')).resolves.not.toBeNull();
-    expect(page.url()).toBe(new URL('sign-in', adminTenantUrl).href);
+    expect(page.url()).toBe(adminTenantUrl);
   });
 });

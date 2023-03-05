@@ -13,6 +13,11 @@ concurrency:
 
 jobs:
   package:
+    # See https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#expanding-or-adding-matrix-configurations
+    strategy:
+      matrix:
+        env: [oss, cloud]
+
     runs-on: ubuntu-latest
 
     steps:
@@ -25,22 +30,32 @@ jobs:
         run: pnpm -r build
 
       - name: Package
+        if: matrix.env != 'cloud'
         run: ./.scripts/package.sh
+      
+      - name: Package
+        if: matrix.env == 'cloud'
+        run: ./.scripts/package.sh
+        env:
+          IS_CLOUD: 1
+          CONSOLE_PUBLIC_URL: /
 
       - uses: actions/upload-artifact@v3
         with:
-          name: integration-test-${{ github.sha }}
+          name: integration-test-${{ github.sha }}-${{ matrix.env }}
           path: /tmp/logto.tar.gz
           retention-days: 3
 
   run-logto:
-    needs: package
-
     strategy:
       matrix:
-        test_target: [api, ui, ui-cloud]
+        target: [api, ui, ui-cloud]
 
+    needs: package
     runs-on: ubuntu-latest
+    env:
+      INTEGRATION_TEST: true
+      IS_CLOUD: ${{ contains(matrix.target, 'cloud') && '1' || '0' }}
 
     steps:
       - uses: actions/checkout@v3
@@ -73,7 +88,7 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: integration-test-${{ github.sha }}
+          name: integration-test-${{ github.sha }}-${{ contains(matrix.target, 'cloud') && 'cloud' || 'oss' }}
 
       - name: Extract
         working-directory: tests
@@ -82,7 +97,7 @@ jobs:
             -p ../logto \
             --db postgres://postgres:postgres@localhost:5432/postgres \
             --du ../logto.tar.gz \
-            ${{ contains(matrix.test_target, 'cloud') && '--cloud' || '' }}
+            ${{ contains(matrix.target, 'cloud') && '--cloud' || '' }}
       
       - name: Check and add mock connectors
         working-directory: tests
@@ -93,15 +108,11 @@ jobs:
       - name: Run Logto
         working-directory: logto/
         run: nohup npm start > nohup.out 2> nohup.err < /dev/null &
-        env:
-          INTEGRATION_TEST: true
 
       - name: Run Logto Cloud
         working-directory: logto/
-        if: contains(matrix.test_target, 'cloud')
-        run: nohup npm start:cloud > nohup-cloud.out 2> nohup-cloud.err < /dev/null &
-        env:
-          INTEGRATION_TEST: true
+        if: contains(matrix.target, 'cloud')
+        run: nohup npm run start:cloud > nohup-cloud.out 2> nohup-cloud.err < /dev/null &
 
       - name: Sleep for 5 seconds
         run: sleep 5
@@ -112,7 +123,7 @@ jobs:
         run: |
           cd tests/packages/integration-tests
           pnpm build
-          pnpm test:${{ matrix.test_target }}
+          pnpm run test:${{ matrix.target }}
 
       - name: Show logs
         working-directory: logto/
@@ -121,3 +132,13 @@ jobs:
       - name: Show error logs
         working-directory: logto/
         run: cat nohup.err
+
+      - name: Show cloud logs
+        working-directory: logto/
+        if: contains(matrix.target, 'cloud')
+        run: cat nohup-cloud.out
+
+      - name: Show cloud error logs
+        working-directory: logto/
+        if: contains(matrix.target, 'cloud')
+        run: cat nohup-cloud.err

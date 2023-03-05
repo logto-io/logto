@@ -10,8 +10,12 @@ echo Install production dependencies
 NODE_ENV=production pnpm i
 
 echo Prune files
-# Remove cloud in OSS distributions
-rm -rf packages/cloud
+
+if [[ "${IS_CLOUD}" != @(1|true|y|yes|yep|yeah) ]]; then
+  # Remove cloud in OSS distributions
+  rm -rf packages/cloud
+fi
+
 # Some node packages use `src` as their dist folder, so ignore them from the rm list in the end
 find \
 .git .changeset .changeset-staged .devcontainer .github .husky .parcel-cache .scripts .vscode pnpm-*.yaml *.js \
