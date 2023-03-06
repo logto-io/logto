@@ -113,14 +113,6 @@ export default function socialRoutes<T extends AuthedMeRouter>(
 
       const { target } = connector.metadata;
 
-      assertThat(
-        !has(user.identities, target),
-        new RequestError({
-          code: 'user.social_account_exists_in_profile',
-          status: 422,
-        })
-      );
-
       /**
        * Same as above, passing `notImplemented` only works for connectors not relying on session storage.
        * E.g. Google and GitHub
@@ -131,7 +123,7 @@ export default function socialRoutes<T extends AuthedMeRouter>(
       });
 
       assertThat(
-        !(await hasUserWithIdentity(target, socialUserInfo.id)),
+        !(await hasUserWithIdentity(target, socialUserInfo.id, userId)),
         new RequestError({
           code: 'user.identity_already_in_use',
           status: 422,
