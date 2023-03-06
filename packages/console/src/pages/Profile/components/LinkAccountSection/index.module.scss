@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  display: flex;
+  align-items: center;
+
+  svg {
+    margin-right: _.unit(2);
+  }
+}

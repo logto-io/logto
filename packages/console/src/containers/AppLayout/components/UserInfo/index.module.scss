@@ -19,37 +19,11 @@
   }
 }
 
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-}
-
-.nameWrapper {
-  display: flex;
-  flex-direction: column;
-  margin-left: _.unit(3);
-
-  .name {
-    font: var(--font-label-2);
-    color: var(--color-text);
-  }
-
-  .email {
-    font: var(--font-body-3);
-    color: var(--color-text-secondary);
-  }
-}
-
 .dropdown {
   min-width: 320px;
 
   .userInfo {
-    display: flex;
-    align-items: center;
     padding: _.unit(4) _.unit(5);
-    user-select: none;
-    cursor: default;
   }
 }
 

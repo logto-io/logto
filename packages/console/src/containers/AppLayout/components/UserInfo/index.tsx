@@ -16,6 +16,7 @@ import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import Spacer from '@/components/Spacer';
 import { Ring as Spinner } from '@/components/Spinner';
 import UserAvatar from '@/components/UserAvatar';
+import UserInfoCard from '@/components/UserInfoCard';
 import { getSignOutRedirectPathname } from '@/consts';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -53,8 +54,6 @@ const UserInfo = () => {
     return <UserInfoSkeleton />;
   }
 
-  const { username, name, picture, email } = user;
-
   return (
     <>
       <div
@@ -69,7 +68,7 @@ const UserInfo = () => {
           setShowDropdown(true);
         }}
       >
-        <UserAvatar className={styles.avatar} url={picture} />
+        <UserAvatar url={user.picture} />
       </div>
       <Dropdown
         hasOverflowContent
@@ -81,13 +80,7 @@ const UserInfo = () => {
           setShowDropdown(false);
         }}
       >
-        <div className={styles.userInfo}>
-          <UserAvatar className={styles.avatar} url={picture} />
-          <div className={styles.nameWrapper}>
-            <div className={styles.name}>{name ?? username}</div>
-            {email && <div className={styles.email}>{email}</div>}
-          </div>
-        </div>
+        <UserInfoCard className={styles.userInfo} user={user} />
         <Divider />
         <DropdownItem
           className={classNames(styles.dropdownItem, isLoading && styles.loading)}

@@ -4,9 +4,11 @@ import path from 'path';
 
 import type { AllConnector, BaseConnector, GetConnectorConfig } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
+import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
+import { pick } from '@silverhand/essentials';
 
 import { notImplemented } from './consts.js';
-import type { ConnectorFactory } from './types.js';
+import type { ConnectorFactory, LogtoConnector } from './types.js';
 
 export function validateConnectorModule(
   connector: Partial<BaseConnector<ConnectorType>>
@@ -76,4 +78,23 @@ export const buildRawConnector = async (
   const rawMetadata = await parseMetadata(rawConnector.metadata, packagePath);
 
   return { rawConnector, rawMetadata };
+};
+
+export const transpileLogtoConnector = ({
+  dbEntry,
+  metadata,
+  type,
+}: LogtoConnector): ConnectorResponse => {
+  return {
+    type,
+    ...metadata,
+    ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'config', 'metadata'),
+  };
+};
+
+export const transpileConnectorFactory = ({
+  metadata,
+  type,
+}: ConnectorFactory): ConnectorFactoryResponse => {
+  return { type, ...metadata };
 };

@@ -6,6 +6,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { notImplemented } from '#src/utils/connectors/consts.js';
+import { transpileLogtoConnector } from '#src/utils/connectors/index.js';
 
 import type { RouterInitArgs } from '../routes/types.js';
 import type { AuthedMeRouter } from './types.js';
@@ -20,15 +21,30 @@ export default function socialRoutes<T extends AuthedMeRouter>(
 ) {
   const {
     libraries: {
-      connectors: { getLogtoConnectorById },
+      connectors: { getLogtoConnectors, getLogtoConnectorById },
     },
     queries: {
       users: { findUserById, updateUserById, deleteUserIdentity, hasUserWithIdentity },
+      signInExperiences: { findDefaultSignInExperience },
     },
   } = tenant;
 
+  router.get('/social/connectors', async (ctx, next) => {
+    const connectors = await getLogtoConnectors();
+    const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
+
+    ctx.body = connectors
+      .filter(
+        ({ type, metadata: { target } }) =>
+          type === ConnectorType.Social && socialSignInConnectorTargets.includes(target)
+      )
+      .map((connector) => transpileLogtoConnector(connector));
+
+    return next();
+  });
+
   router.post(
-    '/social-authorization-uri',
+    '/social/authorization-uri',
     koaGuard({
       body: object({ connectorId: string(), state: string(), redirectUri: string() }),
     }),
@@ -70,7 +86,7 @@ export default function socialRoutes<T extends AuthedMeRouter>(
   );
 
   router.post(
-    '/link-social-identity',
+    '/social/link-identity',
     koaGuard({
       body: object({
         connectorId: string(),
@@ -139,7 +155,7 @@ export default function socialRoutes<T extends AuthedMeRouter>(
   );
 
   router.delete(
-    '/social-identity/:connectorId',
+    '/social/identity/:connectorId',
     koaGuard({
       params: object({
         connectorId: string(),

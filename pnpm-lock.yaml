@@ -232,6 +232,7 @@ importers:
       recharts: ^2.1.13
       remark-gfm: ^3.0.1
       stylelint: ^15.0.0
+      superstruct: ^0.16.0
       swr: ^1.3.0
       typescript: ^4.9.4
       zod: ^3.20.2
@@ -305,6 +306,7 @@ importers:
       recharts: 2.1.13_v2m5e27vhdewzwhryxwfaorcca
       remark-gfm: 3.0.1
       stylelint: 15.0.0
+      superstruct: 0.16.0
       swr: 1.3.0_react@18.2.0
       typescript: 4.9.4
       zod: 3.20.2

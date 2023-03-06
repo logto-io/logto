@@ -22,7 +22,9 @@ export const storeState = (state: string, connectorId: string) => {
 };
 
 export const stateValidation = (state: string, connectorId: string) => {
-  const stateStorage = sessionStorage.getItem(`${storageStateKeyPrefix}:${connectorId}`);
+  const storageKey = `${storageStateKeyPrefix}:${connectorId}`;
+  const stateStorage = sessionStorage.getItem(storageKey);
+  sessionStorage.removeItem(storageKey);
 
   return stateStorage === state;
 };
