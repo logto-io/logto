@@ -1,5 +1,5 @@
 import { generateStandardId } from '@logto/core-kit';
-import type { TenantModel, AdminData, UpdateAdminData } from '@logto/schemas';
+import type { TenantModel, AdminData, UpdateAdminData, CreateScope } from '@logto/schemas';
 import { CreateRolesScope } from '@logto/schemas';
 import { createTenantMetadata } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
@@ -25,7 +25,8 @@ export const createTenant = async (pool: CommonQueryMethods, tenantId: string) =
 
 export const seedAdminData = async (
   pool: CommonQueryMethods,
-  data: AdminData | UpdateAdminData
+  data: AdminData | UpdateAdminData,
+  ...additionalScopes: CreateScope[]
 ) => {
   const { resource, scope, role } = data;
 
@@ -53,6 +54,7 @@ export const seedAdminData = async (
 
   await pool.query(insertInto(resource, 'resources'));
   await pool.query(insertInto(scope, 'scopes'));
+  await Promise.all(additionalScopes.map(async (scope) => pool.query(insertInto(scope, 'scopes'))));
 
   const roleId = await processRole();
   await pool.query(
@@ -64,6 +66,29 @@ export const seedAdminData = async (
         tenantId: resource.tenantId,
       } satisfies CreateRolesScope,
       'roles_scopes'
+    )
+  );
+};
+
+export const assignScopesToRole = async (
+  pool: CommonQueryMethods,
+  tenantId: string,
+  roleId: string,
+  ...scopeIds: string[]
+) => {
+  await Promise.all(
+    scopeIds.map(async (scopeId) =>
+      pool.query(
+        insertInto(
+          {
+            id: generateStandardId(),
+            roleId,
+            scopeId,
+            tenantId,
+          } satisfies CreateRolesScope,
+          'roles_scopes'
+        )
+      )
     )
   );
 };

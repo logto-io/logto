@@ -1,6 +1,9 @@
 import { conditional } from '@silverhand/essentials';
+import { HTTPError } from 'ky';
 import type { ReactNode } from 'react';
 import { Component } from 'react';
+
+import SessionExpired from '@/components/SessionExpired';
 
 import AppError from '../../components/AppError';
 
@@ -9,30 +12,15 @@ type Props = {
 };
 
 type State = {
-  callStack?: string;
-  componentStack?: string;
-  errorMessage?: string;
-  hasError: boolean;
+  error?: Error;
 };
 
 class ErrorBoundary extends Component<Props, State> {
   static getDerivedStateFromError(error: Error): State {
-    const errorMessage = String(error);
-
-    const callStack = conditional(
-      typeof error === 'object' &&
-        typeof error.stack === 'string' &&
-        error.stack.split('\n').slice(1).join('\n')
-    );
-
-    return { callStack, errorMessage, hasError: true };
+    return { error };
   }
 
-  public state: State = {
-    callStack: undefined,
-    errorMessage: undefined,
-    hasError: false,
-  };
+  public state: State = {};
 
   promiseRejectionHandler(error: unknown) {
     this.setState(
@@ -54,10 +42,20 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     const { children } = this.props;
-    const { callStack, errorMessage, hasError } = this.state;
+    const { error } = this.state;
 
-    if (hasError) {
-      return <AppError errorMessage={errorMessage} callStack={callStack} />;
+    if (error) {
+      if (error instanceof HTTPError && error.response.status === 401) {
+        return <SessionExpired error={error} />;
+      }
+
+      const callStack = conditional(
+        typeof error === 'object' &&
+          typeof error.stack === 'string' &&
+          error.stack.split('\n').slice(1).join('\n')
+      );
+
+      return <AppError errorMessage={error.message} callStack={callStack} />;
     }
 
     return children;

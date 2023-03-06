@@ -1,7 +1,7 @@
 import { UserScope } from '@logto/core-kit';
 import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, PredefinedScope } from '@logto/schemas';
-import { deduplicate } from '@silverhand/essentials';
+import { conditionalArray, deduplicate } from '@silverhand/essentials';
 import { useContext } from 'react';
 
 import 'overlayscrollbars/styles/overlayscrollbars.css';
@@ -28,21 +28,26 @@ void initI18n();
 const Content = () => {
   const { tenants, isSettle, currentTenantId } = useContext(TenantsContext);
 
-  const resources = deduplicate([
-    // Explicitly add `currentTenantId` and deduplicate since the user may directly
-    // access a URL with Tenant ID, adding the ID from the URL here can possibly remove one
-    // additional redirect.
-    ...(currentTenantId && [getManagementApi(currentTenantId).indicator]),
-    ...(tenants ?? []).map(({ id }) => getManagementApi(id).indicator),
-    ...(isCloud ? [cloudApi.indicator] : []),
-    meApi.indicator,
-  ]);
+  const resources = deduplicate(
+    conditionalArray(
+      // Explicitly add `currentTenantId` and deduplicate since the user may directly
+      // access a URL with Tenant ID, adding the ID from the URL here can possibly remove one
+      // additional redirect.
+      currentTenantId && getManagementApi(currentTenantId).indicator,
+      ...(tenants ?? []).map(({ id }) => getManagementApi(id).indicator),
+      isCloud && cloudApi.indicator,
+      meApi.indicator
+    )
+  );
   const scopes = [
     UserScope.Email,
     UserScope.Identities,
     UserScope.CustomData,
     PredefinedScope.All,
-    cloudApi.scopes.CreateTenant, // It's fine to keep scope here since core will filter
+    ...conditionalArray(
+      isCloud && cloudApi.scopes.CreateTenant,
+      isCloud && cloudApi.scopes.ManageTenant
+    ),
   ];
 
   return (
@@ -54,26 +59,26 @@ const Content = () => {
         scopes,
       }}
     >
-      {!isCloud || isSettle ? (
-        <AppEndpointsProvider>
-          <AppConfirmModalProvider>
-            <Main />
-          </AppConfirmModalProvider>
-        </AppEndpointsProvider>
-      ) : (
-        <CloudApp />
-      )}
+      <ErrorBoundary>
+        {!isCloud || isSettle ? (
+          <AppEndpointsProvider>
+            <AppConfirmModalProvider>
+              <Main />
+            </AppConfirmModalProvider>
+          </AppEndpointsProvider>
+        ) : (
+          <CloudApp />
+        )}
+      </ErrorBoundary>
     </LogtoProvider>
   );
 };
 
 const App = () => {
   return (
-    <ErrorBoundary>
-      <TenantsProvider>
-        <Content />
-      </TenantsProvider>
-    </ErrorBoundary>
+    <TenantsProvider>
+      <Content />
+    </TenantsProvider>
   );
 };
 export default App;

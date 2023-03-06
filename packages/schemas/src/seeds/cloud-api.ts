@@ -1,5 +1,6 @@
 import { generateStandardId } from '@logto/core-kit';
 
+import type { CreateScope } from '../index.js';
 import { UserRole } from '../types/index.js';
 import type { UpdateAdminData } from './management-api.js';
 import { adminTenantId } from './tenant.js';
@@ -9,28 +10,36 @@ export const cloudApiIndicator = 'https://cloud.logto.io/api';
 
 export enum CloudScope {
   CreateTenant = 'create:tenant',
+  ManageTenant = 'manage:tenant',
 }
 
-export const createCloudApi = (): Readonly<UpdateAdminData> => {
+export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> => {
   const resourceId = generateStandardId();
-
-  return Object.freeze({
-    resource: {
-      tenantId: adminTenantId,
-      id: resourceId,
-      indicator: cloudApiIndicator,
-      name: `Logto Cloud API`,
-    },
-    scope: {
-      tenantId: adminTenantId,
-      id: generateStandardId(),
-      name: CloudScope.CreateTenant,
-      description: 'Allow creating new tenants.',
-      resourceId,
-    },
-    role: {
-      tenantId: adminTenantId,
-      name: UserRole.User,
-    },
+  const buildScope = (name: CloudScope, description: string) => ({
+    tenantId: adminTenantId,
+    id: generateStandardId(),
+    name,
+    description,
+    resourceId,
   });
+
+  return Object.freeze([
+    {
+      resource: {
+        tenantId: adminTenantId,
+        id: resourceId,
+        indicator: cloudApiIndicator,
+        name: `Logto Cloud API`,
+      },
+      scope: buildScope(CloudScope.CreateTenant, 'Allow creating new tenants.'),
+      role: {
+        tenantId: adminTenantId,
+        name: UserRole.User,
+      },
+    },
+    buildScope(
+      CloudScope.ManageTenant,
+      'Allow managing existing tenants, including create without limitation, update, and delete.'
+    ),
+  ]);
 };
