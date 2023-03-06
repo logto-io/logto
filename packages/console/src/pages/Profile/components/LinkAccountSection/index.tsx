@@ -163,7 +163,7 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
                 <NotSet />
               ),
             action: {
-              name: 'profile.change',
+              name: user.primaryEmail ? 'profile.change' : 'profile.link',
               handler: () => {
                 navigate('link-email', {
                   state: { email: user.primaryEmail, action: 'changeEmail' },

@@ -1,4 +1,5 @@
 import { emailRegEx } from '@logto/core-kit';
+import { conditional } from '@silverhand/essentials';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -43,6 +44,8 @@ const LinkEmailModal = () => {
     })();
   };
 
+  const currentEmail = conditional(checkLocationState(state) && state.email);
+
   return (
     <MainFlowLikeModal
       title="profile.link_account.link_email"
@@ -54,7 +57,8 @@ const LinkEmailModal = () => {
           required: t('profile.link_account.email_required'),
           pattern: { value: emailRegEx, message: t('profile.link_account.invalid_email') },
           validate: (value) =>
-            (checkLocationState(state) && state.email !== value) ||
+            !currentEmail ||
+            currentEmail !== value ||
             t('profile.link_account.identical_email_address'),
         })}
         errorMessage={errors.email?.message}
