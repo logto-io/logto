@@ -49,8 +49,9 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
 
   const getSocialAuthorizationUri = useCallback(
     async (connectorId: string) => {
+      const adminTenantEndpointUrl = new URL(adminTenantEndpoint);
       const state = buildIdGenerator(8)();
-      const redirectUri = `${adminTenantEndpoint}/callback/${connectorId}`;
+      const redirectUri = new URL(`/callback/${connectorId}`, adminTenantEndpointUrl).toString();
       const { redirectTo } = await api
         .post('me/social/authorization-uri', { json: { connectorId, state, redirectUri } })
         .json<{ redirectTo: string }>();
@@ -66,6 +67,8 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
     if (!connectors) {
       return [];
     }
+
+    const adminTenantEndpointUrl = new URL(adminTenantEndpoint);
 
     return connectors.map(({ id, name, logo, logoDark, target }) => {
       const logoSrc = theme === AppearanceMode.DarkMode && logoDark ? logoDark : logo;
@@ -108,7 +111,7 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
               const authUri = await getSocialAuthorizationUri(id);
               const callback = new URL(
                 `${getBasename()}/handle-social`,
-                `${adminTenantEndpoint}`
+                adminTenantEndpointUrl
               ).toString();
 
               const queries = new URLSearchParams({
@@ -118,7 +121,7 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
               });
 
               const newWindow = popupWindow(
-                `${adminTenantEndpoint}/springboard?${queries.toString()}`,
+                new URL(`/springboard?${queries.toString()}`, adminTenantEndpointUrl).toString(),
                 'Link social account with Logto',
                 600,
                 640
