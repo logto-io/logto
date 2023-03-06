@@ -14,6 +14,7 @@ import RequestDataError from '@/components/RequestDataError';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { getBasename } from '@/consts';
 import { isCloud } from '@/consts/cloud';
 import { SignInExperiencePage } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
@@ -226,7 +227,7 @@ const SignInExperience = () => {
       )}
       <UnsavedChangesAlertModal
         hasUnsavedChanges={isDirty}
-        parentPath="/console/sign-in-experience"
+        parentPath={`${getBasename()}/sign-in-experience`}
       />
     </PageWrapper>
   );
