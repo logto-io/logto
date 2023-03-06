@@ -37,7 +37,6 @@ import RolePermissions from '@/pages/RoleDetails/RolePermissions';
 import RoleSettings from '@/pages/RoleDetails/RoleSettings';
 import RoleUsers from '@/pages/RoleDetails/RoleUsers';
 import Roles from '@/pages/Roles';
-import Settings from '@/pages/Settings';
 import SignInExperience from '@/pages/SignInExperience';
 import UserDetails from '@/pages/UserDetails';
 import UserLogs from '@/pages/UserDetails/UserLogs';
@@ -136,7 +135,6 @@ const Main = () => {
                     <Route path={RoleDetailsTabs.Users} element={<RoleUsers />} />
                   </Route>
                 </Route>
-                <Route path="settings" element={<Settings />} />
                 <Route path="profile">
                   <Route index element={<Profile />} />
                   <Route path="verify-password" element={<VerifyPasswordModal />} />

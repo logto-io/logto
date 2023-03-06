@@ -1,7 +1,12 @@
 const menu = {
   profile: 'Profil',
   language: 'Sprache',
-  appearance: 'Darstellung',
+  appearance: {
+    label: 'Darstellung',
+    light: 'Hell',
+    dark: 'Dunkel',
+    system: 'Synchonisiere mit Systemeinstellungen',
+  },
   sign_out: 'Abmelden',
 };
 
