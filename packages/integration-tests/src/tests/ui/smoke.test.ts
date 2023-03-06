@@ -1,102 +1,87 @@
-import { logtoConsoleUrl } from '#src/constants.js';
+import path from 'path';
+
+import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
 import { generatePassword } from '#src/utils.js';
+
+const appendPathname = (pathname: string, baseUrl: URL) =>
+  new URL(path.join(baseUrl.pathname, pathname), baseUrl);
+
+const logtoConsoleUrl = new URL(logtoConsoleUrlString);
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
  * Parallel execution will lead to errors.
  */
+// Tip: See https://github.com/argos-ci/jest-puppeteer/blob/main/packages/expect-puppeteer/README.md
+// for convenient expect methods
 describe('smoke testing', () => {
   const consoleUsername = 'admin';
   const consolePassword = generatePassword();
 
   it('opens with app element and navigates to welcome page', async () => {
-    const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
-    await page.goto(logtoConsoleUrl);
-    await navigation;
+    await page.goto(logtoConsoleUrl.href);
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
-    await expect(page.waitForSelector('#app')).resolves.not.toBeNull();
+    await expect(page).toMatchElement('#app');
     expect(page.url()).toBe(new URL('console/welcome', logtoConsoleUrl).href);
   });
 
   it('registers a new admin account and automatically signs in', async () => {
-    const createAccountButton = await page.waitForSelector('button');
-    expect(createAccountButton).not.toBeNull();
+    await expect(page).toClick('button', { text: 'Create account' });
 
-    const navigateToRegister = page.waitForNavigation({ waitUntil: 'networkidle0' });
-    await createAccountButton.click();
-    await navigateToRegister;
-
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
     expect(page.url()).toBe(new URL('register', logtoConsoleUrl).href);
 
-    const usernameField = await page.waitForSelector('input[name=identifier]');
-    const submitButton = await page.waitForSelector('button[name=submit]');
+    await expect(page).toFill('input[name=identifier]', consoleUsername);
+    await expect(page).toClick('button[name=submit]');
 
-    await usernameField.type(consoleUsername);
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    expect(page.url()).toBe(appendPathname('/register/password', logtoConsoleUrl).href);
 
-    const navigateToSignIn = page.waitForNavigation({ waitUntil: 'networkidle0' });
-    await submitButton.click();
-    await navigateToSignIn;
+    await expect(page).toFillForm('form', {
+      newPassword: consolePassword,
+      confirmPassword: consolePassword,
+    });
 
-    expect(page.url()).toBe(new URL('register/password', logtoConsoleUrl).href);
-
-    const passwordField = await page.waitForSelector('input[name=newPassword]');
-    const confirmPasswordField = await page.waitForSelector('input[name=confirmPassword]');
-    const saveButton = await page.waitForSelector('button[name=submit]');
-    await passwordField.type(consolePassword);
-    await confirmPasswordField.type(consolePassword);
-
-    const navigateToGetStarted = page.waitForNavigation({ waitUntil: 'networkidle0' });
-    await saveButton.click();
-    await navigateToGetStarted;
+    await expect(page).toClick('button[name=submit]');
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
     expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
   });
 
   it('signs out of admin console', async () => {
-    const userElement = await page.waitForSelector('div[class$=topbar] > div[class$=container]');
-    await userElement.click();
+    await expect(page).toClick('div[class$=topbar] > div[class$=container]');
 
     // Try awaiting for 500ms before clicking sign-out button
     await page.waitForTimeout(500);
 
-    const signOutButton = await page.waitForSelector(
+    await expect(page).toClick(
       '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownItem]:last-child'
     );
-    const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
-    await signOutButton.click();
-    await navigation;
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
     expect(page.url()).toBe(new URL('sign-in', logtoConsoleUrl).href);
   });
 
   it('signs in to admin console', async () => {
-    const usernameField = await page.waitForSelector('input[name=identifier]');
-    const passwordField = await page.waitForSelector('input[name=password]');
-    const submitButton = await page.waitForSelector('button[name=submit]');
-
-    await usernameField.type(consoleUsername);
-    await passwordField.type(consolePassword);
-
-    const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
-    await submitButton.click();
-    await navigation;
+    await expect(page).toFillForm('form', {
+      identifier: consoleUsername,
+      password: consolePassword,
+    });
+    await expect(page).toClick('button[name=submit]');
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
     expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
 
-    const userElement = await page.waitForSelector('div[class$=topbar] > div:last-child');
-    await userElement.click();
+    await expect(page).toClick('div[class$=topbar] > div:last-child');
 
     const userMenu = await page.waitForSelector('.ReactModalPortal div[class$=dropdownContainer]');
-    const usernameString = await userMenu.$eval(
-      'div[class$=nameWrapper] > div[class$=name]',
-      (element) => element.textContent
-    );
-    expect(usernameString).toBe(consoleUsername);
+    await expect(userMenu).toMatchElement('div[class$=nameWrapper] > div[class$=name]', {
+      text: consoleUsername,
+    });
   });
 
   it('renders SVG correctly with viewbox property', async () => {
-    const logoSvg = await page.waitForSelector('div[class$=topbar] > svg[viewbox]');
-
-    expect(logoSvg).not.toBeNull();
+    await page.waitForSelector('div[class$=topbar] > svg[viewbox]');
   });
 });
