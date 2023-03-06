@@ -18,11 +18,11 @@ import {
 export type InstallArgs = {
   path?: string;
   skipSeed: boolean;
-  officialConnectors?: boolean;
+  cloud: boolean;
   downloadUrl?: string;
 };
 
-const installLogto = async ({ path, skipSeed, officialConnectors, downloadUrl }: InstallArgs) => {
+const installLogto = async ({ path, skipSeed, downloadUrl, cloud }: InstallArgs) => {
   validateNodeVersion();
 
   // Get instance path
@@ -44,7 +44,7 @@ const installLogto = async ({ path, skipSeed, officialConnectors, downloadUrl }:
       )} command to seed database when ready.\n`
     );
   } else {
-    await seedDatabase(instancePath);
+    await seedDatabase(instancePath, cloud);
   }
 
   // Save to dot env
@@ -59,7 +59,7 @@ const install: CommandModule<
   {
     p?: string;
     ss: boolean;
-    oc?: boolean;
+    cloud: boolean;
     du?: string;
   }
 > = {
@@ -78,10 +78,11 @@ const install: CommandModule<
         type: 'boolean',
         default: false,
       },
-      oc: {
-        alias: 'official-connectors',
-        describe: 'Add official connectors after downloading Logto',
+      cloud: {
+        describe: 'Init Logto for cloud',
         type: 'boolean',
+        hidden: true,
+        default: false,
       },
       du: {
         alias: 'download-url',
@@ -90,8 +91,8 @@ const install: CommandModule<
         hidden: true,
       },
     }),
-  handler: async ({ p, ss, oc, du }) => {
-    await installLogto({ path: p, skipSeed: ss, officialConnectors: oc, downloadUrl: du });
+  handler: async ({ p, ss, cloud, du }) => {
+    await installLogto({ path: p, skipSeed: ss, cloud, downloadUrl: du });
   },
 };
 

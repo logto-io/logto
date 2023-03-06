@@ -133,7 +133,7 @@ export const decompress = async (toPath: string, tarPath: string) => {
   );
 };
 
-export const seedDatabase = async (instancePath: string) => {
+export const seedDatabase = async (instancePath: string, cloud: boolean) => {
   try {
     const pool = await createPoolAndDatabaseIfNeeded();
     await seedByPool(pool);

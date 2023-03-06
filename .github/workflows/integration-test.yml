@@ -13,6 +13,11 @@ concurrency:
 
 jobs:
   package:
+    # See https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#expanding-or-adding-matrix-configurations
+    strategy:
+      matrix:
+        env: [oss, cloud]
+
     runs-on: ubuntu-latest
 
     steps:
@@ -21,26 +26,38 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
-      - name: Build
-        run: pnpm -r build
-
-      - name: Package
-        run: ./.scripts/package.sh
+      - name: Build and package
+        if: matrix.env != 'cloud'
+        run: |
+          pnpm -r build
+          ./.scripts/package.sh
+      
+      - name: Build and package (Cloud)
+        if: matrix.env == 'cloud'
+        run: |
+          pnpm -r build
+          ./.scripts/package.sh
+        env:
+          IS_CLOUD: 1
+          CONSOLE_PUBLIC_URL: /
+          ADMIN_ENDPOINT: http://localhost:3002
 
       - uses: actions/upload-artifact@v3
         with:
-          name: integration-test-${{ github.sha }}
+          name: integration-test-${{ github.sha }}-${{ matrix.env }}
           path: /tmp/logto.tar.gz
           retention-days: 3
 
   run-logto:
-    needs: package
-
     strategy:
       matrix:
-        test_target: [api, ui]
+        target: [api, ui, ui-cloud]
 
+    needs: package
     runs-on: ubuntu-latest
+    env:
+      INTEGRATION_TEST: true
+      IS_CLOUD: ${{ contains(matrix.target, 'cloud') && '1' || '0' }}
 
     steps:
       - uses: actions/checkout@v3
@@ -73,12 +90,16 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: integration-test-${{ github.sha }}
+          name: integration-test-${{ github.sha }}-${{ contains(matrix.target, 'cloud') && 'cloud' || 'oss' }}
 
       - name: Extract
         working-directory: tests
         run: |
-          npm run cli init -- -p ../logto --db postgres://postgres:postgres@localhost:5432/postgres --du ../logto.tar.gz
+          npm run cli init -- \
+            -p ../logto \
+            --db postgres://postgres:postgres@localhost:5432/postgres \
+            --du ../logto.tar.gz \
+            ${{ contains(matrix.target, 'cloud') && '--cloud' || '' }}
       
       - name: Check and add mock connectors
         working-directory: tests
@@ -89,8 +110,11 @@ jobs:
       - name: Run Logto
         working-directory: logto/
         run: nohup npm start > nohup.out 2> nohup.err < /dev/null &
-        env:
-          INTEGRATION_TEST: true
+
+      - name: Run Logto Cloud
+        working-directory: logto/
+        if: contains(matrix.target, 'cloud')
+        run: nohup npm run start:cloud > nohup-cloud.out 2> nohup-cloud.err < /dev/null &
 
       - name: Sleep for 5 seconds
         run: sleep 5
@@ -101,7 +125,7 @@ jobs:
         run: |
           cd tests/packages/integration-tests
           pnpm build
-          pnpm test:${{ matrix.test_target }}
+          pnpm run test:${{ matrix.target }}
 
       - name: Show logs
         working-directory: logto/
@@ -110,3 +134,13 @@ jobs:
       - name: Show error logs
         working-directory: logto/
         run: cat nohup.err
+
+      - name: Show cloud logs
+        working-directory: logto/
+        if: contains(matrix.target, 'cloud')
+        run: cat nohup-cloud.out
+
+      - name: Show cloud error logs
+        working-directory: logto/
+        if: contains(matrix.target, 'cloud')
+        run: cat nohup-cloud.err
