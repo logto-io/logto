@@ -1,17 +1,13 @@
 @use '@/scss/underscore' as _;
+@use '@logto/core-kit/scss/console-themes' as themes;
 
-.content {
-  flex-grow: 1;
+.app {
+  position: absolute;
+  inset: 0;
   display: flex;
-  overflow: hidden;
+  flex-direction: column;
 }
 
-.main {
-  flex-grow: 1;
-  padding: 0 _.unit(2);
-  overflow-y: scroll;
-
-  > * {
-    @include _.main-content-width;
-  }
+.topbarShadow {
+  box-shadow: var(--shadow-2);
 }
