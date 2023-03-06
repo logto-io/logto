@@ -18,7 +18,7 @@ describe('smoke testing', () => {
   const consoleUsername = 'admin';
   const consolePassword = generatePassword();
 
-  it('opens with app element and navigates to welcome page', async () => {
+  it('can open with app element and navigate to welcome page', async () => {
     await page.goto(logtoConsoleUrl.href);
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
@@ -26,7 +26,7 @@ describe('smoke testing', () => {
     expect(page.url()).toBe(new URL('console/welcome', logtoConsoleUrl).href);
   });
 
-  it('registers a new admin account and automatically signs in', async () => {
+  it('can register a new admin account and automatically sign in', async () => {
     await expect(page).toClick('button', { text: 'Create account' });
 
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
@@ -49,7 +49,7 @@ describe('smoke testing', () => {
     expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
   });
 
-  it('signs out of admin console', async () => {
+  it('can sign out of admin console', async () => {
     await expect(page).toClick('div[class$=topbar] > div[class$=container]');
 
     // Try awaiting for 500ms before clicking sign-out button
@@ -63,7 +63,7 @@ describe('smoke testing', () => {
     expect(page.url()).toBe(new URL('sign-in', logtoConsoleUrl).href);
   });
 
-  it('signs in to admin console', async () => {
+  it('can sign in to admin console', async () => {
     await expect(page).toFillForm('form', {
       identifier: consoleUsername,
       password: consolePassword,
@@ -82,6 +82,6 @@ describe('smoke testing', () => {
   });
 
   it('renders SVG correctly with viewbox property', async () => {
-    await page.waitForSelector('div[class$=topbar] > svg[viewbox]');
+    await page.waitForSelector('div[class$=topbar] > svg[viewbox][class$=logo]');
   });
 });
