@@ -40,18 +40,18 @@ describe('ForgotPassword', () => {
 
     act(() => {
       if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: '123456' } });
+        fireEvent.change(passwordInput, { target: { value: '1234!@#$' } });
       }
 
       if (confirmPasswordInput) {
-        fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
+        fireEvent.change(confirmPasswordInput, { target: { value: '1234!@#$' } });
       }
 
       fireEvent.click(submitButton);
     });
 
     await waitFor(() => {
-      expect(setUserPassword).toBeCalledWith('123456');
+      expect(setUserPassword).toBeCalledWith('1234!@#$');
     });
   });
 });

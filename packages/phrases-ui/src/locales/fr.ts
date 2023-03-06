@@ -108,6 +108,8 @@ const translation = {
     invalid_phone: "Le numéro de téléphone n'est pas valide",
     password_min_length: 'Le mot de passe doit comporter un minimum de {{min}} caractères.',
     passwords_do_not_match: 'Les mots de passe ne correspondent pas',
+    invalid_password:
+      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
     invalid_passcode: 'Le code est invalide',
     invalid_connector_auth: "L'autorisation n'est pas valide",
     invalid_connector_request: 'Les données du connecteur ne sont pas valides',

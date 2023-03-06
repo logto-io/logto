@@ -101,6 +101,8 @@ const translation = {
     invalid_phone: '휴대전화번호가 유효하지 않아요.',
     password_min_length: '비밀번호는 최소 {{min}} 자리로 이루어져야 해요.',
     passwords_do_not_match: '비밀번호가 일치하지 않아요.',
+    invalid_password:
+      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
     invalid_passcode: '비밀번호가 유효하지 않아요.',
     invalid_connector_auth: '인증이 유효하지 않아요.',
     invalid_connector_request: '연동 정보가 유효하지 않아요.',

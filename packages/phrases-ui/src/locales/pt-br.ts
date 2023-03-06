@@ -105,6 +105,8 @@ const translation = {
     invalid_phone: 'O número de telefone é inválido',
     password_min_length: 'A senha requer um mínimo de {{min}} caracteres',
     passwords_do_not_match: 'Suas senhas não correspondem. Por favor, tente novamente.',
+    invalid_password:
+      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
     invalid_passcode: 'O código de verificação é inválido',
     invalid_connector_auth: 'A autorização é inválida',
     invalid_connector_request: 'Os dados do conector são inválidos',

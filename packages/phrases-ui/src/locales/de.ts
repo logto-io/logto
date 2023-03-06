@@ -107,6 +107,8 @@ const translation = {
     invalid_phone: 'Die Telefonnummer ist ungültig',
     password_min_length: 'Passwort muss mindestens {{min}} Zeichen lang sein',
     passwords_do_not_match: 'Passwörter stimmen nicht überein',
+    invalid_password:
+      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
     invalid_passcode: 'Der Bestätigungscode ist ungültig',
     invalid_connector_auth: 'Die Autorisierung ist ungültig',
     invalid_connector_request: 'Connector Daten sind ungültig',
