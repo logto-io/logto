@@ -16,7 +16,10 @@ const HandleSocialCallback = () => {
 
       if (connectorId) {
         const queries = new URLSearchParams(search);
-        queries.set('redirectUri', `${adminTenantEndpoint}/callback/${connectorId}`);
+        queries.set(
+          'redirectUri',
+          new URL(`/callback/${connectorId}`, new URL(adminTenantEndpoint)).toString()
+        );
         const connectorData = Object.fromEntries(queries);
 
         await api.post('me/social/link-identity', { json: { connectorId, connectorData } });

@@ -111,7 +111,7 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
               const authUri = await getSocialAuthorizationUri(id);
               const callback = new URL(
                 `${getBasename()}/handle-social`,
-                adminTenantEndpointUrl
+                window.location.origin
               ).toString();
 
               const queries = new URLSearchParams({
