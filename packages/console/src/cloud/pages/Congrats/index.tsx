@@ -1,26 +1,25 @@
+import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import AirPlay from '@/assets/images/air-play.svg';
-import GetStarted from '@/assets/images/get-started.svg';
-import ActionBar from '@/cloud/components/ActionBar';
+import CalendarOutline from '@/assets/images/calendar-outline.svg';
+import CongratsImageDark from '@/assets/images/congrats-dark.svg';
+import CongratsImageLight from '@/assets/images/congrats.svg';
 import Reservation from '@/cloud/components/Reservation';
 import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
-import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { useTheme } from '@/hooks/use-theme';
 
-import { OnboardingPage } from '../../types';
-import { getOnboardPagePathname } from '../../utils';
 import * as styles from './index.module.scss';
 
 const Congrats = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { userEndpoint } = useContext(AppEndpointsContext);
+  const theme = useTheme();
+  const CongratsImage = theme === AppearanceMode.LightMode ? CongratsImageLight : CongratsImageDark;
   const { update } = useUserOnboardingData();
 
   const navigate = useNavigate();
@@ -30,42 +29,33 @@ const Congrats = () => {
     navigate('/');
   };
 
-  const handleBack = () => {
-    navigate(getOnboardPagePathname(OnboardingPage.SignInExperience));
-  };
-
   return (
     <div className={pageLayout.page}>
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={classNames(pageLayout.content, styles.content)}>
-          <GetStarted />
+          <CongratsImage className={styles.congratsImage} />
           <div className={styles.title}>{t('cloud.congrats.title')}</div>
-          <div className={styles.description}>{t('cloud.congrats.description')}</div>
-          <Button
-            type="primary"
-            size="large"
-            title="cloud.congrats.check_out_button"
-            icon={<AirPlay className={styles.buttonIcon} />}
-            onClick={() => {
-              window.open(new URL('/demo-app', userEndpoint), '_blank');
-            }}
-          />
-          <Divider className={styles.divider} />
+          <div className={styles.description}>
+            <Trans components={{ strong: <span className={styles.strong} /> }}>
+              {t('cloud.congrats.description')}
+            </Trans>
+          </div>
           <Reservation
             title="cloud.congrats.reserve_title"
             description="cloud.congrats.reserve_description"
             reservationButtonTitle="cloud.congrats.book_button"
+            reservationButtonIcon={<CalendarOutline />}
+            className={styles.reservation}
+          />
+          <Divider className={styles.divider} />
+          <Button
+            size="large"
+            type="primary"
+            title="cloud.congrats.enter_admin_console"
+            onClick={enterAdminConsole}
           />
         </div>
       </OverlayScrollbar>
-      <ActionBar step={4}>
-        <Button
-          type="primary"
-          title="cloud.congrats.enter_admin_console"
-          onClick={enterAdminConsole}
-        />
-        <Button title="general.back" onClick={handleBack} />
-      </ActionBar>
     </div>
   );
 };

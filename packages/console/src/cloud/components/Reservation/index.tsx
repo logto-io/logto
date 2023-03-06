@@ -1,4 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import classNames from 'classnames';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Calendar from '@/assets/images/calendar.svg';
@@ -12,13 +14,21 @@ type Props = {
   title: AdminConsoleKey;
   description: AdminConsoleKey;
   reservationButtonTitle: AdminConsoleKey;
+  reservationButtonIcon?: ReactNode;
+  className?: string;
 };
 
-const Reservation = ({ title, description, reservationButtonTitle }: Props) => {
+const Reservation = ({
+  title,
+  description,
+  reservationButtonTitle,
+  reservationButtonIcon,
+  className,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
-    <div className={styles.reservation}>
+    <div className={classNames(styles.reservation, className)}>
       <div className={styles.reservationInfo}>
         <Calendar className={styles.reservationIcon} />
         <div>
@@ -29,6 +39,7 @@ const Reservation = ({ title, description, reservationButtonTitle }: Props) => {
       <Button
         type="outline"
         title={reservationButtonTitle}
+        icon={reservationButtonIcon}
         onClick={() => {
           const bookLink = buildUrl(reservationLink, {
             // Note: month format is YYYY-MM
