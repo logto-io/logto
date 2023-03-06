@@ -26,19 +26,21 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
-      - name: Build
-        run: pnpm -r build
-
-      - name: Package
+      - name: Build and package
         if: matrix.env != 'cloud'
-        run: ./.scripts/package.sh
+        run: |
+          pnpm -r build
+          ./.scripts/package.sh
       
-      - name: Package
+      - name: Build and package (Cloud)
         if: matrix.env == 'cloud'
-        run: ./.scripts/package.sh
+        run: |
+          pnpm -r build
+          ./.scripts/package.sh
         env:
           IS_CLOUD: 1
           CONSOLE_PUBLIC_URL: /
+          ADMIN_ENDPOINT: http://localhost:3002
 
       - uses: actions/upload-artifact@v3
         with:

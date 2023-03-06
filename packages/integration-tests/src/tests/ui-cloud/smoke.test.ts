@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { logtoCloudUrl, logtoConsoleUrl } from '#src/constants.js';
 import { generatePassword } from '#src/utils.js';
 
@@ -8,7 +10,7 @@ import { generatePassword } from '#src/utils.js';
 describe('smoke testing for cloud', () => {
   const consoleUsername = 'admin';
   const consolePassword = generatePassword();
-  const adminTenantUrl = logtoConsoleUrl; // In dev mode, the console URL is actually for admin tenant
+  const adminTenantUrl = new URL(logtoConsoleUrl); // In dev mode, the console URL is actually for admin tenant
 
   it('opens with app element and navigates to sign-in page', async () => {
     const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
@@ -16,6 +18,8 @@ describe('smoke testing for cloud', () => {
     await navigation;
 
     await expect(page.waitForSelector('#app')).resolves.not.toBeNull();
-    expect(page.url()).toBe(adminTenantUrl);
+    expect(page.url()).toBe(
+      new URL(path.join(adminTenantUrl.pathname, '/register'), adminTenantUrl).toString()
+    );
   });
 });
