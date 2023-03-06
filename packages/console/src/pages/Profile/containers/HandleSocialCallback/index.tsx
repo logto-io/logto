@@ -12,10 +12,13 @@ const HandleSocialCallback = () => {
   useEffect(() => {
     (async () => {
       const connectorId = sessionStorage.getItem(profileSocialLinkingKeyPrefix);
-      const connectorData = Object.fromEntries(new URLSearchParams(search));
+      sessionStorage.removeItem(profileSocialLinkingKeyPrefix);
 
       if (connectorId) {
-        sessionStorage.removeItem(profileSocialLinkingKeyPrefix);
+        const queries = new URLSearchParams(search);
+        queries.set('redirectUri', `${adminTenantEndpoint}/callback/${connectorId}`);
+        const connectorData = Object.fromEntries(queries);
+
         await api.post('me/social/link-identity', { json: { connectorId, connectorData } });
 
         window.close();

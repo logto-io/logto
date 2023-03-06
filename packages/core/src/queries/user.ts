@@ -81,12 +81,13 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
     `);
 
-  const hasUserWithIdentity = async (target: string, userId: string) =>
+  const hasUserWithIdentity = async (target: string, userId: string, excludeUserId?: string) =>
     pool.exists(
       sql`
         select ${fields.id}
         from ${table}
         where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = ${userId}
+        ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
       `
     );
 
