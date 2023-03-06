@@ -33,7 +33,7 @@ const CardContent = <T extends Nullable<string | Record<string, unknown>> | unde
   data,
 }: Props<T>) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const defaultRenderer = (value: unknown) => (value ? <>{String(value)}</> : <NotSet />);
+  const defaultRenderer = (value: unknown) => (value ? <span>{String(value)}</span> : <NotSet />);
 
   if (data.length === 0) {
     return null;

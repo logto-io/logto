@@ -2,6 +2,7 @@ import type { User } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import { useState } from 'react';
 
+import FormCard from '@/components/FormCard';
 import UserAvatar from '@/components/UserAvatar';
 import { isCloud } from '@/consts/cloud';
 
@@ -9,7 +10,6 @@ import type { BasicUserField } from '../../containers/BasicUserInfoUpdateModal';
 import BasicUserInfoUpdateModal from '../../containers/BasicUserInfoUpdateModal';
 import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
-import Section from '../Section';
 
 type Props = {
   user: User;
@@ -47,7 +47,7 @@ const BasicUserInfoSection = ({ user, onUpdate }: Props) => {
   };
 
   return (
-    <Section title="profile.settings.title">
+    <FormCard title="profile.settings.title">
       <CardContent
         title="profile.settings.profile_information"
         data={[
@@ -90,7 +90,7 @@ const BasicUserInfoSection = ({ user, onUpdate }: Props) => {
           }}
         />
       )}
-    </Section>
+    </FormCard>
   );
 };
 

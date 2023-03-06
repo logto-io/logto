@@ -17,7 +17,7 @@ import { Ring as Spinner } from '@/components/Spinner';
 import UserAvatar from '@/components/UserAvatar';
 import UserInfoCard from '@/components/UserInfoCard';
 import { getSignOutRedirectPathname } from '@/consts';
-import useLogtoAdminUser from '@/hooks/use-logto-admin-user';
+import useCurrentUser from '@/hooks/use-current-user';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -29,7 +29,7 @@ const UserInfo = () => {
   const { signOut } = useLogto();
   const navigate = useNavigate();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [user] = useLogtoAdminUser();
+  const { user, isLoading: isLoadingUser } = useCurrentUser();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -39,7 +39,7 @@ const UserInfo = () => {
     update,
   } = useUserPreferences();
 
-  if (!user) {
+  if (isLoadingUser) {
     return <UserInfoSkeleton />;
   }
 
@@ -57,7 +57,7 @@ const UserInfo = () => {
           setShowDropdown(true);
         }}
       >
-        <UserAvatar url={user.avatar} />
+        <UserAvatar url={user?.avatar} />
       </div>
       <Dropdown
         hasOverflowContent

@@ -5,6 +5,12 @@
   align-items: center;
 
   svg {
+    flex-shrink: 0;
     margin-right: _.unit(2);
+  }
+
+  span {
+    @include _.text-ellipsis;
+    max-width: 292px;
   }
 }

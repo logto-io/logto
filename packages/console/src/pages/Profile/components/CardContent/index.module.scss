@@ -40,22 +40,33 @@
       border-bottom: 1px solid var(--color-neutral-variant-90);
 
       &:first-child {
-        width: 35%;
+        max-width: 248px;
+        width: 25%;
         font: var(--font-label-2);
       }
 
       &:last-child {
         text-align: right;
-        width: 30%;
+        width: 25%;
 
         .wrapper {
           justify-content: flex-end;
         }
+      }
+
+      > span {
+        @include _.text-ellipsis;
+        display: inline-block;
+        max-width: 320px;
       }
     }
 
     tr:last-child td {
       border-bottom: none;
     }
+  }
+
+  &:not(:first-child) {
+    margin-top: _.unit(6);
   }
 }

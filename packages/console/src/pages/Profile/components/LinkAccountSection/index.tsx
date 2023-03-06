@@ -3,12 +3,13 @@ import type { ConnectorResponse, User } from '@logto/schemas';
 import { AppearanceMode } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { is } from 'superstruct';
 
 import MailIcon from '@/assets/images/mail.svg';
+import FormCard from '@/components/FormCard';
 import ImageWithErrorFallback from '@/components/ImageWithErrorFallback';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import UserInfoCard from '@/components/UserInfoCard';
@@ -23,29 +24,20 @@ import { popupWindow } from '../../utils';
 import type { Action, Row } from '../CardContent';
 import CardContent from '../CardContent';
 import NotSet from '../NotSet';
-import Section from '../Section';
 import * as styles from './index.module.scss';
 
 type Props = {
   user: User;
+  connectors?: ConnectorResponse[];
   onUpdate: () => void;
 };
 
-const LinkAccountSection = ({ user, onUpdate }: Props) => {
+const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const theme = useTheme();
   const { show: showConfirm } = useConfirmModal();
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
-  const [connectors, setConnectors] = useState<ConnectorResponse[]>();
-
-  useEffect(() => {
-    (async () => {
-      const connectors = await api.get('me/social/connectors').json<ConnectorResponse[]>();
-
-      setConnectors(connectors);
-    })();
-  }, [api]);
 
   const getSocialAuthorizationUri = useCallback(
     async (connectorId: string) => {
@@ -145,7 +137,7 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
   ]);
 
   return (
-    <Section title="profile.link_account.title">
+    <FormCard title="profile.link_account.title">
       <CardContent
         title="profile.link_account.email_sign_in"
         data={[
@@ -157,7 +149,7 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
               email ? (
                 <div className={styles.wrapper}>
                   <MailIcon />
-                  {email}
+                  <span>{email}</span>
                 </div>
               ) : (
                 <NotSet />
@@ -174,7 +166,7 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
         ]}
       />
       <CardContent title="profile.link_account.social_sign_in" data={tableInfo} />
-    </Section>
+    </FormCard>
   );
 };
 
