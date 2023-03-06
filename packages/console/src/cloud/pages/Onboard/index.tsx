@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
 import { OnboardPage } from '@/cloud/types';
 import { getOnboardPagePathname } from '@/cloud/utils';
-import Topbar from '@/containers/AppLayout/components/Topbar';
 import NotFound from '@/pages/NotFound';
 
 import About from '../About';
@@ -26,7 +25,6 @@ const Onboard = () => {
 
   return (
     <div className={styles.onBoard}>
-      <Topbar />
       <Routes>
         <Route index element={<Navigate replace to={welcomePathname} />} />
         <Route path={OnboardPage.Welcome} element={<Welcome />} />

@@ -62,6 +62,7 @@ export type Questionnaire = z.infer<typeof questionnaireGuard>;
 
 export const userOnboardingDataGuard = z.object({
   questionnaire: questionnaireGuard.optional(),
+  hasOnboard: z.boolean().optional(),
 });
 
 export type UserOnboardingData = z.infer<typeof userOnboardingDataGuard>;

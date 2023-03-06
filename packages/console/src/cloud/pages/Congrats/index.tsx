@@ -7,10 +7,12 @@ import AirPlay from '@/assets/images/air-play.svg';
 import GetStarted from '@/assets/images/get-started.svg';
 import ActionBar from '@/cloud/components/ActionBar';
 import Reservation from '@/cloud/components/Reservation';
+import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
+import { getBasename } from '@/consts';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 
 import { OnboardPage } from '../../types';
@@ -20,11 +22,13 @@ import * as styles from './index.module.scss';
 const Congrats = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { userEndpoint } = useContext(AppEndpointsContext);
+  const { update } = useUserOnboardingData();
 
   const navigate = useNavigate();
 
-  const enterAdminConsole = () => {
-    navigate('/');
+  const enterAdminConsole = async () => {
+    await update({ hasOnboard: true });
+    navigate(getBasename());
   };
 
   const handleBack = () => {

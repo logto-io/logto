@@ -1,5 +1,5 @@
 import type { RefObject } from 'react';
 
-export type AppLayoutOutletContext = {
+export type AppContentOutletContext = {
   scrollableContent: RefObject<HTMLDivElement>;
 };
