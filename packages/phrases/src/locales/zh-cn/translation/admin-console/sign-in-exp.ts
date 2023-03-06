@@ -26,6 +26,7 @@ const sign_in_exp = {
   branding: {
     title: '品牌定制区',
     ui_style: '样式',
+    favicon: '浏览器地址栏图标',
     styles: {
       logo_slogan: 'Logo 和标语',
       logo: '仅有 Logo',

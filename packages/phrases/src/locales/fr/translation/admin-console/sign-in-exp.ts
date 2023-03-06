@@ -29,6 +29,7 @@ const sign_in_exp = {
   branding: {
     title: 'ZONE DE MARQUE',
     ui_style: 'Style',
+    favicon: 'Browser favicon', // UNTRANSLATED
     styles: {
       logo_slogan: "Logo de l'application avec slogan",
       logo: "Logo de l'application seulement",

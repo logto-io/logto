@@ -57,7 +57,6 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
 
     const {
       signInExperience: { socialConnectors, color, ...rest },
-      language,
       mode,
       platform,
       isNative,

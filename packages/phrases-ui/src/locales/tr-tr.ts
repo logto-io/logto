@@ -48,6 +48,7 @@ const translation = {
     agree_with_terms: 'Okudum ve anladım',
     agree_with_terms_modal: 'Devam etmek için lütfen <link></link>i kabul edin.',
     terms_of_use: 'Kullanım Koşulları',
+    sign_in: 'Giriş Yap',
     create_account: 'Hesap Oluştur',
     or: 'veya',
     enter_passcode: 'Kod {{address}} {{target}} inize gönderildi.',

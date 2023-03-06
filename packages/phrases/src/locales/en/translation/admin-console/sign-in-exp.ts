@@ -27,6 +27,7 @@ const sign_in_exp = {
   branding: {
     title: 'BRANDING AREA',
     ui_style: 'Style',
+    favicon: 'Browser favicon',
     styles: {
       logo_slogan: 'App logo with slogan',
       logo: 'App logo only',

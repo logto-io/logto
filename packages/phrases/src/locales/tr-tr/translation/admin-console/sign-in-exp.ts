@@ -28,6 +28,7 @@ const sign_in_exp = {
   branding: {
     title: 'MARKA ALANI',
     ui_style: 'Stil',
+    favicon: 'Browser favicon', // UNTRANSLATED
     styles: {
       logo_slogan: 'Sloganlı şekilde uygulama logosu',
       logo: 'Yalnızca uygulama logosu',

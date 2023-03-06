@@ -27,6 +27,16 @@ const BrandingForm = () => {
   return (
     <Card>
       <div className={styles.title}>{t('sign_in_exp.branding.title')}</div>
+      <FormField title="sign_in_exp.branding.favicon">
+        <TextInput
+          {...register('branding.favicon', {
+            validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
+          })}
+          hasError={Boolean(errors.branding?.favicon)}
+          errorMessage={errors.branding?.favicon?.message}
+          placeholder={t('sign_in_exp.branding.favicon')}
+        />
+      </FormField>
       <FormField title="sign_in_exp.branding.ui_style">
         <Controller
           name="branding.style"

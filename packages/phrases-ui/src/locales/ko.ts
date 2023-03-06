@@ -48,6 +48,7 @@ const translation = {
     agree_with_terms: '나는 내용을 읽었으며, 이에 동의합니다.',
     agree_with_terms_modal: '진행하기 위해서는, 다음을 동의해주세요 <link></link>.',
     terms_of_use: '이용약관',
+    sign_in: '로그인',
     create_account: '계정 생성',
     or: '또는',
     enter_passcode: '{{address}} {{target}} 으로 비밀번호가 전송되었어요.',

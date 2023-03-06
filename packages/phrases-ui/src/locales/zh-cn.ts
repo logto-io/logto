@@ -48,6 +48,7 @@ const translation = {
     agree_with_terms: '我已阅读并同意 ',
     agree_with_terms_modal: '请先同意 <link></link> 以继续',
     terms_of_use: '使用条款',
+    sign_in: '登录',
     create_account: '创建帐号',
     or: '或',
     enter_passcode: '验证码已经发送至你的{{ address }} {{target}}',

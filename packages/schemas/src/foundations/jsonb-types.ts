@@ -113,6 +113,7 @@ export const brandingGuard = z.object({
   logoUrl: z.string().url(),
   darkLogoUrl: z.string().url().optional(),
   slogan: z.string().optional(),
+  favicon: z.string().url().optional(),
 });
 
 export type Branding = z.infer<typeof brandingGuard>;
