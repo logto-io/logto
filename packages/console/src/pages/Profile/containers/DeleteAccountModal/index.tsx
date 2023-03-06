@@ -3,6 +3,7 @@ import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
 import ModalLayout from '@/components/ModalLayout';
+import TextLink from '@/components/TextLink';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import * as styles from './index.module.scss';
@@ -24,26 +25,19 @@ const DeleteAccountModal = ({ isOpen, onClose }: Props) => {
       isOpen={isOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
-      onRequestClose={() => {
-        onClose();
-      }}
+      onRequestClose={onClose}
     >
       <ModalLayout
         title="profile.delete_account.label"
         footer={<Button size="large" title="general.got_it" onClick={onClose} />}
-        onClose={() => {
-          onClose();
-        }}
+        onClose={onClose}
       >
         <div className={styles.container}>
           <p>{t('profile.delete_account.dialog_paragraph_1')}</p>
           <p>
             <Trans
               components={{
-                a: (
-                  // eslint-disable-next-line jsx-a11y/anchor-has-content
-                  <a href={mailToLink} className={styles.mail} />
-                ),
+                a: <TextLink href={mailToLink} className={styles.mail} />,
               }}
             >
               {t('profile.delete_account.dialog_paragraph_2', { mail: contactUsEmail })}

@@ -1,6 +1,7 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
@@ -72,6 +73,7 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
     clearErrors();
     void handleSubmit(async (data) => {
       await api.patch(`me/user`, { json: { [field]: data[field] } });
+      toast.success(t('profile.updated', { target: t(`profile.settings.${field}`) }));
       onClose();
     })();
   };
@@ -82,9 +84,7 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
       isOpen={isOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
-      onRequestClose={() => {
-        onClose();
-      }}
+      onRequestClose={onClose}
     >
       <ModalLayout
         title={getModalTitle()}
@@ -97,9 +97,7 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
             onClick={onSubmit}
           />
         }
-        onClose={() => {
-          onClose();
-        }}
+        onClose={onClose}
       >
         <div>
           <TextInput

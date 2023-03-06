@@ -4,6 +4,7 @@ import { AppearanceMode } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { is } from 'superstruct';
 
@@ -13,6 +14,7 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import UserInfoCard from '@/components/UserInfoCard';
 import { adminTenantEndpoint, getBasename, meApi, profileSocialLinkingKeyPrefix } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import { useTheme } from '@/hooks/use-theme';
 import type { SocialUserInfo } from '@/types/profile';
 import { socialUserInfoGuard } from '@/types/profile';
@@ -30,8 +32,10 @@ type Props = {
 };
 
 const LinkAccountSection = ({ user, onUpdate }: Props) => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const theme = useTheme();
+  const { show: showConfirm } = useConfirmModal();
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
   const [connectors, setConnectors] = useState<ConnectorResponse[]>();
 
@@ -72,8 +76,19 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
             {
               name: 'profile.unlink',
               handler: async () => {
-                await api.delete(`me/social/identity/${id}`);
-                onUpdate();
+                const [result] = await showConfirm({
+                  ModalContent: () => (
+                    <Trans components={{ span: <UnnamedTrans resource={name} /> }}>
+                      {t('profile.unlink_reminder')}
+                    </Trans>
+                  ),
+                  confirmButtonText: 'profile.unlink_confirm_text',
+                });
+
+                if (result) {
+                  await api.delete(`me/social/identity/${id}`);
+                  onUpdate();
+                }
               },
             },
           ]
@@ -115,7 +130,16 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
         ],
       };
     });
-  }, [connectors, theme, user.identities, api, onUpdate, getSocialAuthorizationUri]);
+  }, [
+    api,
+    connectors,
+    theme,
+    user.identities,
+    showConfirm,
+    t,
+    onUpdate,
+    getSocialAuthorizationUri,
+  ]);
 
   return (
     <Section title="profile.link_account.title">
@@ -126,12 +150,15 @@ const LinkAccountSection = ({ user, onUpdate }: Props) => {
             key: 'email',
             label: 'profile.link_account.email',
             value: user.primaryEmail,
-            renderer: (email) => (
-              <div className={styles.wrapper}>
-                <MailIcon />
-                {email}
-              </div>
-            ),
+            renderer: (email) =>
+              email ? (
+                <div className={styles.wrapper}>
+                  <MailIcon />
+                  {email}
+                </div>
+              ) : (
+                <NotSet />
+              ),
             action: {
               name: 'profile.change',
               handler: () => {

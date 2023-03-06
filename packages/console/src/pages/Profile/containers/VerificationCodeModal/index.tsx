@@ -2,6 +2,7 @@ import type { RequestErrorBody } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
@@ -61,6 +62,7 @@ const VerificationCodeModal = () => {
 
       if (action === 'changeEmail') {
         await api.patch(`me/user`, { json: { primaryEmail: email } });
+        toast.success(t('profile.email_changed'));
 
         onClose();
       }
@@ -76,7 +78,7 @@ const VerificationCodeModal = () => {
         setError(String(error));
       }
     }
-  }, [action, api, code, email, state, navigate, onClose]);
+  }, [code, email, api, action, t, onClose, navigate, state]);
 
   useEffect(() => {
     if (code.length === defaultLength && code.every(Boolean)) {

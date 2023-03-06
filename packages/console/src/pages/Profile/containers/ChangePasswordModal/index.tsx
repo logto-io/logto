@@ -120,7 +120,7 @@ const ChangePasswordModal = () => {
         checked={showPassword}
         label={t('profile.password.show_password')}
         onChange={() => {
-          setShowPassword((show) => !show);
+          setShowPassword((value) => !value);
         }}
       />
       <Button type="primary" title="general.create" isLoading={isSubmitting} onClick={onSubmit} />

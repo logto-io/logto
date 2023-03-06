@@ -4,5 +4,7 @@
 }
 
 .link {
-  text-decoration: none;
+  &:not(:disabled):hover {
+    text-decoration: none;
+  }
 }
