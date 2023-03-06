@@ -28,7 +28,12 @@
   display: flex;
   align-items: center;
 
+  &:active {
+    color: var(--color-primary-pressed);
+  }
+
   &:not(:disabled):hover {
+    color: var(--color-primary-hover);
     text-decoration: none;
   }
 }

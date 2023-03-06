@@ -16,6 +16,7 @@ import { useStaticApi } from '@/hooks/use-api';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { checkLocationState } from '../../utils';
+import * as styles from './index.module.scss';
 
 type FormFields = {
   password: string;
@@ -46,7 +47,7 @@ const VerifyPasswordModal = () => {
     clearErrors();
     void handleSubmit(async ({ password }) => {
       await api.post(`me/password/verify`, { json: { password } });
-      reset({});
+      reset();
       navigate('../change-password', { state });
     })();
   };
@@ -93,6 +94,7 @@ const VerifyPasswordModal = () => {
       />
       {email && (
         <TextLink
+          className={styles.link}
           icon={<ArrowConnection />}
           onClick={() => {
             void api.post('me/verification-codes', { json: { email } });

@@ -1,9 +1,8 @@
 import { builtInLanguageOptions as consoleBuiltInLanguageOptions } from '@logto/phrases';
-import type { UserInfoResponse } from '@logto/react';
 import { useLogto } from '@logto/react';
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,6 +17,7 @@ import { Ring as Spinner } from '@/components/Spinner';
 import UserAvatar from '@/components/UserAvatar';
 import UserInfoCard from '@/components/UserInfoCard';
 import { getSignOutRedirectPathname } from '@/consts';
+import useLogtoAdminUser from '@/hooks/use-logto-admin-user';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -26,29 +26,18 @@ import UserInfoSkeleton from '../UserInfoSkeleton';
 import * as styles from './index.module.scss';
 
 const UserInfo = () => {
-  const { isAuthenticated, fetchUserInfo, signOut } = useLogto();
+  const { signOut } = useLogto();
   const navigate = useNavigate();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const [user] = useLogtoAdminUser();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [user, setUser] =
-    useState<
-      Pick<Record<string, unknown> & UserInfoResponse, 'username' | 'name' | 'picture' | 'email'>
-    >();
+
   const [isLoading, setIsLoading] = useState(false);
   const {
     data: { language, appearanceMode },
     update,
   } = useUserPreferences();
-
-  useEffect(() => {
-    (async () => {
-      if (isAuthenticated) {
-        const userInfo = await fetchUserInfo();
-        setUser(userInfo ?? { name: '' }); // Provide a fallback to avoid infinite loading state
-      }
-    })();
-  }, [isAuthenticated, fetchUserInfo]);
 
   if (!user) {
     return <UserInfoSkeleton />;
@@ -68,7 +57,7 @@ const UserInfo = () => {
           setShowDropdown(true);
         }}
       >
-        <UserAvatar url={user.picture} />
+        <UserAvatar url={user.avatar} />
       </div>
       <Dropdown
         hasOverflowContent

@@ -1,5 +1,14 @@
 @use '@/scss/underscore' as _;
 
+.content {
+  margin-top: _.unit(4);
+  padding-bottom: _.unit(6);
+
+  > div + div {
+    margin-top: _.unit(4);
+  }
+}
+
 .deleteAccount {
   flex: 1;
   display: flex;

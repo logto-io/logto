@@ -70,6 +70,11 @@ const profile = {
   updated: '{{target}} updated!', // UNTRANSLATED
   linked: '{{target}} linked!', // UNTRANSLATED
   unlinked: '{{target}} unlinked!', // UNTRANSLATED
+  email_exists_reminder:
+    'This email {{email}} is associated with an existing account. Link another email here.', // UNTRANSLATED
+  unlink_confirm_text: 'Yes, unlink', // UNTRANSLATED
+  unlink_reminder:
+    'You won’t be able to sign in with the <span></span> account if you unlink it. Are you sure to proceed?', // UNTRANSLATED
 };
 
 export default profile;
