@@ -12,7 +12,6 @@ import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
-import { getBasename } from '@/consts';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 
 import { OnboardPage } from '../../types';
@@ -28,7 +27,7 @@ const Congrats = () => {
 
   const enterAdminConsole = async () => {
     await update({ hasOnboard: true });
-    navigate(getBasename());
+    navigate('/');
   };
 
   const handleBack = () => {

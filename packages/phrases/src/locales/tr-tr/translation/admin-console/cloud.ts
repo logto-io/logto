@@ -90,6 +90,10 @@ const cloud = {
     },
     social_field: 'Social sign in', // UNTRANSLATED
     finish_and_done: 'Finish and done', // UNTRANSLATED
+    preview: {
+      mobile_tab: 'Mobile', // UNTRANSLATED
+      web_tab: 'Web', // UNTRANSLATED
+    },
   },
 };
 

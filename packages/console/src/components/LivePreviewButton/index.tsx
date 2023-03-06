@@ -15,9 +15,11 @@ import * as styles from './index.module.scss';
 type Props = {
   size?: ButtonProps['size'];
   isDisabled: boolean;
+  className?: string;
+  iconClassName?: string;
 };
 
-const LivePreviewButton = ({ size = 'medium', isDisabled }: Props) => {
+const LivePreviewButton = ({ size = 'medium', isDisabled, className, iconClassName }: Props) => {
   const { configs, updateConfigs } = useConfigs();
   const { userEndpoint } = useContext(AppEndpointsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -27,9 +29,12 @@ const LivePreviewButton = ({ size = 'medium', isDisabled }: Props) => {
       <Button
         size={size}
         disabled={isDisabled}
+        className={className}
         title="sign_in_exp.preview.live_preview"
         trailingIcon={
-          <ExternalLinkIcon className={classNames(styles.icon, isDisabled && styles.disabled)} />
+          <ExternalLinkIcon
+            className={classNames(styles.icon, iconClassName, isDisabled && styles.disabled)}
+          />
         }
         onClick={() => {
           if (!configs?.livePreviewChecked) {

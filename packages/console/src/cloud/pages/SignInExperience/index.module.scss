@@ -2,14 +2,22 @@
 
 .content {
   display: flex;
+  flex: 1;
+  overflow-y: hidden;
   padding: 0 _.unit(17);
 
-  .config {
+  .configWrapper {
     flex: 1;
+    overflow: auto;
+    margin-right: _.unit(4);
+    padding: 0 _.unit(4) _.unit(6) 0;
+  }
+
+  .config {
     background-color: var(--color-layer-1);
     border-radius: 8px;
     padding: _.unit(12);
-    margin-right: _.unit(8);
+    min-width: 430px;
 
     .title {
       margin-top: _.unit(6);
@@ -51,5 +59,14 @@
 
   .preview {
     flex: 1;
+    margin-bottom: _.unit(6);
+    min-height: 580px;
   }
+}
+
+.continueActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: _.unit(4);
 }

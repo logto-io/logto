@@ -19,11 +19,11 @@ import { PreviewPlatform } from './types';
 type Props = {
   platform: PreviewPlatform;
   mode: Omit<AppearanceMode, AppearanceMode.SyncWithSystem>;
-  language: LanguageTag;
+  language?: LanguageTag;
   signInExperience?: SignInExperience;
 };
 
-const SignInExperiencePreview = ({ platform, mode, language, signInExperience }: Props) => {
+const SignInExperiencePreview = ({ platform, mode, language = 'en', signInExperience }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { customPhrases } = useUiLanguages();
@@ -88,6 +88,10 @@ const SignInExperiencePreview = ({ platform, mode, language, signInExperience }:
       iframe?.removeEventListener('load', postPreviewMessage);
     };
   }, [postPreviewMessage]);
+
+  if (!userEndpoint) {
+    return null;
+  }
 
   return (
     <div
