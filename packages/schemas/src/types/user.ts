@@ -1,6 +1,3 @@
-import type { z } from 'zod';
-import { number, object, string } from 'zod';
-
 import type { CreateUser } from '../db-entries/index.js';
 
 export const userInfoSelectFields = Object.freeze([
@@ -34,10 +31,3 @@ export enum UserRole {
 export enum PredefinedScope {
   All = 'all',
 }
-
-export const passwordVerificationGuard = object({
-  passwordVerifiedAt: number(),
-  passwordVerifiedWithSessionId: string().optional(),
-});
-
-export type PasswordVerificationData = z.infer<typeof passwordVerificationGuard>;

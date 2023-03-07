@@ -1,10 +1,5 @@
 import { emailRegEx, passwordRegEx, usernameRegEx } from '@logto/core-kit';
-import type { PasswordVerificationData } from '@logto/schemas';
-import {
-  userInfoSelectFields,
-  passwordVerificationGuard,
-  arbitraryObjectGuard,
-} from '@logto/schemas';
+import { userInfoSelectFields, arbitraryObjectGuard } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 import { literal, object, string } from 'zod';
 
@@ -26,6 +21,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
     },
     libraries: {
       users: { checkIdentifierCollision },
+      verificationStatuses: { createVerificationStatus, checkVerificationStatus },
     },
   } = tenant;
 
@@ -114,19 +110,14 @@ export default function userRoutes<T extends AuthedMeRouter>(
       const cookieMap = convertCookieToMap(ctx.request.headers.cookie);
       const sessionId = cookieMap.get('_session');
 
-      assertThat(Boolean(sessionId), new RequestError({ code: 'session.not_found', status: 401 }));
+      assertThat(sessionId, new RequestError({ code: 'session.not_found', status: 401 }));
 
       const user = await findUserById(userId);
       assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
       await verifyUserPassword(user, password);
 
-      const customData: PasswordVerificationData = {
-        passwordVerifiedAt: Date.now(),
-        passwordVerifiedWithSessionId: sessionId,
-      };
-
-      await updateUserById(userId, { customData });
+      await createVerificationStatus(userId, sessionId);
 
       ctx.status = 204;
 
@@ -141,23 +132,16 @@ export default function userRoutes<T extends AuthedMeRouter>(
       const { id: userId } = ctx.auth;
       const { password } = ctx.guard.body;
 
-      const { customData, isSuspended } = await findUserById(userId);
+      const { isSuspended } = await findUserById(userId);
+
       assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
       const cookieMap = convertCookieToMap(ctx.request.headers.cookie);
       const sessionId = cookieMap.get('_session');
-      const parsed = passwordVerificationGuard.safeParse(customData);
 
-      // The password verification status is considered valid if:
-      // 1. The password is verified within 10 minutes.
-      // 2. The password is verified with the same session.
-      const isValid =
-        parsed.success &&
-        Date.now() - parsed.data.passwordVerifiedAt < 1000 * 60 * 10 &&
-        Boolean(sessionId) &&
-        parsed.data.passwordVerifiedWithSessionId === sessionId;
+      assertThat(sessionId, new RequestError({ code: 'session.not_found', status: 401 }));
 
-      assertThat(isValid, new RequestError({ code: 'session.verification_failed', status: 401 }));
+      await checkVerificationStatus(userId, sessionId);
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
       await updateUserById(userId, { passwordEncrypted, passwordEncryptionMethod });

@@ -15,6 +15,7 @@ import { createScopeQueries } from '#src/queries/scope.js';
 import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.js';
 import { createUserQueries } from '#src/queries/user.js';
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
+import { createVerificationStatusQueries } from '#src/queries/verification-status.js';
 
 export default class Queries {
   applications = createApplicationQueries(this.pool);
@@ -32,6 +33,7 @@ export default class Queries {
   users = createUserQueries(this.pool);
   usersRoles = createUsersRolesQueries(this.pool);
   applicationsRoles = createApplicationsRolesQueries(this.pool);
+  verificationStatuses = createVerificationStatusQueries(this.pool);
 
   constructor(public readonly pool: CommonQueryMethods) {}
 }
