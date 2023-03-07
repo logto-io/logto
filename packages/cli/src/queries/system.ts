@@ -1,4 +1,4 @@
-import type { AlterationState, System } from '@logto/schemas';
+import type { AlterationState, System, SystemKey } from '@logto/schemas';
 import { systemGuards, Systems, AlterationStateKey } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
@@ -6,7 +6,7 @@ import type { CommonQueryMethods, DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
 import { z } from 'zod';
 
-const { fields } = convertToIdentifiers(Systems);
+const { fields, table } = convertToIdentifiers(Systems);
 
 const doesTableExist = async (pool: CommonQueryMethods, table: string) => {
   const { rows } = await pool.query<{ regclass: Nullable<string> }>(
@@ -67,3 +67,23 @@ export const updateDatabaseTimestamp = async (
     `
   );
 };
+
+export const getRowByKey = async (pool: CommonQueryMethods, key: SystemKey) =>
+  pool.maybeOne<System>(sql`
+    select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
+      where ${fields.key} = ${key}
+  `);
+
+export const updateValueByKey = async <T extends SystemKey>(
+  pool: CommonQueryMethods,
+  key: T,
+  value: z.infer<(typeof systemGuards)[T]>
+) =>
+  pool.query(
+    sql`
+      insert into ${table} (${fields.key}, ${fields.value}) 
+        values (${key}, ${sql.jsonb(value)})
+        on conflict (${fields.key})
+          do update set ${fields.value}=excluded.${fields.value}
+    `
+  );
