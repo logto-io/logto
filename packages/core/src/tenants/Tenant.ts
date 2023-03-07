@@ -83,7 +83,14 @@ export default class Tenant implements TenantContext {
     const provider = initOidc(envSet, queries, libraries);
     app.use(mount('/oidc', provider.app));
 
-    const tenantContext: TenantContext = { id, provider, queries, libraries, modelRouters, envSet };
+    const tenantContext: TenantContext = {
+      id,
+      provider,
+      queries,
+      libraries,
+      modelRouters,
+      envSet,
+    };
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
 

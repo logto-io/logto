@@ -25,6 +25,7 @@
     "test:report": "codecov -F core"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.13.0",
     "@koa/cors": "^4.0.0",
     "@logto/cli": "workspace:*",
     "@logto/connector-kit": "workspace:*",

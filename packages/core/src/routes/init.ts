@@ -26,6 +26,7 @@ import signInExperiencesRoutes from './sign-in-experience/index.js';
 import statusRoutes from './status.js';
 import swaggerRoutes from './swagger.js';
 import type { AnonymousRouter, AuthedRouter } from './types.js';
+import userAssetsRoutes from './user-assets.js';
 import verificationCodeRoutes from './verification-code.js';
 import wellKnownRoutes from './well-known.js';
 
@@ -49,6 +50,7 @@ const createRouters = (tenant: TenantContext) => {
   customPhraseRoutes(managementRouter, tenant);
   hookRoutes(managementRouter, tenant);
   verificationCodeRoutes(managementRouter, tenant);
+  userAssetsRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
   phraseRoutes(anonymousRouter, tenant);

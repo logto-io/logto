@@ -36,7 +36,6 @@ export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;
 export enum AdminConsoleConfigKey {
   AdminConsole = 'adminConsole',
 }
-
 export type AdminConsoleConfigType = {
   [AdminConsoleConfigKey.AdminConsole]: AdminConsoleData;
 };
