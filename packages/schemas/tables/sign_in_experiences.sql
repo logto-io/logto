@@ -8,6 +8,7 @@ create table sign_in_experiences (
   branding jsonb /* @use Branding */ not null,
   language_info jsonb /* @use LanguageInfo */ not null,
   terms_of_use_url varchar(2048),
+  privacy_policy_url varchar(2048),
   sign_in jsonb /* @use SignIn */ not null,
   sign_up jsonb /* @use SignUp */ not null,
   social_sign_in_connector_targets jsonb /* @use ConnectorTargets */ not null default '[]'::jsonb,

@@ -95,6 +95,9 @@ const sign_in_exp = {
       terms_of_use: '이용 약관',
       terms_of_use_placeholder: 'https://your.terms.of.use/',
       terms_of_use_tip: '이용 약관 URL',
+      privacy_policy: '개인정보 처리방침',
+      privacy_policy_placeholder: 'https://your.privacy.policy/',
+      privacy_policy_tip: '개인정보 처리방침 URL',
     },
     languages: {
       title: '언어',

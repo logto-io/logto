@@ -32,6 +32,19 @@ const TermsForm = () => {
           placeholder={t('sign_in_exp.others.terms_of_use.terms_of_use_placeholder')}
         />
       </FormField>
+      <FormField
+        title="sign_in_exp.others.terms_of_use.privacy_policy"
+        tip={t('sign_in_exp.others.terms_of_use.privacy_policy_tip')}
+      >
+        <TextInput
+          {...register('privacyPolicyUrl', {
+            validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
+          })}
+          hasError={Boolean(errors.termsOfUseUrl)}
+          errorMessage={errors.termsOfUseUrl?.message}
+          placeholder={t('sign_in_exp.others.terms_of_use.privacy_policy_placeholder')}
+        />
+      </FormField>
     </Card>
   );
 };

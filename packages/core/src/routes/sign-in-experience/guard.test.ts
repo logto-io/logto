@@ -68,6 +68,25 @@ describe('terms of use url', () => {
   });
 });
 
+describe('privacy policy url', () => {
+  describe('privacyPolicyUrl', () => {
+    test.each([undefined, null, '', 'http://silverhand.com/privacy', 'https://logto.dev/privacy'])(
+      '%p should success',
+      async (privacyPolicyUrl) => {
+        const signInExperience = {
+          privacyPolicyUrl,
+        };
+        await expectPatchResponseStatus(signInExperience, 200);
+      }
+    );
+
+    test.each([' \t\n\r', 'non-url'])('%p should fail', async (privacyPolicyUrl) => {
+      const signInExperience = { privacyPolicyUrl };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+});
+
 describe('languageInfo', () => {
   describe('autoDetect', () => {
     test.each(validBooleans)('%p should success', async (autoDetect) => {

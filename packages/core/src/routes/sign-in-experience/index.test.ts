@@ -14,6 +14,7 @@ import {
   mockLanguageInfo,
   mockAliyunSmsConnector,
   mockTermsOfUseUrl,
+  mockPrivacyPolicyUrl,
 } from '#src/__mocks__/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -118,6 +119,7 @@ describe('PATCH /sign-in-exp', () => {
       branding: mockBranding,
       languageInfo: mockLanguageInfo,
       termsOfUseUrl: mockTermsOfUseUrl,
+      privacyPolicyUrl: mockPrivacyPolicyUrl,
       socialSignInConnectorTargets,
       signUp: mockSignUp,
       signIn: mockSignIn,
@@ -135,6 +137,7 @@ describe('PATCH /sign-in-exp', () => {
         color: mockColor,
         branding: mockBranding,
         termsOfUseUrl: mockTermsOfUseUrl,
+        privacyPolicyUrl: mockPrivacyPolicyUrl,
         socialSignInConnectorTargets,
         signIn: mockSignIn,
       },

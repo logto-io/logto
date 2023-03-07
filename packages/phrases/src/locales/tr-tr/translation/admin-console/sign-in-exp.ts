@@ -100,6 +100,9 @@ const sign_in_exp = {
       terms_of_use: 'Kullanım koşulları',
       terms_of_use_placeholder: 'https://your.terms.of.use/',
       terms_of_use_tip: 'Kullanım koşulları URLi',
+      privacy_policy: 'Gizlilik politikası',
+      privacy_policy_placeholder: 'https://your.privacy.policy/',
+      privacy_policy_tip: 'Gizlilik politikası URLi',
     },
     languages: {
       title: 'DİLLER',

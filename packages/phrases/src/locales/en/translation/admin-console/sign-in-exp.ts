@@ -99,6 +99,9 @@ const sign_in_exp = {
       terms_of_use: 'Terms of use',
       terms_of_use_placeholder: 'https://your.terms.of.use/',
       terms_of_use_tip: 'Terms of use URL',
+      privacy_policy: 'Privacy policy',
+      privacy_policy_placeholder: 'https://your.privacy.policy/',
+      privacy_policy_tip: 'Privacy policy URL',
     },
     languages: {
       title: 'LANGUAGES',

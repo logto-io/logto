@@ -33,10 +33,11 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
     '/sign-in-exp',
     koaGuard({
       body: SignInExperiences.createGuard
-        .omit({ id: true, termsOfUseUrl: true })
+        .omit({ id: true, termsOfUseUrl: true, privacyPolicyUrl: true })
         .merge(
           object({
             termsOfUseUrl: string().url().optional().nullable().or(literal('')),
+            privacyPolicyUrl: string().url().optional().nullable().or(literal('')),
           })
         )
         .partial(),

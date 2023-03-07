@@ -101,6 +101,9 @@ const sign_in_exp = {
       terms_of_use: 'Termos de uso',
       terms_of_use_placeholder: 'https://your.terms.of.use/',
       terms_of_use_tip: 'URL dos termos de uso',
+      privacy_policy: 'Política de privacidade',
+      privacy_policy_placeholder: 'https://your.privacy.policy/',
+      privacy_policy_tip: 'URL da política de privacidade',
     },
     languages: {
       title: 'IDIOMAS',
