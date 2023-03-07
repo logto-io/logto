@@ -48,16 +48,16 @@ const cloud = {
     },
   },
   congrats: {
-    title: 'Congratulations! You’ve customized and built your own sign-in experience',
-    description: 'Check out the live preview and get through end to end flow',
+    title: 'Great news! You are qualified to earn Logto Cloud early credit!',
+    description:
+      'Contact the Logto team to claim the offer. After Logto Cloud is officially launched, you will be entitled to either a <strong>$249</strong> credit or a free <strong>3-month</strong> subscription to Logto Cloud.',
     check_out_button: 'Check out the live preview',
     reserve_title: 'Reserve your time with Logto team',
-    reserve_description:
-      'Book a one-on-one session with our team for SaaS early credit and use case sharing.',
-    book_button: 'Book',
+    reserve_description: 'Credit is only eligible once upon validation.',
+    book_button: 'Schedule now',
     join_description: 'Join our public <a>{{link}}</a> to connect and chat with other developers.',
     discord_link: 'discord channel',
-    enter_admin_console: 'Enter Admin Console',
+    enter_admin_console: 'Enter Logto Cloud Preview',
   },
   gift: {
     title: 'Secure early credit for Logto SaaS join the front-runners now !',

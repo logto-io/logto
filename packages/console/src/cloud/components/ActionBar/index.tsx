@@ -8,7 +8,7 @@ type Props = {
   children: ReactNode;
 };
 
-const totalSteps = 4;
+const totalSteps = 3;
 
 const ActionBar = ({ step, children }: Props) => (
   <div className={styles.container}>
