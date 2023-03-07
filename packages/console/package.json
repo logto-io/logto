@@ -75,6 +75,7 @@
     "react-dnd": "^16.0.0",
     "react-dnd-html5-backend": "^16.0.0",
     "react-dom": "^18.0.0",
+    "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.34.0",
     "react-hot-toast": "^2.2.0",
     "react-i18next": "^11.18.3",

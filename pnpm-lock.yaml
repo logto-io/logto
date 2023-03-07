@@ -228,6 +228,7 @@ importers:
       react-dnd: ^16.0.0
       react-dnd-html5-backend: ^16.0.0
       react-dom: ^18.0.0
+      react-dropzone: ^14.2.3
       react-hook-form: ^7.34.0
       react-hot-toast: ^2.2.0
       react-i18next: ^11.18.3
@@ -302,6 +303,7 @@ importers:
       react-dnd: 16.0.0_3hx2ussxxho4jajbwrd6gq34qe
       react-dnd-html5-backend: 16.0.0
       react-dom: 18.2.0_react@18.2.0
+      react-dropzone: 14.2.3_react@18.2.0
       react-hook-form: 7.34.0_react@18.2.0
       react-hot-toast: 2.2.0_npw22p3c4ehm7n7vxn2gqac44u
       react-i18next: 11.18.3_shxxmfhtk2bc4pbx5cyq3uoph4
@@ -4882,6 +4884,11 @@ packages:
   /asynckit/0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
+  /attr-accept/2.2.2:
+    resolution: {integrity: sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg==}
+    engines: {node: '>=4'}
+    dev: true
+
   /available-typed-arrays/1.0.5:
     resolution: {integrity: sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==}
     engines: {node: '>= 0.4'}
@@ -7126,6 +7133,13 @@ packages:
     engines: {node: ^10.12.0 || >=12.0.0}
     dependencies:
       flat-cache: 3.0.4
+    dev: true
+
+  /file-selector/0.6.0:
+    resolution: {integrity: sha512-QlZ5yJC0VxHxQQsQhXvBaC7VRJ2uaxTf+Tfpu4Z/OcVQJVpZO+DGU0rkoVW5ce2SccxugvpBJoMvUs59iILYdw==}
+    engines: {node: '>= 12'}
+    dependencies:
+      tslib: 2.4.1
     dev: true
 
   /filelist/1.0.2:
@@ -12072,6 +12086,18 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: true
+
+  /react-dropzone/14.2.3_react@18.2.0:
+    resolution: {integrity: sha512-O3om8I+PkFKbxCukfIR3QAGftYXDZfOE2N1mr/7qebQJHs7U+/RSL/9xomJNpRg9kM5h9soQSdf0Gc7OHF5Fug==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      react: '>= 16.8 || 18.0.0 || ^18.0.0'
+    dependencies:
+      attr-accept: 2.2.2
+      file-selector: 0.6.0
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: true
 
   /react-error-overlay/6.0.9:

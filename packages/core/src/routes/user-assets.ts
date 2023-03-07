@@ -1,6 +1,8 @@
 import { readFile } from 'fs/promises';
 
 import { generateStandardId } from '@logto/core-kit';
+import type { UserAssetsResponse, UserAssetsServiceStatusResponse } from '@logto/schemas';
+import { allowUploadMimeTypes, maxUploadFileSize } from '@logto/schemas';
 import { format } from 'date-fns';
 import { object } from 'zod';
 
@@ -8,11 +10,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
-import {
-  allowUploadMimeTypes,
-  maxUploadFileSize,
-  uploadFileGuard,
-} from '#src/utils/storage/consts.js';
+import { uploadFileGuard } from '#src/utils/storage/consts.js';
 import { buildUploadFile } from '#src/utils/storage/index.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
@@ -21,8 +19,7 @@ import type { AuthedRouter, RouterInitArgs } from './types.js';
 export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
   router.get('/user-assets/service-status', async (ctx, next) => {
     const { storageProviderConfig } = SystemContext.shared;
-
-    ctx.body = storageProviderConfig
+    const status: UserAssetsServiceStatusResponse = storageProviderConfig
       ? {
           status: 'ready',
           allowUploadMimeTypes,
@@ -31,6 +28,8 @@ export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: Ro
       : {
           status: 'not_configured',
         };
+
+    ctx.body = status;
 
     return next();
   });
@@ -67,9 +66,11 @@ export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: Ro
           publicUrl: storageProviderConfig.publicUrl,
         });
 
-        ctx.body = {
+        const result: UserAssetsResponse = {
           url,
         };
+
+        ctx.body = result;
       } catch {
         throw new RequestError('storage.upload_error');
       }
