@@ -15,7 +15,7 @@ import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
-import { checkLocationState } from '../../utils';
+import { checkLocationState, handleError } from '../../utils';
 import * as styles from './index.module.scss';
 
 type FormFields = {
@@ -30,12 +30,17 @@ const VerifyPasswordModal = () => {
     register,
     reset,
     clearErrors,
+    setError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     reValidateMode: 'onBlur',
   });
-  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
+  const api = useStaticApi({
+    prefixUrl: adminTenantEndpoint,
+    resourceIndicator: meApi.indicator,
+    hideErrorToast: true,
+  });
   const [showPassword, setShowPassword] = useState(false);
   const email = conditional(checkLocationState(state) && state.email);
 
@@ -46,9 +51,19 @@ const VerifyPasswordModal = () => {
   const onSubmit = () => {
     clearErrors();
     void handleSubmit(async ({ password }) => {
-      await api.post(`me/password/verify`, { json: { password } });
-      reset();
-      navigate('../change-password', { state });
+      try {
+        await api.post(`me/password/verify`, { json: { password } });
+        reset();
+        navigate('../change-password', { state });
+      } catch (error: unknown) {
+        void handleError(error, async (code, message) => {
+          if (code === 'session.invalid_credentials') {
+            setError('password', { type: 'custom', message });
+
+            return true;
+          }
+        });
+      }
     })();
   };
 
@@ -60,13 +75,7 @@ const VerifyPasswordModal = () => {
       onGoBack={onClose}
     >
       <TextInput
-        {...register('password', {
-          required: t('profile.password.required'),
-          minLength: {
-            value: 6,
-            message: t('profile.password.min_length', { min: 6 }),
-          },
-        })}
+        {...register('password', { required: t('profile.password.required') })}
         errorMessage={errors.password?.message}
         type={showPassword ? 'text' : 'password'}
         suffix={

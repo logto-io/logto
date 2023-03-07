@@ -33,17 +33,17 @@ export const encryptUserPassword = async (
 };
 
 export const verifyUserPassword = async (user: Nullable<User>, password: string): Promise<User> => {
-  assertThat(user, new RequestError({ code: 'session.invalid_credentials', status: 401 }));
+  assertThat(user, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
   const { passwordEncrypted, passwordEncryptionMethod } = user;
 
   assertThat(
     passwordEncrypted && passwordEncryptionMethod,
-    new RequestError({ code: 'session.invalid_credentials', status: 401 })
+    new RequestError({ code: 'session.invalid_credentials', status: 422 })
   );
 
   const result = await argon2Verify({ password, hash: passwordEncrypted });
 
-  assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 401 }));
+  assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
 
   return user;
 };

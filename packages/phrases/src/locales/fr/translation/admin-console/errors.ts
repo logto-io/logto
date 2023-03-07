@@ -13,7 +13,8 @@ const errors = {
   more_details: 'Plus de détails',
   username_pattern_error:
     "Le nom d'utilisateur ne doit contenir que des lettres, des chiffres ou des traits de soulignement et ne doit pas commencer par un chiffre.",
-  password_pattern_error: 'Le mot de passe doit comporter un minimum de 6 caractères',
+  password_pattern_error:
+    'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
   insecure_contexts: 'Les contextes non sécurisés (non HTTPS) ne sont pas pris en charge.',
   unexpected_error: "Une erreur inattendue s'est produite",
   not_found: '404 not found', // UNTRANSLATED
