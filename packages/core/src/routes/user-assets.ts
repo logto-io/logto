@@ -19,6 +19,22 @@ import { getTenantId } from '#src/utils/tenant.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
+  router.post('/user-assets/status', async (ctx, next) => {
+    const { storageProviderConfig } = SystemContext.shared;
+
+    ctx.body = storageProviderConfig
+      ? {
+          status: 'ready',
+          allowUploadMimeTypes,
+          maxUploadFileSize,
+        }
+      : {
+          status: 'not_configured',
+        };
+
+    return next();
+  });
+
   router.post(
     '/user-assets',
     koaGuard({
