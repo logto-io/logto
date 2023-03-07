@@ -44,10 +44,13 @@ export default function userAssetsRoutes<T extends AuthedRouter>(
       const objectKey = `${tenantId}/${userId}/${generateStandardId()}/${file.originalFilename}`;
 
       try {
-        await uploadFile(await readFile(file.filepath), objectKey, file.mimetype);
+        const { url } = await uploadFile(await readFile(file.filepath), objectKey, {
+          contentType: file.mimetype,
+          publicUrl: storageProviderConfig.publicUrl,
+        });
 
         ctx.body = {
-          url: `${storageProviderConfig.publicUrl}/${objectKey}`,
+          url,
         };
       } catch {
         throw new RequestError('storage.upload_error');

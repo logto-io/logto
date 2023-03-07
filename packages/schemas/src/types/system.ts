@@ -28,7 +28,7 @@ export enum StorageProvider {
 }
 
 const basicConfig = {
-  publicUrl: z.string(),
+  publicUrl: z.string().optional(),
 };
 
 export const storageProviderDataGuard = z.discriminatedUnion('provider', [
