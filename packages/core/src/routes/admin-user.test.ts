@@ -316,7 +316,7 @@ describe('adminUserRoutes', () => {
 
   it('PATCH /users/:userId/password', async () => {
     const mockedUserId = 'foo';
-    const password = '123456';
+    const password = '1234asd$';
     const response = await userRequest.patch(`/users/${mockedUserId}/password`).send({ password });
     expect(encryptUserPassword).toHaveBeenCalledWith(password);
     expect(findUserById).toHaveBeenCalledTimes(1);
@@ -328,7 +328,7 @@ describe('adminUserRoutes', () => {
 
   it('PATCH /users/:userId/password should throw if user cannot be found', async () => {
     const notExistedUserId = 'notExistedUserId';
-    const dummyPassword = '123456';
+    const dummyPassword = '1234asd$';
 
     findUserById.mockImplementationOnce(async (userId) => {
       if (userId === notExistedUserId) {

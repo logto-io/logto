@@ -26,8 +26,8 @@ const PasswordInputField = (props: Props, forwardRef: Ref<Nullable<HTMLInputElem
         <IconButton
           onMouseDown={(event) => {
             event.preventDefault();
+            toggleShowPassword();
           }}
-          onClick={toggleShowPassword}
         >
           {showPassword ? <PasswordShowIcon /> : <PasswordHideIcon />}
         </IconButton>

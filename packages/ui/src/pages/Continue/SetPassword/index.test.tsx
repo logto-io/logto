@@ -2,6 +2,7 @@ import { act, waitFor, fireEvent } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import { addProfile } from '@/apis/interaction';
 
 import SetPassword from '.';
@@ -18,9 +19,28 @@ jest.mock('@/apis/interaction', () => ({
 }));
 
 describe('SetPassword', () => {
-  it('render set-password page properly', () => {
+  it('render set-password page properly without confirm password field', () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider>
+        <SetPassword />
+      </SettingsProvider>
+    );
+    expect(container.querySelector('input[name="newPassword"]')).not.toBeNull();
+    expect(container.querySelector('input[name="confirmPassword"]')).toBeNull();
+    expect(queryByText('action.save_password')).not.toBeNull();
+  });
+
+  it('render set-password page properly with confirm password field', () => {
+    const { queryByText, container } = renderWithPageContext(
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          forgotPassword: {
+            email: false,
+            phone: false,
+          },
+        }}
+      >
         <SetPassword />
       </SettingsProvider>
     );
@@ -31,7 +51,15 @@ describe('SetPassword', () => {
 
   it('should submit properly', async () => {
     const { getByText, container } = renderWithPageContext(
-      <SettingsProvider>
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          forgotPassword: {
+            email: false,
+            phone: false,
+          },
+        }}
+      >
         <SetPassword />
       </SettingsProvider>
     );
@@ -41,18 +69,18 @@ describe('SetPassword', () => {
 
     act(() => {
       if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: '123456' } });
+        fireEvent.change(passwordInput, { target: { value: '1234!@#$' } });
       }
 
       if (confirmPasswordInput) {
-        fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
+        fireEvent.change(confirmPasswordInput, { target: { value: '1234!@#$' } });
       }
 
       fireEvent.click(submitButton);
     });
 
     await waitFor(() => {
-      expect(addProfile).toBeCalledWith({ password: '123456' });
+      expect(addProfile).toBeCalledWith({ password: '1234!@#$' });
     });
   });
 });

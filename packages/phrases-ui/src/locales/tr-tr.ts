@@ -104,6 +104,8 @@ const translation = {
     invalid_phone: 'Telefon numarası geçersiz',
     password_min_length: 'Şifre en az {{min}} karakterden oluşmalıdır',
     passwords_do_not_match: 'Şifreler eşleşmiyor',
+    invalid_password:
+      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
     invalid_passcode: 'Kod geçersiz',
     invalid_connector_auth: 'Yetki geçersiz',
     invalid_connector_request: 'Bağlayıcı veri geçersiz',

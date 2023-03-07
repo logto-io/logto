@@ -3,6 +3,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import SetPassword from '@/containers/SetPassword';
 import { useSieMethods } from '@/hooks/use-sie';
+import { passwordMinLength } from '@/utils/form';
 
 import ErrorPage from '../ErrorPage';
 import useUsernamePasswordRegister from './use-username-password-register';
@@ -18,8 +19,8 @@ const RegisterPassword = () => {
   return (
     <SecondaryPageWrapper
       title="description.new_password"
-      description="error.password_min_length"
-      descriptionProps={{ min: 6 }}
+      description="error.invalid_password"
+      descriptionProps={{ min: passwordMinLength }}
     >
       <SetPassword
         autoFocus

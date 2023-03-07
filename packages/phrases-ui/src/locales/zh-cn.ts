@@ -100,6 +100,8 @@ const translation = {
     invalid_phone: '无效的手机号',
     password_min_length: '密码最少需要{{min}}个字符',
     passwords_do_not_match: '两次输入的密码不一致，请重试。',
+    invalid_password:
+      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
     invalid_passcode: '无效的验证码',
     invalid_connector_auth: '登录失败',
     invalid_connector_request: '无效的登录请求',

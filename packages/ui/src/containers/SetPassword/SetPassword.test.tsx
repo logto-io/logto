@@ -1,6 +1,6 @@
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
 
-import SetPassword from '.';
+import SetPassword from './SetPassword';
 
 describe('<SetPassword />', () => {
   const submit = jest.fn();
@@ -40,7 +40,7 @@ describe('<SetPassword />', () => {
     expect(submit).not.toBeCalled();
   });
 
-  test('password less than 6 chars should throw', async () => {
+  test('password less than 8 chars should throw', async () => {
     const { queryByText, getByText, container } = render(<SetPassword onSubmit={submit} />);
     const submitButton = getByText('action.save_password');
     const passwordInput = container.querySelector('input[name="newPassword"]');
@@ -62,13 +62,43 @@ describe('<SetPassword />', () => {
     act(() => {
       // Clear error
       if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: '123456' } });
+        fireEvent.change(passwordInput, { target: { value: '1234asdf' } });
         fireEvent.blur(passwordInput);
       }
     });
 
     await waitFor(() => {
       expect(queryByText('error.password_min_length')).toBeNull();
+    });
+  });
+
+  test('password with single type chars should throw', async () => {
+    const { queryByText, getByText, container } = render(<SetPassword onSubmit={submit} />);
+    const submitButton = getByText('action.save_password');
+    const passwordInput = container.querySelector('input[name="newPassword"]');
+
+    if (passwordInput) {
+      fireEvent.change(passwordInput, { target: { value: '12345678' } });
+    }
+
+    act(() => {
+      fireEvent.submit(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(queryByText('error.invalid_password')).not.toBeNull();
+    });
+
+    act(() => {
+      // Clear error
+      if (passwordInput) {
+        fireEvent.change(passwordInput, { target: { value: '1234asdf' } });
+        fireEvent.blur(passwordInput);
+      }
+    });
+
+    await waitFor(() => {
+      expect(queryByText('error.invalid_password')).toBeNull();
     });
   });
 
@@ -80,11 +110,11 @@ describe('<SetPassword />', () => {
 
     act(() => {
       if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: '123456' } });
+        fireEvent.change(passwordInput, { target: { value: '1234asdf' } });
       }
 
       if (confirmPasswordInput) {
-        fireEvent.change(confirmPasswordInput, { target: { value: '012345' } });
+        fireEvent.change(confirmPasswordInput, { target: { value: '0234asdf' } });
       }
 
       fireEvent.submit(submitButton);
@@ -99,7 +129,7 @@ describe('<SetPassword />', () => {
     act(() => {
       // Clear Error
       if (confirmPasswordInput) {
-        fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
+        fireEvent.change(confirmPasswordInput, { target: { value: '1234asdf' } });
         fireEvent.blur(confirmPasswordInput);
       }
     });
@@ -117,11 +147,11 @@ describe('<SetPassword />', () => {
 
     act(() => {
       if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: '123456' } });
+        fireEvent.change(passwordInput, { target: { value: '1234asdf' } });
       }
 
       if (confirmPasswordInput) {
-        fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
+        fireEvent.change(confirmPasswordInput, { target: { value: '1234asdf' } });
       }
 
       fireEvent.submit(submitButton);
@@ -130,7 +160,7 @@ describe('<SetPassword />', () => {
     expect(queryByText('error.passwords_do_not_match')).toBeNull();
 
     await waitFor(() => {
-      expect(submit).toBeCalledWith('123456');
+      expect(submit).toBeCalledWith('1234asdf');
     });
   });
 });
