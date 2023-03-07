@@ -195,6 +195,7 @@ export const mockSignInExperience: SignInExperience = {
     slogan: 'logto',
   },
   termsOfUseUrl: 'http://terms.of.use/',
+  privacyPolicyUrl: 'http://privacy.policy/',
   languageInfo: {
     autoDetect: true,
     fallbackLanguage: 'en',
@@ -218,6 +219,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   color: mockSignInExperience.color,
   branding: mockSignInExperience.branding,
   termsOfUseUrl: mockSignInExperience.termsOfUseUrl,
+  privacyPolicyUrl: mockSignInExperience.privacyPolicyUrl,
   languageInfo: mockSignInExperience.languageInfo,
   signIn: mockSignInExperience.signIn,
   signUp: {
