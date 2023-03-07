@@ -1,5 +1,4 @@
 import type { User } from '@logto/schemas';
-import type { Optional } from '@silverhand/essentials';
 import useSWR from 'swr';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
@@ -9,7 +8,7 @@ import { useStaticApi } from './use-api';
 import useLogtoUserId from './use-logto-user-id';
 import useSwrFetcher from './use-swr-fetcher';
 
-const useLogtoAdminUser = (): [Optional<User>, () => void, boolean] => {
+const useCurrentUser = () => {
   const userId = useLogtoUserId();
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
   const fetcher = useSwrFetcher<User>(api);
@@ -21,7 +20,7 @@ const useLogtoAdminUser = (): [Optional<User>, () => void, boolean] => {
 
   const isLoading = !user && !error;
 
-  return [user, mutate, isLoading];
+  return { user, isLoading, error, reload: mutate };
 };
 
-export default useLogtoAdminUser;
+export default useCurrentUser;

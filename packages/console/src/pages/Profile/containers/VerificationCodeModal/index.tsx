@@ -12,6 +12,7 @@ import TextLink from '@/components/TextLink';
 import VerificationCodeInput, { defaultLength } from '@/components/VerificationCodeInput';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
+import useCurrentUser from '@/hooks/use-current-user';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { checkLocationState } from '../../utils';
@@ -30,6 +31,7 @@ const VerificationCodeModal = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { state } = useLocation();
+  const { reload } = useCurrentUser();
   const [code, setCode] = useState<string[]>([]);
   const [error, setError] = useState<string>();
   const api = useStaticApi({
@@ -48,7 +50,8 @@ const VerificationCodeModal = () => {
 
   const onClose = useCallback(() => {
     navigate('/profile');
-  }, [navigate]);
+    void reload();
+  }, [navigate, reload]);
 
   const onSubmit = useCallback(async () => {
     const verificationCode = code.join('');

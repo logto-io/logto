@@ -7,7 +7,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
-  user: Partial<
+  user?: Partial<
     Pick<User, 'name' | 'username' | 'avatar' | 'primaryEmail'> &
       Pick<IdTokenClaims, 'picture' | 'email'>
   >;
@@ -15,15 +15,16 @@ type Props = {
 };
 
 const UserInfoCard = ({ className, user, avatarSize = 'medium' }: Props) => {
-  const { name, username, avatar, picture, primaryEmail, email } = user;
+  const { name, username, avatar, picture, primaryEmail, email } = user ?? {};
   const avatarToDisplay = avatar ?? picture;
-  const emailToDisplay = primaryEmail ?? email;
+  const nameToDisplay = name ?? username ?? '-';
+  const emailToDisplay = primaryEmail ?? email ?? '-';
 
   return (
     <div className={classNames(styles.userInfo, className)}>
       <UserAvatar className={styles.avatar} url={avatarToDisplay} size={avatarSize} />
       <div className={styles.nameWrapper}>
-        <div className={styles.name}>{name ?? username}</div>
+        <div className={styles.name}>{nameToDisplay}</div>
         {emailToDisplay && <div className={styles.email}>{emailToDisplay}</div>}
       </div>
     </div>
