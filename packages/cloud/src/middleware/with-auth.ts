@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import type { IncomingHttpHeaders } from 'node:http';
-import path from 'node:path/posix';
 
 import { tryThat } from '@logto/shared';
+import { appendPath } from '@silverhand/essentials';
 import type { NextFunction, RequestContext } from '@withtyped/server';
 import { RequestError } from '@withtyped/server';
 import fetchRetry from 'fetch-retry';
@@ -50,9 +50,7 @@ export default function withAuth<InputContext extends RequestContext>({
   const fetch = fetchRetry(global.fetch);
   const getJwkSet = (async () => {
     const fetched = await fetch(
-      new Request(
-        new URL(path.join(endpoint.pathname, 'oidc/.well-known/openid-configuration'), endpoint)
-      ),
+      new Request(appendPath(endpoint, 'oidc/.well-known/openid-configuration')),
       { retries: 5, retryDelay: (attempt) => 2 ** attempt * 1000 }
     );
     const { jwks_uri: jwksUri, issuer } = z
