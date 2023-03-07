@@ -115,7 +115,11 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
             !isSocialConnector && getDocumentationUrl('/docs/references/connectors')
           )}
         >
-          <ConfigForm formItems={connectorData.formItems} connectorId={connectorData.id} />
+          <ConfigForm
+            formItems={connectorData.formItems}
+            connectorId={connectorData.id}
+            connectorType={connectorData.type}
+          />
         </FormCard>
         {/* Tell typescript that the connectorType is Email or Sms */}
         {connectorData.type !== ConnectorType.Social && (

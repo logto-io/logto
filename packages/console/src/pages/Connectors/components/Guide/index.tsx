@@ -190,6 +190,7 @@ const Guide = ({ connector, onClose }: Props) => {
                 <ConfigForm
                   connectorId={callbackConnectorId}
                   configTemplate={connector.configTemplate}
+                  connectorType={connectorType}
                   formItems={connector.formItems}
                 />
               </div>
