@@ -1,6 +1,6 @@
 import { generateStandardId } from '@logto/core-kit';
 
-import type { CreateApplication } from '../db-entries/index.js';
+import type { Application, CreateApplication } from '../db-entries/index.js';
 import { ApplicationType } from '../db-entries/index.js';
 import { adminTenantId } from './tenant.js';
 
@@ -12,6 +12,18 @@ import { adminTenantId } from './tenant.js';
 export const adminConsoleApplicationId = 'admin-console';
 
 export const demoAppApplicationId = 'demo-app';
+
+export const buildDemoAppDataForTenant = (tenantId: string): Application => ({
+  tenantId,
+  id: demoAppApplicationId,
+  name: 'Live Preview',
+  secret: '',
+  description: 'Preview for Sign-in Experience.',
+  type: ApplicationType.SPA,
+  oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
+  customClientMetadata: {},
+  createdAt: 0,
+});
 
 export const createDefaultAdminConsoleApplication = (): Readonly<CreateApplication> =>
   Object.freeze({
