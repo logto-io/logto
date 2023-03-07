@@ -19,7 +19,7 @@ import { getTenantId } from '#src/utils/tenant.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
-  router.post('/user-assets/status', async (ctx, next) => {
+  router.get('/user-assets/service-status', async (ctx, next) => {
     const { storageProviderConfig } = SystemContext.shared;
 
     ctx.body = storageProviderConfig
@@ -58,7 +58,7 @@ export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: Ro
       const uploadFile = buildUploadFile(storageProviderConfig);
       const objectKey = `${tenantId}/${userId}/${format(
         new Date(),
-        'YYYY/MM/dd'
+        'yyyy/MM/dd'
       )}/${generateStandardId(8)}/${file.originalFilename}`;
 
       try {
