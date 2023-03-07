@@ -95,6 +95,7 @@ const cloud = {
       web_tab: 'Web', // UNTRANSLATED
     },
   },
+  broadcast: '📣 You are participating in Logto Cloud Preview', // UNTRANSLATED
 };
 
 export default cloud;
