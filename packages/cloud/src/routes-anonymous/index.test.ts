@@ -7,7 +7,7 @@ import router from './index.js';
 describe('GET /api/status', () => {
   it('should set status to 204', async () => {
     await router.routes()(
-      buildRequestContext('/api/status'),
+      buildRequestContext('GET /api/status'),
       async ({ status, json, stream }) => {
         expect(status).toBe(204);
         expect(json).toBe(undefined);
@@ -21,7 +21,7 @@ describe('GET /api/status', () => {
 describe('GET /api/teapot', () => {
   it('should refuse to brew coffee', async () => {
     await router.routes()(
-      buildRequestContext('/api/teapot'),
+      buildRequestContext('GET /api/teapot'),
       async ({ status, json, stream }) => {
         expect(status).toBe(418);
         expect(isKeyInObject(json, 'message')).toBeTruthy();
