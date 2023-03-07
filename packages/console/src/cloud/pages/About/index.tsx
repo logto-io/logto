@@ -15,7 +15,7 @@ import TextInput from '@/components/TextInput';
 import ActionBar from '../../components/ActionBar';
 import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
-import { OnboardPage } from '../../types';
+import { OnboardingPage } from '../../types';
 import { getOnboardPagePathname } from '../../utils';
 import * as styles from './index.module.scss';
 import { titleOptions, companySizeOptions, reasonOptions } from './options';
@@ -43,11 +43,11 @@ const About = () => {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getOnboardPagePathname(OnboardPage.SignInExperience));
+    navigate(getOnboardPagePathname(OnboardingPage.SignInExperience));
   };
 
   const onBack = async () => {
-    navigate(getOnboardPagePathname(OnboardPage.Welcome));
+    navigate(getOnboardPagePathname(OnboardingPage.Welcome));
   };
 
   return (

@@ -14,7 +14,7 @@ import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 
-import { OnboardPage } from '../../types';
+import { OnboardingPage } from '../../types';
 import { getOnboardPagePathname } from '../../utils';
 import * as styles from './index.module.scss';
 
@@ -26,12 +26,12 @@ const Congrats = () => {
   const navigate = useNavigate();
 
   const enterAdminConsole = async () => {
-    await update({ hasOnboard: true });
+    await update({ isOnboardingDone: true });
     navigate('/');
   };
 
   const handleBack = () => {
-    navigate(getOnboardPagePathname(OnboardPage.SignInExperience));
+    navigate(getOnboardPagePathname(OnboardingPage.SignInExperience));
   };
 
   return (

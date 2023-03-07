@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 
 import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
-import { OnboardPage } from '@/cloud/types';
+import { OnboardingPage } from '@/cloud/types';
 import { getOnboardPagePathname } from '@/cloud/utils';
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
@@ -27,7 +27,7 @@ const AppContent = () => {
   const { isLoading: isPreferencesLoading } = useUserPreferences();
   const { isLoading: isConfigsLoading } = useConfigs();
   const {
-    data: { hasOnboard },
+    data: { isOnboardingDone },
     isLoading: isOnboardingDataLoading,
     isLoaded: isOnboardingDataLoaded,
   } = useUserOnboardingData();
@@ -35,7 +35,7 @@ const AppContent = () => {
   const isLoading =
     isPreferencesLoading || isConfigsLoading || (isCloud && isOnboardingDataLoading);
 
-  const isOnboarding = isCloud && isOnboardingDataLoaded && !hasOnboard;
+  const isOnboarding = isCloud && isOnboardingDataLoaded && !isOnboardingDone;
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,10 +54,12 @@ const AppContent = () => {
     // Navigate to the first menu item after configs are loaded.
     if (!isLoading && location.pathname === '/') {
       navigate(
-        isOnboarding ? getOnboardPagePathname(OnboardPage.Welcome) : getPath(firstItem?.title ?? '')
+        isOnboarding
+          ? getOnboardPagePathname(OnboardingPage.Welcome)
+          : getPath(firstItem?.title ?? '')
       );
     }
-  }, [firstItem?.title, hasOnboard, isLoading, isOnboarding, location.pathname, navigate]);
+  }, [firstItem?.title, isOnboardingDone, isLoading, isOnboarding, location.pathname, navigate]);
 
   if (error) {
     if (error instanceof LogtoClientError) {

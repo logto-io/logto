@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
-import { OnboardPage } from '@/cloud/types';
+import { OnboardingPage } from '@/cloud/types';
 import { getOnboardPagePathname } from '@/cloud/utils';
 import NotFound from '@/pages/NotFound';
 
@@ -11,9 +11,9 @@ import SignInExperience from '../SignInExperience';
 import Welcome from '../Welcome';
 import * as styles from './index.module.scss';
 
-const welcomePathname = getOnboardPagePathname(OnboardPage.Welcome);
+const welcomePathname = getOnboardPagePathname(OnboardingPage.Welcome);
 
-const Onboard = () => {
+const Onboarding = () => {
   const {
     data: { questionnaire },
     isLoaded,
@@ -24,20 +24,20 @@ const Onboard = () => {
   }
 
   return (
-    <div className={styles.onBoard}>
+    <div className={styles.onBoarding}>
       <Routes>
         <Route index element={<Navigate replace to={welcomePathname} />} />
-        <Route path={OnboardPage.Welcome} element={<Welcome />} />
+        <Route path={OnboardingPage.Welcome} element={<Welcome />} />
         <Route
-          path={OnboardPage.AboutUser}
+          path={OnboardingPage.AboutUser}
           element={questionnaire ? <About /> : <Navigate replace to={welcomePathname} />}
         />
         <Route
-          path={OnboardPage.SignInExperience}
+          path={OnboardingPage.SignInExperience}
           element={questionnaire ? <SignInExperience /> : <Navigate replace to={welcomePathname} />}
         />
         <Route
-          path={OnboardPage.Congrats}
+          path={OnboardingPage.Congrats}
           element={questionnaire ? <Congrats /> : <Navigate replace to={welcomePathname} />}
         />
         <Route path="*" element={<NotFound />} />
@@ -46,4 +46,4 @@ const Onboard = () => {
   );
 };
 
-export default Onboard;
+export default Onboarding;

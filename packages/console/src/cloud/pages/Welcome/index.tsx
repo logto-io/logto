@@ -14,7 +14,7 @@ import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 
 import type { Questionnaire } from '../../types';
-import { OnboardPage } from '../../types';
+import { OnboardingPage } from '../../types';
 import { getOnboardPagePathname } from '../../utils';
 import * as styles from './index.module.scss';
 import { deploymentTypeOptions, projectOptions } from './options';
@@ -45,7 +45,7 @@ const Welcome = () => {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getOnboardPagePathname(OnboardPage.AboutUser));
+    navigate(getOnboardPagePathname(OnboardingPage.AboutUser));
   };
 
   return (

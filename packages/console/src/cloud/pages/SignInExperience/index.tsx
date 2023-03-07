@@ -12,8 +12,8 @@ import ActionBar from '@/cloud/components/ActionBar';
 import { CardSelector, MultiCardSelector } from '@/cloud/components/CardSelector';
 import { defaultOnboardingSieConfig } from '@/cloud/constants';
 import * as pageLayout from '@/cloud/scss/layout.module.scss';
-import type { OnboardSieConfig } from '@/cloud/types';
-import { OnboardPage } from '@/cloud/types';
+import type { OnboardingSieConfig } from '@/cloud/types';
+import { OnboardingPage } from '@/cloud/types';
 import { getOnboardPagePathname } from '@/cloud/utils';
 import Button from '@/components/Button';
 import ColorPicker from '@/components/ColorPicker';
@@ -41,7 +41,7 @@ const SignInExperience = () => {
     watch,
     handleSubmit,
     formState: { isSubmitting, isDirty },
-  } = useForm<OnboardSieConfig>({ defaultValues: defaultOnboardingSieConfig });
+  } = useForm<OnboardingSieConfig>({ defaultValues: defaultOnboardingSieConfig });
 
   useEffect(() => {
     if (signInExperience) {
@@ -78,7 +78,7 @@ const SignInExperience = () => {
   });
 
   const handleBack = () => {
-    navigate(getOnboardPagePathname(OnboardPage.AboutUser));
+    navigate(getOnboardPagePathname(OnboardingPage.AboutUser));
   };
 
   const handleSave = async () => {
@@ -88,7 +88,7 @@ const SignInExperience = () => {
 
   const handleNext = async () => {
     await onSubmit();
-    navigate(getOnboardPagePathname(OnboardPage.Congrats));
+    navigate(getOnboardPagePathname(OnboardingPage.Congrats));
   };
 
   return (

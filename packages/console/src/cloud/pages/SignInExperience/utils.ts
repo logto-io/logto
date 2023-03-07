@@ -1,12 +1,12 @@
 import type { SignInExperience } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 
-import type { OnboardSieConfig } from '@/cloud/types';
+import type { OnboardingSieConfig } from '@/cloud/types';
 import { Authentication } from '@/cloud/types';
 
 const signInExperienceToOnboardSieConfig = (
   signInExperience: SignInExperience
-): OnboardSieConfig => {
+): OnboardingSieConfig => {
   const {
     color: { primaryColor },
     signIn: { methods: signInMethods },
@@ -35,7 +35,7 @@ const signInExperienceToOnboardSieConfig = (
 };
 
 const onboardSieConfigToSignInExperience = (
-  config: OnboardSieConfig,
+  config: OnboardingSieConfig,
   basedConfig: SignInExperience
 ): SignInExperience => {
   const { color: onboardConfigColor, identifier, authentications } = config;
