@@ -1,5 +1,6 @@
 import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
 import SetPasswordForm from '@/containers/SetPassword';
+import { passwordMinLength } from '@/utils/form';
 
 import useSetPassword from './use-set-password';
 
@@ -9,8 +10,8 @@ const SetPassword = () => {
   return (
     <SecondaryPageWrapper
       title="description.set_password"
-      description="error.password_min_length"
-      descriptionProps={{ min: 6 }}
+      description="error.invalid_password"
+      descriptionProps={{ min: passwordMinLength }}
     >
       <SetPasswordForm autoFocus onSubmit={setPassword} />
     </SecondaryPageWrapper>

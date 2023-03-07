@@ -103,6 +103,8 @@ const translation = {
     invalid_email: 'O email é inválido',
     invalid_phone: 'O número de telefone é inválido',
     password_min_length: 'A password requer um mínimo de {{min}} caracteres',
+    invalid_password:
+      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
     passwords_do_not_match: 'As passwords não coincidem',
     invalid_passcode: 'A senha é inválida',
     invalid_connector_auth: 'A autorização é inválida',

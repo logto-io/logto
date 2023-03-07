@@ -37,13 +37,13 @@ describe('<Lite />', () => {
     expect(submit).not.toBeCalled();
   });
 
-  test('password less than 6 chars should throw', async () => {
+  test('password less than 8 chars should throw', async () => {
     const { queryByText, getByText, container } = render(<Lite onSubmit={submit} />);
     const submitButton = getByText('action.save_password');
     const passwordInput = container.querySelector('input[name="newPassword"]');
 
     if (passwordInput) {
-      fireEvent.change(passwordInput, { target: { value: '12345' } });
+      fireEvent.change(passwordInput, { target: { value: '1234567' } });
     }
 
     act(() => {
@@ -59,7 +59,7 @@ describe('<Lite />', () => {
     act(() => {
       // Clear error
       if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: '123456' } });
+        fireEvent.change(passwordInput, { target: { value: '1234asdf' } });
         fireEvent.blur(passwordInput);
       }
     });
@@ -76,14 +76,14 @@ describe('<Lite />', () => {
 
     act(() => {
       if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: '123456' } });
+        fireEvent.change(passwordInput, { target: { value: '1234asdf' } });
       }
 
       fireEvent.submit(submitButton);
     });
 
     await waitFor(() => {
-      expect(submit).toBeCalledWith('123456');
+      expect(submit).toBeCalledWith('1234asdf');
     });
   });
 });
