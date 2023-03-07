@@ -21,13 +21,59 @@ export const alterationStateGuard: Readonly<{
   }),
 });
 
-// Summary
-export type SystemKey = AlterationStateKey;
-export type SystemType = AlterationStateType;
-export type SystemGuard = typeof alterationStateGuard;
+// Storage provider
+export enum StorageProvider {
+  AzureStorage = 'AzureStorage',
+  S3Storage = 'S3Storage',
+}
 
-export const systemKeys: readonly SystemKey[] = Object.freeze(Object.values(AlterationStateKey));
+const basicConfig = {
+  publicUrl: z.string(),
+};
+
+export const storageProviderDataGuard = z.discriminatedUnion('provider', [
+  z.object({
+    provider: z.literal(StorageProvider.AzureStorage),
+    connectionString: z.string(),
+    container: z.string(),
+    ...basicConfig,
+  }),
+  z.object({
+    provider: z.literal(StorageProvider.S3Storage),
+    endpoint: z.string(),
+    accessKeyId: z.string(),
+    accessSecretKey: z.string(),
+    ...basicConfig,
+  }),
+]);
+
+export type StorageProviderData = z.infer<typeof storageProviderDataGuard>;
+
+export enum StorageProviderKey {
+  StorageProvider = 'storageProvider',
+}
+
+export type StorageProviderType = {
+  [StorageProviderKey.StorageProvider]: StorageProviderData;
+};
+
+export const storageProviderGuard: Readonly<{
+  [key in StorageProviderKey]: ZodType<StorageProviderType[key]>;
+}> = Object.freeze({
+  [StorageProviderKey.StorageProvider]: storageProviderDataGuard,
+});
+
+// Summary
+export type SystemKey = AlterationStateKey | StorageProviderKey;
+export type SystemType = AlterationStateType | StorageProviderType;
+export type SystemGuard = typeof alterationStateGuard & typeof storageProviderGuard;
+
+export const systemKeys: readonly SystemKey[] = Object.freeze([
+  ...Object.values(AlterationStateKey),
+  ...Object.values(StorageProviderKey),
+]);
 
 export const systemGuards: SystemGuard = Object.freeze({
   ...alterationStateGuard,
+  ...storageProviderGuard,
 });

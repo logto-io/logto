@@ -46,65 +46,17 @@ export const adminConsoleConfigGuard: Readonly<{
   [AdminConsoleConfigKey.AdminConsole]: adminConsoleDataGuard,
 });
 
-export enum StorageProviderConfigKey {
-  StorageProvider = 'storageProvider',
-}
-
-export enum StorageProvider {
-  AzureStorage = 'AzureStorage',
-  S3Storage = 'S3Storage',
-}
-
-const basicConfig = {
-  publicUrl: z.string(),
-};
-
-export const storageProviderDataGuard = z.discriminatedUnion('provider', [
-  z.object({
-    provider: z.literal(StorageProvider.AzureStorage),
-    connectionString: z.string(),
-    container: z.string(),
-    ...basicConfig,
-  }),
-  z.object({
-    provider: z.literal(StorageProvider.S3Storage),
-    endpoint: z.string(),
-    accessKeyId: z.string(),
-    accessSecretKey: z.string(),
-    ...basicConfig,
-  }),
-]);
-
-export type StorageProviderData = z.infer<typeof storageProviderDataGuard>;
-
-export type StorageProviderConfigType = {
-  [StorageProviderConfigKey.StorageProvider]: StorageProviderData;
-};
-
-export const storageProviderConfigGuard: Readonly<{
-  [key in StorageProviderConfigKey]: ZodType<StorageProviderConfigType[key]>;
-}> = Object.freeze({
-  [StorageProviderConfigKey.StorageProvider]: storageProviderDataGuard,
-});
-
 // Summary
-export type LogtoConfigKey = LogtoOidcConfigKey | AdminConsoleConfigKey | StorageProviderConfigKey;
-export type LogtoConfigType =
-  | LogtoOidcConfigType
-  | AdminConsoleConfigType
-  | StorageProviderConfigType;
-export type LogtoConfigGuard = typeof logtoOidcConfigGuard &
-  typeof adminConsoleConfigGuard &
-  typeof storageProviderConfigGuard;
+export type LogtoConfigKey = LogtoOidcConfigKey | AdminConsoleConfigKey;
+export type LogtoConfigType = LogtoOidcConfigType | AdminConsoleConfigType;
+export type LogtoConfigGuard = typeof logtoOidcConfigGuard & typeof adminConsoleConfigGuard;
 
 export const logtoConfigKeys: readonly LogtoConfigKey[] = Object.freeze([
   ...Object.values(LogtoOidcConfigKey),
   ...Object.values(AdminConsoleConfigKey),
-  ...Object.values(StorageProviderConfigKey),
 ]);
 
 export const logtoConfigGuards: LogtoConfigGuard = Object.freeze({
   ...logtoOidcConfigGuard,
   ...adminConsoleConfigGuard,
-  ...storageProviderConfigGuard,
 });

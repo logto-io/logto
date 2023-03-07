@@ -27,11 +27,5 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
         where ${fields.key} in (${sql.join(keys, sql`,`)})
     `);
 
-  const getRowByKey = async (key: LogtoConfigKey) =>
-    pool.maybeOne<LogtoConfig>(sql`
-      select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
-        where ${fields.key}=${key}
-    `);
-
-  return { getAdminConsoleConfig, updateAdminConsoleConfig, getRowsByKeys, getRowByKey };
+  return { getAdminConsoleConfig, updateAdminConsoleConfig, getRowsByKeys };
 };

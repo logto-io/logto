@@ -1,7 +1,6 @@
 import { readFile } from 'fs/promises';
 
 import { generateStandardId } from '@logto/core-kit';
-import { StorageProviderConfigKey, storageProviderDataGuard } from '@logto/schemas';
 import { object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -18,11 +17,9 @@ import { getTenantId } from '#src/utils/tenant.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function userAssetsRoutes<T extends AuthedRouter>(
-  ...[router, { queries }]: RouterInitArgs<T>
+  ...[router, { sharedContext }]: RouterInitArgs<T>
 ) {
-  const {
-    logtoConfigs: { getRowByKey },
-  } = queries;
+  const { storageProviderConfig } = sharedContext;
 
   router.post(
     '/user-assets',
@@ -40,21 +37,17 @@ export default function userAssetsRoutes<T extends AuthedRouter>(
       const tenantId = getTenantId(ctx.URL);
       assertThat(tenantId, 'guard.can_not_get_tenant_id');
 
-      const configRow = await getRowByKey(StorageProviderConfigKey.StorageProvider);
-      assertThat(configRow, 'storage.not_configured');
-      const result = storageProviderDataGuard.safeParse(configRow.value);
-      assertThat(result.success, 'storage.not_configured');
+      assertThat(storageProviderConfig, 'storage.not_configured');
 
       const userId = ctx.auth.id;
-      const config = result.data;
-      const uploadFile = buildUploadFile(config);
+      const uploadFile = buildUploadFile(storageProviderConfig);
       const objectKey = `${tenantId}/${userId}/${generateStandardId()}/${file.originalFilename}`;
 
       try {
         await uploadFile(await readFile(file.filepath), objectKey, file.mimetype);
 
         ctx.body = {
-          url: `${config.publicUrl}/${objectKey}`,
+          url: `${storageProviderConfig.publicUrl}/${objectKey}`,
         };
       } catch {
         throw new RequestError('storage.upload_error');

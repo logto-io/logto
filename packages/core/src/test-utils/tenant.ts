@@ -3,6 +3,7 @@ import { createMockPool, createMockQueryResult } from 'slonik';
 import { createModelRouters } from '#src/model-routers/index.js';
 import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
+import SharedTenantContext from '#src/tenants/SharedTenantContext.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import { mockEnvSet } from './env-set.js';
@@ -47,6 +48,7 @@ export type Partial2<T> = { [key in keyof T]?: Partial<T[key]> };
 export class MockTenant implements TenantContext {
   public id = 'mock_id';
   public envSet = mockEnvSet;
+  public sharedContext = new SharedTenantContext();
   public queries: Queries;
   public libraries: Libraries;
   public modelRouters = createModelRouters(new MockQueryClient());

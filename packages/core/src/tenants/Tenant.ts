@@ -23,16 +23,17 @@ import initApis from '#src/routes/init.js';
 
 import Libraries from './Libraries.js';
 import Queries from './Queries.js';
+import type SharedTenantContext from './SharedTenantContext.js';
 import type TenantContext from './TenantContext.js';
 import { getTenantDatabaseDsn } from './utils.js';
 
 export default class Tenant implements TenantContext {
-  static async create(id: string): Promise<Tenant> {
+  static async create(id: string, sharedContext: SharedTenantContext): Promise<Tenant> {
     // Treat the default database URL as the management URL
     const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
     await envSet.load();
 
-    return new Tenant(envSet, id);
+    return new Tenant(envSet, id, sharedContext);
   }
 
   public readonly provider: Provider;
@@ -54,7 +55,11 @@ export default class Tenant implements TenantContext {
     return mount(this.app);
   }
 
-  private constructor(public readonly envSet: EnvSet, public readonly id: string) {
+  private constructor(
+    public readonly envSet: EnvSet,
+    public readonly id: string,
+    public readonly sharedContext: SharedTenantContext
+  ) {
     const modelRouters = createModelRouters(envSet.queryClient);
     const queries = new Queries(envSet.pool);
     const libraries = new Libraries(queries, modelRouters);
@@ -83,7 +88,15 @@ export default class Tenant implements TenantContext {
     const provider = initOidc(envSet, queries, libraries);
     app.use(mount('/oidc', provider.app));
 
-    const tenantContext: TenantContext = { id, provider, queries, libraries, modelRouters, envSet };
+    const tenantContext: TenantContext = {
+      id,
+      provider,
+      queries,
+      libraries,
+      modelRouters,
+      envSet,
+      sharedContext,
+    };
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
 

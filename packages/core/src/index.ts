@@ -4,6 +4,7 @@ import { findUp } from 'find-up';
 import Koa from 'koa';
 
 import { checkAlterationState } from './env-set/check-alteration-state.js';
+import SharedTenantContext from './tenants/SharedTenantContext.js';
 
 dotenv.config({ path: await findUp('.env', {}) });
 
@@ -23,10 +24,12 @@ try {
     checkRowLevelSecurity(EnvSet.queryClient),
     checkAlterationState(await EnvSet.pool),
   ]);
+  const sharedContext = new SharedTenantContext();
+  await sharedContext.loadStorageProviderConfig(await EnvSet.pool);
 
   // Import last until init completed
   const { default: initApp } = await import('./app/init.js');
-  await initApp(app);
+  await initApp(app, sharedContext);
 } catch (error: unknown) {
   console.error('Error while initializing app:');
   console.error(error);
