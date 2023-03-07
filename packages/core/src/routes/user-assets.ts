@@ -5,6 +5,7 @@ import { object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   allowUploadMimeTypes,
@@ -16,11 +17,7 @@ import { getTenantId } from '#src/utils/tenant.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-export default function userAssetsRoutes<T extends AuthedRouter>(
-  ...[router, { sharedContext }]: RouterInitArgs<T>
-) {
-  const { storageProviderConfig } = sharedContext;
-
+export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
   router.post(
     '/user-assets',
     koaGuard({
@@ -37,6 +34,7 @@ export default function userAssetsRoutes<T extends AuthedRouter>(
       const tenantId = getTenantId(ctx.URL);
       assertThat(tenantId, 'guard.can_not_get_tenant_id');
 
+      const { storageProviderConfig } = SystemContext.shared;
       assertThat(storageProviderConfig, 'storage.not_configured');
 
       const userId = ctx.auth.id;

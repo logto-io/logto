@@ -5,12 +5,10 @@ import type { ModelRouters } from '#src/model-routers/index.js';
 
 import type Libraries from './Libraries.js';
 import type Queries from './Queries.js';
-import type SharedTenantContext from './SharedTenantContext.js';
 
 export default abstract class TenantContext {
   public abstract readonly id: string;
   public abstract readonly envSet: EnvSet;
-  public abstract readonly sharedContext: SharedTenantContext;
   public abstract readonly provider: Provider;
   public abstract readonly queries: Queries;
   public abstract readonly libraries: Libraries;

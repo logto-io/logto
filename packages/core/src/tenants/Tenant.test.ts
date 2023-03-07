@@ -4,8 +4,6 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { emptyMiddleware } from '#src/utils/test-utils.js';
 
-import SharedTenantContext from './SharedTenantContext.js';
-
 const { jest } = import.meta;
 const { mockEsm, mockEsmDefault } = createMockUtils(jest);
 
@@ -53,7 +51,7 @@ describe('Tenant', () => {
   });
 
   it('should call middleware factories for user tenants', async () => {
-    await Tenant.create(defaultTenantId, new SharedTenantContext());
+    await Tenant.create(defaultTenantId);
 
     for (const [, middleware, shouldCall] of userMiddlewareList) {
       if (shouldCall) {
@@ -65,7 +63,7 @@ describe('Tenant', () => {
   });
 
   it('should call middleware factories for the admin tenant', async () => {
-    await Tenant.create(adminTenantId, new SharedTenantContext());
+    await Tenant.create(adminTenantId);
 
     for (const [, middleware, shouldCall] of adminMiddlewareList) {
       if (shouldCall) {
@@ -79,7 +77,7 @@ describe('Tenant', () => {
 
 describe('Tenant `.run()`', () => {
   it('should return a function ', async () => {
-    const tenant = await Tenant.create(defaultTenantId, new SharedTenantContext());
+    const tenant = await Tenant.create(defaultTenantId);
     expect(typeof tenant.run).toBe('function');
   });
 });

@@ -1,12 +1,11 @@
 import LRUCache from 'lru-cache';
 
-import type SharedTenantContext from './SharedTenantContext.js';
 import Tenant from './Tenant.js';
 
 export class TenantPool {
   protected cache = new LRUCache<string, Tenant>({ max: 500 });
 
-  async get(tenantId: string, sharedContext: SharedTenantContext): Promise<Tenant> {
+  async get(tenantId: string): Promise<Tenant> {
     const tenant = this.cache.get(tenantId);
 
     if (tenant) {
@@ -14,7 +13,7 @@ export class TenantPool {
     }
 
     console.log('Init tenant:', tenantId);
-    const newTenant = await Tenant.create(tenantId, sharedContext);
+    const newTenant = await Tenant.create(tenantId);
     this.cache.set(tenantId, newTenant);
 
     return newTenant;

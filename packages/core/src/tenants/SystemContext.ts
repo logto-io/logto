@@ -6,7 +6,8 @@ import { sql } from 'slonik';
 
 const { table, fields } = convertToIdentifiers(Systems);
 
-export default class SharedTenantContext {
+export default class SystemContext {
+  static shared = new SystemContext();
   public storageProviderConfig: StorageProviderData | undefined;
 
   async loadStorageProviderConfig(pool: CommonQueryMethods) {

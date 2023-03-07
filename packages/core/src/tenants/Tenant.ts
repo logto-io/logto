@@ -23,17 +23,16 @@ import initApis from '#src/routes/init.js';
 
 import Libraries from './Libraries.js';
 import Queries from './Queries.js';
-import type SharedTenantContext from './SharedTenantContext.js';
 import type TenantContext from './TenantContext.js';
 import { getTenantDatabaseDsn } from './utils.js';
 
 export default class Tenant implements TenantContext {
-  static async create(id: string, sharedContext: SharedTenantContext): Promise<Tenant> {
+  static async create(id: string): Promise<Tenant> {
     // Treat the default database URL as the management URL
     const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
     await envSet.load();
 
-    return new Tenant(envSet, id, sharedContext);
+    return new Tenant(envSet, id);
   }
 
   public readonly provider: Provider;
@@ -55,11 +54,7 @@ export default class Tenant implements TenantContext {
     return mount(this.app);
   }
 
-  private constructor(
-    public readonly envSet: EnvSet,
-    public readonly id: string,
-    public readonly sharedContext: SharedTenantContext
-  ) {
+  private constructor(public readonly envSet: EnvSet, public readonly id: string) {
     const modelRouters = createModelRouters(envSet.queryClient);
     const queries = new Queries(envSet.pool);
     const libraries = new Libraries(queries, modelRouters);
@@ -95,7 +90,6 @@ export default class Tenant implements TenantContext {
       libraries,
       modelRouters,
       envSet,
-      sharedContext,
     };
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
