@@ -53,7 +53,7 @@ const Content = () => {
   return (
     <LogtoProvider
       config={{
-        endpoint: adminTenantEndpoint,
+        endpoint: adminTenantEndpoint.href,
         appId: adminConsoleApplicationId,
         resources,
         scopes,

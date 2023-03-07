@@ -1,5 +1,6 @@
-import { GlobalValues, appendPath } from '@logto/shared';
+import { GlobalValues } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
+import { appendPath } from '@silverhand/essentials';
 import type { PostgreSql } from '@withtyped/postgres';
 import type { QueryClient } from '@withtyped/server';
 import type { DatabasePool } from 'slonik';
@@ -94,7 +95,7 @@ export class EnvSet {
 
     const oidcConfigs = await getOidcConfigs();
     const endpoint = getTenantEndpoint(this.tenantId, EnvSet.values);
-    this.#oidc = await loadOidcValues(appendPath(endpoint, '/oidc').toString(), oidcConfigs);
+    this.#oidc = await loadOidcValues(appendPath(endpoint, '/oidc').href, oidcConfigs);
   }
 }
 
