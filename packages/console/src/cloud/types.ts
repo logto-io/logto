@@ -3,10 +3,10 @@ import { z } from 'zod';
 
 export enum CloudRoute {
   Callback = 'callback',
-  Onboard = 'onboard',
+  Onboarding = 'onboarding',
 }
 
-export enum OnboardPage {
+export enum OnboardingPage {
   Welcome = 'welcome',
   AboutUser = 'about-user',
   SignInExperience = 'sign-in-experience',
@@ -62,7 +62,7 @@ export type Questionnaire = z.infer<typeof questionnaireGuard>;
 
 export const userOnboardingDataGuard = z.object({
   questionnaire: questionnaireGuard.optional(),
-  hasOnboard: z.boolean().optional(),
+  isOnboardingDone: z.boolean().optional(),
 });
 
 export type UserOnboardingData = z.infer<typeof userOnboardingDataGuard>;
@@ -72,7 +72,7 @@ export enum Authentication {
   VerificationCode = 'verificationCode',
 }
 
-export type OnboardSieConfig = {
+export type OnboardingSieConfig = {
   color: string;
   identifier: SignInIdentifier;
   authentications: Authentication[];

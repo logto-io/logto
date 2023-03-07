@@ -3,7 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
-import Onboard from '@/cloud/pages/Onboard';
+import Onboarding from '@/cloud/pages/Onboarding';
 import { CloudRoute } from '@/cloud/types';
 import AppLoading from '@/components/AppLoading';
 import Toast from '@/components/Toast';
@@ -23,7 +23,7 @@ const Main = () => {
   const swrOptions = useSwrOptions();
   const { userEndpoint } = useContext(AppEndpointsContext);
   const {
-    data: { hasOnboard },
+    data: { isOnboardingDone },
     isLoaded,
   } = useUserOnboardingData();
 
@@ -31,7 +31,7 @@ const Main = () => {
     return <AppLoading />;
   }
 
-  const isOnboarding = isCloud && !hasOnboard;
+  const isOnboarding = isCloud && !isOnboardingDone;
 
   return (
     <BrowserRouter basename={getBasename()}>
@@ -45,8 +45,8 @@ const Main = () => {
             <Route element={<AppContent />}>
               {isOnboarding ? (
                 <Route>
-                  <Route index element={<Navigate replace to={`/${CloudRoute.Onboard}`} />} />
-                  <Route path={`/${CloudRoute.Onboard}/*`} element={<Onboard />} />
+                  <Route index element={<Navigate replace to={`/${CloudRoute.Onboarding}`} />} />
+                  <Route path={`/${CloudRoute.Onboarding}/*`} element={<Onboarding />} />
                 </Route>
               ) : (
                 <Route path="/*" element={<ConsoleContent />} />
