@@ -55,6 +55,12 @@ const connectors = {
       'The value of “IdP name” can be a unique identifier string to distinguish your social identifies. This setting cannot be changed after the connector is built.',
     target_tooltip:
       '"IdP name" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "IdP name" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>',
+    target_conflict:
+      'The IdP name entered matches the existing <span>name</span> connector. Using the same idp name may cause unexpected sign-in behavior where users may access the same account through two different connectors.',
+    target_conflict_line2:
+      'If you\'d like to replace the current connector with the same identity provider and allow previous users to sign in without registering again, please delete the <span>name</span> connector and create a new one with the same "IdP name".',
+    target_conflict_line3:
+      'If you\'d like to connect to a different identity provider, please modify the "IdP name" and proceed.',
     config: 'Enter your config JSON',
     sync_profile: 'Sync profile information',
     sync_profile_only_at_sign_up: 'Only sync at sign-up',

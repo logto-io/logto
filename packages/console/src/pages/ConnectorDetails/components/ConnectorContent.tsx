@@ -103,7 +103,6 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
             learnMoreLink={getDocumentationUrl('/docs/references/connectors')}
           >
             <BasicForm
-              connectorType={connectorData.type}
               isStandard={connectorData.isStandard}
               isDarkDefaultVisible={Boolean(connectorData.metadata.logoDark)}
             />

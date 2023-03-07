@@ -158,16 +158,26 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
       if (connectorFactory.type === ConnectorType.Social) {
         const connectors = await getLogtoConnectors();
+        const duplicateConnector = connectors
+          .filter(({ type }) => type === ConnectorType.Social)
+          .find(
+            ({ metadata: { target, platform } }) =>
+              target ===
+                (metadata ? cleanDeep(metadata).target : connectorFactory.metadata.target) &&
+              platform === connectorFactory.metadata.platform
+          );
         assertThat(
-          !connectors
-            .filter(({ type }) => type === ConnectorType.Social)
-            .some(
-              ({ metadata: { target, platform } }) =>
-                target ===
-                  (metadata ? cleanDeep(metadata).target : connectorFactory.metadata.target) &&
-                platform === connectorFactory.metadata.platform
-            ),
-          new RequestError({ code: 'connector.multiple_target_with_same_platform', status: 422 })
+          !duplicateConnector,
+          new RequestError(
+            {
+              code: 'connector.multiple_target_with_same_platform',
+              status: 422,
+            },
+            {
+              connectorId: duplicateConnector?.metadata.id,
+              connectorName: duplicateConnector?.metadata.name,
+            }
+          )
         );
       }
 

@@ -1,15 +1,16 @@
-import { ConnectorType } from '@logto/connector-kit';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import CaretDown from '@/assets/images/caret-down.svg';
 import CaretUp from '@/assets/images/caret-up.svg';
+import Error from '@/assets/images/toast-error.svg';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
+import UnnamedTrans from '@/components/UnnamedTrans';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { uriValidator } from '@/utils/validator';
 
@@ -21,14 +22,14 @@ type Props = {
   isAllowEditTarget?: boolean;
   isDarkDefaultVisible?: boolean;
   isStandard?: boolean;
-  connectorType: ConnectorType;
+  conflictConnectorName?: Record<string, string>;
 };
 
 const BasicForm = ({
   isAllowEditTarget,
   isDarkDefaultVisible,
-  connectorType,
   isStandard,
+  conflictConnectorName,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
@@ -104,48 +105,74 @@ const BasicForm = ({
               onClick={toggleDarkVisible}
             />
           </div>
-          <FormField
-            isRequired
-            title="connectors.guide.target"
-            tip={(closeTipHandler) => (
-              <Trans
-                components={{
-                  a: (
-                    <TextLink
-                      href={getDocumentationUrl('/docs/references/connectors/#target')}
-                      target="_blank"
-                      onClick={closeTipHandler}
-                    />
-                  ),
-                }}
-              >
-                {t('connectors.guide.target_tooltip')}
-              </Trans>
-            )}
-          >
-            <TextInput
-              placeholder={t('connectors.guide.target_placeholder')}
-              hasError={Boolean(errors.target)}
-              disabled={!isAllowEditTarget}
-              {...register('target', { required: true })}
-            />
-            <div className={styles.tip}>{t('connectors.guide.target_tip')}</div>
-          </FormField>
         </>
       )}
-      {connectorType === ConnectorType.Social && (
-        <FormField title="connectors.guide.sync_profile">
-          <Controller
-            name="syncProfile"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <Select options={syncProfileOptions} value={value} onChange={onChange} />
-            )}
-          />
-          <div className={styles.tip}>{t('connectors.guide.sync_profile_tip')}</div>
-        </FormField>
-      )}
+      <FormField
+        isRequired
+        title="connectors.guide.target"
+        tip={(closeTipHandler) => (
+          <Trans
+            components={{
+              a: (
+                <TextLink
+                  href={getDocumentationUrl('/docs/references/connectors/#target')}
+                  target="_blank"
+                  onClick={closeTipHandler}
+                />
+              ),
+            }}
+          >
+            {t('connectors.guide.target_tooltip')}
+          </Trans>
+        )}
+      >
+        <TextInput
+          placeholder={t('connectors.guide.target_placeholder')}
+          hasError={Boolean(errors.target)}
+          disabled={!isAllowEditTarget}
+          {...register('target', { required: true })}
+        />
+        <div className={styles.tip}>{t('connectors.guide.target_tip')}</div>
+        {conflictConnectorName && (
+          <div className={styles.error}>
+            <div className={styles.icon}>
+              <Error />
+            </div>
+            <div className={styles.content}>
+              <Trans
+                components={{
+                  span: <UnnamedTrans resource={conflictConnectorName} />,
+                }}
+              >
+                {t('connectors.guide.target_conflict')}
+              </Trans>
+              <ul>
+                <li>
+                  <Trans
+                    components={{
+                      span: <UnnamedTrans resource={conflictConnectorName} />,
+                    }}
+                  >
+                    {t('connectors.guide.target_conflict_line2')}
+                  </Trans>
+                </li>
+                <li>{t('connectors.guide.target_conflict_line3')}</li>
+              </ul>
+            </div>
+          </div>
+        )}
+      </FormField>
+      <FormField title="connectors.guide.sync_profile">
+        <Controller
+          name="syncProfile"
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, value } }) => (
+            <Select options={syncProfileOptions} value={value} onChange={onChange} />
+          )}
+        />
+        <div className={styles.tip}>{t('connectors.guide.sync_profile_tip')}</div>
+      </FormField>
     </div>
   );
 };
