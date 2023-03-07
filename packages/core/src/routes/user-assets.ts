@@ -1,6 +1,7 @@
 import { readFile } from 'fs/promises';
 
 import { generateStandardId } from '@logto/core-kit';
+import { format } from 'date-fns';
 import { object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -39,7 +40,10 @@ export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: Ro
 
       const userId = ctx.auth.id;
       const uploadFile = buildUploadFile(storageProviderConfig);
-      const objectKey = `${tenantId}/${userId}/${generateStandardId()}/${file.originalFilename}`;
+      const objectKey = `${tenantId}/${userId}/${format(
+        new Date(),
+        'YYYY/MM/dd'
+      )}/${generateStandardId(8)}/${file.originalFilename}`;
 
       try {
         const { url } = await uploadFile(await readFile(file.filepath), objectKey, {
