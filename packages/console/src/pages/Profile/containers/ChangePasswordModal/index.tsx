@@ -1,3 +1,4 @@
+import { passwordRegEx } from '@logto/core-kit';
 import type { KeyboardEventHandler } from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,8 +13,10 @@ import IconButton from '@/components/IconButton';
 import TextInput from '@/components/TextInput';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
+import { handleError } from '../../utils';
 
 type FormFields = {
   newPassword: string;
@@ -30,6 +33,7 @@ const defaultValues: FormFields = {
 const ChangePasswordModal = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
+  const { show: showModal } = useConfirmModal();
   const { state } = useLocation();
   const {
     watch,
@@ -44,19 +48,38 @@ const ChangePasswordModal = () => {
     defaultValues,
   });
   const [showPassword, setShowPassword] = useState(false);
-  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
+  const api = useStaticApi({
+    prefixUrl: adminTenantEndpoint,
+    resourceIndicator: meApi.indicator,
+    hideErrorToast: true,
+  });
 
   const onClose = () => {
+    reset();
     navigate('/profile');
   };
 
   const onSubmit = () => {
     clearErrors();
     void handleSubmit(async ({ newPassword }) => {
-      await api.post(`me/password`, { json: { password: newPassword } });
-      toast.success(t('profile.password_changed'));
-      reset();
-      onClose();
+      try {
+        await api.post(`me/password`, { json: { password: newPassword } });
+        toast.success(t('profile.password_changed'));
+        onClose();
+      } catch (error: unknown) {
+        void handleError(error, async (code, message) => {
+          if (code === 'session.verification_failed') {
+            await showModal({
+              ModalContent: message,
+              type: 'alert',
+              cancelButtonText: 'general.got_it',
+            });
+            onClose();
+
+            return true;
+          }
+        });
+      }
     })();
   };
 
@@ -79,8 +102,12 @@ const ChangePasswordModal = () => {
         {...register('newPassword', {
           required: t('profile.password.required'),
           minLength: {
-            value: 6,
-            message: t('profile.password.min_length', { min: 6 }),
+            value: 8,
+            message: t('profile.password.min_length', { min: 8 }),
+          },
+          pattern: {
+            value: passwordRegEx,
+            message: t('errors.password_pattern_error'),
           },
         })}
         type={showPassword ? 'text' : 'password'}
@@ -123,7 +150,13 @@ const ChangePasswordModal = () => {
           setShowPassword((value) => !value);
         }}
       />
-      <Button type="primary" title="general.create" isLoading={isSubmitting} onClick={onSubmit} />
+      <Button
+        type="primary"
+        title="general.create"
+        size="large"
+        isLoading={isSubmitting}
+        onClick={onSubmit}
+      />
     </MainFlowLikeModal>
   );
 };

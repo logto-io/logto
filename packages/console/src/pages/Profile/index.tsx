@@ -7,6 +7,7 @@ import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import FormCard from '@/components/FormCard';
 import { adminTenantEndpoint, meApi } from '@/consts';
+import { isCloud } from '@/consts/cloud';
 import { useStaticApi } from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';
 import * as resourcesStyles from '@/scss/resources.module.scss';
@@ -74,23 +75,25 @@ const Profile = () => {
               ]}
             />
           </FormCard>
-          <FormCard title="profile.delete_account.title">
-            <div className={styles.deleteAccount}>
-              <div className={styles.description}>{t('profile.delete_account.description')}</div>
-              <Button
-                title="profile.delete_account.button"
-                onClick={() => {
-                  setShowDeleteAccountModal(true);
+          {isCloud && (
+            <FormCard title="profile.delete_account.title">
+              <div className={styles.deleteAccount}>
+                <div className={styles.description}>{t('profile.delete_account.description')}</div>
+                <Button
+                  title="profile.delete_account.button"
+                  onClick={() => {
+                    setShowDeleteAccountModal(true);
+                  }}
+                />
+              </div>
+              <DeleteAccountModal
+                isOpen={showDeleteAccountModal}
+                onClose={() => {
+                  setShowDeleteAccountModal(false);
                 }}
               />
-            </div>
-            <DeleteAccountModal
-              isOpen={showDeleteAccountModal}
-              onClose={() => {
-                setShowDeleteAccountModal(false);
-              }}
-            />
-          </FormCard>
+            </FormCard>
+          )}
         </div>
       )}
     </div>

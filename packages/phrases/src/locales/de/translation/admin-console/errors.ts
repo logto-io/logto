@@ -13,7 +13,8 @@ const errors = {
   more_details: 'Mehr Details',
   username_pattern_error:
     'Der Benutzername sollte nur Buchstaben, Zahlen oder Unterstriche enthalten und nicht mit einer Zahl beginnen.',
-  password_pattern_error: 'Das Passwort muss aus mindestens 6 Zeichen lang sein',
+  password_pattern_error:
+    'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
   insecure_contexts: 'Unsichere Kontexte (nicht-HTTPS) werden nicht unterstützt.',
   unexpected_error: 'Ein unerwarteter Fehler ist aufgetreten',
   not_found: '404 not found', // UNTRANSLATED

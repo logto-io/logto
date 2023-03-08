@@ -1,6 +1,4 @@
-import type { RequestErrorBody } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { HTTPError } from 'ky';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -12,10 +10,11 @@ import TextLink from '@/components/TextLink';
 import VerificationCodeInput, { defaultLength } from '@/components/VerificationCodeInput';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentUser from '@/hooks/use-current-user';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
-import { checkLocationState } from '../../utils';
+import { checkLocationState, handleError } from '../../utils';
 import * as styles from './index.module.scss';
 
 export const resendTimeout = 59;
@@ -30,6 +29,7 @@ const getTimeout = () => {
 const VerificationCodeModal = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
+  const { show: showModal } = useConfirmModal();
   const { state } = useLocation();
   const { reload } = useCurrentUser();
   const [code, setCode] = useState<string[]>([]);
@@ -74,14 +74,34 @@ const VerificationCodeModal = () => {
         navigate('../change-password', { state });
       }
     } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const logtoError = await error.response.json<RequestErrorBody>();
-        setError(logtoError.message);
-      } else {
-        setError(String(error));
-      }
+      void handleError(error, async (code, message) => {
+        // The following errors will be displayed as inline error message.
+        if (
+          [
+            'verification_code.code_mismatch',
+            'verification_code.exceed_max_try',
+            'verification_code.not_found',
+          ].includes(code)
+        ) {
+          setError(message);
+
+          return true;
+        }
+
+        // Other verification code errors will be displayed in a popup modal.
+        if (code.startsWith('verification_code.')) {
+          await showModal({
+            ModalContent: message,
+            type: 'alert',
+            cancelButtonText: 'general.got_it',
+          });
+          onClose();
+
+          return true;
+        }
+      });
     }
-  }, [code, email, api, action, t, onClose, navigate, state]);
+  }, [code, email, api, action, t, onClose, navigate, state, showModal]);
 
   useEffect(() => {
     if (code.length === defaultLength && code.every(Boolean)) {
