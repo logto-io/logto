@@ -61,12 +61,12 @@ const Profile = () => {
                 {
                   key: 'password',
                   label: 'profile.password.password',
-                  value: user.passwordEncrypted,
+                  value: user.hasPassword,
                   renderer: (value) => (value ? <span>********</span> : <NotSet />),
                   action: {
                     name: 'profile.change',
                     handler: () => {
-                      navigate(user.passwordEncrypted ? 'verify-password' : 'change-password', {
+                      navigate(user.hasPassword ? 'verify-password' : 'change-password', {
                         state: { email: user.primaryEmail, action: 'changePassword' },
                       });
                     },

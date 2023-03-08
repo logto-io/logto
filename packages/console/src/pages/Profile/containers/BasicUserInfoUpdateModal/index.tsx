@@ -72,7 +72,7 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
   const onSubmit = async () => {
     clearErrors();
     void handleSubmit(async (data) => {
-      await api.patch(`me/user`, { json: { [field]: data[field] } });
+      await api.patch('me', { json: { [field]: data[field] } });
       toast.success(t('profile.updated', { target: t(`profile.settings.${field}`) }));
       onClose();
     })();

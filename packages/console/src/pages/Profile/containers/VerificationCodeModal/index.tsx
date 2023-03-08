@@ -64,7 +64,7 @@ const VerificationCodeModal = () => {
       await api.post(`me/verification-codes/verify`, { json: { verificationCode, email } });
 
       if (action === 'changeEmail') {
-        await api.patch(`me/user`, { json: { primaryEmail: email } });
+        await api.patch('me', { json: { primaryEmail: email } });
         toast.success(t('profile.email_changed'));
 
         onClose();
