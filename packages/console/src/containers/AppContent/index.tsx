@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 
+import Broadcast from '@/cloud/components/Broadcast';
 import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
 import { OnboardingPage } from '@/cloud/types';
 import { getOnboardPagePathname } from '@/cloud/utils';
@@ -78,10 +79,13 @@ const AppContent = () => {
   }
 
   return (
-    <div className={styles.app}>
-      <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
-      <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
-    </div>
+    <>
+      <div className={styles.app}>
+        <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
+        <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
+      </div>
+      {isCloud && <Broadcast />}
+    </>
   );
 };
 
