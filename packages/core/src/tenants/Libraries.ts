@@ -7,6 +7,7 @@ import { createResourceLibrary } from '#src/libraries/resource.js';
 import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createUserLibrary } from '#src/libraries/user.js';
+import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
 import type { ModelRouters } from '#src/model-routers/index.js';
 
 import type Queries from './Queries.js';
@@ -21,6 +22,7 @@ export default class Libraries {
   socials = createSocialLibrary(this.queries, this.connectors);
   passcodes = createPasscodeLibrary(this.queries, this.connectors);
   applications = createApplicationLibrary(this.queries);
+  verificationStatuses = createVerificationStatusLibrary(this.queries);
 
   constructor(private readonly queries: Queries, private readonly modelRouters: ModelRouters) {}
 }

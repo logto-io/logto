@@ -9,5 +9,4 @@ export const routes = Object.freeze({
   signUp,
 } as const);
 
-export const verificationTimeout = 10 * 60; // 10 mins.
-export const continueSignInTimeout = 10 * 60; // 10 mins.
+export const verificationTimeout = 10 * 60 * 1000; // 10 mins.
