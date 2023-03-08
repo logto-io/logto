@@ -63,9 +63,9 @@ describe('smoke testing for cloud', () => {
 
     await button.click();
 
-    // Wait for our beautiful logto to show up
+    // Wait for our beautiful logo to show up
     await page.waitForSelector('div[class$=topbar] > svg[viewbox][class$=logo]');
-    expect(page.url()).toBe(new URL(`/${tenantId ?? ''}/onboard/welcome`, logtoCloudUrl).href);
+    expect(page.url()).toBe(new URL(`/${tenantId ?? ''}/onboarding/welcome`, logtoCloudUrl).href);
   });
 
   it('can sign out of admin console', async () => {
