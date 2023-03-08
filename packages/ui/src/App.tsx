@@ -23,7 +23,7 @@ import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignIn from './pages/SocialSignInCallback';
 import Springboard from './pages/Springboard';
 import VerificationCode from './pages/VerificationCode';
-import { getSignInExperienceSettings } from './utils/sign-in-experience';
+import { getSignInExperienceSettings, setFavIcon } from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
 
@@ -44,8 +44,15 @@ const App = () => {
 
     (async () => {
       const settings = await getSignInExperienceSettings();
+
+      const {
+        customCss,
+        branding: { favicon },
+      } = settings;
+
       // eslint-disable-next-line @silverhand/fp/no-mutation
-      customCssRef.current.textContent = settings.customCss;
+      customCssRef.current.textContent = customCss;
+      setFavIcon(favicon);
 
       // Note: i18n must be initialized ahead of page render
       await initI18n();

@@ -27,6 +27,7 @@ const sign_in_exp = {
   branding: {
     title: 'ÁREA DE MARCA',
     ui_style: 'Estilo',
+    favicon: 'Browser favicon', // UNTRANSLATED
     styles: {
       logo_slogan: 'Logo da app com slogan',
       logo: 'Apenas o logo da app',

@@ -48,6 +48,7 @@ const translation = {
     agree_with_terms: 'Eu li e concordo com os ',
     agree_with_terms_modal: 'Para prosseguir, por favor, concorde com o <link></link>.',
     terms_of_use: 'Termos de uso',
+    sign_in: 'Entrar',
     create_account: 'Criar uma conta',
     or: 'ou',
     enter_passcode: 'A senha foi enviada para o seu {{address}} {{target}}',

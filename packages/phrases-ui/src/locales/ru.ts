@@ -48,6 +48,7 @@ const translation = {
     agree_with_terms: 'Я прочитал и согласен с ',
     agree_with_terms_modal: 'Чтобы продолжить, пожалуйста, согласитесь с <link></link>',
     terms_of_use: 'Условиями использования',
+    sign_in: 'Войти',
     create_account: 'Создать аккаунт',
     or: 'или',
     enter_passcode: 'Код подтверждения был отправлен на {{address}}',

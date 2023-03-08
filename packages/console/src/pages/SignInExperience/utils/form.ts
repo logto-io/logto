@@ -47,6 +47,7 @@ export const signInExperienceParser = {
       branding: {
         ...branding,
         // Transform empty string to undefined
+        favicon: conditional(branding.favicon?.length && branding.favicon),
         darkLogoUrl: conditional(branding.darkLogoUrl?.length && branding.darkLogoUrl),
         slogan: conditional(branding.slogan?.length && branding.slogan),
       },

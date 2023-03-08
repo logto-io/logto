@@ -84,6 +84,7 @@ const sign_in_exp = {
   branding: {
     title: 'BRANDING',
     ui_style: 'Stil',
+    favicon: 'Browser favicon', // UNTRANSLATED
     styles: {
       logo_slogan: 'App logo mit Slogan',
       logo: 'Nur App logo',

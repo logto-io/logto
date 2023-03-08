@@ -25,6 +25,7 @@ const sign_in_exp = {
   branding: {
     title: '브랜딩 영역',
     ui_style: '스타일',
+    favicon: 'Browser favicon', // UNTRANSLATED
     styles: {
       logo_slogan: '앱 로고 & 슬로건',
       logo: '앱 로고만',

@@ -7,6 +7,7 @@ const config: Config.InitialOptions = {
     setupFilesAfterEnv: ['<rootDir>/src/jest.setup.ts'],
     transform: {
       '\\.(svg)$': 'jest-transformer-svg',
+      '\\.(png)$': 'jest-transform-stub',
     },
   }),
   // Will update common config soon
