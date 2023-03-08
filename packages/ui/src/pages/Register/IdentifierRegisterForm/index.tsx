@@ -8,7 +8,7 @@ import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
-import TermsOfUse from '@/containers/TermsOfUse';
+import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
 import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
@@ -102,7 +102,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <TermsOfUse className={styles.terms} />
+      <TermsAndPrivacy className={styles.terms} />
 
       <Button name="submit" title="action.create_account" htmlType="submit" />
 

@@ -7,7 +7,7 @@ import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
-import TermsOfUse from '@/containers/TermsOfUse';
+import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
 import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
@@ -99,7 +99,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <TermsOfUse className={styles.terms} />
+      <TermsAndPrivacy className={styles.terms} />
 
       <Button title="action.sign_in" htmlType="submit" />
 

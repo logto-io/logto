@@ -13,7 +13,7 @@ type Props = {
   className?: string;
 };
 
-const TermsOfUse = ({ className }: Props) => {
+const TermsAndPrivacy = ({ className }: Props) => {
   const { termsAgreement, setTermsAgreement, termsOfUseUrl, privacyPolicyUrl, isTermsDisabled } =
     useTerms();
   const { t } = useTranslation();
@@ -52,4 +52,4 @@ const TermsOfUse = ({ className }: Props) => {
   );
 };
 
-export default TermsOfUse;
+export default TermsAndPrivacy;

@@ -6,7 +6,7 @@ import TermsLinks from '@/components/TermsLinks';
 import type { ModalContentRenderProps } from '@/hooks/use-confirm-modal';
 import { PageContext } from '@/hooks/use-page-context';
 
-const TermsOfUseConfirmModalContent = ({ cancel }: ModalContentRenderProps) => {
+const TermsAndPrivacyConfirmModalContent = ({ cancel }: ModalContentRenderProps) => {
   const { experienceSettings } = useContext(PageContext);
   const { termsOfUseUrl, privacyPolicyUrl } = experienceSettings ?? {};
 
@@ -29,4 +29,4 @@ const TermsOfUseConfirmModalContent = ({ cancel }: ModalContentRenderProps) => {
   );
 };
 
-export default TermsOfUseConfirmModalContent;
+export default TermsAndPrivacyConfirmModalContent;

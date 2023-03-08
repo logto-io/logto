@@ -1,7 +1,7 @@
 import { conditional } from '@silverhand/essentials';
 import { useContext, useCallback, useMemo } from 'react';
 
-import TermsOfUseConfirmModalContent from '@/containers/TermsOfUse/TermsOfUseConfirmModalContent';
+import TermsAndPrivacyConfirmModalContent from '@/containers/TermsAndPrivacy/TermsAndPrivacyConfirmModalContent';
 
 import { useConfirmModal } from './use-confirm-modal';
 import { PageContext } from './use-page-context';
@@ -21,9 +21,9 @@ const useTerms = () => {
     };
   }, [experienceSettings]);
 
-  const termsOfUseConfirmModalHandler = useCallback(async () => {
+  const termsAndPrivacyConfirmModalHandler = useCallback(async () => {
     const [result] = await show({
-      ModalContent: TermsOfUseConfirmModalContent,
+      ModalContent: TermsAndPrivacyConfirmModalContent,
       confirmText: 'action.agree',
     });
 
@@ -40,8 +40,8 @@ const useTerms = () => {
       return true;
     }
 
-    return termsOfUseConfirmModalHandler();
-  }, [termsAgreement, isTermsDisabled, termsOfUseConfirmModalHandler]);
+    return termsAndPrivacyConfirmModalHandler();
+  }, [termsAgreement, isTermsDisabled, termsAndPrivacyConfirmModalHandler]);
 
   return {
     termsOfUseUrl,
@@ -50,7 +50,7 @@ const useTerms = () => {
     isTermsDisabled,
     termsValidation,
     setTermsAgreement,
-    termsOfUseConfirmModalHandler,
+    termsAndPrivacyConfirmModalHandler,
   };
 };
 
