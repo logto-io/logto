@@ -10,64 +10,78 @@ const appendPathname = (pathname: string, baseUrl: URL) =>
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
  * Parallel execution will lead to errors.
  */
+// Tip: See https://github.com/argos-ci/jest-puppeteer/blob/main/packages/expect-puppeteer/README.md
+// for convenient expect methods
 describe('smoke testing for cloud', () => {
   const consoleUsername = 'admin';
   const consolePassword = generatePassword();
   const logtoCloudUrl = new URL(logtoCloudUrlString);
   const adminTenantUrl = new URL(logtoConsoleUrl); // In dev mode, the console URL is actually for admin tenant
 
-  it('opens with app element and navigates to sign-in page', async () => {
-    const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
+  it('can open with app element and navigate to register page', async () => {
     await page.goto(logtoCloudUrl.href);
-    await navigation;
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
-    await expect(page.waitForSelector('#app')).resolves.not.toBeNull();
+    await expect(page).toMatchElement('#app');
     expect(page.url()).toBe(appendPathname('/register', adminTenantUrl).href);
   });
 
-  it('registers the first admin account', async () => {
-    const createAccountButton = await page.waitForSelector('button');
-    expect(createAccountButton).not.toBeNull();
+  it('can register the first admin account', async () => {
+    await expect(page).toClick('button', { text: 'Create account' });
 
-    const usernameField = await page.waitForSelector('input[name=identifier]');
-    const submitButton = await page.waitForSelector('button[name=submit]');
+    await expect(page).toFill('input[name=identifier]', consoleUsername);
+    await expect(page).toClick('button[name=submit]');
 
-    await usernameField.type(consoleUsername);
-
-    const navigateToCreatePassword = page.waitForNavigation({ waitUntil: 'networkidle0' });
-    await submitButton.click();
-    await navigateToCreatePassword;
-
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
     expect(page.url()).toBe(appendPathname('/register/password', adminTenantUrl).href);
 
-    const passwordField = await page.waitForSelector('input[name=newPassword]');
-    const confirmPasswordField = await page.waitForSelector('input[name=confirmPassword]');
-    const saveButton = await page.waitForSelector('button[name=submit]');
-    await passwordField.type(consolePassword);
-    await confirmPasswordField.type(consolePassword);
-
-    const navigateToCloud = page.waitForNavigation({ waitUntil: 'networkidle0' });
-    await saveButton.click();
-    await navigateToCloud;
+    await expect(page).toFillForm('form', {
+      newPassword: consolePassword,
+      confirmPassword: consolePassword,
+    });
+    await expect(page).toClick('button[name=submit]');
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
     expect(page.url()).toBe(logtoCloudUrl.href);
   });
 
   it('shows a tenant-select page with two tenants', async () => {
     const tenantsWrapper = await page.waitForSelector('div[class$=wrapper]');
-    const tenants = await tenantsWrapper.$$('a');
-    const hrefs = await Promise.all(
-      tenants.map(async (element) => {
-        const value = await element.getProperty('href');
 
-        return value.jsonValue();
-      })
-    );
+    await expect(tenantsWrapper).toMatchElement('a:nth-of-type(1)', { text: 'default' });
+    await expect(tenantsWrapper).toMatchElement('a:nth-of-type(2)', { text: 'admin' });
+  });
 
-    expect(
-      ['default', 'admin'].every((tenantId) =>
-        hrefs.some((href) => String(href).endsWith('/' + tenantId))
-      )
+  it('can create another tenant', async () => {
+    await expect(page).toClick('button', { text: 'Create' });
+
+    await page.waitForTimeout(1000);
+    const tenants = await page.$$('div[class$=wrapper] > a');
+    expect(tenants.length).toBe(3);
+  });
+
+  it('can enter the tenant just created', async () => {
+    const button = await page.waitForSelector('div[class$=wrapper] > a:last-of-type');
+    const tenantId = await button.evaluate((element) => element.textContent);
+
+    await button.click();
+
+    // Wait for our beautiful logto to show up
+    await page.waitForSelector('div[class$=topbar] > svg[viewbox][class$=logo]');
+    expect(page.url()).toBe(new URL(`/${tenantId ?? ''}/onboard/welcome`, logtoCloudUrl).href);
+  });
+
+  it('can sign out of admin console', async () => {
+    await expect(page).toClick('div[class$=topbar] > div[class$=container]');
+
+    // Try awaiting for 500ms before clicking sign-out button
+    await page.waitForTimeout(500);
+
+    await expect(page).toClick(
+      '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownItem]:last-child'
     );
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+
+    expect(page.url()).toBe(new URL('sign-in', logtoConsoleUrl).href);
   });
 });

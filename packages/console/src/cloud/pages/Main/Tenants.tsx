@@ -51,7 +51,7 @@ const Tenants = ({ data, onAdd }: Props) => {
           </a>
         ))}
         <h3>Create a tenant</h3>
-        <Button title={<DangerousRaw>Create New</DangerousRaw>} onClick={createTenant} />
+        <Button title={<DangerousRaw>Create</DangerousRaw>} onClick={createTenant} />
       </div>
     );
   }

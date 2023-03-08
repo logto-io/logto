@@ -551,8 +551,9 @@ importers:
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.4.0
       '@silverhand/ts-config': 2.0.3
+      '@types/expect-puppeteer': ^5.0.3
       '@types/jest': ^29.1.2
-      '@types/jest-environment-puppeteer': ^5.0.2
+      '@types/jest-environment-puppeteer': ^5.0.3
       '@types/node': ^18.11.18
       '@withtyped/server': ^0.8.0
       dotenv: ^16.0.0
@@ -579,8 +580,9 @@ importers:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
       '@silverhand/essentials': 2.4.0
       '@silverhand/ts-config': 2.0.3_typescript@4.9.4
+      '@types/expect-puppeteer': 5.0.3
       '@types/jest': 29.1.2
-      '@types/jest-environment-puppeteer': 5.0.2
+      '@types/jest-environment-puppeteer': 5.0.3
       '@types/node': 18.11.18
       dotenv: 16.0.0
       eslint: 8.34.0
@@ -4135,6 +4137,13 @@ packages:
       '@types/node': 18.11.18
     dev: true
 
+  /@types/expect-puppeteer/5.0.3:
+    resolution: {integrity: sha512-NIqATm95VmFbc2s9v1L3yj9ZS9/rCrtptSgBsvW8mcw2KFpLFQqXPyEbo0Vju1eiBieI38jRGWgpbVuUKfQVoQ==}
+    dependencies:
+      '@types/jest': 29.1.2
+      '@types/puppeteer': 5.4.6
+    dev: true
+
   /@types/express-serve-static-core/4.17.26:
     resolution: {integrity: sha512-zeu3tpouA043RHxW0gzRxwCHchMgftE8GArRsvYT0ByDMbn19olQHx5jLue0LxWY6iYtXb7rXmuVtSkhy9YZvQ==}
     dependencies:
@@ -4224,8 +4233,8 @@ packages:
       '@types/istanbul-lib-report': 3.0.0
     dev: true
 
-  /@types/jest-environment-puppeteer/5.0.2:
-    resolution: {integrity: sha512-YCdegQnDou6aIK8wqygDDctHgJZtlXd03fI9Bgbqkdu66EFKnImmt7auiR9OkxkSSiqS9smn0joX2pGpVs7ErA==}
+  /@types/jest-environment-puppeteer/5.0.3:
+    resolution: {integrity: sha512-vWGfeb+0TOPZy7+VscKURWzE5lzYjclSWLxtjVpDAYcjUv8arAS1av06xK3mpgeNCDVx7XvavD8Elq1a4w9wIA==}
     dependencies:
       '@jest/types': 27.5.1
       '@types/puppeteer': 5.4.6
@@ -4532,10 +4541,6 @@ packages:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: true
 
-  /@types/yargs-parser/20.2.1:
-    resolution: {integrity: sha512-7tFImggNeNBVMsn0vLrpn1H1uPrUBdnARPTpZoitY37ZrdJREzf7I16tMrlK3hen349gr1NYh8CmZQa7CTG6Aw==}
-    dev: true
-
   /@types/yargs-parser/21.0.0:
     resolution: {integrity: sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==}
     dev: true
@@ -4543,7 +4548,7 @@ packages:
   /@types/yargs/16.0.4:
     resolution: {integrity: sha512-T8Yc9wt/5LbJyCaLiHPReJa0kApcIgJ7Bn735GjItUfh08Z1pJvu8QZqb9s+mMvKV6WUQRV7K2R46YbjMXTTJw==}
     dependencies:
-      '@types/yargs-parser': 20.2.1
+      '@types/yargs-parser': 21.0.0
     dev: true
 
   /@types/yargs/17.0.13:
@@ -9634,7 +9639,7 @@ packages:
       '@jest/types': 27.5.1
       '@types/node': 18.11.18
       chalk: 4.1.2
-      ci-info: 3.5.0
+      ci-info: 3.8.0
       graceful-fs: 4.2.10
       picomatch: 2.3.1
     dev: true
