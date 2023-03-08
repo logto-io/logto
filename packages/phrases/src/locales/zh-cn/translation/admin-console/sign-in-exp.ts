@@ -32,6 +32,12 @@ const sign_in_exp = {
     dark_logo_image_url: 'Logo 图片 URL (深色)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
   },
+  custom_css: {
+    title: 'CUSTOM CSS', // UNTRANSLATED
+    css_code_editor_title: 'Custom CSS to change UI', // UNTRANSLATED
+    css_code_editor_description: 'Description - Doc. <a>{{link}}</a>', // UNTRANSLATED
+    css_code_editor_description_link_content: 'Readme', // UNTRANSLATED
+  },
   sign_up_and_sign_in: {
     identifiers_email: '邮件地址',
     identifiers_phone: '手机号码',
