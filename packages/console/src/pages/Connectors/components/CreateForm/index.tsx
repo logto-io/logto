@@ -161,9 +161,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
           {groups.map(({ id, name, logo, logoDark, description }) => (
             <Radio key={id} value={id}>
               <div className={styles.connector}>
-                <div className={styles.logo}>
-                  <ConnectorLogo data={{ logo, logoDark }} />
-                </div>
+                <ConnectorLogo data={{ logo, logoDark }} />
                 <div className={styles.content}>
                   <div className={classNames(styles.name)}>
                     <UnnamedTrans resource={name} />

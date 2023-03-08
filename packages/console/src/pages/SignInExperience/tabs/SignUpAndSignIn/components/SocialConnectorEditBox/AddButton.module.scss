@@ -16,14 +16,9 @@
   display: flex;
   align-items: center;
 
-  .logo {
-    margin-right: _.unit(3);
-    width: 20px;
-    height: 20px;
-  }
-
   .name {
     font: var(--font-body-2);
+    margin-left: _.unit(3);
   }
 
   .icon {

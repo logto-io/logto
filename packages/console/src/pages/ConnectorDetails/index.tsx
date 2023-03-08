@@ -124,9 +124,7 @@ const ConnectorDetails = () => {
       {!requestError && data && (
         <>
           <Card className={styles.header}>
-            <div className={styles.logoContainer}>
-              <ConnectorLogo data={data} className={styles.logo} />
-            </div>
+            <ConnectorLogo data={data} size="large" />
             <div className={styles.metadata}>
               <div>
                 <div className={styles.name}>
