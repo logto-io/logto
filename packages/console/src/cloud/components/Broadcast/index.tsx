@@ -11,7 +11,7 @@ const Broadcast = () => {
   return (
     <div className={styles.broadcast}>
       <span>{t('cloud.broadcast')}</span>
-      <TextLink href={logtoBlogLink} target="_blank" rel="noopener" className={styles.link}>
+      <TextLink href={logtoBlogLink} target="_blank" className={styles.link}>
         {t('general.learn_more')}
       </TextLink>
     </div>
