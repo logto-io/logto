@@ -95,6 +95,8 @@ const translation = {
       'Для дополнительной безопасности, пожалуйста, привяжите свою электронную почту или номер телефона к учетной записи.',
     continue_with_more_information:
       'Для дополнительной безопасности, пожалуйста, заполните приведенные ниже данные учетной записи.',
+    create_your_account: 'Create your account', // UNTRANSLATED
+    welcome_to_sign_in: 'Welcome to sign in', // UNTRANSLATED
   },
   error: {
     general_required: `Введите {{types, list(type: disjunction;)}}`,
