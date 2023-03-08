@@ -21,6 +21,7 @@ export const mockBranding: Branding = {
 };
 
 export const mockTermsOfUseUrl = 'http://silverhand.com/terms';
+export const mockPrivacyPolicyUrl = 'http://silverhand.com/privacy';
 
 export const mockLanguageInfo: LanguageInfo = {
   autoDetect: true,
@@ -58,6 +59,7 @@ export const mockSignInExperience: SignInExperience = {
     slogan: 'logto',
   },
   termsOfUseUrl: mockTermsOfUseUrl,
+  privacyPolicyUrl: mockPrivacyPolicyUrl,
   languageInfo: {
     autoDetect: true,
     fallbackLanguage: 'en',

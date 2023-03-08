@@ -26,6 +26,7 @@ export const createDefaultSignInExperience = (forTenantId: string): Readonly<Sig
       fallbackLanguage: 'en' as const,
     },
     termsOfUseUrl: null,
+    privacyPolicyUrl: null,
     signUp: {
       identifiers: [SignInIdentifier.Username],
       password: true,
