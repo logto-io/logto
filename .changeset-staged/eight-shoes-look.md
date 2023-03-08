@@ -1,9 +1,9 @@
 ---
-"@logto/console": patch
-"@logto/phrases": patch
-"@logto/phrases-ui": patch
-"@logto/schemas": patch
-"@logto/ui": patch
+"@logto/console": minor
+"@logto/phrases": minor
+"@logto/phrases-ui": minor
+"@logto/schemas": minor
+"@logto/ui": minor
 ---
 
 ### Add dynamic favicon and html title
