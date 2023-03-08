@@ -10,7 +10,10 @@ import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import * as modalStyles from '@/scss/modal.module.scss';
+
+import { handleError } from '../../utils';
 
 export type BasicUserField = 'avatar' | 'username' | 'name';
 
@@ -27,13 +30,19 @@ type FormFields = {
 
 const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
+  const { show: showModal } = useConfirmModal();
+  const api = useStaticApi({
+    prefixUrl: adminTenantEndpoint,
+    resourceIndicator: meApi.indicator,
+    hideErrorToast: true,
+  });
   const {
     register,
     clearErrors,
     handleSubmit,
     setValue,
     reset,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({ reValidateMode: 'onBlur' });
 
@@ -72,9 +81,23 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
   const onSubmit = async () => {
     clearErrors();
     void handleSubmit(async (data) => {
-      await api.patch('me', { json: { [field]: data[field] } });
-      toast.success(t('profile.updated', { target: t(`profile.settings.${field}`) }));
-      onClose();
+      try {
+        await api.patch('me', { json: { [field]: data[field] } });
+        toast.success(t('profile.updated', { target: t(`profile.settings.${field}`) }));
+        onClose();
+      } catch (error: unknown) {
+        void handleError(error, async (_, message, status) => {
+          if (status === 422) {
+            await showModal({
+              ModalContent: message,
+              type: 'alert',
+              cancelButtonText: 'general.got_it',
+            });
+
+            return true;
+          }
+        });
+      }
     })();
   };
 
