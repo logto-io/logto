@@ -1,5 +1,6 @@
 import { AlterationStateKey, Systems } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
+import { DatabaseError } from 'pg-protocol';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import type { QueryType } from '../test-utils.js';
@@ -21,7 +22,11 @@ const systemsTableExists = async () => createMockQueryResult([{ regclass: true }
 
 describe('getCurrentDatabaseAlterationTimestamp()', () => {
   it('returns 0 if query failed (table not found)', async () => {
-    mockQuery.mockImplementationOnce(systemsTableExists).mockRejectedValueOnce({ code: '42P01' });
+    const error = new DatabaseError('test', 0, 'noData');
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    error.code = '42P01';
+
+    mockQuery.mockImplementationOnce(systemsTableExists).mockRejectedValueOnce(error);
 
     await expect(getCurrentDatabaseAlterationTimestamp(pool)).resolves.toBe(0);
   });

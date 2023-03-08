@@ -8,6 +8,7 @@ import { object, string, z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
@@ -38,6 +39,8 @@ export default function roleRoutes<T extends AuthedRouter>(
       insertUsersRoles,
     },
   } = queries;
+
+  router.use('/roles(/.*)?', koaRoleRlsErrorHandler());
 
   router.get('/roles', koaPagination(), async (ctx, next) => {
     const { limit, offset } = ctx.pagination;

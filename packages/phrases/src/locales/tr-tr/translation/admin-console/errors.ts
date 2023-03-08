@@ -18,6 +18,8 @@ const errors = {
   insecure_contexts: 'Güvenli olmayan bağlamlar (HTTPS olmayan) desteklenmez.',
   unexpected_error: 'Beklenmedik bir hata oluştu',
   not_found: '404 not found', // UNTRANSLATED
+  create_internal_role_violation:
+    'You are creating a new internal role which is forbidden by Logto. Try another name that does not start with "#internal:".', // UNTRANSLATED
 };
 
 export default errors;

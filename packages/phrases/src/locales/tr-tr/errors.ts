@@ -188,6 +188,8 @@ const errors = {
     user_exists: 'The user id {{userId}} is already been added to this role', // UNTRANSLATED
     default_role_missing:
       'Some of the default roleNames does not exist in database, please ensure to create roles first', // UNTRANSLATED
+    internal_role_violation:
+      'You may be trying to update or delete an internal role which is forbidden by Logto. If you are creating a new role, try another name that does not start with "#internal:".', // UNTRANSLATED
   },
   scope: {
     name_exists: 'The scope name {{name}} is already in use', // UNTRANSLATED

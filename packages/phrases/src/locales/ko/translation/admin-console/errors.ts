@@ -18,6 +18,8 @@ const errors = {
   insecure_contexts: '비보안 연결(non-HTTPS)는 지원하지 않아요.',
   unexpected_error: '알 수 없는 오류가 발생했어요.',
   not_found: '404 not found', // UNTRANSLATED
+  create_internal_role_violation:
+    'You are creating a new internal role which is forbidden by Logto. Try another name that does not start with "#internal:".', // UNTRANSLATED
 };
 
 export default errors;

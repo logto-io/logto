@@ -1,5 +1,5 @@
 import type { CreateRole, Role } from '@logto/schemas';
-import { defaultManagementApi, SearchJointMode, Roles } from '@logto/schemas';
+import { internalRolePrefix, SearchJointMode, Roles } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalArraySql, conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -34,7 +34,7 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
     pool.one<{ count: number }>(sql`
       select count(*)
       from ${table}
-      where ${fields.id}<>${defaultManagementApi.role.id}
+      where (not starts_with(${fields.name}, ${internalRolePrefix}))
       ${conditionalArraySql(
         excludeRoleIds,
         (value) => sql`and ${fields.id} not in (${sql.join(value, sql`, `)})`
@@ -57,7 +57,7 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
       sql`
         select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
-        where ${fields.id}<>${defaultManagementApi.role.id}
+        where (not starts_with(${fields.name}, ${internalRolePrefix}))
         ${conditionalArraySql(
           excludeRoleIds,
           (value) => sql`and ${fields.id} not in (${sql.join(value, sql`, `)})`

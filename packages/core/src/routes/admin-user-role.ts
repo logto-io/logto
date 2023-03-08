@@ -5,6 +5,7 @@ import { object, string } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
@@ -18,6 +19,8 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
     users: { findUserById },
     usersRoles: { deleteUsersRolesByUserIdAndRoleId, findUsersRolesByUserId, insertUsersRoles },
   } = queries;
+
+  router.use('/users/:userId/roles(/.*)?', koaRoleRlsErrorHandler());
 
   router.get(
     '/users/:userId/roles',
