@@ -9,7 +9,7 @@ import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField, PasswordInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
-import TermsOfUse from '@/containers/TermsOfUse';
+import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
@@ -125,7 +125,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         />
       )}
 
-      <TermsOfUse className={styles.terms} />
+      <TermsAndPrivacy className={styles.terms} />
 
       <Button name="submit" title="action.sign_in" htmlType="submit" />
 

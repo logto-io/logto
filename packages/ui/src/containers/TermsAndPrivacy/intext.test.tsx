@@ -1,18 +1,18 @@
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 
-import TermsOfUse from '.';
+import TermsAndPrivacy from '.';
 
-describe('TermsOfUse Container', () => {
-  it('render with empty TermsOfUse settings', () => {
-    const { queryByText } = renderWithPageContext(<TermsOfUse />);
+describe('TermsAndPrivacy Container', () => {
+  it('render with empty TermsAndPrivacy settings', () => {
+    const { queryByText } = renderWithPageContext(<TermsAndPrivacy />);
     expect(queryByText('description.agree_with_terms')).toBeNull();
   });
 
   it('render with settings', async () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider>
-        <TermsOfUse />
+        <TermsAndPrivacy />
       </SettingsProvider>
     );
 

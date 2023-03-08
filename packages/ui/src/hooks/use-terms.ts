@@ -1,10 +1,8 @@
-import { useContext, useCallback } from 'react';
+import { conditional } from '@silverhand/essentials';
+import { useContext, useCallback, useMemo } from 'react';
 
-import { createIframeConfirmModalContent } from '@/containers/TermsOfUse/IframeConfirmModalContent';
-import TermsOfUseConfirmModalContent from '@/containers/TermsOfUse/TermsOfUseConfirmModalContent';
-import { ConfirmModalMessage } from '@/types';
+import TermsAndPrivacyConfirmModalContent from '@/containers/TermsAndPrivacy/TermsAndPrivacyConfirmModalContent';
 
-import * as styles from '../components/ConfirmModal/MobileModal.module.scss';
 import { useConfirmModal } from './use-confirm-modal';
 import { PageContext } from './use-page-context';
 
@@ -12,12 +10,20 @@ const useTerms = () => {
   const { termsAgreement, setTermsAgreement, experienceSettings } = useContext(PageContext);
   const { show } = useConfirmModal();
 
-  const { termsOfUseUrl } = experienceSettings ?? {};
+  const { termsOfUseUrl, privacyPolicyUrl, isTermsDisabled } = useMemo(() => {
+    const { termsOfUseUrl, privacyPolicyUrl } = experienceSettings ?? {};
+    const isTermsDisabled = !termsOfUseUrl && !privacyPolicyUrl;
 
-  const termsOfUseIframeModalHandler = useCallback(async () => {
+    return {
+      termsOfUseUrl: conditional(termsOfUseUrl),
+      privacyPolicyUrl: conditional(privacyPolicyUrl),
+      isTermsDisabled,
+    };
+  }, [experienceSettings]);
+
+  const termsAndPrivacyConfirmModalHandler = useCallback(async () => {
     const [result] = await show({
-      className: styles.iframeModal,
-      ModalContent: () => createIframeConfirmModalContent(termsOfUseUrl ?? undefined),
+      ModalContent: TermsAndPrivacyConfirmModalContent,
       confirmText: 'action.agree',
     });
 
@@ -27,44 +33,24 @@ const useTerms = () => {
     }
 
     return result;
-  }, [setTermsAgreement, show, termsOfUseUrl]);
-
-  const termsOfUseConfirmModalHandler = useCallback(async () => {
-    const [result, data] = await show({
-      ModalContent: TermsOfUseConfirmModalContent,
-      confirmText: 'action.agree',
-    });
-
-    // Show Terms Detail Confirm Modal
-    if (data === ConfirmModalMessage.SHOW_TERMS_DETAIL_MODAL) {
-      const detailResult = await termsOfUseIframeModalHandler();
-
-      return detailResult;
-    }
-
-    // Update the local terms status
-    if (result) {
-      setTermsAgreement(true);
-    }
-
-    return result;
-  }, [setTermsAgreement, show, termsOfUseIframeModalHandler]);
+  }, [setTermsAgreement, show]);
 
   const termsValidation = useCallback(async () => {
-    if (termsAgreement || !termsOfUseUrl) {
+    if (termsAgreement || isTermsDisabled) {
       return true;
     }
 
-    return termsOfUseConfirmModalHandler();
-  }, [termsAgreement, termsOfUseUrl, termsOfUseConfirmModalHandler]);
+    return termsAndPrivacyConfirmModalHandler();
+  }, [termsAgreement, isTermsDisabled, termsAndPrivacyConfirmModalHandler]);
 
   return {
     termsOfUseUrl,
+    privacyPolicyUrl,
     termsAgreement,
+    isTermsDisabled,
     termsValidation,
     setTermsAgreement,
-    termsOfUseConfirmModalHandler,
-    termsOfUseIframeModalHandler,
+    termsAndPrivacyConfirmModalHandler,
   };
 };
 

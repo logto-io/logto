@@ -15,10 +15,6 @@
 
 .content {
   @include _.text-hint;
-
-  .link {
-    @include _.text-hint;
-  }
 }
 
 .errorMessage {
