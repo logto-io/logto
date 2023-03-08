@@ -41,6 +41,7 @@ export const storageProviderDataGuard = z.discriminatedUnion('provider', [
   z.object({
     provider: z.literal(StorageProvider.S3Storage),
     endpoint: z.string(),
+    bucket: z.string(),
     accessKeyId: z.string(),
     accessSecretKey: z.string(),
     ...basicConfig,
