@@ -2,7 +2,7 @@ import { buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, User } from '@logto/schemas';
 import { AppearanceMode } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
-import { conditional } from '@silverhand/essentials';
+import { appendPath, conditional } from '@silverhand/essentials';
 import { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -43,7 +43,7 @@ const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
     async (connectorId: string) => {
       const adminTenantEndpointUrl = new URL(adminTenantEndpoint);
       const state = buildIdGenerator(8)();
-      const redirectUri = new URL(`/callback/${connectorId}`, adminTenantEndpointUrl).toString();
+      const redirectUri = new URL(`/callback/${connectorId}`, adminTenantEndpointUrl).href;
       const { redirectTo } = await api
         .post('me/social/authorization-uri', { json: { connectorId, state, redirectUri } })
         .json<{ redirectTo: string }>();
@@ -59,8 +59,6 @@ const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
     if (!connectors) {
       return [];
     }
-
-    const adminTenantEndpointUrl = new URL(adminTenantEndpoint);
 
     return connectors.map(({ id, name, logo, logoDark, target }) => {
       const logoSrc = theme === AppearanceMode.DarkMode && logoDark ? logoDark : logo;
@@ -113,7 +111,7 @@ const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
               });
 
               const newWindow = popupWindow(
-                new URL(`/springboard?${queries.toString()}`, adminTenantEndpointUrl).toString(),
+                appendPath(adminTenantEndpoint, `/springboard?${queries.toString()}`).href,
                 'Link social account with Logto',
                 600,
                 640

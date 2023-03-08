@@ -1,10 +1,7 @@
-import path from 'path';
+import { appendPath } from '@silverhand/essentials';
 
 import { logtoCloudUrl as logtoCloudUrlString, logtoConsoleUrl } from '#src/constants.js';
 import { generatePassword } from '#src/utils.js';
-
-const appendPathname = (pathname: string, baseUrl: URL) =>
-  new URL(path.join(baseUrl.pathname, pathname), baseUrl);
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
@@ -22,8 +19,8 @@ describe('smoke testing for cloud', () => {
     await page.goto(logtoCloudUrl.href);
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
-    await expect(page).toMatchElement('#app');
-    expect(page.url()).toBe(appendPathname('/register', adminTenantUrl).href);
+    await expect(page.waitForSelector('#app')).resolves.not.toBeNull();
+    expect(page.url()).toBe(appendPath(adminTenantUrl, '/register').href);
   });
 
   it('can register the first admin account', async () => {
@@ -33,7 +30,7 @@ describe('smoke testing for cloud', () => {
     await expect(page).toClick('button[name=submit]');
 
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
-    expect(page.url()).toBe(appendPathname('/register/password', adminTenantUrl).href);
+    expect(page.url()).toBe(appendPath(adminTenantUrl, '/register/password').href);
 
     await expect(page).toFillForm('form', {
       newPassword: consolePassword,
@@ -66,9 +63,9 @@ describe('smoke testing for cloud', () => {
 
     await button.click();
 
-    // Wait for our beautiful logto to show up
+    // Wait for our beautiful logo to show up
     await page.waitForSelector('div[class$=topbar] > svg[viewbox][class$=logo]');
-    expect(page.url()).toBe(new URL(`/${tenantId ?? ''}/onboard/welcome`, logtoCloudUrl).href);
+    expect(page.url()).toBe(new URL(`/${tenantId ?? ''}/onboarding/welcome`, logtoCloudUrl).href);
   });
 
   it('can sign out of admin console', async () => {

@@ -7,7 +7,8 @@ import {
   LogtoOidcConfigKey,
   LogtoConfigs,
 } from '@logto/schemas';
-import { convertToIdentifiers, appendPath } from '@logto/shared';
+import { convertToIdentifiers } from '@logto/shared';
+import { appendPath } from '@silverhand/essentials';
 import type { JWK } from 'jose';
 import { sql } from 'slonik';
 
@@ -49,7 +50,7 @@ export const getAdminTenantTokenValidationSet = async (): Promise<{
       appendPath(
         isMultiTenancy ? getTenantEndpoint(adminTenantId, EnvSet.values) : adminUrlSet.endpoint,
         '/oidc'
-      ).toString(),
+      ).href,
     ],
   };
 };

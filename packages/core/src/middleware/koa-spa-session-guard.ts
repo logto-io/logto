@@ -1,4 +1,4 @@
-import { appendPath } from '@logto/shared';
+import { appendPath } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import type Provider from 'oidc-provider';
@@ -31,7 +31,7 @@ export default function koaSpaSessionGuard<
       try {
         await provider.interactionDetails(ctx.req, ctx.res);
       } catch {
-        ctx.redirect(appendPath(endpoint, sessionNotFoundPath).toString());
+        ctx.redirect(appendPath(endpoint, sessionNotFoundPath).href);
 
         return;
       }

@@ -6,8 +6,9 @@ import { isCloud } from './cloud';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-export const adminTenantEndpoint =
-  process.env.ADMIN_ENDPOINT ?? (isProduction ? window.location.origin : 'http://localhost:3002');
+export const adminTenantEndpoint = new URL(
+  process.env.ADMIN_ENDPOINT ?? (isProduction ? window.location.origin : 'http://localhost:3002')
+);
 
 export const getUserTenantId = () => {
   if (isCloud) {

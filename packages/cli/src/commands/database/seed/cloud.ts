@@ -1,5 +1,6 @@
 import { adminConsoleApplicationId, adminTenantId, defaultTenantId } from '@logto/schemas';
-import { appendPath, GlobalValues } from '@logto/shared';
+import { GlobalValues } from '@logto/shared';
+import { appendPath } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 

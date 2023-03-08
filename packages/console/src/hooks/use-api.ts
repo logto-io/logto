@@ -24,7 +24,7 @@ export class RequestError extends Error {
 }
 
 type StaticApiProps = {
-  prefixUrl: string;
+  prefixUrl?: URL;
   hideErrorToast?: boolean;
   resourceIndicator?: string;
 };
@@ -113,7 +113,7 @@ export const useStaticApi = ({
 const useApi = (props: Omit<StaticApiProps, 'prefixUrl'> = {}) => {
   const { userEndpoint } = useContext(AppEndpointsContext);
 
-  return useStaticApi({ ...props, prefixUrl: userEndpoint?.toString() ?? '' });
+  return useStaticApi({ ...props, prefixUrl: userEndpoint });
 };
 
 export default useApi;
