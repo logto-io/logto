@@ -4,10 +4,18 @@ import { useLocation } from 'react-router-dom';
 import AppLoading from '@/components/AppLoading';
 import { adminTenantEndpoint, meApi, profileSocialLinkingKeyPrefix } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
+
+import { handleError } from '../../utils';
 
 const HandleSocialCallback = () => {
   const { search } = useLocation();
-  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
+  const { show: showModal } = useConfirmModal();
+  const api = useStaticApi({
+    prefixUrl: adminTenantEndpoint,
+    resourceIndicator: meApi.indicator,
+    hideErrorToast: true,
+  });
 
   useEffect(() => {
     (async () => {
@@ -22,12 +30,27 @@ const HandleSocialCallback = () => {
         );
         const connectorData = Object.fromEntries(queries);
 
-        await api.post('me/social/link-identity', { json: { connectorId, connectorData } });
+        try {
+          await api.post('me/social/link-identity', { json: { connectorId, connectorData } });
 
-        window.close();
+          window.close();
+        } catch (error: unknown) {
+          void handleError(error, async (code, message) => {
+            if (code === 'user.identity_already_in_use') {
+              await showModal({
+                ModalContent: message,
+                type: 'alert',
+                cancelButtonText: 'general.got_it',
+              });
+              window.close();
+
+              return true;
+            }
+          });
+        }
       }
     })();
-  }, [api, search]);
+  }, [api, search, showModal]);
 
   return <AppLoading />;
 };
