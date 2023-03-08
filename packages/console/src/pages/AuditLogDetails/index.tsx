@@ -1,4 +1,5 @@
 import type { User, Log } from '@logto/schemas';
+import { demoAppApplicationId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
@@ -74,7 +75,10 @@ const AuditLogDetails = () => {
                   <div className={styles.label}>{t('log_details.application')}</div>
                   <div>
                     {data.payload.applicationId ? (
-                      <ApplicationName isLink applicationId={data.payload.applicationId} />
+                      <ApplicationName
+                        isLink={data.payload.applicationId !== demoAppApplicationId}
+                        applicationId={data.payload.applicationId}
+                      />
                     ) : (
                       '-'
                     )}

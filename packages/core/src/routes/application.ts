@@ -1,6 +1,11 @@
 import { generateStandardId, buildIdGenerator } from '@logto/core-kit';
-import { defaultManagementApi, Applications } from '@logto/schemas';
-import { boolean, object, string } from 'zod';
+import {
+  defaultManagementApi,
+  Applications,
+  demoAppApplicationId,
+  buildDemoAppDataForTenant,
+} from '@logto/schemas';
+import { boolean, object, string, z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -11,7 +16,7 @@ import type { AuthedRouter, RouterInitArgs } from './types.js';
 const applicationId = buildIdGenerator(21);
 
 export default function applicationRoutes<T extends AuthedRouter>(
-  ...[router, { queries }]: RouterInitArgs<T>
+  ...[router, { queries, id: tenantId }]: RouterInitArgs<T>
 ) {
   const {
     deleteApplicationById,
@@ -65,11 +70,19 @@ export default function applicationRoutes<T extends AuthedRouter>(
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
+      response: Applications.guard.merge(z.object({ isAdmin: z.boolean() })),
     }),
     async (ctx, next) => {
       const {
         params: { id },
       } = ctx.guard;
+
+      // Somethings console needs to display demo app info. Build a fixed one for it.
+      if (id === demoAppApplicationId) {
+        ctx.body = { ...buildDemoAppDataForTenant(tenantId), isAdmin: false };
+
+        return next();
+      }
 
       const application = await findApplicationById(id);
       const applicationsRoles = await findApplicationsRolesByApplicationId(id);

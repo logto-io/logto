@@ -46,7 +46,7 @@ const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
   return {
     ...getConstantClientMetadata(envSet, ApplicationType.SPA),
     client_id: demoAppApplicationId,
-    client_name: 'Demo App',
+    client_name: 'Live Preview',
     redirect_uris: urlStrings,
     post_logout_redirect_uris: urlStrings,
   };
