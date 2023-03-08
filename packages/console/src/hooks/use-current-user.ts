@@ -1,4 +1,4 @@
-import type { User } from '@logto/schemas';
+import type { UserProfileResponse } from '@logto/schemas';
 import useSWR from 'swr';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
@@ -11,12 +11,12 @@ import useSwrFetcher from './use-swr-fetcher';
 const useCurrentUser = () => {
   const userId = useLogtoUserId();
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
-  const fetcher = useSwrFetcher<User>(api);
+  const fetcher = useSwrFetcher<UserProfileResponse>(api);
   const {
     data: user,
     error,
     mutate,
-  } = useSWR<User, RequestError>(userId && `me/users/${userId}`, fetcher);
+  } = useSWR<UserProfileResponse, RequestError>(userId && 'me', fetcher);
 
   const isLoading = !user && !error;
 

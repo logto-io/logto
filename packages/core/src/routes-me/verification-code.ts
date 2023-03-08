@@ -28,7 +28,6 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
     '/verification-codes',
     koaGuard({
       body: object({ email: string().regex(emailRegEx) }),
-      status: 204,
     }),
     async (ctx, next) => {
       const code = await createPasscode(undefined, codeType, ctx.guard.body);
@@ -48,7 +47,6 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
         verificationCode: string().min(1),
         action: union([literal('changeEmail'), literal('changePassword')]),
       }),
-      status: 204,
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;

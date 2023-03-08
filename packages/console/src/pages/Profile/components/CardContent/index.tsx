@@ -28,7 +28,7 @@ type Props<T> = {
   data: Array<Row<T>>;
 };
 
-const CardContent = <T extends Nullable<string | Record<string, unknown>> | undefined>({
+const CardContent = <T extends Nullable<boolean | string | Record<string, unknown>> | undefined>({
   title,
   data,
 }: Props<T>) => {

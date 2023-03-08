@@ -1,6 +1,7 @@
 import { emailRegEx, passwordRegEx, usernameRegEx } from '@logto/core-kit';
+import type { UserProfileResponse } from '@logto/schemas';
 import { userInfoSelectFields, arbitraryObjectGuard } from '@logto/schemas';
-import { pick } from '@silverhand/essentials';
+import { conditional, pick } from '@silverhand/essentials';
 import { literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -25,26 +26,23 @@ export default function userRoutes<T extends AuthedMeRouter>(
     },
   } = tenant;
 
-  router.get(
-    '/users/:userId',
-    koaGuard({
-      params: object({ userId: string() }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { userId },
-      } = ctx.guard;
+  router.get('/', async (ctx, next) => {
+    const { id: userId } = ctx.auth;
 
-      const user = await findUserById(userId);
+    const user = await findUserById(userId);
 
-      ctx.body = pick(user, ...userInfoSelectFields, 'passwordEncrypted');
+    const responseData: UserProfileResponse = {
+      ...pick(user, ...userInfoSelectFields),
+      ...conditional(user.passwordEncrypted && { hasPassword: Boolean(user.passwordEncrypted) }),
+    };
 
-      return next();
-    }
-  );
+    ctx.body = responseData;
+
+    return next();
+  });
 
   router.patch(
-    '/user',
+    '/',
     koaGuard({
       body: object({
         username: string().regex(usernameRegEx),
@@ -61,8 +59,9 @@ export default function userRoutes<T extends AuthedMeRouter>(
       assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
       await checkIdentifierCollision(body, userId);
-      await updateUserById(userId, body);
-      ctx.status = 204;
+
+      const updatedUser = await updateUserById(userId, body);
+      ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
     }
@@ -71,6 +70,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
   router.get('/custom-data', async (ctx, next) => {
     const { id: userId } = ctx.auth;
     const user = await findUserById(userId);
+    assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
     ctx.body = user.customData;
 
@@ -87,13 +87,14 @@ export default function userRoutes<T extends AuthedMeRouter>(
       const { id: userId } = ctx.auth;
       const { body: customData } = ctx.guard;
 
-      await findUserById(userId);
+      const user = await findUserById(userId);
+      assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-      const user = await updateUserById(userId, {
+      const updatedUser = await updateUserById(userId, {
         customData,
       });
 
-      ctx.body = user.customData;
+      ctx.body = updatedUser.customData;
 
       return next();
     }

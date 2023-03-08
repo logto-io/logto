@@ -1,5 +1,5 @@
 import { buildIdGenerator } from '@logto/core-kit';
-import type { ConnectorResponse, User } from '@logto/schemas';
+import type { ConnectorResponse, UserInfo } from '@logto/schemas';
 import { AppearanceMode } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath, conditional } from '@silverhand/essentials';
@@ -27,7 +27,7 @@ import NotSet from '../NotSet';
 import * as styles from './index.module.scss';
 
 type Props = {
-  user: User;
+  user: UserInfo;
   connectors?: ConnectorResponse[];
   onUpdate: () => void;
 };
@@ -62,7 +62,7 @@ const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
 
     return connectors.map(({ id, name, logo, logoDark, target }) => {
       const logoSrc = theme === AppearanceMode.DarkMode && logoDark ? logoDark : logo;
-      const relatedUserDetails = user.identities[target]?.details;
+      const relatedUserDetails = user.identities?.[target]?.details;
       const hasLinked = is(relatedUserDetails, socialUserInfoGuard);
       const conditionalUnlinkAction: Action[] = hasLinked
         ? [
