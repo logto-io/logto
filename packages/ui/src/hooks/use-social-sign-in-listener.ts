@@ -1,8 +1,8 @@
 import type { RequestErrorBody } from '@logto/schemas';
 import { SignInMode } from '@logto/schemas';
-import { useEffect, useCallback, useContext, useMemo } from 'react';
+import { useEffect, useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import { signInWithSocial } from '@/apis/interaction';
@@ -17,16 +17,22 @@ import { PageContext } from './use-page-context';
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 import { useSieMethods } from './use-sie';
 import useSocialRegister from './use-social-register';
+import useTerms from './use-terms';
 
 const useSocialSignInListener = (connectorId?: string) => {
   const { setToast } = useContext(PageContext);
   const { signInMode } = useSieMethods();
   const { t } = useTranslation();
+  const { termsValidation } = useTerms();
+  const [isConsumed, setIsConsumed] = useState(false);
+  const [searchParameters, setSearchParameters] = useSearchParams();
 
   const navigate = useNavigate();
 
   const handleError = useErrorHandler();
+
   const registerWithSocial = useSocialRegister(connectorId, true);
+
   const asyncSignInWithSocial = useApi(signInWithSocial);
 
   const accountNotExistErrorHandler = useCallback(
@@ -55,6 +61,7 @@ const useSocialSignInListener = (connectorId?: string) => {
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({
     replace: true,
   });
+
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.identity_not_exist': async (error) => {
@@ -65,11 +72,22 @@ const useSocialSignInListener = (connectorId?: string) => {
           return;
         }
 
+        // Agree to terms and conditions first before proceeding
+        if (!(await termsValidation())) {
+          return;
+        }
+
         await accountNotExistErrorHandler(error);
       },
       ...requiredProfileErrorHandlers,
     }),
-    [requiredProfileErrorHandlers, signInMode, accountNotExistErrorHandler, setToast]
+    [
+      requiredProfileErrorHandlers,
+      signInMode,
+      termsValidation,
+      accountNotExistErrorHandler,
+      setToast,
+    ]
   );
 
   const signInWithSocialHandler = useCallback(
@@ -102,7 +120,16 @@ const useSocialSignInListener = (connectorId?: string) => {
       return;
     }
 
-    const { state, ...rest } = parseQueryParameters(window.location.search);
+    if (isConsumed) {
+      return;
+    }
+
+    setIsConsumed(true);
+
+    const { state, ...rest } = parseQueryParameters(searchParameters);
+
+    // Cleanup the search parameters once it's consumed
+    setSearchParameters({}, { replace: true });
 
     if (!state || !stateValidation(state, connectorId)) {
       setToast(t('error.invalid_connector_auth'));
@@ -111,7 +138,15 @@ const useSocialSignInListener = (connectorId?: string) => {
     }
 
     void signInWithSocialHandler(connectorId, rest);
-  }, [connectorId, setToast, signInWithSocialHandler, t]);
+  }, [
+    connectorId,
+    isConsumed,
+    searchParameters,
+    setSearchParameters,
+    setToast,
+    signInWithSocialHandler,
+    t,
+  ]);
 };
 
 export default useSocialSignInListener;

@@ -43,6 +43,8 @@ describe('<SignIn />', () => {
       });
 
       expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
+      expect(queryByText('description.terms_of_use')).not.toBeNull();
+      expect(queryByText('description.privacy_policy')).not.toBeNull();
 
       expect(queryByText('action.sign_in')).not.toBeNull();
 
@@ -57,7 +59,7 @@ describe('<SignIn />', () => {
     test.each(mockSignInMethodSettingsTestCases)(
       'renders with [%p %p %p] SignIn Methods only mode',
       async (...methods) => {
-        const { container } = renderSignIn({
+        const { container, queryByText } = renderSignIn({
           signIn: {
             methods,
           },
@@ -65,12 +67,14 @@ describe('<SignIn />', () => {
 
         expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
         expect(container.querySelector('input[name="password"]')).toBeNull();
+        expect(queryByText('description.terms_of_use')).not.toBeNull();
+        expect(queryByText('description.privacy_policy')).not.toBeNull();
       }
     );
   });
 
   test('renders with social as primary', async () => {
-    const { container } = renderWithPageContext(
+    const { container, queryByText } = renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, signIn: { methods: [] } }}>
         <MemoryRouter>
           <SignIn />
@@ -81,6 +85,9 @@ describe('<SignIn />', () => {
     expect(container.querySelectorAll('button')).toHaveLength(
       mockSignInExperienceSettings.socialConnectors.length
     );
+
+    expect(queryByText('description.terms_of_use')).not.toBeNull();
+    expect(queryByText('description.privacy_policy')).not.toBeNull();
   });
 
   test('render with register only mode should return ErrorPage', () => {

@@ -22,20 +22,21 @@ const TermsLinks = ({ className, inline, termsOfUseUrl, privacyPolicyUrl }: Prop
           className={styles.link}
           text="description.terms_of_use"
           href={termsOfUseUrl}
-          type={inline ? 'inlinePrimary' : 'primary'}
+          type="inlinePrimary"
           target="_blank"
           onClick={(event) => {
             event.stopPropagation();
           }}
         />
       )}
-      {termsOfUseUrl && privacyPolicyUrl && ` ${t('description.and')} `}
+      {termsOfUseUrl && privacyPolicyUrl && inline && ` ${t('description.and')} `}
+      {termsOfUseUrl && privacyPolicyUrl && !inline && <i className={styles.divider} />}
       {privacyPolicyUrl && (
         <TextLink
           className={styles.link}
           text="description.privacy_policy"
           href={privacyPolicyUrl}
-          type={inline ? 'inlinePrimary' : 'primary'}
+          type="inlinePrimary"
           target="_blank"
           onClick={(event) => {
             event.stopPropagation();

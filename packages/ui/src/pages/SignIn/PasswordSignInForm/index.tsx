@@ -9,10 +9,8 @@ import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField, PasswordInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
-import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
-import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
@@ -32,7 +30,6 @@ type FormState = {
 const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { t } = useTranslation();
 
-  const { termsValidation } = useTerms();
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
 
@@ -59,17 +56,13 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
           return;
         }
 
-        if (!(await termsValidation())) {
-          return;
-        }
-
         await onSubmit({
           [type]: value,
           password,
         });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit, termsValidation]
+    [clearErrorMessage, handleSubmit, onSubmit]
   );
 
   useEffect(() => {
@@ -124,8 +117,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
           value={watch('identifier').value}
         />
       )}
-
-      <TermsAndPrivacy className={styles.terms} />
 
       <Button name="submit" title="action.sign_in" htmlType="submit" />
 

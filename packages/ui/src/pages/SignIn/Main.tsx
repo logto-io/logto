@@ -1,6 +1,6 @@
 import type { SignIn, ConnectorMetadata } from '@logto/schemas';
 
-import SocialSignIn from '@/containers/SocialSignIn';
+import SocialSignInList from '@/containers/SocialSignInList';
 
 import IdentifierSignInForm from './IdentifierSignInForm';
 import PasswordSignInForm from './PasswordSignInForm';
@@ -13,7 +13,7 @@ type Props = {
 
 const Main = ({ signInMethods, socialConnectors }: Props) => {
   if (signInMethods.length === 0 && socialConnectors.length > 0) {
-    return <SocialSignIn className={styles.main} socialConnectors={socialConnectors} />;
+    return <SocialSignInList className={styles.main} socialConnectors={socialConnectors} />;
   }
 
   const isPasswordOnly =

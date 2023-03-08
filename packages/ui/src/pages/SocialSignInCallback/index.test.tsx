@@ -1,5 +1,5 @@
-import { waitFor, act } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { waitFor } from '@testing-library/react';
+import { MemoryRouter, Route, Routes, useSearchParams } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -19,22 +19,22 @@ jest.mock('@/apis/interaction', () => ({
   signInWithSocial: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
 }));
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useSearchParams: jest.fn(),
+}));
+
+const mockUseSearchParameters = useSearchParams as jest.Mock;
+
 describe('SocialCallbackPage with code', () => {
   it('callback validation and signIn with social', async () => {
     const state = generateState();
     storeState(state, 'github');
 
-    /* eslint-disable @silverhand/fp/no-mutating-methods */
-    Object.defineProperty(window, 'location', {
-      value: {
-        origin,
-        href: `/sign-in/social/github?state=${state}&code=foo`,
-        search: `?state=${state}&code=foo`,
-        pathname: '/sign-in/social',
-        replace: jest.fn(),
-      },
-    });
-    /* eslint-enable @silverhand/fp/no-mutating-methods */
+    mockUseSearchParameters.mockReturnValue([
+      new URLSearchParams(`state=${state}&code=foo`),
+      jest.fn(),
+    ]);
 
     renderWithPageContext(
       <SettingsProvider>
@@ -46,10 +46,8 @@ describe('SocialCallbackPage with code', () => {
       </SettingsProvider>
     );
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(signInWithSocial).toBeCalled();
-      });
+    await waitFor(() => {
+      expect(signInWithSocial).toBeCalled();
     });
   });
 });

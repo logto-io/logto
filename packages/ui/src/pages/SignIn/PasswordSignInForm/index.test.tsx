@@ -8,7 +8,6 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import { signInWithPasswordIdentifier } from '@/apis/interaction';
-import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
 import type { SignInExperienceResponse } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -37,9 +36,7 @@ describe('UsernamePasswordSignInForm', () => {
     renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
         <MemoryRouter>
-          <ConfirmModalProvider>
-            <PasswordSignInForm signInMethods={signInMethods} />
-          </ConfirmModalProvider>
+          <PasswordSignInForm signInMethods={signInMethods} />
         </MemoryRouter>
       </SettingsProvider>
     );
@@ -57,7 +54,6 @@ describe('UsernamePasswordSignInForm', () => {
     expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
     expect(container.querySelector('input[name="password"]')).not.toBeNull();
     expect(queryByText('action.sign_in')).not.toBeNull();
-    expect(queryByText('description.agree_with_terms')).not.toBeNull();
     expect(queryByText('action.forgot_password')).not.toBeNull();
   });
 
@@ -138,33 +134,6 @@ describe('UsernamePasswordSignInForm', () => {
     });
   });
 
-  test('should show terms confirm modal', async () => {
-    const { queryByText, getByText, container } = renderPasswordSignInForm();
-    const submitButton = getByText('action.sign_in');
-
-    const identifierInput = container.querySelector('input[name="identifier"]');
-    const passwordInput = container.querySelector('input[name="password"]');
-
-    assert(identifierInput, new Error('identifier input should exist'));
-    assert(passwordInput, new Error('password input should exist'));
-
-    act(() => {
-      fireEvent.change(identifierInput, { target: { value: 'username' } });
-    });
-
-    act(() => {
-      fireEvent.change(passwordInput, { target: { value: 'password' } });
-    });
-
-    act(() => {
-      fireEvent.submit(submitButton);
-    });
-
-    await waitFor(() => {
-      expect(queryByText('description.agree_with_terms_modal')).not.toBeNull();
-    });
-  });
-
   test.each([
     ['username', SignInIdentifier.Username],
     ['foo@logto.io', SignInIdentifier.Email],
@@ -182,12 +151,6 @@ describe('UsernamePasswordSignInForm', () => {
 
     fireEvent.change(identifierInput, { target: { value: identifier } });
     fireEvent.change(passwordInput, { target: { value: 'password' } });
-
-    const termsButton = getByText('description.agree_with_terms');
-
-    act(() => {
-      fireEvent.click(termsButton);
-    });
 
     act(() => {
       fireEvent.submit(submitButton);

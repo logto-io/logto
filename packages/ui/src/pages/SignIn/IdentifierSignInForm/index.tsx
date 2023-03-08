@@ -7,8 +7,6 @@ import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
-import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
-import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
@@ -26,7 +24,6 @@ type FormState = {
 };
 
 const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
-  const { termsValidation } = useTerms();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
 
   const enabledSignInMethods = useMemo(
@@ -57,14 +54,10 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
           return;
         }
 
-        if (!(await termsValidation())) {
-          return;
-        }
-
         await onSubmit(type, value);
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit, termsValidation]
+    [clearErrorMessage, handleSubmit, onSubmit]
   );
 
   return (
@@ -98,8 +91,6 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
       />
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
-
-      <TermsAndPrivacy className={styles.terms} />
 
       <Button title="action.sign_in" htmlType="submit" />
 
