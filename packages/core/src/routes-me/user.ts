@@ -103,7 +103,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
   router.post(
     '/password/verify',
     koaGuard({
-      body: object({ password: string().regex(passwordRegEx) }),
+      body: object({ password: string() }),
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
