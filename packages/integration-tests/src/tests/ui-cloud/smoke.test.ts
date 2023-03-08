@@ -81,4 +81,28 @@ describe('smoke testing for cloud', () => {
 
     expect(page.url()).toBe(new URL('sign-in', logtoConsoleUrl).href);
   });
+
+  it('can create another account', async () => {
+    const newUsername = 'another_admin';
+    const newPassword = generatePassword();
+
+    await expect(page).toClick('a', { text: 'Create account' });
+    await expect(page).toMatchElement('button', { text: 'Create account' });
+    await expect(page).toFill('input[name=identifier]', newUsername);
+    await expect(page).toClick('button[name=submit]');
+
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    expect(page.url()).toBe(new URL('/register/password', logtoConsoleUrl).href);
+
+    await expect(page).toFillForm('form', {
+      newPassword,
+      confirmPassword: newPassword,
+    });
+
+    await expect(page).toClick('button[name=submit]');
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+
+    expect(page.url().startsWith(logtoCloudUrl.href)).toBeTruthy();
+    expect(new URL(page.url()).pathname.endsWith('/onboarding/welcome')).toBeTruthy();
+  });
 });
