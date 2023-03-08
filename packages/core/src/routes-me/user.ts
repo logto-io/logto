@@ -133,7 +133,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
       const { id: userId } = ctx.auth;
       const { password } = ctx.guard.body;
 
-      const { isSuspended } = await findUserById(userId);
+      const { isSuspended, passwordEncrypted: oldPasswordEncrypted } = await findUserById(userId);
 
       assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
@@ -142,7 +142,9 @@ export default function userRoutes<T extends AuthedMeRouter>(
 
       assertThat(sessionId, new RequestError({ code: 'session.not_found', status: 401 }));
 
-      await checkVerificationStatus(userId, sessionId);
+      if (oldPasswordEncrypted) {
+        await checkVerificationStatus(userId, sessionId);
+      }
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
       await updateUserById(userId, { passwordEncrypted, passwordEncryptionMethod });

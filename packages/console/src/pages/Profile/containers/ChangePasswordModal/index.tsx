@@ -90,13 +90,7 @@ const ChangePasswordModal = () => {
   };
 
   return (
-    <MainFlowLikeModal
-      title="profile.password.set_password"
-      onClose={onClose}
-      onGoBack={() => {
-        navigate('../verify-password', { state });
-      }}
-    >
+    <MainFlowLikeModal title="profile.password.set_password" onClose={onClose} onGoBack={onClose}>
       <TextInput
         placeholder={t('profile.password.password')}
         {...register('newPassword', {
