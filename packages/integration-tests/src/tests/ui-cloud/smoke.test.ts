@@ -70,7 +70,7 @@ describe('smoke testing for cloud', () => {
 
   it('can complete the onboarding welcome process and enter the user survey page', async () => {
     // Select the project type option
-    await expect(page).toClick('div[class$=content]', { text: 'Personal Project' });
+    await expect(page).toClick('div[class$=content]', { text: 'Personal project' });
     // Select the deployment type option
     await expect(page).toClick('div[class$=content]', { text: 'Open-Source' });
 
