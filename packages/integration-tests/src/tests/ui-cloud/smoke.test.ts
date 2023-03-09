@@ -70,18 +70,27 @@ describe('smoke testing for cloud', () => {
 
   it('can complete the onboarding welcome process and enter the user survey page', async () => {
     // Select the project type option
-    await expect(page).toClick('div[class$=content]', { text: 'Personal project' });
+    const personalOption = await page.waitForSelector(
+      'div[role=radio]:has(input[name=project][value=personal])'
+    );
+    await personalOption.click();
+
     // Select the deployment type option
-    await expect(page).toClick('div[class$=content]', { text: 'Open-Source' });
+    const openSourceOption = await page.waitForSelector(
+      'div[role=radio]:has(input[name=deploymentType][value=open-source])'
+    );
+    await openSourceOption.click();
 
     // Click the next button
-    await expect(page).toClick('span', { text: 'Next' });
+    const nextButton = await page.waitForSelector('div[class$=actions] button:first-child');
+    await nextButton.click();
 
     // Wait for the next page to load
-    await page.waitForFunction(
-      "document.querySelector('div[class$=content] div[class$=title]').innerText.includes('A little bit about you')"
-    );
-    console.log('page.url():', page.url());
+    const contentWrapper = await page.waitForSelector('div[class$=content]:has(div[class$=title])');
+    await expect(contentWrapper).toMatchElement('div[class$=title]', {
+      text: 'A little bit about you',
+    });
+
     expect(new URL(page.url()).pathname.endsWith('/onboarding/about-user')).toBeTruthy();
   });
 
@@ -90,34 +99,45 @@ describe('smoke testing for cloud', () => {
     await expect(page).toClick('div[class$=option]', { text: 'Others' });
 
     // Click the next button
-    await expect(page).toClick('span', { text: 'Next' });
+    const nextButton = await page.waitForSelector('div[class$=actions] button:first-child');
+    await nextButton.click();
 
     // Wait for the next page to load
-    await page.waitForFunction(
-      "document.querySelector('div[class$=content] div[class$=title]').innerText.includes('Let’s first customize your experience with ease')"
-    );
+    const configWrapper = await page.waitForSelector('div[class$=config]:has(div[class$=title])');
+    await expect(configWrapper).toMatchElement('div[class$=title]', {
+      text: 'Let’s first customize your experience with ease',
+    });
+
     expect(new URL(page.url()).pathname.endsWith('/onboarding/sign-in-experience')).toBeTruthy();
   });
 
   it('can complete the sie configuration process and enter the congrats page', async () => {
-    // Click the next button
-    await expect(page).toClick('span', { text: 'Finish and done' });
+    // Click the finish button
+    const finishButton = await page.waitForSelector(
+      'div[class$=continueActions] button:last-child'
+    );
+    await finishButton.click();
 
     // Wait for the next page to load
-    await page.waitForFunction(
-      "document.querySelector('div[class$=content] div[class$=title]').innerText.includes('Great news! You are qualified to earn Logto Cloud early credit!')"
-    );
+    const contentWrapper = await page.waitForSelector('div[class$=content]:has(div[class$=title])');
+    await expect(contentWrapper).toMatchElement('div[class$=title]', {
+      text: 'Great news! You are qualified to earn Logto Cloud early credit!',
+    });
+
     expect(new URL(page.url()).pathname.endsWith('/onboarding/congrats')).toBeTruthy();
   });
 
   it('can complete the onboarding process and enter the admin console', async () => {
-    // Click the next button
-    await expect(page).toClick('span', { text: 'Enter Logto Cloud Preview' });
+    // Click the enter ac button
+    const enterAdminConsoleButton = await page.waitForSelector('div[class$=content] >button');
+    await enterAdminConsoleButton.click();
 
     // Wait for the next page to load
-    await page.waitForFunction(
-      "document.querySelector('div[class$=main] div[class$=title]').innerText.includes('How do you want to get started with Logto?')"
-    );
+    const mainContent = await page.waitForSelector('div[class$=main]:has(div[class$=title])');
+    await expect(mainContent).toMatchElement('div[class$=title]', {
+      text: 'How do you want to get started with Logto?',
+    });
+
     expect(new URL(page.url()).pathname.endsWith('/get-started')).toBeTruthy();
   });
 
