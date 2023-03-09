@@ -21,7 +21,7 @@ const SelectedConnectorItem = ({
     <div className={styles.item}>
       <div className={styles.info}>
         <Draggable className={styles.draggableIcon} />
-        <ConnectorLogo data={{ logo, logoDark }} className={styles.logo} />
+        <ConnectorLogo data={{ logo, logoDark }} size="small" />
         <UnnamedTrans resource={name} className={styles.name} />
         {connectors.length > 1 &&
           connectors.map(({ platform }) => (

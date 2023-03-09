@@ -78,11 +78,7 @@ const ConnectorName = ({ connectorGroup }: Props) => {
           )}
         </>
       }
-      icon={
-        <div className={styles.logoContainer}>
-          <ConnectorLogo className={styles.logo} data={connector} />
-        </div>
-      }
+      icon={<ConnectorLogo data={connector} />}
       to={`/connectors/${
         connector.type === ConnectorType.Social
           ? ConnectorsTabs.Social

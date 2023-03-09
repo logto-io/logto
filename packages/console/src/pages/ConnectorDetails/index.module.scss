@@ -6,29 +6,13 @@
 }
 
 .header {
-  padding: _.unit(6);
+  padding: _.unit(6) _.unit(8);
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   > *:not(:first-child) {
     margin-left: _.unit(6);
-  }
-
-  .logoContainer {
-    margin-left: _.unit(2);
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    background-color: var(--color-hover);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .logo {
-    width: 42px;
-    height: 42px;
   }
 
   .operations {

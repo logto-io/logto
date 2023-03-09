@@ -6,12 +6,9 @@ import FallbackImageDark from '@/assets/images/broken-image-dark.svg';
 import FallbackImageLight from '@/assets/images/broken-image-light.svg';
 import { useTheme } from '@/hooks/use-theme';
 
-const ImageWithErrorFallback = ({
-  src,
-  alt,
-  className,
-  ...props
-}: ImgHTMLAttributes<HTMLImageElement>) => {
+type Props = { containerClassName?: string } & ImgHTMLAttributes<HTMLImageElement>;
+
+const ImageWithErrorFallback = ({ src, alt, className, containerClassName, ...props }: Props) => {
   const [hasError, setHasError] = useState(false);
   const theme = useTheme();
   const Fallback = theme === AppearanceMode.LightMode ? FallbackImageLight : FallbackImageDark;
@@ -24,7 +21,11 @@ const ImageWithErrorFallback = ({
     return <Fallback className={className} />;
   }
 
-  return <img className={className} src={src} alt={alt} onError={errorHandler} {...props} />;
+  return (
+    <div className={containerClassName}>
+      <img className={className} src={src} alt={alt} onError={errorHandler} {...props} />
+    </div>
+  );
 };
 
 export default ImageWithErrorFallback;

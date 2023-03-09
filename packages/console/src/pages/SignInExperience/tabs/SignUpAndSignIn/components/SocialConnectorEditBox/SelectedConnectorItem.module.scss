@@ -20,16 +20,12 @@
 
     .draggableIcon {
       color: var(--color-text-secondary);
-    }
-
-    .logo {
-      margin: auto _.unit(3);
-      width: 20px;
-      height: 20px;
+      margin-right: _.unit(3);
     }
 
     .name {
       font: var(--font-label-2);
+      margin-left: _.unit(3);
     }
 
     .icon {

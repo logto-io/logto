@@ -53,7 +53,7 @@ const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
           }}
         >
           <div className={styles.title}>
-            <ConnectorLogo data={{ logo, logoDark }} className={styles.logo} />
+            <ConnectorLogo data={{ logo, logoDark }} size="small" />
             <UnnamedTrans resource={name} className={styles.name} />
             {connectors.length > 1 &&
               connectors.map(({ platform }) => (
