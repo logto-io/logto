@@ -1,6 +1,6 @@
 import { defaultTenantId, ossConsolePath } from '@logto/schemas';
 
-import { CloudRoute } from '@/cloud/types';
+import { OnboardingRoute } from '@/onboarding/types';
 
 import { isCloud } from './cloud';
 
@@ -15,7 +15,7 @@ export const getUserTenantId = () => {
     const segment = window.location.pathname.split('/')[1];
 
     // eslint-disable-next-line no-restricted-syntax
-    if (Object.values(CloudRoute).includes(segment as CloudRoute)) {
+    if (Object.values(OnboardingRoute).includes(segment as OnboardingRoute)) {
       return '';
     }
 

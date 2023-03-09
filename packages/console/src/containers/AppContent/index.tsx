@@ -4,10 +4,6 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 
-import Broadcast from '@/cloud/components/Broadcast';
-import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
-import { OnboardingPage } from '@/cloud/types';
-import { getOnboardPagePathname } from '@/cloud/utils';
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
 import SessionExpired from '@/components/SessionExpired';
@@ -15,6 +11,7 @@ import { isCloud } from '@/consts/cloud';
 import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import Broadcast from '@/onboarding/components/Broadcast';
 
 import { getPath } from '../ConsoleContent/Sidebar';
 import { useSidebarMenuItems } from '../ConsoleContent/Sidebar/hook';
@@ -27,16 +24,8 @@ const AppContent = () => {
   const href = useHref('/callback');
   const { isLoading: isPreferencesLoading } = useUserPreferences();
   const { isLoading: isConfigsLoading } = useConfigs();
-  const {
-    data: { isOnboardingDone },
-    isLoading: isOnboardingDataLoading,
-    isLoaded: isOnboardingDataLoaded,
-  } = useUserOnboardingData();
 
-  const isLoading =
-    isPreferencesLoading || isConfigsLoading || (isCloud && isOnboardingDataLoading);
-
-  const isOnboarding = isCloud && isOnboardingDataLoaded && !isOnboardingDone;
+  const isLoading = isPreferencesLoading || isConfigsLoading;
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,13 +43,9 @@ const AppContent = () => {
   useEffect(() => {
     // Navigate to the first menu item after configs are loaded.
     if (!isLoading && location.pathname === '/') {
-      navigate(
-        isOnboarding
-          ? getOnboardPagePathname(OnboardingPage.Welcome)
-          : getPath(firstItem?.title ?? '')
-      );
+      navigate(getPath(firstItem?.title ?? ''));
     }
-  }, [firstItem?.title, isOnboardingDone, isLoading, isOnboarding, location.pathname, navigate]);
+  }, [firstItem?.title, isLoading, location.pathname, navigate]);
 
   if (error) {
     if (error instanceof LogtoClientError) {

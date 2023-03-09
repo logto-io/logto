@@ -8,19 +8,19 @@ import useSWR from 'swr';
 
 import Bulb from '@/assets/images/bulb.svg';
 import Tools from '@/assets/images/tools.svg';
-import ActionBar from '@/cloud/components/ActionBar';
-import { CardSelector, MultiCardSelector } from '@/cloud/components/CardSelector';
-import { defaultOnboardingSieConfig } from '@/cloud/constants';
-import * as pageLayout from '@/cloud/scss/layout.module.scss';
-import type { OnboardingSieConfig } from '@/cloud/types';
-import { OnboardingPage } from '@/cloud/types';
-import { getOnboardPagePathname } from '@/cloud/utils';
 import Button from '@/components/Button';
 import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import ActionBar from '@/onboarding/components/ActionBar';
+import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
+import { defaultOnboardingSieConfig } from '@/onboarding/constants';
+import * as pageLayout from '@/onboarding/scss/layout.module.scss';
+import { OnboardingPage } from '@/onboarding/types';
+import type { OnboardingSieConfig } from '@/onboarding/types';
+import { getOnboardingPage } from '@/onboarding/utils';
 
 import Preview from './components/Preview';
 import * as styles from './index.module.scss';
@@ -78,7 +78,7 @@ const SignInExperience = () => {
   });
 
   const handleBack = () => {
-    navigate(getOnboardPagePathname(OnboardingPage.AboutUser));
+    navigate(getOnboardingPage(OnboardingPage.AboutUser));
   };
 
   const handleSave = async () => {
@@ -88,7 +88,7 @@ const SignInExperience = () => {
 
   const handleNext = async () => {
     await onSubmit();
-    navigate(getOnboardPagePathname(OnboardingPage.Congrats));
+    navigate(getOnboardingPage(OnboardingPage.Congrats));
   };
 
   return (

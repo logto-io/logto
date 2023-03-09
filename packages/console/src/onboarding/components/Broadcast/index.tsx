@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import { logtoBlogLink } from '@/cloud/constants';
 import TextLink from '@/components/TextLink';
+import { logtoBlogLink } from '@/onboarding/constants';
 
 import * as styles from './index.module.scss';
 

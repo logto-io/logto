@@ -5,8 +5,8 @@ import Keyboard from '@/assets/images/keyboard.svg';
 import Label from '@/assets/images/label.svg';
 import Lock from '@/assets/images/lock.svg';
 import Mobile from '@/assets/images/mobile.svg';
-import type { Option as SelectorOption } from '@/cloud/components/CardSelector';
-import { Authentication } from '@/cloud/types';
+import type { Option as SelectorOption } from '@/onboarding/components/CardSelector';
+import { Authentication } from '@/onboarding/types';
 
 export const identifierOptions: SelectorOption[] = [
   {

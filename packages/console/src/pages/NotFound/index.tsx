@@ -13,10 +13,12 @@ const NotFound = () => {
   const theme = useTheme();
 
   return (
-    <Card className={styles.container}>
-      {theme === AppearanceMode.LightMode ? <NotFoundImage /> : <NotFoundDarkImage />}
-      <div className={styles.message}>{t('errors.page_not_found')}</div>
-    </Card>
+    <div className={styles.container}>
+      <Card className={styles.content}>
+        {theme === AppearanceMode.LightMode ? <NotFoundImage /> : <NotFoundDarkImage />}
+        <div className={styles.message}>{t('errors.page_not_found')}</div>
+      </Card>
+    </div>
   );
 };
 

@@ -1,18 +1,19 @@
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
+import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import CalendarOutline from '@/assets/images/calendar-outline.svg';
 import CongratsImageDark from '@/assets/images/congrats-dark.svg';
 import CongratsImageLight from '@/assets/images/congrats.svg';
-import Reservation from '@/cloud/components/Reservation';
-import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
-import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import { useTheme } from '@/hooks/use-theme';
+import Reservation from '@/onboarding/components/Reservation';
+import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
+import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 
 import * as styles from './index.module.scss';
 
@@ -21,12 +22,11 @@ const Congrats = () => {
   const theme = useTheme();
   const CongratsImage = theme === AppearanceMode.LightMode ? CongratsImageLight : CongratsImageDark;
   const { update } = useUserOnboardingData();
+  const { navigate, currentTenantId } = useContext(TenantsContext);
 
-  const navigate = useNavigate();
-
-  const enterAdminConsole = async () => {
-    await update({ isOnboardingDone: true });
-    navigate('/');
+  const enterAdminConsole = () => {
+    void update({ isOnboardingDone: true });
+    navigate(currentTenantId);
   };
 
   return (

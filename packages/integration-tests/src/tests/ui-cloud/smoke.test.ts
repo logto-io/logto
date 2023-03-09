@@ -68,6 +68,50 @@ describe('smoke testing for cloud', () => {
     expect(page.url()).toBe(new URL(`/${tenantId ?? ''}/onboarding/welcome`, logtoCloudUrl).href);
   });
 
+  it('can complete the onboarding welcome process and enter the user survey page', async () => {
+    // Select the project type option
+    await expect(page).toClick('div[class$=content]', { text: 'Personal Project' });
+    // Select the deployment type option
+    await expect(page).toClick('div[class$=content]', { text: 'Open-Source' });
+
+    // Click the next button
+    await expect(page).toClick('span', { text: 'Next' });
+
+    // Wait for the next page to load
+    await page.waitForTimeout(500);
+    expect(new URL(page.url()).pathname.endsWith('/onboarding/about-user')).toBeTruthy();
+  });
+
+  it('can complete the onboarding user survey process and enter the sie page', async () => {
+    // Select the reason option
+    await expect(page).toClick('div[class$=content]', { text: 'Others' });
+
+    // Click the next button
+    await expect(page).toClick('span', { text: 'Next' });
+
+    // Wait for the next page to load
+    await page.waitForTimeout(500);
+    expect(new URL(page.url()).pathname.endsWith('/onboarding/sign-in-experience')).toBeTruthy();
+  });
+
+  it('can complete the sie configuration process and enter the congrats page', async () => {
+    // Click the next button
+    await expect(page).toClick('span', { text: 'Finish and done' });
+
+    // Wait for the next page to load
+    await page.waitForTimeout(500);
+    expect(new URL(page.url()).pathname.endsWith('/onboarding/congrats')).toBeTruthy();
+  });
+
+  it('can complete the onboarding process and enter the admin console', async () => {
+    // Click the next button
+    await expect(page).toClick('span', { text: 'Enter Logto Cloud Preview' });
+
+    // Wait for the next page to load
+    await page.waitForTimeout(500);
+    expect(new URL(page.url()).pathname.endsWith('/get-started')).toBeTruthy();
+  });
+
   it('can sign out of admin console', async () => {
     await expect(page).toClick('div[class$=topbar] > div[class$=container]');
 

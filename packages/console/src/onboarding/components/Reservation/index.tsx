@@ -4,8 +4,8 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Calendar from '@/assets/images/calendar.svg';
-import { reservationLink } from '@/cloud/constants';
 import Button from '@/components/Button';
+import { reservationLink } from '@/onboarding/constants';
 import { buildUrl } from '@/utils/url';
 
 import * as styles from './index.module.scss';
