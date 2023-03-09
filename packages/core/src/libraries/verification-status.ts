@@ -9,40 +9,28 @@ export type VerificationStatusLibrary = ReturnType<typeof createVerificationStat
 
 export const createVerificationStatusLibrary = (queries: Queries) => {
   const {
-    findVerificationStatusByUserIdAndSessionId,
+    findVerificationStatusByUserId,
     insertVerificationStatus,
-    deleteVerificationStatusesByUserIdAndSessionId,
+    deleteVerificationStatusesByUserId,
   } = queries.verificationStatuses;
 
-  const createVerificationStatus = async (userId: string, sessionId: string) => {
-    // Remove existing verification statuses for current user in current session.
-    await deleteVerificationStatusesByUserIdAndSessionId(userId, sessionId);
+  const createVerificationStatus = async (userId: string) => {
+    // Remove existing verification statuses for current user.
+    await deleteVerificationStatusesByUserId(userId);
 
-    // When creating new verification record, we use session ID to identify the client device.
-    // The session ID is a cookie value, which is unique for each client.
-    // This prevents the user from proceeding after being verified on another device.
     return insertVerificationStatus({
       id: generateStandardId(),
-      sessionId,
       userId,
     });
   };
 
-  const checkVerificationStatus = async (userId: string, sessionId: string): Promise<void> => {
-    const verificationStatus = await findVerificationStatusByUserIdAndSessionId(userId, sessionId);
+  const checkVerificationStatus = async (userId: string): Promise<void> => {
+    const verificationStatus = await findVerificationStatusByUserId(userId);
 
     assertThat(verificationStatus, 'session.verification_session_not_found');
 
-    const { sessionId: storedSessionId, createdAt } = verificationStatus;
-
-    // The user verification status is considered valid if:
-    // 1. The user is verified within 10 minutes.
-    // 2. The user is verified with the same client session (cookie).
-    const isValid =
-      Date.now() - createdAt < verificationTimeout &&
-      Boolean(sessionId) &&
-      storedSessionId === sessionId;
-
+    // The user verification status is considered valid if the user is verified within 10 minutes.
+    const isValid = Date.now() - verificationStatus.createdAt < verificationTimeout;
     assertThat(isValid, new RequestError({ code: 'session.verification_failed', status: 422 }));
   };
 

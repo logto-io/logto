@@ -9,11 +9,11 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 const { table, fields } = convertToIdentifiers(VerificationStatuses);
 
 export const createVerificationStatusQueries = (pool: CommonQueryMethods) => {
-  const findVerificationStatusByUserIdAndSessionId = async (userId: string, sessionId: string) =>
+  const findVerificationStatusByUserId = async (userId: string) =>
     pool.maybeOne<VerificationStatus>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      where ${fields.sessionId}=${sessionId} and ${fields.userId}=${userId}
+      where ${fields.userId}=${userId}
     `);
 
   const insertVerificationStatus = buildInsertIntoWithPool(pool)<
@@ -23,19 +23,16 @@ export const createVerificationStatusQueries = (pool: CommonQueryMethods) => {
     returning: true,
   });
 
-  const deleteVerificationStatusesByUserIdAndSessionId = async (
-    userId: string,
-    sessionId: string
-  ) => {
+  const deleteVerificationStatusesByUserId = async (userId: string) => {
     await pool.query(sql`
       delete from ${table}
-      where ${fields.sessionId}=${sessionId} and ${fields.userId}=${userId}
+      where ${fields.userId}=${userId}
     `);
   };
 
   return {
-    findVerificationStatusByUserIdAndSessionId,
+    findVerificationStatusByUserId,
     insertVerificationStatus,
-    deleteVerificationStatusesByUserIdAndSessionId,
+    deleteVerificationStatusesByUserId,
   };
 };
