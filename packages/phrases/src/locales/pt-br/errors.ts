@@ -147,9 +147,6 @@ const errors = {
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:
       'URL de conteúdo "Termos de uso" vazia. Adicione o URL do conteúdo se "Termos de uso" estiver ativado.',
-    empty_logo: 'Insira o URL do seu logotipo',
-    empty_slogan:
-      'Slogan de marca vazio. Adicione um slogan de marca se um estilo de IU contendo o slogan for selecionado.',
     empty_social_connectors:
       'Conectores sociais vazios. Adicione conectores sociais ativados quando o método de login social estiver ativado.',
     enabled_connector_not_found: 'Conector {{type}} ativado não encontrado.',

@@ -26,16 +26,10 @@ const sign_in_exp = {
     title: '브랜딩 영역',
     ui_style: '스타일',
     favicon: 'Browser favicon', // UNTRANSLATED
-    styles: {
-      logo_slogan: '앱 로고 & 슬로건',
-      logo: '앱 로고만',
-    },
     logo_image_url: '앱 로고 이미지 URL',
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: '앱 로고 이미지 URL (다크 모드)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    slogan: '슬로건',
-    slogan_placeholder: '상상력을 펼쳐 보세요',
   },
   sign_up_and_sign_in: {
     identifiers_email: '이메일 주소',

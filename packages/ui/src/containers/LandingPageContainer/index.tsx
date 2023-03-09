@@ -5,7 +5,7 @@ import type { TFuncKey } from 'react-i18next';
 
 import BrandingHeader from '@/components/BrandingHeader';
 import { PageContext } from '@/hooks/use-page-context';
-import { getLogoUrl } from '@/utils/logo';
+import { getBrandingLogoUrl } from '@/utils/logo';
 
 import AppNotification from '../AppNotification';
 import * as styles from './index.module.scss';
@@ -23,7 +23,10 @@ const LandingPageContainer = ({ children, className, title }: Props) => {
     return null;
   }
 
-  const { logoUrl, darkLogoUrl } = experienceSettings.branding;
+  const {
+    color: { isDarkModeEnabled },
+    branding,
+  } = experienceSettings;
 
   return (
     <>
@@ -32,7 +35,7 @@ const LandingPageContainer = ({ children, className, title }: Props) => {
         <BrandingHeader
           className={styles.header}
           headline={title}
-          logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
+          logo={getBrandingLogoUrl({ theme, branding, isDarkModeEnabled })}
         />
         {children}
       </div>

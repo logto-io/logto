@@ -2,17 +2,26 @@ import { ConnectorPlatform } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 
+import * as appStyles from '@/containers/AppBoundary/index.module.scss';
 import * as styles from '@/containers/AppContent/index.module.scss';
 import type { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';
-import type { SignInExperienceResponse, PreviewConfig } from '@/types';
+import type { SignInExperienceResponse, PreviewConfig, Theme } from '@/types';
 import { parseQueryParameters } from '@/utils';
 import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
 
+const applyTheme = (theme: Theme) => {
+  document.body.classList.remove(
+    conditionalString(appStyles.light),
+    conditionalString(appStyles.dark)
+  );
+  document.body.classList.add(conditionalString(appStyles[theme]));
+};
+
 const usePreview = (context: Context): [boolean, PreviewConfig?] => {
   const [previewConfig, setPreviewConfig] = useState<PreviewConfig>();
-  const { setTheme, setExperienceSettings, setPlatform } = context;
+  const { setExperienceSettings, setPlatform } = context;
 
   const { preview } = parseQueryParameters(window.location.search);
   const isPreview = preview === 'true';
@@ -56,7 +65,7 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     }
 
     const {
-      signInExperience: { socialConnectors, color, ...rest },
+      signInExperience: { socialConnectors, ...rest },
       mode,
       platform,
       isNative,
@@ -64,10 +73,6 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
 
     const experienceSettings: SignInExperienceResponse = {
       ...rest,
-      color: {
-        ...color,
-        isDarkModeEnabled: false, // Disable theme mode auto detection on preview
-      },
       socialConnectors: filterPreviewSocialConnectors(
         isNative ? ConnectorPlatform.Native : ConnectorPlatform.Web,
         socialConnectors
@@ -75,13 +80,13 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     };
 
     (async () => {
-      setTheme(mode);
+      applyTheme(mode);
 
       setPlatform(platform);
 
       setExperienceSettings(experienceSettings);
     })();
-  }, [isPreview, previewConfig, setExperienceSettings, setPlatform, setTheme]);
+  }, [isPreview, previewConfig, setExperienceSettings, setPlatform]);
 
   useEffect(() => {
     if (!isPreview || !previewConfig?.language) {

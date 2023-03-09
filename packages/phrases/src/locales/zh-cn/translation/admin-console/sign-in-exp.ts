@@ -27,16 +27,10 @@ const sign_in_exp = {
     title: '品牌定制区',
     ui_style: '样式',
     favicon: '浏览器地址栏图标',
-    styles: {
-      logo_slogan: 'Logo 和标语',
-      logo: '仅有 Logo',
-    },
     logo_image_url: 'Logo 图片 URL',
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'Logo 图片 URL (深色)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    slogan: '标语',
-    slogan_placeholder: '释放你的创意',
   },
   sign_up_and_sign_in: {
     identifiers_email: '邮件地址',

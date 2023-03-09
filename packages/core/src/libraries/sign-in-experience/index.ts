@@ -1,8 +1,7 @@
 import { builtInLanguages } from '@logto/phrases-ui';
-import type { Branding, LanguageInfo, SignInExperience } from '@logto/schemas';
-import { ConnectorType, BrandingStyle } from '@logto/schemas';
+import type { LanguageInfo, SignInExperience } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
-import i18next from 'i18next';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
@@ -11,14 +10,6 @@ import assertThat from '#src/utils/assert-that.js';
 
 export * from './sign-up.js';
 export * from './sign-in.js';
-
-export const validateBranding = (branding: Branding) => {
-  if (branding.style === BrandingStyle.Logo_Slogan) {
-    assertThat(branding.slogan?.trim(), 'sign_in_experiences.empty_slogan');
-  }
-
-  assertThat(branding.logoUrl.trim(), 'sign_in_experiences.empty_logo');
-};
 
 export type SignInExperienceLibrary = ReturnType<typeof createSignInExperienceLibrary>;
 
@@ -61,16 +52,7 @@ export const createSignInExperienceLibrary = (
     });
   };
 
-  const getSignInExperience = async (): Promise<SignInExperience> => {
-    const raw = await findDefaultSignInExperience();
-    const { branding } = raw;
-
-    // Alter sign-in experience dynamic configs
-    return Object.freeze({
-      ...raw,
-      branding: { ...branding, slogan: branding.slogan && i18next.t(branding.slogan) },
-    });
-  };
+  const getSignInExperience = async (): Promise<SignInExperience> => findDefaultSignInExperience();
 
   return {
     validateLanguageInfo,
