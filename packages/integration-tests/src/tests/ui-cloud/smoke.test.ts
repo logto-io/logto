@@ -122,7 +122,7 @@ describe('smoke testing for cloud', () => {
     // Try waiting for 500ms before navigate to the admin console
     await page.waitForTimeout(500);
 
-    await expect(page).toMatchElement('div[class$=main] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main]:has(div[class$=title])', {
       text: 'How do you want to get started with Logto?',
     });
 
