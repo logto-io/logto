@@ -78,19 +78,24 @@ describe('smoke testing for cloud', () => {
     await expect(page).toClick('span', { text: 'Next' });
 
     // Wait for the next page to load
-    await page.waitForTimeout(500);
+    await page.waitForFunction(
+      "document.querySelector('div[class$=content] div[class$=title]').innerText.includes('A little bit about you')"
+    );
+    console.log('page.url():', page.url());
     expect(new URL(page.url()).pathname.endsWith('/onboarding/about-user')).toBeTruthy();
   });
 
   it('can complete the onboarding user survey process and enter the sie page', async () => {
     // Select the reason option
-    await expect(page).toClick('div[class$=content]', { text: 'Others' });
+    await expect(page).toClick('div[class$=option]', { text: 'Others' });
 
     // Click the next button
     await expect(page).toClick('span', { text: 'Next' });
 
     // Wait for the next page to load
-    await page.waitForTimeout(500);
+    await page.waitForFunction(
+      "document.querySelector('div[class$=content] div[class$=title]').innerText.includes('Let’s first customize your experience with ease')"
+    );
     expect(new URL(page.url()).pathname.endsWith('/onboarding/sign-in-experience')).toBeTruthy();
   });
 
@@ -99,7 +104,9 @@ describe('smoke testing for cloud', () => {
     await expect(page).toClick('span', { text: 'Finish and done' });
 
     // Wait for the next page to load
-    await page.waitForTimeout(500);
+    await page.waitForFunction(
+      "document.querySelector('div[class$=content] div[class$=title]').innerText.includes('Great news! You are qualified to earn Logto Cloud early credit!')"
+    );
     expect(new URL(page.url()).pathname.endsWith('/onboarding/congrats')).toBeTruthy();
   });
 
@@ -108,7 +115,9 @@ describe('smoke testing for cloud', () => {
     await expect(page).toClick('span', { text: 'Enter Logto Cloud Preview' });
 
     // Wait for the next page to load
-    await page.waitForTimeout(500);
+    await page.waitForFunction(
+      "document.querySelector('div[class$=main] div[class$=title]').innerText.includes('How do you want to get started with Logto?')"
+    );
     expect(new URL(page.url()).pathname.endsWith('/get-started')).toBeTruthy();
   });
 
