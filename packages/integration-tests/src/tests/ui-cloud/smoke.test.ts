@@ -70,24 +70,18 @@ describe('smoke testing for cloud', () => {
 
   it('can complete the onboarding welcome process and enter the user survey page', async () => {
     // Select the project type option
-    const personalOption = await page.waitForSelector(
-      'div[role=radio]:has(input[name=project][value=personal])'
-    );
-    await personalOption.click();
+    await expect(page).toClick('div[role=radio]:has(input[name=project][value=personal])');
 
     // Select the deployment type option
-    const openSourceOption = await page.waitForSelector(
+    await expect(page).toClick(
       'div[role=radio]:has(input[name=deploymentType][value=open-source])'
     );
-    await openSourceOption.click();
 
     // Click the next button
-    const nextButton = await page.waitForSelector('div[class$=actions] button:first-child');
-    await nextButton.click();
+    await expect(page).toClick('div[class$=actions] button:first-child');
 
     // Wait for the next page to load
-    const contentWrapper = await page.waitForSelector('div[class$=content]:has(div[class$=title])');
-    await expect(contentWrapper).toMatchElement('div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=content] div[class$=title]', {
       text: 'A little bit about you',
     });
 
@@ -99,12 +93,10 @@ describe('smoke testing for cloud', () => {
     await expect(page).toClick('div[class$=option]', { text: 'Others' });
 
     // Click the next button
-    const nextButton = await page.waitForSelector('div[class$=actions] button:first-child');
-    await nextButton.click();
+    await expect(page).toClick('div[class$=actions] button:first-child');
 
     // Wait for the next page to load
-    const configWrapper = await page.waitForSelector('div[class$=config]:has(div[class$=title])');
-    await expect(configWrapper).toMatchElement('div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=config] div[class$=title]', {
       text: 'Let’s first customize your experience with ease',
     });
 
@@ -113,14 +105,10 @@ describe('smoke testing for cloud', () => {
 
   it('can complete the sie configuration process and enter the congrats page', async () => {
     // Click the finish button
-    const finishButton = await page.waitForSelector(
-      'div[class$=continueActions] button:last-child'
-    );
-    await finishButton.click();
+    await expect(page).toClick('div[class$=continueActions] button:last-child');
 
     // Wait for the next page to load
-    const contentWrapper = await page.waitForSelector('div[class$=content]:has(div[class$=title])');
-    await expect(contentWrapper).toMatchElement('div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=content] div[class$=title]', {
       text: 'Great news! You are qualified to earn Logto Cloud early credit!',
     });
 
@@ -129,12 +117,10 @@ describe('smoke testing for cloud', () => {
 
   it('can complete the onboarding process and enter the admin console', async () => {
     // Click the enter ac button
-    const enterAdminConsoleButton = await page.waitForSelector('div[class$=content] >button');
-    await enterAdminConsoleButton.click();
+    await expect(page).toClick('div[class$=content] >button');
 
     // Wait for the next page to load
-    const mainContent = await page.waitForSelector('div[class$=main]:has(div[class$=title])');
-    await expect(mainContent).toMatchElement('div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main] div[class$=title]', {
       text: 'How do you want to get started with Logto?',
     });
 

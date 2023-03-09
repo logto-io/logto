@@ -43,7 +43,7 @@ const AppContent = () => {
   useEffect(() => {
     // Navigate to the first menu item after configs are loaded.
     if (!isLoading && location.pathname === '/') {
-      navigate(getPath(firstItem?.title ?? ''));
+      navigate(getPath(firstItem?.title ?? ''), { replace: true });
     }
   }, [firstItem?.title, isLoading, location.pathname, navigate]);
 
