@@ -88,6 +88,7 @@ const VerifyPasswordModal = () => {
             {showPassword ? <PasswordShowIcon /> : <PasswordHideIcon />}
           </IconButton>
         }
+        size="large"
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
             onSubmit();

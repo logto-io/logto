@@ -4,11 +4,12 @@ import { cloneElement, forwardRef } from 'react';
 
 import * as styles from './index.module.scss';
 
-type Props = HTMLProps<HTMLInputElement> & {
+type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
   hasError?: boolean;
   errorMessage?: string;
   icon?: ReactElement;
   suffix?: ReactElement;
+  size?: 'medium' | 'large';
 };
 
 const TextInput = (
@@ -21,6 +22,7 @@ const TextInput = (
     className,
     readOnly,
     value,
+    size = 'medium',
     ...rest
   }: Props,
   reference: ForwardedRef<HTMLInputElement>
@@ -33,7 +35,8 @@ const TextInput = (
           hasError && styles.error,
           icon && styles.withIcon,
           disabled && styles.disabled,
-          readOnly && styles.readOnly
+          readOnly && styles.readOnly,
+          styles[size]
         )}
       >
         {icon && <span className={styles.icon}>{icon}</span>}
