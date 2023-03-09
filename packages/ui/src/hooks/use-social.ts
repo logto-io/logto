@@ -8,11 +8,10 @@ import { generateState, storeState, buildSocialLandingUri } from '@/utils/social
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 import { PageContext } from './use-page-context';
-import useTerms from './use-terms';
 
 const useSocial = () => {
   const { experienceSettings, theme } = useContext(PageContext);
-  const { termsValidation } = useTerms();
+
   const handleError = useErrorHandler();
   const asyncInvokeSocialSignIn = useApi(getSocialAuthorizationUrl);
 
@@ -32,10 +31,6 @@ const useSocial = () => {
 
   const invokeSocialSignInHandler = useCallback(
     async (connector: ConnectorMetadata) => {
-      if (!(await termsValidation())) {
-        return;
-      }
-
       const { id: connectorId } = connector;
 
       const state = generateState();
@@ -67,7 +62,7 @@ const useSocial = () => {
       // Invoke Web Social Sign In flow
       window.location.assign(result.redirectTo);
     },
-    [asyncInvokeSocialSignIn, handleError, nativeSignInHandler, termsValidation]
+    [asyncInvokeSocialSignIn, handleError, nativeSignInHandler]
   );
 
   return {

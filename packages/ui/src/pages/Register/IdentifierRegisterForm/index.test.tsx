@@ -6,6 +6,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { registerWithUsernamePassword } from '@/apis/interaction';
 import { sendVerificationCodeApi } from '@/apis/utils';
+import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
 import { UserFlow } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -35,7 +36,9 @@ jest.mock('@/apis/interaction', () => ({
 const renderForm = (signUpMethods: SignInIdentifier[] = [SignInIdentifier.Username]) => {
   return renderWithPageContext(
     <SettingsProvider>
-      <IdentifierRegisterForm signUpMethods={signUpMethods} />
+      <ConfirmModalProvider>
+        <IdentifierRegisterForm signUpMethods={signUpMethods} />
+      </ConfirmModalProvider>
     </SettingsProvider>
   );
 };
@@ -130,7 +133,7 @@ describe('<IdentifierRegisterForm />', () => {
     });
 
     test('submit properly', async () => {
-      const { getByText, container } = renderForm();
+      const { getByText, queryByText, container } = renderForm();
       const submitButton = getByText('action.create_account');
       const termsButton = getByText('description.agree_with_terms');
       const usernameInput = container.querySelector('input[name="identifier"]');
@@ -143,11 +146,15 @@ describe('<IdentifierRegisterForm />', () => {
       });
 
       await waitFor(() => {
+        expect(queryByText('description.agree_with_terms_modal')).not.toBeNull();
         expect(registerWithUsernamePassword).not.toBeCalled();
       });
 
       act(() => {
         fireEvent.click(termsButton);
+      });
+
+      act(() => {
         fireEvent.submit(submitButton);
       });
 
@@ -201,6 +208,9 @@ describe('<IdentifierRegisterForm />', () => {
         act(() => {
           fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
           fireEvent.click(termsButton);
+        });
+
+        act(() => {
           fireEvent.submit(submitButton);
         });
 
@@ -257,6 +267,9 @@ describe('<IdentifierRegisterForm />', () => {
         act(() => {
           fireEvent.change(phoneInput, { target: { value: '8573333333' } });
           fireEvent.click(termsButton);
+        });
+
+        act(() => {
           fireEvent.submit(submitButton);
         });
 

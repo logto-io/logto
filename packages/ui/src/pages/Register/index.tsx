@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
 import LandingPageContainer from '@/containers/LandingPageContainer';
-import SocialSignIn, { SocialSignInList } from '@/containers/SocialSignIn';
+import SocialSignInList from '@/containers/SocialSignInList';
+import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
 import { useSieMethods } from '@/hooks/use-sie';
 
 import ErrorPage from '../ErrorPage';
@@ -25,7 +26,10 @@ const Register = () => {
         <IdentifierRegisterForm signUpMethods={signUpMethods} className={styles.main} />
       )}
       {signUpMethods.length === 0 && socialConnectors.length > 0 && (
-        <SocialSignIn className={styles.main} socialConnectors={socialConnectors} />
+        <>
+          <TermsAndPrivacy className={styles.terms} />
+          <SocialSignInList className={styles.main} socialConnectors={socialConnectors} />
+        </>
       )}
       {
         // SignIn footer

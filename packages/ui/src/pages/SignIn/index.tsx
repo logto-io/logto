@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
 import LandingPageContainer from '@/containers/LandingPageContainer';
-import { SocialSignInList } from '@/containers/SocialSignIn';
+import SocialSignInList from '@/containers/SocialSignInList';
+import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
 import { useSieMethods } from '@/hooks/use-sie';
 
 import ErrorPage from '../ErrorPage';
@@ -40,6 +41,7 @@ const SignIn = () => {
           </>
         )
       }
+      <TermsAndPrivacyLinks className={styles.terms} />
     </LandingPageContainer>
   );
 };
