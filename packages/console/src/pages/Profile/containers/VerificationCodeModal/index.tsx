@@ -61,7 +61,7 @@ const VerificationCodeModal = () => {
     }
 
     try {
-      await api.post(`me/verification-codes/verify`, { json: { verificationCode, email } });
+      await api.post(`me/verification-codes/verify`, { json: { verificationCode, email, action } });
 
       if (action === 'changeEmail') {
         await api.patch('me', { json: { primaryEmail: email } });
