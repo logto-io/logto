@@ -65,6 +65,7 @@
     "nanoid": "^4.0.0",
     "oidc-provider": "^8.0.0",
     "p-retry": "^5.1.2",
+    "pg-protocol": "^1.6.0",
     "roarr": "^7.11.0",
     "semver": "^7.3.8",
     "slonik": "^30.0.0",

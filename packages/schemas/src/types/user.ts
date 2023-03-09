@@ -22,7 +22,17 @@ export type UserInfo<Keys extends keyof CreateUser = (typeof userInfoSelectField
 
 export type UserProfileResponse = UserInfo & { hasPassword?: boolean };
 
-export enum UserRole {
+/** Internal read-only roles for user tenants. */
+export enum InternalRole {
+  /**
+   * Internal admin role for Machine-to-Machine apps in Logto user tenants.
+   *
+   * It should NOT be assigned to any user.
+   */
+  Admin = '#internal:admin',
+}
+
+export enum AdminTenantRole {
   Admin = 'admin',
   /** Common user role in admin tenant. */
   User = 'user',

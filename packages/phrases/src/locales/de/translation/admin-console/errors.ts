@@ -17,7 +17,9 @@ const errors = {
     'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
   insecure_contexts: 'Unsichere Kontexte (nicht-HTTPS) werden nicht unterstützt.',
   unexpected_error: 'Ein unerwarteter Fehler ist aufgetreten',
-  not_found: '404 not found', // UNTRANSLATED
+  not_found: '404 not found', // UNTRANSLATED,
+  create_internal_role_violation:
+    'You are creating a new internal role which is forbidden by Logto. Try another name that does not start with "#internal:".', // UNTRANSLATED
 };
 
 export default errors;

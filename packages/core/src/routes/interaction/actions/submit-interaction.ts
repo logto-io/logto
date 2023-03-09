@@ -1,7 +1,7 @@
 import type { User, Profile } from '@logto/schemas';
 import {
+  AdminTenantRole,
   SignInMode,
-  UserRole,
   getManagementApiAdminName,
   defaultTenantId,
   adminTenantId,
@@ -180,7 +180,7 @@ export default async function submitInteraction(
         ...upsertProfile,
       },
       conditionalArray<string>(
-        isInAdminTenant && UserRole.User,
+        isInAdminTenant && AdminTenantRole.User,
         isCreatingFirstAdminUser && getManagementApiAdminName(defaultTenantId),
         isCreatingFirstAdminUser && isCloud && getManagementApiAdminName(adminTenantId)
       )

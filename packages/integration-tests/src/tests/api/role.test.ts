@@ -48,7 +48,13 @@ describe('roles', () => {
     const createdRole = await createRole();
 
     const response = await createRole(createdRole.name).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 422).toBe(true);
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(422);
+  });
+
+  it('should fail when try to create an internal role', async () => {
+    const response = await createRole('#internal:foo').catch((error: unknown) => error);
+
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(403);
   });
 
   it('should get role detail successfully', async () => {
@@ -82,7 +88,7 @@ describe('roles', () => {
     const response = await updateRole(role2.id, {
       name: role1.name,
     }).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 422).toBe(true);
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(422);
   });
 
   it('should delete role successfully', async () => {
@@ -91,6 +97,6 @@ describe('roles', () => {
     await deleteRole(role.id);
 
     const response = await getRole(role.id).catch((error: unknown) => error);
-    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
   });
 });

@@ -2,9 +2,10 @@ import type { AlterationState, System, SystemKey } from '@logto/schemas';
 import { systemGuards, Systems, AlterationStateKey } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
+import { DatabaseError } from 'pg-protocol';
 import type { CommonQueryMethods, DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 const { fields, table } = convertToIdentifiers(Systems);
 
@@ -37,11 +38,9 @@ export const getCurrentDatabaseAlterationTimestamp = async (pool: CommonQueryMet
 
     return (parsed.success && parsed.data.timestamp) || 0;
   } catch (error: unknown) {
-    const result = z.object({ code: z.string() }).safeParse(error);
-
     // Relation does not exist, treat as 0
     // https://www.postgresql.org/docs/14/errcodes-appendix.html
-    if (result.success && result.data.code === '42P01') {
+    if (error instanceof DatabaseError && error.code === '42P01') {
       return 0;
     }
 

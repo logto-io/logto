@@ -18,6 +18,8 @@ const errors = {
   insecure_contexts: 'Insecure contexts (non-HTTPS) are not supported.',
   unexpected_error: 'An unexpected error occurred',
   not_found: '404 not found',
+  create_internal_role_violation:
+    'You are creating a new internal role which is forbidden by Logto. Try another name that does not start with "#internal:".',
 };
 
 export default errors;

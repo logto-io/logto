@@ -2,9 +2,9 @@ import type { SchemaLike } from '@logto/schemas';
 import { convertToPrimitiveOrSql } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import decamelize from 'decamelize';
+import { DatabaseError } from 'pg-protocol';
 import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
-import { z } from 'zod';
 
 import { ConfigKey, getCliConfigWithPrompt, log } from './utils.js';
 
@@ -36,11 +36,9 @@ export const createPoolAndDatabaseIfNeeded = async () => {
   try {
     return await createPoolFromConfig();
   } catch (error: unknown) {
-    const result = z.object({ code: z.string() }).safeParse(error);
-
     // Database does not exist, try to create one
     // https://www.postgresql.org/docs/14/errcodes-appendix.html
-    if (!(result.success && result.data.code === '3D000')) {
+    if (!(error instanceof DatabaseError && error.code === '3D000')) {
       log.error(error);
     }
 

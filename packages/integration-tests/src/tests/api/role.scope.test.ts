@@ -1,3 +1,6 @@
+import { defaultManagementApi } from '@logto/schemas';
+import { HTTPError } from 'got';
+
 import { createResource } from '#src/api/index.js';
 import {
   assignScopesToRole,
@@ -41,5 +44,15 @@ describe('roles scopes', () => {
 
     const newScopes = await getRoleScopes(role.id);
     expect(newScopes.length).toBe(0);
+  });
+
+  it('should fail when try to assign a scope to an internal role', async () => {
+    const resource = await createResource();
+    const scope = await createScope(resource.id);
+    const response = await assignScopesToRole([scope.id], defaultManagementApi.role.id).catch(
+      (error: unknown) => error
+    );
+
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(403);
   });
 });

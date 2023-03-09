@@ -1,4 +1,5 @@
 import type { Role, ScopeResponse } from '@logto/schemas';
+import { internalRolePrefix } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -70,9 +71,15 @@ const CreateRoleForm = ({ onClose }: Props) => {
           <TextInput
             // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
-            {...register('name', { required: true })}
+            {...register('name', {
+              required: true,
+              validate: (name) =>
+                name.startsWith(internalRolePrefix)
+                  ? t('errors.create_internal_role_violation')
+                  : true,
+            })}
             placeholder={t('roles.role_name_placeholder')}
-            hasError={Boolean(errors.name)}
+            errorMessage={errors.name?.message}
           />
         </FormField>
         <FormField isRequired title="roles.role_description">

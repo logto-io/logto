@@ -1,18 +1,21 @@
-import type { ApplicationsRole, CreateApplicationsRole } from '@logto/schemas';
-import { ApplicationsRoles, RolesScopes } from '@logto/schemas';
+import type { ApplicationsRole, CreateApplicationsRole, Role } from '@logto/schemas';
+import { Roles, ApplicationsRoles, RolesScopes } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
-const { table, fields } = convertToIdentifiers(ApplicationsRoles);
+const { table, fields } = convertToIdentifiers(ApplicationsRoles, true);
 
 export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
   const findApplicationsRolesByApplicationId = async (applicationId: string) =>
-    pool.any<ApplicationsRole>(sql`
-      select ${sql.join(Object.values(fields), sql`,`)}
+    pool.any<ApplicationsRole & { role: Role }>(sql`
+      select
+        ${sql.join(Object.values(fields), sql`,`)},
+        to_jsonb(${sql.identifier([Roles.table])}) as role
       from ${table}
+      join roles on ${sql.identifier([Roles.table, Roles.fields.id])} = ${fields.roleId}
       where ${fields.applicationId}=${applicationId}
     `);
 

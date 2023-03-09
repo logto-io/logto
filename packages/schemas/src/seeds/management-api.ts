@@ -1,7 +1,7 @@
 import { generateStandardId } from '@logto/core-kit';
 
 import type { CreateResource, CreateRole, CreateScope } from '../db-entries/index.js';
-import { PredefinedScope, UserRole } from '../types/index.js';
+import { PredefinedScope, InternalRole, AdminTenantRole } from '../types/index.js';
 import { adminTenantId, defaultTenantId } from './tenant.js';
 
 export type AdminData = {
@@ -47,8 +47,8 @@ export const defaultManagementApi = Object.freeze({
     tenantId: defaultTenantId,
     /** @deprecated You should not rely on this constant. Change to something else. */
     id: 'admin-role',
-    name: UserRole.Admin,
-    description: 'Admin role for Logto.',
+    name: InternalRole.Admin,
+    description: `Internal admin role for Logto tenant ${defaultTenantId}.`,
   },
 }) satisfies AdminData;
 
@@ -65,7 +65,7 @@ export function getManagementApiResourceIndicator(tenantId: string, path = 'api'
 }
 
 export const getManagementApiAdminName = <TenantId extends string>(tenantId: TenantId) =>
-  `${tenantId}:${UserRole.Admin}` as const;
+  `${tenantId}:${AdminTenantRole.Admin}` as const;
 
 /** Create a set of admin data for Management API of the given tenant ID. */
 export const createAdminData = (tenantId: string): AdminData => {
@@ -88,8 +88,8 @@ export const createAdminData = (tenantId: string): AdminData => {
     role: {
       tenantId,
       id: generateStandardId(),
-      name: UserRole.Admin,
-      description: 'Admin role for Logto.',
+      name: InternalRole.Admin,
+      description: `Internal admin role for Logto tenant ${defaultTenantId}.`,
     },
   });
 };
@@ -116,7 +116,7 @@ export const createAdminDataInAdminTenant = (tenantId: string): AdminData => {
       tenantId: adminTenantId,
       id: generateStandardId(),
       name: getManagementApiAdminName(tenantId),
-      description: 'Admin role for Logto.',
+      description: `Admin tenant admin role for Logto tenant ${tenantId}.`,
     },
   });
 };
@@ -141,7 +141,7 @@ export const createMeApiInAdminTenant = (): AdminData => {
     role: {
       tenantId: adminTenantId,
       id: generateStandardId(),
-      name: UserRole.User,
+      name: AdminTenantRole.User,
       description: 'Default role for admin tenant.',
     },
   });

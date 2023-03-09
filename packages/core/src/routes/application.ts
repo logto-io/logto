@@ -1,19 +1,24 @@
 import { generateStandardId, buildIdGenerator } from '@logto/core-kit';
+import type { Role } from '@logto/schemas';
 import {
-  defaultManagementApi,
-  Applications,
   demoAppApplicationId,
   buildDemoAppDataForTenant,
+  Applications,
+  InternalRole,
 } from '@logto/schemas';
 import { boolean, object, string, z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 const applicationId = buildIdGenerator(21);
+const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
+  roles.some(({ role: { name } }) => name === InternalRole.Admin);
 
 export default function applicationRoutes<T extends AuthedRouter>(
   ...[router, { queries, id: tenantId }]: RouterInitArgs<T>
@@ -28,6 +33,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
   } = queries.applications;
   const { findApplicationsRolesByApplicationId, insertApplicationsRoles, deleteApplicationRole } =
     queries.applicationsRoles;
+  const { findRoleByRoleName } = queries.roles;
 
   router.get('/applications', koaPagination(), async (ctx, next) => {
     const { limit, offset } = ctx.pagination;
@@ -89,7 +95,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
 
       ctx.body = {
         ...application,
-        isAdmin: applicationsRoles.some(({ roleId }) => roleId === defaultManagementApi.role.id),
+        isAdmin: includesInternalAdminRole(applicationsRoles),
       };
 
       return next();
@@ -117,19 +123,27 @@ export default function applicationRoutes<T extends AuthedRouter>(
 
       const { isAdmin, ...rest } = body;
 
-      // FIXME @sijie temp solution to set admin access to machine to machine app
+      // User can enable the admin access of Machine-to-Machine apps by switching on a toggle on Admin Console.
+      // Since those apps sit in the user tenant, we provide an internal role to apply the necessary scopes.
+      // This role is NOT intended for user assignment.
       if (isAdmin !== undefined) {
-        const applicationsRoles = await findApplicationsRolesByApplicationId(id);
-        const originalIsAdmin = applicationsRoles.some(
-          ({ roleId }) => roleId === defaultManagementApi.role.id
+        const [applicationsRoles, internalAdminRole] = await Promise.all([
+          findApplicationsRolesByApplicationId(id),
+          findRoleByRoleName(InternalRole.Admin),
+        ]);
+        const usedToBeAdmin = includesInternalAdminRole(applicationsRoles);
+
+        assertThat(
+          internalAdminRole,
+          new RequestError('entity.not_exists', { name: InternalRole.Admin })
         );
 
-        if (isAdmin && !originalIsAdmin) {
+        if (isAdmin && !usedToBeAdmin) {
           await insertApplicationsRoles([
-            { id: generateStandardId(), applicationId: id, roleId: defaultManagementApi.role.id },
+            { id: generateStandardId(), applicationId: id, roleId: internalAdminRole.id },
           ]);
-        } else if (!isAdmin && originalIsAdmin) {
-          await deleteApplicationRole(id, defaultManagementApi.role.id);
+        } else if (!isAdmin && usedToBeAdmin) {
+          await deleteApplicationRole(id, internalAdminRole.id);
         }
       }
 

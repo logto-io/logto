@@ -1,7 +1,7 @@
 import { generateStandardId } from '@logto/core-kit';
 
 import type { CreateScope } from '../index.js';
-import { UserRole } from '../types/index.js';
+import { AdminTenantRole } from '../types/index.js';
 import type { UpdateAdminData } from './management-api.js';
 import { adminTenantId } from './tenant.js';
 
@@ -34,7 +34,7 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
       scope: buildScope(CloudScope.CreateTenant, 'Allow creating new tenants.'),
       role: {
         tenantId: adminTenantId,
-        name: UserRole.User,
+        name: AdminTenantRole.User,
       },
     },
     buildScope(
