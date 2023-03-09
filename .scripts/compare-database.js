@@ -74,6 +74,35 @@ const queryDatabaseManifest = async (database) => {
   `);
 
   const { rows: triggers } = await pool.query(/* sql */`select * from information_schema.triggers;`);
+  const { rows: policies } = await pool.query(/* sql */`select * from pg_policies order by tablename, policyname;`);
+  const { rows: columnGrants } = await pool.query(/* sql */`
+    select * from information_schema.role_column_grants
+    where table_schema = '${schema}'
+      and grantee != 'postgres'
+    order by grantee, table_name, column_name, privilege_type;
+  `);
+  const { rows: tableGrants } = await pool.query(/* sql */`
+    select * from information_schema.role_table_grants
+    where table_schema = '${schema}'
+      and grantee != 'postgres'
+    order by grantee, table_name, privilege_type;
+  `);
+
+  // This function removes the last segment of grantee since Logto will use 'logto_tenant_fresh/alteration' for the role name.
+  const normalizeGrantee = ({ grantee, ...rest }) => {
+    if (grantee.startsWith('logto_tenant_')) {
+      return { ...rest, grantee: 'logto_tenant' };
+    }
+
+    return { grantee, ...rest };
+  };
+
+  // Ditto.
+  const normalizeRoles = ({ roles: raw, ...rest }) => {
+    const roles = raw.slice(1, -1).split(',').map((name) => name.startsWith('logto_tenant_') ? 'logto_tenant' : name);
+
+    return { roles, ...rest };
+  };
 
   // Omit generated ids and values
   return {
@@ -100,6 +129,9 @@ const queryDatabaseManifest = async (database) => {
     indexes,
     funcs,
     triggers: omitArray(triggers, 'trigger_catalog', 'event_object_catalog'),
+    policies: policies.map(normalizeRoles),
+    columnGrants: omitArray(columnGrants, 'table_catalog').map(normalizeGrantee),
+    tableGrants: omitArray(tableGrants, 'table_catalog').map(normalizeGrantee),
   };
 };
 

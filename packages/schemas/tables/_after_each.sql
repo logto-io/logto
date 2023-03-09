@@ -6,5 +6,8 @@ create trigger set_tenant_id before insert on ${name}
 alter table ${name} enable row level security;
 
 create policy ${name}_tenant_id on ${name}
-  to logto_tenant_${database}
+  as restrictive
   using (tenant_id = (select id from tenants where db_user = current_user));
+
+create policy ${name}_modification on ${name}
+  using (true);
