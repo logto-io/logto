@@ -140,7 +140,7 @@ describe('adminUserRoutes', () => {
 
   it('POST /users', async () => {
     const username = 'MJAtLogto';
-    const password = 'PASSWORD';
+    const password = 'PASSWORD1234';
     const name = 'Michael';
     const { primaryEmail, primaryPhone } = mockUser;
 
@@ -171,7 +171,7 @@ describe('adminUserRoutes', () => {
     mockHasUser.mockImplementationOnce(async () => true);
 
     const username = 'MJAtLogto';
-    const password = 'PASSWORD';
+    const password = 'PASSWORD1234';
     const name = 'Michael';
 
     await expect(
