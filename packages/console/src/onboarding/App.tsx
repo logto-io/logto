@@ -6,7 +6,6 @@ import Toast from '@/components/Toast';
 import { getBasename } from '@/consts';
 import AppBoundary from '@/containers/AppBoundary';
 import useSwrOptions from '@/hooks/use-swr-options';
-import Callback from '@/pages/Callback';
 import NotFound from '@/pages/NotFound';
 
 import * as styles from './App.module.scss';
@@ -40,7 +39,6 @@ const App = () => {
           <AppBoundary>
             <Toast />
             <Routes>
-              <Route path="callback" element={<Callback />} />
               <Route index element={<Navigate replace to={welcomePathname} />} />
               <Route path={`/${OnboardingRoute.Onboarding}`} element={<AppContent />}>
                 <Route index element={<Navigate replace to={welcomePathname} />} />
