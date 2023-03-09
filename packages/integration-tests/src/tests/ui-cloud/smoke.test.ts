@@ -119,7 +119,9 @@ describe('smoke testing for cloud', () => {
     // Click the enter ac button
     await expect(page).toClick('div[class$=content] >button');
 
-    // Wait for the next page to load
+    // Try waiting for 500ms before navigate to the admin console
+    await page.waitForTimeout(500);
+
     await expect(page).toMatchElement('div[class$=main] div[class$=title]', {
       text: 'How do you want to get started with Logto?',
     });
