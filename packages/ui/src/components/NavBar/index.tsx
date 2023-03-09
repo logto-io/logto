@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,20 +11,30 @@ import * as styles from './index.module.scss';
 type Props = {
   title?: string;
   type?: 'back' | 'close';
+  onClose?: () => void;
 };
 
-const NavBar = ({ title, type = 'back' }: Props) => {
+const NavBar = ({ title, type = 'back', onClose }: Props) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+
   const isClosable = type === 'close';
 
-  const clickHandler = () => {
+  const clickHandler = useCallback(() => {
+    if (onClose) {
+      onClose();
+
+      return;
+    }
+
     if (isClosable) {
       window.close();
+
+      return;
     }
 
     navigate(-1);
-  };
+  }, [isClosable, navigate, onClose]);
 
   return (
     <div className={styles.navBar}>

@@ -929,6 +929,7 @@ importers:
       react-router-dom: ^6.2.2
       react-string-replace: ^1.0.0
       react-timer-hook: ^3.0.5
+      react-top-loading-bar: ^2.3.1
       stylelint: ^15.0.0
       superstruct: ^0.16.0
       ts-jest: ^29.0.5
@@ -993,6 +994,7 @@ importers:
       react-router-dom: 6.2.2_biqbaboplfbrettd7655fr4n2y
       react-string-replace: 1.0.0
       react-timer-hook: 3.0.5_biqbaboplfbrettd7655fr4n2y
+      react-top-loading-bar: 2.3.1_react@18.2.0
       stylelint: 15.0.0
       superstruct: 0.16.0
       ts-jest: 29.0.5_cdjgginuefokmzmklysahvrmme
@@ -12391,6 +12393,15 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: true
+
+  /react-top-loading-bar/2.3.1_react@18.2.0:
+    resolution: {integrity: sha512-rQk2Nm+TOBrM1C4E3e6KwT65iXyRSgBHjCkr2FNja1S51WaPulRA5nKj/xazuQ3x89wDDdGsrqkqy0RBIfd0xg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16 || ^17 || ^18 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: true
 
   /react-transition-group/2.9.0_biqbaboplfbrettd7655fr4n2y:

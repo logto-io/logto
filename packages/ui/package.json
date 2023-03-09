@@ -74,6 +74,7 @@
     "react-router-dom": "^6.2.2",
     "react-string-replace": "^1.0.0",
     "react-timer-hook": "^3.0.5",
+    "react-top-loading-bar": "^2.3.1",
     "stylelint": "^15.0.0",
     "superstruct": "^0.16.0",
     "ts-jest": "^29.0.5",

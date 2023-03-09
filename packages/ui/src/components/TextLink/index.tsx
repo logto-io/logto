@@ -1,9 +1,13 @@
 import classNames from 'classnames';
+import { useMemo } from 'react';
 import type { ReactNode, AnchorHTMLAttributes } from 'react';
 import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import type { LinkProps } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+
+import { useIframeModal } from '@/containers/IframeModalProvider';
+import usePlatform from '@/hooks/use-platform';
 
 import * as styles from './index.module.scss';
 
@@ -17,6 +21,33 @@ export type Props = AnchorHTMLAttributes<HTMLAnchorElement> & {
 
 const TextLink = ({ className, children, text, icon, type = 'primary', to, ...rest }: Props) => {
   const { t } = useTranslation();
+  const { isMobile } = usePlatform();
+  const { setModalState } = useIframeModal();
+
+  // By default the behavior of opening a new window is not supported in WkWebView, or in android webview.
+  // Hijack the hyperlink props and open the link in an iframe modal instead.
+
+  const hyperLinkProps = useMemo(() => {
+    if (!isMobile) {
+      return rest;
+    }
+
+    const { href, target, onClick, ...others } = rest;
+
+    if (!href || target !== '_blank') {
+      return rest;
+    }
+
+    const title = text && t(text);
+
+    return {
+      onClick: (event: React.MouseEvent<HTMLAnchorElement>) => {
+        setModalState({ href, title: typeof title === 'string' ? title : undefined });
+        onClick?.(event);
+      },
+      ...others,
+    };
+  }, [isMobile, rest, setModalState, t, text]);
 
   if (to) {
     return (
@@ -28,7 +59,11 @@ const TextLink = ({ className, children, text, icon, type = 'primary', to, ...re
   }
 
   return (
-    <a className={classNames(styles.link, styles[type], className)} {...rest} rel="noreferrer">
+    <a
+      className={classNames(styles.link, styles[type], className)}
+      {...hyperLinkProps}
+      rel="noreferrer"
+    >
       {icon}
       {children ?? (text ? t(text) : '')}
     </a>
