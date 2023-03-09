@@ -21,7 +21,7 @@ import type { SocialUserInfo } from '@/types/profile';
 import { socialUserInfoGuard } from '@/types/profile';
 
 import { popupWindow } from '../../utils';
-import type { Action, Row } from '../CardContent';
+import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 import NotSet from '../NotSet';
 import * as styles from './index.module.scss';
@@ -64,9 +64,15 @@ const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
       const logoSrc = theme === AppearanceMode.DarkMode && logoDark ? logoDark : logo;
       const relatedUserDetails = user.identities?.[target]?.details;
       const hasLinked = is(relatedUserDetails, socialUserInfoGuard);
-      const conditionalUnlinkAction: Action[] = hasLinked
-        ? [
-            {
+
+      return {
+        key: target,
+        icon: <ImageWithErrorFallback src={logoSrc} />,
+        label: <UnnamedTrans resource={name} />,
+        value: conditional(hasLinked && relatedUserDetails),
+        renderer: (user) => (user ? <UserInfoCard user={user} avatarSize="small" /> : <NotSet />),
+        action: hasLinked
+          ? {
               name: 'profile.unlink',
               handler: async () => {
                 const [result] = await showConfirm({
@@ -83,44 +89,32 @@ const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
                   onUpdate();
                 }
               },
+            }
+          : {
+              name: 'profile.link',
+              handler: async () => {
+                const authUri = await getSocialAuthorizationUri(id);
+                const callback = new URL(
+                  `${getBasename()}/handle-social`,
+                  window.location.origin
+                ).toString();
+
+                const queries = new URLSearchParams({
+                  redirectTo: authUri,
+                  connectorId: id,
+                  callback,
+                });
+
+                const newWindow = popupWindow(
+                  appendPath(adminTenantEndpoint, `/springboard?${queries.toString()}`).href,
+                  'Link social account with Logto',
+                  600,
+                  640
+                );
+
+                newWindow?.focus();
+              },
             },
-          ]
-        : [];
-
-      return {
-        key: target,
-        icon: <ImageWithErrorFallback src={logoSrc} />,
-        label: <UnnamedTrans resource={name} />,
-        value: conditional(hasLinked && relatedUserDetails),
-        renderer: (user) => (user ? <UserInfoCard user={user} avatarSize="small" /> : <NotSet />),
-        action: [
-          ...conditionalUnlinkAction,
-          {
-            name: hasLinked ? 'profile.change' : 'profile.link',
-            handler: async () => {
-              const authUri = await getSocialAuthorizationUri(id);
-              const callback = new URL(
-                `${getBasename()}/handle-social`,
-                window.location.origin
-              ).toString();
-
-              const queries = new URLSearchParams({
-                redirectTo: authUri,
-                connectorId: id,
-                callback,
-              });
-
-              const newWindow = popupWindow(
-                appendPath(adminTenantEndpoint, `/springboard?${queries.toString()}`).href,
-                'Link social account with Logto',
-                600,
-                640
-              );
-
-              newWindow?.focus();
-            },
-          },
-        ],
       };
     });
   }, [
