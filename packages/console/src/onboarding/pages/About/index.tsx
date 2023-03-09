@@ -43,11 +43,11 @@ const About = () => {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getOnboardingPage(OnboardingPage.SignInExperience));
+    navigate(getOnboardingPage(OnboardingPage.SignInExperience), { replace: true });
   };
 
   const onBack = async () => {
-    navigate(getOnboardingPage(OnboardingPage.Welcome));
+    navigate(getOnboardingPage(OnboardingPage.Welcome), { replace: true });
   };
 
   return (

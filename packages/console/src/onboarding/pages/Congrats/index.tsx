@@ -26,7 +26,7 @@ const Congrats = () => {
 
   const enterAdminConsole = () => {
     void update({ isOnboardingDone: true });
-    navigate(currentTenantId);
+    navigate(currentTenantId, { replace: true });
   };
 
   return (

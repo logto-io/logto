@@ -45,7 +45,7 @@ const Welcome = () => {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getOnboardingPage(OnboardingPage.AboutUser));
+    navigate(getOnboardingPage(OnboardingPage.AboutUser), { replace: true });
   };
 
   return (

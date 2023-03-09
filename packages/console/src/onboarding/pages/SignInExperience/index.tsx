@@ -78,7 +78,7 @@ const SignInExperience = () => {
   });
 
   const handleBack = () => {
-    navigate(getOnboardingPage(OnboardingPage.AboutUser));
+    navigate(getOnboardingPage(OnboardingPage.AboutUser), { replace: true });
   };
 
   const handleSave = async () => {
@@ -88,7 +88,7 @@ const SignInExperience = () => {
 
   const handleNext = async () => {
     await onSubmit();
-    navigate(getOnboardingPage(OnboardingPage.Congrats));
+    navigate(getOnboardingPage(OnboardingPage.Congrats), { replace: true });
   };
 
   return (
