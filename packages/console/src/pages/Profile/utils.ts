@@ -46,13 +46,13 @@ export const popupWindow = (url: string, windowName: string, width: number, heig
 
 export const handleError = async (
   error: unknown,
-  exec?: (errorCode: string, message: string) => Promise<boolean | undefined>
+  exec?: (errorCode: string, message: string, status: number) => Promise<boolean | undefined>
 ) => {
   if (error instanceof HTTPError) {
     const logtoError = await error.response.json<RequestErrorBody>();
     const { code, message } = logtoError;
 
-    const handled = await exec?.(code, message);
+    const handled = await exec?.(code, message, error.response.status);
 
     if (handled) {
       return;

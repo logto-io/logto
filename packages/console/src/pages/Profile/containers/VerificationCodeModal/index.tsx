@@ -89,7 +89,7 @@ const VerificationCodeModal = () => {
         }
 
         // Other verification code errors will be displayed in a popup modal.
-        if (code.startsWith('verification_code.')) {
+        if (code.startsWith('verification_code.') || code === 'user.email_already_in_use') {
           await showModal({
             ModalContent: message,
             type: 'alert',
