@@ -4,5 +4,6 @@
     "**/assets/icons/*.svg": [
       "@parcel/transformer-svg-react"
     ]
-  }
+  },
+  "resolvers": ["parcel-resolver-ignore", "..."]
 }
