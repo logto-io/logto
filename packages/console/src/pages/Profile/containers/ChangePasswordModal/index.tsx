@@ -116,6 +116,7 @@ const ChangePasswordModal = () => {
             <ClearInput />
           </IconButton>
         }
+        size="large"
         onKeyDown={onKeyDown}
       />
       <TextInput
@@ -135,6 +136,7 @@ const ChangePasswordModal = () => {
             <ClearInput />
           </IconButton>
         }
+        size="large"
         onKeyDown={onKeyDown}
       />
       <Checkbox

@@ -16,9 +16,13 @@
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
   padding: 0 _.unit(3);
-  height: 44px;
+  height: 36px;
   background: var(--color-layer-1);
   font: var(--font-body-2);
+
+  &.large {
+    height: 44px;
+  }
 
   &.withIcon {
     display: flex;
