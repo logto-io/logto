@@ -26,6 +26,7 @@ const Congrats = () => {
 
   const enterAdminConsole = () => {
     void update({ isOnboardingDone: true });
+    // Note: navigate to the admin console page directly instead of using the router
     navigate(currentTenantId, { replace: true });
   };
 
