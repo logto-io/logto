@@ -16,14 +16,14 @@ const translation = {
     sign_in: 'Connexion',
     continue: 'Continuer',
     create_account: 'Créer un compte',
-    create_account_without_linking: 'Créer un compte sans lier', 
+    create_account_without_linking: 'Créer un compte sans lier',
     create: 'Créer',
     enter_passcode: 'Entrer le code',
     confirm: 'Confirmer',
     cancel: 'Annuler',
     save_password: 'Enregistrer le mot de passe',
     bind: 'Lier avec {{address}}',
-    bind_and_continue: 'Lier et continuer', 
+    bind_and_continue: 'Lier et continuer',
     back: 'Aller en arrière',
     nav_back: 'Retour',
     agree: 'Accepter',
@@ -31,13 +31,13 @@ const translation = {
     sign_in_with: 'Continuer avec {{name}}',
     forgot_password: 'Mot de passe oublié?',
     switch_to: 'Passer au {{method}}',
-    sign_in_via_passcode: 'Se connecter avec le code de vérification', 
-    sign_in_via_password: 'Se connecter avec le mot de passe', 
-    change: 'Changer {{method}}', 
-    link_another_email: 'Lier une autre adresse e-mail', 
-    link_another_phone: 'Lier un autre numéro de téléphone', 
-    link_another_email_or_phone: 'Lier une autre adresse e-mail ou un autre numéro de téléphone', 
-    show_password: 'Afficher le mot de passe', 
+    sign_in_via_passcode: 'Se connecter avec le code de vérification',
+    sign_in_via_password: 'Se connecter avec le mot de passe',
+    change: 'Changer {{method}}',
+    link_another_email: 'Lier une autre adresse e-mail',
+    link_another_phone: 'Lier un autre numéro de téléphone',
+    link_another_email_or_phone: 'Lier une autre adresse e-mail ou un autre numéro de téléphone',
+    show_password: 'Afficher le mot de passe',
   },
   description: {
     email: 'email',
@@ -59,20 +59,20 @@ const translation = {
     resend_passcode: 'Renvoyer le code',
     create_account_id_exists:
       'Le compte avec {{type}} {{value}} existe déjà, voulez-vous vous connecter?',
-    link_account_id_exists:
-      'Le compte avec {{type}} {{value}} existe déjà, voulez-vous le lier?', 
+    link_account_id_exists: 'Le compte avec {{type}} {{value}} existe déjà, voulez-vous le lier?',
     sign_in_id_does_not_exist:
       "Le compte avec {{type}} {{value}} n'existe pas, voulez-vous créer un nouveau compte?",
-    sign_in_id_does_not_exist_alert: 'Nous ne trouvons aucun compte associé à {{type}} {{value}}.', 
+    sign_in_id_does_not_exist_alert: 'Nous ne trouvons aucun compte associé à {{type}} {{value}}.',
     create_account_id_exists_alert:
-      'Le compte avec {{type}} {{value}} est lié à un autre compte. Veuillez essayer un autre {{type}}.', 
+      'Le compte avec {{type}} {{value}} est lié à un autre compte. Veuillez essayer un autre {{type}}.',
     social_identity_exist:
       'Le {{type}} {{value}} est lié à un autre compte. Veuillez essayer un autre {{type}}.',
-    bind_account_title: 'Lier ou créer un compte', 
+    bind_account_title: 'Lier ou créer un compte',
     social_create_account: 'Vous pouvez créer un nouveau compte',
-    social_link_email: 'Vous pouvez lier une autre adresse e-mail', 
+    social_link_email: 'Vous pouvez lier une autre adresse e-mail',
     social_link_phone: 'Vous pouvez lier un autre numéro de téléphone',
-    social_link_email_or_phone: 'Vous pouvez lier une autre adresse e-mail ou un autre numéro de téléphone', 
+    social_link_email_or_phone:
+      'Vous pouvez lier une autre adresse e-mail ou un autre numéro de téléphone',
     social_bind_with_existing:
       'Nous avons trouvé une {{method}} connexe qui a été enregistrée, et vous pouvez la lier directement.',
     reset_password: 'Mot de passe oublié',
@@ -81,22 +81,25 @@ const translation = {
     new_password: 'Nouveau mot de passe',
     set_password: 'Définir un mot de passe',
     password_changed: 'Mot de passe modifié',
-    no_account: 'Pas encore de compte? ', 
-    have_account: 'Déjà un compte?', 
+    no_account: 'Pas encore de compte? ',
+    have_account: 'Déjà un compte?',
     enter_password: 'Entrer le mot de passe',
-    enter_password_for: 'Connectez-vous avec le mot de passe pour {{method}} {{value}}', 
+    enter_password_for: 'Connectez-vous avec le mot de passe pour {{method}} {{value}}',
     enter_username: "Définir un nom d'utilisateur",
     enter_username_description:
       "Le nom d'utilisateur est une alternative pour la connexion. Le nom d'utilisateur doit contenir uniquement des lettres, des chiffres et des underscores.", // UNTRANSLATED
-    link_email: "Lier l'adresse e-mail", 
+    link_email: "Lier l'adresse e-mail",
     link_phone: 'Lier le numéro de téléphone',
-    link_email_or_phone: "Lier l'adresse e-mail ou le numéro de téléphone", 
-    link_email_description: 'Pour une sécurité accrue, veuillez lier votre adresse e-mail au compte.', 
-    link_phone_description: 'Pour une sécurité accrue, veuillez lier votre numéro de téléphone au compte.', 
+    link_email_or_phone: "Lier l'adresse e-mail ou le numéro de téléphone",
+    link_email_description:
+      'Pour une sécurité accrue, veuillez lier votre adresse e-mail au compte.',
+    link_phone_description:
+      'Pour une sécurité accrue, veuillez lier votre numéro de téléphone au compte.',
     link_email_or_phone_description:
-      'Pour une sécurité accrue, veuillez lier votre adresse e-mail ou votre numéro de téléphone au compte.', 
-    continue_with_more_information: 'Pour une sécurité accrue, veuillez compléter les détails du compte ci-dessous.', 
-    create_your_account: 'Créer votre compte', 
+      'Pour une sécurité accrue, veuillez lier votre adresse e-mail ou votre numéro de téléphone au compte.',
+    continue_with_more_information:
+      'Pour une sécurité accrue, veuillez compléter les détails du compte ci-dessous.',
+    create_your_account: 'Créer votre compte',
     welcome_to_sign_in: 'Bienvenue pour vous connecter',
   },
   error: {
@@ -114,7 +117,7 @@ const translation = {
     password_min_length: 'Le mot de passe doit comporter un minimum de {{min}} caractères.',
     passwords_do_not_match: 'Les mots de passe ne correspondent pas',
     invalid_password:
-      'Le mot de passe doit contenir au minimum {{min}} caractères et doit inclure une combinaison de lettres, de chiffres et de symboles.', 
+      'Le mot de passe doit contenir au minimum {{min}} caractères et doit inclure une combinaison de lettres, de chiffres et de symboles.',
     invalid_passcode: 'Le code est invalide',
     invalid_connector_auth: "L'autorisation n'est pas valide",
     invalid_connector_request: 'Les données du connecteur ne sont pas valides',
@@ -123,7 +126,7 @@ const translation = {
       'Session non trouvée. Veuillez revenir en arrière et vous connecter à nouveau.',
   },
   demo_app: {
-    notification: "Astuce : Créez d'abord un compte pour tester l'expérience de connexion.", 
+    notification: "Astuce : Créez d'abord un compte pour tester l'expérience de connexion.",
   },
 };
 
