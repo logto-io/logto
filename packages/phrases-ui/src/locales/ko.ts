@@ -57,7 +57,8 @@ const translation = {
     passcode_sent: '비밀번호가 재전송되었어요.',
     resend_after_seconds: '<span>{{seconds}}</span> 초 후에 재전송',
     resend_passcode: '비밀번호 재전송',
-    create_account_id_exists: '{{type}} {{value}} 계정은 다른 계정과 연결되어 있습니다. 다른 {{type}}을(를) 시도해주세요.',
+    create_account_id_exists:
+      '{{type}} {{value}} 계정은 다른 계정과 연결되어 있습니다. 다른 {{type}}을(를) 시도해주세요.',
     link_account_id_exists: '{{type}} {{value}}와/과 연동된 계정이 이미 존재해요. 연동할까요?',
     sign_in_id_does_not_exist: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
     sign_in_id_does_not_exist_alert: '{{type}} {{value}} 계정이 존재하지 않아요.',
@@ -106,8 +107,7 @@ const translation = {
     invalid_phone: '휴대전화번호가 유효하지 않아요.',
     password_min_length: '비밀번호는 최소 {{min}} 자리로 이루어져야 해요.',
     passwords_do_not_match: '비밀번호가 일치하지 않아요.',
-    invalid_password:
-      '비밀번호는 최소 {{min}}자 이상이며 문자, 숫자 및 기호의 조합이 필요합니다.', 
+    invalid_password: '비밀번호는 최소 {{min}}자 이상이며 문자, 숫자 및 기호의 조합이 필요합니다.',
     invalid_passcode: '비밀번호가 유효하지 않아요.',
     invalid_connector_auth: '인증이 유효하지 않아요.',
     invalid_connector_request: '연동 정보가 유효하지 않아요.',
