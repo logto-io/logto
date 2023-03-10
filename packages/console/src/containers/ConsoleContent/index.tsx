@@ -55,6 +55,7 @@ const ConsoleContent = () => {
           <Route path="applications">
             <Route index element={<Applications />} />
             <Route path="create" element={<Applications />} />
+            <Route path=":id/guide" element={<ApplicationDetails />} />
             <Route path=":id" element={<ApplicationDetails />} />
           </Route>
           <Route path="api-resources">
@@ -77,6 +78,7 @@ const ConsoleContent = () => {
             <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
             <Route path=":tab" element={<Connectors />} />
             <Route path=":tab/create/:createType" element={<Connectors />} />
+            <Route path=":tab/guide/:factoryId" element={<Connectors />} />
             <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
           </Route>
           <Route path="users">

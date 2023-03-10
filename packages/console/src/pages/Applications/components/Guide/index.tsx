@@ -4,12 +4,14 @@ import type { Optional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import type { MDXProps } from 'mdx/types';
 import type { LazyExoticComponent } from 'react';
-import { useContext, cloneElement, lazy, Suspense, useEffect, useState } from 'react';
+import { useEffect, useContext, cloneElement, lazy, Suspense, useState } from 'react';
+import Modal from 'react-modal';
 
 import CodeEditor from '@/components/CodeEditor';
 import TextLink from '@/components/TextLink';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
+import * as modalStyles from '@/scss/modal.module.scss';
 import type { SupportedSdk } from '@/types/applications';
 import { applicationTypeAndSdkTypeMappings } from '@/types/applications';
 
@@ -19,9 +21,9 @@ import StepsSkeleton from '../StepsSkeleton';
 import * as styles from './index.module.scss';
 
 type Props = {
-  app: Application;
+  app?: Application;
   isCompact?: boolean;
-  onClose: () => void;
+  onClose: (id: string) => void;
 };
 
 const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Element>> = {
@@ -50,83 +52,93 @@ const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Elemen
 };
 
 const Guide = ({ app, isCompact, onClose }: Props) => {
-  const { id: appId, secret: appSecret, name: appName, type: appType, oidcClientMetadata } = app;
-  const sdks = applicationTypeAndSdkTypeMappings[appType];
-  const [selectedSdk, setSelectedSdk] = useState<Optional<SupportedSdk>>(sdks[0]);
+  const sdks = app && applicationTypeAndSdkTypeMappings[app.type];
+  const [selectedSdk, setSelectedSdk] = useState<Optional<SupportedSdk>>();
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
   const { userEndpoint } = useContext(AppEndpointsContext);
 
-  // Directly close guide if no SDK available
   useEffect(() => {
-    if (!selectedSdk) {
-      onClose();
+    if (sdks?.length) {
+      setSelectedSdk(sdks[0]);
     }
-  }, [onClose, selectedSdk]);
+  }, [sdks]);
 
-  if (!selectedSdk) {
+  if (!app || !sdks || !selectedSdk) {
     return null;
   }
 
+  const { id: appId, secret: appSecret, name: appName, oidcClientMetadata } = app;
   const locale = i18next.language;
   const guideI18nKey = `${selectedSdk}_${locale}`.toLowerCase();
   const GuideComponent = Guides[guideI18nKey] ?? Guides[selectedSdk.toLowerCase()];
 
-  return (
-    <div className={styles.container}>
-      <GuideHeader
-        appName={appName}
-        selectedSdk={selectedSdk}
-        isCompact={isCompact}
-        onClose={onClose}
-      />
-      <div className={styles.content}>
-        {cloneElement(<SdkSelector sdks={sdks} selectedSdk={selectedSdk} />, {
-          className: styles.banner,
-          isCompact,
-          onChange: setSelectedSdk,
-          onToggle: () => {
-            setActiveStepIndex(0);
-          },
-        })}
-        <MDXProvider
-          components={{
-            code: ({ className, children }) => {
-              const [, language] = /language-(\w+)/.exec(className ?? '') ?? [];
+  const closeModal = () => {
+    onClose(appId);
+  };
 
-              return language ? (
-                <CodeEditor isReadonly language={language} value={String(children)} />
-              ) : (
-                <code>{String(children)}</code>
-              );
+  return (
+    <Modal
+      shouldCloseOnEsc
+      isOpen={Boolean(app)}
+      className={modalStyles.fullScreen}
+      onRequestClose={closeModal}
+    >
+      <div className={styles.container}>
+        <GuideHeader
+          appName={appName}
+          selectedSdk={selectedSdk}
+          isCompact={isCompact}
+          onClose={closeModal}
+        />
+        <div className={styles.content}>
+          {cloneElement(<SdkSelector sdks={sdks} selectedSdk={selectedSdk} />, {
+            className: styles.banner,
+            isCompact,
+            onChange: setSelectedSdk,
+            onToggle: () => {
+              setActiveStepIndex(0);
             },
-            a: ({ children, ...props }) => (
-              <TextLink {...props} target="_blank" rel="noopener noreferrer">
-                {children}
-              </TextLink>
-            ),
-            details: DetailsSummary,
-          }}
-        >
-          <Suspense fallback={<StepsSkeleton />}>
-            {GuideComponent && (
-              <GuideComponent
-                appId={appId}
-                appSecret={appSecret}
-                endpoint={userEndpoint}
-                redirectUris={oidcClientMetadata.redirectUris}
-                postLogoutRedirectUris={oidcClientMetadata.postLogoutRedirectUris}
-                activeStepIndex={activeStepIndex}
-                isCompact={isCompact}
-                onNext={(nextIndex: number) => {
-                  setActiveStepIndex(nextIndex);
-                }}
-                onComplete={onClose}
-              />
-            )}
-          </Suspense>
-        </MDXProvider>
+          })}
+          <MDXProvider
+            components={{
+              code: ({ className, children }) => {
+                const [, language] = /language-(\w+)/.exec(className ?? '') ?? [];
+
+                return language ? (
+                  <CodeEditor isReadonly language={language} value={String(children)} />
+                ) : (
+                  <code>{String(children)}</code>
+                );
+              },
+              a: ({ children, ...props }) => (
+                <TextLink {...props} target="_blank" rel="noopener noreferrer">
+                  {children}
+                </TextLink>
+              ),
+              details: DetailsSummary,
+            }}
+          >
+            <Suspense fallback={<StepsSkeleton />}>
+              {GuideComponent && (
+                <GuideComponent
+                  appId={appId}
+                  appSecret={appSecret}
+                  endpoint={userEndpoint}
+                  redirectUris={oidcClientMetadata.redirectUris}
+                  postLogoutRedirectUris={oidcClientMetadata.postLogoutRedirectUris}
+                  activeStepIndex={activeStepIndex}
+                  isCompact={isCompact}
+                  onNext={(nextIndex: number) => {
+                    setActiveStepIndex(nextIndex);
+                  }}
+                  onComplete={closeModal}
+                />
+              )}
+            </Suspense>
+          </MDXProvider>
+        </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

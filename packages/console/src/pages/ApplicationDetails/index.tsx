@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Back from '@/assets/images/back.svg';
@@ -42,6 +42,8 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
 
 const ApplicationDetails = () => {
   const { id } = useParams();
+  const { pathname } = useLocation();
+  const isGuideView = !!id && pathname === `/applications/${id}/guide`;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<ApplicationResponse, RequestError>(
     id && `api/applications/${id}`
@@ -224,6 +226,14 @@ const ApplicationDetails = () => {
         </>
       )}
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
+      {isGuideView && (
+        <Guide
+          app={data}
+          onClose={(id) => {
+            navigate(`/applications/${id}`);
+          }}
+        />
+      )}
     </div>
   );
 };

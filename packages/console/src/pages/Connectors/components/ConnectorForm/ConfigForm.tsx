@@ -20,7 +20,7 @@ type Props = {
   formItems?: ConnectorConfigFormItem[];
   className?: string;
   connectorId: string;
-  connectorType: ConnectorType;
+  connectorType?: ConnectorType;
 };
 
 const ConfigForm = ({

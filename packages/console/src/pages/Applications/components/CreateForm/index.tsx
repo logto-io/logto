@@ -1,7 +1,6 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -16,7 +15,6 @@ import useConfigs from '@/hooks/use-configs';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
-import Guide from '../Guide';
 import TypeDescription from '../TypeDescription';
 import * as styles from './index.module.scss';
 
@@ -27,13 +25,12 @@ type FormData = {
 };
 
 type Props = {
+  isOpen: boolean;
   onClose?: (createdApp?: Application) => void;
 };
 
-const CreateForm = ({ onClose }: Props) => {
+const CreateForm = ({ isOpen, onClose }: Props) => {
   const { updateConfigs } = useConfigs();
-  const [createdApp, setCreatedApp] = useState<Application>();
-  const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
   const {
     handleSubmit,
     control,
@@ -46,10 +43,9 @@ const CreateForm = ({ onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
 
-  const closeModal = () => {
-    setIsGetStartedModalOpen(false);
-    onClose?.(createdApp);
-  };
+  if (!isOpen) {
+    return null;
+  }
 
   const onSubmit = handleSubmit(async (data) => {
     if (isSubmitting) {
@@ -57,83 +53,82 @@ const CreateForm = ({ onClose }: Props) => {
     }
 
     const createdApp = await api.post('api/applications', { json: data }).json<Application>();
-    setCreatedApp(createdApp);
-    setIsGetStartedModalOpen(true);
     void updateConfigs({
       applicationCreated: true,
       ...conditional(
         createdApp.type === ApplicationType.MachineToMachine && { m2mApplicationCreated: true }
       ),
     });
+    onClose?.(createdApp);
   });
 
   return (
-    <ModalLayout
-      title="applications.create"
-      subtitle="applications.subtitle"
-      size="large"
-      footer={
-        <Button
-          isLoading={isSubmitting}
-          htmlType="submit"
-          title="applications.create"
-          size="large"
-          type="primary"
-          onClick={onSubmit}
-        />
-      }
-      onClose={onClose}
+    <Modal
+      shouldCloseOnEsc
+      isOpen={isOpen}
+      className={modalStyles.content}
+      overlayClassName={modalStyles.overlay}
+      onRequestClose={() => {
+        onClose?.();
+      }}
     >
-      <form>
-        <FormField title="applications.select_application_type">
-          <RadioGroup
-            ref={ref}
-            className={styles.radioGroup}
-            name={name}
-            value={value}
-            type="card"
-            onChange={onChange}
-          >
-            {Object.values(ApplicationType).map((value) => (
-              <Radio key={value} value={value}>
-                <TypeDescription
-                  type={value}
-                  title={t(`${applicationTypeI18nKey[value]}.title`)}
-                  subtitle={t(`${applicationTypeI18nKey[value]}.subtitle`)}
-                  description={t(`${applicationTypeI18nKey[value]}.description`)}
-                />
-              </Radio>
-            ))}
-          </RadioGroup>
-          {errors.type?.type === 'required' && (
-            <div className={styles.error}>{t('applications.no_application_type_selected')}</div>
-          )}
-        </FormField>
-        <FormField isRequired title="applications.application_name">
-          <TextInput
-            {...register('name', { required: true })}
-            placeholder={t('applications.application_name_placeholder')}
-            hasError={Boolean(errors.name)}
+      <ModalLayout
+        title="applications.create"
+        subtitle="applications.subtitle"
+        size="large"
+        footer={
+          <Button
+            isLoading={isSubmitting}
+            htmlType="submit"
+            title="applications.create"
+            size="large"
+            type="primary"
+            onClick={onSubmit}
           />
-        </FormField>
-        <FormField title="applications.application_description">
-          <TextInput
-            {...register('description')}
-            placeholder={t('applications.application_description_placeholder')}
-          />
-        </FormField>
-      </form>
-      {createdApp && (
-        <Modal
-          shouldCloseOnEsc
-          isOpen={isGetStartedModalOpen}
-          className={modalStyles.fullScreen}
-          onRequestClose={closeModal}
-        >
-          <Guide app={createdApp} onClose={closeModal} />
-        </Modal>
-      )}
-    </ModalLayout>
+        }
+        onClose={onClose}
+      >
+        <form>
+          <FormField title="applications.select_application_type">
+            <RadioGroup
+              ref={ref}
+              className={styles.radioGroup}
+              name={name}
+              value={value}
+              type="card"
+              onChange={onChange}
+            >
+              {Object.values(ApplicationType).map((value) => (
+                <Radio key={value} value={value}>
+                  <TypeDescription
+                    type={value}
+                    title={t(`${applicationTypeI18nKey[value]}.title`)}
+                    subtitle={t(`${applicationTypeI18nKey[value]}.subtitle`)}
+                    description={t(`${applicationTypeI18nKey[value]}.description`)}
+                  />
+                </Radio>
+              ))}
+            </RadioGroup>
+            {errors.type?.type === 'required' && (
+              <div className={styles.error}>{t('applications.no_application_type_selected')}</div>
+            )}
+          </FormField>
+          <FormField isRequired title="applications.application_name">
+            <TextInput
+              {...register('name', { required: true })}
+              placeholder={t('applications.application_name_placeholder')}
+              hasError={Boolean(errors.name)}
+            />
+          </FormField>
+          <FormField title="applications.application_description">
+            <TextInput
+              {...register('description')}
+              placeholder={t('applications.application_description_placeholder')}
+            />
+          </FormField>
+        </form>
+      </ModalLayout>
+    </Modal>
   );
 };
 
