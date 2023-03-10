@@ -16,12 +16,12 @@ const translation = {
     sign_in: 'Войти',
     continue: 'Продолжить',
     create_account: 'Создать аккаунт',
-    create_account_without_linking: 'Create account without linking', // UNTRANSLATED
+    create_account_without_linking: 'Создать аккаунт без связывания', 
     create: 'Создать',
-    enter_passcode: 'Введите код подтверждения',
+    enter_passcode: 'Введите код подтверждения', 
     confirm: 'Подтвердить',
     cancel: 'Отменить',
-    save_password: 'Сохранить',
+    save_password: 'Сохраните пароль',
     bind: 'Привязать к {{address}}',
     bind_and_continue: 'Привязать и продолжить',
     back: 'Назад',
@@ -62,16 +62,16 @@ const translation = {
     sign_in_id_does_not_exist:
       'Учетная запись для {{value}} не существует, хотите зарегистрироваться?',
     sign_in_id_does_not_exist_alert: 'Учетная запись для {{value}} не существует.',
-    create_account_id_exists_alert: 'Учетная запись для уже существует',
+    create_account_id_exists_alert: 'Аккаунт с {{type}} {{value}} связан с другим аккаунтом. Пожалуйста, попробуйте другой {{type}}.', 
     social_identity_exist:
-      '{{value}} уже связан с другой учетной записью. Пожалуйста, попробуйте другой {{type}}',
+      '{{type}} {{value}} связан с другим аккаунтом. Пожалуйста, попробуйте другой {{type}}.',
     bind_account_title: 'Привязать или создать аккаунт',
-    social_create_account: 'Вы можете создать новый аккаунт и привязать.',
+    social_create_account: 'Вы можете создать новую учетную запись.', 
     social_link_email: 'Вы можете привязать другой адрес электронной почты',
     social_link_phone: 'Вы можете привязать другой номер телефона',
     social_link_email_or_phone: 'Вы можете привязать другой адрес электронной почты или телефон',
-    social_bind_with_existing: 'Мы нашли связанную учетную запись, вы можете связать ее напрямую.',
-    reset_password: 'Сброс пароля',
+    social_bind_with_existing: 'Мы находим зарегистрированную связанную учетную запись, и вы можете связать ее напрямую.', 
+    reset_password: 'Забыли пароль', 
     reset_password_description:
       'Введите {{types, list(type: disjunction;)}} от вашей учетной записи, и мы вышлем вам код для восстановления пароля.',
     new_password: 'Новый пароль',
@@ -81,7 +81,7 @@ const translation = {
     have_account: 'Уже есть аккаунт?',
     enter_password: 'Введите пароль',
     enter_password_for: 'Введите пароль для {{value}}',
-    enter_username: 'Задать имя пользователя',
+    enter_username: 'Установить имя пользователя', 
     enter_username_description:
       'Имя пользователя является альтернативой для входа в систему. Имя пользователя должно содержать только буквы, цифры и символы подчеркивания.',
     link_email: 'Привязать почту',
@@ -95,8 +95,8 @@ const translation = {
       'Для дополнительной безопасности, пожалуйста, привяжите свою электронную почту или номер телефона к учетной записи.',
     continue_with_more_information:
       'Для дополнительной безопасности, пожалуйста, заполните приведенные ниже данные учетной записи.',
-    create_your_account: 'Create your account', // UNTRANSLATED
-    welcome_to_sign_in: 'Welcome to sign in', // UNTRANSLATED
+    create_your_account: 'Создайте свой аккаунт',
+    welcome_to_sign_in: 'Добро пожаловать для входа в систему',
   },
   error: {
     general_required: `Введите {{types, list(type: disjunction;)}}`,
@@ -112,7 +112,7 @@ const translation = {
     password_min_length: 'Пароль должен быть минимум {{min}} символов',
     passwords_do_not_match: 'Пароли не совпадают. Пожалуйста, попробуйте еще раз.',
     invalid_password:
-      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
+      'Пароль должен содержать минимум {{min}} символов, включая буквы, цифры и символы.',
     invalid_passcode: 'Неправильный код подтверждения',
     invalid_connector_auth: 'Авторизация недействительна',
     invalid_connector_request: 'Данные коннектора недействительны.',
@@ -120,7 +120,7 @@ const translation = {
     invalid_session: 'Сессия не найдена. Пожалуйста, войдите снова.',
   },
   demo_app: {
-    notification: 'Tip: Create an account first to test the sign-in experience.', // UNTRANSLATED
+    notification: 'Совет: Создайте аккаунт сначала, чтобы протестировать процесс входа.',
   },
 };
 

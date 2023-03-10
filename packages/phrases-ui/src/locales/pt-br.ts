@@ -16,14 +16,14 @@ const translation = {
     sign_in: 'Entrar',
     continue: 'Continuar',
     create_account: 'Criar conta',
-    create_account_without_linking: 'Create account without linking', // UNTRANSLATED
+    create_account_without_linking: 'Criar conta sem vincular',
     create: 'Criar',
-    enter_passcode: 'Digite o código de verificação',
+    enter_passcode: 'Inserir código de verificação',
     confirm: 'Confirmar',
     cancel: 'Cancelar',
-    save_password: 'Salvar',
+    save_password: 'Salvar senha',
     bind: 'Link com {{address}}',
-    bind_and_continue: 'Link and continue', // UNTRANSLATED
+    bind_and_continue: 'Linkar e continuar',
     back: 'Voltar',
     nav_back: 'Voltar',
     agree: 'Aceito',
@@ -31,13 +31,13 @@ const translation = {
     sign_in_with: 'Continuar com {{name}}',
     forgot_password: 'Esqueceu sua senha?',
     switch_to: 'Trocar para {{method}}',
-    sign_in_via_passcode: 'Entrar com código de verificação',
-    sign_in_via_password: 'Entrar com senha',
-    change: 'Change {{change}}', // UNTRANSLATED
-    link_another_email: 'Link another email', // UNTRANSLATED
-    link_another_phone: 'Link another phone', // UNTRANSLATED
-    link_another_email_or_phone: 'Link another email or phone', // UNTRANSLATED
-    show_password: 'Show password', // UNTRANSLATED
+    sign_in_via_passcode: 'Fazer login com código de verificação',
+    sign_in_via_password: 'Fazer login com senha',
+    change: 'Alterar {{change}}',
+    link_another_email: 'Vincular outro e-mail',
+    link_another_phone: 'Vincular outro telefone',
+    link_another_email_or_phone: 'Vincular outro e-mail ou telefone',
+    show_password: 'Mostrar senha',
   },
   description: {
     email: 'e-mail',
@@ -59,21 +59,21 @@ const translation = {
     resend_passcode: 'Reenviar código de verificação',
     create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de entrar?',
     link_account_id_exists:
-      'The account with {{type}} {{value}} already exists, would you like to link?', // UNTRANSLATED
+      'A conta com {{type}} {{value}} já existe, gostaria de vincular?',
     sign_in_id_does_not_exist:
       'A conta com {{type}} {{value}} não existe, gostaria de criar uma nova conta?',
     sign_in_id_does_not_exist_alert: 'A conta com {{type}} {{value}} não existe.',
-    create_account_id_exists_alert: 'A conta com {{type}} {{value}} já existe',
+    create_account_id_exists_alert: 'A conta com {{type}} {{value}} está vinculada a outra conta. Por favor, tente outro {{type}}.',
     social_identity_exist:
-      'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
-    bind_account_title: 'Link or create account', // UNTRANSLATED
-    social_create_account: 'Sem conta? Você pode criar uma nova conta e link.',
-    social_link_email: 'You can link another email', // UNTRANSLATED
-    social_link_phone: 'You can link another phone', // UNTRANSLATED
-    social_link_email_or_phone: 'You can link another email or phone', // UNTRANSLATED
+      'O {{type}} {{value}} está vinculado a outra conta. Por favor, tente outro {{type}}.',
+    bind_account_title: 'Vincular ou criar conta',
+    social_create_account: 'Você pode criar uma nova conta.',
+    social_link_email: 'É possível vincular outro e-mail',
+    social_link_phone: 'É possível vincular outro telefone',
+    social_link_email_or_phone: 'É possível vincular outro e-mail ou telefone',
     social_bind_with_existing:
-      'Encontramos uma conta relacionada, você pode vinculá-la diretamente.',
-    reset_password: 'Redefinir senha',
+      'Encontramos uma conta relacionada registrada e você pode vinculá-la diretamente.',
+    reset_password: 'Esqueceu a senha',
     reset_password_description:
       'Digite o {{types, list(type: disjunction;)}} à sua conta e enviaremos a você o código de verificação para redefinir sua senha.',
     new_password: 'Nova senha',
@@ -83,19 +83,19 @@ const translation = {
     have_account: 'Já tinha uma conta?',
     enter_password: 'Digite a senha',
     enter_password_for: 'Entre com a senha para {{method}} {{value}}',
-    enter_username: 'Insira nome de usuário',
+    enter_username: 'Definir nome de usuário',
     enter_username_description:
-      'O nome de usuário é uma alternativa para entrar. O nome de usuário deve conter apenas letras, números e sublinhados.',
-    link_email: 'Link e-mail',
-    link_phone: 'Link telefone',
-    link_email_or_phone: 'Link e-mail ou telefone',
+      'O nome de usuário é uma alternativa para fazer login. O nome de usuário deve conter apenas letras, números e sublinhados.',
+    link_email: 'Linkar e-mail',
+    link_phone: 'Linkar telefone',
+    link_email_or_phone: 'Linkar e-mail ou telefone',
     link_email_description: 'Para maior segurança, vincule seu e-mail à conta.',
     link_phone_description: 'Para maior segurança, vincule seu telefone à conta.',
     link_email_or_phone_description:
       'Para maior segurança, vincule seu e-mail ou telefone à conta.',
     continue_with_more_information: 'Para maior segurança, preencha os detalhes da conta abaixo.',
-    create_your_account: 'Create your account', // UNTRANSLATED
-    welcome_to_sign_in: 'Welcome to sign in', // UNTRANSLATED
+    create_your_account: 'Crie sua conta',
+    welcome_to_sign_in: 'Bem-vindo(a) para entrar',
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} é obrigatório`,
@@ -111,7 +111,7 @@ const translation = {
     password_min_length: 'A senha requer um mínimo de {{min}} caracteres',
     passwords_do_not_match: 'Suas senhas não correspondem. Por favor, tente novamente.',
     invalid_password:
-      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
+      'A senha requer um mínimo de {{min}} caracteres e contém uma mistura de letras, números e símbolos.',
     invalid_passcode: 'O código de verificação é inválido',
     invalid_connector_auth: 'A autorização é inválida',
     invalid_connector_request: 'Os dados do conector são inválidos',
@@ -119,7 +119,7 @@ const translation = {
     invalid_session: 'Sessão não encontrada. Volte e faça login novamente.',
   },
   demo_app: {
-    notification: 'Tip: Create an account first to test the sign-in experience.', // UNTRANSLATED
+    notification: 'Dica: Crie uma conta primeiro para testar a experiência de login.',
   },
 };
 
