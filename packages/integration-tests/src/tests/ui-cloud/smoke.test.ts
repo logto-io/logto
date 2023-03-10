@@ -68,6 +68,66 @@ describe('smoke testing for cloud', () => {
     expect(page.url()).toBe(new URL(`/${tenantId ?? ''}/onboarding/welcome`, logtoCloudUrl).href);
   });
 
+  it('can complete the onboarding welcome process and enter the user survey page', async () => {
+    // Select the project type option
+    await expect(page).toClick('div[role=radio]:has(input[name=project][value=personal])');
+
+    // Select the deployment type option
+    await expect(page).toClick(
+      'div[role=radio]:has(input[name=deploymentType][value=open-source])'
+    );
+
+    // Click the next button
+    await expect(page).toClick('div[class$=actions] button:first-child');
+
+    // Wait for the next page to load
+    await expect(page).toMatchElement('div[class$=content] div[class$=title]', {
+      text: 'A little bit about you',
+    });
+
+    expect(new URL(page.url()).pathname.endsWith('/onboarding/about-user')).toBeTruthy();
+  });
+
+  it('can complete the onboarding user survey process and enter the sie page', async () => {
+    // Select the reason option
+    await expect(page).toClick('div[class$=option]', { text: 'Others' });
+
+    // Click the next button
+    await expect(page).toClick('div[class$=actions] button:first-child');
+
+    // Wait for the next page to load
+    await expect(page).toMatchElement('div[class$=config] div[class$=title]', {
+      text: 'Let’s first customize your experience with ease',
+    });
+
+    expect(new URL(page.url()).pathname.endsWith('/onboarding/sign-in-experience')).toBeTruthy();
+  });
+
+  it('can complete the sie configuration process and enter the congrats page', async () => {
+    // Click the finish button
+    await expect(page).toClick('div[class$=continueActions] button:last-child');
+
+    // Wait for the next page to load
+    await expect(page).toMatchElement('div[class$=content] div[class$=title]', {
+      text: 'Great news! You are qualified to earn Logto Cloud early credit!',
+    });
+
+    expect(new URL(page.url()).pathname.endsWith('/onboarding/congrats')).toBeTruthy();
+  });
+
+  it('can complete the onboarding process and enter the admin console', async () => {
+    // Click the enter ac button
+    await expect(page).toClick('div[class$=content] >button');
+
+    // Wait for the admin console to load
+    const mainContent = await page.waitForSelector('div[class$=main]:has(div[class$=title])');
+    await expect(mainContent).toMatchElement('div[class$=title]', {
+      text: 'How do you want to get started with Logto?',
+    });
+
+    expect(new URL(page.url()).pathname.endsWith('/get-started')).toBeTruthy();
+  });
+
   it('can sign out of admin console', async () => {
     await expect(page).toClick('div[class$=topbar] > div[class$=container]');
 

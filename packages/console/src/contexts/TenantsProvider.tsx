@@ -3,6 +3,7 @@ import { defaultManagementApi } from '@logto/schemas';
 import { conditional, noop } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
+import type { NavigateOptions } from 'react-router-dom';
 
 import { isCloud } from '@/consts/cloud';
 import { getUserTenantId } from '@/consts/tenants';
@@ -17,7 +18,7 @@ export type Tenants = {
   setTenants: (tenants: TenantInfo[]) => void;
   setIsSettle: (isSettle: boolean) => void;
   currentTenantId: string;
-  navigate: (tenantId: string) => void;
+  navigate: (tenantId: string, options?: NavigateOptions) => void;
 };
 
 const { tenantId, indicator } = defaultManagementApi.resource;
@@ -37,8 +38,13 @@ const TenantsProvider = ({ children }: Props) => {
   const [isSettle, setIsSettle] = useState(false);
   const [currentTenantId, setCurrentTenantId] = useState(getUserTenantId());
 
-  const navigate = useCallback((tenantId: string) => {
-    window.history.pushState({}, '', '/' + tenantId);
+  const navigate = useCallback((tenantId: string, options?: NavigateOptions) => {
+    if (options?.replace) {
+      window.history.replaceState(options.state ?? {}, '', '/' + tenantId);
+
+      return;
+    }
+    window.history.pushState(options?.state ?? {}, '', '/' + tenantId);
     setCurrentTenantId(tenantId);
   }, []);
 

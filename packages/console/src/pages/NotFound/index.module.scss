@@ -2,6 +2,11 @@
 
 .container {
   height: 100%;
+  padding: _.unit(6);
+}
+
+.content {
+  height: 100%;
   color: var(--color-text);
   text-align: center;
   overflow: hidden;

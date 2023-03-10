@@ -1,5 +1,4 @@
 @use '@/scss/underscore' as _;
-@use './cloud-page-size.scss' as size;
 
 .page {
   height: 100%;
@@ -16,7 +15,7 @@
 
 .content {
   margin: 0 auto;
-  max-width: size.$questionnaire-content-width;
+  max-width: 858px;
   border-radius: 16px;
   padding: _.unit(12);
   background-color: var(--color-layer-1);

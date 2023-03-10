@@ -1,8 +1,8 @@
 import type { SignInExperience } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 
-import type { OnboardingSieConfig } from '@/cloud/types';
-import { Authentication } from '@/cloud/types';
+import type { OnboardingSieConfig } from '@/onboarding/types';
+import { Authentication } from '@/onboarding/types';
 
 const signInExperienceToOnboardSieConfig = (
   signInExperience: SignInExperience

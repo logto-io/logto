@@ -5,17 +5,17 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import Congrats from '@/assets/images/congrats.svg';
-import ActionBar from '@/cloud/components/ActionBar';
-import { CardSelector } from '@/cloud/components/CardSelector';
-import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
-import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
+import ActionBar from '@/onboarding/components/ActionBar';
+import { CardSelector } from '@/onboarding/components/CardSelector';
+import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
+import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 
 import type { Questionnaire } from '../../types';
 import { OnboardingPage } from '../../types';
-import { getOnboardPagePathname } from '../../utils';
+import { getOnboardingPage } from '../../utils';
 import * as styles from './index.module.scss';
 import { deploymentTypeOptions, projectOptions } from './options';
 
@@ -45,7 +45,7 @@ const Welcome = () => {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getOnboardPagePathname(OnboardingPage.AboutUser));
+    navigate(getOnboardingPage(OnboardingPage.AboutUser), { replace: true });
   };
 
   return (

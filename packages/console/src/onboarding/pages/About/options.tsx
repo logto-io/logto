@@ -1,4 +1,4 @@
-import type { Option as SelectorOption } from '@/cloud/components/CardSelector';
+import type { Option as SelectorOption } from '@/onboarding/components/CardSelector';
 
 import { CompanySize, Reason, Title } from '../../types';
 

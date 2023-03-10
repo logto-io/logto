@@ -18,10 +18,10 @@ import initI18n from '@/i18n/init';
 import { adminTenantEndpoint } from './consts';
 import { isCloud } from './consts/cloud';
 import ErrorBoundary from './containers/ErrorBoundary';
+import TenantAppContainer from './containers/TenantAppContainer';
 import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppEndpointsProvider from './contexts/AppEndpointsProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
-import Main from './pages/Main';
 
 void initI18n();
 
@@ -39,6 +39,7 @@ const Content = () => {
       meApi.indicator
     )
   );
+
   const scopes = [
     UserScope.Email,
     UserScope.Identities,
@@ -63,7 +64,7 @@ const Content = () => {
         {!isCloud || isSettle ? (
           <AppEndpointsProvider>
             <AppConfirmModalProvider>
-              <Main />
+              <TenantAppContainer />
             </AppConfirmModalProvider>
           </AppEndpointsProvider>
         ) : (
@@ -81,4 +82,5 @@ const App = () => {
     </TenantsProvider>
   );
 };
+
 export default App;

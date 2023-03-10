@@ -5,18 +5,18 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import Case from '@/assets/images/case.svg';
-import useUserOnboardingData from '@/cloud/hooks/use-user-onboarding-data';
-import * as pageLayout from '@/cloud/scss/layout.module.scss';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import TextInput from '@/components/TextInput';
+import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
+import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 
 import ActionBar from '../../components/ActionBar';
 import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
 import { OnboardingPage } from '../../types';
-import { getOnboardPagePathname } from '../../utils';
+import { getOnboardingPage } from '../../utils';
 import * as styles from './index.module.scss';
 import { titleOptions, companySizeOptions, reasonOptions } from './options';
 
@@ -43,11 +43,11 @@ const About = () => {
 
   const onNext = async () => {
     await onSubmit();
-    navigate(getOnboardPagePathname(OnboardingPage.SignInExperience));
+    navigate(getOnboardingPage(OnboardingPage.SignInExperience), { replace: true });
   };
 
   const onBack = async () => {
-    navigate(getOnboardPagePathname(OnboardingPage.Welcome));
+    navigate(getOnboardingPage(OnboardingPage.Welcome), { replace: true });
   };
 
   return (
