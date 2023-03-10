@@ -1,24 +1,19 @@
 @use '@/scss/underscore' as _;
 
-.wrapper {
-  @include _.full-page;
+.container {
+  flex: 1;
   @include _.flex-column;
+  @include _.full-width;
+}
 
-  .container {
-    flex: 1;
-    @include _.flex-column;
-    @include _.full-width;
-  }
+.title {
+  margin-top: _.unit(8);
+  text-align: center;
+}
 
-  .title {
-    margin-top: _.unit(8);
-    text-align: center;
-  }
-
-  .message {
-    @include _.text-hint;
-    text-align: center;
-  }
+.message {
+  @include _.text-hint;
+  text-align: center;
 }
 
 

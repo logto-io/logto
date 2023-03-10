@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
-import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import { passwordIdentifierStateGuard } from '@/types/guard';
 import { identifierInputDescriptionMap } from '@/utils/form';
@@ -47,7 +47,7 @@ const ForgotPassword = () => {
   const defaultValue = (identifierState?.identifier === defaultType && identifierState.value) || '';
 
   return (
-    <SecondaryPageWrapper
+    <SecondaryPageLayout
       title="description.reset_password"
       description="description.reset_password_description"
       descriptionProps={{
@@ -60,7 +60,7 @@ const ForgotPassword = () => {
         defaultValue={defaultValue}
         enabledTypes={enabledMethods}
       />
-    </SecondaryPageWrapper>
+    </SecondaryPageLayout>
   );
 };
 

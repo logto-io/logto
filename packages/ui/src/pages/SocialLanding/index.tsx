@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
+import StaticPageLayout from '@/Layout/StaticPageLayout';
 import SocialLandingContainer from '@/containers/SocialLanding';
 import useSocialLandingHandler from '@/hooks/use-social-landing-handler';
 
@@ -27,13 +28,13 @@ const SocialLanding = () => {
   }
 
   return (
-    <div className={styles.wrapper}>
+    <StaticPageLayout>
       <SocialLandingContainer
         className={styles.connectorContainer}
         connectorId={connectorId}
         isLoading={loading}
       />
-    </div>
+    </StaticPageLayout>
   );
 };
 

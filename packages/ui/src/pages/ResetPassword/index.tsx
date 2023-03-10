@@ -1,4 +1,4 @@
-import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SetPassword from '@/containers/SetPassword';
 import { passwordMinLength } from '@/utils/form';
 
@@ -8,7 +8,7 @@ const ResetPassword = () => {
   const { resetPassword, errorMessage, clearErrorMessage } = useResetPassword();
 
   return (
-    <SecondaryPageWrapper
+    <SecondaryPageLayout
       title="description.new_password"
       description="error.invalid_password"
       descriptionProps={{ min: passwordMinLength }}
@@ -19,7 +19,7 @@ const ResetPassword = () => {
         clearErrorMessage={clearErrorMessage}
         onSubmit={resetPassword}
       />
-    </SecondaryPageWrapper>
+    </SecondaryPageLayout>
   );
 };
 

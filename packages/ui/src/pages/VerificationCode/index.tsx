@@ -2,7 +2,7 @@ import { t } from 'i18next';
 import { useParams, useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
-import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import VerificationCodeContainer from '@/containers/VerificationCode';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
@@ -40,7 +40,7 @@ const VerificationCode = () => {
   }
 
   return (
-    <SecondaryPageWrapper
+    <SecondaryPageLayout
       title="action.enter_passcode"
       description="description.enter_passcode"
       descriptionProps={{
@@ -54,7 +54,7 @@ const VerificationCode = () => {
         target={value}
         hasPasswordButton={useFlow === UserFlow.signIn && methodSettings?.password}
       />
-    </SecondaryPageWrapper>
+    </SecondaryPageLayout>
   );
 };
 

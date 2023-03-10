@@ -1,6 +1,7 @@
 import { conditional } from '@silverhand/essentials';
 import { useEffect, useContext, useState } from 'react';
 
+import StaticPageLayout from '@/Layout/StaticPageLayout';
 import { consent } from '@/apis/consent';
 import { LoadingIcon } from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
@@ -41,10 +42,10 @@ const Consent = () => {
   }, [asyncConsent, handleError]);
 
   return (
-    <div className={styles.wrapper}>
-      {brandingLogo && <img alt="logo" src={brandingLogo} />}
+    <StaticPageLayout>
+      {brandingLogo && <img alt="logo" className={styles.img} src={brandingLogo} />}
       {loading && <LoadingIcon />}
-    </div>
+    </StaticPageLayout>
   );
 };
 

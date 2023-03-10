@@ -7,7 +7,7 @@ import BrandingHeader from '@/components/BrandingHeader';
 import { PageContext } from '@/hooks/use-page-context';
 import { getBrandingLogoUrl } from '@/utils/logo';
 
-import AppNotification from '../AppNotification';
+import AppNotification from '../../containers/AppNotification';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
   title?: TFuncKey;
 };
 
-const LandingPageContainer = ({ children, className, title }: Props) => {
+const LandingPageLayout = ({ children, className, title }: Props) => {
   const { experienceSettings, theme, platform } = useContext(PageContext);
 
   if (!experienceSettings) {
@@ -45,4 +45,4 @@ const LandingPageContainer = ({ children, className, title }: Props) => {
   );
 };
 
-export default LandingPageContainer;
+export default LandingPageLayout;

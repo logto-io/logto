@@ -2,7 +2,7 @@ import type { MissingProfile } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'react-i18next';
 
-import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
@@ -69,7 +69,7 @@ const SetEmailOrPhone = ({ missingProfile, notification }: Props) => {
   };
 
   return (
-    <SecondaryPageWrapper {...pageContent[missingProfile]} notification={notification}>
+    <SecondaryPageLayout {...pageContent[missingProfile]} notification={notification}>
       <IdentifierProfileForm
         autoFocus
         errorMessage={errorMessage}
@@ -78,7 +78,7 @@ const SetEmailOrPhone = ({ missingProfile, notification }: Props) => {
         onSubmit={handleSubmit}
       />
       <SocialIdentityNotification missingProfileTypes={formSettings[missingProfile].enabledTypes} />
-    </SecondaryPageWrapper>
+    </SecondaryPageLayout>
   );
 };
 

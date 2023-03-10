@@ -7,7 +7,7 @@ import { parseHtmlTitle } from '@/utils/sign-in-experience';
 
 import * as styles from './index.module.scss';
 
-const AppContent = () => {
+const AppLayout = () => {
   const { isMobile } = usePlatform();
   const location = useLocation();
 
@@ -25,7 +25,7 @@ const AppContent = () => {
     <div className={styles.viewBox}>
       <div className={styles.container}>
         <div className={styles.placeHolder} />
-        <main className={styles.main}>
+        <main id="main-form" className={styles.main}>
           <Outlet />
           {isMobile && <LogtoSignature />}
         </main>
@@ -36,4 +36,4 @@ const AppContent = () => {
   );
 };
 
-export default AppContent;
+export default AppLayout;

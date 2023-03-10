@@ -1,13 +1,13 @@
 import { conditionalString } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
-import { useCallback, useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
-import Toast from '@/components/Toast';
 import useColorTheme from '@/hooks/use-color-theme';
 import { PageContext } from '@/hooks/use-page-context';
 import useTheme from '@/hooks/use-theme';
 
 import ConfirmModalProvider from '../ConfirmModalProvider';
+import ToastProvider from '../ToastProvider';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -18,7 +18,7 @@ const AppBoundary = ({ children }: Props) => {
   // Set Primary Color
   useColorTheme();
   const theme = useTheme();
-  const { platform, toast, setToast } = useContext(PageContext);
+  const { platform } = useContext(PageContext);
 
   // Set Theme Mode
   useEffect(() => {
@@ -32,15 +32,9 @@ const AppBoundary = ({ children }: Props) => {
     document.body.classList.add(platform === 'mobile' ? 'mobile' : 'desktop');
   }, [platform]);
 
-  // Prevent internal eventListener rebind
-  const hideToast = useCallback(() => {
-    setToast('');
-  }, [setToast]);
-
   return (
     <ConfirmModalProvider>
-      <Toast message={toast} callback={hideToast} />
-      {children}
+      <ToastProvider>{children}</ToastProvider>
     </ConfirmModalProvider>
   );
 };
