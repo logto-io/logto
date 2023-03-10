@@ -16,7 +16,7 @@ const translation = {
     sign_in: 'Anmelden',
     continue: 'Weiter',
     create_account: 'Konto erstellen',
-    create_account_without_linking: 'Erstelle ein Konto ohne Verknüpfung', 
+    create_account_without_linking: 'Erstelle ein Konto ohne Verknüpfung',
     create: 'Erstellen',
     enter_passcode: 'Bestätigungscode eingeben',
     confirm: 'Bestätigen',
@@ -64,7 +64,8 @@ const translation = {
     sign_in_id_does_not_exist:
       'Das Konto mit {{type}} {{value}} existiert nicht, möchtest du ein neues Konto erstellen?',
     sign_in_id_does_not_exist_alert: 'Das Konto mit {{type}} {{value}} existiert nicht',
-    create_account_id_exists_alert: 'Das Konto mit {{type}} {{value}} ist mit einem anderen Konto verknüpft. Bitte versuche es mit einem anderen {{type}} erneut',
+    create_account_id_exists_alert:
+      'Das Konto mit {{type}} {{value}} ist mit einem anderen Konto verknüpft. Bitte versuche es mit einem anderen {{type}} erneut',
     social_identity_exist:
       '{{type}} {{value}} ist mit einem anderen Konto verknüpft. Bitte versuche ein(e(n)) andere(n/s) {{type}}',
     bind_account_title: 'Verlinke oder erstelle ein Konto',
@@ -72,7 +73,8 @@ const translation = {
     social_link_email: 'Du kannst eine weitere Email verknüpfen',
     social_link_phone: 'Du kannst eine weitere Telefonnummer verknüpfen',
     social_link_email_or_phone: 'Du kannst eine weitere Email oder Telefonnummer verknüpfen',
-    social_bind_with_existing: 'Wir haben eine verwandte {{method}} gefunden, die bereits registriert wurde, und Sie können sie direkt verknüpfen.',
+    social_bind_with_existing:
+      'Wir haben eine verwandte {{method}} gefunden, die bereits registriert wurde, und Sie können sie direkt verknüpfen.',
     reset_password: 'Passwort vergessen',
     reset_password_description:
       'Gib die {{types, list(type: disjunction;)}} deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
@@ -97,8 +99,8 @@ const translation = {
       'Für zusätzliche Sicherheit, verknüpfe bitte deine Email oder Telefonnummer mit dem Konto.',
     continue_with_more_information:
       'Für zusätzliche Sicherheit, vervollständige bitte deine Informationen.',
-    create_your_account: 'Erstelle dein Konto', 
-    welcome_to_sign_in: 'Willkommen zur Anmeldung', 
+    create_your_account: 'Erstelle dein Konto',
+    welcome_to_sign_in: 'Willkommen zur Anmeldung',
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} ist erforderlich`,
@@ -113,7 +115,7 @@ const translation = {
     password_min_length: 'Passwort muss mindestens {{min}} Zeichen lang sein',
     passwords_do_not_match: 'Passwörter stimmen nicht überein',
     invalid_password:
-      'Passwort erfordert mindestens {{min}} Zeichen und enthält eine Kombination aus Buchstaben, Zahlen und Symbolen.', 
+      'Passwort erfordert mindestens {{min}} Zeichen und enthält eine Kombination aus Buchstaben, Zahlen und Symbolen.',
     invalid_passcode: 'Der Bestätigungscode ist ungültig',
     invalid_connector_auth: 'Die Autorisierung ist ungültig',
     invalid_connector_request: 'Connector Daten sind ungültig',
@@ -121,7 +123,7 @@ const translation = {
     invalid_session: 'Die Sitzung ist ungültig. Bitte melde dich erneut an.',
   },
   demo_app: {
-    notification: 'Tipp: Erstelle zuerst ein Konto, um die Anmeldeerfahrung zu testen.', 
+    notification: 'Tipp: Erstelle zuerst ein Konto, um die Anmeldeerfahrung zu testen.',
   },
 };
 
