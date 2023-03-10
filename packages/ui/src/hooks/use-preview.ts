@@ -3,28 +3,15 @@ import { conditionalString } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 
 import * as styles from '@/Layout/AppLayout/index.module.scss';
-import * as appStyles from '@/Providers/AppBoundary/index.module.scss';
 import type { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';
-import type { SignInExperienceResponse, PreviewConfig, Theme } from '@/types';
-import { parseQueryParameters } from '@/utils';
+import type { SignInExperienceResponse, PreviewConfig } from '@/types';
 import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
-
-const applyTheme = (theme: Theme) => {
-  document.body.classList.remove(
-    conditionalString(appStyles.light),
-    conditionalString(appStyles.dark)
-  );
-  document.body.classList.add(conditionalString(appStyles[theme]));
-};
 
 const usePreview = (context: Context): [boolean, PreviewConfig?] => {
   const [previewConfig, setPreviewConfig] = useState<PreviewConfig>();
-  const { setExperienceSettings, setPlatform } = context;
-
-  const { preview } = parseQueryParameters(window.location.search);
-  const isPreview = preview === 'true';
+  const { isPreview, setExperienceSettings, setPlatform, setTheme } = context;
 
   useEffect(() => {
     if (!isPreview) {
@@ -80,13 +67,13 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     };
 
     (async () => {
-      applyTheme(mode);
+      setTheme(mode);
 
       setPlatform(platform);
 
       setExperienceSettings(experienceSettings);
     })();
-  }, [isPreview, previewConfig, setExperienceSettings, setPlatform]);
+  }, [isPreview, previewConfig, setExperienceSettings, setPlatform, setTheme]);
 
   useEffect(() => {
     if (!isPreview || !previewConfig?.language) {

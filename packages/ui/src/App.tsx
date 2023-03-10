@@ -29,9 +29,10 @@ import './scss/normalized.scss';
 
 const App = () => {
   const { context, Provider } = usePageContext();
-  const { experienceSettings, setLoading, setExperienceSettings } = context;
+  const { isPreview, experienceSettings, setLoading, setExperienceSettings } = context;
   const customCssRef = useRef(document.createElement('style'));
-  const [isPreview] = usePreview(context);
+
+  usePreview(context);
 
   useEffect(() => {
     document.head.append(customCssRef.current);
