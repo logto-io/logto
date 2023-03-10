@@ -112,7 +112,7 @@ const FileUploader = ({ maxSize, allowedMimeTypes, limitDescription, onCompleted
           )}
         </div>
       </div>
-      <div className={classNames(styles.limitDescription, hasError && styles.error)}>
+      <div className={classNames(styles.description, hasError && styles.error)}>
         {hasError ? uploaderError : limitDescription}
       </div>
     </div>
