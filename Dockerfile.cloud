@@ -21,8 +21,8 @@ RUN pnpm i
 # Admin Console build env
 ENV CONSOLE_PUBLIC_URL=/
 ENV IS_CLOUD=1
-# Temporarily use it for Admin Console build, will try to use runtime technique later
-ENV ADMIN_ENDPOINT=https://auth.logto.dev/
+ARG admin_endpoint
+ENV ADMIN_ENDPOINT=${admin_endpoint}
 RUN pnpm prepack
 RUN pnpm -r --filter @logto/console --filter @logto/cloud build
 
