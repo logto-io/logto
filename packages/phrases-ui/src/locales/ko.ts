@@ -16,7 +16,7 @@ const translation = {
     sign_in: '로그인',
     continue: '계속',
     create_account: '계정 생성',
-    create_account_without_linking: 'Create account without linking', // UNTRANSLATED
+    create_account_without_linking: '연동 없이 계정 생성하기',
     create: '생성',
     enter_passcode: '비밀번호 입력',
     confirm: '확인',
@@ -33,7 +33,7 @@ const translation = {
     switch_to: '{{method}}로 전환',
     sign_in_via_passcode: '인증번호로 로그인',
     sign_in_via_password: '비밀번호로 로그인',
-    change: 'Change {{change}}',
+    change: '변경 {{method}}',
     link_another_email: '다른 이메일 연동',
     link_another_phone: '다른 전화번호 연동',
     link_another_email_or_phone: '다른 이메일 또는 전화번호 연동',
@@ -57,7 +57,7 @@ const translation = {
     passcode_sent: '비밀번호가 재전송되었어요.',
     resend_after_seconds: '<span>{{seconds}}</span> 초 후에 재전송',
     resend_passcode: '비밀번호 재전송',
-    create_account_id_exists: '{{type}} {{value}} 계정이 이미 존재해요. 로그인하시겠어요?',
+    create_account_id_exists: '{{type}} {{value}} 계정은 다른 계정과 연결되어 있습니다. 다른 {{type}}을(를) 시도해주세요.',
     link_account_id_exists: '{{type}} {{value}}와/과 연동된 계정이 이미 존재해요. 연동할까요?',
     sign_in_id_does_not_exist: '{type}} {{value}} 계정이 존재하지 않아요. 새로 만드시겠어요?',
     sign_in_id_does_not_exist_alert: '{{type}} {{value}} 계정이 존재하지 않아요.',
@@ -65,14 +65,14 @@ const translation = {
     social_identity_exist:
       '{{type}} {{value}}이/가 다른 계정과 연동되어 있어요. 다른 {{type}}을/를 시도해 보세요.',
     bind_account_title: '계정 만들거나 연동하기',
-    social_create_account: '계정이 없으신가요? 새로운 계정을 만들고 연동해 보세요.',
+    social_create_account: '새로운 계정을 만들 수 있습니다.',
     social_link_email: '다른 이메일을 연동할 수 있어요',
     social_link_phone: '다른 휴대전화를 연동할 수 있어요',
     social_link_email_or_phone: '다른 이메일이나 휴대전화를 연동할 수 있어요',
-    social_bind_with_existing: '관련된 계정을 찾았어요. 해당 계정과 연동할 수 있어요.',
-    reset_password: '암호를 재설정',
+    social_bind_with_existing: '등록된 관련 {{method}}이 있습니다. 직접 연결할 수 있습니다.',
+    reset_password: '비밀번호를 잊으셨나요',
     reset_password_description:
-      'Enter the {{types, list(type: disjunction;)}} associated with your account, and we’ll send you the verification code to reset your password.', // UNTRANSLATED
+      '귀하의 계정과 연결된 {{types, list(type: disjunction;)}}를 입력하면 비밀번호 재설정을 위한 인증 코드를 보내드립니다.',
     new_password: '새 비밀번호',
     set_password: '비밀번호 설정',
     password_changed: '비밀번호 변경됨',
@@ -80,7 +80,7 @@ const translation = {
     have_account: '이미 계정이 있나요?',
     enter_password: '비밀번호 입력',
     enter_password_for: '{{method}} {{value}} 비밀번호 로그인',
-    enter_username: '사용자 이름 입력',
+    enter_username: '사용자 이름 설정하기',
     enter_username_description:
       '사용자 이름은 로그인을 할 때 사용되요. 사용자 이름에는 문자, 숫자 및 밑줄만 포함되어야 해요.',
     link_email: '이메일 연동',
@@ -91,8 +91,8 @@ const translation = {
     link_email_or_phone_description:
       '더 나은 보안을 위해 이메일 또는 휴대전화번호를 연동해 주세요.',
     continue_with_more_information: '더 나은 보안을 위해 아래 자세한 내용을 따라 주세요.',
-    create_your_account: 'Create your account', // UNTRANSLATED
-    welcome_to_sign_in: 'Welcome to sign in', // UNTRANSLATED
+    create_your_account: '계정 생성하기',
+    welcome_to_sign_in: '로그인을 환영합니다',
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} 필수예요.`,
@@ -107,7 +107,7 @@ const translation = {
     password_min_length: '비밀번호는 최소 {{min}} 자리로 이루어져야 해요.',
     passwords_do_not_match: '비밀번호가 일치하지 않아요.',
     invalid_password:
-      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
+      '비밀번호는 최소 {{min}}자 이상이며 문자, 숫자 및 기호의 조합이 필요합니다.', 
     invalid_passcode: '비밀번호가 유효하지 않아요.',
     invalid_connector_auth: '인증이 유효하지 않아요.',
     invalid_connector_request: '연동 정보가 유효하지 않아요.',
@@ -115,7 +115,7 @@ const translation = {
     invalid_session: '세션을 찾을 수 없어요. 다시 로그인해 주세요.',
   },
   demo_app: {
-    notification: 'Tip: Create an account first to test the sign-in experience.', // UNTRANSLATED
+    notification: '알림:로그인 경험을 테스트하기 위해 먼저 계정을 만드는 것이 좋습니다.',
   },
 };
 
