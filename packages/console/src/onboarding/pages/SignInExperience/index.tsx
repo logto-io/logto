@@ -1,30 +1,36 @@
 import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
-import { useEffect, useMemo } from 'react';
+import { SignInIdentifier } from '@logto/schemas';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Bulb from '@/assets/images/bulb.svg';
 import Tools from '@/assets/images/tools.svg';
 import Button from '@/components/Button';
 import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
+import ImageUploader from '@/components/ImageUploader';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
+import TextInput from '@/components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useUserAssetsService from '@/hooks/use-user-assets-service';
 import ActionBar from '@/onboarding/components/ActionBar';
 import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
-import { defaultOnboardingSieConfig } from '@/onboarding/constants';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
-import { OnboardingPage } from '@/onboarding/types';
+import { Authentication, OnboardingPage } from '@/onboarding/types';
 import type { OnboardingSieConfig } from '@/onboarding/types';
 import { getOnboardingPage } from '@/onboarding/utils';
+import { uriValidator } from '@/utils/validator';
 
+import InspireMe from './components/InspireMe';
 import Preview from './components/Preview';
+import SocialSelector from './components/SocialSelector';
 import * as styles from './index.module.scss';
 import { authenticationOptions, identifierOptions } from './options';
+import { defaultOnboardingSieConfig } from './sie-config-templates';
 import { parser } from './utils';
 
 const SignInExperience = () => {
@@ -33,21 +39,35 @@ const SignInExperience = () => {
   const { data: signInExperience, mutate } = useSWR<SignInExperienceType, RequestError>(
     'api/sign-in-exp'
   );
+
   const api = useApi();
+  const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
 
   const {
     reset,
     control,
     watch,
+    register,
     handleSubmit,
-    formState: { isSubmitting, isDirty },
+    getValues,
+    setValue,
+    formState: { isSubmitting, isDirty, errors },
   } = useForm<OnboardingSieConfig>({ defaultValues: defaultOnboardingSieConfig });
+
+  const updateAuthenticationConfig = useCallback(() => {
+    const identifier = getValues('identifier');
+
+    if (identifier === SignInIdentifier.Username) {
+      setValue('authentications', [Authentication.Password]);
+    }
+  }, [getValues, setValue]);
 
   useEffect(() => {
     if (signInExperience) {
       reset(parser.signInExperienceToOnboardSieConfig(signInExperience));
+      updateAuthenticationConfig();
     }
-  }, [reset, signInExperience]);
+  }, [reset, signInExperience, updateAuthenticationConfig]);
 
   const onboardingSieConfig = watch();
 
@@ -57,13 +77,7 @@ const SignInExperience = () => {
     }
   }, [onboardingSieConfig, signInExperience]);
 
-  const handleInspireMe = () => {
-    // TODO @xiaoyijun
-    reset(defaultOnboardingSieConfig);
-    console.log('on inspire me');
-  };
-
-  const onSubmit = handleSubmit(async (formData) => {
+  const submit = (onSuccess: () => void) => async (formData: OnboardingSieConfig) => {
     if (!signInExperience) {
       return;
     }
@@ -75,46 +89,44 @@ const SignInExperience = () => {
       .json<SignInExperienceType>();
 
     void mutate(updatedData);
-  });
 
-  const handleBack = () => {
-    navigate(getOnboardingPage(OnboardingPage.AboutUser), { replace: true });
-  };
-
-  const handleSave = async () => {
-    await onSubmit();
-    toast.success(t('general.saved'));
-  };
-
-  const handleNext = async () => {
-    await onSubmit();
-    navigate(getOnboardingPage(OnboardingPage.Congrats), { replace: true });
+    onSuccess();
   };
 
   return (
     <div className={pageLayout.page}>
-      <div className={styles.content}>
-        <OverlayScrollbar
-          options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 500 } }}
-          className={styles.configWrapper}
-        >
+      <OverlayScrollbar className={pageLayout.contentContainer}>
+        <div className={styles.content}>
           <div className={styles.config}>
             <Tools />
             <div className={styles.title}>{t('cloud.sie.title')}</div>
-            <div className={styles.inspire}>
-              <div className={styles.inspireContent}>
-                <div className={styles.inspireTitle}>{t('cloud.sie.inspire.title')}</div>
-                <div className={styles.inspireDescription}>
-                  {t('cloud.sie.inspire.description')}
-                </div>
-              </div>
-              <Button
-                icon={<Bulb />}
-                title="cloud.sie.inspire.inspire_me"
-                onClick={handleInspireMe}
-              />
-            </div>
-            <FormField title="cloud.sie.logo_field">TBD</FormField>
+            <InspireMe
+              onInspired={(template) => {
+                reset(template);
+                updateAuthenticationConfig();
+              }}
+            />
+            <FormField title="cloud.sie.logo_field">
+              {isUserAssetsServiceReady ? (
+                <Controller
+                  name="logo"
+                  control={control}
+                  render={({ field: { onChange, value, name } }) => (
+                    <ImageUploader name={name} value={value ?? ''} onChange={onChange} />
+                  )}
+                />
+              ) : (
+                <TextInput
+                  size="large"
+                  {...register('logo', {
+                    validate: (value) =>
+                      !value || uriValidator(value) || t('errors.invalid_uri_format'),
+                  })}
+                  hasError={Boolean(errors.logo)}
+                  errorMessage={errors.logo?.message}
+                />
+              )}
+            </FormField>
             <FormField title="cloud.sie.color_field">
               <Controller
                 name="color"
@@ -136,7 +148,10 @@ const SignInExperience = () => {
                     name={name}
                     value={value}
                     options={identifierOptions}
-                    onChange={onChange}
+                    onChange={(value) => {
+                      onChange(value);
+                      updateAuthenticationConfig();
+                    }}
                   />
                 )}
               />
@@ -155,7 +170,11 @@ const SignInExperience = () => {
                     isNotAllowEmpty
                     className={styles.authnSelector}
                     value={value}
-                    options={authenticationOptions}
+                    options={authenticationOptions.filter(
+                      ({ value }) =>
+                        onboardingSieConfig.identifier !== SignInIdentifier.Username ||
+                        value === Authentication.Password
+                    )}
                     onChange={onChange}
                   />
                 )}
@@ -166,16 +185,23 @@ const SignInExperience = () => {
               title="cloud.sie.social_field"
               headlineClassName={styles.cardFieldHeadline}
             >
-              TBD
+              <Controller
+                name="socialTargets"
+                control={control}
+                defaultValue={defaultOnboardingSieConfig.socialTargets}
+                render={({ field: { value, onChange } }) => (
+                  <SocialSelector value={value ?? []} onChange={onChange} />
+                )}
+              />
             </FormField>
           </div>
-        </OverlayScrollbar>
-        <Preview
-          className={styles.preview}
-          signInExperience={previewSieConfig}
-          isLivePreviewDisabled={isDirty}
-        />
-      </div>
+          <Preview
+            className={styles.preview}
+            signInExperience={previewSieConfig}
+            isLivePreviewDisabled={isDirty}
+          />
+        </div>
+      </OverlayScrollbar>
 
       <ActionBar step={3}>
         <div className={styles.continueActions}>
@@ -183,16 +209,34 @@ const SignInExperience = () => {
             type="outline"
             title="general.save"
             disabled={isSubmitting}
-            onClick={handleSave}
+            onClick={async () => {
+              await handleSubmit(
+                submit(() => {
+                  toast.success(t('general.saved'));
+                })
+              )();
+            }}
           />
           <Button
             type="primary"
             title="cloud.sie.finish_and_done"
             disabled={isSubmitting}
-            onClick={handleNext}
+            onClick={async () => {
+              await handleSubmit(
+                submit(() => {
+                  navigate(getOnboardingPage(OnboardingPage.Congrats), { replace: true });
+                })
+              )();
+            }}
           />
         </div>
-        <Button title="general.back" disabled={isSubmitting} onClick={handleBack} />
+        <Button
+          title="general.back"
+          disabled={isSubmitting}
+          onClick={() => {
+            navigate(getOnboardingPage(OnboardingPage.AboutUser), { replace: true });
+          }}
+        />
       </ActionBar>
     </div>
   );

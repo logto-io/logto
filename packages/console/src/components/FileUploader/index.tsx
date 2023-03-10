@@ -1,4 +1,4 @@
-import type { UserAssetsResponse, AllowedUploadMimeType } from '@logto/schemas';
+import type { AllowedUploadMimeType, UserAssets } from '@logto/schemas';
 import { maxUploadFileSize } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useState } from 'react';
@@ -66,9 +66,7 @@ const FileUploader = ({ maxSize, allowedMimeTypes, limitDescription, onCompleted
 
       try {
         setIsUploading(true);
-        const { url } = await api
-          .post('api/user-assets', { body: formData })
-          .json<UserAssetsResponse>();
+        const { url } = await api.post('api/user-assets', { body: formData }).json<UserAssets>();
 
         onCompleted(url);
       } catch {

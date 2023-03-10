@@ -58,6 +58,7 @@ jobs:
     env:
       INTEGRATION_TEST: true
       IS_CLOUD: ${{ contains(matrix.target, 'cloud') && '1' || '0' }}
+      PATH_BASED_MULTI_TENANCY: ${{ contains(matrix.target, 'cloud') && '1' || '0' }}
 
     steps:
       - uses: actions/checkout@v3

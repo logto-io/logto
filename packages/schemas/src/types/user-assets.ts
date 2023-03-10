@@ -24,10 +24,10 @@ export const userAssetsServiceStatusGuard = z.object({
   maxUploadFileSize: z.number().optional(),
 });
 
-export type UserAssetsServiceStatusResponse = z.infer<typeof userAssetsServiceStatusGuard>;
+export type UserAssetsServiceStatus = z.infer<typeof userAssetsServiceStatusGuard>;
 
 export const userAssetsGuard = z.object({
   url: z.string(),
 });
 
-export type UserAssetsResponse = z.infer<typeof userAssetsGuard>;
+export type UserAssets = z.infer<typeof userAssetsGuard>;

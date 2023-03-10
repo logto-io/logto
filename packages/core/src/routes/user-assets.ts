@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises';
 
 import { generateStandardId } from '@logto/core-kit';
-import type { UserAssetsResponse } from '@logto/schemas';
+import type { UserAssets } from '@logto/schemas';
 import {
   userAssetsGuard,
   userAssetsServiceStatusGuard,
@@ -81,7 +81,7 @@ export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: Ro
           publicUrl: storageProviderConfig.publicUrl,
         });
 
-        const result: UserAssetsResponse = {
+        const result: UserAssets = {
           url,
         };
 
