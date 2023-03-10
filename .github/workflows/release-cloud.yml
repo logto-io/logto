@@ -55,8 +55,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args:
-            - admin_endpoint: https://auth.logto.${{ inputs.target == 'cloud' && 'io' || 'dev' }}/
+          build-args: |
+            admin_endpoint=https://auth.logto.${{ inputs.target == 'cloud' && 'io' || 'dev' }}/
 
   deploy:
     runs-on: ubuntu-latest
