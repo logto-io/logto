@@ -37,7 +37,7 @@ services:
     entrypoint: /bin/sh
     command:
       - "-c"
-      - "npm run cli db seed -- --swe && ENDPOINT=$$UFFIZZI_URL npm start"
+      - "npm run cli db seed -- --swe && ADMIN_ENDPOINT=$$UFFIZZI_URL/console ENDPOINT=$$UFFIZZI_URL npm start"
 
   postgres:
     image: postgres:14-alpine
