@@ -23,7 +23,7 @@ const translation = {
     confirm: '确认',
     save_password: '保存密码',
     bind: '绑定到 {{address}}',
-    bind_and_continue: 'Link and continue', // UNTRANSLATED
+    bind_and_continue: '绑定并继续',
     back: '返回',
     nav_back: '返回',
     agree: '同意',
@@ -57,22 +57,19 @@ const translation = {
     passcode_sent: '验证码已经发送',
     resend_after_seconds: '在 <span>{{ seconds }}</span> 秒后重发',
     resend_passcode: '重发验证码',
-    create_account_id_exists: '{{ type }}为 {{ value }} 的帐号已存在，你要登录吗？',
-    link_account_id_exists:
-      'The account with {{type}} {{value}} already exists, would you like to link?', // UNTRANSLATED
-    sign_in_id_does_not_exist: '{{ type }}为 {{ value }} 的帐号不存在，你要创建一个新帐号吗？',
-    sign_in_id_does_not_exist_alert: '{{ type }}为 {{ value }} 的帐号不存在。',
-    create_account_id_exists_alert:
-      '{{ type }}为 {{ value }} 的帐号已绑定其他账号。请尝试其他{{ type }}。',
-    social_identity_exist:
-      'The {{type}} {{value}} is linked to another account. Please try another {{type}}', // UNTRANSLATED
-    bind_account_title: '绑定或创建帐号',
+    create_account_id_exists: '{{type}}为 {{value}} 的帐号已存在，你要登录吗？',
+    link_account_id_exists: ' {{type}}为 {{value}} 的账号已注册，你要绑定至这个账号吗？',
+    sign_in_id_does_not_exist: '{{type}}为 {{value}} 的帐号不存在，你要创建一个新帐号吗？',
+    sign_in_id_does_not_exist_alert: '{{type}}为 {{value}} 的帐号不存在。',
+    create_account_id_exists_alert: '{{type}} {{value}} 已绑定其他账号。请尝试其他{{type}}。',
+    social_identity_exist: ' {{type}} {{value}} 已绑定其他账号。请尝试其他{{type}}',
+    bind_account_title: '绑定或注册帐号',
     social_create_account: '你可以注册一个新的账号。',
     social_link_email: '你可以绑定其他邮箱',
     social_link_phone: '你可以绑定其他手机号',
     social_link_email_or_phone: '你可以绑定其他邮箱或手机号',
-    social_bind_with_existing: '找到了一个匹配的帐号，你可以直接绑定。',
-    reset_password: '重设密码',
+    social_bind_with_existing: '找到了一个已注册的账号，你可以直接绑定。',
+    reset_password: '忘记密码',
     reset_password_description: '输入{{types, list(type: disjunction;)}}，获取验证码以重设密码。',
     new_password: '新密码',
     set_password: '设置密码',
@@ -103,10 +100,9 @@ const translation = {
     username_invalid_charset: '用户名只能包含英文字母、数字或下划线。',
     invalid_email: '无效的邮箱',
     invalid_phone: '无效的手机号',
-    password_min_length: '密码最少需要{{min}}个字符',
+    password_min_length: '密码最少需要 {{min}} 个字符',
     passwords_do_not_match: '两次输入的密码不一致，请重试。',
-    invalid_password:
-      'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
+    invalid_password: '密码至少需要 {{min}} 个字符，并包含字母、数字和符号的组合。',
     invalid_passcode: '无效的验证码',
     invalid_connector_auth: '登录失败',
     invalid_connector_request: '无效的登录请求',
@@ -114,7 +110,7 @@ const translation = {
     invalid_session: '未找到会话，请返回并重新登录。',
   },
   demo_app: {
-    notification: 'Tip: Create an account first to test the sign-in experience.', // UNTRANSLATED
+    notification: '提示：先注册一个账号，再测试登录体验。',
   },
 };
 
