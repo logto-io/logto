@@ -3,6 +3,7 @@ import api_resources from './api-resources.js';
 import application_details from './application-details.js';
 import applications from './applications.js';
 import cloud from './cloud.js';
+import components from './components.js';
 import connector_details from './connector-details.js';
 import connectors from './connectors.js';
 import contact from './contact.js';
@@ -55,6 +56,7 @@ const admin_console = {
   permissions,
   cloud,
   profile,
+  components,
 };
 
 export default admin_console;
