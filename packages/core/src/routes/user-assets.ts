@@ -1,8 +1,13 @@
 import { readFile } from 'fs/promises';
 
 import { generateStandardId } from '@logto/core-kit';
-import type { UserAssetsResponse, UserAssetsServiceStatusResponse } from '@logto/schemas';
-import { allowUploadMimeTypes, maxUploadFileSize } from '@logto/schemas';
+import type { UserAssetsResponse } from '@logto/schemas';
+import {
+  userAssetsGuard,
+  userAssetsServiceStatusGuard,
+  allowUploadMimeTypes,
+  maxUploadFileSize,
+} from '@logto/schemas';
 import { format } from 'date-fns';
 import { object } from 'zod';
 
@@ -17,22 +22,28 @@ import { getTenantId } from '#src/utils/tenant.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: RouterInitArgs<T>) {
-  router.get('/user-assets/service-status', async (ctx, next) => {
-    const { storageProviderConfig } = SystemContext.shared;
-    const status: UserAssetsServiceStatusResponse = storageProviderConfig
-      ? {
-          status: 'ready',
-          allowUploadMimeTypes,
-          maxUploadFileSize,
-        }
-      : {
-          status: 'not_configured',
-        };
+  router.get(
+    '/user-assets/service-status',
+    koaGuard({
+      response: userAssetsServiceStatusGuard,
+    }),
+    async (ctx, next) => {
+      const { storageProviderConfig } = SystemContext.shared;
+      const status = storageProviderConfig
+        ? {
+            status: 'ready',
+            allowUploadMimeTypes,
+            maxUploadFileSize,
+          }
+        : {
+            status: 'not_configured',
+          };
 
-    ctx.body = status;
+      ctx.body = status;
 
-    return next();
-  });
+      return next();
+    }
+  );
 
   router.post(
     '/user-assets',
@@ -40,12 +51,16 @@ export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: Ro
       files: object({
         file: uploadFileGuard,
       }),
+      response: userAssetsGuard,
     }),
     async (ctx, next) => {
       const { file } = ctx.guard.files;
 
       assertThat(file.size <= maxUploadFileSize, 'guard.file_size_exceeded');
-      assertThat(allowUploadMimeTypes.includes(file.mimetype), 'guard.mime_type_not_allowed');
+      assertThat(
+        allowUploadMimeTypes.map(String).includes(file.mimetype),
+        'guard.mime_type_not_allowed'
+      );
 
       const tenantId = getTenantId(ctx.URL);
       assertThat(tenantId, 'guard.can_not_get_tenant_id');
