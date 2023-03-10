@@ -4,5 +4,12 @@
     "**/assets/icons/*.svg": [
       "@parcel/transformer-svg-react"
     ]
+  },
+  "compressors": {
+    "*.{html,css,js,svg,map}": [
+      "...",
+      "@parcel/compressor-gzip",
+      "@parcel/compressor-brotli"
+    ]
   }
 }

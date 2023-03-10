@@ -180,6 +180,8 @@ importers:
       '@logto/react': 1.0.0
       '@logto/schemas': workspace:*
       '@mdx-js/react': ^1.6.22
+      '@parcel/compressor-brotli': 2.8.3
+      '@parcel/compressor-gzip': 2.8.3
       '@parcel/core': 2.8.3
       '@parcel/transformer-mdx': 2.8.3
       '@parcel/transformer-sass': 2.8.3
@@ -255,6 +257,8 @@ importers:
       '@logto/react': 1.0.0_react@18.2.0
       '@logto/schemas': link:../schemas
       '@mdx-js/react': 1.6.22_react@18.2.0
+      '@parcel/compressor-brotli': 2.8.3_@parcel+core@2.8.3
+      '@parcel/compressor-gzip': 2.8.3_@parcel+core@2.8.3
       '@parcel/core': 2.8.3
       '@parcel/transformer-mdx': 2.8.3_bj7lw3hdztun63ochfmnvr3ssm
       '@parcel/transformer-sass': 2.8.3_@parcel+core@2.8.3
@@ -343,6 +347,7 @@ importers:
       '@types/js-yaml': ^4.0.5
       '@types/koa': ^2.13.3
       '@types/koa-compose': ^3.2.5
+      '@types/koa-compress': ^4.0.3
       '@types/koa-logger': ^3.1.1
       '@types/koa-mount': ^4.0.0
       '@types/koa-send': ^4.1.3
@@ -377,6 +382,7 @@ importers:
       koa: ^2.13.1
       koa-body: ^5.0.0
       koa-compose: ^4.1.0
+      koa-compress: ^5.1.0
       koa-logger: ^3.2.1
       koa-mount: ^4.0.0
       koa-proxies: ^0.12.1
@@ -435,6 +441,7 @@ importers:
       koa: 2.13.4
       koa-body: 5.0.0
       koa-compose: 4.1.0
+      koa-compress: 5.1.0
       koa-logger: 3.2.1
       koa-mount: 4.0.0
       koa-proxies: 0.12.1_koa@2.13.4
@@ -463,6 +470,7 @@ importers:
       '@types/js-yaml': 4.0.5
       '@types/koa': 2.13.4
       '@types/koa-compose': 3.2.5
+      '@types/koa-compress': 4.0.3
       '@types/koa-logger': 3.1.2
       '@types/koa-mount': 4.0.1
       '@types/koa-send': 4.1.3
@@ -870,6 +878,8 @@ importers:
       '@logto/phrases': workspace:*
       '@logto/phrases-ui': workspace:*
       '@logto/schemas': workspace:*
+      '@parcel/compressor-brotli': 2.8.3
+      '@parcel/compressor-gzip': 2.8.3
       '@parcel/core': 2.8.3
       '@parcel/transformer-sass': 2.8.3
       '@parcel/transformer-svg-react': 2.8.3
@@ -928,6 +938,8 @@ importers:
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
+      '@parcel/compressor-brotli': 2.8.3_@parcel+core@2.8.3
+      '@parcel/compressor-gzip': 2.8.3_@parcel+core@2.8.3
       '@parcel/core': 2.8.3
       '@parcel/transformer-sass': 2.8.3_@parcel+core@2.8.3
       '@parcel/transformer-svg-react': 2.8.3_@parcel+core@2.8.3
@@ -2641,6 +2653,24 @@ packages:
       chalk: 4.1.2
     dev: true
 
+  /@parcel/compressor-brotli/2.8.3_@parcel+core@2.8.3:
+    resolution: {integrity: sha512-RavknrtGFagtlTdD5Km94bot6MViFRW/IUFH/bUHCTgl5WB1hD5qJaS8xbO0HJt1/jvuWzrGu5lqfo3MR+QFKQ==}
+    engines: {node: '>= 12.0.0', parcel: ^2.8.3}
+    dependencies:
+      '@parcel/plugin': 2.8.3_@parcel+core@2.8.3
+    transitivePeerDependencies:
+      - '@parcel/core'
+    dev: true
+
+  /@parcel/compressor-gzip/2.8.3_@parcel+core@2.8.3:
+    resolution: {integrity: sha512-WLYP0vDD4oTPjKBKgTdALAb2wWCYjRvs8cw5fHze4905BlO5Oqye+YnAk2Mvdj5ng2iucleQB/+IBxy7oYo+yQ==}
+    engines: {node: '>= 12.0.0', parcel: ^2.8.3}
+    dependencies:
+      '@parcel/plugin': 2.8.3_@parcel+core@2.8.3
+    transitivePeerDependencies:
+      - '@parcel/core'
+    dev: true
+
   /@parcel/compressor-raw/2.8.3_@parcel+core@2.8.3:
     resolution: {integrity: sha512-bVDsqleBUxRdKMakWSlWC9ZjOcqDKE60BE+Gh3JSN6WJrycJ02P5wxjTVF4CStNP/G7X17U+nkENxSlMG77ySg==}
     engines: {node: '>= 12.0.0', parcel: ^2.8.3}
@@ -3317,6 +3347,18 @@ packages:
       - '@parcel/core'
     dev: true
 
+  /@parcel/types/2.8.3:
+    resolution: {integrity: sha512-FECA1FB7+0UpITKU0D6TgGBpGxYpVSMNEENZbSJxFSajNy3wrko+zwBKQmFOLOiPcEtnGikxNs+jkFWbPlUAtw==}
+    dependencies:
+      '@parcel/cache': 2.8.3_@parcel+core@2.8.3
+      '@parcel/diagnostic': 2.8.3
+      '@parcel/fs': 2.8.3_@parcel+core@2.8.3
+      '@parcel/package-manager': 2.8.3_@parcel+core@2.8.3
+      '@parcel/source-map': 2.1.1
+      '@parcel/workers': 2.8.3_@parcel+core@2.8.3
+      utility-types: 3.10.0
+    dev: true
+
   /@parcel/types/2.8.3_@parcel+core@2.8.3:
     resolution: {integrity: sha512-FECA1FB7+0UpITKU0D6TgGBpGxYpVSMNEENZbSJxFSajNy3wrko+zwBKQmFOLOiPcEtnGikxNs+jkFWbPlUAtw==}
     dependencies:
@@ -3362,7 +3404,7 @@ packages:
       '@parcel/core': 2.8.3
       '@parcel/diagnostic': 2.8.3
       '@parcel/logger': 2.8.3
-      '@parcel/types': 2.8.3_@parcel+core@2.8.3
+      '@parcel/types': 2.8.3
       '@parcel/utils': 2.8.3
       chrome-trace-event: 1.0.3
       nullthrows: 1.1.1
@@ -4167,6 +4209,13 @@ packages:
     resolution: {integrity: sha512-B8nG/OoE1ORZqCkBVsup/AKcvjdgoHnfi4pZMn5UwAPCbhk/96xyv284eBYW8JlQbQ7zDmnpFr68I/40mFoIBQ==}
     dependencies:
       '@types/koa': 2.13.4
+    dev: true
+
+  /@types/koa-compress/4.0.3:
+    resolution: {integrity: sha512-nJSII/tOSvYCwk3yDEBJLHd8ctkt5CQFZ0j8ZBnHZ2x0hg24z9H1i38lWXA/5z0Ix0uitMW1jov+kVbQI1aNPQ==}
+    dependencies:
+      '@types/koa': 2.13.4
+      '@types/node': 18.11.18
     dev: true
 
   /@types/koa-logger/3.1.2:
@@ -5568,6 +5617,13 @@ packages:
   /component-emitter/1.3.0:
     resolution: {integrity: sha512-Rd3se6QB+sO1TwqZjscQrurpEPIfO0/yYnSin6Q/rD3mOutHvUrCAhJub3r90uNb+SESBuE0QYoB90YdfatsRg==}
     dev: true
+
+  /compressible/2.0.18:
+    resolution: {integrity: sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==}
+    engines: {node: '>= 0.6'}
+    dependencies:
+      mime-db: 1.52.0
+    dev: false
 
   /concat-map/0.0.1:
     resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
@@ -9543,12 +9599,27 @@ packages:
     resolution: {integrity: sha512-8ODW8TrDuMYvXRwra/Kh7/rJo9BtOfPc6qO8eAfC80CnCvSjSl0bkRM24X6/XBBEyj0v1nRUQ1LyOy3dbqOWXw==}
     dev: false
 
+  /koa-compress/5.1.0:
+    resolution: {integrity: sha512-G3Ppo9jrUwlchp6qdoRgQNMiGZtM0TAHkxRZQ7EoVvIG8E47J4nAsMJxXHAUQ+0oc7t0MDxSdONWTFcbzX7/Bg==}
+    engines: {node: '>= 8.0.0'}
+    dependencies:
+      bytes: 3.1.2
+      compressible: 2.0.18
+      http-errors: 1.8.1
+      koa-is-json: 1.0.0
+      statuses: 2.0.1
+    dev: false
+
   /koa-convert/2.0.0:
     resolution: {integrity: sha512-asOvN6bFlSnxewce2e/DK3p4tltyfC4VM7ZwuTuepI7dEQVcvpyFuBcEARu1+Hxg8DIwytce2n7jrZtRlPrARA==}
     engines: {node: '>= 10'}
     dependencies:
       co: 4.6.0
       koa-compose: 4.1.0
+    dev: false
+
+  /koa-is-json/1.0.0:
+    resolution: {integrity: sha512-+97CtHAlWDx0ndt0J8y3P12EWLwTLMXIfMnYDev3wOTwH/RpBGMlfn4bDXlMEg1u73K6XRE9BbUp+5ZAYoRYWw==}
     dev: false
 
   /koa-logger/3.2.1:
