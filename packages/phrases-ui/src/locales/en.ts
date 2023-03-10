@@ -19,7 +19,7 @@ const translation = {
     enter_passcode: 'Enter verification code',
     confirm: 'Confirm',
     cancel: 'Cancel',
-    save_password: 'Save',
+    save_password: 'Save password',
     bind: 'Link with {{address}}',
     bind_and_continue: 'Link and continue',
     back: 'Go back',
@@ -58,14 +58,14 @@ const translation = {
     create_account_id_exists:
       'The account with {{type}} {{value}} already exists, would you like to sign in?',
     link_account_id_exists:
-      'The account with {{type}} {{value}} already exists, would you like to link?',
+      'The account with {{type}} {{value}} already exists. Would you like to link?',
     sign_in_id_does_not_exist:
       'The account with {{type}} {{value}} does not exist, would you like to create a new account?',
     sign_in_id_does_not_exist_alert: 'The account with {{type}} {{value}} does not exist.',
     create_account_id_exists_alert:
       'The account with {{type}} {{value}} is linked to another account. Please try another {{type}}.',
     social_identity_exist:
-      'The {{type}} {{value}} is linked to another account. Please try another {{type}}',
+      'The {{type}} {{value}} is linked to another account. Please try another {{type}}.',
     bind_account_title: 'Link or create account',
     social_create_account: 'You can create a new account.',
     social_link_email: 'You can link another email',
@@ -77,14 +77,14 @@ const translation = {
       'Enter the {{types, list(type: disjunction;)}} associated with your account, and we’ll send you the verification code to reset your password.',
     new_password: 'New password',
     set_password: 'Set password',
-    password_changed: 'Password Changed',
+    password_changed: 'Password changed',
     no_account: 'No account yet? ',
     have_account: 'Already had an account?',
-    enter_password: 'Enter Password',
+    enter_password: 'Enter ppassword',
     enter_password_for: 'Sign in with the password to {{method}} {{value}}',
     enter_username: 'Set username',
     enter_username_description:
-      'Username is an alternative for sign-in. Username must contain only letters, numbers, and underscores.',
+      'Username is an alternative for sign-in. Username should contain only letters, numbers, and underscores.',
     link_email: 'Link email',
     link_phone: 'Link phone',
     link_email_or_phone: 'Link email or phone',
