@@ -58,14 +58,11 @@ const translation = {
     resend_after_seconds: '在 <span>{{ seconds }}</span> 秒后重发',
     resend_passcode: '重发验证码',
     create_account_id_exists: '{{type}}为 {{value}} 的帐号已存在，你要登录吗？',
-    link_account_id_exists:
-      ' {{type}}为 {{value}} 的账号已注册，你要绑定至这个账号吗？',
+    link_account_id_exists: ' {{type}}为 {{value}} 的账号已注册，你要绑定至这个账号吗？',
     sign_in_id_does_not_exist: '{{type}}为 {{value}} 的帐号不存在，你要创建一个新帐号吗？',
     sign_in_id_does_not_exist_alert: '{{type}}为 {{value}} 的帐号不存在。',
-    create_account_id_exists_alert:
-      '{{type}} {{value}} 已绑定其他账号。请尝试其他{{type}}。',
-    social_identity_exist:
-      ' {{type}} {{value}} 已绑定其他账号。请尝试其他{{type}}',
+    create_account_id_exists_alert: '{{type}} {{value}} 已绑定其他账号。请尝试其他{{type}}。',
+    social_identity_exist: ' {{type}} {{value}} 已绑定其他账号。请尝试其他{{type}}',
     bind_account_title: '绑定或注册帐号',
     social_create_account: '你可以注册一个新的账号。',
     social_link_email: '你可以绑定其他邮箱',
@@ -105,8 +102,7 @@ const translation = {
     invalid_phone: '无效的手机号',
     password_min_length: '密码最少需要 {{min}} 个字符',
     passwords_do_not_match: '两次输入的密码不一致，请重试。',
-    invalid_password:
-      '密码至少需要 {{min}} 个字符，并包含字母、数字和符号的组合。',
+    invalid_password: '密码至少需要 {{min}} 个字符，并包含字母、数字和符号的组合。',
     invalid_passcode: '无效的验证码',
     invalid_connector_auth: '登录失败',
     invalid_connector_request: '无效的登录请求',

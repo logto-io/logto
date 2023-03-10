@@ -3,7 +3,7 @@ import type { LocalePhrase } from '../types.js';
 const translation = {
   input: {
     username: 'Utilizador',
-    password: 'Palavra-passe', 
+    password: 'Palavra-passe',
     email: 'Email',
     phone_number: 'Telefone',
     confirm_password: 'Confirmar palavra-passe',
@@ -57,9 +57,8 @@ const translation = {
     passcode_sent: 'O código de verificação foi reenviado',
     resend_after_seconds: 'Reenviar após <span>{{seconds}}</span> segundos',
     resend_passcode: 'Reenviar código de verificação',
-    create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de fazer login?', 
-    link_account_id_exists:
-      'A conta com {{type}} {{value}} já existe, gostaria de vinculá-la?',
+    create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de fazer login?',
+    link_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de vinculá-la?',
     sign_in_id_does_not_exist: 'A conta com {{type}} {{value}} não existe, gostaria de criar uma?',
     sign_in_id_does_not_exist_alert: 'A conta com {{type}} {{value}} não existe.',
     create_account_id_exists_alert:
@@ -71,7 +70,8 @@ const translation = {
     social_link_email: 'Pode vincular outro email',
     social_link_phone: 'Pode vincular outro telefone',
     social_link_email_or_phone: 'Pode vincular outro email ou telefone',
-    social_bind_with_existing: 'Encontramos uma conta relacionada registrada e você pode vinculá-la diretamente.',
+    social_bind_with_existing:
+      'Encontramos uma conta relacionada registrada e você pode vinculá-la diretamente.',
     reset_password: 'Esqueceu a senha',
     reset_password_description:
       'Insira os {{types, list(type: disjunction;)}} associados à sua conta e enviaremos o código de verificação para redefinir sua senha.',
@@ -92,7 +92,8 @@ const translation = {
     link_phone_description: 'Para maior segurança, vincule o seu telefone à conta.',
     link_email_or_phone_description:
       'Para maior segurança, vincule o seu email ou telefone à conta.',
-    continue_with_more_information: 'Para maior segurança, por favor complete os detalhes da conta abaixo.',
+    continue_with_more_information:
+      'Para maior segurança, por favor complete os detalhes da conta abaixo.',
     create_your_account: 'Criar conta',
     welcome_to_sign_in: 'Bem-vindo(a) para iniciar sessão',
   },

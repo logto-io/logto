@@ -16,9 +16,9 @@ const translation = {
     sign_in: 'Войти',
     continue: 'Продолжить',
     create_account: 'Создать аккаунт',
-    create_account_without_linking: 'Создать аккаунт без связывания', 
+    create_account_without_linking: 'Создать аккаунт без связывания',
     create: 'Создать',
-    enter_passcode: 'Введите код подтверждения', 
+    enter_passcode: 'Введите код подтверждения',
     confirm: 'Подтвердить',
     cancel: 'Отменить',
     save_password: 'Сохраните пароль',
@@ -62,16 +62,18 @@ const translation = {
     sign_in_id_does_not_exist:
       'Учетная запись для {{value}} не существует, хотите зарегистрироваться?',
     sign_in_id_does_not_exist_alert: 'Учетная запись для {{value}} не существует.',
-    create_account_id_exists_alert: 'Аккаунт с {{type}} {{value}} связан с другим аккаунтом. Пожалуйста, попробуйте другой {{type}}.', 
+    create_account_id_exists_alert:
+      'Аккаунт с {{type}} {{value}} связан с другим аккаунтом. Пожалуйста, попробуйте другой {{type}}.',
     social_identity_exist:
       '{{type}} {{value}} связан с другим аккаунтом. Пожалуйста, попробуйте другой {{type}}.',
     bind_account_title: 'Привязать или создать аккаунт',
-    social_create_account: 'Вы можете создать новую учетную запись.', 
+    social_create_account: 'Вы можете создать новую учетную запись.',
     social_link_email: 'Вы можете привязать другой адрес электронной почты',
     social_link_phone: 'Вы можете привязать другой номер телефона',
     social_link_email_or_phone: 'Вы можете привязать другой адрес электронной почты или телефон',
-    social_bind_with_existing: 'Мы находим зарегистрированную связанную учетную запись, и вы можете связать ее напрямую.', 
-    reset_password: 'Забыли пароль', 
+    social_bind_with_existing:
+      'Мы находим зарегистрированную связанную учетную запись, и вы можете связать ее напрямую.',
+    reset_password: 'Забыли пароль',
     reset_password_description:
       'Введите {{types, list(type: disjunction;)}} от вашей учетной записи, и мы вышлем вам код для восстановления пароля.',
     new_password: 'Новый пароль',
@@ -81,7 +83,7 @@ const translation = {
     have_account: 'Уже есть аккаунт?',
     enter_password: 'Введите пароль',
     enter_password_for: 'Введите пароль для {{value}}',
-    enter_username: 'Установить имя пользователя', 
+    enter_username: 'Установить имя пользователя',
     enter_username_description:
       'Имя пользователя является альтернативой для входа в систему. Имя пользователя должно содержать только буквы, цифры и символы подчеркивания.',
     link_email: 'Привязать почту',

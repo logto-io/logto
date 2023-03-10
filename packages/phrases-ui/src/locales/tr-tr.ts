@@ -46,7 +46,7 @@ const translation = {
     reminder: 'Hatırlatıcı',
     not_found: '404 Bulunamadı',
     agree_with_terms: 'Okudum ve anladım',
-    agree_with_terms_modal: 'Devam etmek için lütfen <link></link>\'i kabul edin.',
+    agree_with_terms_modal: "Devam etmek için lütfen <link></link>'i kabul edin.",
     terms_of_use: 'Kullanım Koşulları',
     sign_in: 'Giriş Yap',
     privacy_policy: 'Gizlilik Politikası',
@@ -58,8 +58,7 @@ const translation = {
     resend_after_seconds: '<span>{{seconds}}</span> saniye sonra tekrar gönder',
     resend_passcode: 'Doğrulama kodunu tekrar gönder',
     create_account_id_exists: '{{type}} {{value}} ile hesap mevcut, giriş yapmak ister misiniz?',
-    link_account_id_exists:
-      '{{type}} {{value}} olan hesap zaten var, bağlamak ister misiniz?',
+    link_account_id_exists: '{{type}} {{value}} olan hesap zaten var, bağlamak ister misiniz?',
     sign_in_id_does_not_exist:
       '{{type}} {{value}} ile hesap mevcut değil, yeni bir hesap oluşturmak ister misiniz?',
     sign_in_id_does_not_exist_alert: '{{type}} {{value}} olan hesap mevcut değil.',
@@ -93,7 +92,8 @@ const translation = {
     link_phone_description: 'Daha fazla güvenlik için lütfen telefonunuzu hesaba bağlayın.',
     link_email_or_phone_description:
       'Daha fazla güvenlik için lütfen e-postanızı veya telefonunuzu hesaba bağlayın.',
-    continue_with_more_information: 'Daha fazla güvenlik için lütfen aşağıdaki hesap ayrıntılarını tamamlayın.',
+    continue_with_more_information:
+      'Daha fazla güvenlik için lütfen aşağıdaki hesap ayrıntılarını tamamlayın.',
     create_your_account: 'hesabını oluştur',
     welcome_to_sign_in: 'oturum açmaya hoş geldiniz',
   },

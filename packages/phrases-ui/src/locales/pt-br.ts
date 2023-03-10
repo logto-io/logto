@@ -58,12 +58,12 @@ const translation = {
     resend_after_seconds: 'Reenviar depois <span>{{seconds}}</span> segundos',
     resend_passcode: 'Reenviar código de verificação',
     create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de entrar?',
-    link_account_id_exists:
-      'A conta com {{type}} {{value}} já existe, gostaria de vincular?',
+    link_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de vincular?',
     sign_in_id_does_not_exist:
       'A conta com {{type}} {{value}} não existe, gostaria de criar uma nova conta?',
     sign_in_id_does_not_exist_alert: 'A conta com {{type}} {{value}} não existe.',
-    create_account_id_exists_alert: 'A conta com {{type}} {{value}} está vinculada a outra conta. Por favor, tente outro {{type}}.',
+    create_account_id_exists_alert:
+      'A conta com {{type}} {{value}} está vinculada a outra conta. Por favor, tente outro {{type}}.',
     social_identity_exist:
       'O {{type}} {{value}} está vinculado a outra conta. Por favor, tente outro {{type}}.',
     bind_account_title: 'Vincular ou criar conta',
