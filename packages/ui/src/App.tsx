@@ -2,9 +2,9 @@ import { SignInMode } from '@logto/schemas';
 import { useEffect, useRef } from 'react';
 import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 
-import AppBoundary from './containers/AppBoundary';
-import AppContent from './containers/AppContent';
-import LoadingLayerProvider from './containers/LoadingLayerProvider';
+import AppLayout from './Layout/AppLayout';
+import AppBoundary from './Providers/AppBoundary';
+import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import usePageContext from './hooks/use-page-context';
 import usePreview from './hooks/use-preview';
 import initI18n from './i18n/init';
@@ -74,7 +74,7 @@ const App = () => {
       <Provider value={context}>
         <AppBoundary>
           <Routes>
-            <Route element={<AppContent />}>
+            <Route element={<AppLayout />}>
               <Route
                 path="unknown-session"
                 element={<ErrorPage message="error.invalid_session" />}

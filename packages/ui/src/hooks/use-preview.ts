@@ -2,8 +2,8 @@ import { ConnectorPlatform } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 
-import * as appStyles from '@/containers/AppBoundary/index.module.scss';
-import * as styles from '@/containers/AppContent/index.module.scss';
+import * as styles from '@/Layout/AppLayout/index.module.scss';
+import * as appStyles from '@/Providers/AppBoundary/index.module.scss';
 import type { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';

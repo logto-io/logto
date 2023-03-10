@@ -4,7 +4,7 @@ import type { TFuncKey } from 'react-i18next';
 import NavBar from '@/components/NavBar';
 import usePlatform from '@/hooks/use-platform';
 
-import { InlineNotification } from '../Notification';
+import { InlineNotification } from '../../components/Notification';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const SecondaryPageWrapper = ({
+const SecondaryPageLayout = ({
   title,
   description,
   titleProps,
@@ -50,4 +50,4 @@ const SecondaryPageWrapper = ({
   );
 };
 
-export default SecondaryPageWrapper;
+export default SecondaryPageLayout;

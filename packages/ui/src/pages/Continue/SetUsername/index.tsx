@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'react-i18next';
 
-import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 
 import IdentifierProfileForm from '../IdentifierProfileForm';
 import useSetUsername from './use-set-username';
@@ -22,7 +22,7 @@ const SetUsername = (props: Props) => {
   };
 
   return (
-    <SecondaryPageWrapper
+    <SecondaryPageLayout
       title="description.enter_username"
       description="description.enter_username_description"
       {...props}
@@ -35,7 +35,7 @@ const SetUsername = (props: Props) => {
         enabledTypes={[SignInIdentifier.Username]}
         onSubmit={handleSubmit}
       />
-    </SecondaryPageWrapper>
+    </SecondaryPageLayout>
   );
 };
 

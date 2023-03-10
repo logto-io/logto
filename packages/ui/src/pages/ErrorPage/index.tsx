@@ -3,6 +3,7 @@ import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import StaticPageLayout from '@/Layout/StaticPageLayout';
 import EmptyStateDark from '@/assets/icons/empty-state-dark.svg';
 import EmptyState from '@/assets/icons/empty-state.svg';
 import Button from '@/components/Button';
@@ -25,7 +26,7 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
   const errorMessage = rawMessage ?? (message && t(message));
 
   return (
-    <div className={styles.wrapper}>
+    <StaticPageLayout>
       <NavBar />
       <div className={styles.container}>
         {theme === 'light' ? <EmptyState /> : <EmptyStateDark />}
@@ -39,7 +40,7 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
           navigate(-1);
         }}
       />
-    </div>
+    </StaticPageLayout>
   );
 };
 

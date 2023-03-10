@@ -3,7 +3,7 @@ import type { TFuncKey } from 'react-i18next';
 import { useParams, useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
 
-import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SocialLinkAccountContainer from '@/containers/SocialLinkAccount';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
@@ -48,9 +48,9 @@ const SocialLinkAccount = () => {
   const { relatedUser } = state;
 
   return (
-    <SecondaryPageWrapper title={getPageTitle(signUpMethods)}>
+    <SecondaryPageLayout title={getPageTitle(signUpMethods)}>
       <SocialLinkAccountContainer connectorId={connectorId} relatedUser={relatedUser} />
-    </SecondaryPageWrapper>
+    </SecondaryPageLayout>
   );
 };
 

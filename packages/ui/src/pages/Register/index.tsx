@@ -1,9 +1,9 @@
 import { SignInMode } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
+import LandingPageLayout from '@/Layout/LandingPageLayout';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
-import LandingPageContainer from '@/containers/LandingPageContainer';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -21,7 +21,7 @@ const Register = () => {
   }
 
   return (
-    <LandingPageContainer title="description.create_your_account">
+    <LandingPageLayout title="description.create_your_account">
       {signUpMethods.length > 0 && (
         <IdentifierRegisterForm signUpMethods={signUpMethods} className={styles.main} />
       )}
@@ -48,7 +48,7 @@ const Register = () => {
           </>
         )
       }
-    </LandingPageContainer>
+    </LandingPageLayout>
   );
 };
 

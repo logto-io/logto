@@ -1,6 +1,6 @@
 import { SignInIdentifier } from '@logto/schemas';
 
-import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SetPassword from '@/containers/SetPassword';
 import { useSieMethods } from '@/hooks/use-sie';
 import { passwordMinLength } from '@/utils/form';
@@ -17,7 +17,7 @@ const RegisterPassword = () => {
   }
 
   return (
-    <SecondaryPageWrapper
+    <SecondaryPageLayout
       title="description.new_password"
       description="error.invalid_password"
       descriptionProps={{ min: passwordMinLength }}
@@ -28,7 +28,7 @@ const RegisterPassword = () => {
           void setPassword(password);
         }}
       />
-    </SecondaryPageWrapper>
+    </SecondaryPageLayout>
   );
 };
 

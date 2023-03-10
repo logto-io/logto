@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
-import SecondaryPageWrapper from '@/components/SecondaryPageWrapper';
+import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
 import { passwordIdentifierStateGuard } from '@/types/guard';
@@ -33,7 +33,7 @@ const SignInPassword = () => {
   }
 
   return (
-    <SecondaryPageWrapper
+    <SecondaryPageLayout
       title="description.enter_password"
       description="description.enter_password_for"
       descriptionProps={{
@@ -50,7 +50,7 @@ const SignInPassword = () => {
         value={value}
         isVerificationCodeEnabled={methodSetting.verificationCode}
       />
-    </SecondaryPageWrapper>
+    </SecondaryPageLayout>
   );
 };
 

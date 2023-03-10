@@ -1,9 +1,9 @@
 import { SignInMode } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
+import LandingPageLayout from '@/Layout/LandingPageLayout';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
-import LandingPageContainer from '@/containers/LandingPageContainer';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -21,7 +21,7 @@ const SignIn = () => {
   }
 
   return (
-    <LandingPageContainer title="description.welcome_to_sign_in">
+    <LandingPageLayout title="description.welcome_to_sign_in">
       <Main signInMethods={signInMethods} socialConnectors={socialConnectors} />
       {
         // Create Account footer
@@ -42,7 +42,7 @@ const SignIn = () => {
         )
       }
       <TermsAndPrivacyLinks className={styles.terms} />
-    </LandingPageContainer>
+    </LandingPageLayout>
   );
 };
 

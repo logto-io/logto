@@ -2,11 +2,11 @@ import { SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, act, waitFor } from '@testing-library/react';
 
+import ConfirmModalProvider from '@/Providers/ConfirmModalProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { registerWithUsernamePassword } from '@/apis/interaction';
 import { sendVerificationCodeApi } from '@/apis/utils';
-import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
 import { UserFlow } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
