@@ -30,6 +30,11 @@ export type WithSpaConfig = {
    * @default 'index.html'
    */
   indexPath?: string;
+  /**
+   * Explicitly disable cache for the index file in order to keep fresh and avoid cache invalidation issues.
+   * @default true
+   */
+  disableIndexCache?: boolean;
 };
 
 export default function withSpa<InputContext extends RequestContext>({
@@ -38,6 +43,7 @@ export default function withSpa<InputContext extends RequestContext>({
   pathname: rootPathname = '/',
   ignorePathnames,
   indexPath: index = 'index.html',
+  disableIndexCache = true,
 }: WithSpaConfig) {
   assert(root, new Error('Root directory is required to serve files.'));
 
@@ -69,6 +75,7 @@ export default function withSpa<InputContext extends RequestContext>({
       return next({ ...context, status: 404 });
     }
 
+    const [originalPath] = result;
     const [pathLike, stat, compression] = (await tryCompressedFile(request, result[0])) ?? result;
 
     return next({
@@ -77,9 +84,12 @@ export default function withSpa<InputContext extends RequestContext>({
         ...headers,
         ...(compression && { 'Content-Encoding': compression }),
         ...(!compression && { 'Content-Length': stat.size }),
-        'Content-Type': mime.lookup(result[0]), // Use the original path to lookup
+        'Content-Type': mime.lookup(originalPath),
         'Last-Modified': stat.mtime.toUTCString(),
-        'Cache-Control': `max-age=${maxAge}`,
+        'Cache-Control':
+          disableIndexCache && originalPath === indexPath
+            ? 'no-cache, no-store, must-revalidate'
+            : `max-age=${maxAge}`,
         ETag: `"${stat.size.toString(16)}-${stat.mtimeMs.toString(16)}"`,
       },
       stream: createReadStream(pathLike),
