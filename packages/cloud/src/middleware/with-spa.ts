@@ -1,9 +1,11 @@
 import { createReadStream } from 'node:fs';
 import fs from 'node:fs/promises';
+import type { IncomingMessage } from 'node:http';
 import path from 'node:path';
 
-import { assert } from '@silverhand/essentials';
-import type { NextFunction, RequestContext } from '@withtyped/server';
+import { assert, conditional } from '@silverhand/essentials';
+import type { HttpContext, NextFunction, RequestContext } from '@withtyped/server';
+import accepts from 'accepts';
 import mime from 'mime-types';
 
 import { matchPathname } from '#src/utils/url.js';
@@ -39,7 +41,11 @@ export default function withSpa<InputContext extends RequestContext>({
 }: WithSpaConfig) {
   assert(root, new Error('Root directory is required to serve files.'));
 
-  return async (context: InputContext, next: NextFunction<InputContext>) => {
+  return async (
+    context: InputContext,
+    next: NextFunction<InputContext>,
+    { request }: HttpContext
+  ) => {
     const {
       headers,
       request: { url },
@@ -63,14 +69,15 @@ export default function withSpa<InputContext extends RequestContext>({
       return next({ ...context, status: 404 });
     }
 
-    const [pathLike, stat] = result;
+    const [pathLike, stat, compression] = (await tryCompressedFile(request, result[0])) ?? result;
 
     return next({
       ...context,
       headers: {
         ...headers,
-        'Content-Length': stat.size,
-        'Content-Type': mime.lookup(pathLike),
+        ...(compression && { 'Content-Encoding': compression }),
+        ...(!compression && { 'Content-Length': stat.size }),
+        'Content-Type': mime.lookup(result[0]), // Use the original path to lookup
         'Last-Modified': stat.mtime.toUTCString(),
         'Cache-Control': `max-age=${maxAge}`,
         ETag: `"${stat.size.toString(16)}-${stat.mtimeMs.toString(16)}"`,
@@ -80,6 +87,33 @@ export default function withSpa<InputContext extends RequestContext>({
     });
   };
 }
+
+type CompressionEncoding = keyof typeof compressionExtensions;
+
+const compressionExtensions = {
+  br: 'br',
+  gzip: 'gz',
+} as const;
+
+const compressionEncodings = Object.freeze(Object.keys(compressionExtensions));
+
+const isValidEncoding = (value?: string): value is CompressionEncoding =>
+  Boolean(value && compressionEncodings.includes(value));
+
+const tryCompressedFile = async (request: IncomingMessage, pathLike: string) => {
+  // Honor the compression preference
+  const compression = conditional(accepts(request).encodings([...compressionEncodings]));
+
+  if (!isValidEncoding(compression)) {
+    return;
+  }
+
+  const result = await tryStat(pathLike + '.' + compressionExtensions[compression]);
+
+  if (result) {
+    return [...result, compression] as const;
+  }
+};
 
 const tryStat = async (pathLike: string) => {
   try {
