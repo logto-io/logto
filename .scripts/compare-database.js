@@ -176,6 +176,7 @@ const queryDatabaseData = async (database) => {
         'id',
         'resource_id',
         'role_id',
+        'application_id',
         'scope_id',
         'created_at',
         'updated_at',
