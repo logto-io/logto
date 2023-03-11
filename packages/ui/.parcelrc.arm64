@@ -15,5 +15,6 @@
       "@parcel/compressor-gzip",
       "@parcel/compressor-brotli"
     ]
-  }
+  },
+  "resolvers": ["parcel-resolver-ignore", "..."]
 }
