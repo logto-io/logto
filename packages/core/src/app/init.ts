@@ -19,6 +19,12 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
 
 export default async function initApp(app: Koa): Promise<void> {
   app.use(async (ctx, next) => {
+    if (EnvSet.values.isDomainBasedMultiTenancy && ctx.URL.pathname === '/status') {
+      ctx.status = 204;
+
+      return next();
+    }
+
     const tenantId = getTenantId(ctx.URL);
 
     if (!tenantId) {
