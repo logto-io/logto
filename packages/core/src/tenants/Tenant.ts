@@ -131,7 +131,7 @@ export default class Tenant implements TenantContext {
     }
 
     // Mount UI
-    app.use(compose([koaSpaSessionGuard(provider), koaSpaProxy(mountedApps)]));
+    app.use(compose([koaSpaSessionGuard(provider, queries), koaSpaProxy(mountedApps)]));
 
     this.app = app;
     this.provider = provider;

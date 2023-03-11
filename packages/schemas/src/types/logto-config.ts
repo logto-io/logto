@@ -1,7 +1,7 @@
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
-// Logto OIDC config
+/* --- Logto OIDC configs --- */
 export enum LogtoOidcConfigKey {
   PrivateKeys = 'oidc.privateKeys',
   CookieKeys = 'oidc.cookieKeys',
@@ -19,7 +19,7 @@ export const logtoOidcConfigGuard: Readonly<{
   [LogtoOidcConfigKey.CookieKeys]: z.string().array(),
 });
 
-// Admin console config
+/* --- Logto tenant configs --- */
 export const adminConsoleDataGuard = z.object({
   // Get started challenges
   livePreviewChecked: z.boolean(),
@@ -33,30 +33,34 @@ export const adminConsoleDataGuard = z.object({
 
 export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;
 
-export enum AdminConsoleConfigKey {
+export enum LogtoTenantConfigKey {
   AdminConsole = 'adminConsole',
+  /** The URL to redirect when session not found in Sign-in Experience. */
+  SessionNotFoundRedirectUrl = 'sessionNotFoundRedirectUrl',
 }
-export type AdminConsoleConfigType = {
-  [AdminConsoleConfigKey.AdminConsole]: AdminConsoleData;
+export type LogtoTenantConfigType = {
+  [LogtoTenantConfigKey.AdminConsole]: AdminConsoleData;
+  [LogtoTenantConfigKey.SessionNotFoundRedirectUrl]: { url: string };
 };
 
-export const adminConsoleConfigGuard: Readonly<{
-  [key in AdminConsoleConfigKey]: ZodType<AdminConsoleConfigType[key]>;
+export const logtoTenantConfigGuard: Readonly<{
+  [key in LogtoTenantConfigKey]: ZodType<LogtoTenantConfigType[key]>;
 }> = Object.freeze({
-  [AdminConsoleConfigKey.AdminConsole]: adminConsoleDataGuard,
+  [LogtoTenantConfigKey.AdminConsole]: adminConsoleDataGuard,
+  [LogtoTenantConfigKey.SessionNotFoundRedirectUrl]: z.object({ url: z.string() }),
 });
 
-// Summary
-export type LogtoConfigKey = LogtoOidcConfigKey | AdminConsoleConfigKey;
-export type LogtoConfigType = LogtoOidcConfigType | AdminConsoleConfigType;
-export type LogtoConfigGuard = typeof logtoOidcConfigGuard & typeof adminConsoleConfigGuard;
+/* --- Summary --- */
+export type LogtoConfigKey = LogtoOidcConfigKey | LogtoTenantConfigKey;
+export type LogtoConfigType = LogtoOidcConfigType | LogtoTenantConfigType;
+export type LogtoConfigGuard = typeof logtoOidcConfigGuard & typeof logtoTenantConfigGuard;
 
 export const logtoConfigKeys: readonly LogtoConfigKey[] = Object.freeze([
   ...Object.values(LogtoOidcConfigKey),
-  ...Object.values(AdminConsoleConfigKey),
+  ...Object.values(LogtoTenantConfigKey),
 ]);
 
 export const logtoConfigGuards: LogtoConfigGuard = Object.freeze({
   ...logtoOidcConfigGuard,
-  ...adminConsoleConfigGuard,
+  ...logtoTenantConfigGuard,
 });
