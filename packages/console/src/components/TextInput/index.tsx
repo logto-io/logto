@@ -21,7 +21,6 @@ const TextInput = (
     disabled,
     className,
     readOnly,
-    value,
     size = 'medium',
     ...rest
   }: Props,
