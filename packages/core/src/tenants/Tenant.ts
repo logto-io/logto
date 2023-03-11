@@ -2,6 +2,7 @@ import { adminTenantId } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import Koa from 'koa';
 import compose from 'koa-compose';
+import koaCompress from 'koa-compress';
 import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 import type Provider from 'oidc-provider';
@@ -78,6 +79,7 @@ export default class Tenant implements TenantContext {
     app.use(koaSlonikErrorHandler());
     app.use(koaConnectorErrorHandler());
     app.use(koaI18next());
+    app.use(koaCompress());
 
     // Mount OIDC
     const provider = initOidc(envSet, queries, libraries);

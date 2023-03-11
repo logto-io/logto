@@ -5,5 +5,12 @@
       "@parcel/transformer-svg-react"
     ]
   },
+  "compressors": {
+    "*.{html,css,js,svg,map}": [
+      "...",
+      "@parcel/compressor-gzip",
+      "@parcel/compressor-brotli"
+    ]
+  },
   "resolvers": ["parcel-resolver-ignore", "..."]
 }
