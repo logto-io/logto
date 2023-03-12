@@ -2,6 +2,16 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'The release target of Logto'
+        required: true
+        default: dev
+        type: choice
+        options:
+          - prod
+          - dev
+
   push:
     branches:
       - master
@@ -12,7 +22,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
 
 jobs:
-  dockerize:
+  dockerize-core:
     environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' || '' }}
     runs-on: ubuntu-latest
     permissions:
@@ -37,6 +47,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=raw,enable=${{ startsWith(github.ref, 'refs/tags/v') }},value=prerelease
+            type=raw,enable=${{ inputs.target == 'prod' }},value=prod
             type=edge
 
       - name: Login to DockerHub
@@ -80,10 +91,50 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  deploy-dev:
+  dockerize-cloud:
     runs-on: ubuntu-latest
-    needs: dockerize
-    environment: dev
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/logto-io/cloud
+          # https://github.com/docker/metadata-action
+          tags: |
+            type=raw,enable=${{ inputs.target == 'prod' }},value=prod
+            type=edge
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: silverhand-bot
+          password: ${{ secrets.BOT_PAT }}
+      
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          file: Dockerfile.cloud
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            admin_endpoint=https://auth.logto.${{ inputs.target == 'prod' && 'io' || 'dev' }}/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [dockerize-core, dockerize-cloud]
+    environment: ${{ inputs.target || 'dev' }}
     if: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
     steps:
@@ -92,23 +143,37 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
-      - name: Deploy alteration
+      - name: Deploy database alteration
+        if: github.environment == 'dev'
         run: |
           pnpm prepack
           pnpm cli db alt deploy next
         env:
-          DB_URL: ${{ secrets.DB_URL_DEV }}
+          DB_URL: ${{ secrets.DB_URL }}
+      
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: silverhand-bot
+          password: ${{ secrets.BOT_PAT }}
 
       - name: Login via Azure CLI
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      - name: Deploy to containerapp
+      - name: Deploy core to containerapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: logto-dev
-          images: svhd/logto:edge
+          app-name: ${{ env.APP_NAME_CORE }}
+          images: ghcr.io/logto-io/logto:${{ env.DOCKER_TAG }}
+
+      - name: Deploy cloud to containerapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.APP_NAME_CLOUD }}
+          images: ghcr.io/logto-io/cloud:${{ env.DOCKER_TAG }}
 
   # Publish packages and create git tags if needed
   publish-and-tag:
