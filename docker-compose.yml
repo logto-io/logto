@@ -18,7 +18,7 @@ services:
       - ENDPOINT
       - ADMIN_ENDPOINT
   postgres:
-    image: postgres:14-alpine
+    image: postgres:15-alpine
     user: postgres
     environment:
       POSTGRES_USER: postgres

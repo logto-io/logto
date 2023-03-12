@@ -26,7 +26,7 @@ services:
       - "npm run cli db seed -- --swe && ENDPOINT=$$UFFIZZI_URL npm start"
 
   postgres:
-    image: postgres:14-alpine
+    image: postgres:15-alpine
     user: postgres
     environment:
       POSTGRES_USER: "postgres"
