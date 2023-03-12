@@ -389,7 +389,7 @@ importers:
       koa-router: ^12.0.0
       koa-send: ^5.0.1
       lint-staged: ^13.0.0
-      lru-cache: ^7.14.1
+      lru-cache: ^8.0.0
       nanoid: ^4.0.0
       node-mocks-http: ^1.12.1
       nodemon: ^2.0.19
@@ -447,7 +447,7 @@ importers:
       koa-proxies: 0.12.1_koa@2.13.4
       koa-router: 12.0.0
       koa-send: 5.0.1
-      lru-cache: 7.14.1
+      lru-cache: 8.0.0
       nanoid: 4.0.0
       oidc-provider: 8.0.0
       p-retry: 5.1.2
@@ -10073,9 +10073,9 @@ packages:
     dependencies:
       yallist: 4.0.0
 
-  /lru-cache/7.14.1:
-    resolution: {integrity: sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA==}
-    engines: {node: '>=12'}
+  /lru-cache/8.0.0:
+    resolution: {integrity: sha512-pMu1vSJIwJPS/YuMJAJFjvKA2OC7rvgKqJHr90JmZ1kv/hO+MuzqHRSWqyn730vlOwc1Bx/c8+3izTGzmKyXNQ==}
+    engines: {node: '>=16.14'}
     dev: false
 
   /lz-string/1.4.4:
