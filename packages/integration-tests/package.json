@@ -55,6 +55,6 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@withtyped/server": "^0.8.0"
+    "@withtyped/server": "^0.8.1"
   }
 }
