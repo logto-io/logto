@@ -47,11 +47,13 @@
         .topBar {
           display: flex;
           align-items: center;
-          padding: _.unit(3) _.unit(6);
+          padding: _.unit(3) _.unit(4);
 
           .time {
             flex: 1;
             font: var(--font-label-2);
+            transform-origin: left center;
+            transform: scale(0.8);
           }
         }
 
