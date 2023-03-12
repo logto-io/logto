@@ -36,8 +36,6 @@
     "@logto/schemas": "workspace:*",
     "@logto/shared": "workspace:*",
     "@silverhand/essentials": "2.4.0",
-    "@withtyped/postgres": "^0.8.1",
-    "@withtyped/server": "^0.8.1",
     "aws-sdk": "^2.1329.0",
     "chalk": "^5.0.0",
     "clean-deep": "^3.4.0",

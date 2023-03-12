@@ -16,8 +16,6 @@ import koaOIDCErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
 import koaSlonikErrorHandler from '#src/middleware/koa-slonik-error-handler.js';
 import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
 import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
-import type { ModelRouters } from '#src/model-routers/index.js';
-import { createModelRouters } from '#src/model-routers/index.js';
 import initOidc from '#src/oidc/init.js';
 import initMeApis from '#src/routes-me/init.js';
 import initApis from '#src/routes/init.js';
@@ -39,7 +37,6 @@ export default class Tenant implements TenantContext {
   public readonly provider: Provider;
   public readonly queries: Queries;
   public readonly libraries: Libraries;
-  public readonly modelRouters: ModelRouters;
 
   public readonly app: Koa;
 
@@ -56,9 +53,8 @@ export default class Tenant implements TenantContext {
   }
 
   private constructor(public readonly envSet: EnvSet, public readonly id: string) {
-    const modelRouters = createModelRouters(envSet.queryClient);
     const queries = new Queries(envSet.pool);
-    const libraries = new Libraries(queries, modelRouters);
+    const libraries = new Libraries(queries);
     const isAdminTenant = id === adminTenantId;
     const mountedApps = [
       ...Object.values(UserApps),
@@ -66,7 +62,6 @@ export default class Tenant implements TenantContext {
     ];
 
     this.envSet = envSet;
-    this.modelRouters = modelRouters;
     this.queries = queries;
     this.libraries = libraries;
 
@@ -90,7 +85,6 @@ export default class Tenant implements TenantContext {
       provider,
       queries,
       libraries,
-      modelRouters,
       envSet,
     };
     // Mount APIs

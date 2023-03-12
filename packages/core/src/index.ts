@@ -18,13 +18,14 @@ try {
   const app = new Koa({
     proxy: EnvSet.values.trustProxyHeader,
   });
+  const sharedAdminPool = await EnvSet.sharedPool;
   await initI18n();
   await loadConnectorFactories();
   await Promise.all([
-    checkRowLevelSecurity(EnvSet.queryClient),
-    checkAlterationState(await EnvSet.pool),
+    checkRowLevelSecurity(sharedAdminPool),
+    checkAlterationState(sharedAdminPool),
   ]);
-  await SystemContext.shared.loadStorageProviderConfig(await EnvSet.pool);
+  await SystemContext.shared.loadStorageProviderConfig(sharedAdminPool);
 
   // Import last until init completed
   const { default: initApp } = await import('./app/init.js');

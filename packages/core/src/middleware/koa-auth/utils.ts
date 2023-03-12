@@ -33,7 +33,7 @@ export const getAdminTenantTokenValidationSet = async (): Promise<{
     return { keys: [], issuer: [] };
   }
 
-  const pool = await EnvSet.pool;
+  const pool = await EnvSet.sharedPool;
   const { value } = await pool.one<LogtoConfig>(sql`
     select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
       where ${fields.tenantId} = ${adminTenantId}

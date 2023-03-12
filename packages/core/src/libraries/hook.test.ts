@@ -1,10 +1,7 @@
-import { InteractionEvent, LogResult } from '@logto/schemas';
-import { HookEvent } from '@logto/schemas/lib/models/hooks.js';
+import type { Hook } from '@logto/schemas';
+import { HookEvent, InteractionEvent, LogResult } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
-import type { InferModelType } from '@withtyped/server';
 import { got } from 'got';
-
-import type { ModelRouters } from '#src/model-routers/index.js';
 
 import type { Interaction } from './hook.js';
 
@@ -18,19 +15,15 @@ await mockEsmWithActual('@logto/core-kit', () => ({
   generateStandardId: () => nanoIdMock,
 }));
 
-const { createModelRouters } = await import('#src/model-routers/index.js');
-const { MockQueryClient } = await import('#src/test-utils/query-client.js');
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 
-const queryClient = new MockQueryClient();
-const queryFunction = jest.fn();
-
 const url = 'https://logto.gg';
-const hook: InferModelType<ModelRouters['hook']['model']> = {
+const hook: Hook = {
+  tenantId: 'bar',
   id: 'foo',
   event: HookEvent.PostSignIn,
   config: { headers: { bar: 'baz' }, url, retries: 3 },
-  createdAt: new Date(),
+  createdAt: Date.now() / 1000,
 };
 
 const post = jest
@@ -39,13 +32,9 @@ const post = jest
   .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
 
 const insertLog = jest.fn();
-
-// eslint-disable-next-line unicorn/consistent-function-scoping
-mockEsmDefault('#src/env-set/create-query-client.js', () => () => queryClient);
-jest.spyOn(queryClient, 'query').mockImplementation(queryFunction);
+const findAllHooks = jest.fn().mockResolvedValue([hook]);
 
 const { createHookLibrary } = await import('./hook.js');
-const modelRouters = createModelRouters(new MockQueryClient());
 const { triggerInteractionHooksIfNeeded } = createHookLibrary(
   new MockQueries({
     // @ts-expect-error
@@ -55,13 +44,9 @@ const { triggerInteractionHooksIfNeeded } = createHookLibrary(
       findApplicationById: async () => ({ id: 'app_id', extraField: 'not_ok' }),
     },
     logs: { insertLog },
-  }),
-  modelRouters
+    hooks: { findAllHooks },
+  })
 );
-
-const readAll = jest
-  .spyOn(modelRouters.hook.client, 'readAll')
-  .mockResolvedValue({ rows: [hook], rowCount: 1 });
 
 describe('triggerInteractionHooksIfNeeded()', () => {
   afterEach(() => {
@@ -71,7 +56,7 @@ describe('triggerInteractionHooksIfNeeded()', () => {
   it('should return if no user ID found', async () => {
     await triggerInteractionHooksIfNeeded(InteractionEvent.SignIn);
 
-    expect(queryFunction).not.toBeCalled();
+    expect(findAllHooks).not.toBeCalled();
   });
 
   it('should set correct payload when hook triggered', async () => {
@@ -87,7 +72,7 @@ describe('triggerInteractionHooksIfNeeded()', () => {
       } as Interaction
     );
 
-    expect(readAll).toHaveBeenCalled();
+    expect(findAllHooks).toHaveBeenCalled();
     expect(post).toHaveBeenCalledWith(url, {
       headers: { 'user-agent': 'Logto (https://logto.io)', bar: 'baz' },
       json: {

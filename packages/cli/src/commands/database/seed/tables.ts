@@ -17,7 +17,7 @@ import {
   createAdminTenantApplicationRole,
   CloudScope,
 } from '@logto/schemas';
-import { Hooks, Tenants } from '@logto/schemas/models';
+import { Tenants } from '@logto/schemas/models';
 import type { DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
 import { raw } from 'slonik-sql-tag-raw';
@@ -94,7 +94,6 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
   };
 
   const allQueries: Array<[string, string]> = [
-    [Hooks.tableName, Hooks.raw],
     [Tenants.tableName, Tenants.raw],
     ...queries.filter(([file]) => !lifecycleNames.includes(file.slice(1, -4))),
   ];

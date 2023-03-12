@@ -1,6 +1,11 @@
 import { generateStandardId } from '@logto/core-kit';
-import { InteractionEvent, LogResult, userInfoSelectFields } from '@logto/schemas';
-import { HookEventPayload, HookEvent } from '@logto/schemas/models';
+import {
+  HookEvent,
+  HookEventPayload,
+  InteractionEvent,
+  LogResult,
+  userInfoSelectFields,
+} from '@logto/schemas';
 import { trySafe } from '@logto/shared';
 import { conditional, pick } from '@silverhand/essentials';
 import type { Response } from 'got';
@@ -8,7 +13,6 @@ import { got, HTTPError } from 'got';
 import type Provider from 'oidc-provider';
 
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
-import type { ModelRouters } from '#src/model-routers/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
 const parseResponse = ({ statusCode, body }: Response) => ({
@@ -25,12 +29,13 @@ const eventToHook: Record<InteractionEvent, HookEvent> = {
 
 export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
 
-export const createHookLibrary = (queries: Queries, { hook }: ModelRouters) => {
+export const createHookLibrary = (queries: Queries) => {
   const {
     applications: { findApplicationById },
     logs: { insertLog },
     // TODO: @gao should we use the library function thus we can pass full userinfo to the payload?
     users: { findUserById },
+    hooks: { findAllHooks },
   } = queries;
 
   const triggerInteractionHooksIfNeeded = async (
@@ -47,7 +52,7 @@ export const createHookLibrary = (queries: Queries, { hook }: ModelRouters) => {
     }
 
     const hookEvent = eventToHook[event];
-    const { rows } = await hook.client.readAll();
+    const rows = await findAllHooks();
 
     const [user, application] = await Promise.all([
       trySafe(findUserById(userId)),

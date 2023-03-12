@@ -2,9 +2,9 @@ import { Systems } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
 import { isKeyInObject } from '@logto/shared';
 import { conditional, conditionalString } from '@silverhand/essentials';
-import { identifier, sql } from '@withtyped/postgres';
-import type { QueryClient } from '@withtyped/server';
-import { parseDsn, stringifyDsn } from 'slonik';
+import type { CommonQueryMethods } from 'slonik';
+import { parseDsn, sql, stringifyDsn } from 'slonik';
+import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 
@@ -13,16 +13,19 @@ export class TenantNotFoundError extends Error {}
 /**
  * This function is to fetch the tenant password for the corresponding Postgres user.
  *
- * In multi-tenancy mode, Logto should ALWAYS use a restricted user with RLS enforced to ensure data isolation between tenants.
+ * ** **CAUTION** ** In multi-tenancy mode, Logto should ALWAYS use a restricted user with RLS enforced to ensure data isolation between tenants.
  */
 export const getTenantDatabaseDsn = async (tenantId: string) => {
-  const { queryClient, dbUrl } = EnvSet;
+  const { sharedPool, dbUrl } = EnvSet;
   const {
     tableName,
     rawKeys: { id, dbUser, dbUserPassword },
   } = Tenants;
 
-  const { rows } = await queryClient.query(sql`
+  const identifier = (id: string) => sql.identifier([id]);
+  const pool = await sharedPool;
+
+  const { rows } = await pool.query(sql`
     select ${identifier(dbUser)}, ${identifier(dbUserPassword)}
     from ${identifier(tableName)}
     where ${identifier(id)} = ${tenantId}
@@ -33,17 +36,18 @@ export const getTenantDatabaseDsn = async (tenantId: string) => {
   }
 
   const options = parseDsn(dbUrl);
-  const username = rows[0][dbUser];
-  const password = rows[0][dbUserPassword];
+  const { dbUser: username, dbUserPassword: password } = z
+    .object({ dbUser: z.string(), dbUserPassword: z.string().optional() })
+    .parse(rows[0]);
 
   return stringifyDsn({
     ...options,
-    username: conditional(typeof username === 'string' && username),
+    username,
     password: conditional(typeof password === 'string' && password),
   });
 };
 
-export const checkRowLevelSecurity = async (client: QueryClient) => {
+export const checkRowLevelSecurity = async (client: CommonQueryMethods) => {
   const { rows } = await client.query(sql`
     select tablename
     from pg_catalog.pg_tables
