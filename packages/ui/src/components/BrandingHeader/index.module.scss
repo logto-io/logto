@@ -14,6 +14,7 @@ $logo-height: 40px;
 }
 
 .headline {
+  flex-shrink: 0;
   text-align: center;
   color: var(--color-type-primary);
   @include _.multi-line-ellipsis(2);
