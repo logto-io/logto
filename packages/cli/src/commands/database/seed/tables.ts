@@ -12,6 +12,10 @@ import {
   createAdminTenantSignInExperience,
   createDefaultAdminConsoleApplication,
   createCloudApi,
+  createTenantApplicationRole,
+  createTenantMachineToMachineApplication,
+  createAdminTenantApplicationRole,
+  CloudScope,
 } from '@logto/schemas';
 import { Hooks, Tenants } from '@logto/schemas/models';
 import type { DatabaseTransactionConnection } from 'slonik';
@@ -128,7 +132,27 @@ export const seedTables = async (
   await seedAdminData(connection, createMeApiInAdminTenant());
 
   const [cloudData, ...cloudAdditionalScopes] = createCloudApi();
+  const applicationRole = createTenantApplicationRole();
   await seedAdminData(connection, cloudData, ...cloudAdditionalScopes);
+  await connection.query(insertInto(applicationRole, 'roles'));
+  await assignScopesToRole(
+    connection,
+    adminTenantId,
+    applicationRole.id,
+    ...cloudAdditionalScopes
+      .filter(({ name }) => name === CloudScope.SendSms || name === CloudScope.SendEmail)
+      .map(({ id }) => id)
+  );
+
+  // Add M2M app for default tenant
+  const defaultTenantApplication = createTenantMachineToMachineApplication(defaultTenantId);
+  await connection.query(insertInto(defaultTenantApplication, 'applications'));
+  await connection.query(
+    insertInto(
+      createAdminTenantApplicationRole(defaultTenantApplication.id, applicationRole.id),
+      'applications_roles'
+    )
+  );
 
   // Assign all cloud API scopes to role `admin:admin`
   await assignScopesToRole(

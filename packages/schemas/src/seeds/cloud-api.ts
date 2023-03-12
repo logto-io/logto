@@ -1,6 +1,6 @@
 import { generateStandardId } from '@logto/core-kit';
 
-import type { CreateScope } from '../index.js';
+import type { CreateScope, Role } from '../index.js';
 import { AdminTenantRole } from '../types/index.js';
 import type { UpdateAdminData } from './management-api.js';
 import { adminTenantId } from './tenant.js';
@@ -11,6 +11,8 @@ export const cloudApiIndicator = 'https://cloud.logto.io/api';
 export enum CloudScope {
   CreateTenant = 'create:tenant',
   ManageTenant = 'manage:tenant',
+  SendSms = 'send:sms',
+  SendEmail = 'send:email',
 }
 
 export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> => {
@@ -41,5 +43,21 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
       CloudScope.ManageTenant,
       'Allow managing existing tenants, including create without limitation, update, and delete.'
     ),
+    buildScope(
+      CloudScope.SendEmail,
+      'Allow sending emails. This scope is only available to M2M application.'
+    ),
+    buildScope(
+      CloudScope.SendSms,
+      'Allow sending SMS. This scope is only available to M2M application.'
+    ),
   ]);
 };
+
+export const createTenantApplicationRole = (): Readonly<Role> => ({
+  tenantId: adminTenantId,
+  id: generateStandardId(),
+  name: AdminTenantRole.TenantApplication,
+  description:
+    'The role for M2M applications that represent a user tenant and send requests to Logto Cloud.',
+});

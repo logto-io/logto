@@ -1,6 +1,10 @@
 import { generateStandardId } from '@logto/core-kit';
 
-import type { Application, CreateApplication } from '../db-entries/index.js';
+import type {
+  Application,
+  CreateApplication,
+  CreateApplicationsRole,
+} from '../db-entries/index.js';
 import { ApplicationType } from '../db-entries/index.js';
 import { adminTenantId } from './tenant.js';
 
@@ -34,4 +38,35 @@ export const createDefaultAdminConsoleApplication = (): Readonly<CreateApplicati
     description: 'Logto Admin Console.',
     type: ApplicationType.SPA,
     oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
+  });
+
+export const createTenantMachineToMachineApplication = (
+  tenantId: string
+): Readonly<CreateApplication> =>
+  Object.freeze({
+    tenantId: adminTenantId,
+    id: generateStandardId(),
+    name: 'Cloud Service',
+    description: `Machine to machine application for tenant ${tenantId}`,
+    secret: generateStandardId(),
+    type: ApplicationType.MachineToMachine,
+    oidcClientMetadata: {
+      redirectUris: [],
+      postLogoutRedirectUris: [],
+    },
+    customClientMetadata: {
+      tenantId,
+    },
+  });
+
+/** Create role for "tenant application (M2M)" in admin tenant */
+export const createAdminTenantApplicationRole = (
+  applicationId: string,
+  roleId: string
+): Readonly<CreateApplicationsRole> =>
+  Object.freeze({
+    id: generateStandardId(),
+    tenantId: adminTenantId,
+    applicationId,
+    roleId,
   });

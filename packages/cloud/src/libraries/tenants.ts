@@ -5,6 +5,9 @@ import {
 import { generateStandardId } from '@logto/core-kit';
 import type { LogtoOidcConfigType, TenantInfo, TenantModel } from '@logto/schemas';
 import {
+  createAdminTenantApplicationRole,
+  AdminTenantRole,
+  createTenantMachineToMachineApplication,
   LogtoOidcConfigKey,
   LogtoConfigs,
   SignInExperiences,
@@ -18,7 +21,9 @@ import { createTenantMetadata } from '@logto/shared';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
+import { createApplicationsQueries } from '#src/queries/application.js';
 import type { Queries } from '#src/queries/index.js';
+import { createRolesQuery } from '#src/queries/roles.js';
 import { createTenantsQueries } from '#src/queries/tenants.js';
 import { createUsersQueries } from '#src/queries/users.js';
 import { getDatabaseName } from '#src/queries/utils.js';
@@ -61,6 +66,8 @@ export class TenantsLibrary {
     const transaction = await this.queries.client.transaction();
     const tenants = createTenantsQueries(transaction);
     const users = createUsersQueries(transaction);
+    const applications = createApplicationsQueries(transaction);
+    const roles = createRolesQuery(transaction);
 
     /* --- Start --- */
     await transaction.start();
@@ -79,6 +86,16 @@ export class TenantsLibrary {
       userId: forUserId,
       roleId: adminDataInAdminTenant.role.id,
     });
+    // Create M2M App
+    const m2mRoleId = await roles.findRoleIdByName(
+      AdminTenantRole.TenantApplication,
+      adminTenantId
+    );
+    const m2mApplication = createTenantMachineToMachineApplication(tenantId);
+    await applications.insertApplication(m2mApplication);
+    await applications.assignRoleToApplication(
+      createAdminTenantApplicationRole(m2mApplication.id, m2mRoleId)
+    );
 
     // Create initial configs
     await Promise.all([

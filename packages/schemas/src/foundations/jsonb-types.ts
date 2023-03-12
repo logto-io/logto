@@ -67,12 +67,14 @@ export enum CustomClientMetadataKey {
   CorsAllowedOrigins = 'corsAllowedOrigins',
   IdTokenTtl = 'idTokenTtl',
   RefreshTokenTtl = 'refreshTokenTtl',
+  TenantId = 'tenantId',
 }
 
 export const customClientMetadataGuard = z.object({
   [CustomClientMetadataKey.CorsAllowedOrigins]: z.string().url().array().optional(),
   [CustomClientMetadataKey.IdTokenTtl]: z.number().optional(),
   [CustomClientMetadataKey.RefreshTokenTtl]: z.number().optional(),
+  [CustomClientMetadataKey.TenantId]: z.string().optional(),
 });
 
 export type CustomClientMetadata = z.infer<typeof customClientMetadataGuard>;
