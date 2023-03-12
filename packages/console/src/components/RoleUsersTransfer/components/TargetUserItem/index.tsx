@@ -12,13 +12,13 @@ type Props = {
   onDelete: () => void;
 };
 
-const TargetUserItem = ({ user: { avatar, name }, onDelete }: Props) => {
+const TargetUserItem = ({ user, onDelete }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <div className={styles.item}>
-      <UserAvatar className={styles.avatar} url={avatar} />
-      <div className={styles.name}>{name ?? t('users.unnamed')}</div>
+      <UserAvatar user={user} size="micro" />
+      <div className={styles.name}>{user.name ?? t('users.unnamed')}</div>
       <IconButton
         size="small"
         iconClassName={styles.icon}

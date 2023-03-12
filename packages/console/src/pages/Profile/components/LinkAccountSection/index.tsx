@@ -70,7 +70,7 @@ const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
         icon: <ImageWithErrorFallback src={logoSrc} />,
         label: <UnnamedTrans resource={name} />,
         value: conditional(hasLinked && relatedUserDetails),
-        renderer: (user) => (user ? <UserInfoCard user={user} avatarSize="small" /> : <NotSet />),
+        renderer: (user) => (user ? <UserInfoCard user={user} /> : <NotSet />),
         action: hasLinked
           ? {
               name: 'profile.unlink',

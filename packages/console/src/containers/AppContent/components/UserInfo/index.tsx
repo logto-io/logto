@@ -44,6 +44,8 @@ const UserInfo = () => {
     return <UserInfoSkeleton />;
   }
 
+  const { avatar, name } = user ?? {};
+
   return (
     <>
       <div
@@ -58,7 +60,7 @@ const UserInfo = () => {
           setShowDropdown(true);
         }}
       >
-        <UserAvatar url={user?.avatar} />
+        <UserAvatar user={user} />
       </div>
       <Dropdown
         hasOverflowContent
@@ -70,7 +72,7 @@ const UserInfo = () => {
           setShowDropdown(false);
         }}
       >
-        <UserInfoCard className={styles.userInfo} user={user} />
+        <UserInfoCard className={styles.userInfo} user={user} avatarSize="large" />
         <Divider />
         <DropdownItem
           className={classNames(styles.dropdownItem, isLoading && styles.loading)}

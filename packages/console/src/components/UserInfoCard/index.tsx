@@ -11,18 +11,21 @@ type Props = {
     Pick<User, 'name' | 'username' | 'avatar' | 'primaryEmail'> &
       Pick<IdTokenClaims, 'picture' | 'email'>
   >;
-  avatarSize?: 'small' | 'medium' | 'large';
+  avatarSize?: 'medium' | 'large';
 };
 
 const UserInfoCard = ({ className, user, avatarSize = 'medium' }: Props) => {
   const { name, username, avatar, picture, primaryEmail, email } = user ?? {};
   const avatarToDisplay = avatar ?? picture;
-  const nameToDisplay = name ?? username ?? '-';
-  const emailToDisplay = primaryEmail ?? email ?? '-';
+  const nameToDisplay = name ?? username;
+  const emailToDisplay = primaryEmail ?? email;
 
   return (
     <div className={classNames(styles.userInfo, className)}>
-      <UserAvatar className={styles.avatar} url={avatarToDisplay} size={avatarSize} />
+      <UserAvatar
+        size={avatarSize}
+        user={{ name, username, avatar: avatarToDisplay, primaryEmail: emailToDisplay }}
+      />
       <div className={styles.nameWrapper}>
         <div className={styles.name}>{nameToDisplay}</div>
         {emailToDisplay && <div className={styles.email}>{emailToDisplay}</div>}

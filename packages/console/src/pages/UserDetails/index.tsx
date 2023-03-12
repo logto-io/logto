@@ -85,7 +85,7 @@ const UserDetails = () => {
       {data && (
         <>
           <Card className={styles.header}>
-            <UserAvatar className={styles.avatar} url={data.avatar} />
+            <UserAvatar user={data} size="xlarge" />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
               <div>

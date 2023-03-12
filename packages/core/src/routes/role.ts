@@ -67,7 +67,7 @@ export default function roleRoutes<T extends AuthedRouter>(
             return {
               ...role,
               usersCount: count,
-              featuredUsers: users.map(({ id, avatar }) => ({ id, avatar })),
+              featuredUsers: users.map(({ id, avatar, name }) => ({ id, avatar, name })),
             };
           })
         );

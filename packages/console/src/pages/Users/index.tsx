@@ -93,15 +93,19 @@ const Users = () => {
             title: t('users.user_name'),
             dataIndex: 'name',
             colSpan: 6,
-            render: ({ id, name, avatar }) => (
-              <ItemPreview
-                title={name ?? t('users.unnamed')}
-                subtitle={id}
-                icon={<UserAvatar className={styles.avatar} url={avatar} />}
-                to={buildDetailsPathname(id)}
-                size="compact"
-              />
-            ),
+            render: (user) => {
+              const { id, name } = user;
+
+              return (
+                <ItemPreview
+                  title={name ?? t('users.unnamed')}
+                  subtitle={id}
+                  icon={<UserAvatar user={user} />}
+                  to={buildDetailsPathname(id)}
+                  size="compact"
+                />
+              );
+            },
           },
           {
             title: t('users.application_name'),

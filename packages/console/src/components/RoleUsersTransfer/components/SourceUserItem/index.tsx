@@ -13,7 +13,7 @@ type Props = {
   onSelect: () => void;
 };
 
-const SourceUserItem = ({ user: { avatar, name }, isSelected, onSelect }: Props) => {
+const SourceUserItem = ({ user, isSelected, onSelect }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -34,8 +34,8 @@ const SourceUserItem = ({ user: { avatar, name }, isSelected, onSelect }: Props)
           onSelect();
         }}
       />
-      <UserAvatar className={styles.avatar} url={avatar} />
-      <div className={styles.name}>{name ?? t('users.unnamed')}</div>
+      <UserAvatar user={user} size="micro" />
+      <div className={styles.name}>{user.name ?? t('users.unnamed')}</div>
     </div>
   );
 };
