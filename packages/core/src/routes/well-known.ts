@@ -1,18 +1,27 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
+import { isBuiltInLanguageTag } from '@logto/phrases-ui';
 import { adminTenantId } from '@logto/schemas';
+import { object, string } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import detectLanguage from '#src/i18n/detect-language.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(
-  ...[router, { libraries, id }]: RouterInitArgs<T>
+  ...[router, { queries, libraries, id }]: RouterInitArgs<T>
 ) {
+  const {
+    customPhrases: { findAllCustomLanguageTags },
+    signInExperiences: { findDefaultSignInExperience },
+  } = queries;
   const {
     signInExperiences: { getSignInExperience },
     connectors: { getLogtoConnectors },
+    phrases: { getPhrases },
   } = libraries;
 
   if (id === adminTenantId) {
@@ -61,4 +70,36 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
 
     return next();
   });
+
+  router.get(
+    '/.well-known/phrases',
+    koaGuard({
+      query: object({
+        lng: string().optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const {
+        query: { lng },
+      } = ctx.guard;
+
+      const {
+        languageInfo: { autoDetect, fallbackLanguage },
+      } = await findDefaultSignInExperience();
+
+      const targetLanguage = lng ? [lng] : [];
+      const detectedLanguages = autoDetect ? detectLanguage(ctx) : [];
+      const acceptableLanguages = [...targetLanguage, ...detectedLanguages, fallbackLanguage];
+      const customLanguages = await findAllCustomLanguageTags();
+      const language =
+        acceptableLanguages.find(
+          (tag) => isBuiltInLanguageTag(tag) || customLanguages.includes(tag)
+        ) ?? 'en';
+
+      ctx.set('Content-Language', language);
+      ctx.body = await getPhrases(language, customLanguages);
+
+      return next();
+    }
+  );
 }

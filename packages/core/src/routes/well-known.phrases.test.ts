@@ -49,7 +49,7 @@ const tenantContext = new MockTenant(
   { phrases: { getPhrases } }
 );
 
-const phraseRoutes = await pickDefault(import('./phrase.js'));
+const phraseRoutes = await pickDefault(import('./well-known.js'));
 
 const { createRequester } = await import('#src/utils/test-utils.js');
 const phraseRequest = createRequester({
@@ -63,7 +63,7 @@ describe('when the application is not admin-console', () => {
   });
 
   it('should call findDefaultSignInExperience', async () => {
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
+    await expect(phraseRequest.get('/.well-known/phrases')).resolves.toHaveProperty('status', 200);
     expect(findDefaultSignInExperience).toBeCalledTimes(1);
   });
 
@@ -75,7 +75,7 @@ describe('when the application is not admin-console', () => {
         autoDetect: true,
       },
     });
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
+    await expect(phraseRequest.get('/.well-known/phrases')).resolves.toHaveProperty('status', 200);
     expect(detectLanguageSpy).toBeCalledTimes(1);
   });
 
@@ -87,12 +87,12 @@ describe('when the application is not admin-console', () => {
         autoDetect: false,
       },
     });
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
+    await expect(phraseRequest.get('/.well-known/phrases')).resolves.toHaveProperty('status', 200);
     expect(detectLanguageSpy).not.toBeCalled();
   });
 
   it('should call findAllCustomLanguageTags', async () => {
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
+    await expect(phraseRequest.get('/.well-known/phrases')).resolves.toHaveProperty('status', 200);
     expect(findAllCustomLanguageTags).toBeCalledTimes(1);
   });
 
@@ -104,7 +104,7 @@ describe('when the application is not admin-console', () => {
         fallbackLanguage: customizedLanguage,
       },
     });
-    await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
+    await expect(phraseRequest.get('/.well-known/phrases')).resolves.toHaveProperty('status', 200);
     expect(getPhrases).toBeCalledTimes(1);
     expect(getPhrases).toBeCalledWith(customizedLanguage, [customizedLanguage]);
   });
@@ -117,7 +117,10 @@ describe('when the application is not admin-console', () => {
         fallbackLanguage: customizedLanguage,
       },
     });
-    await expect(phraseRequest.get('/phrase?lng=fr')).resolves.toHaveProperty('status', 200);
+    await expect(phraseRequest.get('/.well-known/phrases?lng=fr')).resolves.toHaveProperty(
+      'status',
+      200
+    );
     expect(getPhrases).toBeCalledWith('fr', [customizedLanguage]);
   });
 });
