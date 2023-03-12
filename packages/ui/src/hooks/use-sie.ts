@@ -20,6 +20,8 @@ export const useSieMethods = () => {
     socialConnectors: experienceSettings?.socialConnectors ?? [],
     signInMode: experienceSettings?.signInMode,
     forgotPassword: experienceSettings?.forgotPassword,
+    customCss: experienceSettings?.customCss,
+    customContent: experienceSettings?.customContent,
   };
 };
 

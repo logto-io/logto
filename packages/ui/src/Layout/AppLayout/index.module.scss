@@ -24,16 +24,11 @@
 
 .container {
   min-height: 100%;
-  @include _.flex_column(center, normal);
+  @include _.flex_column(center, center);
 }
 
 .main {
   @include _.flex_column;
-}
-
-.placeHolder {
-  flex: 1;
-  min-height: _.unit(5);
 }
 
 :global(body.mobile) {
@@ -48,13 +43,13 @@
     position: relative;
     background: var(--color-bg-body);
   }
-
-  .placeHolder {
-    display: none;
-  }
 }
 
 :global(body.desktop) {
+  .container {
+    padding: _.unit(5);
+  }
+
   .main {
     width: 640px;
     min-height: 640px;
