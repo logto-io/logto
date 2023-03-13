@@ -82,12 +82,12 @@ const SignInExperience = () => {
     handleSubmit,
     getValues,
     watch,
-    formState: { isSubmitting, isDirty, errors },
+    formState: { isSubmitting, isDirty, dirtyFields, errors },
   } = methods;
   const api = useApi();
   const formData = watch();
 
-  const previewConfigs = usePreviewConfigs(formData, isDirty, data);
+  const previewConfigs = usePreviewConfigs(formData, isDirty, dirtyFields, data);
 
   const defaultFormData = useMemo(() => {
     if (!data) {
