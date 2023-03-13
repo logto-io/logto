@@ -11,19 +11,20 @@ import assertThat from '#src/utils/assert-that.js';
 import { isKeyOf } from '#src/utils/schema.js';
 
 type BuildUpdateWhere = {
-  <Schema extends SchemaLike, ReturnType extends SchemaLike>(
-    schema: GeneratedSchema<Schema>,
+  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
+    schema: GeneratedSchema<CreateSchema, Schema>,
     returning: true
-  ): (data: UpdateWhereData<Schema>) => Promise<ReturnType>;
-  <Schema extends SchemaLike>(schema: GeneratedSchema<Schema>, returning?: false): (
-    data: UpdateWhereData<Schema>
-  ) => Promise<void>;
+  ): (data: UpdateWhereData<Schema>) => Promise<Schema>;
+  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
+    schema: GeneratedSchema<CreateSchema, Schema>,
+    returning?: false
+  ): (data: UpdateWhereData<Schema>) => Promise<void>;
 };
 
 export const buildUpdateWhereWithPool =
   (pool: CommonQueryMethods): BuildUpdateWhere =>
-  <Schema extends SchemaLike, ReturnType extends SchemaLike>(
-    schema: GeneratedSchema<Schema>,
+  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
+    schema: GeneratedSchema<CreateSchema, Schema>,
     returning = false
   ) => {
     const { table, fields } = convertToIdentifiers(schema);
@@ -59,7 +60,7 @@ export const buildUpdateWhereWithPool =
     return async ({ set, where, jsonbMode }: UpdateWhereData<Schema>) => {
       const {
         rows: [data],
-      } = await pool.query<ReturnType>(sql`
+      } = await pool.query<Schema>(sql`
         update ${table}
         set ${sql.join(connectKeyValueWithEqualSign(set, jsonbMode), sql`, `)}
         where ${sql.join(connectKeyValueWithEqualSign(where, jsonbMode), sql` and `)}

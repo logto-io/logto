@@ -35,20 +35,20 @@ type InsertIntoConfig = {
 };
 
 type BuildInsertInto = {
-  <Schema extends SchemaLike, ReturnType extends SchemaLike>(
-    { fieldKeys, ...rest }: GeneratedSchema<Schema>,
+  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
+    { fieldKeys, ...rest }: GeneratedSchema<CreateSchema, Schema>,
     config: InsertIntoConfigReturning
-  ): (data: OmitAutoSetFields<Schema>) => Promise<ReturnType>;
-  <Schema extends SchemaLike>(
-    { fieldKeys, ...rest }: GeneratedSchema<Schema>,
+  ): (data: OmitAutoSetFields<CreateSchema>) => Promise<Schema>;
+  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
+    { fieldKeys, ...rest }: GeneratedSchema<CreateSchema, Schema>,
     config?: InsertIntoConfig
-  ): (data: OmitAutoSetFields<Schema>) => Promise<void>;
+  ): (data: OmitAutoSetFields<CreateSchema>) => Promise<void>;
 };
 
 export const buildInsertIntoWithPool =
   (pool: CommonQueryMethods): BuildInsertInto =>
-  <Schema extends SchemaLike, ReturnType extends SchemaLike>(
-    schema: GeneratedSchema<Schema>,
+  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
+    schema: GeneratedSchema<CreateSchema, Schema>,
     config?: InsertIntoConfig | InsertIntoConfigReturning
   ) => {
     const { fieldKeys, ...rest } = schema;
@@ -57,11 +57,11 @@ export const buildInsertIntoWithPool =
     const returning = Boolean(config?.returning);
     const onConflict = config?.onConflict;
 
-    return async (data: OmitAutoSetFields<Schema>): Promise<ReturnType | void> => {
+    return async (data: OmitAutoSetFields<CreateSchema>): Promise<Schema | void> => {
       const insertingKeys = keys.filter((key) => has(data, key));
       const {
         rows: [entry],
-      } = await pool.query<ReturnType>(sql`
+      } = await pool.query<Schema>(sql`
         insert into ${table} (${sql.join(
         insertingKeys.map((key) => fields[key]),
         sql`, `
@@ -80,7 +80,7 @@ export const buildInsertIntoWithPool =
         ${conditionalSql(returning, () => sql`returning *`)}
       `);
 
-      assertThat(!returning || entry, new InsertionError(schema, data));
+      assertThat(!returning || entry, new InsertionError<CreateSchema, Schema>(schema, data));
 
       return entry;
     };

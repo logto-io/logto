@@ -9,8 +9,8 @@ import { isKeyOf } from '#src/utils/schema.js';
 
 export const buildFindEntityByIdWithPool =
   (pool: CommonQueryMethods) =>
-  <Schema extends SchemaLike, ReturnType extends SchemaLike>(
-    schema: GeneratedSchema<Schema & { id: string }>
+  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
+    schema: GeneratedSchema<CreateSchema, Schema & { id: string }>
   ) => {
     const { table, fields } = convertToIdentifiers(schema);
     const isKeyOfSchema = isKeyOf(schema);
@@ -20,7 +20,7 @@ export const buildFindEntityByIdWithPool =
 
     return async (id: string) => {
       try {
-        return await pool.one<ReturnType>(sql`
+        return await pool.one<Schema>(sql`
           select ${sql.join(Object.values(fields), sql`, `)}
           from ${table}
           where ${fields.id}=${id}

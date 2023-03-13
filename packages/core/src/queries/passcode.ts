@@ -1,5 +1,5 @@
 import type { VerificationCodeType } from '@logto/connector-kit';
-import type { Passcode, CreatePasscode, RequestVerificationCodePayload } from '@logto/schemas';
+import type { Passcode, RequestVerificationCodePayload } from '@logto/schemas';
 import { Passcodes } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -54,7 +54,7 @@ export const createPasscodeQueries = (pool: CommonQueryMethods) => {
     properties: FindByIdentifierAndTypeProperties
   ) => pool.any<Passcode>(buildSqlForFindByIdentifierAndType(properties));
 
-  const insertPasscode = buildInsertIntoWithPool(pool)<CreatePasscode, Passcode>(Passcodes, {
+  const insertPasscode = buildInsertIntoWithPool(pool)(Passcodes, {
     returning: true,
   });
 

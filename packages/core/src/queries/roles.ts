@@ -108,13 +108,13 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
       )}
     `);
 
-  const insertRole = buildInsertIntoWithPool(pool)<CreateRole, Role>(Roles, {
+  const insertRole = buildInsertIntoWithPool(pool)(Roles, {
     returning: true,
   });
 
-  const findRoleById = buildFindEntityByIdWithPool(pool)<CreateRole, Role>(Roles);
+  const findRoleById = buildFindEntityByIdWithPool(pool)(Roles);
 
-  const updateRole = buildUpdateWhereWithPool(pool)<CreateRole, Role>(Roles, true);
+  const updateRole = buildUpdateWhereWithPool(pool)(Roles, true);
 
   const updateRoleById = async (id: string, set: Partial<OmitAutoSetFields<CreateRole>>) =>
     updateRole({ set, where: { id }, jsonbMode: 'merge' });

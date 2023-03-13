@@ -1,4 +1,4 @@
-import type { CreateLog, Log } from '@logto/schemas';
+import type { Log } from '@logto/schemas';
 import { token, Logs } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -30,7 +30,7 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
   });
 
 export const createLogQueries = (pool: CommonQueryMethods) => {
-  const insertLog = buildInsertIntoWithPool(pool)<CreateLog>(Logs);
+  const insertLog = buildInsertIntoWithPool(pool)(Logs);
 
   const countLogs = async (condition: LogCondition) =>
     pool.one<{ count: number }>(sql`
@@ -49,7 +49,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       offset ${offset}
     `);
 
-  const findLogById = buildFindEntityByIdWithPool(pool)<CreateLog, Log>(Logs);
+  const findLogById = buildFindEntityByIdWithPool(pool)(Logs);
 
   const getDailyActiveUserCountsByTimeInterval = async (
     startTimeExclusive: number,

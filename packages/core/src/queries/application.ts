@@ -25,19 +25,11 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
         ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
       `)
     );
-  const findApplicationById = buildFindEntityByIdWithPool(pool)<CreateApplication, Application>(
-    Applications
-  );
-  const insertApplication = buildInsertIntoWithPool(pool)<CreateApplication, Application>(
-    Applications,
-    {
-      returning: true,
-    }
-  );
-  const updateApplication = buildUpdateWhereWithPool(pool)<CreateApplication, Application>(
-    Applications,
-    true
-  );
+  const findApplicationById = buildFindEntityByIdWithPool(pool)(Applications);
+  const insertApplication = buildInsertIntoWithPool(pool)(Applications, {
+    returning: true,
+  });
+  const updateApplication = buildUpdateWhereWithPool(pool)(Applications, true);
   const updateApplicationById = async (
     id: string,
     set: Partial<OmitAutoSetFields<CreateApplication>>

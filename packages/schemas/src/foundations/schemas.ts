@@ -18,7 +18,10 @@ export type SchemaLike<Key extends string = string> = {
   [key in Key]: SchemaValue;
 };
 
-export type GeneratedSchema<Schema extends SchemaLike> = keyof Schema extends string
+export type GeneratedSchema<
+  CreateSchema extends SchemaLike,
+  Schema extends CreateSchema
+> = keyof Schema extends string
   ? Readonly<{
       table: string;
       tableSingular: string;
@@ -26,7 +29,7 @@ export type GeneratedSchema<Schema extends SchemaLike> = keyof Schema extends st
         [key in keyof Required<Schema>]: string;
       };
       fieldKeys: ReadonlyArray<keyof Schema>;
-      createGuard: CreateGuard<Schema>;
+      createGuard: CreateGuard<CreateSchema>;
       guard: Guard<Schema>;
     }>
   : never;
