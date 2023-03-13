@@ -8,9 +8,18 @@ const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
 const getThemeBySystemConfiguration = (): Theme => (darkThemeWatchMedia.matches ? 'dark' : 'light');
 
 export default function useTheme(): Theme {
-  const { experienceSettings, theme, setTheme } = useContext(PageContext);
+  const { isPreview, experienceSettings, theme, setTheme } = useContext(PageContext);
 
   useEffect(() => {
+    /**
+     * Note:
+     * In preview mode, the theme of the page is controlled by the preview options and does not follow system changes.
+     * The `usePreview` hook changes the theme of the page by calling the `setTheme` API of the `PageContext`.
+     */
+    if (isPreview) {
+      return;
+    }
+
     if (!experienceSettings?.color.isDarkModeEnabled) {
       return;
     }
@@ -26,7 +35,7 @@ export default function useTheme(): Theme {
     return () => {
       darkThemeWatchMedia.removeEventListener('change', changeTheme);
     };
-  }, [experienceSettings, setTheme]);
+  }, [experienceSettings, isPreview, setTheme]);
 
   return theme;
 }

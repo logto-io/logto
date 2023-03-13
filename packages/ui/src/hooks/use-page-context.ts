@@ -3,6 +3,7 @@ import { useState, useMemo, createContext } from 'react';
 import { isMobile } from 'react-device-detect';
 
 import type { SignInExperienceResponse, Platform, Theme } from '@/types';
+import { parseQueryParameters } from '@/utils';
 
 export type Context = {
   theme: Theme;
@@ -11,6 +12,7 @@ export type Context = {
   platform: Platform;
   termsAgreement: boolean;
   experienceSettings: SignInExperienceResponse | undefined;
+  isPreview: boolean;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
   setToast: React.Dispatch<React.SetStateAction<string>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,6 +28,7 @@ export const PageContext = createContext<Context>({
   platform: isMobile ? 'mobile' : 'web',
   termsAgreement: false,
   experienceSettings: undefined,
+  isPreview: false,
   setTheme: noop,
   setToast: noop,
   setLoading: noop,
@@ -42,6 +45,9 @@ const usePageContext = () => {
   const [experienceSettings, setExperienceSettings] = useState<SignInExperienceResponse>();
   const [termsAgreement, setTermsAgreement] = useState(false);
 
+  const { preview } = parseQueryParameters(window.location.search);
+  const isPreview = preview === 'true';
+
   const context = useMemo(
     () => ({
       theme,
@@ -50,6 +56,7 @@ const usePageContext = () => {
       platform,
       termsAgreement,
       experienceSettings,
+      isPreview,
       setTheme,
       setLoading,
       setToast,
@@ -57,7 +64,7 @@ const usePageContext = () => {
       setTermsAgreement,
       setExperienceSettings,
     }),
-    [experienceSettings, loading, platform, termsAgreement, theme, toast]
+    [experienceSettings, isPreview, loading, platform, termsAgreement, theme, toast]
   );
 
   return {
