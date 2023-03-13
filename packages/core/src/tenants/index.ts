@@ -5,8 +5,8 @@ import Tenant from './Tenant.js';
 export class TenantPool {
   protected cache = new LRUCache<string, Tenant>({
     max: 100,
-    dispose: async (tenant) => {
-      await tenant.envSet.end();
+    dispose: (tenant) => {
+      void tenant.dispose();
     },
   });
 
