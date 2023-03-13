@@ -142,7 +142,7 @@ const Tooltip = ({
             horizontalAlignment={positionState.horizontalAlign}
             isSuccessful={isSuccessful}
           >
-            <div className={classNames(isContentTruncated && styles.ellipsis)}>{content}</div>
+            {content}
           </TipBubble>,
           tooltipDom
         )}
