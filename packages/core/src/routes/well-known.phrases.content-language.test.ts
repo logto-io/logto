@@ -32,7 +32,7 @@ const tenantContext = new MockTenant(
   { phrases: { getPhrases: jest.fn().mockResolvedValue(en) } }
 );
 
-const phraseRoutes = await pickDefault(import('./phrase.js'));
+const phraseRoutes = await pickDefault(import('./well-known.js'));
 
 const phraseRequest = createRequester({
   anonymousRoutes: phraseRoutes,
@@ -54,7 +54,7 @@ describe('when auto-detect is not enabled', () => {
       },
     });
     const response = await phraseRequest
-      .get('/phrase')
+      .get('/.well-known/phrases')
       .set('Accept-Language', `${zhCnTag},${zhHkTag}`);
     expect(response.headers['content-language']).toEqual('en');
   });
@@ -71,13 +71,13 @@ describe('when auto-detect is not enabled', () => {
     });
 
     it('when there is no detected language', async () => {
-      const response = await phraseRequest.get('/phrase');
+      const response = await phraseRequest.get('/.well-known/phrases');
       expect(response.headers['content-language']).toEqual(fallbackLanguage);
     });
 
     it('when there are detected languages', async () => {
       const response = await phraseRequest
-        .get('/phrase')
+        .get('/.well-known/phrases')
         .set('Accept-Language', `${zhCnTag},${zhHkTag}`);
       expect(response.headers['content-language']).toEqual(fallbackLanguage);
     });
@@ -95,7 +95,7 @@ describe('when auto-detect is enabled', () => {
       },
     });
     const response = await phraseRequest
-      .get('/phrase')
+      .get('/.well-known/phrases')
       .set('Accept-Language', unsupportedLanguageY);
     expect(response.headers['content-language']).toEqual('en');
   });
@@ -113,7 +113,7 @@ describe('when auto-detect is enabled', () => {
 
     describe('when there is no detected language', () => {
       it('should be fallback language from sign-in experience', async () => {
-        const response = await phraseRequest.get('/phrase');
+        const response = await phraseRequest.get('/.well-known/phrases');
         expect(response.headers['content-language']).toEqual(fallbackLanguage);
       });
     });
@@ -121,7 +121,7 @@ describe('when auto-detect is enabled', () => {
     describe('when there are detected languages but all of them is unsupported', () => {
       it('should be first supported detected language', async () => {
         const response = await phraseRequest
-          .get('/phrase')
+          .get('/.well-known/phrases')
           .set('Accept-Language', `${unsupportedLanguageX},${unsupportedLanguageY}`);
         expect(response.headers['content-language']).toEqual(fallbackLanguage);
       });
@@ -131,7 +131,7 @@ describe('when auto-detect is enabled', () => {
       it('should be first supported detected language', async () => {
         const firstSupportedLanguage = zhCnTag;
         const response = await phraseRequest
-          .get('/phrase')
+          .get('/.well-known/phrases')
           .set('Accept-Language', `${unsupportedLanguageX},${firstSupportedLanguage},${zhHkTag}`);
         expect(response.headers['content-language']).toEqual(firstSupportedLanguage);
       });

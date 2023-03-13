@@ -3,6 +3,7 @@
  * The API will be deprecated in the future once SSR is implemented.
  */
 
+import { conditionalString } from '@silverhand/essentials';
 import ky from 'ky';
 
 import type { SignInExperienceResponse } from '@/types';
@@ -30,4 +31,4 @@ export const getPhrases = async ({
         ],
       },
     })
-    .get(`/api/phrase${language ? `?lng=${language}` : ''}`);
+    .get(`/api/.well-known/phrases${conditionalString(language && `?lng=${language}`)}`);
