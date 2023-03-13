@@ -144,7 +144,7 @@ jobs:
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
       - name: Deploy database alteration
-        if: github.environment == 'dev'
+        if: ${{ (inputs.target || 'dev') == 'dev' }}
         run: |
           pnpm prepack
           pnpm cli db alt deploy next
@@ -166,14 +166,14 @@ jobs:
       - name: Deploy core to containerapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.APP_NAME_CORE }}
-          images: ghcr.io/logto-io/logto:${{ env.DOCKER_TAG }}
+          app-name: ${{ vars.APP_NAME_CORE }}
+          images: ghcr.io/logto-io/logto:${{ vars.DOCKER_TAG }}
 
       - name: Deploy cloud to containerapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.APP_NAME_CLOUD }}
-          images: ghcr.io/logto-io/cloud:${{ env.DOCKER_TAG }}
+          app-name: ${{ vars.APP_NAME_CLOUD }}
+          images: ghcr.io/logto-io/cloud:${{ vars.DOCKER_TAG }}
 
   # Publish packages and create git tags if needed
   publish-and-tag:
