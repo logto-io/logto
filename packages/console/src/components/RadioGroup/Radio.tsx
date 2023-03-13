@@ -1,9 +1,10 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import type { KeyboardEventHandler, ReactNode } from 'react';
+import type { KeyboardEventHandler, ReactElement, ReactNode } from 'react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import type DangerousRaw from '../DangerousRaw';
 import * as styles from './Radio.module.scss';
 
 const Check = () => (
@@ -18,7 +19,7 @@ const Check = () => (
 export type Props = {
   className?: string;
   value: string;
-  title?: AdminConsoleKey;
+  title?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   name?: string;
   children?: ReactNode;
   isChecked?: boolean;
@@ -85,7 +86,7 @@ const Radio = ({
         {children}
         {type === 'plain' && <div className={styles.indicator} />}
         {icon && <span className={styles.icon}>{icon}</span>}
-        {title && t(title)}
+        {title && (typeof title === 'string' ? t(title) : title)}
         {isDisabled && disabledLabel && (
           <div className={classNames(styles.indicator, styles.disabledLabel)}>
             {t(disabledLabel)}

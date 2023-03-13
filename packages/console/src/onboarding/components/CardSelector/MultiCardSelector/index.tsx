@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import type { Option } from '../types';
+import type { MultiCardSelectorOption } from '../types';
 import * as styles from './index.module.scss';
 
 type Props = {
-  options: Option[];
+  options: MultiCardSelectorOption[];
   value: string[];
   onChange: (value: string[]) => void;
   isNotAllowEmpty?: boolean;
@@ -39,7 +39,7 @@ const MultiCardSelector = ({
 
   return (
     <div className={classNames(styles.selector, className)}>
-      {options.map(({ icon, title, value }) => (
+      {options.map(({ icon, title, value, tag, trailingTag }) => (
         <div
           key={value}
           role="button"
@@ -57,7 +57,15 @@ const MultiCardSelector = ({
           })}
         >
           {icon && <span className={styles.icon}>{icon}</span>}
-          {t(title)}
+          <div className={styles.content}>
+            <div>
+              {typeof title === 'string' ? t(title) : title}
+              {trailingTag && (
+                <span className={classNames(styles.tag, styles.trailingTag)}>{t(trailingTag)}</span>
+              )}
+            </div>
+            {tag && <span className={styles.tag}>{t(tag)}</span>}
+          </div>
         </div>
       ))}
     </div>

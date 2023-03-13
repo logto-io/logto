@@ -1,11 +1,11 @@
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 
-import type { Option } from './types';
+import type { CardSelectorOption } from './types';
 
 type Props = {
   name: string;
   value: string;
-  options: Option[];
+  options: CardSelectorOption[];
   onChange: (value: string) => void;
   optionClassName?: string;
 };

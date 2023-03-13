@@ -2,11 +2,11 @@ import Building from '@/assets/images/building.svg';
 import Cloud from '@/assets/images/cloud.svg';
 import Database from '@/assets/images/database.svg';
 import Pizza from '@/assets/images/pizza.svg';
-import type { Option as SelectorOption } from '@/onboarding/components/CardSelector';
+import type { CardSelectorOption } from '@/onboarding/components/CardSelector';
 
 import { DeploymentType, Project } from '../../types';
 
-export const projectOptions: SelectorOption[] = [
+export const projectOptions: CardSelectorOption[] = [
   {
     icon: <Pizza />,
     title: 'cloud.welcome.project_options.personal',
@@ -19,7 +19,7 @@ export const projectOptions: SelectorOption[] = [
   },
 ];
 
-export const deploymentTypeOptions: SelectorOption[] = [
+export const deploymentTypeOptions: CardSelectorOption[] = [
   {
     icon: <Database />,
     title: 'cloud.welcome.deployment_type_options.open_source',

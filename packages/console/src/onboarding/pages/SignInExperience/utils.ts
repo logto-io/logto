@@ -1,5 +1,6 @@
 import type { SignInExperience } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 
 import type { OnboardingSieConfig } from '@/onboarding/types';
 import { Authentication } from '@/onboarding/types';
@@ -9,8 +10,10 @@ const signInExperienceToOnboardSieConfig = (
 ): OnboardingSieConfig => {
   const {
     color: { primaryColor },
+    branding: { logoUrl: logo },
     signIn: { methods: signInMethods },
     signUp: { identifiers: signUpIdentifiers },
+    socialSignInConnectorTargets,
   } = signInExperience;
 
   const identifier =
@@ -28,9 +31,11 @@ const signInExperienceToOnboardSieConfig = (
   }, []);
 
   return {
+    logo,
     color: primaryColor,
     identifier,
     authentications,
+    socialTargets: socialSignInConnectorTargets,
   };
 };
 
@@ -38,16 +43,19 @@ const onboardSieConfigToSignInExperience = (
   config: OnboardingSieConfig,
   basedConfig: SignInExperience
 ): SignInExperience => {
-  const { color: onboardConfigColor, identifier, authentications } = config;
-  const { color: baseColorConfig } = basedConfig;
+  const { logo, color: onboardConfigColor, identifier, authentications, socialTargets } = config;
+  const { color: baseColorConfig, branding: baseBranding } = basedConfig;
 
   const isPasswordSetup = authentications.includes(Authentication.Password);
-  const isVerificationCodeSetup =
-    authentications.includes(Authentication.VerificationCode) &&
-    identifier !== SignInIdentifier.Username;
+  const isVerificationCodeSetup = identifier !== SignInIdentifier.Username;
 
-  const signInExperience = {
+  const signInExperience: SignInExperience = {
     ...basedConfig,
+    branding: {
+      ...baseBranding,
+      logoUrl: conditional(logo?.length && logo),
+      darkLogoUrl: conditional(logo?.length && logo),
+    },
     color: {
       ...baseColorConfig,
       primaryColor: onboardConfigColor,
@@ -67,6 +75,7 @@ const onboardSieConfigToSignInExperience = (
         },
       ],
     },
+    socialSignInConnectorTargets: socialTargets ?? [],
   };
 
   return signInExperience;

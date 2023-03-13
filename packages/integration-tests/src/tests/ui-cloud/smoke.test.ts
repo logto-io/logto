@@ -104,6 +104,12 @@ describe('smoke testing for cloud', () => {
   });
 
   it('can complete the sie configuration process and enter the congrats page', async () => {
+    // Wait for the sie config to load
+    await page.waitForTimeout(1000);
+
+    // Select username as the identifier
+    await expect(page).toClick('div[role=radio]:has(input[name=identifier][value=username])');
+
     // Click the finish button
     await expect(page).toClick('div[class$=continueActions] button:last-child');
 

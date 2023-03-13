@@ -5,10 +5,13 @@ import Keyboard from '@/assets/images/keyboard.svg';
 import Label from '@/assets/images/label.svg';
 import Lock from '@/assets/images/lock.svg';
 import Mobile from '@/assets/images/mobile.svg';
-import type { Option as SelectorOption } from '@/onboarding/components/CardSelector';
+import type {
+  MultiCardSelectorOption,
+  CardSelectorOption,
+} from '@/onboarding/components/CardSelector';
 import { Authentication } from '@/onboarding/types';
 
-export const identifierOptions: SelectorOption[] = [
+export const identifierOptions: CardSelectorOption[] = [
   {
     icon: <Envelop />,
     title: 'sign_in_exp.sign_up_and_sign_in.identifiers_email',
@@ -26,7 +29,7 @@ export const identifierOptions: SelectorOption[] = [
   },
 ];
 
-export const authenticationOptions: SelectorOption[] = [
+export const authenticationOptions: MultiCardSelectorOption[] = [
   {
     icon: <Lock />,
     title: 'sign_in_exp.sign_up_and_sign_in.sign_in.password_auth',
@@ -36,5 +39,6 @@ export const authenticationOptions: SelectorOption[] = [
     icon: <Keyboard />,
     title: 'sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth',
     value: Authentication.VerificationCode,
+    trailingTag: 'general.cap_limit',
   },
 ];

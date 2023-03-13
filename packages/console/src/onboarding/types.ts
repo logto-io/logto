@@ -72,7 +72,9 @@ export enum Authentication {
 }
 
 export type OnboardingSieConfig = {
+  logo?: string;
   color: string;
   identifier: SignInIdentifier;
   authentications: Authentication[];
+  socialTargets?: string[];
 };
