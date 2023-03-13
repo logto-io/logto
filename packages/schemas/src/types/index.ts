@@ -13,3 +13,4 @@ export * from './application.js';
 export * from './system.js';
 export * from './tenant.js';
 export * from './user-assets.js';
+export * from './hook.js';

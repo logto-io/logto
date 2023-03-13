@@ -1,8 +1,5 @@
-import type { LogKey } from '@logto/schemas';
-import { SignInIdentifier, LogResult, InteractionEvent } from '@logto/schemas';
-import type { Hooks } from '@logto/schemas/models';
-import { HookEvent } from '@logto/schemas/models';
-import type { InferModelType } from '@withtyped/server';
+import type { Hook, LogKey } from '@logto/schemas';
+import { HookEvent, SignInIdentifier, LogResult, InteractionEvent } from '@logto/schemas';
 
 import { authedAdminApi, deleteUser, getLogs, putInteraction } from '#src/api/index.js';
 import { initClient, processSession } from '#src/helpers/client.js';
@@ -10,8 +7,6 @@ import { createMockServer } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
 import { waitFor } from '#src/utils.js';
-
-type Hook = InferModelType<typeof Hooks>;
 
 const createPayload = (event: HookEvent, url = 'not_work_url'): Partial<Hook> => ({
   event,

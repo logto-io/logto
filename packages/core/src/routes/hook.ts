@@ -1,29 +1,76 @@
-import { koaAdapter, RequestError } from '@withtyped/server';
-import type { MiddlewareType } from 'koa';
-import koaBody from 'koa-body';
+import { generateStandardId } from '@logto/core-kit';
+import { Hooks } from '@logto/schemas';
+import { z } from 'zod';
 
-import LogtoRequestError from '#src/errors/RequestError/index.js';
+import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-// Organize this function if we decide to adopt withtyped eventually
-const errorHandler: MiddlewareType = async (_, next) => {
-  try {
-    await next();
-  } catch (error: unknown) {
-    if (error instanceof RequestError) {
-      throw new LogtoRequestError(
-        { code: 'request.general', status: error.status },
-        error.original
-      );
-    }
-
-    throw error;
-  }
-};
-
 export default function hookRoutes<T extends AuthedRouter>(
-  ...[router, { modelRouters }]: RouterInitArgs<T>
+  ...[router, { queries }]: RouterInitArgs<T>
 ) {
-  router.all('/hooks/(.*)?', koaBody(), errorHandler, koaAdapter(modelRouters.hook.routes()));
+  const { findAllHooks, findHookById, insertHook, updateHookById, deleteHookById } = queries.hooks;
+
+  router.get('/hooks', async (ctx, next) => {
+    ctx.body = await findAllHooks();
+
+    return next();
+  });
+
+  router.post(
+    '/hooks',
+    koaGuard({ body: Hooks.createGuard.omit({ id: true }) }),
+    async (ctx, next) => {
+      ctx.body = await insertHook({
+        id: generateStandardId(),
+        ...ctx.guard.body,
+      });
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/hooks/:id',
+    koaGuard({ params: z.object({ id: z.string().min(1) }) }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+
+      ctx.body = await findHookById(id);
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/hooks/:id',
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      body: Hooks.createGuard.omit({ id: true }).partial(),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+        body,
+      } = ctx.guard;
+
+      ctx.body = await updateHookById(id, body);
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/hooks/:id',
+    koaGuard({ params: z.object({ id: z.string().min(1) }) }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+      await deleteHookById(id);
+      ctx.status = 204;
+
+      return next();
+    }
+  );
 }

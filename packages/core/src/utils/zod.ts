@@ -5,6 +5,7 @@ import { conditional } from '@silverhand/essentials';
 import type { OpenAPIV3 } from 'openapi-types';
 import type { ZodStringDef } from 'zod';
 import {
+  ZodRecord,
   ZodArray,
   ZodBoolean,
   ZodEffects,
@@ -206,6 +207,13 @@ export const zodTypeToSwagger = (
       type: 'object',
       required: conditional(required.length > 0 && required),
       properties: Object.fromEntries(entries.map(([key, value]) => [key, zodTypeToSwagger(value)])),
+    };
+  }
+
+  if (config instanceof ZodRecord) {
+    return {
+      type: 'object',
+      additionalProperties: zodTypeToSwagger(config.valueSchema),
     };
   }
 

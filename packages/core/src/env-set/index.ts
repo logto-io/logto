@@ -1,15 +1,12 @@
 import { GlobalValues } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath } from '@silverhand/essentials';
-import type { PostgreSql } from '@withtyped/postgres';
-import type { QueryClient } from '@withtyped/server';
 import type { DatabasePool } from 'slonik';
 
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 
 import createPool from './create-pool.js';
-import createQueryClient from './create-query-client.js';
 import loadOidcValues from './oidc.js';
 import { throwNotLoadedError } from './throw-errors.js';
 import { getTenantEndpoint } from './utils.js';
@@ -40,15 +37,9 @@ export class EnvSet {
     return this.values.dbUrl;
   }
 
-  static queryClient = createQueryClient(this.dbUrl, this.isTest);
-
-  /** @deprecated Only for backward compatibility; Will be replaced soon. */
-  static pool = createPool(this.dbUrl, this.isTest);
+  static sharedPool = createPool(this.dbUrl, this.isTest);
 
   #pool: Optional<DatabasePool>;
-  // Use another pool for `withtyped` while adopting the new model,
-  // as we cannot extract the original PgPool from slonik
-  #queryClient: Optional<QueryClient<PostgreSql>>;
   #oidc: Optional<Awaited<ReturnType<typeof loadOidcValues>>>;
 
   constructor(public readonly tenantId: string, public readonly databaseUrl: string) {}
@@ -65,18 +56,6 @@ export class EnvSet {
     return this.#pool;
   }
 
-  get queryClient() {
-    if (!this.#queryClient) {
-      return throwNotLoadedError();
-    }
-
-    return this.#queryClient;
-  }
-
-  get queryClientSafe() {
-    return this.#queryClient;
-  }
-
   get oidc() {
     if (!this.#oidc) {
       return throwNotLoadedError();
@@ -89,7 +68,6 @@ export class EnvSet {
     const pool = await createPool(this.databaseUrl, EnvSet.isTest);
 
     this.#pool = pool;
-    this.#queryClient = createQueryClient(this.databaseUrl, EnvSet.isTest);
 
     const { getOidcConfigs } = createLogtoConfigLibrary(createLogtoConfigQueries(pool));
 
@@ -99,7 +77,7 @@ export class EnvSet {
   }
 
   async end() {
-    await Promise.all([this.#pool?.end(), this.#queryClient?.end()]);
+    await this.#pool?.end();
   }
 }
 

@@ -8,7 +8,6 @@ import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
-import type { ModelRouters } from '#src/model-routers/index.js';
 
 import type Queries from './Queries.js';
 
@@ -18,11 +17,11 @@ export default class Libraries {
   signInExperiences = createSignInExperienceLibrary(this.queries, this.connectors);
   phrases = createPhraseLibrary(this.queries);
   resources = createResourceLibrary(this.queries);
-  hooks = createHookLibrary(this.queries, this.modelRouters);
+  hooks = createHookLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
   passcodes = createPasscodeLibrary(this.queries, this.connectors);
   applications = createApplicationLibrary(this.queries);
   verificationStatuses = createVerificationStatusLibrary(this.queries);
 
-  constructor(private readonly queries: Queries, private readonly modelRouters: ModelRouters) {}
+  constructor(private readonly queries: Queries) {}
 }

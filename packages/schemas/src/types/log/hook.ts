@@ -1,4 +1,4 @@
-import type { HookEvent } from '../../models/hooks.js';
+import type { HookEvent } from '../../foundations/index.js';
 
 /** The type of a hook event. */
 export enum Type {

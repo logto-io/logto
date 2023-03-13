@@ -69,7 +69,7 @@ export class TenantsLibrary {
     const applications = createApplicationsQueries(transaction);
     const roles = createRolesQuery(transaction);
 
-    /* --- Start --- */
+    /* === Start === */
     await transaction.start();
 
     // Init tenant
@@ -116,7 +116,7 @@ export class TenantsLibrary {
     );
 
     await transaction.end();
-    /* --- End --- */
+    /* === End === */
 
     return { id: tenantId, indicator: adminDataInAdminTenant.resource.indicator };
   }

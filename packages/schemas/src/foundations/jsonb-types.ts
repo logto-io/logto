@@ -9,17 +9,13 @@ export {
   type Storage,
 } from '@logto/connector-kit';
 
-/**
- * Commonly Used
- */
+/* === Commonly Used === */
 
 export const arbitraryObjectGuard = z.record(z.unknown());
 
 export type ArbitraryObject = z.infer<typeof arbitraryObjectGuard>;
 
-/**
- * OIDC Model Instances
- */
+/* === OIDC Model Instances === */
 
 export const oidcModelInstancePayloadGuard = z
   .object({
@@ -79,9 +75,7 @@ export const customClientMetadataGuard = z.object({
 
 export type CustomClientMetadata = z.infer<typeof customClientMetadataGuard>;
 
-/**
- * Users
- */
+/* === Users === */
 export const roleNamesGuard = z.string().array();
 
 const identityGuard = z.object({
@@ -93,9 +87,7 @@ export const identitiesGuard = z.record(identityGuard);
 export type Identity = z.infer<typeof identityGuard>;
 export type Identities = z.infer<typeof identitiesGuard>;
 
-/**
- * SignIn Experiences
- */
+/* === SignIn Experiences === */
 
 export const colorGuard = z.object({
   primaryColor: z.string().regex(hexColorRegEx),
@@ -151,9 +143,7 @@ export const connectorTargetsGuard = z.string().array();
 
 export type ConnectorTargets = z.infer<typeof connectorTargetsGuard>;
 
-/**
- * Settings
- */
+/* === Logto Configs === */
 
 export enum AppearanceMode {
   SyncWithSystem = 'system',
@@ -161,9 +151,7 @@ export enum AppearanceMode {
   DarkMode = 'dark',
 }
 
-/**
- * Phrases
- */
+/* === Phrases === */
 
 export type Translation = {
   [key: string]: string | Translation;
@@ -173,9 +161,7 @@ export const translationGuard: z.ZodType<Translation> = z.lazy(() =>
   z.record(z.string().or(translationGuard))
 );
 
-/**
- * Logs
- */
+/* === Logs === */
 
 export enum LogResult {
   Success = 'Success',
@@ -202,3 +188,34 @@ export const logContextPayloadGuard = z
  * Here we use `string` to make it compatible with the Zod guard.
  **/
 export type LogContextPayload = z.infer<typeof logContextPayloadGuard>;
+
+/* === Hooks === */
+
+export enum HookEvent {
+  PostRegister = 'PostRegister',
+  PostSignIn = 'PostSignIn',
+  PostResetPassword = 'PostResetPassword',
+}
+
+export const hookEventGuard: z.ZodType<HookEvent> = z.nativeEnum(HookEvent);
+
+export type HookConfig = {
+  /** We don't need `type` since v1 only has web hook */
+  // type: 'web';
+  /** Method fixed to `POST` */
+  url: string;
+  /** Additional headers that attach to the request */
+  headers?: Record<string, string>;
+  /**
+   * Retry times when hook response status >= 500.
+   *
+   * Must be less than or equal to `3`. Use `0` to disable retry.
+   **/
+  retries: number;
+};
+
+export const hookConfigGuard: z.ZodType<HookConfig> = z.object({
+  url: z.string(),
+  headers: z.record(z.string()).optional(),
+  retries: z.number().gte(0).lte(3),
+});

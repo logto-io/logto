@@ -25,7 +25,13 @@ export class TenantPool {
   }
 
   async endAll(): Promise<void> {
-    await Promise.all(this.cache.dump().map(async ([, tenant]) => tenant.value.envSet.end()));
+    await Promise.all(
+      this.cache.dump().map(([, tenant]) => {
+        const { poolSafe } = tenant.value.envSet;
+
+        return poolSafe?.end();
+      })
+    );
   }
 }
 
