@@ -39,7 +39,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting, isDirty, dirtyFields },
+    formState: { isSubmitting, isDirty },
     watch,
   } = methods;
   const api = useApi();
@@ -47,7 +47,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
   const formData = watch();
   const [isLoading, setIsLoading] = useState(false);
 
-  const previewConfigs = usePreviewConfigs(formData, isDirty, dirtyFields, data);
+  const previewConfigs = usePreviewConfigs(formData, isDirty, data);
 
   useEffect(() => {
     if (data && !isDirty) {
