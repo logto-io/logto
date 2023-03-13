@@ -42,7 +42,6 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
     handleSubmit,
     setValue,
     reset,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({ reValidateMode: 'onBlur' });
 
@@ -130,6 +129,8 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
                 !!value ||
                 t('errors.required_field_missing', { field: t(`profile.settings.${field}`) }),
             })}
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
             placeholder={getInputPlaceholder()}
             errorMessage={errors[field]?.message}
             size="large"

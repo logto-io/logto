@@ -104,6 +104,8 @@ const ChangePasswordModal = () => {
             message: t('errors.password_pattern_error'),
           },
         })}
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus
         type={showPassword ? 'text' : 'password'}
         errorMessage={errors.newPassword?.message}
         suffix={
