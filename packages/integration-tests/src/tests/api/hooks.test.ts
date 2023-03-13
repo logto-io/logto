@@ -33,7 +33,7 @@ describe('hooks', () => {
     await close();
   });
 
-  it('should be able to create, query, and delete a hook', async () => {
+  it('should be able to create, query, update, and delete a hook', async () => {
     const payload = createPayload(HookEvent.PostRegister);
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
 
@@ -42,6 +42,11 @@ describe('hooks', () => {
 
     expect(await authedAdminApi.get('hooks').json<Hook[]>()).toContainEqual(created);
     expect(await authedAdminApi.get(`hooks/${created.id}`).json<Hook>()).toEqual(created);
+    expect(
+      await authedAdminApi
+        .patch(`hooks/${created.id}`, { json: { event: HookEvent.PostSignIn } })
+        .json<Hook>()
+    ).toEqual({ ...created, event: HookEvent.PostSignIn });
     expect(await authedAdminApi.delete(`hooks/${created.id}`)).toHaveProperty('statusCode', 204);
     await expect(authedAdminApi.get(`hooks/${created.id}`)).rejects.toHaveProperty(
       'response.statusCode',
