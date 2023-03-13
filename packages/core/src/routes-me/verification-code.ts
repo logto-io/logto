@@ -6,7 +6,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
 import assertThat from '#src/utils/assert-that.js';
-import { convertCookieToMap } from '#src/utils/cookie.js';
 
 import type { AuthedMeRouter } from './types.js';
 
@@ -55,15 +54,10 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
 
       if (action === 'changePassword') {
         // Store password verification status
-        const cookieMap = convertCookieToMap(ctx.request.headers.cookie);
-        const sessionId = cookieMap.get('_session');
-
-        assertThat(sessionId, new RequestError({ code: 'session.not_found', status: 401 }));
-
         const user = await findUserById(userId);
         assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-        await createVerificationStatus(userId, sessionId);
+        await createVerificationStatus(userId);
       }
 
       ctx.status = 204;

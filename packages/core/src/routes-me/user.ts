@@ -8,7 +8,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { encryptUserPassword, verifyUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
-import { convertCookieToMap } from '#src/utils/cookie.js';
 
 import type { RouterInitArgs } from '../routes/types.js';
 import type { AuthedMeRouter } from './types.js';
@@ -108,17 +107,13 @@ export default function userRoutes<T extends AuthedMeRouter>(
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
       const { password } = ctx.guard.body;
-      const cookieMap = convertCookieToMap(ctx.request.headers.cookie);
-      const sessionId = cookieMap.get('_session');
-
-      assertThat(sessionId, new RequestError({ code: 'session.not_found', status: 401 }));
 
       const user = await findUserById(userId);
       assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
       await verifyUserPassword(user, password);
 
-      await createVerificationStatus(userId, sessionId);
+      await createVerificationStatus(userId);
 
       ctx.status = 204;
 
@@ -137,13 +132,8 @@ export default function userRoutes<T extends AuthedMeRouter>(
 
       assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-      const cookieMap = convertCookieToMap(ctx.request.headers.cookie);
-      const sessionId = cookieMap.get('_session');
-
-      assertThat(sessionId, new RequestError({ code: 'session.not_found', status: 401 }));
-
       if (oldPasswordEncrypted) {
-        await checkVerificationStatus(userId, sessionId);
+        await checkVerificationStatus(userId);
       }
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
