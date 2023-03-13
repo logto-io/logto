@@ -31,7 +31,6 @@ const ConnectorSetupWarning = ({ requiredConnectors }: Props) => {
               a: (
                 <TextLink
                   to={connectorType === ConnectorType.Social ? '/connectors/social' : '/connectors'}
-                  target="_blank"
                 />
               ),
             }}

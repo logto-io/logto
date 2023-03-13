@@ -27,11 +27,7 @@ const UserName = ({ userId, isLink = false }: Props) => {
   return (
     <div className={styles.userName}>
       {isLink ? (
-        <Link
-          to={`/users/${userId}`}
-          target="_blank"
-          className={classNames(styles.title, styles.link)}
-        >
+        <Link to={`/users/${userId}`} className={classNames(styles.title, styles.link)}>
           {name}
         </Link>
       ) : (

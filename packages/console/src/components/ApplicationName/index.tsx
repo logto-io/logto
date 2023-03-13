@@ -21,7 +21,7 @@ const ApplicationName = ({ applicationId, isLink = false }: Props) => {
 
   if (isLink && !isAdminConsole) {
     return (
-      <Link className={styles.link} to={`/applications/${applicationId}`} target="_blank">
+      <Link className={styles.link} to={`/applications/${applicationId}`}>
         {name}
       </Link>
     );

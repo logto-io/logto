@@ -24,7 +24,6 @@ const ConnectorStatusField = () => {
                   a: (
                     <TextLink
                       to="/sign-in-experience/sign-up-and-sign-in"
-                      target="_blank"
                       onClick={closeTipHandler}
                     />
                   ),

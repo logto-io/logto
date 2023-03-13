@@ -31,7 +31,7 @@ const SignInExperienceSetupNotice = () => {
       >
         <Trans
           components={{
-            a: <TextLink to="/sign-in-experience/sign-up-and-sign-in" target="_blank" />,
+            a: <TextLink to="/sign-in-experience/sign-up-and-sign-in" />,
           }}
         >
           {t('connectors.config_sie_notice', { link: t('connectors.config_sie_link_text') })}
