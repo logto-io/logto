@@ -202,7 +202,6 @@ const SignInExperience = () => {
           />
         </div>
       </OverlayScrollbar>
-
       <ActionBar step={3}>
         <div className={styles.continueActions}>
           <Button

@@ -1,17 +1,17 @@
-import { AppearanceMode } from '@logto/schemas';
 import type { ImgHTMLAttributes } from 'react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import FallbackImageDark from '@/assets/images/broken-image-dark.svg';
 import FallbackImageLight from '@/assets/images/broken-image-light.svg';
-import { useTheme } from '@/hooks/use-theme';
+import { AppThemeContext } from '@/contexts/AppThemeProvider';
+import { Theme } from '@/types/theme';
 
 type Props = { containerClassName?: string } & ImgHTMLAttributes<HTMLImageElement>;
 
 const ImageWithErrorFallback = ({ src, alt, className, containerClassName, ...props }: Props) => {
   const [hasError, setHasError] = useState(false);
-  const theme = useTheme();
-  const Fallback = theme === AppearanceMode.LightMode ? FallbackImageLight : FallbackImageDark;
+  const { theme } = useContext(AppThemeContext);
+  const Fallback = theme === Theme.LightMode ? FallbackImageLight : FallbackImageDark;
 
   const errorHandler = () => {
     setHasError(true);

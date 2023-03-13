@@ -1,7 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
 import type { SignInExperience } from '@logto/schemas';
-import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +12,7 @@ import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import ToggleThemeButton from '@/components/ToggleThemeButton';
 import useUiLanguages from '@/hooks/use-ui-languages';
+import { Theme } from '@/types/theme';
 
 import * as styles from './index.module.scss';
 
@@ -31,15 +31,13 @@ const Preview = ({
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [language, setLanguage] = useState<LanguageTag>('en');
-  const [mode, setMode] = useState<Omit<AppearanceMode, AppearanceMode.SyncWithSystem>>(
-    AppearanceMode.LightMode
-  );
+  const [mode, setMode] = useState<Theme>(Theme.LightMode);
   const [platform, setPlatform] = useState<PreviewPlatform>(PreviewPlatform.DesktopWeb);
   const { languages } = useUiLanguages();
 
   useEffect(() => {
     if (!signInExperience?.color.isDarkModeEnabled) {
-      setMode(AppearanceMode.LightMode);
+      setMode(Theme.LightMode);
     }
   }, [mode, signInExperience]);
 

@@ -1,5 +1,5 @@
 import type { Resource } from '@logto/schemas';
-import { AppearanceMode } from '@logto/schemas';
+import { useContext } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -18,11 +18,12 @@ import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import { defaultPageSize } from '@/consts';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
+import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
-import { useTheme } from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
+import { Theme } from '@/types/theme';
 import { buildUrl } from '@/utils/url';
 
 import CreateForm from './components/CreateForm';
@@ -52,10 +53,10 @@ const ApiResources = () => {
 
   const isLoading = !data && !error;
   const navigate = useNavigate();
-  const theme = useTheme();
+  const { theme } = useContext(AppThemeContext);
   const [apiResources, totalCount] = data ?? [];
 
-  const ResourceIcon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
+  const ResourceIcon = theme === Theme.LightMode ? ApiResource : ApiResourceDark;
 
   return (
     <div className={resourcesStyles.container}>

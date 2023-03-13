@@ -1,4 +1,3 @@
-import { AppearanceMode } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,6 +5,7 @@ import ErrorDark from '@/assets/images/error-dark.svg';
 import Error from '@/assets/images/error.svg';
 import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/images/keyboard-arrow-up.svg';
+import { Theme } from '@/types/theme';
 import { onKeyDownHandler } from '@/utils/a11y';
 import { getThemeFromLocalStorage } from '@/utils/theme';
 
@@ -26,7 +26,7 @@ const AppError = ({ title, errorCode, errorMessage, callStack, children }: Props
 
   return (
     <div className={styles.container}>
-      {theme === AppearanceMode.LightMode ? <Error /> : <ErrorDark />}
+      {theme === Theme.LightMode ? <Error /> : <ErrorDark />}
       <label>{title ?? t('errors.something_went_wrong')}</label>
       <div className={styles.summary}>
         <span>
