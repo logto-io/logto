@@ -77,7 +77,7 @@ export class EnvSet {
   }
 
   async end() {
-    await Promise.all([this.#pool?.end(), this.#queryClient?.end()]);
+    await this.#pool?.end();
   }
 }
 
