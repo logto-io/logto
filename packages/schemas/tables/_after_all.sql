@@ -28,6 +28,11 @@ revoke all privileges
   on table systems
   from logto_tenant_${database};
 
+---- Revoke all privileges on service_logs table for tenant roles ----
+revoke all privileges
+  on table service_logs
+  from logto_tenant_${database};
+
 ---- Create policies to make internal roles read-only ----
 
 /**

@@ -1,4 +1,4 @@
-import { Systems } from '@logto/schemas';
+import { ServiceLogs, Systems } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
 import { isKeyInObject } from '@logto/shared';
 import { conditional, conditionalString } from '@silverhand/essentials';
@@ -55,7 +55,9 @@ export const checkRowLevelSecurity = async (client: CommonQueryMethods) => {
     and rowsecurity=false
   `);
 
-  const rlsDisabled = rows.filter(({ tablename }) => tablename !== Systems.table);
+  const rlsDisabled = rows.filter(
+    ({ tablename }) => tablename !== Systems.table && tablename !== ServiceLogs.table
+  );
 
   if (rlsDisabled.length > 0) {
     throw new Error(
