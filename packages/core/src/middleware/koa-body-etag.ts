@@ -17,7 +17,7 @@ export default function koaBodyEtag<StateT, ContextT, ResponseBodyT>(
     await next();
 
     // eslint-disable-next-line no-restricted-syntax
-    if (methods.includes(ctx.method as Uppercase<Method>)) {
+    if (methods.includes(ctx.method as Uppercase<Method>) && ctx.body) {
       ctx.response.etag = etag(JSON.stringify(ctx.body));
 
       if (ctx.fresh) {

@@ -3,6 +3,7 @@ import Koa from 'koa';
 import Router from 'koa-router';
 
 import { EnvSet } from '#src/env-set/index.js';
+import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaCors from '#src/middleware/koa-cors.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
@@ -68,6 +69,7 @@ export default function initApis(tenant: TenantContext): Koa {
 
   const { adminUrlSet, cloudUrlSet } = EnvSet.values;
   apisApp.use(koaCors(adminUrlSet, cloudUrlSet));
+  apisApp.use(koaBodyEtag());
 
   for (const router of createRouters(tenant)) {
     apisApp.use(router.routes()).use(router.allowedMethods());

@@ -3,7 +3,9 @@ import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import type Provider from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { getTenantId } from '#src/utils/tenant.js';
 
 // Need To Align With UI
 export const sessionNotFoundPath = '/unknown-session';
@@ -20,18 +22,24 @@ export default function koaSpaSessionGuard<
   ContextT extends IRouterParamContext,
   ResponseBodyT
 >(provider: Provider): MiddlewareType<StateT, ContextT, ResponseBodyT> {
-  const { endpoint } = EnvSet.values;
-
   return async (ctx, next) => {
     const requestPath = ctx.request.path;
-    const isPreview = ctx.request.URL.searchParams.get('preview');
+    const isPreview = ctx.URL.searchParams.get('preview');
     const isSessionRequiredPath = guardedPath.some((path) => requestPath.startsWith(path));
 
     if (isSessionRequiredPath && !isPreview) {
       try {
         await provider.interactionDetails(ctx.req, ctx.res);
       } catch {
-        ctx.redirect(appendPath(endpoint, sessionNotFoundPath).href);
+        const tenantId = getTenantId(ctx.URL);
+
+        if (!tenantId) {
+          throw new RequestError({ code: 'session.not_found', status: 404 });
+        }
+
+        ctx.redirect(
+          appendPath(getTenantEndpoint(tenantId, EnvSet.values), sessionNotFoundPath).href
+        );
 
         return;
       }
