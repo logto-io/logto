@@ -20,6 +20,7 @@ import Table from '@/components/Table';
 import Textarea from '@/components/Textarea';
 import { Tooltip } from '@/components/Tip';
 import useApi, { RequestError } from '@/hooks/use-api';
+import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import {
   createEmptyUiTranslation,
@@ -34,18 +35,14 @@ const emptyUiTranslation = createEmptyUiTranslation();
 
 const LanguageDetails = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
-
   const { languages } = useUiLanguages();
-
   const { selectedLanguage, setIsDirty, setSelectedLanguage } = useContext(LanguageEditorContext);
-
   const [isDeletionAlertOpen, setIsDeletionAlertOpen] = useState(false);
-
   const isBuiltIn = isBuiltInLanguageTag(selectedLanguage);
-
   const isDefaultLanguage = signInExperience?.languageInfo.fallbackLanguage === selectedLanguage;
+  const fetchApi = useApi({ hideErrorToast: true });
+  const fetcher = useSwrFetcher<CustomPhraseResponse>(fetchApi);
 
   const translationEntries = useMemo(
     () => Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation),
@@ -55,6 +52,7 @@ const LanguageDetails = () => {
   const { data: customPhrase, mutate } = useSWR<CustomPhraseResponse, RequestError>(
     `api/custom-phrases/${selectedLanguage}`,
     {
+      fetcher,
       shouldRetryOnError: (error: unknown) => {
         if (error instanceof RequestError) {
           return error.status !== 404;
@@ -98,7 +96,6 @@ const LanguageDetails = () => {
   ]);
 
   const { mutate: globalMutate } = useSWRConfig();
-
   const api = useApi();
 
   const upsertCustomPhrase = useCallback(
