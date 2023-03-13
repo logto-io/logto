@@ -15,7 +15,7 @@ import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import ActionBar from '../../components/ActionBar';
 import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
-import { OnboardingPage } from '../../types';
+import { Project, OnboardingPage } from '../../types';
 import { getOnboardingPage } from '../../utils';
 import * as styles from './index.module.scss';
 import { titleOptions, companySizeOptions, reasonOptions } from './options';
@@ -28,6 +28,8 @@ const About = () => {
     data: { questionnaire },
     update,
   } = useUserOnboardingData();
+
+  const isCompanyProject = questionnaire?.project === Project.Company;
 
   const { control, register, handleSubmit, reset } = useForm<Questionnaire>({
     mode: 'onChange',
@@ -58,50 +60,59 @@ const About = () => {
           <div className={styles.title}>{t('cloud.about.title')}</div>
           <div className={styles.description}>{t('cloud.about.description')}</div>
           <form className={styles.form}>
-            <FormField title="cloud.about.title_field" headlineClassName={styles.cardFieldHeadline}>
-              <Controller
-                control={control}
-                name="titles"
-                render={({ field: { onChange, value } }) => (
-                  <MultiCardSelector
-                    className={styles.titleSelector}
-                    optionClassName={styles.option}
-                    value={value ?? []}
-                    options={titleOptions}
-                    onChange={(value) => {
-                      onChange(value.length === 0 ? undefined : value);
-                    }}
+            {isCompanyProject && (
+              <>
+                <FormField
+                  isMultiple
+                  title="cloud.about.title_field"
+                  headlineClassName={styles.cardFieldHeadline}
+                >
+                  <Controller
+                    control={control}
+                    name="titles"
+                    render={({ field: { onChange, value } }) => (
+                      <MultiCardSelector
+                        className={styles.titleSelector}
+                        optionClassName={styles.option}
+                        value={value ?? []}
+                        options={titleOptions}
+                        onChange={(value) => {
+                          onChange(value.length === 0 ? undefined : value);
+                        }}
+                      />
+                    )}
                   />
-                )}
-              />
-            </FormField>
-            <FormField title="cloud.about.company_name_field">
-              <TextInput
-                placeholder={t('cloud.about.company_name_placeholder')}
-                {...register('companyName')}
-              />
-            </FormField>
-            <FormField
-              title="cloud.about.company_size_field"
-              headlineClassName={styles.cardFieldHeadline}
-            >
-              <Controller
-                control={control}
-                name="companySize"
-                render={({ field: { onChange, value, name } }) => (
-                  <CardSelector
-                    name={name}
-                    value={value ?? ''}
-                    options={companySizeOptions}
-                    optionClassName={styles.option}
-                    onChange={(value) => {
-                      onChange(conditional(value && value));
-                    }}
+                </FormField>
+                <FormField title="cloud.about.company_name_field">
+                  <TextInput
+                    placeholder={t('cloud.about.company_name_placeholder')}
+                    {...register('companyName')}
                   />
-                )}
-              />
-            </FormField>
+                </FormField>
+                <FormField
+                  title="cloud.about.company_size_field"
+                  headlineClassName={styles.cardFieldHeadline}
+                >
+                  <Controller
+                    control={control}
+                    name="companySize"
+                    render={({ field: { onChange, value, name } }) => (
+                      <CardSelector
+                        name={name}
+                        value={value ?? ''}
+                        options={companySizeOptions}
+                        optionClassName={styles.option}
+                        onChange={(value) => {
+                          onChange(conditional(value && value));
+                        }}
+                      />
+                    )}
+                  />
+                </FormField>
+              </>
+            )}
             <FormField
+              isMultiple
               title="cloud.about.reason_field"
               headlineClassName={styles.cardFieldHeadline}
             >

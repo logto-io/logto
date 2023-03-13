@@ -16,7 +16,7 @@ export const titleOptions: MultiCardSelectorOption[] = [
 
 export const companySizeOptions: CardSelectorOption[] = [
   { title: 'cloud.about.company_options.size_1', value: CompanySize.Scale1 },
-  { title: 'cloud.about.company_options.size_1_49', value: CompanySize.Scale2 },
+  { title: 'cloud.about.company_options.size_2_49', value: CompanySize.Scale2 },
   { title: 'cloud.about.company_options.size_50_199', value: CompanySize.Scale3 },
   { title: 'cloud.about.company_options.size_200_999', value: CompanySize.Scale4 },
   { title: 'cloud.about.company_options.size_1000_plus', value: CompanySize.Scale5 },

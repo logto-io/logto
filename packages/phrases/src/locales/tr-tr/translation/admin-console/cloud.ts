@@ -32,7 +32,7 @@ const cloud = {
     company_size_field: 'How’s your company size?', // UNTRANSLATED
     company_options: {
       size_1: '1', // UNTRANSLATED
-      size_1_49: '1-49', // UNTRANSLATED
+      size_2_49: '2-49', // UNTRANSLATED
       size_50_199: '50-199', // UNTRANSLATED
       size_200_999: '200-999', // UNTRANSLATED
       size_1000_plus: '1000+', // UNTRANSLATED
