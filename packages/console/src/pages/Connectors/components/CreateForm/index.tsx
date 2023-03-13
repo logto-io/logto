@@ -14,7 +14,6 @@ import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import { getConnectorGroups } from '../../utils';
-import Guide from '../Guide';
 import PlatformSelector from './PlatformSelector';
 import * as styles from './index.module.scss';
 import { getConnectorOrder } from './utils';
@@ -37,7 +36,6 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
   const isLoading = !factories && !existingConnectors && !connectorsError && !factoriesError;
   const [activeGroupId, setActiveGroupId] = useState<string>();
   const [activeFactoryId, setActiveFactoryId] = useState<string>();
-  const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
 
   const groups = useMemo(() => {
     if (!factories || !existingConnectors) {
@@ -73,11 +71,6 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
     [activeGroupId, groups]
   );
 
-  const activeFactory = useMemo(
-    () => factories?.find(({ id }) => id === activeFactoryId),
-    [activeFactoryId, factories]
-  );
-
   const cardTitle = useMemo(() => {
     if (type === ConnectorType.Email) {
       return 'connectors.setup_title.email';
@@ -89,6 +82,22 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
 
     return 'connectors.setup_title.social';
   }, [type]);
+
+  const modalSize = useMemo(() => {
+    if (groups.length <= 2) {
+      return 'medium';
+    }
+
+    if (groups.length === 3) {
+      return 'large';
+    }
+
+    return 'xlarge';
+  }, [groups.length]);
+
+  if (!isFormOpen) {
+    return null;
+  }
 
   const handleGroupChange = (groupId: string) => {
     setActiveGroupId(groupId);
@@ -103,25 +112,6 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
 
     setActiveFactoryId(firstAvailableConnector?.id);
   };
-
-  const closeModal = () => {
-    setIsGetStartedModalOpen(false);
-    onClose?.(activeFactoryId);
-    setActiveGroupId(undefined);
-    setActiveFactoryId(undefined);
-  };
-
-  const modalSize = useMemo(() => {
-    if (groups.length <= 2) {
-      return 'medium';
-    }
-
-    if (groups.length === 3) {
-      return 'large';
-    }
-
-    return 'xlarge';
-  }, [groups]);
 
   return (
     <Modal
@@ -141,7 +131,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
             type="primary"
             disabled={!activeFactoryId}
             onClick={() => {
-              setIsGetStartedModalOpen(true);
+              onClose?.(activeFactoryId);
             }}
           />
         }
@@ -180,16 +170,6 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
             connectorId={activeFactoryId}
             onConnectorIdChange={setActiveFactoryId}
           />
-        )}
-        {activeFactory && (
-          <Modal
-            shouldCloseOnEsc
-            isOpen={isGetStartedModalOpen}
-            className={modalStyles.fullScreen}
-            onRequestClose={closeModal}
-          >
-            <Guide connector={activeFactory} onClose={closeModal} />
-          </Modal>
         )}
       </ModalLayout>
     </Modal>

@@ -1,6 +1,6 @@
 import type { Application } from '@logto/schemas';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import Modal from 'react-modal';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -15,7 +15,6 @@ import Table from '@/components/Table';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
-import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
@@ -28,11 +27,12 @@ const pageSize = defaultPageSize;
 const applicationsPathname = '/applications';
 const createApplicationPathname = `${applicationsPathname}/create`;
 const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
+const buildGuidePathname = (id: string) => `${buildDetailsPathname(id)}/guide`;
 
 const Applications = () => {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();
-  const isCreateNew = pathname === createApplicationPathname;
+  const isShowingCreationForm = pathname === createApplicationPathname;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
@@ -48,6 +48,13 @@ const Applications = () => {
 
   const isLoading = !data && !error;
   const [applications, totalCount] = data ?? [];
+
+  const mutateApplicationList = useCallback(
+    async (newApp: Application) => {
+      await mutate([[newApp, ...(applications ?? [])], (totalCount ?? 0) + 1]);
+    },
+    [applications, totalCount, mutate]
+  );
 
   return (
     <div className={resourcesStyles.container}>
@@ -65,32 +72,6 @@ const Applications = () => {
             });
           }}
         />
-        <Modal
-          shouldCloseOnEsc
-          isOpen={isCreateNew}
-          className={modalStyles.content}
-          overlayClassName={modalStyles.overlay}
-          onRequestClose={() => {
-            navigate({
-              pathname: applicationsPathname,
-              search,
-            });
-          }}
-        >
-          <CreateForm
-            onClose={(createdApp) => {
-              if (createdApp) {
-                navigate(buildDetailsPathname(createdApp.id), { replace: true });
-
-                return;
-              }
-              navigate({
-                pathname: applicationsPathname,
-                search,
-              });
-            }}
-          />
-        </Modal>
       </div>
       <Table
         className={resourcesStyles.table}
@@ -119,7 +100,14 @@ const Applications = () => {
             render: ({ id }) => <CopyToClipboard value={id} variant="text" />,
           },
         ]}
-        placeholder={<ApplicationsPlaceholder />}
+        placeholder={
+          <ApplicationsPlaceholder
+            onCreate={async (newApp) => {
+              await mutateApplicationList(newApp);
+              navigate(buildGuidePathname(newApp.id), { replace: true });
+            }}
+          />
+        }
         rowClickHandler={({ id }) => {
           navigate(buildDetailsPathname(id));
         }}
@@ -132,6 +120,20 @@ const Applications = () => {
         className={styles.pagination}
         onChange={(page) => {
           updateSearchParameters({ page });
+        }}
+      />
+      <CreateForm
+        isOpen={isShowingCreationForm}
+        onClose={async (newApp) => {
+          if (newApp) {
+            navigate(buildGuidePathname(newApp.id), { replace: true });
+
+            return;
+          }
+          navigate({
+            pathname: applicationsPathname,
+            search,
+          });
         }}
       />
     </div>

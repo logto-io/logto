@@ -1,9 +1,11 @@
+import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
+import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
 import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
@@ -15,6 +17,7 @@ import Table from '@/components/Table';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
 import { defaultEmailConnectorGroup, defaultSmsConnectorGroup } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
+import type { RequestError } from '@/hooks/use-api';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import * as resourcesStyles from '@/scss/resources.module.scss';
@@ -24,6 +27,7 @@ import ConnectorStatus from './components/ConnectorStatus';
 import ConnectorStatusField from './components/ConnectorStatusField';
 import ConnectorTypeColumn from './components/ConnectorTypeColumn';
 import CreateForm from './components/CreateForm';
+import Guide from './components/Guide';
 import SignInExperienceSetupNotice from './components/SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
 
@@ -31,10 +35,19 @@ const basePathname = '/connectors';
 const passwordlessPathname = `${basePathname}/${ConnectorsTabs.Passwordless}`;
 const socialPathname = `${basePathname}/${ConnectorsTabs.Social}`;
 
-const buildCreatePathname = (connectorType: ConnectorType) => {
-  const pathname = connectorType === ConnectorType.Social ? socialPathname : passwordlessPathname;
+const buildTabPathname = (connectorType: ConnectorType) =>
+  connectorType === ConnectorType.Social ? socialPathname : passwordlessPathname;
 
-  return `${pathname}/create/${connectorType}`;
+const buildCreatePathname = (connectorType: ConnectorType) => {
+  const tabPath = buildTabPathname(connectorType);
+
+  return `${tabPath}/create/${connectorType}`;
+};
+
+const buildGuidePathname = (connectorType: ConnectorType, factoryId: string) => {
+  const tabPath = buildTabPathname(connectorType);
+
+  return `${tabPath}/guide/${factoryId}`;
 };
 
 const isConnectorType = (value: string): value is ConnectorType =>
@@ -44,14 +57,20 @@ const parseToConnectorType = (value?: string): ConnectorType | undefined =>
   conditional(value && isConnectorType(value) && value);
 
 const Connectors = () => {
-  const { tab = ConnectorsTabs.Passwordless, createType } = useParams();
+  const { tab = ConnectorsTabs.Passwordless, createType, factoryId } = useParams();
   const createConnectorType = parseToConnectorType(createType);
   const navigate = useNavigate();
   const isSocial = tab === ConnectorsTabs.Social;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
+
   const { data, error, mutate } = useConnectorGroups();
-  const isLoading = !data && !error;
+  const { data: factories, error: factoriesError } = useSWR<
+    ConnectorFactoryResponse[],
+    RequestError
+  >('api/connector-factories');
+
+  const isLoading = !data && !factories && !error && !factoriesError;
 
   const passwordlessConnectors = useMemo(() => {
     const smsConnector =
@@ -69,6 +88,12 @@ const Connectors = () => {
   );
 
   const connectors = isSocial ? socialConnectors : passwordlessConnectors;
+
+  const connectorToShowInGuide = useMemo(() => {
+    if (factories && factoryId) {
+      return factories.find(({ id }) => id === factoryId);
+    }
+  }, [factoryId, factories]);
 
   return (
     <>
@@ -159,16 +184,26 @@ const Connectors = () => {
           onRetry={async () => mutate(undefined, true)}
         />
       </div>
-      {Boolean(createConnectorType) && (
-        <CreateForm
-          isOpen
-          type={createConnectorType}
-          onClose={() => {
-            navigate(`${basePathname}/${tab}`);
-            void mutate();
-          }}
-        />
-      )}
+      <CreateForm
+        isOpen={Boolean(createConnectorType)}
+        type={createConnectorType}
+        onClose={async (id) => {
+          await mutate();
+
+          if (createConnectorType && id) {
+            navigate(buildGuidePathname(createConnectorType, id), { replace: true });
+
+            return;
+          }
+          navigate(`${basePathname}/${tab}`);
+        }}
+      />
+      <Guide
+        connector={connectorToShowInGuide}
+        onClose={() => {
+          navigate(`${basePathname}/${tab}`);
+        }}
+      />
     </>
   );
 };
