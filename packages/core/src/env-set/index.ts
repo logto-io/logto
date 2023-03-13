@@ -97,6 +97,10 @@ export class EnvSet {
     const endpoint = getTenantEndpoint(this.tenantId, EnvSet.values);
     this.#oidc = await loadOidcValues(appendPath(endpoint, '/oidc').href, oidcConfigs);
   }
+
+  async end() {
+    await Promise.all([this.#pool?.end(), this.#queryClient?.end()]);
+  }
 }
 
 export { getTenantEndpoint } from './utils.js';

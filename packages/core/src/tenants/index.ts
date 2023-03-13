@@ -3,7 +3,12 @@ import LRUCache from 'lru-cache';
 import Tenant from './Tenant.js';
 
 export class TenantPool {
-  protected cache = new LRUCache<string, Tenant>({ max: 500 });
+  protected cache = new LRUCache<string, Tenant>({
+    max: 100,
+    dispose: async (tenant) => {
+      await tenant.envSet.end();
+    },
+  });
 
   async get(tenantId: string): Promise<Tenant> {
     const tenant = this.cache.get(tenantId);
@@ -20,13 +25,7 @@ export class TenantPool {
   }
 
   async endAll(): Promise<void> {
-    await Promise.all(
-      this.cache.dump().flatMap(([, tenant]) => {
-        const { poolSafe, queryClientSafe } = tenant.value.envSet;
-
-        return [poolSafe?.end(), queryClientSafe?.end()];
-      })
-    );
+    await Promise.all(this.cache.dump().map(async ([, tenant]) => tenant.value.envSet.end()));
   }
 }
 
