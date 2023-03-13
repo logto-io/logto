@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.trialTag {
+.tag {
   font: var(--font-label-3);
   background-color: var(--color-alert-99);
   padding: _.unit(0.5) _.unit(1.5);

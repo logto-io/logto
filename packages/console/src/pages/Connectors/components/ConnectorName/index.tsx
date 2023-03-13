@@ -15,15 +15,15 @@ import { ConnectorsTabs } from '@/consts/page-tabs';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
 
-import TrialTag from './TrialTag';
+import DemoTag from './DemoTag';
 import * as styles from './index.module.scss';
 
 type Props = {
   connectorGroup: ConnectorGroup;
-  isTrial?: boolean;
+  isDemo?: boolean;
 };
 
-const ConnectorName = ({ connectorGroup, isTrial = false }: Props) => {
+const ConnectorName = ({ connectorGroup, isDemo = false }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { type, connectors } = connectorGroup;
   const connector = connectors[0];
@@ -86,7 +86,7 @@ const ConnectorName = ({ connectorGroup, isTrial = false }: Props) => {
             : ConnectorsTabs.Passwordless
         }/${connector.id}`}
       />
-      {isTrial && <TrialTag />}
+      {isDemo && <DemoTag />}
     </div>
   );
 };

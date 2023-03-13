@@ -59,4 +59,4 @@ export const defaultEmailConnectorGroup: ConnectorGroup = {
 /**
  * Note: this feature has not been implemented yet; @xiaoyijun will refactor this once the internal Logto connectors are ready.
  */
-export const isConnectorsInTrial = false;
+export const isDemoConnector = true;

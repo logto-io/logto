@@ -30,7 +30,7 @@ const SocialSelector = ({ value, onChange }: Props) => {
           </DangerousRaw>
         ),
         value: item.target,
-        tag: 'general.trial',
+        tag: 'general.demo',
       };
     });
 
