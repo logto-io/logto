@@ -25,7 +25,6 @@ type Props = {
   anchorClassName?: string;
   children?: ReactNode;
   content?: ReactNode;
-  isContentTruncated?: boolean;
 };
 
 const Tooltip = ({
@@ -37,7 +36,6 @@ const Tooltip = ({
   anchorClassName,
   children,
   content,
-  isContentTruncated = true,
 }: Props) => {
   const [tooltipDom, setTooltipDom] = useState<HTMLDivElement>();
   const anchorRef = useRef<HTMLDivElement>(null);

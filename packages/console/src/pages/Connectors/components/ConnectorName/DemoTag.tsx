@@ -8,7 +8,7 @@ const DemoTag = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
-    <Tooltip isContentTruncated={false} content={<div>{t('connectors.connector_trial_tip')}</div>}>
+    <Tooltip content={<div>{t('connectors.connector_trial_tip')}</div>}>
       <div className={styles.tag}>{t('general.demo')}</div>
     </Tooltip>
   );
