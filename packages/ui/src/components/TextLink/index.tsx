@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import type { LinkProps } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-import { useIframeModal } from '@/containers/IframeModalProvider';
+import { useIframeModal } from '@/Providers/IframeModalProvider';
 import usePlatform from '@/hooks/use-platform';
 
 import * as styles from './index.module.scss';
