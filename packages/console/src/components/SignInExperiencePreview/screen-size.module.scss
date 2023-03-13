@@ -1,0 +1,25 @@
+// Web
+$web-iframe-width: 640px;
+$web-iframe-height: 800px;
+
+$web-width: 498px;
+$web-height: calc($web-width * $web-iframe-height / $web-iframe-width);
+
+$web-scale-x: calc($web-width / $web-iframe-width);
+$web-scale-y: calc($web-height / $web-iframe-height);
+
+$web-to-wrapper-offset-x: calc($web-iframe-width * 0.5 * ($web-scale-x - 1));
+$web-to-wrapper-offset-y: calc($web-iframe-height * 0.5 * ($web-scale-y - 1));
+
+// Mobile
+$mobile-iframe-width: 390px;
+$mobile-iframe-height: 844px;
+
+$mobile-width: 320px;
+$mobile-height: calc($mobile-width * $mobile-iframe-height / $mobile-iframe-width);
+
+$mobile-scale-x: calc($mobile-width / $mobile-iframe-width);
+$mobile-scale-y: calc($mobile-height / $mobile-iframe-height);
+
+$mobile-to-wrapper-offset-x: calc($mobile-iframe-width * 0.5 * ($mobile-scale-x - 1));
+$mobile-to-wrapper-offset-y: calc($mobile-iframe-height * 0.5 * ($mobile-scale-y - 1));
