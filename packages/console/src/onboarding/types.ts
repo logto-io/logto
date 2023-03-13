@@ -33,7 +33,7 @@ export enum Title {
 
 export enum CompanySize {
   Scale1 = '1',
-  Scale2 = '1-49',
+  Scale2 = '2-49',
   Scale3 = '50-199',
   Scale4 = '200-999',
   Scale5 = '1000+',
