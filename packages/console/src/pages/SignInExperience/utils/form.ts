@@ -40,7 +40,7 @@ export const signInExperienceParser = {
     };
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
-    const { branding, createAccountEnabled, signUp } = setup;
+    const { branding, createAccountEnabled, signUp, customCss } = setup;
 
     return {
       ...setup,
@@ -59,6 +59,7 @@ export const signInExperienceParser = {
             verify: false,
           },
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
+      customCss: customCss?.length ? customCss : null,
     };
   },
 };
@@ -80,11 +81,12 @@ export const hasSignUpAndSignInConfigChanged = (
 export const getBrandingErrorCount = (
   errors: FieldErrorsImpl<DeepRequired<SignInExperienceForm>>
 ) => {
-  const { color, branding } = errors;
+  const { color, branding, customCss } = errors;
   const colorFormErrorCount = color ? Object.keys(color).length : 0;
   const brandingFormErrorCount = branding ? Object.keys(branding).length : 0;
+  const customCssFormErrorCount = customCss ? 1 : 0;
 
-  return colorFormErrorCount + brandingFormErrorCount;
+  return colorFormErrorCount + brandingFormErrorCount + customCssFormErrorCount;
 };
 
 export const getSignUpAndSignInErrorCount = (

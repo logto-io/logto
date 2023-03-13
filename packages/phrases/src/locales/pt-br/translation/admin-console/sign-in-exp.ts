@@ -34,6 +34,12 @@ const sign_in_exp = {
     dark_logo_image_url: 'URL da imagem do logotipo do aplicativo (Escuro)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
   },
+  custom_css: {
+    title: 'CUSTOM CSS', // UNTRANSLATED
+    css_code_editor_title: 'Custom CSS to change UI', // UNTRANSLATED
+    css_code_editor_description: 'Description - Doc. <a>{{link}}</a>', // UNTRANSLATED
+    css_code_editor_description_link_content: 'Readme', // UNTRANSLATED
+  },
   sign_up_and_sign_in: {
     identifiers_email: 'Endereço de e-mail',
     identifiers_phone: 'Número de telefone',

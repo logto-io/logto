@@ -29,10 +29,9 @@ import './scss/normalized.scss';
 
 const App = () => {
   const { context, Provider } = usePageContext();
-  const { isPreview, experienceSettings, setLoading, setExperienceSettings } = context;
+  const { experienceSettings, setLoading, setExperienceSettings } = context;
   const customCssRef = useRef(document.createElement('style'));
-
-  usePreview(context);
+  const [isPreview, previewConfig] = usePreview(context);
 
   useEffect(() => {
     document.head.append(customCssRef.current);
@@ -40,6 +39,9 @@ const App = () => {
 
   useEffect(() => {
     if (isPreview) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      customCssRef.current.textContent = previewConfig?.signInExperience.customCss ?? null;
+
       return;
     }
 
@@ -61,7 +63,7 @@ const App = () => {
       // Init the page settings and render
       setExperienceSettings(settings);
     })();
-  }, [isPreview, setExperienceSettings, setLoading]);
+  }, [isPreview, previewConfig, setExperienceSettings, setLoading]);
 
   if (!experienceSettings) {
     return null;

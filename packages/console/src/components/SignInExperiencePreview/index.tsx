@@ -29,6 +29,7 @@ const SignInExperiencePreview = ({ platform, mode, language = 'en', signInExperi
   const { customPhrases } = useUiLanguages();
   const { userEndpoint } = useContext(AppEndpointsContext);
   const previewRef = useRef<HTMLIFrameElement>(null);
+  const customCssRef = useRef(document.createElement('style'));
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
 
   const configForUiPage = useMemo(() => {
@@ -79,6 +80,8 @@ const SignInExperiencePreview = ({ platform, mode, language = 'en', signInExperi
 
   useEffect(() => {
     postPreviewMessage();
+
+    document.head.append(customCssRef.current);
 
     const iframe = previewRef.current;
 

@@ -33,6 +33,12 @@ const sign_in_exp = {
     dark_logo_image_url: 'App logo image URL (Dark)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
   },
+  custom_css: {
+    title: 'CUSTOM CSS', // UNTRANSLATED
+    css_code_editor_title: 'Custom CSS to change UI', // UNTRANSLATED
+    css_code_editor_description: 'Description - Doc. <a>{{link}}</a>', // UNTRANSLATED
+    css_code_editor_description_link_content: 'Readme', // UNTRANSLATED
+  },
   sign_up_and_sign_in: {
     identifiers_email: 'Email address',
     identifiers_phone: 'Phone number',
