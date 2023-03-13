@@ -40,20 +40,9 @@ export default class Tenant implements TenantContext {
   public readonly provider: Provider;
   public readonly queries: Queries;
   public readonly libraries: Libraries;
+  public readonly run: MiddlewareType;
 
-  public readonly app: Koa;
-
-  get run(): MiddlewareType {
-    if (
-      EnvSet.values.isPathBasedMultiTenancy &&
-      // If admin URL Set is specified, consider that URL first
-      !(EnvSet.values.adminUrlSet.deduplicated().length > 0 && this.id === adminTenantId)
-    ) {
-      return mount('/' + this.id, this.app);
-    }
-
-    return mount(this.app);
-  }
+  private readonly app: Koa;
 
   private constructor(public readonly envSet: EnvSet, public readonly id: string) {
     const queries = new Queries(envSet.pool);
@@ -132,6 +121,14 @@ export default class Tenant implements TenantContext {
 
     this.app = app;
     this.provider = provider;
+
+    const { isPathBasedMultiTenancy, adminUrlSet } = EnvSet.values;
+    this.run =
+      isPathBasedMultiTenancy &&
+      // If admin URL Set is specified, consider that URL first
+      !(adminUrlSet.deduplicated().length > 0 && this.id === adminTenantId)
+        ? mount('/' + this.id, this.app)
+        : mount(this.app);
   }
 
   public requestStart() {
