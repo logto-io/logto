@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { Globals } from '@react-spring/web';
 import { assert } from '@silverhand/essentials';
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 
 import { getBoundingClientRectMock } from '@/__mocks__/logto';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
@@ -65,21 +65,25 @@ describe('SmartInputField Component', () => {
     );
 
     test('phone', async () => {
-      const { container, queryAllByText, queryByTestId } = renderInputField({
+      const { container, getByText, queryByTestId } = renderInputField({
         enabledTypes: [SignInIdentifier.Phone],
       });
 
-      const countryCode = queryAllByText(`+${defaultCountryCallingCode}`);
-      expect(countryCode).toHaveLength(2);
+      const countryCode = getByText(`+${defaultCountryCallingCode}`);
+      expect(countryCode).not.toBeNull();
 
       expect(queryByTestId('prefix')?.style.width).toBe('100px');
 
-      const selector = container.querySelector('select');
-      assert(selector, new Error('selector should not be null'));
+      act(() => {
+        fireEvent.click(countryCode);
+      });
 
       const newCountryCode = '86';
 
-      fireEvent.change(selector, { target: { value: newCountryCode } });
+      // Expect country code modal shown
+      const newCodeButton = getByText(`+${newCountryCode}`);
+      fireEvent.click(newCodeButton);
+
       expect(onChange).toBeCalledWith({
         type: SignInIdentifier.Phone,
         value: '',

@@ -7,6 +7,7 @@ const translation = {
     email: 'E-posta Adresi',
     phone_number: 'Telefon Numarası',
     confirm_password: 'Şifreyi Doğrula',
+    search_region_code: 'Bölge kodunu ara',
   },
   secondary: {
     social_bind_with:

@@ -1,0 +1,132 @@
+@use '@/scss/underscore' as _;
+
+
+.dropdownOverlay {
+  background: transparent;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+.dropdownModal {
+  position: absolute;
+  z-index: 50;
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+
+.dropdownContent {
+  background: var(--color-bg-float);
+  padding: _.unit(2) _.unit(3);
+}
+
+.searchInputField {
+  margin-bottom: _.unit(2);
+
+  input {
+    padding-left: _.unit(2);
+  }
+
+  svg {
+    color: var(--color-type-secondary);
+    align-self: center;
+  }
+}
+
+.countryList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: auto;
+
+  li {
+    padding: _.unit(1) _.unit(2) _.unit(1) _.unit(7);
+    @include _.flex-row;
+    cursor: pointer;
+
+    > svg {
+      margin-right: _.unit(1);
+    }
+
+    &.active {
+      color: var(--color-type-link);
+      padding-left: calc(_.unit(7) - _.unit(6));
+    }
+
+    &:hover {
+      background: var(--color-overlay-neutral-hover);
+      color: var(--color-type-link);
+    }
+  }
+}
+
+
+:global(body.desktop) {
+  .dropdownContent {
+    border: _.border(var(--color-line-divider));
+    box-shadow: var(--color-shadow-2);
+    border-radius: _.unit(2);
+  }
+
+  .searchInputField > div {
+    padding: _.unit(1.5) _.unit(3);
+    height: auto;
+  }
+
+  .countryList {
+    max-height: 400px;
+  }
+}
+
+:global(body.mobile) {
+  .dropdownOverlay {
+    z-index: 200;
+  }
+
+  .dropdownModal {
+    inset: 0;
+  }
+
+  .dropdownContent {
+    @include _.flex-column;
+    align-items: stretch;
+    height: 100%;
+  }
+
+  .countryList {
+    overflow: auto;
+    flex: 1;
+  }
+
+  .searchInputField {
+    &:not(:first-child) {
+      margin-top: _.unit(2);
+    }
+
+    > div {
+      padding-left: _.unit(4);
+    }
+  }
+}
+
+:global {
+  body.mobile {
+    /* stylelint-disable selector-class-pattern */
+    .ReactModal__Content[id='country-code-dropdown'] {
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .ReactModal__Content--after-open[id='country-code-dropdown'] {
+      transform: translateX(0);
+    }
+
+    .ReactModal__Content--before-close[id='country-code-dropdown'] {
+      transform: translateX(100%);
+    }
+    /* stylelint-enable selector-class-pattern */
+  }
+}

@@ -81,7 +81,7 @@ describe('ForgotPassword', () => {
     test.each(stateCases)('render the forgot password page with state %o', async (state) => {
       mockUseLocation.mockImplementation(() => ({ state }));
 
-      const { queryByText, queryAllByText, container, queryByTestId } = renderPage(settings);
+      const { queryByText, container, queryByTestId } = renderPage(settings);
       const inputField = container.querySelector('input[name="identifier"]');
       const countryCodeSelectorPrefix = queryByTestId('prefix');
 
@@ -95,7 +95,7 @@ describe('ForgotPassword', () => {
       if (state.identifier === SignInIdentifier.Phone && settings.phone) {
         expect(inputField.getAttribute('value')).toBe(phone);
         expect(countryCodeSelectorPrefix?.style.width).toBe('100px');
-        expect(queryAllByText(`+${countryCode}`)).toHaveLength(2);
+        expect(queryByText(`+${countryCode}`)).not.toBeNull();
       } else if (state.identifier === SignInIdentifier.Phone) {
         // Phone Number not enabled
         expect(inputField.getAttribute('value')).toBe('');
