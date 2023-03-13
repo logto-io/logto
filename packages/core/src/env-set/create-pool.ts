@@ -2,7 +2,7 @@ import { assert } from '@silverhand/essentials';
 import { createMockPool, createMockQueryResult, createPool, parseDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 
-const createPoolByEnv = async (databaseDsn: string, isTest: boolean) => {
+const createPoolByEnv = async (databaseDsn: string, isTest: boolean, poolSize?: number) => {
   // Database connection is disabled in unit test environment
   if (isTest) {
     return createMockPool({ query: async () => createMockQueryResult([]) });
@@ -12,7 +12,7 @@ const createPoolByEnv = async (databaseDsn: string, isTest: boolean) => {
 
   assert(parseDsn(databaseDsn).databaseName, new Error('Database name is required'));
 
-  return createPool(databaseDsn, { interceptors });
+  return createPool(databaseDsn, { interceptors, maximumPoolSize: poolSize });
 };
 
 export default createPoolByEnv;

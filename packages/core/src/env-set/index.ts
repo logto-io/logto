@@ -6,7 +6,7 @@ import type { DatabasePool } from 'slonik';
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 
-import createPool from './create-pool.js';
+import createPoolByEnv from './create-pool.js';
 import loadOidcValues from './oidc.js';
 import { throwNotLoadedError } from './throw-errors.js';
 import { getTenantEndpoint } from './utils.js';
@@ -37,7 +37,7 @@ export class EnvSet {
     return this.values.dbUrl;
   }
 
-  static sharedPool = createPool(this.dbUrl, this.isTest);
+  static sharedPool = createPoolByEnv(this.dbUrl, this.isTest, this.values.databasePoolSize);
 
   #pool: Optional<DatabasePool>;
   #oidc: Optional<Awaited<ReturnType<typeof loadOidcValues>>>;
@@ -61,7 +61,11 @@ export class EnvSet {
   }
 
   async load() {
-    const pool = await createPool(this.databaseUrl, EnvSet.isTest);
+    const pool = await createPoolByEnv(
+      this.databaseUrl,
+      EnvSet.isTest,
+      EnvSet.values.databasePoolSize
+    );
 
     this.#pool = pool;
 
