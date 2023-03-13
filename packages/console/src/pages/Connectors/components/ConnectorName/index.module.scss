@@ -1,5 +1,10 @@
 @use '@/scss/underscore' as _;
 
+.container {
+  display: flex;
+  align-items: center;
+}
+
 .logoContainer {
   width: 40px;
   height: 40px;

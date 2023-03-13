@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.tag {
+  font: var(--font-label-3);
+  background-color: var(--color-alert-99);
+  padding: _.unit(0.5) _.unit(1.5);
+  border-radius: 10px;
+  user-select: none;
+}

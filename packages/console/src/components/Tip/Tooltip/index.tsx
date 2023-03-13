@@ -140,7 +140,7 @@ const Tooltip = ({
             horizontalAlignment={positionState.horizontalAlign}
             isSuccessful={isSuccessful}
           >
-            <div className={styles.content}>{content}</div>
+            {content}
           </TipBubble>,
           tooltipDom
         )}

@@ -15,13 +15,14 @@ import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import Table from '@/components/Table';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
-import { defaultEmailConnectorGroup, defaultSmsConnectorGroup } from '@/consts';
+import { defaultEmailConnectorGroup, defaultSmsConnectorGroup, isDemoConnector } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 
+import ConnectorDeleteButton from './components/ConnectorDeleteButton';
 import ConnectorName from './components/ConnectorName';
 import ConnectorStatus from './components/ConnectorStatus';
 import ConnectorStatusField from './components/ConnectorStatusField';
@@ -126,7 +127,9 @@ const Connectors = () => {
               title: t('connectors.connector_name'),
               dataIndex: 'name',
               colSpan: 6,
-              render: (connectorGroup) => <ConnectorName connectorGroup={connectorGroup} />,
+              render: (connectorGroup) => (
+                <ConnectorName connectorGroup={connectorGroup} isDemo={isDemoConnector} />
+              ),
             },
             {
               title: t('connectors.connector_type'),
@@ -137,11 +140,19 @@ const Connectors = () => {
             {
               title: <ConnectorStatusField />,
               dataIndex: 'status',
-              colSpan: 5,
+              colSpan: 4,
               render: (connectorGroup) => <ConnectorStatus connectorGroup={connectorGroup} />,
             },
+            {
+              title: null,
+              dataIndex: 'delete',
+              colSpan: 1,
+              render: (connectorGroup) =>
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                isDemoConnector ? <ConnectorDeleteButton connectorGroup={connectorGroup} /> : null,
+            },
           ]}
-          isRowClickable={({ connectors }) => Boolean(connectors[0])}
+          isRowClickable={({ connectors }) => Boolean(connectors[0]) && !isDemoConnector}
           rowClickHandler={({ connectors }) => {
             const firstConnector = connectors[0];
 

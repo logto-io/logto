@@ -7,6 +7,8 @@ const connectors = {
   tab_email_sms: 'E-Mail und SMS Connectoren',
   tab_social: 'Social Connectoren',
   connector_name: 'Connectorname',
+  demo_tip:
+    'This connector has been preconfigured for demonstration purposes only. It should not be utilized in a production environment. Once you have completed your testing, be sure to provide your own credentials and set up your own connectors. The one you created will replace the trial version.', // UNTRANSLATED
   connector_type: 'Typ',
   connector_status: 'Anmeldeoberfläche',
   connector_status_in_use: 'In Benutzung',
