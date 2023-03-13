@@ -10,11 +10,47 @@ import RequestError from '#src/errors/RequestError/index.js';
 import ServerError from '#src/errors/ServerError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
+/** Configure what and how to guard. */
 export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
+  /**
+   * Guard query parameters after `?` in the URL.
+   *
+   * Normally you need to use a "string-string" dictionary guard for wrapping key-value pairs
+   * since query parameter values will be always parsed as strings.
+   *
+   * @example
+   * // e.g. parse '?key1=foo'
+   * z.object({ key1: z.string() })
+   */
   query?: ZodType<QueryT>;
+  /**
+   * Guard JSON request body. You can treat the body like a normal object.
+   *
+   * @example
+   * z.object({
+   *   key1: z.string(),
+   *   key2: z.object({ key3: z.number() }).array(),
+   * })
+   */
   body?: ZodType<BodyT>;
+  /**
+   * Guard `koa-router` path parameters (i.e. `ctx.params`).
+   *
+   * @example
+   * // e.g. parse '/foo/:key1'
+   * z.object({ key1: z.string() })
+   */
   params?: ZodType<ParametersT>;
+  /**
+   * Guard response body.
+   *
+   * @example z.object({ key1: z.string() })
+   */
   response?: ZodType<ResponseT>;
+  /**
+   * Guard response status code. It produces a `ServerError` (500)
+   * if the response does not satisfy any of the given value(s).
+   */
   status?: number | number[];
   files?: ZodType<FilesT>;
 };
@@ -113,13 +149,9 @@ export default function koaGuard<
       GuardResponseT
     >
   > = async function (ctx, next) {
-    if (body ?? files) {
-      return koaBody<StateT, ContextT>({ multipart: Boolean(files) })(ctx, async () =>
-        guard(ctx, next)
-      );
-    }
-
-    await guard(ctx, next);
+    await (body ?? files
+      ? koaBody<StateT, ContextT>({ multipart: Boolean(files) })(ctx, async () => guard(ctx, next))
+      : guard(ctx, next));
 
     if (status !== undefined) {
       assertThat(
