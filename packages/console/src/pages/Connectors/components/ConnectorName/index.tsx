@@ -15,13 +15,15 @@ import { ConnectorsTabs } from '@/consts/page-tabs';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
 
+import TrialTag from './TrialTag';
 import * as styles from './index.module.scss';
 
 type Props = {
   connectorGroup: ConnectorGroup;
+  isTrial?: boolean;
 };
 
-const ConnectorName = ({ connectorGroup }: Props) => {
+const ConnectorName = ({ connectorGroup, isTrial = false }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { type, connectors } = connectorGroup;
   const connector = connectors[0];
@@ -58,12 +60,12 @@ const ConnectorName = ({ connectorGroup }: Props) => {
   }
 
   return (
-    <ItemPreview
-      title={<UnnamedTrans resource={connector.name} />}
-      subtitle={
-        <>
-          {type !== ConnectorType.Social && connector.id}
-          {type === ConnectorType.Social && hasNonUniversalConnector && (
+    <div className={styles.container}>
+      <ItemPreview
+        title={<UnnamedTrans resource={connector.name} />}
+        subtitle={
+          type === ConnectorType.Social &&
+          hasNonUniversalConnector && (
             <div className={styles.platforms}>
               {connectors.map(
                 ({ id, platform }) =>
@@ -75,16 +77,17 @@ const ConnectorName = ({ connectorGroup }: Props) => {
                   )
               )}
             </div>
-          )}
-        </>
-      }
-      icon={<ConnectorLogo data={connector} />}
-      to={`/connectors/${
-        connector.type === ConnectorType.Social
-          ? ConnectorsTabs.Social
-          : ConnectorsTabs.Passwordless
-      }/${connector.id}`}
-    />
+          )
+        }
+        icon={<ConnectorLogo data={connector} />}
+        to={`/connectors/${
+          connector.type === ConnectorType.Social
+            ? ConnectorsTabs.Social
+            : ConnectorsTabs.Passwordless
+        }/${connector.id}`}
+      />
+      {isTrial && <TrialTag />}
+    </div>
   );
 };
 

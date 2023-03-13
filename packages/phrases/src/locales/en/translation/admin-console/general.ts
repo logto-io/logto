@@ -50,7 +50,7 @@ const general = {
   try_now: 'Try Now',
   multiple_form_field: '(Multiple)',
   cap_limit: 'Cap limit',
-  trial: 'Trail',
+  trial: 'Trial',
 };
 
 export default general;

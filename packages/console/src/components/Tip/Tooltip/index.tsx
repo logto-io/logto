@@ -25,6 +25,7 @@ type Props = {
   anchorClassName?: string;
   children?: ReactNode;
   content?: ReactNode;
+  isLineEllipsisDisabled?: boolean;
 };
 
 const Tooltip = ({
@@ -36,6 +37,7 @@ const Tooltip = ({
   anchorClassName,
   children,
   content,
+  isLineEllipsisDisabled = false,
 }: Props) => {
   const [tooltipDom, setTooltipDom] = useState<HTMLDivElement>();
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -140,7 +142,9 @@ const Tooltip = ({
             horizontalAlignment={positionState.horizontalAlign}
             isSuccessful={isSuccessful}
           >
-            <div className={styles.content}>{content}</div>
+            <div className={classNames(!isLineEllipsisDisabled && styles.lineEllipsis)}>
+              {content}
+            </div>
           </TipBubble>,
           tooltipDom
         )}

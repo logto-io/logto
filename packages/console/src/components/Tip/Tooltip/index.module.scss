@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.content {
+.lineEllipsis {
   @include _.multi-line-ellipsis(6);
 }
 
