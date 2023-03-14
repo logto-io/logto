@@ -1,3 +1,4 @@
+import { defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
 import { ConnectorType, VerificationCodeType } from '@logto/connector-kit';
 import { Passcode } from '@logto/schemas';
 import { any } from 'zod';
@@ -5,7 +6,6 @@ import { any } from 'zod';
 import { mockConnector, mockMetadata } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
-import { defaultConnectorMethods } from '#src/utils/connectors/consts.js';
 
 import {
   createPasscodeLibrary,

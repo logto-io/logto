@@ -1,84 +1,19 @@
 import { existsSync } from 'fs';
-import { readFile } from 'fs/promises';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-import type { AllConnector, BaseConnector, GetConnectorConfig } from '@logto/connector-kit';
-import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
+import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
+import { loadConnectorFactories as _loadConnectorFactories } from '@logto/cli/lib/connector/index.js';
+import { connectorDirectory } from '@logto/cli/lib/constants.js';
+import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utils.js';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
-import { pick } from '@silverhand/essentials';
+import { findPackage } from '@logto/shared';
+import { deduplicate, pick } from '@silverhand/essentials';
 
-import { notImplemented } from './consts.js';
-import type { ConnectorFactory, LogtoConnector } from './types.js';
+import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
-export function validateConnectorModule(
-  connector: Partial<BaseConnector<ConnectorType>>
-): asserts connector is BaseConnector<ConnectorType> {
-  if (!connector.metadata) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidMetadata);
-  }
-
-  if (!connector.configGuard) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidConfigGuard);
-  }
-
-  if (!connector.type || !Object.values(ConnectorType).includes(connector.type)) {
-    throw new ConnectorError(ConnectorErrorCodes.UnexpectedType);
-  }
-}
-
-export const readUrl = async (
-  url: string,
-  baseUrl: string,
-  type: 'text' | 'svg'
-): Promise<string> => {
-  if (!url) {
-    return url;
-  }
-
-  if (type !== 'text' && url.startsWith('http')) {
-    return url;
-  }
-
-  if (!existsSync(path.join(baseUrl, url))) {
-    return url;
-  }
-
-  if (type === 'svg') {
-    const data = await readFile(path.join(baseUrl, url));
-
-    return `data:image/svg+xml;base64,${data.toString('base64')}`;
-  }
-
-  return readFile(path.join(baseUrl, url), 'utf8');
-};
-
-export const parseMetadata = async (
-  metadata: AllConnector['metadata'],
-  packagePath: string
-): Promise<AllConnector['metadata']> => {
-  return {
-    ...metadata,
-    logo: await readUrl(metadata.logo, packagePath, 'svg'),
-    logoDark: metadata.logoDark && (await readUrl(metadata.logoDark, packagePath, 'svg')),
-    readme: await readUrl(metadata.readme, packagePath, 'text'),
-    configTemplate:
-      metadata.configTemplate && (await readUrl(metadata.configTemplate, packagePath, 'text')),
-  };
-};
-
-export const buildRawConnector = async (
-  connectorFactory: ConnectorFactory,
-  getConnectorConfig?: GetConnectorConfig
-) => {
-  const { createConnector, path: packagePath } = connectorFactory;
-  const rawConnector = await createConnector({
-    getConfig: getConnectorConfig ?? notImplemented,
-  });
-  validateConnectorModule(rawConnector);
-  const rawMetadata = await parseMetadata(rawConnector.metadata, packagePath);
-
-  return { rawConnector, rawMetadata };
-};
+import type { LogtoConnector } from './types.js';
 
 export const transpileLogtoConnector = ({
   dbEntry,
@@ -97,4 +32,42 @@ export const transpileConnectorFactory = ({
   type,
 }: ConnectorFactory): ConnectorFactoryResponse => {
   return { type, ...metadata };
+};
+
+const checkDuplicateConnectorFactoriesId = (connectorFactories: ConnectorFactory[]) => {
+  const connectorFactoryIds = connectorFactories.map(({ metadata }) => metadata.id);
+  const deduplicatedConnectorFactoryIds = deduplicate(connectorFactoryIds);
+
+  if (connectorFactoryIds.length !== deduplicatedConnectorFactoryIds.length) {
+    const duplicatedConnectorFactoryIds = deduplicatedConnectorFactoryIds.filter(
+      (deduplicateId) => connectorFactoryIds.filter((id) => id === deduplicateId).length > 1
+    );
+    throw new RequestError({
+      code: 'connector.more_than_one_connector_factory',
+      status: 422,
+      connectorIds: duplicatedConnectorFactoryIds.map((id) => `${id}`).join(', '),
+    });
+  }
+};
+
+export const loadConnectorFactories = async () => {
+  const currentDirname = path.dirname(fileURLToPath(import.meta.url));
+  const cliDirectory = await findPackage(currentDirname);
+  const coreDirectory = cliDirectory && path.join(cliDirectory, '../core');
+  const directory = coreDirectory && path.join(coreDirectory, connectorDirectory);
+
+  if (!directory || !existsSync(directory)) {
+    return [];
+  }
+
+  const connectorPackages = await getConnectorPackagesFromDirectory(directory);
+
+  const connectorFactories = await _loadConnectorFactories(
+    connectorPackages,
+    EnvSet.values.isIntegrationTest || EnvSet.values.ignoreConnectorVersionCheck
+  );
+
+  checkDuplicateConnectorFactoriesId(connectorFactories);
+
+  return connectorFactories;
 };

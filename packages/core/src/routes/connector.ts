@@ -1,3 +1,4 @@
+import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
 import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
@@ -7,9 +8,8 @@ import { string, object } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
-import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
 import {
-  buildRawConnector,
+  loadConnectorFactories,
   transpileConnectorFactory,
   transpileLogtoConnector,
 } from '#src/utils/connectors/index.js';

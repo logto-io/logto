@@ -1,12 +1,11 @@
+import { buildRawConnector, defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
 import type { AllConnector } from '@logto/connector-kit';
 import { validateConfig } from '@logto/connector-kit';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
-import { defaultConnectorMethods } from '#src/utils/connectors/consts.js';
-import { loadConnectorFactories } from '#src/utils/connectors/factories.js';
-import { buildRawConnector } from '#src/utils/connectors/index.js';
+import { loadConnectorFactories } from '#src/utils/connectors/index.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 export type ConnectorLibrary = ReturnType<typeof createConnectorLibrary>;
