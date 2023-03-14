@@ -35,14 +35,6 @@
 
 :global(body.mobile) {
   .signature {
-    margin: _.unit(10) 0 _.unit(2);
     color: var(--color-neutral-variant-80);
-  }
-}
-
-
-:global(body.desktop) {
-  .signature {
-    margin: _.unit(7) 0;
   }
 }
