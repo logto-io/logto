@@ -16,9 +16,10 @@ type Props = {
   title?: TFuncKey;
   message?: TFuncKey;
   rawMessage?: string;
+  isRootPath?: boolean;
 };
 
-const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Props) => {
+const ErrorPage = ({ title = 'description.not_found', message, rawMessage, isRootPath }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { theme } = useContext(PageContext);
@@ -27,19 +28,21 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
 
   return (
     <StaticPageLayout>
-      <NavBar />
+      {!isRootPath && <NavBar />}
       <div className={styles.container}>
         {theme === 'light' ? <EmptyState /> : <EmptyStateDark />}
         <div className={styles.title}>{t(title)}</div>
         {errorMessage && <div className={styles.message}>{String(errorMessage)}</div>}
       </div>
-      <Button
-        className={styles.backButton}
-        title="action.back"
-        onClick={() => {
-          navigate(-1);
-        }}
-      />
+      {!isRootPath && (
+        <Button
+          className={styles.backButton}
+          title="action.back"
+          onClick={() => {
+            navigate(-1);
+          }}
+        />
+      )}
     </StaticPageLayout>
   );
 };
