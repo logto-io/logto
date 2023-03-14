@@ -1,4 +1,4 @@
-import { AppearanceMode } from '@logto/schemas';
+import { ThemeAdaptionStrategy } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, createContext } from 'react';
@@ -29,7 +29,7 @@ export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
   const [theme, setTheme] = useState<Theme>(Theme.LightMode);
 
   const {
-    data: { appearanceMode },
+    data: { themeAdaptionStrategy },
   } = useUserPreferences();
 
   useEffect(() => {
@@ -39,8 +39,10 @@ export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
       return;
     }
 
-    if (appearanceMode !== AppearanceMode.SyncWithSystem) {
-      setTheme(appearanceMode === AppearanceMode.LightMode ? Theme.LightMode : Theme.DarkMode);
+    if (themeAdaptionStrategy !== ThemeAdaptionStrategy.FollowSystem) {
+      setTheme(
+        themeAdaptionStrategy === ThemeAdaptionStrategy.LightOnly ? Theme.LightMode : Theme.DarkMode
+      );
 
       return;
     }
@@ -56,7 +58,7 @@ export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
     return () => {
       darkThemeWatchMedia.removeEventListener('change', changeTheme);
     };
-  }, [appearanceMode, fixedTheme]);
+  }, [themeAdaptionStrategy, fixedTheme]);
 
   // Set Theme Mode
   useEffect(() => {

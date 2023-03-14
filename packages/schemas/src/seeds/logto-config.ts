@@ -1,7 +1,5 @@
 import { CreateLogtoConfig } from '../db-entries/index.js';
-import { AppearanceMode } from '../foundations/index.js';
-import type { AdminConsoleData } from '../types/index.js';
-import { LogtoTenantConfigKey } from '../types/index.js';
+import { AdminConsoleData, LogtoTenantConfigKey } from '../types/index.js';
 
 export const createDefaultAdminConsoleConfig = (
   forTenantId: string
@@ -14,8 +12,6 @@ export const createDefaultAdminConsoleConfig = (
     tenantId: forTenantId,
     key: LogtoTenantConfigKey.AdminConsole,
     value: {
-      language: 'en',
-      appearanceMode: AppearanceMode.SyncWithSystem,
       livePreviewChecked: false,
       applicationCreated: false,
       signInExperienceCustomized: false,
@@ -23,5 +19,5 @@ export const createDefaultAdminConsoleConfig = (
       selfHostingChecked: false,
       communityChecked: false,
       m2mApplicationCreated: false,
-    },
+    } satisfies AdminConsoleData,
   } satisfies CreateLogtoConfig);

@@ -153,10 +153,10 @@ export type CustomContent = z.infer<typeof customContentGuard>;
  * Settings
  */
 
-export enum AppearanceMode {
-  SyncWithSystem = 'system',
-  LightMode = 'light',
-  DarkMode = 'dark',
+export enum ThemeAdaptionStrategy {
+  FollowSystem = 'followSystem',
+  LightOnly = 'lightOnly',
+  DarkOnly = 'darkOnly',
 }
 
 /* === Phrases === */

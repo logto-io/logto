@@ -1,10 +1,10 @@
 import { builtInLanguages as builtInConsoleLanguages } from '@logto/phrases';
-import { AppearanceMode } from '@logto/schemas';
+import { ThemeAdaptionStrategy } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
 import { useEffect, useMemo } from 'react';
 import { z } from 'zod';
 
-import { themeStorageKey } from '@/consts';
+import { themeAdaptionStrategyStorageKey } from '@/consts';
 
 import useMeCustomData from './use-me-custom-data';
 
@@ -12,7 +12,7 @@ const adminConsolePreferencesKey = 'adminConsolePreferences';
 
 const userPreferencesGuard = z.object({
   language: z.enum(builtInConsoleLanguages).optional(),
-  appearanceMode: z.nativeEnum(AppearanceMode),
+  themeAdaptionStrategy: z.nativeEnum(ThemeAdaptionStrategy),
   experienceNoticeConfirmed: z.boolean().optional(),
   getStartedHidden: z.boolean().optional(),
   connectorSieNoticeConfirmed: z.boolean().optional(),
@@ -34,11 +34,11 @@ const useUserPreferences = () => {
     return parsed.success
       ? parsed.data[adminConsolePreferencesKey]
       : {
-          appearanceMode:
+          themeAdaptionStrategy:
             getEnumFromArray(
-              Object.values(AppearanceMode),
-              localStorage.getItem(themeStorageKey)
-            ) ?? AppearanceMode.SyncWithSystem,
+              Object.values(ThemeAdaptionStrategy),
+              localStorage.getItem(themeAdaptionStrategyStorageKey)
+            ) ?? ThemeAdaptionStrategy.FollowSystem,
         };
   }, [data]);
 
@@ -52,8 +52,8 @@ const useUserPreferences = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem(themeStorageKey, userPreferences.appearanceMode);
-  }, [userPreferences.appearanceMode]);
+    localStorage.setItem(themeAdaptionStrategyStorageKey, userPreferences.themeAdaptionStrategy);
+  }, [userPreferences.themeAdaptionStrategy]);
 
   return {
     isLoading,

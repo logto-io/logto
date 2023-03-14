@@ -1,6 +1,6 @@
 import { builtInLanguageOptions as consoleBuiltInLanguageOptions } from '@logto/phrases';
 import { useLogto } from '@logto/react';
-import { AppearanceMode } from '@logto/schemas';
+import { ThemeAdaptionStrategy } from '@logto/schemas';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,7 +35,7 @@ const UserInfo = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const {
-    data: { language, appearanceMode },
+    data: { language, themeAdaptionStrategy },
     update,
   } = useUserPreferences();
 
@@ -98,21 +98,21 @@ const UserInfo = () => {
           title="menu.appearance.label"
           options={[
             {
-              value: AppearanceMode.SyncWithSystem,
+              value: ThemeAdaptionStrategy.FollowSystem,
               title: t('menu.appearance.system'),
             },
             {
-              value: AppearanceMode.LightMode,
+              value: ThemeAdaptionStrategy.LightOnly,
               title: t('menu.appearance.light'),
             },
             {
-              value: AppearanceMode.DarkMode,
+              value: ThemeAdaptionStrategy.DarkOnly,
               title: t('menu.appearance.dark'),
             },
           ]}
-          selectedOption={appearanceMode}
-          onItemClick={(appearanceMode) => {
-            void update({ appearanceMode });
+          selectedOption={themeAdaptionStrategy}
+          onItemClick={(themeAdaptionStrategy) => {
+            void update({ themeAdaptionStrategy });
             setShowDropdown(false);
           }}
         />
