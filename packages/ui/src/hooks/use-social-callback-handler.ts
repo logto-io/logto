@@ -15,16 +15,7 @@ const useSocialCallbackHandler = () => {
       const hashString = window.location.hash
 
       // Define evaluated search string
-      let search = searchString
-
-      // Apple use fragment mode to store auth parameter. Need to support it.
-      if (!searchString && hashString) {
-        search = `?${hashString.slice(1)}`
-      }
-
-      if (searchString && hashString) {
-        search = `${search}&${hashString.slice(1)}`
-      }
+      const search = `${searchString ?? '?'}${(searchString && hashString ? '&' : '')}${hashString.slice(1)}`
 
       // Get native callback link from storage
       const callbackLink = getCallbackLinkFromStorage(connectorId);
