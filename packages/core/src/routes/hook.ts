@@ -11,15 +11,19 @@ export default function hookRoutes<T extends AuthedRouter>(
 ) {
   const { findAllHooks, findHookById, insertHook, updateHookById, deleteHookById } = queries.hooks;
 
-  router.get('/hooks', async (ctx, next) => {
-    ctx.body = await findAllHooks();
+  router.get(
+    '/hooks',
+    koaGuard({ response: Hooks.guard.array(), status: 200 }),
+    async (ctx, next) => {
+      ctx.body = await findAllHooks();
 
-    return next();
-  });
+      return next();
+    }
+  );
 
   router.post(
     '/hooks',
-    koaGuard({ body: Hooks.createGuard.omit({ id: true }) }),
+    koaGuard({ body: Hooks.createGuard.omit({ id: true }), response: Hooks.guard, status: 200 }),
     async (ctx, next) => {
       ctx.body = await insertHook({
         id: generateStandardId(),
@@ -32,7 +36,11 @@ export default function hookRoutes<T extends AuthedRouter>(
 
   router.get(
     '/hooks/:id',
-    koaGuard({ params: z.object({ id: z.string().min(1) }) }),
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      response: Hooks.guard,
+      status: [200, 404],
+    }),
     async (ctx, next) => {
       const {
         params: { id },
@@ -49,6 +57,8 @@ export default function hookRoutes<T extends AuthedRouter>(
     koaGuard({
       params: z.object({ id: z.string().min(1) }),
       body: Hooks.createGuard.omit({ id: true }).partial(),
+      response: Hooks.guard,
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const {
@@ -64,7 +74,7 @@ export default function hookRoutes<T extends AuthedRouter>(
 
   router.delete(
     '/hooks/:id',
-    koaGuard({ params: z.object({ id: z.string().min(1) }) }),
+    koaGuard({ params: z.object({ id: z.string().min(1) }), status: [204, 404] }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       await deleteHookById(id);
