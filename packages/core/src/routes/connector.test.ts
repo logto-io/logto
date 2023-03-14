@@ -1,11 +1,12 @@
 /* eslint-disable max-lines */
-import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
+import { defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
 import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorPlatform,
   VerificationCodeType,
 } from '@logto/connector-kit';
+import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
 import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
@@ -26,7 +27,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import Queries from '#src/tenants/Queries.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import assertThat from '#src/utils/assert-that.js';
-import { defaultConnectorMethods } from '#src/utils/connectors/consts.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -57,11 +57,14 @@ const {
 // eslint-disable-next-line @typescript-eslint/ban-types
 const getLogtoConnectors = jest.fn<Promise<LogtoConnector[]>, []>();
 
-const { loadConnectorFactories } = mockEsm('#src/utils/connectors/factories.js', () => ({
-  loadConnectorFactories: jest.fn(),
-}));
+const { loadConnectorFactories } = await mockEsmWithActual(
+  '#src/utils/connectors/index.js',
+  () => ({
+    loadConnectorFactories: jest.fn(),
+  })
+);
 
-const { buildRawConnector } = await mockEsmWithActual('#src/utils/connectors/index.js', () => ({
+const { buildRawConnector } = await mockEsmWithActual('@logto/cli/lib/connector/index.js', () => ({
   buildRawConnector: jest.fn(),
 }));
 

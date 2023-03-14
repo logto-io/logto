@@ -1,9 +1,10 @@
+import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
 import { ConnectorPlatform } from '@logto/connector-kit';
 import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
-import type { LogtoConnector, ConnectorFactory } from '#src/utils/connectors/types.js';
+import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 import {
   mockConnector0,

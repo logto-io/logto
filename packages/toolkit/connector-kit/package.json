@@ -32,7 +32,6 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/core-kit": "workspace:*",
     "@logto/language-kit": "workspace:*",
     "@silverhand/essentials": "2.4.0"
   },

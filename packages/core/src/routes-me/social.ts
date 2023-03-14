@@ -1,3 +1,4 @@
+import { notImplemented } from '@logto/cli/lib/connector/index.js';
 import { ConnectorType } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
 import { object, record, string, unknown } from 'zod';
@@ -5,7 +6,6 @@ import { object, record, string, unknown } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
-import { notImplemented } from '#src/utils/connectors/consts.js';
 import { transpileLogtoConnector } from '#src/utils/connectors/index.js';
 
 import type { RouterInitArgs } from '../routes/types.js';

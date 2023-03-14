@@ -43,6 +43,7 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
+    "@logto/connector-kit": "workspace:1.0.0-rc.2",
     "@logto/core-kit": "workspace:*",
     "@logto/schemas": "workspace:*",
     "@logto/shared": "workspace:*",

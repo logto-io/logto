@@ -2,15 +2,14 @@ import path from 'path';
 
 import type { AllConnector, CreateConnector } from '@logto/connector-kit';
 import connectorKitMeta from '@logto/connector-kit/package.json' assert { type: 'json' };
-import { isKeyInObject } from '@logto/shared';
 import { satisfies } from 'semver';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { isKeyInObject } from './utils.js';
 
 const connectorKit = '@logto/connector-kit';
 const { version: currentVersion } = connectorKitMeta;
 
-const checkConnectorKitVersion = (dependencies: unknown) => {
+const checkConnectorKitVersion = (dependencies: unknown, ignoreVersionMismatch: boolean) => {
   if (isKeyInObject(dependencies, connectorKit)) {
     const value = dependencies[connectorKit];
 
@@ -21,7 +20,7 @@ const checkConnectorKitVersion = (dependencies: unknown) => {
 
       const message = `Connector requires ${connectorKit} to be ${value}, but the version here is ${currentVersion}.`;
 
-      if (EnvSet.values.isIntegrationTest || EnvSet.values.ignoreConnectorVersionCheck) {
+      if (ignoreVersionMismatch) {
         console.warn(`[warn] ${message}\n\nThis is highly discouraged in production.`);
 
         return;
@@ -35,7 +34,8 @@ const checkConnectorKitVersion = (dependencies: unknown) => {
 };
 
 export const loadConnector = async (
-  connectorPath: string
+  connectorPath: string,
+  ignoreVersionMismatch: boolean
 ): Promise<CreateConnector<AllConnector>> => {
   const {
     default: { dependencies },
@@ -44,7 +44,7 @@ export const loadConnector = async (
     assert: { type: 'json' },
   })) as { default: Record<string, unknown> };
 
-  checkConnectorKitVersion(dependencies);
+  checkConnectorKitVersion(dependencies, ignoreVersionMismatch);
 
   const loaded: unknown = await import(path.join(connectorPath, 'lib/index.js'));
 

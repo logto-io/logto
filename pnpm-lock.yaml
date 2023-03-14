@@ -27,6 +27,7 @@ importers:
 
   packages/cli:
     specifiers:
+      '@logto/connector-kit': workspace:1.0.0-rc.2
       '@logto/core-kit': workspace:*
       '@logto/schemas': workspace:*
       '@logto/shared': workspace:*
@@ -66,6 +67,7 @@ importers:
       yargs: ^17.6.0
       zod: ^3.20.2
     dependencies:
+      '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
@@ -619,7 +621,6 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/core-kit': workspace:*
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.4.0
@@ -630,7 +631,6 @@ importers:
       typescript: ^4.9.4
       zod: ^3.20.2
     dependencies:
-      '@logto/core-kit': link:../toolkit/core-kit
       '@logto/language-kit': link:../toolkit/language-kit
       '@silverhand/essentials': 2.4.0
       zod: 3.20.2
@@ -644,7 +644,6 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@logto/core-kit': workspace:*
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.4.0
@@ -656,7 +655,6 @@ importers:
       typescript: ^4.9.4
       zod: ^3.20.2
     dependencies:
-      '@logto/core-kit': link:../toolkit/core-kit
       '@logto/language-kit': link:../toolkit/language-kit
       '@silverhand/essentials': 2.4.0
       zod: 3.20.2
@@ -765,7 +763,6 @@ importers:
 
   packages/toolkit/connector-kit:
     specifiers:
-      '@logto/core-kit': workspace:*
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': 2.4.0
@@ -778,7 +775,6 @@ importers:
       typescript: ^4.9.4
       zod: ^3.20.2
     dependencies:
-      '@logto/core-kit': link:../core-kit
       '@logto/language-kit': link:../language-kit
       '@silverhand/essentials': 2.4.0
     optionalDependencies:
