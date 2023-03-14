@@ -118,6 +118,7 @@
 
   .content {
     padding: _.unit(5);
+    height: 100%;
 
     .icon {
       margin-right: _.unit(4);
@@ -154,6 +155,7 @@
 .compact.checked {
   color: var(--color-text-link);
   border-color: var(--color-primary);
+  background-color: var(--color-hover-variant);
 
   .content {
     .icon {
@@ -222,7 +224,6 @@
   &:hover {
     color: var(--color-text-link);
     border-color: var(--color-primary);
-    background-color: var(--color-hover-variant);
 
     .content {
       .icon {
