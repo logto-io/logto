@@ -31,12 +31,14 @@ export const signInExperienceParser = {
     };
   },
   toLocalForm: (signInExperience: SignInExperience): SignInExperienceForm => {
-    const { signUp, signInMode } = signInExperience;
+    const { signUp, signInMode, customCss } = signInExperience;
 
     return {
       ...signInExperience,
       signUp: signInExperienceParser.toLocalSignUp(signUp),
       createAccountEnabled: signInMode !== SignInMode.SignIn,
+      // Code editor components can not properly handle null value, manually transform null to undefined instead
+      customCss: customCss?.length ? customCss : undefined,
     };
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {

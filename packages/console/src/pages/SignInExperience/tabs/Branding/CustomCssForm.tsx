@@ -43,11 +43,12 @@ const CustomCssForm = () => {
         <Controller
           name="customCss"
           control={control}
+          defaultValue={t('sign_in_exp.custom_css.css_code_editor_content_placeholder')}
           render={({ field: { onChange, value } }) => (
             <CodeEditor
               className={brandingStyles.customCssCodeEditor}
               language="scss"
-              value={value ?? undefined}
+              value={value}
               onChange={onChange}
             />
           )}

@@ -33,10 +33,12 @@ const sign_in_exp = {
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
   },
   custom_css: {
-    title: 'CUSTOM CSS', // UNTRANSLATED
-    css_code_editor_title: 'Custom CSS to change UI', // UNTRANSLATED
-    css_code_editor_description: 'Description - Doc. <a>{{link}}</a>', // UNTRANSLATED
-    css_code_editor_description_link_content: 'Readme', // UNTRANSLATED
+    title: '自定义 CSS',
+    css_code_editor_title: '自定义 CSS 个性化你的用户界面',
+    css_code_editor_description: '查看自定义 CSS 的例子。 <a>{{link}}</a>',
+    css_code_editor_description_link_content: '了解更多',
+    css_code_editor_content_placeholder:
+      '// 输入自定义CSS代码，从颜色、字体、组件样式和布局等，定制你的登录、注册、忘记密码和其他页面。充分发挥创造力，让你的用户界面脱颖而出。',
   },
   sign_up_and_sign_in: {
     identifiers_email: '邮件地址',
