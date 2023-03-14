@@ -12,15 +12,4 @@
     height: 30px;
     color: var(--color-text);
   }
-
-  .line {
-    @include _.vertical-bar;
-    height: 20px;
-    margin: 0 _.unit(5);
-  }
-
-  .text {
-    font: var(--font-title-2);
-    color: var(--color-text);
-  }
 }

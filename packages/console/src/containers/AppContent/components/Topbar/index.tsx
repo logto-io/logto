@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
+import CloudLogo from '@/assets/images/cloud-logo.svg';
 import Logo from '@/assets/images/logo.svg';
 import Spacer from '@/components/Spacer';
 import { isCloud } from '@/consts/cloud';
@@ -11,26 +12,26 @@ import UserInfo from '../UserInfo';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isLogoOnly?: boolean;
   className?: string;
 };
 
-const Topbar = ({ isLogoOnly = false, className }: Props) => {
+const Topbar = ({ className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const LogtoLogo = isCloud ? CloudLogo : Logo;
 
   return (
     <div className={classNames(styles.topbar, className)}>
-      <Logo className={styles.logo} />
-      <div className={styles.line} />
-      <div className={styles.text}>{t('title')}</div>
-      <Spacer />
-      {!isLogoOnly && (
+      <LogtoLogo className={styles.logo} />
+      {!isCloud && (
         <>
-          <GetStartedProgress />
-          {isCloud && <EarlyBirdGift />}
-          <UserInfo />
+          <div className={styles.line} />
+          <div className={styles.text}>{t('title')}</div>
         </>
       )}
+      <Spacer />
+      <GetStartedProgress />
+      {isCloud && <EarlyBirdGift />}
+      <UserInfo />
     </div>
   );
 };
