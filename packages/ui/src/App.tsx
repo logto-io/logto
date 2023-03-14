@@ -80,7 +80,7 @@ const App = () => {
             <Route element={<AppLayout />}>
               <Route
                 path="unknown-session"
-                element={<ErrorPage message="error.invalid_session" />}
+                element={<ErrorPage isRootPath message="error.invalid_session" />}
               />
               <Route path="springboard" element={<Springboard />} />
 
@@ -128,7 +128,7 @@ const App = () => {
                 <Route path="callback/:connectorId" element={<Callback />} />
               </Route>
 
-              <Route path="*" element={<ErrorPage />} />
+              <Route path="*" element={<ErrorPage isRootPath />} />
             </Route>
           </Routes>
         </AppBoundary>
