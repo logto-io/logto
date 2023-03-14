@@ -18,6 +18,10 @@
 }
 
 :global(body.desktop) {
+  .wrapper {
+    padding: _.unit(6) 0;
+  }
+
   .header {
     margin-bottom: _.unit(6);
   }
