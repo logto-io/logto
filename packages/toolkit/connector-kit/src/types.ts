@@ -1,7 +1,7 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { isLanguageTag } from '@logto/language-kit';
 import type { ZodType } from 'zod';
-import { z, unknown } from 'zod';
+import { z } from 'zod';
 
 // MARK: Foundation
 export enum ConnectorType {
@@ -183,13 +183,20 @@ export type GetSession = () => Promise<ConnectorSession>;
 
 export type SetSession = (storage: ConnectorSession) => Promise<void>;
 
-export const storageGuard = z.record(unknown());
+export const storageGuard = z
+  .object({
+    accessToken: z.string(),
+    refreshToken: z.string(),
+    expiresIn: z.number(),
+    tokenType: z.string(),
+  })
+  .partial();
 
 export type Storage = z.infer<typeof storageGuard>;
 
-export type GetStorageValue = (key: string) => Promise<unknown>;
+export type GetStorageValue = () => Promise<Storage>;
 
-export type SetStorageValue = (key: string, value: unknown) => Promise<void>;
+export type SetStorageValue = (value: Storage) => Promise<void>;
 
 export type BaseConnector<Type extends ConnectorType> = {
   type: Type;

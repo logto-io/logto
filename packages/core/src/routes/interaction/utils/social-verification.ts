@@ -1,6 +1,6 @@
 import type { ConnectorSession, SocialUserInfo } from '@logto/connector-kit';
 import { connectorSessionGuard } from '@logto/connector-kit';
-import type { SocialConnectorPayload } from '@logto/schemas';
+import type { Storage, SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import type { Context } from 'koa';
 import type Provider from 'oidc-provider';
@@ -62,7 +62,7 @@ export const verifySocialIdentity = async (
     socials: { getUserInfoByAuthCode },
   } = libraries;
   const {
-    connectors: { setValueByIdAndKey, getValueByIdAndKey },
+    connectors: { setValueById, getValueById },
   } = queries;
 
   const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
@@ -73,8 +73,8 @@ export const verifySocialIdentity = async (
     connectorData,
     async () => getConnectorSessionResult(ctx, provider),
     {
-      set: async (key: string, value: unknown) => setValueByIdAndKey(connectorId, key, value),
-      get: async (key: string) => getValueByIdAndKey(connectorId, key),
+      set: async (value: Storage) => setValueById(connectorId, value),
+      get: async () => getValueById(connectorId),
     }
   );
 

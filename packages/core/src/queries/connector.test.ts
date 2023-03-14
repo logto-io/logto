@@ -22,8 +22,8 @@ const {
   findAllConnectors,
   findConnectorById,
   countConnectorByConnectorId,
-  setValueByIdAndKey,
-  getValueByIdAndKey,
+  setValueById,
+  getValueById,
   deleteConnectorById,
   deleteConnectorByIds,
   insertConnector,
@@ -93,60 +93,58 @@ describe('connector queries', () => {
     await expect(countConnectorByConnectorId(rowData.connectorId)).resolves.toEqual(rowData);
   });
 
-  it('setValueByIdAndKey', async () => {
+  it('setValueById', async () => {
     const id = 'foo';
-    const key = 'bar';
     const value = {
-      foo: 'foo',
-      bar: 1,
-      baz: { key1: [1, 2, 3], key2: ['a', 'b', 'c'], key3: false },
+      accessToken: 'accessToken',
+      refreshToken: 'refreshToken',
+      expiresIn: 5000,
+      tokenType: 'Bearer',
     };
-    const rowData = { id, storage: { [key]: value } };
+    const rowData = { id, storage: value };
     const expectSql = sql`
       update ${table}
       set
       ${fields.storage}=
-      coalesce(${fields.storage},'{}'::jsonb) || ${JSON.stringify({
-      [key]: value,
-    })}
+      coalesce(${fields.storage},'{}'::jsonb) || ${JSON.stringify(value)}
       where ${fields.id}=$2
       returning *
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([JSON.stringify({ [key]: value }), id]);
+      expect(values).toEqual([JSON.stringify(value), id]);
 
       // @ts-expect-error createMockQueryResult doesn't support jsonb
       return createMockQueryResult([rowData]);
     });
 
-    await expect(setValueByIdAndKey(id, key, value)).resolves.toEqual(undefined);
+    await expect(setValueById(id, value)).resolves.toEqual(undefined);
   });
 
-  it('getValueByIdAndKey', async () => {
+  it('getValueById', async () => {
     const id = 'foo';
-    const key = 'bar';
     const value = {
-      foo: 'foo',
-      bar: 1,
-      baz: { key1: [1, 2, 3], key2: ['a', 'b', 'c'], key3: false },
+      accessToken: 'accessToken',
+      refreshToken: 'refreshToken',
+      expiresIn: 5000,
+      tokenType: 'Bearer',
     };
     const expectSql = sql`
-      select ${fields.storage}->$1 as value
+      select ${fields.storage} as value
       from ${table}
-      where ${fields.id} = $2;
+      where ${fields.id} = $1;
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([key, id]);
+      expect(values).toEqual([id]);
 
       // @ts-expect-error createMockQueryResult doesn't support jsonb
       return createMockQueryResult([{ value }]);
     });
 
-    await expect(getValueByIdAndKey(id, key)).resolves.toEqual(value);
+    await expect(getValueById(id)).resolves.toEqual(value);
   });
 
   it('deleteConnectorById', async () => {

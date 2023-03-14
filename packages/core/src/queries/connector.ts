@@ -1,4 +1,4 @@
-import type { Connector } from '@logto/schemas';
+import type { Connector, Storage } from '@logto/schemas';
 import { Connectors } from '@logto/schemas';
 import { manyRows, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -32,17 +32,17 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
       where ${fields.connectorId}=${connectorId}
     `);
 
-  const setValueByIdAndKey = async (id: string, key: string, value: unknown): Promise<void> => {
+  const setValueById = async (id: string, value: Storage): Promise<void> => {
     await updateConnector({
-      set: { storage: { [key]: value } },
+      set: { storage: value },
       where: { id },
       jsonbMode: 'merge',
     });
   };
 
-  const getValueByIdAndKey = async <T = unknown>(id: string, key: string): Promise<T> => {
-    const { value } = await pool.one<{ value: T }>(sql`
-      select ${fields.storage}->${key} as value
+  const getValueById = async (id: string): Promise<Storage> => {
+    const { value } = await pool.one<{ value: Storage }>(sql`
+      select ${fields.storage} as value
       from ${table}
       where ${fields.id} = ${id};
     `);
@@ -80,8 +80,8 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
     findAllConnectors,
     findConnectorById,
     countConnectorByConnectorId,
-    setValueByIdAndKey,
-    getValueByIdAndKey,
+    setValueById,
+    getValueById,
     deleteConnectorById,
     deleteConnectorByIds,
     insertConnector,
