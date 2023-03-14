@@ -44,6 +44,7 @@ const InspireMe = ({ onInspired }: Props) => {
       </div>
       <Button
         icon={<BulbIcon />}
+        size="large"
         className={styles.button}
         title="cloud.sie.inspire.inspire_me"
         onMouseEnter={() => {
