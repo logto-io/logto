@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import Congrats from '@/assets/images/congrats.svg';
+import WelcomeImage from '@/assets/images/sign-in-experience-welcome.svg';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
@@ -52,7 +52,7 @@ const Welcome = () => {
     <div className={pageLayout.page}>
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={classNames(pageLayout.content, styles.content)}>
-          <Congrats className={styles.congrats} />
+          <WelcomeImage className={styles.congrats} />
           <div className={styles.title}>{t('cloud.welcome.title')}</div>
           <div className={styles.description}>{t('cloud.welcome.description')}</div>
           <form className={styles.form}>
