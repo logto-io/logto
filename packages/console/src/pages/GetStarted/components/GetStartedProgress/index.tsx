@@ -1,14 +1,14 @@
-import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TadaDark from '@/assets/images/tada-dark.svg';
 import Tada from '@/assets/images/tada.svg';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import Index from '@/components/Index';
-import { useTheme } from '@/hooks/use-theme';
+import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import { Theme } from '@/types/theme';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import useGetStartedMetadata from '../../hook';
@@ -19,8 +19,8 @@ const GetStartedProgress = () => {
   const {
     data: { getStartedHidden },
   } = useUserPreferences();
-  const theme = useTheme();
-  const Icon = theme === AppearanceMode.LightMode ? Tada : TadaDark;
+  const { theme } = useContext(AppThemeContext);
+  const Icon = theme === Theme.LightMode ? Tada : TadaDark;
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const { data, completedCount, totalCount } = useGetStartedMetadata();

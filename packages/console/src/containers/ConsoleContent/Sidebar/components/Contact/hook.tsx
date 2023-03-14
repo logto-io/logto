@@ -1,5 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import { AppearanceMode } from '@logto/schemas';
+import { useContext } from 'react';
 
 import DiscordDark from '@/assets/images/discord-dark.svg';
 import Discord from '@/assets/images/discord.svg';
@@ -8,7 +8,8 @@ import Email from '@/assets/images/email.svg';
 import GithubDark from '@/assets/images/github-dark.svg';
 import Github from '@/assets/images/github.svg';
 import { contactEmailLink, discordLink, githubIssuesLink } from '@/consts';
-import { useTheme } from '@/hooks/use-theme';
+import { AppThemeContext } from '@/contexts/AppThemeProvider';
+import { Theme } from '@/types/theme';
 
 type ContactItem = {
   icon: SvgComponent;
@@ -19,8 +20,8 @@ type ContactItem = {
 };
 
 export const useContacts = (): ContactItem[] => {
-  const theme = useTheme();
-  const isLightMode = theme === AppearanceMode.LightMode;
+  const { theme } = useContext(AppThemeContext);
+  const isLightMode = theme === Theme.LightMode;
 
   return [
     {

@@ -1,16 +1,19 @@
+import { useContext } from 'react';
+
 import IllustrationDark from '@/assets/images/loading-illustration-dark.svg';
 import Illustration from '@/assets/images/loading-illustration.svg';
 import { Daisy as Spinner } from '@/components/Spinner';
-import { useTheme } from '@/hooks/use-theme';
+import { AppThemeContext } from '@/contexts/AppThemeProvider';
+import { Theme } from '@/types/theme';
 
 import * as styles from './index.module.scss';
 
 const AppLoading = () => {
-  const theme = useTheme();
+  const { theme } = useContext(AppThemeContext);
 
   return (
     <div className={styles.container}>
-      {theme === 'light' ? <Illustration /> : <IllustrationDark />}
+      {theme === Theme.LightMode ? <Illustration /> : <IllustrationDark />}
       <Spinner />
     </div>
   );

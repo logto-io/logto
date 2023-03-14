@@ -1,11 +1,12 @@
-import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import RequestErrorDarkImage from '@/assets/images/request-error-dark.svg';
 import RequestErrorImage from '@/assets/images/request-error.svg';
+import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import type { RequestError } from '@/hooks/use-api';
-import { useTheme } from '@/hooks/use-theme';
+import { Theme } from '@/types/theme';
 
 import Button from '../Button';
 import Card from '../Card';
@@ -19,10 +20,10 @@ type Props = {
 
 const RequestDataError = ({ error, onRetry, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const theme = useTheme();
+  const { theme } = useContext(AppThemeContext);
   const errorMessage = error.body?.message ?? error.message;
   const isNotFoundError = error.status === 404;
-  const ErrorImage = theme === AppearanceMode.LightMode ? RequestErrorImage : RequestErrorDarkImage;
+  const ErrorImage = theme === Theme.LightMode ? RequestErrorImage : RequestErrorDarkImage;
 
   return (
     <Card className={classNames(styles.error, className)}>

@@ -5,8 +5,10 @@ import AppLoading from '@/components/AppLoading';
 import Toast from '@/components/Toast';
 import { getBasename } from '@/consts';
 import AppBoundary from '@/containers/AppBoundary';
+import { AppThemeProvider } from '@/contexts/AppThemeProvider';
 import useSwrOptions from '@/hooks/use-swr-options';
 import NotFound from '@/pages/NotFound';
+import { Theme } from '@/types/theme';
 
 import * as styles from './App.module.scss';
 import AppContent from './containers/AppContent';
@@ -36,31 +38,39 @@ const App = () => {
     <BrowserRouter basename={getBasename()}>
       <div className={styles.app}>
         <SWRConfig value={swrOptions}>
-          <AppBoundary>
-            <Toast />
-            <Routes>
-              <Route index element={<Navigate replace to={welcomePathname} />} />
-              <Route path={`/${OnboardingRoute.Onboarding}`} element={<AppContent />}>
+          <AppThemeProvider fixedTheme={Theme.LightMode}>
+            <AppBoundary>
+              <Toast />
+              <Routes>
                 <Route index element={<Navigate replace to={welcomePathname} />} />
-                <Route path={OnboardingPage.Welcome} element={<Welcome />} />
-                <Route
-                  path={OnboardingPage.AboutUser}
-                  element={questionnaire ? <About /> : <Navigate replace to={welcomePathname} />}
-                />
-                <Route
-                  path={OnboardingPage.SignInExperience}
-                  element={
-                    questionnaire ? <SignInExperience /> : <Navigate replace to={welcomePathname} />
-                  }
-                />
-                <Route
-                  path={OnboardingPage.Congrats}
-                  element={questionnaire ? <Congrats /> : <Navigate replace to={welcomePathname} />}
-                />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AppBoundary>
+                <Route path={`/${OnboardingRoute.Onboarding}`} element={<AppContent />}>
+                  <Route index element={<Navigate replace to={welcomePathname} />} />
+                  <Route path={OnboardingPage.Welcome} element={<Welcome />} />
+                  <Route
+                    path={OnboardingPage.AboutUser}
+                    element={questionnaire ? <About /> : <Navigate replace to={welcomePathname} />}
+                  />
+                  <Route
+                    path={OnboardingPage.SignInExperience}
+                    element={
+                      questionnaire ? (
+                        <SignInExperience />
+                      ) : (
+                        <Navigate replace to={welcomePathname} />
+                      )
+                    }
+                  />
+                  <Route
+                    path={OnboardingPage.Congrats}
+                    element={
+                      questionnaire ? <Congrats /> : <Navigate replace to={welcomePathname} />
+                    }
+                  />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AppBoundary>
+          </AppThemeProvider>
         </SWRConfig>
       </div>
     </BrowserRouter>

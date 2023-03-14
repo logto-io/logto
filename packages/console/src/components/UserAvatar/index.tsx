@@ -1,10 +1,11 @@
-import { AppearanceMode } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
+import { useContext } from 'react';
 
 import DarkAvatar from '@/assets/images/default-avatar-dark.svg';
 import LightAvatar from '@/assets/images/default-avatar-light.svg';
-import { useTheme } from '@/hooks/use-theme';
+import { AppThemeContext } from '@/contexts/AppThemeProvider';
+import { Theme } from '@/types/theme';
 
 import ImageWithErrorFallback from '../ImageWithErrorFallback';
 import * as styles from './index.module.scss';
@@ -16,8 +17,8 @@ type Props = {
 };
 
 const UserAvatar = ({ className, url, size = 'medium' }: Props) => {
-  const theme = useTheme();
-  const DefaultAvatar = theme === AppearanceMode.LightMode ? LightAvatar : DarkAvatar;
+  const { theme } = useContext(AppThemeContext);
+  const DefaultAvatar = theme === Theme.LightMode ? LightAvatar : DarkAvatar;
   const avatarClassName = classNames(styles.avatar, styles[size], className);
 
   if (url) {
