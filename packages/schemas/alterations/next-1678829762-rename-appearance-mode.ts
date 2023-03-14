@@ -103,7 +103,7 @@ const rollbackAdminConsoleData = async (
   await pool.query(
     sql`update users set custom_data = ${JSON.stringify(
       oldCustomData
-    )} where where tenant_id = ${tenantId} and id = ${id}`
+    )} where tenant_id = ${tenantId} and id = ${id}`
   );
 };
 
