@@ -30,7 +30,7 @@ const LogoAndFaviconUploader = () => {
               <ImageUploader
                 name={name}
                 value={value ?? ''}
-                actionDescription="App Logo to display in UI interface"
+                actionDescription={t('sign_in_exp.branding.upload_logo_image_description')}
                 onCompleted={onChange}
                 onUploadError={setUploadLogoError}
                 onDelete={() => {
@@ -48,7 +48,7 @@ const LogoAndFaviconUploader = () => {
               <ImageUploader
                 name={name}
                 value={value ?? ''}
-                actionDescription="Browser Favicon"
+                actionDescription={t('sign_in_exp.branding.upload_favicon_description')}
                 onCompleted={onChange}
                 onUploadError={setUploadFaviconError}
                 onDelete={() => {

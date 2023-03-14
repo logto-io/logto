@@ -36,6 +36,8 @@ const sign_in_exp = {
     favicon_action_description: 'Browser Favicon', // UNTRANSLATED
     logo_image_error: 'App logo: {{error}}', // UNTRANSLATED
     favicon_error: 'Favicon: {{error}}', // UNTRANSLATED
+    upload_logo_image_description: 'App Logo to display in UI interface', // UNTRANSLATED
+    upload_favicon_description: 'Browser Favicon', // UNTRANSLATED
   },
   custom_css: {
     title: 'CUSTOM CSS', // UNTRANSLATED
