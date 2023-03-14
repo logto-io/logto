@@ -5,7 +5,7 @@ import type { TenantsLibrary } from '#src/libraries/tenants.js';
 import { tenantInfoGuard } from '#src/libraries/tenants.js';
 import type { WithAuthContext } from '#src/middleware/with-auth.js';
 
-export const createTenants = (library: TenantsLibrary) =>
+export const tenantsRoutes = (library: TenantsLibrary) =>
   createRouter<WithAuthContext, '/tenants'>('/tenants')
     .get('/', { response: tenantInfoGuard.array() }, async (context, next) => {
       return next({ ...context, json: await library.getAvailableTenants(context.auth.id) });

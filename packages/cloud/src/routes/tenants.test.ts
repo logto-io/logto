@@ -5,11 +5,11 @@ import { buildRequestAuthContext, createHttpContext } from '#src/test-utils/cont
 import { noop } from '#src/test-utils/function.js';
 import { MockTenantsLibrary } from '#src/test-utils/libraries.js';
 
-import { createTenants } from './tenants.js';
+import { tenantsRoutes } from './tenants.js';
 
 describe('GET /api/tenants', () => {
   const library = new MockTenantsLibrary();
-  const router = createTenants(library);
+  const router = tenantsRoutes(library);
 
   it('should return whatever the library returns', async () => {
     const tenants: TenantInfo[] = [{ id: 'tenant_a', indicator: 'https://foo.bar' }];
@@ -27,7 +27,7 @@ describe('GET /api/tenants', () => {
 
 describe('POST /api/tenants', () => {
   const library = new MockTenantsLibrary();
-  const router = createTenants(library);
+  const router = tenantsRoutes(library);
 
   it('should throw 403 when lack of permission', async () => {
     await expect(
