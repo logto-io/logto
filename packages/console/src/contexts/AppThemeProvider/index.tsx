@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState, createContext } from 'react';
 
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { Theme } from '@/types/theme';
+import { getTheme } from '@/utils/theme';
 
 import * as styles from './index.module.scss';
 
@@ -40,6 +41,8 @@ export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
     }
 
     if (appearanceMode !== AppearanceMode.SyncWithSystem) {
+      setTheme(getTheme(appearanceMode));
+
       return;
     }
 
