@@ -2,7 +2,7 @@ const cloud = {
   welcome: {
     title: 'Welcome and let’s create your own Logto Cloud Preview',
     description:
-      'Whether you’re an open-source or cloud user, take a tour of the showcase and experience the full value of Logto. This demo also serves as a preview of Logto’s SaaS version.',
+      'Whether you’re an open-source or cloud user, take a tour of the showcase and experience the full value of Logto. Cloud preview also serves as a preliminary version of Logto Cloud.',
     project_field: 'I’m using Logto for',
     project_options: {
       personal: 'Personal project',
