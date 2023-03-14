@@ -214,10 +214,17 @@ export type EmailConnector = BaseConnector<ConnectorType.Email> & {
   sendMessage: SendMessageFunction;
 };
 
-export type SendMessageFunction = (
-  data: { to: string; type: VerificationCodeType; payload: { code: string } },
-  config?: unknown
-) => Promise<unknown>;
+export const sendMessagePayloadGuard = z.object({
+  to: z.string(),
+  type: verificationCodeTypeGuard,
+  payload: z.object({
+    code: z.string(),
+  }),
+});
+
+export type SendMessagePayload = z.infer<typeof sendMessagePayloadGuard>;
+
+export type SendMessageFunction = (data: SendMessagePayload, config?: unknown) => Promise<unknown>;
 
 // MARK: Social connector
 export type SocialConnector = BaseConnector<ConnectorType.Social> & {

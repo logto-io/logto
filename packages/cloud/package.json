@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@logto/cli": "workspace:*",
+    "@logto/connector-kit": "workspace:*",
     "@logto/core-kit": "workspace:*",
     "@logto/schemas": "workspace:*",
     "@logto/shared": "workspace:*",

@@ -6,6 +6,12 @@ import { MockServicesLibrary } from '#src/test-utils/libraries.js';
 
 import { servicesRoutes } from './services.js';
 
+const mockSendMessagePayload = {
+  to: 'logto@gmail.com',
+  type: 'SignIn',
+  payload: { code: '1234' },
+};
+
 describe('POST /api/services/send-email', () => {
   const library = new MockServicesLibrary();
   const router = servicesRoutes(library);
@@ -13,7 +19,9 @@ describe('POST /api/services/send-email', () => {
   it('should throw 403 when lack of permission', async () => {
     await expect(
       router.routes()(
-        buildRequestAuthContext('POST /services/send-email')(),
+        buildRequestAuthContext('POST /services/send-email', {
+          body: { data: mockSendMessagePayload },
+        })(),
         noop,
         createHttpContext()
       )
@@ -24,9 +32,12 @@ describe('POST /api/services/send-email', () => {
     library.getTenantIdFromApplicationId.mockResolvedValueOnce('tenantId');
 
     await router.routes()(
-      buildRequestAuthContext('POST /services/send-email')([CloudScope.SendEmail]),
+      buildRequestAuthContext('POST /services/send-email', {
+        body: { data: mockSendMessagePayload },
+      })([CloudScope.SendEmail]),
       async ({ status }) => {
         expect(status).toBe(201);
+        expect(library.sendEmail).toBeCalledWith(mockSendMessagePayload);
       },
       createHttpContext()
     );

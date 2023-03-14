@@ -27,7 +27,7 @@ importers:
 
   packages/cli:
     specifiers:
-      '@logto/connector-kit': workspace:1.0.0-rc.2
+      '@logto/connector-kit': workspace:*
       '@logto/core-kit': workspace:*
       '@logto/schemas': workspace:*
       '@logto/shared': workspace:*
@@ -111,6 +111,7 @@ importers:
   packages/cloud:
     specifiers:
       '@logto/cli': workspace:*
+      '@logto/connector-kit': workspace:*
       '@logto/core-kit': workspace:*
       '@logto/schemas': workspace:*
       '@logto/shared': workspace:*
@@ -143,6 +144,7 @@ importers:
       zod: ^3.20.2
     dependencies:
       '@logto/cli': link:../cli
+      '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
