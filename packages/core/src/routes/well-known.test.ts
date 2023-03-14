@@ -12,10 +12,11 @@ import {
 } from '#src/__mocks__/index.js';
 
 const { jest } = import.meta;
-const { mockEsmWithActual } = createMockUtils(jest);
+const { mockEsm } = createMockUtils(jest);
 
-await mockEsmWithActual('i18next', () => ({
+mockEsm('i18next', () => ({
   default: {
+    language: 'en',
     t: (key: string) => key,
   },
 }));
