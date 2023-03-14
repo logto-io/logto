@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import ImageUploader, {
   allowedImageMimeTypes,
   maxImageSizeLimit,
-} from '@/components/ImageUploader';
+} from '@/components/Uploader/ImageUploader';
 import type { SignInExperienceForm } from '@/pages/SignInExperience/types';
 import { convertToFileExtensionArray } from '@/utils/uploader';
 
@@ -14,8 +14,8 @@ import * as styles from './index.module.scss';
 
 const LogoAndFaviconUploader = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [logoError, setLogoError] = useState<string>();
-  const [faviconError, setFaviconError] = useState<string>();
+  const [uploadLogoError, setUploadLogoError] = useState<string>();
+  const [uploadFaviconError, setUploadFaviconError] = useState<string>();
 
   const { control } = useFormContext<SignInExperienceForm>();
 
@@ -28,12 +28,15 @@ const LogoAndFaviconUploader = () => {
             name="branding.logoUrl"
             render={({ field: { onChange, value, name } }) => (
               <ImageUploader
-                isHideStateInfo
                 name={name}
                 value={value ?? ''}
                 actionDescription="App Logo to display in UI interface"
-                onChange={onChange}
-                onError={setLogoError}
+                hasError={Boolean(uploadLogoError)}
+                onCompleted={onChange}
+                onUploadError={setUploadLogoError}
+                onDelete={() => {
+                  onChange('');
+                }}
               />
             )}
           />
@@ -44,25 +47,28 @@ const LogoAndFaviconUploader = () => {
             name="branding.favicon"
             render={({ field: { onChange, value, name } }) => (
               <ImageUploader
-                isHideStateInfo
                 name={name}
                 value={value ?? ''}
                 actionDescription="Browser Favicon"
-                onChange={onChange}
-                onError={setFaviconError}
+                hasError={Boolean(uploadFaviconError)}
+                onCompleted={onChange}
+                onUploadError={setUploadFaviconError}
+                onDelete={() => {
+                  onChange('');
+                }}
               />
             )}
           />
         </div>
       </div>
-      {logoError && (
+      {uploadLogoError && (
         <div className={classNames(styles.description, styles.error)}>
-          {t('sign_in_exp.branding.logo_image_error', { error: logoError })}
+          {t('sign_in_exp.branding.logo_image_error', { error: uploadLogoError })}
         </div>
       )}
-      {faviconError && (
+      {uploadFaviconError && (
         <div className={classNames(styles.description, styles.error)}>
-          {t('sign_in_exp.branding.favicon_error', { error: faviconError })}
+          {t('sign_in_exp.branding.favicon_error', { error: uploadFaviconError })}
         </div>
       )}
       <div className={styles.description}>

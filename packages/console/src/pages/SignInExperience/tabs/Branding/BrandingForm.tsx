@@ -8,9 +8,9 @@ import Card from '@/components/Card';
 import ColorPicker from '@/components/ColorPicker';
 import DangerousRaw from '@/components/DangerousRaw';
 import FormField from '@/components/FormField';
-import ImageUploader from '@/components/ImageUploader';
 import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
+import { ImageUploaderField } from '@/components/Uploader';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { uriValidator } from '@/utils/validator';
 
@@ -140,7 +140,7 @@ const BrandingForm = () => {
                 name="branding.darkLogoUrl"
                 control={control}
                 render={({ field: { onChange, value, name } }) => (
-                  <ImageUploader name={name} value={value ?? ''} onChange={onChange} />
+                  <ImageUploaderField name={name} value={value ?? ''} onChange={onChange} />
                 )}
               />
             </FormField>

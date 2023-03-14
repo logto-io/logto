@@ -9,16 +9,16 @@ import UploaderIcon from '@/assets/images/upload.svg';
 import useApi from '@/hooks/use-api';
 import { convertToFileExtensionArray } from '@/utils/uploader';
 
-import { Ring } from '../Spinner';
+import { Ring } from '../../Spinner';
 import * as styles from './index.module.scss';
 
-type Props = {
+export type Props = {
   maxSize: number; // In bytes
   allowedMimeTypes: AllowedUploadMimeType[];
   actionDescription?: string;
   hasError?: boolean;
   onCompleted: (fileUrl: string) => void;
-  onError: (errorMessage?: string) => void;
+  onUploadError: (errorMessage?: string) => void;
 };
 
 const FileUploader = ({
@@ -27,7 +27,7 @@ const FileUploader = ({
   actionDescription,
   hasError,
   onCompleted,
-  onError,
+  onUploadError,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isUploading, setIsUploading] = useState(false);
@@ -36,7 +36,7 @@ const FileUploader = ({
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      onError(undefined);
+      onUploadError(undefined);
 
       const selectedFile = acceptedFiles[0];
 
@@ -45,7 +45,7 @@ const FileUploader = ({
       }
 
       if (!allowedMimeTypes.map(String).includes(selectedFile.type)) {
-        onError(
+        onUploadError(
           t('components.uploader.error_file_type', {
             extensions: convertToFileExtensionArray(allowedMimeTypes),
           })
@@ -57,7 +57,7 @@ const FileUploader = ({
       const fileSizeLimit = Math.min(maxSize, maxUploadFileSize);
 
       if (selectedFile.size > fileSizeLimit) {
-        onError(t('components.uploader.error_file_size', { size: fileSizeLimit / 1024 }));
+        onUploadError(t('components.uploader.error_file_size', { size: fileSizeLimit / 1024 }));
 
         return;
       }
@@ -71,12 +71,12 @@ const FileUploader = ({
 
         onCompleted(url);
       } catch {
-        onError(t('components.uploader.error_upload'));
+        onUploadError(t('components.uploader.error_upload'));
       } finally {
         setIsUploading(false);
       }
     },
-    [allowedMimeTypes, api, maxSize, onCompleted, onError, t]
+    [allowedMimeTypes, api, maxSize, onCompleted, onUploadError, t]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
