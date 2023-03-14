@@ -124,13 +124,13 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
       `)
       : [];
 
-  const insertScope = buildInsertIntoWithPool(pool)<CreateScope, Scope>(Scopes, {
+  const insertScope = buildInsertIntoWithPool(pool)(Scopes, {
     returning: true,
   });
 
-  const findScopeById = buildFindEntityByIdWithPool(pool)<CreateScope, Scope>(Scopes);
+  const findScopeById = buildFindEntityByIdWithPool(pool)(Scopes);
 
-  const updateScope = buildUpdateWhereWithPool(pool)<CreateScope, Scope>(Scopes, true);
+  const updateScope = buildUpdateWhereWithPool(pool)(Scopes, true);
 
   const updateScopeById = async (id: string, set: Partial<OmitAutoSetFields<CreateScope>>) =>
     updateScope({ set, where: { id }, jsonbMode: 'merge' });

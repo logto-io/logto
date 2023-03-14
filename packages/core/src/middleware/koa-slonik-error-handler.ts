@@ -40,7 +40,7 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
           code: 'entity.create_failed',
           // Assert generic type of the Class instance
           // eslint-disable-next-line no-restricted-syntax
-          name: (error as InsertionError<SchemaLike>).schema.tableSingular,
+          name: (error as InsertionError<SchemaLike, SchemaLike>).schema.tableSingular,
         });
       }
 
@@ -49,7 +49,7 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
           code: 'entity.not_exists',
           // Assert generic type of the Class instance
           // eslint-disable-next-line no-restricted-syntax
-          name: (error as UpdateError<SchemaLike>).schema.tableSingular,
+          name: (error as UpdateError<SchemaLike, SchemaLike>).schema.tableSingular,
         });
       }
 

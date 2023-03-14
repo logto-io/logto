@@ -21,13 +21,13 @@ export const createHooksQueries = (pool: CommonQueryMethods) => {
       `)
     );
 
-  const findHookById = buildFindEntityByIdWithPool(pool)<CreateHook, Hook>(Hooks);
+  const findHookById = buildFindEntityByIdWithPool(pool)(Hooks);
 
-  const insertHook = buildInsertIntoWithPool(pool)<CreateHook, Hook>(Hooks, {
+  const insertHook = buildInsertIntoWithPool(pool)(Hooks, {
     returning: true,
   });
 
-  const updateHook = buildUpdateWhereWithPool(pool)<CreateHook, Hook>(Hooks, true);
+  const updateHook = buildUpdateWhereWithPool(pool)(Hooks, true);
 
   const updateHookById = async (
     id: string,

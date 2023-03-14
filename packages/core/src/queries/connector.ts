@@ -1,4 +1,4 @@
-import type { Connector, CreateConnector } from '@logto/schemas';
+import type { Connector } from '@logto/schemas';
 import { Connectors } from '@logto/schemas';
 import { manyRows, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -71,13 +71,10 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
       throw new DeletionError(Connectors.table, JSON.stringify({ ids }));
     }
   };
-  const insertConnector = buildInsertIntoWithPool(pool)<CreateConnector, Connector>(Connectors, {
+  const insertConnector = buildInsertIntoWithPool(pool)(Connectors, {
     returning: true,
   });
-  const updateConnector = buildUpdateWhereWithPool(pool)<CreateConnector, Connector>(
-    Connectors,
-    true
-  );
+  const updateConnector = buildUpdateWhereWithPool(pool)(Connectors, true);
 
   return {
     findAllConnectors,

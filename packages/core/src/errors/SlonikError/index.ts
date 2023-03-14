@@ -14,11 +14,17 @@ export class DeletionError extends SlonikError {
   }
 }
 
-export class UpdateError<Schema extends SchemaLike> extends SlonikError {
-  schema: GeneratedSchema<Schema>;
+export class UpdateError<
+  CreateSchema extends SchemaLike,
+  Schema extends CreateSchema
+> extends SlonikError {
+  schema: GeneratedSchema<CreateSchema, Schema>;
   detail: UpdateWhereData<Schema>;
 
-  public constructor(schema: GeneratedSchema<Schema>, detail: UpdateWhereData<Schema>) {
+  public constructor(
+    schema: GeneratedSchema<CreateSchema, Schema>,
+    detail: UpdateWhereData<Schema>
+  ) {
     super('Resource not found.');
 
     this.schema = schema;
@@ -26,11 +32,17 @@ export class UpdateError<Schema extends SchemaLike> extends SlonikError {
   }
 }
 
-export class InsertionError<Schema extends SchemaLike> extends SlonikError {
-  schema: GeneratedSchema<Schema>;
-  detail?: OmitAutoSetFields<Schema>;
+export class InsertionError<
+  CreateSchema extends SchemaLike,
+  Schema extends CreateSchema
+> extends SlonikError {
+  schema: GeneratedSchema<CreateSchema, Schema>;
+  detail?: OmitAutoSetFields<CreateSchema>;
 
-  public constructor(schema: GeneratedSchema<Schema>, detail?: OmitAutoSetFields<Schema>) {
+  public constructor(
+    schema: GeneratedSchema<CreateSchema, Schema>,
+    detail?: OmitAutoSetFields<CreateSchema>
+  ) {
     super('Create Error.');
 
     this.schema = schema;

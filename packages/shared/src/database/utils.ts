@@ -13,7 +13,7 @@ export const conditionalArraySql = <T>(
   buildSql: (value: Exclude<T[], Falsy>) => SqlSqlToken
 ) => (value.length > 0 ? buildSql(value) : sql``);
 
-export const autoSetFields = Object.freeze(['createdAt', 'updatedAt'] as const);
+export const autoSetFields = Object.freeze(['tenantId', 'createdAt', 'updatedAt'] as const);
 export type OmitAutoSetFields<T> = Omit<T, (typeof autoSetFields)[number]>;
 export type ExcludeAutoSetFields<T> = Exclude<T, (typeof autoSetFields)[number]>;
 export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>

@@ -33,7 +33,7 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
       where ${fields.indicator}=${indicator}
     `);
 
-  const findResourceById = buildFindEntityByIdWithPool(pool)<CreateResource, Resource>(Resources);
+  const findResourceById = buildFindEntityByIdWithPool(pool)(Resources);
 
   const findResourcesByIds = async (resourceIds: string[]) =>
     resourceIds.length > 0
@@ -44,11 +44,11 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
       `)
       : [];
 
-  const insertResource = buildInsertIntoWithPool(pool)<CreateResource, Resource>(Resources, {
+  const insertResource = buildInsertIntoWithPool(pool)(Resources, {
     returning: true,
   });
 
-  const updateResource = buildUpdateWhereWithPool(pool)<CreateResource, Resource>(Resources, true);
+  const updateResource = buildUpdateWhereWithPool(pool)(Resources, true);
 
   const updateResourceById = async (
     id: string,

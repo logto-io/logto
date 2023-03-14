@@ -1,4 +1,4 @@
-import type { CreateCustomPhrase, CustomPhrase } from '@logto/schemas';
+import type { CustomPhrase } from '@logto/schemas';
 import { CustomPhrases } from '@logto/schemas';
 import { convertToIdentifiers, manyRows } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -38,16 +38,13 @@ export const createCustomPhraseQueries = (pool: CommonQueryMethods) => {
       where ${fields.languageTag} = ${languageTag}
     `);
 
-  const upsertCustomPhrase = buildInsertIntoWithPool(pool)<CreateCustomPhrase, CustomPhrase>(
-    CustomPhrases,
-    {
-      returning: true,
-      onConflict: {
-        fields: [fields.tenantId, fields.languageTag],
-        setExcludedFields: [fields.translation],
-      },
-    }
-  );
+  const upsertCustomPhrase = buildInsertIntoWithPool(pool)(CustomPhrases, {
+    returning: true,
+    onConflict: {
+      fields: [fields.tenantId, fields.languageTag],
+      setExcludedFields: [fields.translation],
+    },
+  });
 
   const deleteCustomPhraseByLanguageTag = async (languageTag: string) => {
     const { rowCount } = await pool.query(sql`

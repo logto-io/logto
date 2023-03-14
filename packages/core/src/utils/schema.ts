@@ -1,6 +1,8 @@
 import type { GeneratedSchema, SchemaLike } from '@logto/schemas';
 
 export const isKeyOf =
-  <Schema extends SchemaLike>({ fieldKeys }: GeneratedSchema<Schema>) =>
+  <CreateSchema extends SchemaLike, Schema extends CreateSchema>({
+    fieldKeys,
+  }: GeneratedSchema<CreateSchema, Schema>) =>
   (key: string): key is keyof Schema extends string ? keyof Schema : never =>
     fieldKeys.includes(key);

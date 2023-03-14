@@ -1,8 +1,4 @@
-import type {
-  OidcModelInstance,
-  CreateOidcModelInstance,
-  OidcModelInstancePayload,
-} from '@logto/schemas';
+import type { OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas';
 import { OidcModelInstances } from '@logto/schemas';
 import { convertToIdentifiers, convertToTimestamp } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
@@ -59,15 +55,12 @@ const findByModel = (modelName: string) => sql`
 `;
 
 export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
-  const upsertInstance = buildInsertIntoWithPool(pool)<CreateOidcModelInstance>(
-    OidcModelInstances,
-    {
-      onConflict: {
-        fields: [fields.tenantId, fields.modelName, fields.id],
-        setExcludedFields: [fields.payload, fields.expiresAt],
-      },
-    }
-  );
+  const upsertInstance = buildInsertIntoWithPool(pool)(OidcModelInstances, {
+    onConflict: {
+      fields: [fields.tenantId, fields.modelName, fields.id],
+      setExcludedFields: [fields.payload, fields.expiresAt],
+    },
+  });
 
   const findPayloadById = async (modelName: string, id: string) => {
     const result = await pool.maybeOne<QueryResult>(sql`

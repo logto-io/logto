@@ -111,10 +111,11 @@ describe('resource query', () => {
   });
 
   it('insertResource', async () => {
+    const insertFields = Object.values(fields).filter((field) => field.names[0] !== 'tenant_id');
     const expectSql = sql`
-      insert into ${table} (${sql.join(Object.values(fields), sql`, `)})
+      insert into ${table} (${sql.join(insertFields, sql`, `)})
       values (${sql.join(
-        Object.values(fields).map((_, index) => `$${index + 1}`),
+        insertFields.map((_, index) => `$${index + 1}`),
         sql`, `
       )})
       returning *
@@ -124,7 +125,9 @@ describe('resource query', () => {
       expectSqlAssert(sql, expectSql.sql);
 
       expect(values).toEqual(
-        Resources.fieldKeys.map((k) => convertToPrimitiveOrSql(k, mockResource[k]))
+        Resources.fieldKeys
+          .filter((key) => key !== 'tenantId')
+          .map((k) => convertToPrimitiveOrSql(k, mockResource[k]))
       );
 
       return createMockQueryResult([mockResource]);

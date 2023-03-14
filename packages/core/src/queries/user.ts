@@ -172,7 +172,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       `)
       : [];
 
-  const updateUser = buildUpdateWhereWithPool(pool)<CreateUser, User>(Users, true);
+  const updateUser = buildUpdateWhereWithPool(pool)(Users, true);
 
   const updateUserById = async (
     id: string,

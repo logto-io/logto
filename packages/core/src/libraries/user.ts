@@ -74,7 +74,7 @@ export const createUserLibrary = (queries: Queries) => {
       { retries, factor: 0 } // No need for exponential backoff
     );
 
-  const insertUserQuery = buildInsertIntoWithPool(pool)<CreateUser, User>(Users, {
+  const insertUserQuery = buildInsertIntoWithPool(pool)(Users, {
     returning: true,
   });
 

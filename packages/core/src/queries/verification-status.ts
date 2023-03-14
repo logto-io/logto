@@ -1,4 +1,4 @@
-import type { CreateVerificationStatus, VerificationStatus } from '@logto/schemas';
+import type { VerificationStatus } from '@logto/schemas';
 import { VerificationStatuses } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -16,10 +16,7 @@ export const createVerificationStatusQueries = (pool: CommonQueryMethods) => {
       where ${fields.userId}=${userId}
     `);
 
-  const insertVerificationStatus = buildInsertIntoWithPool(pool)<
-    CreateVerificationStatus,
-    VerificationStatus
-  >(VerificationStatuses, {
+  const insertVerificationStatus = buildInsertIntoWithPool(pool)(VerificationStatuses, {
     returning: true,
   });
 
