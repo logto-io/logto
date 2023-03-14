@@ -24,8 +24,17 @@
   }
 
   .button {
-    &:not(:disabled):not(:active):hover {
-      background: var(--color-layer-1);
+    &:not(:disabled) {
+      &:not(:active),
+      &:active {
+        &:hover {
+          background: var(--color-layer-1) center / 90% no-repeat url('../../../../assets/images/fireworks.png');
+        }
+      }
+
+      &:active:hover {
+        background-color: transparent;
+      }
     }
   }
 }
