@@ -1,4 +1,3 @@
-import type { RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
 import type { KyInstance } from 'ky/distribution/types/ky';
 import { useCallback } from 'react';
@@ -41,8 +40,9 @@ const useSwrFetcher: useSwrFetcherHook = <T>(api: KyInstance) => {
       } catch (error: unknown) {
         if (error instanceof HTTPError) {
           const { response } = error;
-          const metadata = await response.json<RequestErrorBody>();
-          throw new RequestError(response.status, metadata);
+          // See https://stackoverflow.com/questions/53511974/javascript-fetch-failed-to-execute-json-on-response-body-stream-is-locked
+          // for why `.clone()` is needed
+          throw new RequestError(response.status, await response.clone().json());
         }
         throw error;
       }

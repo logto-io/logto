@@ -13,13 +13,8 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import { useConfirmModal } from './use-confirm-modal';
 
 export class RequestError extends Error {
-  status: number;
-  body?: RequestErrorBody;
-
-  constructor(status: number, body: RequestErrorBody) {
+  constructor(public readonly status: number, public readonly body?: RequestErrorBody) {
     super('Request error occurred.');
-    this.status = status;
-    this.body = body;
   }
 }
 
