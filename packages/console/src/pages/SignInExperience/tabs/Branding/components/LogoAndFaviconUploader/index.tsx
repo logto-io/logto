@@ -31,7 +31,6 @@ const LogoAndFaviconUploader = () => {
                 name={name}
                 value={value ?? ''}
                 actionDescription="App Logo to display in UI interface"
-                hasError={Boolean(uploadLogoError)}
                 onCompleted={onChange}
                 onUploadError={setUploadLogoError}
                 onDelete={() => {
@@ -50,7 +49,6 @@ const LogoAndFaviconUploader = () => {
                 name={name}
                 value={value ?? ''}
                 actionDescription="Browser Favicon"
-                hasError={Boolean(uploadFaviconError)}
                 onCompleted={onChange}
                 onUploadError={setUploadFaviconError}
                 onDelete={() => {

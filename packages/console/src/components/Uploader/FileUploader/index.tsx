@@ -1,7 +1,7 @@
 import type { AllowedUploadMimeType, UserAssets } from '@logto/schemas';
 import { maxUploadFileSize } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 
@@ -16,7 +16,6 @@ export type Props = {
   maxSize: number; // In bytes
   allowedMimeTypes: AllowedUploadMimeType[];
   actionDescription?: string;
-  hasError?: boolean;
   onCompleted: (fileUrl: string) => void;
   onUploadError: (errorMessage?: string) => void;
 };
@@ -25,18 +24,26 @@ const FileUploader = ({
   maxSize,
   allowedMimeTypes,
   actionDescription,
-  hasError,
   onCompleted,
   onUploadError,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string>();
+
+  useEffect(() => {
+    onUploadError(uploadError);
+
+    return () => {
+      onUploadError(undefined);
+    };
+  }, [onUploadError, uploadError]);
 
   const api = useApi();
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      onUploadError(undefined);
+      setUploadError(undefined);
 
       const selectedFile = acceptedFiles[0];
 
@@ -45,7 +52,7 @@ const FileUploader = ({
       }
 
       if (!allowedMimeTypes.map(String).includes(selectedFile.type)) {
-        onUploadError(
+        setUploadError(
           t('components.uploader.error_file_type', {
             extensions: convertToFileExtensionArray(allowedMimeTypes),
           })
@@ -57,7 +64,7 @@ const FileUploader = ({
       const fileSizeLimit = Math.min(maxSize, maxUploadFileSize);
 
       if (selectedFile.size > fileSizeLimit) {
-        onUploadError(t('components.uploader.error_file_size', { size: fileSizeLimit / 1024 }));
+        setUploadError(t('components.uploader.error_file_size', { size: fileSizeLimit / 1024 }));
 
         return;
       }
@@ -71,12 +78,12 @@ const FileUploader = ({
 
         onCompleted(url);
       } catch {
-        onUploadError(t('components.uploader.error_upload'));
+        setUploadError(t('components.uploader.error_upload'));
       } finally {
         setIsUploading(false);
       }
     },
-    [allowedMimeTypes, api, maxSize, onCompleted, onUploadError, t]
+    [allowedMimeTypes, api, maxSize, onCompleted, t]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -90,7 +97,7 @@ const FileUploader = ({
       {...getRootProps()}
       className={classNames(
         styles.uploader,
-        hasError && styles.uploaderError,
+        Boolean(uploadError) && styles.uploaderError,
         isDragActive && styles.dragActive
       )}
     >

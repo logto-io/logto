@@ -1,5 +1,4 @@
 import type { AllowedUploadMimeType } from '@logto/schemas';
-import { useEffect } from 'react';
 
 import Delete from '@/assets/images/delete.svg';
 
@@ -24,14 +23,8 @@ export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
   onDelete: () => void;
 };
 
-const ImageUploader = ({ name, value, onDelete, onUploadError, ...rest }: Props) => {
-  useEffect(() => {
-    if (value) {
-      onUploadError(undefined);
-    }
-  }, [onUploadError, value]);
-
-  return value ? (
+const ImageUploader = ({ name, value, onDelete, ...rest }: Props) =>
+  value ? (
     <div className={styles.imageUploader}>
       <img alt={name} src={value} />
       <IconButton
@@ -44,13 +37,7 @@ const ImageUploader = ({ name, value, onDelete, onUploadError, ...rest }: Props)
       </IconButton>
     </div>
   ) : (
-    <FileUploader
-      allowedMimeTypes={allowedImageMimeTypes}
-      maxSize={maxImageSizeLimit}
-      onUploadError={onUploadError}
-      {...rest}
-    />
+    <FileUploader allowedMimeTypes={allowedImageMimeTypes} maxSize={maxImageSizeLimit} {...rest} />
   );
-};
 
 export default ImageUploader;
