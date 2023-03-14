@@ -43,7 +43,7 @@
   &.selected {
     border-color: var(--color-primary);
     background-color: var(--color-hover-variant);
-    color: var(--color-text-link);
+    color: var(--color-primary);
 
     .icon {
       color: var(--color-primary);
@@ -52,7 +52,7 @@
 
   &:hover {
     border-color: var(--color-primary);
-    color: var(--color-text-link);
+    color: var(--color-primary);
 
     .icon {
       color: var(--color-primary);
