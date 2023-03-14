@@ -17,6 +17,18 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
   }
 };
 
+const getTenant = async (tenantId: string) => {
+  try {
+    return await tenantPool.get(tenantId);
+  } catch (error: unknown) {
+    if (error instanceof TenantNotFoundError) {
+      return error;
+    }
+
+    throw error;
+  }
+};
+
 export default async function initApp(app: Koa): Promise<void> {
   app.use(async (ctx, next) => {
     if (EnvSet.values.isDomainBasedMultiTenancy && ctx.URL.pathname === '/status') {
@@ -33,18 +45,20 @@ export default async function initApp(app: Koa): Promise<void> {
       return next();
     }
 
+    const tenant = await getTenant(tenantId);
+
+    if (tenant instanceof TenantNotFoundError) {
+      ctx.status = 404;
+
+      return next();
+    }
+
     try {
-      const tenant = await tenantPool.get(tenantId);
+      tenant.requestStart();
       await tenant.run(ctx, next);
-
-      return;
+      tenant.requestEnd();
     } catch (error: unknown) {
-      if (error instanceof TenantNotFoundError) {
-        ctx.status = 404;
-
-        return next();
-      }
-
+      tenant.requestEnd();
       throw error;
     }
   });

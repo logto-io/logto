@@ -34,23 +34,15 @@ export default class Tenant implements TenantContext {
     return new Tenant(envSet, id);
   }
 
+  #requestCount = 0;
+  #onRequestEmpty?: () => Promise<void>;
+
   public readonly provider: Provider;
   public readonly queries: Queries;
   public readonly libraries: Libraries;
+  public readonly run: MiddlewareType;
 
-  public readonly app: Koa;
-
-  get run(): MiddlewareType {
-    if (
-      EnvSet.values.isPathBasedMultiTenancy &&
-      // If admin URL Set is specified, consider that URL first
-      !(EnvSet.values.adminUrlSet.deduplicated().length > 0 && this.id === adminTenantId)
-    ) {
-      return mount('/' + this.id, this.app);
-    }
-
-    return mount(this.app);
-  }
+  private readonly app: Koa;
 
   private constructor(public readonly envSet: EnvSet, public readonly id: string) {
     const queries = new Queries(envSet.pool);
@@ -129,5 +121,56 @@ export default class Tenant implements TenantContext {
 
     this.app = app;
     this.provider = provider;
+
+    const { isPathBasedMultiTenancy, adminUrlSet } = EnvSet.values;
+    this.run =
+      isPathBasedMultiTenancy &&
+      // If admin URL Set is specified, consider that URL first
+      !(adminUrlSet.deduplicated().length > 0 && this.id === adminTenantId)
+        ? mount('/' + this.id, this.app)
+        : mount(this.app);
+  }
+
+  public requestStart() {
+    this.#requestCount += 1;
+  }
+
+  public requestEnd() {
+    if (this.#requestCount > 0) {
+      this.#requestCount -= 1;
+
+      if (this.#requestCount === 0) {
+        void this.#onRequestEmpty?.();
+      }
+    }
+  }
+
+  /**
+   * Try to dispose the tenant resources. If there are any pending requests, this function will wait for them to end with 5s timeout.
+   *
+   * Currently this function only ends the database pool.
+   *
+   * @returns Resolves `true` for a normal disposal and `'timeout'` for a timeout.
+   */
+  public async dispose() {
+    if (this.#requestCount <= 0) {
+      await this.envSet.end();
+
+      return true;
+    }
+
+    return new Promise<true | 'timeout'>((resolve) => {
+      const timeout = setTimeout(async () => {
+        this.#onRequestEmpty = undefined;
+        await this.envSet.end();
+        resolve('timeout');
+      }, 5000);
+
+      this.#onRequestEmpty = async () => {
+        clearTimeout(timeout);
+        await this.envSet.end();
+        resolve(true);
+      };
+    });
   }
 }
