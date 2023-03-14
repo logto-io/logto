@@ -110,7 +110,7 @@ We have a [contributing guideline](https://github.com/logto-io/logto/blob/master
 ## Resources
 
 - [📖 Logto docs](https://docs.logto.io?utm_source=github)
-- [✍️ Silverhand blog](https://docs.logto.io/blog?utm_source=github)
+- [✍️ Blog](https://docs.logto.io/blog?utm_source=github)
 
 <br/>
 
