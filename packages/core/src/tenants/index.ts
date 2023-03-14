@@ -3,9 +3,10 @@ import LRUCache from 'lru-cache';
 import Tenant from './Tenant.js';
 
 export class TenantPool {
-  protected cache = new LRUCache<string, Tenant>({
+  protected cache = new LRUCache<string, Promise<Tenant>>({
     max: 100,
-    dispose: (tenant) => {
+    dispose: async (entry) => {
+      const tenant = await entry;
       void tenant.dispose();
     },
   });
@@ -18,7 +19,7 @@ export class TenantPool {
     }
 
     console.log('Init tenant:', tenantId);
-    const newTenant = await Tenant.create(tenantId);
+    const newTenant = Tenant.create(tenantId);
     this.cache.set(tenantId, newTenant);
 
     return newTenant;
@@ -26,10 +27,10 @@ export class TenantPool {
 
   async endAll(): Promise<void> {
     await Promise.all(
-      this.cache.dump().map(([, tenant]) => {
-        const { poolSafe } = tenant.value.envSet;
+      this.cache.dump().map(async ([, entry]) => {
+        const tenant = await entry.value;
 
-        return poolSafe?.end();
+        return tenant.envSet.end();
       })
     );
   }

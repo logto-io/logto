@@ -52,10 +52,6 @@ export class EnvSet {
     return this.#pool;
   }
 
-  get poolSafe() {
-    return this.#pool;
-  }
-
   get oidc() {
     if (!this.#oidc) {
       return throwNotLoadedError();
