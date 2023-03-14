@@ -203,6 +203,7 @@ export const mockSignInExperience: SignInExperience = {
   socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
   signInMode: SignInMode.SignInAndRegister,
   customCss: null,
+  customContent: {},
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -226,6 +227,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
     phone: true,
   },
   customCss: null,
+  customContent: {},
 };
 
 const usernameSettings = {

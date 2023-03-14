@@ -240,6 +240,13 @@ export const zodTypeToSwagger = (
     };
   }
 
+  if (config instanceof ZodRecord) {
+    return {
+      type: 'object',
+      additionalProperties: zodTypeToSwagger(config.valueSchema),
+    };
+  }
+
   // TO-DO: Improve swagger output for zod schema with refinement (validate through JS functions)
   if (config instanceof ZodEffects && config._def.effect.type === 'refinement') {
     return {

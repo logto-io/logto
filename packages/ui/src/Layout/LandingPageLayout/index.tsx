@@ -5,6 +5,7 @@ import type { TFuncKey } from 'react-i18next';
 
 import BrandingHeader from '@/components/BrandingHeader';
 import { PageContext } from '@/hooks/use-page-context';
+import { layoutClassNames } from '@/utils/consts';
 import { getBrandingLogoUrl } from '@/utils/logo';
 
 import AppNotification from '../../containers/AppNotification';
@@ -33,7 +34,7 @@ const LandingPageLayout = ({ children, className, title }: Props) => {
       {platform === 'web' && <div className={styles.placeholderTop} />}
       <div className={classNames(styles.wrapper, className)}>
         <BrandingHeader
-          className={styles.header}
+          className={classNames(styles.header, layoutClassNames.brandingHeader)}
           headline={title}
           logo={getBrandingLogoUrl({ theme, branding, isDarkModeEnabled })}
         />

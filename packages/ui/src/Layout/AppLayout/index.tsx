@@ -1,10 +1,13 @@
+import classNames from 'classnames';
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import LogtoSignature from '@/components/LogtoSignature';
 import usePlatform from '@/hooks/use-platform';
+import { layoutClassNames } from '@/utils/consts';
 import { parseHtmlTitle } from '@/utils/sign-in-experience';
 
+import CustomContent from './CustomContent';
 import * as styles from './index.module.scss';
 
 const AppLayout = () => {
@@ -23,14 +26,13 @@ const AppLayout = () => {
 
   return (
     <div className={styles.viewBox}>
-      <div className={styles.container}>
-        <div className={styles.placeHolder} />
-        <main id="main-form" className={styles.main}>
+      <div className={classNames(styles.container, layoutClassNames.pageContainer)}>
+        {!isMobile && <CustomContent className={layoutClassNames.customContent} />}
+        <main className={classNames(styles.main, layoutClassNames.mainContent)}>
           <Outlet />
-          {isMobile && <LogtoSignature />}
+          {isMobile && <LogtoSignature className={layoutClassNames.signature} />}
         </main>
-        {!isMobile && <LogtoSignature />}
-        <div className={styles.placeHolder} />
+        {!isMobile && <LogtoSignature className={layoutClassNames.signature} />}
       </div>
     </div>
   );

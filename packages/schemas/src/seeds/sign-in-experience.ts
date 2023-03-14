@@ -44,6 +44,7 @@ export const createDefaultSignInExperience = (forTenantId: string): Readonly<Sig
     socialSignInConnectorTargets: [],
     signInMode: SignInMode.SignInAndRegister,
     customCss: null,
+    customContent: {},
   });
 
 /** @deprecated Use `createDefaultSignInExperience()` instead. */
