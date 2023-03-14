@@ -109,10 +109,26 @@ const rollbackAdminConsoleData = async (
 
 const alteration: AlterationScript = {
   up: async (pool) => {
+    const { count: userCount } = await pool.one<{ count: number }>(sql`select count(*) from users`);
+
+    if (userCount <= 0) {
+      console.log('No users found, skipping alteration');
+
+      return;
+    }
+
     const rows = await pool.many<OldUserData>(sql`select tenant_id, id, custom_data from users`);
     await Promise.all(rows.map(async (row) => alterAdminConsoleData(row, pool)));
   },
   down: async (pool) => {
+    const { count: userCount } = await pool.one<{ count: number }>(sql`select count(*) from users`);
+
+    if (userCount <= 0) {
+      console.log('No users found, skipping alteration');
+
+      return;
+    }
+
     const rows = await pool.many<NewUserData>(sql`select tenant_id, id, custom_data from users`);
     await Promise.all(rows.map(async (row) => rollbackAdminConsoleData(row, pool)));
   },
