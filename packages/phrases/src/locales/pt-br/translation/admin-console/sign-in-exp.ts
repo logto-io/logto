@@ -33,6 +33,12 @@ const sign_in_exp = {
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'URL da imagem do logotipo do aplicativo (Escuro)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
+    logo_image: 'App logo', // UNTRANSLATED
+    dark_logo_image: 'App logo (Dark)', // UNTRANSLATED
+    logo_action_description: 'App Logo to display in UI interface', // UNTRANSLATED
+    favicon_action_description: 'Browser Favicon', // UNTRANSLATED
+    logo_image_error: 'App logo: {{error}}', // UNTRANSLATED
+    favicon_error: 'Favicon: {{error}}', // UNTRANSLATED
   },
   custom_css: {
     title: 'CUSTOM CSS', // UNTRANSLATED

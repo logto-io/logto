@@ -18,7 +18,6 @@ import * as modalStyles from '@/scss/modal.module.scss';
 
 import usePreviewConfigs from '../../hooks/use-preview-configs';
 import BrandingForm from '../../tabs/Branding/BrandingForm';
-import ColorForm from '../../tabs/Branding/ColorForm';
 import LanguagesForm from '../../tabs/Others/LanguagesForm';
 import TermsForm from '../../tabs/Others/TermsForm';
 import type { SignInExperienceForm } from '../../types';
@@ -116,7 +115,6 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
               )}
               <div className={styles.main}>
                 <div className={styles.form}>
-                  <ColorForm />
                   <BrandingForm />
                   <TermsForm />
                   <LanguagesForm />

@@ -7,36 +7,36 @@ import { useTranslation } from 'react-i18next';
 
 import UploaderIcon from '@/assets/images/upload.svg';
 import useApi from '@/hooks/use-api';
+import { convertToFileExtensionArray } from '@/utils/uploader';
 
 import { Ring } from '../Spinner';
 import * as styles from './index.module.scss';
 
-const allowedFileCount = 1;
-
 type Props = {
   maxSize: number; // In bytes
   allowedMimeTypes: AllowedUploadMimeType[];
-  limitDescription: string;
+  actionDescription?: string;
+  hasError?: boolean;
   onCompleted: (fileUrl: string) => void;
+  onError: (errorMessage?: string) => void;
 };
 
-const FileUploader = ({ maxSize, allowedMimeTypes, limitDescription, onCompleted }: Props) => {
+const FileUploader = ({
+  maxSize,
+  allowedMimeTypes,
+  actionDescription,
+  hasError,
+  onCompleted,
+  onError,
+}: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isUploading, setIsUploading] = useState(false);
-  const [uploaderError, setUploaderError] = useState<string>();
-  const hasError = Boolean(uploaderError);
 
   const api = useApi();
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      setUploaderError(undefined);
-
-      if (acceptedFiles.length > allowedFileCount) {
-        setUploaderError(t('components.uploader.error_file_count', { count: allowedFileCount }));
-
-        return;
-      }
+      onError(undefined);
 
       const selectedFile = acceptedFiles[0];
 
@@ -45,10 +45,11 @@ const FileUploader = ({ maxSize, allowedMimeTypes, limitDescription, onCompleted
       }
 
       if (!allowedMimeTypes.map(String).includes(selectedFile.type)) {
-        const supportedFileTypes = allowedMimeTypes.map((type) =>
-          type.split('/')[1]?.toUpperCase()
+        onError(
+          t('components.uploader.error_file_type', {
+            extensions: convertToFileExtensionArray(allowedMimeTypes),
+          })
         );
-        setUploaderError(t('components.uploader.error_file_type', { types: supportedFileTypes }));
 
         return;
       }
@@ -56,7 +57,7 @@ const FileUploader = ({ maxSize, allowedMimeTypes, limitDescription, onCompleted
       const fileSizeLimit = Math.min(maxSize, maxUploadFileSize);
 
       if (selectedFile.size > fileSizeLimit) {
-        setUploaderError(t('components.uploader.error_file_size', { count: fileSizeLimit / 1024 }));
+        onError(t('components.uploader.error_file_size', { size: fileSizeLimit / 1024 }));
 
         return;
       }
@@ -70,48 +71,44 @@ const FileUploader = ({ maxSize, allowedMimeTypes, limitDescription, onCompleted
 
         onCompleted(url);
       } catch {
-        setUploaderError(t('components.uploader.error_upload'));
+        onError(t('components.uploader.error_upload'));
       } finally {
         setIsUploading(false);
       }
     },
-    [allowedMimeTypes, api, maxSize, onCompleted, t]
+    [allowedMimeTypes, api, maxSize, onCompleted, onError, t]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     disabled: isUploading,
+    multiple: false,
   });
 
   return (
-    <div>
-      <div
-        {...getRootProps()}
-        className={classNames(
-          styles.uploader,
-          uploaderError && styles.uploaderError,
-          isDragActive && styles.dragActive
+    <div
+      {...getRootProps()}
+      className={classNames(
+        styles.uploader,
+        hasError && styles.uploaderError,
+        isDragActive && styles.dragActive
+      )}
+    >
+      <input {...getInputProps()} />
+      <div className={styles.placeholder}>
+        {isUploading ? (
+          <>
+            <Ring className={styles.uploadingIcon} />
+            <div className={styles.actionDescription}>{t('components.uploader.uploading')}</div>
+          </>
+        ) : (
+          <>
+            <UploaderIcon className={styles.icon} />
+            <div className={styles.actionDescription}>
+              {actionDescription ?? t('components.uploader.action_description')}
+            </div>
+          </>
         )}
-      >
-        <input {...getInputProps()} />
-        <div className={styles.placeholder}>
-          {isUploading ? (
-            <>
-              <Ring className={styles.uploadingIcon} />
-              <div className={styles.actionDescription}>{t('components.uploader.uploading')}</div>
-            </>
-          ) : (
-            <>
-              <UploaderIcon className={styles.icon} />
-              <div className={styles.actionDescription}>
-                {t('components.uploader.action_description')}
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-      <div className={classNames(styles.description, hasError && styles.error)}>
-        {hasError ? uploaderError : limitDescription}
       </div>
     </div>
   );

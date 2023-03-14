@@ -31,6 +31,12 @@ const sign_in_exp = {
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'Logo 图片 URL (深色)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
+    logo_image: 'Logo 图片',
+    dark_logo_image: 'Logo 图片(深色)',
+    logo_action_description: 'App Logo to display in UI interface', // UNTRANSLATED
+    favicon_action_description: 'Browser Favicon', // UNTRANSLATED
+    logo_image_error: 'App logo: {{error}}', // UNTRANSLATED
+    favicon_error: 'Favicon: {{error}}', // UNTRANSLATED
   },
   custom_css: {
     title: 'CUSTOM CSS', // UNTRANSLATED

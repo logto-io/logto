@@ -32,6 +32,12 @@ const sign_in_exp = {
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'App logo image URL (Dark)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
+    logo_image: 'App logo',
+    dark_logo_image: 'App logo (Dark)',
+    logo_action_description: 'App Logo to display in UI interface',
+    favicon_action_description: 'Browser Favicon',
+    logo_image_error: 'App logo: {{error}}',
+    favicon_error: 'Favicon: {{error}}',
   },
   custom_css: {
     title: 'CUSTOM CSS', // UNTRANSLATED
