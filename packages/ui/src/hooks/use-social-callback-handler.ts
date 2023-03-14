@@ -9,13 +9,13 @@ const useSocialCallbackHandler = () => {
   const socialCallbackHandler = useCallback(
     (connectorId: string) => {
       // Get search string to evaluate
-      const searchString = window.location.search
+      const searchString = window.location.search;
 
       // Get hash string to evaluate
-      const hashString = window.location.hash
+      const hashString = window.location.hash;
 
       // Define evaluated search string
-      const search = `${searchString ?? '?'}${(searchString && hashString ? '&' : '')}${hashString.slice(1)}`
+      const search = `${searchString ?? '?'}${(searchString && hashString ? '&' : '')}${hashString.slice(1)}`;
 
       // Get native callback link from storage
       const callbackLink = getCallbackLinkFromStorage(connectorId);
