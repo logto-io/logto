@@ -449,7 +449,7 @@ describe('connector route', () => {
       expect(sendMessage).toHaveBeenCalledWith(
         {
           to: '12345678901',
-          type: VerificationCodeType.Test,
+          type: VerificationCodeType.Generic,
           payload: {
             code: '000000',
           },
@@ -477,7 +477,7 @@ describe('connector route', () => {
       expect(sendMessage).toHaveBeenCalledWith(
         {
           to: 'test@email.com',
-          type: VerificationCodeType.Test,
+          type: VerificationCodeType.Generic,
           payload: {
             code: '000000',
           },

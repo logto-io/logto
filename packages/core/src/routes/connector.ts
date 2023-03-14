@@ -309,7 +309,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
       await sendMessage(
         {
           to: subject,
-          type: VerificationCodeType.Test,
+          type: VerificationCodeType.Generic,
           payload: {
             code: '000000',
           },

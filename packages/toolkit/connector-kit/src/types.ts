@@ -75,6 +75,7 @@ export enum VerificationCodeType {
   /** @deprecated */
   Continue = 'Continue',
   Generic = 'Generic',
+  /** @deprecated Use `Generic` type template for sending test sms/email use case */
   Test = 'Test',
 }
 
