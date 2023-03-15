@@ -1,0 +1,11 @@
+@use '@/scss/underscore' as _;
+
+.description {
+  margin-top: _.unit(2);
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.error {
+  color: var(--color-error);
+}

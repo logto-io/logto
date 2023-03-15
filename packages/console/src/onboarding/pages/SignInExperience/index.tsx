@@ -11,9 +11,9 @@ import Tools from '@/assets/images/tools.svg';
 import Button from '@/components/Button';
 import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
-import ImageUploader from '@/components/ImageUploader';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import TextInput from '@/components/TextInput';
+import { ImageUploaderField } from '@/components/Uploader';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
@@ -112,7 +112,7 @@ const SignInExperience = () => {
                   name="logo"
                   control={control}
                   render={({ field: { onChange, value, name } }) => (
-                    <ImageUploader name={name} value={value ?? ''} onChange={onChange} />
+                    <ImageUploaderField name={name} value={value ?? ''} onChange={onChange} />
                   )}
                 />
               ) : (
