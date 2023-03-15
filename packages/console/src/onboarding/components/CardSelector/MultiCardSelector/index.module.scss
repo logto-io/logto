@@ -42,7 +42,8 @@
 
   &.selected {
     border-color: var(--color-primary);
-    color: var(--color-text-link);
+    background-color: var(--color-hover-variant);
+    color: var(--color-primary);
 
     .icon {
       color: var(--color-primary);
@@ -50,8 +51,8 @@
   }
 
   &:hover {
-    background-color: var(--color-hover-variant);
-    color: var(--color-text-link);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
 
     .icon {
       color: var(--color-primary);
