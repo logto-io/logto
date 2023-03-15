@@ -1,12 +1,12 @@
 import { Outlet } from 'react-router-dom';
 
-import Topbar from '@/containers/AppContent/components/Topbar';
+import Topbar from '@/onboarding/components/Topbar';
 
 import * as styles from './index.module.scss';
 
 const AppContent = () => (
   <div className={styles.app}>
-    <Topbar isLogoOnly />
+    <Topbar />
     <div className={styles.content}>
       <Outlet />
     </div>
