@@ -1,7 +1,7 @@
 import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ForwardedRef } from 'react';
-import { useCallback, useState, useMemo, forwardRef } from 'react';
+import { useState, useMemo, forwardRef } from 'react';
 
 import DownArrowIcon from '@/assets/icons/arrow-down.svg';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -25,13 +25,13 @@ const CountryCodeSelector = (
   const countryList = useMemo(getCountryList, []);
   const defaultCountCode = useMemo(getDefaultCountryCallingCode, []);
 
-  const showDropDown = useCallback(() => {
+  const showDropDown = () => {
     setIsDropdownOpen(true);
-  }, []);
+  };
 
-  const hideDropDown = useCallback(() => {
+  const hideDropDown = () => {
     setIsDropdownOpen(false);
-  }, []);
+  };
 
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const countryCode = value || defaultCountCode;

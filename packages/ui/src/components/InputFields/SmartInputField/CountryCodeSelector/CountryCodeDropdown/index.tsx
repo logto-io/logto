@@ -3,12 +3,12 @@ import { conditional } from '@silverhand/essentials';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { useDebounce } from 'usehooks-ts';
 
 import CheckMark from '@/assets/icons/check-mark.svg';
 import SearchIcon from '@/assets/icons/search-icon.svg';
 import InputField from '@/components/InputFields/InputField';
 import NavBar from '@/components/NavBar';
+import useDebounce from '@/hooks/use-debounce';
 import usePlatform from '@/hooks/use-platform';
 import { onKeyDownHandler } from '@/utils/a11y';
 import type { CountryMetaData } from '@/utils/country-code';
