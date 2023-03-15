@@ -95,7 +95,8 @@ const SignInExperience = () => {
     }
 
     return signInExperienceParser.toLocalForm(data);
-  }, [data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, t]); // Form data default value depends on i18n, manually trigger re-render when i18n changes.
 
   useEffect(() => {
     if (defaultFormData) {
