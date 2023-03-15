@@ -1,1 +1,4 @@
-export const demoConnectorIds = ['logto-email', 'logto-sms'];
+export const demoConnectors = {
+  sms: 'logto-sms',
+  email: 'logto-email',
+} as const;
