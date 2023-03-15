@@ -97,9 +97,25 @@ export const createSignInExperienceLibrary = (
   return {
     validateLanguageInfo,
     removeUnavailableSocialConnectorTargets,
-    /** NOTE: This function is cached. */
+    /**
+     * NOTE: This function is cached.
+     *
+     * **Cache Invalidation**
+     *
+     * ```ts
+     * wellKnownCache.invalidate(tenantId, ['sie']);
+     * ```
+     */
     getSignInExperience,
-    /** NOTE: This function is cached. */
+    /**
+     * NOTE: This function is cached.
+     *
+     * **Cache Invalidation**
+     *
+     * ```ts
+     * wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
+     * ```
+     */
     getFullSignInExperience,
   };
 };

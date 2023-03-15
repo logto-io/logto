@@ -30,8 +30,12 @@ class WellKnownCache {
     });
   }
 
-  async invalidate(tenantId: string, keys = [...cacheKeys]) {
+  async invalidate(tenantId: string, keys: readonly WellKnownCacheKey[]) {
     return this.#keyv.delete(keys.map((key) => buildKey(tenantId, key)));
+  }
+
+  async invalidateAll(tenantId: string) {
+    return this.invalidate(tenantId, cacheKeys);
   }
 
   async set(tenantId: string, key: WellKnownCacheKey, value: unknown) {

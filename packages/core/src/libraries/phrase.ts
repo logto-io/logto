@@ -40,9 +40,24 @@ export const createPhraseLibrary = (queries: Queries, tenantId: string) => {
   );
 
   return {
-    /** NOTE: This function is cached by the first parameter. */
+    /**
+     * NOTE: This function is cached by the first parameter.
+     * **Cache Invalidation**
+     *
+     * ```ts
+     * wellKnownCache.invalidate(tenantId, ['phrases']);
+     * ```
+     */
     getPhrases,
-    /** NOTE: This function is cached. */
+    /**
+     * NOTE: This function is cached.
+     *
+     * **Cache Invalidation**
+     *
+     * ```ts
+     * wellKnownCache.invalidate(tenantId, ['phrases-lng-tags']);
+     * ```
+     */
     getAllCustomLanguageTags,
   };
 };

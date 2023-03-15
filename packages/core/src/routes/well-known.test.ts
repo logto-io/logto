@@ -56,7 +56,7 @@ const tenantContext = new MockTenant(
 
 describe('GET /.well-known/sign-in-exp', () => {
   afterEach(async () => {
-    await wellKnownCache.invalidate(tenantContext.id);
+    await wellKnownCache.invalidateAll(tenantContext.id);
     jest.clearAllMocks();
   });
 

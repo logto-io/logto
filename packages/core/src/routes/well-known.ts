@@ -3,23 +3,25 @@ import { adminTenantId } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { wellKnownCache } from '#src/caches/well-known.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import detectLanguage from '#src/i18n/detect-language.js';
 import { guardFullSignInExperience } from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { noCache } from '#src/utils/request.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(
-  ...[router, { libraries, id }]: RouterInitArgs<T>
+  ...[router, { libraries, id: tenantId }]: RouterInitArgs<T>
 ) {
   const {
     signInExperiences: { getSignInExperience, getFullSignInExperience },
     phrases: { getPhrases, getAllCustomLanguageTags },
   } = libraries;
 
-  if (id === adminTenantId) {
+  if (tenantId === adminTenantId) {
     router.get('/.well-known/endpoints/:tenantId', async (ctx, next) => {
       if (!ctx.params.tenantId) {
         throw new RequestError('request.invalid_input');
@@ -37,6 +39,10 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
     '/.well-known/sign-in-exp',
     koaGuard({ response: guardFullSignInExperience, status: 200 }),
     async (ctx, next) => {
+      if (noCache(ctx.headers)) {
+        await wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
+      }
+
       ctx.body = await getFullSignInExperience();
 
       return next();
@@ -53,6 +59,10 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
       status: 200,
     }),
     async (ctx, next) => {
+      if (noCache(ctx.headers)) {
+        await wellKnownCache.invalidate(tenantId, ['sie', 'phrases-lng-tags', 'phrases']);
+      }
+
       const {
         query: { lng },
       } = ctx.guard;

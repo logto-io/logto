@@ -50,7 +50,7 @@ const { getPhrases } = createPhraseLibrary(
 );
 
 afterEach(async () => {
-  await wellKnownCache.invalidate(tenantId);
+  await wellKnownCache.invalidateAll(tenantId);
   jest.clearAllMocks();
 });
 

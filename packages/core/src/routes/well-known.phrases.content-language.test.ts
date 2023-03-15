@@ -42,7 +42,7 @@ const phraseRequest = createRequester({
 });
 
 afterEach(async () => {
-  await wellKnownCache.invalidate(tenantContext.id);
+  await wellKnownCache.invalidateAll(tenantContext.id);
   jest.clearAllMocks();
 });
 
