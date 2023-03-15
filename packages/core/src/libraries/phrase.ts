@@ -4,7 +4,7 @@ import type { CustomPhrase } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import deepmerge from 'deepmerge';
 
-import { useWellKnownCache } from '#src/caches/well-known.js';
+import { wellKnownCache } from '#src/caches/well-known.js';
 import type Queries from '#src/tenants/Queries.js';
 
 export const createPhraseLibrary = (queries: Queries, tenantId: string) => {
@@ -31,11 +31,11 @@ export const createPhraseLibrary = (queries: Queries, tenantId: string) => {
     );
   };
 
-  const getPhrases = useWellKnownCache(tenantId, 'phrases', _getPhrases);
+  const getPhrases = wellKnownCache.use(tenantId, 'phrases', _getPhrases);
 
-  const getAllCustomLanguageTags = useWellKnownCache(
+  const getAllCustomLanguageTags = wellKnownCache.use(
     tenantId,
-    'lng-tags',
+    'phrases-lng-tags',
     findAllCustomLanguageTags
   );
 

@@ -18,10 +18,6 @@ export const createSignInExperienceQueries = (pool: CommonQueryMethods) => {
 
   return {
     updateDefaultSignInExperience,
-    /**
-     * NOTE: Use `getSignInExperience()` from sign-in experience library
-     * if possible since that function leverages cache.
-     */
     findDefaultSignInExperience,
   };
 };

@@ -10,7 +10,7 @@ import {
   mockWechatConnector,
   mockWechatNativeConnector,
 } from '#src/__mocks__/index.js';
-import { invalidateWellKnownCache } from '#src/caches/well-known.js';
+import { wellKnownCache } from '#src/caches/well-known.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -56,7 +56,7 @@ const tenantContext = new MockTenant(
 
 describe('GET /.well-known/sign-in-exp', () => {
   afterEach(async () => {
-    await invalidateWellKnownCache(tenantContext.id);
+    await wellKnownCache.invalidate(tenantContext.id);
     jest.clearAllMocks();
   });
 

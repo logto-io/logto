@@ -5,7 +5,7 @@ import { SignInExperiences, ConnectorType } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { useWellKnownCache } from '#src/caches/well-known.js';
+import { wellKnownCache } from '#src/caches/well-known.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -55,7 +55,7 @@ export const createSignInExperienceLibrary = (
     });
   };
 
-  const getSignInExperience = useWellKnownCache(tenantId, 'sie', findDefaultSignInExperience);
+  const getSignInExperience = wellKnownCache.use(tenantId, 'sie', findDefaultSignInExperience);
 
   const _getFullSignInExperience = async (): Promise<FullSignInExperience> => {
     const [signInExperience, logtoConnectors] = await Promise.all([
@@ -88,7 +88,11 @@ export const createSignInExperienceLibrary = (
     };
   };
 
-  const getFullSignInExperience = useWellKnownCache(tenantId, 'sie-full', _getFullSignInExperience);
+  const getFullSignInExperience = wellKnownCache.use(
+    tenantId,
+    'sie-full',
+    _getFullSignInExperience
+  );
 
   return {
     validateLanguageInfo,

@@ -11,7 +11,7 @@ import {
   zhCnTag,
   zhHkTag,
 } from '#src/__mocks__/custom-phrase.js';
-import { invalidateWellKnownCache } from '#src/caches/well-known.js';
+import { wellKnownCache } from '#src/caches/well-known.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -50,7 +50,7 @@ const { getPhrases } = createPhraseLibrary(
 );
 
 afterEach(async () => {
-  await invalidateWellKnownCache(tenantId);
+  await wellKnownCache.invalidate(tenantId);
   jest.clearAllMocks();
 });
 
