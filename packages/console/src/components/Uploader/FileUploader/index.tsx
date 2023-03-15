@@ -17,7 +17,7 @@ export type Props = {
   allowedMimeTypes: AllowedUploadMimeType[];
   actionDescription?: string;
   onCompleted: (fileUrl: string) => void;
-  onUploadError: (errorMessage?: string) => void;
+  onUploadErrorChange: (errorMessage?: string) => void;
 };
 
 const FileUploader = ({
@@ -25,19 +25,19 @@ const FileUploader = ({
   allowedMimeTypes,
   actionDescription,
   onCompleted,
-  onUploadError,
+  onUploadErrorChange,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string>();
 
   useEffect(() => {
-    onUploadError(uploadError);
+    onUploadErrorChange(uploadError);
 
     return () => {
-      onUploadError(undefined);
+      onUploadErrorChange(undefined);
     };
-  }, [onUploadError, uploadError]);
+  }, [onUploadErrorChange, uploadError]);
 
   const api = useApi();
 

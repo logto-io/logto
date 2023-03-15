@@ -32,7 +32,7 @@ const LogoAndFaviconUploader = () => {
                 value={value ?? ''}
                 actionDescription={t('sign_in_exp.branding.upload_logo_image_description')}
                 onCompleted={onChange}
-                onUploadError={setUploadLogoError}
+                onUploadErrorChange={setUploadLogoError}
                 onDelete={() => {
                   onChange('');
                 }}
@@ -50,7 +50,7 @@ const LogoAndFaviconUploader = () => {
                 value={value ?? ''}
                 actionDescription={t('sign_in_exp.branding.upload_favicon_description')}
                 onCompleted={onChange}
-                onUploadError={setUploadFaviconError}
+                onUploadErrorChange={setUploadFaviconError}
                 onDelete={() => {
                   onChange('');
                 }}

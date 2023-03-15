@@ -26,7 +26,7 @@ const ImageUploaderField = ({ onChange, ...rest }: Props) => {
     <div>
       <ImageUploader
         onCompleted={onChange}
-        onUploadError={setUploadError}
+        onUploadErrorChange={setUploadError}
         onDelete={() => {
           onChange('');
         }}
