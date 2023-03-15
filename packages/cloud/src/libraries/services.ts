@@ -1,6 +1,8 @@
 import { buildRawConnector, defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
 import type { AllConnector, EmailConnector, SendMessagePayload } from '@logto/connector-kit';
 import { ConnectorType, validateConfig } from '@logto/connector-kit';
+import { generateStandardId } from '@logto/core-kit';
+import type { ServiceLogType } from '@logto/schemas';
 import { adminTenantId } from '@logto/schemas';
 import { trySafe } from '@logto/shared';
 import { RequestError } from '@withtyped/server';
@@ -8,6 +10,8 @@ import { RequestError } from '@withtyped/server';
 import type { Queries } from '#src/queries/index.js';
 import type { LogtoConnector } from '#src/utils/connector/index.js';
 import { loadConnectorFactories } from '#src/utils/connector/index.js';
+
+export const serviceCountLimitForTenant = 100;
 
 export class ServicesLibrary {
   constructor(public readonly queries: Queries) {}
@@ -95,5 +99,19 @@ export class ServicesLibrary {
     const { sendMessage } = connector;
 
     return sendMessage(data);
+  }
+
+  async addLog(tenantId: string, type: ServiceLogType) {
+    return this.queries.serviceLogs.insertLog({
+      id: generateStandardId(),
+      type,
+      tenantId,
+    });
+  }
+
+  async getTenantBalanceForType(tenantId: string, type: ServiceLogType) {
+    const usedCount = await this.queries.serviceLogs.countTenantLogs(tenantId, type);
+
+    return serviceCountLimitForTenant - usedCount;
   }
 }

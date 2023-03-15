@@ -1,5 +1,5 @@
 import { sendMessagePayloadGuard } from '@logto/connector-kit';
-import { CloudScope } from '@logto/schemas';
+import { CloudScope, ServiceLogType } from '@logto/schemas';
 import { createRouter, RequestError } from '@withtyped/server';
 import { z } from 'zod';
 
@@ -17,10 +17,18 @@ export const servicesRoutes = (library: ServicesLibrary) =>
 
       const tenantId = await library.getTenantIdFromApplicationId(context.auth.id);
 
-      // TODO limitation control
-      console.log(tenantId);
+      if (!tenantId) {
+        throw new RequestError('Unable to find tenant id.', 403);
+      }
+
+      const balance = await library.getTenantBalanceForType(tenantId, ServiceLogType.SendEmail);
+
+      if (!balance) {
+        throw new RequestError('Service usage limit reached.', 403);
+      }
 
       await library.sendEmail(context.guarded.body.data);
+      await library.addLog(tenantId, ServiceLogType.SendEmail);
 
       return next({ ...context, status: 201 });
     }

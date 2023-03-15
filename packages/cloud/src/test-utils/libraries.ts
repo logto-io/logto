@@ -1,4 +1,4 @@
-import type { TenantInfo } from '@logto/schemas';
+import type { ServiceLogType, TenantInfo } from '@logto/schemas';
 
 import type { ServicesLibrary } from '#src/libraries/services.js';
 import type { TenantsLibrary } from '#src/libraries/tenants.js';
@@ -25,4 +25,10 @@ export class MockServicesLibrary implements ServicesLibrary {
   public sendEmail = jest.fn();
 
   public getAdminTenantLogtoConnectors = jest.fn();
+
+  public addLog = jest.fn();
+
+  public getTenantBalanceForType = jest
+    .fn<Promise<number>, [string, ServiceLogType]>()
+    .mockResolvedValue(100);
 }
