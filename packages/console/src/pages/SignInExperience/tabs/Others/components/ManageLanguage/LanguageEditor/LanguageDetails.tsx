@@ -45,7 +45,11 @@ const LanguageDetails = () => {
   const fetcher = useSwrFetcher<CustomPhraseResponse>(fetchApi);
 
   const translationEntries = useMemo(
-    () => Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation),
+    () =>
+      Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation).filter(
+        // Filter out the demo app phrases in AC
+        ([groupKey]) => groupKey !== 'demo_app'
+      ),
     [isBuiltIn, selectedLanguage]
   );
 
