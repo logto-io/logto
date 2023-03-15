@@ -84,6 +84,8 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          build-args: | # Test cloud build
+            additional_connector_args=--cloud
 
       - name: Build cloud
         uses: docker/build-push-action@v4
