@@ -75,6 +75,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            additional_connector_args="--cloud"
 
       - name: Setup Depot
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
