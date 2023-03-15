@@ -52,7 +52,12 @@ export const createHookLibrary = (queries: Queries) => {
     }
 
     const hookEvent = eventToHook[event];
-    const rows = await findAllHooks();
+    const found = await findAllHooks();
+    const rows = found.filter(({ event }) => event === hookEvent);
+
+    if (rows.length === 0) {
+      return;
+    }
 
     const [user, application] = await Promise.all([
       trySafe(findUserById(userId)),
@@ -73,46 +78,44 @@ export const createHookLibrary = (queries: Queries) => {
     } satisfies Omit<HookEventPayload, 'hookId'>;
 
     await Promise.all(
-      rows
-        .filter(({ event }) => event === hookEvent)
-        .map(async ({ config: { url, headers, retries }, id }) => {
-          console.log(`\tTriggering hook ${id} due to ${hookEvent} event`);
-          const json: HookEventPayload = { hookId: id, ...payload };
-          const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
+      rows.map(async ({ config: { url, headers, retries }, id }) => {
+        console.log(`\tTriggering hook ${id} due to ${hookEvent} event`);
+        const json: HookEventPayload = { hookId: id, ...payload };
+        const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
 
-          logEntry.append({ json, hookId: id });
+        logEntry.append({ json, hookId: id });
 
-          // Trigger web hook and log response
-          await got
-            .post(url, {
-              headers: { 'user-agent': 'Logto (https://logto.io)', ...headers },
-              json,
-              retry: { limit: retries },
-              timeout: { request: 10_000 },
-            })
-            .then(async (response) => {
-              logEntry.append({
-                response: parseResponse(response),
-              });
-            })
-            .catch(async (error) => {
-              logEntry.append({
-                result: LogResult.Error,
-                response: conditional(error instanceof HTTPError && parseResponse(error.response)),
-                error: conditional(error instanceof Error && String(error)),
-              });
+        // Trigger web hook and log response
+        await got
+          .post(url, {
+            headers: { 'user-agent': 'Logto (https://logto.io)', ...headers },
+            json,
+            retry: { limit: retries },
+            timeout: { request: 10_000 },
+          })
+          .then(async (response) => {
+            logEntry.append({
+              response: parseResponse(response),
             });
-
-          console.log(
-            `\tHook ${id} ${logEntry.payload.result === LogResult.Success ? 'succeeded' : 'failed'}`
-          );
-
-          await insertLog({
-            id: generateStandardId(),
-            key: logEntry.key,
-            payload: logEntry.payload,
+          })
+          .catch(async (error) => {
+            logEntry.append({
+              result: LogResult.Error,
+              response: conditional(error instanceof HTTPError && parseResponse(error.response)),
+              error: conditional(error instanceof Error && String(error)),
+            });
           });
-        })
+
+        console.log(
+          `\tHook ${id} ${logEntry.payload.result === LogResult.Success ? 'succeeded' : 'failed'}`
+        );
+
+        await insertLog({
+          id: generateStandardId(),
+          key: logEntry.key,
+          payload: logEntry.payload,
+        });
+      })
     );
   };
 

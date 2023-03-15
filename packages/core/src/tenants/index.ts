@@ -1,10 +1,12 @@
 import LRUCache from 'lru-cache';
 
+import { EnvSet } from '#src/env-set/index.js';
+
 import Tenant from './Tenant.js';
 
 export class TenantPool {
   protected cache = new LRUCache<string, Promise<Tenant>>({
-    max: 100,
+    max: EnvSet.values.tenantPoolSize,
     dispose: async (entry) => {
       const tenant = await entry;
       void tenant.dispose();

@@ -98,6 +98,11 @@ export default class GlobalValues {
   public readonly trustProxyHeader = yes(getEnv('TRUST_PROXY_HEADER'));
   public readonly ignoreConnectorVersionCheck = yes(getEnv('IGNORE_CONNECTOR_VERSION_CHECK'));
 
+  /** Maximum number of tenants to keep in the tenant pool. */
+  public readonly tenantPoolSize = Number(getEnv('TENANT_POOL_SIZE', '100'));
+  /** Maximum number of clients to keep in a single database pool (i.e. per `Tenant` class). */
+  public readonly databasePoolSize = Number(getEnv('DATABASE_POOL_SIZE', '20'));
+
   public get dbUrl(): string {
     return this.databaseUrl;
   }
