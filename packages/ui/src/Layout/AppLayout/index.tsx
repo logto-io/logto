@@ -30,9 +30,8 @@ const AppLayout = () => {
         {!isMobile && <CustomContent className={layoutClassNames.customContent} />}
         <main className={classNames(styles.main, layoutClassNames.mainContent)}>
           <Outlet />
-          {isMobile && <LogtoSignature className={layoutClassNames.signature} />}
+          <LogtoSignature className={classNames(styles.signature, layoutClassNames.signature)} />
         </main>
-        {!isMobile && <LogtoSignature className={layoutClassNames.signature} />}
       </div>
     </div>
   );

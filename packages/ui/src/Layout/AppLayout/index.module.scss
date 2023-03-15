@@ -43,6 +43,10 @@
     position: relative;
     background: var(--color-bg-body);
   }
+
+  .signature {
+    margin: _.unit(10) 0 _.unit(2);
+  }
 }
 
 :global(body.desktop) {
@@ -51,12 +55,19 @@
   }
 
   .main {
-    width: 640px;
-    min-height: 640px;
+    width: 540px;
+    min-height: 540px;
     position: relative;
     padding: _.unit(6);
     border-radius: 16px;
     background: var(--color-bg-float);
     box-shadow: var(--color-shadow-2);
+  }
+
+  .signature {
+    position: absolute;
+    bottom: 0;
+    transform: translateY(calc(100% + _.unit(7)));
+    padding-bottom: _.unit(7);
   }
 }
