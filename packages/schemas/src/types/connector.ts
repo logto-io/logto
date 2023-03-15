@@ -10,10 +10,10 @@ export type ConnectorResponse = Pick<
   'id' | 'syncProfile' | 'config' | 'metadata' | 'connectorId'
 > &
   Omit<BaseConnector<ConnectorType>, 'configGuard' | 'metadata'> &
-  ConnectorMetadata;
+  ConnectorMetadata & { isDemo?: boolean };
 
 export type ConnectorFactoryResponse = Omit<
   BaseConnector<ConnectorType>,
   'configGuard' | 'metadata'
 > &
-  ConnectorMetadata;
+  ConnectorMetadata & { isDemo?: boolean };

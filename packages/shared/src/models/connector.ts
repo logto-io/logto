@@ -1,4 +1,6 @@
-export const demoConnectors = {
-  sms: 'logto-sms',
-  email: 'logto-email',
-} as const;
+export enum DemoConnector {
+  Sms = 'logto-sms',
+  Email = 'logto-email',
+}
+
+export const demoConnectorIds: string[] = [DemoConnector.Sms, DemoConnector.Email];

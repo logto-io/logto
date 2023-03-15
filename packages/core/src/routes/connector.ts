@@ -2,7 +2,7 @@ import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
 import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
-import { demoConnectors } from '@logto/shared';
+import { demoConnectorIds } from '@logto/shared';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
@@ -70,10 +70,9 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
   router.get('/connector-factories', async (ctx, next) => {
     const connectorFactories = await loadConnectorFactories();
-    ctx.body = connectorFactories
-      .map((connectorFactory) => transpileConnectorFactory(connectorFactory))
-      // eslint-disable-next-line unicorn/prefer-includes
-      .filter(({ id }) => !Object.values(demoConnectors).some((connectorId) => connectorId === id));
+    ctx.body = connectorFactories.map((connectorFactory) =>
+      transpileConnectorFactory(connectorFactory)
+    );
 
     return next();
   });
@@ -104,6 +103,10 @@ export default function connectorRoutes<T extends AuthedRouter>(
         params: { id },
       } = ctx.guard;
       const connector = await getLogtoConnectorById(id);
+
+      // Hide demo connector
+      assertThat(!demoConnectorIds.includes(connector.metadata.id), 'connector.not_found');
+
       ctx.body = transpileLogtoConnector(connector);
 
       return next();
@@ -130,7 +133,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
       const connectorFactories = await loadConnectorFactories();
 
       const connectorFactory = connectorFactories.find(
-        ({ metadata: { id } }) => id === connectorId
+        ({ metadata: { id } }) => id === connectorId && !demoConnectorIds.includes(id)
       );
 
       if (!connectorFactory) {
@@ -238,6 +241,9 @@ export default function connectorRoutes<T extends AuthedRouter>(
       } = ctx.guard;
 
       const { type, validateConfig, metadata: originalMetadata } = await getLogtoConnectorById(id);
+
+      // Cannot modify demo connector
+      assertThat(!demoConnectorIds.includes(originalMetadata.id), 'connector.not_found');
 
       assertThat(
         originalMetadata.isStandard !== true ||

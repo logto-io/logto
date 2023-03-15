@@ -18,7 +18,7 @@ import {
   createAdminData,
   createAdminDataInAdminTenant,
 } from '@logto/schemas';
-import { createTenantMetadata, demoConnectors, GlobalValues } from '@logto/shared';
+import { createTenantMetadata, DemoConnector, GlobalValues } from '@logto/shared';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -118,7 +118,7 @@ export class TenantsLibrary {
     await connectors.insertConnector({
       id: generateStandardId(),
       tenantId,
-      connectorId: demoConnectors.email,
+      connectorId: DemoConnector.Email,
       config: {
         appId: m2mApplication.id,
         appSecret: m2mApplication.secret,

@@ -15,7 +15,7 @@ import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import Table from '@/components/Table';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
-import { defaultEmailConnectorGroup, defaultSmsConnectorGroup, isDemoConnector } from '@/consts';
+import { defaultEmailConnectorGroup, defaultSmsConnectorGroup } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useConnectorGroups from '@/hooks/use-connector-groups';
@@ -128,7 +128,7 @@ const Connectors = () => {
               dataIndex: 'name',
               colSpan: 6,
               render: (connectorGroup) => (
-                <ConnectorName connectorGroup={connectorGroup} isDemo={isDemoConnector} />
+                <ConnectorName connectorGroup={connectorGroup} isDemo={connectorGroup.isDemo} />
               ),
             },
             {
@@ -148,11 +148,12 @@ const Connectors = () => {
               dataIndex: 'delete',
               colSpan: 1,
               render: (connectorGroup) =>
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                isDemoConnector ? <ConnectorDeleteButton connectorGroup={connectorGroup} /> : null,
+                connectorGroup.isDemo ? (
+                  <ConnectorDeleteButton connectorGroup={connectorGroup} />
+                ) : null,
             },
           ]}
-          isRowClickable={({ connectors }) => Boolean(connectors[0]) && !isDemoConnector}
+          isRowClickable={({ connectors }) => Boolean(connectors[0]) && !connectors[0]?.isDemo}
           rowClickHandler={({ connectors }) => {
             const firstConnector = connectors[0];
 

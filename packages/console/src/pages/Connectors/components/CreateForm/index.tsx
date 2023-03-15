@@ -43,7 +43,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
     }
 
     const allGroups = getConnectorGroups<ConnectorFactoryResponse>(
-      factories.filter(({ type: factoryType }) => factoryType === type)
+      factories.filter(({ type: factoryType, isDemo }) => factoryType === type && !isDemo)
     );
 
     return allGroups
