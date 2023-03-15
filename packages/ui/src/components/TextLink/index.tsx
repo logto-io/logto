@@ -26,23 +26,24 @@ const TextLink = ({ className, children, text, icon, type = 'primary', to, ...re
 
   // By default the behavior of opening a new window is not supported in WkWebView, or in android webview.
   // Hijack the hyperlink props and open the link in an iframe modal instead.
-
   const hyperLinkProps = useMemo(() => {
-    if (!isMobile) {
-      return rest;
-    }
-
     const { href, target, onClick, ...others } = rest;
 
+    // Keep the original behavior if the link is not external.
     if (!href || target !== '_blank') {
       return rest;
     }
 
-    const title = text && t(text);
-
     return {
+      href,
+      target,
       onClick: (event: React.MouseEvent<HTMLAnchorElement>) => {
-        setModalState({ href, title: typeof title === 'string' ? title : undefined });
+        if (isMobile) {
+          const title = text && t(text);
+          event.preventDefault();
+          setModalState({ href, title: typeof title === 'string' ? title : undefined });
+        }
+
         onClick?.(event);
       },
       ...others,
@@ -62,7 +63,7 @@ const TextLink = ({ className, children, text, icon, type = 'primary', to, ...re
     <a
       className={classNames(styles.link, styles[type], className)}
       {...hyperLinkProps}
-      rel="noreferrer"
+      rel="noopener"
     >
       {icon}
       {children ?? (text ? t(text) : '')}
