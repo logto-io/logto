@@ -9,6 +9,7 @@ import i18next from 'i18next';
 import Provider, { errors, ResourceServer } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
+import { wellKnownCache } from '#src/caches/well-known.js';
 import type { EnvSet } from '#src/env-set/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
@@ -25,7 +26,12 @@ import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
 
-export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Libraries): Provider {
+export default function initOidc(
+  tenantId: string,
+  envSet: EnvSet,
+  queries: Queries,
+  libraries: Libraries
+): Provider {
   const {
     issuer,
     cookieKeys,
@@ -140,24 +146,25 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
       },
     },
     interactions: {
-      url: (ctx, interaction) => {
+      url: async (ctx, interaction) => {
+        const isDemoApp = interaction.params.client_id === demoAppApplicationId;
+
         const appendParameters = (path: string) => {
           // `notification` is for showing a text banner on the homepage
-          return interaction.params.client_id === demoAppApplicationId
-            ? path + `?notification=demo_app.notification`
-            : path;
+          return isDemoApp ? path + `?notification=demo_app.notification` : path;
         };
 
         switch (interaction.prompt.name) {
           case 'login': {
-            if (
-              // Register user experience first
-              ctx.oidc.params?.[OIDCExtraParametersKey.InteractionMode] === InteractionMode.signUp
-            ) {
-              return appendParameters(routes.signUp);
+            // Always fetch the latest sign-in experience config for demo app (live preview)
+            if (isDemoApp) {
+              await wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
             }
 
-            return appendParameters(routes.signIn.credentials);
+            const isSignUp =
+              ctx.oidc.params?.[OIDCExtraParametersKey.InteractionMode] === InteractionMode.signUp;
+
+            return appendParameters(isSignUp ? routes.signUp : routes.signIn.credentials);
           }
 
           case 'consent': {

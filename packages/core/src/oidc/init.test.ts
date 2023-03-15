@@ -7,6 +7,6 @@ describe('oidc provider init', () => {
   it('init should not throw', async () => {
     const { queries, libraries } = new MockTenant();
 
-    expect(() => initOidc(mockEnvSet, queries, libraries)).not.toThrow();
+    expect(() => initOidc('mock_id', mockEnvSet, queries, libraries)).not.toThrow();
   });
 });
