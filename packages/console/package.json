@@ -35,7 +35,7 @@
     "@parcel/transformer-svg-react": "2.8.3",
     "@silverhand/eslint-config": "2.0.1",
     "@silverhand/eslint-config-react": "2.0.1",
-    "@silverhand/essentials": "2.4.0",
+    "@silverhand/essentials": "2.4.1",
     "@silverhand/ts-config": "2.0.3",
     "@silverhand/ts-config-react": "2.0.3",
     "@tsconfig/docusaurus": "^1.0.5",
