@@ -5,14 +5,13 @@ import TextLink from '@/components/TextLink';
 import * as styles from './index.module.scss';
 
 type Props = {
-  className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   inline?: boolean;
   termsOfUseUrl?: string;
   privacyPolicyUrl?: string;
 };
 
-const TermsLinks = ({ className, inline, termsOfUseUrl, privacyPolicyUrl }: Props) => {
+const TermsLinks = ({ inline, termsOfUseUrl, privacyPolicyUrl }: Props) => {
   const { t } = useTranslation();
 
   return (
