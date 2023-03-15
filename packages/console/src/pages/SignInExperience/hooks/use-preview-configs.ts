@@ -10,7 +10,7 @@ const usePreviewConfigs = (
   formData: SignInExperienceForm,
   isDirty: boolean,
   data?: SignInExperience,
-  timeDelay = 2000 // Render the preview after the user stops typing in the custom CSS editing box for two seconds.
+  timeDelay = 400 // Render the preview after the user stops typing in the custom CSS editing box for two seconds.
 ) => {
   const debounce = useDebounce(timeDelay);
   const { customCss, ...restFormData } = formData;
