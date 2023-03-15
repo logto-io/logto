@@ -1,7 +1,9 @@
-import type { Connector } from '@logto/schemas';
+import type { Connector, CreateConnector } from '@logto/schemas';
 import type { PostgreSql } from '@withtyped/postgres';
 import { sql } from '@withtyped/postgres';
-import type { Queryable } from '@withtyped/server';
+import type { JsonObject, Queryable } from '@withtyped/server';
+
+import { insertInto } from '#src/utils/query.js';
 
 export type ConnectorsQuery = ReturnType<typeof createConnectorsQuery>;
 
@@ -18,5 +20,10 @@ export const createConnectorsQuery = (client: Queryable<PostgreSql>) => {
     return rows;
   };
 
-  return { findAllConnectors };
+  const insertConnector = async (
+    // TODO @sijie update with-typed "JsonObject" to support "unknown" value
+    connector: Pick<CreateConnector, 'id' | 'tenantId' | 'connectorId'> & { config: JsonObject }
+  ) => client.query(insertInto(connector, 'connectors'));
+
+  return { findAllConnectors, insertConnector };
 };

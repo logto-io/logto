@@ -2,7 +2,7 @@ import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
 import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
-import { demoConnectorIds } from '@logto/shared';
+import { demoConnectors } from '@logto/shared';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
@@ -72,7 +72,8 @@ export default function connectorRoutes<T extends AuthedRouter>(
     const connectorFactories = await loadConnectorFactories();
     ctx.body = connectorFactories
       .map((connectorFactory) => transpileConnectorFactory(connectorFactory))
-      .filter(({ id }) => !demoConnectorIds.includes(id));
+      // eslint-disable-next-line unicorn/prefer-includes
+      .filter(({ id }) => !Object.values(demoConnectors).some((connectorId) => connectorId === id));
 
     return next();
   });

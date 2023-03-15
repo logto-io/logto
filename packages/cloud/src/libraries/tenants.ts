@@ -5,6 +5,7 @@ import {
 import { generateStandardId } from '@logto/core-kit';
 import type { LogtoOidcConfigType, TenantInfo, TenantModel } from '@logto/schemas';
 import {
+  cloudApiIndicator,
   createAdminTenantApplicationRole,
   AdminTenantRole,
   createTenantMachineToMachineApplication,
@@ -17,11 +18,12 @@ import {
   createAdminData,
   createAdminDataInAdminTenant,
 } from '@logto/schemas';
-import { createTenantMetadata } from '@logto/shared';
+import { createTenantMetadata, demoConnectors, GlobalValues } from '@logto/shared';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
 import { createApplicationsQueries } from '#src/queries/application.js';
+import { createConnectorsQuery } from '#src/queries/connector.js';
 import type { Queries } from '#src/queries/index.js';
 import { createRolesQuery } from '#src/queries/roles.js';
 import { createTenantsQueries } from '#src/queries/tenants.js';
@@ -68,6 +70,7 @@ export class TenantsLibrary {
     const users = createUsersQueries(transaction);
     const applications = createApplicationsQueries(transaction);
     const roles = createRolesQuery(transaction);
+    const connectors = createConnectorsQuery(transaction);
 
     /* === Start === */
     await transaction.start();
@@ -107,6 +110,23 @@ export class TenantsLibrary {
         insertInto(createDefaultSignInExperience(tenantId), SignInExperiences.table)
       ),
     ]);
+
+    // Create demo connectors
+    const globalValues = new GlobalValues();
+    const { cloudUrlSet, adminUrlSet } = globalValues;
+
+    await connectors.insertConnector({
+      id: generateStandardId(),
+      tenantId,
+      connectorId: demoConnectors.email,
+      config: {
+        appId: m2mApplication.id,
+        appSecret: m2mApplication.secret,
+        tokenEndpoint: `${adminUrlSet.endpoint.toString()}oidc/token`,
+        endpoint: `${cloudUrlSet.endpoint.toString()}api`,
+        resource: cloudApiIndicator,
+      },
+    });
 
     // Update Redirect URI for Admin Console
     await tenants.appendAdminConsoleRedirectUris(

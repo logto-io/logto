@@ -15,7 +15,7 @@ export const createServiceLogsQueries = (client: Queryable<PostgreSql>) => {
     const { rows } = await client.query<{ count: number }>(sql`
       select count(id) as count
       from service_logs
-      where tenantId = ${tenantId}
+      where tenant_id = ${tenantId}
         and type = ${type}
     `);
 
