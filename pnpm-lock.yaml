@@ -32,7 +32,7 @@ importers:
       '@logto/schemas': workspace:*
       '@logto/shared': workspace:*
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3
       '@types/inquirer': ^9.0.0
       '@types/jest': ^29.4.0
@@ -71,7 +71,7 @@ importers:
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       chalk: 5.1.2
       decamelize: 6.0.0
       dotenv: 16.0.0
@@ -115,7 +115,7 @@ importers:
       '@logto/schemas': workspace:*
       '@logto/shared': workspace:*
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/jest-config': ^2.0.1
       '@silverhand/ts-config': 2.0.3
       '@types/accepts': ^1.3.5
@@ -146,7 +146,7 @@ importers:
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@withtyped/postgres': 0.8.1_@withtyped+server@0.8.1
       '@withtyped/server': 0.8.1
       accepts: 1.3.8
@@ -194,7 +194,7 @@ importers:
       '@parcel/transformer-svg-react': 2.8.3
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/eslint-config-react': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3
       '@silverhand/ts-config-react': 2.0.3
       '@tsconfig/docusaurus': ^1.0.5
@@ -271,7 +271,7 @@ importers:
       '@parcel/transformer-svg-react': 2.8.3_@parcel+core@2.8.3
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
       '@silverhand/eslint-config-react': 2.0.1_kz2ighe3mj4zdkvq5whtl3dq4u
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@silverhand/ts-config-react': 2.0.3_typescript@4.9.4
       '@tsconfig/docusaurus': 1.0.5
@@ -344,7 +344,7 @@ importers:
       '@logto/schemas': workspace:*
       '@logto/shared': workspace:*
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3
       '@types/debug': ^4.1.7
       '@types/etag': ^1.8.1
@@ -424,7 +424,7 @@ importers:
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       aws-sdk: 2.1329.0
       chalk: 5.1.2
       clean-deep: 3.4.0
@@ -571,7 +571,7 @@ importers:
       '@logto/schemas': workspace:*
       '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3
       '@types/expect-puppeteer': ^5.0.3
       '@types/jest': ^29.4.0
@@ -600,7 +600,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@peculiar/webcrypto': 1.3.3
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/expect-puppeteer': 5.0.3
       '@types/jest': 29.4.0
@@ -623,7 +623,7 @@ importers:
     specifiers:
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3
       eslint: ^8.34.0
       lint-staged: ^13.0.0
@@ -632,7 +632,7 @@ importers:
       zod: ^3.20.2
     dependencies:
       '@logto/language-kit': link:../toolkit/language-kit
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       zod: 3.20.2
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
@@ -646,7 +646,7 @@ importers:
     specifiers:
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3
       buffer: ^5.7.1
       eslint: ^8.34.0
@@ -656,7 +656,7 @@ importers:
       zod: ^3.20.2
     dependencies:
       '@logto/language-kit': link:../toolkit/language-kit
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       zod: 3.20.2
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
@@ -675,7 +675,7 @@ importers:
       '@logto/phrases': workspace:*
       '@logto/phrases-ui': workspace:*
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3
       '@types/inquirer': ^9.0.0
       '@types/jest': ^29.4.0
@@ -704,7 +704,7 @@ importers:
       zod: 3.20.2
     devDependencies:
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/inquirer': 9.0.3
       '@types/jest': 29.4.0
@@ -728,7 +728,7 @@ importers:
       '@logto/core-kit': workspace:*
       '@logto/schemas': workspace:*
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3
       '@types/jest': ^29.4.0
       '@types/node': ^18.11.18
@@ -744,7 +744,7 @@ importers:
     dependencies:
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/schemas': link:../schemas
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       chalk: 5.1.2
       find-up: 6.3.0
       nanoid: 4.0.0
@@ -765,7 +765,7 @@ importers:
     specifiers:
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3
       '@types/node': ^18.11.18
       eslint: ^8.34.0
@@ -776,7 +776,7 @@ importers:
       zod: ^3.20.2
     dependencies:
       '@logto/language-kit': link:../language-kit
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
     optionalDependencies:
       zod: 3.20.2
     devDependencies:
@@ -795,7 +795,7 @@ importers:
       '@logto/language-kit': workspace:*
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/eslint-config-react': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3
       '@types/color': ^3.0.3
       '@types/jest': ^29.4.0
@@ -822,7 +822,7 @@ importers:
       '@jest/types': 29.3.1
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
       '@silverhand/eslint-config-react': 2.0.1_wfldc7mlde5bb3fdzap5arn6me
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@types/color': 3.0.3
       '@types/jest': 29.4.0
@@ -884,7 +884,7 @@ importers:
       '@react-spring/web': ^9.6.1
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/eslint-config-react': 2.0.1
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/jest-config': 1.2.2
       '@silverhand/ts-config': 2.0.3
       '@silverhand/ts-config-react': 2.0.3
@@ -949,7 +949,7 @@ importers:
       '@react-spring/web': 9.6.1_biqbaboplfbrettd7655fr4n2y
       '@silverhand/eslint-config': 2.0.1_kjzxg5porcw5dx54sezsklj5cy
       '@silverhand/eslint-config-react': 2.0.1_kz2ighe3mj4zdkvq5whtl3dq4u
-      '@silverhand/essentials': 2.4.0
+      '@silverhand/essentials': 2.4.1
       '@silverhand/jest-config': 1.2.2_cdjgginuefokmzmklysahvrmme
       '@silverhand/ts-config': 2.0.3_typescript@4.9.4
       '@silverhand/ts-config-react': 2.0.3_typescript@4.9.4
@@ -3654,8 +3654,8 @@ packages:
       lodash.pick: 4.4.0
     dev: true
 
-  /@silverhand/essentials/2.4.0:
-    resolution: {integrity: sha512-qwMdx6626e4oEvORMt3GoHiBC4Kmc1XNaSk9Ne2MXjljGIc5RLhdCKlcmc/kGTTBdumOD7Of075QXBiBMopheg==}
+  /@silverhand/essentials/2.4.1:
+    resolution: {integrity: sha512-o37Nsdp65LDPbk51rjcZ7/Lsrox3ag3IaOHTFkSR/TjYwwSJiKVh26ywGdb2lKacDDKraVjBuV6kRhhA0Jm19w==}
     engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^7}
 
   /@silverhand/jest-config/1.2.2_cdjgginuefokmzmklysahvrmme:
