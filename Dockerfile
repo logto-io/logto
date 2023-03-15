@@ -19,7 +19,9 @@ RUN pnpm i
 RUN pnpm -r build
 
 ### Add official connectors ###
-RUN pnpm cli connector add --official -p .
+ARG additional_connector_args
+ENV ADDITIONAL_CONNECTOR_ARGS=${additional_connector_args}
+RUN pnpm cli connector add --official $ADDITIONAL_CONNECTOR_ARGS -p .
 
 ### Prune dependencies for production ###
 RUN rm -rf node_modules packages/**/node_modules
