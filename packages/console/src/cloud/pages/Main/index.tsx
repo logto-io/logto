@@ -4,7 +4,7 @@ import { useContext, useEffect } from 'react';
 import { useHref } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { AppLoadingOffline } from '@/components/AppLoading/Offline';
+import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import Redirect from './Redirect';
@@ -40,7 +40,7 @@ const Protected = () => {
     );
   }
 
-  return <AppLoadingOffline />;
+  return <AppLoading />;
 };
 
 const Main = () => {
@@ -55,7 +55,7 @@ const Main = () => {
   }, [href, isAuthenticated, isLoading, signIn]);
 
   if (!isAuthenticated) {
-    return <AppLoadingOffline />;
+    return <AppLoading />;
   }
 
   return <Protected />;

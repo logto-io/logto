@@ -8,6 +8,7 @@ import AppContent from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
 import { AppThemeProvider } from '@/contexts/AppThemeProvider';
 import useSwrOptions from '@/hooks/use-swr-options';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import Callback from '@/pages/Callback';
 import Welcome from '@/pages/Welcome';
 
@@ -15,11 +16,14 @@ import HandleSocialCallback from '../Profile/containers/HandleSocialCallback';
 
 const Main = () => {
   const swrOptions = useSwrOptions();
+  const {
+    data: { themeAdaptionStrategy },
+  } = useUserPreferences();
 
   return (
     <BrowserRouter basename={getBasename()}>
       <SWRConfig value={swrOptions}>
-        <AppThemeProvider>
+        <AppThemeProvider strategy={themeAdaptionStrategy}>
           <AppBoundary>
             <Toast />
             <Routes>

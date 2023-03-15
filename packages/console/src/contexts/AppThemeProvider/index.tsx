@@ -1,15 +1,17 @@
 import { ThemeAdaptionStrategy } from '@logto/schemas';
-import { conditionalString } from '@silverhand/essentials';
+import { conditionalString, trySafe } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, createContext } from 'react';
+import { z } from 'zod';
 
-import useUserPreferences from '@/hooks/use-user-preferences';
+import { themeAdaptionStrategyStorageKey } from '@/consts';
 import { Theme } from '@/types/theme';
 
 import * as styles from './index.module.scss';
 
 type Props = {
   fixedTheme?: Theme;
+  strategy?: ThemeAdaptionStrategy;
   children: ReactNode;
 };
 
@@ -17,20 +19,23 @@ type AppTheme = {
   theme: Theme;
 };
 
+const defaultTheme = Theme.LightMode;
+
 const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
 const getThemeBySystemConfiguration = (): Theme =>
   darkThemeWatchMedia.matches ? Theme.DarkMode : Theme.LightMode;
 
+const getThemeAdaptionStrategyFromLocalStorage = (): ThemeAdaptionStrategy =>
+  trySafe(() =>
+    z.nativeEnum(ThemeAdaptionStrategy).parse(localStorage.getItem(themeAdaptionStrategyStorageKey))
+  ) ?? ThemeAdaptionStrategy.FollowSystem;
+
 export const AppThemeContext = createContext<AppTheme>({
-  theme: Theme.LightMode,
+  theme: defaultTheme,
 });
 
-export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
-  const [theme, setTheme] = useState<Theme>(Theme.LightMode);
-
-  const {
-    data: { themeAdaptionStrategy },
-  } = useUserPreferences();
+export const AppThemeProvider = ({ fixedTheme, strategy, children }: Props) => {
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   useEffect(() => {
     if (fixedTheme) {
@@ -39,9 +44,12 @@ export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
       return;
     }
 
-    if (themeAdaptionStrategy !== ThemeAdaptionStrategy.FollowSystem) {
+    // Note: if the preferred strategy is not available, attempt to retrieve the last saved value from localStorage.
+    const adaptionStrategy = strategy ?? getThemeAdaptionStrategyFromLocalStorage();
+
+    if (adaptionStrategy !== ThemeAdaptionStrategy.FollowSystem) {
       setTheme(
-        themeAdaptionStrategy === ThemeAdaptionStrategy.LightOnly ? Theme.LightMode : Theme.DarkMode
+        adaptionStrategy === ThemeAdaptionStrategy.LightOnly ? Theme.LightMode : Theme.DarkMode
       );
 
       return;
@@ -58,7 +66,7 @@ export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
     return () => {
       darkThemeWatchMedia.removeEventListener('change', changeTheme);
     };
-  }, [themeAdaptionStrategy, fixedTheme]);
+  }, [strategy, fixedTheme]);
 
   // Set Theme Mode
   useEffect(() => {
