@@ -181,7 +181,7 @@ const officialConnectorPrefix = '@logto/connector-';
 
 type PackageMeta = { name: string; scope: string; version: string };
 
-const fetchOfficialConnectorList = async () => {
+const fetchOfficialConnectorList = async (includingCloudConnectors = false) => {
   // See https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#get-v1search
   type FetchResult = {
     objects: Array<{
@@ -211,13 +211,15 @@ const fetchOfficialConnectorList = async () => {
     // eslint-disable-next-line no-await-in-loop
     const { objects } = await fetchList(page * 20, 20);
 
+    const excludeList = ['mock', 'kit', ...(includingCloudConnectors ? [] : ['logto'])];
+
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     packages.push(
       ...objects
         .filter(
           ({ package: { name, scope } }) =>
             scope === 'logto' &&
-            ['mock', 'kit'].every(
+            excludeList.every(
               (excluded) => !name.slice(officialConnectorPrefix.length).startsWith(excluded)
             )
         )
@@ -232,8 +234,11 @@ const fetchOfficialConnectorList = async () => {
   return packages;
 };
 
-export const addOfficialConnectors = async (instancePath: string) => {
-  const packages = await oraPromise(fetchOfficialConnectorList(), {
+export const addOfficialConnectors = async (
+  instancePath: string,
+  includingCloudConnectors = false
+) => {
+  const packages = await oraPromise(fetchOfficialConnectorList(includingCloudConnectors), {
     text: 'Fetch official connector list',
     prefixText: chalk.blue('[info]'),
   });
