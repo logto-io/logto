@@ -7,7 +7,7 @@ import { loadConnectorFactories as _loadConnectorFactories } from '@logto/cli/li
 import { connectorDirectory } from '@logto/cli/lib/constants.js';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utils.js';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
-import { findPackage } from '@logto/shared';
+import { demoConnectorIds, findPackage } from '@logto/shared';
 import { deduplicate, pick } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -20,10 +20,16 @@ export const transpileLogtoConnector = ({
   metadata,
   type,
 }: LogtoConnector): ConnectorResponse => {
+  const isDemo = demoConnectorIds.includes(dbEntry.connectorId);
+  const { config } = dbEntry;
+
   return {
     type,
     ...metadata,
-    ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'config', 'metadata'),
+    ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'metadata'),
+    isDemo,
+    // Hide demo connector config
+    config: isDemo ? {} : config,
   };
 };
 
@@ -31,7 +37,7 @@ export const transpileConnectorFactory = ({
   metadata,
   type,
 }: ConnectorFactory): ConnectorFactoryResponse => {
-  return { type, ...metadata };
+  return { type, ...metadata, isDemo: demoConnectorIds.includes(metadata.id) };
 };
 
 const checkDuplicateConnectorFactoriesId = (connectorFactories: ConnectorFactory[]) => {

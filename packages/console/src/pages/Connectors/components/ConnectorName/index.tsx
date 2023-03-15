@@ -1,4 +1,5 @@
 import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -80,11 +81,14 @@ const ConnectorName = ({ connectorGroup, isDemo = false }: Props) => {
           )
         }
         icon={<ConnectorLogo data={connector} />}
-        to={`/connectors/${
-          connector.type === ConnectorType.Social
-            ? ConnectorsTabs.Social
-            : ConnectorsTabs.Passwordless
-        }/${connector.id}`}
+        to={conditional(
+          !isDemo &&
+            `/connectors/${
+              connector.type === ConnectorType.Social
+                ? ConnectorsTabs.Social
+                : ConnectorsTabs.Passwordless
+            }/${connector.id}`
+        )}
       />
       {isDemo && <DemoTag />}
     </div>

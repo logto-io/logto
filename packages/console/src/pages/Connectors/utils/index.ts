@@ -19,6 +19,7 @@ export const getConnectorGroups = <
         ...previous,
         {
           id: item.id, // Take first connector's id as groupId, only used for indexing.
+          isDemo: item.isDemo,
           name: item.name,
           logo: item.logo,
           logoDark: item.logoDark,
