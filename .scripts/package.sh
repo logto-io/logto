@@ -25,7 +25,8 @@ packages/**/*.config.js packages/**/*.config.ts packages/**/tsconfig*.json \
 -prune -exec rm -rf {} +
 
 # Add official connectors
-pnpm cli connector add --official -p .
+cloud_option=$( [[ "$IS_CLOUD" =~ ^(1|true|y|yes|yep|yeah)$ ]] && echo "--cloud" || echo "" )
+pnpm cli connector add --official $cloud_option -p .
 
 echo Tar
 cd ..
