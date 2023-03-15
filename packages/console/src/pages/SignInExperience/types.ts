@@ -12,7 +12,8 @@ export type SignUpForm = Omit<SignUp, 'identifiers'> & {
   identifier: SignUpIdentifier;
 };
 
-export type SignInExperienceForm = Omit<SignInExperience, 'signUp'> & {
+export type SignInExperienceForm = Omit<SignInExperience, 'signUp' | 'customCss'> & {
+  customCss?: string; // Code editor components can not properly handle null value, manually transform null to undefined instead.
   signUp?: SignUpForm;
   createAccountEnabled: boolean;
 };

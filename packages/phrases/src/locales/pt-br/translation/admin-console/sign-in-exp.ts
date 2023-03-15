@@ -44,9 +44,11 @@ const sign_in_exp = {
   },
   custom_css: {
     title: 'CUSTOM CSS', // UNTRANSLATED
-    css_code_editor_title: 'Custom CSS to change UI', // UNTRANSLATED
-    css_code_editor_description: 'Description - Doc. <a>{{link}}</a>', // UNTRANSLATED
-    css_code_editor_description_link_content: 'Readme', // UNTRANSLATED
+    css_code_editor_title: 'Personalize your UI with Custom CSS', // UNTRANSLATED
+    css_code_editor_description: 'See the example of Custom CSS. <a>{{link}}</a>', // UNTRANSLATED
+    css_code_editor_description_link_content: 'Learn more', // UNTRANSLATED
+    css_code_editor_content_placeholder:
+      '// Enter your Custom CSS code to tailor the styles of color, font, components, and layout... of Sign-in, Create-account, Forgot-Password, and other pages to your exact specifications. Express your creativity and make your UI stand out.', // UNTRANSLATED
   },
   sign_up_and_sign_in: {
     identifiers_email: 'Endereço de e-mail',
