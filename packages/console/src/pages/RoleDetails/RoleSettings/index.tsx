@@ -46,7 +46,11 @@ const RoleSettings = () => {
         onDiscard={reset}
         onSubmit={onSubmit}
       >
-        <FormCard title="role_details.settings" description="role_details.settings_description">
+        <FormCard
+          title="role_details.settings"
+          description="role_details.settings_description"
+          learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles"
+        >
           <FormField isRequired title="role_details.field_name">
             <TextInput {...register('name', { required: true })} hasError={Boolean(errors.name)} />
           </FormField>

@@ -24,7 +24,7 @@ const GiftModal = ({ isOpen, onClose }: Props) => {
       onRequestClose={onClose}
     >
       <ModalLayout
-        isTitleWordWrapEnabled
+        isWordWrapEnabled
         title="cloud.gift.title"
         className={styles.content}
         onClose={onClose}
