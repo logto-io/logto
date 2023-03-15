@@ -5,6 +5,7 @@ import { parseDsn } from '#src/utils/postgres.js';
 
 import { createApplicationsQueries } from './application.js';
 import { createConnectorsQuery } from './connector.js';
+import { createServiceLogsQueries } from './service-logs.js';
 import { createTenantsQueries } from './tenants.js';
 import { createUsersQueries } from './users.js';
 
@@ -16,4 +17,5 @@ export class Queries {
   public readonly users = createUsersQueries(this.client);
   public readonly applications = createApplicationsQueries(this.client);
   public readonly connectors = createConnectorsQuery(this.client);
+  public readonly serviceLogs = createServiceLogsQueries(this.client);
 }

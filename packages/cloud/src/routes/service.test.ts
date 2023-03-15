@@ -1,4 +1,4 @@
-import { CloudScope } from '@logto/schemas';
+import { CloudScope, ServiceLogType } from '@logto/schemas';
 
 import { buildRequestAuthContext, createHttpContext } from '#src/test-utils/context.js';
 import { noop } from '#src/test-utils/function.js';
@@ -28,6 +28,33 @@ describe('POST /api/services/send-email', () => {
     ).rejects.toMatchObject({ status: 403 });
   });
 
+  it('should throw 403 when tenant id not found', async () => {
+    await expect(
+      router.routes()(
+        buildRequestAuthContext('POST /services/send-email', {
+          body: { data: mockSendMessagePayload },
+        })([CloudScope.SendEmail]),
+        noop,
+        createHttpContext()
+      )
+    ).rejects.toMatchObject({ status: 403 });
+  });
+
+  it('should throw 403 when insufficient funds', async () => {
+    library.getTenantIdFromApplicationId.mockResolvedValueOnce('tenantId');
+    library.getTenantBalanceForType.mockResolvedValueOnce(0);
+
+    await expect(
+      router.routes()(
+        buildRequestAuthContext('POST /services/send-email', {
+          body: { data: mockSendMessagePayload },
+        })([CloudScope.SendEmail]),
+        noop,
+        createHttpContext()
+      )
+    ).rejects.toMatchObject({ status: 403 });
+  });
+
   it('should return 201', async () => {
     library.getTenantIdFromApplicationId.mockResolvedValueOnce('tenantId');
 
@@ -38,6 +65,7 @@ describe('POST /api/services/send-email', () => {
       async ({ status }) => {
         expect(status).toBe(201);
         expect(library.sendEmail).toBeCalledWith(mockSendMessagePayload);
+        expect(library.addLog).toBeCalledWith('tenantId', ServiceLogType.SendEmail);
       },
       createHttpContext()
     );
