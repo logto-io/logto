@@ -96,8 +96,8 @@ const useSmartInputField = ({ _defaultType, defaultValue, enabledTypes }: Props)
     [defaultType, currentType, enabledTypeSet]
   );
 
-  const onCountryCodeChange = useCallback<ChangeEventHandler<HTMLSelectElement>>(
-    ({ target: { value } }) => {
+  const onCountryCodeChange = useCallback(
+    (value: string) => {
       if (currentType === SignInIdentifier.Phone) {
         const code = value.replace(/\D/g, '');
         setCountryCode(code);

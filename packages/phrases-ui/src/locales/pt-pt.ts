@@ -7,6 +7,7 @@ const translation = {
     email: 'Email',
     phone_number: 'Telefone',
     confirm_password: 'Confirmar palavra-passe',
+    search_region_code: 'Procurar código de região',
   },
   secondary: {
     social_bind_with:

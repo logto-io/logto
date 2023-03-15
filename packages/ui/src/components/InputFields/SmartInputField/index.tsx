@@ -75,8 +75,9 @@ const SmartInputField = (
         <AnimatedPrefix isVisible={isPrefixVisible}>
           <CountryCodeSelector
             value={countryCode}
-            onChange={(event) => {
-              onCountryCodeChange(event);
+            inputRef={innerRef.current}
+            onChange={(value) => {
+              onCountryCodeChange(value);
               innerRef.current?.focus();
             }}
           />

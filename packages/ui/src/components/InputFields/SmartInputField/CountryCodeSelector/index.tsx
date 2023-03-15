@@ -1,40 +1,62 @@
+import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import type { ChangeEventHandler, ForwardedRef } from 'react';
-import { useMemo, forwardRef } from 'react';
+import type { ForwardedRef } from 'react';
+import { useState, useMemo, forwardRef } from 'react';
 
 import DownArrowIcon from '@/assets/icons/arrow-down.svg';
+import { onKeyDownHandler } from '@/utils/a11y';
 import { getCountryList, getDefaultCountryCallingCode } from '@/utils/country-code';
 
+import CountryCodeDropdown from './CountryCodeDropdown';
 import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
   value?: string;
-  onChange?: ChangeEventHandler<HTMLSelectElement>;
+  inputRef?: Nullable<HTMLInputElement>;
+  onChange?: (value: string) => void;
 };
 
 const CountryCodeSelector = (
-  { className, value, onChange }: Props,
+  { className, value, inputRef, onChange }: Props,
   ref: ForwardedRef<HTMLDivElement>
 ) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const countryList = useMemo(getCountryList, []);
   const defaultCountCode = useMemo(getDefaultCountryCallingCode, []);
+
+  const showDropDown = () => {
+    setIsDropdownOpen(true);
+  };
+
+  const hideDropDown = () => {
+    setIsDropdownOpen(false);
+  };
 
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const countryCode = value || defaultCountCode;
 
   return (
-    <div ref={ref} className={classNames(styles.countryCodeSelector, className)}>
+    <div
+      ref={ref}
+      className={classNames(styles.countryCodeSelector, className)}
+      role="button"
+      tabIndex={0}
+      onClick={showDropDown}
+      onKeyDown={onKeyDownHandler({
+        Enter: showDropDown,
+      })}
+    >
       <span>{`+${countryCode}`}</span>
       <DownArrowIcon />
-
-      <select name="countryCode" autoComplete="country-code" onChange={onChange}>
-        {countryList.map(({ countryCallingCode, countryCode }) => (
-          <option key={countryCode} value={countryCallingCode}>
-            {`+${countryCallingCode}`}
-          </option>
-        ))}
-      </select>
+      <CountryCodeDropdown
+        inputRef={inputRef}
+        isOpen={isDropdownOpen}
+        countryCode={countryCode}
+        countryList={countryList}
+        onClose={hideDropDown}
+        onChange={onChange}
+      />
     </div>
   );
 };
