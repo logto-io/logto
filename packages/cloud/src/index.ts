@@ -1,6 +1,6 @@
 import { cloudApiIndicator } from '@logto/schemas';
 import type { RequestContext } from '@withtyped/server';
-import createServer, { compose, withRequest } from '@withtyped/server';
+import createServer, { withBody, compose, withRequest } from '@withtyped/server';
 import dotenv from 'dotenv';
 import { findUp } from 'find-up';
 
@@ -25,6 +25,7 @@ const { listen } = createServer({
       withPathname(
         '/api',
         compose<RequestContext>()
+          .and(withBody())
           .and(withAuth({ endpoint: EnvSet.global.logtoEndpoint, audience: cloudApiIndicator }))
           .and(router.routes())
       )
