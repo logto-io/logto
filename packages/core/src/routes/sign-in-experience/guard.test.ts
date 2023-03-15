@@ -20,6 +20,7 @@ const tenantContext = new MockTenant(
       }),
     },
   },
+  undefined,
   {
     signInExperiences: {
       validateLanguageInfo,

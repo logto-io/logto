@@ -20,13 +20,11 @@ export default function socialRoutes<T extends AuthedMeRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
   const {
-    libraries: {
-      connectors: { getLogtoConnectors, getLogtoConnectorById },
-    },
     queries: {
       users: { findUserById, updateUserById, deleteUserIdentity, hasUserWithIdentity },
       signInExperiences: { findDefaultSignInExperience },
     },
+    connectors: { getLogtoConnectors, getLogtoConnectorById },
   } = tenant;
 
   router.get('/social/connectors', async (ctx, next) => {

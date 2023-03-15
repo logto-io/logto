@@ -8,14 +8,14 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
 export default function signInExperiencesRoutes<T extends AuthedRouter>(
-  ...[router, { queries, libraries }]: RouterInitArgs<T>
+  ...[router, { queries, libraries, connectors }]: RouterInitArgs<T>
 ) {
   const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;
   const { deleteConnectorById } = queries.connectors;
   const {
     signInExperiences: { validateLanguageInfo },
-    connectors: { getLogtoConnectors },
   } = libraries;
+  const { getLogtoConnectors } = connectors;
 
   /**
    * As we only support single signInExperience settings for V1

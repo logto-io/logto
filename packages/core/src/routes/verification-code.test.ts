@@ -23,13 +23,9 @@ const passcodeQueries = await mockEsmWithActual('#src/queries/passcode.js', () =
 const verificationCodeRoutes = await pickDefault(import('./verification-code.js'));
 
 describe('Generic verification code flow triggered by management API', () => {
-  const tenantContext = new MockTenant(
-    undefined,
-    { passcodes: passcodeQueries },
-    {
-      passcodes: passcodeLibraries,
-    }
-  );
+  const tenantContext = new MockTenant(undefined, { passcodes: passcodeQueries }, undefined, {
+    passcodes: passcodeLibraries,
+  });
   const verificationCodeRequest = createRequester({
     authedRoutes: verificationCodeRoutes,
     tenantContext,

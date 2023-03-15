@@ -149,7 +149,7 @@ const parseUserProfile = async (
 export default async function submitInteraction(
   interaction: VerifiedInteractionResult,
   ctx: WithInteractionDetailsContext,
-  { provider, libraries, queries }: TenantContext,
+  { provider, libraries, connectors, queries }: TenantContext,
   log?: LogEntry
 ) {
   const { hasActiveUsers, findUserById, updateUserById } = queries.users;
@@ -157,7 +157,6 @@ export default async function submitInteraction(
 
   const {
     users: { generateUserId, insertUser },
-    connectors,
   } = libraries;
   const { event, profile } = interaction;
 

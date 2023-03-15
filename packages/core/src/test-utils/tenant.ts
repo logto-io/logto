@@ -1,5 +1,7 @@
 import { createMockPool, createMockQueryResult } from 'slonik';
 
+import type { ConnectorLibrary } from '#src/libraries/connector.js';
+import { createConnectorLibrary } from '#src/libraries/connector.js';
 import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -46,15 +48,18 @@ export class MockTenant implements TenantContext {
   public id = 'mock_id';
   public envSet = mockEnvSet;
   public queries: Queries;
+  public connectors: ConnectorLibrary;
   public libraries: Libraries;
 
   constructor(
     public provider = createMockProvider(),
     queriesOverride?: Partial2<Queries>,
+    connectorsOverride?: Partial<ConnectorLibrary>,
     librariesOverride?: Partial2<Libraries>
   ) {
     this.queries = new MockQueries(queriesOverride);
-    this.libraries = new Libraries(this.queries);
+    this.connectors = { ...createConnectorLibrary(this.queries), ...connectorsOverride };
+    this.libraries = new Libraries(this.id, this.queries, this.connectors);
     this.setPartial('libraries', librariesOverride);
   }
 

@@ -76,24 +76,24 @@ const tenantContext = new MockTenant(
   undefined,
   { connectors: connectorQueries },
   {
-    signInExperiences: { removeUnavailableSocialConnectorTargets },
-    connectors: {
-      getLogtoConnectors,
-      getLogtoConnectorById: async (connectorId: string) => {
-        const connectors = await getLogtoConnectors();
-        const connector = connectors.find(({ dbEntry }) => dbEntry.id === connectorId);
-        assertThat(
-          connector,
-          new RequestError({
-            code: 'entity.not_found',
-            connectorId,
-            status: 404,
-          })
-        );
+    getLogtoConnectors,
+    getLogtoConnectorById: async (connectorId: string) => {
+      const connectors = await getLogtoConnectors();
+      const connector = connectors.find(({ dbEntry }) => dbEntry.id === connectorId);
+      assertThat(
+        connector,
+        new RequestError({
+          code: 'entity.not_found',
+          connectorId,
+          status: 404,
+        })
+      );
 
-        return connector;
-      },
+      return connector;
     },
+  },
+  {
+    signInExperiences: { removeUnavailableSocialConnectorTargets },
   }
 );
 

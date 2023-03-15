@@ -1,27 +1,22 @@
-import type { ConnectorMetadata } from '@logto/connector-kit';
-import { ConnectorType } from '@logto/connector-kit';
 import { isBuiltInLanguageTag } from '@logto/phrases-ui';
 import { adminTenantId } from '@logto/schemas';
-import { object, string } from 'zod';
+import { conditionalArray } from '@silverhand/essentials';
+import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import detectLanguage from '#src/i18n/detect-language.js';
+import { guardFullSignInExperience } from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(
-  ...[router, { queries, libraries, id }]: RouterInitArgs<T>
+  ...[router, { libraries, id }]: RouterInitArgs<T>
 ) {
   const {
-    customPhrases: { findAllCustomLanguageTags },
-    signInExperiences: { findDefaultSignInExperience },
-  } = queries;
-  const {
-    signInExperiences: { getSignInExperience },
-    connectors: { getLogtoConnectors },
-    phrases: { getPhrases },
+    signInExperiences: { getSignInExperience, getFullSignInExperience },
+    phrases: { getPhrases, getAllCustomLanguageTags },
   } = libraries;
 
   if (id === adminTenantId) {
@@ -38,45 +33,24 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
     });
   }
 
-  router.get('/.well-known/sign-in-exp', async (ctx, next) => {
-    const [signInExperience, logtoConnectors] = await Promise.all([
-      getSignInExperience(),
-      getLogtoConnectors(),
-    ]);
+  router.get(
+    '/.well-known/sign-in-exp',
+    koaGuard({ response: guardFullSignInExperience, status: 200 }),
+    async (ctx, next) => {
+      ctx.body = await getFullSignInExperience();
 
-    const forgotPassword = {
-      phone: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
-      email: logtoConnectors.some(({ type }) => type === ConnectorType.Email),
-    };
-
-    const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
-      Array<ConnectorMetadata & { id: string }>
-    >((previous, connectorTarget) => {
-      const connectors = logtoConnectors.filter(
-        ({ metadata: { target } }) => target === connectorTarget
-      );
-
-      return [
-        ...previous,
-        ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
-      ];
-    }, []);
-
-    ctx.body = {
-      ...signInExperience,
-      socialConnectors,
-      forgotPassword,
-    };
-
-    return next();
-  });
+      return next();
+    }
+  );
 
   router.get(
     '/.well-known/phrases',
     koaGuard({
-      query: object({
-        lng: string().optional(),
+      query: z.object({
+        lng: z.string().optional(),
       }),
+      response: z.record(z.string().or(z.record(z.unknown()))),
+      status: 200,
     }),
     async (ctx, next) => {
       const {
@@ -85,12 +59,14 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
 
       const {
         languageInfo: { autoDetect, fallbackLanguage },
-      } = await findDefaultSignInExperience();
+      } = await getSignInExperience();
 
-      const targetLanguage = lng ? [lng] : [];
-      const detectedLanguages = autoDetect ? detectLanguage(ctx) : [];
-      const acceptableLanguages = [...targetLanguage, ...detectedLanguages, fallbackLanguage];
-      const customLanguages = await findAllCustomLanguageTags();
+      const acceptableLanguages = conditionalArray<string | string[]>(
+        lng,
+        autoDetect && detectLanguage(ctx),
+        fallbackLanguage
+      );
+      const customLanguages = await getAllCustomLanguageTags();
       const language =
         acceptableLanguages.find(
           (tag) => isBuiltInLanguageTag(tag) || customLanguages.includes(tag)

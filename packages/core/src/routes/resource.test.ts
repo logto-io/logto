@@ -52,7 +52,7 @@ mockEsm('@logto/core-kit', () => ({
   buildIdGenerator: () => () => 'randomId',
 }));
 
-const tenantContext = new MockTenant(undefined, { scopes, resources }, libraries);
+const tenantContext = new MockTenant(undefined, { scopes, resources }, undefined, libraries);
 
 const resourceRoutes = await pickDefault(import('./resource.js'));
 

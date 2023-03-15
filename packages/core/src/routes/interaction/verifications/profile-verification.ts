@@ -58,7 +58,7 @@ const verifyProfileIdentifiers = (
 };
 
 const verifyProfileNotRegisteredByOtherUserAccount = async (
-  { queries, libraries }: TenantContext,
+  { queries, connectors }: TenantContext,
   { username, email, phone, connectorId }: Profile,
   identifiers: Identifier[] = []
 ) => {
@@ -97,7 +97,7 @@ const verifyProfileNotRegisteredByOtherUserAccount = async (
   if (connectorId) {
     const {
       metadata: { target },
-    } = await libraries.connectors.getLogtoConnectorById(connectorId);
+    } = await connectors.getLogtoConnectorById(connectorId);
 
     const socialIdentifier = identifiers.find(
       (identifier): identifier is SocialIdentifier => identifier.key === 'social'

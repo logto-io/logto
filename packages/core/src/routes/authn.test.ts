@@ -62,6 +62,7 @@ const usersLibraries = {
 const tenantContext = new MockTenant(
   createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
   undefined,
+  undefined,
   { users: usersLibraries, socials: socialsLibraries }
 );
 const { createRequester } = await import('#src/utils/test-utils.js');

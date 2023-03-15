@@ -19,11 +19,9 @@ const tenantContext = new MockTenant(
     },
   },
   {
-    connectors: {
-      getLogtoConnectorById: jest.fn().mockResolvedValue({
-        metadata: { target: 'logto' },
-      }),
-    },
+    getLogtoConnectorById: jest.fn().mockResolvedValue({
+      metadata: { target: 'logto' },
+    }),
   }
 );
 const verifyProfile = await pickDefault(import('./profile-verification.js'));

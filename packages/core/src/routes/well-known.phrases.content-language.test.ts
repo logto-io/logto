@@ -4,6 +4,7 @@ import { pickDefault } from '@logto/shared/esm';
 
 import { trTrTag, zhCnTag, zhHkTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
+import { invalidateWellKnownCache } from '#src/caches/well-known.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -29,6 +30,7 @@ const tenantContext = new MockTenant(
     customPhrases: { findAllCustomLanguageTags: async () => [trTrTag, zhCnTag] },
     signInExperiences: { findDefaultSignInExperience },
   },
+  undefined,
   { phrases: { getPhrases: jest.fn().mockResolvedValue(en) } }
 );
 
@@ -39,7 +41,8 @@ const phraseRequest = createRequester({
   tenantContext,
 });
 
-afterEach(() => {
+afterEach(async () => {
+  await invalidateWellKnownCache(tenantContext.id);
   jest.clearAllMocks();
 });
 

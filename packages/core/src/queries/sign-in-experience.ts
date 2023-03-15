@@ -16,5 +16,12 @@ export const createSignInExperienceQueries = (pool: CommonQueryMethods) => {
   const findDefaultSignInExperience = async () =>
     buildFindEntityByIdWithPool(pool)(SignInExperiences)(id);
 
-  return { updateDefaultSignInExperience, findDefaultSignInExperience };
+  return {
+    updateDefaultSignInExperience,
+    /**
+     * NOTE: Use `getSignInExperience()` from sign-in experience library
+     * if possible since that function leverages cache.
+     */
+    findDefaultSignInExperience,
+  };
 };

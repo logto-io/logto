@@ -11,7 +11,9 @@ const { mockEsm } = createMockUtils(jest);
 
 const getUserInfoByAuthCode = jest.fn().mockResolvedValue({ id: 'foo' });
 
-const tenant = new MockTenant(undefined, undefined, { socials: { getUserInfoByAuthCode } });
+const tenant = new MockTenant(undefined, undefined, undefined, {
+  socials: { getUserInfoByAuthCode },
+});
 
 mockEsm('#src/libraries/connector.js', () => ({
   getLogtoConnectorById: jest.fn().mockResolvedValue({

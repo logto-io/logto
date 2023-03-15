@@ -3,12 +3,12 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import type { UserIdentity } from '../types/index.js';
 
 export default async function findUserByIdentifier(
-  { queries, libraries }: TenantContext,
+  { queries, connectors }: TenantContext,
   identity: UserIdentity
 ) {
   const { findUserByEmail, findUserByUsername, findUserByPhone, findUserByIdentity } =
     queries.users;
-  const { getLogtoConnectorById } = libraries.connectors;
+  const { getLogtoConnectorById } = connectors;
 
   if ('username' in identity) {
     return findUserByUsername(identity.username);

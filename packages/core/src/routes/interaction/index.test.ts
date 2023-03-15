@@ -101,21 +101,21 @@ const tenantContext = new MockTenant(
   createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
   undefined,
   {
-    connectors: {
-      getLogtoConnectorById: async (connectorId: string) => {
-        const connector = await getLogtoConnectorByIdHelper(connectorId);
+    getLogtoConnectorById: async (connectorId: string) => {
+      const connector = await getLogtoConnectorByIdHelper(connectorId);
 
-        if (connector.type !== ConnectorType.Social) {
-          throw new RequestError({
-            code: 'entity.not_found',
-            status: 404,
-          });
-        }
+      if (connector.type !== ConnectorType.Social) {
+        throw new RequestError({
+          code: 'entity.not_found',
+          status: 404,
+        });
+      }
 
-        // @ts-expect-error
-        return connector as LogtoConnector;
-      },
+      // @ts-expect-error
+      return connector as LogtoConnector;
     },
+  },
+  {
     signInExperiences: {
       getSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
     },

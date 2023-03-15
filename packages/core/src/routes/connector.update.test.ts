@@ -44,10 +44,10 @@ const tenantContext = new MockTenant(
   undefined,
   { connectors: { updateConnector } },
   {
-    connectors: {
-      getLogtoConnectors,
-      getLogtoConnectorById,
-    },
+    getLogtoConnectors,
+    getLogtoConnectorById,
+  },
+  {
     signInExperiences: {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       removeUnavailableSocialConnectorTargets: async () => {},

@@ -1,6 +1,9 @@
 import type { SignInExperience, CreateSignInExperience } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
+import { MockTenant } from '#src/test-utils/tenant.js';
+import { createRequester } from '#src/utils/test-utils.js';
+
 import {
   mockFacebookConnector,
   mockGithubConnector,
@@ -17,8 +20,6 @@ import {
   mockPrivacyPolicyUrl,
   mockDemoSocialConnector,
 } from '#src/__mocks__/index.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
-import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -56,15 +57,9 @@ const mockDeleteConnectorById = jest.fn();
 
 const tenantContext = new MockTenant(
   undefined,
-  {
-    signInExperiences,
-    customPhrases: { findAllCustomLanguageTags: async () => [] },
-    connectors: { deleteConnectorById: mockDeleteConnectorById },
-  },
-  {
-    signInExperiences: { validateLanguageInfo },
-    connectors: { getLogtoConnectors: mockGetLogtoConnectors },
-  }
+  { signInExperiences, customPhrases: { findAllCustomLanguageTags: async () => [] } },
+  { getLogtoConnectors: async () => logtoConnectors },
+  { signInExperiences: { validateLanguageInfo } }
 );
 
 const signInExperiencesRoutes = await pickDefault(import('./index.js'));
