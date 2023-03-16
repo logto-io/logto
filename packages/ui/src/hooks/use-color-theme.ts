@@ -1,4 +1,5 @@
 import { absoluteDarken, absoluteLighten } from '@logto/core-kit';
+import { Theme } from '@logto/schemas';
 import color from 'color';
 import { useEffect, useContext } from 'react';
 
@@ -34,7 +35,7 @@ const useColorTheme = () => {
 
     const lightPrimary = color(primaryColor);
 
-    if (theme === 'light') {
+    if (theme === Theme.Light) {
       const lightColorLibrary = generateLightColorLibrary(lightPrimary);
 
       for (const [key, value] of Object.entries(lightColorLibrary)) {

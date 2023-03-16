@@ -1,3 +1,4 @@
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
@@ -20,6 +21,7 @@ type Props = {
 
 const LogtoSignature = ({ className }: Props) => {
   const { theme } = useContext(PageContext);
+  const LogtoLogo = theme === Theme.Light ? LogtoLogoLight : LogtoLogtoDark;
 
   return (
     <a
@@ -31,11 +33,7 @@ const LogtoSignature = ({ className }: Props) => {
     >
       <span className={styles.text}>Powered by</span>
       <LogtoLogoShadow className={styles.staticIcon} />
-      {theme === 'light' ? (
-        <LogtoLogoLight className={styles.highlightIcon} />
-      ) : (
-        <LogtoLogtoDark className={styles.highlightIcon} />
-      )}
+      <LogtoLogo className={styles.highlightIcon} />
     </a>
   );
 };

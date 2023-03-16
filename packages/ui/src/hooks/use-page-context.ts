@@ -1,8 +1,9 @@
+import { Theme } from '@logto/schemas';
 import { noop } from '@silverhand/essentials';
 import { useState, useMemo, createContext } from 'react';
 import { isMobile } from 'react-device-detect';
 
-import type { SignInExperienceResponse, Platform, Theme } from '@/types';
+import type { SignInExperienceResponse, Platform } from '@/types';
 import { parseQueryParameters } from '@/utils';
 
 export type Context = {
@@ -23,7 +24,7 @@ export type Context = {
 
 export const PageContext = createContext<Context>({
   toast: '',
-  theme: 'light',
+  theme: Theme.Light,
   loading: false,
   platform: isMobile ? 'mobile' : 'web',
   termsAgreement: false,
@@ -40,7 +41,7 @@ export const PageContext = createContext<Context>({
 const usePageContext = () => {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState('');
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>(Theme.Light);
   const [platform, setPlatform] = useState<Platform>(isMobile ? 'mobile' : 'web');
   const [experienceSettings, setExperienceSettings] = useState<SignInExperienceResponse>();
   const [termsAgreement, setTermsAgreement] = useState(false);

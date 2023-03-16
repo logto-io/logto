@@ -1,3 +1,4 @@
+import { Theme } from '@logto/schemas';
 import { useContext } from 'react';
 import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +31,7 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage, isRoo
     <StaticPageLayout>
       {!isRootPath && <NavBar />}
       <div className={styles.container}>
-        {theme === 'light' ? <EmptyState /> : <EmptyStateDark />}
+        {theme === Theme.Light ? <EmptyState /> : <EmptyStateDark />}
         <div className={styles.title}>{t(title)}</div>
         {errorMessage && <div className={styles.message}>{String(errorMessage)}</div>}
       </div>

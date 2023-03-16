@@ -1,4 +1,4 @@
-import type { SignInExperience, ConnectorMetadata, SignInIdentifier } from '@logto/schemas';
+import type { SignInExperience, ConnectorMetadata, SignInIdentifier, Theme } from '@logto/schemas';
 
 export enum UserFlow {
   signIn = 'sign-in',
@@ -14,9 +14,6 @@ export enum SearchParameters {
 }
 
 export type Platform = 'web' | 'mobile';
-
-// TODO: @simeng, @sijie, @charles should we combine this with admin console?
-export type Theme = 'dark' | 'light';
 
 export type VerificationCodeIdentifier = SignInIdentifier.Email | SignInIdentifier.Phone;
 

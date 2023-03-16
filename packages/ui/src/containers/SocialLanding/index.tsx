@@ -1,3 +1,4 @@
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
@@ -21,7 +22,7 @@ const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => 
       <div className={styles.connector}>
         {connector ? (
           <img
-            src={theme === 'dark' ? connector.logoDark ?? connector.logo : connector.logo}
+            src={theme === Theme.Dark ? connector.logoDark ?? connector.logo : connector.logo}
             alt="logo"
           />
         ) : (
