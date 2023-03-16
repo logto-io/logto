@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, createContext } from 'react';
 
 import useUserPreferences from '@/hooks/use-user-preferences';
-import { ThemePolicy } from '@/types/appearance-mode';
+import { DynamicAppearanceMode } from '@/types/appearance-mode';
 
 import * as styles from './index.module.scss';
 
@@ -41,7 +41,7 @@ export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
       return;
     }
 
-    if (appearanceMode !== ThemePolicy.System) {
+    if (appearanceMode !== DynamicAppearanceMode.System) {
       setTheme(appearanceMode);
 
       return;

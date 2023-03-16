@@ -2,11 +2,11 @@ import { Theme } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import { appearanceModeStorageKey } from '@/consts';
-import { appearanceModeGuard, ThemePolicy } from '@/types/appearance-mode';
+import { appearanceModeGuard, DynamicAppearanceMode } from '@/types/appearance-mode';
 import type { AppearanceMode } from '@/types/appearance-mode';
 
 export const getTheme = (appearanceMode: AppearanceMode): Theme => {
-  if (appearanceMode !== ThemePolicy.System) {
+  if (appearanceMode !== DynamicAppearanceMode.System) {
     return appearanceMode;
   }
 
@@ -20,4 +20,4 @@ export const getThemeFromLocalStorage = () => getTheme(getAppearanceModeFromLoca
 
 export const getAppearanceModeFromLocalStorage = (): AppearanceMode =>
   trySafe(() => appearanceModeGuard.parse(localStorage.getItem(appearanceModeStorageKey))) ??
-  ThemePolicy.System;
+  DynamicAppearanceMode.System;

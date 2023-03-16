@@ -19,7 +19,7 @@ import UserInfoCard from '@/components/UserInfoCard';
 import { getSignOutRedirectPathname } from '@/consts';
 import useCurrentUser from '@/hooks/use-current-user';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import { ThemePolicy } from '@/types/appearance-mode';
+import { DynamicAppearanceMode } from '@/types/appearance-mode';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import SubMenu from '../SubMenu';
@@ -99,7 +99,7 @@ const UserInfo = () => {
           title="menu.appearance.label"
           options={[
             {
-              value: ThemePolicy.System,
+              value: DynamicAppearanceMode.System,
               title: t('menu.appearance.system'),
             },
             {
