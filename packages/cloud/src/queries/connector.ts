@@ -22,7 +22,10 @@ export const createConnectorsQuery = (client: Queryable<PostgreSql>) => {
 
   const insertConnector = async (
     // TODO @sijie update with-typed "JsonObject" to support "unknown" value
-    connector: Pick<CreateConnector, 'id' | 'tenantId' | 'connectorId'> & { config: JsonObject }
+    connector: Pick<CreateConnector, 'id' | 'tenantId' | 'connectorId'> & {
+      config: JsonObject;
+      metadata?: JsonObject;
+    }
   ) => client.query(insertInto(connector, 'connectors'));
 
   return { findAllConnectors, insertConnector };
