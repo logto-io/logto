@@ -1,21 +1,29 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  display: flex;
-  align-items: center;
-  padding: _.unit(2);
+  position: relative;
   margin-left: _.unit(4);
-  border-radius: 8px;
-  transition: background-color 0.2s ease-in-out;
-  user-select: none;
   cursor: pointer;
 
-  &:hover {
-    background-color: var(--color-hover-variant);
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    z-index: 1;
+    transition: background 0.2s ease-in-out;
   }
 
-  &.active {
-    background-color: var(--color-focused-variant);
+  &:hover::after {
+    background: var(--color-hover);
+  }
+
+  &.active::after {
+    background: var(--color-focused);
   }
 }
 

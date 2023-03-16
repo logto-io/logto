@@ -10,21 +10,13 @@
 }
 
 .header {
-  padding: _.unit(6);
+  padding: _.unit(6) _.unit(8);
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   > *:not(:first-child) {
     margin-left: _.unit(6);
-  }
-
-  .avatar {
-    margin-left: _.unit(2);
-    border-radius: 8px;
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
   }
 
   .metadata {

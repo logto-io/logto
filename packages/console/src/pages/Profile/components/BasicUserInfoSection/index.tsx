@@ -55,7 +55,7 @@ const BasicUserInfoSection = ({ user, onUpdate }: Props) => {
             key: 'avatar',
             label: 'profile.settings.avatar',
             value: avatar,
-            renderer: (value) => <UserAvatar url={value} size="large" />,
+            renderer: () => <UserAvatar size="large" user={user} />,
             action: {
               name: 'profile.change',
               handler: () => {

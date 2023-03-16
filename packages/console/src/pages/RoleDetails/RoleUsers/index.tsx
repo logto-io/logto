@@ -90,15 +90,19 @@ const RoleUsers = () => {
             title: t('role_details.users.name_column'),
             dataIndex: 'name',
             colSpan: 5,
-            render: ({ id, name, avatar }) => (
-              <ItemPreview
-                title={name ?? t('users.unnamed')}
-                subtitle={id}
-                icon={<UserAvatar className={styles.avatar} url={avatar} />}
-                to={`/users/${id}`}
-                size="compact"
-              />
-            ),
+            render: (user) => {
+              const { id, name } = user;
+
+              return (
+                <ItemPreview
+                  title={name ?? t('users.unnamed')}
+                  subtitle={id}
+                  icon={<UserAvatar user={user} />}
+                  to={`/users/${id}`}
+                  size="compact"
+                />
+              );
+            },
           },
           {
             title: t('role_details.users.app_column'),

@@ -1,18 +1,67 @@
-.avatar {
-  border-radius: 6px;
+.wrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &.micro {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+  }
 
   &.small {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
   }
 
   &.medium {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
   }
 
   &.large {
     width: 40px;
     height: 40px;
+  }
+
+  &.xlarge {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  color: #fff;
+  font: var(--font-headline-3);
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  transform-origin: 0 0;
+
+  &.micro {
+    transform: scale(0.416);
+  }
+
+  &.small {
+    transform: scale(0.5);
+  }
+
+  &.medium {
+    transform: scale(0.667);
+  }
+
+  &.large {
+    transform: scale(0.833);
+  }
+
+  &.xlarge {
+    transform: scale(1.25);
   }
 }

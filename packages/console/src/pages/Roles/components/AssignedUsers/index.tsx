@@ -5,7 +5,7 @@ import UserAvatar from '@/components/UserAvatar';
 import * as styles from './index.module.scss';
 
 type Props = {
-  users: Array<Pick<User, 'avatar' | 'id'>>;
+  users: Array<Pick<User, 'avatar' | 'id' | 'name'>>;
   count: number;
 };
 
@@ -13,8 +13,8 @@ const AssignedUsers = ({ users, count }: Props) =>
   count ? (
     <div className={styles.users}>
       <div className={styles.avatars}>
-        {users.map(({ id, avatar }) => (
-          <UserAvatar key={id} url={avatar} className={styles.avatar} />
+        {users.map((user) => (
+          <UserAvatar key={user.id} className={styles.avatar} user={user} size="small" />
         ))}
       </div>
       {count > 2 && <span className={styles.count}>{count.toLocaleString()}</span>}

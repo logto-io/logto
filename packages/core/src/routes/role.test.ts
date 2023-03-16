@@ -97,6 +97,7 @@ describe('role routes', () => {
           {
             id: mockUser.id,
             avatar: mockUser.avatar,
+            name: mockUser.name,
           },
         ],
       },
