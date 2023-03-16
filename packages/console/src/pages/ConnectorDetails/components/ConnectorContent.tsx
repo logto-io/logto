@@ -1,5 +1,6 @@
 import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -27,6 +28,14 @@ type Props = {
   onConnectorUpdated: (connector: ConnectorResponse) => void;
 };
 
+const getConnectorTarget = (connectorData: ConnectorResponse): Optional<string> => {
+  return conditional(
+    connectorData.type === ConnectorType.Social &&
+      !connectorData.isStandard &&
+      (connectorData.metadata.target ?? connectorData.target)
+  );
+};
+
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
@@ -36,6 +45,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
     reValidateMode: 'onBlur',
     defaultValues: {
       syncProfile: SyncProfileMode.OnlyAtRegister,
+      target: getConnectorTarget(connectorData),
     },
   });
   const {
@@ -52,7 +62,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
 
     reset({
       ...(formItems ? initFormData(formItems, config) : {}),
-      target,
+      target: getConnectorTarget(connectorData) ?? target,
       logo,
       logoDark: logoDark ?? '',
       name: name?.en,
@@ -76,7 +86,8 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       ...payload,
       metadata: { name: { en: name }, logo, logoDark, target },
     };
-    const body = isStandard ? standardConnectorPayload : payload;
+    // Should not update `target` for neither passwordless connectors nor non-standard social connectors.
+    const body = isStandard ? standardConnectorPayload : { ...payload, target: undefined };
 
     const updatedConnector = await api
       .patch(`api/connectors/${id}`, {
