@@ -147,18 +147,6 @@ export const customContentGuard = z.record(z.string());
 
 export type CustomContent = z.infer<typeof customContentGuard>;
 
-/* === Logto Configs === */
-
-/**
- * Settings
- */
-
-export enum AppearanceMode {
-  SyncWithSystem = 'system',
-  LightMode = 'light',
-  DarkMode = 'dark',
-}
-
 /* === Phrases === */
 
 export type Translation = {

@@ -26,7 +26,7 @@ const AppError = ({ title, errorCode, errorMessage, callStack, children }: Props
 
   return (
     <div className={styles.container}>
-      {theme === Theme.LightMode ? <Error /> : <ErrorDark />}
+      {theme === Theme.Light ? <Error /> : <ErrorDark />}
       <label>{title ?? t('errors.something_went_wrong')}</label>
       <div className={styles.summary}>
         <span>

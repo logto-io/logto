@@ -1,10 +1,10 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import WelcomeImageDark from '@/assets/images/sign-in-experience-welcome-dark.svg';
 import WelcomeImage from '@/assets/images/sign-in-experience-welcome.svg';
 import Button from '@/components/Button';
-import { AppThemeContext } from '@/contexts/AppThemeProvider';
+import useTheme from '@/hooks/use-theme';
 import { Theme } from '@/types/theme';
 
 import GuideModal from './GuideModal';
@@ -17,16 +17,13 @@ type Props = {
 const Welcome = ({ mutate }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isOpen, setIsOpen] = useState(false);
-  const { theme } = useContext(AppThemeContext);
+  const theme = useTheme();
+  const WelcomeIcon = theme === Theme.Light ? WelcomeImage : WelcomeImageDark;
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {theme === Theme.LightMode ? (
-          <WelcomeImage className={styles.icon} />
-        ) : (
-          <WelcomeImageDark className={styles.icon} />
-        )}
+        <WelcomeIcon className={styles.icon} />
         <div className={styles.wrapper}>
           <div className={styles.title}>{t('sign_in_exp.welcome.title')}</div>
           <div className={styles.description}>{t('sign_in_exp.welcome.description')}</div>

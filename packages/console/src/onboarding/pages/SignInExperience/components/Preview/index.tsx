@@ -5,8 +5,7 @@ import { useState } from 'react';
 
 import LivePreviewButton from '@/components/LivePreviewButton';
 import SignInExperiencePreview from '@/components/SignInExperiencePreview';
-import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
-import { Theme } from '@/types/theme';
+import { PreviewPlatform, UiTheme } from '@/components/SignInExperiencePreview/types';
 
 import PlatformTabs from '../PlatformTabs';
 import * as styles from './index.module.scss';
@@ -32,7 +31,7 @@ const Preview = ({ signInExperience, isLivePreviewDisabled = false, className }:
       </div>
       <SignInExperiencePreview
         platform={currentTab}
-        mode={Theme.LightMode}
+        mode={UiTheme.Light}
         signInExperience={signInExperience}
       />
     </div>

@@ -1,23 +1,22 @@
-import { AppearanceMode } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
-import { z } from 'zod';
 
-import { themeStorageKey } from '@/consts';
-import { Theme } from '@/types/theme';
+import { appearanceModeStorageKey } from '@/consts';
+import { appearanceModeGuard, Theme } from '@/types/theme';
+import type { AppearanceMode } from '@/types/theme';
 
 export const getTheme = (appearanceMode: AppearanceMode): Theme => {
-  if (appearanceMode !== AppearanceMode.SyncWithSystem) {
-    return appearanceMode === AppearanceMode.LightMode ? Theme.LightMode : Theme.DarkMode;
+  if (appearanceMode !== 'system') {
+    return appearanceMode;
   }
 
   const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
-  const theme = darkThemeWatchMedia.matches ? Theme.DarkMode : Theme.LightMode;
+  const theme = darkThemeWatchMedia.matches ? Theme.Dark : Theme.Light;
 
   return theme;
 };
 
-export const getThemeFromLocalStorage = () =>
-  getTheme(
-    trySafe(() => z.nativeEnum(AppearanceMode).parse(localStorage.getItem(themeStorageKey))) ??
-      AppearanceMode.SyncWithSystem
-  );
+export const getThemeFromLocalStorage = () => getTheme(getAppearanceModeFromLocalStorage());
+
+export const getAppearanceModeFromLocalStorage = (): AppearanceMode =>
+  trySafe(() => appearanceModeGuard.parse(localStorage.getItem(appearanceModeStorageKey))) ??
+  'system';

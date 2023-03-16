@@ -1,4 +1,3 @@
-import { AppearanceMode } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, createContext } from 'react';
@@ -17,16 +16,18 @@ type AppTheme = {
   theme: Theme;
 };
 
+const defaultTheme: Theme = Theme.Light;
+
 const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
 const getThemeBySystemConfiguration = (): Theme =>
-  darkThemeWatchMedia.matches ? Theme.DarkMode : Theme.LightMode;
+  darkThemeWatchMedia.matches ? Theme.Dark : Theme.Light;
 
 export const AppThemeContext = createContext<AppTheme>({
-  theme: Theme.LightMode,
+  theme: defaultTheme,
 });
 
 export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
-  const [theme, setTheme] = useState<Theme>(Theme.LightMode);
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   const {
     data: { appearanceMode },
@@ -39,8 +40,8 @@ export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
       return;
     }
 
-    if (appearanceMode !== AppearanceMode.SyncWithSystem) {
-      setTheme(appearanceMode === AppearanceMode.LightMode ? Theme.LightMode : Theme.DarkMode);
+    if (appearanceMode !== 'system') {
+      setTheme(appearanceMode);
 
       return;
     }

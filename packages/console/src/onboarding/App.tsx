@@ -38,7 +38,7 @@ const App = () => {
     <BrowserRouter basename={getBasename()}>
       <div className={styles.app}>
         <SWRConfig value={swrOptions}>
-          <AppThemeProvider fixedTheme={Theme.LightMode}>
+          <AppThemeProvider fixedTheme={Theme.Light}>
             <AppBoundary>
               <Toast />
               <Routes>

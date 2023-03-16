@@ -1,10 +1,10 @@
 import { builtInLanguages as builtInConsoleLanguages } from '@logto/phrases';
-import { AppearanceMode } from '@logto/schemas';
-import type { Nullable, Optional } from '@silverhand/essentials';
 import { useEffect, useMemo } from 'react';
 import { z } from 'zod';
 
-import { themeStorageKey } from '@/consts';
+import { appearanceModeStorageKey } from '@/consts';
+import { appearanceModeGuard } from '@/types/theme';
+import { getAppearanceModeFromLocalStorage } from '@/utils/theme';
 
 import useMeCustomData from './use-me-custom-data';
 
@@ -12,18 +12,13 @@ const adminConsolePreferencesKey = 'adminConsolePreferences';
 
 const userPreferencesGuard = z.object({
   language: z.enum(builtInConsoleLanguages).optional(),
-  appearanceMode: z.nativeEnum(AppearanceMode),
+  appearanceMode: appearanceModeGuard,
   experienceNoticeConfirmed: z.boolean().optional(),
   getStartedHidden: z.boolean().optional(),
   connectorSieNoticeConfirmed: z.boolean().optional(),
 });
 
 export type UserPreferences = z.infer<typeof userPreferencesGuard>;
-
-const getEnumFromArray = <T extends string>(
-  array: T[],
-  value: Nullable<Optional<string>>
-): Optional<T> => array.find((element) => element === value);
 
 const useUserPreferences = () => {
   const { data, error, isLoading, isLoaded, update: updateMeCustomData } = useMeCustomData();
@@ -34,11 +29,7 @@ const useUserPreferences = () => {
     return parsed.success
       ? parsed.data[adminConsolePreferencesKey]
       : {
-          appearanceMode:
-            getEnumFromArray(
-              Object.values(AppearanceMode),
-              localStorage.getItem(themeStorageKey)
-            ) ?? AppearanceMode.SyncWithSystem,
+          appearanceMode: getAppearanceModeFromLocalStorage(),
         };
   }, [data]);
 
@@ -52,7 +43,7 @@ const useUserPreferences = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem(themeStorageKey, userPreferences.appearanceMode);
+    localStorage.setItem(appearanceModeStorageKey, userPreferences.appearanceMode);
   }, [userPreferences.appearanceMode]);
 
   return {

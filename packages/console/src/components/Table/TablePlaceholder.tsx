@@ -1,9 +1,8 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import type { ReactNode } from 'react';
-import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AppThemeContext } from '@/contexts/AppThemeProvider';
+import useTheme from '@/hooks/use-theme';
 import { Theme } from '@/types/theme';
 
 import TextLink from '../TextLink';
@@ -27,11 +26,11 @@ const TablePlaceholder = ({
   action,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { theme } = useContext(AppThemeContext);
+  const theme = useTheme();
 
   return (
     <div className={styles.placeholder}>
-      <div className={styles.image}>{theme === Theme.LightMode ? image : imageDark}</div>
+      <div className={styles.image}>{theme === Theme.Light ? image : imageDark}</div>
       <div className={styles.title}>{t(title)}</div>
       <div className={styles.description}>
         {t(description)}

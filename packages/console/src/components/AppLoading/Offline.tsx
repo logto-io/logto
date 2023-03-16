@@ -14,7 +14,7 @@ export const AppLoadingOffline = () => {
 
   return (
     <div className={styles.container}>
-      {theme === Theme.LightMode ? <Illustration /> : <IllustrationDark />}
+      {theme === Theme.Light ? <Illustration /> : <IllustrationDark />}
       <Spinner />
     </div>
   );

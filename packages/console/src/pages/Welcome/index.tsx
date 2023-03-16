@@ -1,6 +1,6 @@
 import { LogtoClientError, useLogto } from '@logto/react';
 import classNames from 'classnames';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useHref } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ import Logo from '@/assets/images/logo.svg';
 import AppError from '@/components/AppError';
 import Button from '@/components/Button';
 import SessionExpired from '@/components/SessionExpired';
-import { AppThemeContext } from '@/contexts/AppThemeProvider';
+import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';
 
@@ -17,7 +17,7 @@ const Welcome = () => {
   const navigate = useNavigate();
   const { isAuthenticated, error, signIn } = useLogto();
   const href = useHref('/callback');
-  const { theme } = useContext(AppThemeContext);
+  const theme = useTheme();
 
   useEffect(() => {
     // If Authenticated, navigate to the Admin Console root page. directly

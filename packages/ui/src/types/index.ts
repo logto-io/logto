@@ -1,9 +1,4 @@
-import type {
-  SignInExperience,
-  ConnectorMetadata,
-  AppearanceMode,
-  SignInIdentifier,
-} from '@logto/schemas';
+import type { SignInExperience, ConnectorMetadata, SignInIdentifier } from '@logto/schemas';
 
 export enum UserFlow {
   signIn = 'sign-in',
@@ -42,7 +37,7 @@ export enum ConfirmModalMessage {
 export type PreviewConfig = {
   signInExperience: SignInExperienceResponse;
   language: string;
-  mode: AppearanceMode.LightMode | AppearanceMode.DarkMode;
+  mode: Theme;
   platform: Platform;
   isNative: boolean;
 };
