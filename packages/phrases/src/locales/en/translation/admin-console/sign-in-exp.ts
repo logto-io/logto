@@ -44,7 +44,8 @@ const sign_in_exp = {
   custom_css: {
     title: 'CUSTOM CSS',
     css_code_editor_title: 'Personalize your UI with Custom CSS',
-    css_code_editor_description: 'See the example of Custom CSS. <a>{{link}}</a>',
+    css_code_editor_description1: 'See the example of Custom CSS.',
+    css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'Learn more',
     css_code_editor_content_placeholder:
       '// Enter your Custom CSS code to tailor the styles of color, font, components, and layout... of Sign-in, Create-account, Forgot-Password, and other pages to your exact specifications. Express your creativity and make your UI stand out.',
