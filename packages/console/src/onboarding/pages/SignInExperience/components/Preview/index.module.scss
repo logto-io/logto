@@ -12,15 +12,4 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  .button {
-    border: 1px solid var(--color-surface-5);
-    margin-left: _.unit(2);
-  }
-
-  .livePreviewIcon {
-    width: 20px;
-    height: 20px;
-    color: var(--color-primary);
-  }
 }

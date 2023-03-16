@@ -9,7 +9,14 @@ import { Ring as Spinner } from '@/components/Spinner';
 import type DangerousRaw from '../DangerousRaw';
 import * as styles from './index.module.scss';
 
-export type ButtonType = 'primary' | 'danger' | 'outline' | 'text' | 'default' | 'branding';
+export type ButtonType =
+  | 'primary'
+  | 'danger'
+  | 'outline'
+  | 'text'
+  | 'default'
+  | 'branding'
+  | 'violet';
 
 type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
   htmlType?: 'button' | 'submit' | 'reset';
@@ -86,7 +93,7 @@ const Button = ({
       {showSpinner && <Spinner className={styles.spinner} />}
       {icon && <span className={styles.icon}>{icon}</span>}
       {title && (typeof title === 'string' ? <span>{t(title)}</span> : title)}
-      {trailingIcon}
+      {trailingIcon && <span className={styles.trailingIcon}>{trailingIcon}</span>}
     </button>
   );
 };

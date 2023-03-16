@@ -48,6 +48,15 @@
     }
   }
 
+  .trailingIcon {
+    display: flex;
+    align-items: center;
+
+    &:not(:first-child) {
+      margin-left: _.unit(2);
+    }
+  }
+
   &.small {
     height: 30px;
     padding: 0 _.unit(3);
@@ -59,6 +68,12 @@
     .icon {
       &:not(:last-child) {
         margin-right: _.unit(1);
+      }
+    }
+
+    .trailingIcon {
+      &:not(:first-child) {
+        margin-left: _.unit(1);
       }
     }
   }
@@ -92,7 +107,7 @@
     border-style: solid;
 
     &:disabled {
-      border-color: var(--color-neutral-70);
+      border-color: var(--color-border);
       color: var(--color-neutral-70);
     }
 
@@ -219,6 +234,44 @@
 
     &:not(:disabled):hover {
       background-color: var(--color-hover-variant);
+    }
+  }
+
+  &.violet {
+    background: var(--color-layer-1);
+    border: 1px solid var(--color-surface-5);
+    overflow: hidden;
+    position: relative;
+
+    .icon,
+    .trailingIcon {
+      color: var(--color-primary);
+    }
+
+    &:disabled {
+      color: var(--color-disabled);
+
+      .icon,
+      .trailingIcon {
+        color: var(--color-primary-80);
+      }
+    }
+
+    &:focus-visible {
+      border: 2px solid var(--color-primary-40);
+      outline: 4px solid var(--color-focused-variant);
+    }
+
+    &:not(:disabled):hover {
+      background-color: var(--color-hover-variant);
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: var(--color-layer-1);
+        z-index: -1;
+      }
     }
   }
 }
