@@ -10,11 +10,10 @@ import * as styles from './index.module.scss';
 export const maxImageSizeLimit = 500 * 1024; // 500 KB
 
 export const allowedImageMimeTypes: AllowedUploadMimeType[] = [
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'image/webp',
   'image/svg+xml',
+  'image/png',
+  'image/jpeg',
+  'image/vnd.microsoft.icon',
 ];
 
 export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
