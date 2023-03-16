@@ -1,3 +1,4 @@
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
@@ -5,7 +6,6 @@ import RequestErrorDarkImage from '@/assets/images/request-error-dark.svg';
 import RequestErrorImage from '@/assets/images/request-error.svg';
 import type { RequestError } from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
-import { Theme } from '@/types/theme';
 
 import Button from '../Button';
 import Card from '../Card';

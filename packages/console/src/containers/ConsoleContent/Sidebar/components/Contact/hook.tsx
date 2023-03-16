@@ -1,4 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import { Theme } from '@logto/schemas';
 
 import DiscordDark from '@/assets/images/discord-dark.svg';
 import Discord from '@/assets/images/discord.svg';
@@ -8,7 +9,6 @@ import GithubDark from '@/assets/images/github-dark.svg';
 import Github from '@/assets/images/github.svg';
 import { contactEmailLink, discordLink, githubIssuesLink } from '@/consts';
 import useTheme from '@/hooks/use-theme';
-import { Theme } from '@/types/theme';
 
 type ContactItem = {
   icon: SvgComponent;

@@ -1,5 +1,5 @@
 import type { Resource } from '@logto/schemas';
-import { defaultManagementApi } from '@logto/schemas';
+import { defaultManagementApi, Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -25,7 +25,6 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
-import { Theme } from '@/types/theme';
 
 import * as styles from './index.module.scss';
 import { ApiResourceDetailsOutletContext } from './types';

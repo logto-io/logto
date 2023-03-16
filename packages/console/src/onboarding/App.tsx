@@ -1,3 +1,4 @@
+import { Theme } from '@logto/schemas';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
@@ -8,7 +9,6 @@ import AppBoundary from '@/containers/AppBoundary';
 import { AppThemeProvider } from '@/contexts/AppThemeProvider';
 import useSwrOptions from '@/hooks/use-swr-options';
 import NotFound from '@/pages/NotFound';
-import { Theme } from '@/types/theme';
 
 import * as styles from './App.module.scss';
 import AppContent from './containers/AppContent';

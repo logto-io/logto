@@ -1,5 +1,6 @@
 import { buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, UserInfo } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath, conditional } from '@silverhand/essentials';
 import { useCallback, useMemo } from 'react';
@@ -18,7 +19,6 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTheme from '@/hooks/use-theme';
 import type { SocialUserInfo } from '@/types/profile';
 import { socialUserInfoGuard } from '@/types/profile';
-import { Theme } from '@/types/theme';
 
 import { popupWindow } from '../../utils';
 import type { Row } from '../CardContent';

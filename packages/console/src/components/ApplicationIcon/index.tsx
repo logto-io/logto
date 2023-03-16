@@ -1,8 +1,8 @@
 import type { ApplicationType } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 
 import { darkModeApplicationIconMap, lightModeApplicationIconMap } from '@/consts';
 import useTheme from '@/hooks/use-theme';
-import { Theme } from '@/types/theme';
 
 type Props = {
   type: ApplicationType;

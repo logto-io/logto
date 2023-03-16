@@ -1,3 +1,4 @@
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +14,6 @@ import Select from '@/components/Select';
 import Spacer from '@/components/Spacer';
 import useTheme from '@/hooks/use-theme';
 import type { SupportedSdk } from '@/types/applications';
-import { Theme } from '@/types/theme';
 
 import * as styles from './index.module.scss';
 

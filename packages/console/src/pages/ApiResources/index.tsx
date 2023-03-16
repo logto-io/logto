@@ -1,4 +1,5 @@
 import type { Resource } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -22,7 +23,6 @@ import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import { Theme } from '@/types/theme';
 import { buildUrl } from '@/utils/url';
 
 import CreateForm from './components/CreateForm';

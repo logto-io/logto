@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { z } from 'zod';
 
 import { appearanceModeStorageKey } from '@/consts';
-import { appearanceModeGuard } from '@/types/theme';
+import { appearanceModeGuard } from '@/types/appearance-mode';
 import { getAppearanceModeFromLocalStorage } from '@/utils/theme';
 
 import useMeCustomData from './use-me-custom-data';

@@ -1,8 +1,9 @@
+import { Theme } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import { appearanceModeStorageKey } from '@/consts';
-import { appearanceModeGuard, Theme } from '@/types/theme';
-import type { AppearanceMode } from '@/types/theme';
+import { appearanceModeGuard, ThemePolicy } from '@/types/appearance-mode';
+import type { AppearanceMode } from '@/types/appearance-mode';
 
 export const getTheme = (appearanceMode: AppearanceMode): Theme => {
   if (appearanceMode !== 'system') {
@@ -19,4 +20,4 @@ export const getThemeFromLocalStorage = () => getTheme(getAppearanceModeFromLoca
 
 export const getAppearanceModeFromLocalStorage = (): AppearanceMode =>
   trySafe(() => appearanceModeGuard.parse(localStorage.getItem(appearanceModeStorageKey))) ??
-  'system';
+  ThemePolicy.System;

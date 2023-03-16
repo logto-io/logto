@@ -1,4 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import { Theme } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,7 +23,6 @@ import { ConnectorsTabs } from '@/consts/page-tabs';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import useConfigs from '@/hooks/use-configs';
 import useTheme from '@/hooks/use-theme';
-import { Theme } from '@/types/theme';
 
 type GetStartedMetadata = {
   id: string;

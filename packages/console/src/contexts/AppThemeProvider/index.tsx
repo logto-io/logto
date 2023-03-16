@@ -1,9 +1,9 @@
+import { Theme } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, createContext } from 'react';
 
 import useUserPreferences from '@/hooks/use-user-preferences';
-import { Theme } from '@/types/theme';
 
 import * as styles from './index.module.scss';
 

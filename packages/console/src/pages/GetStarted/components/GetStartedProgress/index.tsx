@@ -1,3 +1,4 @@
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +9,6 @@ import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import Index from '@/components/Index';
 import useTheme from '@/hooks/use-theme';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import { Theme } from '@/types/theme';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import useGetStartedMetadata from '../../hook';

@@ -1,10 +1,10 @@
+import { Theme } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 
 import DarkAvatar from '@/assets/images/default-avatar-dark.svg';
 import LightAvatar from '@/assets/images/default-avatar-light.svg';
 import useTheme from '@/hooks/use-theme';
-import { Theme } from '@/types/theme';
 
 import ImageWithErrorFallback from '../ImageWithErrorFallback';
 import * as styles from './index.module.scss';

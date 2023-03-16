@@ -1,9 +1,9 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import { Theme } from '@logto/schemas';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import useTheme from '@/hooks/use-theme';
-import { Theme } from '@/types/theme';
 
 import TextLink from '../TextLink';
 import * as styles from './TablePlaceholder.module.scss';
