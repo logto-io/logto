@@ -2,7 +2,7 @@ import type { TenantInfo } from '@logto/schemas';
 import { useCallback, useContext, useEffect } from 'react';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { AppLoadingOffline } from '@/components/AppLoading/Offline';
+import AppLoading from '@/components/AppLoading';
 import Button from '@/components/Button';
 import DangerousRaw from '@/components/DangerousRaw';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -56,7 +56,7 @@ const Tenants = ({ data, onAdd }: Props) => {
     );
   }
 
-  return <AppLoadingOffline />;
+  return <AppLoading />;
 };
 
 export default Tenants;
