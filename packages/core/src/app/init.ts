@@ -17,6 +17,8 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
   }
 };
 
+const serverTimeout = 120_000;
+
 const getTenant = async (tenantId: string) => {
   try {
     return await tenantPool.get(tenantId);
@@ -76,6 +78,7 @@ export default async function initApp(app: Koa): Promise<void> {
     coreServer.listen(urlSet.port, () => {
       logListening();
     });
+    coreServer.setTimeout(serverTimeout);
 
     // Create another server if admin localhost enabled
     if (!adminUrlSet.isLocalhostDisabled) {
@@ -83,20 +86,23 @@ export default async function initApp(app: Koa): Promise<void> {
       adminServer.listen(adminUrlSet.port, () => {
         logListening('admin');
       });
+      adminServer.setTimeout(serverTimeout);
     }
 
     return;
   }
 
   // Chrome doesn't allow insecure HTTP/2 servers, stick with HTTP for localhost.
-  app.listen(urlSet.port, () => {
+  const coreServer = app.listen(urlSet.port, () => {
     logListening();
   });
+  coreServer.setTimeout(serverTimeout);
 
   // Create another server if admin localhost enabled
   if (!adminUrlSet.isLocalhostDisabled) {
-    app.listen(adminUrlSet.port, () => {
+    const adminServer = app.listen(adminUrlSet.port, () => {
       logListening('admin');
     });
+    adminServer.setTimeout(serverTimeout);
   }
 }
