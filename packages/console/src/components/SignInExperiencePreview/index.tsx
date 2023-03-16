@@ -4,7 +4,7 @@ import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { format } from 'date-fns';
-import { useContext, useRef, useMemo, useCallback, useEffect } from 'react';
+import { useContext, useRef, useMemo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -31,6 +31,7 @@ const SignInExperiencePreview = ({ platform, mode, language = 'en', signInExperi
   const { userEndpoint } = useContext(AppEndpointsContext);
   const previewRef = useRef<HTMLIFrameElement>(null);
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
+  const [iframeLoaded, setIframeLoaded] = useState(false);
 
   const configForUiPage = useMemo(() => {
     if (!allConnectors || !signInExperience) {
@@ -78,17 +79,27 @@ const SignInExperiencePreview = ({ platform, mode, language = 'en', signInExperi
     );
   }, [userEndpoint?.origin, configForUiPage, customPhrases]);
 
-  useEffect(() => {
-    postPreviewMessage();
+  const iframeOnLoadEventHandler = useCallback(() => {
+    setIframeLoaded(true);
+  }, []);
 
+  useEffect(() => {
     const iframe = previewRef.current;
 
-    iframe?.addEventListener('load', postPreviewMessage);
+    iframe?.addEventListener('load', iframeOnLoadEventHandler);
 
     return () => {
-      iframe?.removeEventListener('load', postPreviewMessage);
+      iframe?.removeEventListener('load', iframeOnLoadEventHandler);
     };
-  }, [postPreviewMessage]);
+  }, [iframeLoaded, iframeOnLoadEventHandler]);
+
+  useEffect(() => {
+    if (!iframeLoaded) {
+      return;
+    }
+
+    postPreviewMessage();
+  }, [iframeLoaded, postPreviewMessage]);
 
   if (!userEndpoint) {
     return null;
