@@ -5,6 +5,7 @@
   flex-direction: column;
   background-color: var(--color-base);
   height: 100vh;
+  overflow-x: auto;
 
   .header {
     display: flex;
@@ -31,18 +32,24 @@
   .content {
     flex: 1;
     display: flex;
-    overflow: hidden;
+    overflow-y: hidden;
+    overflow-x: auto;
+    justify-content: center;
+    min-width: min-content;
 
     > * {
       flex: 1;
+      max-width: 800px;
+      min-width: 400px;
       overflow-y: auto;
+      margin: _.unit(2) 0 _.unit(6) 0;
     }
 
     .readme {
       background-color: var(--color-layer-1);
       border: 1.5px solid var(--color-focused-variant);
       border-radius: 16px;
-      margin: _.unit(2) _.unit(3) _.unit(6) _.unit(18);
+      margin-right: _.unit(6);
       overflow: hidden;
 
       .readmeTitle {
@@ -59,8 +66,6 @@
     }
 
     .setup {
-      margin: _.unit(2) _.unit(18) _.unit(6) _.unit(3);
-
       .block {
         background-color: var(--color-layer-1);
         border-radius: 16px;
