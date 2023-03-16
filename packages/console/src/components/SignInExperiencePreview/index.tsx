@@ -84,10 +84,6 @@ const SignInExperiencePreview = ({ platform, mode, language = 'en', signInExperi
   }, []);
 
   useEffect(() => {
-    if (iframeLoaded) {
-      return;
-    }
-
     const iframe = previewRef.current;
 
     iframe?.addEventListener('load', iframeOnLoadEventHandler);
