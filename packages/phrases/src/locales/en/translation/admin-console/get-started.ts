@@ -16,14 +16,17 @@ const get_started = {
   passwordless_title: 'Scale passwordless sign in by adding your own connectors',
   passwordless_subtitle:
     'Try passwordless sign in and enable a secure and frictionless experience for your customer',
-  self_hosting_title: 'Check Github for self-hosting options',
-  self_hosting_subtitle:
-    'Efficiently deploy by visiting the Github homepage in a matter of minutes',
   community_title: 'Join our discord community',
   community_subtitle: 'Join our public channel to chat with other developers',
   management_api_title: 'Interact with Management API',
   management_api_subtitle:
     'Build a machine to machine app for API access and your product tech infrastructure setup',
+  further_readings_title: 'Further readings',
+  further_readings_subtitle:
+    'Check out our step-by-step, scenario-based docs without tedious concepts',
+  add_rbac_title: 'Add role-based access control to protect your resources',
+  add_rbac_subtitle:
+    'Control your resource through scalable role authorization for diverse use cases.',
 };
 
 export default get_started;

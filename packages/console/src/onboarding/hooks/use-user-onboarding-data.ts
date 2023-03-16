@@ -1,10 +1,11 @@
 import { useCallback, useMemo } from 'react';
 import { z } from 'zod';
 
+import { isCloud } from '@/consts/cloud';
 import useMeCustomData from '@/hooks/use-me-custom-data';
 
 import type { UserOnboardingData } from '../types';
-import { userOnboardingDataGuard } from '../types';
+import { Project, userOnboardingDataGuard } from '../types';
 
 const userOnboardingDataKey = 'onboarding';
 
@@ -16,6 +17,10 @@ const useUserOnboardingData = () => {
 
     return parsed.success ? parsed.data[userOnboardingDataKey] : {};
   }, [data]);
+
+  const isBusinessPlan = useMemo(() => {
+    return isCloud && userOnboardingData.questionnaire?.project === Project.Company;
+  }, [userOnboardingData]);
 
   const update = useCallback(
     async (data: Partial<UserOnboardingData>) => {
@@ -29,7 +34,7 @@ const useUserOnboardingData = () => {
     [updateMeCustomData, userOnboardingData]
   );
 
-  return { data: userOnboardingData, error, isLoading, isLoaded, update };
+  return { data: userOnboardingData, error, isLoading, isLoaded, isBusinessPlan, update };
 };
 
 export default useUserOnboardingData;

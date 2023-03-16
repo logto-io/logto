@@ -7,22 +7,25 @@ import CheckPreviewDark from '@/assets/images/check-demo-dark.svg';
 import CheckPreview from '@/assets/images/check-demo.svg';
 import CreateAppDark from '@/assets/images/create-app-dark.svg';
 import CreateApp from '@/assets/images/create-app.svg';
+import CreateRoleDark from '@/assets/images/create-role-dark.svg';
+import CreateRole from '@/assets/images/create-role.svg';
 import CustomizeDark from '@/assets/images/customize-dark.svg';
 import Customize from '@/assets/images/customize.svg';
 import DiscordDark from '@/assets/images/discord-dark.svg';
 import Discord from '@/assets/images/discord.svg';
-import GithubDark from '@/assets/images/github-dark.svg';
-import Github from '@/assets/images/github.svg';
+import FurtherReadingsDark from '@/assets/images/further-readings-dark.svg';
+import FurtherReadings from '@/assets/images/further-readings.svg';
 import MachineToMachineDark from '@/assets/images/machine-to-machine-dark.svg';
 import MachineToMachine from '@/assets/images/machine-to-machine.svg';
 import PasswordlessDark from '@/assets/images/passwordless-dark.svg';
 import Passwordless from '@/assets/images/passwordless.svg';
-import { discordLink, githubLink } from '@/consts';
-import { isCloud } from '@/consts/cloud';
+import { discordLink } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import useConfigs from '@/hooks/use-configs';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTheme from '@/hooks/use-theme';
+import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
 type GetStartedMetadata = {
   id: string;
@@ -41,9 +44,11 @@ const useGetStartedMetadata = () => {
   const theme = useTheme();
   const isLightMode = theme === Theme.Light;
   const navigate = useNavigate();
+  const { isBusinessPlan } = useUserOnboardingData();
+  const { getDocumentationUrl } = useDocumentationUrl();
 
-  const data = useMemo(() => {
-    const metadataItems: GetStartedMetadata[] = [
+  const basicMetadata: GetStartedMetadata[] = useMemo(
+    () => [
       {
         id: 'checkLivePreview',
         title: 'get_started.check_preview_title',
@@ -89,30 +94,21 @@ const useGetStartedMetadata = () => {
           navigate('/sign-in-experience');
         },
       },
-      isCloud
-        ? {
-            id: 'interactWithManagementAPI',
-            title: 'get_started.management_api_title',
-            subtitle: 'get_started.management_api_subtitle',
-            icon: isLightMode ? MachineToMachine : MachineToMachineDark,
-            buttonText: 'general.create',
-            isComplete: configs?.m2mApplicationCreated,
-            onClick: () => {
-              navigate('/applications/create');
-            },
-          }
-        : {
-            id: 'checkOutSelfHostingOptions',
-            title: 'get_started.self_hosting_title',
-            subtitle: 'get_started.self_hosting_subtitle',
-            icon: isLightMode ? Github : GithubDark,
-            buttonText: 'general.visit',
-            isComplete: configs?.selfHostingChecked,
-            onClick: () => {
-              void updateConfigs({ selfHostingChecked: true });
-              window.open(githubLink, '_blank');
-            },
-          },
+    ],
+    [
+      configs?.applicationCreated,
+      configs?.livePreviewChecked,
+      configs?.passwordlessConfigured,
+      configs?.signInExperienceCustomized,
+      isLightMode,
+      navigate,
+      updateConfigs,
+      userEndpoint,
+    ]
+  );
+
+  const personalPlanMetadata: GetStartedMetadata[] = useMemo(
+    () => [
       {
         id: 'joinCommunity',
         title: 'get_started.community_title',
@@ -125,22 +121,67 @@ const useGetStartedMetadata = () => {
           window.open(discordLink, '_blank');
         },
       },
+      {
+        id: 'checkOutFurtherReadings',
+        title: 'get_started.further_readings_title',
+        subtitle: 'get_started.further_readings_subtitle',
+        icon: isLightMode ? FurtherReadings : FurtherReadingsDark,
+        buttonText: 'general.check_out',
+        isComplete: configs?.furtherReadingsChecked,
+        onClick: () => {
+          void updateConfigs({ furtherReadingsChecked: true });
+          window.open(
+            getDocumentationUrl('/docs/tutorials/get-started/further-readings'),
+            '_blank'
+          );
+        },
+      },
+    ],
+    [
+      configs?.communityChecked,
+      configs?.furtherReadingsChecked,
+      getDocumentationUrl,
+      isLightMode,
+      updateConfigs,
+    ]
+  );
+
+  const businessPlanMetadata: GetStartedMetadata[] = useMemo(
+    () => [
+      {
+        id: 'interactWithManagementAPI',
+        title: 'get_started.management_api_title',
+        subtitle: 'get_started.management_api_subtitle',
+        icon: isLightMode ? MachineToMachine : MachineToMachineDark,
+        buttonText: 'general.create',
+        isComplete: configs?.m2mApplicationCreated,
+        onClick: () => {
+          navigate('/applications/create');
+        },
+      },
+      {
+        id: 'addRbac',
+        title: 'get_started.add_rbac_title',
+        subtitle: 'get_started.add_rbac_subtitle',
+        icon: isLightMode ? CreateRole : CreateRoleDark,
+        buttonText: 'general.create',
+        isComplete: configs?.roleCreated,
+        onClick: () => {
+          navigate('/roles/create');
+        },
+      },
+    ],
+    [configs?.m2mApplicationCreated, configs?.roleCreated, isLightMode, navigate]
+  );
+
+  const data = useMemo(() => {
+    const metadataItems: GetStartedMetadata[] = [
+      ...basicMetadata,
+      ...(isBusinessPlan ? businessPlanMetadata : personalPlanMetadata),
     ];
 
     return metadataItems.filter(({ isHidden }) => !isHidden);
-  }, [
-    isLightMode,
-    configs?.livePreviewChecked,
-    configs?.applicationCreated,
-    configs?.passwordlessConfigured,
-    configs?.signInExperienceCustomized,
-    configs?.m2mApplicationCreated,
-    configs?.selfHostingChecked,
-    configs?.communityChecked,
-    updateConfigs,
-    userEndpoint,
-    navigate,
-  ]);
+  }, [basicMetadata, isBusinessPlan, businessPlanMetadata, personalPlanMetadata]);
 
   return {
     data,

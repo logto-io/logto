@@ -26,8 +26,9 @@ export const adminConsoleDataGuard = z.object({
   applicationCreated: z.boolean(),
   signInExperienceCustomized: z.boolean(),
   passwordlessConfigured: z.boolean(),
-  selfHostingChecked: z.boolean(),
   communityChecked: z.boolean(),
+  furtherReadingsChecked: z.boolean(),
+  roleCreated: z.boolean(),
   m2mApplicationCreated: z.boolean(),
 });
 
