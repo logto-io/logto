@@ -1,6 +1,6 @@
 import type { LogtoErrorCode } from '@logto/phrases';
 import type { RequestErrorBody } from '@logto/schemas';
-import { HTTPError } from 'ky';
+import { HTTPError, TimeoutError } from 'ky';
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -39,6 +39,12 @@ const useErrorHandler = () => {
 
           return;
         }
+      }
+
+      if (error instanceof TimeoutError) {
+        setToast(t('error.timeout'));
+
+        return;
       }
 
       setToast(t('error.unknown'));

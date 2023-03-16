@@ -118,6 +118,7 @@ const translation = {
     invalid_connector_request: 'Os dados do conector são inválidos',
     unknown: 'Erro desconhecido. Por favor, tente novamente mais tarde.',
     invalid_session: 'Sessão não encontrada. Volte e faça login novamente.',
+    timeout: 'Tempo limite de sessão. Volte e faça login novamente.',
   },
   demo_app: {
     notification: 'Dica: Crie uma conta primeiro para testar a experiência de login.',

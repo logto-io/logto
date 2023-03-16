@@ -6,3 +6,7 @@
   @include _.image-align-center;
   margin-bottom: _.unit(4);
 }
+
+.loadingWrapper {
+  height: _.unit(12);
+}

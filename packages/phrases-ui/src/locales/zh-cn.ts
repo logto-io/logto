@@ -109,6 +109,7 @@ const translation = {
     invalid_connector_request: '无效的登录请求',
     unknown: '未知错误，请稍后重试。',
     invalid_session: '未找到会话，请返回并重新登录。',
+    timeout: '请求超时，请稍后重试。',
   },
   demo_app: {
     notification: '提示：先注册一个账号，再测试登录体验。',

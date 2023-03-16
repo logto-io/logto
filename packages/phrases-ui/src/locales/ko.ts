@@ -114,6 +114,7 @@ const translation = {
     invalid_connector_request: '연동 정보가 유효하지 않아요.',
     unknown: '알 수 없는 오류가 발생했어요. 잠시 후에 시도해 주세요.',
     invalid_session: '세션을 찾을 수 없어요. 다시 로그인해 주세요.',
+    timeout: '요청 시간이 초과되었어요. 잠시 후에 다시 시도해 주세요.',
   },
   demo_app: {
     notification: '알림:로그인 경험을 테스트하기 위해 먼저 계정을 만드는 것이 좋습니다.',

@@ -117,6 +117,7 @@ const translation = {
     invalid_connector_request: 'Bağlayıcı veri geçersiz',
     unknown: 'Bilinmeyen hata. Lütfen daha sonra tekrar deneyiniz.',
     invalid_session: 'Oturum bulunamadı. Lütfen geri dönüp tekrar giriş yapınız.',
+    timeout: 'Oturum zaman aşımına uğradı. Lütfen geri dönüp tekrar giriş yapınız.',
   },
   demo_app: {
     notification: 'İpucu: Oturum açma deneyimini test etmek için önce bir hesap oluşturun.',

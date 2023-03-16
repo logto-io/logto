@@ -57,6 +57,7 @@
     }
 
     &:hover {
+      border-radius: _.unit(2);
       background: var(--color-overlay-neutral-hover);
       color: var(--color-type-link);
     }

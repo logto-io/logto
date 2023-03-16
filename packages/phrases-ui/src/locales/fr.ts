@@ -125,6 +125,7 @@ const translation = {
     unknown: 'Erreur inconnue. Veuillez réessayer plus tard.',
     invalid_session:
       'Session non trouvée. Veuillez revenir en arrière et vous connecter à nouveau.',
+    timeout: 'Request timeout. Please try again later.', // UNTRANSLATED
   },
   demo_app: {
     notification: "Astuce : Créez d'abord un compte pour tester l'expérience de connexion.",
