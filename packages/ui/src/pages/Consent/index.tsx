@@ -44,7 +44,7 @@ const Consent = () => {
   return (
     <StaticPageLayout>
       {brandingLogo && <img alt="logo" className={styles.img} src={brandingLogo} />}
-      <div className={styles.loadingHolder}>{loading && <LoadingIcon />}</div>
+      <div className={styles.loadingWrapper}>{loading && <LoadingIcon />}</div>
     </StaticPageLayout>
   );
 };
