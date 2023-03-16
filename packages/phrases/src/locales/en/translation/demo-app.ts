@@ -1,9 +1,9 @@
 const demo_app = {
-  title: "You've successfully signed in the demo app!",
+  title: "You've successfully signed in the live preview!",
   subtitle: 'Here is your log in information:',
   username: 'Username: ',
   user_id: 'User ID: ',
-  sign_out: 'Sign Out the Demo App',
+  sign_out: 'Sign Out the Live Preview',
   continue_explore: 'Or continue to explore',
   customize_sign_in_experience: 'Customize Sign-in Experience',
   enable_passwordless: 'Enable Passwordless',

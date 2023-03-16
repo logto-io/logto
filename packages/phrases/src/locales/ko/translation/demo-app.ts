@@ -1,9 +1,9 @@
 const demo_app = {
-  title: '성공적으로 체험 App에 로그인되었어요!',
+  title: "You've successfully signed in the live preview!", // UNTRANSLATED
   subtitle: '여기 로그인 정보가 있어요:',
   username: '사용자 이름: ',
   user_id: '사용자 ID: ',
-  sign_out: '체험 App 로그아웃',
+  sign_out: 'Sign Out the Live Preview', // UNTRANSLATED
   continue_explore: '또는 계속해서 살펴보기',
   customize_sign_in_experience: '로그인 경험 커스터마이징',
   enable_passwordless: 'Passwordless 활성화',
