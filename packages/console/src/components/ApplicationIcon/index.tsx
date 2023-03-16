@@ -1,9 +1,8 @@
 import type { ApplicationType } from '@logto/schemas';
-import { useContext } from 'react';
+import { Theme } from '@logto/schemas';
 
 import { darkModeApplicationIconMap, lightModeApplicationIconMap } from '@/consts';
-import { AppThemeContext } from '@/contexts/AppThemeProvider';
-import { Theme } from '@/types/theme';
+import useTheme from '@/hooks/use-theme';
 
 type Props = {
   type: ApplicationType;
@@ -11,8 +10,8 @@ type Props = {
 };
 
 const ApplicationIcon = ({ type, className }: Props) => {
-  const { theme } = useContext(AppThemeContext);
-  const isLightMode = theme === Theme.LightMode;
+  const theme = useTheme();
+  const isLightMode = theme === Theme.Light;
   const Icon = isLightMode ? lightModeApplicationIconMap[type] : darkModeApplicationIconMap[type];
 
   return <Icon className={className} />;

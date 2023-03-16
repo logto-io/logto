@@ -1,8 +1,9 @@
 import { buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, UserInfo } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath, conditional } from '@silverhand/essentials';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { is } from 'superstruct';
@@ -13,12 +14,11 @@ import ImageWithErrorFallback from '@/components/ImageWithErrorFallback';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import UserInfoCard from '@/components/UserInfoCard';
 import { adminTenantEndpoint, getBasename, meApi, profileSocialLinkingKeyPrefix } from '@/consts';
-import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useTheme from '@/hooks/use-theme';
 import type { SocialUserInfo } from '@/types/profile';
 import { socialUserInfoGuard } from '@/types/profile';
-import { Theme } from '@/types/theme';
 
 import { popupWindow } from '../../utils';
 import type { Row } from '../CardContent';
@@ -35,7 +35,7 @@ type Props = {
 const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
-  const { theme } = useContext(AppThemeContext);
+  const theme = useTheme();
   const { show: showConfirm } = useConfirmModal();
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
 
@@ -61,7 +61,7 @@ const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
     }
 
     return connectors.map(({ id, name, logo, logoDark, target }) => {
-      const logoSrc = theme === Theme.DarkMode && logoDark ? logoDark : logo;
+      const logoSrc = theme === Theme.Dark && logoDark ? logoDark : logo;
       const relatedUserDetails = user.identities?.[target]?.details;
       const hasLinked = is(relatedUserDetails, socialUserInfoGuard);
 

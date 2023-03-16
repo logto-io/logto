@@ -1,7 +1,6 @@
 import type { Branding } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
-
-import type { Theme } from '@/types';
 
 export type GetLogoUrl = {
   theme: Theme;
@@ -11,7 +10,7 @@ export type GetLogoUrl = {
 };
 
 export const getLogoUrl = ({ theme, logoUrl, darkLogoUrl, isApple }: GetLogoUrl) => {
-  if (theme === (isApple ? 'light' : 'dark')) {
+  if (theme === (isApple ? Theme.Light : Theme.Dark)) {
     return darkLogoUrl ?? logoUrl;
   }
 

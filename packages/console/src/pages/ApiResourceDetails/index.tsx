@@ -1,7 +1,7 @@
 import type { Resource } from '@logto/schemas';
-import { defaultManagementApi } from '@logto/schemas';
+import { defaultManagementApi, Theme } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -21,11 +21,10 @@ import RequestDataError from '@/components/RequestDataError';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextLink from '@/components/TextLink';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
-import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useTheme from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
-import { Theme } from '@/types/theme';
 
 import * as styles from './index.module.scss';
 import { ApiResourceDetailsOutletContext } from './types';
@@ -37,8 +36,8 @@ const ApiResourceDetails = () => {
   const navigate = useNavigate();
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `api/resources/${id}`);
   const isLoading = !data && !error;
-  const { theme } = useContext(AppThemeContext);
-  const Icon = theme === Theme.LightMode ? ApiResource : ApiResourceDark;
+  const theme = useTheme();
+  const Icon = theme === Theme.Light ? ApiResource : ApiResourceDark;
 
   const isOnPermissionPage = pathname.endsWith(ApiResourceDetailsTabs.Permissions);
   const isLogtoManagementApiResource = data?.indicator === defaultManagementApi.resource.indicator;

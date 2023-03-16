@@ -1,6 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import type { ConnectorMetadata, ConnectorResponse, SignInExperience } from '@logto/schemas';
-import { ConnectorType } from '@logto/schemas';
+import { Theme, ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { format } from 'date-fns';
@@ -12,10 +12,11 @@ import PhoneInfo from '@/assets/images/phone-info.svg';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
-import { Theme } from '@/types/theme';
 
 import * as styles from './index.module.scss';
 import { PreviewPlatform } from './types';
+
+export { default as ToggleUiThemeButton } from './components/ToggleUiThemeButton';
 
 type Props = {
   platform: PreviewPlatform;
@@ -114,7 +115,7 @@ const SignInExperiencePreview = ({ platform, mode, language = 'en', signInExperi
       style={conditional(
         platform === PreviewPlatform.DesktopWeb && {
           // Set background color to match iframe's background color on both dark and light mode.
-          backgroundColor: mode === Theme.DarkMode ? '#000' : '#e5e1ec',
+          backgroundColor: mode === Theme.Dark ? '#000' : '#e5e1ec',
         }
       )}
     >

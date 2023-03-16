@@ -1,5 +1,6 @@
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CongratsDark from '@/assets/images/congrats-dark.svg';
@@ -11,9 +12,8 @@ import Card from '@/components/Card';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import Select from '@/components/Select';
 import Spacer from '@/components/Spacer';
-import { AppThemeContext } from '@/contexts/AppThemeProvider';
+import useTheme from '@/hooks/use-theme';
 import type { SupportedSdk } from '@/types/applications';
-import { Theme } from '@/types/theme';
 
 import * as styles from './index.module.scss';
 
@@ -36,8 +36,8 @@ const SdkSelector = ({
 }: Props) => {
   const [isFolded, setIsFolded] = useState(isCompact);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { theme } = useContext(AppThemeContext);
-  const isLightMode = theme === Theme.LightMode;
+  const theme = useTheme();
+  const isLightMode = theme === Theme.Light;
   const CongratsIcon = isLightMode ? Congrats : CongratsDark;
   const TadaIcon = isLightMode ? Tada : TadaDark;
 

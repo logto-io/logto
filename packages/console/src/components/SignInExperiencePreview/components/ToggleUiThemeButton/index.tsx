@@ -1,11 +1,11 @@
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 
 import Moon from '@/assets/images/moon.svg';
 import Sun from '@/assets/images/sun.svg';
-import { Theme } from '@/types/theme';
 
-import type { Props as ButtonProps } from '../Button';
-import Button from '../Button';
+import type { Props as ButtonProps } from '../../../Button';
+import Button from '../../../Button';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -16,14 +16,14 @@ type Props = {
   size?: ButtonProps['size'];
 };
 
-const ToggleThemeButton = ({
+const ToggleUiThemeButton = ({
   value,
   onToggle,
   className,
   iconClassName,
   size = 'medium',
 }: Props) => {
-  const ThemeIcon = value === Theme.LightMode ? Sun : Moon;
+  const ThemeIcon = value === Theme.Light ? Sun : Moon;
 
   return (
     <div className={classNames(styles.container, styles[size])}>
@@ -32,11 +32,11 @@ const ToggleThemeButton = ({
         className={classNames(styles.button, className)}
         icon={<ThemeIcon className={classNames(styles.icon, iconClassName)} />}
         onClick={() => {
-          onToggle(value === Theme.LightMode ? Theme.DarkMode : Theme.LightMode);
+          onToggle(value === Theme.Light ? Theme.Dark : Theme.Light);
         }}
       />
     </div>
   );
 };
 
-export default ToggleThemeButton;
+export default ToggleUiThemeButton;

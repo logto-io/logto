@@ -1,18 +1,17 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
 import type { SignInExperience } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LivePreviewButton from '@/components/LivePreviewButton';
 import Select from '@/components/Select';
-import SignInExperiencePreview from '@/components/SignInExperiencePreview';
+import SignInExperiencePreview, { ToggleUiThemeButton } from '@/components/SignInExperiencePreview';
 import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import ToggleThemeButton from '@/components/ToggleThemeButton';
 import useUiLanguages from '@/hooks/use-ui-languages';
-import { Theme } from '@/types/theme';
 
 import * as styles from './index.module.scss';
 
@@ -31,13 +30,13 @@ const Preview = ({
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [language, setLanguage] = useState<LanguageTag>('en');
-  const [mode, setMode] = useState<Theme>(Theme.LightMode);
+  const [mode, setMode] = useState<Theme>(Theme.Light);
   const [platform, setPlatform] = useState<PreviewPlatform>(PreviewPlatform.DesktopWeb);
   const { languages } = useUiLanguages();
 
   useEffect(() => {
     if (!signInExperience?.color.isDarkModeEnabled) {
-      setMode(Theme.LightMode);
+      setMode(Theme.Light);
     }
   }, [mode, signInExperience]);
 
@@ -71,7 +70,7 @@ const Preview = ({
         <div className={styles.title}>{t('sign_in_exp.preview.title')}</div>
         <div className={styles.selects}>
           {signInExperience?.color.isDarkModeEnabled && (
-            <ToggleThemeButton value={mode} size="small" onToggle={setMode} />
+            <ToggleUiThemeButton value={mode} size="small" onToggle={setMode} />
           )}
           <Select
             className={styles.language}

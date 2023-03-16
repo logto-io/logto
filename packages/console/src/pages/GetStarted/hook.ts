@@ -1,4 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import { Theme } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,9 +21,8 @@ import { discordLink, githubLink } from '@/consts';
 import { isCloud } from '@/consts/cloud';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
-import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import useConfigs from '@/hooks/use-configs';
-import { Theme } from '@/types/theme';
+import useTheme from '@/hooks/use-theme';
 
 type GetStartedMetadata = {
   id: string;
@@ -38,8 +38,8 @@ type GetStartedMetadata = {
 const useGetStartedMetadata = () => {
   const { configs, updateConfigs } = useConfigs();
   const { userEndpoint } = useContext(AppEndpointsContext);
-  const { theme } = useContext(AppThemeContext);
-  const isLightMode = theme === Theme.LightMode;
+  const theme = useTheme();
+  const isLightMode = theme === Theme.Light;
   const navigate = useNavigate();
 
   const data = useMemo(() => {

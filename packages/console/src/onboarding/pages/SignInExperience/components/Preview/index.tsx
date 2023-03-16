@@ -1,4 +1,5 @@
 import type { SignInExperience } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -6,7 +7,6 @@ import { useState } from 'react';
 import LivePreviewButton from '@/components/LivePreviewButton';
 import SignInExperiencePreview from '@/components/SignInExperiencePreview';
 import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
-import { Theme } from '@/types/theme';
 
 import PlatformTabs from '../PlatformTabs';
 import * as styles from './index.module.scss';
@@ -32,7 +32,7 @@ const Preview = ({ signInExperience, isLivePreviewDisabled = false, className }:
       </div>
       <SignInExperiencePreview
         platform={currentTab}
-        mode={Theme.LightMode}
+        mode={Theme.Light}
         signInExperience={signInExperience}
       />
     </div>

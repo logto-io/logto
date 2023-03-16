@@ -1,7 +1,8 @@
+import { Theme } from '@logto/schemas';
+
 import IllustrationDark from '@/assets/images/loading-illustration-dark.svg';
 import Illustration from '@/assets/images/loading-illustration.svg';
 import { Daisy as Spinner } from '@/components/Spinner';
-import { Theme } from '@/types/theme';
 import { getThemeFromLocalStorage } from '@/utils/theme';
 
 import * as styles from './index.module.scss';
@@ -14,7 +15,7 @@ export const AppLoadingOffline = () => {
 
   return (
     <div className={styles.container}>
-      {theme === Theme.LightMode ? <Illustration /> : <IllustrationDark />}
+      {theme === Theme.Light ? <Illustration /> : <IllustrationDark />}
       <Spinner />
     </div>
   );

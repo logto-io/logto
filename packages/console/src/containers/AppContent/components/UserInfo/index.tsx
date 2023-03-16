@@ -1,6 +1,6 @@
 import { builtInLanguageOptions as consoleBuiltInLanguageOptions } from '@logto/phrases';
 import { useLogto } from '@logto/react';
-import { AppearanceMode } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,7 @@ import UserInfoCard from '@/components/UserInfoCard';
 import { getSignOutRedirectPathname } from '@/consts';
 import useCurrentUser from '@/hooks/use-current-user';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import { DynamicAppearanceMode } from '@/types/appearance-mode';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import SubMenu from '../SubMenu';
@@ -98,15 +99,15 @@ const UserInfo = () => {
           title="menu.appearance.label"
           options={[
             {
-              value: AppearanceMode.SyncWithSystem,
+              value: DynamicAppearanceMode.System,
               title: t('menu.appearance.system'),
             },
             {
-              value: AppearanceMode.LightMode,
+              value: Theme.Light,
               title: t('menu.appearance.light'),
             },
             {
-              value: AppearanceMode.DarkMode,
+              value: Theme.Dark,
               title: t('menu.appearance.dark'),
             },
           ]}
