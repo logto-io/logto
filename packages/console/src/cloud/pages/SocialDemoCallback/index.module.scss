@@ -1,0 +1,53 @@
+@use '@/scss/underscore' as _;
+@use '@logto/core-kit/scss/fonts';
+@use '@logto/core-kit/scss/console-themes' as themes;
+
+.container {
+  .card {
+    background: var(--color-layer-1);
+    border-radius: 16px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 640px;
+    height: 640px;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+
+    img {
+      margin-top: _.unit(25);
+      width: 160px;
+      height: 160px;
+    }
+
+    .title {
+      margin-top: _.unit(16);
+      color: var(--color-neutral-10);
+      font: var(--font-title-2);
+    }
+
+    .message {
+      margin-top: _.unit(3);
+      font: var(--font-body-2);
+      color: var(--color-text-secondary);
+      padding: 0 _.unit(8);
+    }
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    @include themes.light;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    @include themes.dark;
+  }
+}
