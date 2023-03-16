@@ -26,14 +26,20 @@
       display: flex;
       flex: 1;
       margin-bottom: _.unit(6);
+      justify-content: center;
+      min-width: min-content;
 
       &.withSubmitActionBar {
         margin-bottom: _.unit(3);
       }
 
+      > * {
+        max-width: 800px;
+      }
+
       .form {
         flex: 1;
-        margin-right: _.unit(3);
+        margin-right: _.unit(6);
         min-width: 535px;
       }
 

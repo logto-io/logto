@@ -2,14 +2,20 @@
 
 .content {
   display: flex;
+  justify-content: center;
+  min-width: min-content;
   padding: 0 _.unit(17);
+
+  > div {
+    max-width: 800px;
+  }
 
   .config {
     background-color: var(--color-layer-1);
     border-radius: 8px;
     padding: _.unit(12);
+    margin-right: _.unit(6);
     min-width: 500px;
-    margin-right: _.unit(8);
 
     .title {
       margin-top: _.unit(6);
