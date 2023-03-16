@@ -6,7 +6,7 @@ import { appearanceModeGuard, ThemePolicy } from '@/types/appearance-mode';
 import type { AppearanceMode } from '@/types/appearance-mode';
 
 export const getTheme = (appearanceMode: AppearanceMode): Theme => {
-  if (appearanceMode !== 'system') {
+  if (appearanceMode !== ThemePolicy.System) {
     return appearanceMode;
   }
 

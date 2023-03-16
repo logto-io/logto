@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, createContext } from 'react';
 
 import useUserPreferences from '@/hooks/use-user-preferences';
+import { ThemePolicy } from '@/types/appearance-mode';
 
 import * as styles from './index.module.scss';
 
@@ -40,7 +41,7 @@ export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
       return;
     }
 
-    if (appearanceMode !== 'system') {
+    if (appearanceMode !== ThemePolicy.System) {
       setTheme(appearanceMode);
 
       return;
