@@ -22,22 +22,27 @@ const CustomCssForm = () => {
       <FormField
         title="sign_in_exp.custom_css.css_code_editor_title"
         tip={(closeTipHandler) => (
-          <Trans
-            components={{
-              a: (
-                <TextLink
-                  // TODO: update the link when Custom CSS docs are ready
-                  to={getDocumentationUrl('/docs/recipes/customize-sie/configure-branding')}
-                  target="_blank"
-                  onClick={closeTipHandler}
-                />
-              ),
-            }}
-          >
-            {t('sign_in_exp.custom_css.css_code_editor_description', {
-              link: t('sign_in_exp.custom_css.css_code_editor_description_link_content'),
-            })}
-          </Trans>
+          <>
+            <div>{t('sign_in_exp.custom_css.css_code_editor_description1')}</div>
+            <div>
+              <Trans
+                components={{
+                  a: (
+                    <TextLink
+                      // TODO: update the link when Custom CSS docs are ready
+                      to={getDocumentationUrl('/docs/recipes/customize-sie/configure-branding')}
+                      target="_blank"
+                      onClick={closeTipHandler}
+                    />
+                  ),
+                }}
+              >
+                {t('sign_in_exp.custom_css.css_code_editor_description2', {
+                  link: t('sign_in_exp.custom_css.css_code_editor_description_link_content'),
+                })}
+              </Trans>
+            </div>
+          </>
         )}
       >
         <Controller
