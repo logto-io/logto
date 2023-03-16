@@ -116,6 +116,7 @@ const translation = {
     invalid_connector_request: 'The connector data is invalid',
     unknown: 'Unknown error. Please try again later.',
     invalid_session: 'Session not found. Please go back and sign in again.',
+    timeout: 'Request timeout. Please try again later.',
   },
   demo_app: {
     notification: 'Tip: Create an account first to test the sign-in experience.',

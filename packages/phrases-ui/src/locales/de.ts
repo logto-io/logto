@@ -122,6 +122,7 @@ const translation = {
     invalid_connector_request: 'Connector Daten sind ungültig',
     unknown: 'Unbekannter Fehler. Versuche es später noch einmal.',
     invalid_session: 'Die Sitzung ist ungültig. Bitte melde dich erneut an.',
+    timeout: 'Zeitüberschreitung. Bitte melde dich erneut an.',
   },
   demo_app: {
     notification: 'Tipp: Erstelle zuerst ein Konto, um die Anmeldeerfahrung zu testen.',
