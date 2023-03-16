@@ -53,6 +53,7 @@ const CreateRoleForm = ({ onClose }: Props) => {
     <ModalLayout
       title="roles.create_role_title"
       subtitle="roles.create_role_description"
+      learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles"
       size="large"
       footer={
         <Button

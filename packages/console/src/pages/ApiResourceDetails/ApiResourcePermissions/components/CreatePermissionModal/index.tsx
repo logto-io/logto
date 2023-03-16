@@ -53,6 +53,7 @@ const CreatePermissionModal = ({ resourceId, onClose }: Props) => {
       <ModalLayout
         title="api_resource_details.permission.create_title"
         subtitle="api_resource_details.permission.create_subtitle"
+        learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions"
         footer={
           <Button
             isLoading={isSubmitting}

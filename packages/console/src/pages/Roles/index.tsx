@@ -57,7 +57,11 @@ const Roles = () => {
   return (
     <div className={pageStyles.container}>
       <div className={pageStyles.headline}>
-        <CardTitle title="roles.title" subtitle="roles.subtitle" />
+        <CardTitle
+          title="roles.title"
+          subtitle="roles.subtitle"
+          learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles"
+        />
         <Button
           icon={<Plus />}
           title="roles.create"

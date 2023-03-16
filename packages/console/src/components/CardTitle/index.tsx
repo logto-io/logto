@@ -4,12 +4,14 @@ import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type DangerousRaw from '../DangerousRaw';
+import TextLink from '../TextLink';
 import * as styles from './index.module.scss';
 
-type Props = {
+export type Props = {
   title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   size?: 'small' | 'medium' | 'large';
+  learnMoreLink?: string;
   isWordWrapEnabled?: boolean;
   className?: string;
 };
@@ -22,6 +24,7 @@ const CardTitle = ({
   subtitle,
   size = 'large',
   isWordWrapEnabled = false,
+  learnMoreLink,
   className,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -31,9 +34,14 @@ const CardTitle = ({
       <div className={classNames(styles.title, !isWordWrapEnabled && styles.titleEllipsis)}>
         {typeof title === 'string' ? t(title) : title}
       </div>
-      {subtitle && (
+      {Boolean(subtitle ?? learnMoreLink) && (
         <div className={styles.subtitle}>
-          {typeof subtitle === 'string' ? t(subtitle) : subtitle}
+          {subtitle && <span>{typeof subtitle === 'string' ? t(subtitle) : subtitle}</span>}
+          {learnMoreLink && (
+            <TextLink href={learnMoreLink} target="_blank" className={styles.learnMore}>
+              {t('general.learn_more')}
+            </TextLink>
+          )}
         </div>
       )}
     </div>

@@ -1,40 +1,34 @@
-import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import type { ReactElement, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import Close from '@/assets/images/close.svg';
 
 import Card from '../Card';
+import type { Props as CardTitleProps } from '../CardTitle';
 import CardTitle from '../CardTitle';
-import type DangerousRaw from '../DangerousRaw';
 import IconButton from '../IconButton';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
-  subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   children: ReactNode;
   footer?: ReactNode;
   onClose?: () => void;
   className?: string;
   size?: 'medium' | 'large' | 'xlarge';
-  isTitleWordWrapEnabled?: boolean;
-};
+} & Pick<CardTitleProps, 'learnMoreLink' | 'title' | 'subtitle' | 'isWordWrapEnabled'>;
 
 const ModalLayout = ({
-  title,
-  subtitle,
   children,
   footer,
   onClose,
   className,
   size = 'medium',
-  isTitleWordWrapEnabled = false,
+  ...cardTitleProps
 }: Props) => {
   return (
     <Card className={classNames(styles.container, styles[size])}>
       <div className={styles.header}>
-        <CardTitle title={title} subtitle={subtitle} isWordWrapEnabled={isTitleWordWrapEnabled} />
+        <CardTitle {...cardTitleProps} />
         {onClose && (
           <IconButton
             onClick={() => {
