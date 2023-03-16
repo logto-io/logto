@@ -146,7 +146,7 @@ export default function initOidc(
       },
     },
     interactions: {
-      url: async (ctx, interaction) => {
+      url: (ctx, interaction) => {
         const isDemoApp = interaction.params.client_id === demoAppApplicationId;
 
         const appendParameters = (path: string) => {
@@ -158,7 +158,7 @@ export default function initOidc(
           case 'login': {
             // Always fetch the latest sign-in experience config for demo app (live preview)
             if (isDemoApp) {
-              await wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
+              wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
             }
 
             const isSignUp =

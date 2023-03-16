@@ -1,4 +1,4 @@
-import Keyv from 'keyv';
+import { TtlCache } from '@logto/shared';
 import type { AnyAsyncFunction } from 'p-memoize';
 import pMemoize from 'p-memoize';
 
@@ -10,14 +10,14 @@ export type WellKnownCacheKey = (typeof cacheKeys)[number];
 const buildKey = (tenantId: string, key: WellKnownCacheKey) => `${tenantId}:${key}` as const;
 
 class WellKnownCache {
-  // Not sure if we need guard value for `.has()` and `.get()`,
-  // trust cache value for now.
-  #keyv = new Keyv({ ttl: 180_000 /* 3 minutes */ });
+  #cache = new TtlCache<string, unknown>(180_000 /* 3 minutes */);
 
   /**
    * Use for centralized well-known data caching.
    *
-   * WARN: You should store only well-known (public) data since it's a central cache.
+   * WARN:
+   * - You should store only well-known (public) data since it's a central cache.
+   * - The cache does not guard types.
    */
   use<FunctionToMemoize extends AnyAsyncFunction>(
     tenantId: string,
@@ -26,20 +26,24 @@ class WellKnownCache {
   ) {
     return pMemoize(run, {
       cacheKey: () => buildKey(tenantId, key),
-      cache: this.#keyv,
+      // Trust cache value type
+      // eslint-disable-next-line no-restricted-syntax
+      cache: this.#cache as TtlCache<string, Awaited<ReturnType<FunctionToMemoize>>>,
     });
   }
 
-  async invalidate(tenantId: string, keys: readonly WellKnownCacheKey[]) {
-    return this.#keyv.delete(keys.map((key) => buildKey(tenantId, key)));
+  invalidate(tenantId: string, keys: readonly WellKnownCacheKey[]) {
+    for (const key of keys) {
+      this.#cache.delete(buildKey(tenantId, key));
+    }
   }
 
-  async invalidateAll(tenantId: string) {
-    return this.invalidate(tenantId, cacheKeys);
+  invalidateAll(tenantId: string) {
+    this.invalidate(tenantId, cacheKeys);
   }
 
-  async set(tenantId: string, key: WellKnownCacheKey, value: unknown) {
-    return this.#keyv.set(buildKey(tenantId, key), value);
+  set(tenantId: string, key: WellKnownCacheKey, value: unknown) {
+    this.#cache.set(buildKey(tenantId, key), value);
   }
 }
 

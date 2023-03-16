@@ -17,7 +17,7 @@ export default function koaInteractionSie<StateT, ContextT, ResponseT>(
 ): MiddlewareType<StateT, WithInteractionSieContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
     if (noCache(ctx.headers)) {
-      await wellKnownCache.invalidate(tenantId, ['sie']);
+      wellKnownCache.invalidate(tenantId, ['sie']);
     }
 
     const signInExperience = await getSignInExperience();

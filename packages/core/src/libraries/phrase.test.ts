@@ -49,8 +49,8 @@ const { getPhrases } = createPhraseLibrary(
   tenantId
 );
 
-afterEach(async () => {
-  await wellKnownCache.invalidateAll(tenantId);
+afterEach(() => {
+  wellKnownCache.invalidateAll(tenantId);
   jest.clearAllMocks();
 });
 

@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "2.0.1",
-    "@silverhand/essentials": "^2.4.1",
+    "@silverhand/essentials": "2.4.1",
     "@silverhand/ts-config": "2.0.3",
     "@types/inquirer": "^9.0.0",
     "@types/jest": "^29.4.0",

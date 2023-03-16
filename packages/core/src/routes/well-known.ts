@@ -40,7 +40,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
     koaGuard({ response: guardFullSignInExperience, status: 200 }),
     async (ctx, next) => {
       if (noCache(ctx.headers)) {
-        await wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
+        wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
       }
 
       ctx.body = await getFullSignInExperience();
@@ -60,7 +60,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       if (noCache(ctx.headers)) {
-        await wellKnownCache.invalidate(tenantId, ['sie', 'phrases-lng-tags', 'phrases']);
+        wellKnownCache.invalidate(tenantId, ['sie', 'phrases-lng-tags', 'phrases']);
       }
 
       const {

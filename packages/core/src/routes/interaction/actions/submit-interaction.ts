@@ -195,7 +195,7 @@ export default async function submitInteraction(
 
       // Normally we don't need to manually invalidate TTL cache.
       // This is for better OSS onboarding experience.
-      await wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
+      wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
     }
 
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });

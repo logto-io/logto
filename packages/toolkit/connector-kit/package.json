@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@logto/language-kit": "workspace:*",
-    "@silverhand/essentials": "^2.4.1"
+    "@silverhand/essentials": "2.4.1"
   },
   "optionalDependencies": {
     "zod": "^3.20.2"

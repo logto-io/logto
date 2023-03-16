@@ -28,7 +28,7 @@
     "@logto/core-kit": "workspace:*",
     "@logto/schemas": "workspace:*",
     "@logto/shared": "workspace:*",
-    "@silverhand/essentials": "^2.4.1",
+    "@silverhand/essentials": "2.4.1",
     "@withtyped/postgres": "^0.8.1",
     "@withtyped/server": "^0.8.1",
     "accepts": "^1.3.8",
