@@ -15,10 +15,7 @@ type Props = {
   onClose?: () => void;
   className?: string;
   size?: 'medium' | 'large' | 'xlarge';
-} & Pick<
-  CardTitleProps,
-  'learnMoreLink' | 'learnMoreLinkText' | 'title' | 'subtitle' | 'isWordWrapEnabled'
->;
+} & Pick<CardTitleProps, 'learnMoreLink' | 'title' | 'subtitle' | 'isWordWrapEnabled'>;
 
 const ModalLayout = ({
   children,

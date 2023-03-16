@@ -12,7 +12,6 @@ export type Props = {
   subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   size?: 'small' | 'medium' | 'large';
   learnMoreLink?: string;
-  learnMoreLinkText?: AdminConsoleKey;
   isWordWrapEnabled?: boolean;
   className?: string;
 };
@@ -26,7 +25,6 @@ const CardTitle = ({
   size = 'large',
   isWordWrapEnabled = false,
   learnMoreLink,
-  learnMoreLinkText = 'general.learn_more',
   className,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -41,7 +39,7 @@ const CardTitle = ({
           {subtitle && <span>{typeof subtitle === 'string' ? t(subtitle) : subtitle}</span>}
           {learnMoreLink && (
             <TextLink href={learnMoreLink} target="_blank" className={styles.learnMore}>
-              {t(learnMoreLinkText)}
+              {t('general.learn_more')}
             </TextLink>
           )}
         </div>
