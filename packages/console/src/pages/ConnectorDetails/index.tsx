@@ -36,6 +36,7 @@ import ConnectorTabs from './components/ConnectorTabs';
 import ConnectorTypeName from './components/ConnectorTypeName';
 import * as styles from './index.module.scss';
 
+// TODO: refactor path-related operation utils in both Connectors and ConnectorDetails page
 const getConnectorsPathname = (isSocial: boolean) =>
   `/connectors/${isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless}`;
 
@@ -202,7 +203,7 @@ const ConnectorDetails = () => {
                   setIsSetupOpen(false);
 
                   if (connectorId) {
-                    navigate(`${getConnectorsPathname(isSocial)}/${connectorId}`);
+                    navigate(`${getConnectorsPathname(isSocial)}/guide/${connectorId}`);
                   }
                 }}
               />
