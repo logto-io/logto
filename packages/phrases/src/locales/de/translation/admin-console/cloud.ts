@@ -39,18 +39,18 @@ const cloud = {
     },
     reason_field: 'I’m signing up because', // UNTRANSLATED
     reason_options: {
-      adoption: 'Implementing new tech infra for early projects', // UNTRANSLATED
-      replacement: 'Seeking a replacement for the current authentication system', // UNTRANSLATED
-      evaluation: 'Investigating open-source or budget-friendly SaaS options', // UNTRANSLATED
-      experimentation: 'Exploring and experimenting with OIDC and products', // UNTRANSLATED
-      aesthetics: 'Finding an auth solution with beautiful UI and components', // UNTRANSLATED
+      passwordless: 'Finding passwordless authentication and UI kit', // UNTRANSLATED
+      efficiency: 'Finding out-of-the-box identity infrastructure', // UNTRANSLATED
+      access_control: 'Controlling user access based on roles and responsibilities', // UNTRANSLATED
+      multi_tenancy: 'Seeking strategies for a multi-tenancy product', // UNTRANSLATED
+      enterprise: 'Finding SSO solutions for enterprise readiness', // UNTRANSLATED
       others: 'Others', // UNTRANSLATED
     },
   },
   congrats: {
     title: 'Great news! You are qualified to earn Logto Cloud early credit!', // UNTRANSLATED
     description:
-      'Contact the Logto team to claim the offer. After Logto Cloud is officially launched, you will be entitled to either a <strong>$249</strong> credit or a free <strong>3-month</strong> subscription to Logto Cloud.', // UNTRANSLATED
+      'Don’t miss out on a chance to enjoy a free <strong>60 days</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.', // UNTRANSLATED
     check_out_button: 'Check out the live preview', // UNTRANSLATED
     reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
     reserve_description: 'Credit is only eligible once upon validation.', // UNTRANSLATED
@@ -60,11 +60,10 @@ const cloud = {
     enter_admin_console: 'Enter Logto Cloud Preview', // UNTRANSLATED
   },
   gift: {
-    title: 'Secure early credit for Logto SaaS join the front-runners now !', // UNTRANSLATED
-    description: 'Book a one-on-one session with our team for early credit and use case sharing.', // UNTRANSLATED
+    title: 'Use Logto Cloud free for 60 days. Join the front-runners now!', // UNTRANSLATED
+    description: 'Book a one-on-one session with our team for early credit.', // UNTRANSLATED
     reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
-    reserve_description:
-      'You can also save the calendar link. We’re always available to assist you.', // UNTRANSLATED
+    reserve_description: 'Credit is only eligible once upon evaluation.', // UNTRANSLATED
     book_button: 'Book', // UNTRANSLATED
   },
   sie: {
@@ -72,7 +71,7 @@ const cloud = {
     inspire: {
       title: 'Create compelling examples', // UNTRANSLATED
       description:
-        'Feeling unsure about sign in experience? Just click the "Inspire Me" and let the magic happen! ', // UNTRANSLATED
+        'Feeling unsure about sign in experience? Just click the "Inspire Me" and let the magic happen!', // UNTRANSLATED
       inspire_me: 'Inspire me', // UNTRANSLATED
     },
     logo_field: 'App Logo', // UNTRANSLATED

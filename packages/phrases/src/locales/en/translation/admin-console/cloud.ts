@@ -39,18 +39,18 @@ const cloud = {
     },
     reason_field: 'I’m signing up because',
     reason_options: {
-      adoption: 'Implementing new tech infra for early projects',
-      replacement: 'Seeking a replacement for the current authentication system',
-      evaluation: 'Investigating open-source or budget-friendly SaaS options',
-      experimentation: 'Exploring and experimenting with OIDC and products',
-      aesthetics: 'Finding an auth solution with beautiful UI and components',
+      passwordless: 'Finding passwordless authentication and UI kit',
+      efficiency: 'Finding out-of-the-box identity infrastructure',
+      access_control: 'Controlling user access based on roles and responsibilities',
+      multi_tenancy: 'Seeking strategies for a multi-tenancy product',
+      enterprise: 'Finding SSO solutions for enterprise readiness',
       others: 'Others',
     },
   },
   congrats: {
     title: 'Great news! You are qualified to earn Logto Cloud early credit!',
     description:
-      'Contact the Logto team to claim the offer. After Logto Cloud is officially launched, you will be entitled to either a <strong>$249</strong> credit or a free <strong>3-month</strong> subscription to Logto Cloud.',
+      'Don’t miss out on a chance to enjoy a free <strong>60 days</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.',
     check_out_button: 'Check out the live preview',
     reserve_title: 'Reserve your time with Logto team',
     reserve_description: 'Credit is only eligible once upon validation.',
@@ -60,11 +60,10 @@ const cloud = {
     enter_admin_console: 'Enter Logto Cloud Preview',
   },
   gift: {
-    title: 'Secure early credit for Logto SaaS join the front-runners now !',
-    description: 'Book a one-on-one session with our team for early credit and use case sharing.',
+    title: 'Use Logto Cloud free for 60 days. Join the front-runners now!',
+    description: 'Book a one-on-one session with our team for early credit.',
     reserve_title: 'Reserve your time with Logto team',
-    reserve_description:
-      'You can also save the calendar link. We’re always available to assist you.',
+    reserve_description: 'Credit is only eligible once upon evaluation.',
     book_button: 'Book',
   },
   sie: {
@@ -72,7 +71,7 @@ const cloud = {
     inspire: {
       title: 'Create compelling examples',
       description:
-        'Feeling unsure about sign in experience? Just click the "Inspire Me" and let the magic happen! ',
+        'Feeling unsure about sign in experience? Just click the "Inspire Me" and let the magic happen!',
       inspire_me: 'Inspire me',
     },
     logo_field: 'App Logo',
