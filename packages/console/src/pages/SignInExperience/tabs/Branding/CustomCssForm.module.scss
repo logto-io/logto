@@ -1,5 +1,9 @@
 .customCssCodeEditor {
   max-height: calc(100vh - 260px);
   min-height: 132px; // min-height to show three lines of code
-  overflow-y: auto;
+
+  .editor {
+    overflow-x: auto;
+    // overflow-y: auto;
+  }
 }

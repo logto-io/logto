@@ -3,7 +3,7 @@ import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { a11yDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { a11yDark as a11yDarkTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import CopyToClipboard from '../CopyToClipboard';
 import * as styles from './index.module.scss';
@@ -65,6 +65,8 @@ const CodeEditor = ({
     return t('general.required');
   }, [errorMessage, t]);
 
+  const maxLineNumberDigits = ((value ?? '').split('\n').length + 1).toString().length;
+
   return (
     <>
       <div className={classNames(styles.container, className)}>
@@ -82,6 +84,10 @@ const CodeEditor = ({
             readOnly={isReadonly}
             spellCheck="false"
             value={value}
+            style={{
+              marginLeft: `calc(${maxLineNumberDigits}ch + 20px)`,
+              width: `calc(100% - ${maxLineNumberDigits}ch - 20px)`,
+            }}
             onChange={handleChange}
             onKeyDown={handleKeydown}
           />
@@ -89,7 +95,29 @@ const CodeEditor = ({
       inline-styles by default. Therefore, We can only use inline styles to customize them.
       Some styles have to be applied multiple times to each of them for the sake of consistency. */}
           <SyntaxHighlighter
-            wrapLongLines
+            showLineNumbers
+            showInlineLineNumbers
+            lineNumberContainerStyle={{
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: 'right',
+              paddingLeft: '0px',
+              paddingRight: '0px',
+            }}
+            lineNumberStyle={{
+              marginLeft: '0px',
+              marginRight: '20px',
+              paddingRight: '0px',
+              paddingLeft: '0px',
+              display: 'inline-flex',
+              justifyContent: 'flex-end',
+              counterIncrement: 'line',
+              lineHeight: '1.5',
+              flexShrink: 0,
+              fontFamily: "'Roboto Mono', monospace",
+              fontSize: '14px',
+              minWidth: `${maxLineNumberDigits}ch`,
+            }}
             codeTagProps={{
               style: {
                 fontFamily: "'Roboto Mono', monospace", // Override default font-family of <code>
@@ -105,7 +133,7 @@ const CodeEditor = ({
               fontFamily: "'Roboto Mono', monospace", // Override default font-family of <pre>
             }}
             language={language}
-            style={theme}
+            style={a11yDarkTheme}
           >
             {value ?? ''}
           </SyntaxHighlighter>

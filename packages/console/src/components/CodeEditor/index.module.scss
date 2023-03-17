@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  padding: _.unit(6);
+  padding: _.unit(6) _.unit(6) _.unit(6) _.unit(4);
   border-radius: 16px;
   // Force dark theme on the code editor
   background: #34353f;
@@ -36,6 +36,7 @@
 
   .editor {
     position: relative;
+    // overflow-x: auto;
 
     textarea {
       width: 100%;
@@ -46,13 +47,13 @@
       font-size: 14px;
       line-height: 1.5;
       font-family: 'Roboto Mono', monospace;
-      white-space: pre-wrap;
-      word-break: break-all;
+      // white-space: pre-wrap;
+      white-space: nowrap;
+      word-break: normal;
       position: absolute;
       inset: 0;
       resize: none;
       color: #fefefe;
-      overflow: hidden;
       -webkit-text-fill-color: transparent;
       outline: none;
     }
