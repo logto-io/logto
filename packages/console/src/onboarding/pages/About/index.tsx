@@ -15,7 +15,7 @@ import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import ActionBar from '../../components/ActionBar';
 import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
-import { Project, OnboardingPage } from '../../types';
+import { OnboardingPage } from '../../types';
 import { getOnboardingPage } from '../../utils';
 import * as styles from './index.module.scss';
 import { titleOptions, companySizeOptions, reasonOptions } from './options';
@@ -26,10 +26,9 @@ const About = () => {
 
   const {
     data: { questionnaire },
+    isBusinessPlan,
     update,
   } = useUserOnboardingData();
-
-  const isCompanyProject = questionnaire?.project === Project.Company;
 
   const { control, register, handleSubmit, reset } = useForm<Questionnaire>({
     mode: 'onChange',
@@ -60,7 +59,7 @@ const About = () => {
           <div className={styles.title}>{t('cloud.about.title')}</div>
           <div className={styles.description}>{t('cloud.about.description')}</div>
           <form className={styles.form}>
-            {isCompanyProject && (
+            {isBusinessPlan && (
               <>
                 <FormField
                   isMultiple

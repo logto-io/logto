@@ -10,6 +10,7 @@ import ModalLayout from '@/components/ModalLayout';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
+import useConfigs from '@/hooks/use-configs';
 
 export type Props = {
   onClose: (createdRole?: Role) => void;
@@ -33,6 +34,7 @@ const CreateRoleForm = ({ onClose }: Props) => {
   } = useForm<CreateRoleFormData>();
 
   const api = useApi();
+  const { updateConfigs } = useConfigs();
 
   const onSubmit = handleSubmit(async ({ name, description, scopes }) => {
     if (isSubmitting) {
@@ -46,6 +48,7 @@ const CreateRoleForm = ({ onClose }: Props) => {
     };
 
     const createdRole = await api.post('api/roles', { json: payload }).json<Role>();
+    await updateConfigs({ roleCreated: true });
     onClose(createdRole);
   });
 

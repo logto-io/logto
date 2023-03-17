@@ -85,7 +85,8 @@ export const mockAdminConsoleData: AdminConsoleData = {
   applicationCreated: false,
   signInExperienceCustomized: false,
   passwordlessConfigured: false,
-  selfHostingChecked: false,
+  furtherReadingsChecked: false,
+  roleCreated: false,
   communityChecked: false,
   m2mApplicationCreated: false,
 };
