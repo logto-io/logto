@@ -1,6 +1,6 @@
 // Web
-$web-iframe-width: 640px;
-$web-iframe-height: 800px;
+$web-iframe-width: 700px;
+$web-iframe-height: 880px;
 
 $web-width: 498px;
 $web-height: calc($web-width * $web-iframe-height / $web-iframe-width);
@@ -15,7 +15,7 @@ $web-to-wrapper-offset-y: calc($web-iframe-height * 0.5 * ($web-scale-y - 1));
 $mobile-iframe-width: 390px;
 $mobile-iframe-height: 844px;
 
-$mobile-width: 320px;
+$mobile-width: 260px;
 $mobile-height: calc($mobile-width * $mobile-iframe-height / $mobile-iframe-width);
 
 $mobile-scale-x: calc($mobile-width / $mobile-iframe-width);
