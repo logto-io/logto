@@ -12,10 +12,6 @@
 
   &.primary {
     font: var(--font-label-2);
-  }
-
-  &.primary,
-  &.inlinePrimary {
     color: var(--color-brand-default);
     text-decoration: none;
 
@@ -24,22 +20,22 @@
     }
   }
 
+
   &.secondary {
-    color: var(--color-type-secondary);
-    text-decoration: underline;
+    color: var(--color-type-primary);
+    font: inherit;
+    text-decoration: none;
   }
 }
 
 
 :global(body.desktop) {
   .link {
-    &.primary:hover,
-    &.inlinePrimary:hover {
+    &.primary:hover {
       color: var(--color-brand-hover);
     }
 
-    &.primary:focus-visible,
-    &.inlinePrimary:focus-visible {
+    &.primary:focus-visible {
       outline: _.border(var(--color-overlay-brand-focused));
     }
 

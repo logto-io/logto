@@ -43,7 +43,12 @@ const TermsAndPrivacy = ({ className }: Props) => {
         ' ': toggle,
       })}
     >
-      <Checkbox name="termsAgreement" checked={termsAgreement} className={styles.checkbox} />
+      <Checkbox
+        name="termsAgreement"
+        checked={termsAgreement}
+        className={styles.checkbox}
+        size="small"
+      />
       <div className={styles.content}>
         <span>{prefix}</span>
         <TermsLinks inline termsOfUseUrl={termsOfUseUrl} privacyPolicyUrl={privacyPolicyUrl} />

@@ -21,7 +21,7 @@ const TermsLinks = ({ inline, termsOfUseUrl, privacyPolicyUrl }: Props) => {
           className={styles.link}
           text="description.terms_of_use"
           href={termsOfUseUrl}
-          type="inlinePrimary"
+          type="secondary"
           target="_blank"
           onClick={(event) => {
             event.stopPropagation();
@@ -35,7 +35,7 @@ const TermsLinks = ({ inline, termsOfUseUrl, privacyPolicyUrl }: Props) => {
           className={styles.link}
           text="description.privacy_policy"
           href={privacyPolicyUrl}
-          type="inlinePrimary"
+          type="secondary"
           target="_blank"
           onClick={(event) => {
             event.stopPropagation();

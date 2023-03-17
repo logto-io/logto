@@ -15,6 +15,7 @@
 
 .content {
   @include _.text-hint;
+  font: var(--font-label-3);
 }
 
 .errorMessage {
