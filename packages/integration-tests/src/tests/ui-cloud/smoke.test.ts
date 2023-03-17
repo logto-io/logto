@@ -89,8 +89,8 @@ describe('smoke testing for cloud', () => {
   });
 
   it('can complete the onboarding user survey process and enter the sie page', async () => {
-    // Select the reason option
-    await expect(page).toClick('role[button] div[class$=item]', { text: 'Others' });
+    // Select the first reason option
+    await expect(page).toClick('div[role=button][class$=item]');
 
     // Click the next button
     await expect(page).toClick('div[class$=actions] button:first-child');
