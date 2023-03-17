@@ -7,6 +7,8 @@ import useConnectorGroups from '@/hooks/use-connector-groups';
 import type { MultiCardSelectorOption } from '@/onboarding/components/CardSelector';
 import { MultiCardSelector } from '@/onboarding/components/CardSelector';
 
+import { fakeSocialTargetOptions } from '../../options';
+
 type Props = {
   value: string[];
   onChange: (value: string[]) => void;
@@ -34,7 +36,13 @@ const SocialSelector = ({ value, onChange }: Props) => {
       };
     });
 
-  return <MultiCardSelector options={connectorOptions} value={value} onChange={onChange} />;
+  return (
+    <MultiCardSelector
+      options={[...connectorOptions, ...fakeSocialTargetOptions]}
+      value={value}
+      onChange={onChange}
+    />
+  );
 };
 
 export default SocialSelector;
