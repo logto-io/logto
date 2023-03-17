@@ -94,6 +94,11 @@ const cloud = {
       mobile_tab: 'Mobile',
       web_tab: 'Web',
     },
+    connectors: {
+      unlock_later: 'Unlock later',
+      unlock_later_tip:
+        'Once you have completed the onboarding process and entered the product, you will have access to even more social sign-in methods.',
+    },
   },
   broadcast: '📣 You are participating in Logto Cloud Preview',
   socialCallback: {
