@@ -39,11 +39,11 @@ const cloud = {
     },
     reason_field: 'I’m signing up because', // UNTRANSLATED
     reason_options: {
-      adoption: 'Implementing new tech infra for early projects', // UNTRANSLATED
-      replacement: 'Seeking a replacement for the current authentication system', // UNTRANSLATED
-      evaluation: 'Investigating open-source or budget-friendly SaaS options', // UNTRANSLATED
-      experimentation: 'Exploring and experimenting with OIDC and products', // UNTRANSLATED
-      aesthetics: 'Finding an auth solution with beautiful UI and components', // UNTRANSLATED
+      passwordless: 'Finding password-less authentication and UI kit', // UNTRANSLATED
+      efficiency: 'Finding out-of-the-box identity infrastructure', // UNTRANSLATED
+      access_control: 'Controlling user access based on roles and responsibilities', // UNTRANSLATED
+      multi_tenancy: 'Seeking strategies for a multi-tenancy product', // UNTRANSLATED
+      enterprise: 'Finding SSO solutions for enterprise readiness', // UNTRANSLATED
       others: 'Others', // UNTRANSLATED
     },
   },

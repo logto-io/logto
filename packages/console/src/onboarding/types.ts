@@ -40,11 +40,11 @@ export enum CompanySize {
 }
 
 export enum Reason {
-  Adoption = 'adoption',
-  Replacement = 'replacement',
-  Evaluation = 'evaluation',
-  Experimentation = 'experimentation',
-  Aesthetics = 'aesthetics',
+  Passwordless = 'passwordless',
+  Efficiency = 'efficiency',
+  AccessControl = 'access-control',
+  MultiTenancy = 'multi-tenancy',
+  Enterprise = 'enterprise',
   Others = 'others',
 }
 

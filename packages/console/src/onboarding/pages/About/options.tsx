@@ -23,10 +23,10 @@ export const companySizeOptions: CardSelectorOption[] = [
 ];
 
 export const reasonOptions: MultiCardSelectorOption[] = [
-  { title: 'cloud.about.reason_options.adoption', value: Reason.Adoption },
-  { title: 'cloud.about.reason_options.replacement', value: Reason.Replacement },
-  { title: 'cloud.about.reason_options.evaluation', value: Reason.Evaluation },
-  { title: 'cloud.about.reason_options.experimentation', value: Reason.Experimentation },
-  { title: 'cloud.about.reason_options.aesthetics', value: Reason.Aesthetics },
+  { title: 'cloud.about.reason_options.passwordless', value: Reason.Passwordless },
+  { title: 'cloud.about.reason_options.efficiency', value: Reason.Efficiency },
+  { title: 'cloud.about.reason_options.access_control', value: Reason.AccessControl },
+  { title: 'cloud.about.reason_options.multi_tenancy', value: Reason.MultiTenancy },
+  { title: 'cloud.about.reason_options.enterprise', value: Reason.Enterprise },
   { title: 'cloud.about.reason_options.others', value: Reason.Others },
 ];
