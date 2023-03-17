@@ -20,11 +20,10 @@
     height: 40px;
     max-width: 100%;
     object-fit: contain;
+    cursor: not-allowed;
   }
 
   &:hover {
-    cursor: not-allowed;
-
     .delete {
       display: block;
     }

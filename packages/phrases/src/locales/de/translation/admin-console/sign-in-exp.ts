@@ -84,19 +84,15 @@ const sign_in_exp = {
   branding: {
     title: 'BRANDING',
     ui_style: 'Stil',
-    favicon: 'Browser favicon', // UNTRANSLATED
+    favicon: 'Favicon', // UNTRANSLATED
     logo_image_url: 'App logo URL',
     logo_image_url_placeholder: 'https://dein.cdn.domain/logo.png',
     dark_logo_image_url: 'App logo URL (Dunkler Modus)',
     dark_logo_image_url_placeholder: 'https://dein.cdn.domain/logo-dark.png',
     logo_image: 'App logo',
     dark_logo_image: 'App logo (Dunkler Modus)',
-    logo_action_description: 'App Logo to display in UI interface', // UNTRANSLATED
-    favicon_action_description: 'Browser Favicon', // UNTRANSLATED
     logo_image_error: 'App logo: {{error}}', // UNTRANSLATED
     favicon_error: 'Favicon: {{error}}', // UNTRANSLATED
-    upload_logo_image_description: 'App Logo to display in UI interface', // UNTRANSLATED
-    upload_favicon_description: 'Browser Favicon', // UNTRANSLATED
   },
   custom_css: {
     title: 'CUSTOM CSS', // UNTRANSLATED
