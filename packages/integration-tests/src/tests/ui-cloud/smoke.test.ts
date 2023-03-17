@@ -128,7 +128,7 @@ describe('smoke testing for cloud', () => {
     // Wait for the admin console to load
     const mainContent = await page.waitForSelector('div[class$=main]:has(div[class$=title])');
     await expect(mainContent).toMatchElement('div[class$=title]', {
-      text: 'How do you want to get started with Logto?',
+      text: 'Something to explore to help you succeed',
     });
 
     expect(new URL(page.url()).pathname.endsWith('/get-started')).toBeTruthy();
