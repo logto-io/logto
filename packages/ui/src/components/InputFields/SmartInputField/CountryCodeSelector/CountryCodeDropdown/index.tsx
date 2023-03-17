@@ -113,13 +113,20 @@ const CountryCodeDropdown = ({
       const { key } = event;
 
       switch (key) {
-        case 'Enter': {
+        case 'Enter':
+        case ' ': {
           event.preventDefault();
           event.stopPropagation();
 
           if (selectedCountryCode) {
             onCodeChange(selectedCountryCode);
           }
+          break;
+        }
+        case 'Escape': {
+          event.preventDefault();
+          event.stopPropagation();
+          onDestroy();
           break;
         }
         case 'ArrowUp':
@@ -169,7 +176,7 @@ const CountryCodeDropdown = ({
         }
       }
     },
-    [filteredCountryList, onCodeChange, selectedCountryCode]
+    [filteredCountryList, onCodeChange, onDestroy, selectedCountryCode]
   );
 
   useLayoutEffect(() => {
