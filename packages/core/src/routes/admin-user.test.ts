@@ -105,7 +105,9 @@ const usersLibraries = {
 const adminUserRoutes = await pickDefault(import('./admin-user.js'));
 
 describe('adminUserRoutes', () => {
-  const tenantContext = new MockTenant(undefined, mockedQueries, { users: usersLibraries });
+  const tenantContext = new MockTenant(undefined, mockedQueries, undefined, {
+    users: usersLibraries,
+  });
   const userRequest = createRequester({ authedRoutes: adminUserRoutes, tenantContext });
 
   afterEach(() => {

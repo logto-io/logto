@@ -10,6 +10,7 @@ import {
 } from '@logto/schemas';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 
+import { wellKnownCache } from '#src/caches/well-known.js';
 import { EnvSet } from '#src/env-set/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
@@ -149,7 +150,7 @@ const parseUserProfile = async (
 export default async function submitInteraction(
   interaction: VerifiedInteractionResult,
   ctx: WithInteractionDetailsContext,
-  { provider, libraries, queries }: TenantContext,
+  { provider, libraries, connectors, queries, id: tenantId }: TenantContext,
   log?: LogEntry
 ) {
   const { hasActiveUsers, findUserById, updateUserById } = queries.users;
@@ -157,7 +158,6 @@ export default async function submitInteraction(
 
   const {
     users: { generateUserId, insertUser },
-    connectors,
   } = libraries;
   const { event, profile } = interaction;
 
@@ -192,6 +192,10 @@ export default async function submitInteraction(
       await updateDefaultSignInExperience({
         signInMode: isCloud ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       });
+
+      // Normally we don't need to manually invalidate TTL cache.
+      // This is for better OSS onboarding experience.
+      wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
     }
 
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });

@@ -4,6 +4,7 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
+import { wellKnownCache } from '#src/caches/well-known.js';
 import Queries from '#src/tenants/Queries.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -46,6 +47,7 @@ const getPhrases = jest.fn(async () => zhCN);
 const tenantContext = new MockTenant(
   createMockProvider(),
   { customPhrases, signInExperiences: { findDefaultSignInExperience } },
+  undefined,
   { phrases: { getPhrases } }
 );
 
@@ -57,11 +59,12 @@ const phraseRequest = createRequester({
   tenantContext,
 });
 
-describe('when the application is not admin-console', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+afterEach(() => {
+  wellKnownCache.invalidateAll(tenantContext.id);
+  jest.clearAllMocks();
+});
 
+describe('when the application is not admin-console', () => {
   it('should call findDefaultSignInExperience', async () => {
     await expect(phraseRequest.get('/.well-known/phrases')).resolves.toHaveProperty('status', 200);
     expect(findDefaultSignInExperience).toBeCalledTimes(1);
@@ -122,5 +125,17 @@ describe('when the application is not admin-console', () => {
       200
     );
     expect(getPhrases).toBeCalledWith('fr', [customizedLanguage]);
+  });
+
+  it('should use cache for continuous requests', async () => {
+    const [response1, response2, response3] = await Promise.all([
+      phraseRequest.get('/.well-known/phrases'),
+      phraseRequest.get('/.well-known/phrases'),
+      phraseRequest.get('/.well-known/phrases'),
+    ]);
+    expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
+    expect(findAllCustomLanguageTags).toHaveBeenCalledTimes(1);
+    expect(response1.body).toStrictEqual(response2.body);
+    expect(response1.body).toStrictEqual(response3.body);
   });
 });

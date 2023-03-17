@@ -8,6 +8,7 @@ import mount from 'koa-mount';
 import type Provider from 'oidc-provider';
 
 import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
+import { createConnectorLibrary } from '#src/libraries/connector.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
@@ -38,15 +39,18 @@ export default class Tenant implements TenantContext {
   #onRequestEmpty?: () => Promise<void>;
 
   public readonly provider: Provider;
-  public readonly queries: Queries;
-  public readonly libraries: Libraries;
   public readonly run: MiddlewareType;
 
   private readonly app: Koa;
 
-  private constructor(public readonly envSet: EnvSet, public readonly id: string) {
-    const queries = new Queries(envSet.pool);
-    const libraries = new Libraries(queries);
+  // eslint-disable-next-line max-params
+  private constructor(
+    public readonly envSet: EnvSet,
+    public readonly id: string,
+    public readonly queries = new Queries(envSet.pool),
+    public readonly connectors = createConnectorLibrary(queries),
+    public readonly libraries = new Libraries(id, queries, connectors)
+  ) {
     const isAdminTenant = id === adminTenantId;
     const mountedApps = [
       ...Object.values(UserApps),
@@ -54,8 +58,6 @@ export default class Tenant implements TenantContext {
     ];
 
     this.envSet = envSet;
-    this.queries = queries;
-    this.libraries = libraries;
 
     // Init app
     const app = new Koa();
@@ -69,13 +71,14 @@ export default class Tenant implements TenantContext {
     app.use(koaCompress());
 
     // Mount OIDC
-    const provider = initOidc(envSet, queries, libraries);
+    const provider = initOidc(id, envSet, queries, libraries);
     app.use(mount('/oidc', provider.app));
 
     const tenantContext: TenantContext = {
       id,
       provider,
       queries,
+      connectors,
       libraries,
       envSet,
     };

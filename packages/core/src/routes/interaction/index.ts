@@ -49,7 +49,7 @@ export type RouterContext<T> = T extends Router<unknown, infer Context> ? Contex
 export default function interactionRoutes<T extends AnonymousRouter>(
   ...[anonymousRouter, tenant]: RouterInitArgs<T>
 ) {
-  const { provider, queries, libraries } = tenant;
+  const { provider, queries, libraries, id: tenantId } = tenant;
   const router =
     // @ts-expect-error for good koa types
     // eslint-disable-next-line no-restricted-syntax
@@ -68,7 +68,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         profile: profileGuard.optional(),
       }),
     }),
-    koaInteractionSie(libraries.signInExperiences),
+    koaInteractionSie(libraries.signInExperiences, tenantId),
     async (ctx, next) => {
       const { event, identifier, profile } = ctx.guard.body;
       const { signInExperience, createLog } = ctx;
@@ -118,7 +118,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   router.put(
     `${interactionPrefix}/event`,
     koaGuard({ body: z.object({ event: eventGuard }) }),
-    koaInteractionSie(libraries.signInExperiences),
+    koaInteractionSie(libraries.signInExperiences, tenantId),
     async (ctx, next) => {
       const { event } = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
@@ -156,7 +156,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: identifierPayloadGuard,
     }),
-    koaInteractionSie(libraries.signInExperiences),
+    koaInteractionSie(libraries.signInExperiences, tenantId),
     async (ctx, next) => {
       const identifierPayload = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
@@ -193,7 +193,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: profileGuard,
     }),
-    koaInteractionSie(libraries.signInExperiences),
+    koaInteractionSie(libraries.signInExperiences, tenantId),
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
@@ -230,7 +230,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: profileGuard,
     }),
-    koaInteractionSie(libraries.signInExperiences),
+    koaInteractionSie(libraries.signInExperiences, tenantId),
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
@@ -283,7 +283,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   // Submit Interaction
   router.post(
     `${interactionPrefix}/submit`,
-    koaInteractionSie(libraries.signInExperiences),
+    koaInteractionSie(libraries.signInExperiences, tenantId),
     koaInteractionHooks(tenant),
     async (ctx, next) => {
       const { interactionDetails, createLog } = ctx;

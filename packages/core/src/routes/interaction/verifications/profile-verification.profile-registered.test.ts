@@ -21,11 +21,7 @@ const getLogtoConnectorById = jest.fn().mockResolvedValue({
   metadata: { target: 'logto' },
 });
 
-const tenantContext = new MockTenant(
-  undefined,
-  { users: userQueries },
-  { connectors: { getLogtoConnectorById } }
-);
+const tenantContext = new MockTenant(undefined, { users: userQueries }, { getLogtoConnectorById });
 const verifyProfile = await pickDefault(import('./profile-verification.js'));
 
 const identifiers: Identifier[] = [

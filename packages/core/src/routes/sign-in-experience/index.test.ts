@@ -61,10 +61,8 @@ const tenantContext = new MockTenant(
     customPhrases: { findAllCustomLanguageTags: async () => [] },
     connectors: { deleteConnectorById: mockDeleteConnectorById },
   },
-  {
-    signInExperiences: { validateLanguageInfo },
-    connectors: { getLogtoConnectors: mockGetLogtoConnectors },
-  }
+  { getLogtoConnectors: mockGetLogtoConnectors },
+  { signInExperiences: { validateLanguageInfo } }
 );
 
 const signInExperiencesRoutes = await pickDefault(import('./index.js'));

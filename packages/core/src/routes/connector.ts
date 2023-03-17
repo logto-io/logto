@@ -21,7 +21,7 @@ import type { AuthedRouter, RouterInitArgs } from './types.js';
 const generateConnectorId = buildIdGenerator(12);
 
 export default function connectorRoutes<T extends AuthedRouter>(
-  ...[router, { queries, libraries }]: RouterInitArgs<T>
+  ...[router, { queries, connectors, libraries }]: RouterInitArgs<T>
 ) {
   const {
     findConnectorById,
@@ -31,8 +31,8 @@ export default function connectorRoutes<T extends AuthedRouter>(
     insertConnector,
     updateConnector,
   } = queries.connectors;
+  const { getLogtoConnectorById, getLogtoConnectors } = connectors;
   const {
-    connectors: { getLogtoConnectorById, getLogtoConnectors },
     signInExperiences: { removeUnavailableSocialConnectorTargets },
   } = libraries;
 

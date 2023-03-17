@@ -24,7 +24,8 @@ concurrency:
 jobs:
   dockerize-core:
     environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' || '' }}
-    runs-on: ubuntu-latest
+    # Use normal machine for OSS release since we'll build on Depot
+    runs-on: ${{ startsWith(github.ref, 'refs/tags/') && 'ubuntu-latest' || 'ubuntu-latest-4-cores' }}
     permissions:
       contents: read
       id-token: write
@@ -94,7 +95,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   dockerize-cloud:
-    runs-on: ubuntu-latest
+    # Use normal machine for OSS release since we'll build on Depot
+    runs-on: ${{ startsWith(github.ref, 'refs/tags/') && 'ubuntu-latest' || 'ubuntu-latest-4-cores' }}
 
     steps:
       - uses: actions/checkout@v3

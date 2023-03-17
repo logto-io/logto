@@ -10,6 +10,7 @@ import {
   mockWechatConnector,
   mockWechatNativeConnector,
 } from '#src/__mocks__/index.js';
+import { wellKnownCache } from '#src/caches/well-known.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -32,34 +33,36 @@ const { createMockProvider } = await import('#src/test-utils/oidc-provider.js');
 const { MockTenant } = await import('#src/test-utils/tenant.js');
 const { createRequester } = await import('#src/utils/test-utils.js');
 
+const provider = createMockProvider();
+const getLogtoConnectors = jest.fn(async () => {
+  return [
+    mockAliyunDmConnector,
+    mockAliyunSmsConnector,
+    mockFacebookConnector,
+    mockGithubConnector,
+    mockGoogleConnector,
+    mockWechatConnector,
+    mockWechatNativeConnector,
+  ];
+});
+const tenantContext = new MockTenant(
+  provider,
+  {
+    signInExperiences: sieQueries,
+    users: { hasActiveUsers: jest.fn().mockResolvedValue(true) },
+  },
+  { getLogtoConnectors }
+);
+
 describe('GET /.well-known/sign-in-exp', () => {
   afterEach(() => {
+    wellKnownCache.invalidateAll(tenantContext.id);
     jest.clearAllMocks();
   });
 
-  const provider = createMockProvider();
   const sessionRequest = createRequester({
     anonymousRoutes: wellKnownRoutes,
-    tenantContext: new MockTenant(
-      provider,
-      {
-        signInExperiences: sieQueries,
-        users: { hasActiveUsers: jest.fn().mockResolvedValue(true) },
-      },
-      {
-        connectors: {
-          getLogtoConnectors: jest.fn(async () => [
-            mockAliyunDmConnector,
-            mockAliyunSmsConnector,
-            mockFacebookConnector,
-            mockGithubConnector,
-            mockGoogleConnector,
-            mockWechatConnector,
-            mockWechatNativeConnector,
-          ]),
-        },
-      }
-    ),
+    tenantContext,
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();
@@ -95,5 +98,17 @@ describe('GET /.well-known/sign-in-exp', () => {
         },
       ],
     });
+  });
+
+  it('should use cache for continuous requests', async () => {
+    const [response1, response2, response3] = await Promise.all([
+      sessionRequest.get('/.well-known/sign-in-exp'),
+      sessionRequest.get('/.well-known/sign-in-exp'),
+      sessionRequest.get('/.well-known/sign-in-exp'),
+    ]);
+    expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
+    expect(getLogtoConnectors).toHaveBeenCalledTimes(1);
+    expect(response1.body).toStrictEqual(response2.body);
+    expect(response2.body).toStrictEqual(response3.body);
   });
 });

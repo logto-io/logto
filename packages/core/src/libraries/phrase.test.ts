@@ -11,6 +11,7 @@ import {
   zhCnTag,
   zhHkTag,
 } from '#src/__mocks__/custom-phrase.js';
+import { wellKnownCache } from '#src/caches/well-known.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -41,12 +42,15 @@ const findCustomPhraseByLanguageTag = jest.fn(async (languageTag: string) => {
   return mockCustomPhrase;
 });
 
+const tenantId = 'mock_id';
 const { createPhraseLibrary } = await import('#src/libraries/phrase.js');
 const { getPhrases } = createPhraseLibrary(
-  new MockQueries({ customPhrases: { findCustomPhraseByLanguageTag } })
+  new MockQueries({ customPhrases: { findCustomPhraseByLanguageTag } }),
+  tenantId
 );
 
 afterEach(() => {
+  wellKnownCache.invalidateAll(tenantId);
   jest.clearAllMocks();
 });
 

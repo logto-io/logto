@@ -58,6 +58,10 @@ export const createCustomPhraseQueries = (pool: CommonQueryMethods) => {
   };
 
   return {
+    /**
+     * NOTE: Use `getAllCustomLanguageTags()` from phrase library
+     * if possible since that function leverages cache.
+     */
     findAllCustomLanguageTags,
     findAllCustomPhrases,
     findCustomPhraseByLanguageTag,

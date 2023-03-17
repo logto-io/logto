@@ -56,7 +56,8 @@ describe('submit action', () => {
   const tenant = new MockTenant(
     undefined,
     { users: userQueries, signInExperiences: { updateDefaultSignInExperience: jest.fn() } },
-    { users: userLibraries, connectors: { getLogtoConnectorById } }
+    { getLogtoConnectorById },
+    { users: userLibraries }
   );
   const ctx = {
     ...createContextWithRouteParameters(),

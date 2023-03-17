@@ -11,11 +11,9 @@ const { mockEsmDefault } = createMockUtils(jest);
 
 const findUserByIdentifier = mockEsmDefault('../utils/find-user-by-identifier.js', () => jest.fn());
 
-const tenant = new MockTenant(
-  undefined,
-  {},
-  { socials: { findSocialRelatedUser: jest.fn().mockResolvedValue(null) } }
-);
+const tenant = new MockTenant(undefined, undefined, undefined, {
+  socials: { findSocialRelatedUser: jest.fn().mockResolvedValue(null) },
+});
 
 const verifyUserAccount = await pickDefault(import('./user-identity-verification.js'));
 

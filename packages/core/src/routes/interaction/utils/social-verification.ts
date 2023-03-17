@@ -14,12 +14,10 @@ import type { SocialAuthorizationUrlPayload } from '../types/index.js';
 
 export const createSocialAuthorizationUrl = async (
   ctx: WithLogContext,
-  { provider, libraries }: TenantContext,
+  { provider, connectors }: TenantContext,
   payload: SocialAuthorizationUrlPayload
 ) => {
-  const {
-    connectors: { getLogtoConnectorById },
-  } = libraries;
+  const { getLogtoConnectorById } = connectors;
 
   const { connectorId, state, redirectUri } = payload;
   assertThat(state && redirectUri, 'session.insufficient_info');

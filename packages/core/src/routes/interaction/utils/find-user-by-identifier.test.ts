@@ -18,7 +18,7 @@ const tenantContext = new MockTenant(
   {
     users: queries,
   },
-  { connectors: { getLogtoConnectorById } }
+  { getLogtoConnectorById }
 );
 
 const findUserByIdentifier = await pickDefault(import('./find-user-by-identifier.js'));
