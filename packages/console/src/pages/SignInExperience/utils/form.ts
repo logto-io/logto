@@ -1,7 +1,6 @@
 import type { SignInExperience, SignUp } from '@logto/schemas';
 import { SignInMode, SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { t } from 'i18next';
 import type { DeepRequired, FieldErrorsImpl } from 'react-hook-form';
 
 import {
@@ -38,10 +37,7 @@ export const signInExperienceParser = {
       ...signInExperience,
       signUp: signInExperienceParser.toLocalSignUp(signUp),
       createAccountEnabled: signInMode !== SignInMode.SignIn,
-      // CodeEditor component can not properly handle i18n default value, put placeholder here as workaround
-      customCss: customCss?.length
-        ? customCss
-        : t('admin_console.sign_in_exp.custom_css.css_code_editor_content_placeholder'),
+      customCss: customCss ?? undefined,
     };
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
