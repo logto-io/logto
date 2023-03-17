@@ -25,6 +25,7 @@
 
   .button {
     border-color: var(--color-neutral-variant-80);
+    padding-right: _.unit(7);
 
     &:not(:disabled) {
       &:not(:active),
