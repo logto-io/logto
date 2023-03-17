@@ -6,5 +6,6 @@ const config = {
   coveragePathIgnorePatterns: ['/node_modules/', '/test-utils/'],
   collectCoverageFrom: ['**/*.js'],
   roots: ['./build'],
+  setupFilesAfterEnv: ['./jest.setup.js'],
 };
 export default config;
