@@ -73,17 +73,6 @@ const useGetStartedMetadata = () => {
         },
       },
       {
-        id: 'configurePasswordless',
-        title: 'get_started.passwordless_title',
-        subtitle: 'get_started.passwordless_subtitle',
-        icon: isLightMode ? Passwordless : PasswordlessDark,
-        buttonText: 'general.enable',
-        isComplete: configs?.passwordlessConfigured,
-        onClick: () => {
-          navigate(`/connectors/${ConnectorsTabs.Passwordless}`);
-        },
-      },
-      {
         id: 'customizeSignInExperience',
         title: 'get_started.custom_sie_title',
         subtitle: 'get_started.custom_sie_subtitle',
@@ -92,6 +81,17 @@ const useGetStartedMetadata = () => {
         isComplete: configs?.signInExperienceCustomized,
         onClick: () => {
           navigate('/sign-in-experience');
+        },
+      },
+      {
+        id: 'configurePasswordless',
+        title: 'get_started.passwordless_title',
+        subtitle: 'get_started.passwordless_subtitle',
+        icon: isLightMode ? Passwordless : PasswordlessDark,
+        buttonText: 'general.enable',
+        isComplete: configs?.passwordlessConfigured,
+        onClick: () => {
+          navigate(`/connectors/${ConnectorsTabs.Passwordless}`);
         },
       },
     ],
@@ -153,10 +153,10 @@ const useGetStartedMetadata = () => {
         title: 'get_started.management_api_title',
         subtitle: 'get_started.management_api_subtitle',
         icon: isLightMode ? MachineToMachine : MachineToMachineDark,
-        buttonText: 'general.create',
+        buttonText: 'general.check_out',
         isComplete: configs?.m2mApplicationCreated,
         onClick: () => {
-          navigate('/applications/create');
+          navigate('/api-resources');
         },
       },
       {
@@ -164,10 +164,10 @@ const useGetStartedMetadata = () => {
         title: 'get_started.add_rbac_title',
         subtitle: 'get_started.add_rbac_subtitle',
         icon: isLightMode ? CreateRole : CreateRoleDark,
-        buttonText: 'general.create',
+        buttonText: 'general.check_out',
         isComplete: configs?.roleCreated,
         onClick: () => {
-          navigate('/roles/create');
+          navigate('/roles');
         },
       },
     ],
