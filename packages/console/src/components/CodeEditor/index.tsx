@@ -1,3 +1,4 @@
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useRef } from 'react';
@@ -16,17 +17,19 @@ type Props = {
   tabSize?: number;
   hasError?: boolean;
   errorMessage?: string;
+  placeholder?: string;
 };
 
 const CodeEditor = ({
   className,
   language,
   isReadonly = false,
-  value = '',
+  value,
   onChange,
   tabSize = 2,
   hasError,
   errorMessage,
+  placeholder,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -55,7 +58,7 @@ const CodeEditor = ({
   return (
     <>
       <div className={classNames(styles.container, className)}>
-        <CopyToClipboard value={value} variant="icon" className={styles.copy} />
+        <CopyToClipboard value={value ?? ''} variant="icon" className={styles.copy} />
         <div className={styles.editor}>
           {/* SyntaxHighlighter is a readonly component, so a transparent <textarea> layer is needed
       in order to support user interactions, such as code editing, copy-pasting, etc. */}
@@ -68,6 +71,7 @@ const CodeEditor = ({
             readOnly={isReadonly}
             spellCheck="false"
             value={value}
+            placeholder={placeholder}
             onChange={handleChange}
             onKeyDown={handleKeydown}
           />
@@ -93,7 +97,7 @@ const CodeEditor = ({
             language={language}
             style={theme}
           >
-            {value}
+            {conditional(Boolean(value) && value) ?? placeholder ?? ''}
           </SyntaxHighlighter>
         </div>
       </div>

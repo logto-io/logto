@@ -9,7 +9,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import type { SignInExperienceForm } from '../../types';
 import * as tabsStyles from '../index.module.scss';
-import * as brandingStyles from './index.module.scss';
+import * as brandingStyles from './CustomCssForm.module.scss';
 
 const CustomCssForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -53,6 +53,7 @@ const CustomCssForm = () => {
               className={brandingStyles.customCssCodeEditor}
               language="scss"
               value={value ?? undefined}
+              placeholder={t('sign_in_exp.custom_css.css_code_editor_content_placeholder')}
               onChange={onChange}
             />
           )}
