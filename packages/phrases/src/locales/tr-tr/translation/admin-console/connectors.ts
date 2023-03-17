@@ -9,7 +9,7 @@ const connectors = {
   tab_social: 'Social connectorlar',
   connector_name: 'Connector adı',
   demo_tip:
-    'This connector has been preconfigured for demonstration purposes only. It should not be utilized in a production environment. Once you have completed your testing, be sure to provide your own credentials and set up your own connectors. The one you created will replace the trial version.', // UNTRANSLATED
+    'The demo connector is designed exclusively for demonstration purposes and is not recommended for deployment in a production environment.', // UNTRANSLATED
   connector_type: 'Tip',
   connector_status: 'Oturum açma deneyimi',
   connector_status_in_use: 'Kullanımda',

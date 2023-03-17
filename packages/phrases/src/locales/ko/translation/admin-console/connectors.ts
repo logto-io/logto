@@ -9,7 +9,7 @@ const connectors = {
   tab_social: '소셜 연동',
   connector_name: '연동 이름',
   demo_tip:
-    'This connector has been preconfigured for demonstration purposes only. It should not be utilized in a production environment. Once you have completed your testing, be sure to provide your own credentials and set up your own connectors. The one you created will replace the trial version.', // UNTRANSLATED
+    'The demo connector is designed exclusively for demonstration purposes and is not recommended for deployment in a production environment.', // UNTRANSLATED
   connector_type: '종류',
   connector_status: '로그인 경험',
   connector_status_in_use: '사용 중',
