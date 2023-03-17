@@ -60,11 +60,10 @@ const cloud = {
     enter_admin_console: 'Enter Logto Cloud Preview',
   },
   gift: {
-    title: 'Secure early credit for Logto SaaS join the front-runners now !',
-    description: 'Book a one-on-one session with our team for early credit and use case sharing.',
+    title: 'Use Logto Cloud free for 3 months. Join the front-runners now !',
+    description: 'Book a one-on-one session with our team for early credit.',
     reserve_title: 'Reserve your time with Logto team',
-    reserve_description:
-      'You can also save the calendar link. We’re always available to assist you.',
+    reserve_description: 'Credit is only eligible once upon evaluation. ',
     book_button: 'Book',
   },
   sie: {
