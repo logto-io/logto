@@ -97,6 +97,8 @@ const cloud = {
       unlocked_later: 'Unlocked later',
       unlocked_later_tip:
         'Once you have completed the onboarding process and entered the product, you will have access to even more social sign-in methods.',
+      notice:
+        'Please avoid using the demo connector for production purposes. Once you’ve completed testing, kindly delete the demo connector and set up your own connector with your credentials.',
     },
   },
   broadcast: '📣 You are participating in Logto Cloud Preview',
