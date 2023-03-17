@@ -95,6 +95,7 @@ const translation = {
     continue_with_more_information: '더 나은 보안을 위해 아래 자세한 내용을 따라 주세요.',
     create_your_account: '계정 생성하기',
     welcome_to_sign_in: '로그인을 환영합니다',
+    no_region_code_found: '지역 코드를 찾을 수 없습니다.',
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} 필수예요.`,

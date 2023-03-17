@@ -1,5 +1,7 @@
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
+import classNames from 'classnames';
+import type { KeyboardEventHandler } from 'react';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -36,6 +38,7 @@ const CountryCodeDropdown = ({
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
   const [position, setPosition] = useState({});
+  const [selectedCountryCode, setSelectedCountryCode] = useState('');
   const debouncedSearchValue = useDebounce(searchValue, 100);
 
   const onSearchChange = useCallback(({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,6 +96,90 @@ const CountryCodeDropdown = ({
     [countryList, debouncedSearchValue]
   );
 
+  useLayoutEffect(() => {
+    if (!debouncedSearchValue) {
+      setSelectedCountryCode('');
+
+      return;
+    }
+
+    // Auto Focus on the first available element
+    const firstCountryCode = filteredCountryList[0]?.countryCallingCode;
+    setSelectedCountryCode(firstCountryCode ?? '');
+  }, [filteredCountryList, debouncedSearchValue]);
+
+  const onInputKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(
+    (event) => {
+      const { key } = event;
+
+      switch (key) {
+        case 'Enter': {
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (selectedCountryCode) {
+            onCodeChange(selectedCountryCode);
+          }
+          break;
+        }
+        case 'ArrowUp':
+        case 'ArrowLeft': {
+          event.preventDefault();
+          event.stopPropagation();
+
+          const currentSelectedIndex = filteredCountryList.findIndex(
+            ({ countryCallingCode }) => countryCallingCode === selectedCountryCode
+          );
+
+          if (currentSelectedIndex <= 0) {
+            return;
+          }
+
+          const nextSelectedCountryCode = filteredCountryList[currentSelectedIndex - 1];
+
+          setSelectedCountryCode(nextSelectedCountryCode?.countryCallingCode ?? '');
+          break;
+        }
+        case '-':
+        case 'e':
+        case '.': {
+          event.preventDefault();
+          event.stopPropagation();
+          break;
+        }
+        case 'ArrowRight':
+        case 'ArrowDown': {
+          event.preventDefault();
+          event.stopPropagation();
+
+          const currentSelectedIndex = filteredCountryList.findIndex(
+            ({ countryCallingCode }) => countryCallingCode === selectedCountryCode
+          );
+
+          if (currentSelectedIndex >= filteredCountryList.length - 1) {
+            return;
+          }
+
+          const nextSelectedCountryCode = filteredCountryList[currentSelectedIndex + 1];
+          setSelectedCountryCode(nextSelectedCountryCode?.countryCallingCode ?? '');
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    },
+    [filteredCountryList, onCodeChange, selectedCountryCode]
+  );
+
+  useLayoutEffect(() => {
+    const selectedItemDom = document.querySelector(`li[data-id="${selectedCountryCode}"]`);
+
+    if (selectedItemDom) {
+      selectedItemDom.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [selectedCountryCode]);
+
   return (
     <ReactModal
       id="country-code-dropdown"
@@ -130,21 +217,28 @@ const CountryCodeDropdown = ({
           autoFocus
           name="country-code-search"
           type="number"
+          min={0}
           prefix={<SearchIcon />}
           value={searchValue}
           className={styles.searchInputField}
           placeholder={t('input.search_region_code')}
           onChange={onSearchChange}
+          onKeyDown={onInputKeyDown}
         />
         <ul className={styles.countryList}>
           {filteredCountryList.map(({ countryCallingCode, countryCode: countryKeyCode }) => {
             const isActive = countryCallingCode === countryCode;
+            const isSelected = countryCallingCode === selectedCountryCode;
 
             return (
               <li
                 key={countryKeyCode}
                 tabIndex={0}
-                className={conditional(isActive && styles.active)}
+                data-id={countryCallingCode}
+                className={classNames(
+                  conditional(isActive && styles.active),
+                  conditional(isSelected && styles.selected)
+                )}
                 // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
                 role="button"
                 onKeyDown={onKeyDownHandler({
@@ -155,6 +249,12 @@ const CountryCodeDropdown = ({
                 onClick={() => {
                   onCodeChange(countryCallingCode);
                 }}
+                onMouseEnter={() => {
+                  setSelectedCountryCode(countryCallingCode);
+                }}
+                onMouseLeave={() => {
+                  setSelectedCountryCode('');
+                }}
               >
                 {isActive && <CheckMark />}
                 {`+${countryCallingCode}`}
@@ -162,6 +262,9 @@ const CountryCodeDropdown = ({
             );
           })}
         </ul>
+        {filteredCountryList.length === 0 && (
+          <div className={styles.notFound}>{t('description.no_region_code_found')}</div>
+        )}
       </div>
     </ReactModal>
   );

@@ -102,6 +102,7 @@ const translation = {
       'Pour une sécurité accrue, veuillez compléter les détails du compte ci-dessous.',
     create_your_account: 'Créer votre compte',
     welcome_to_sign_in: 'Bienvenue pour vous connecter',
+    no_region_code_found: 'Aucun code de région trouvé',
   },
   error: {
     general_required: `Le {{types, list(type: disjunction;)}} est requis`,

@@ -56,12 +56,18 @@
       padding-left: calc(_.unit(7) - _.unit(6));
     }
 
-    &:hover {
+    &.selected {
       border-radius: _.unit(2);
       background: var(--color-overlay-neutral-hover);
       color: var(--color-type-link);
     }
   }
+}
+
+.notFound {
+  color: var(--color-type-secondary);
+  padding: _.unit(1) _.unit(2) _.unit(1) _.unit(7);
+  text-align: center;
 }
 
 
@@ -98,6 +104,7 @@
   }
 
   .countryList {
+    font: var(--font-body-1);
     overflow: auto;
     flex: 1;
   }

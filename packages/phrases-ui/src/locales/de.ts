@@ -102,6 +102,7 @@ const translation = {
       'Für zusätzliche Sicherheit, vervollständige bitte deine Informationen.',
     create_your_account: 'Erstelle dein Konto',
     welcome_to_sign_in: 'Willkommen zur Anmeldung',
+    no_region_code_found: 'Kein Regionencode gefunden',
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} ist erforderlich`,

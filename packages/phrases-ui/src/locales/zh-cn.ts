@@ -90,6 +90,7 @@ const translation = {
     continue_with_more_information: '为保障你的账号安全，需要你补充以下信息。',
     create_your_account: '注册你的账号',
     welcome_to_sign_in: '欢迎登录',
+    no_region_code_found: '没有找到区域码',
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}}必填`,
