@@ -15,6 +15,7 @@ import {
   mockAliyunSmsConnector,
   mockTermsOfUseUrl,
   mockPrivacyPolicyUrl,
+  mockDemoSocialConnector,
 } from '#src/__mocks__/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -50,13 +51,19 @@ const signInExperiences = {
 const { findDefaultSignInExperience } = signInExperiences;
 
 const validateLanguageInfo = jest.fn();
+const mockGetLogtoConnectors = jest.fn(async () => logtoConnectors);
+const mockDeleteConnectorById = jest.fn();
 
 const tenantContext = new MockTenant(
   undefined,
-  { signInExperiences, customPhrases: { findAllCustomLanguageTags: async () => [] } },
+  {
+    signInExperiences,
+    customPhrases: { findAllCustomLanguageTags: async () => [] },
+    connectors: { deleteConnectorById: mockDeleteConnectorById },
+  },
   {
     signInExperiences: { validateLanguageInfo },
-    connectors: { getLogtoConnectors: async () => logtoConnectors },
+    connectors: { getLogtoConnectors: mockGetLogtoConnectors },
   }
 );
 
@@ -80,6 +87,10 @@ describe('GET /sign-in-exp', () => {
 });
 
 describe('PATCH /sign-in-exp', () => {
+  afterEach(() => {
+    mockDeleteConnectorById.mockClear();
+  });
+
   it('should update social connector targets in correct sorting order', async () => {
     const socialSignInConnectorTargets = ['github', 'facebook'];
     const signInExperience = {
@@ -108,6 +119,40 @@ describe('PATCH /sign-in-exp', () => {
         socialSignInConnectorTargets: ['github', 'facebook', 'google'],
       },
     });
+  });
+
+  it('should remove unselected demo social connectors', async () => {
+    mockGetLogtoConnectors.mockResolvedValueOnce([...logtoConnectors, mockDemoSocialConnector]);
+    const socialSignInConnectorTargets = ['facebook', 'google'];
+    const signInExperience = {
+      socialSignInConnectorTargets,
+    };
+    await signInExperienceRequester
+      .patch('/sign-in-exp?removeUnusedDemoSocialConnector=1')
+      .send(signInExperience);
+    expect(mockDeleteConnectorById).toHaveBeenCalledWith(mockDemoSocialConnector.dbEntry.id);
+  });
+
+  it('should remove unselected demo social connectors when removeUnusedDemoSocialConnector is not set', async () => {
+    mockGetLogtoConnectors.mockResolvedValueOnce([...logtoConnectors, mockDemoSocialConnector]);
+    const socialSignInConnectorTargets = ['facebook', 'google'];
+    const signInExperience = {
+      socialSignInConnectorTargets,
+    };
+    await signInExperienceRequester.patch('/sign-in-exp').send(signInExperience);
+    expect(mockDeleteConnectorById).not.toHaveBeenCalled();
+  });
+
+  it('should not remove selected demo social connectors', async () => {
+    mockGetLogtoConnectors.mockResolvedValueOnce([...logtoConnectors, mockDemoSocialConnector]);
+    const socialSignInConnectorTargets = ['github', 'facebook', 'google'];
+    const signInExperience = {
+      socialSignInConnectorTargets,
+    };
+    await signInExperienceRequester
+      .patch('/sign-in-exp?removeUnusedDemoSocialConnector=1')
+      .send(signInExperience);
+    expect(mockDeleteConnectorById).not.toHaveBeenCalled();
   });
 
   it('should succeed to update when the input is valid', async () => {

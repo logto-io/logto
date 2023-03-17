@@ -1,5 +1,6 @@
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
-import { literal, object, string } from 'zod';
+import { DemoConnector } from '@logto/shared';
+import { literal, object, string, z } from 'zod';
 
 import { validateSignUp, validateSignIn } from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -10,6 +11,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;
+  const { deleteConnectorById } = queries.connectors;
   const {
     signInExperiences: { validateLanguageInfo },
     connectors: { getLogtoConnectors },
@@ -28,6 +30,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
   router.patch(
     '/sign-in-exp',
     koaGuard({
+      query: z.object({ removeUnusedDemoSocialConnector: z.string().optional() }),
       body: SignInExperiences.createGuard
         .omit({ id: true, termsOfUseUrl: true, privacyPolicyUrl: true })
         .merge(
@@ -39,7 +42,10 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
         .partial(),
     }),
     async (ctx, next) => {
-      const { socialSignInConnectorTargets, ...rest } = ctx.guard.body;
+      const {
+        query: { removeUnusedDemoSocialConnector },
+        body: { socialSignInConnectorTargets, ...rest },
+      } = ctx.guard;
       const { languageInfo, signUp, signIn } = rest;
 
       if (languageInfo) {
@@ -66,6 +72,22 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
         const signInExperience = await findDefaultSignInExperience();
         validateSignIn(signIn, signInExperience.signUp, connectors);
       }
+
+      // Remove unused demo social connectors, those that are not selected in onboarding SIE config.
+      if (removeUnusedDemoSocialConnector && filteredSocialSignInConnectorTargets) {
+        await Promise.all(
+          connectors
+            .filter((connector) => {
+              return (
+                connector.type === ConnectorType.Social &&
+                connector.metadata.id === DemoConnector.Social &&
+                !filteredSocialSignInConnectorTargets.includes(connector.metadata.target)
+              );
+            })
+            .map(async (connector) => deleteConnectorById(connector.dbEntry.id))
+        );
+      }
+
       ctx.body = await updateDefaultSignInExperience(
         filteredSocialSignInConnectorTargets
           ? {

@@ -2,6 +2,7 @@ import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
 import { ConnectorPlatform } from '@logto/connector-kit';
 import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import { DemoConnector } from '@logto/shared';
 import { any } from 'zod';
 
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
@@ -217,6 +218,21 @@ export const mockGoogleConnector: LogtoConnector = {
     id: 'google',
     target: 'google',
     platform: ConnectorPlatform.Web,
+  },
+  type: ConnectorType.Social,
+  ...mockLogtoConnector,
+};
+
+export const mockDemoSocialConnector: LogtoConnector = {
+  dbEntry: {
+    ...mockConnector,
+    id: 'demo-social',
+  },
+  metadata: {
+    ...mockMetadata,
+    id: DemoConnector.Social,
+    target: 'github',
+    platform: null,
   },
   type: ConnectorType.Social,
   ...mockLogtoConnector,
