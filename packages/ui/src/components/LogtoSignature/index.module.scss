@@ -4,7 +4,7 @@
 .signature {
   @include _.flex-row;
   font: var(--font-label-2);
-  color: var(--color-neutral-variant-60);
+  color: var(--color-neutral-variant-70);
   padding: _.unit(1) _.unit(2);
   text-decoration: none;
 
@@ -36,5 +36,6 @@
 :global(body.mobile) {
   .signature {
     color: var(--color-neutral-variant-80);
+    font: var(--font-label-3);
   }
 }
