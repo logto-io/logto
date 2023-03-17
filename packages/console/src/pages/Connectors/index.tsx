@@ -20,6 +20,7 @@ import { ConnectorsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import DemoConnectorNotice from '@/onboarding/components/DemoConnectorNotice';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 
 import ConnectorDeleteButton from './components/ConnectorDeleteButton';
@@ -90,6 +91,8 @@ const Connectors = () => {
 
   const connectors = isSocial ? socialConnectors : passwordlessConnectors;
 
+  const hasDemoConnector = connectors?.some(({ isDemo }) => isDemo);
+
   const connectorToShowInGuide = useMemo(() => {
     if (factories && factoryId) {
       return factories.find(({ id }) => id === factoryId);
@@ -118,6 +121,7 @@ const Connectors = () => {
           <TabNavItem href={passwordlessPathname}>{t('connectors.tab_email_sms')}</TabNavItem>
           <TabNavItem href={socialPathname}>{t('connectors.tab_social')}</TabNavItem>
         </TabNav>
+        {hasDemoConnector && <DemoConnectorNotice />}
         <Table
           className={resourcesStyles.table}
           rowIndexKey="id"
