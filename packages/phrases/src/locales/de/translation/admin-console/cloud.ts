@@ -39,7 +39,7 @@ const cloud = {
     },
     reason_field: 'I’m signing up because', // UNTRANSLATED
     reason_options: {
-      passwordless: 'Finding password-less authentication and UI kit', // UNTRANSLATED
+      passwordless: 'Finding passwordless authentication and UI kit', // UNTRANSLATED
       efficiency: 'Finding out-of-the-box identity infrastructure', // UNTRANSLATED
       access_control: 'Controlling user access based on roles and responsibilities', // UNTRANSLATED
       multi_tenancy: 'Seeking strategies for a multi-tenancy product', // UNTRANSLATED
@@ -50,7 +50,7 @@ const cloud = {
   congrats: {
     title: 'Great news! You are qualified to earn Logto Cloud early credit!', // UNTRANSLATED
     description:
-      'Don’t miss out on a chance to enjoy a free <strong>3-month</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.', // UNTRANSLATED
+      'Don’t miss out on a chance to enjoy a free <strong>60 days</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.', // UNTRANSLATED
     check_out_button: 'Check out the live preview', // UNTRANSLATED
     reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
     reserve_description: 'Credit is only eligible once upon validation.', // UNTRANSLATED
@@ -60,7 +60,7 @@ const cloud = {
     enter_admin_console: 'Enter Logto Cloud Preview', // UNTRANSLATED
   },
   gift: {
-    title: 'Use Logto Cloud free for 3 months. Join the front-runners now !', // UNTRANSLATED
+    title: 'Use Logto Cloud free for 60 days. Join the front-runners now !', // UNTRANSLATED
     description: 'Book a one-on-one session with our team for early credit.', // UNTRANSLATED
     reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
     reserve_description: 'Credit is only eligible once upon evaluation. ', // UNTRANSLATED

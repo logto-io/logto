@@ -39,7 +39,7 @@ const cloud = {
     },
     reason_field: 'I’m signing up because',
     reason_options: {
-      passwordless: 'Finding password-less authentication and UI kit',
+      passwordless: 'Finding passwordless authentication and UI kit',
       efficiency: 'Finding out-of-the-box identity infrastructure',
       access_control: 'Controlling user access based on roles and responsibilities',
       multi_tenancy: 'Seeking strategies for a multi-tenancy product',
@@ -50,7 +50,7 @@ const cloud = {
   congrats: {
     title: 'Great news! You are qualified to earn Logto Cloud early credit!',
     description:
-      'Don’t miss out on a chance to enjoy a free <strong>3-month</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.',
+      'Don’t miss out on a chance to enjoy a free <strong>60 days</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.',
     check_out_button: 'Check out the live preview',
     reserve_title: 'Reserve your time with Logto team',
     reserve_description: 'Credit is only eligible once upon validation.',
@@ -60,7 +60,7 @@ const cloud = {
     enter_admin_console: 'Enter Logto Cloud Preview',
   },
   gift: {
-    title: 'Use Logto Cloud free for 3 months. Join the front-runners now !',
+    title: 'Use Logto Cloud free for 60 days. Join the front-runners now !',
     description: 'Book a one-on-one session with our team for early credit.',
     reserve_title: 'Reserve your time with Logto team',
     reserve_description: 'Credit is only eligible once upon evaluation. ',
