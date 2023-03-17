@@ -23,6 +23,7 @@ import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import { Authentication, OnboardingPage } from '@/onboarding/types';
 import type { OnboardingSieConfig } from '@/onboarding/types';
 import { getOnboardingPage } from '@/onboarding/utils';
+import { buildUrl } from '@/utils/url';
 import { uriValidator } from '@/utils/validator';
 
 import InspireMe from './components/InspireMe';
@@ -83,7 +84,7 @@ const SignInExperience = () => {
     }
 
     const updatedData = await api
-      .patch('api/sign-in-exp', {
+      .patch(buildUrl('api/sign-in-exp', { removeUnusedDemoSocialConnector: '1' }), {
         json: parser.onboardSieConfigToSignInExperience(formData, signInExperience),
       })
       .json<SignInExperienceType>();
