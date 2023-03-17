@@ -81,7 +81,7 @@ const translation = {
     password_changed: 'Password changed',
     no_account: 'No account yet? ',
     have_account: 'Already had an account?',
-    enter_password: 'Enter ppassword',
+    enter_password: 'Enter password',
     enter_password_for: 'Sign in with the password to {{method}} {{value}}',
     enter_username: 'Set username',
     enter_username_description:
