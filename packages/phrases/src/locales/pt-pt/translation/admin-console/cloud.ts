@@ -50,7 +50,7 @@ const cloud = {
   congrats: {
     title: 'Great news! You are qualified to earn Logto Cloud early credit!', // UNTRANSLATED
     description:
-      'Contact the Logto team to claim the offer. After Logto Cloud is officially launched, you will be entitled to either a <strong>$249</strong> credit or a free <strong>3-month</strong> subscription to Logto Cloud.', // UNTRANSLATED
+      'Don’t miss out on a chance to enjoy a free <strong>3-month</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.', // UNTRANSLATED
     check_out_button: 'Check out the live preview', // UNTRANSLATED
     reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
     reserve_description: 'Credit is only eligible once upon validation.', // UNTRANSLATED
