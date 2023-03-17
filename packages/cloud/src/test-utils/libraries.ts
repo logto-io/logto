@@ -22,7 +22,7 @@ export class MockServicesLibrary implements ServicesLibrary {
 
   public getTenantIdFromApplicationId = jest.fn<Promise<string>, [string]>();
 
-  public sendEmail = jest.fn();
+  public sendMessage = jest.fn();
 
   public getAdminTenantLogtoConnectors = jest.fn();
 

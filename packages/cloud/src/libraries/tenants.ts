@@ -5,7 +5,6 @@ import {
 import { generateStandardId } from '@logto/core-kit';
 import type { LogtoOidcConfigType, TenantInfo, TenantModel } from '@logto/schemas';
 import {
-  cloudApiIndicator,
   createAdminTenantApplicationRole,
   AdminTenantRole,
   createTenantMachineToMachineApplication,
@@ -30,6 +29,7 @@ import { createSystemsQuery } from '#src/queries/system.js';
 import { createTenantsQueries } from '#src/queries/tenants.js';
 import { createUsersQueries } from '#src/queries/users.js';
 import { getDatabaseName } from '#src/queries/utils.js';
+import { createCloudServiceConnector } from '#src/utils/connector/seed.js';
 import { insertInto } from '#src/utils/query.js';
 import { getTenantIdFromManagementApiIndicator } from '#src/utils/tenant.js';
 
@@ -117,20 +117,20 @@ export class TenantsLibrary {
 
     // Create demo connectors
     const globalValues = new GlobalValues();
-    const { cloudUrlSet, adminUrlSet } = globalValues;
+    const { cloudUrlSet } = globalValues;
 
-    await connectors.insertConnector({
-      id: generateStandardId(),
-      tenantId,
-      connectorId: DemoConnector.Email,
-      config: {
-        appId: m2mApplication.id,
-        appSecret: m2mApplication.secret,
-        tokenEndpoint: `${adminUrlSet.endpoint.toString()}oidc/token`,
-        endpoint: `${cloudUrlSet.endpoint.toString()}api`,
-        resource: cloudApiIndicator,
-      },
-    });
+    await Promise.all(
+      [DemoConnector.Email, DemoConnector.Sms].map(async (connectorId) => {
+        return connectors.insertConnector(
+          createCloudServiceConnector({
+            tenantId,
+            connectorId,
+            appId: m2mApplication.id,
+            appSecret: m2mApplication.secret,
+          })
+        );
+      })
+    );
 
     // Create demo social connectors
     const presetSocialConnectors = await systems.getDemoSocialValue();
