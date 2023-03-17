@@ -140,7 +140,12 @@ const BrandingForm = () => {
                 name="branding.darkLogoUrl"
                 control={control}
                 render={({ field: { onChange, value, name } }) => (
-                  <ImageUploaderField name={name} value={value ?? ''} onChange={onChange} />
+                  <ImageUploaderField
+                    name={name}
+                    value={value ?? ''}
+                    actionDescription={t('sign_in_exp.branding.dark_logo_image')}
+                    onChange={onChange}
+                  />
                 )}
               />
             </FormField>

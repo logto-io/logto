@@ -29,19 +29,15 @@ const sign_in_exp = {
   branding: {
     title: 'ZONE DE MARQUE',
     ui_style: 'Style',
-    favicon: 'Browser favicon', // UNTRANSLATED
+    favicon: 'Favicon', // UNTRANSLATED
     logo_image_url: "URL de l'image du logo de l'application",
     logo_image_url_placeholder: 'https://votre.domaine.cdn/logo.png',
     dark_logo_image_url: "URL de l'image du logo de l'application (Sombre)",
     dark_logo_image_url_placeholder: 'https://votre.domaine.cdn/logo-dark.png',
     logo_image: 'App logo', // UNTRANSLATED
     dark_logo_image: 'App logo (Dark)', // UNTRANSLATED
-    logo_action_description: 'App Logo to display in UI interface', // UNTRANSLATED
-    favicon_action_description: 'Browser Favicon', // UNTRANSLATED
     logo_image_error: 'App logo: {{error}}', // UNTRANSLATED
     favicon_error: 'Favicon: {{error}}', // UNTRANSLATED
-    upload_logo_image_description: 'App Logo to display in UI interface', // UNTRANSLATED
-    upload_favicon_description: 'Browser Favicon', // UNTRANSLATED
   },
   custom_css: {
     title: 'CUSTOM CSS', // UNTRANSLATED

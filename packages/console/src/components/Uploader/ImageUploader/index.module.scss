@@ -3,13 +3,14 @@
 .imageUploader {
   border: 1px dashed var(--color-border);
   border-radius: 8px;
-  padding: _.unit(6) _.unit(2);
+  padding: _.unit(3.75) _.unit(2);
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
 
   .delete {
+    display: none;
     position: absolute;
     right: _.unit(2);
     bottom: _.unit(2);
@@ -19,5 +20,12 @@
     height: 40px;
     max-width: 100%;
     object-fit: contain;
+    cursor: not-allowed;
+  }
+
+  &:hover {
+    .delete {
+      display: block;
+    }
   }
 }
