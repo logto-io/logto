@@ -37,10 +37,10 @@
 }
 
 .countryList {
-  margin: 0;
-  padding: 0;
+  margin: 0 _.unit(-3);
+  padding: 0 _.unit(3);
   list-style: none;
-  overflow: auto;
+  overflow: scroll;
 
   li {
     padding: _.unit(1) _.unit(2) _.unit(1) _.unit(7);
