@@ -24,8 +24,6 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
 
   const errorMessage = rawMessage ?? (message && t(message));
 
-  console.log(history.length);
-
   return (
     <StaticPageLayout>
       {history.length > 1 && <NavBar />}
