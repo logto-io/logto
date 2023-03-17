@@ -7,11 +7,7 @@ import * as styles from './index.module.scss';
 const DemoConnectorNotice = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  return (
-    <div className={styles.container}>
-      <Alert className={styles.notice}>{t('cloud.sie.connectors.notice')}</Alert>
-    </div>
-  );
+  return <Alert className={styles.notice}>{t('cloud.sie.connectors.notice')}</Alert>;
 };
 
 export default DemoConnectorNotice;

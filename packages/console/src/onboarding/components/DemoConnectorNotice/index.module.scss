@@ -1,7 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.container {
-  .notice {
-    margin: _.unit(4) 0 0;
-  }
+div.notice {
+  margin: _.unit(4) 0 0;
 }
