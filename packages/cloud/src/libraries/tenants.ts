@@ -17,10 +17,11 @@ import {
   createAdminData,
   createAdminDataInAdminTenant,
 } from '@logto/schemas';
-import { createTenantMetadata, DemoConnector, GlobalValues } from '@logto/shared';
+import { createTenantMetadata, DemoConnector } from '@logto/shared';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { createApplicationsQueries } from '#src/queries/application.js';
 import { createConnectorsQuery } from '#src/queries/connector.js';
 import type { Queries } from '#src/queries/index.js';
@@ -116,8 +117,7 @@ export class TenantsLibrary {
     ]);
 
     // Create demo connectors
-    const globalValues = new GlobalValues();
-    const { cloudUrlSet } = globalValues;
+    const { cloudUrlSet } = EnvSet.global;
 
     await Promise.all(
       [DemoConnector.Email, DemoConnector.Sms].map(async (connectorId) => {

@@ -26,7 +26,9 @@ const { listen } = createServer({
         '/api',
         compose<RequestContext>()
           .and(withBody())
-          .and(withAuth({ endpoint: EnvSet.global.logtoEndpoint, audience: cloudApiIndicator }))
+          .and(
+            withAuth({ endpoint: EnvSet.global.adminUrlSet.endpoint, audience: cloudApiIndicator })
+          )
           .and(router.routes())
       )
     )
