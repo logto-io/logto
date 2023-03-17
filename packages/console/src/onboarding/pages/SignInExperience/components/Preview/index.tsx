@@ -1,6 +1,5 @@
 import type { SignInExperience } from '@logto/schemas';
 import { Theme } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useState } from 'react';
 
@@ -24,11 +23,7 @@ const Preview = ({ signInExperience, isLivePreviewDisabled = false, className }:
     <div className={classNames(styles.container, className)}>
       <div className={styles.topBar}>
         <PlatformTabs currentTab={currentTab} onSelect={setCurrentTab} />
-        <LivePreviewButton
-          isDisabled={isLivePreviewDisabled}
-          className={styles.button}
-          iconClassName={conditional(!isLivePreviewDisabled && styles.livePreviewIcon)}
-        />
+        <LivePreviewButton type="violet" isDisabled={isLivePreviewDisabled} />
       </div>
       <SignInExperiencePreview
         platform={currentTab}

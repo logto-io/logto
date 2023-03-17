@@ -7,19 +7,18 @@ import ExternalLinkIcon from '@/assets/images/external-link.svg';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import useConfigs from '@/hooks/use-configs';
 
-import type { Props as ButtonProps } from '../Button';
+import type { Props as ButtonProps, ButtonType } from '../Button';
 import Button from '../Button';
 import { Tooltip } from '../Tip';
 import * as styles from './index.module.scss';
 
 type Props = {
   size?: ButtonProps['size'];
+  type?: ButtonType;
   isDisabled: boolean;
-  className?: string;
-  iconClassName?: string;
 };
 
-const LivePreviewButton = ({ size = 'medium', isDisabled, className, iconClassName }: Props) => {
+const LivePreviewButton = ({ size, type, isDisabled }: Props) => {
   const { configs, updateConfigs } = useConfigs();
   const { userEndpoint } = useContext(AppEndpointsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -28,12 +27,15 @@ const LivePreviewButton = ({ size = 'medium', isDisabled, className, iconClassNa
     <Tooltip content={conditional(isDisabled && t('sign_in_exp.preview.live_preview_tip'))}>
       <Button
         size={size}
+        type={type}
         disabled={isDisabled}
-        className={className}
         title="sign_in_exp.preview.live_preview"
         trailingIcon={
           <ExternalLinkIcon
-            className={classNames(styles.icon, iconClassName, isDisabled && styles.disabled)}
+            className={conditional(
+              type !== 'violet' &&
+                classNames(styles.defaultIcon, isDisabled && styles.disabledDefaultIcon)
+            )}
           />
         }
         onClick={() => {
