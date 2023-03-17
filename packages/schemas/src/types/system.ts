@@ -64,17 +64,54 @@ export const storageProviderGuard: Readonly<{
   [StorageProviderKey.StorageProvider]: storageProviderDataGuard,
 });
 
+// Demo social connectors
+export enum DemoSocialProvider {
+  Google = 'google',
+  GitHub = 'github',
+  Discord = 'discord',
+}
+
+export const demoSocialDataGuard = z
+  .object({
+    name: z.string(),
+    logo: z.string(),
+    logoDark: z.string(),
+    provider: z.nativeEnum(DemoSocialProvider),
+    clientId: z.string(),
+  })
+  .array();
+
+export type DemoSocialData = z.infer<typeof demoSocialDataGuard>;
+
+export enum DemoSocialKey {
+  DemoSocial = 'demoSocial',
+}
+
+export type DemoSocialType = {
+  [DemoSocialKey.DemoSocial]: DemoSocialData;
+};
+
+export const demoSocialGuard: Readonly<{
+  [key in DemoSocialKey]: ZodType<DemoSocialType[key]>;
+}> = Object.freeze({
+  [DemoSocialKey.DemoSocial]: demoSocialDataGuard,
+});
+
 // Summary
-export type SystemKey = AlterationStateKey | StorageProviderKey;
-export type SystemType = AlterationStateType | StorageProviderType;
-export type SystemGuard = typeof alterationStateGuard & typeof storageProviderGuard;
+export type SystemKey = AlterationStateKey | StorageProviderKey | DemoSocialKey;
+export type SystemType = AlterationStateType | StorageProviderType | DemoSocialType;
+export type SystemGuard = typeof alterationStateGuard &
+  typeof storageProviderGuard &
+  typeof demoSocialGuard;
 
 export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(AlterationStateKey),
   ...Object.values(StorageProviderKey),
+  ...Object.values(DemoSocialKey),
 ]);
 
 export const systemGuards: SystemGuard = Object.freeze({
   ...alterationStateGuard,
   ...storageProviderGuard,
+  ...demoSocialGuard,
 });

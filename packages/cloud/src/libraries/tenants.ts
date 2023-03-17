@@ -26,11 +26,14 @@ import { createApplicationsQueries } from '#src/queries/application.js';
 import { createConnectorsQuery } from '#src/queries/connector.js';
 import type { Queries } from '#src/queries/index.js';
 import { createRolesQuery } from '#src/queries/roles.js';
+import { createSystemsQuery } from '#src/queries/system.js';
 import { createTenantsQueries } from '#src/queries/tenants.js';
 import { createUsersQueries } from '#src/queries/users.js';
 import { getDatabaseName } from '#src/queries/utils.js';
 import { insertInto } from '#src/utils/query.js';
 import { getTenantIdFromManagementApiIndicator } from '#src/utils/tenant.js';
+
+const demoSocialConnectorId = 'logto-social-demo';
 
 export const tenantInfoGuard: ZodType<TenantInfo> = z.object({
   id: z.string(),
@@ -71,6 +74,7 @@ export class TenantsLibrary {
     const applications = createApplicationsQueries(transaction);
     const roles = createRolesQuery(transaction);
     const connectors = createConnectorsQuery(transaction);
+    const systems = createSystemsQuery(transaction);
 
     /* === Start === */
     await transaction.start();
@@ -127,6 +131,32 @@ export class TenantsLibrary {
         resource: cloudApiIndicator,
       },
     });
+
+    // Create demo social connectors
+    const presetSocialConnectors = await systems.getDemoSocialValue();
+
+    if (presetSocialConnectors) {
+      await Promise.all(
+        presetSocialConnectors.map(async (connector) => {
+          return connectors.insertConnector({
+            id: generateStandardId(),
+            tenantId,
+            connectorId: demoSocialConnectorId,
+            metadata: {
+              name: { en: connector.name },
+              target: connector.provider,
+              logo: connector.logo,
+              logoDark: connector.logoDark,
+            },
+            config: {
+              provider: connector.provider,
+              clientId: connector.clientId,
+              redirectUri: `${cloudUrlSet.endpoint.toString()}social-demo-callback`,
+            },
+          });
+        })
+      );
+    }
 
     // Update Redirect URI for Admin Console
     await tenants.appendAdminConsoleRedirectUris(
