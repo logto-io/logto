@@ -3,6 +3,7 @@ import type { MiddlewareType } from 'koa';
 import Koa from 'koa';
 import compose from 'koa-compose';
 import koaCompress from 'koa-compress';
+import helmet from 'koa-helmet';
 import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 import type Provider from 'oidc-provider';
@@ -120,6 +121,7 @@ export default class Tenant implements TenantContext {
     }
 
     // Mount UI
+    app.use(helmet({ contentSecurityPolicy: false }));
     app.use(compose([koaSpaSessionGuard(provider, queries), koaSpaProxy(mountedApps)]));
 
     this.app = app;

@@ -389,6 +389,7 @@ importers:
       koa-body: ^5.0.0
       koa-compose: ^4.1.0
       koa-compress: ^5.1.0
+      koa-helmet: ^6.1.0
       koa-logger: ^3.2.1
       koa-mount: ^4.0.0
       koa-proxies: ^0.12.1
@@ -491,6 +492,7 @@ importers:
       http-errors: 1.8.1
       jest: 29.5.0_@types+node@18.11.18
       jest-matcher-specific-error: 1.0.0
+      koa-helmet: 6.1.0
       lint-staged: 13.0.0
       node-mocks-http: 1.12.1
       nodemon: 2.0.19
@@ -7808,6 +7810,11 @@ packages:
       space-separated-tokens: 1.1.5
     dev: true
 
+  /helmet/4.6.0:
+    resolution: {integrity: sha512-HVqALKZlR95ROkrnesdhbbZJFi/rIVSoNq6f3jA/9u6MIbTsPh3xZwihjeI5+DO/2sOV6HMHooXcEOuwskHpTg==}
+    engines: {node: '>=10.0.0'}
+    dev: true
+
   /hexoid/1.0.0:
     resolution: {integrity: sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==}
     engines: {node: '>=8'}
@@ -9620,6 +9627,13 @@ packages:
       co: 4.6.0
       koa-compose: 4.1.0
     dev: false
+
+  /koa-helmet/6.1.0:
+    resolution: {integrity: sha512-WymEv4qo/7ghh15t+1qTjvZBmZkmVlTtfnpe5oxn8m8mO2Q2rKJ3eMvWuQGW/6yVxN9+hQ75evuWcg3XBbFLbg==}
+    engines: {node: '>= 8.0.0'}
+    dependencies:
+      helmet: 4.6.0
+    dev: true
 
   /koa-is-json/1.0.0:
     resolution: {integrity: sha512-+97CtHAlWDx0ndt0J8y3P12EWLwTLMXIfMnYDev3wOTwH/RpBGMlfn4bDXlMEg1u73K6XRE9BbUp+5ZAYoRYWw==}
