@@ -48,7 +48,7 @@ const Guide = ({ connector, onClose }: Props) => {
   const parseJsonConfig = useConfigParser();
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { type: connectorType, formItems, target, isStandard } = connector ?? {};
+  const { type: connectorType, formItems, target, isStandard, configTemplate } = connector ?? {};
 
   const { language } = i18next;
 
@@ -56,30 +56,29 @@ const Guide = ({ connector, onClose }: Props) => {
     connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',
-    defaultValues: {
-      ...(formItems ? initFormData(formItems) : {}),
-      syncProfile: SyncProfileMode.OnlyAtRegister,
-    },
   });
   const {
     formState: { isSubmitting },
     handleSubmit,
     watch,
-    setValue,
     setError,
+    reset,
   } = methods;
 
   useEffect(() => {
-    if (isSocialConnector && !isStandard && target) {
-      setValue('target', target);
-    }
-  }, [isSocialConnector, target, isStandard, setValue]);
+    reset({
+      ...(formItems ? initFormData(formItems) : {}),
+      ...(configTemplate ? { config: configTemplate } : {}),
+      ...(isSocialConnector && !isStandard && target ? { target } : {}),
+      syncProfile: SyncProfileMode.OnlyAtRegister,
+    });
+  }, [formItems, reset, configTemplate, target, isSocialConnector, isStandard]);
 
   if (!connector) {
     return null;
   }
 
-  const { id: connectorId, name, readme, configTemplate } = connector;
+  const { id: connectorId, name, readme } = connector;
   const { title, content } = splitMarkdownByTitle(readme);
   const connectorName = conditional(isLanguageTag(language) && name[language]) ?? name.en;
 
@@ -203,7 +202,6 @@ const Guide = ({ connector, onClose }: Props) => {
                   </div>
                   <ConfigForm
                     connectorId={callbackConnectorId.current}
-                    configTemplate={configTemplate}
                     connectorType={connectorType}
                     formItems={formItems}
                   />

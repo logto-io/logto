@@ -1,6 +1,5 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
-import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -16,20 +15,13 @@ import ConfigFormItems from '../ConfigForm';
 import * as styles from './ConfigForm.module.scss';
 
 type Props = {
-  configTemplate?: ConnectorFactoryResponse['configTemplate'];
   formItems?: ConnectorConfigFormItem[];
   className?: string;
   connectorId: string;
   connectorType?: ConnectorType;
 };
 
-const ConfigForm = ({
-  configTemplate,
-  formItems,
-  className,
-  connectorId,
-  connectorType,
-}: Props) => {
+const ConfigForm = ({ formItems, className, connectorId, connectorType }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
@@ -56,7 +48,6 @@ const ConfigForm = ({
           <Controller
             name="config"
             control={control}
-            defaultValue={configTemplate}
             rules={{
               validate: (value) => jsonValidator(value) || t('errors.invalid_json_format'),
             }}
