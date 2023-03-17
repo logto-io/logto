@@ -1,15 +1,17 @@
 import { Theme } from '@logto/schemas';
-import { conditionalString } from '@silverhand/essentials';
+import { conditionalString, trySafe } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, createContext } from 'react';
 
-import useUserPreferences from '@/hooks/use-user-preferences';
-import { DynamicAppearanceMode } from '@/types/appearance-mode';
+import { appearanceModeStorageKey } from '@/consts';
+import type { AppearanceMode } from '@/types/appearance-mode';
+import { appearanceModeGuard, DynamicAppearanceMode } from '@/types/appearance-mode';
 
 import * as styles from './index.module.scss';
 
 type Props = {
   fixedTheme?: Theme;
+  appearanceMode?: AppearanceMode;
   children: ReactNode;
 };
 
@@ -23,16 +25,16 @@ const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
 const getThemeBySystemConfiguration = (): Theme =>
   darkThemeWatchMedia.matches ? Theme.Dark : Theme.Light;
 
+export const getAppearanceModeFromLocalStorage = (): AppearanceMode =>
+  trySafe(() => appearanceModeGuard.parse(localStorage.getItem(appearanceModeStorageKey))) ??
+  DynamicAppearanceMode.System;
+
 export const AppThemeContext = createContext<AppTheme>({
   theme: defaultTheme,
 });
 
-export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
+export const AppThemeProvider = ({ fixedTheme, appearanceMode, children }: Props) => {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
-
-  const {
-    data: { appearanceMode },
-  } = useUserPreferences();
 
   useEffect(() => {
     if (fixedTheme) {
@@ -41,8 +43,11 @@ export const AppThemeProvider = ({ fixedTheme, children }: Props) => {
       return;
     }
 
-    if (appearanceMode !== DynamicAppearanceMode.System) {
-      setTheme(appearanceMode);
+    // Note: if the appearanceMode is not available, attempt to retrieve the last saved value from localStorage.
+    const appliedAppearanceMode = appearanceMode ?? getAppearanceModeFromLocalStorage();
+
+    if (appliedAppearanceMode !== DynamicAppearanceMode.System) {
+      setTheme(appliedAppearanceMode);
 
       return;
     }

@@ -4,7 +4,7 @@ import { trySafe } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { useHref } from 'react-router-dom';
 
-import { AppLoadingOffline } from '@/components/AppLoading/Offline';
+import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 type Props = {
@@ -39,7 +39,7 @@ const Redirect = ({ tenants, toTenantId }: Props) => {
     return <div>Forbidden</div>;
   }
 
-  return <AppLoadingOffline />;
+  return <AppLoading />;
 };
 
 export default Redirect;

@@ -6,8 +6,8 @@ import ErrorDark from '@/assets/images/error-dark.svg';
 import Error from '@/assets/images/error.svg';
 import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/images/keyboard-arrow-up.svg';
+import useTheme from '@/hooks/use-theme';
 import { onKeyDownHandler } from '@/utils/a11y';
-import { getThemeFromLocalStorage } from '@/utils/theme';
 
 import * as styles from './index.module.scss';
 
@@ -22,7 +22,7 @@ type Props = {
 const AppError = ({ title, errorCode, errorMessage, callStack, children }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const theme = getThemeFromLocalStorage(); // Should be able to use the component in an offline environment
+  const theme = useTheme();
 
   return (
     <div className={styles.container}>
