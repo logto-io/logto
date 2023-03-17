@@ -60,10 +60,10 @@ const cloud = {
     enter_admin_console: 'Enter Logto Cloud Preview', // UNTRANSLATED
   },
   gift: {
-    title: 'Use Logto Cloud free for 60 days. Join the front-runners now !', // UNTRANSLATED
+    title: 'Use Logto Cloud free for 60 days. Join the front-runners now!', // UNTRANSLATED
     description: 'Book a one-on-one session with our team for early credit.', // UNTRANSLATED
     reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
-    reserve_description: 'Credit is only eligible once upon evaluation. ', // UNTRANSLATED
+    reserve_description: 'Credit is only eligible once upon evaluation.', // UNTRANSLATED
     book_button: 'Book', // UNTRANSLATED
   },
   sie: {
@@ -71,7 +71,7 @@ const cloud = {
     inspire: {
       title: 'Create compelling examples', // UNTRANSLATED
       description:
-        'Feeling unsure about sign in experience? Just click the "Inspire Me" and let the magic happen! ', // UNTRANSLATED
+        'Feeling unsure about sign in experience? Just click the "Inspire Me" and let the magic happen!', // UNTRANSLATED
       inspire_me: 'Inspire me', // UNTRANSLATED
     },
     logo_field: 'App Logo', // UNTRANSLATED
