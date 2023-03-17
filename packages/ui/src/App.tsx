@@ -77,14 +77,13 @@ const App = () => {
       <Provider value={context}>
         <AppBoundary>
           <Routes>
+            <Route path="sign-in/consent" element={<Consent />} />
             <Route element={<AppLayout />}>
               <Route
                 path="unknown-session"
                 element={<ErrorPage isRootPath message="error.invalid_session" />}
               />
               <Route path="springboard" element={<Springboard />} />
-
-              <Route path="sign-in/consent" element={<Consent />} />
 
               <Route element={<LoadingLayerProvider />}>
                 {/* Sign-in */}

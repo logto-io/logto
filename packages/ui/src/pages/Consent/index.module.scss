@@ -1,12 +1,25 @@
 @use '@/scss/underscore' as _;
 
-.img {
-  width: 96px;
-  height: 96px;
-  @include _.image-align-center;
-  margin-bottom: _.unit(4);
+
+.viewBox {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+
+  .container {
+    min-height: 100%;
+    @include _.flex_column(center, center);
+  }
+
+  .img {
+    height: _.unit(10);
+    @include _.image-align-center;
+    margin-bottom: _.unit(5);
+  }
+
+  .loadingWrapper {
+    height: _.unit(16);
+    @include _.flex_column(center, center);
+  }
 }
 
-.loadingWrapper {
-  height: _.unit(12);
-}
