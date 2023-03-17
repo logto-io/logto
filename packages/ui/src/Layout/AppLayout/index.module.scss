@@ -68,6 +68,7 @@
     position: absolute;
     bottom: 0;
     transform: translateY(calc(100% + _.unit(7)));
+    // Have to use padding instead of margin. Overflow margin spacing will be ignored by the browser.
     padding-bottom: _.unit(7);
   }
 }
