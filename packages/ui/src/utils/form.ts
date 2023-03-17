@@ -1,3 +1,4 @@
+import { usernameRegEx, emailRegEx } from '@logto/core-kit';
 import { SignInIdentifier } from '@logto/schemas';
 import i18next from 'i18next';
 import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/mobile';
@@ -9,9 +10,8 @@ import { parseE164Number, parsePhoneNumber } from '@/utils/country-code';
 
 const { t } = i18next;
 
-const usernameRegex = /^[A-Z_a-z-][\w-]*$/;
-const emailRegex = /^\S+@\S+\.\S+$/;
-
+// We validate the password format step by step to provide more detailed error messages at the front end.
+// The overall password format regex passwordRegEx is defined in the '@logto/core-kit' need to align these two.
 const specialChars = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~-]/;
 const digits = /\d/;
 const letters = /[A-Za-z]/;
@@ -28,13 +28,13 @@ export const validateUsername = (username: string): ErrorType | undefined => {
     return 'username_should_not_start_with_number';
   }
 
-  if (!usernameRegex.test(username)) {
+  if (!usernameRegEx.test(username)) {
     return 'username_invalid_charset';
   }
 };
 
 export const validateEmail = (email: string): ErrorType | undefined => {
-  if (!emailRegex.test(email)) {
+  if (!emailRegEx.test(email)) {
     return 'invalid_email';
   }
 };
