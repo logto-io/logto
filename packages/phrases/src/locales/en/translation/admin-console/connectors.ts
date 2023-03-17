@@ -8,7 +8,7 @@ const connectors = {
   tab_social: 'Social connectors',
   connector_name: 'Connector name',
   demo_tip:
-    'This connector has been preconfigured for demonstration purposes only. It should not be utilized in a production environment. Once you have completed your testing, be sure to provide your own credentials and set up your own connectors. The one you created will replace the trial version.',
+    'The demo connector is designed exclusively for demonstration purposes and is not recommended for deployment in a production environment.',
   connector_type: 'Type',
   connector_status: 'Sign in Experience',
   connector_status_in_use: 'In use',
