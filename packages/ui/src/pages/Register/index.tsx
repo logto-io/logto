@@ -17,7 +17,7 @@ const Register = () => {
   const { t } = useTranslation();
 
   if (!signInMode || signInMode === SignInMode.SignIn) {
-    return <ErrorPage isRootPath />;
+    return <ErrorPage />;
   }
 
   return (
