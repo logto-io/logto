@@ -144,6 +144,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set short sha
+        id: sha
+        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Setup Node and pnpm
         if: ${{ (inputs.target || 'dev') == 'dev' }}
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
@@ -172,13 +176,13 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ vars.APP_NAME_CORE }}
-          images: ghcr.io/logto-io/logto:sha-${{ github.sha }}
+          images: ghcr.io/logto-io/logto:sha-${{ steps.sha.outputs.short }}
 
       - name: Deploy cloud to containerapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ vars.APP_NAME_CLOUD }}
-          images: ghcr.io/logto-io/cloud:sha-${{ github.sha }}
+          images: ghcr.io/logto-io/cloud:sha-${{ steps.sha.outputs.short }}
 
   # Publish packages and create git tags if needed
   publish-and-tag:
