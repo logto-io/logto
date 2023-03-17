@@ -7,6 +7,13 @@
 
   .icon {
     margin-right: _.unit(2);
+    width: 18px;
+    height: 18px;
+
+    &.small {
+      width: 16px;
+      height: 16px;
+    }
 
     > * {
       display: none;
@@ -23,8 +30,8 @@
 
   input {
     position: absolute;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     left: 0;
     top: 0;
     margin: 0;
@@ -35,5 +42,15 @@
   input:checked:not(:disabled) ~ .icon > *:nth-child(2),
   input:checked:not(:disabled) ~ .icon > *:nth-child(3) {
     display: block;
+  }
+}
+
+:global(body.mobile) {
+  .checkbox {
+    .icon,
+    .icon.small {
+      width: 18px;
+      height: 18px;
+    }
   }
 }

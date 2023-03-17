@@ -16,7 +16,7 @@ export type Props = AnchorHTMLAttributes<HTMLAnchorElement> & {
   children?: ReactNode;
   text?: TFuncKey;
   icon?: ReactNode;
-  type?: 'primary' | 'secondary' | 'inlinePrimary';
+  type?: 'primary' | 'secondary';
 } & Partial<LinkProps>;
 
 const TextLink = ({ className, children, text, icon, type = 'primary', to, ...rest }: Props) => {
