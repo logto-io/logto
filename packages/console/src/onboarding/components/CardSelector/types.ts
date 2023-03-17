@@ -12,4 +12,6 @@ export type CardSelectorOption = {
 export type MultiCardSelectorOption = CardSelectorOption & {
   tag?: AdminConsoleKey;
   trailingTag?: AdminConsoleKey;
+  isDisabled?: boolean;
+  disabledTip?: AdminConsoleKey;
 };

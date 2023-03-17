@@ -89,11 +89,14 @@ export const randomSieConfigTemplate = (
     randomIndex === lastTemplateIndex ? (randomIndex + 1) % sieConfigTemplates.length : randomIndex;
   const template = sieConfigTemplates[index] ?? configTemplate1;
 
-  // Take the first two after shuffling.
+  // Get 2 or 3 random social targets
+  const randomCount = Math.floor(Math.random() * 2) + 2;
+
+  // Take the first randomCount after shuffling.
   const socialTargets = availableSocialTargets
     .slice()
     .sort(() => 0.5 - Math.random())
-    .slice(0, 2);
+    .slice(0, randomCount);
 
   return {
     template: {
