@@ -20,10 +20,6 @@
   background: var(--color-layer-1);
   font: var(--font-body-2);
 
-  &.large {
-    height: 44px;
-  }
-
   &.withIcon {
     display: flex;
     align-items: center;

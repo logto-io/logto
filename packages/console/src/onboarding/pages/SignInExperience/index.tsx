@@ -14,8 +14,8 @@ import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import TextInput from '@/components/TextInput';
 import { ImageUploaderField } from '@/components/Uploader';
-import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import type { RequestError } from '@/hooks/use-api';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import ActionBar from '@/onboarding/components/ActionBar';
 import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
@@ -118,7 +118,6 @@ const SignInExperience = () => {
                 />
               ) : (
                 <TextInput
-                  size="large"
                   {...register('logo', {
                     validate: (value) =>
                       !value || uriValidator(value) || t('errors.invalid_uri_format'),

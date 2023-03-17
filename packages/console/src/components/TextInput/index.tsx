@@ -9,7 +9,6 @@ type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
   errorMessage?: string;
   icon?: ReactElement;
   suffix?: ReactElement;
-  size?: 'medium' | 'large';
 };
 
 const TextInput = (
@@ -21,7 +20,6 @@ const TextInput = (
     disabled,
     className,
     readOnly,
-    size = 'medium',
     ...rest
   }: Props,
   reference: ForwardedRef<HTMLInputElement>
@@ -34,8 +32,7 @@ const TextInput = (
           hasError && styles.error,
           icon && styles.withIcon,
           disabled && styles.disabled,
-          readOnly && styles.readOnly,
-          styles[size]
+          readOnly && styles.readOnly
         )}
       >
         {icon && <span className={styles.icon}>{icon}</span>}
