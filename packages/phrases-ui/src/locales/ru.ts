@@ -100,6 +100,7 @@ const translation = {
       'Для дополнительной безопасности, пожалуйста, заполните приведенные ниже данные учетной записи.',
     create_your_account: 'Создайте свой аккаунт',
     welcome_to_sign_in: 'Добро пожаловать для входа в систему',
+    no_region_code_found: 'Не удалось определить код региона',
   },
   error: {
     general_required: `Введите {{types, list(type: disjunction;)}}`,

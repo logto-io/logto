@@ -96,6 +96,7 @@ const translation = {
     continue_with_more_information: 'For added security, please complete below account details.',
     create_your_account: 'Create your account',
     welcome_to_sign_in: 'Welcome to sign in',
+    no_region_code_found: 'No region code found',
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} is required`,

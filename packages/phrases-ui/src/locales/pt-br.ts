@@ -97,6 +97,7 @@ const translation = {
     continue_with_more_information: 'Para maior segurança, preencha os detalhes da conta abaixo.',
     create_your_account: 'Crie sua conta',
     welcome_to_sign_in: 'Bem-vindo(a) para entrar',
+    no_region_code_found: 'Não foi possível encontrar o código de região do seu telefone.',
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} é obrigatório`,

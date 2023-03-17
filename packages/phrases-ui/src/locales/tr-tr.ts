@@ -97,6 +97,7 @@ const translation = {
       'Daha fazla güvenlik için lütfen aşağıdaki hesap ayrıntılarını tamamlayın.',
     create_your_account: 'hesabını oluştur',
     welcome_to_sign_in: 'oturum açmaya hoş geldiniz',
+    no_region_code_found: 'Bölge kodu bulunamadı',
   },
   error: {
     general_required: `{{types, list(type: disjunction;)}} gerekli`,
