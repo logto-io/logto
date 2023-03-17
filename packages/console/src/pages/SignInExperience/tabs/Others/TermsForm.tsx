@@ -19,10 +19,7 @@ const TermsForm = () => {
   return (
     <Card>
       <div className={styles.title}>{t('sign_in_exp.others.terms_of_use.title')}</div>
-      <FormField
-        title="sign_in_exp.others.terms_of_use.terms_of_use"
-        tip={t('sign_in_exp.others.terms_of_use.terms_of_use_tip')}
-      >
+      <FormField title="sign_in_exp.others.terms_of_use.terms_of_use">
         <TextInput
           {...register('termsOfUseUrl', {
             validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
@@ -32,10 +29,7 @@ const TermsForm = () => {
           placeholder={t('sign_in_exp.others.terms_of_use.terms_of_use_placeholder')}
         />
       </FormField>
-      <FormField
-        title="sign_in_exp.others.terms_of_use.privacy_policy"
-        tip={t('sign_in_exp.others.terms_of_use.privacy_policy_tip')}
-      >
+      <FormField title="sign_in_exp.others.terms_of_use.privacy_policy">
         <TextInput
           {...register('privacyPolicyUrl', {
             validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),

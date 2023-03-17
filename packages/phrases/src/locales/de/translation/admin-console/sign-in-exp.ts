@@ -109,13 +109,11 @@ const sign_in_exp = {
   },
   others: {
     terms_of_use: {
-      title: 'NUTZUNGSBEDINGUNGEN',
-      terms_of_use: 'Nutzungsbedingungen',
+      title: 'Terms', // UNTRANSLATED
+      terms_of_use: 'URL zu den Nutzungsbedingungen',
       terms_of_use_placeholder: 'https://beispiel.de/nutzungsbedingungen',
-      terms_of_use_tip: 'URL zu den Nutzungsbedingungen',
-      privacy_policy: 'Datenschutzrichtlinien',
+      privacy_policy: 'URL zu den Datenschutzrichtlinien',
       privacy_policy_placeholder: 'https://beispiel.de/datenschutzrichtlinien',
-      privacy_policy_tip: 'URL zu den Datenschutzrichtlinien',
     },
     languages: {
       title: 'SPRACHEN',

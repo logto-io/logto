@@ -111,12 +111,10 @@ const sign_in_exp = {
   others: {
     terms_of_use: {
       title: "CONDITIONS D'UTILISATION",
-      terms_of_use: "Conditions d'utilisation",
+      terms_of_use: "Conditions d'utilisation URL",
       terms_of_use_placeholder: 'https://vos.conditions.utilisation/',
-      terms_of_use_tip: "Conditions d'utilisation URL",
-      privacy_policy: 'Politique de confidentialité',
+      privacy_policy: 'Politique de confidentialité URL',
       privacy_policy_placeholder: 'https://votre.politique.confidentialite/',
-      privacy_policy_tip: 'Politique de confidentialité URL',
     },
     languages: {
       title: 'LANGAGES',

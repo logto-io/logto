@@ -101,13 +101,11 @@ const sign_in_exp = {
   },
   others: {
     terms_of_use: {
-      title: '使用条款',
-      terms_of_use: '使用条款',
+      title: '条款',
+      terms_of_use: '使用条款 URL',
       terms_of_use_placeholder: 'https://your.terms.of.use/',
-      terms_of_use_tip: '使用条款 URL',
-      privacy_policy: '隐私政策',
+      privacy_policy: '隐私政策 URL',
       privacy_policy_placeholder: 'https://your.privacy.policy/',
-      privacy_policy_tip: '隐私政策 URL',
     },
     languages: {
       title: '语言',
