@@ -1,5 +1,4 @@
 import { Theme } from '@logto/schemas';
-import classNames from 'classnames';
 import { useContext } from 'react';
 
 import LogtoLogtoDark from '@/assets/icons/logto-logo-dark.svg';
@@ -24,17 +23,19 @@ const LogtoSignature = ({ className }: Props) => {
   const LogtoLogo = theme === Theme.Light ? LogtoLogoLight : LogtoLogtoDark;
 
   return (
-    <a
-      className={classNames(styles.signature, className)}
-      aria-label="Powered By Logto"
-      href={logtoUrl.toString()}
-      target="_blank"
-      rel="noopener"
-    >
-      <span className={styles.text}>Powered by</span>
-      <LogtoLogoShadow className={styles.staticIcon} />
-      <LogtoLogo className={styles.highlightIcon} />
-    </a>
+    <div className={className}>
+      <a
+        className={styles.signature}
+        aria-label="Powered By Logto"
+        href={logtoUrl.toString()}
+        target="_blank"
+        rel="noopener"
+      >
+        <span className={styles.text}>Powered by</span>
+        <LogtoLogoShadow className={styles.staticIcon} />
+        <LogtoLogo className={styles.highlightIcon} />
+      </a>
+    </div>
   );
 };
 
