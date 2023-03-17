@@ -62,6 +62,8 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
         )
       );
 
+      console.log('???', socialSignInConnectorTargets, filteredSocialSignInConnectorTargets);
+
       if (signUp) {
         validateSignUp(signUp, connectors);
       }
