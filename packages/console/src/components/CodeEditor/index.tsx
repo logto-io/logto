@@ -71,6 +71,7 @@ const CodeEditor = ({
             readOnly={isReadonly}
             spellCheck="false"
             value={value}
+            placeholder={placeholder}
             onChange={handleChange}
             onKeyDown={handleKeydown}
           />
