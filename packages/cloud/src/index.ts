@@ -6,10 +6,14 @@ import { findUp } from 'find-up';
 
 dotenv.config({ path: await findUp('.env', {}) });
 
+const { appInsights } = await import('@logto/shared/app-insights');
+appInsights.setup('logto-cloud-eu');
+
 const { default: withAuth } = await import('./middleware/with-auth.js');
 const { default: withHttpProxy } = await import('./middleware/with-http-proxy.js');
 const { default: withPathname } = await import('./middleware/with-pathname.js');
 const { default: withSpa } = await import('./middleware/with-spa.js');
+const { default: withErrorReport } = await import('./middleware/with-error-report.js');
 
 const { EnvSet } = await import('./env-set/index.js');
 const { default: router } = await import('./routes/index.js');
@@ -19,7 +23,9 @@ const ignorePathnames = ['/api'];
 
 const { listen } = createServer({
   port: 3003,
-  composer: compose(withRequest())
+  composer: compose()
+    .and(withErrorReport())
+    .and(withRequest())
     .and(anonymousRouter.routes())
     .and(
       withPathname(

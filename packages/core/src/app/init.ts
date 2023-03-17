@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
 import http2 from 'http2';
 
-import { toTitle } from '@silverhand/essentials';
+import { appInsights } from '@logto/shared/app-insights';
+import { toTitle, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type Koa from 'koa';
 
@@ -19,21 +20,9 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
 
 const serverTimeout = 120_000;
 
-const getTenant = async (tenantId: string) => {
-  try {
-    return await tenantPool.get(tenantId);
-  } catch (error: unknown) {
-    if (error instanceof TenantNotFoundError) {
-      return error;
-    }
-
-    throw error;
-  }
-};
-
 export default async function initApp(app: Koa): Promise<void> {
   app.use(async (ctx, next) => {
-    if (EnvSet.values.isDomainBasedMultiTenancy && ctx.URL.pathname === '/status') {
+    if (EnvSet.values.isDomainBasedMultiTenancy && ['/status', '/'].includes(ctx.URL.pathname)) {
       ctx.status = 204;
 
       return next();
@@ -47,11 +36,16 @@ export default async function initApp(app: Koa): Promise<void> {
       return next();
     }
 
-    const tenant = await getTenant(tenantId);
+    const tenant = await trySafe(tenantPool.get(tenantId), (error) => {
+      if (error instanceof TenantNotFoundError) {
+        ctx.status = 404;
+      } else {
+        ctx.status = 500;
+        appInsights.trackException(error);
+      }
+    });
 
-    if (tenant instanceof TenantNotFoundError) {
-      ctx.status = 404;
-
+    if (!tenant) {
       return next();
     }
 
@@ -61,6 +55,8 @@ export default async function initApp(app: Koa): Promise<void> {
       tenant.requestEnd();
     } catch (error: unknown) {
       tenant.requestEnd();
+      appInsights.trackException(error);
+
       throw error;
     }
   });
