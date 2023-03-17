@@ -1,6 +1,12 @@
 import { buildRawConnector, defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
-import type { AllConnector, EmailConnector, SendMessagePayload } from '@logto/connector-kit';
-import { ConnectorType, validateConfig } from '@logto/connector-kit';
+import type {
+  AllConnector,
+  EmailConnector,
+  SendMessagePayload,
+  ConnectorType,
+  SmsConnector,
+} from '@logto/connector-kit';
+import { validateConfig } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/core-kit';
 import type { ServiceLogType } from '@logto/schemas';
 import { adminTenantId } from '@logto/schemas';
@@ -84,16 +90,16 @@ export class ServicesLibrary {
     );
   }
 
-  async sendEmail(data: SendMessagePayload) {
+  async sendMessage(type: ConnectorType.Email | ConnectorType.Sms, data: SendMessagePayload) {
     const connectors = await this.getAdminTenantLogtoConnectors();
 
     const connector = connectors.find(
-      (connector): connector is LogtoConnector<EmailConnector> =>
-        connector.type === ConnectorType.Email
+      (connector): connector is LogtoConnector<EmailConnector | SmsConnector> =>
+        connector.type === type
     );
 
     if (!connector) {
-      throw new RequestError('Unable to find email connector', 500);
+      throw new RequestError(`Unable to find ${type} connector`, 500);
     }
 
     const { sendMessage } = connector;
