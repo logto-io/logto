@@ -36,6 +36,7 @@
     overflow-x: auto;
     justify-content: center;
     min-width: min-content;
+    padding-top: _.unit(2);
 
     > * {
       flex: 1;
@@ -50,7 +51,7 @@
       background-color: var(--color-layer-1);
       border: 1.5px solid var(--color-focused-variant);
       border-radius: 16px;
-      margin: _.unit(2) _.unit(6) _.unit(6) 0;
+      margin: 0 _.unit(6) _.unit(6) 0;
 
       .readmeTitle {
         font: var(--font-title-2);
@@ -67,7 +68,7 @@
     }
 
     .setup {
-      padding: _.unit(2) 0;
+      padding-bottom: _.unit(6);
 
       .block {
         background-color: var(--color-layer-1);
