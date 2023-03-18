@@ -8,6 +8,8 @@
 
   > div {
     max-width: 800px;
+    min-width: 540px;
+    flex: 1;
   }
 
   .config {
@@ -32,7 +34,6 @@
   }
 
   .preview {
-    flex: 1;
     position: sticky;
     top: 0;
     align-self: flex-start;
