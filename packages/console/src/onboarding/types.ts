@@ -77,4 +77,5 @@ export type OnboardingSieConfig = {
   identifier: SignInIdentifier;
   authentications: Authentication[];
   socialTargets?: string[];
+  isDarkModeEnabled?: boolean;
 };

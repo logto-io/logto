@@ -9,7 +9,7 @@ const signInExperienceToOnboardSieConfig = (
   signInExperience: SignInExperience
 ): OnboardingSieConfig => {
   const {
-    color: { primaryColor },
+    color: { primaryColor, isDarkModeEnabled },
     branding: { logoUrl: logo },
     signIn: { methods: signInMethods },
     signUp: { identifiers: signUpIdentifiers },
@@ -36,6 +36,7 @@ const signInExperienceToOnboardSieConfig = (
     identifier,
     authentications,
     socialTargets: socialSignInConnectorTargets,
+    isDarkModeEnabled,
   };
 };
 

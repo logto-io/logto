@@ -65,10 +65,16 @@ const SignInExperience = () => {
 
   useEffect(() => {
     if (signInExperience) {
-      reset(parser.signInExperienceToOnboardSieConfig(signInExperience));
+      const sieConfig = parser.signInExperienceToOnboardSieConfig(signInExperience);
+      reset(sieConfig);
       updateAuthenticationConfig();
+
+      // Note: disable dark mode for the onboarding live preview
+      if (sieConfig.isDarkModeEnabled) {
+        setValue('isDarkModeEnabled', false, { shouldDirty: true });
+      }
     }
-  }, [reset, signInExperience, updateAuthenticationConfig]);
+  }, [reset, setValue, signInExperience, updateAuthenticationConfig]);
 
   const onboardingSieConfig = watch();
 
