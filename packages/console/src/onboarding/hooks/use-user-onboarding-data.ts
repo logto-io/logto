@@ -34,8 +34,16 @@ const useUserOnboardingData = () => {
   }, [currentTenantId, userOnboardingData.isOnboardingDone]);
 
   const isBusinessPlan = useMemo(() => {
-    return isCloud && userOnboardingData.questionnaire?.project === Project.Company;
-  }, [userOnboardingData]);
+    if (!isCloud) {
+      return false;
+    }
+
+    if (currentTenantId === adminTenantId) {
+      return true;
+    }
+
+    return userOnboardingData.questionnaire?.project === Project.Company;
+  }, [currentTenantId, userOnboardingData.questionnaire?.project]);
 
   const update = useCallback(
     async (data: Partial<UserOnboardingData>) => {
