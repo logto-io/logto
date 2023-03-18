@@ -90,7 +90,7 @@ const errors = {
       'Interaction session not found. Please go back and start the session again.', // UNTRANSLATED
   },
   connector: {
-    general: '连接器发生未知错误{{errorDescription}}',
+    general: '连接器发生错误：{{errorDescription}}',
     not_found: '找不到可用的 {{type}} 类型的连接器',
     not_enabled: '连接器尚未启用',
     invalid_metadata: '连接器 metadata 参数错误',

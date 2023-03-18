@@ -97,7 +97,7 @@ const errors = {
       'Interaction session not found. Please go back and start the session again.',
   },
   connector: {
-    general: 'An unexpected error occurred in connector.{{errorDescription}}',
+    general: 'Error occurred in connector: {{errorDescription}}',
     not_found: 'Cannot find any available connector for type: {{type}}.',
     not_enabled: 'The connector is not enabled.',
     invalid_metadata: "The connector's metadata is invalid.",

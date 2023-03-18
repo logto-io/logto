@@ -69,9 +69,12 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
 
     const data = { config: result.data, ...(isSms ? { phone: sendTo } : { email: sendTo }) };
 
-    await api.post(`api/connectors/${connectorId}/test`, { json: data }).json();
-
-    setShowTooltip(true);
+    try {
+      await api.post(`api/connectors/${connectorId}/test`, { json: data }).json();
+      setShowTooltip(true);
+    } catch (error: unknown) {
+      console.error(error);
+    }
   });
 
   return (

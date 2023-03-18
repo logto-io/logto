@@ -1,5 +1,5 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import { conditional } from '@silverhand/essentials';
+import { trySafe } from '@silverhand/essentials';
 import type { Middleware } from 'koa';
 import { z } from 'zod';
 
@@ -8,7 +8,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
   // Too many error types :-)
   // eslint-disable-next-line complexity
-  return async (ctx, next) => {
+  return async (_, next) => {
     try {
       await next();
     } catch (error: unknown) {
@@ -19,8 +19,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
       const { code, data } = error;
 
       const errorDescriptionGuard = z.object({ errorDescription: z.string() });
-      const result = errorDescriptionGuard.safeParse(data);
-      const errorMessage = conditional(result.success && '\n' + result.data.errorDescription);
+      const message = trySafe(() => errorDescriptionGuard.parse(data))?.errorDescription;
 
       switch (code) {
         case ConnectorErrorCodes.InvalidMetadata:
@@ -43,7 +42,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
           throw new RequestError(
             {
               code: `connector.${code}`,
-              status: 500,
+              status: 400,
             },
             data
           );
@@ -57,8 +56,8 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
           throw new RequestError(
             {
               code: `connector.${code}`,
-              status: 500,
-              errorDescription: errorMessage,
+              status: 400, // Temporarily use 400 to avoid false positives. May update later.
+              errorDescription: message,
             },
             data
           );

@@ -14,8 +14,9 @@ const connector_details = {
   test_sms_sender: '测试你的短信连接器',
   test_email_placeholder: '请输入一个用于测试的邮件地址',
   test_sms_placeholder: '请输入一个用于测试的手机号码',
-  test_message_sent: '测试信息已发送！',
-  test_sender_description: '如果你的 JSON 配置正确，你会收到一条测试消息。',
+  test_message_sent: '测试信息已发送',
+  test_sender_description:
+    'Logto 使用“Generic”模板进行测试。如果你的 JSON 正确配置，你将收到一条消息。',
   options_change_email: '更换邮件连接器',
   options_change_sms: '更换短信连接器',
   connector_deleted: '成功删除连接器',

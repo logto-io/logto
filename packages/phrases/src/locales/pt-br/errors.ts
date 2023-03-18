@@ -98,7 +98,7 @@ const errors = {
       'Interaction session not found. Please go back and start the session again.', // UNTRANSLATED
   },
   connector: {
-    general: 'Ocorreu um erro inesperado no conector.{{errorDescription}}',
+    general: 'Ocorreu um erro no conector: {{errorDescription}}',
     not_found: 'Não foi possível encontrar nenhum conector disponível para o tipo: {{type}}.',
     not_enabled: 'O conector não está ativado.',
     invalid_metadata: 'Os metadados do conector são inválidos.',
