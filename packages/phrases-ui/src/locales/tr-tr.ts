@@ -95,8 +95,8 @@ const translation = {
       'Daha fazla güvenlik için lütfen e-postanızı veya telefonunuzu hesaba bağlayın.',
     continue_with_more_information:
       'Daha fazla güvenlik için lütfen aşağıdaki hesap ayrıntılarını tamamlayın.',
-    create_your_account: 'hesabını oluştur',
-    welcome_to_sign_in: 'oturum açmaya hoş geldiniz',
+    create_your_account: 'Hesabını oluştur',
+    sign_in_to_your_account: 'Hesabına giriş yap',
     no_region_code_found: 'Bölge kodu bulunamadı',
   },
   error: {

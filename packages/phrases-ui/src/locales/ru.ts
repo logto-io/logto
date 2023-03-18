@@ -99,7 +99,7 @@ const translation = {
     continue_with_more_information:
       'Для дополнительной безопасности, пожалуйста, заполните приведенные ниже данные учетной записи.',
     create_your_account: 'Создайте свой аккаунт',
-    welcome_to_sign_in: 'Добро пожаловать для входа в систему',
+    sign_in_to_your_account: 'Войди в свой аккаунт',
     no_region_code_found: 'Не удалось определить код региона',
   },
   error: {

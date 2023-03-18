@@ -101,7 +101,7 @@ const translation = {
     continue_with_more_information:
       'Pour une sécurité accrue, veuillez compléter les détails du compte ci-dessous.',
     create_your_account: 'Créer votre compte',
-    welcome_to_sign_in: 'Bienvenue pour vous connecter',
+    sign_in_to_your_account: 'Connecte-toi à ton compte',
     no_region_code_found: 'Aucun code de région trouvé',
   },
   error: {
