@@ -181,7 +181,7 @@ const Guide = ({ connector, onClose }: Props) => {
           </div>
           <div className={styles.setup}>
             <FormProvider {...methods}>
-              <form onSubmit={onSubmit}>
+              <form autoComplete="off" onSubmit={onSubmit}>
                 {isSocialConnector && (
                   <div className={styles.block}>
                     <div className={styles.blockTitle}>
