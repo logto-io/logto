@@ -36,21 +36,22 @@
     overflow-x: auto;
     justify-content: center;
     min-width: min-content;
+    padding-top: _.unit(2);
 
     > * {
       flex: 1;
       max-width: 800px;
       min-width: 400px;
       overflow-y: auto;
-      margin: _.unit(2) 0 _.unit(6) 0;
     }
 
     .readme {
+      display: flex;
+      flex-direction: column;
       background-color: var(--color-layer-1);
       border: 1.5px solid var(--color-focused-variant);
       border-radius: 16px;
-      margin-right: _.unit(6);
-      overflow: hidden;
+      margin: 0 _.unit(6) _.unit(6) 0;
 
       .readmeTitle {
         font: var(--font-title-2);
@@ -59,13 +60,16 @@
       }
 
       .readmeContent {
+        flex: 1;
         padding: 0 _.unit(6);
         overflow-y: auto;
-        height: 100%;
+        padding-bottom: _.unit(4);
       }
     }
 
     .setup {
+      padding-bottom: _.unit(6);
+
       .block {
         background-color: var(--color-layer-1);
         border-radius: 16px;
