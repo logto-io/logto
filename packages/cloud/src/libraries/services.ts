@@ -10,7 +10,7 @@ import { validateConfig } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/core-kit';
 import type { ServiceLogType } from '@logto/schemas';
 import { adminTenantId } from '@logto/schemas';
-import { trySafe } from '@logto/shared';
+import { trySafe } from '@silverhand/essentials';
 import { RequestError } from '@withtyped/server';
 
 import type { Queries } from '#src/queries/index.js';

@@ -1,7 +1,6 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
-import { tryThat } from '@logto/shared';
-import { conditional, has, pick } from '@silverhand/essentials';
+import { conditional, has, pick, tryThat } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';

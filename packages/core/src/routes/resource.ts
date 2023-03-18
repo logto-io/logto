@@ -1,7 +1,6 @@
 import { buildIdGenerator } from '@logto/core-kit';
 import { Resources, Scopes } from '@logto/schemas';
-import { tryThat } from '@logto/shared';
-import { yes } from '@silverhand/essentials';
+import { tryThat, yes } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';

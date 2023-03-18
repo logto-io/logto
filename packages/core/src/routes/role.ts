@@ -1,8 +1,7 @@
 import { generateStandardId } from '@logto/core-kit';
 import type { RoleResponse } from '@logto/schemas';
 import { userInfoSelectFields, Roles } from '@logto/schemas';
-import { tryThat } from '@logto/shared';
-import { pick } from '@silverhand/essentials';
+import { pick, tryThat } from '@silverhand/essentials';
 import { object, string, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
