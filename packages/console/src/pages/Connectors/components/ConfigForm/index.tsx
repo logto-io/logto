@@ -49,22 +49,22 @@ const ConfigForm = ({ formItems }: Props) => {
     const hasError = Boolean(errors[item.key]);
     const errorMessage = errors[item.key]?.message;
 
-    const commonProperties = {
+    const buildCommonProperties = () => ({
       ...register(item.key, { required: item.required }),
       placeholder: item.placeholder,
       hasError,
-    };
+    });
 
     if (item.type === ConnectorConfigFormItemType.Text) {
-      return <TextInput {...commonProperties} />;
+      return <TextInput {...buildCommonProperties()} />;
     }
 
     if (item.type === ConnectorConfigFormItemType.MultilineText) {
-      return <Textarea rows={5} {...commonProperties} />;
+      return <Textarea rows={5} {...buildCommonProperties()} />;
     }
 
     if (item.type === ConnectorConfigFormItemType.Number) {
-      return <TextInput type="number" {...commonProperties} />;
+      return <TextInput type="number" {...buildCommonProperties()} />;
     }
 
     return (
