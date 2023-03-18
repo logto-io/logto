@@ -9,16 +9,11 @@ import ConsoleApp from '@/pages/Main';
 
 const TenantAppContainer = () => {
   const { userEndpoint } = useContext(AppEndpointsContext);
-  const {
-    data: { isOnboardingDone },
-    isLoaded,
-  } = useUserOnboardingData();
+  const { isOnboarding, isLoaded } = useUserOnboardingData();
 
   if (!userEndpoint || (isCloud && !isLoaded)) {
     return <AppLoading />;
   }
-
-  const isOnboarding = isCloud && !isOnboardingDone;
 
   if (isOnboarding) {
     return <OnboardingApp />;
