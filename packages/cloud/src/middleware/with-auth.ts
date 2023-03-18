@@ -1,8 +1,7 @@
 import assert from 'node:assert';
 import type { IncomingHttpHeaders } from 'node:http';
 
-import { tryThat } from '@logto/shared';
-import { appendPath } from '@silverhand/essentials';
+import { appendPath, tryThat } from '@silverhand/essentials';
 import type { NextFunction, RequestContext } from '@withtyped/server';
 import { RequestError } from '@withtyped/server';
 import fetchRetry from 'fetch-retry';

@@ -6,8 +6,7 @@ import {
   LogResult,
   userInfoSelectFields,
 } from '@logto/schemas';
-import { trySafe } from '@logto/shared';
-import { conditional, pick } from '@silverhand/essentials';
+import { conditional, pick, trySafe } from '@silverhand/essentials';
 import type { Response } from 'got';
 import { got, HTTPError } from 'got';
 import type Provider from 'oidc-provider';

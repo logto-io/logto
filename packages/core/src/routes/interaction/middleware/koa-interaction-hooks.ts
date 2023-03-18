@@ -1,4 +1,4 @@
-import { trySafe } from '@logto/shared';
+import { trySafe } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 

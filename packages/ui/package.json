@@ -33,7 +33,7 @@
     "@react-spring/web": "^9.6.1",
     "@silverhand/eslint-config": "2.0.1",
     "@silverhand/eslint-config-react": "2.0.1",
-    "@silverhand/essentials": "2.4.1",
+    "@silverhand/essentials": "^2.5.0",
     "@silverhand/jest-config": "1.2.2",
     "@silverhand/ts-config": "2.0.3",
     "@silverhand/ts-config-react": "2.0.3",

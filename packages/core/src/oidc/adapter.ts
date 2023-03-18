@@ -1,7 +1,6 @@
 import type { CreateApplication } from '@logto/schemas';
 import { ApplicationType, adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas';
-import { tryThat } from '@logto/shared';
-import { appendPath } from '@silverhand/essentials';
+import { appendPath, tryThat } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
 import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import { errors } from 'oidc-provider';
