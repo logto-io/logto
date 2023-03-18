@@ -1,5 +1,6 @@
 export const emailRegEx = /^\S+@\S+\.\S+$/;
 export const phoneRegEx = /^\d+$/;
+export const phoneInputRegEx = /^\+?[\d-( )]+$/;
 export const usernameRegEx = /^[A-Z_a-z]\w*$/;
 export const webRedirectUriProtocolRegEx = /^https?:$/;
 export const mobileUriSchemeProtocolRegEx = /^[a-z][\d_a-z]*(\.[\d_a-z]+)+:$/;

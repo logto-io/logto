@@ -1,7 +1,6 @@
-import { phoneRegEx, emailRegEx } from '@logto/core-kit';
+import { emailRegEx, phoneInputRegEx } from '@logto/core-kit';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -67,7 +66,12 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
       return;
     }
 
-    const data = { config: result.data, ...(isSms ? { phone: sendTo } : { email: sendTo }) };
+    const data = {
+      config: result.data,
+      ...(isSms
+        ? { phone: sendTo.replace(/[ ()-]/g, '').replace(/\+/g, '00') }
+        : { email: sendTo }),
+    };
 
     try {
       await api.post(`api/connectors/${connectorId}/test`, { json: data }).json();
@@ -87,7 +91,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
           className={styles.textField}
         >
           <TextInput
-            hasError={Boolean(inputError?.message)}
+            hasError={Boolean(inputError)}
             type={isSms ? 'tel' : 'email'}
             placeholder={
               isSms
@@ -98,7 +102,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
             {...register('sendTo', {
               required: true,
               pattern: {
-                value: isSms ? phoneRegEx : emailRegEx,
+                value: isSms ? phoneInputRegEx : emailRegEx,
                 message: t('connector_details.send_error_invalid_format'),
               },
             })}
@@ -118,9 +122,8 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
           />
         </Tooltip>
       </div>
-      <div className={classNames(inputError?.message ? styles.error : styles.description)}>
-        {inputError?.message ?? t('connector_details.test_sender_description')}
-      </div>
+      <div className={styles.description}>{t('connector_details.test_sender_description')}</div>
+      <div className={styles.error}>{inputError?.message}</div>
     </div>
   );
 };
