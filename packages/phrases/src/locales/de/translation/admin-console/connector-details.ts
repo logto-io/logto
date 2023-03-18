@@ -12,8 +12,8 @@ const connector_details = {
   edit_config_label: 'Gib deine JSON-Konfiguration ein',
   test_email_sender: 'Teste den E-Mail Connector',
   test_sms_sender: 'Teste den SMS Connector',
-  test_email_placeholder: 'Gib eine Test-E-Mail ein',
-  test_sms_placeholder: 'Gib eine Test-Telefonnummer ein',
+  test_email_placeholder: 'john.doe@example.com',
+  test_sms_placeholder: '+49 151 12345678',
   test_message_sent: 'Testnachricht wurde gesendet',
   test_sender_description:
     'Logto verwendet die "Generic"-Vorlage zum Testen. Du erhältst eine Nachricht, wenn dein Connector richtig konfiguriert ist.',

@@ -12,8 +12,8 @@ const connector_details = {
   edit_config_label: 'Introduza o JSON aqui',
   test_email_sender: 'Teste o conector de email',
   test_sms_sender: 'Teste o conector de SMS',
-  test_email_placeholder: 'Insira um endereço de email para o teste',
-  test_sms_placeholder: 'Insira um número de telefone para o teste',
+  test_email_placeholder: 'john.doe@example.com',
+  test_sms_placeholder: '+351 912 345 678',
   test_message_sent: 'Mensagem de teste enviada',
   test_sender_description:
     'O Logto utiliza o modelo "Generic" para testes. Receberás uma mensagem se o teu conector estiver configurado corretamente.',
