@@ -59,6 +59,7 @@ const onboardSieConfigToSignInExperience = (
     color: {
       ...baseColorConfig,
       primaryColor: onboardConfigColor,
+      isDarkModeEnabled: false, // Note: disable dark mode for the onboarding live preview
     },
     signUp: {
       identifiers: [identifier],
