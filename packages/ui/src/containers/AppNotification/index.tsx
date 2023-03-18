@@ -5,6 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { AppNotification as Notification } from '@/components/Notification';
 import usePlatform from '@/hooks/use-platform';
+import { searchKeys } from '@/utils/search-parameters';
 
 import * as styles from './index.module.scss';
 
@@ -26,7 +27,7 @@ const AppNotification = () => {
   }, []);
 
   useEffect(() => {
-    setNotification(new URLSearchParams(window.location.search).get('notification'));
+    setNotification(sessionStorage.getItem(searchKeys.notification));
   }, []);
 
   useEffect(() => {
