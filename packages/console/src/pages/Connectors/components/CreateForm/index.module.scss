@@ -50,6 +50,7 @@
         .name {
           font: var(--font-label-2);
           @include _.multi-line-ellipsis(1);
+          padding-right: _.unit(3);
         }
 
         .connectorId {
