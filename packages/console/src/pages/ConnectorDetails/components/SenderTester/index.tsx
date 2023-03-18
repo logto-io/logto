@@ -1,7 +1,7 @@
 import { emailRegEx, phoneInputRegEx } from '@logto/core-kit';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -17,17 +17,24 @@ import { safeParseJson } from '@/utils/json';
 import * as styles from './index.module.scss';
 
 type Props = {
-  connectorId: string;
+  connectorFactoryId: string;
   connectorType: Exclude<ConnectorType, ConnectorType.Social>;
-  config: string;
   className?: string;
+  formConfig?: Record<string, unknown>;
+  stringConfig?: string;
 };
 
 type FormData = {
   sendTo: string;
 };
 
-const SenderTester = ({ connectorId, connectorType, config, className }: Props) => {
+const SenderTester = ({
+  connectorFactoryId,
+  connectorType,
+  className,
+  formConfig,
+  stringConfig,
+}: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const {
     handleSubmit,
@@ -55,26 +62,39 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
     };
   }, [showTooltip]);
 
+  const stringConfigParser = useCallback(
+    (config?: string) => {
+      if (!config) {
+        toast.error(t('connector_details.save_error_empty_config'));
+
+        return;
+      }
+
+      const result = safeParseJson(config);
+
+      if (!result.success) {
+        toast.error(result.error);
+
+        return;
+      }
+
+      return result.data;
+    },
+    [t]
+  );
+
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
 
-    const result = safeParseJson(config);
-
-    if (!result.success) {
-      toast.error(result.error);
-
-      return;
-    }
-
     const data = {
-      config: result.data,
+      config: formConfig ?? stringConfigParser(stringConfig),
       ...(isSms
         ? { phone: sendTo.replace(/[ ()-]/g, '').replace(/\+/g, '00') }
         : { email: sendTo }),
     };
 
     try {
-      await api.post(`api/connectors/${connectorId}/test`, { json: data }).json();
+      await api.post(`api/connectors/${connectorFactoryId}/test`, { json: data }).json();
       setShowTooltip(true);
     } catch (error: unknown) {
       console.error(error);

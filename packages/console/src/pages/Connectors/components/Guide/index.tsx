@@ -213,9 +213,10 @@ const Guide = ({ connector, onClose }: Props) => {
                       <div>{t('connectors.guide.test_connection')}</div>
                     </div>
                     <SenderTester
-                      connectorId={connectorId}
+                      connectorFactoryId={connectorId}
                       connectorType={connectorType}
-                      config={watch('config')}
+                      formConfig={formItems ? parseFormConfig(watch(), formItems) : undefined}
+                      stringConfig={watch('config')}
                     />
                   </div>
                 )}

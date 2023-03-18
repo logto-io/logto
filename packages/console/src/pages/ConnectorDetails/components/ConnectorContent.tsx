@@ -135,9 +135,14 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
         {connectorData.type !== ConnectorType.Social && (
           <FormCard title="connector_details.test_connection">
             <SenderTester
-              connectorId={connectorData.id}
+              connectorFactoryId={connectorData.connectorId}
               connectorType={connectorData.type}
-              config={watch('config')}
+              formConfig={
+                connectorData.formItems
+                  ? parseFormConfig(watch(), connectorData.formItems)
+                  : undefined
+              }
+              stringConfig={watch('config')}
             />
           </FormCard>
         )}

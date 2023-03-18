@@ -1,11 +1,6 @@
 /* eslint-disable max-lines */
-import { defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  ConnectorPlatform,
-  VerificationCodeType,
-} from '@logto/connector-kit';
+import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
+import { ConnectorPlatform, VerificationCodeType } from '@logto/connector-kit';
 import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
 import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
@@ -224,10 +219,6 @@ describe('connector route', () => {
           ...mockLogtoConnector,
         },
       ]);
-      validateConfig.mockImplementationOnce((config: unknown) => {
-        throw new ConnectorError(ConnectorErrorCodes.General);
-      });
-      buildRawConnector.mockResolvedValueOnce({ rawConnector: { configGuard: any() } });
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'connectorId',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
@@ -384,8 +375,6 @@ describe('connector route', () => {
           ...mockLogtoConnector,
         },
       ]);
-      validateConfig.mockReturnValueOnce(null);
-      buildRawConnector.mockResolvedValueOnce({ rawConnector: { configGuard: any() } });
       const response = await connectorRequest.post('/connectors').send({
         connectorId: 'id0',
         metadata: { target: 'target' },
@@ -432,19 +421,15 @@ describe('connector route', () => {
     });
 
     it('should get SMS connector and send test message', async () => {
-      const mockedMetadata = {
-        ...mockMetadata,
-      };
       const sendMessage = jest.fn();
-      const mockedSmsConnector: LogtoConnector<SmsConnector> = {
-        dbEntry: mockConnector,
-        metadata: mockedMetadata,
+      const mockedSmsConnectorFactory: ConnectorFactory<SmsConnector> = {
+        ...mockConnectorFactory,
+        metadata: mockMetadata,
         type: ConnectorType.Sms,
-        configGuard: any(),
-        ...defaultConnectorMethods,
-        sendMessage,
+        createConnector: jest.fn(),
       };
-      getLogtoConnectors.mockResolvedValueOnce([mockedSmsConnector]);
+      loadConnectorFactories.mockResolvedValueOnce([mockedSmsConnectorFactory]);
+      buildRawConnector.mockResolvedValueOnce({ rawConnector: { sendMessage } });
       const response = await connectorRequest
         .post('/connectors/id/test')
         .send({ phone: '12345678901', config: { test: 123 } });
@@ -464,15 +449,14 @@ describe('connector route', () => {
 
     it('should get email connector and send test message', async () => {
       const sendMessage = jest.fn();
-      const mockedEmailConnector: LogtoConnector<EmailConnector> = {
-        dbEntry: mockConnector,
+      const mockedEmailConnectorFactory: ConnectorFactory<EmailConnector> = {
+        ...mockConnectorFactory,
         metadata: mockMetadata,
         type: ConnectorType.Email,
-        configGuard: any(),
-        ...defaultConnectorMethods,
-        sendMessage,
+        createConnector: jest.fn(),
       };
-      getLogtoConnectors.mockResolvedValueOnce([mockedEmailConnector]);
+      loadConnectorFactories.mockResolvedValueOnce([mockedEmailConnectorFactory]);
+      buildRawConnector.mockResolvedValueOnce({ rawConnector: { sendMessage } });
       const response = await connectorRequest
         .post('/connectors/id/test')
         .send({ email: 'test@email.com', config: { test: 123 } });

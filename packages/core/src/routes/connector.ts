@@ -1,4 +1,7 @@
+/* eslint-disable max-lines */
 import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
+import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
+import type { SmsConnector, EmailConnector } from '@logto/connector-kit';
 import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
 import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
@@ -281,9 +284,9 @@ export default function connectorRoutes<T extends AuthedRouter>(
   );
 
   router.post(
-    '/connectors/:id/test',
+    '/connectors/:factoryId/test',
     koaGuard({
-      params: object({ id: string().min(1) }),
+      params: object({ factoryId: string().min(1) }),
       body: object({
         phone: string().regex(phoneRegEx).optional(),
         email: string().regex(emailRegEx).optional(),
@@ -292,7 +295,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }),
     async (ctx, next) => {
       const {
-        params: { id },
+        params: { factoryId },
         body,
       } = ctx.guard;
       const { phone, email, config } = body;
@@ -300,19 +303,29 @@ export default function connectorRoutes<T extends AuthedRouter>(
       const subject = phone ?? email;
       assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
 
-      const connector = await getLogtoConnectorById(id);
+      const connectorFactories = await loadConnectorFactories();
+      const connectorFactory = connectorFactories
+        .filter(
+          (factory): factory is ConnectorFactory<SmsConnector> | ConnectorFactory<EmailConnector> =>
+            factory.type === ConnectorType.Email || factory.type === ConnectorType.Sms
+        )
+        .find(({ metadata: { id } }) => id === factoryId && !demoConnectorIds.includes(id));
       const expectType = phone ? ConnectorType.Sms : ConnectorType.Email;
 
       assertThat(
-        connector,
+        connectorFactory,
         new RequestError({
           code: 'connector.not_found',
           type: expectType,
+          factoryId,
         })
       );
-      assertThat(connector.type === expectType, 'connector.unexpected_type');
 
-      const { sendMessage } = connector;
+      assertThat(connectorFactory.type === expectType, 'connector.unexpected_type');
+
+      const {
+        rawConnector: { sendMessage },
+      } = await buildRawConnector<SmsConnector | EmailConnector>(connectorFactory);
 
       await sendMessage(
         {
@@ -358,3 +371,4 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }
   );
 }
+/* eslint-enable max-lines */

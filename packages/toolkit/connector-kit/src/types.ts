@@ -198,7 +198,7 @@ export type BaseConnector<Type extends ConnectorType> = {
   configGuard: ZodType;
 };
 
-export type CreateConnector<T extends BaseConnector<ConnectorType>> = (options: {
+export type CreateConnector<T extends AllConnector> = (options: {
   getConfig: GetConnectorConfig;
 }) => Promise<T>;
 
