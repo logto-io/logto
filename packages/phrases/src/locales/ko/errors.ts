@@ -94,7 +94,7 @@ const errors = {
     interaction_not_found: '인터렉션 세션을 찾을 수 없어요. 처음부터 다시 세션을 시작해 주세요.',
   },
   connector: {
-    general: '연동 중에 알 수 없는 오류가 발생했어요. {{errorDescription}}',
+    general: '커넥터에서 오류가 발생했습니다: {{errorDescription}}',
     not_found: '{{type}} 값을 가진 연동 종류를 찾을 수 없어요.',
     not_enabled: '연동이 활성화되지 않았어요.',
     invalid_metadata: '연동 메타데이터가 유효하지 않아요.',

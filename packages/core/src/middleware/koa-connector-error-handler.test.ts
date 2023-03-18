@@ -108,7 +108,7 @@ describe('koaConnectorErrorHandler middleware', () => {
       new RequestError(
         {
           code: 'connector.template_not_found',
-          status: 500,
+          status: 400,
         },
         { message }
       )
@@ -198,7 +198,7 @@ describe('koaConnectorErrorHandler middleware', () => {
       new RequestError(
         {
           code: 'connector.general',
-          status: 500,
+          status: 400,
         },
         { message }
       )
@@ -216,7 +216,7 @@ describe('koaConnectorErrorHandler middleware', () => {
       new RequestError(
         {
           code: 'connector.general',
-          status: 500,
+          status: 400,
           errorDescription: '\nMock General connector errors',
         },
         message

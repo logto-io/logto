@@ -102,7 +102,7 @@ const errors = {
       'Interaction session not found. Please go back and start the session again.', // UNTRANSLATED
   },
   connector: {
-    general: "Une erreur inattendue s'est produite dans le connecteur. {{errorDescription}}",
+    general: "Une erreur s'est produite dans le connecteur: {{errorDescription}}",
     not_found: 'Impossible de trouver un connecteur disponible pour le type : {{type}}.',
     not_enabled: "Le connecteur n'est pas activé.",
     invalid_metadata: "The connector's metadata is invalid.", // UNTRANSLATED

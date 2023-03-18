@@ -14,8 +14,9 @@ const connector_details = {
   test_sms_sender: 'SMS connectorunuzu test edin',
   test_email_placeholder: 'Test e-posta adresi girin',
   test_sms_placeholder: 'Test telefon numarası girin',
-  test_message_sent: 'Test mesajı gönderildi!',
-  test_sender_description: 'Eğer jsonunuz doğru yapılandırılmışsa bir mesaj alacaksınız',
+  test_message_sent: 'Test mesajı gönderildi',
+  test_sender_description:
+    'Logto testler için "Generic" şablonunu kullanır. Bağlantınız doğru şekilde yapılandırılmışsa bir mesaj alacaksınız.',
   options_change_email: 'Eposta connectorunuzu değiştirin',
   options_change_sms: 'SMS connectorunuzu değiştirin',
   connector_deleted: 'Connector başarıyla silindi',

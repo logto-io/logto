@@ -19,7 +19,6 @@ import { initFormData, parseFormConfig } from '@/pages/Connectors/components/Con
 import type { ConnectorFormType } from '@/pages/Connectors/types';
 import { SyncProfileMode } from '@/pages/Connectors/types';
 
-import * as styles from './ConnectorContent.module.scss';
 import SenderTester from './SenderTester';
 
 type Props = {
@@ -136,7 +135,6 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
         {connectorData.type !== ConnectorType.Social && (
           <FormCard title="connector_details.test_connection">
             <SenderTester
-              className={styles.senderTest}
               connectorId={connectorData.id}
               connectorType={connectorData.type}
               config={watch('config')}

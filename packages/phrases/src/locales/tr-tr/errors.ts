@@ -98,7 +98,7 @@ const errors = {
       'Interaction session not found. Please go back and start the session again.', // UNTRANSLATED
   },
   connector: {
-    general: 'Bağlayıcıda beklenmeyen bir hata oldu.{{errorDescription}}',
+    general: 'Bağdaştırıcıda bir hata oluştu: {{errorDescription}}',
     not_found: '{{type}} tipi icin uygun bağlayıcı bulunamadı.',
     not_enabled: 'Bağlayıcı etkin değil.',
     invalid_metadata: "The connector's metadata is invalid.", // UNTRANSLATED

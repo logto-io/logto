@@ -15,6 +15,7 @@ const formatZodError = ({ issues }: ZodError): string[] =>
 
     return base + issue.message;
   });
+
 export default class RequestError extends Error {
   code: LogtoErrorCode;
   status: number;
