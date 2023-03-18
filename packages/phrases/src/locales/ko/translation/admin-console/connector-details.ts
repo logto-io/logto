@@ -16,7 +16,7 @@ const connector_details = {
   test_sms_placeholder: '테스트 휴대전화번호를 입력해 주세요.',
   test_message_sent: '테스트 메세지 전송 완료',
   test_sender_description:
-    'Logto는 "Generic" 템플릿을 사용하여 테스트합니다. JSON이 올바르게 구성되어 있으면 메시지를 받게 됩니다.',
+    'Logto는 "Generic" 템플릿을 사용하여 테스트합니다. 커넥터가 올바르게 구성되면 메시지를 받게 됩니다.',
   options_change_email: '이메일 연동 수정',
   options_change_sms: 'SMS 연동 수정',
   connector_deleted: '연동이 성공적으로 제거되었어요.',

@@ -16,7 +16,7 @@ const connector_details = {
   test_sms_placeholder: 'Digite um número de telefone de teste',
   test_message_sent: 'Mensagem de teste enviada',
   test_sender_description:
-    'O Logto usa o modelo "Generic" para testes. Você receberá uma mensagem se o seu JSON estiver configurado corretamente.',
+    'O Logto utiliza o modelo "Generic" para testes. Você receberá uma mensagem se o seu conector estiver configurado corretamente.',
   options_change_email: 'Alterar conector de e-mail',
   options_change_sms: 'Alterar conector de SMS',
   connector_deleted: 'O conector foi excluído com sucesso',

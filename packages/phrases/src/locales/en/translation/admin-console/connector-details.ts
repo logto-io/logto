@@ -16,7 +16,7 @@ const connector_details = {
   test_sms_placeholder: 'Enter a test phone number',
   test_message_sent: 'Test message sent',
   test_sender_description:
-    'Logto uses the "Generic" template for testing. You will receive a message if your JSON is rightly configured.',
+    'Logto uses the "Generic" template for testing. You will receive a message if your connector is rightly configured.',
   options_change_email: 'Change email connector',
   options_change_sms: 'Change SMS connector',
   connector_deleted: 'The connector has been successfully deleted',
