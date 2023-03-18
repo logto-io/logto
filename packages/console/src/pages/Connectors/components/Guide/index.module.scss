@@ -42,15 +42,15 @@
       max-width: 800px;
       min-width: 400px;
       overflow-y: auto;
-      margin: _.unit(2) 0 _.unit(6) 0;
     }
 
     .readme {
+      display: flex;
+      flex-direction: column;
       background-color: var(--color-layer-1);
       border: 1.5px solid var(--color-focused-variant);
       border-radius: 16px;
-      margin-right: _.unit(6);
-      overflow: hidden;
+      margin: _.unit(2) _.unit(6) _.unit(6) 0;
 
       .readmeTitle {
         font: var(--font-title-2);
@@ -59,6 +59,7 @@
       }
 
       .readmeContent {
+        flex: 1;
         padding: 0 _.unit(6);
         overflow-y: auto;
         height: 100%;
@@ -66,6 +67,8 @@
     }
 
     .setup {
+      padding: _.unit(2) 0;
+
       .block {
         background-color: var(--color-layer-1);
         border-radius: 16px;
