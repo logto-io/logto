@@ -38,12 +38,7 @@ describe('social-verification', () => {
     const connectorData = { authCode: 'code' };
     const userInfo = await verifySocialIdentity({ connectorId, connectorData }, ctx, tenant);
 
-    expect(getUserInfoByAuthCode).toBeCalledWith(
-      connectorId,
-      connectorData,
-      expect.anything(),
-      expect.anything()
-    );
+    expect(getUserInfoByAuthCode).toBeCalledWith(connectorId, connectorData, expect.anything());
     expect(userInfo).toEqual({ id: 'foo' });
   });
 });

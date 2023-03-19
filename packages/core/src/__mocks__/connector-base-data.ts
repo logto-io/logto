@@ -82,7 +82,6 @@ export const mockConnector0: Connector = {
   createdAt: 1_234_567_890_123,
   syncProfile: false,
   metadata: {},
-  storage: {},
   connectorId: 'id0',
 };
 
@@ -93,7 +92,6 @@ export const mockConnector1: Connector = {
   createdAt: 1_234_567_890_234,
   syncProfile: false,
   metadata: {},
-  storage: {},
   connectorId: 'id1',
 };
 
@@ -104,7 +102,6 @@ export const mockConnector2: Connector = {
   createdAt: 1_234_567_890_345,
   syncProfile: false,
   metadata: {},
-  storage: {},
   connectorId: 'id2',
 };
 
@@ -115,7 +112,6 @@ export const mockConnector3: Connector = {
   createdAt: 1_234_567_890_456,
   syncProfile: false,
   metadata: {},
-  storage: {},
   connectorId: 'id3',
 };
 
@@ -126,7 +122,6 @@ export const mockConnector4: Connector = {
   createdAt: 1_234_567_890_567,
   syncProfile: false,
   metadata: {},
-  storage: {},
   connectorId: 'id4',
 };
 
@@ -137,7 +132,6 @@ export const mockConnector5: Connector = {
   createdAt: 1_234_567_890_567,
   syncProfile: false,
   metadata: {},
-  storage: {},
   connectorId: 'id5',
 };
 
@@ -148,6 +142,5 @@ export const mockConnector6: Connector = {
   createdAt: 1_234_567_890_567,
   syncProfile: false,
   metadata: {},
-  storage: {},
   connectorId: 'id6',
 };

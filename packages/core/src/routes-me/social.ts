@@ -115,10 +115,7 @@ export default function socialRoutes<T extends AuthedMeRouter>(
        * Same as above, passing `notImplemented` only works for connectors not relying on session storage.
        * E.g. Google and GitHub
        */
-      const socialUserInfo = await connector.getUserInfo(connectorData, notImplemented, {
-        get: notImplemented,
-        set: notImplemented,
-      });
+      const socialUserInfo = await connector.getUserInfo(connectorData, notImplemented);
 
       assertThat(
         !(await hasUserWithIdentity(target, socialUserInfo.id, userId)),

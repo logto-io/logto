@@ -54,26 +54,17 @@ export const createSocialAuthorizationUrl = async (
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
   ctx: WithLogContext,
-  { provider, queries, libraries }: TenantContext
+  { provider, libraries }: TenantContext
 ): Promise<SocialUserInfo> => {
   const {
     socials: { getUserInfoByAuthCode },
   } = libraries;
-  const {
-    connectors: { setValueByIdAndKey, getValueByIdAndKey },
-  } = queries;
 
   const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
   log.append({ connectorId, connectorData });
 
-  const userInfo = await getUserInfoByAuthCode(
-    connectorId,
-    connectorData,
-    async () => getConnectorSessionResult(ctx, provider),
-    {
-      set: async (key: string, value: unknown) => setValueByIdAndKey(connectorId, key, value),
-      get: async (key: string) => getValueByIdAndKey(connectorId, key),
-    }
+  const userInfo = await getUserInfoByAuthCode(connectorId, connectorData, async () =>
+    getConnectorSessionResult(ctx, provider)
   );
 
   log.append(userInfo);
