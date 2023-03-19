@@ -16,7 +16,7 @@ export default function koaInteractionSie<StateT, ContextT, ResponseT>(
   tenantId: string
 ): MiddlewareType<StateT, WithInteractionSieContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
-    if (noCache(ctx.headers)) {
+    if (noCache(ctx.request)) {
       wellKnownCache.invalidate(tenantId, ['sie']);
     }
 

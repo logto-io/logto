@@ -9,7 +9,6 @@ import i18next from 'i18next';
 import Provider, { errors, ResourceServer } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { wellKnownCache } from '#src/caches/well-known.js';
 import type { EnvSet } from '#src/env-set/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
@@ -151,16 +150,11 @@ export default function initOidc(
 
         const appendParameters = (path: string) => {
           // `notification` is for showing a text banner on the homepage
-          return isDemoApp ? path + `?notification=demo_app.notification` : path;
+          return isDemoApp ? path + `?notification=demo_app.notification&no_cache` : path;
         };
 
         switch (interaction.prompt.name) {
           case 'login': {
-            // Always fetch the latest sign-in experience config for demo app (live preview)
-            if (isDemoApp) {
-              wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
-            }
-
             const isSignUp =
               ctx.oidc.params?.[OIDCExtraParametersKey.InteractionMode] === InteractionMode.signUp;
 

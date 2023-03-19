@@ -23,9 +23,12 @@ import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignIn from './pages/SocialSignInCallback';
 import Springboard from './pages/Springboard';
 import VerificationCode from './pages/VerificationCode';
+import { handleSearchParametersData } from './utils/search-parameters';
 import { getSignInExperienceSettings, setFavIcon } from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
+
+handleSearchParametersData();
 
 const App = () => {
   const { context, Provider } = usePageContext();

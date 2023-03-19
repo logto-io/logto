@@ -1,5 +1,8 @@
-import type { IncomingHttpHeaders } from 'http';
+import type { Request } from 'koa';
 
-export const noCache = (headers: IncomingHttpHeaders): boolean =>
-  headers['cache-control']?.split(',').some((value) => value.trim().toLowerCase() === 'no-cache') ??
-  false;
+export const noCache = (request: Request): boolean =>
+  Boolean(
+    request.headers['cache-control']
+      ?.split(',')
+      .some((value) => ['no-cache', 'no-store'].includes(value.trim().toLowerCase()))
+  ) || request.URL.searchParams.get('no_cache') !== null;
