@@ -46,7 +46,7 @@ const user_details = {
     assign_button: 'Assign Roles',
     delete_description:
       'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.',
-    deleted: '{{name}} was successfully removed from this user!',
+    deleted: '{{name}} was successfully removed from this user.',
     assign_title: 'Assign roles to {{name}}',
     assign_subtitle: 'Authorize {{name}} one or more roles',
     assign_role_field: 'Assign roles',

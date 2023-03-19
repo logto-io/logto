@@ -1,13 +1,13 @@
 const components = {
   uploader: {
-    action_description: 'Drag and drop or browse', // UNTRANSLATED
-    uploading: 'Uploading...', // UNTRANSLATED
+    action_description: '拖放或浏览上传',
+    uploading: '上传中...',
     image_limit:
-      'Upload image under {{size, number}}KB, {{extensions, list(style: narrow; type: conjunction;)}} only.', // UNTRANSLATED
-    error_upload: 'Something went wrong. File upload failed.', // UNTRANSLATED
-    error_file_size: 'File size is too large. Please upload a file under {{size, number}}KB.', // UNTRANSLATED
+      '上传图片大小不能超过 {{size, number}}KB，只支持 {{extensions, list(style: narrow; type: conjunction;)}} 格式的文件。',
+    error_upload: '哎呀，出了些问题。文件上传失败。',
+    error_file_size: '文件太大了，请上传小于 {{size, number}}KB 的文件。',
     error_file_type:
-      'File type is not supported. {{extensions, list(style: narrow; type: conjunction;)}} only.', // UNTRANSLATED
+      '不支持该文件类型。只支持 {{extensions, list(style: narrow; type: conjunction;)}} 格式的文件。',
   },
 };
 

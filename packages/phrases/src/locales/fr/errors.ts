@@ -19,7 +19,7 @@ const errors = {
     invalid_pagination: "La valeur de la pagination de la requête n'est pas valide.",
     can_not_get_tenant_id: 'Unable to get tenant id from request.', // UNTRANSLATED
     file_size_exceeded: 'File size exceeded.', // UNTRANSLATED
-    mime_type_not_allowed: 'Mime type is not allowed.', // UNTRANSLATED
+    mime_type_not_allowed: 'MIME type is not allowed.', // UNTRANSLATED
   },
   oidc: {
     aborted: "L'utilisateur a abandonné l'interaction.",

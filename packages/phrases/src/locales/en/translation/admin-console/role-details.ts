@@ -23,10 +23,10 @@ const role_details = {
     api_permission_count_one: '{{count, number}} permission',
     api_permission_count_other: '{{count, number}} permissions',
     confirm_assign: 'Assign Permissions',
-    permission_assigned: 'The selected permissions were successfully assigned to this role!',
+    permission_assigned: 'The selected permissions were successfully assigned to this role',
     deletion_description:
       'If this permission is removed, the affected user with this role will lose the access granted by this permission.',
-    permission_deleted: 'The permission "{{name}}" was successfully removed from this role!',
+    permission_deleted: 'The permission "{{name}}" was successfully removed from this role',
     empty: 'No permission available',
   },
   users: {
@@ -36,13 +36,13 @@ const role_details = {
     latest_sign_in_column: 'Latest sign in',
     delete_description:
       'It will remain in your user pool but lose the authorization for this role.',
-    deleted: '{{name}} was successfully removed from this role!', // UNTRANSLATED
+    deleted: '{{name}} was successfully removed from this role', // UNTRANSLATED
     assign_title: 'Assign users',
     assign_subtitle:
       'Assign users to this role. Find appropriate users by searching name, email, phone, or user ID.',
     assign_users_field: 'Assign users',
     confirm_assign: 'Assign users',
-    users_assigned: 'The selected users were successfully assigned to this role!',
+    users_assigned: 'The selected users were successfully assigned to this role',
     empty: 'No user available',
   },
 };

@@ -1,111 +1,108 @@
 const cloud = {
   welcome: {
-    title: 'Welcome and let’s create your own Logto Cloud Preview', // UNTRANSLATED
+    title: '欢迎来到 Logto Cloud（预览版），让我们一起创建独属于你的体验',
     description:
-      'Whether you’re an open-source or cloud user, take a tour of the showcase and experience the full value of Logto. Cloud preview also serves as a preliminary version of Logto Cloud.', // UNTRANSLATED
-    project_field: 'I’m using Logto for', // UNTRANSLATED
+      '无论你是开源用户还是云用户，都可以在展示中了解 Logto 的全部价值。Cloud 预览版也是 Logto Cloud 的初步版本。',
+    project_field: '我使用 Logto 是为了',
     project_options: {
-      personal: 'Personal project', // UNTRANSLATED
-      company: 'Company project', // UNTRANSLATED
+      personal: '个人项目',
+      company: '公司项目',
     },
-    deployment_type_field: 'Prefer open-source or cloud?', // UNTRANSLATED
+    deployment_type_field: '你偏爱开源还是云？',
     deployment_type_options: {
-      open_source: 'Open-Source', // UNTRANSLATED
-      cloud: 'Cloud', // UNTRANSLATED
+      open_source: '开源',
+      cloud: '云',
     },
   },
   about: {
-    title: 'A little bit about you', // UNTRANSLATED
-    description:
-      'Let‘s make your Logto experience unique to you by getting to know you better. Your information is safe with us.', // UNTRANSLATED
-    title_field: 'Your title', // UNTRANSLATED
+    title: '关于你的一些信息',
+    description: '通过更好地了解你，我们可以使你的 Logto 体验更加个性化。你的信息是安全的。',
+    title_field: '你的头衔',
     title_options: {
-      developer: 'Developer', // UNTRANSLATED
-      team_lead: 'Team Lead', // UNTRANSLATED
-      ceo: 'CEO', // UNTRANSLATED
-      cto: 'CTO', // UNTRANSLATED
-      product: 'Product', // UNTRANSLATED
-      others: 'Others', // UNTRANSLATED
+      developer: '开发人员',
+      team_lead: '团队负责人',
+      ceo: 'CEO',
+      cto: 'CTO',
+      product: '产品',
+      others: '其他',
     },
-    company_name_field: 'Company name', // UNTRANSLATED
-    company_name_placeholder: 'Acme.co', // UNTRANSLATED
-    company_size_field: 'How’s your company size?', // UNTRANSLATED
+    company_name_field: '公司名称',
+    company_name_placeholder: 'Acme.co',
+    company_size_field: '你的公司规模如何？',
     company_options: {
-      size_1: '1', // UNTRANSLATED
-      size_2_49: '2-49', // UNTRANSLATED
-      size_50_199: '50-199', // UNTRANSLATED
-      size_200_999: '200-999', // UNTRANSLATED
-      size_1000_plus: '1000+', // UNTRANSLATED
+      size_1: '1',
+      size_2_49: '2-49',
+      size_50_199: '50-199',
+      size_200_999: '200-999',
+      size_1000_plus: '1000+',
     },
-    reason_field: 'I’m signing up because', // UNTRANSLATED
+    reason_field: '我注册的原因是',
     reason_options: {
-      passwordless: 'Finding passwordless authentication and UI kit', // UNTRANSLATED
-      efficiency: 'Finding out-of-the-box identity infrastructure', // UNTRANSLATED
-      access_control: 'Controlling user access based on roles and responsibilities', // UNTRANSLATED
-      multi_tenancy: 'Seeking strategies for a multi-tenancy product', // UNTRANSLATED
-      enterprise: 'Finding SSO solutions for enterprise readiness', // UNTRANSLATED
-      others: 'Others', // UNTRANSLATED
+      passwordless: '寻找无需密码身份验证和 UI 工具包',
+      efficiency: '寻找即插即用的身份基础架构',
+      access_control: '基于角色和责任控制用户访问',
+      multi_tenancy: '寻求面向多租户产品的策略',
+      enterprise: '为企业级就绪寻找 SSO 解决方案',
+      others: '其他',
     },
   },
   congrats: {
-    title: 'Great news! You are qualified to earn Logto Cloud early credit!', // UNTRANSLATED
+    title: '好消息！你有资格获得 Logto Cloud 的早鸟惊喜。',
     description:
-      'Don’t miss out on a chance to enjoy a free <strong>60 days</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.', // UNTRANSLATED
-    check_out_button: 'Check out the live preview', // UNTRANSLATED
-    reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
-    reserve_description: 'Credit is only eligible once upon validation.', // UNTRANSLATED
-    book_button: 'Schedule now', // UNTRANSLATED
-    join_description: 'Join our public <a>{{link}}</a> to connect and chat with other developers.', // UNTRANSLATED
-    discord_link: 'discord channel', // UNTRANSLATED
-    enter_admin_console: 'Enter Logto Cloud Preview', // UNTRANSLATED
+      '别错过这和机会，立即联系 Logto 团队，了解更多信息，免费获得 Logto Cloud 正式启动后 <strong>60 天</strong> 的订阅！',
+    check_out_button: '查看实时预览',
+    reserve_title: '与 Logto 团队预定时间',
+    reserve_description: '验证后仅有一次领取资格。',
+    book_button: '现在预定',
+    join_description: '加入我们的公开 <a>{{link}}</a>，与其他开发人员连接和聊天。',
+    discord_link: 'Discord 频道',
+    enter_admin_console: '进入 Logto Cloud 预览',
   },
   gift: {
-    title: 'Use Logto Cloud free for 60 days. Join the front-runners now!', // UNTRANSLATED
-    description: 'Book a one-on-one session with our team for early credit.', // UNTRANSLATED
-    reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
-    reserve_description: 'Credit is only eligible once upon evaluation.', // UNTRANSLATED
-    book_button: 'Book', // UNTRANSLATED
+    title: '免费使用 Logto Cloud 60 天，立即成为种子用户！',
+    description: '预定与我们团队的一对一会话，以获取早鸟惊喜。',
+    reserve_title: '与 Logto 团队预定时间',
+    reserve_description: '评估后仅有一次领取资格。',
+    book_button: '预定',
   },
   sie: {
-    title: 'Let’s first customize your experience with ease', // UNTRANSLATED
+    title: '放轻松，让我们先定制你的体验。',
     inspire: {
-      title: 'Create compelling examples', // UNTRANSLATED
-      description:
-        'Feeling unsure about sign in experience? Just click the "Inspire Me" and let the magic happen!', // UNTRANSLATED
-      inspire_me: 'Inspire me', // UNTRANSLATED
+      title: '创建引人入胜的示例',
+      description: '对登录体验不确定吗？只需点击“启发我”，让魔法发生！',
+      inspire_me: '启发我',
     },
-    logo_field: 'App Logo', // UNTRANSLATED
-    color_field: 'Brand color', // UNTRANSLATED
-    identifier_field: 'Identifier', // UNTRANSLATED
+    logo_field: '应用商标',
+    color_field: '品牌颜色',
+    identifier_field: '标识符',
     identifier_options: {
-      email: 'Email', // UNTRANSLATED
-      phone: 'Phone', // UNTRANSLATED
-      user_name: 'Username', // UNTRANSLATED
+      email: '电子邮件',
+      phone: '电话',
+      user_name: '用户名',
     },
-    authn_field: 'Authentication', // UNTRANSLATED
+    authn_field: '身份验证',
     authn_options: {
-      password: 'Password', // UNTRANSLATED
-      verification_code: 'Verification code', // UNTRANSLATED
+      password: '密码',
+      verification_code: '验证码',
     },
-    social_field: 'Social sign in', // UNTRANSLATED
-    finish_and_done: 'Finish and done', // UNTRANSLATED
+    social_field: '社交登录',
+    finish_and_done: '完成并完成',
     preview: {
-      mobile_tab: 'Mobile', // UNTRANSLATED
-      web_tab: 'Web', // UNTRANSLATED
+      mobile_tab: '移动端',
+      web_tab: '网页端',
     },
     connectors: {
-      unlocked_later: 'Unlocked later', // UNTRANSLATED
-      unlocked_later_tip:
-        'Once you have completed the onboarding process and entered the product, you will have access to even more social sign-in methods.', // UNTRANSLATED
+      unlocked_later: '稍后解锁',
+      unlocked_later_tip: '完成入门流程并进入产品后，你将获得访问更多社交登录方式的权限。',
       notice:
-        'Please avoid using the demo connector for production purposes. Once you’ve completed testing, kindly delete the demo connector and set up your own connector with your credentials.', // UNTRANSLATED
+        '请勿将演示连接器用于生产目的。完成测试后，请删除演示连接器并使用你的凭据设置自己的连接器。',
     },
   },
-  broadcast: '📣 You are in Logto Cloud (Preview)', // UNTRANSLATED
+  broadcast: '📣 你正在使用 Logto Cloud（预览版）',
   socialCallback: {
-    title: "You've successfully signed in!", // UNTRANSLATED
+    title: '你已成功登录！',
     description:
-      'You have successfully signed in using your social account. To ensure seamless integration and access to all the features of Logto, we recommend that you proceed to configure your own social connector.', // UNTRANSLATED
+      '你已成功使用社交账户登录。为确保与 Logto 的无缝集成并获得所有功能的访问权限，我们建议你继续配置自己的社交连接器。',
   },
 };
 

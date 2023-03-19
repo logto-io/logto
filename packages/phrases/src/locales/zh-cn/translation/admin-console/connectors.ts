@@ -7,8 +7,7 @@ const connectors = {
   tab_email_sms: '短信和邮件连接器',
   tab_social: '社交连接器',
   connector_name: '连接器名称',
-  demo_tip:
-    'The demo connector is designed exclusively for demonstration purposes and is not recommended for deployment in a production environment.', // UNTRANSLATED
+  demo_tip: '演示连接器仅用于演示目的，不建议在生产环境中部署。',
   connector_type: '类型',
   connector_status: '登录体验',
   connector_status_in_use: '使用中',
@@ -17,9 +16,9 @@ const connectors = {
     content: '未使用意味着你的登录体验并没有使用这个登录方式。<a>{{link}}</a>去添加。',
     go_to_sie: '前往登录体验',
   },
-  placeholder_title: 'Social connector', // UNTRANSLATED
+  placeholder_title: '社交连接器',
   placeholder_description:
-    'Logto has provided many widely used social sign-in connectors meantime you can create your own with standard protocols.', // UNTRANSLATED
+    'Logto 提供了许多广泛使用的社交登录连接器，同时你还可以使用标准协议创建自己的连接器。',
   save_and_done: '保存并完成',
   type: {
     email: '邮件连接器',
@@ -57,15 +56,15 @@ const connectors = {
       '此「身份供应商名称」值与现有的 <span>name</span> 连接器相同。使用相同的身份供应商名称会导致不符合预期的登录行为，用户可能通过两个不同的连接器访问同一个帐户。',
     target_conflict_line2:
       '如果你想替换当前的连接器，并连接相同的身份提供商（IdP），以便先前的用户可以直接登录而无需重新注册，请先删除 <span>name</span> 连接器，再创建一个新的连接器并使用相同的「身份供应商名称」值。',
-    target_conflict_line3: '如果您想连接一个新的身份验证提供程序，请修改「身份供应商名称」并继续。',
+    target_conflict_line3: '如果你想连接一个新的身份验证提供程序，请修改「身份供应商名称」并继续。',
     config: '粘贴你的 JSON 代码',
     sync_profile: '开启用户资料同步',
     sync_profile_only_at_sign_up: '首次注册时同步',
     sync_profile_each_sign_in: '每次登录时同步',
     sync_profile_tip: '同步用户的用户名、头像等个人资料信息',
-    callback_uri: 'Callback URI', // UNTRANSLATED
+    callback_uri: 'Callback URI',
     callback_uri_description:
-      "Also called redirect URI, is the URI in Logto where users will be sent back after social authorization, copy and paste to the social provider's config page.", // UNTRANSLATED
+      '也称为重定向 URI，在社交授权后，用户将被发送回 Logto 的 URI，复制并粘贴到社交提供者的配置页面中。',
   },
   platform: {
     universal: '通用',

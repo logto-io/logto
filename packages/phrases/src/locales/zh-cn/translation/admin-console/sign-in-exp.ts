@@ -7,9 +7,8 @@ const sign_in_exp = {
     others: '其它',
   },
   welcome: {
-    title: 'Customize sign-in experience', // UNTRANSLATED
-    description:
-      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.', // UNTRANSLATED
+    title: '自定义登录体验',
+    description: '通过首次登录设置快速入门。本指南将带领你完成所有必要的设置。',
     get_started: '开始',
     apply_remind: '请注意，登录体验将会应用到当前帐户下的所有应用。',
   },
@@ -33,8 +32,8 @@ const sign_in_exp = {
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
     logo_image: 'Logo 图片',
     dark_logo_image: 'Logo 图片(深色)',
-    logo_image_error: 'App logo: {{error}}', // UNTRANSLATED
-    favicon_error: 'Favicon: {{error}}', // UNTRANSLATED
+    logo_image_error: '应用 Logo：{{error}}',
+    favicon_error: 'Favicon：{{error}}',
   },
   custom_css: {
     title: '自定义 CSS',
@@ -160,8 +159,8 @@ const sign_in_exp = {
   },
   preview: {
     title: '登录预览',
-    live_preview: 'Live preview', // UNTRANSLATED
-    live_preview_tip: 'Save to preview changes', // UNTRANSLATED
+    live_preview: '实时预览',
+    live_preview_tip: '保存以预览更改',
     native: '移动原生',
     desktop_web: '桌面网页',
     mobile_web: '移动网页',

@@ -1,7 +1,7 @@
 const errors = {
   request: {
-    invalid_input: 'Input is invalid. {{details}}', // UNTRANSLATED
-    general: 'Request error occurred.', // UNTRANSLATED
+    invalid_input: '输入无效。{{details}}',
+    general: '发生请求错误。',
   },
   auth: {
     authorization_header_missing: 'Authorization 请求头缺失。',
@@ -15,9 +15,9 @@ const errors = {
   guard: {
     invalid_input: '请求中 {{type}} 无效',
     invalid_pagination: '分页参数无效',
-    can_not_get_tenant_id: 'Unable to get tenant id from request.', // UNTRANSLATED
-    file_size_exceeded: 'File size exceeded.', // UNTRANSLATED
-    mime_type_not_allowed: 'Mime type is not allowed.', // UNTRANSLATED
+    can_not_get_tenant_id: '无法从请求中获取租户 ID。',
+    file_size_exceeded: '文件大小超过限制。',
+    mime_type_not_allowed: '不允许使用此 MIME 类型。',
   },
   oidc: {
     aborted: '用户终止了交互。',
@@ -62,9 +62,9 @@ const errors = {
     phone_exists_in_profile: '当前用户已绑定手机号，无需重复操作。',
     email_or_phone_required_in_profile: '请绑定邮箱地址或手机号码。',
     suspended: '账号已被禁用。',
-    user_not_exist: '未找到与 {{ identifier }} 相关联的用户。',
+    user_not_exist: '未找到与 {{identifier}} 相关联的用户。',
     missing_profile: '请于登录时提供必要的用户补充信息。',
-    role_exists: 'The role id {{roleId}} is already been added to this user', // UNTRANSLATED
+    role_exists: '角色 ID {{roleId}} 已添加到此用户',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',
@@ -85,9 +85,8 @@ const errors = {
     forgot_password_not_enabled: '忘记密码功能没有开启。',
     verification_failed: '验证失败，请重新验证。',
     connector_validation_session_not_found: '找不到连接器用于验证 token 的信息。',
-    identifier_not_found: 'User identifier not found. Please go back and sign in again.', // UNTRANSLATED
-    interaction_not_found:
-      'Interaction session not found. Please go back and start the session again.', // UNTRANSLATED
+    identifier_not_found: '找不到用户标识符。请返回并重新登录。',
+    interaction_not_found: '找不到交互会话。请返回并重新开始会话。',
   },
   connector: {
     general: '连接器发生错误：{{errorDescription}}',
@@ -133,18 +132,16 @@ const errors = {
     empty_social_connectors: '你启用了社交登录的方式。请至少选择一个社交连接器。',
     enabled_connector_not_found: '未找到已启用的 {{type}} 连接器',
     not_one_and_only_one_primary_sign_in_method: '主要的登录方式必须有且仅有一个，请检查你的输入。',
-    username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
-    passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
-    miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.', // UNTRANSLATED
-    password_sign_in_must_be_enabled:
-      'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
-    code_sign_in_must_be_enabled:
-      'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
-    unsupported_default_language: '{{language}}无法选择为默认语言。',
+    username_requires_password: '必须为用户名注册标识符启用设置密码。',
+    passwordless_requires_verify: '必须为电子邮件/电话注册标识符启用验证。',
+    miss_sign_up_identifier_in_sign_in: '登录方法必须包含注册标识符。',
+    password_sign_in_must_be_enabled: '必须在注册中要求设置密码时启用密码登录。',
+    code_sign_in_must_be_enabled: '必须在注册中不要求设置密码时启用验证码登录。',
+    unsupported_default_language: '{{language}} 无法选择为默认语言。',
     at_least_one_authentication_factor: '至少要选择一个登录要素',
   },
   localization: {
-    cannot_delete_default_language: '你已设置{{languageTag}}为你的默认语言，你无法删除默认语言。',
+    cannot_delete_default_language: '你已设置 {{languageTag}} 为你的默认语言，你无法删除默认语言。',
     invalid_translation_structure: '无效的数据格式，请检查你的输入并重试。',
   },
   swagger: {
@@ -158,25 +155,24 @@ const errors = {
     not_found: '该资源不存在',
   },
   log: {
-    invalid_type: 'The log type is invalid.', // UNTRANSLATED
+    invalid_type: '日志类型无效。',
   },
   role: {
-    name_in_use: 'This role name {{name}} is already in use', // UNTRANSLATED
-    scope_exists: 'The scope id {{scopeId}} has already been added to this role', // UNTRANSLATED
-    user_exists: 'The user id {{userId}} is already been added to this role', // UNTRANSLATED
-    default_role_missing:
-      'Some of the default roleNames does not exist in database, please ensure to create roles first', // UNTRANSLATED
+    name_in_use: '此角色名称 {{name}} 已被使用',
+    scope_exists: '作用域 ID {{scopeId}} 已添加到此角色',
+    user_exists: '用户 ID {{userId}} 已添加到此角色',
+    default_role_missing: '某些默认角色名称在数据库中不存在，请确保先创建角色',
     internal_role_violation:
-      'You may be trying to update or delete an internal role which is forbidden by Logto. If you are creating a new role, try another name that does not start with "#internal:".', // UNTRANSLATED
+      '你可能正在尝试更新或删除 Logto 禁止的内部角色。如果你要创建新角色，请尝试使用不以“#internal:”开头的名称。',
   },
   scope: {
-    name_exists: 'The scope name {{name}} is already in use', // UNTRANSLATED
-    name_with_space: 'The name of the scope cannot contain any spaces.', // UNTRANSLATED
+    name_exists: '此作用域名称 {{name}} 已被使用',
+    name_with_space: '作用域名称不能包含任何空格。',
   },
   storage: {
-    not_configured: 'Storage provider is not configured.', // UNTRANSLATED
-    missing_parameter: 'Missing parameter {{parameter}} for storage provider.', // UNTRANSLATED
-    upload_error: 'Failed to upload file to the storage provider.', // UNTRANSLATED
+    not_configured: '未配置存储提供程序。',
+    missing_parameter: '存储提供程序缺少参数 {{parameter}}。',
+    upload_error: '无法将文件上传到存储提供程序。',
   },
 };
 

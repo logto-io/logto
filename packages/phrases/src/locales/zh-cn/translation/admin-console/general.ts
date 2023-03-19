@@ -11,7 +11,7 @@ const general = {
   save: '保存',
   save_changes: '保存更改',
   saved: '保存成功!',
-  discard: 'Discard', // UNTRANSLATED
+  discard: '放弃',
   loading: '读取中...',
   redirecting: '页面跳转中...',
   add: '添加',
@@ -41,16 +41,16 @@ const general = {
   got_it: '知道了',
   continue: '继续',
   page_info: '{{min, number}}-{{max, number}} 共 {{total, number}} 条',
-  learn_more: 'Learn more', // UNTRANSLATED
-  tab_errors: '{{count, number}} errors', // UNTRANSLATED
-  skip_for_now: 'Skip for now', // UNTRANSLATED
+  learn_more: '了解更多',
+  tab_errors: '{{count, number}} 个错误',
+  skip_for_now: '先跳过',
   remove: '移除',
-  visit: 'Visit', // UNTRANSLATED
-  join: 'Join', // UNTRANSLATED
-  try_now: 'Try Now', // UNTRANSLATED
-  multiple_form_field: '(Multiple)', // UNTRANSLATED
-  cap_limit: 'Cap limit', // UNTRANSLATED
-  demo: 'Demo', // UNTRANSLATED
+  visit: '访问',
+  join: '加入',
+  try_now: '现在试试',
+  multiple_form_field: '（多选）',
+  cap_limit: '限量使用',
+  demo: '演示',
 };
 
 export default general;

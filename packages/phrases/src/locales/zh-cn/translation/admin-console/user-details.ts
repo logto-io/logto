@@ -14,12 +14,12 @@ const user_details = {
     congratulations: '该用户已被重置',
     new_password: '新密码：',
   },
-  tab_settings: 'Settings', // UNTRANSLATED
-  tab_roles: 'Roles', // UNTRANSLATED
+  tab_settings: '设置',
+  tab_roles: '角色',
   tab_logs: '用户日志',
-  settings: 'Settings', // UNTRANSLATED
+  settings: '设置',
   settings_description:
-    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
+    '每个用户都有一个包含所有用户信息的个人资料。它由基本数据、社交身份和自定义数据组成。',
   field_email: '主要邮箱',
   field_phone: '主要手机号码',
   field_username: '用户名',
@@ -39,22 +39,21 @@ const user_details = {
   },
   suspended: '已禁用',
   roles: {
-    name_column: 'Role', // UNTRANSLATED
-    description_column: 'Description', // UNTRANSLATED
-    assign_button: 'Assign Roles', // UNTRANSLATED
-    delete_description:
-      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.', // UNTRANSLATED
-    deleted: '{{name}} was successfully removed from this user!', // UNTRANSLATED
-    assign_title: 'Assign roles to {{name}}', // UNTRANSLATED
-    assign_subtitle: 'Authorize {{name}} one or more roles', // UNTRANSLATED
-    assign_role_field: 'Assign roles', // UNTRANSLATED
-    role_search_placeholder: 'Search by role name', // UNTRANSLATED
-    added_text: '{{value, number}} added', // UNTRANSLATED
-    assigned_user_count: '{{value, number}} users', // UNTRANSLATED
-    confirm_assign: 'Assign roles', // UNTRANSLATED
-    role_assigned: 'Successfully assigned role(s)', // UNTRANSLATED
-    search: 'Search by role name, description or ID', // UNTRANSLATED
-    empty: 'No role available', // UNTRANSLATED
+    name_column: '角色名称',
+    description_column: '描述',
+    assign_button: '分配角色',
+    delete_description: '此操作将从此用户中删除此角色。角色本身仍将存在，但不再与此用户相关联。',
+    deleted: '已成功将 {{name}} 从此用户中删除。',
+    assign_title: '将角色分配给 {{name}}',
+    assign_subtitle: '为 {{name}} 授权一个或多个角色',
+    assign_role_field: '分配角色',
+    role_search_placeholder: '按角色名称搜索',
+    added_text: '添加了 {{value, number}} 个',
+    assigned_user_count: '{{value, number}} 个用户',
+    confirm_assign: '分配角色',
+    role_assigned: '已成功分配角色',
+    search: '按角色名称、描述或 ID 搜索',
+    empty: '无可用角色',
   },
 };
 

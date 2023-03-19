@@ -18,7 +18,7 @@ const errors = {
     invalid_pagination: 'The request pagination value is invalid.',
     can_not_get_tenant_id: 'Unable to get tenant id from request.',
     file_size_exceeded: 'File size exceeded.',
-    mime_type_not_allowed: 'Mime type is not allowed.',
+    mime_type_not_allowed: 'MIME type is not allowed.',
   },
   oidc: {
     aborted: 'The end-user aborted interaction.',

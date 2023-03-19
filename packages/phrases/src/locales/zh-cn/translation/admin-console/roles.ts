@@ -1,23 +1,20 @@
 const roles = {
-  title: 'Roles', // UNTRANSLATED
-  subtitle:
-    'Roles include permissions that determine what a user can do. RBAC uses roles to give users access to resources for specific actions.', // UNTRANSLATED
-  create: 'Create Role', // UNTRANSLATED
-  role_name: 'Role', // UNTRANSLATED
-  role_description: 'Description', // UNTRANSLATED
-  role_name_placeholder: 'Enter your role name', // UNTRANSLATED
-  role_description_placeholder: 'Enter your role description', // UNTRANSLATED
-  assigned_users: 'Assigned users', // UNTRANSLATED
-  assign_permissions: 'Assign permissions', // UNTRANSLATED
-  create_role_title: 'Create Role', // UNTRANSLATED
-  create_role_description:
-    'Create and manage roles for your applications. Roles contain collections of permissions and can be assigned to users.', // UNTRANSLATED
-  create_role_button: 'Create Role', // UNTRANSLATED
-  role_created: 'The role {{name}} has been successfully created!', // UNTRANSLATED
-  search: 'Search by role name, description or ID', // UNTRANSLATED
-  placeholder_title: 'Roles', // UNTRANSLATED
-  placeholder_description:
-    'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.', // UNTRANSLATED
+  title: '角色',
+  subtitle: '角色包括决定用户可以做什么的权限。RBAC 使用角色为用户提供访问特定操作的资源的权限。',
+  create: '创建角色',
+  role_name: '角色名称',
+  role_description: '描述',
+  role_name_placeholder: '输入你的角色名称',
+  role_description_placeholder: '输入你的角色描述',
+  assigned_users: '已分配的用户',
+  assign_permissions: '分配权限',
+  create_role_title: '创建角色',
+  create_role_description: '为你的应用程序创建和管理角色。角色包含权限集合，并可以分配给用户。',
+  create_role_button: '创建角色',
+  role_created: '角色 {{name}} 已成功创建。',
+  search: '按角色名称、描述或 ID 搜索',
+  placeholder_title: '角色',
+  placeholder_description: '角色是可以分配给用户的权限分组。在创建角色之前，请确保先添加权限。',
 };
 
 export default roles;
