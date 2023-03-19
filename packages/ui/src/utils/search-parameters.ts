@@ -4,7 +4,7 @@ export const searchKeys = Object.freeze({
 });
 
 export const handleSearchParametersData = () => {
-  const { search, origin, pathname } = window.location;
+  const { search } = window.location;
 
   if (!search) {
     return;
@@ -21,6 +21,4 @@ export const handleSearchParametersData = () => {
   if (parameters.get(searchKeys.noCache) !== null) {
     sessionStorage.setItem(searchKeys.noCache, 'true');
   }
-
-  window.history.replaceState(undefined, '', new URL(pathname, origin));
 };
