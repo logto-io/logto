@@ -103,7 +103,7 @@ const cloud = {
   },
   broadcast: '📣 You are in Logto Cloud (Preview)', // UNTRANSLATED
   socialCallback: {
-    title: "You've successfully signed in!", // UNTRANSLATED
+    title: "You've successfully signed in", // UNTRANSLATED
     description:
       'You have successfully signed in using your social account. To ensure seamless integration and access to all the features of Logto, we recommend that you proceed to configure your own social connector.', // UNTRANSLATED
   },

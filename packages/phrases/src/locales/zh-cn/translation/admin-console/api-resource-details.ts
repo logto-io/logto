@@ -14,7 +14,7 @@ const api_resource_details = {
   permission: {
     create_button: '创建权限',
     create_title: '创建权限',
-    create_subtitle: '定义此 API 所需的权限 (作用域)。',
+    create_subtitle: '定义此 API 所需的权限 (scope)。',
     confirm_create: '创建权限',
     name: '权限名称',
     name_placeholder: 'read:resource',

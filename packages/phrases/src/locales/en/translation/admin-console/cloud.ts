@@ -67,7 +67,7 @@ const cloud = {
     book_button: 'Book',
   },
   sie: {
-    title: 'Let’s first customize your experience with ease',
+    title: 'Let’s first customize your sign-in experience with ease',
     inspire: {
       title: 'Create compelling examples',
       description:
@@ -103,7 +103,7 @@ const cloud = {
   },
   broadcast: '📣 You are in Logto Cloud (Preview)',
   socialCallback: {
-    title: "You've successfully signed in!",
+    title: "You've successfully signed in",
     description:
       'You have successfully signed in using your social account. To ensure seamless integration and access to all the features of Logto, we recommend that you proceed to configure your own social connector.',
   },

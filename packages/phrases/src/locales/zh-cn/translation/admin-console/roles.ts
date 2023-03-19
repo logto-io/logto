@@ -1,6 +1,7 @@
 const roles = {
   title: '角色',
-  subtitle: '角色包括决定用户可以做什么的权限。RBAC 使用角色为用户提供访问特定操作的资源的权限。',
+  subtitle:
+    'RBAC 是一种访问控制方法，它使用角色来决定用户可以做什么事情，包括授予用户访问特定资源的权限。',
   create: '创建角色',
   role_name: '角色名称',
   role_description: '描述',

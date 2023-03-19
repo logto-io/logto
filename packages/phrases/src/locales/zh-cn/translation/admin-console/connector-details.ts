@@ -24,9 +24,9 @@ const connector_details = {
   type_sms: '短信连接器',
   type_social: '社交连接器',
   in_used_social_deletion_description:
-    '此连接器在你的登录体验中正在使用。删除后，<name/> 登录体验将在登录体验设置中被删除。',
+    '你的登录体验正在使用这个连接器。删除后，<name/> 登录体验将在登录体验设置中被删除。',
   in_used_passwordless_deletion_description:
-    '此 {{name}} 正在你的登录体验中使用。删除后，你的登录体验将无法正常工作，直到你解决冲突。',
+    '你的登录体验正在使用 {{name}} 连接器。删除后，你的登录体验将无法正常工作，直到你解决冲突。',
 };
 
 export default connector_details;

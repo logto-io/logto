@@ -42,14 +42,14 @@ const cloud = {
       efficiency: '寻找即插即用的身份基础架构',
       access_control: '基于角色和责任控制用户访问',
       multi_tenancy: '寻求面向多租户产品的策略',
-      enterprise: '为企业级就绪寻找 SSO 解决方案',
+      enterprise: '为产品更方便企业使用寻找 SSO 解决方案',
       others: '其他',
     },
   },
   congrats: {
     title: '好消息！你有资格获得 Logto Cloud 的早鸟惊喜。',
     description:
-      '别错过这和机会，立即联系 Logto 团队，了解更多信息，免费获得 Logto Cloud 正式启动后 <strong>60 天</strong> 的订阅！',
+      '别错过：立即联系 Logto 团队，了解更多信息，获得 Logto Cloud 正式版 <strong>60 天</strong> 的免费试用机会！',
     check_out_button: '查看实时预览',
     reserve_title: '与 Logto 团队预定时间',
     reserve_description: '验证后仅有一次领取资格。',
@@ -59,18 +59,18 @@ const cloud = {
     enter_admin_console: '进入 Logto Cloud 预览',
   },
   gift: {
-    title: '免费使用 Logto Cloud 60 天，立即成为种子用户！',
+    title: '免费使用 Logto Cloud 60 天，立即成为尝鲜会员！',
     description: '预定与我们团队的一对一会话，以获取早鸟惊喜。',
     reserve_title: '与 Logto 团队预定时间',
     reserve_description: '评估后仅有一次领取资格。',
     book_button: '预定',
   },
   sie: {
-    title: '放轻松，让我们先定制你的体验。',
+    title: '让我们轻松定制你的登录体验',
     inspire: {
       title: '创建引人入胜的示例',
       description: '对登录体验不确定吗？只需点击“启发我”，让魔法发生！',
-      inspire_me: '启发我',
+      inspire_me: '来点灵感',
     },
     logo_field: '应用商标',
     color_field: '品牌颜色',
@@ -100,7 +100,7 @@ const cloud = {
   },
   broadcast: '📣 你正在使用 Logto Cloud（预览版）',
   socialCallback: {
-    title: '你已成功登录！',
+    title: '你已成功登录',
     description:
       '你已成功使用社交账户登录。为确保与 Logto 的无缝集成并获得所有功能的访问权限，我们建议你继续配置自己的社交连接器。',
   },
