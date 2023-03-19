@@ -142,10 +142,10 @@ test('send SMS/email test message', async () => {
   const email = 'test@example.com';
 
   await expect(
-    sendSmsTestMessage(connectorIdMap.get(mockSmsConnectorId), phone, mockSmsConnectorConfig)
+    sendSmsTestMessage(mockSmsConnectorId, phone, mockSmsConnectorConfig)
   ).resolves.not.toThrow();
   await expect(
-    sendEmailTestMessage(connectorIdMap.get(mockEmailConnectorId), email, mockEmailConnectorConfig)
+    sendEmailTestMessage(mockEmailConnectorId, email, mockEmailConnectorConfig)
   ).resolves.not.toThrow();
   await expect(sendSmsTestMessage(mockSmsConnectorId, phone, {})).rejects.toThrow(HTTPError);
   await expect(sendEmailTestMessage(mockEmailConnectorId, email, {})).rejects.toThrow(HTTPError);

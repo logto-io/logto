@@ -3,7 +3,6 @@ import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
@@ -12,22 +11,21 @@ import TextInput from '@/components/TextInput';
 import { Tooltip } from '@/components/Tip';
 import useApi from '@/hooks/use-api';
 import { onKeyDownHandler } from '@/utils/a11y';
-import { safeParseJson } from '@/utils/json';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  connectorId: string;
+  connectorFactoryId: string;
   connectorType: Exclude<ConnectorType, ConnectorType.Social>;
-  config: string;
   className?: string;
+  parse: () => unknown;
 };
 
 type FormData = {
   sendTo: string;
 };
 
-const SenderTester = ({ connectorId, connectorType, config, className }: Props) => {
+const SenderTester = ({ connectorFactoryId, connectorType, className, parse }: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const {
     handleSubmit,
@@ -58,23 +56,15 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
 
-    const result = safeParseJson(config);
-
-    if (!result.success) {
-      toast.error(result.error);
-
-      return;
-    }
-
     const data = {
-      config: result.data,
+      config: parse(),
       ...(isSms
         ? { phone: sendTo.replace(/[ ()-]/g, '').replace(/\+/g, '00') }
         : { email: sendTo }),
     };
 
     try {
-      await api.post(`api/connectors/${connectorId}/test`, { json: data }).json();
+      await api.post(`api/connectors/${connectorFactoryId}/test`, { json: data }).json();
       setShowTooltip(true);
     } catch (error: unknown) {
       console.error(error);

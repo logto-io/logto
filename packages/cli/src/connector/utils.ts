@@ -2,7 +2,12 @@ import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
 import path from 'path';
 
-import type { AllConnector, BaseConnector, GetConnectorConfig } from '@logto/connector-kit';
+import type {
+  AllConnector,
+  BaseConnector,
+  ConnectorMetadata,
+  GetConnectorConfig,
+} from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
 
 import { notImplemented } from './consts.js';
@@ -64,10 +69,10 @@ export const parseMetadata = async (
   };
 };
 
-export const buildRawConnector = async (
-  connectorFactory: ConnectorFactory,
+export const buildRawConnector = async <T extends AllConnector = AllConnector>(
+  connectorFactory: ConnectorFactory<T>,
   getConnectorConfig?: GetConnectorConfig
-) => {
+): Promise<{ rawConnector: T; rawMetadata: ConnectorMetadata }> => {
   const { createConnector, path: packagePath } = connectorFactory;
   const rawConnector = await createConnector({
     getConfig: getConnectorConfig ?? notImplemented,

@@ -14,8 +14,8 @@ import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import BasicForm from '@/pages/Connectors/components/ConnectorForm/BasicForm';
 import ConfigForm from '@/pages/Connectors/components/ConnectorForm/ConfigForm';
-import { useConfigParser } from '@/pages/Connectors/components/ConnectorForm/hooks';
-import { initFormData, parseFormConfig } from '@/pages/Connectors/components/ConnectorForm/utils';
+import { useConnectorFormConfigParser } from '@/pages/Connectors/components/ConnectorForm/hooks';
+import { initFormData } from '@/pages/Connectors/components/ConnectorForm/utils';
 import type { ConnectorFormType } from '@/pages/Connectors/types';
 import { SyncProfileMode } from '@/pages/Connectors/types';
 
@@ -38,7 +38,6 @@ const getConnectorTarget = (connectorData: ConnectorResponse): Optional<string> 
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
-  const parseJsonConfig = useConfigParser();
   const api = useApi();
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',
@@ -70,9 +69,11 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
     });
   }, [connectorData, reset]);
 
+  const configParser = useConnectorFormConfigParser();
+
   const onSubmit = handleSubmit(async (data) => {
     const { formItems, isStandard, id } = connectorData;
-    const config = formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
+    const config = configParser(data, formItems);
     const { syncProfile, name, logo, logoDark, target } = data;
 
     const payload = isSocialConnector
@@ -136,9 +137,9 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
         {connectorData.type !== ConnectorType.Social && (
           <FormCard title="connector_details.test_connection">
             <SenderTester
-              connectorId={connectorData.id}
+              connectorFactoryId={connectorData.connectorId}
               connectorType={connectorData.type}
-              config={watch('config')}
+              parse={() => configParser(watch(), connectorData.formItems)}
             />
           </FormCard>
         )}

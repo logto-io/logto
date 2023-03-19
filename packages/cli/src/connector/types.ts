@@ -7,7 +7,7 @@ export type ConnectorFactory<T extends AllConnector = AllConnector> = Pick<
   T,
   'type' | 'metadata'
 > & {
-  createConnector: CreateConnector<AllConnector>;
+  createConnector: CreateConnector<T>;
   path: string;
 };
 

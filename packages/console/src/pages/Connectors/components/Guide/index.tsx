@@ -29,8 +29,8 @@ import { SyncProfileMode } from '../../types';
 import { splitMarkdownByTitle } from '../../utils';
 import BasicForm from '../ConnectorForm/BasicForm';
 import ConfigForm from '../ConnectorForm/ConfigForm';
-import { useConfigParser } from '../ConnectorForm/hooks';
-import { initFormData, parseFormConfig } from '../ConnectorForm/utils';
+import { useConnectorFormConfigParser } from '../ConnectorForm/hooks';
+import { initFormData } from '../ConnectorForm/utils';
 import * as styles from './index.module.scss';
 
 const targetErrorCode = 'connector.multiple_target_with_same_platform';
@@ -45,7 +45,6 @@ const Guide = ({ connector, onClose }: Props) => {
   const navigate = useNavigate();
   const callbackConnectorId = useRef(generateStandardId());
   const { updateConfigs } = useConfigs();
-  const parseJsonConfig = useConfigParser();
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { type: connectorType, formItems, target, isStandard, configTemplate } = connector ?? {};
@@ -74,6 +73,8 @@ const Guide = ({ connector, onClose }: Props) => {
     });
   }, [formItems, reset, configTemplate, target, isSocialConnector, isStandard]);
 
+  const configParser = useConnectorFormConfigParser();
+
   if (!connector) {
     return null;
   }
@@ -90,7 +91,8 @@ const Guide = ({ connector, onClose }: Props) => {
     // Recover error state
     setConflictConnectorName(undefined);
 
-    const config = formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
+    const config = configParser(data, formItems);
+
     const { syncProfile, name, logo, logoDark, target } = data;
 
     const basePayload = {
@@ -213,9 +215,9 @@ const Guide = ({ connector, onClose }: Props) => {
                       <div>{t('connectors.guide.test_connection')}</div>
                     </div>
                     <SenderTester
-                      connectorId={connectorId}
+                      connectorFactoryId={connectorId}
                       connectorType={connectorType}
-                      config={watch('config')}
+                      parse={() => configParser(watch(), formItems)}
                     />
                   </div>
                 )}

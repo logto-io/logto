@@ -1,9 +1,12 @@
+import type { ConnectorResponse } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
+import { parseFormConfig } from '@/pages/Connectors/components/ConnectorForm/utils';
+import type { ConnectorFormType } from '@/pages/Connectors/types';
 import { safeParseJson } from '@/utils/json';
 
-export const useConfigParser = () => {
+export const useJsonStringConfigParser = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (config: string) => {
@@ -22,5 +25,13 @@ export const useConfigParser = () => {
     }
 
     return result.data;
+  };
+};
+
+export const useConnectorFormConfigParser = () => {
+  const parseJsonConfig = useJsonStringConfigParser();
+
+  return (data: ConnectorFormType, formItems: ConnectorResponse['formItems']) => {
+    return formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
   };
 };
