@@ -6,9 +6,7 @@ import { getBasename } from '@/consts';
 import AppBoundary from '@/containers/AppBoundary';
 import AppContent from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
-import { AppThemeProvider } from '@/contexts/AppThemeProvider';
 import useSwrOptions from '@/hooks/use-swr-options';
-import useUserPreferences from '@/hooks/use-user-preferences';
 import Callback from '@/pages/Callback';
 import Welcome from '@/pages/Welcome';
 
@@ -16,26 +14,21 @@ import HandleSocialCallback from '../Profile/containers/HandleSocialCallback';
 
 const Main = () => {
   const swrOptions = useSwrOptions();
-  const {
-    data: { appearanceMode },
-  } = useUserPreferences();
 
   return (
     <BrowserRouter basename={getBasename()}>
       <SWRConfig value={swrOptions}>
-        <AppThemeProvider appearanceMode={appearanceMode}>
-          <AppBoundary>
-            <Toast />
-            <Routes>
-              <Route path="callback" element={<Callback />} />
-              <Route path="welcome" element={<Welcome />} />
-              <Route path="handle-social" element={<HandleSocialCallback />} />
-              <Route element={<AppContent />}>
-                <Route path="/*" element={<ConsoleContent />} />
-              </Route>
-            </Routes>
-          </AppBoundary>
-        </AppThemeProvider>
+        <AppBoundary>
+          <Toast />
+          <Routes>
+            <Route path="callback" element={<Callback />} />
+            <Route path="welcome" element={<Welcome />} />
+            <Route path="handle-social" element={<HandleSocialCallback />} />
+            <Route element={<AppContent />}>
+              <Route path="/*" element={<ConsoleContent />} />
+            </Route>
+          </Routes>
+        </AppBoundary>
       </SWRConfig>
     </BrowserRouter>
   );
