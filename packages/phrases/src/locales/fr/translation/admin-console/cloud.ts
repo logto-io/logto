@@ -67,7 +67,7 @@ const cloud = {
     book_button: 'Book', // UNTRANSLATED
   },
   sie: {
-    title: 'Let’s first customize your experience with ease', // UNTRANSLATED
+    title: 'Let’s first customize your sign-in experience with ease', // UNTRANSLATED
     inspire: {
       title: 'Create compelling examples', // UNTRANSLATED
       description:

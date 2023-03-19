@@ -100,7 +100,7 @@ describe('smoke testing for cloud', () => {
 
     // Wait for the next page to load
     await expect(page).toMatchElement('div[class$=config] div[class$=title]', {
-      text: 'Let’s first customize your experience with ease',
+      text: 'Let’s first customize your sign-in experience with ease',
     });
 
     expect(new URL(page.url()).pathname.endsWith('/onboarding/sign-in-experience')).toBeTruthy();
