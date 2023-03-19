@@ -19,7 +19,7 @@ on:
       - v*.*.*
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
 
 jobs:
   dockerize-core:
