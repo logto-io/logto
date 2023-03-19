@@ -5,7 +5,7 @@ import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { HTTPError } from 'ky';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -29,8 +29,8 @@ import { SyncProfileMode } from '../../types';
 import { splitMarkdownByTitle } from '../../utils';
 import BasicForm from '../ConnectorForm/BasicForm';
 import ConfigForm from '../ConnectorForm/ConfigForm';
-import { useConfigParser } from '../ConnectorForm/hooks';
-import { initFormData, parseFormConfig } from '../ConnectorForm/utils';
+import { useConnectorFormConfigParser } from '../ConnectorForm/hooks';
+import { initFormData } from '../ConnectorForm/utils';
 import * as styles from './index.module.scss';
 
 const targetErrorCode = 'connector.multiple_target_with_same_platform';
@@ -45,7 +45,6 @@ const Guide = ({ connector, onClose }: Props) => {
   const navigate = useNavigate();
   const callbackConnectorId = useRef(generateStandardId());
   const { updateConfigs } = useConfigs();
-  const parseJsonConfig = useConfigParser();
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { type: connectorType, formItems, target, isStandard, configTemplate } = connector ?? {};
@@ -74,12 +73,7 @@ const Guide = ({ connector, onClose }: Props) => {
     });
   }, [formItems, reset, configTemplate, target, isSocialConnector, isStandard]);
 
-  const parseConfig = useCallback(
-    (data: ConnectorFormType, formItems: ConnectorResponse['formItems']) => {
-      return formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
-    },
-    [parseJsonConfig]
-  );
+  const configParser = useConnectorFormConfigParser();
 
   if (!connector) {
     return null;
@@ -97,7 +91,8 @@ const Guide = ({ connector, onClose }: Props) => {
     // Recover error state
     setConflictConnectorName(undefined);
 
-    const config = parseConfig(data, formItems);
+    const config = configParser(data, formItems);
+
     const { syncProfile, name, logo, logoDark, target } = data;
 
     const basePayload = {
@@ -222,7 +217,7 @@ const Guide = ({ connector, onClose }: Props) => {
                     <SenderTester
                       connectorFactoryId={connectorId}
                       connectorType={connectorType}
-                      parse={() => parseConfig(watch(), formItems)}
+                      parse={() => configParser(watch(), formItems)}
                     />
                   </div>
                 )}
