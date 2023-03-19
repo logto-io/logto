@@ -8,6 +8,9 @@ import SystemContext from './tenants/SystemContext.js';
 
 dotenv.config({ path: await findUp('.env', {}) });
 
+const { appInsights } = await import('@logto/shared/app-insights');
+appInsights.setup('logto-cloud-eu');
+
 // Import after env has been configured
 const { loadConnectorFactories } = await import('./utils/connectors/index.js');
 const { EnvSet } = await import('./env-set/index.js');

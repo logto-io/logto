@@ -33,6 +33,7 @@ export default class RequestError extends Error {
 
     super(message);
 
+    this.name = 'RequestError';
     this.expose = expose;
     this.code = code;
     this.status = status;

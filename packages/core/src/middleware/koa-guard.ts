@@ -7,7 +7,7 @@ import type { ZodType, ZodTypeDef } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import ServerError from '#src/errors/ServerError/index.js';
+import { ResponseBodyError, StatusCodeError } from '#src/errors/ServerError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 /** Configure what and how to guard. */
@@ -158,7 +158,7 @@ export default function koaGuard<
         Array.isArray(status)
           ? status.includes(ctx.response.status)
           : status === ctx.response.status,
-        new ServerError()
+        new StatusCodeError(status, ctx.response.status)
       );
     }
 
@@ -169,7 +169,8 @@ export default function koaGuard<
         if (!EnvSet.values.isProduction) {
           console.error('Invalid response:', result.error);
         }
-        throw new ServerError();
+
+        throw new ResponseBodyError(result.error);
       }
     }
   };
