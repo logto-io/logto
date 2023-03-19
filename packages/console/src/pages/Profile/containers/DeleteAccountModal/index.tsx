@@ -13,7 +13,7 @@ type Props = {
   onClose: () => void;
 };
 
-const contactUsEmail = 'logto@silverhand.io';
+const contactUsEmail = 'contact@logto.io';
 const mailToLink = `mailto:${contactUsEmail}?subject=Account%20Deletion%20Request`;
 
 const DeleteAccountModal = ({ isOpen, onClose }: Props) => {
