@@ -24,7 +24,7 @@ const connector_details = {
   type_sms: 'SMS connector',
   type_social: 'Social connector',
   in_used_social_deletion_description:
-    'This connector is in use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.',
+    'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.',
   in_used_passwordless_deletion_description:
     'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict.',
 };
