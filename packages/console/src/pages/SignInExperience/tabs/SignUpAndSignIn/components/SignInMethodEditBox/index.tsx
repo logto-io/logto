@@ -35,7 +35,10 @@ const SignInMethodEditBox = () => {
 
   const revalidate = () => {
     if (submitCount) {
-      void trigger(`signIn.methods`);
+      // Note: wait for the form to be updated before validating the new data.
+      setTimeout(() => {
+        void trigger('signIn.methods');
+      }, 0);
     }
   };
 
