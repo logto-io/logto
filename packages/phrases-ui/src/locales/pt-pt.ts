@@ -95,8 +95,8 @@ const translation = {
       'Para maior segurança, vincule o seu email ou telefone à conta.',
     continue_with_more_information:
       'Para maior segurança, por favor complete os detalhes da conta abaixo.',
-    create_your_account: 'Criar conta',
-    welcome_to_sign_in: 'Bem-vindo(a) para iniciar sessão',
+    create_your_account: 'Crie a sua conta',
+    sign_in_to_your_account: 'Inicie sessão na sua conta',
     no_region_code_found: 'Não foi possível encontrar o código de região do seu telefone.',
   },
   error: {
