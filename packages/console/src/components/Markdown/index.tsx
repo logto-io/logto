@@ -44,7 +44,7 @@ const Markdown = ({ className, children }: Props) => {
       remarkPlugins={[remarkGfm]}
       className={classNames(styles.markdown, className)}
       components={{
-        code: ({ node, inline, className, children, ...props }) => {
+        code: ({ inline, className, children, ...props }) => {
           const [, codeBlockType] = /language-(\w+)/.exec(className ?? '') ?? [];
 
           return inline ? (

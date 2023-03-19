@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ClearInput from '@/assets/images/clear-input.svg';
 import Button from '@/components/Button';
@@ -34,7 +34,6 @@ const ChangePasswordModal = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { show: showModal } = useConfirmModal();
-  const { state } = useLocation();
   const {
     watch,
     reset,
@@ -118,7 +117,6 @@ const ChangePasswordModal = () => {
             <ClearInput />
           </IconButton>
         }
-        size="large"
         onKeyDown={onKeyDown}
       />
       <TextInput
@@ -138,7 +136,6 @@ const ChangePasswordModal = () => {
             <ClearInput />
           </IconButton>
         }
-        size="large"
         onKeyDown={onKeyDown}
       />
       <Checkbox

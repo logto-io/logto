@@ -64,7 +64,6 @@ const LinkEmailModal = () => {
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
         errorMessage={errors.email?.message}
-        size="large"
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
             onSubmit();

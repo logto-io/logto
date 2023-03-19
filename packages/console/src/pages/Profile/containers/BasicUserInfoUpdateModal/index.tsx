@@ -133,7 +133,6 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
             autoFocus
             placeholder={getInputPlaceholder()}
             errorMessage={errors[field]?.message}
-            size="large"
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
                 void onSubmit();
