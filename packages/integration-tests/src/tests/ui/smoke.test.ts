@@ -1,7 +1,11 @@
 import path from 'path';
 
+import { setDefaultOptions } from 'expect-puppeteer';
+
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
 import { generatePassword } from '#src/utils.js';
+
+setDefaultOptions({ timeout: 1000 });
 
 const appendPathname = (pathname: string, baseUrl: URL) =>
   new URL(path.join(baseUrl.pathname, pathname), baseUrl);
