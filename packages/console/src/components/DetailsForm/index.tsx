@@ -5,16 +5,27 @@ import SubmitFormChangesActionBar from '../SubmitFormChangesActionBar';
 import * as styles from './index.module.scss';
 
 type Props = {
+  autoComplete?: string;
   isDirty: boolean;
   isSubmitting: boolean;
-  children: ReactNode;
   onSubmit: () => Promise<void>;
   onDiscard: () => void;
+  children: ReactNode;
 };
 
-const DetailsForm = ({ isDirty, isSubmitting, onSubmit, onDiscard, children }: Props) => {
+const DetailsForm = ({
+  autoComplete,
+  isDirty,
+  isSubmitting,
+  onSubmit,
+  onDiscard,
+  children,
+}: Props) => {
   return (
-    <form className={classNames(styles.container, isDirty && styles.withSubmitActionBar)}>
+    <form
+      className={classNames(styles.container, isDirty && styles.withSubmitActionBar)}
+      autoComplete={autoComplete}
+    >
       <div className={styles.fields}>{children}</div>
       <SubmitFormChangesActionBar
         isOpen={isDirty}

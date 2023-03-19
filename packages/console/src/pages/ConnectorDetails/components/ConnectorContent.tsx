@@ -101,6 +101,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
   return (
     <FormProvider {...methods}>
       <DetailsForm
+        autoComplete="off"
         isDirty={isDirty}
         isSubmitting={isSubmitting}
         onDiscard={reset}
