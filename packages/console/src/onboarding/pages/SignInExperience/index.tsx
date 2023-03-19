@@ -20,8 +20,8 @@ import useUserAssetsService from '@/hooks/use-user-assets-service';
 import ActionBar from '@/onboarding/components/ActionBar';
 import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
-import { Authentication, OnboardingPage } from '@/onboarding/types';
 import type { OnboardingSieConfig } from '@/onboarding/types';
+import { Authentication, OnboardingPage } from '@/onboarding/types';
 import { getOnboardingPage } from '@/onboarding/utils';
 import { buildUrl } from '@/utils/url';
 import { uriValidator } from '@/utils/validator';
@@ -103,7 +103,10 @@ const SignInExperience = () => {
             <div className={styles.title}>{t('cloud.sie.title')}</div>
             <InspireMe
               onInspired={(template) => {
-                reset(template);
+                for (const [key, value] of Object.entries(template)) {
+                  // eslint-disable-next-line no-restricted-syntax
+                  setValue(key as keyof OnboardingSieConfig, value, { shouldDirty: true });
+                }
                 updateAuthenticationConfig();
               }}
             />
