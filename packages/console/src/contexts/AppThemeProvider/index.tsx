@@ -16,7 +16,7 @@ type Props = {
 type Context = {
   theme: Theme;
   setAppearanceMode: (mode: AppearanceMode) => void;
-  setFixedTheme: React.Dispatch<React.SetStateAction<Theme | undefined>>;
+  setThemeOverride: React.Dispatch<React.SetStateAction<Theme | undefined>>;
 };
 
 const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
@@ -37,12 +37,12 @@ const defaultTheme =
 export const AppThemeContext = createContext<Context>({
   theme: defaultTheme,
   setAppearanceMode: noop,
-  setFixedTheme: noop,
+  setThemeOverride: noop,
 });
 
 export const AppThemeProvider = ({ children }: Props) => {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
-  const [fixedTheme, setFixedTheme] = useState<Theme>();
+  const [themeOverride, setThemeOverride] = useState<Theme>();
   const [mode, setMode] = useState<AppearanceMode>(defaultAppearanceMode);
 
   const setAppearanceMode = (mode: AppearanceMode) => {
@@ -51,8 +51,8 @@ export const AppThemeProvider = ({ children }: Props) => {
   };
 
   useEffect(() => {
-    if (fixedTheme) {
-      setTheme(fixedTheme);
+    if (themeOverride) {
+      setTheme(themeOverride);
 
       return;
     }
@@ -74,7 +74,7 @@ export const AppThemeProvider = ({ children }: Props) => {
     return () => {
       darkThemeWatchMedia.removeEventListener('change', changeTheme);
     };
-  }, [mode, fixedTheme]);
+  }, [mode, themeOverride]);
 
   // Set Theme Mode
   useEffect(() => {
@@ -86,7 +86,7 @@ export const AppThemeProvider = ({ children }: Props) => {
     () => ({
       theme,
       setAppearanceMode,
-      setFixedTheme,
+      setThemeOverride,
     }),
     [theme]
   );

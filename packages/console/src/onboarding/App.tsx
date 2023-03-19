@@ -25,15 +25,15 @@ const welcomePathname = getOnboardingPage(OnboardingPage.Welcome);
 
 const App = () => {
   const swrOptions = useSwrOptions();
-  const { setFixedTheme } = useContext(AppThemeContext);
+  const { setThemeOverride } = useContext(AppThemeContext);
 
   useEffect(() => {
-    setFixedTheme(Theme.Light);
+    setThemeOverride(Theme.Light);
 
     return () => {
-      setFixedTheme(undefined);
+      setThemeOverride(undefined);
     };
-  }, [setFixedTheme]);
+  }, [setThemeOverride]);
 
   const {
     data: { questionnaire },
