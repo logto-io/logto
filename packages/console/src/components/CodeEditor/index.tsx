@@ -1,7 +1,8 @@
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -32,6 +33,7 @@ const CodeEditor = ({
   placeholder,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.currentTarget;
@@ -54,6 +56,15 @@ const CodeEditor = ({
       onChange?.(newText);
     }
   };
+
+  // TODO @sijie temp solution for required error (the errorMessage is an empty string)
+  const finalErrorMessage = useMemo(() => {
+    if (errorMessage) {
+      return errorMessage;
+    }
+
+    return t('general.required');
+  }, [errorMessage, t]);
 
   return (
     <>
@@ -101,7 +112,7 @@ const CodeEditor = ({
           </SyntaxHighlighter>
         </div>
       </div>
-      {hasError && errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
+      {hasError && <div className={styles.errorMessage}>{finalErrorMessage}</div>}
     </>
   );
 };
