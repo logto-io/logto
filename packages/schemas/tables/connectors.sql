@@ -6,7 +6,6 @@ create table connectors (
   connector_id varchar(128) not null,
   config jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,
   metadata jsonb /* @use ConfigurableConnectorMetadata */ not null default '{}'::jsonb,
-  storage jsonb /* @use Storage */ not null default '{}'::jsonb,
   created_at timestamptz not null default(now()),
   primary key (id)
 );

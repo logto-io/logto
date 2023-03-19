@@ -12,7 +12,6 @@ const connectors: Connector[] = [
     syncProfile: false,
     connectorId: 'id',
     metadata: {},
-    storage: {},
   },
 ];
 

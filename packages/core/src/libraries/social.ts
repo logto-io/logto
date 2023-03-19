@@ -1,9 +1,4 @@
-import type {
-  GetSession,
-  SocialUserInfo,
-  SetStorageValue,
-  GetStorageValue,
-} from '@logto/connector-kit';
+import type { GetSession, SocialUserInfo } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import type { User } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
@@ -70,8 +65,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
   const getUserInfoByAuthCode = async (
     connectorId: string,
     data: unknown,
-    getConnectorSession: GetSession,
-    storage: { set: SetStorageValue; get: GetStorageValue }
+    getConnectorSession: GetSession
   ): Promise<SocialUserInfo> => {
     const connector = await getConnector(connectorId);
 
@@ -84,7 +78,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
       })
     );
 
-    return connector.getUserInfo(data, getConnectorSession, storage);
+    return connector.getUserInfo(data, getConnectorSession);
   };
 
   /**
