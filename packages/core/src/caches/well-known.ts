@@ -10,7 +10,10 @@ export type WellKnownCacheKey = (typeof cacheKeys)[number];
 const buildKey = (tenantId: string, key: WellKnownCacheKey) => `${tenantId}:${key}` as const;
 
 class WellKnownCache {
-  #cache = new TtlCache<string, unknown>(180_000 /* 3 minutes */);
+  // This TTL should be very small since the sign-in experiences will be unusable
+  // if requests hit different instances during the cache-hit period.
+  // We need to use a real central cache like Redis with invalidation mechanism for it.
+  #cache = new TtlCache<string, unknown>(5000);
 
   /**
    * Use for centralized well-known data caching.
