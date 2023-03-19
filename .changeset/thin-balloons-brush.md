@@ -1,6 +1,4 @@
 ---
-"@logto/core": patch
-"@logto/schemas": patch
 "@logto/connector-kit": patch
 ---
 
