@@ -23,8 +23,10 @@ const connector_details = {
   type_email: '邮件连接器',
   type_sms: '短信连接器',
   type_social: '社交连接器',
-  in_use_deletion_description:
-    'This connector is in use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.', // UNTRANSLATED
+  in_used_social_deletion_description:
+    'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.', // UNTRANSLATED
+  in_used_passwordless_deletion_description:
+    'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict.', // UNTRANSLATED
 };
 
 export default connector_details;

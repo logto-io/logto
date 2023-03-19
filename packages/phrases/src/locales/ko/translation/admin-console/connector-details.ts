@@ -23,8 +23,10 @@ const connector_details = {
   type_email: '이메일 연동',
   type_sms: 'SMS 연동',
   type_social: '소셜 연동',
-  in_use_deletion_description:
+  in_used_social_deletion_description:
     '이 연동은 로그인 환경에서 사용 중이에요. 삭제 시 로그인 경험 설정에서 <name/> 로그인 경험이 삭제돼요.',
+  in_used_passwordless_deletion_description:
+    'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict.', // UNTRANSLATED
 };
 
 export default connector_details;

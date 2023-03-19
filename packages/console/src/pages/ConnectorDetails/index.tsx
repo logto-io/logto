@@ -2,7 +2,7 @@ import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
@@ -13,7 +13,6 @@ import Reset from '@/assets/images/reset.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import ConfirmModal from '@/components/ConfirmModal';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
@@ -34,6 +33,7 @@ import CreateForm from '../Connectors/components/CreateForm';
 import ConnectorContent from './components/ConnectorContent';
 import ConnectorTabs from './components/ConnectorTabs';
 import ConnectorTypeName from './components/ConnectorTypeName';
+import DeleteConnectorConfirmModal from './components/DeleteConnectorConfirmModal';
 import * as styles from './index.module.scss';
 
 // TODO: refactor path-related operation utils in both Connectors and ConnectorDetails page
@@ -76,7 +76,7 @@ const ConnectorDetails = () => {
   }, [pathname]);
 
   const onDeleteClick = async () => {
-    if (!isSocial || !inUse) {
+    if (!inUse) {
       await handleDelete();
 
       return;
@@ -221,20 +221,14 @@ const ConnectorDetails = () => {
               void mutate(connector);
             }}
           />
-          <ConfirmModal
+          <DeleteConnectorConfirmModal
+            data={data}
             isOpen={isDeleteAlertOpen}
-            confirmButtonText="general.delete"
             onCancel={() => {
               setIsDeleteAlertOpen(false);
             }}
             onConfirm={handleDelete}
-          >
-            <Trans
-              t={t}
-              i18nKey="connector_details.in_use_deletion_description"
-              components={{ name: <UnnamedTrans resource={data.name} /> }}
-            />
-          </ConfirmModal>
+          />
         </>
       )}
     </div>

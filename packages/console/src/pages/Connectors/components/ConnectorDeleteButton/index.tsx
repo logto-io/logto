@@ -1,17 +1,15 @@
 import type { ConnectorResponse } from '@logto/schemas';
-import { ConnectorType } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/images/delete.svg';
-import ConfirmModal from '@/components/ConfirmModal';
 import IconButton from '@/components/IconButton';
 import { Tooltip } from '@/components/Tip';
-import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
+import DeleteConnectorConfirmModal from '@/pages/ConnectorDetails/components/DeleteConnectorConfirmModal';
 import type { ConnectorGroup } from '@/types/connector';
 
 type Props = {
@@ -25,7 +23,6 @@ const ConnectorDeleteButton = ({ connectorGroup }: Props) => {
   const { isConnectorInUse } = useConnectorInUse();
 
   const firstConnector = connectors[0];
-  const isSocial = firstConnector?.type === ConnectorType.Social;
   const inUse = isConnectorInUse(firstConnector);
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
@@ -33,7 +30,7 @@ const ConnectorDeleteButton = ({ connectorGroup }: Props) => {
   const api = useApi();
 
   const onDeleteClick = async () => {
-    if (!isSocial || !inUse) {
+    if (!inUse) {
       await handleDelete();
 
       return;
@@ -70,20 +67,14 @@ const ConnectorDeleteButton = ({ connectorGroup }: Props) => {
           <Delete />
         </IconButton>
       </Tooltip>
-      <ConfirmModal
+      <DeleteConnectorConfirmModal
+        data={firstConnector}
         isOpen={isDeleteAlertOpen}
-        confirmButtonText="general.delete"
         onCancel={() => {
           setIsDeleteAlertOpen(false);
         }}
         onConfirm={handleDelete}
-      >
-        <Trans
-          t={t}
-          i18nKey="connector_details.in_use_deletion_description"
-          components={{ name: <UnnamedTrans resource={firstConnector.name} /> }}
-        />
-      </ConfirmModal>
+      />
     </>
   );
 };
