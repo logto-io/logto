@@ -1,5 +1,5 @@
 import { Theme } from '@logto/schemas';
-import { conditionalString, trySafe } from '@silverhand/essentials';
+import { conditionalString, noop, trySafe } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, createContext } from 'react';
 
@@ -10,16 +10,14 @@ import { appearanceModeGuard, DynamicAppearanceMode } from '@/types/appearance-m
 import * as styles from './index.module.scss';
 
 type Props = {
-  fixedTheme?: Theme;
-  appearanceMode?: AppearanceMode;
   children: ReactNode;
 };
 
-type AppTheme = {
+type Context = {
   theme: Theme;
+  setAppearanceMode: (mode: AppearanceMode) => void;
+  setFixedTheme: React.Dispatch<React.SetStateAction<Theme | undefined>>;
 };
-
-const defaultTheme: Theme = Theme.Light;
 
 const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
 const getThemeBySystemConfiguration = (): Theme =>
@@ -29,12 +27,28 @@ export const getAppearanceModeFromLocalStorage = (): AppearanceMode =>
   trySafe(() => appearanceModeGuard.parse(localStorage.getItem(appearanceModeStorageKey))) ??
   DynamicAppearanceMode.System;
 
-export const AppThemeContext = createContext<AppTheme>({
+const defaultAppearanceMode = getAppearanceModeFromLocalStorage();
+
+const defaultTheme =
+  defaultAppearanceMode === DynamicAppearanceMode.System
+    ? getThemeBySystemConfiguration()
+    : defaultAppearanceMode;
+
+export const AppThemeContext = createContext<Context>({
   theme: defaultTheme,
+  setAppearanceMode: noop,
+  setFixedTheme: noop,
 });
 
-export const AppThemeProvider = ({ fixedTheme, appearanceMode, children }: Props) => {
+export const AppThemeProvider = ({ children }: Props) => {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [fixedTheme, setFixedTheme] = useState<Theme>();
+  const [mode, setMode] = useState<AppearanceMode>(defaultAppearanceMode);
+
+  const setAppearanceMode = (mode: AppearanceMode) => {
+    setMode(mode);
+    localStorage.setItem(appearanceModeStorageKey, mode);
+  };
 
   useEffect(() => {
     if (fixedTheme) {
@@ -43,11 +57,8 @@ export const AppThemeProvider = ({ fixedTheme, appearanceMode, children }: Props
       return;
     }
 
-    // Note: if the appearanceMode is not available, attempt to retrieve the last saved value from localStorage.
-    const appliedAppearanceMode = appearanceMode ?? getAppearanceModeFromLocalStorage();
-
-    if (appliedAppearanceMode !== DynamicAppearanceMode.System) {
-      setTheme(appliedAppearanceMode);
+    if (mode !== DynamicAppearanceMode.System) {
+      setTheme(mode);
 
       return;
     }
@@ -63,7 +74,7 @@ export const AppThemeProvider = ({ fixedTheme, appearanceMode, children }: Props
     return () => {
       darkThemeWatchMedia.removeEventListener('change', changeTheme);
     };
-  }, [appearanceMode, fixedTheme]);
+  }, [mode, fixedTheme]);
 
   // Set Theme Mode
   useEffect(() => {
@@ -71,9 +82,11 @@ export const AppThemeProvider = ({ fixedTheme, appearanceMode, children }: Props
     document.body.classList.add(conditionalString(styles[theme]));
   }, [theme]);
 
-  const context = useMemo(
+  const context = useMemo<Context>(
     () => ({
       theme,
+      setAppearanceMode,
+      setFixedTheme,
     }),
     [theme]
   );

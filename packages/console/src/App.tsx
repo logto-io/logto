@@ -21,6 +21,7 @@ import ErrorBoundary from './containers/ErrorBoundary';
 import TenantAppContainer from './containers/TenantAppContainer';
 import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppEndpointsProvider from './contexts/AppEndpointsProvider';
+import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 
 void initI18n();
@@ -60,17 +61,19 @@ const Content = () => {
         scopes,
       }}
     >
-      <ErrorBoundary>
-        {!isCloud || isSettle ? (
-          <AppEndpointsProvider>
-            <AppConfirmModalProvider>
-              <TenantAppContainer />
-            </AppConfirmModalProvider>
-          </AppEndpointsProvider>
-        ) : (
-          <CloudApp />
-        )}
-      </ErrorBoundary>
+      <AppThemeProvider>
+        <ErrorBoundary>
+          {!isCloud || isSettle ? (
+            <AppEndpointsProvider>
+              <AppConfirmModalProvider>
+                <TenantAppContainer />
+              </AppConfirmModalProvider>
+            </AppEndpointsProvider>
+          ) : (
+            <CloudApp />
+          )}
+        </ErrorBoundary>
+      </AppThemeProvider>
     </LogtoProvider>
   );
 };

@@ -1,9 +1,8 @@
 import { builtInLanguages as builtInConsoleLanguages } from '@logto/phrases';
-import { useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { z } from 'zod';
 
-import { appearanceModeStorageKey } from '@/consts';
-import { getAppearanceModeFromLocalStorage } from '@/contexts/AppThemeProvider';
+import { AppThemeContext, getAppearanceModeFromLocalStorage } from '@/contexts/AppThemeProvider';
 import { appearanceModeGuard } from '@/types/appearance-mode';
 
 import useMeCustomData from './use-me-custom-data';
@@ -22,6 +21,7 @@ export type UserPreferences = z.infer<typeof userPreferencesGuard>;
 
 const useUserPreferences = () => {
   const { data, error, isLoading, isLoaded, update: updateMeCustomData } = useMeCustomData();
+  const { setAppearanceMode } = useContext(AppThemeContext);
 
   const userPreferences = useMemo(() => {
     const parsed = z.object({ [adminConsolePreferencesKey]: userPreferencesGuard }).safeParse(data);
@@ -43,8 +43,8 @@ const useUserPreferences = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem(appearanceModeStorageKey, userPreferences.appearanceMode);
-  }, [userPreferences.appearanceMode]);
+    setAppearanceMode(userPreferences.appearanceMode);
+  }, [setAppearanceMode, userPreferences.appearanceMode]);
 
   return {
     isLoading,
