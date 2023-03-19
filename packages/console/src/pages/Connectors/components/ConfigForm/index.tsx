@@ -71,15 +71,15 @@ const ConfigForm = ({ formItems }: Props) => {
       <Controller
         name={item.key}
         control={control}
-        rules={
-          item.type === ConnectorConfigFormItemType.Json
-            ? {
-                validate: (value) =>
+        rules={{
+          required: item.required,
+          validate:
+            item.type === ConnectorConfigFormItemType.Json
+              ? (value) =>
                   (typeof value === 'string' && jsonValidator(value)) ||
-                  t('errors.invalid_json_format'),
-              }
-            : undefined
-        }
+                  t('errors.invalid_json_format')
+              : undefined,
+        }}
         render={({ field: { onChange, value } }) => {
           if (item.type === ConnectorConfigFormItemType.Switch) {
             return (
