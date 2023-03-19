@@ -215,7 +215,7 @@ const Guide = ({ connector, onClose }: Props) => {
                     <SenderTester
                       connectorFactoryId={connectorId}
                       connectorType={connectorType}
-                      formConfig={formItems ? parseFormConfig(watch(), formItems) : undefined}
+                      formConfig={conditional(formItems && parseFormConfig(watch(), formItems))}
                       stringConfig={watch('config')}
                     />
                   </div>

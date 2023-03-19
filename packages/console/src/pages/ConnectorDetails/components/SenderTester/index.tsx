@@ -1,9 +1,8 @@
 import { emailRegEx, phoneInputRegEx } from '@logto/core-kit';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
@@ -11,8 +10,8 @@ import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import { Tooltip } from '@/components/Tip';
 import useApi from '@/hooks/use-api';
+import { useConfigParser } from '@/pages/Connectors/components/ConnectorForm/hooks';
 import { onKeyDownHandler } from '@/utils/a11y';
-import { safeParseJson } from '@/utils/json';
 
 import * as styles from './index.module.scss';
 
@@ -62,32 +61,13 @@ const SenderTester = ({
     };
   }, [showTooltip]);
 
-  const stringConfigParser = useCallback(
-    (config?: string) => {
-      if (!config) {
-        toast.error(t('connector_details.save_error_empty_config'));
-
-        return;
-      }
-
-      const result = safeParseJson(config);
-
-      if (!result.success) {
-        toast.error(result.error);
-
-        return;
-      }
-
-      return result.data;
-    },
-    [t]
-  );
+  const configParser = useConfigParser();
 
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
 
     const data = {
-      config: formConfig ?? stringConfigParser(stringConfig),
+      config: formConfig ?? configParser(stringConfig ?? ''),
       ...(isSms
         ? { phone: sendTo.replace(/[ ()-]/g, '').replace(/\+/g, '00') }
         : { email: sendTo }),
