@@ -101,7 +101,7 @@ const cloud = {
         'Please avoid using the demo connector for production purposes. Once you’ve completed testing, kindly delete the demo connector and set up your own connector with your credentials.', // UNTRANSLATED
     },
   },
-  broadcast: '📣 You are participating in Logto Cloud Preview', // UNTRANSLATED
+  broadcast: '📣 You are in Logto Cloud (Preview)', // UNTRANSLATED
   socialCallback: {
     title: "You've successfully signed in!", // UNTRANSLATED
     description:
