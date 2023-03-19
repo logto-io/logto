@@ -23,8 +23,10 @@ const connector_details = {
   type_email: 'Email connector',
   type_sms: 'SMS connector',
   type_social: 'Social connector',
-  in_use_deletion_description:
+  in_used_social_deletion_description:
     'This connector is in use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.',
+  in_used_passwordless_deletion_description:
+    'This {{name}} connector is in use in your sign-in experience. By deleting, your sign-in experience won’t go live until resolving the conflict.',
 };
 
 export default connector_details;
