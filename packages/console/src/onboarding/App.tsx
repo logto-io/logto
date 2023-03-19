@@ -2,7 +2,6 @@ import { Theme } from '@logto/schemas';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
-import AppLoading from '@/components/AppLoading';
 import Toast from '@/components/Toast';
 import { getBasename } from '@/consts';
 import AppBoundary from '@/containers/AppBoundary';
@@ -27,12 +26,7 @@ const App = () => {
 
   const {
     data: { questionnaire },
-    isLoaded,
   } = useUserOnboardingData();
-
-  if (!isLoaded) {
-    return <AppLoading />;
-  }
 
   return (
     <BrowserRouter basename={getBasename()}>

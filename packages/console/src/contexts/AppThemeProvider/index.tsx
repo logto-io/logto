@@ -19,8 +19,6 @@ type AppTheme = {
   theme: Theme;
 };
 
-const defaultTheme: Theme = Theme.Light;
-
 const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
 const getThemeBySystemConfiguration = (): Theme =>
   darkThemeWatchMedia.matches ? Theme.Dark : Theme.Light;
@@ -29,12 +27,24 @@ export const getAppearanceModeFromLocalStorage = (): AppearanceMode =>
   trySafe(() => appearanceModeGuard.parse(localStorage.getItem(appearanceModeStorageKey))) ??
   DynamicAppearanceMode.System;
 
+export const getThemeFromLocalStorage = () => {
+  const appearanceMode = getAppearanceModeFromLocalStorage();
+
+  if (appearanceMode === DynamicAppearanceMode.System) {
+    return getThemeBySystemConfiguration();
+  }
+
+  return appearanceMode;
+};
+
+const cachedTheme = getThemeFromLocalStorage();
+
 export const AppThemeContext = createContext<AppTheme>({
-  theme: defaultTheme,
+  theme: cachedTheme,
 });
 
 export const AppThemeProvider = ({ fixedTheme, appearanceMode, children }: Props) => {
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [theme, setTheme] = useState<Theme>(cachedTheme);
 
   useEffect(() => {
     if (fixedTheme) {
