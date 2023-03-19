@@ -1,6 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -8,9 +8,11 @@ import ReactModal from 'react-modal';
 import Button from '@/components/Button';
 import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
+import { ImageUploaderField } from '@/components/Uploader';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useUserAssetsService from '@/hooks/use-user-assets-service';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import { handleError } from '../../utils';
@@ -42,8 +44,10 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
     handleSubmit,
     setValue,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({ reValidateMode: 'onBlur' });
+  const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
 
   useEffect(() => {
     clearErrors();
@@ -121,7 +125,15 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
         }
         onClose={onClose}
       >
-        <div>
+        {field === 'avatar' && isUserAssetsServiceReady ? (
+          <Controller
+            name="avatar"
+            control={control}
+            render={({ field: { onChange, value, name } }) => (
+              <ImageUploaderField name={name} value={value} onChange={onChange} />
+            )}
+          />
+        ) : (
           <TextInput
             {...register(field, {
               validate: (value) =>
@@ -139,7 +151,7 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
               }
             }}
           />
-        </div>
+        )}
       </ModalLayout>
     </ReactModal>
   );
