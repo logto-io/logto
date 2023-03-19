@@ -43,7 +43,7 @@ const sign_in_exp = {
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: '了解更多',
     css_code_editor_content_placeholder:
-      '// 输入自定义 CSS 代码，从颜色、字体、组件样式和布局等，定制你的登录、注册、忘记密码和其他页面。充分发挥创造力，让你的用户界面脱颖而出。',
+      '输入自定义 CSS 以根据你的需求定制任何内容的样式。发挥创造力，让你的用户界面脱颖而出。',
   },
   sign_up_and_sign_in: {
     identifiers_email: '邮件地址',
