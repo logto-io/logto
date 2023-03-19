@@ -1,4 +1,3 @@
-import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useRef } from 'react';
@@ -58,6 +57,7 @@ const CodeEditor = ({
   return (
     <>
       <div className={classNames(styles.container, className)}>
+        {!value && <div className={styles.placeholder}>{placeholder}</div>}
         <CopyToClipboard value={value ?? ''} variant="icon" className={styles.copy} />
         <div className={styles.editor}>
           {/* SyntaxHighlighter is a readonly component, so a transparent <textarea> layer is needed
@@ -71,7 +71,6 @@ const CodeEditor = ({
             readOnly={isReadonly}
             spellCheck="false"
             value={value}
-            placeholder={placeholder}
             onChange={handleChange}
             onKeyDown={handleKeydown}
           />
@@ -97,7 +96,7 @@ const CodeEditor = ({
             language={language}
             style={theme}
           >
-            {conditional(Boolean(value) && value) ?? placeholder ?? ''}
+            {value ?? ''}
           </SyntaxHighlighter>
         </div>
       </div>
