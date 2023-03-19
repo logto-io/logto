@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-rc.3
+
+### Patch Changes
+
+- ad3611f5a: Remove connector database `storage` column and its corresponding access.
+
 ## 1.0.0-rc.2
 
 ### Patch Changes
