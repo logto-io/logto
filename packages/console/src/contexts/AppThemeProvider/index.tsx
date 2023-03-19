@@ -23,11 +23,11 @@ const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
 const getThemeBySystemConfiguration = (): Theme =>
   darkThemeWatchMedia.matches ? Theme.Dark : Theme.Light;
 
-export const getAppearanceModeFromLocalStorage = (): AppearanceMode =>
+export const buildDefaultAppearanceMode = (): AppearanceMode =>
   trySafe(() => appearanceModeGuard.parse(localStorage.getItem(appearanceModeStorageKey))) ??
   DynamicAppearanceMode.System;
 
-const defaultAppearanceMode = getAppearanceModeFromLocalStorage();
+const defaultAppearanceMode = buildDefaultAppearanceMode();
 
 const defaultTheme =
   defaultAppearanceMode === DynamicAppearanceMode.System

@@ -2,7 +2,7 @@ import { builtInLanguages as builtInConsoleLanguages } from '@logto/phrases';
 import { useContext, useEffect, useMemo } from 'react';
 import { z } from 'zod';
 
-import { AppThemeContext, getAppearanceModeFromLocalStorage } from '@/contexts/AppThemeProvider';
+import { AppThemeContext, buildDefaultAppearanceMode } from '@/contexts/AppThemeProvider';
 import { appearanceModeGuard } from '@/types/appearance-mode';
 
 import useMeCustomData from './use-me-custom-data';
@@ -29,7 +29,7 @@ const useUserPreferences = () => {
     return parsed.success
       ? parsed.data[adminConsolePreferencesKey]
       : {
-          appearanceMode: getAppearanceModeFromLocalStorage(),
+          appearanceMode: buildDefaultAppearanceMode(),
         };
   }, [data]);
 
