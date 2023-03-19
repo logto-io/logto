@@ -35,7 +35,9 @@ const SignInMethodEditBox = () => {
 
   const revalidate = () => {
     if (submitCount) {
-      void trigger(`signIn.methods`);
+      setTimeout(() => {
+        void trigger('signIn.methods');
+      }, 0);
     }
   };
 

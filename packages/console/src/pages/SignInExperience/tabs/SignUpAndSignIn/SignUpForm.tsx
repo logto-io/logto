@@ -103,7 +103,9 @@ const SignUpForm = () => {
 
     // Note: we need to revalidate the sign-in methods after we have submitted
     if (submitCount) {
-      void trigger('signIn.methods');
+      setTimeout(() => {
+        void trigger('signIn.methods');
+      }, 0);
     }
   };
 
