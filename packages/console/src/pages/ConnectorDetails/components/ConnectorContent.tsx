@@ -2,7 +2,7 @@ import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -70,9 +70,16 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
     });
   }, [connectorData, reset]);
 
+  const parseConfig = useCallback(
+    (data: ConnectorFormType, formItems: ConnectorResponse['formItems']) => {
+      return formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
+    },
+    [parseJsonConfig]
+  );
+
   const onSubmit = handleSubmit(async (data) => {
     const { formItems, isStandard, id } = connectorData;
-    const config = formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
+    const config = parseConfig(data, formItems);
     const { syncProfile, name, logo, logoDark, target } = data;
 
     const payload = isSocialConnector
@@ -137,10 +144,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
             <SenderTester
               connectorFactoryId={connectorData.connectorId}
               connectorType={connectorData.type}
-              formConfig={conditional(
-                connectorData.formItems && parseFormConfig(watch(), connectorData.formItems)
-              )}
-              stringConfig={watch('config')}
+              parse={() => parseConfig(watch(), connectorData.formItems)}
             />
           </FormCard>
         )}

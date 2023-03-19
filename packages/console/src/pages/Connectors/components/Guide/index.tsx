@@ -5,7 +5,7 @@ import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { HTTPError } from 'ky';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -74,6 +74,13 @@ const Guide = ({ connector, onClose }: Props) => {
     });
   }, [formItems, reset, configTemplate, target, isSocialConnector, isStandard]);
 
+  const parseConfig = useCallback(
+    (data: ConnectorFormType, formItems: ConnectorResponse['formItems']) => {
+      return formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
+    },
+    [parseJsonConfig]
+  );
+
   if (!connector) {
     return null;
   }
@@ -90,7 +97,7 @@ const Guide = ({ connector, onClose }: Props) => {
     // Recover error state
     setConflictConnectorName(undefined);
 
-    const config = formItems ? parseFormConfig(data, formItems) : parseJsonConfig(data.config);
+    const config = parseConfig(data, formItems);
     const { syncProfile, name, logo, logoDark, target } = data;
 
     const basePayload = {
@@ -215,8 +222,7 @@ const Guide = ({ connector, onClose }: Props) => {
                     <SenderTester
                       connectorFactoryId={connectorId}
                       connectorType={connectorType}
-                      formConfig={conditional(formItems && parseFormConfig(watch(), formItems))}
-                      stringConfig={watch('config')}
+                      parse={() => parseConfig(watch(), formItems)}
                     />
                   </div>
                 )}

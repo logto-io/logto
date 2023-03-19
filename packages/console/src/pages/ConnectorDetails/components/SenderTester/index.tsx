@@ -10,7 +10,6 @@ import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import { Tooltip } from '@/components/Tip';
 import useApi from '@/hooks/use-api';
-import { useConfigParser } from '@/pages/Connectors/components/ConnectorForm/hooks';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';
@@ -19,21 +18,14 @@ type Props = {
   connectorFactoryId: string;
   connectorType: Exclude<ConnectorType, ConnectorType.Social>;
   className?: string;
-  formConfig?: Record<string, unknown>;
-  stringConfig?: string;
+  parse: () => unknown;
 };
 
 type FormData = {
   sendTo: string;
 };
 
-const SenderTester = ({
-  connectorFactoryId,
-  connectorType,
-  className,
-  formConfig,
-  stringConfig,
-}: Props) => {
+const SenderTester = ({ connectorFactoryId, connectorType, className, parse }: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const {
     handleSubmit,
@@ -61,13 +53,11 @@ const SenderTester = ({
     };
   }, [showTooltip]);
 
-  const configParser = useConfigParser();
-
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
 
     const data = {
-      config: formConfig ?? configParser(stringConfig ?? ''),
+      config: parse(),
       ...(isSms
         ? { phone: sendTo.replace(/[ ()-]/g, '').replace(/\+/g, '00') }
         : { email: sendTo }),
