@@ -1,7 +1,7 @@
 const errors = {
   request: {
-    invalid_input: 'Input is invalid. {{details}}', // UNTRANSLATED
-    general: 'Request error occurred.', // UNTRANSLATED
+    invalid_input: 'Input inválido. {{details}}',
+    general: 'Ocorreu um erro no pedido.',
   },
   auth: {
     authorization_header_missing: 'O cabeçalho de autorização está ausente.',
@@ -10,14 +10,15 @@ const errors = {
     forbidden: 'Proibido. Verifique os seus cargos e permissões.',
     expected_role_not_found: 'Role esperado não encontrado. Verifique os seus cargos e permissões.',
     jwt_sub_missing: 'Campo `sub` está ausente no JWT.',
-    require_re_authentication: 'Re-authentication is required to perform a protected action.', // UNTRANSLATED
+    require_re_authentication:
+      'É necessária uma nova autenticação para executar uma ação protegida.',
   },
   guard: {
     invalid_input: 'O pedido {{type}} é inválido.',
     invalid_pagination: 'O valor de paginação enviado é inválido.',
-    can_not_get_tenant_id: 'Unable to get tenant id from request.', // UNTRANSLATED
-    file_size_exceeded: 'File size exceeded.', // UNTRANSLATED
-    mime_type_not_allowed: 'MIME type is not allowed.', // UNTRANSLATED
+    can_not_get_tenant_id: 'Não é possível obter o ID do inquilino a partir do pedido.',
+    file_size_exceeded: 'Tamanho do ficheiro excedido.',
+    mime_type_not_allowed: 'Tipo MIME não permitido.',
   },
   oidc: {
     aborted: 'O utilizador final abortou a interação.',
@@ -38,35 +39,37 @@ const errors = {
     provider_error: 'Erro interno OIDC: {{message}}.',
   },
   user: {
-    username_already_in_use: 'This username is already in use.', // UNTRANSLATED
-    email_already_in_use: 'This email is associated with an existing account.', // UNTRANSLATED
-    phone_already_in_use: 'This phone number is associated with an existing account.', // UNTRANSLATED
+    username_already_in_use: 'Este nome de usuário já está em uso.',
+    email_already_in_use: 'Este email já está associado a uma conta existente.',
+    phone_already_in_use: 'Este número de telefone já está associado a uma conta existente.',
     invalid_email: 'Endereço de email inválido.',
     invalid_phone: 'Número de telefone inválido.',
     email_not_exist: 'O endereço de email ainda não foi registada.',
     phone_not_exist: 'O numero do telefone ainda não foi registada.',
     identity_not_exist: 'A conta social ainda não foi registada.',
     identity_already_in_use: 'A conta social foi registada.',
-    social_account_exists_in_profile: 'You have already associated this social account.', // UNTRANSLATED
+    social_account_exists_in_profile: 'A conta social já foi associada a este perfil.',
     cannot_delete_self: 'Não se pode remover a si mesmo.',
-    sign_up_method_not_enabled: 'This sign-up method is not enabled.', // UNTRANSLATED
-    sign_in_method_not_enabled: 'This sign-in method is not enabled.', // UNTRANSLATED
-    same_password: 'New password cannot be the same as your old password.', // UNTRANSLATED
-    password_required_in_profile: 'You need to set a password before signing-in.', // UNTRANSLATED
-    new_password_required_in_profile: 'You need to set a new password.', // UNTRANSLATED
-    password_exists_in_profile: 'Password already exists in your profile.', // UNTRANSLATED
-    username_required_in_profile: 'You need to set a username before signing-in.', // UNTRANSLATED
-    username_exists_in_profile: 'Username already exists in your profile.', // UNTRANSLATED
-    email_required_in_profile: 'You need to add an email address before signing-in.', // UNTRANSLATED
-    email_exists_in_profile: 'Your profile has already associated with an email address.', // UNTRANSLATED
-    phone_required_in_profile: 'You need to add a phone number before signing-in.', // UNTRANSLATED
-    phone_exists_in_profile: 'Your profile has already associated with a phone number.', // UNTRANSLATED
+    sign_up_method_not_enabled: 'Este método de registo não está ativo.',
+    sign_in_method_not_enabled: 'Este método de início de sessão não está ativo.',
+    same_password: 'A nova palavra-passe não pode ser igual à antiga.',
+    password_required_in_profile: 'Precisa de definir uma palavra-passe antes de iniciar sessão.',
+    new_password_required_in_profile: 'Precisa de definir uma nova palavra-passe.',
+    password_exists_in_profile: 'A palavra-passe já existe no seu perfil.',
+    username_required_in_profile:
+      'Precisa de definir um nome de utilizador antes de iniciar sessão.',
+    username_exists_in_profile: 'O nome de utilizador já existe no seu perfil.',
+    email_required_in_profile: 'Precisa de adicionar um endereço de email antes de iniciar sessão.',
+    email_exists_in_profile: 'O seu perfil já está associado a um endereço de email.',
+    phone_required_in_profile:
+      'Precisa de adicionar um número de telefone antes de iniciar sessão.',
+    phone_exists_in_profile: 'O seu perfil já está associado a um número de telefone.',
     email_or_phone_required_in_profile:
-      'You need to add an email address or phone number before signing-in.', // UNTRANSLATED
-    suspended: 'This account is suspended.', // UNTRANSLATED
-    user_not_exist: 'User with {{ identifier }} does not exist.', // UNTRANSLATED,
-    missing_profile: 'You need to provide additional info before signing-in.', // UNTRANSLATED
-    role_exists: 'The role id {{roleId}} is already been added to this user', // UNTRANSLATED
+      'Precisa de adicionar um endereço de email ou um número de telefone antes de iniciar sessão.',
+    suspended: 'Esta conta está suspensa.',
+    user_not_exist: 'O utilizador com {{ identifier }} não existe.',
+    missing_profile: 'Precisa de fornecer informações adicionais antes de iniciar sessão.',
+    role_exists: 'O id da função {{roleId}} já foi adicionado a este utilizador.',
   },
   password: {
     unsupported_encryption_method: 'O método de enncriptação {{name}} não é suportado.',
@@ -83,19 +86,20 @@ const errors = {
     connector_session_not_found:
       'Sessão do conector não encontrada. Por favor, volte e faça login novamente.',
     verification_session_not_found:
-      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
+      'A verificação não foi bem-sucedida. Reinicie o processo de verificação e tente novamente.',
     verification_expired:
-      'The connection has timed out. Verify again to ensure your account safety.', // UNTRANSLATED
+      'A conexão expirou. Verifique novamente para garantir a segurança de sua conta.',
     unauthorized: 'Faça login primeiro.',
     unsupported_prompt_name: 'Nome de prompt não suportado.',
-    forgot_password_not_enabled: 'Forgot password is not enabled.', // UNTRANSLATED
+    forgot_password_not_enabled: 'Recuperação de senha não está habilitada.',
     verification_failed:
-      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
+      'A verificação não foi bem-sucedida. Reinicie o processo de verificação e tente novamente.',
     connector_validation_session_not_found:
-      'The connector session for token validation is not found.', // UNTRANSLATED
-    identifier_not_found: 'User identifier not found. Please go back and sign in again.', // UNTRANSLATED
+      'A sessão do conector para validação do token não foi encontrada.',
+    identifier_not_found:
+      'Identificador do usuário não encontrado. Por favor, volte e faça login novamente.',
     interaction_not_found:
-      'Interaction session not found. Please go back and start the session again.', // UNTRANSLATED
+      'Sessão de interação não encontrada. Por favor, volte e inicie a sessão novamente.',
   },
   connector: {
     general: 'Ocorreu um erro no conector: {{errorDescription}}',
@@ -104,7 +108,7 @@ const errors = {
     invalid_metadata: 'Os metadados do conector são inválidos.',
     invalid_config_guard: 'A configuração de proteção do conector é inválida.',
     unexpected_type: 'O tipo do conector é inesperado.',
-    invalid_request_parameters: 'The request is with wrong input parameter(s).', // UNTRANSLATED
+    invalid_request_parameters: 'O pedido tem parâmetros de entrada inválidos.',
     insufficient_request_parameters: 'A solicitação pode perder alguns parâmetros de entrada.',
     invalid_config: 'A configuração do conector é inválida.',
     invalid_response: 'A resposta do conector é inválida.',
@@ -119,28 +123,31 @@ const errors = {
     more_than_one_sms: 'O número de conectores SMS é maior que 1.',
     more_than_one_email: 'O número de conectores de e-mail é maior que 1.',
     more_than_one_connector_factory:
-      'Found multiple connector factories (with id {{connectorIds}}), you may uninstall unnecessary ones.', // UNTRANSLATED
+      'Foram encontradas várias fábricas de conectores (com id {{connectorIds}}), pode desinstalar as desnecessárias.',
     db_connector_type_mismatch: 'Há um conector no banco de dados que não corresponde ao tipo.',
-    not_found_with_connector_id: 'Can not find connector with given standard connector id.', // UNTRANSLATED
+    not_found_with_connector_id:
+      'Não foi possível encontrar o conector com o id do conector padrão fornecido.',
     multiple_instances_not_supported:
-      'Can not create multiple instance with picked standard connector.', // UNTRANSLATED
-    invalid_type_for_syncing_profile: 'You can only sync user profile with social connectors.', // UNTRANSLATED
-    can_not_modify_target: "The connector 'target' can not be modified.", // UNTRANSLATED
-    should_specify_target: "You should specify 'target'.", // UNTRANSLATED
+      'Não é possível criar várias instâncias com o conector padrão selecionado.',
+    invalid_type_for_syncing_profile:
+      'Você só pode sincronizar o perfil do usuário com conectores sociais.',
+    can_not_modify_target: "O 'target' do conector não pode ser modificado.",
+    should_specify_target: 'Você deve especificar o alvo (target).',
     multiple_target_with_same_platform:
-      'You can not have multiple social connectors that have same target and platform.', // UNTRANSLATED
+      'Não é possível ter vários conectores sociais com o mesmo alvo e plataforma.',
     cannot_overwrite_metadata_for_non_standard_connector:
-      "This connector's 'metadata' cannot be overwritten.", // UNTRANSLATED
+      'Os metadados deste conector não podem ser sobrescritos.',
   },
   verification_code: {
-    phone_email_empty: 'Both phone and email are empty.', // UNTRANSLATED
-    not_found: 'Verification code not found. Please send verification code first.', // UNTRANSLATED
-    phone_mismatch: 'Phone mismatch. Please request a new verification code.', // UNTRANSLATED
-    email_mismatch: 'Email mismatch. Please request a new verification code.', // UNTRANSLATED
-    code_mismatch: 'Invalid verification code.', // UNTRANSLATED
-    expired: 'Verification code has expired. Please request a new verification code.', // UNTRANSLATED
+    phone_email_empty: 'Tanto o telefone como o e-mail estão vazios.',
+    not_found:
+      'Código de verificação não encontrado. Por favor, envie primeiro o código de verificação.',
+    phone_mismatch: 'Telefone não corresponde. Por favor, solicite um novo código de verificação.',
+    email_mismatch: 'E-mail não corresponde. Por favor, solicite um novo código de verificação.',
+    code_mismatch: 'Código de verificação inválido.',
+    expired: 'O código de verificação expirou. Por favor, solicite um novo código de verificação.',
     exceed_max_try:
-      'Verification code retries limitation exceeded. Please request a new verification code.', // UNTRANSLATED
+      'Limite máximo de tentativas de verificação excedido. Por favor, solicite um novo código de verificação.',
   },
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:
@@ -150,20 +157,24 @@ const errors = {
     enabled_connector_not_found: 'Conector {{type}} ativado não encontrado.',
     not_one_and_only_one_primary_sign_in_method:
       'Deve haver um e apenas um método de login principal. Por favor, verifique sua entrada.',
-    username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
-    passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
-    miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.', // UNTRANSLATED
+    username_requires_password:
+      'É necessário habilitar a configuração de uma senha para o identificador de inscrição por nome de usuário.',
+    passwordless_requires_verify:
+      'É necessário habilitar a verificação para o identificador de inscrição por e-mail/telefone.',
+    miss_sign_up_identifier_in_sign_in:
+      'Os métodos de login devem conter o identificador de inscrição.',
     password_sign_in_must_be_enabled:
-      'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
+      'O login com senha deve ser habilitado quando é requerido configurar uma senha na inscrição.',
     code_sign_in_must_be_enabled:
-      'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
-    unsupported_default_language: 'This language - {{language}} is not supported at the moment.', // UNTRANSLATED
-    at_least_one_authentication_factor: 'You have to select at least one authentication factor.', // UNTRANSLATED
+      'O login com código de verificação deve ser habilitado quando não é requerido configurar uma senha na inscrição.',
+    unsupported_default_language: 'Este idioma - {{language}} não é suportado no momento.',
+    at_least_one_authentication_factor: 'Você deve selecionar pelo menos um fator de autenticação.',
   },
   localization: {
     cannot_delete_default_language:
-      '{{languageTag}} is set as your default language and can’t be deleted.', // UNTRANSLATED
-    invalid_translation_structure: 'Invalid data schemas. Please check your input and try again.', // UNTRANSLATED
+      '{{languageTag}} é o seu idioma padrão e não pode ser excluído.',
+    invalid_translation_structure:
+      'Estrutura de dados inválida. Verifique sua entrada e tente novamente.',
   },
   swagger: {
     invalid_zod_type: 'Tipo de Zod inválido. Verifique a configuração do protetor de rota.',
@@ -177,25 +188,25 @@ const errors = {
     not_found: 'O recurso não existe.',
   },
   log: {
-    invalid_type: 'The log type is invalid.', // UNTRANSLATED
+    invalid_type: 'O tipo de registro é inválido.',
   },
   role: {
-    name_in_use: 'This role name {{name}} is already in use', // UNTRANSLATED
-    scope_exists: 'The scope id {{scopeId}} has already been added to this role', // UNTRANSLATED
-    user_exists: 'The user id {{userId}} is already been added to this role', // UNTRANSLATED
+    name_in_use: 'Este nome de função {{name}} já está em uso',
+    scope_exists: 'O id do escopo {{scopeId}} já foi adicionado a esta função',
+    user_exists: 'O id do usuário {{userId}} já foi adicionado a esta função',
     default_role_missing:
-      'Some of the default roleNames does not exist in database, please ensure to create roles first', // UNTRANSLATED
+      'Alguns dos nomes de função padrão não existem no banco de dados, por favor, certifique-se de criar as funções primeiro',
     internal_role_violation:
-      'You may be trying to update or delete an internal role which is forbidden by Logto. If you are creating a new role, try another name that does not start with "#internal:".', // UNTRANSLATED
+      'Você pode estar tentando atualizar ou excluir uma função interna que é proibida pelo Logto. Se você estiver criando uma nova função, tente outro nome que não comece com "#internal:". ',
   },
   scope: {
-    name_exists: 'The scope name {{name}} is already in use', // UNTRANSLATED
-    name_with_space: 'The name of the scope cannot contain any spaces.', // UNTRANSLATED
+    name_exists: 'O nome do escopo {{name}} já está em uso',
+    name_with_space: 'O nome do escopo não pode conter espaços.',
   },
   storage: {
-    not_configured: 'Storage provider is not configured.', // UNTRANSLATED
-    missing_parameter: 'Missing parameter {{parameter}} for storage provider.', // UNTRANSLATED
-    upload_error: 'Failed to upload file to the storage provider.', // UNTRANSLATED
+    not_configured: 'O provedor de armazenamento não está configurado.',
+    missing_parameter: 'Faltando o parâmetro {{parameter}} para o provedor de armazenamento.',
+    upload_error: 'Falha ao enviar o arquivo para o provedor de armazenamento.',
   },
 };
 

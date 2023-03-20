@@ -16,9 +16,9 @@ const errors = {
   guard: {
     invalid_input: '{{type}} 요청 타입은 유효하지 않아요.',
     invalid_pagination: '요청의 Pagination 값이 유효하지 않아요.',
-    can_not_get_tenant_id: 'Unable to get tenant id from request.', // UNTRANSLATED
-    file_size_exceeded: 'File size exceeded.', // UNTRANSLATED
-    mime_type_not_allowed: 'MIME type is not allowed.', // UNTRANSLATED
+    can_not_get_tenant_id: '요청에서 테넌트 ID를 가져올 수 없습니다.',
+    file_size_exceeded: '파일 크기가 초과되었습니다.',
+    mime_type_not_allowed: 'MIME 타입이 허용되지 않습니다.',
   },
   oidc: {
     aborted: 'End 사용자가 상호 작용을 중단했어요.',
@@ -47,7 +47,7 @@ const errors = {
     phone_not_exist: '휴대전화번호가 아직 등록되지 않았어요.',
     identity_not_exist: '소셜 계정이 아직 등록되지 않았어요.',
     identity_already_in_use: '소셜 계정이 이미 등록되어 있어요.',
-    social_account_exists_in_profile: 'You have already associated this social account.', // UNTRANSLATED
+    social_account_exists_in_profile: '이 소셜 계정은 이미 연동되어 있습니다.',
     cannot_delete_self: '자기 자신을 삭제할 수 없어요.',
     sign_up_method_not_enabled: '이 회원가입 방법은 활성화되어있지 않아요.',
     sign_in_method_not_enabled: '이 로그인 방법은 활성화되어있지 않아요.',
@@ -114,7 +114,7 @@ const errors = {
     more_than_one_sms: 'SMS 서비스는 1개만 연동되어야 해요.',
     more_than_one_email: '이메일 서비스는 1개만 연동되어야 해요.',
     more_than_one_connector_factory:
-      'Found multiple connector factories (with id {{connectorIds}}), you may uninstall unnecessary ones.', // UNTRANSLATED
+      '다수의 커넥터 팩토리가 발견되었습니다 (ID {{connectorIds}}). 불필요한 팩토리는 제거해주세요.',
     db_connector_type_mismatch: '종류가 일치하지 않은 연동 서비스가 DB에 존재해요.',
     not_found_with_connector_id: '주어진 연동 ID로 연동 설정을 찾을 수 없어요.',
     multiple_instances_not_supported: '선택된 연동 기준으로 여러 인스턴스를 생성할 수 없어요.',
@@ -178,16 +178,16 @@ const errors = {
     default_role_missing:
       '기본 역할 이름의 일부가 데이터베이스에 존재하지 않아요. 먼저 역할을 생성해 주세요.',
     internal_role_violation:
-      'You may be trying to update or delete an internal role which is forbidden by Logto. If you are creating a new role, try another name that does not start with "#internal:".', // UNTRANSLATED
+      '내부 역할 위반: Logto에서 금지되는 내부 역할을 업데이트하거나 삭제하려고 할 수 있습니다. 새 역할을 만드는 경우 "#internal:"으로 시작하지 않는 다른 이름을 시도해보세요.',
   },
   scope: {
     name_exists: '범위 이름 {{name}}이/가 이미 사용 중이에요.',
     name_with_space: '범위 이름에 공백을 포함할 수 없어요.',
   },
   storage: {
-    not_configured: 'Storage provider is not configured.', // UNTRANSLATED
-    missing_parameter: 'Missing parameter {{parameter}} for storage provider.', // UNTRANSLATED
-    upload_error: 'Failed to upload file to the storage provider.', // UNTRANSLATED
+    not_configured: '저장소 공급자가 구성되지 않았습니다.',
+    missing_parameter: '저장소 공급자에 대한 누락된 매개변수 {{parameter}}.',
+    upload_error: '파일을 저장소 공급자에 업로드하지 못했습니다.',
   },
 };
 
