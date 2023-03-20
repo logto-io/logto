@@ -1,5 +1,32 @@
 # Change Log
 
+## 1.0.0
+
+### Minor Changes
+
+- 8658827ca: Add optional `formItems` to connector's metadata.
+
+  If set, the admin console's connector page (both create and update) will use it to generate a form to input config instead of raw JSON.
+
+- 738675a7d: ## Improvements
+
+  - Exported seed constants and schemas.
+  - Add ID generation utilities `buildIdGenerator()` and `generateStandardId()`.
+
+- c0526d931: Pass user agent to connector
+
+### Patch Changes
+
+- 69ac13e3a: Add description and tooltip for connector config's formItems.
+- 69af8a381: 1. Add `connectorId`, `connectorFactoryId` and `jti` to `GetAuthorizationUri`. 2. Make `ConnectorSession` compatible for arbitrary keys.
+- c2d36b1c8: Add optional `setSession` method and `getSession` method as input parameters of `getAuthorizationUri` and `getUserInfo` respectively.
+
+  This change enabled stateless connectors to utilize Logto session to pass parameters between APIs.
+
+- ad3611f5a: Remove connector database `storage` column and its corresponding access.
+- Updated dependencies [738675a7d]
+  - @logto/language-kit@1.0.0
+
 ## 1.0.0-rc.3
 
 ### Patch Changes

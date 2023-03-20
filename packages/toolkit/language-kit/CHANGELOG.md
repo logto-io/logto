@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.0.0
+
+### Minor Changes
+
+- 738675a7d: ## Improvements
+
+  - Exported seed constants and schemas.
+  - Add ID generation utilities `buildIdGenerator()` and `generateStandardId()`.
+
 ## 1.0.0-beta.30
 
 ### Minor Changes

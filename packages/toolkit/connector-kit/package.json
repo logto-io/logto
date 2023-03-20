@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-kit",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/toolkit#readme",
   "repository": {
