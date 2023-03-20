@@ -10,7 +10,11 @@ let reactPlugin: Optional<ReactPlugin>;
 let appInsights: Optional<ApplicationInsights>;
 
 const initAppInsights = () => {
-  const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING;
+  // The string needs to be normalized since it may contain '"'
+  const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING?.replace(
+    /^"?(.*)"?$/g,
+    '$1'
+  );
 
   if (!isCloud || !connectionString) {
     return;
