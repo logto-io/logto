@@ -1,12 +1,13 @@
 import { LogtoClientError, LogtoError, useLogto } from '@logto/react';
-import { conditional } from '@silverhand/essentials';
+import { conditional, yes } from '@silverhand/essentials';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useHref, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
 import SessionExpired from '@/components/SessionExpired';
+import { searchKeys } from '@/consts';
 import { isCloud } from '@/consts/cloud';
 import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
@@ -29,6 +30,7 @@ const AppContent = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParameters] = useSearchParams();
   const { firstItem } = useSidebarMenuItems();
   const scrollableContent = useRef<HTMLDivElement>(null);
   const { scrollTop } = useScroll(scrollableContent.current);
@@ -36,9 +38,14 @@ const AppContent = () => {
 
   useEffect(() => {
     if (!isAuthenticated && !isLogtoLoading) {
-      void signIn(new URL(href, window.location.origin).toString());
+      const signUpFirst = searchParameters.get(searchKeys.signUp);
+
+      void signIn(
+        new URL(href, window.location.origin).toString(),
+        conditional(yes(signUpFirst) && 'signUp')
+      );
     }
-  }, [href, isAuthenticated, isLogtoLoading, signIn]);
+  }, [href, isAuthenticated, isLogtoLoading, searchParameters, signIn]);
 
   useEffect(() => {
     // Navigate to the first menu item after configs are loaded.

@@ -187,7 +187,7 @@ importers:
       '@logto/language-kit': workspace:*
       '@logto/phrases': workspace:*
       '@logto/phrases-ui': workspace:*
-      '@logto/react': 1.0.0
+      '@logto/react': 1.1.0
       '@logto/schemas': workspace:*
       '@mdx-js/react': ^1.6.22
       '@microsoft/applicationinsights-react-js': ^3.4.1
@@ -267,7 +267,7 @@ importers:
       '@logto/language-kit': link:../toolkit/language-kit
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
-      '@logto/react': 1.0.0_react@18.2.0
+      '@logto/react': 1.1.0_react@18.2.0
       '@logto/schemas': link:../schemas
       '@mdx-js/react': 1.6.22_react@18.2.0
       '@microsoft/applicationinsights-react-js': 3.4.1_ru3n4sc2jwbij7oomq3xpksl5a
@@ -2485,6 +2485,14 @@ packages:
       js-base64: 3.7.4
     dev: true
 
+  /@logto/browser/1.1.0:
+    resolution: {integrity: sha512-0NpRVM+D1d4bCwpQb0OcgE6cKKwLevqdMCBjVLlosi527ydMa25X3cEuvRw+bojxSF3QfS/Ig9GktS7xvUAnCg==}
+    dependencies:
+      '@logto/client': 1.1.0
+      '@silverhand/essentials': 1.3.0
+      js-base64: 3.7.4
+    dev: true
+
   /@logto/client/1.0.0:
     resolution: {integrity: sha512-80tqgNdZRT9hmxznpkpb1UjOdtBO5FMyFU2GYvym5j6zCTQxi3dGXlgNRzOUDX2sHM1PqkUvsVM2IzgMGGNjvg==}
     dependencies:
@@ -2496,8 +2504,28 @@ packages:
       lodash.once: 4.1.1
     dev: true
 
+  /@logto/client/1.1.0:
+    resolution: {integrity: sha512-HdUuH6vwbKzhLoa7JgWu85CMTU8a7lux9Uadv5yitMaJMEsYERUU0SntQC8jZ7K5/Ktc8r/3kbfo0MKyFNffMA==}
+    dependencies:
+      '@logto/js': 1.1.0
+      '@silverhand/essentials': 1.3.0
+      camelcase-keys: 7.0.2
+      jose: 4.11.1
+      lodash.get: 4.4.2
+      lodash.once: 4.1.1
+    dev: true
+
   /@logto/js/1.0.0:
     resolution: {integrity: sha512-brhyDIIDzIpsvcvQZHWjiYknKO//py3YnxfdWx9P1OkcyF1iIAiYv0o25/XXzfsb3XS0TkP1FdvLhLp/LDLz5g==}
+    dependencies:
+      '@silverhand/essentials': 1.3.0
+      camelcase-keys: 7.0.2
+      jose: 4.11.1
+      lodash.get: 4.4.2
+    dev: true
+
+  /@logto/js/1.1.0:
+    resolution: {integrity: sha512-YW8ou7DifY0T9Pfli3sZG9sdm5UbINcHEi9pkj6pGxVUX5lBWRxT+ZWGgOsRl4KtrPXzg9ivAAJHzyPRwZAf7g==}
     dependencies:
       '@silverhand/essentials': 1.3.0
       camelcase-keys: 7.0.2
@@ -2522,6 +2550,16 @@ packages:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
       '@logto/browser': 1.0.0
+      '@silverhand/essentials': 1.3.0
+      react: 18.2.0
+    dev: true
+
+  /@logto/react/1.1.0_react@18.2.0:
+    resolution: {integrity: sha512-uz7kevuDVd9CMXVhQ3Mt7eVcV0a5Ghcmn6YabS6Sjv9kJCmpRHXGJrVHP4mah+vSEUGirGtoKLVNE8kyPdDVIA==}
+    peerDependencies:
+      react: '>=16.8.0 || ^18.0.0'
+    dependencies:
+      '@logto/browser': 1.1.0
       '@silverhand/essentials': 1.3.0
       react: 18.2.0
     dev: true
