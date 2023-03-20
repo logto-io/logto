@@ -15,17 +15,23 @@ const initAppInsights = () => {
   if (!isCloud || !connectionString) {
     return;
   }
-  // https://github.com/microsoft/applicationinsights-react-js#readme
-  reactPlugin = new ReactPlugin();
-  appInsights = new ApplicationInsights({
-    config: {
-      connectionString,
-      enableAutoRouteTracking: true,
-      extensions: [reactPlugin],
-    },
-  });
 
-  appInsights.loadAppInsights();
+  try {
+    // https://github.com/microsoft/applicationinsights-react-js#readme
+    reactPlugin = new ReactPlugin();
+    appInsights = new ApplicationInsights({
+      config: {
+        connectionString,
+        enableAutoRouteTracking: true,
+        extensions: [reactPlugin],
+      },
+    });
+
+    appInsights.loadAppInsights();
+  } catch (error: unknown) {
+    console.error('Unable to init ApplicationInsights:');
+    console.error(error);
+  }
 };
 /* eslint-enable @silverhand/fp/no-mutation, @silverhand/fp/no-let */
 
