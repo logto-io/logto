@@ -27,6 +27,8 @@
     "@logto/react": "1.0.0",
     "@logto/schemas": "workspace:*",
     "@mdx-js/react": "^1.6.22",
+    "@microsoft/applicationinsights-react-js": "^3.4.1",
+    "@microsoft/applicationinsights-web": "^2.8.11",
     "@parcel/compressor-brotli": "2.8.3",
     "@parcel/compressor-gzip": "2.8.3",
     "@parcel/core": "2.8.3",
@@ -92,6 +94,7 @@
     "stylelint": "^15.0.0",
     "superstruct": "^0.16.0",
     "swr": "^1.3.0",
+    "tslib": "^2.4.1",
     "typescript": "^4.9.4",
     "zod": "^3.20.2"
   },

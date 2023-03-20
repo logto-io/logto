@@ -22,6 +22,7 @@ import useConnectorGroups from '@/hooks/use-connector-groups';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import DemoConnectorNotice from '@/onboarding/components/DemoConnectorNotice';
 import * as resourcesStyles from '@/scss/resources.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
 import ConnectorDeleteButton from './components/ConnectorDeleteButton';
 import ConnectorName from './components/ConnectorName';
@@ -58,7 +59,8 @@ const isConnectorType = (value: string): value is ConnectorType =>
 const parseToConnectorType = (value?: string): ConnectorType | undefined =>
   conditional(value && isConnectorType(value) && value);
 
-const Connectors = () => {
+// eslint-disable-next-line react/function-component-definition
+function Connectors() {
   const { tab = ConnectorsTabs.Passwordless, createType, factoryId } = useParams();
   const createConnectorType = parseToConnectorType(createType);
   const navigate = useNavigate();
@@ -222,6 +224,6 @@ const Connectors = () => {
       />
     </>
   );
-};
+}
 
-export default Connectors;
+export default withAppInsights(Connectors);

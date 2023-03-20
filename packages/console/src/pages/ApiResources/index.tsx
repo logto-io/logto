@@ -23,6 +23,7 @@ import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 import { buildUrl } from '@/utils/url';
 
 import CreateForm from './components/CreateForm';
@@ -34,7 +35,8 @@ const createApiResourcePathname = `${apiResourcesPathname}/create`;
 const buildDetailsPathname = (id: string) =>
   `${apiResourcesPathname}/${id}/${ApiResourceDetailsTabs.Settings}`;
 
-const ApiResources = () => {
+// eslint-disable-next-line react/function-component-definition
+function ApiResources() {
   const { pathname, search } = useLocation();
   const isCreateNew = pathname.endsWith('/create');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -146,6 +148,6 @@ const ApiResources = () => {
       />
     </div>
   );
-};
+}
 
-export default ApiResources;
+export default withAppInsights(ApiResources);

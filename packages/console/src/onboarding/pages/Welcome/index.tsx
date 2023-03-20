@@ -12,6 +12,7 @@ import ActionBar from '@/onboarding/components/ActionBar';
 import { CardSelector } from '@/onboarding/components/CardSelector';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
 import type { Questionnaire } from '../../types';
 import { OnboardingPage } from '../../types';
@@ -19,7 +20,8 @@ import { getOnboardingPage } from '../../utils';
 import * as styles from './index.module.scss';
 import { deploymentTypeOptions, projectOptions } from './options';
 
-const Welcome = () => {
+// eslint-disable-next-line react/function-component-definition
+function Welcome() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
 
@@ -105,6 +107,6 @@ const Welcome = () => {
       </ActionBar>
     </div>
   );
-};
+}
 
-export default Welcome;
+export default withAppInsights(Welcome);

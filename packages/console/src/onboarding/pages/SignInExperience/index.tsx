@@ -23,6 +23,7 @@ import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import type { OnboardingSieConfig } from '@/onboarding/types';
 import { Authentication, OnboardingPage } from '@/onboarding/types';
 import { getOnboardingPage } from '@/onboarding/utils';
+import { withAppInsights } from '@/utils/app-insights';
 import { buildUrl } from '@/utils/url';
 import { uriValidator } from '@/utils/validator';
 
@@ -34,7 +35,8 @@ import { authenticationOptions, identifierOptions } from './options';
 import { defaultOnboardingSieConfig } from './sie-config-templates';
 import { parser } from './utils';
 
-const SignInExperience = () => {
+// eslint-disable-next-line react/function-component-definition
+function SignInExperience() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { data: signInExperience, mutate } = useSWR<SignInExperienceType, RequestError>(
@@ -242,6 +244,6 @@ const SignInExperience = () => {
       </ActionBar>
     </div>
   );
-};
+}
 
-export default SignInExperience;
+export default withAppInsights(SignInExperience);

@@ -21,11 +21,13 @@ import { RoleDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
 import { RoleDetailsOutletContext } from './types';
 
-const RoleDetails = () => {
+// eslint-disable-next-line react/function-component-definition
+function RoleDetails() {
   const { pathname } = useLocation();
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -147,6 +149,6 @@ const RoleDetails = () => {
       )}
     </div>
   );
-};
+}
 
-export default RoleDetails;
+export default withAppInsights(RoleDetails);

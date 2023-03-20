@@ -25,13 +25,15 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
 import UserAccountInformation from '../../components/UserAccountInformation';
 import ResetPasswordForm from './components/ResetPasswordForm';
 import * as styles from './index.module.scss';
 import { UserDetailsOutletContext } from './types';
 
-const UserDetails = () => {
+// eslint-disable-next-line react/function-component-definition
+function UserDetails() {
   const { pathname } = useLocation();
   const isPageHasTable =
     pathname.endsWith(UserDetailsTabs.Roles) || pathname.endsWith(UserDetailsTabs.Logs);
@@ -195,6 +197,6 @@ const UserDetails = () => {
       )}
     </div>
   );
-};
+}
 
-export default UserDetails;
+export default withAppInsights(UserDetails);

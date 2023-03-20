@@ -8,12 +8,14 @@ import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';
 import Spacer from '@/components/Spacer';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import { withAppInsights } from '@/utils/app-insights';
 
 import Skeleton from './components/Skeleton';
 import useGetStartedMetadata from './hook';
 import * as styles from './index.module.scss';
 
-const GetStarted = () => {
+// eslint-disable-next-line react/function-component-definition
+function GetStarted() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { data, isLoading } = useGetStartedMetadata();
@@ -83,6 +85,6 @@ const GetStarted = () => {
       </ConfirmModal>
     </div>
   );
-};
+}
 
-export default GetStarted;
+export default withAppInsights(GetStarted);

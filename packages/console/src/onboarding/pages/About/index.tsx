@@ -11,6 +11,7 @@ import OverlayScrollbar from '@/components/OverlayScrollbar';
 import TextInput from '@/components/TextInput';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
 import ActionBar from '../../components/ActionBar';
 import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
@@ -20,7 +21,8 @@ import { getOnboardingPage } from '../../utils';
 import * as styles from './index.module.scss';
 import { titleOptions, companySizeOptions, reasonOptions } from './options';
 
-const About = () => {
+// eslint-disable-next-line react/function-component-definition
+function About() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
 
@@ -138,6 +140,6 @@ const About = () => {
       </ActionBar>
     </div>
   );
-};
+}
 
-export default About;
+export default withAppInsights(About);

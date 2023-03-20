@@ -28,6 +28,7 @@ import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import * as detailsStyles from '@/scss/details.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { withAppInsights } from '@/utils/app-insights';
 
 import Guide from '../Applications/components/Guide';
 import AdvancedSettings from './components/AdvancedSettings';
@@ -40,7 +41,8 @@ const mapToUriFormatArrays = (value?: string[]) =>
 const mapToUriOriginFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(new URL(uri).origin));
 
-const ApplicationDetails = () => {
+// eslint-disable-next-line react/function-component-definition
+function ApplicationDetails() {
   const { id } = useParams();
   const { pathname } = useLocation();
   const isGuideView = !!id && pathname === `/applications/${id}/guide`;
@@ -236,6 +238,6 @@ const ApplicationDetails = () => {
       )}
     </div>
   );
-};
+}
 
-export default ApplicationDetails;
+export default withAppInsights(ApplicationDetails);

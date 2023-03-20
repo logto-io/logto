@@ -28,6 +28,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 import * as detailsStyles from '@/scss/details.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
 import CreateForm from '../Connectors/components/CreateForm';
 import ConnectorContent from './components/ConnectorContent';
@@ -40,7 +41,8 @@ import * as styles from './index.module.scss';
 const getConnectorsPathname = (isSocial: boolean) =>
   `/connectors/${isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless}`;
 
-const ConnectorDetails = () => {
+// eslint-disable-next-line react/function-component-definition
+function ConnectorDetails() {
   const { pathname } = useLocation();
   const { connectorId } = useParams();
   const { mutate: mutateGlobal } = useSWRConfig();
@@ -233,6 +235,6 @@ const ConnectorDetails = () => {
       )}
     </div>
   );
-};
+}
 
-export default ConnectorDetails;
+export default withAppInsights(ConnectorDetails);
