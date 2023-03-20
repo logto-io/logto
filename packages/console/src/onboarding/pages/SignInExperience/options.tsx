@@ -16,6 +16,7 @@ import Apple from '../../assets/images/social-apple.svg';
 import Facebook from '../../assets/images/social-facebook.svg';
 import Google from '../../assets/images/social-google.svg';
 import Kakao from '../../assets/images/social-kakao.svg';
+import Microsoft from '../../assets/images/social-microsoft.svg';
 import Oidc from '../../assets/images/social-oidc.svg';
 import Smal from '../../assets/images/social-smal.svg';
 
@@ -71,7 +72,15 @@ export const fakeSocialTargetOptions: MultiCardSelectorOption[] = [
   {
     icon: <Google />,
     title: <DangerousRaw>Google</DangerousRaw>,
-    value: 'fake-azure-ad',
+    value: 'fake-google',
+    tag: 'cloud.sie.connectors.unlocked_later',
+    isDisabled: true,
+    disabledTip: 'cloud.sie.connectors.unlocked_later_tip',
+  },
+  {
+    icon: <Microsoft />,
+    title: <DangerousRaw>Microsoft</DangerousRaw>,
+    value: 'fake-microsoft',
     tag: 'cloud.sie.connectors.unlocked_later',
     isDisabled: true,
     disabledTip: 'cloud.sie.connectors.unlocked_later_tip',
