@@ -1,6 +1,6 @@
 import { generateDarkColor } from '@logto/core-kit';
 
-import type { SignInExperience } from '../db-entries/index.js';
+import type { CreateSignInExperience } from '../db-entries/index.js';
 import { SignInMode } from '../db-entries/index.js';
 import { SignInIdentifier } from '../foundations/index.js';
 import { adminTenantId, defaultTenantId } from './tenant.js';
@@ -10,7 +10,7 @@ const defaultPrimaryColor = '#6139F6';
 export const createDefaultSignInExperience = (
   forTenantId: string,
   isCloud: boolean
-): Readonly<SignInExperience> =>
+): Readonly<CreateSignInExperience> =>
   Object.freeze({
     tenantId: forTenantId,
     id: 'default',
@@ -20,8 +20,8 @@ export const createDefaultSignInExperience = (
       darkPrimaryColor: generateDarkColor(defaultPrimaryColor),
     },
     branding: {
-      logoUrl: isCloud ? '' : 'https://logto.io/logo.svg',
-      darkLogoUrl: isCloud ? '' : 'https://logto.io/logo-dark.svg',
+      logoUrl: isCloud ? undefined : 'https://logto.io/logo.svg',
+      darkLogoUrl: isCloud ? undefined : 'https://logto.io/logo-dark.svg',
     },
     languageInfo: {
       autoDetect: true,
@@ -53,7 +53,7 @@ export const createDefaultSignInExperience = (
 /** @deprecated Use `createDefaultSignInExperience()` instead. */
 export const defaultSignInExperience = createDefaultSignInExperience(defaultTenantId, false);
 
-export const createAdminTenantSignInExperience = (): Readonly<SignInExperience> =>
+export const createAdminTenantSignInExperience = (): Readonly<CreateSignInExperience> =>
   Object.freeze({
     ...defaultSignInExperience,
     tenantId: adminTenantId,
