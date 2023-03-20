@@ -49,7 +49,6 @@ const general = {
   join: 'Join',
   try_now: 'Try Now',
   multiple_form_field: '(Multiple)',
-  cap_limit: 'Cap limit',
   demo: 'Demo',
 };
 

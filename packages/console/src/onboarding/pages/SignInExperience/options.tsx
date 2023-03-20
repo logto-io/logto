@@ -48,7 +48,6 @@ export const authenticationOptions: MultiCardSelectorOption[] = [
     icon: <Keyboard />,
     title: 'sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth',
     value: Authentication.VerificationCode,
-    trailingTag: 'general.cap_limit',
   },
 ];
 

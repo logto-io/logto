@@ -9,7 +9,7 @@ const connectors = {
   tab_social: 'Conectores sociais',
   connector_name: 'Nome do conector',
   demo_tip:
-    'The demo connector is designed exclusively for demonstration purposes and is not recommended for deployment in a production environment.', // UNTRANSLATED
+    'The maximum number of messages allowed for this demo connector is limited to 100 and is not recommended for deployment in a production environment.', // UNTRANSLATED
   connector_type: 'Tipo',
   connector_status: 'Experiência de login',
   connector_status_in_use: 'Em uso',
