@@ -1,12 +1,13 @@
 import classNames from 'classnames';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import { useMemo, useRef } from 'react';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { a11yDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { a11yDark as a11yDarkTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import CopyToClipboard from '../CopyToClipboard';
 import * as styles from './index.module.scss';
+import { lineNumberContainerStyle, lineNumberStyle, customStyle } from './utils';
 
 type Props = {
   className?: string;
@@ -32,7 +33,18 @@ const CodeEditor = ({
   placeholder,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  useLayoutEffect(() => {
+    // Update textarea width according to its scroll width
+    const { current } = textareaRef;
+
+    if (current && current.style.width !== `${current.scrollWidth}px`) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      current.style.width = `${current.scrollWidth}px`;
+    }
+  }, [value]);
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.currentTarget;
@@ -54,6 +66,15 @@ const CodeEditor = ({
 
       onChange?.(newText);
     }
+
+    /**
+     * Since lineNumber container could cover leftmost part of the editor,
+     * when user is clicking on "Enter", should manually scroll to the leftmost.
+     */
+    if (event.key === 'Enter' && editorRef.current && editorRef.current.scrollLeft !== 0) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      editorRef.current.scrollLeft = 0;
+    }
   };
 
   // TODO @sijie temp solution for required error (the errorMessage is an empty string)
@@ -65,12 +86,15 @@ const CodeEditor = ({
     return t('general.required');
   }, [errorMessage, t]);
 
+  const maxLineNumberDigits = ((value ?? '').split('\n').length + 1).toString().length;
+  const isShowingPlaceholder = !value;
+
   return (
     <>
       <div className={classNames(styles.container, className)}>
-        {!value && <div className={styles.placeholder}>{placeholder}</div>}
+        {isShowingPlaceholder && <div className={styles.placeholder}>{placeholder}</div>}
         <CopyToClipboard value={value ?? ''} variant="icon" className={styles.copy} />
-        <div className={styles.editor}>
+        <div ref={editorRef} className={styles.editor}>
           {/* SyntaxHighlighter is a readonly component, so a transparent <textarea> layer is needed
       in order to support user interactions, such as code editing, copy-pasting, etc. */}
           <textarea
@@ -82,6 +106,14 @@ const CodeEditor = ({
             readOnly={isReadonly}
             spellCheck="false"
             value={value}
+            style={
+              isShowingPlaceholder
+                ? { marginLeft: '8px', width: 'calc(100% - 8px)' }
+                : {
+                    marginLeft: `calc(${maxLineNumberDigits}ch + 20px)`,
+                    width: `calc(100% - ${maxLineNumberDigits}ch - 20px)`,
+                  }
+            }
             onChange={handleChange}
             onKeyDown={handleKeydown}
           />
@@ -89,23 +121,19 @@ const CodeEditor = ({
       inline-styles by default. Therefore, We can only use inline styles to customize them.
       Some styles have to be applied multiple times to each of them for the sake of consistency. */}
           <SyntaxHighlighter
-            wrapLongLines
+            showInlineLineNumbers
+            showLineNumbers={!isShowingPlaceholder}
+            width={textareaRef.current?.scrollWidth ?? 0}
+            lineNumberContainerStyle={lineNumberContainerStyle()}
+            lineNumberStyle={lineNumberStyle(maxLineNumberDigits)}
             codeTagProps={{
               style: {
                 fontFamily: "'Roboto Mono', monospace", // Override default font-family of <code>
               },
             }}
-            customStyle={{
-              background: 'transparent',
-              fontSize: '14px',
-              margin: '0',
-              padding: '0',
-              borderRadius: '0',
-              wordBreak: 'break-all',
-              fontFamily: "'Roboto Mono', monospace", // Override default font-family of <pre>
-            }}
+            customStyle={customStyle(textareaRef.current?.scrollWidth)}
             language={language}
-            style={theme}
+            style={a11yDarkTheme}
           >
             {value ?? ''}
           </SyntaxHighlighter>
