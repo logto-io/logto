@@ -23,8 +23,10 @@ import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppEndpointsProvider from './contexts/AppEndpointsProvider';
 import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
+import setTitle from './utils/set-title';
 
 void initI18n();
+setTitle();
 
 const Content = () => {
   const { tenants, isSettle, currentTenantId } = useContext(TenantsContext);
