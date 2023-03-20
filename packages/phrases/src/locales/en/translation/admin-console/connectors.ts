@@ -9,6 +9,8 @@ const connectors = {
   connector_name: 'Connector name',
   demo_tip:
     'The maximum number of messages allowed for this demo connector is limited to 100 and is not recommended for deployment in a production environment.',
+  social_demo_tip:
+    'The demo connector is designed exclusively for demonstration purposes and is not recommended for deployment in a production environment.',
   connector_type: 'Type',
   connector_status: 'Sign in Experience',
   connector_status_in_use: 'In use',
