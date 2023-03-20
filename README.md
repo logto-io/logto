@@ -7,8 +7,8 @@
 ---
 
 <p align="center">
-Logto is going to launch Cloud (Preview) and OSS General Availability on <a href="https://www.producthunt.com/products/logto" target="_blank">Product Hunt</a>!<br/>
-Click the “Notify me” button on the page in order to receive a notification when our launch is live.
+Logto has launched Cloud (Preview) and OSS General Availability on <a href="https://www.producthunt.com/products/logto" target="_blank">Product Hunt</a>.<br/>
+Come and support us!
 </p>
 <p align="center">
 😊 See you on the cloud!
@@ -66,7 +66,7 @@ Docker Compose CLI usually comes with [Docker Desktop](https://www.docker.com/pr
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/docker-compose.yml | \
-TAG=prerelease docker compose -p logto -f - up
+docker compose -p logto -f - up
 ```
 
 #### npm-init
