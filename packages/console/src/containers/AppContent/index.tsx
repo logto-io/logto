@@ -1,5 +1,5 @@
 import { LogtoClientError, LogtoError, useLogto } from '@logto/react';
-import { conditional } from '@silverhand/essentials';
+import { conditional, yes } from '@silverhand/essentials';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useHref, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -42,7 +42,7 @@ const AppContent = () => {
 
       void signIn(
         new URL(href, window.location.origin).toString(),
-        conditional(signUpFirst === 'true' && 'signUp')
+        conditional(yes(signUpFirst) && 'signUp')
       );
     }
   }, [href, isAuthenticated, isLogtoLoading, searchParameters, signIn]);

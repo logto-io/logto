@@ -12,5 +12,5 @@ export const requestTimeout = 20_000;
 export const defaultPageSize = 20;
 
 export enum queryParameterKeys {
-  signUp = 'signup',
+  signUp = 'sign_up',
 }
