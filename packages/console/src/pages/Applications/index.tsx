@@ -1,4 +1,5 @@
 import type { Application } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -128,7 +129,12 @@ function Applications() {
         isOpen={isShowingCreationForm}
         onClose={async (newApp) => {
           if (newApp) {
-            navigate(buildGuidePathname(newApp.id), { replace: true });
+            const buildNavigatePath =
+              newApp.type === ApplicationType.MachineToMachine
+                ? buildDetailsPathname
+                : buildGuidePathname;
+
+            navigate(buildNavigatePath(newApp.id), { replace: true });
 
             return;
           }
