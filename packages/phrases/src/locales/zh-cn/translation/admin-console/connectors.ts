@@ -7,7 +7,7 @@ const connectors = {
   tab_email_sms: '短信和邮件连接器',
   tab_social: '社交连接器',
   connector_name: '连接器名称',
-  demo_tip: '演示连接器仅用于演示目的，不建议在生产环境中部署。',
+  demo_tip: '演示连接器仅用于演示且最多只能发送 100 条消息，不建议在生产环境中部署。',
   connector_type: '类型',
   connector_status: '登录体验',
   connector_status_in_use: '使用中',
