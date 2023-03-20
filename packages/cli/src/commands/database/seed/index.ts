@@ -25,7 +25,7 @@ export const seedByPool = async (pool: DatabasePool, cloud = false) => {
       text: 'Create tables',
       prefixText: chalk.blue('[info]'),
     });
-    await seedTables(connection, latestTimestamp);
+    await seedTables(connection, latestTimestamp, cloud);
 
     if (cloud) {
       await seedCloud(connection);

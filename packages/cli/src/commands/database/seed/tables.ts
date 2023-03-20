@@ -117,7 +117,8 @@ export const createTables = async (connection: DatabaseTransactionConnection) =>
 
 export const seedTables = async (
   connection: DatabaseTransactionConnection,
-  latestTimestamp: number
+  latestTimestamp: number,
+  isCloud: boolean
 ) => {
   await createTenant(connection, defaultTenantId);
   await seedOidcConfigs(connection, defaultTenantId);
@@ -164,7 +165,7 @@ export const seedTables = async (
   await Promise.all([
     connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),
     connection.query(
-      insertInto(createDefaultSignInExperience(defaultTenantId, false), 'sign_in_experiences')
+      insertInto(createDefaultSignInExperience(defaultTenantId, isCloud), 'sign_in_experiences')
     ),
     connection.query(insertInto(createDefaultAdminConsoleConfig(adminTenantId), 'logto_configs')),
     connection.query(insertInto(createAdminTenantSignInExperience(), 'sign_in_experiences')),
