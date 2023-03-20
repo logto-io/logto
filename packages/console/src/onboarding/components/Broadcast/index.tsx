@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import TextLink from '@/components/TextLink';
-import { logtoBlogLink } from '@/onboarding/constants';
+import { aboutCloudPreviewLink } from '@/onboarding/constants';
 
 import * as styles from './index.module.scss';
 
@@ -11,7 +11,7 @@ const Broadcast = () => {
   return (
     <div className={styles.broadcast}>
       <span>{t('cloud.broadcast')}</span>
-      <TextLink href={logtoBlogLink} target="_blank" className={styles.link}>
+      <TextLink href={aboutCloudPreviewLink} target="_blank" className={styles.link}>
         {t('general.learn_more')}
       </TextLink>
     </div>

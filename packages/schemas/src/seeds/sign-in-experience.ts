@@ -7,7 +7,10 @@ import { adminTenantId, defaultTenantId } from './tenant.js';
 
 const defaultPrimaryColor = '#6139F6';
 
-export const createDefaultSignInExperience = (forTenantId: string): Readonly<SignInExperience> =>
+export const createDefaultSignInExperience = (
+  forTenantId: string,
+  isCloud: boolean
+): Readonly<SignInExperience> =>
   Object.freeze({
     tenantId: forTenantId,
     id: 'default',
@@ -17,8 +20,8 @@ export const createDefaultSignInExperience = (forTenantId: string): Readonly<Sig
       darkPrimaryColor: generateDarkColor(defaultPrimaryColor),
     },
     branding: {
-      logoUrl: 'https://logto.io/logo.svg',
-      darkLogoUrl: 'https://logto.io/logo-dark.svg',
+      logoUrl: isCloud ? '' : 'https://logto.io/logo.svg',
+      darkLogoUrl: isCloud ? '' : 'https://logto.io/logo-dark.svg',
     },
     languageInfo: {
       autoDetect: true,
@@ -27,14 +30,14 @@ export const createDefaultSignInExperience = (forTenantId: string): Readonly<Sig
     termsOfUseUrl: null,
     privacyPolicyUrl: null,
     signUp: {
-      identifiers: [SignInIdentifier.Username],
+      identifiers: [isCloud ? SignInIdentifier.Email : SignInIdentifier.Username],
       password: true,
-      verify: false,
+      verify: isCloud,
     },
     signIn: {
       methods: [
         {
-          identifier: SignInIdentifier.Username,
+          identifier: isCloud ? SignInIdentifier.Email : SignInIdentifier.Username,
           password: true,
           verificationCode: false,
           isPasswordPrimary: true,
@@ -48,7 +51,7 @@ export const createDefaultSignInExperience = (forTenantId: string): Readonly<Sig
   });
 
 /** @deprecated Use `createDefaultSignInExperience()` instead. */
-export const defaultSignInExperience = createDefaultSignInExperience(defaultTenantId);
+export const defaultSignInExperience = createDefaultSignInExperience(defaultTenantId, false);
 
 export const createAdminTenantSignInExperience = (): Readonly<SignInExperience> =>
   Object.freeze({

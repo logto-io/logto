@@ -113,7 +113,7 @@ export class TenantsLibrary {
       ),
       transaction.query(insertInto(createDefaultAdminConsoleConfig(tenantId), LogtoConfigs.table)),
       transaction.query(
-        insertInto(createDefaultSignInExperience(tenantId), SignInExperiences.table)
+        insertInto(createDefaultSignInExperience(tenantId, true), SignInExperiences.table)
       ),
     ]);
 
