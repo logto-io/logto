@@ -1,4 +1,5 @@
 export const featuredConnectorTargets = [
+  // Social
   'google',
   'apple',
   'facebook',
@@ -9,4 +10,12 @@ export const featuredConnectorTargets = [
   'kakao',
   'naver',
   'azuread',
+  // Email
+  'aws-ses',
+  'sendgrid-mail',
+  'aliyun-dm',
+  // SMS
+  'twilio-sms',
+  'aliyun-sms',
+  'tencent-sms',
 ];
