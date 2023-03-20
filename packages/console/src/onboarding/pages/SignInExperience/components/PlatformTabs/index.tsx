@@ -13,17 +13,17 @@ type Props = {
 const PlatformTabs = ({ currentTab, onSelect }: Props) => (
   <div className={styles.container}>
     <PlatformTab
-      icon={<Native />}
-      title="cloud.sie.preview.mobile_tab"
-      tab={PreviewPlatform.MobileWeb}
-      isSelected={currentTab === PreviewPlatform.MobileWeb}
-      onClick={onSelect}
-    />
-    <PlatformTab
       icon={<Web />}
       title="cloud.sie.preview.web_tab"
       tab={PreviewPlatform.DesktopWeb}
       isSelected={currentTab === PreviewPlatform.DesktopWeb}
+      onClick={onSelect}
+    />
+    <PlatformTab
+      icon={<Native />}
+      title="cloud.sie.preview.mobile_tab"
+      tab={PreviewPlatform.MobileWeb}
+      isSelected={currentTab === PreviewPlatform.MobileWeb}
       onClick={onSelect}
     />
   </div>
