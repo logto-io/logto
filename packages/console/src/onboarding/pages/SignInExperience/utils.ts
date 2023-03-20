@@ -46,8 +46,17 @@ const onboardSieConfigToSignInExperience = (
   const { logo, color: onboardConfigColor, identifier, authentications, socialTargets } = config;
   const { color: baseColorConfig, branding: baseBranding } = basedConfig;
 
-  const isPasswordSetup = authentications.includes(Authentication.Password);
-  const isVerificationCodeSetup = identifier !== SignInIdentifier.Username;
+  // Map to sign-up config
+  const shouldSetupPasswordInSignUp =
+    identifier === SignInIdentifier.Username || authentications.includes(Authentication.Password);
+  const shouldSignUpVerify = identifier !== SignInIdentifier.Username;
+
+  // Map to sign-in methods
+  const isSignInByPasswordEnabled =
+    identifier === SignInIdentifier.Username || authentications.includes(Authentication.Password);
+  const isSignInByVerificationCodeEnabled = authentications.includes(
+    Authentication.VerificationCode
+  );
 
   const signInExperience: SignInExperience = {
     ...basedConfig,
@@ -62,16 +71,16 @@ const onboardSieConfigToSignInExperience = (
     },
     signUp: {
       identifiers: [identifier],
-      password: isPasswordSetup,
-      verify: isVerificationCodeSetup,
+      verify: shouldSignUpVerify,
+      password: shouldSetupPasswordInSignUp,
     },
     signIn: {
       methods: [
         {
           identifier,
-          password: isPasswordSetup,
-          verificationCode: isVerificationCodeSetup,
-          isPasswordPrimary: isPasswordSetup,
+          password: isSignInByPasswordEnabled,
+          verificationCode: isSignInByVerificationCodeEnabled,
+          isPasswordPrimary: isSignInByPasswordEnabled,
         },
       ],
     },
