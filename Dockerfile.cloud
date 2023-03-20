@@ -23,6 +23,8 @@ ENV CONSOLE_PUBLIC_URL=/
 ENV IS_CLOUD=1
 ARG admin_endpoint
 ENV ADMIN_ENDPOINT=${admin_endpoint}
+ARG applicationinsights_connection_string
+ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_string}
 RUN pnpm prepack
 RUN pnpm -r --filter @logto/console --filter @logto/cloud build
 
