@@ -19,6 +19,7 @@ const profile = {
     email_required: 'Email is required', // UNTRANSLATED
     invalid_email: 'Invalid email address', // UNTRANSLATED
     identical_email_address: 'The input email address is identical to the current one', // UNTRANSLATED
+    anonymous: 'Anonymous', // UNTRANSLATED
   },
   password: {
     title: 'PASSWORD & SECURITY', // UNTRANSLATED
