@@ -7,6 +7,7 @@ import { a11yDark as a11yDarkTheme } from 'react-syntax-highlighter/dist/esm/sty
 
 import CopyToClipboard from '../CopyToClipboard';
 import * as styles from './index.module.scss';
+import { lineNumberContainerStyle, lineNumberStyle, customStyle } from './utils';
 
 type Props = {
   className?: string;
@@ -85,12 +86,8 @@ const CodeEditor = ({
     return t('general.required');
   }, [errorMessage, t]);
 
-  const maxLineNumberDigits = useMemo(() => {
-    return ((value ?? '').split('\n').length + 1).toString().length;
-  }, [value]);
-  const isShowingPlaceholder = useMemo(() => {
-    return !value;
-  }, [value]);
+  const maxLineNumberDigits = ((value ?? '').split('\n').length + 1).toString().length;
+  const isShowingPlaceholder = !value;
 
   return (
     <>
@@ -111,7 +108,7 @@ const CodeEditor = ({
             value={value}
             style={
               isShowingPlaceholder
-                ? {}
+                ? { marginLeft: '8px', width: 'calc(100% - 8px)' }
                 : {
                     marginLeft: `calc(${maxLineNumberDigits}ch + 20px)`,
                     width: `calc(100% - ${maxLineNumberDigits}ch - 20px)`,
@@ -127,45 +124,14 @@ const CodeEditor = ({
             showInlineLineNumbers
             showLineNumbers={!isShowingPlaceholder}
             width={textareaRef.current?.scrollWidth ?? 0}
-            lineNumberContainerStyle={{
-              display: 'flex',
-              flexDirection: 'column',
-              textAlign: 'right',
-              paddingLeft: '0px',
-              paddingRight: '0px',
-            }}
-            lineNumberStyle={{
-              marginLeft: '0px',
-              paddingRight: '20px',
-              paddingLeft: '0px',
-              display: 'inline-flex',
-              justifyContent: 'flex-end',
-              counterIncrement: 'line',
-              lineHeight: '1.5',
-              flexShrink: 0,
-              fontFamily: "'Roboto Mono', monospace",
-              fontSize: '14px',
-              minWidth: `calc(${maxLineNumberDigits}ch + 20px)`,
-              position: 'sticky',
-              background: '#34353f', // Stick to code editor container
-              left: 0,
-            }}
+            lineNumberContainerStyle={lineNumberContainerStyle()}
+            lineNumberStyle={lineNumberStyle(maxLineNumberDigits)}
             codeTagProps={{
               style: {
                 fontFamily: "'Roboto Mono', monospace", // Override default font-family of <code>
               },
             }}
-            customStyle={{
-              width: `${textareaRef.current?.scrollWidth ?? 0}px`,
-              background: 'transparent',
-              fontSize: '14px',
-              margin: '0',
-              padding: '0',
-              borderRadius: '0',
-              wordBreak: 'break-all',
-              overflow: 'unset',
-              fontFamily: "'Roboto Mono', monospace", // Override default font-family of <pre>
-            }}
+            customStyle={customStyle(textareaRef.current?.scrollWidth)}
             language={language}
             style={a11yDarkTheme}
           >
