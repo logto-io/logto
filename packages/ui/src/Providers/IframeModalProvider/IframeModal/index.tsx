@@ -52,7 +52,8 @@ const IframeModal = ({ className, title = '', href = '', onClose }: ModalProps) 
           <iframe
             title={title}
             src={href}
-            sandbox="allow-scripts"
+            // Applies all restrictions
+            sandbox=""
             className={conditional(isLoaded && styles.loaded)}
             onLoad={() => {
               setIsLoaded(true);
