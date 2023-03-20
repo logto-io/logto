@@ -19,10 +19,10 @@
     font-size: 14px;
     line-height: 20px;
 
-    img {
+    > svg {
       margin-top: _.unit(25);
-      width: 160px;
-      height: 160px;
+      width: 120px;
+      height: 120px;
     }
 
     .title {
