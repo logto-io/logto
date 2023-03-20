@@ -32,14 +32,14 @@ const CodeEditor = ({
   placeholder,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const preRef = useRef<SyntaxHighlighter>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   useLayoutEffect(() => {
     // Update textarea width according to its scroll width
     const { current } = textareaRef;
 
-    if (current) {
+    if (current && current.style.width !== `${current.scrollWidth}px`) {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       current.style.width = `${current.scrollWidth}px`;
     }
@@ -65,6 +65,15 @@ const CodeEditor = ({
 
       onChange?.(newText);
     }
+
+    /**
+     * Since lineNumber container could cover leftmost part of the editor,
+     * when user is clicking on "Enter", should manually scroll to the leftmost.
+     */
+    if (event.key === 'Enter' && editorRef.current && editorRef.current.scrollLeft !== 0) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      editorRef.current.scrollLeft = 0;
+    }
   };
 
   // TODO @sijie temp solution for required error (the errorMessage is an empty string)
@@ -76,14 +85,19 @@ const CodeEditor = ({
     return t('general.required');
   }, [errorMessage, t]);
 
-  const maxLineNumberDigits = ((value ?? '').split('\n').length + 1).toString().length;
+  const maxLineNumberDigits = useMemo(() => {
+    return ((value ?? '').split('\n').length + 1).toString().length;
+  }, [value]);
+  const isShowingPlaceholder = useMemo(() => {
+    return !value;
+  }, [value]);
 
   return (
     <>
       <div className={classNames(styles.container, className)}>
-        {!value && <div className={styles.placeholder}>{placeholder}</div>}
+        {isShowingPlaceholder && <div className={styles.placeholder}>{placeholder}</div>}
         <CopyToClipboard value={value ?? ''} variant="icon" className={styles.copy} />
-        <div className={styles.editor}>
+        <div ref={editorRef} className={styles.editor}>
           {/* SyntaxHighlighter is a readonly component, so a transparent <textarea> layer is needed
       in order to support user interactions, such as code editing, copy-pasting, etc. */}
           <textarea
@@ -95,10 +109,14 @@ const CodeEditor = ({
             readOnly={isReadonly}
             spellCheck="false"
             value={value}
-            style={{
-              marginLeft: `calc(${maxLineNumberDigits}ch + 20px)`,
-              width: `calc(100% - ${maxLineNumberDigits}ch - 20px)`,
-            }}
+            style={
+              isShowingPlaceholder
+                ? {}
+                : {
+                    marginLeft: `calc(${maxLineNumberDigits}ch + 20px)`,
+                    width: `calc(100% - ${maxLineNumberDigits}ch - 20px)`,
+                  }
+            }
             onChange={handleChange}
             onKeyDown={handleKeydown}
           />
@@ -106,8 +124,8 @@ const CodeEditor = ({
       inline-styles by default. Therefore, We can only use inline styles to customize them.
       Some styles have to be applied multiple times to each of them for the sake of consistency. */}
           <SyntaxHighlighter
-            showLineNumbers
             showInlineLineNumbers
+            showLineNumbers={!isShowingPlaceholder}
             width={textareaRef.current?.scrollWidth ?? 0}
             lineNumberContainerStyle={{
               display: 'flex',
@@ -129,7 +147,7 @@ const CodeEditor = ({
               fontSize: '14px',
               minWidth: `calc(${maxLineNumberDigits}ch + 20px)`,
               position: 'sticky',
-              background: '#34353f',
+              background: '#34353f', // Stick to code editor container
               left: 0,
             }}
             codeTagProps={{

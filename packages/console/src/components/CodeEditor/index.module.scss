@@ -6,6 +6,7 @@
   // Force dark theme on the code editor
   background: #34353f;
   position: relative;
+  overflow-y: auto;
 
   .placeholder {
     position: absolute;
@@ -47,7 +48,6 @@
       font-size: 14px;
       line-height: 1.5;
       font-family: 'Roboto Mono', monospace;
-      // white-space: pre-wrap;
       white-space: nowrap;
       word-break: normal;
       position: absolute;
@@ -64,6 +64,10 @@
       display: flex;
       min-height: 80px;
     }
+  }
+
+  .editor::-webkit-scrollbar {
+    display: none;
   }
 }
 
