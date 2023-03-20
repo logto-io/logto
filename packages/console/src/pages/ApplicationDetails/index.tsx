@@ -31,6 +31,7 @@ import { applicationTypeI18nKey } from '@/types/applications';
 import { withAppInsights } from '@/utils/app-insights';
 
 import Guide from '../Applications/components/Guide';
+import GuideModal from '../Applications/components/Guide/GuideModal';
 import AdvancedSettings from './components/AdvancedSettings';
 import Settings from './components/Settings';
 import * as styles from './index.module.scss';
@@ -229,7 +230,7 @@ function ApplicationDetails() {
       )}
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
       {isGuideView && (
-        <Guide
+        <GuideModal
           app={data}
           onClose={(id) => {
             navigate(`/applications/${id}`);
