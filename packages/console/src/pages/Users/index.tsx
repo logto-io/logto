@@ -21,6 +21,7 @@ import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import CreateForm from './components/CreateForm';
@@ -31,7 +32,8 @@ const usersPathname = '/users';
 const createUserPathname = `${usersPathname}/create`;
 const buildDetailsPathname = (id: string) => `${usersPathname}/${id}/${UserDetailsTabs.Settings}`;
 
-const Users = () => {
+// eslint-disable-next-line react/function-component-definition
+function Users() {
   const { pathname, search } = useLocation();
   const isCreateNew = pathname === createUserPathname;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -172,6 +174,6 @@ const Users = () => {
       />
     </div>
   );
-};
+}
 
-export default Users;
+export default withAppInsights(Users);

@@ -18,6 +18,7 @@ import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
 import type { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
 import EventIcon from './components/EventIcon';
 import * as styles from './index.module.scss';
@@ -28,7 +29,8 @@ const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
 const getDetailsTabNavLink = (logId: string, userId?: string) =>
   userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
 
-const AuditLogDetails = () => {
+// eslint-disable-next-line react/function-component-definition
+function AuditLogDetails() {
   const { id, logId } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -127,6 +129,6 @@ const AuditLogDetails = () => {
       )}
     </div>
   );
-};
+}
 
-export default AuditLogDetails;
+export default withAppInsights(AuditLogDetails);

@@ -11,6 +11,7 @@ import { isCloud } from '@/consts/cloud';
 import { useStaticApi } from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';
 import * as resourcesStyles from '@/scss/resources.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
 import BasicUserInfoSection from './components/BasicUserInfoSection';
 import CardContent from './components/CardContent';
@@ -20,7 +21,8 @@ import Skeleton from './components/Skeleton';
 import DeleteAccountModal from './containers/DeleteAccountModal';
 import * as styles from './index.module.scss';
 
-const Profile = () => {
+// eslint-disable-next-line react/function-component-definition
+function Profile() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
@@ -98,6 +100,6 @@ const Profile = () => {
       )}
     </div>
   );
-};
+}
 
-export default Profile;
+export default withAppInsights(Profile);

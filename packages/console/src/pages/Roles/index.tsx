@@ -18,6 +18,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as pageStyles from '@/scss/resources.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import AssignedUsers from './components/AssignedUsers';
@@ -30,7 +31,8 @@ const buildDetailsPathname = (id: string) => `${rolesPathname}/${id}`;
 
 const pageSize = defaultPageSize;
 
-const Roles = () => {
+// eslint-disable-next-line react/function-component-definition
+function Roles() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
@@ -158,6 +160,6 @@ const Roles = () => {
       )}
     </div>
   );
-};
+}
 
-export default Roles;
+export default withAppInsights(Roles);

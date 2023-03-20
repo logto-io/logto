@@ -17,6 +17,7 @@ import AppError from '@/components/AppError';
 import Card from '@/components/Card';
 import TextInput from '@/components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
+import { withAppInsights } from '@/utils/app-insights';
 
 import Block from './components/Block';
 import ChartTooltip from './components/ChartTooltip';
@@ -35,7 +36,8 @@ const tickFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
 });
 
-const Dashboard = () => {
+// eslint-disable-next-line react/function-component-definition
+function Dashboard() {
   const [date, setDate] = useState<string>(format(Date.now(), 'yyyy-MM-dd'));
   const { data: totalData, error: totalError } = useSWR<TotalUsersResponse, RequestError>(
     'api/dashboard/users/total'
@@ -148,6 +150,6 @@ const Dashboard = () => {
       )}
     </div>
   );
-};
+}
 
-export default Dashboard;
+export default withAppInsights(Dashboard);

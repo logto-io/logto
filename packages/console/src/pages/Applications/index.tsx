@@ -17,6 +17,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { withAppInsights } from '@/utils/app-insights';
 import { buildUrl } from '@/utils/url';
 
 import ApplicationsPlaceholder from './components/ApplicationsPlaceholder';
@@ -29,7 +30,8 @@ const createApplicationPathname = `${applicationsPathname}/create`;
 const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
 const buildGuidePathname = (id: string) => `${buildDetailsPathname(id)}/guide`;
 
-const Applications = () => {
+// eslint-disable-next-line react/function-component-definition
+function Applications() {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();
   const isShowingCreationForm = pathname === createApplicationPathname;
@@ -138,6 +140,6 @@ const Applications = () => {
       />
     </div>
   );
-};
+}
 
-export default Applications;
+export default withAppInsights(Applications);

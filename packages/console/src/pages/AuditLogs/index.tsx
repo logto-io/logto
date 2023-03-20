@@ -1,8 +1,10 @@
 import AuditLogTable from '@/components/AuditLogTable';
 import CardTitle from '@/components/CardTitle';
 import * as resourcesStyles from '@/scss/resources.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
-const AuditLogs = () => {
+// eslint-disable-next-line react/function-component-definition
+function AuditLogs() {
   return (
     <div className={resourcesStyles.container}>
       <div className={resourcesStyles.headline}>
@@ -11,6 +13,6 @@ const AuditLogs = () => {
       <AuditLogTable className={resourcesStyles.table} />
     </div>
   );
-};
+}
 
-export default AuditLogs;
+export default withAppInsights(AuditLogs);

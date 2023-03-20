@@ -21,6 +21,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import useUiLanguages from '@/hooks/use-ui-languages';
+import { withAppInsights } from '@/utils/app-insights';
 
 import Preview from './components/Preview';
 import SignUpAndSignInChangePreview from './components/SignUpAndSignInChangePreview';
@@ -55,7 +56,8 @@ const PageWrapper = ({ children }: PageWrapperProps) => (
   </div>
 );
 
-const SignInExperience = () => {
+// eslint-disable-next-line react/function-component-definition
+function SignInExperience() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('api/sign-in-exp');
@@ -231,6 +233,6 @@ const SignInExperience = () => {
       />
     </PageWrapper>
   );
-};
+}
 
-export default SignInExperience;
+export default withAppInsights(SignInExperience);
