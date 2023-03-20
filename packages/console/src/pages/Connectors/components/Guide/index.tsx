@@ -75,6 +75,10 @@ const Guide = ({ connector, onClose }: Props) => {
 
   const configParser = useConnectorFormConfigParser();
 
+  useEffect(() => {
+    setConflictConnectorName(undefined);
+  }, [connector]);
+
   if (!connector) {
     return null;
   }
