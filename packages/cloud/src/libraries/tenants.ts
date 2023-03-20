@@ -18,6 +18,7 @@ import {
   createAdminDataInAdminTenant,
 } from '@logto/schemas';
 import { createTenantMetadata, DemoConnector } from '@logto/shared';
+import { appendPath } from '@silverhand/essentials';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -160,9 +161,7 @@ export class TenantsLibrary {
 
     // Update Redirect URI for Admin Console
     await tenants.appendAdminConsoleRedirectUris(
-      ...['http://localhost:3003', 'https://cloud.logto.dev'].map(
-        (endpoint) => new URL(`/${tenantModel.id}/callback`, endpoint)
-      )
+      ...cloudUrlSet.deduplicated().map((url) => appendPath(url, tenantModel.id, 'callback'))
     );
 
     await transaction.end();
