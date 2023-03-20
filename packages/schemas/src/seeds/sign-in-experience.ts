@@ -17,8 +17,8 @@ export const createDefaultSignInExperience = (forTenantId: string): Readonly<Sig
       darkPrimaryColor: generateDarkColor(defaultPrimaryColor),
     },
     branding: {
-      logoUrl: 'https://logto.io/logo.svg',
-      darkLogoUrl: 'https://logto.io/logo-dark.svg',
+      logoUrl: '',
+      darkLogoUrl: '',
     },
     languageInfo: {
       autoDetect: true,
@@ -27,14 +27,14 @@ export const createDefaultSignInExperience = (forTenantId: string): Readonly<Sig
     termsOfUseUrl: null,
     privacyPolicyUrl: null,
     signUp: {
-      identifiers: [SignInIdentifier.Username],
+      identifiers: [SignInIdentifier.Email],
       password: true,
-      verify: false,
+      verify: true,
     },
     signIn: {
       methods: [
         {
-          identifier: SignInIdentifier.Username,
+          identifier: SignInIdentifier.Email,
           password: true,
           verificationCode: false,
           isPasswordPrimary: true,
