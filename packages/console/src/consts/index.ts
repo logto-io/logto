@@ -11,6 +11,6 @@ export const profileSocialLinkingKeyPrefix = 'logto:admin_console:linking_social
 export const requestTimeout = 20_000;
 export const defaultPageSize = 20;
 
-export enum queryParameterKeys {
+export enum searchKeys {
   signUp = 'sign_up',
 }

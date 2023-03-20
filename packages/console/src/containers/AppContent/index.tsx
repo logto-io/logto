@@ -7,7 +7,7 @@ import { Outlet, useHref, useLocation, useNavigate, useSearchParams } from 'reac
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
 import SessionExpired from '@/components/SessionExpired';
-import { queryParameterKeys } from '@/consts';
+import { searchKeys } from '@/consts';
 import { isCloud } from '@/consts/cloud';
 import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
@@ -38,7 +38,7 @@ const AppContent = () => {
 
   useEffect(() => {
     if (!isAuthenticated && !isLogtoLoading) {
-      const signUpFirst = searchParameters.get(queryParameterKeys.signUp);
+      const signUpFirst = searchParameters.get(searchKeys.signUp);
 
       void signIn(
         new URL(href, window.location.origin).toString(),
