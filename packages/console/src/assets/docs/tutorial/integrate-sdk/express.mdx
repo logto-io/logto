@@ -53,8 +53,8 @@ pnpm add @logto/express cookie-parser express-session
 Import and initialize LogtoClient:
 
 <pre>
-<code className="language-ts">
-{`import LogtoClient from '@logto/express';
+  <code className="language-ts">
+    {`import LogtoClient from '@logto/express';
 
 export const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
@@ -62,7 +62,7 @@ export const logtoClient = new LogtoClient({
   appSecret: '${props.appSecret}',
   baseUrl: 'http://localhost:3000', // Change to your own base URL
 });`}
-</code>
+  </code>
 </pre>
 
 </Step>
@@ -78,13 +78,13 @@ export const logtoClient = new LogtoClient({
 The SDK requires [express-session](https://www.npmjs.com/package/express-session) to be configured in prior.
 
 <pre>
-<code className="language-ts">
-{`import cookieParser from 'cookie-parser';
+  <code className="language-ts">
+    {`import cookieParser from 'cookie-parser';
 import session from 'express-session';
 
 app.use(cookieParser());
 app.use(session({ secret: '${buildIdGenerator(32)()}', cookie: { maxAge: 14 * 24 * 60 * 60 } }));`}
-</code>
+  </code>
 </pre>
 
 </Step>
@@ -101,7 +101,12 @@ app.use(session({ secret: '${buildIdGenerator(32)()}', cookie: { maxAge: 14 * 24
 
 First, let’s enter your redirect URI. E.g. `http://localhost:3000/api/logto/sign-in-callback`.
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+<UriInputField
+  appId={props.appId}
+  isSingle={!props.isCompact}
+  name="redirectUris"
+  title="application_details.redirect_uri"
+/>
 
 ### Prepare Logto routes
 
@@ -214,9 +219,9 @@ After signing out, it'll be great to redirect your user back to your website. Le
   onButtonClick={props.onComplete}
 >
 
-- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
-- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
-- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)
 - [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
 
 </Step>
