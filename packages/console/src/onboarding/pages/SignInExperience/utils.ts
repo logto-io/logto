@@ -54,9 +54,9 @@ const onboardSieConfigToSignInExperience = (
   // Map to sign-in methods
   const isSignInByPasswordEnabled =
     identifier === SignInIdentifier.Username || authentications.includes(Authentication.Password);
-  const isSignInByVerificationCodeEnabled = authentications.includes(
-    Authentication.VerificationCode
-  );
+  const isSignInByVerificationCodeEnabled =
+    identifier !== SignInIdentifier.Username &&
+    authentications.includes(Authentication.VerificationCode);
 
   const signInExperience: SignInExperience = {
     ...basedConfig,
