@@ -90,7 +90,7 @@ const ConnectorName = ({ connectorGroup, isDemo = false }: Props) => {
             }/${connector.id}`
         )}
       />
-      {isDemo && <DemoTag />}
+      {isDemo && <DemoTag connectorType={connector.type} />}
     </div>
   );
 };
