@@ -1,12 +1,11 @@
 const permissions = {
-  search_placeholder: 'Search by API or permission name', // UNTRANSLATED
-  search_placeholder_without_api: 'Search by permission name', // UNTRANSLATED
-  name_column: 'Permission', // UNTRANSLATED
-  description_column: 'Description', // UNTRANSLATED
-  api_column: 'API', // UNTRANSLATED
-  placeholder_title: 'Permission', // UNTRANSLATED
-  placeholder_description:
-    'Permission refers to the authorization to access a resource (we call it API resource).', // UNTRANSLATED
+  search_placeholder: '通过 API 或权限名称搜索',
+  search_placeholder_without_api: '通过权限名称搜索',
+  name_column: '权限',
+  description_column: '描述',
+  api_column: 'API',
+  placeholder_title: '权限',
+  placeholder_description: '权限是指访问资源的授权（我们称其为 API 资源）。',
 };
 
 export default permissions;

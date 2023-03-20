@@ -26,11 +26,10 @@ const applications = {
       subtitle: '仅由 Web 服务器渲染和更新的应用程序',
       description: '例如 Next.js, PHP',
     },
-    // UNTRANSLATED
     machine_to_machine: {
-      title: 'Machine to Machine',
-      subtitle: 'An app (usually a service) that directly talks to resources',
-      description: 'E.g., Backend service',
+      title: '机器对机器',
+      subtitle: '直接与资源对话的应用程序（通常是服务）',
+      description: '例如，后端服务',
     },
   },
   guide: {
@@ -41,9 +40,9 @@ const applications = {
     subtitle: '参考以下步骤完成你的应用设置。首先，选择你要使用的 SDK 类型：',
     description_by_sdk: '本教程向你演示如何在 {{sdk}} 应用中集成 Logto 登录功能',
   },
-  placeholder_title: 'Select an application type to continue', // UNTRANSLATED
+  placeholder_title: '选择应用程序类型以继续',
   placeholder_description:
-    'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.', // UNTRANSLATED
+    'Logto 使用 OIDC 的应用程序实体来帮助识别你的应用程序、管理登录和创建审计日志等任务。',
 };
 
 export default applications;

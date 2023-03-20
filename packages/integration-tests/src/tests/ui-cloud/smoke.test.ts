@@ -1,7 +1,10 @@
 import { appendPath } from '@silverhand/essentials';
+import { setDefaultOptions } from 'expect-puppeteer';
 
 import { logtoCloudUrl as logtoCloudUrlString, logtoConsoleUrl } from '#src/constants.js';
 import { generatePassword } from '#src/utils.js';
+
+setDefaultOptions({ timeout: 1000 });
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
@@ -97,7 +100,7 @@ describe('smoke testing for cloud', () => {
 
     // Wait for the next page to load
     await expect(page).toMatchElement('div[class$=config] div[class$=title]', {
-      text: 'Let’s first customize your experience with ease',
+      text: 'Let’s first customize your sign-in experience with ease',
     });
 
     expect(new URL(page.url()).pathname.endsWith('/onboarding/sign-in-experience')).toBeTruthy();

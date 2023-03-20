@@ -3,7 +3,7 @@ const log_details = {
   back_to_user: '返回 {{name}}',
   success: '成功',
   failed: '失败',
-  event_key: 'Event Key', // UNTRANSLATED
+  event_key: '事件 Key',
   application: '应用',
   ip_address: 'IP 地址',
   user: '用户',

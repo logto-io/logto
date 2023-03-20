@@ -18,7 +18,7 @@ const errors = {
     invalid_pagination: 'Die Paginierung der Anfrage ist ungültig.',
     can_not_get_tenant_id: 'Unable to get tenant id from request.', // UNTRANSLATED
     file_size_exceeded: 'File size exceeded.', // UNTRANSLATED
-    mime_type_not_allowed: 'Mime type is not allowed.', // UNTRANSLATED
+    mime_type_not_allowed: 'MIME type is not allowed.', // UNTRANSLATED
   },
   oidc: {
     aborted: 'Der Endnutzer hat die Interaktion abgebrochen.',
