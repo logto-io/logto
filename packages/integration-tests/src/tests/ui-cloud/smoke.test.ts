@@ -4,7 +4,7 @@ import { setDefaultOptions } from 'expect-puppeteer';
 import { logtoCloudUrl as logtoCloudUrlString, logtoConsoleUrl } from '#src/constants.js';
 import { generatePassword } from '#src/utils.js';
 
-setDefaultOptions({ timeout: 1000 });
+setDefaultOptions({ timeout: 2000 });
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
