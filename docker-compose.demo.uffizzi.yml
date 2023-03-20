@@ -10,7 +10,7 @@ services:
   app:
     depends_on:
       - "postgres"
-    image: registry.uffizzi.com/logto-io/logto:prerelease
+    image: registry.uffizzi.com/logto-io/logto:latest
     ports:
       - 3001:3001
     environment:
