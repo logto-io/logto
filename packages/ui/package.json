@@ -78,7 +78,7 @@
     "stylelint": "^15.0.0",
     "superstruct": "^0.16.0",
     "ts-jest": "^29.0.5",
-    "typescript": "^4.9.4",
+    "typescript": "^5.0.0",
     "use-debounced-loader": "^0.1.1",
     "zod": "^3.20.2"
   },

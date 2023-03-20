@@ -57,7 +57,7 @@
     "roarr": "^7.11.0",
     "slonik": "^30.0.0",
     "slonik-sql-tag-raw": "^1.1.4",
-    "typescript": "^4.9.4"
+    "typescript": "^5.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",
