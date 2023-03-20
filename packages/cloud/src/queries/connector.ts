@@ -11,7 +11,7 @@ export const createConnectorsQuery = (client: Queryable<PostgreSql>) => {
   const findAllConnectors = async (tenantId: string) => {
     const { rows } = await client.query<Connector>(sql`
       select id, sync_profile as "syncProfile",
-        config, metadata, storage, connector_id as "connectorId",
+        config, metadata, connector_id as "connectorId",
         created_at as "createdAt"
       from connectors
       where tenant_id=${tenantId}
