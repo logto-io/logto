@@ -10,14 +10,16 @@ let reactPlugin: Optional<ReactPlugin>;
 let appInsights: Optional<ApplicationInsights>;
 
 const initAppInsights = () => {
-  if (!isCloud) {
+  const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING;
+
+  if (!isCloud || !connectionString) {
     return;
   }
   // https://github.com/microsoft/applicationinsights-react-js#readme
   reactPlugin = new ReactPlugin();
   appInsights = new ApplicationInsights({
     config: {
-      connectionString: process.env.APPLICATIONINSIGHTS_CONNECTION_STRING,
+      connectionString,
       enableAutoRouteTracking: true,
       extensions: [reactPlugin],
     },
