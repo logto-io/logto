@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import { useMemo, useRef } from 'react';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark as a11yDarkTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -32,7 +32,18 @@ const CodeEditor = ({
   placeholder,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const preRef = useRef<SyntaxHighlighter>(null);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  useLayoutEffect(() => {
+    // Update textarea width according to its scroll width
+    const { current } = textareaRef;
+
+    if (current) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      current.style.width = `${current.scrollWidth}px`;
+    }
+  }, [value]);
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.currentTarget;
@@ -97,6 +108,7 @@ const CodeEditor = ({
           <SyntaxHighlighter
             showLineNumbers
             showInlineLineNumbers
+            width={textareaRef.current?.scrollWidth ?? 0}
             lineNumberContainerStyle={{
               display: 'flex',
               flexDirection: 'column',
@@ -106,8 +118,7 @@ const CodeEditor = ({
             }}
             lineNumberStyle={{
               marginLeft: '0px',
-              marginRight: '20px',
-              paddingRight: '0px',
+              paddingRight: '20px',
               paddingLeft: '0px',
               display: 'inline-flex',
               justifyContent: 'flex-end',
@@ -116,7 +127,10 @@ const CodeEditor = ({
               flexShrink: 0,
               fontFamily: "'Roboto Mono', monospace",
               fontSize: '14px',
-              minWidth: `${maxLineNumberDigits}ch`,
+              minWidth: `calc(${maxLineNumberDigits}ch + 20px)`,
+              position: 'sticky',
+              background: '#34353f',
+              left: 0,
             }}
             codeTagProps={{
               style: {
@@ -124,12 +138,14 @@ const CodeEditor = ({
               },
             }}
             customStyle={{
+              width: `${textareaRef.current?.scrollWidth ?? 0}px`,
               background: 'transparent',
               fontSize: '14px',
               margin: '0',
               padding: '0',
               borderRadius: '0',
               wordBreak: 'break-all',
+              overflow: 'unset',
               fontFamily: "'Roboto Mono', monospace", // Override default font-family of <pre>
             }}
             language={language}

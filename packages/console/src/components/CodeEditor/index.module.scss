@@ -36,7 +36,7 @@
 
   .editor {
     position: relative;
-    // overflow-x: auto;
+    overflow-x: auto;
 
     textarea {
       width: 100%;
@@ -56,6 +56,7 @@
       color: #fefefe;
       -webkit-text-fill-color: transparent;
       outline: none;
+      overflow: hidden;
     }
 
     textarea,
