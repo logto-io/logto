@@ -47,14 +47,14 @@ pnpm add @logto/browser
 Import and init `LogtoClient` by passing config:
 
 <pre>
-<code className="language-ts">
-{`import LogtoClient from '@logto/browser';
+  <code className="language-ts">
+    {`import LogtoClient from '@logto/browser';
 
 const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
   appId: '${props.appId}',
 });`}
-</code>
+  </code>
 </pre>
 
 </Step>
@@ -75,18 +75,25 @@ const logtoClient = new LogtoClient({
 
 First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+<UriInputField
+  appId={props.appId}
+  isSingle={!props.isCompact}
+  name="redirectUris"
+  title="application_details.redirect_uri"
+/>
 
 ### Implement a sign-in button
 
 Go back to your IDE/editor, use the following code to implement the sign-in button:
 
 <pre>
-<code className="language-html">
-{`<button onclick="logtoClient.signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}')">
+  <code className="language-html">
+    {`<button onclick="logtoClient.signIn('${
+      props.redirectUris[0] ?? 'http://localhost:3000/callback'
+    }')">
   Sign In
 </button>`}
-</code>
+  </code>
 </pre>
 
 ### Handle redirect
@@ -120,16 +127,23 @@ Calling `.signOut()` will clear all the Logto data in memory and localStorage if
 
 After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
+<UriInputField
+  appId={props.appId}
+  isSingle={!props.isCompact}
+  name="postLogoutRedirectUris"
+  title="application_details.post_sign_out_redirect_uri"
+/>
 
 ### Implement a sign-out button
 
 <pre>
-<code className="language-html">
-{`<button onclick="logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}')">
+  <code className="language-html">
+    {`<button onclick="logtoClient.signOut('${
+      props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'
+    }')">
   Sign Out
 </button>`}
-</code>
+  </code>
 </pre>
 
 </Step>
@@ -144,9 +158,9 @@ After signing out, it'll be great to redirect user back to your website. Let's a
   onButtonClick={props.onComplete}
 >
 
-- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
-- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
-- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)
 - [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
 
 </Step>

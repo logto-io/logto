@@ -56,8 +56,9 @@ In traditional web applications, the user authentication information will be sto
 Logto SDK provides a `Storage` interface, you can implement a `Storage` adapter based on your web framework so that the Logto SDK can store user authentication information in the session.
 
 <Alert>
-  We do NOT recommend using cookie-based sessions, as user authentication information stored by Logto may exceed the cookie size limit.
-  In this example, we use memory-based sessions. You can use Redis, MongoDB, and other technologies in production to store sessions as needed.
+  We do NOT recommend using cookie-based sessions, as user authentication information stored by
+  Logto may exceed the cookie size limit. In this example, we use memory-based sessions. You can use
+  Redis, MongoDB, and other technologies in production to store sessions as needed.
 </Alert>
 
 The `Storage` type in the Logto SDK is as follows:
@@ -77,7 +78,6 @@ We will use [github.com/gin-contrib/sessions](https://github.com/gin-contrib/ses
 ### Apply session middleware
 
 Apply the [github.com/gin-contrib/sessions](https://github.com/gin-contrib/sessions) middleware to the application, so that we can get the user session by the user request context in the route handler:
-
 
 ```go
 package main
@@ -156,8 +156,8 @@ sessionStorage := &SessionStorage{session: session}
 ### Create LogtConfig
 
 <pre>
-<code className="language-go">
-{`// main.go
+  <code className="language-go">
+    {`// main.go
 func main() {
 	// ...
 
@@ -169,7 +169,7 @@ func main() {
 
 	// ...
 }`}
-</code>
+  </code>
 </pre>
 
 ### Init LogtoClient for each user request
@@ -219,7 +219,12 @@ func main() {
 Add `http://localhost:8080/sign-in-callback` to the Redirect URI field.  
 This allows Logto to redirect the user to the `/sign-in-callback` route of your application after signing in.
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+<UriInputField
+  appId={props.appId}
+  isSingle={!props.isCompact}
+  name="redirectUris"
+  title="application_details.redirect_uri"
+/>
 
 ### Add a route for handling sign-in requests
 
@@ -312,7 +317,12 @@ func main() {
 
 Add `http://localhost:8080` to the Post Sign-out Redirect URI filed:
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutUris" title="application_details.post_sign_out_redirect_uri" />
+<UriInputField
+  appId={props.appId}
+  isSingle={!props.isCompact}
+  name="postLogoutUris"
+  title="application_details.post_sign_out_redirect_uri"
+/>
 
 This configuration enables the user to return to the home page after signing out.
 
@@ -373,9 +383,9 @@ After the user makes a signing-out request, Logto will clear all user authentica
   onButtonClick={props.onComplete}
 >
 
-- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
-- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
-- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)
 - [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
 
 </Step>

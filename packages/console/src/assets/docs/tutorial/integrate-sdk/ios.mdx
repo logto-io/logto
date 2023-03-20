@@ -48,8 +48,8 @@ CocoaPods [does not support local dependency](https://github.com/CocoaPods/Cocoa
 >
 
 <pre>
-<code className="language-swift">
-{`import Logto
+  <code className="language-swift">
+    {`import Logto
 import LogtoClient
 
 let config = try? LogtoConfig(
@@ -57,7 +57,7 @@ let config = try? LogtoConfig(
   appId: "${props.appId}"
 )
 let logtoClient = LogtoClient(useConfig: config)`}
-</code>
+  </code>
 </pre>
 
 By default, we store credentials like ID Token and Refresh Token in Keychain. Thus the user doesn't need to sign in again when he returns.
@@ -85,23 +85,34 @@ let config = try? LogtoConfig(
 
 First, let’s configure your redirect URI scheme. E.g. `io.logto://callback`
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+<UriInputField
+  appId={props.appId}
+  isSingle={!props.isCompact}
+  name="redirectUris"
+  title="application_details.redirect_uri"
+/>
 
 <Alert>
-  The Redirect URI in iOS SDK is only for internal use. There's <em>NO NEED</em> to add a <a href="https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app">Custom URL Scheme</a> until a connector asks.
+  The Redirect URI in iOS SDK is only for internal use. There's <em>NO NEED</em> to add a{' '}
+  <a href="https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app">
+    Custom URL Scheme
+  </a>{' '}
+  until a connector asks.
 </Alert>
 
 Go back to Xcode, use the following code to implement sign-in:
 
 <pre>
-<code className="language-swift">
-{`do {
-  try await client.signInWithBrowser(redirectUri: "${props.redirectUris[0] ?? 'io.logto://callback'}")
+  <code className="language-swift">
+    {`do {
+  try await client.signInWithBrowser(redirectUri: "${
+    props.redirectUris[0] ?? 'io.logto://callback'
+  }")
   print(client.isAuthenticated) // true
 } catch let error as LogtoClientErrors.SignIn {
   // error occured during sign in
 }`}
-</code>
+  </code>
 </pre>
 
 </Step>
@@ -132,9 +143,9 @@ await client.signOut()
   onButtonClick={props.onComplete}
 >
 
-- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
-- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
-- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)
 - [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
 
 </Step>

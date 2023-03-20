@@ -12,9 +12,7 @@ import Alert from '@/components/Alert';
   onButtonClick={() => props.onNext(1)}
 >
 
-<Alert>
-  The minimum supported Android API is level 24
-</Alert>
+<Alert>The minimum supported Android API is level 24</Alert>
 
 Add the `mavenCentral()` repository to your Gradle project build file:
 
@@ -65,8 +63,8 @@ dependencies {
 <TabItem value="kotlin" label="Kotlin">
 
 <pre>
-<code className="language-kotlin">
-{`import io.logto.sdk.android.LogtoClient
+  <code className="language-kotlin">
+    {`import io.logto.sdk.android.LogtoClient
 import io.logto.sdk.android.type.LogtoConfig
 
 class MainActivity : AppCompatActivity() {
@@ -80,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
     val logtoClient = LogtoClient(logtoConfig, application)
 }`}
-</code>
+  </code>
 </pre>
 
 </TabItem>
@@ -88,8 +86,8 @@ class MainActivity : AppCompatActivity() {
 <TabItem value="java" label="Java">
 
 <pre>
-<code className="language-java">
-{`import io.logto.sdk.android.LogtoClient;
+  <code className="language-java">
+    {`import io.logto.sdk.android.LogtoClient;
 import io.logto.sdk.android.type.LogtoConfig;
 
 public class MainActivity extends AppCompatActivity {
@@ -111,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         logtoClient = new LogtoClient(logtoConfig, getApplication());
     }
 }`}
-</code>
+  </code>
 </pre>
 
 </TabItem>
@@ -132,7 +130,12 @@ public class MainActivity extends AppCompatActivity {
 
 First, let’s configure your redirect URI. E.g. `io.logto.android://io.logto.sample/callback`
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+<UriInputField
+  appId={props.appId}
+  isSingle={!props.isCompact}
+  name="redirectUris"
+  title="application_details.redirect_uri"
+/>
 
 Go back to your IDE/editor, use the following code to implement sign-in:
 
@@ -141,11 +144,13 @@ Go back to your IDE/editor, use the following code to implement sign-in:
 <TabItem value="kotlin" label="Kotlin">
 
 <pre>
-<code className="language-kotlin">
-{`logtoClient.signIn(this, "${props.redirectUris[0] ?? '<your-redirect-uri>'}") { logtoException: LogtoException? ->
+  <code className="language-kotlin">
+    {`logtoClient.signIn(this, "${
+      props.redirectUris[0] ?? '<your-redirect-uri>'
+    }") { logtoException: LogtoException? ->
     // User signed in successfully if \`logtoException\` is null.
 }`}
-</code>
+  </code>
 </pre>
 
 </TabItem>
@@ -153,11 +158,13 @@ Go back to your IDE/editor, use the following code to implement sign-in:
 <TabItem value="java" label="Java">
 
 <pre>
-<code className="language-java">
-{`logtoClient.signIn(this, "${props.redirectUris[0] ?? '<your-redirect-uri>'}", logtoException -> {
+  <code className="language-java">
+    {`logtoClient.signIn(this, "${
+      props.redirectUris[0] ?? '<your-redirect-uri>'
+    }", logtoException -> {
     // User signed in successfully if \`logtoException\` is null.
 });`}
-</code>
+  </code>
 </pre>
 
 </TabItem>
@@ -214,9 +221,9 @@ logtoClient.signOut(logtoException -> {
   onButtonClick={props.onComplete}
 >
 
-- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
-- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
-- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)
 - [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
 
 </Step>

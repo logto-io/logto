@@ -52,8 +52,8 @@ pnpm add @logto/next
 Import and initialize LogtoClient:
 
 <pre>
-<code className="language-ts">
-{`// libraries/logto.js
+  <code className="language-ts">
+    {`// libraries/logto.js
 import LogtoClient from '@logto/next';
 
 export const logtoClient = new LogtoClient({
@@ -64,7 +64,7 @@ export const logtoClient = new LogtoClient({
   cookieSecret: '${buildIdGenerator(32)()}', // Auto-generated 32 digit secret
   cookieSecure: process.env.NODE_ENV === 'production',
 });`}
-</code>
+  </code>
 </pre>
 
 </Step>
@@ -81,7 +81,12 @@ export const logtoClient = new LogtoClient({
 
 First, let’s enter your redirect URI. E.g. `http://localhost:3000/api/logto/sign-in-callback`.
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+<UriInputField
+  appId={props.appId}
+  isSingle={!props.isCompact}
+  name="redirectUris"
+  title="application_details.redirect_uri"
+/>
 
 ### Prepare API routes
 
@@ -112,9 +117,7 @@ import { useRouter } from 'next/router';
 
 const { push } = useRouter();
 
-<button onClick={() => push('/api/logto/sign-in')}>
-  Sign In
-</button>
+<button onClick={() => push('/api/logto/sign-in')}>Sign In</button>;
 ```
 
 Now you will be navigated to Logto sign-in page when you click the button.
@@ -240,14 +243,17 @@ Calling `/api/logto/sign-out` will clear all the Logto data in memory and cookie
 
 After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below before calling `/api/logto/sign-out`.
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
+<UriInputField
+  appId={props.appId}
+  isSingle={!props.isCompact}
+  name="postLogoutRedirectUris"
+  title="application_details.post_sign_out_redirect_uri"
+/>
 
 ### Implement a sign-out button
 
 ```tsx
-<button onClick={() => push('/api/logto/sign-out')}>
-  Sign Out
-</button>
+<button onClick={() => push('/api/logto/sign-out')}>Sign Out</button>
 ```
 
 </Step>
@@ -262,9 +268,9 @@ After signing out, it'll be great to redirect user back to your website. Let's a
   onButtonClick={props.onComplete}
 >
 
-- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
-- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
-- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)
 - [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
 
 </Step>
