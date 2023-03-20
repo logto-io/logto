@@ -49,7 +49,6 @@ const general = {
   join: '加入',
   try_now: '现在试试',
   multiple_form_field: '（多选）',
-  cap_limit: '限量使用',
   demo: '演示',
 };
 

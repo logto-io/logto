@@ -9,7 +9,7 @@ const connectors = {
   tab_social: '소셜 연동',
   connector_name: '연동 이름',
   demo_tip:
-    'The demo connector is designed exclusively for demonstration purposes and is not recommended for deployment in a production environment.', // UNTRANSLATED
+    'The maximum number of messages allowed for this demo connector is limited to 100 and is not recommended for deployment in a production environment.', // UNTRANSLATED
   connector_type: '종류',
   connector_status: '로그인 경험',
   connector_status_in_use: '사용 중',
