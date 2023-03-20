@@ -37,13 +37,13 @@ const sign_in_exp = {
     favicon_error: 'Favicon: {{error}}', // UNTRANSLATED
   },
   custom_css: {
-    title: '自定义 CSS',
+    title: '自定义 CSS 个性化用户界面',
     css_code_editor_title: '自定义 CSS 个性化你的用户界面',
     css_code_editor_description1: '查看自定义 CSS 的例子。',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: '了解更多',
     css_code_editor_content_placeholder:
-      '输入自定义 CSS 以根据你的需求定制任何内容的样式。发挥创造力，让你的用户界面脱颖而出。',
+      '输入 CSS 代码，修改颜色、字体、组件样式、布局，定制你的登录、注册、忘记密码等页面。充分发挥创造力，让你的用户界面脱颖而出。',
   },
   sign_up_and_sign_in: {
     identifiers_email: '邮件地址',

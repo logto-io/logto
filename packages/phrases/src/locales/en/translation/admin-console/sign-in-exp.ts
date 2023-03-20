@@ -38,7 +38,7 @@ const sign_in_exp = {
     favicon_error: 'Favicon: {{error}}',
   },
   custom_css: {
-    title: 'CUSTOM CSS',
+    title: 'Personalize UI with Custom CSS',
     css_code_editor_title: 'Personalize your UI with Custom CSS',
     css_code_editor_description1: 'See the example of Custom CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
