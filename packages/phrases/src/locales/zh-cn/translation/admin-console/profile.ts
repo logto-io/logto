@@ -18,6 +18,7 @@ const profile = {
     email_required: '邮箱不能为空',
     invalid_email: '无效的邮箱地址',
     identical_email_address: '输入的邮箱地址与当前邮箱地址相同',
+    anonymous: '匿名',
   },
   password: {
     title: '密码与安全',

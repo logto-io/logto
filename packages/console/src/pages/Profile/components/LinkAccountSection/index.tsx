@@ -1,3 +1,5 @@
+import type { SocialUserInfo } from '@logto/connector-kit';
+import { socialUserInfoGuard } from '@logto/connector-kit';
 import { buildIdGenerator } from '@logto/core-kit';
 import type { ConnectorResponse, UserInfo } from '@logto/schemas';
 import { Theme } from '@logto/schemas';
@@ -6,7 +8,6 @@ import { appendPath, conditional } from '@silverhand/essentials';
 import { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { is } from 'superstruct';
 
 import MailIcon from '@/assets/images/mail.svg';
 import FormCard from '@/components/FormCard';
@@ -17,8 +18,6 @@ import { adminTenantEndpoint, getBasename, meApi, profileSocialLinkingKeyPrefix 
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTheme from '@/hooks/use-theme';
-import type { SocialUserInfo } from '@/types/profile';
-import { socialUserInfoGuard } from '@/types/profile';
 
 import { popupWindow } from '../../utils';
 import type { Row } from '../CardContent';
@@ -63,13 +62,15 @@ const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
     return connectors.map(({ id, name, logo, logoDark, target }) => {
       const logoSrc = theme === Theme.Dark && logoDark ? logoDark : logo;
       const relatedUserDetails = user.identities?.[target]?.details;
-      const hasLinked = is(relatedUserDetails, socialUserInfoGuard);
+
+      const socialUserInfo = socialUserInfoGuard.safeParse(relatedUserDetails);
+      const hasLinked = socialUserInfo.success;
 
       return {
         key: target,
         icon: <ImageWithErrorFallback src={logoSrc} />,
         label: <UnnamedTrans resource={name} />,
-        value: conditional(hasLinked && relatedUserDetails),
+        value: conditional(hasLinked && socialUserInfo.data),
         renderer: (user) => (user ? <UserInfoCard user={user} /> : <NotSet />),
         action: hasLinked
           ? {

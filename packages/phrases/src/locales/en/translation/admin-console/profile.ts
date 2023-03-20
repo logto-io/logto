@@ -19,6 +19,7 @@ const profile = {
     email_required: 'Email is required',
     invalid_email: 'Invalid email address',
     identical_email_address: 'The input email address is identical to the current one',
+    anonymous: 'Anonymous',
   },
   password: {
     title: 'PASSWORD & SECURITY',

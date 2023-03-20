@@ -6,12 +6,3 @@ export const locationStateGuard = s.object({
 });
 
 export type LocationState = s.Infer<typeof locationStateGuard>;
-
-export const socialUserInfoGuard = s.object({
-  id: s.string(),
-  name: s.string(),
-  email: s.string(),
-  avatar: s.string(),
-});
-
-export type SocialUserInfo = s.Infer<typeof socialUserInfoGuard>;
