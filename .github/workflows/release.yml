@@ -25,7 +25,7 @@ jobs:
   dockerize-core:
     environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' || '' }}
     # Use normal machine for OSS release since we'll build on Depot
-    runs-on: ${{ startsWith(github.ref, 'refs/tags/') && 'ubuntu-latest' || 'ubuntu-latest-4-cores' }}
+    runs-on: ${{ (inputs.target || 'dev') == 'dev' && 'ubuntu-latest' || 'ubuntu-latest-4-cores' }}
     permissions:
       contents: read
       id-token: write
@@ -96,7 +96,7 @@ jobs:
 
   dockerize-cloud:
     # Use normal machine for OSS release since we'll build on Depot
-    runs-on: ${{ startsWith(github.ref, 'refs/tags/') && 'ubuntu-latest' || 'ubuntu-latest-4-cores' }}
+    runs-on: (inputs.target || 'dev') == 'dev' && 'ubuntu-latest' || 'ubuntu-latest-4-cores' }}
 
     steps:
       - uses: actions/checkout@v3
