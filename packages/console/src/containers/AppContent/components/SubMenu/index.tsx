@@ -19,7 +19,7 @@ type Props<T> = {
   icon?: ReactNode;
   title: AdminConsoleKey;
   options: Array<Option<T>>;
-  selectedOption?: T;
+  selectedOption: T;
   onItemClick: (value: T) => void;
 };
 

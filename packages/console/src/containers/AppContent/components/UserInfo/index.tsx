@@ -44,8 +44,6 @@ const UserInfo = () => {
     return <UserInfoSkeleton />;
   }
 
-  const { avatar, name } = user ?? {};
-
   return (
     <>
       <div
