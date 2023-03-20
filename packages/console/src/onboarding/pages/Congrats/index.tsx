@@ -11,10 +11,12 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Reservation from '@/onboarding/components/Reservation';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
 
-const Congrats = () => {
+// eslint-disable-next-line react/function-component-definition
+function Congrats() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { update } = useUserOnboardingData();
   const { navigate, currentTenantId } = useContext(TenantsContext);
@@ -54,6 +56,6 @@ const Congrats = () => {
       </OverlayScrollbar>
     </div>
   );
-};
+}
 
-export default Congrats;
+export default withAppInsights(Congrats);

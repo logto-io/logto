@@ -25,11 +25,13 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
 import * as detailsStyles from '@/scss/details.module.scss';
+import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
 import { ApiResourceDetailsOutletContext } from './types';
 
-const ApiResourceDetails = () => {
+// eslint-disable-next-line react/function-component-definition
+function ApiResourceDetails() {
   const { pathname } = useLocation();
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -154,6 +156,6 @@ const ApiResourceDetails = () => {
       )}
     </div>
   );
-};
+}
 
-export default ApiResourceDetails;
+export default withAppInsights(ApiResourceDetails);
