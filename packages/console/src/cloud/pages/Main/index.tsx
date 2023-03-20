@@ -1,10 +1,12 @@
 import { useLogto } from '@logto/react';
 import type { TenantInfo } from '@logto/schemas';
+import { conditional, yes } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
-import { useHref } from 'react-router-dom';
+import { useHref, useSearchParams } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppLoading from '@/components/AppLoading';
+import { searchKeys } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import Redirect from './Redirect';
@@ -44,15 +46,20 @@ const Protected = () => {
 };
 
 const Main = () => {
+  const [searchParameters] = useSearchParams();
   const { isAuthenticated, isLoading, signIn } = useLogto();
   const { currentTenantId } = useContext(TenantsContext);
   const href = useHref(currentTenantId + '/callback');
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      void signIn(new URL(href, window.location.origin).toString());
+      const isSignUpMode = yes(searchParameters.get(searchKeys.signUp));
+      void signIn(
+        new URL(href, window.location.origin).toString(),
+        conditional(isSignUpMode && 'signUp')
+      );
     }
-  }, [href, isAuthenticated, isLoading, signIn]);
+  }, [href, isAuthenticated, isLoading, searchParameters, signIn]);
 
   if (!isAuthenticated) {
     return <AppLoading />;
