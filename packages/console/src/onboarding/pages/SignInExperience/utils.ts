@@ -47,9 +47,9 @@ const onboardSieConfigToSignInExperience = (
   const { color: baseColorConfig, branding: baseBranding } = basedConfig;
 
   // Map to sign-up config
-  const shouldSetupPasswordInSignUp =
+  const shouldSetPasswordAtSignUp =
     identifier === SignInIdentifier.Username || authentications.includes(Authentication.Password);
-  const shouldSignUpVerify = identifier !== SignInIdentifier.Username;
+  const shouldVerifyAtSignUp = identifier !== SignInIdentifier.Username;
 
   // Map to sign-in methods
   const isSignInByPasswordEnabled =
@@ -71,8 +71,8 @@ const onboardSieConfigToSignInExperience = (
     },
     signUp: {
       identifiers: [identifier],
-      verify: shouldSignUpVerify,
-      password: shouldSetupPasswordInSignUp,
+      verify: shouldVerifyAtSignUp,
+      password: shouldSetPasswordAtSignUp,
     },
     signIn: {
       methods: [
