@@ -7,11 +7,10 @@
 ---
 
 <p align="center">
-Logto has launched Cloud (Preview) and OSS General Availability on <a href="https://www.producthunt.com/products/logto" target="_blank">Product Hunt</a>.<br/>
-Come and support us!
+Logto has launched Cloud (Preview) and OSS General Availability on <a href="https://www.producthunt.com/posts/logto-cloud-preview" target="_blank">Product Hunt</a>.<br/> 
 </p>
 <p align="center">
-😊 See you on the cloud!
+😊 Come and support us! We'll see you on the cloud.
 </p>
 
 ---
