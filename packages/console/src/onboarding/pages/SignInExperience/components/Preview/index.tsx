@@ -17,7 +17,7 @@ type Props = {
 };
 
 const Preview = ({ signInExperience, isLivePreviewDisabled = false, className }: Props) => {
-  const [currentTab, setCurrentTab] = useState(PreviewPlatform.MobileWeb);
+  const [currentTab, setCurrentTab] = useState(PreviewPlatform.DesktopWeb);
 
   return (
     <div className={classNames(styles.container, className)}>
