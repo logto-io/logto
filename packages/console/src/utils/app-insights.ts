@@ -10,22 +10,32 @@ let reactPlugin: Optional<ReactPlugin>;
 let appInsights: Optional<ApplicationInsights>;
 
 const initAppInsights = () => {
-  const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING;
+  // The string needs to be normalized since it may contain '"'
+  const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING?.replace(
+    /^"?(.*)"?$/g,
+    '$1'
+  );
 
   if (!isCloud || !connectionString) {
     return;
   }
-  // https://github.com/microsoft/applicationinsights-react-js#readme
-  reactPlugin = new ReactPlugin();
-  appInsights = new ApplicationInsights({
-    config: {
-      connectionString,
-      enableAutoRouteTracking: true,
-      extensions: [reactPlugin],
-    },
-  });
 
-  appInsights.loadAppInsights();
+  try {
+    // https://github.com/microsoft/applicationinsights-react-js#readme
+    reactPlugin = new ReactPlugin();
+    appInsights = new ApplicationInsights({
+      config: {
+        connectionString,
+        enableAutoRouteTracking: true,
+        extensions: [reactPlugin],
+      },
+    });
+
+    appInsights.loadAppInsights();
+  } catch (error: unknown) {
+    console.error('Unable to init ApplicationInsights:');
+    console.error(error);
+  }
 };
 /* eslint-enable @silverhand/fp/no-mutation, @silverhand/fp/no-let */
 
