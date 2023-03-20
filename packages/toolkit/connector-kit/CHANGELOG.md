@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.0
+
+### Minor Changes
+
+- 343b1090f: Allow admin tenant admin to create tenants without limitation
+
 ## 1.0.0
 
 ### Minor Changes

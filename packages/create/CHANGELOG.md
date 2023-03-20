@@ -1,5 +1,30 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- 1c9160112: Packages are now ESM.
+
+### Patch Changes
+
+- 38970fb88: Fix a Sign-in experience bug that may block some users to sign in.
+- 7fb689b73: Fix version lifecycle script
+- 1c9160112: - Remove official connectors inquiry
+  - Fix default download url with current package version
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [343b1090f]
+- Updated dependencies [38970fb88]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [1c9160112]
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [7fb689b73]
+- Updated dependencies [1c9160112]
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [3ff2e90cd]
+  - @logto/cli@1.0.0
+
 ## 1.0.0-rc.3
 
 ### Patch Changes

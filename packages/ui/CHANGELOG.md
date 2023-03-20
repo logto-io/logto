@@ -1,5 +1,131 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- 1c9160112: ### Features
+
+  - Enhanced user search params #2639
+  - Web hooks
+
+  ### Improvements
+
+  - Refactored Interaction APIs and Audit logs
+
+- 343b1090f: **💥 BREAKING CHANGE 💥** Move `/api/phrase` API to `/api/.well-known/phrases`
+
+### Minor Changes
+
+- 343b1090f: ### Simplify the terms of use and privacy policy manual agreement steps for the sign-in flow
+
+  The Terms of Use and Privacy Policy manuel agreement are now removed from the sign-in flow.
+
+  - The changes may take effect on all the existing sign-in flows, including password sign-in, social sign-in, and verification-code sign-in.
+  - The agreement checkbox in sign-in pages is now replaced with links to the Terms of Use and Privacy Policy pages. Users can still read the agreements before signing in.
+  - The manual agreement steps are still mandatory for the sign-up flow. Users must agree to the Terms of Use and Privacy Policy before signing up a new account. Including sign-up with new social identities. The agreement checkbox in sign-up pages remain still.
+
+- f41fd3f05: Replace `passcode` naming convention in the interaction APIs and main flow ui with `verificationCode`.
+- 343b1090f: ### Update the password policy
+
+  Password policy description: Password requires a minimum of 8 characters and contains a mix of letters, numbers, and symbols.
+
+  - min-length updates: Password requires a minimum of 8 characters
+  - allowed characters updates: Password contains a mix of letters, numbers, and symbols
+    - digits: 0-9
+    - letters: a-z, A-Z
+    - symbols: !"#$%&'()\*+,./:;<=>?@[\]^\_`{|}~-
+  - At least two types of characters are required:
+    - letters and digits
+    - letters and symbols
+    - digits and symbols
+
+  > notice: The new password policy is applied to new users or new passwords only. Existing users are not affected by this change, users may still use their old password to sign-in.
+
+- 343b1090f: ### Add dynamic favicon and html title
+
+  - Add the favicon field in the sign-in-experience branding settings. Users would be able to upload their own favicon. Use local logto icon as a fallback
+
+  - Set different html title for different pages.
+    - sign-in
+    - register
+    - forgot-password
+    - logto
+
+- 343b1090f: Allow admin tenant admin to create tenants without limitation
+- 343b1090f: ## Add iframe modal for mobile platform
+
+  Implement a full screen iframe modal on the mobile platform. As for most of the webview containers, opening a new tab is not allowed. So we need to implement a full screen iframe modal to show the external link page on the mobile platform.
+
+- 343b1090f: New feature: User account settings page
+
+  - We have removed the previous settings page and moved it to the account settings page. You can access to the new settings menu by clicking the user avatar in the top right corner.
+  - You can directly change the language or theme from the popover menu, and explore more account settings by clicking the "Profile" menu item.
+  - You can update your avatar, name and username in the profile page, and also changing your password.
+  - [Cloud] Cloud users can also link their email address and social accounts (Google and GitHub at first launch).
+
+- c12717412: ## Smart Identifier Input designed to streamline your sign-in experience
+
+  - Smart Contact Input
+  - Smart Identifier Input
+  - Intelligent Identifier Input Field
+
+  Content:
+  We have integrated the traditional input fields for username, phone number, and email into a single intelligent input box. This advanced input box automatically identifies the type of characters you’re entering, such as an @ sign or consecutive numbers, and provides relevant error feedback. By streamlining the sign-in process, users no longer need to waste time figuring out which button to click to switch their desired login method. This reduces the risk of errors and ensures a smoother sign-in experience.
+
+- 343b1090f: Implement a country code selector dropdown component with search box. Users may able to quick search for a country code by typing in the search box.
+- 343b1090f: remove the branding style config and make the logo URL config optional
+- c12717412: **Customize CSS for Sign-in Experience**
+
+  We have put a lot of effort into improving the user sign-in experience and have provided a brand color option for the UI. However, we know that fine-tuning UI requirements can be unpredictable. While Logto is still exploring the best options for customization, we want to provide a programmatic method to unblock your development.
+
+  You can now use the Management API `PATCH /api/sign-in-exp` with body `{ "customCss": "arbitrary string" }` to set customized CSS for the sign-in experience. You should see the value of `customCss` attached after `<title>` of the page. If the style has a higher priority, it should be able to override.
+
+  > **Note**
+  >
+  > Since Logto uses CSS Modules, you may see a hash value in the `class` property of DOM elements (e.g. a `<div>` with `vUugRG_container`). To override these, you can use the `$=` CSS selector to match elements that end with a specified value. In this case, it should be `div[class$=container]`.
+
+- 343b1090f: Add custom CSS code editor so that users can apply advanced UI customization.
+  - Users can check the real time preview of the CSS via SIE preview on the right side.
+- 2168936b9: **Sign-in Experience v2**
+
+  We are thrilled to announce the release of the newest version of the Sign-in Experience, which includes more ways to sign-in and sign-up, as well as a framework that is easier to understand and more flexible to configure in the Admin Console.
+
+  When compared to Sign-in Experience v1, this version’s capability was expanded so that it could support a greater variety of flexible use cases. For example, now users can sign up with email verification code and sign in with email and password.
+
+  We hope that this will be able to assist developers in delivering a successful sign-in flow, which will also be appreciated by the end users.
+
+- 343b1090f: ### Add custom content sign-in-experience settings to allow insert custom static html content to the logto sign-in pages
+
+  - feat: combine with the custom css, give the user the ability to further customize the sign-in pages
+
+- fdb2bb48e: **Streamlining the social sign-up flow**
+
+  - detect trusted email (or phone number) from the social account
+    - email (or phone number) has been registered: automatically connecting the social identity to the existing user account with a single click
+    - email (or phone number) not registered: automatically sync up the user profile with the social provided email (or phone) if and only if marked as a required user profile.
+
+- f41fd3f05: Replace the `sms` naming convention using `phone` cross logto codebase. Including Sign-in Experience types, API paths, API payload and internal variable names.
+
+### Patch Changes
+
+- 51f527b0c: bug fixes
+
+  - core: fix 500 error when enabling app admin access in console
+  - ui: handle required profile errors on social binding flow
+
+- 343b1090f: ## Implement a lite version of set password form.
+
+  To simplify the effort when user set new password, we implement a lite version of set password form.
+
+  The lite version of set password form only contains only one field password. It will be used if and only if the forgot-password feature is enabled (password can be reset either by email and phone).
+
+  If you do not have any email or sms service enabled, we still use the old version of set password form which contains two fields: password and confirm password.
+
+- 38970fb88: Fix a Sign-in experience bug that may block some users to sign in.
+- 02cc9abd8: Fix a bug to show forgot password when only SMS connector is configured
+- 343b1090f: - Add Power By Logto Signature to the main-flow pages
+
 ## 1.0.0-rc.3
 
 ## 1.0.0-rc.2
