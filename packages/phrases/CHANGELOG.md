@@ -1,5 +1,59 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- 1c9160112: Packages are now ESM.
+
+### Minor Changes
+
+- 343b1090f: ### Add dynamic favicon and html title
+
+  - Add the favicon field in the sign-in-experience branding settings. Users would be able to upload their own favicon. Use local logto icon as a fallback
+
+  - Set different html title for different pages.
+    - sign-in
+    - register
+    - forgot-password
+    - logto
+
+- c12717412: ## Creating your social connector with ease
+
+  We’re excited to announce that Logto now supports standard protocols (SAML, OIDC, and OAuth2.0) for creating social connectors to integrate external identity providers. Each protocol can create multiple social connectors, giving you more control over your access needs.
+
+  To simplify the process of configuring social connectors, we’re replacing code-edit with simple forms. SAML already supports form configuration, with other connectors coming soon. This means you don’t need to compare documents or worry about code format.
+
+- 68f2d56a2: Add German language
+- 343b1090f: Allow admin tenant admin to create tenants without limitation
+- 343b1090f: ### Add privacy policy url
+
+  In addition to the terms of service url, we also provide a privacy policy url field in the sign-in-experience settings. To better support the end-users' privacy declaration needs.
+
+- 343b1090f: New feature: User account settings page
+
+  - We have removed the previous settings page and moved it to the account settings page. You can access to the new settings menu by clicking the user avatar in the top right corner.
+  - You can directly change the language or theme from the popover menu, and explore more account settings by clicking the "Profile" menu item.
+  - You can update your avatar, name and username in the profile page, and also changing your password.
+  - [Cloud] Cloud users can also link their email address and social accounts (Google and GitHub at first launch).
+
+- 343b1090f: remove the branding style config and make the logo URL config optional
+- 343b1090f: Add custom CSS code editor so that users can apply advanced UI customization.
+  - Users can check the real time preview of the CSS via SIE preview on the right side.
+- 1c9160112: ### Features
+
+  - Enhanced user search params #2639
+  - Web hooks
+
+  ### Improvements
+
+  - Refactored Interaction APIs and Audit logs
+
+### Patch Changes
+
+- 343b1090f: add deletion confirm for in-used passwordless connectors
+- 38970fb88: Fix a Sign-in experience bug that may block some users to sign in.
+
 ## 1.0.0-rc.1
 
 ### Minor Changes

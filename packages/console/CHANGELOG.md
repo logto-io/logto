@@ -1,5 +1,117 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- c12717412: **Decouple users and admins**
+
+  ## 💥 BREAKING CHANGES 💥
+
+  Logto was using a single port to serve both normal users and admins, as well as the web console. While we continuously maintain a high level of security, it’ll still be great to decouple these components into two separate parts to keep data isolated and provide a flexible infrastructure.
+
+  From this version, Logto now listens to two ports by default, one for normal users (`3001`), and one for admins (`3002`).
+
+  - Nothing changed for normal users. No adaption is needed.
+  - For admin users:
+    - The default Admin Console URL has been changed to `http://localhost:3002/console`.
+    - To change the admin port, set the environment variable `ADMIN_PORT`. For instance, `ADMIN_PORT=3456`.
+    - You can specify a custom endpoint for admins by setting the environment variable `ADMIN_ENDPOINT`. For example, `ADMIN_ENDPOINT=https://admin.your-domain.com`.
+    - You can now completely disable admin endpoints by setting `ADMIN_DISABLE_LOCALHOST=1` and leaving `ADMIN_ENDPOINT` unset.
+    - Admin Console and admin user data are not accessible via normal user endpoints, including `localhost` and `ENDPOINT` from the environment.
+    - Admin Console no longer displays audit logs of admin users. However, these logs still exist in the database, and Logto still inserts admin user logs. There is just no convenient interface to inspect them.
+    - Due to the data isolation, the numbers on the dashboard may slightly decrease (admins are excluded).
+
+  If you are upgrading from a previous version, simply run the database alteration command as usual, and we'll take care of the rest.
+
+  > **Note** DID YOU KNOW
+  >
+  > Under the hood, we use the powerful Postgres feature Row-Level Security to isolate admin and user data.
+
+- 1c9160112: ### Features
+
+  - Enhanced user search params #2639
+  - Web hooks
+
+  ### Improvements
+
+  - Refactored Interaction APIs and Audit logs
+
+- f41fd3f05: drop settings table and add systems table
+
+  **BREAKING CHANGES**
+
+  - core: removed `GET /settings` and `PATCH /settings` API
+  - core: added `GET /configs/admin-console` and `PATCH /configs/admin-console` API
+    - `/configs/*` APIs are config/key-specific now. they may have different logic per key
+  - cli: change valid `logto db config` keys by removing `alterationState` and adding `adminConsole` since:
+    - OIDC configs and admin console configs are tenant-level configs (the concept of "tenant" can be ignored until we officially announce it)
+    - alteration state is still a system-wide config
+
+### Minor Changes
+
+- 343b1090f: ### Add dynamic favicon and html title
+
+  - Add the favicon field in the sign-in-experience branding settings. Users would be able to upload their own favicon. Use local logto icon as a fallback
+
+  - Set different html title for different pages.
+    - sign-in
+    - register
+    - forgot-password
+    - logto
+
+- c12717412: ## Creating your social connector with ease
+
+  We’re excited to announce that Logto now supports standard protocols (SAML, OIDC, and OAuth2.0) for creating social connectors to integrate external identity providers. Each protocol can create multiple social connectors, giving you more control over your access needs.
+
+  To simplify the process of configuring social connectors, we’re replacing code-edit with simple forms. SAML already supports form configuration, with other connectors coming soon. This means you don’t need to compare documents or worry about code format.
+
+- 343b1090f: - Automatically create a new tenant for new cloud users
+  - Support path-based multi-tenancy
+- 343b1090f: Allow admin tenant admin to create tenants without limitation
+- 343b1090f: ### Add privacy policy url
+
+  In addition to the terms of service url, we also provide a privacy policy url field in the sign-in-experience settings. To better support the end-users' privacy declaration needs.
+
+- 343b1090f: New feature: User account settings page
+
+  - We have removed the previous settings page and moved it to the account settings page. You can access to the new settings menu by clicking the user avatar in the top right corner.
+  - You can directly change the language or theme from the popover menu, and explore more account settings by clicking the "Profile" menu item.
+  - You can update your avatar, name and username in the profile page, and also changing your password.
+  - [Cloud] Cloud users can also link their email address and social accounts (Google and GitHub at first launch).
+
+- 343b1090f: remove the branding style config and make the logo URL config optional
+- 343b1090f: Add custom CSS code editor so that users can apply advanced UI customization.
+  - Users can check the real time preview of the CSS via SIE preview on the right side.
+- 2168936b9: **Sign-in Experience v2**
+
+  We are thrilled to announce the release of the newest version of the Sign-in Experience, which includes more ways to sign-in and sign-up, as well as a framework that is easier to understand and more flexible to configure in the Admin Console.
+
+  When compared to Sign-in Experience v1, this version’s capability was expanded so that it could support a greater variety of flexible use cases. For example, now users can sign up with email verification code and sign in with email and password.
+
+  We hope that this will be able to assist developers in delivering a successful sign-in flow, which will also be appreciated by the end users.
+
+- f41fd3f05: Replace the `sms` naming convention using `phone` cross logto codebase. Including Sign-in Experience types, API paths, API payload and internal variable names.
+
+### Patch Changes
+
+- 343b1090f: ## Refactor the Admin Console 403 flow
+
+  - Add 403 error handler for all AC API requests
+  - Show confirm modal to notify the user who is not authorized
+  - Click `confirm` button to sign out and redirect user to the sign-in page
+
+- 343b1090f: add deletion confirm for in-used passwordless connectors
+- 38970fb88: Fix a Sign-in experience bug that may block some users to sign in.
+- 343b1090f: **Seed data for cloud**
+
+  - cli!: remove `oidc` option for `database seed` command as it's unused
+  - cli: add hidden `--cloud` option for `database seed` command to init cloud data
+  - cli, cloud: appending Redirect URIs to Admin Console will deduplicate values before update
+  - move `UrlSet` and `GlobalValues` to `@logto/shared`
+
+- 1c9160112: Various UI improvements
+
 ## 1.0.0-rc.3
 
 ## 1.0.0-rc.2

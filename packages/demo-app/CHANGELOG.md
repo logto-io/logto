@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- 1c9160112: Packages are now ESM.
+
 ## 1.0.0-beta.13
 
 ### Major Changes

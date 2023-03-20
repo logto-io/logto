@@ -1,5 +1,67 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- 1c9160112: Packages are now ESM.
+
+### Minor Changes
+
+- 343b1090f: ### Update the password policy
+
+  Password policy description: Password requires a minimum of 8 characters and contains a mix of letters, numbers, and symbols.
+
+  - min-length updates: Password requires a minimum of 8 characters
+  - allowed characters updates: Password contains a mix of letters, numbers, and symbols
+    - digits: 0-9
+    - letters: a-z, A-Z
+    - symbols: !"#$%&'()\*+,./:;<=>?@[\]^\_`{|}~-
+  - At least two types of characters are required:
+    - letters and digits
+    - letters and symbols
+    - digits and symbols
+
+  > notice: The new password policy is applied to new users or new passwords only. Existing users are not affected by this change, users may still use their old password to sign-in.
+
+- 343b1090f: ### Add dynamic favicon and html title
+
+  - Add the favicon field in the sign-in-experience branding settings. Users would be able to upload their own favicon. Use local logto icon as a fallback
+
+  - Set different html title for different pages.
+    - sign-in
+    - register
+    - forgot-password
+    - logto
+
+- c12717412: ## Creating your social connector with ease
+
+  We’re excited to announce that Logto now supports standard protocols (SAML, OIDC, and OAuth2.0) for creating social connectors to integrate external identity providers. Each protocol can create multiple social connectors, giving you more control over your access needs.
+
+  To simplify the process of configuring social connectors, we’re replacing code-edit with simple forms. SAML already supports form configuration, with other connectors coming soon. This means you don’t need to compare documents or worry about code format.
+
+- 68f2d56a2: Add German language
+- 343b1090f: Allow admin tenant admin to create tenants without limitation
+- c12717412: Added Russian translation.
+- c12717412: ## Smart Identifier Input designed to streamline your sign-in experience
+
+  - Smart Contact Input
+  - Smart Identifier Input
+  - Intelligent Identifier Input Field
+
+  Content:
+  We have integrated the traditional input fields for username, phone number, and email into a single intelligent input box. This advanced input box automatically identifies the type of characters you’re entering, such as an @ sign or consecutive numbers, and provides relevant error feedback. By streamlining the sign-in process, users no longer need to waste time figuring out which button to click to switch their desired login method. This reduces the risk of errors and ensures a smoother sign-in experience.
+
+- 343b1090f: Implement a country code selector dropdown component with search box. Users may able to quick search for a country code by typing in the search box.
+- 1c9160112: ### Features
+
+  - Enhanced user search params #2639
+  - Web hooks
+
+  ### Improvements
+
+  - Refactored Interaction APIs and Audit logs
+
 ## 1.0.0-rc.1
 
 ### Minor Changes

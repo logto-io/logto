@@ -1,5 +1,84 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- 343b1090f: **Seed data for cloud**
+
+  - cli!: remove `oidc` option for `database seed` command as it's unused
+  - cli: add hidden `--cloud` option for `database seed` command to init cloud data
+  - cli, cloud: appending Redirect URIs to Admin Console will deduplicate values before update
+  - move `UrlSet` and `GlobalValues` to `@logto/shared`
+
+- 1c9160112: Packages are now ESM.
+- f41fd3f05: drop settings table and add systems table
+
+  **BREAKING CHANGES**
+
+  - core: removed `GET /settings` and `PATCH /settings` API
+  - core: added `GET /configs/admin-console` and `PATCH /configs/admin-console` API
+    - `/configs/*` APIs are config/key-specific now. they may have different logic per key
+  - cli: change valid `logto db config` keys by removing `alterationState` and adding `adminConsole` since:
+    - OIDC configs and admin console configs are tenant-level configs (the concept of "tenant" can be ignored until we officially announce it)
+    - alteration state is still a system-wide config
+
+### Minor Changes
+
+- f41fd3f05: Add `logto database alteration rollback` command for running `down()` alteration scripts
+- 343b1090f: Allow admin tenant admin to create tenants without limitation
+- 343b1090f: Add CLI command to get/set db's system table value
+- f41fd3f05: - cli: use `ec` with `secp384r1` as the default key generation type
+  - core: use `ES384` as the signing algorithm for EC keys
+- 3ff2e90cd: **CLI**
+
+  **Rotate your private or secret key**
+
+  We add a new command `db config rotate <key>` to support key rotation via CLI.
+
+  When rotating, the CLI will generate a new key and prepend to the corresponding key array. Thus the old key is still valid and the service will use the new key for signing.
+
+  Run `logto db config rotate help` for detailed usage.
+
+  **Trim the private or secret key you don't need**
+
+  If you want to trim one or more out-dated private or secret key(s) from the config, use the command `db config trim <key>`. It will remove the last item (private or secret key) in the array.
+
+  You may remove the old key after a certain period (such as half a year) to allow most of your users have time to touch the new key.
+
+  If you want to remove multiple keys at once, just append a number to the command. E.g. `logto db config trim oidc.cookieKeys 3`.
+
+  Run `logto db config trim help` for detailed usage.
+
+### Patch Changes
+
+- 38970fb88: Fix a Sign-in experience bug that may block some users to sign in.
+- 7fb689b73: Fix version lifecycle script
+- 1c9160112: - Remove official connectors inquiry
+  - Fix default download url with current package version
+- Updated dependencies [343b1090f]
+- Updated dependencies [e63f5f8b0]
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [c12717412]
+- Updated dependencies [343b1090f]
+- Updated dependencies [38970fb88]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [1c9160112]
+- Updated dependencies [1c9160112]
+- Updated dependencies [7fb689b73]
+- Updated dependencies [343b1090f]
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [2d45cc3e6]
+  - @logto/schemas@1.0.0
+  - @logto/shared@1.0.0
+  - @logto/connector-kit@1.1.0
+  - @logto/core-kit@1.1.0
+
 ## 1.0.0-rc.3
 
 ## 1.0.0-rc.2

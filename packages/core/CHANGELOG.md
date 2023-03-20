@@ -1,5 +1,205 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- c12717412: **Decouple users and admins**
+
+  ## 💥 BREAKING CHANGES 💥
+
+  Logto was using a single port to serve both normal users and admins, as well as the web console. While we continuously maintain a high level of security, it’ll still be great to decouple these components into two separate parts to keep data isolated and provide a flexible infrastructure.
+
+  From this version, Logto now listens to two ports by default, one for normal users (`3001`), and one for admins (`3002`).
+
+  - Nothing changed for normal users. No adaption is needed.
+  - For admin users:
+    - The default Admin Console URL has been changed to `http://localhost:3002/console`.
+    - To change the admin port, set the environment variable `ADMIN_PORT`. For instance, `ADMIN_PORT=3456`.
+    - You can specify a custom endpoint for admins by setting the environment variable `ADMIN_ENDPOINT`. For example, `ADMIN_ENDPOINT=https://admin.your-domain.com`.
+    - You can now completely disable admin endpoints by setting `ADMIN_DISABLE_LOCALHOST=1` and leaving `ADMIN_ENDPOINT` unset.
+    - Admin Console and admin user data are not accessible via normal user endpoints, including `localhost` and `ENDPOINT` from the environment.
+    - Admin Console no longer displays audit logs of admin users. However, these logs still exist in the database, and Logto still inserts admin user logs. There is just no convenient interface to inspect them.
+    - Due to the data isolation, the numbers on the dashboard may slightly decrease (admins are excluded).
+
+  If you are upgrading from a previous version, simply run the database alteration command as usual, and we'll take care of the rest.
+
+  > **Note** DID YOU KNOW
+  >
+  > Under the hood, we use the powerful Postgres feature Row-Level Security to isolate admin and user data.
+
+- 1c9160112: Packages are now ESM.
+- 343b1090f: **💥 BREAKING CHANGE 💥** Move `/api/phrase` API to `/api/.well-known/phrases`
+- f41fd3f05: drop settings table and add systems table
+
+  **BREAKING CHANGES**
+
+  - core: removed `GET /settings` and `PATCH /settings` API
+  - core: added `GET /configs/admin-console` and `PATCH /configs/admin-console` API
+    - `/configs/*` APIs are config/key-specific now. they may have different logic per key
+  - cli: change valid `logto db config` keys by removing `alterationState` and adding `adminConsole` since:
+    - OIDC configs and admin console configs are tenant-level configs (the concept of "tenant" can be ignored until we officially announce it)
+    - alteration state is still a system-wide config
+
+### Minor Changes
+
+- c12717412: - mask sensitive password value in audit logs
+- f41fd3f05: Replace `passcode` naming convention in the interaction APIs and main flow ui with `verificationCode`.
+- c12717412: ## Creating your social connector with ease
+
+  We’re excited to announce that Logto now supports standard protocols (SAML, OIDC, and OAuth2.0) for creating social connectors to integrate external identity providers. Each protocol can create multiple social connectors, giving you more control over your access needs.
+
+  To simplify the process of configuring social connectors, we’re replacing code-edit with simple forms. SAML already supports form configuration, with other connectors coming soon. This means you don’t need to compare documents or worry about code format.
+
+- c12717412: ## Enable connector method `getUserInfo` read and write access to DB
+
+  Logto connectors are designed to be stateless to the extent possible and practical, but it still has some exceptions at times.
+
+  With the recent addition of database read and write access, connectors can now store persistent information. For example, connectors can now store access tokens and refresh tokens to minimize number of requests to social vendor's APIs.
+
+- 343b1090f: - Automatically create a new tenant for new cloud users
+  - Support path-based multi-tenancy
+- 343b1090f: Add storage provider: S3Storage
+- 343b1090f: Allow admin tenant admin to create tenants without limitation
+- 343b1090f: ### Add privacy policy url
+
+  In addition to the terms of service url, we also provide a privacy policy url field in the sign-in-experience settings. To better support the end-users' privacy declaration needs.
+
+- 18e3b82e6: Add user suspend API endpoint
+
+  Use `PATCH /api/users/:userId/is-suspended` to update a user's suspended state, once a user is suspended, all refresh tokens belong to this user will be revoked.
+
+  Suspended users will get an error toast when trying to sign in.
+
+- 343b1090f: Add API for uploading user images to storage providers: Azure Storage.
+- f41fd3f05: Officially cleanup all deprecated `/session` APIs in core and all the related integration tests.
+- 343b1090f: **Add `sessionNotFoundRedirectUrl` tenant config**
+
+  - User can use this optional config to designate the URL to redirect if session not found in Sign-in Experience.
+  - Session guard now works for root path as well.
+
+- 343b1090f: New feature: User account settings page
+
+  - We have removed the previous settings page and moved it to the account settings page. You can access to the new settings menu by clicking the user avatar in the top right corner.
+  - You can directly change the language or theme from the popover menu, and explore more account settings by clicking the "Profile" menu item.
+  - You can update your avatar, name and username in the profile page, and also changing your password.
+  - [Cloud] Cloud users can also link their email address and social accounts (Google and GitHub at first launch).
+
+- 343b1090f: remove the branding style config and make the logo URL config optional
+- c12717412: **Customize CSS for Sign-in Experience**
+
+  We have put a lot of effort into improving the user sign-in experience and have provided a brand color option for the UI. However, we know that fine-tuning UI requirements can be unpredictable. While Logto is still exploring the best options for customization, we want to provide a programmatic method to unblock your development.
+
+  You can now use the Management API `PATCH /api/sign-in-exp` with body `{ "customCss": "arbitrary string" }` to set customized CSS for the sign-in experience. You should see the value of `customCss` attached after `<title>` of the page. If the style has a higher priority, it should be able to override.
+
+  > **Note**
+  >
+  > Since Logto uses CSS Modules, you may see a hash value in the `class` property of DOM elements (e.g. a `<div>` with `vUugRG_container`). To override these, you can use the `$=` CSS selector to match elements that end with a specified value. In this case, it should be `div[class$=container]`.
+
+- 2168936b9: **Sign-in Experience v2**
+
+  We are thrilled to announce the release of the newest version of the Sign-in Experience, which includes more ways to sign-in and sign-up, as well as a framework that is easier to understand and more flexible to configure in the Admin Console.
+
+  When compared to Sign-in Experience v1, this version’s capability was expanded so that it could support a greater variety of flexible use cases. For example, now users can sign up with email verification code and sign in with email and password.
+
+  We hope that this will be able to assist developers in delivering a successful sign-in flow, which will also be appreciated by the end users.
+
+- 1c9160112: ### Features
+
+  - Enhanced user search params #2639
+  - Web hooks
+
+  ### Improvements
+
+  - Refactored Interaction APIs and Audit logs
+
+- f41fd3f05: - cli: use `ec` with `secp384r1` as the default key generation type
+  - core: use `ES384` as the signing algorithm for EC keys
+- 343b1090f: ### Add custom content sign-in-experience settings to allow insert custom static html content to the logto sign-in pages
+
+  - feat: combine with the custom css, give the user the ability to further customize the sign-in pages
+
+- fdb2bb48e: **Streamlining the social sign-up flow**
+
+  - detect trusted email (or phone number) from the social account
+    - email (or phone number) has been registered: automatically connecting the social identity to the existing user account with a single click
+    - email (or phone number) not registered: automatically sync up the user profile with the social provided email (or phone) if and only if marked as a required user profile.
+
+- f41fd3f05: Replace the `sms` naming convention using `phone` cross logto codebase. Including Sign-in Experience types, API paths, API payload and internal variable names.
+- 402866994: **💥 Breaking change 💥**
+
+  Use case-insensitive strategy for searching emails
+
+- f41fd3f05: Add support to send and verify verification code in management APIs
+
+### Patch Changes
+
+- e63f5f8b0: Bump connector kit version to fix "Continue" issues on sending email/sms.
+- 51f527b0c: bug fixes
+
+  - core: fix 500 error when enabling app admin access in console
+  - ui: handle required profile errors on social binding flow
+
+- 343b1090f: ## Refactor the Admin Console 403 flow
+
+  - Add 403 error handler for all AC API requests
+  - Show confirm modal to notify the user who is not authorized
+  - Click `confirm` button to sign out and redirect user to the sign-in page
+
+- 343b1090f: Add interactionMode extra OIDC params to specify the desired use interaction experience
+
+  - signUp: Deliver a sign-up first interaction experience
+  - signIn & undefined: Deliver a default sign-in first interaction experience
+
+- 38970fb88: Fix a Sign-in experience bug that may block some users to sign in.
+- 343b1090f: **Seed data for cloud**
+
+  - cli!: remove `oidc` option for `database seed` command as it's unused
+  - cli: add hidden `--cloud` option for `database seed` command to init cloud data
+  - cli, cloud: appending Redirect URIs to Admin Console will deduplicate values before update
+  - move `UrlSet` and `GlobalValues` to `@logto/shared`
+
+- 5e1466f40: Allow localhost CORS when only one endpoint available
+- Updated dependencies [343b1090f]
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [e63f5f8b0]
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [c12717412]
+- Updated dependencies [68f2d56a2]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [c12717412]
+- Updated dependencies [343b1090f]
+- Updated dependencies [38970fb88]
+- Updated dependencies [c12717412]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [c12717412]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [1c9160112]
+- Updated dependencies [343b1090f]
+- Updated dependencies [1c9160112]
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [7fb689b73]
+- Updated dependencies [1c9160112]
+- Updated dependencies [343b1090f]
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [f41fd3f05]
+- Updated dependencies [2d45cc3e6]
+- Updated dependencies [3ff2e90cd]
+  - @logto/schemas@1.0.0
+  - @logto/shared@1.0.0
+  - @logto/cli@1.0.0
+  - @logto/phrases-ui@1.0.0
+  - @logto/phrases@1.0.0
+  - @logto/connector-kit@1.1.0
+  - @logto/core-kit@1.1.0
+
 ## 1.0.0-rc.3
 
 ### Patch Changes

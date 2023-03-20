@@ -1,5 +1,119 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- c12717412: **Decouple users and admins**
+
+  ## 💥 BREAKING CHANGES 💥
+
+  Logto was using a single port to serve both normal users and admins, as well as the web console. While we continuously maintain a high level of security, it’ll still be great to decouple these components into two separate parts to keep data isolated and provide a flexible infrastructure.
+
+  From this version, Logto now listens to two ports by default, one for normal users (`3001`), and one for admins (`3002`).
+
+  - Nothing changed for normal users. No adaption is needed.
+  - For admin users:
+    - The default Admin Console URL has been changed to `http://localhost:3002/console`.
+    - To change the admin port, set the environment variable `ADMIN_PORT`. For instance, `ADMIN_PORT=3456`.
+    - You can specify a custom endpoint for admins by setting the environment variable `ADMIN_ENDPOINT`. For example, `ADMIN_ENDPOINT=https://admin.your-domain.com`.
+    - You can now completely disable admin endpoints by setting `ADMIN_DISABLE_LOCALHOST=1` and leaving `ADMIN_ENDPOINT` unset.
+    - Admin Console and admin user data are not accessible via normal user endpoints, including `localhost` and `ENDPOINT` from the environment.
+    - Admin Console no longer displays audit logs of admin users. However, these logs still exist in the database, and Logto still inserts admin user logs. There is just no convenient interface to inspect them.
+    - Due to the data isolation, the numbers on the dashboard may slightly decrease (admins are excluded).
+
+  If you are upgrading from a previous version, simply run the database alteration command as usual, and we'll take care of the rest.
+
+  > **Note** DID YOU KNOW
+  >
+  > Under the hood, we use the powerful Postgres feature Row-Level Security to isolate admin and user data.
+
+- 1c9160112: Packages are now ESM.
+- f41fd3f05: drop settings table and add systems table
+
+  **BREAKING CHANGES**
+
+  - core: removed `GET /settings` and `PATCH /settings` API
+  - core: added `GET /configs/admin-console` and `PATCH /configs/admin-console` API
+    - `/configs/*` APIs are config/key-specific now. they may have different logic per key
+  - cli: change valid `logto db config` keys by removing `alterationState` and adding `adminConsole` since:
+    - OIDC configs and admin console configs are tenant-level configs (the concept of "tenant" can be ignored until we officially announce it)
+    - alteration state is still a system-wide config
+
+### Minor Changes
+
+- 343b1090f: Add demo social connectors for new tenant
+- f41fd3f05: Replace `passcode` naming convention in the interaction APIs and main flow ui with `verificationCode`.
+- 343b1090f: ### Add dynamic favicon and html title
+
+  - Add the favicon field in the sign-in-experience branding settings. Users would be able to upload their own favicon. Use local logto icon as a fallback
+
+  - Set different html title for different pages.
+    - sign-in
+    - register
+    - forgot-password
+    - logto
+
+- 343b1090f: Allow admin tenant admin to create tenants without limitation
+- 343b1090f: ### Add privacy policy url
+
+  In addition to the terms of service url, we also provide a privacy policy url field in the sign-in-experience settings. To better support the end-users' privacy declaration needs.
+
+- 343b1090f: **Add `sessionNotFoundRedirectUrl` tenant config**
+
+  - User can use this optional config to designate the URL to redirect if session not found in Sign-in Experience.
+  - Session guard now works for root path as well.
+
+- 343b1090f: remove the branding style config and make the logo URL config optional
+- 1c9160112: ### Features
+
+  - Enhanced user search params #2639
+  - Web hooks
+
+  ### Improvements
+
+  - Refactored Interaction APIs and Audit logs
+
+- 343b1090f: ### Add custom content sign-in-experience settings to allow insert custom static html content to the logto sign-in pages
+
+  - feat: combine with the custom css, give the user the ability to further customize the sign-in pages
+
+- f41fd3f05: Replace the `sms` naming convention using `phone` cross logto codebase. Including Sign-in Experience types, API paths, API payload and internal variable names.
+
+### Patch Changes
+
+- e63f5f8b0: Bump connector kit version to fix "Continue" issues on sending email/sms.
+- 38970fb88: Fix a Sign-in experience bug that may block some users to sign in.
+- 343b1090f: **Seed data for cloud**
+
+  - cli!: remove `oidc` option for `database seed` command as it's unused
+  - cli: add hidden `--cloud` option for `database seed` command to init cloud data
+  - cli, cloud: appending Redirect URIs to Admin Console will deduplicate values before update
+  - move `UrlSet` and `GlobalValues` to `@logto/shared`
+
+- 7fb689b73: Fix version lifecycle script
+- 2d45cc3e6: Update alteration script names after versioning
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [c12717412]
+- Updated dependencies [68f2d56a2]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [38970fb88]
+- Updated dependencies [c12717412]
+- Updated dependencies [343b1090f]
+- Updated dependencies [c12717412]
+- Updated dependencies [343b1090f]
+- Updated dependencies [343b1090f]
+- Updated dependencies [1c9160112]
+- Updated dependencies [343b1090f]
+- Updated dependencies [1c9160112]
+  - @logto/phrases-ui@1.0.0
+  - @logto/phrases@1.0.0
+  - @logto/connector-kit@1.1.0
+  - @logto/core-kit@1.1.0
+
 ## 1.0.0-rc.1
 
 ### Major Changes
