@@ -29,6 +29,7 @@ import { uriValidator } from '@/utils/validator';
 
 import InspireMe from './components/InspireMe';
 import Preview from './components/Preview';
+import Skeleton from './components/Skeleton';
 import SocialSelector from './components/SocialSelector';
 import * as styles from './index.module.scss';
 import { authenticationOptions, identifierOptions } from './options';
@@ -39,10 +40,14 @@ import { parser } from './utils';
 function SignInExperience() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
-  const { data: signInExperience, mutate } = useSWR<SignInExperienceType, RequestError>(
-    'api/sign-in-exp'
-  );
-
+  const {
+    data: signInExperience,
+    error,
+    mutate,
+  } = useSWR<SignInExperienceType, RequestError>('api/sign-in-exp');
+  const isSignInExperienceDataLoading = !error && !signInExperience;
+  const { isLoading: isUserAssetsServiceLoading } = useUserAssetsService();
+  const isLoading = isSignInExperienceDataLoading || isUserAssetsServiceLoading;
   const api = useApi();
   const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
 
@@ -95,6 +100,10 @@ function SignInExperience() {
 
     onSuccess();
   };
+
+  if (!isLoading) {
+    return <Skeleton />;
+  }
 
   return (
     <div className={pageLayout.page}>
