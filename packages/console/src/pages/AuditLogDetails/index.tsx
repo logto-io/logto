@@ -5,15 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Back from '@/assets/images/back.svg';
 import ApplicationName from '@/components/ApplicationName';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
-import DetailsSkeleton from '@/components/DetailsSkeleton';
+import DangerousRaw from '@/components/DangerousRaw';
+import DetailsPage from '@/components/DetailsPage';
 import FormField from '@/components/FormField';
-import RequestDataError from '@/components/RequestDataError';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import TextLink from '@/components/TextLink';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
 import type { RequestError } from '@/hooks/use-api';
@@ -48,19 +46,15 @@ function AuditLogDetails() {
   }
 
   return (
-    <div className={detailsStyles.container}>
-      <TextLink to={backLink} icon={<Back />} className={styles.backLink}>
-        {backLinkTitle}
-      </TextLink>
-      {isLoading && <DetailsSkeleton />}
-      {error && (
-        <RequestDataError
-          error={error}
-          onRetry={() => {
-            void mutate();
-          }}
-        />
-      )}
+    <DetailsPage
+      backLink={backLink}
+      backLinkTitle={<DangerousRaw>{backLinkTitle}</DangerousRaw>}
+      isLoading={isLoading}
+      error={error}
+      onRetry={() => {
+        void mutate();
+      }}
+    >
       {data && (
         <>
           <Card className={styles.header}>
@@ -126,7 +120,7 @@ function AuditLogDetails() {
           </Card>
         </>
       )}
-    </div>
+    </DetailsPage>
   );
 }
 

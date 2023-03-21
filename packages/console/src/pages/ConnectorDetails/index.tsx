@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
-import Back from '@/assets/images/back.svg';
 import Delete from '@/assets/images/delete.svg';
 import More from '@/assets/images/more.svg';
 import Reset from '@/assets/images/reset.svg';
@@ -15,19 +14,16 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import CopyToClipboard from '@/components/CopyToClipboard';
-import DetailsSkeleton from '@/components/DetailsSkeleton';
+import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
 import Markdown from '@/components/Markdown';
-import RequestDataError from '@/components/RequestDataError';
 import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import TextLink from '@/components/TextLink';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
-import * as detailsStyles from '@/scss/details.module.scss';
 import { withAppInsights } from '@/utils/app-insights';
 
 import CreateForm from '../Connectors/components/CreateForm';
@@ -108,22 +104,18 @@ function ConnectorDetails() {
   }
 
   return (
-    <div className={detailsStyles.container}>
-      <TextLink to={getConnectorsPathname(isSocial)} icon={<Back />} className={styles.backLink}>
-        {t('connector_details.back_to_connectors')}
-      </TextLink>
-      {requestError && (
-        <RequestDataError
-          error={requestError}
-          onRetry={() => {
-            void mutate();
-            void mutateConnectorFactory();
-          }}
-        />
-      )}
-      {isLoading && !requestError && <DetailsSkeleton />}
+    <DetailsPage
+      backLink={getConnectorsPathname(isSocial)}
+      backLinkTitle="connector_details.back_to_connectors"
+      isLoading={isLoading}
+      error={requestError}
+      onRetry={() => {
+        void mutate();
+        void mutateConnectorFactory();
+      }}
+    >
       {isSocial && <ConnectorTabs target={data.target} connectorId={data.id} />}
-      {!requestError && data && (
+      {data && (
         <>
           <Card className={styles.header}>
             <ConnectorLogo data={data} size="large" />
@@ -232,7 +224,7 @@ function ConnectorDetails() {
           />
         </>
       )}
-    </div>
+    </DetailsPage>
   );
 }
 

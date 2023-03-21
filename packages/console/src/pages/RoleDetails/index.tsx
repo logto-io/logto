@@ -6,21 +6,17 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
-import Back from '@/assets/images/back.svg';
 import Delete from '@/assets/images/delete.svg';
 import More from '@/assets/images/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
-import DetailsSkeleton from '@/components/DetailsSkeleton';
-import RequestDataError from '@/components/RequestDataError';
+import DetailsPage from '@/components/DetailsPage';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import TextLink from '@/components/TextLink';
 import { RoleDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import * as detailsStyles from '@/scss/details.module.scss';
 import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
@@ -67,25 +63,16 @@ function RoleDetails() {
   };
 
   return (
-    <div
-      className={classNames(
-        detailsStyles.container,
-        styles.container,
-        isPageHasTable && styles.withTable
-      )}
+    <DetailsPage
+      backLink="/roles"
+      backLinkTitle="role_details.back_to_roles"
+      isLoading={isLoading}
+      error={error}
+      className={classNames(isPageHasTable && styles.withTable)}
+      onRetry={() => {
+        void mutate();
+      }}
     >
-      <TextLink to="/roles" icon={<Back />} className={styles.backLink}>
-        {t('role_details.back_to_roles')}
-      </TextLink>
-      {isLoading && <DetailsSkeleton />}
-      {error && (
-        <RequestDataError
-          error={error}
-          onRetry={() => {
-            void mutate();
-          }}
-        />
-      )}
       {data && (
         <>
           <Card className={styles.header}>
@@ -146,7 +133,7 @@ function RoleDetails() {
           />
         </>
       )}
-    </div>
+    </DetailsPage>
   );
 }
 
