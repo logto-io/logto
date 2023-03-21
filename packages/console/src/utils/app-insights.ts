@@ -46,5 +46,5 @@ export const withAppInsights = (Component: ComponentType) => {
     return Component;
   }
 
-  return withAITracking(reactPlugin, Component);
+  return withAITracking(reactPlugin, Component, undefined, 'appInsightsWrapper');
 };
