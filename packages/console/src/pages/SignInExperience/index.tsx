@@ -21,6 +21,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import useUiLanguages from '@/hooks/use-ui-languages';
+import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { withAppInsights } from '@/utils/app-insights';
 
 import Preview from './components/Preview';
@@ -62,6 +63,7 @@ function SignInExperience() {
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('api/sign-in-exp');
   const isLoadingSignInExperience = !data && !error;
+  const { isLoading: isUserAssetsServiceLoading } = useUserAssetsService();
 
   const {
     configs,
@@ -77,6 +79,12 @@ function SignInExperience() {
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
 
   const requestError = error ?? configsError ?? languageError;
+
+  const isLoading =
+    isLoadingSignInExperience ||
+    isLoadingConfig ||
+    isLoadingLanguages ||
+    isUserAssetsServiceLoading;
 
   const methods = useForm<SignInExperienceForm>();
   const {
@@ -134,7 +142,7 @@ function SignInExperience() {
     await saveData();
   });
 
-  if (isLoadingSignInExperience || isLoadingConfig || isLoadingLanguages) {
+  if (isLoading) {
     return <Skeleton />;
   }
 

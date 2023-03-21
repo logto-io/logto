@@ -10,6 +10,7 @@ import { adminTenantEndpoint, meApi } from '@/consts';
 import { isCloud } from '@/consts/cloud';
 import { useStaticApi } from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';
+import useUserAssetsService from '@/hooks/use-user-assets-service';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { withAppInsights } from '@/utils/app-insights';
 
@@ -27,12 +28,13 @@ function Profile() {
   const navigate = useNavigate();
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
   const { user, reload, isLoading: isLoadingUser } = useCurrentUser();
+  const { isLoading: isUserAssetServiceLoading } = useUserAssetsService();
 
   const [connectors, setConnectors] = useState<ConnectorResponse[]>();
   const [isLoadingConnectors, setIsLoadingConnectors] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
-  const showLoadingSkeleton = isLoadingUser || isLoadingConnectors;
+  const showLoadingSkeleton = isLoadingUser || isLoadingConnectors || isUserAssetServiceLoading;
 
   useEffect(() => {
     void reload();

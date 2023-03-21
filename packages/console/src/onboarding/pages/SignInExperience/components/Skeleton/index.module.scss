@@ -1,0 +1,107 @@
+@use '@/scss/underscore' as _;
+
+.fieldWrapper {
+  padding: _.unit(2);
+
+  >:not(:first-child) {
+    margin-top: _.unit(6);
+  }
+
+  .title {
+    @include _.shimmering-animation;
+    width: 80px;
+    height: 16px;
+  }
+
+  .field {
+    @include _.shimmering-animation;
+    width: 100%;
+    height: 44px;
+  }
+
+  &:not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}
+
+.preview {
+  background: var(--color-surface-variant);
+  padding: _.unit(6);
+  border-radius: 12px;
+  overflow: hidden;
+
+  .header {
+    padding: _.unit(2);
+    margin-bottom: _.unit(6);
+    display: flex;
+    justify-content: space-between;
+
+    .actions {
+      display: flex;
+      gap: _.unit(3);
+    }
+
+    .smallButton {
+      width: 30px;
+      height: 30px;
+      margin-left: _.unit(2.5);
+      @include _.shimmering-animation;
+    }
+
+    .button {
+      width: 104px;
+      height: 30px;
+      margin-left: _.unit(2.5);
+      @include _.shimmering-animation;
+    }
+  }
+
+  .mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 375px;
+    height: 667px;
+    background: var(--color-surface);
+    margin: 0 auto;
+    padding: _.unit(6);
+    border-radius: 16px;
+    transform: scale(0.6);
+    transform-origin: top;
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-top: _.unit(16);
+      @include _.shimmering-animation;
+    }
+
+    .slogan {
+      width: 177px;
+      height: 16px;
+      margin: _.unit(3) 0 _.unit(10);
+      @include _.shimmering-animation;
+    }
+
+    .field {
+      width: 100%;
+      height: 36px;
+      margin-top: _.unit(3);
+      @include _.shimmering-animation;
+    }
+
+    .button {
+      width: 100%;
+      height: 36px;
+      margin-top: _.unit(10);
+      @include _.shimmering-animation;
+    }
+
+    .social {
+      width: 180px;
+      height: 24px;
+      margin-top: _.unit(3);
+      @include _.shimmering-animation;
+    }
+  }
+}
