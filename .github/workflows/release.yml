@@ -95,7 +95,7 @@ jobs:
 
   dockerize-cloud:
     # Use normal machine for OSS release since we'll build on Depot
-    runs-on: (inputs.target || 'dev') == 'dev' && 'ubuntu-latest' || 'ubuntu-latest-4-cores' }}
+    runs-on: ${{ (inputs.target || 'dev') == 'dev' && 'ubuntu-latest' || 'ubuntu-latest-4-cores' }}
 
     steps:
       - uses: actions/checkout@v3
