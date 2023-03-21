@@ -33,7 +33,7 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@logto/language-kit": "workspace:*",
+    "@logto/language-kit": "workspace:^",
     "@silverhand/essentials": "^2.5.0",
     "zod": "^3.20.2"
   },

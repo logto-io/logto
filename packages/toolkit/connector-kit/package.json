@@ -32,7 +32,7 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/language-kit": "workspace:*",
+    "@logto/language-kit": "workspace:^",
     "@silverhand/essentials": "^2.5.0"
   },
   "optionalDependencies": {

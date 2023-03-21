@@ -43,10 +43,10 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@logto/connector-kit": "workspace:*",
-    "@logto/core-kit": "workspace:*",
-    "@logto/schemas": "workspace:*",
-    "@logto/shared": "workspace:*",
+    "@logto/connector-kit": "workspace:^",
+    "@logto/core-kit": "workspace:^",
+    "@logto/schemas": "workspace:^",
+    "@logto/shared": "workspace:^",
     "@silverhand/essentials": "^2.5.0",
     "chalk": "^5.0.0",
     "decamelize": "^6.0.0",
