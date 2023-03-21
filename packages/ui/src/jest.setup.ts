@@ -17,8 +17,8 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// eslint-disable-next-line @silverhand/fp/no-mutation
-global.crypto = new Crypto();
+// eslint-disable-next-line @silverhand/fp/no-mutation, no-restricted-syntax
+global.crypto = new Crypto() as typeof global.crypto;
 
 const translation = (key: string) => key;
 

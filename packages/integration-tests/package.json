@@ -45,7 +45,7 @@
     "prettier": "^2.8.2",
     "puppeteer": "^19.0.0",
     "text-encoder": "^0.0.4",
-    "typescript": "^4.9.4"
+    "typescript": "^5.0.0"
   },
   "engines": {
     "node": "^18.12.0"
