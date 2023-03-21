@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.0.1
+
+### Patch Changes
+
+- 03ac35e75: fix applications_roles query
+  - @logto/cli@1.0.1
+
 ## 1.0.0
 
 ### Major Changes
