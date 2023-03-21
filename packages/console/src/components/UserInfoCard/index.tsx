@@ -15,7 +15,7 @@ type Props = {
   avatarSize?: 'medium' | 'large';
 };
 
-const UserInfoCard = ({ className, user, avatarSize = 'medium' }: Props) => {
+function UserInfoCard({ className, user, avatarSize = 'medium' }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { name, username, avatar, picture, primaryEmail, email } = user ?? {};
@@ -38,6 +38,6 @@ const UserInfoCard = ({ className, user, avatarSize = 'medium' }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default UserInfoCard;

@@ -9,11 +9,13 @@ type Props = {
   variant?: 'plain' | 'outlined';
 };
 
-const Status = ({ status, children, variant = 'plain' }: Props) => (
-  <div className={classNames(styles.status, styles[status], styles[variant])}>
-    <div className={styles.icon} />
-    <div>{children}</div>
-  </div>
-);
+function Status({ status, children, variant = 'plain' }: Props) {
+  return (
+    <div className={classNames(styles.status, styles[status], styles[variant])}>
+      <div className={styles.icon} />
+      <div>{children}</div>
+    </div>
+  );
+}
 
 export default Status;

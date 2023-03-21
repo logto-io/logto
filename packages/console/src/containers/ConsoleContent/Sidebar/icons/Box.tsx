@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react';
 
-const Box = (props: SVGProps<SVGSVGElement>) => {
+function Box(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
@@ -9,6 +9,6 @@ const Box = (props: SVGProps<SVGSVGElement>) => {
       />
     </svg>
   );
-};
+}
 
 export default Box;

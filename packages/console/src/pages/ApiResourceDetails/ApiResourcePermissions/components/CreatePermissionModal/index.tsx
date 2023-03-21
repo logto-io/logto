@@ -18,7 +18,7 @@ type Props = {
 
 type CreatePermissionFormData = Pick<Scope, 'name' | 'description'>;
 
-const CreatePermissionModal = ({ resourceId, onClose }: Props) => {
+function CreatePermissionModal({ resourceId, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     handleSubmit,
@@ -94,6 +94,6 @@ const CreatePermissionModal = ({ resourceId, onClose }: Props) => {
       </ModalLayout>
     </ReactModal>
   );
-};
+}
 
 export default CreatePermissionModal;

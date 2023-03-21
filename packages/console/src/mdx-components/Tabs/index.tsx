@@ -22,7 +22,7 @@ function isTabItem(comp: ReactElement): comp is ReactElement<TabItemProps> {
   return comp.props.value !== undefined;
 }
 
-const Tabs = ({ className, children }: Props): JSX.Element => {
+function Tabs({ className, children }: Props): JSX.Element {
   const verifiedChildren = Children.map(children, (child) => {
     if (isValidElement(child) && isTabItem(child)) {
       return child;
@@ -107,6 +107,6 @@ const Tabs = ({ className, children }: Props): JSX.Element => {
       </div>
     </div>
   );
-};
+}
 
 export default Tabs;

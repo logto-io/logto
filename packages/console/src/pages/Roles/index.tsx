@@ -31,7 +31,6 @@ const buildDetailsPathname = (id: string) => `${rolesPathname}/${id}`;
 
 const pageSize = defaultPageSize;
 
-// eslint-disable-next-line react/function-component-definition
 function Roles() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname, search } = useLocation();

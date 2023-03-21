@@ -25,7 +25,7 @@ type FormData = {
   sendTo: string;
 };
 
-const SenderTester = ({ connectorFactoryId, connectorType, className, parse }: Props) => {
+function SenderTester({ connectorFactoryId, connectorType, className, parse }: Props) {
   const [showTooltip, setShowTooltip] = useState(false);
   const {
     handleSubmit,
@@ -116,6 +116,6 @@ const SenderTester = ({ connectorFactoryId, connectorType, className, parse }: P
       <div className={styles.error}>{inputError?.message}</div>
     </div>
   );
-};
+}
 
 export default SenderTester;

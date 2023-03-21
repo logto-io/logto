@@ -11,7 +11,7 @@ type Props = {
   isLink?: boolean;
 };
 
-const ApplicationName = ({ applicationId, isLink = false }: Props) => {
+function ApplicationName({ applicationId, isLink = false }: Props) {
   const isAdminConsole = applicationId === adminConsoleApplicationId;
 
   const { data } = useSWR<Application>(!isAdminConsole && `api/applications/${applicationId}`);
@@ -28,6 +28,6 @@ const ApplicationName = ({ applicationId, isLink = false }: Props) => {
   }
 
   return <span>{name}</span>;
-};
+}
 
 export default ApplicationName;

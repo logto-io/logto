@@ -12,7 +12,7 @@ type Props = Pick<ImageUploaderProps, 'name' | 'value' | 'actionDescription'> & 
   onChange: (value: string) => void;
 };
 
-const ImageUploaderField = ({ onChange, ...rest }: Props) => {
+function ImageUploaderField({ onChange, ...rest }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const limitDescription = t('components.uploader.image_limit', {
@@ -37,6 +37,6 @@ const ImageUploaderField = ({ onChange, ...rest }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default ImageUploaderField;

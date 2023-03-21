@@ -8,13 +8,13 @@ type Props = {
   isAfter?: boolean;
 };
 
-const DiffSegment = ({ children, hasChanged, isAfter = false }: Props) => {
+function DiffSegment({ children, hasChanged, isAfter = false }: Props) {
   if (!hasChanged) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     return <>{children}</>;
   }
 
   return <span className={isAfter ? styles.green : styles.red}>{children}</span>;
-};
+}
 
 export default DiffSegment;

@@ -33,7 +33,7 @@ import { LanguageEditorContext } from './use-language-editor-context';
 
 const emptyUiTranslation = createEmptyUiTranslation();
 
-const LanguageDetails = () => {
+function LanguageDetails() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
   const { languages } = useUiLanguages();
@@ -270,6 +270,6 @@ const LanguageDetails = () => {
       </ConfirmModal>
     </div>
   );
-};
+}
 
 export default LanguageDetails;

@@ -29,7 +29,7 @@ type Props = {
   onClose?: (createdApp?: Application) => void;
 };
 
-const CreateForm = ({ isOpen, onClose }: Props) => {
+function CreateForm({ isOpen, onClose }: Props) {
   const { updateConfigs } = useConfigs();
   const {
     handleSubmit,
@@ -130,6 +130,6 @@ const CreateForm = ({ isOpen, onClose }: Props) => {
       </ModalLayout>
     </Modal>
   );
-};
+}
 
 export default CreateForm;

@@ -59,7 +59,6 @@ const isConnectorType = (value: string): value is ConnectorType =>
 const parseToConnectorType = (value?: string): ConnectorType | undefined =>
   conditional(value && isConnectorType(value) && value);
 
-// eslint-disable-next-line react/function-component-definition
 function Connectors() {
   const { tab = ConnectorsTabs.Passwordless, createType, factoryId } = useParams();
   const createConnectorType = parseToConnectorType(createType);

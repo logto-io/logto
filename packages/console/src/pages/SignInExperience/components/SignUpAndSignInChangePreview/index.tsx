@@ -9,7 +9,7 @@ type Props = {
   after: SignInExperience;
 };
 
-const SignUpAndSignInChangePreview = ({ before, after }: Props) => {
+function SignUpAndSignInChangePreview({ before, after }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -27,6 +27,6 @@ const SignUpAndSignInChangePreview = ({ before, after }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default SignUpAndSignInChangePreview;

@@ -14,7 +14,6 @@ import Skeleton from './components/Skeleton';
 import useGetStartedMetadata from './hook';
 import * as styles from './index.module.scss';
 
-// eslint-disable-next-line react/function-component-definition
 function GetStarted() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();

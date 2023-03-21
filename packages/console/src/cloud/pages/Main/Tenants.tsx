@@ -14,7 +14,7 @@ type Props = {
   onAdd: (tenant: TenantInfo) => void;
 };
 
-const Tenants = ({ data, onAdd }: Props) => {
+function Tenants({ data, onAdd }: Props) {
   const api = useCloudApi();
   const { navigate } = useContext(TenantsContext);
 
@@ -57,6 +57,6 @@ const Tenants = ({ data, onAdd }: Props) => {
   }
 
   return <AppLoading />;
-};
+}
 
 export default Tenants;

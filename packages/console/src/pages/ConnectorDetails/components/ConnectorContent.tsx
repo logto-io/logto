@@ -35,7 +35,7 @@ const getConnectorTarget = (connectorData: ConnectorResponse): Optional<string> 
   );
 };
 
-const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
+function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
@@ -147,6 +147,6 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </FormProvider>
   );
-};
+}
 
 export default ConnectorContent;

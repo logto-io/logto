@@ -19,14 +19,7 @@ export type Props = {
   onChange?: (pageIndex: number) => void;
 };
 
-const Pagination = ({
-  page,
-  totalCount,
-  pageSize,
-  className,
-  mode = 'normal',
-  onChange,
-}: Props) => {
+function Pagination({ page, totalCount, pageSize, className, mode = 'normal', onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   /**
@@ -77,6 +70,6 @@ const Pagination = ({
       />
     </div>
   );
-};
+}
 
 export default Pagination;

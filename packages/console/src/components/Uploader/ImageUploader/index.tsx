@@ -22,8 +22,8 @@ export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
   onDelete: () => void;
 };
 
-const ImageUploader = ({ name, value, onDelete, ...rest }: Props) =>
-  value ? (
+function ImageUploader({ name, value, onDelete, ...rest }: Props) {
+  return value ? (
     <div className={styles.imageUploader}>
       <img alt={name} src={value} />
       <IconButton
@@ -38,5 +38,6 @@ const ImageUploader = ({ name, value, onDelete, ...rest }: Props) =>
   ) : (
     <FileUploader allowedMimeTypes={allowedImageMimeTypes} maxSize={maxImageSizeLimit} {...rest} />
   );
+}
 
 export default ImageUploader;

@@ -7,7 +7,7 @@ import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';
 
-const AppLoading = () => {
+function AppLoading() {
   const theme = useTheme();
 
   return (
@@ -16,6 +16,6 @@ const AppLoading = () => {
       <Spinner />
     </div>
   );
-};
+}
 
 export default AppLoading;

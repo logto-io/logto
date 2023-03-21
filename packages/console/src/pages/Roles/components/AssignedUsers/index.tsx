@@ -9,8 +9,8 @@ type Props = {
   count: number;
 };
 
-const AssignedUsers = ({ users, count }: Props) =>
-  count ? (
+function AssignedUsers({ users, count }: Props) {
+  return count ? (
     <div className={styles.users}>
       <div className={styles.avatars}>
         {users.map((user) => (
@@ -22,5 +22,6 @@ const AssignedUsers = ({ users, count }: Props) =>
   ) : (
     <div className={styles.empty}>-</div>
   );
+}
 
 export default AssignedUsers;

@@ -8,7 +8,7 @@ type Props = {
   onChange: (value?: string) => void;
 };
 
-const EventSelector = ({ value, onChange }: Props) => {
+function EventSelector({ value, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const options = Object.entries(logEventTitle).map(([value, title]) => ({
     value,
@@ -24,6 +24,6 @@ const EventSelector = ({ value, onChange }: Props) => {
       onChange={onChange}
     />
   );
-};
+}
 
 export default EventSelector;

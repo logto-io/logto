@@ -10,7 +10,7 @@ export type Props = {
   onDelete: (scope: ScopeResponse) => void;
 };
 
-const TargetScopeItem = ({ scope, onDelete }: Props) => {
+function TargetScopeItem({ scope, onDelete }: Props) {
   const {
     name,
     resource: { name: resourceName },
@@ -33,6 +33,6 @@ const TargetScopeItem = ({ scope, onDelete }: Props) => {
       </IconButton>
     </div>
   );
-};
+}
 
 export default TargetScopeItem;

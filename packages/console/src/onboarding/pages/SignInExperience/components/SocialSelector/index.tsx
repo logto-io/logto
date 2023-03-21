@@ -14,7 +14,7 @@ type Props = {
   onChange: (value: string[]) => void;
 };
 
-const SocialSelector = ({ value, onChange }: Props) => {
+function SocialSelector({ value, onChange }: Props) {
   const { data: connectorData, error } = useConnectorGroups();
 
   if (!connectorData || error) {
@@ -43,6 +43,6 @@ const SocialSelector = ({ value, onChange }: Props) => {
       onChange={onChange}
     />
   );
-};
+}
 
 export default SocialSelector;

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
 
-const Callback = () => {
+function Callback() {
   const navigate = useNavigate();
   const { error } = useHandleSignInCallback(() => {
     navigate('/');
@@ -24,6 +24,6 @@ const Callback = () => {
   }
 
   return <AppLoading />;
-};
+}
 
 export default Callback;

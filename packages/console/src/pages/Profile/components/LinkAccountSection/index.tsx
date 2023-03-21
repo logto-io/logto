@@ -31,7 +31,7 @@ type Props = {
   onUpdate: () => void;
 };
 
-const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
+function LinkAccountSection({ user, connectors, onUpdate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const theme = useTheme();
@@ -161,6 +161,6 @@ const LinkAccountSection = ({ user, connectors, onUpdate }: Props) => {
       <CardContent title="profile.link_account.social_sign_in" data={tableInfo} />
     </FormCard>
   );
-};
+}
 
 export default LinkAccountSection;

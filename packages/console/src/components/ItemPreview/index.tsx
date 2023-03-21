@@ -13,7 +13,7 @@ type Props = {
   size?: 'default' | 'compact';
 };
 
-const ItemPreview = ({ title, subtitle, icon, to, size = 'default' }: Props) => {
+function ItemPreview({ title, subtitle, icon, to, size = 'default' }: Props) {
   return (
     <div className={classNames(styles.item, styles[size])}>
       {icon}
@@ -34,6 +34,6 @@ const ItemPreview = ({ title, subtitle, icon, to, size = 'default' }: Props) => 
       </div>
     </div>
   );
-};
+}
 
 export default ItemPreview;

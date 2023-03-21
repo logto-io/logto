@@ -8,7 +8,7 @@ import Switch from '@/components/Switch';
 import type { SignInExperienceForm } from '../../types';
 import * as styles from '../index.module.scss';
 
-const AuthenticationForm = () => {
+function AuthenticationForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { register } = useFormContext<SignInExperienceForm>();
 
@@ -23,6 +23,6 @@ const AuthenticationForm = () => {
       </FormField>
     </Card>
   );
-};
+}
 
 export default AuthenticationForm;

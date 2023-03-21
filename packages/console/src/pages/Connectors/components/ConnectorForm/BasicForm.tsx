@@ -25,12 +25,12 @@ type Props = {
   conflictConnectorName?: Record<string, string>;
 };
 
-const BasicForm = ({
+function BasicForm({
   isAllowEditTarget,
   isDarkDefaultVisible,
   isStandard,
   conflictConnectorName,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const {
@@ -175,6 +175,6 @@ const BasicForm = ({
       </FormField>
     </div>
   );
-};
+}
 
 export default BasicForm;

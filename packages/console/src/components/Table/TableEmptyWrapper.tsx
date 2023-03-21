@@ -7,12 +7,14 @@ type Props = {
   children: ReactNode;
 };
 
-const TableEmptyWrapper = ({ columns, children }: Props) => (
-  <tr>
-    <td colSpan={columns} className={styles.tableEmptyWrapper}>
-      <div className={styles.content}>{children}</div>
-    </td>
-  </tr>
-);
+function TableEmptyWrapper({ columns, children }: Props) {
+  return (
+    <tr>
+      <td colSpan={columns} className={styles.tableEmptyWrapper}>
+        <div className={styles.content}>{children}</div>
+      </td>
+    </tr>
+  );
+}
 
 export default TableEmptyWrapper;

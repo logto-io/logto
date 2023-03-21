@@ -15,7 +15,7 @@ type Props = {
   columns: number;
 };
 
-const TableError = ({ title, content, onRetry, columns }: Props) => {
+function TableError({ title, content, onRetry, columns }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
 
@@ -31,6 +31,6 @@ const TableError = ({ title, content, onRetry, columns }: Props) => {
       </td>
     </tr>
   );
-};
+}
 
 export default TableError;

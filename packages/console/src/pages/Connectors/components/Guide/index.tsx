@@ -41,7 +41,7 @@ type Props = {
   onClose: (id?: string) => void;
 };
 
-const Guide = ({ connector, onClose }: Props) => {
+function Guide({ connector, onClose }: Props) {
   const api = useApi({ hideErrorToast: true });
   const navigate = useNavigate();
   const callbackConnectorId = useRef(generateStandardId());
@@ -240,6 +240,6 @@ const Guide = ({ connector, onClose }: Props) => {
       </div>
     </Modal>
   );
-};
+}
 
 export default Guide;

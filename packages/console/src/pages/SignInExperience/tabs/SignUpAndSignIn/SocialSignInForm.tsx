@@ -8,7 +8,7 @@ import type { SignInExperienceForm } from '../../types';
 import * as styles from '../index.module.scss';
 import SocialConnectorEditBox from './components/SocialConnectorEditBox';
 
-const SocialSignInForm = () => {
+function SocialSignInForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { control } = useFormContext<SignInExperienceForm>();
 
@@ -33,6 +33,6 @@ const SocialSignInForm = () => {
       </FormField>
     </Card>
   );
-};
+}
 
 export default SocialSignInForm;

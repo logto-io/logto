@@ -42,7 +42,6 @@ const mapToUriFormatArrays = (value?: string[]) =>
 const mapToUriOriginFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(new URL(uri).origin));
 
-// eslint-disable-next-line react/function-component-definition
 function ApplicationDetails() {
   const { id } = useParams();
   const { pathname } = useLocation();

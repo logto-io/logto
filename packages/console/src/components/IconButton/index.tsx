@@ -9,10 +9,10 @@ export type Props = Omit<HTMLProps<HTMLButtonElement>, 'size' | 'type'> & {
   iconClassName?: string;
 };
 
-const IconButton = (
+function IconButton(
   { size = 'medium', children, className, iconClassName, ...rest }: Props,
   reference: ForwardedRef<HTMLButtonElement>
-) => {
+) {
   const tipRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -27,6 +27,6 @@ const IconButton = (
       </div>
     </button>
   );
-};
+}
 
 export default forwardRef(IconButton);

@@ -21,7 +21,7 @@ export type AppEndpoints = {
 
 export const AppEndpointsContext = createContext<AppEndpoints>({});
 
-const AppEndpointsProvider = ({ children }: Props) => {
+function AppEndpointsProvider({ children }: Props) {
   const [endpoints, setEndpoints] = useState<AppEndpoints>({});
   const { currentTenantId } = useContext(TenantsContext);
   const memorizedContext = useMemo(() => endpoints, [endpoints]);
@@ -44,6 +44,6 @@ const AppEndpointsProvider = ({ children }: Props) => {
   return (
     <AppEndpointsContext.Provider value={memorizedContext}>{children}</AppEndpointsContext.Provider>
   );
-};
+}
 
 export default AppEndpointsProvider;

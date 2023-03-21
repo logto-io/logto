@@ -41,7 +41,6 @@ import * as styles from './index.module.scss';
 const getConnectorsPathname = (isSocial: boolean) =>
   `/connectors/${isSocial ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless}`;
 
-// eslint-disable-next-line react/function-component-definition
 function ConnectorDetails() {
   const { pathname } = useLocation();
   const { connectorId } = useParams();

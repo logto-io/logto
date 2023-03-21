@@ -26,7 +26,6 @@ import { withAppInsights } from '@/utils/app-insights';
 import * as styles from './index.module.scss';
 import { RoleDetailsOutletContext } from './types';
 
-// eslint-disable-next-line react/function-component-definition
 function RoleDetails() {
   const { pathname } = useLocation();
   const { id } = useParams();

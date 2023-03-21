@@ -20,13 +20,13 @@ export type Props = {
   onUploadErrorChange: (errorMessage?: string) => void;
 };
 
-const FileUploader = ({
+function FileUploader({
   maxSize,
   allowedMimeTypes,
   actionDescription,
   onCompleted,
   onUploadErrorChange,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string>();
@@ -119,6 +119,6 @@ const FileUploader = ({
       </div>
     </div>
   );
-};
+}
 
 export default FileUploader;

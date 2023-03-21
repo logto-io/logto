@@ -44,7 +44,7 @@ type Props = {
   retryHandler: () => void;
 };
 
-const PermissionsTable = ({
+function PermissionsTable({
   scopes,
   isLoading,
   errorMessage,
@@ -58,7 +58,7 @@ const PermissionsTable = ({
   createHandler,
   deleteHandler,
   retryHandler,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
 
@@ -182,6 +182,6 @@ const PermissionsTable = ({
       onRetry={retryHandler}
     />
   );
-};
+}
 
 export default PermissionsTable;

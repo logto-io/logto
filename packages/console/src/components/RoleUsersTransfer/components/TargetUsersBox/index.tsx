@@ -11,7 +11,7 @@ type Props = {
   onChange: (value: User[]) => void;
 };
 
-const TargetUsersBox = ({ selectedUsers, onChange }: Props) => {
+function TargetUsersBox({ selectedUsers, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -35,6 +35,6 @@ const TargetUsersBox = ({ selectedUsers, onChange }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default TargetUsersBox;

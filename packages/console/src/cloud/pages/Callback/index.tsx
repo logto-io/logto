@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AppLoading from '@/components/AppLoading';
 import { getUserTenantId } from '@/consts/tenants';
 
-const Callback = () => {
+function Callback() {
   const navigate = useNavigate();
   const { error } = useHandleSignInCallback(() => {
     navigate('/' + getUserTenantId(), { replace: true });
@@ -21,6 +21,6 @@ const Callback = () => {
   }
 
   return <AppLoading />;
-};
+}
 
 export default Callback;

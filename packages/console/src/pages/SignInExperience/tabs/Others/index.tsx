@@ -8,12 +8,14 @@ type Props = {
   isActive: boolean;
 };
 
-const Others = ({ isActive }: Props) => (
-  <TabWrapper isActive={isActive} className={styles.tabContent}>
-    <TermsForm />
-    <LanguagesForm isManageLanguageVisible />
-    <AuthenticationForm />
-  </TabWrapper>
-);
+function Others({ isActive }: Props) {
+  return (
+    <TabWrapper isActive={isActive} className={styles.tabContent}>
+      <TermsForm />
+      <LanguagesForm isManageLanguageVisible />
+      <AuthenticationForm />
+    </TabWrapper>
+  );
+}
 
 export default Others;

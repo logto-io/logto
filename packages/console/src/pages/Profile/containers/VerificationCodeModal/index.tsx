@@ -26,7 +26,7 @@ const getTimeout = () => {
   return now;
 };
 
-const VerificationCodeModal = () => {
+function VerificationCodeModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { show: showModal } = useConfirmModal();
@@ -155,6 +155,6 @@ const VerificationCodeModal = () => {
       )}
     </MainFlowLikeModal>
   );
-};
+}
 
 export default VerificationCodeModal;

@@ -14,7 +14,7 @@ type Props = {
   isAfter?: boolean;
 };
 
-const SocialTargetsDiffSection = ({ before, after, isAfter = false }: Props) => {
+function SocialTargetsDiffSection({ before, after, isAfter = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: groups, error } = useConnectorGroups();
   const { language } = i18next;
@@ -58,6 +58,6 @@ const SocialTargetsDiffSection = ({ before, after, isAfter = false }: Props) => 
       </ul>
     </div>
   );
-};
+}
 
 export default SocialTargetsDiffSection;

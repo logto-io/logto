@@ -15,7 +15,6 @@ import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
 
-// eslint-disable-next-line react/function-component-definition
 function Congrats() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { update } = useUserOnboardingData();

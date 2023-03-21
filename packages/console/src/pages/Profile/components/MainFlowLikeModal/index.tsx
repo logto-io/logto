@@ -19,14 +19,7 @@ type Props = PropsWithChildren<{
   onGoBack?: () => void;
 }>;
 
-const MainFlowLikeModal = ({
-  title,
-  subtitle,
-  subtitleProps,
-  children,
-  onClose,
-  onGoBack,
-}: Props) => {
+function MainFlowLikeModal({ title, subtitle, subtitleProps, children, onClose, onGoBack }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
 
@@ -60,6 +53,6 @@ const MainFlowLikeModal = ({
       </div>
     </ReactModal>
   );
-};
+}
 
 export default MainFlowLikeModal;

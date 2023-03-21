@@ -28,10 +28,11 @@ type DisplayConnector = {
   name: ConnectorResponse['name'] | string;
 };
 
-const ConnectorName = ({ name }: { name: DisplayConnector['name'] }) =>
-  typeof name === 'string' ? <span>{name}</span> : <UnnamedTrans resource={name} />;
+function ConnectorName({ name }: { name: DisplayConnector['name'] }) {
+  return typeof name === 'string' ? <span>{name}</span> : <UnnamedTrans resource={name} />;
+}
 
-const UserSocialIdentities = ({ userId, identities, onDelete }: Props) => {
+function UserSocialIdentities({ userId, identities, onDelete }: Props) {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
@@ -157,6 +158,6 @@ const UserSocialIdentities = ({ userId, identities, onDelete }: Props) => {
       </DeleteConfirmModal>
     </div>
   );
-};
+}
 
 export default UserSocialIdentities;

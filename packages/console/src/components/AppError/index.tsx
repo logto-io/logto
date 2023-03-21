@@ -19,7 +19,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const AppError = ({ title, errorCode, errorMessage, callStack, children }: Props) => {
+function AppError({ title, errorCode, errorMessage, callStack, children }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const theme = useTheme();
@@ -55,6 +55,6 @@ const AppError = ({ title, errorCode, errorMessage, callStack, children }: Props
       {children}
     </div>
   );
-};
+}
 
 export default AppError;

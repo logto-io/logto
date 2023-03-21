@@ -7,7 +7,7 @@ import OnboardingApp from '@/onboarding/App';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import ConsoleApp from '@/pages/Main';
 
-const TenantAppContainer = () => {
+function TenantAppContainer() {
   const { userEndpoint } = useContext(AppEndpointsContext);
   const { isOnboarding, isLoaded } = useUserOnboardingData();
 
@@ -20,6 +20,6 @@ const TenantAppContainer = () => {
   }
 
   return <ConsoleApp />;
-};
+}
 
 export default TenantAppContainer;

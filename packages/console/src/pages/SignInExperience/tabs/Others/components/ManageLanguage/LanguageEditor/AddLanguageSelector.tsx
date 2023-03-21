@@ -18,7 +18,7 @@ type Props = {
   onSelect: (languageTag: LanguageTag) => void;
 };
 
-const AddLanguageSelector = ({ options, onSelect }: Props) => {
+function AddLanguageSelector({ options, onSelect }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const selectorRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -112,6 +112,6 @@ const AddLanguageSelector = ({ options, onSelect }: Props) => {
       )}
     </div>
   );
-};
+}
 
 export default AddLanguageSelector;

@@ -25,7 +25,7 @@ type Props = {
   className?: string;
 };
 
-const AuditLogTable = ({ userId, className }: Props) => {
+function AuditLogTable({ userId, className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
   const pageSize = defaultPageSize;
@@ -132,6 +132,6 @@ const AuditLogTable = ({ userId, className }: Props) => {
       onRetry={async () => mutate(undefined, true)}
     />
   );
-};
+}
 
 export default AuditLogTable;

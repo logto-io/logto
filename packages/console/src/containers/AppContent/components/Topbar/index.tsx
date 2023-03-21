@@ -15,7 +15,7 @@ type Props = {
   className?: string;
 };
 
-const Topbar = ({ className }: Props) => {
+function Topbar({ className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const LogtoLogo = isCloud ? CloudLogo : Logo;
 
@@ -34,6 +34,6 @@ const Topbar = ({ className }: Props) => {
       <UserInfo />
     </div>
   );
-};
+}
 
 export default Topbar;

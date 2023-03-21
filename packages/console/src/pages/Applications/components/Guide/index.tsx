@@ -49,7 +49,7 @@ const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Elemen
   'go_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go_zh-cn.mdx')),
 };
 
-const Guide = ({ app, isCompact, onClose }: Props) => {
+function Guide({ app, isCompact, onClose }: Props) {
   const sdks = app && applicationTypeAndSdkTypeMappings[app.type];
   const [selectedSdk, setSelectedSdk] = useState<Optional<SupportedSdk>>();
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
@@ -127,6 +127,6 @@ const Guide = ({ app, isCompact, onClose }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default Guide;

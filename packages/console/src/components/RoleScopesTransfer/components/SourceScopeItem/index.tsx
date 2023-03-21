@@ -11,28 +11,30 @@ type Props = {
   onSelect: (scope: ScopeResponse) => void;
 };
 
-const SourceScopeItem = ({ scope, scope: { name }, isSelected, onSelect }: Props) => (
-  <div className={styles.sourceScopeItem}>
-    <Checkbox
-      checked={isSelected}
-      onChange={() => {
-        onSelect(scope);
-      }}
-    />
-    <div
-      className={styles.name}
-      role="button"
-      tabIndex={0}
-      onKeyDown={onKeyDownHandler(() => {
-        onSelect(scope);
-      })}
-      onClick={() => {
-        onSelect(scope);
-      }}
-    >
-      {name}
+function SourceScopeItem({ scope, scope: { name }, isSelected, onSelect }: Props) {
+  return (
+    <div className={styles.sourceScopeItem}>
+      <Checkbox
+        checked={isSelected}
+        onChange={() => {
+          onSelect(scope);
+        }}
+      />
+      <div
+        className={styles.name}
+        role="button"
+        tabIndex={0}
+        onKeyDown={onKeyDownHandler(() => {
+          onSelect(scope);
+        })}
+        onClick={() => {
+          onSelect(scope);
+        }}
+      >
+        {name}
+      </div>
     </div>
-  </div>
-);
+  );
+}
 
 export default SourceScopeItem;

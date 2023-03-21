@@ -7,11 +7,13 @@ type Props = {
   isActive: boolean;
 };
 
-const Branding = ({ isActive }: Props) => (
-  <TabWrapper isActive={isActive} className={styles.tabContent}>
-    <BrandingForm />
-    <CustomCssForm />
-  </TabWrapper>
-);
+function Branding({ isActive }: Props) {
+  return (
+    <TabWrapper isActive={isActive} className={styles.tabContent}>
+      <BrandingForm />
+      <CustomCssForm />
+    </TabWrapper>
+  );
+}
 
 export default Branding;

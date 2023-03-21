@@ -17,7 +17,7 @@ type Props = {
   hasSelectedIdentifiers: boolean;
 };
 
-const AddButton = ({ options, onSelected, hasSelectedIdentifiers }: Props) => {
+function AddButton({ options, onSelected, hasSelectedIdentifiers }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   if (options.length === 0) {
@@ -60,6 +60,6 @@ const AddButton = ({ options, onSelected, hasSelectedIdentifiers }: Props) => {
       ))}
     </ActionMenu>
   );
-};
+}
 
 export default AddButton;

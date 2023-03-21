@@ -26,7 +26,7 @@ import SubMenu from '../SubMenu';
 import UserInfoSkeleton from '../UserInfoSkeleton';
 import * as styles from './index.module.scss';
 
-const UserInfo = () => {
+function UserInfo() {
   const { signOut } = useLogto();
   const navigate = useNavigate();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -138,6 +138,6 @@ const UserInfo = () => {
       </Dropdown>
     </>
   );
-};
+}
 
 export default UserInfo;

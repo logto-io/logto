@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react';
 
-const Contact = (props: SVGProps<SVGSVGElement>) => {
+function Contact(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       width="20"
@@ -16,6 +16,6 @@ const Contact = (props: SVGProps<SVGSVGElement>) => {
       />
     </svg>
   );
-};
+}
 
 export default Contact;

@@ -18,7 +18,7 @@ type Props = {
   isDisabled: boolean;
 };
 
-const LivePreviewButton = ({ size, type, isDisabled }: Props) => {
+function LivePreviewButton({ size, type, isDisabled }: Props) {
   const { configs, updateConfigs } = useConfigs();
   const { userEndpoint } = useContext(AppEndpointsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -48,6 +48,6 @@ const LivePreviewButton = ({ size, type, isDisabled }: Props) => {
       />
     </Tooltip>
   );
-};
+}
 
 export default LivePreviewButton;

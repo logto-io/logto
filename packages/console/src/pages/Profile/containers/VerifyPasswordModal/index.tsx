@@ -22,7 +22,7 @@ type FormFields = {
   password: string;
 };
 
-const VerifyPasswordModal = () => {
+function VerifyPasswordModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -117,6 +117,6 @@ const VerifyPasswordModal = () => {
       )}
     </MainFlowLikeModal>
   );
-};
+}
 
 export default VerifyPasswordModal;

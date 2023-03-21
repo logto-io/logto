@@ -27,7 +27,7 @@ import {
   getSignInMethodVerificationCodeCheckState,
 } from './utils';
 
-const SignUpForm = () => {
+function SignUpForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
@@ -209,6 +209,6 @@ const SignUpForm = () => {
       )}
     </Card>
   );
-};
+}
 
 export default SignUpForm;

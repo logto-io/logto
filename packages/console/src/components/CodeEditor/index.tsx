@@ -21,7 +21,7 @@ type Props = {
   placeholder?: string;
 };
 
-const CodeEditor = ({
+function CodeEditor({
   className,
   language,
   isReadonly = false,
@@ -31,7 +31,7 @@ const CodeEditor = ({
   hasError,
   errorMessage,
   placeholder,
-}: Props) => {
+}: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -142,6 +142,6 @@ const CodeEditor = ({
       {hasError && <div className={styles.errorMessage}>{finalErrorMessage}</div>}
     </>
   );
-};
+}
 
 export default CodeEditor;

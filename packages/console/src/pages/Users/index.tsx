@@ -32,7 +32,6 @@ const usersPathname = '/users';
 const createUserPathname = `${usersPathname}/create`;
 const buildDetailsPathname = (id: string) => `${usersPathname}/${id}/${UserDetailsTabs.Settings}`;
 
-// eslint-disable-next-line react/function-component-definition
 function Users() {
   const { pathname, search } = useLocation();
   const isCreateNew = pathname === createUserPathname;

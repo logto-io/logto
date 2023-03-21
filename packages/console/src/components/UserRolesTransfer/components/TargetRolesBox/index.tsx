@@ -11,7 +11,7 @@ type Props = {
   onChange: (value: RoleResponse[]) => void;
 };
 
-const TargetRolesBox = ({ selectedRoles, onChange }: Props) => {
+function TargetRolesBox({ selectedRoles, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -35,6 +35,6 @@ const TargetRolesBox = ({ selectedRoles, onChange }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default TargetRolesBox;

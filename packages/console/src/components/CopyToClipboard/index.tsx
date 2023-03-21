@@ -23,13 +23,13 @@ type Props = {
 
 type CopyState = TFuncKey<'translation', 'admin_console.general'>;
 
-const CopyToClipboard = ({
+function CopyToClipboard({
   value,
   className,
   hasVisibilityToggle,
   variant = 'contained',
   size = 'default',
-}: Props) => {
+}: Props) {
   const copyIconReference = useRef<HTMLButtonElement>(null);
   const [copyState, setCopyState] = useState<CopyState>('copy');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.general' });
@@ -101,6 +101,6 @@ const CopyToClipboard = ({
       </div>
     </div>
   );
-};
+}
 
 export default CopyToClipboard;

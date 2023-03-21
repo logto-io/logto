@@ -12,7 +12,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Redirect from './Redirect';
 import Tenants from './Tenants';
 
-const Protected = () => {
+function Protected() {
   const api = useCloudApi();
   const { tenants, setTenants, currentTenantId } = useContext(TenantsContext);
 
@@ -43,9 +43,9 @@ const Protected = () => {
   }
 
   return <AppLoading />;
-};
+}
 
-const Main = () => {
+function Main() {
   const [searchParameters] = useSearchParams();
   const { isAuthenticated, isLoading, signIn } = useLogto();
   const { currentTenantId } = useContext(TenantsContext);
@@ -66,6 +66,6 @@ const Main = () => {
   }
 
   return <Protected />;
-};
+}
 
 export default Main;

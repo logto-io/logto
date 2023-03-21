@@ -23,7 +23,7 @@ type Props = {
   parentPath?: string;
 };
 
-const UnsavedChangesAlertModal = ({ hasUnsavedChanges, parentPath }: Props) => {
+function UnsavedChangesAlertModal({ hasUnsavedChanges, parentPath }: Props) {
   const { navigator } = useContext(UNSAFE_NavigationContext);
 
   /**
@@ -96,6 +96,6 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges, parentPath }: Props) => {
       {t('general.unsaved_changes_warning')}
     </ConfirmModal>
   );
-};
+}
 
 export default UnsavedChangesAlertModal;

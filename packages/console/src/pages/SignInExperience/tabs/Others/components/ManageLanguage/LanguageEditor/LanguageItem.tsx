@@ -13,7 +13,7 @@ type Props = {
   onClick: () => void;
 };
 
-const LanguageItem = ({ languageTag, isSelected, onClick }: Props) => {
+function LanguageItem({ languageTag, isSelected, onClick }: Props) {
   const itemRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,6 +43,6 @@ const LanguageItem = ({ languageTag, isSelected, onClick }: Props) => {
       <div className={style.languageTag}>{languageTag}</div>
     </div>
   );
-};
+}
 
 export default LanguageItem;

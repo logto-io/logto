@@ -19,7 +19,7 @@ import CreatePermissionModal from './components/CreatePermissionModal';
 
 const pageSize = defaultPageSize;
 
-const ApiResourcePermissions = () => {
+function ApiResourcePermissions() {
   const {
     resource: { id: resourceId },
     isLogtoManagementApiResource,
@@ -133,6 +133,6 @@ const ApiResourcePermissions = () => {
       )}
     </>
   );
-};
+}
 
 export default ApiResourcePermissions;

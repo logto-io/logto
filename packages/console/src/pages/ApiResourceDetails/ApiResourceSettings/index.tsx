@@ -14,7 +14,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import type { ApiResourceDetailsOutletContext } from '../types';
 
-const ApiResourceSettings = () => {
+function ApiResourceSettings() {
   const { resource, isDeleting, isLogtoManagementApiResource, onResourceUpdated } =
     useOutletContext<ApiResourceDetailsOutletContext>();
 
@@ -78,6 +78,6 @@ const ApiResourceSettings = () => {
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </>
   );
-};
+}
 
 export default ApiResourceSettings;

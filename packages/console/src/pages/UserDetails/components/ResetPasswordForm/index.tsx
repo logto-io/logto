@@ -11,7 +11,7 @@ type Props = {
   onClose?: (password?: string) => void;
 };
 
-const ResetPasswordForm = ({ onClose, userId }: Props) => {
+function ResetPasswordForm({ onClose, userId }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
@@ -39,6 +39,6 @@ const ResetPasswordForm = ({ onClose, userId }: Props) => {
       {t('user_details.reset_password.content')}
     </ConfirmModal>
   );
-};
+}
 
 export default ResetPasswordForm;

@@ -11,7 +11,7 @@ type Props = AnchorHTMLAttributes<HTMLAnchorElement> &
     isTrailingIcon?: boolean;
   };
 
-const TextLink = ({ to, children, icon, isTrailingIcon = false, className, ...rest }: Props) => {
+function TextLink({ to, children, icon, isTrailingIcon = false, className, ...rest }: Props) {
   if (to) {
     return (
       <Link
@@ -36,6 +36,6 @@ const TextLink = ({ to, children, icon, isTrailingIcon = false, className, ...re
       <>{children}</>
     </a>
   );
-};
+}
 
 export default TextLink;

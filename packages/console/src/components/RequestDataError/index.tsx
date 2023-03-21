@@ -17,7 +17,7 @@ type Props = {
   className?: string;
 };
 
-const RequestDataError = ({ error, onRetry, className }: Props) => {
+function RequestDataError({ error, onRetry, className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
   const errorMessage = error.body?.message ?? error.message;
@@ -34,6 +34,6 @@ const RequestDataError = ({ error, onRetry, className }: Props) => {
       {onRetry && <Button title="general.retry" onClick={onRetry} />}
     </Card>
   );
-};
+}
 
 export default RequestDataError;

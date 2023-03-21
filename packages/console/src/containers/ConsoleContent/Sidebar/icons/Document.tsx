@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react';
 
-const Document = (props: SVGProps<SVGSVGElement>) => {
+function Document(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
@@ -9,6 +9,6 @@ const Document = (props: SVGProps<SVGSVGElement>) => {
       />
     </svg>
   );
-};
+}
 
 export default Document;

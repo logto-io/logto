@@ -24,7 +24,7 @@ type Props = {
   onClose?: (connectorId?: string) => void;
 };
 
-const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
+function CreateForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const { data: existingConnectors, error: connectorsError } = useSWR<
     ConnectorResponse[],
     RequestError
@@ -174,6 +174,6 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
       </ModalLayout>
     </Modal>
   );
-};
+}
 
 export default CreateForm;

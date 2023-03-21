@@ -23,7 +23,7 @@ type Props = {
   onChange: (value: ScopeResponse[]) => void;
 };
 
-const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
+function SourceScopesBox({ roleId, selectedScopes, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { data: allResources, error: fetchAllResourcesError } = useSWR<
@@ -154,6 +154,6 @@ const SourceScopesBox = ({ roleId, selectedScopes, onChange }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default SourceScopesBox;

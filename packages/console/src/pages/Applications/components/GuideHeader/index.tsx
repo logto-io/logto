@@ -61,7 +61,7 @@ const getSampleProjectUrl = (sdk: SupportedSdk) => {
   }
 };
 
-const GuideHeader = ({ appName, selectedSdk, isCompact = false, onClose }: Props) => {
+function GuideHeader({ appName, selectedSdk, isCompact = false, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const onClickGetSample = () => {
@@ -116,6 +116,6 @@ const GuideHeader = ({ appName, selectedSdk, isCompact = false, onClose }: Props
       )}
     </div>
   );
-};
+}
 
 export default GuideHeader;

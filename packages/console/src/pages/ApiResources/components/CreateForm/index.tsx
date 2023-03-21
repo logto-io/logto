@@ -18,7 +18,7 @@ type Props = {
   onClose?: (createdApiResource?: Resource) => void;
 };
 
-const CreateForm = ({ onClose }: Props) => {
+function CreateForm({ onClose }: Props) {
   const {
     handleSubmit,
     register,
@@ -89,6 +89,6 @@ const CreateForm = ({ onClose }: Props) => {
       </form>
     </ModalLayout>
   );
-};
+}
 
 export default CreateForm;

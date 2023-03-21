@@ -9,7 +9,7 @@ type Props = {
   isSuccess: boolean;
 };
 
-const EventIcon = ({ isSuccess }: Props) => {
+function EventIcon({ isSuccess }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -22,6 +22,6 @@ const EventIcon = ({ isSuccess }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default EventIcon;

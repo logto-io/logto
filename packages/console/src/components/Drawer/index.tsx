@@ -16,7 +16,7 @@ type Props = {
   onClose?: () => void;
 };
 
-const Drawer = ({ title, subtitle, isOpen, children, onClose }: Props) => {
+function Drawer({ title, subtitle, isOpen, children, onClose }: Props) {
   return (
     <ReactModal
       shouldCloseOnOverlayClick
@@ -43,6 +43,6 @@ const Drawer = ({ title, subtitle, isOpen, children, onClose }: Props) => {
       </div>
     </ReactModal>
   );
-};
+}
 
 export default Drawer;

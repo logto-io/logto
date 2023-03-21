@@ -8,7 +8,7 @@ import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';
 
-const NotFound = () => {
+function NotFound() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
 
@@ -20,6 +20,6 @@ const NotFound = () => {
       </Card>
     </div>
   );
-};
+}
 
 export default NotFound;

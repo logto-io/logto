@@ -5,7 +5,7 @@ type Props = {
   className?: string;
 };
 
-const UnnamedTrans = ({ resource, className }: Props) => {
+function UnnamedTrans({ resource, className }: Props) {
   const {
     i18n: { languages },
   } = useTranslation();
@@ -16,6 +16,6 @@ const UnnamedTrans = ({ resource, className }: Props) => {
   }
 
   return <span className={className}>{resource[matchedLanguage]}</span>;
-};
+}
 
 export default UnnamedTrans;

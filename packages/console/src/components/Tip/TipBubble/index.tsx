@@ -21,7 +21,7 @@ type Props = HTMLProps<HTMLDivElement> & {
 
 const supportHorizontalAlignmentPlacements = new Set<TipBubblePlacement>(['top', 'bottom']);
 
-const TipBubble = (
+function TipBubble(
   {
     children,
     position,
@@ -33,7 +33,7 @@ const TipBubble = (
     ...rest
   }: Props,
   reference: ForwardedRef<HTMLDivElement>
-) => {
+) {
   if (!anchorRef.current) {
     return null;
   }
@@ -64,6 +64,6 @@ const TipBubble = (
       <div className={styles.arrow} style={{ ...arrowPosition }} />
     </div>
   );
-};
+}
 
 export default forwardRef(TipBubble);

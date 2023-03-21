@@ -20,7 +20,7 @@ type Props = {
   formItems: ConnectorConfigFormItem[];
 };
 
-const ConfigForm = ({ formItems }: Props) => {
+function ConfigForm({ formItems }: Props) {
   const {
     watch,
     register,
@@ -150,6 +150,6 @@ const ConfigForm = ({ formItems }: Props) => {
       ))}
     </>
   );
-};
+}
 
 export default ConfigForm;

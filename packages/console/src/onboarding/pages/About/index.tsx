@@ -21,7 +21,6 @@ import { getOnboardingPage } from '../../utils';
 import * as styles from './index.module.scss';
 import { titleOptions, companySizeOptions, reasonOptions } from './options';
 
-// eslint-disable-next-line react/function-component-definition
 function About() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();

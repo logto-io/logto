@@ -12,7 +12,7 @@ type Props = {
   onSelect: () => void;
 };
 
-const SourceRoleItem = ({ role, isSelected, onSelect }: Props) => {
+function SourceRoleItem({ role, isSelected, onSelect }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { name, usersCount } = role;
 
@@ -40,6 +40,6 @@ const SourceRoleItem = ({ role, isSelected, onSelect }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default SourceRoleItem;

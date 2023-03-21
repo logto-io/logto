@@ -7,7 +7,7 @@ import Main from './pages/Main';
 import SocialDemoCallback from './pages/SocialDemoCallback';
 import { CloudRoute } from './types';
 
-const App = () => {
+function App() {
   return (
     <BrowserRouter>
       <div className={styles.app}>
@@ -20,6 +20,6 @@ const App = () => {
       </div>
     </BrowserRouter>
   );
-};
+}
 
 export default App;

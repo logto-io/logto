@@ -9,15 +9,15 @@ type Props = HTMLProps<HTMLTextAreaElement> & {
   hasError?: boolean;
 };
 
-const Textarea = (
+function Textarea(
   { className, hasError, ...rest }: Props,
   reference: ForwardedRef<HTMLTextAreaElement>
-) => {
+) {
   return (
     <div className={classNames(styles.container, hasError && styles.error, className)}>
       <textarea {...rest} ref={reference} />
     </div>
   );
-};
+}
 
 export default forwardRef(Textarea);

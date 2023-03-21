@@ -17,14 +17,14 @@ type Props = {
   size?: 'medium' | 'large' | 'xlarge';
 } & Pick<CardTitleProps, 'learnMoreLink' | 'title' | 'subtitle' | 'isWordWrapEnabled'>;
 
-const ModalLayout = ({
+function ModalLayout({
   children,
   footer,
   onClose,
   className,
   size = 'medium',
   ...cardTitleProps
-}: Props) => {
+}: Props) {
   return (
     <Card className={classNames(styles.container, styles[size])}>
       <div className={styles.header}>
@@ -43,6 +43,6 @@ const ModalLayout = ({
       {footer && <div className={styles.footer}>{footer}</div>}
     </Card>
   );
-};
+}
 
 export default ModalLayout;

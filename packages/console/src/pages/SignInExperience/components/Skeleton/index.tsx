@@ -6,7 +6,7 @@ import Spacer from '@/components/Spacer';
 import * as pageStyles from '../../index.module.scss';
 import * as styles from './index.module.scss';
 
-const Skeleton = () => {
+function Skeleton() {
   return (
     <div className={classNames(pageStyles.container, styles.container)}>
       <CardTitle
@@ -56,6 +56,6 @@ const Skeleton = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Skeleton;

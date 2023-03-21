@@ -12,7 +12,7 @@ type Props = {
   onDelete: () => void;
 };
 
-const TargetUserItem = ({ user, onDelete }: Props) => {
+function TargetUserItem({ user, onDelete }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -30,6 +30,6 @@ const TargetUserItem = ({ user, onDelete }: Props) => {
       </IconButton>
     </div>
   );
-};
+}
 
 export default TargetUserItem;

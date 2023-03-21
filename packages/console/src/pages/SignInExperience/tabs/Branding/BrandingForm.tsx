@@ -18,7 +18,7 @@ import type { SignInExperienceForm } from '../../types';
 import * as styles from '../index.module.scss';
 import LogoAndFaviconUploader from './components/LogoAndFaviconUploader';
 
-const BrandingForm = () => {
+function BrandingForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
   const {
@@ -166,6 +166,6 @@ const BrandingForm = () => {
       )}
     </Card>
   );
-};
+}
 
 export default BrandingForm;

@@ -8,7 +8,7 @@ type Props = {
   connectorGroup: ConnectorGroup;
 };
 
-const ConnectorStatus = ({ connectorGroup }: Props) => {
+function ConnectorStatus({ connectorGroup }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { connectors } = connectorGroup;
@@ -24,6 +24,6 @@ const ConnectorStatus = ({ connectorGroup }: Props) => {
   ) : (
     <span>-</span>
   );
-};
+}
 
 export default ConnectorStatus;

@@ -8,7 +8,7 @@ import useUserPreferences from '@/hooks/use-user-preferences';
 
 import * as styles from './index.module.scss';
 
-const SignInExperienceSetupNotice = () => {
+function SignInExperienceSetupNotice() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: connectors } = useSWR<ConnectorResponse[]>('api/connectors');
   const {
@@ -39,6 +39,6 @@ const SignInExperienceSetupNotice = () => {
       </Alert>
     </div>
   );
-};
+}
 
 export default SignInExperienceSetupNotice;

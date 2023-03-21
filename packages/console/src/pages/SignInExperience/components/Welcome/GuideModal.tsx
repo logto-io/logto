@@ -30,7 +30,7 @@ type Props = {
   onClose: () => void;
 };
 
-const GuideModal = ({ isOpen, onClose }: Props) => {
+function GuideModal({ isOpen, onClose }: Props) {
   const { data } = useSWR<SignInExperience>('api/sign-in-exp');
   const { data: preferences, update: updatePreferences } = useUserPreferences();
   const { updateConfigs } = useConfigs();
@@ -143,6 +143,6 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
       </div>
     </Modal>
   );
-};
+}
 
 export default GuideModal;

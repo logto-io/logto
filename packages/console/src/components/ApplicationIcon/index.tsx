@@ -9,12 +9,12 @@ type Props = {
   className?: string;
 };
 
-const ApplicationIcon = ({ type, className }: Props) => {
+function ApplicationIcon({ type, className }: Props) {
   const theme = useTheme();
   const isLightMode = theme === Theme.Light;
   const Icon = isLightMode ? lightModeApplicationIconMap[type] : darkModeApplicationIconMap[type];
 
   return <Icon className={className} />;
-};
+}
 
 export default ApplicationIcon;

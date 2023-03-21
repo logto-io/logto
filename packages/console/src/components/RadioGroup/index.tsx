@@ -24,10 +24,10 @@ type Props = {
   onChange?: (value: string) => void;
 };
 
-const RadioGroup = (
+function RadioGroup(
   { name, children, value, className, onChange, type = 'plain' }: Props,
   ref?: Ref<HTMLDivElement>
-) => {
+) {
   return (
     <div ref={ref} className={classNames(styles.radioGroup, styles[type], className)}>
       {Children.map(children, (child) => {
@@ -56,7 +56,7 @@ const RadioGroup = (
       })}
     </div>
   );
-};
+}
 
 export default forwardRef<HTMLDivElement, Props>(RadioGroup);
 export { default as Radio } from './Radio';

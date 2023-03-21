@@ -7,7 +7,7 @@ type Props = HTMLProps<HTMLInputElement> & {
   label?: ReactNode;
 };
 
-const Switch = ({ label, ...rest }: Props, ref?: Ref<HTMLInputElement>) => {
+function Switch({ label, ...rest }: Props, ref?: Ref<HTMLInputElement>) {
   return (
     <div className={styles.wrapper}>
       <div className={styles.label}>{label}</div>
@@ -17,6 +17,6 @@ const Switch = ({ label, ...rest }: Props, ref?: Ref<HTMLInputElement>) => {
       </label>
     </div>
   );
-};
+}
 
 export default forwardRef<HTMLInputElement, Props>(Switch);

@@ -25,7 +25,7 @@ type Props = {
   signInExperience?: SignInExperience;
 };
 
-const SignInExperiencePreview = ({ platform, mode, language = 'en', signInExperience }: Props) => {
+function SignInExperiencePreview({ platform, mode, language = 'en', signInExperience }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { customPhrases } = useUiLanguages();
@@ -139,6 +139,6 @@ const SignInExperiencePreview = ({ platform, mode, language = 'en', signInExperi
       </div>
     </div>
   );
-};
+}
 
 export default SignInExperiencePreview;

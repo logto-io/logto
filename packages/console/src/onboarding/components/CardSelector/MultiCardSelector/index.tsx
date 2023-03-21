@@ -13,14 +13,14 @@ type Props = {
   optionClassName?: string;
 };
 
-const MultiCardSelector = ({
+function MultiCardSelector({
   options,
   value: selectedValues,
   onChange,
   isNotAllowEmpty = false,
   className,
   optionClassName,
-}: Props) => {
+}: Props) {
   const onToggle = (value: string) => {
     if (selectedValues.includes(value) && selectedValues.length === 1 && isNotAllowEmpty) {
       return;
@@ -46,6 +46,6 @@ const MultiCardSelector = ({
       ))}
     </div>
   );
-};
+}
 
 export default MultiCardSelector;

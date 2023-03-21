@@ -16,7 +16,7 @@ type Props = {
   isAfter?: boolean;
 };
 
-const SignInDiffSection = ({ before, after, isAfter = false }: Props) => {
+function SignInDiffSection({ before, after, isAfter = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const beforeSignInMethodsObject = convertToSignInMethodsObject(before);
@@ -86,6 +86,6 @@ const SignInDiffSection = ({ before, after, isAfter = false }: Props) => {
       </ul>
     </div>
   );
-};
+}
 
 export default SignInDiffSection;

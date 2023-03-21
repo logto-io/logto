@@ -16,7 +16,7 @@ type Props = {
   externalLink?: string;
 };
 
-const Item = ({ icon, titleKey, modal, externalLink, isActive = false }: Props) => {
+function Item({ icon, titleKey, modal, externalLink, isActive = false }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tabs',
   });
@@ -63,6 +63,6 @@ const Item = ({ icon, titleKey, modal, externalLink, isActive = false }: Props) 
       {content}
     </Link>
   );
-};
+}
 
 export default Item;

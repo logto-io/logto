@@ -18,7 +18,7 @@ type Props = {
   hasSelectedConnectors: boolean;
 };
 
-const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
+function AddButton({ options, onSelected, hasSelectedConnectors }: Props) {
   if (options.length === 0) {
     return null;
   }
@@ -66,6 +66,6 @@ const AddButton = ({ options, onSelected, hasSelectedConnectors }: Props) => {
       ))}
     </ActionMenu>
   );
-};
+}
 
 export default AddButton;

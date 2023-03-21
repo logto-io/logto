@@ -22,7 +22,7 @@ type Props = {
   variant?: 'bordered' | 'default' | 'plain';
 };
 
-const Block = ({ variant = 'default', count, delta, title, tip }: Props) => {
+function Block({ variant = 'default', count, delta, title, tip }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const deltaLabel = delta !== undefined && `${conditionalString(delta >= 0 && '+')}${delta}`;
@@ -51,6 +51,6 @@ const Block = ({ variant = 'default', count, delta, title, tip }: Props) => {
       </div>
     </Card>
   );
-};
+}
 
 export default Block;

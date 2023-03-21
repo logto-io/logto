@@ -11,7 +11,7 @@ type Props = {
   onDelete: () => void;
 };
 
-const TargetRoleItem = ({ role, onDelete }: Props) => {
+function TargetRoleItem({ role, onDelete }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { name, usersCount } = role;
 
@@ -28,6 +28,6 @@ const TargetRoleItem = ({ role, onDelete }: Props) => {
       </IconButton>
     </div>
   );
-};
+}
 
 export default TargetRoleItem;

@@ -27,7 +27,7 @@ type Props = {
 
 const pageSize = defaultPageSize;
 
-const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
+function SourceUsersBox({ roleId, selectedUsers, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
@@ -105,5 +105,5 @@ const SourceUsersBox = ({ roleId, selectedUsers, onChange }: Props) => {
       />
     </div>
   );
-};
+}
 export default SourceUsersBox;

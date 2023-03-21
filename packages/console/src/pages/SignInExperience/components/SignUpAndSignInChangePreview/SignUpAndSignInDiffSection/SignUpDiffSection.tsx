@@ -16,7 +16,7 @@ type Props = {
   isAfter?: boolean;
 };
 
-const SignUpDiffSection = ({ before, after, isAfter = false }: Props) => {
+function SignUpDiffSection({ before, after, isAfter = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const parsedBefore = signInExperienceParser.toLocalSignUp(before);
   const parsedAfter = signInExperienceParser.toLocalSignUp(after);
@@ -57,6 +57,6 @@ const SignUpDiffSection = ({ before, after, isAfter = false }: Props) => {
       </ul>
     </div>
   );
-};
+}
 
 export default SignUpDiffSection;

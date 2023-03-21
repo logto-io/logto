@@ -17,7 +17,7 @@ type Props = {
   onClose: (success?: boolean) => void;
 };
 
-const AssignUsersModal = ({ roleId, isRemindSkip = false, onClose }: Props) => {
+function AssignUsersModal({ roleId, isRemindSkip = false, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
@@ -93,6 +93,6 @@ const AssignUsersModal = ({ roleId, isRemindSkip = false, onClose }: Props) => {
       </ModalLayout>
     </ReactModal>
   );
-};
+}
 
 export default AssignUsersModal;

@@ -20,7 +20,7 @@ type Props = {
   isManageLanguageVisible?: boolean;
 };
 
-const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
+function LanguagesForm({ isManageLanguageVisible = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
   const { watch, control, register, setValue } = useFormContext<SignInExperienceForm>();
@@ -72,6 +72,6 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
       </FormField>
     </Card>
   );
-};
+}
 
 export default LanguagesForm;

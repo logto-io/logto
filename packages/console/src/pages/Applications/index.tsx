@@ -1,3 +1,5 @@
+import Button from '@/components/Button';
+import type { RequestError } from '@/hooks/use-api';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
@@ -6,14 +8,12 @@ import useSWR from 'swr';
 
 import Plus from '@/assets/images/plus.svg';
 import ApplicationIcon from '@/components/ApplicationIcon';
-import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import { defaultPageSize } from '@/consts';
-import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
@@ -37,7 +37,6 @@ const buildNavigatePathPostAppCreation = ({ type, id }: Application) => {
   return build(id);
 };
 
-// eslint-disable-next-line react/function-component-definition
 function Applications() {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();

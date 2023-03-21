@@ -115,7 +115,16 @@
     "@mdx/components/*": "./src/mdx-components/$1"
   },
   "eslintConfig": {
-    "extends": "@silverhand/react"
+    "extends": "@silverhand/react",
+    "rules": {
+      "react/function-component-definition": [
+        "error",
+        {
+          "namedComponents": "function-declaration",
+          "unnamedComponents": "arrow-function"
+        }
+      ]
+    }
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"

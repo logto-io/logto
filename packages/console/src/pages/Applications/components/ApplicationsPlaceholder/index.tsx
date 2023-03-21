@@ -18,7 +18,7 @@ type Props = {
   onCreate: (createdApp: Application) => void;
 };
 
-const ApplicationsPlaceholder = ({ onCreate }: Props) => {
+function ApplicationsPlaceholder({ onCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isCreating, setIsCreating] = useState(false);
   const api = useApi();
@@ -77,6 +77,6 @@ const ApplicationsPlaceholder = ({ onCreate }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default ApplicationsPlaceholder;
