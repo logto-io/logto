@@ -1,3 +1,4 @@
+import { appendPath } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -23,7 +24,7 @@ const useDocumentationUrl = () => {
 
   return {
     documentationSiteUrl,
-    getDocumentationUrl: (pagePath: string) => `${documentationSiteUrl}${pagePath}`,
+    getDocumentationUrl: (pagePath: string) => appendPath(new URL(documentationSiteUrl), pagePath),
   };
 };
 

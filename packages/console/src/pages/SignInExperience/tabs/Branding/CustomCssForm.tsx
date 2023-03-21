@@ -29,8 +29,7 @@ const CustomCssForm = () => {
                 components={{
                   a: (
                     <TextLink
-                      // TODO: update the link when Custom CSS docs are ready
-                      to={getDocumentationUrl('/docs/recipes/customize-sie/configure-branding')}
+                      href={getDocumentationUrl('/docs/recipes/customize-sie/custom-css')}
                       target="_blank"
                       onClick={closeTipHandler}
                     />
