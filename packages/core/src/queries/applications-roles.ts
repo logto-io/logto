@@ -7,6 +7,7 @@ import { sql } from 'slonik';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(ApplicationsRoles, true);
+const { fields: insertFields } = convertToIdentifiers(ApplicationsRoles);
 
 export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
   const findApplicationsRolesByApplicationId = async (applicationId: string) =>
@@ -21,7 +22,9 @@ export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
 
   const insertApplicationsRoles = async (applicationsRoles: CreateApplicationsRole[]) =>
     pool.query(sql`
-      insert into ${table} (${fields.id}, ${fields.applicationId}, ${fields.roleId}) values
+      insert into ${table} (${insertFields.id}, ${insertFields.applicationId}, ${
+      insertFields.roleId
+    }) values
       ${sql.join(
         applicationsRoles.map(
           ({ id, applicationId, roleId }) => sql`(${id}, ${applicationId}, ${roleId})`
