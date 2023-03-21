@@ -24,7 +24,8 @@ const useDocumentationUrl = () => {
 
   return {
     documentationSiteUrl,
-    getDocumentationUrl: (pagePath: string) => appendPath(new URL(documentationSiteUrl), pagePath),
+    getDocumentationUrl: (pagePath: string) =>
+      appendPath(new URL(documentationSiteUrl), pagePath).toString(),
   };
 };
 
