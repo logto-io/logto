@@ -1,4 +1,4 @@
-import LRUCache from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 
 import { EnvSet } from '#src/env-set/index.js';
 
