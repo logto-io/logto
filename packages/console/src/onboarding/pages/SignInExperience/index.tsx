@@ -101,7 +101,7 @@ function SignInExperience() {
     onSuccess();
   };
 
-  if (!isLoading) {
+  if (isLoading) {
     return <Skeleton />;
   }
 
