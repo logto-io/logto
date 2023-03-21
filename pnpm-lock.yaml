@@ -27,10 +27,10 @@ importers:
 
   packages/cli:
     specifiers:
-      '@logto/connector-kit': workspace:*
-      '@logto/core-kit': workspace:*
-      '@logto/schemas': workspace:*
-      '@logto/shared': workspace:*
+      '@logto/connector-kit': workspace:^
+      '@logto/core-kit': workspace:^
+      '@logto/schemas': workspace:^
+      '@logto/shared': workspace:^
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': ^2.5.0
       '@silverhand/ts-config': 2.0.3
@@ -110,11 +110,11 @@ importers:
 
   packages/cloud:
     specifiers:
-      '@logto/cli': workspace:*
-      '@logto/connector-kit': workspace:*
-      '@logto/core-kit': workspace:*
-      '@logto/schemas': workspace:*
-      '@logto/shared': workspace:*
+      '@logto/cli': workspace:^
+      '@logto/connector-kit': workspace:^
+      '@logto/core-kit': workspace:^
+      '@logto/schemas': workspace:^
+      '@logto/shared': workspace:^
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': ^2.5.0
       '@silverhand/jest-config': ^2.0.1
@@ -182,13 +182,13 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/connector-kit': workspace:*
-      '@logto/core-kit': workspace:*
-      '@logto/language-kit': workspace:*
-      '@logto/phrases': workspace:*
-      '@logto/phrases-ui': workspace:*
+      '@logto/connector-kit': workspace:^
+      '@logto/core-kit': workspace:^
+      '@logto/language-kit': workspace:^
+      '@logto/phrases': workspace:^
+      '@logto/phrases-ui': workspace:^
       '@logto/react': 1.1.0
-      '@logto/schemas': workspace:*
+      '@logto/schemas': workspace:^
       '@mdx-js/react': ^1.6.22
       '@microsoft/applicationinsights-react-js': ^3.4.1
       '@microsoft/applicationinsights-web': ^2.8.11
@@ -345,14 +345,14 @@ importers:
     specifiers:
       '@azure/storage-blob': ^12.13.0
       '@koa/cors': ^4.0.0
-      '@logto/cli': workspace:*
-      '@logto/connector-kit': workspace:*
-      '@logto/core-kit': workspace:*
-      '@logto/language-kit': workspace:*
-      '@logto/phrases': workspace:*
-      '@logto/phrases-ui': workspace:*
-      '@logto/schemas': workspace:*
-      '@logto/shared': workspace:*
+      '@logto/cli': workspace:^
+      '@logto/connector-kit': workspace:^
+      '@logto/core-kit': workspace:^
+      '@logto/language-kit': workspace:^
+      '@logto/phrases': workspace:^
+      '@logto/phrases-ui': workspace:^
+      '@logto/schemas': workspace:^
+      '@logto/shared': workspace:^
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': ^2.5.0
       '@silverhand/ts-config': 2.0.3
@@ -512,17 +512,17 @@ importers:
 
   packages/create:
     specifiers:
-      '@logto/cli': workspace:*
+      '@logto/cli': workspace:^
     dependencies:
       '@logto/cli': link:../cli
 
   packages/demo-app:
     specifiers:
-      '@logto/core-kit': workspace:*
-      '@logto/language-kit': workspace:*
-      '@logto/phrases': workspace:*
+      '@logto/core-kit': workspace:^
+      '@logto/language-kit': workspace:^
+      '@logto/phrases': workspace:^
       '@logto/react': 1.1.0
-      '@logto/schemas': workspace:*
+      '@logto/schemas': workspace:^
       '@parcel/core': 2.8.3
       '@parcel/transformer-sass': 2.8.3
       '@silverhand/eslint-config': 2.0.1
@@ -579,10 +579,10 @@ importers:
   packages/integration-tests:
     specifiers:
       '@jest/types': ^29.1.2
-      '@logto/connector-kit': workspace:*
+      '@logto/connector-kit': workspace:^
       '@logto/js': 1.1.0
       '@logto/node': 1.1.0
-      '@logto/schemas': workspace:*
+      '@logto/schemas': workspace:^
       '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': ^2.5.0
@@ -635,7 +635,7 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/language-kit': workspace:*
+      '@logto/language-kit': workspace:^
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': ^2.5.0
       '@silverhand/ts-config': 2.0.3
@@ -658,7 +658,7 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@logto/language-kit': workspace:*
+      '@logto/language-kit': workspace:^
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': ^2.5.0
       '@silverhand/ts-config': 2.0.3
@@ -683,11 +683,11 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-kit': workspace:*
-      '@logto/core-kit': workspace:*
-      '@logto/language-kit': workspace:*
-      '@logto/phrases': workspace:*
-      '@logto/phrases-ui': workspace:*
+      '@logto/connector-kit': workspace:^
+      '@logto/core-kit': workspace:^
+      '@logto/language-kit': workspace:^
+      '@logto/phrases': workspace:^
+      '@logto/phrases-ui': workspace:^
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': ^2.5.0
       '@silverhand/ts-config': 2.0.3
@@ -738,9 +738,9 @@ importers:
 
   packages/shared:
     specifiers:
-      '@logto/connector-kit': workspace:*
-      '@logto/core-kit': workspace:*
-      '@logto/schemas': workspace:*
+      '@logto/connector-kit': workspace:^
+      '@logto/core-kit': workspace:^
+      '@logto/schemas': workspace:^
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': ^2.5.0
       '@silverhand/ts-config': 2.0.3
@@ -780,7 +780,7 @@ importers:
 
   packages/toolkit/connector-kit:
     specifiers:
-      '@logto/language-kit': workspace:*
+      '@logto/language-kit': workspace:^
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/essentials': ^2.5.0
       '@silverhand/ts-config': 2.0.3
@@ -809,7 +809,7 @@ importers:
   packages/toolkit/core-kit:
     specifiers:
       '@jest/types': ^29.0.3
-      '@logto/language-kit': workspace:*
+      '@logto/language-kit': workspace:^
       '@silverhand/eslint-config': 2.0.1
       '@silverhand/eslint-config-react': 2.0.1
       '@silverhand/essentials': ^2.5.0
@@ -885,12 +885,12 @@ importers:
 
   packages/ui:
     specifiers:
-      '@logto/connector-kit': workspace:*
-      '@logto/core-kit': workspace:*
-      '@logto/language-kit': workspace:*
-      '@logto/phrases': workspace:*
-      '@logto/phrases-ui': workspace:*
-      '@logto/schemas': workspace:*
+      '@logto/connector-kit': workspace:^
+      '@logto/core-kit': workspace:^
+      '@logto/language-kit': workspace:^
+      '@logto/phrases': workspace:^
+      '@logto/phrases-ui': workspace:^
+      '@logto/schemas': workspace:^
       '@parcel/compressor-brotli': 2.8.3
       '@parcel/compressor-gzip': 2.8.3
       '@parcel/core': 2.8.3
