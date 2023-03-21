@@ -1,6 +1,5 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -31,6 +30,13 @@ const createApplicationPathname = `${applicationsPathname}/create`;
 const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
 const buildGuidePathname = (id: string) => `${buildDetailsPathname(id)}/guide`;
 
+const buildNavigatePathPostAppCreation = ({ type, id }: Application) => {
+  const build =
+    type === ApplicationType.MachineToMachine ? buildDetailsPathname : buildGuidePathname;
+
+  return build(id);
+};
+
 // eslint-disable-next-line react/function-component-definition
 function Applications() {
   const navigate = useNavigate();
@@ -52,12 +58,9 @@ function Applications() {
   const isLoading = !data && !error;
   const [applications, totalCount] = data ?? [];
 
-  const mutateApplicationList = useCallback(
-    async (newApp: Application) => {
-      await mutate([[newApp, ...(applications ?? [])], (totalCount ?? 0) + 1]);
-    },
-    [applications, totalCount, mutate]
-  );
+  const mutateApplicationList = async (newApp: Application) => {
+    await mutate([[newApp, ...(applications ?? [])], (totalCount ?? 0) + 1]);
+  };
 
   return (
     <div className={resourcesStyles.container}>
@@ -107,7 +110,7 @@ function Applications() {
           <ApplicationsPlaceholder
             onCreate={async (newApp) => {
               await mutateApplicationList(newApp);
-              navigate(buildGuidePathname(newApp.id), { replace: true });
+              navigate(buildNavigatePathPostAppCreation(newApp), { replace: true });
             }}
           />
         }
@@ -129,12 +132,7 @@ function Applications() {
         isOpen={isShowingCreationForm}
         onClose={async (newApp) => {
           if (newApp) {
-            const buildNavigatePath =
-              newApp.type === ApplicationType.MachineToMachine
-                ? buildDetailsPathname
-                : buildGuidePathname;
-
-            navigate(buildNavigatePath(newApp.id), { replace: true });
+            navigate(buildNavigatePathPostAppCreation(newApp), { replace: true });
 
             return;
           }
