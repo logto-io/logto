@@ -1,6 +1,7 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 import { useMemo } from 'react';
+import type { RegisterOptions } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -49,8 +50,8 @@ const ConfigForm = ({ formItems }: Props) => {
     const hasError = Boolean(errors[item.key]);
     const errorMessage = errors[item.key]?.message;
 
-    const buildCommonProperties = () => ({
-      ...register(item.key, { required: item.required }),
+    const buildCommonProperties = (registerOptions?: RegisterOptions) => ({
+      ...register(item.key, { required: item.required, ...registerOptions }),
       placeholder: item.placeholder,
       hasError,
     });
@@ -64,7 +65,7 @@ const ConfigForm = ({ formItems }: Props) => {
     }
 
     if (item.type === ConnectorConfigFormItemType.Number) {
-      return <TextInput type="number" {...buildCommonProperties()} />;
+      return <TextInput {...buildCommonProperties({ valueAsNumber: true })} />;
     }
 
     return (
