@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.7
+
+### Patch Changes
+
+- 5b4da1e3d: force bump to fix npm publishment
+
 ## 1.0.1
 
 ### Patch Changes

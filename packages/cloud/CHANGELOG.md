@@ -1,5 +1,14 @@
 # @logto/cloud
 
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [5b4da1e3d]
+  - @logto/schemas@1.0.7
+  - @logto/cli@1.0.3
+  - @logto/shared@1.0.2
+
 ## 0.2.2
 
 ### Patch Changes
