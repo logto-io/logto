@@ -7,7 +7,6 @@ import ReactModal from 'react-modal';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Back from '@/assets/images/back.svg';
 import Delete from '@/assets/images/delete.svg';
 import More from '@/assets/images/more.svg';
 import Reset from '@/assets/images/reset.svg';
@@ -15,15 +14,12 @@ import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
-import DetailsSkeleton from '@/components/DetailsSkeleton';
-import RequestDataError from '@/components/RequestDataError';
+import DetailsPage from '@/components/DetailsPage';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import TextLink from '@/components/TextLink';
 import UserAvatar from '@/components/UserAvatar';
 import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { withAppInsights } from '@/utils/app-insights';
 
@@ -70,19 +66,14 @@ function UserDetails() {
   };
 
   return (
-    <div className={classNames(detailsStyles.container, isPageHasTable && styles.resourceLayout)}>
-      <TextLink to="/users" icon={<Back />} className={styles.backLink}>
-        {t('user_details.back_to_users')}
-      </TextLink>
-      {isLoading && <DetailsSkeleton />}
-      {error && (
-        <RequestDataError
-          error={error}
-          onRetry={() => {
-            void mutate();
-          }}
-        />
-      )}
+    <DetailsPage
+      backLink="/users"
+      backLinkTitle="user_details.back_to_users"
+      isLoading={isLoading}
+      error={error}
+      className={classNames(isPageHasTable && styles.resourceLayout)}
+      onRetry={mutate}
+    >
       {data && (
         <>
           <Card className={styles.header}>
@@ -194,7 +185,7 @@ function UserDetails() {
           )}
         </>
       )}
-    </div>
+    </DetailsPage>
   );
 }
 

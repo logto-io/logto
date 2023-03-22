@@ -7,7 +7,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Back from '@/assets/images/back.svg';
 import Delete from '@/assets/images/delete.svg';
 import More from '@/assets/images/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
@@ -17,16 +16,13 @@ import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsForm from '@/components/DetailsForm';
-import DetailsSkeleton from '@/components/DetailsSkeleton';
+import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
-import RequestDataError from '@/components/RequestDataError';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import * as detailsStyles from '@/scss/details.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { withAppInsights } from '@/utils/app-insights';
 
@@ -131,20 +127,16 @@ function ApplicationDetails() {
   };
 
   return (
-    <div className={detailsStyles.container}>
-      <TextLink to="/applications" icon={<Back />} className={styles.backLink}>
-        {t('application_details.back_to_applications')}
-      </TextLink>
-      {isLoading && <DetailsSkeleton />}
-      {requestError && (
-        <RequestDataError
-          error={requestError}
-          onRetry={() => {
-            void mutate();
-            void mutateOidcConfig();
-          }}
-        />
-      )}
+    <DetailsPage
+      backLink="/applications"
+      backLinkTitle="application_details.back_to_applications"
+      isLoading={isLoading}
+      error={requestError}
+      onRetry={() => {
+        void mutate();
+        void mutateOidcConfig();
+      }}
+    >
       {data && oidcConfig && (
         <>
           <Card className={styles.header}>
@@ -236,7 +228,7 @@ function ApplicationDetails() {
           }}
         />
       )}
-    </div>
+    </DetailsPage>
   );
 }
 

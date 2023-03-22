@@ -9,22 +9,18 @@ import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
 import ApiResource from '@/assets/images/api-resource.svg';
-import Back from '@/assets/images/back.svg';
 import Delete from '@/assets/images/delete.svg';
 import More from '@/assets/images/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
-import DetailsSkeleton from '@/components/DetailsSkeleton';
-import RequestDataError from '@/components/RequestDataError';
+import DetailsPage from '@/components/DetailsPage';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import TextLink from '@/components/TextLink';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
-import * as detailsStyles from '@/scss/details.module.scss';
 import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
@@ -70,21 +66,14 @@ function ApiResourceDetails() {
   };
 
   return (
-    <div
-      className={classNames(detailsStyles.container, isOnPermissionPage && styles.permissionPage)}
+    <DetailsPage
+      backLink="/api-resources"
+      backLinkTitle="api_resource_details.back_to_api_resources"
+      isLoading={isLoading}
+      error={error}
+      className={classNames(isOnPermissionPage && styles.permissionPage)}
+      onRetry={mutate}
     >
-      <TextLink to="/api-resources" icon={<Back />} className={styles.backLink}>
-        {t('api_resource_details.back_to_api_resources')}
-      </TextLink>
-      {isLoading && <DetailsSkeleton />}
-      {error && (
-        <RequestDataError
-          error={error}
-          onRetry={() => {
-            void mutate();
-          }}
-        />
-      )}
       {data && (
         <>
           <Card className={styles.header}>
@@ -153,7 +142,7 @@ function ApiResourceDetails() {
           />
         </>
       )}
-    </div>
+    </DetailsPage>
   );
 }
 

@@ -1,10 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.backLink {
-  margin: _.unit(1) 0 0 _.unit(1);
-  user-select: none;
-}
-
 .deleteConfirm {
   > :not(:first-child) {
     margin-top: _.unit(6);
