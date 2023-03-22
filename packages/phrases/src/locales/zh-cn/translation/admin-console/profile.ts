@@ -70,7 +70,7 @@ const profile = {
   unlinked: '{{target}}账号解绑成功！',
   email_exists_reminder: '该邮箱 {{email}} 已被其他账号绑定，请更换邮箱。',
   unlink_confirm_text: '确定解绑',
-  unlink_reminder: '解绑后，你将无法使用该 <span></span> 账号进行登录。确定要解绑吗？',
+  unlink_reminder: '解绑后，用户将无法使用该 <span></span> 账号进行登录。确定要解绑吗？',
 };
 
 export default profile;

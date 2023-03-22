@@ -75,7 +75,7 @@ const profile = {
     'This email {{email}} is associated with an existing account. Link another email here.', // UNTRANSLATED
   unlink_confirm_text: 'Yes, unlink', // UNTRANSLATED
   unlink_reminder:
-    'You won’t be able to sign in with the <span></span> account if you unlink it. Are you sure to proceed?', // UNTRANSLATED
+    'Users will not be able to sign in with the <span></span> account if you unlink it. Are you sure to proceed?', // UNTRANSLATED
 };
 
 export default profile;
