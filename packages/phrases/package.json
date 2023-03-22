@@ -38,8 +38,8 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "2.0.1",
-    "@silverhand/ts-config": "2.0.3",
+    "@silverhand/eslint-config": "2.1.0",
+    "@silverhand/ts-config": "2.1.0",
     "eslint": "^8.34.0",
     "lint-staged": "^13.0.0",
     "prettier": "^2.8.2",
