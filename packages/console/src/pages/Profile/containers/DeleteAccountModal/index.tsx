@@ -16,7 +16,7 @@ type Props = {
 const contactUsEmail = 'contact@logto.io';
 const mailToLink = `mailto:${contactUsEmail}?subject=Account%20Deletion%20Request`;
 
-const DeleteAccountModal = ({ isOpen, onClose }: Props) => {
+function DeleteAccountModal({ isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -48,6 +48,6 @@ const DeleteAccountModal = ({ isOpen, onClose }: Props) => {
       </ModalLayout>
     </ReactModal>
   );
-};
+}
 
 export default DeleteAccountModal;

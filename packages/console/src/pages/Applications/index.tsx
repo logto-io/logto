@@ -37,7 +37,6 @@ const buildNavigatePathPostAppCreation = ({ type, id }: Application) => {
   return build(id);
 };
 
-// eslint-disable-next-line react/function-component-definition
 function Applications() {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();

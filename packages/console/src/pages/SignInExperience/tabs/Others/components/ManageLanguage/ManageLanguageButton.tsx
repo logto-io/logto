@@ -8,7 +8,7 @@ type Props = {
   className?: string;
 };
 
-const ManageLanguageButton = ({ className }: Props) => {
+function ManageLanguageButton({ className }: Props) {
   const [isLanguageEditorOpen, setIsLanguageEditorOpen] = useState(false);
 
   return (
@@ -30,6 +30,6 @@ const ManageLanguageButton = ({ className }: Props) => {
       />
     </>
   );
-};
+}
 
 export default ManageLanguageButton;

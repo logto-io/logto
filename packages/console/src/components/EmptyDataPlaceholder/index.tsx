@@ -13,7 +13,7 @@ export type Props = {
   size?: 'large' | 'medium' | 'small';
 };
 
-const EmptyDataPlaceholder = ({ title, size = 'medium' }: Props) => {
+function EmptyDataPlaceholder({ title, size = 'medium' }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
   const EmptyImage = theme === Theme.Light ? Empty : EmptyDark;
@@ -24,6 +24,6 @@ const EmptyDataPlaceholder = ({ title, size = 'medium' }: Props) => {
       <div className={styles.title}>{title ?? t('errors.empty')}</div>
     </div>
   );
-};
+}
 
 export default EmptyDataPlaceholder;

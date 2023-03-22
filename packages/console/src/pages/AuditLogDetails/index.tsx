@@ -29,7 +29,6 @@ const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
 const getDetailsTabNavLink = (logId: string, userId?: string) =>
   userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
 
-// eslint-disable-next-line react/function-component-definition
 function AuditLogDetails() {
   const { id, logId } = useParams();
   const { pathname } = useLocation();

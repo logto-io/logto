@@ -13,7 +13,7 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const ConnectorLogo = ({ className, data, size = 'medium' }: Props) => {
+function ConnectorLogo({ className, data, size = 'medium' }: Props) {
   const theme = useTheme();
 
   return (
@@ -24,6 +24,6 @@ const ConnectorLogo = ({ className, data, size = 'medium' }: Props) => {
       src={theme === Theme.Dark && data.logoDark ? data.logoDark : data.logo}
     />
   );
-};
+}
 
 export default ConnectorLogo;

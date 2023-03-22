@@ -39,7 +39,7 @@ type IconButtonProps = BaseProps & {
 
 export type Props = TitleButtonProps | IconButtonProps;
 
-const Button = ({
+function Button({
   htmlType = 'button',
   type = 'default',
   size = 'medium',
@@ -51,7 +51,7 @@ const Button = ({
   onClick,
   trailingIcon,
   ...rest
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [showSpinner, setShowSpinner] = useState(false);
   const timerRef = useRef<number>();
@@ -96,6 +96,6 @@ const Button = ({
       {trailingIcon && <span className={styles.trailingIcon}>{trailingIcon}</span>}
     </button>
   );
-};
+}
 
 export default Button;

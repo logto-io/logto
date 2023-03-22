@@ -13,10 +13,10 @@ type Props = {
   onDelete: (connectorTarget: string) => void;
 };
 
-const SelectedConnectorItem = ({
+function SelectedConnectorItem({
   data: { logo, logoDark, target, name, connectors },
   onDelete,
-}: Props) => {
+}: Props) {
   return (
     <div className={styles.item}>
       <div className={styles.info}>
@@ -39,6 +39,6 @@ const SelectedConnectorItem = ({
       </IconButton>
     </div>
   );
-};
+}
 
 export default SelectedConnectorItem;

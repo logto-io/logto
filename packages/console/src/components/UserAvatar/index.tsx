@@ -13,7 +13,7 @@ type Props = {
   user?: Partial<Pick<User, 'name' | 'username' | 'avatar' | 'primaryEmail'>>;
 };
 
-const UserAvatar = ({ className, size = 'medium', user }: Props) => {
+function UserAvatar({ className, size = 'medium', user }: Props) {
   const avatarClassName = classNames(styles.avatar, styles[size]);
   const wrapperClassName = classNames(styles.wrapper, styles[size], className);
   const defaultColorPalette = [
@@ -66,6 +66,6 @@ const UserAvatar = ({ className, size = 'medium', user }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default UserAvatar;

@@ -11,17 +11,19 @@ type Props = {
   isComplete?: boolean;
 };
 
-const Index = ({ className, index, isActive, isComplete }: Props) => (
-  <div
-    className={classNames(
-      styles.container,
-      className,
-      isActive && styles.active,
-      isComplete && styles.completed
-    )}
-  >
-    {isComplete ? <Tick /> : index}
-  </div>
-);
+function Index({ className, index, isActive, isComplete }: Props) {
+  return (
+    <div
+      className={classNames(
+        styles.container,
+        className,
+        isActive && styles.active,
+        isComplete && styles.completed
+      )}
+    >
+      {isComplete ? <Tick /> : index}
+    </div>
+  );
+}
 
 export default Index;

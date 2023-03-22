@@ -18,13 +18,13 @@ type Props = {
   className?: string;
 };
 
-const Reservation = ({
+function Reservation({
   title,
   description,
   reservationButtonTitle,
   reservationButtonIcon,
   className,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -51,6 +51,6 @@ const Reservation = ({
       />
     </div>
   );
-};
+}
 
 export default Reservation;

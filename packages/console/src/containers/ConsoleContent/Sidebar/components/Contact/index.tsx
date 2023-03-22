@@ -13,7 +13,7 @@ type Props = {
   onCancel?: () => void;
 };
 
-const Contact = ({ isOpen, onCancel }: Props) => {
+function Contact({ isOpen, onCancel }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const contacts = useContacts();
 
@@ -50,6 +50,6 @@ const Contact = ({ isOpen, onCancel }: Props) => {
       </ModalLayout>
     </ReactModal>
   );
-};
+}
 
 export default Contact;

@@ -8,7 +8,7 @@ import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';
 
-const SocialDemoCallback = () => {
+function SocialDemoCallback() {
   const theme = useTheme();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -21,6 +21,6 @@ const SocialDemoCallback = () => {
       </Card>
     </div>
   );
-};
+}
 
 export default SocialDemoCallback;

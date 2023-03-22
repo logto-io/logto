@@ -9,7 +9,7 @@ type Props = {
   className?: string;
 };
 
-const Card = (props: Props, reference?: Ref<HTMLDivElement>) => {
+function Card(props: Props, reference?: Ref<HTMLDivElement>) {
   const { children, className } = props;
 
   return (
@@ -17,6 +17,6 @@ const Card = (props: Props, reference?: Ref<HTMLDivElement>) => {
       {children}
     </div>
   );
-};
+}
 
 export default forwardRef<HTMLDivElement, Props>(Card);

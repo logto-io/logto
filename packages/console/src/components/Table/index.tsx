@@ -36,7 +36,7 @@ type Props<
   onRetry?: () => void;
 };
 
-const Table = <
+function Table<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
@@ -56,7 +56,7 @@ const Table = <
   errorMessage,
   hasBorder,
   onRetry,
-}: Props<TFieldValues, TName>) => {
+}: Props<TFieldValues, TName>) {
   const totalColspan = columns.reduce((result, { colSpan }) => {
     return result + (colSpan ?? 1);
   }, 0);
@@ -152,6 +152,6 @@ const Table = <
       {pagination && <Pagination className={styles.pagination} {...pagination} />}
     </div>
   );
-};
+}
 
 export default Table;

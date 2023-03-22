@@ -35,7 +35,6 @@ const createApiResourcePathname = `${apiResourcesPathname}/create`;
 const buildDetailsPathname = (id: string) =>
   `${apiResourcesPathname}/${id}/${ApiResourceDetailsTabs.Settings}`;
 
-// eslint-disable-next-line react/function-component-definition
 function ApiResources() {
   const { pathname, search } = useLocation();
   const isCreateNew = pathname.endsWith('/create');

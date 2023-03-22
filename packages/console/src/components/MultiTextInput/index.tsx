@@ -25,7 +25,7 @@ export type Props = {
   className?: string;
 };
 
-const MultiTextInput = ({
+function MultiTextInput({
   title,
   value,
   onChange,
@@ -33,7 +33,7 @@ const MultiTextInput = ({
   error,
   placeholder,
   className,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [deleteFieldIndex, setDeleteFieldIndex] = useState<number>();
@@ -127,6 +127,6 @@ const MultiTextInput = ({
       </ConfirmModal>
     </div>
   );
-};
+}
 
 export default MultiTextInput;

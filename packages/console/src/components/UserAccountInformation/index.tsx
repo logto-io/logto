@@ -22,7 +22,7 @@ type Props = {
   confirmButtonTitle?: AdminConsoleKey;
 };
 
-const UserAccountInformation = ({
+function UserAccountInformation({
   username,
   password,
   title,
@@ -30,7 +30,7 @@ const UserAccountInformation = ({
   onConfirm,
   passwordLabel,
   confirmButtonTitle,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -94,6 +94,6 @@ const UserAccountInformation = ({
       </ModalLayout>
     </ReactModal>
   );
-};
+}
 
 export default UserAccountInformation;

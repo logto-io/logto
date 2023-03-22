@@ -16,7 +16,7 @@ type Props = {
   connectorId: string;
 };
 
-const ConnectorTabs = ({ target, connectorId }: Props) => {
+function ConnectorTabs({ target, connectorId }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: connectors } = useSWR<ConnectorResponse[]>(`api/connectors?target=${target}`);
 
@@ -54,6 +54,6 @@ const ConnectorTabs = ({ target, connectorId }: Props) => {
       ))}
     </div>
   );
-};
+}
 
 export default ConnectorTabs;

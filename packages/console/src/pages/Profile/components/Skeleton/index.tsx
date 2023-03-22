@@ -1,6 +1,6 @@
 import * as styles from './index.module.scss';
 
-const Skeleton = () => {
+function Skeleton() {
   return (
     <div className={styles.container}>
       {Array.from({ length: 2 }).map((_, sectionIndex) => (
@@ -34,6 +34,6 @@ const Skeleton = () => {
       ))}
     </div>
   );
-};
+}
 
 export default Skeleton;

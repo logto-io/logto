@@ -12,7 +12,7 @@ import Welcome from '@/pages/Welcome';
 
 import HandleSocialCallback from '../Profile/containers/HandleSocialCallback';
 
-const Main = () => {
+function Main() {
   const swrOptions = useSwrOptions();
 
   return (
@@ -32,6 +32,6 @@ const Main = () => {
       </SWRConfig>
     </BrowserRouter>
   );
-};
+}
 
 export default Main;

@@ -22,12 +22,12 @@ type Props = {
   className?: string;
 };
 
-const Preview = ({
+function Preview({
   isLivePreviewDisabled = false,
   isLivePreviewEntryInvisible = false,
   signInExperience,
   className,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [language, setLanguage] = useState<LanguageTag>('en');
   const [mode, setMode] = useState<Theme>(Theme.Light);
@@ -122,6 +122,6 @@ const Preview = ({
       />
     </div>
   );
-};
+}
 
 export default Preview;

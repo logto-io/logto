@@ -14,24 +14,26 @@ type Props = {
   type?: 'default' | 'danger';
 };
 
-const DropdownItem = ({
+function DropdownItem({
   onClick,
   className,
   children,
   icon,
   iconClassName,
   type = 'default',
-}: Props) => (
-  <div
-    className={classNames(styles.item, styles[type], className)}
-    role="menuitem"
-    tabIndex={0}
-    onKeyDown={onKeyDownHandler(onClick)}
-    onClick={onClick}
-  >
-    {icon && <span className={classNames(styles.icon, iconClassName)}>{icon}</span>}
-    {children}
-  </div>
-);
+}: Props) {
+  return (
+    <div
+      className={classNames(styles.item, styles[type], className)}
+      role="menuitem"
+      tabIndex={0}
+      onKeyDown={onKeyDownHandler(onClick)}
+      onClick={onClick}
+    >
+      {icon && <span className={classNames(styles.icon, iconClassName)}>{icon}</span>}
+      {children}
+    </div>
+  );
+}
 
 export default DropdownItem;

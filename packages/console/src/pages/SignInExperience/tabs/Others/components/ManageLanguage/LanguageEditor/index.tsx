@@ -19,7 +19,7 @@ type Props = {
   onClose: () => void;
 };
 
-const LanguageEditorModal = ({ isOpen, onClose }: Props) => {
+function LanguageEditorModal({ isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { languages, addLanguage } = useUiLanguages();
 
@@ -106,9 +106,9 @@ const LanguageEditorModal = ({ isOpen, onClose }: Props) => {
       </ConfirmModal>
     </Modal>
   );
-};
+}
 
-const LanguageEditor = (props: Props) => {
+function LanguageEditor(props: Props) {
   const { context: languageEditorContext, Provider: LanguageEditorContextProvider } =
     useLanguageEditorContext();
 
@@ -117,6 +117,6 @@ const LanguageEditor = (props: Props) => {
       <LanguageEditorModal {...props} />
     </LanguageEditorContextProvider>
   );
-};
+}
 
 export default LanguageEditor;

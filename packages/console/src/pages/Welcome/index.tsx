@@ -12,7 +12,7 @@ import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';
 
-const Welcome = () => {
+function Welcome() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { isAuthenticated, error, signIn } = useLogto();
@@ -58,6 +58,6 @@ const Welcome = () => {
       </main>
     </div>
   );
-};
+}
 
 export default Welcome;

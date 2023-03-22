@@ -14,7 +14,7 @@ type Props = {
   mutate: () => void;
 };
 
-const Welcome = ({ mutate }: Props) => {
+function Welcome({ mutate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
@@ -45,6 +45,6 @@ const Welcome = ({ mutate }: Props) => {
       />
     </div>
   );
-};
+}
 
 export default Welcome;

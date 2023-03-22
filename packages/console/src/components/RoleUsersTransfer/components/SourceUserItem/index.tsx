@@ -13,7 +13,7 @@ type Props = {
   onSelect: () => void;
 };
 
-const SourceUserItem = ({ user, isSelected, onSelect }: Props) => {
+function SourceUserItem({ user, isSelected, onSelect }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -38,6 +38,6 @@ const SourceUserItem = ({ user, isSelected, onSelect }: Props) => {
       <div className={styles.name}>{user.name ?? t('users.unnamed')}</div>
     </div>
   );
-};
+}
 
 export default SourceUserItem;

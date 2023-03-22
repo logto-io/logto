@@ -36,7 +36,6 @@ import { authenticationOptions, identifierOptions } from './options';
 import { defaultOnboardingSieConfig } from './sie-config-templates';
 import { parser } from './utils';
 
-// eslint-disable-next-line react/function-component-definition
 function SignInExperience() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();

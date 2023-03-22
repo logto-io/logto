@@ -5,7 +5,7 @@ import IconButton from '@/components/IconButton';
 
 import GiftModal from './GiftModal';
 
-const EarlyBirdGift = () => {
+function EarlyBirdGift() {
   const [isGiftOpen, setIsGiftOpen] = useState(false);
 
   return (
@@ -26,6 +26,6 @@ const EarlyBirdGift = () => {
       />
     </>
   );
-};
+}
 
 export default EarlyBirdGift;

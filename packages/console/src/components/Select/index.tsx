@@ -28,7 +28,7 @@ type Props<T> = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const Select = <T extends string>({
+function Select<T extends string>({
   className,
   value,
   options,
@@ -38,7 +38,7 @@ const Select = <T extends string>({
   placeholder,
   isClearable,
   size = 'large',
-}: Props<T>) => {
+}: Props<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const anchorRef = useRef<HTMLInputElement>(null);
   const current = options.find((option) => value && option.value === value);
@@ -116,6 +116,6 @@ const Select = <T extends string>({
       </Dropdown>
     </>
   );
-};
+}
 
 export default Select;

@@ -4,7 +4,7 @@ type Props = {
   columnSpans: number[];
 };
 
-const TableLoading = ({ columnSpans }: Props) => {
+function TableLoading({ columnSpans }: Props) {
   return (
     <>
       {Array.from({ length: 8 }).map((_, rowIndex) => (
@@ -29,6 +29,6 @@ const TableLoading = ({ columnSpans }: Props) => {
       ))}
     </>
   );
-};
+}
 
 export default TableLoading;

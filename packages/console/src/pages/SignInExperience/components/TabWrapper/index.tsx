@@ -9,8 +9,8 @@ type Props = {
   children: ReactNode;
 };
 
-const TabWrapper = ({ isActive, className, children }: Props) => {
+function TabWrapper({ isActive, className, children }: Props) {
   return <div className={classNames(!isActive && styles.hide, className)}>{children}</div>;
-};
+}
 
 export default TabWrapper;

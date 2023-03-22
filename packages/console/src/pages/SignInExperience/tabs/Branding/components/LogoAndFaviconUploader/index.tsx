@@ -12,7 +12,7 @@ import { convertToFileExtensionArray } from '@/utils/uploader';
 
 import * as styles from './index.module.scss';
 
-const LogoAndFaviconUploader = () => {
+function LogoAndFaviconUploader() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [uploadLogoError, setUploadLogoError] = useState<string>();
   const [uploadFaviconError, setUploadFaviconError] = useState<string>();
@@ -77,6 +77,6 @@ const LogoAndFaviconUploader = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LogoAndFaviconUploader;

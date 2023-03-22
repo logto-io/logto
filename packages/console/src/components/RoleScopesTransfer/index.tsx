@@ -13,12 +13,14 @@ type Props = {
   onChange: (value: ScopeResponse[]) => void;
 };
 
-const RoleScopesTransfer = ({ roleId, value, onChange }: Props) => (
-  <div className={classNames(transferLayout.container, styles.roleScopesTransfer)}>
-    <SourceScopesBox roleId={roleId} selectedScopes={value} onChange={onChange} />
-    <div className={transferLayout.verticalBar} />
-    <TargetScopesBox selectedScopes={value} onChange={onChange} />
-  </div>
-);
+function RoleScopesTransfer({ roleId, value, onChange }: Props) {
+  return (
+    <div className={classNames(transferLayout.container, styles.roleScopesTransfer)}>
+      <SourceScopesBox roleId={roleId} selectedScopes={value} onChange={onChange} />
+      <div className={transferLayout.verticalBar} />
+      <TargetScopesBox selectedScopes={value} onChange={onChange} />
+    </div>
+  );
+}
 
 export default RoleScopesTransfer;

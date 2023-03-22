@@ -9,7 +9,7 @@ type Props = {
   connectorType: ConnectorType;
 };
 
-const DemoTag = ({ connectorType }: Props) => {
+function DemoTag({ connectorType }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const isSocial = connectorType === ConnectorType.Social;
 
@@ -20,6 +20,6 @@ const DemoTag = ({ connectorType }: Props) => {
       <div className={styles.tag}>{t('general.demo')}</div>
     </Tooltip>
   );
-};
+}
 
 export default DemoTag;

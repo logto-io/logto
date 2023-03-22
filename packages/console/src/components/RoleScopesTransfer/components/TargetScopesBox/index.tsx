@@ -11,7 +11,7 @@ type Props = {
   onChange: (value: ScopeResponse[]) => void;
 };
 
-const TargetScopesBox = ({ selectedScopes, onChange }: Props) => {
+function TargetScopesBox({ selectedScopes, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -34,6 +34,6 @@ const TargetScopesBox = ({ selectedScopes, onChange }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default TargetScopesBox;

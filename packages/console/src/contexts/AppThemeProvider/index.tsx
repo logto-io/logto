@@ -40,7 +40,7 @@ export const AppThemeContext = createContext<Context>({
   setThemeOverride: noop,
 });
 
-export const AppThemeProvider = ({ children }: Props) => {
+export function AppThemeProvider({ children }: Props) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
   const [themeOverride, setThemeOverride] = useState<Theme>();
   const [mode, setMode] = useState<AppearanceMode>(defaultAppearanceMode);
@@ -92,4 +92,4 @@ export const AppThemeProvider = ({ children }: Props) => {
   );
 
   return <AppThemeContext.Provider value={context}>{children}</AppThemeContext.Provider>;
-};
+}

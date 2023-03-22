@@ -6,7 +6,7 @@ import Success from '@/assets/images/toast-success.svg';
 
 import * as styles from './index.module.scss';
 
-const Toast = () => {
+function Toast() {
   return (
     <Toaster
       toastOptions={{
@@ -31,6 +31,6 @@ const Toast = () => {
       )}
     </Toaster>
   );
-};
+}
 
 export default Toast;

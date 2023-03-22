@@ -15,12 +15,12 @@ type Props = {
   className?: string;
 };
 
-const CardItem = ({
+function CardItem({
   option: { icon, title, value, tag, trailingTag, isDisabled, disabledTip },
   isSelected,
   onClick,
   className,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -61,6 +61,6 @@ const CardItem = ({
       </div>
     </Tooltip>
   );
-};
+}
 
 export default CardItem;

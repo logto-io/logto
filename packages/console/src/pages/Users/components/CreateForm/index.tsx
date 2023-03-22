@@ -30,7 +30,7 @@ type Props = {
   onCreate: () => void;
 };
 
-const CreateForm = ({ onClose, onCreate }: Props) => {
+function CreateForm({ onClose, onCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { search } = useLocation();
   const navigate = useNavigate();
@@ -123,6 +123,6 @@ const CreateForm = ({ onClose, onCreate }: Props) => {
       </ModalLayout>
     </Modal>
   );
-};
+}
 
 export default CreateForm;

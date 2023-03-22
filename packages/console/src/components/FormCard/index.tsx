@@ -13,7 +13,7 @@ type Props = {
   children: ReactNode;
 };
 
-const FormCard = ({ title, description, learnMoreLink, children }: Props) => {
+function FormCard({ title, description, learnMoreLink, children }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -37,6 +37,6 @@ const FormCard = ({ title, description, learnMoreLink, children }: Props) => {
       <div className={styles.form}>{children}</div>
     </Card>
   );
-};
+}
 
 export default FormCard;

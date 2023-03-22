@@ -13,7 +13,7 @@ type Props = {
   to?: string;
 };
 
-const EventName = ({ eventKey, isSuccess, to }: Props) => {
+function EventName({ eventKey, isSuccess, to }: Props) {
   const title = logEventTitle[eventKey] ?? eventKey;
 
   return (
@@ -35,6 +35,6 @@ const EventName = ({ eventKey, isSuccess, to }: Props) => {
       {!to && <div className={styles.title}>{title}</div>}
     </div>
   );
-};
+}
 
 export default EventName;

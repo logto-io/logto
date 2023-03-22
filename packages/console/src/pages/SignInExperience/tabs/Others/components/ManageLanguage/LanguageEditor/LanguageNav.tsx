@@ -9,7 +9,7 @@ import LanguageItem from './LanguageItem';
 import * as style from './LanguageNav.module.scss';
 import { LanguageEditorContext } from './use-language-editor-context';
 
-const LanguageNav = () => {
+function LanguageNav() {
   const { languages, addLanguage } = useUiLanguages();
 
   const {
@@ -66,6 +66,6 @@ const LanguageNav = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LanguageNav;

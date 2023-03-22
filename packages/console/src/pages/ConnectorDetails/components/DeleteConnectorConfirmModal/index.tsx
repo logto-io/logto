@@ -12,7 +12,7 @@ type Props = {
   onConfirm: () => void;
 };
 
-const DeleteConnectorConfirmModal = ({ data, isOpen, onCancel, onConfirm }: Props) => {
+function DeleteConnectorConfirmModal({ data, isOpen, onCancel, onConfirm }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const isSocial = data.type === ConnectorType.Social;
 
@@ -40,6 +40,6 @@ const DeleteConnectorConfirmModal = ({ data, isOpen, onCancel, onConfirm }: Prop
       )}
     </ConfirmModal>
   );
-};
+}
 
 export default DeleteConnectorConfirmModal;

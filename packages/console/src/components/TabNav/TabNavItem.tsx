@@ -24,7 +24,7 @@ type Props =
   | (BaseProps & LinkStyleProps & Partial<Record<keyof TabStyleProps, undefined>>)
   | (BaseProps & TabStyleProps & Partial<Record<keyof LinkStyleProps, undefined>>);
 
-const TabNavItem = ({ children, href, isActive, errorCount = 0, onClick }: Props) => {
+function TabNavItem({ children, href, isActive, errorCount = 0, onClick }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const location = useLocation();
   const selected = href ? location.pathname === href : isActive;
@@ -46,6 +46,6 @@ const TabNavItem = ({ children, href, isActive, errorCount = 0, onClick }: Props
       )}
     </div>
   );
-};
+}
 
 export default TabNavItem;

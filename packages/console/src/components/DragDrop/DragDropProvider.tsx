@@ -19,7 +19,7 @@ export const DragDropContext = createContext<DragDropContextProps>({
   isDragging: false,
 });
 
-const DragDropProvider = ({ children }: Props) => {
+function DragDropProvider({ children }: Props) {
   const [isDragging, setIsDragging] = useState(false);
 
   const memorizedContext = useMemo(() => ({ isDragging, setIsDragging }), [isDragging]);
@@ -31,6 +31,6 @@ const DragDropProvider = ({ children }: Props) => {
       </DndProvider>
     </DragDropContext.Provider>
   );
-};
+}
 
 export default DragDropProvider;

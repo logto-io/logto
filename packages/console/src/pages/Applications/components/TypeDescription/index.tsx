@@ -13,13 +13,15 @@ type Props = {
   size?: 'large' | 'small';
 };
 
-const TypeDescription = ({ title, subtitle, description, type, size = 'large' }: Props) => (
-  <div className={classNames(styles.container, styles[size])}>
-    <ApplicationIcon type={type} />
-    <div className={styles.title}>{title}</div>
-    <div className={styles.subtitle}>{subtitle}</div>
-    <div className={styles.description}>{description}</div>
-  </div>
-);
+function TypeDescription({ title, subtitle, description, type, size = 'large' }: Props) {
+  return (
+    <div className={classNames(styles.container, styles[size])}>
+      <ApplicationIcon type={type} />
+      <div className={styles.title}>{title}</div>
+      <div className={styles.subtitle}>{subtitle}</div>
+      <div className={styles.description}>{description}</div>
+    </div>
+  );
+}
 
 export default TypeDescription;

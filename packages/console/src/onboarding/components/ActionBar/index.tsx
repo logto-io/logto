@@ -10,11 +10,13 @@ type Props = {
 
 const totalSteps = 3;
 
-const ActionBar = ({ step, children }: Props) => (
-  <div className={styles.container}>
-    <ProgressBar currentStep={step} totalSteps={totalSteps} />
-    <div className={styles.actions}>{children}</div>
-  </div>
-);
+function ActionBar({ step, children }: Props) {
+  return (
+    <div className={styles.container}>
+      <ProgressBar currentStep={step} totalSteps={totalSteps} />
+      <div className={styles.actions}>{children}</div>
+    </div>
+  );
+}
 
 export default ActionBar;

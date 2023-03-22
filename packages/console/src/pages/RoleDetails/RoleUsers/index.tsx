@@ -31,7 +31,7 @@ import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 
-const RoleUsers = () => {
+function RoleUsers() {
   const {
     role: { id: roleId },
   } = useOutletContext<RoleDetailsOutletContext>();
@@ -194,6 +194,6 @@ const RoleUsers = () => {
       )}
     </>
   );
-};
+}
 
 export default RoleUsers;

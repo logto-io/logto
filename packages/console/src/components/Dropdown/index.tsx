@@ -31,14 +31,14 @@ type Props = {
   hasOverflowContent?: boolean;
 };
 
-const Div = ({
+function Div({
   children,
   ...rest
-}: PropsWithChildren<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>>) => (
-  <div {...rest}>{children}</div>
-);
+}: PropsWithChildren<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>>) {
+  return <div {...rest}>{children}</div>;
+}
 
-const Dropdown = ({
+function Dropdown({
   children,
   title,
   isOpen,
@@ -49,7 +49,7 @@ const Dropdown = ({
   titleClassName,
   horizontalAlign = 'end',
   hasOverflowContent,
-}: Props) => {
+}: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   const { position, positionState, mutate } = usePosition({
@@ -95,6 +95,6 @@ const Dropdown = ({
       </div>
     </ReactModal>
   );
-};
+}
 
 export default Dropdown;

@@ -10,7 +10,7 @@ type Props = {
   onClose: (id: string) => void;
 };
 
-const GuideModal = ({ app, onClose }: Props) => {
+function GuideModal({ app, onClose }: Props) {
   if (!app) {
     return null;
   }
@@ -29,6 +29,6 @@ const GuideModal = ({ app, onClose }: Props) => {
       <Guide app={app} onClose={closeModal} />
     </Modal>
   );
-};
+}
 
 export default GuideModal;

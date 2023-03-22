@@ -27,7 +27,7 @@ type Props = {
   content?: ReactNode;
 };
 
-const Tooltip = ({
+function Tooltip({
   className,
   isKeepOpen = false,
   isSuccessful = false,
@@ -36,7 +36,7 @@ const Tooltip = ({
   anchorClassName,
   children,
   content,
-}: Props) => {
+}: Props) {
   const [tooltipDom, setTooltipDom] = useState<HTMLDivElement>();
   const anchorRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -146,6 +146,6 @@ const Tooltip = ({
         )}
     </>
   );
-};
+}
 
 export default Tooltip;

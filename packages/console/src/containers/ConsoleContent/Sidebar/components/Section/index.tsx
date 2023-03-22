@@ -7,13 +7,13 @@ type Props = {
   children: ReactNode;
 };
 
-const Section = ({ children, title }: Props) => {
+function Section({ children, title }: Props) {
   return (
     <div>
       <div className={styles.title}>{title}</div>
       {children}
     </div>
   );
-};
+}
 
 export default Section;

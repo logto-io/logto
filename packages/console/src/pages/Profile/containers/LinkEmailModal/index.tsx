@@ -16,7 +16,7 @@ type EmailForm = {
   email: string;
 };
 
-const LinkEmailModal = () => {
+function LinkEmailModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -79,6 +79,6 @@ const LinkEmailModal = () => {
       />
     </MainFlowLikeModal>
   );
-};
+}
 
 export default LinkEmailModal;

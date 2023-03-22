@@ -28,7 +28,7 @@ import setTitle from './utils/set-title';
 void initI18n();
 setTitle();
 
-const Content = () => {
+function Content() {
   const { tenants, isSettle, currentTenantId } = useContext(TenantsContext);
 
   const resources = deduplicate(
@@ -78,14 +78,14 @@ const Content = () => {
       </AppThemeProvider>
     </LogtoProvider>
   );
-};
+}
 
-const App = () => {
+function App() {
   return (
     <TenantsProvider>
       <Content />
     </TenantsProvider>
   );
-};
+}
 
 export default App;

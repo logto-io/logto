@@ -20,7 +20,7 @@ type Props = {
   onSelectScope: (scope: ScopeResponse) => void;
 };
 
-const ResourceItem = ({ resource, selectedScopes, onSelectResource, onSelectScope }: Props) => {
+function ResourceItem({ resource, selectedScopes, onSelectResource, onSelectScope }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { name, scopes } = resource;
   const selectedScopesCount = selectedScopes.length;
@@ -69,6 +69,6 @@ const ResourceItem = ({ resource, selectedScopes, onSelectResource, onSelectScop
       </div>
     </div>
   );
-};
+}
 
 export default ResourceItem;

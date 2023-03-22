@@ -19,7 +19,7 @@ import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
 import { AppContentOutletContext } from './types';
 
-const AppContent = () => {
+function AppContent() {
   const { isAuthenticated, isLoading: isLogtoLoading, error, signIn } = useLogto();
   const href = useHref('/callback');
   const { isLoading: isPreferencesLoading } = useUserPreferences();
@@ -72,6 +72,6 @@ const AppContent = () => {
       {isCloud && <Broadcast />}
     </>
   );
-};
+}
 
 export default AppContent;

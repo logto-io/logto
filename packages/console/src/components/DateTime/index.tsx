@@ -5,7 +5,7 @@ type Props = {
   children: Nullable<string | number>;
 };
 
-const DateTime = ({ children }: Props) => {
+function DateTime({ children }: Props) {
   const date = children && new Date(children);
 
   if (!date || !isValid(date)) {
@@ -13,6 +13,6 @@ const DateTime = ({ children }: Props) => {
   }
 
   return <span>{date.toLocaleDateString()}</span>;
-};
+}
 
 export default DateTime;

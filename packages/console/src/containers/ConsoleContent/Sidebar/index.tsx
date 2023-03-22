@@ -7,7 +7,7 @@ import { useSidebarMenuItems } from './hook';
 import * as styles from './index.module.scss';
 import { getPath } from './utils';
 
-const Sidebar = () => {
+function Sidebar() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tab_sections',
   });
@@ -35,7 +35,7 @@ const Sidebar = () => {
       ))}
     </div>
   );
-};
+}
 
 export default Sidebar;
 

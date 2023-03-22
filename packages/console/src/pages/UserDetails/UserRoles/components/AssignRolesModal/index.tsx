@@ -16,7 +16,7 @@ type Props = {
   onClose: (success?: boolean) => void;
 };
 
-const AssignRolesModal = ({ user, onClose }: Props) => {
+function AssignRolesModal({ user, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const userName = user.name ?? t('users.unnamed');
@@ -85,6 +85,6 @@ const AssignRolesModal = ({ user, onClose }: Props) => {
       </ModalLayout>
     </ReactModal>
   );
-};
+}
 
 export default AssignRolesModal;

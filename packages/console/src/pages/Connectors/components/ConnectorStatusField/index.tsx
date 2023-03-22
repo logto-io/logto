@@ -7,7 +7,7 @@ import { ToggleTip } from '@/components/Tip';
 
 import * as styles from './index.module.scss';
 
-const ConnectorStatusField = () => {
+function ConnectorStatusField() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -43,6 +43,6 @@ const ConnectorStatusField = () => {
       </ToggleTip>
     </div>
   );
-};
+}
 
 export default ConnectorStatusField;

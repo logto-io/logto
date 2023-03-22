@@ -20,7 +20,7 @@ import type { UserDetailsForm, UserDetailsOutletContext } from '../types';
 import { userDetailsParser } from '../utils';
 import UserSocialIdentities from './components/UserSocialIdentities';
 
-const UserSettings = () => {
+function UserSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
 
@@ -141,6 +141,6 @@ const UserSettings = () => {
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </>
   );
-};
+}
 
 export default UserSettings;

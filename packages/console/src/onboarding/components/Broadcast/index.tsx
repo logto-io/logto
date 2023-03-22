@@ -5,7 +5,7 @@ import { aboutCloudPreviewLink } from '@/onboarding/constants';
 
 import * as styles from './index.module.scss';
 
-const Broadcast = () => {
+function Broadcast() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -16,6 +16,6 @@ const Broadcast = () => {
       </TextLink>
     </div>
   );
-};
+}
 
 export default Broadcast;

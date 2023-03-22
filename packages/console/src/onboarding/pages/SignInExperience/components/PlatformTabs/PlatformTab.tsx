@@ -16,7 +16,7 @@ type Props = {
   onClick: (tab: PreviewPlatform) => void;
 };
 
-const PlatformTab = ({ isSelected, icon, title, tab, onClick }: Props) => {
+function PlatformTab({ isSelected, icon, title, tab, onClick }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -35,6 +35,6 @@ const PlatformTab = ({ isSelected, icon, title, tab, onClick }: Props) => {
       {t(title)}
     </div>
   );
-};
+}
 
 export default PlatformTab;

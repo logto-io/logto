@@ -9,8 +9,8 @@ type Props = {
   children: React.ReactNode;
 };
 
-const TabNav = ({ className, children }: Props) => (
-  <nav className={classNames(styles.nav, className)}>{children}</nav>
-);
+function TabNav({ className, children }: Props) {
+  return <nav className={classNames(styles.nav, className)}>{children}</nav>;
+}
 
 export default TabNav;

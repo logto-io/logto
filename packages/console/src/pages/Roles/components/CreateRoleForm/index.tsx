@@ -24,7 +24,7 @@ type CreateRolePayload = Pick<Role, 'name' | 'description'> & {
   scopeIds?: string[];
 };
 
-const CreateRoleForm = ({ onClose }: Props) => {
+function CreateRoleForm({ onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
@@ -106,6 +106,6 @@ const CreateRoleForm = ({ onClose }: Props) => {
       </form>
     </ModalLayout>
   );
-};
+}
 
 export default CreateRoleForm;

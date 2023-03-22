@@ -10,7 +10,7 @@ type Props = {
   connectorGroup: ConnectorGroup;
 };
 
-const ConnectorTypeColumn = ({ connectorGroup: { type, connectors } }: Props) => {
+function ConnectorTypeColumn({ connectorGroup: { type, connectors } }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const standardConnectors = connectors.filter(({ isStandard }) => isStandard);
@@ -34,6 +34,6 @@ const ConnectorTypeColumn = ({ connectorGroup: { type, connectors } }: Props) =>
   }
 
   return <UnnamedTrans resource={connectorFactory.name} />;
-};
+}
 
 export default ConnectorTypeColumn;

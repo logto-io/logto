@@ -22,7 +22,7 @@ export type Props = {
   tip?: ToggleTipProps['content'];
 };
 
-const FormField = ({
+function FormField({
   title,
   children,
   isRequired,
@@ -30,7 +30,7 @@ const FormField = ({
   className,
   tip,
   headlineClassName,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -55,6 +55,6 @@ const FormField = ({
       {children}
     </div>
   );
-};
+}
 
 export default FormField;

@@ -23,7 +23,7 @@ type Props<T> = {
   onItemClick: (value: T) => void;
 };
 
-const SubMenu = <T extends string>({
+function SubMenu<T extends string>({
   className,
   menuItemClassName,
   icon,
@@ -31,7 +31,7 @@ const SubMenu = <T extends string>({
   options,
   selectedOption,
   onItemClick,
-}: Props<T>) => {
+}: Props<T>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -94,6 +94,6 @@ const SubMenu = <T extends string>({
       </div>
     </div>
   );
-};
+}
 
 export default SubMenu;

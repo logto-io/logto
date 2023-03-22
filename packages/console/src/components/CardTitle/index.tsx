@@ -19,14 +19,14 @@ export type Props = {
 /**
  * Always use this component to render CardTitle, with built-in i18n support.
  */
-const CardTitle = ({
+function CardTitle({
   title,
   subtitle,
   size = 'large',
   isWordWrapEnabled = false,
   learnMoreLink,
   className,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -46,6 +46,6 @@ const CardTitle = ({
       )}
     </div>
   );
-};
+}
 
 export default CardTitle;

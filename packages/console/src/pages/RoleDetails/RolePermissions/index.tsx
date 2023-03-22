@@ -19,7 +19,7 @@ import AssignPermissionsModal from './components/AssignPermissionsModal';
 
 const pageSize = defaultPageSize;
 
-const RolePermissions = () => {
+function RolePermissions() {
   const {
     role: { id: roleId },
   } = useOutletContext<RoleDetailsOutletContext>();
@@ -126,6 +126,6 @@ const RolePermissions = () => {
       )}
     </>
   );
-};
+}
 
 export default RolePermissions;

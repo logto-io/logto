@@ -21,14 +21,14 @@ type DragItemProps = {
   type: string;
 };
 
-const DraggableItem = ({
+function DraggableItem({
   id,
   children,
   sortIndex,
   moveItem,
   dragType = 'DraggableItem',
   className,
-}: Props) => {
+}: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const { setIsDragging } = useContext(DragDropContext);
   const [{ handlerId }, drop] = useDrop<DragItemProps, void, { handlerId: Nullable<Identifier> }>({
@@ -110,6 +110,6 @@ const DraggableItem = ({
       {children}
     </div>
   );
-};
+}
 
 export default DraggableItem;

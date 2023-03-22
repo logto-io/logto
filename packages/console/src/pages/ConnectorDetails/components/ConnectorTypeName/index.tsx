@@ -7,7 +7,7 @@ type Props = {
   type: ConnectorType;
 };
 
-const ConnectorTypeName = ({ type }: Props) => {
+function ConnectorTypeName({ type }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -17,6 +17,6 @@ const ConnectorTypeName = ({ type }: Props) => {
       {type === ConnectorType.Social && t('connector_details.type_social')}
     </div>
   );
-};
+}
 
 export default ConnectorTypeName;

@@ -30,7 +30,7 @@ type FormFields = {
   [key in BasicUserField]: string;
 };
 
-const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose }: Props) => {
+function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show: showModal } = useConfirmModal();
   const api = useStaticApi({
@@ -155,6 +155,6 @@ const BasicUserInfoUpdateModal = ({ field, value: initialValue, isOpen, onClose 
       </ModalLayout>
     </ReactModal>
   );
-};
+}
 
 export default BasicUserInfoUpdateModal;

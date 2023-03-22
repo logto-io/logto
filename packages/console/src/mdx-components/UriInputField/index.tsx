@@ -26,7 +26,7 @@ type Props = {
   isSingle?: boolean;
 };
 
-const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
+function UriInputField({ appId, name, title, isSingle = false }: Props) {
   const methods = useForm<Partial<GuideForm>>();
   const {
     control,
@@ -138,6 +138,6 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
       </form>
     </FormProvider>
   );
-};
+}
 
 export default UriInputField;

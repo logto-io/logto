@@ -29,14 +29,14 @@ const normalize = (value: string[], length: number): string[] => {
   return value;
 };
 
-const VerificationCodeInput = ({
+function VerificationCodeInput({
   name,
   className,
   value,
   length = defaultLength,
   error,
   onChange,
-}: Props) => {
+}: Props) {
   /* eslint-disable @typescript-eslint/ban-types */
   const inputReferences = useRef<Array<HTMLInputElement | null>>(
     Array.from<null>({ length }).fill(null)
@@ -215,6 +215,6 @@ const VerificationCodeInput = ({
       {error && <div className={styles.errorMessage}>{error}</div>}
     </div>
   );
-};
+}
 
 export default VerificationCodeInput;

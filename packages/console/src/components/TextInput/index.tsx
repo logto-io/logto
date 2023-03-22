@@ -11,7 +11,7 @@ type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
   suffix?: ReactElement;
 };
 
-const TextInput = (
+function TextInput(
   {
     errorMessage,
     hasError = Boolean(errorMessage),
@@ -23,7 +23,7 @@ const TextInput = (
     ...rest
   }: Props,
   reference: ForwardedRef<HTMLInputElement>
-) => {
+) {
   return (
     <div className={className}>
       <div
@@ -45,6 +45,6 @@ const TextInput = (
       {hasError && errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
     </div>
   );
-};
+}
 
 export default forwardRef(TextInput);

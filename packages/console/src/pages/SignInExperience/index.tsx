@@ -46,18 +46,19 @@ type PageWrapperProps = {
   children: ReactNode;
 };
 
-const PageWrapper = ({ children }: PageWrapperProps) => (
-  <div className={styles.container}>
-    <CardTitle
-      title="sign_in_exp.title"
-      subtitle="sign_in_exp.description"
-      className={styles.cardTitle}
-    />
-    {children}
-  </div>
-);
+function PageWrapper({ children }: PageWrapperProps) {
+  return (
+    <div className={styles.container}>
+      <CardTitle
+        title="sign_in_exp.title"
+        subtitle="sign_in_exp.description"
+        className={styles.cardTitle}
+      />
+      {children}
+    </div>
+  );
+}
 
-// eslint-disable-next-line react/function-component-definition
 function SignInExperience() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();

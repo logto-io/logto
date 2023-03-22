@@ -28,10 +28,10 @@ type Props<T> = {
   data: Array<Row<T>>;
 };
 
-const CardContent = <T extends Nullable<boolean | string | Record<string, unknown>> | undefined>({
+function CardContent<T extends Nullable<boolean | string | Record<string, unknown>> | undefined>({
   title,
   data,
-}: Props<T>) => {
+}: Props<T>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const defaultRenderer = (value: unknown) => (value ? <span>{String(value)}</span> : <NotSet />);
 
@@ -80,6 +80,6 @@ const CardContent = <T extends Nullable<boolean | string | Record<string, unknow
       </table>
     </div>
   );
-};
+}
 
 export default CardContent;

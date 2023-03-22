@@ -6,7 +6,7 @@ import FormField from '@/components/FormField';
 import * as styles from '../index.module.scss';
 import SignInMethodEditBox from './components/SignInMethodEditBox';
 
-const SignInForm = () => {
+function SignInForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -20,6 +20,6 @@ const SignInForm = () => {
       </FormField>
     </Card>
   );
-};
+}
 
 export default SignInForm;

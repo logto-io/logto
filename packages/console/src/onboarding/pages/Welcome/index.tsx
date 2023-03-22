@@ -20,7 +20,6 @@ import { getOnboardingPage } from '../../utils';
 import * as styles from './index.module.scss';
 import { deploymentTypeOptions, projectOptions } from './options';
 
-// eslint-disable-next-line react/function-component-definition
 function Welcome() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();

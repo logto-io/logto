@@ -30,7 +30,7 @@ const defaultValues: FormFields = {
   showPassword: false,
 };
 
-const ChangePasswordModal = () => {
+function ChangePasswordModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { show: showModal } = useConfirmModal();
@@ -154,6 +154,6 @@ const ChangePasswordModal = () => {
       />
     </MainFlowLikeModal>
   );
-};
+}
 
 export default ChangePasswordModal;

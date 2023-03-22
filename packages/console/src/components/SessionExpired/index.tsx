@@ -10,7 +10,7 @@ type Props = {
   callbackHref?: string;
 };
 
-const SessionExpired = ({ callbackHref = '/callback', error }: Props) => {
+function SessionExpired({ callbackHref = '/callback', error }: Props) {
   const { signIn, signOut } = useLogto();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -31,6 +31,6 @@ const SessionExpired = ({ callbackHref = '/callback', error }: Props) => {
       />
     </AppError>
   );
-};
+}
 
 export default SessionExpired;

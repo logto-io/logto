@@ -24,7 +24,7 @@ export type ConfirmModalProps = {
   onConfirm?: () => void;
 };
 
-const ConfirmModal = ({
+function ConfirmModal({
   children,
   className,
   title = 'general.reminder',
@@ -36,7 +36,7 @@ const ConfirmModal = ({
   isLoading = false,
   onCancel,
   onConfirm,
-}: ConfirmModalProps) => {
+}: ConfirmModalProps) {
   return (
     <ReactModal
       shouldCloseOnEsc
@@ -68,6 +68,6 @@ const ConfirmModal = ({
       </ModalLayout>
     </ReactModal>
   );
-};
+}
 
 export default ConfirmModal;

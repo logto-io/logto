@@ -16,7 +16,7 @@ type Props = {
   onClose: (success?: boolean) => void;
 };
 
-const AssignPermissionsModal = ({ roleId, onClose }: Props) => {
+function AssignPermissionsModal({ roleId, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,6 +82,6 @@ const AssignPermissionsModal = ({ roleId, onClose }: Props) => {
       </ModalLayout>
     </ReactModal>
   );
-};
+}
 
 export default AssignPermissionsModal;

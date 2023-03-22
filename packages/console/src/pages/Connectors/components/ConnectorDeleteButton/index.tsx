@@ -16,7 +16,7 @@ type Props = {
   connectorGroup: ConnectorGroup;
 };
 
-const ConnectorDeleteButton = ({ connectorGroup }: Props) => {
+function ConnectorDeleteButton({ connectorGroup }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { mutate: mutateGlobal } = useSWRConfig();
   const { connectors } = connectorGroup;
@@ -77,6 +77,6 @@ const ConnectorDeleteButton = ({ connectorGroup }: Props) => {
       />
     </>
   );
-};
+}
 
 export default ConnectorDeleteButton;

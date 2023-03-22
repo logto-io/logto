@@ -3,7 +3,6 @@ import CardTitle from '@/components/CardTitle';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { withAppInsights } from '@/utils/app-insights';
 
-// eslint-disable-next-line react/function-component-definition
 function AuditLogs() {
   return (
     <div className={resourcesStyles.container}>

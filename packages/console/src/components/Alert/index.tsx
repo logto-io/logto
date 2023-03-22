@@ -19,7 +19,7 @@ type Props = {
   className?: string;
 };
 
-const Alert = ({
+function Alert({
   children,
   action,
   href,
@@ -27,7 +27,7 @@ const Alert = ({
   severity = 'info',
   variant = 'plain',
   className,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -44,6 +44,6 @@ const Alert = ({
       )}
     </div>
   );
-};
+}
 
 export default Alert;

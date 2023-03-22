@@ -23,7 +23,7 @@ import { getOnboardingPage } from './utils';
 
 const welcomePathname = getOnboardingPage(OnboardingPage.Welcome);
 
-const App = () => {
+function App() {
   const swrOptions = useSwrOptions();
   const { setThemeOverride } = useContext(AppThemeContext);
 
@@ -77,6 +77,6 @@ const App = () => {
       </div>
     </BrowserRouter>
   );
-};
+}
 
 export default App;

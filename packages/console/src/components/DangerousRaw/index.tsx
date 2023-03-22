@@ -4,6 +4,8 @@ type Props = {
   children: ReactNode;
 };
 
-const DangerousRaw = ({ children }: Props) => <span>{children}</span>;
+function DangerousRaw({ children }: Props) {
+  return <span>{children}</span>;
+}
 
 export default DangerousRaw;

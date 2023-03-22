@@ -11,14 +11,14 @@ type Props = {
   fallbackElement?: ReactElement;
 } & ImgHTMLAttributes<HTMLImageElement>;
 
-const ImageWithErrorFallback = ({
+function ImageWithErrorFallback({
   src,
   alt,
   className,
   containerClassName,
   fallbackElement,
   ...props
-}: Props) => {
+}: Props) {
   const [hasError, setHasError] = useState(false);
   const theme = useTheme();
   const DefaultFallback = theme === Theme.Light ? FallbackImageLight : FallbackImageDark;
@@ -40,6 +40,6 @@ const ImageWithErrorFallback = ({
       <img className={className} src={src} alt={alt} onError={errorHandler} {...props} />
     </div>
   );
-};
+}
 
 export default ImageWithErrorFallback;

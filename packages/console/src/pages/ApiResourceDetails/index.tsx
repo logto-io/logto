@@ -30,7 +30,6 @@ import { withAppInsights } from '@/utils/app-insights';
 import * as styles from './index.module.scss';
 import { ApiResourceDetailsOutletContext } from './types';
 
-// eslint-disable-next-line react/function-component-definition
 function ApiResourceDetails() {
   const { pathname } = useLocation();
   const { id } = useParams();

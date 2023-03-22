@@ -12,7 +12,7 @@ type Props = {
   toTenantId: string;
 };
 
-const Redirect = ({ tenants, toTenantId }: Props) => {
+function Redirect({ tenants, toTenantId }: Props) {
   const { getAccessToken, signIn } = useLogto();
   const tenant = tenants.find(({ id }) => id === toTenantId);
   const { setIsSettle } = useContext(TenantsContext);
@@ -40,6 +40,6 @@ const Redirect = ({ tenants, toTenantId }: Props) => {
   }
 
   return <AppLoading />;
-};
+}
 
 export default Redirect;

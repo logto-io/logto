@@ -10,7 +10,7 @@ type Props = {
   requiredConnectors: ConnectorType[];
 };
 
-const ConnectorSetupWarning = ({ requiredConnectors }: Props) => {
+function ConnectorSetupWarning({ requiredConnectors }: Props) {
   const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -43,6 +43,6 @@ const ConnectorSetupWarning = ({ requiredConnectors }: Props) => {
       ))}
     </>
   );
-};
+}
 
 export default ConnectorSetupWarning;

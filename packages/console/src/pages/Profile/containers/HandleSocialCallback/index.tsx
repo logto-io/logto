@@ -8,7 +8,7 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 
 import { handleError } from '../../utils';
 
-const HandleSocialCallback = () => {
+function HandleSocialCallback() {
   const { search } = useLocation();
   const { show: showModal } = useConfirmModal();
   const api = useStaticApi({
@@ -53,6 +53,6 @@ const HandleSocialCallback = () => {
   }, [api, search, showModal]);
 
   return <AppLoading />;
-};
+}
 
 export default HandleSocialCallback;

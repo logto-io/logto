@@ -10,7 +10,7 @@ type Props = {
   onChange: (value?: string) => void;
 };
 
-const ApplicationSelector = ({ value, onChange }: Props) => {
+function ApplicationSelector({ value, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data } = useSWR<Application[]>('api/applications');
   const options =
@@ -28,6 +28,6 @@ const ApplicationSelector = ({ value, onChange }: Props) => {
       onChange={onChange}
     />
   );
-};
+}
 
 export default ApplicationSelector;

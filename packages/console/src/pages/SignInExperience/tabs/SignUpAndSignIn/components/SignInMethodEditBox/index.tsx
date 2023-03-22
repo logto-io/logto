@@ -18,7 +18,7 @@ import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
 import * as styles from './index.module.scss';
 
-const SignInMethodEditBox = () => {
+function SignInMethodEditBox() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
@@ -148,6 +148,6 @@ const SignInMethodEditBox = () => {
       />
     </div>
   );
-};
+}
 
 export default SignInMethodEditBox;

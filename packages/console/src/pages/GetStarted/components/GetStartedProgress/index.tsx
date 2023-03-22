@@ -14,7 +14,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import useGetStartedMetadata from '../../hook';
 import * as styles from './index.module.scss';
 
-const GetStartedProgress = () => {
+function GetStartedProgress() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     data: { getStartedHidden },
@@ -83,6 +83,6 @@ const GetStartedProgress = () => {
       </Dropdown>
     </>
   );
-};
+}
 
 export default GetStartedProgress;

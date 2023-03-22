@@ -12,23 +12,25 @@ type Props = MultiTextInputProps &
     formFieldClassName?: FormFieldProps['className'];
   };
 
-const MultiTextInputField = ({
+function MultiTextInputField({
   title,
   isRequired,
   tip,
   formFieldClassName,
   value,
   ...rest
-}: Props) => (
-  <FormField
-    title={title}
-    isRequired={isRequired}
-    tip={tip}
-    className={formFieldClassName}
-    headlineClassName={conditional(value && value.length > 1 && styles.headlineWithMultiInputs)}
-  >
-    <MultiTextInput title={title} value={value} {...rest} />
-  </FormField>
-);
+}: Props) {
+  return (
+    <FormField
+      title={title}
+      isRequired={isRequired}
+      tip={tip}
+      className={formFieldClassName}
+      headlineClassName={conditional(value && value.length > 1 && styles.headlineWithMultiInputs)}
+    >
+      <MultiTextInput title={title} value={value} {...rest} />
+    </FormField>
+  );
+}
 
 export default MultiTextInputField;

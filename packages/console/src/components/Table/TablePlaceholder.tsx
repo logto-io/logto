@@ -17,14 +17,7 @@ type Props = {
   action: ReactNode;
 };
 
-const TablePlaceholder = ({
-  image,
-  imageDark,
-  title,
-  description,
-  learnMoreLink,
-  action,
-}: Props) => {
+function TablePlaceholder({ image, imageDark, title, description, learnMoreLink, action }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
 
@@ -46,6 +39,6 @@ const TablePlaceholder = ({
       {action && <div className={styles.action}>{action}</div>}
     </div>
   );
-};
+}
 
 export default TablePlaceholder;

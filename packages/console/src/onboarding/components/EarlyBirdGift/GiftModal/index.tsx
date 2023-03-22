@@ -12,7 +12,7 @@ type Props = {
   onClose: () => void;
 };
 
-const GiftModal = ({ isOpen, onClose }: Props) => {
+function GiftModal({ isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -38,6 +38,6 @@ const GiftModal = ({ isOpen, onClose }: Props) => {
       </ModalLayout>
     </ReactModal>
   );
-};
+}
 
 export default GiftModal;

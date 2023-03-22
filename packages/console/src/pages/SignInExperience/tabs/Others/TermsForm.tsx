@@ -9,7 +9,7 @@ import { uriValidator } from '@/utils/validator';
 import type { SignInExperienceForm } from '../../types';
 import * as styles from '../index.module.scss';
 
-const TermsForm = () => {
+function TermsForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
@@ -41,6 +41,6 @@ const TermsForm = () => {
       </FormField>
     </Card>
   );
-};
+}
 
 export default TermsForm;

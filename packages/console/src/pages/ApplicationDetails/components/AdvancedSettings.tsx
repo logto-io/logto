@@ -16,7 +16,7 @@ type Props = {
   oidcConfig: SnakeCaseOidcConfig;
 };
 
-const AdvancedSettings = ({ applicationType, oidcConfig }: Props) => {
+function AdvancedSettings({ applicationType, oidcConfig }: Props) {
   const { control } = useFormContext<Application & { isAdmin: boolean }>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -83,6 +83,6 @@ const AdvancedSettings = ({ applicationType, oidcConfig }: Props) => {
       )}
     </FormCard>
   );
-};
+}
 
 export default AdvancedSettings;

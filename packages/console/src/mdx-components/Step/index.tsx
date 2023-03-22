@@ -28,7 +28,7 @@ type Props = PropsWithChildren<{
   onButtonClick?: () => void;
 }>;
 
-const Step = ({
+function Step({
   children,
   title,
   subtitle,
@@ -39,7 +39,7 @@ const Step = ({
   buttonType = 'outline',
   isLoading,
   onButtonClick,
-}: Props) => {
+}: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const isActive = index === activeIndex;
   const isComplete = index < activeIndex;
@@ -105,6 +105,6 @@ const Step = ({
       </div>
     </Card>
   );
-};
+}
 
 export default Step;

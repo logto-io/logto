@@ -15,7 +15,7 @@ type Props = {
   onConfirm: () => void;
 };
 
-const DeleteConfirmModal = ({
+function DeleteConfirmModal({
   isOpen,
   isLoading = false,
   expectedInput,
@@ -24,7 +24,7 @@ const DeleteConfirmModal = ({
   className,
   onCancel,
   onConfirm,
-}: Props) => {
+}: Props) {
   const [input, setInput] = useState('');
   const isConfirmBlocked = Boolean(expectedInput) && input !== expectedInput;
 
@@ -52,6 +52,6 @@ const DeleteConfirmModal = ({
       )}
     </ConfirmModal>
   );
-};
+}
 
 export default DeleteConfirmModal;

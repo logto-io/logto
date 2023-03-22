@@ -15,7 +15,7 @@ type Props = {
   onClose: () => void;
 };
 
-const CreateRoleModal = ({ onClose }: Props) => {
+function CreateRoleModal({ onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
 
@@ -53,6 +53,6 @@ const CreateRoleModal = ({ onClose }: Props) => {
       )}
     </ReactModal>
   );
-};
+}
 
 export default CreateRoleModal;

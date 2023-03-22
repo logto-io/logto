@@ -9,7 +9,7 @@ type Props = {
   onChange?: (value: string) => void;
 };
 
-const ColorPicker = ({ onChange, value = '#000000' }: Props) => {
+function ColorPicker({ onChange, value = '#000000' }: Props) {
   const [id, setId] = useState(nanoid());
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -22,5 +22,5 @@ const ColorPicker = ({ onChange, value = '#000000' }: Props) => {
       <label htmlFor={id}>{value.toUpperCase()}</label>
     </div>
   );
-};
+}
 export default ColorPicker;

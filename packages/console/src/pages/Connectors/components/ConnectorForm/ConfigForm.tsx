@@ -21,7 +21,7 @@ type Props = {
   connectorType?: ConnectorType;
 };
 
-const ConfigForm = ({ formItems, className, connectorId, connectorType }: Props) => {
+function ConfigForm({ formItems, className, connectorId, connectorType }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
@@ -65,6 +65,6 @@ const ConfigForm = ({ formItems, className, connectorId, connectorType }: Props)
       )}
     </div>
   );
-};
+}
 
 export default ConfigForm;

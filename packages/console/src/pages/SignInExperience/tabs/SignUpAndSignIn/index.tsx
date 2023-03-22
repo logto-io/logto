@@ -8,12 +8,14 @@ type Props = {
   isActive: boolean;
 };
 
-const SignUpAndSignIn = ({ isActive }: Props) => (
-  <TabWrapper isActive={isActive} className={styles.tabContent}>
-    <SignUpForm />
-    <SignInForm />
-    <SocialSignInForm />
-  </TabWrapper>
-);
+function SignUpAndSignIn({ isActive }: Props) {
+  return (
+    <TabWrapper isActive={isActive} className={styles.tabContent}>
+      <SignUpForm />
+      <SignInForm />
+      <SocialSignInForm />
+    </TabWrapper>
+  );
+}
 
 export default SignUpAndSignIn;

@@ -6,6 +6,8 @@ type Props = {
   className?: string;
 };
 
-const Divider = ({ className }: Props) => <div className={classNames(styles.divider, className)} />;
+function Divider({ className }: Props) {
+  return <div className={classNames(styles.divider, className)} />;
+}
 
 export default Divider;

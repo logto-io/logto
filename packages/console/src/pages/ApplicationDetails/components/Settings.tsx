@@ -20,7 +20,7 @@ type Props = {
   data: Application;
 };
 
-const Settings = ({ data }: Props) => {
+function Settings({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const {
@@ -193,6 +193,6 @@ const Settings = ({ data }: Props) => {
       )}
     </FormCard>
   );
-};
+}
 
 export default Settings;

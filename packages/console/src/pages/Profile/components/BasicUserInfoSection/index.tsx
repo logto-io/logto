@@ -16,7 +16,7 @@ type Props = {
   onUpdate?: () => void;
 };
 
-const BasicUserInfoSection = ({ user, onUpdate }: Props) => {
+function BasicUserInfoSection({ user, onUpdate }: Props) {
   const [editingField, setEditingField] = useState<BasicUserField>();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
@@ -92,6 +92,6 @@ const BasicUserInfoSection = ({ user, onUpdate }: Props) => {
       )}
     </FormCard>
   );
-};
+}
 
 export default BasicUserInfoSection;

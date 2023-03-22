@@ -16,7 +16,7 @@ type Props = {
   className?: string;
 };
 
-const Preview = ({ signInExperience, isLivePreviewDisabled = false, className }: Props) => {
+function Preview({ signInExperience, isLivePreviewDisabled = false, className }: Props) {
   const [currentTab, setCurrentTab] = useState(PreviewPlatform.DesktopWeb);
 
   return (
@@ -32,6 +32,6 @@ const Preview = ({ signInExperience, isLivePreviewDisabled = false, className }:
       />
     </div>
   );
-};
+}
 
 export default Preview;

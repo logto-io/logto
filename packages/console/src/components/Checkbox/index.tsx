@@ -19,7 +19,7 @@ type Props = {
   tooltip?: ReactNode;
 };
 
-const Checkbox = ({
+function Checkbox({
   checked,
   disabled = false,
   indeterminate,
@@ -27,7 +27,7 @@ const Checkbox = ({
   label,
   className,
   tooltip,
-}: Props) => {
+}: Props) {
   const [isIndeterminate, setIsIndeterminate] = useState(indeterminate);
 
   useLayoutEffect(() => {
@@ -106,6 +106,6 @@ const Checkbox = ({
       </div>
     </div>
   );
-};
+}
 
 export default Checkbox;

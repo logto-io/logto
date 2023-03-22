@@ -11,7 +11,7 @@ import type { SignInExperienceForm } from '../../types';
 import * as tabsStyles from '../index.module.scss';
 import * as brandingStyles from './CustomCssForm.module.scss';
 
-const CustomCssForm = () => {
+function CustomCssForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const { control } = useFormContext<SignInExperienceForm>();
@@ -60,6 +60,6 @@ const CustomCssForm = () => {
       </FormField>
     </Card>
   );
-};
+}
 
 export default CustomCssForm;

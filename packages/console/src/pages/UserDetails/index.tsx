@@ -32,7 +32,6 @@ import ResetPasswordForm from './components/ResetPasswordForm';
 import * as styles from './index.module.scss';
 import { UserDetailsOutletContext } from './types';
 
-// eslint-disable-next-line react/function-component-definition
 function UserDetails() {
   const { pathname } = useLocation();
   const isPageHasTable =

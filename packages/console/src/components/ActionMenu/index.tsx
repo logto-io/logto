@@ -20,14 +20,14 @@ type Props = {
   isDropdownFullWidth?: boolean;
 };
 
-const ActionMenu = ({
+function ActionMenu({
   children,
   buttonProps,
   title,
   dropdownHorizontalAlign,
   dropdownClassName,
   isDropdownFullWidth = false,
-}: Props) => {
+}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const anchorReference = useRef<HTMLDivElement>(null);
 
@@ -56,6 +56,6 @@ const ActionMenu = ({
       </Dropdown>
     </div>
   );
-};
+}
 
 export default ActionMenu;

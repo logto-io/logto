@@ -32,7 +32,7 @@ type Props = {
   onDelete: () => void;
 };
 
-const SignInMethodItem = ({
+function SignInMethodItem({
   signInMethod: { identifier, password, verificationCode, isPasswordPrimary },
   isPasswordCheckable,
   isVerificationCodeCheckable,
@@ -43,7 +43,7 @@ const SignInMethodItem = ({
   onVerificationStateChange,
   onToggleVerificationPrimary,
   onDelete,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -116,6 +116,6 @@ const SignInMethodItem = ({
       <ConnectorSetupWarning requiredConnectors={requiredConnectors} />
     </div>
   );
-};
+}
 
 export default SignInMethodItem;

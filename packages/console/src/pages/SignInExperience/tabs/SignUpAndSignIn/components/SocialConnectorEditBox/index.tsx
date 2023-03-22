@@ -16,7 +16,7 @@ type Props = {
   onChange: (value: string[]) => void;
 };
 
-const SocialConnectorEditBox = ({ value, onChange }: Props) => {
+function SocialConnectorEditBox({ value, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: connectorData, error } = useConnectorGroups();
 
@@ -93,6 +93,6 @@ const SocialConnectorEditBox = ({ value, onChange }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default SocialConnectorEditBox;

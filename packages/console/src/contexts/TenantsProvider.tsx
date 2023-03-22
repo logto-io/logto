@@ -33,7 +33,7 @@ export const TenantsContext = createContext<Tenants>({
   navigate: noop,
 });
 
-const TenantsProvider = ({ children }: Props) => {
+function TenantsProvider({ children }: Props) {
   const [tenants, setTenants] = useState(initialTenants);
   const [isSettle, setIsSettle] = useState(false);
   const [currentTenantId, setCurrentTenantId] = useState(getUserTenantId());
@@ -54,6 +54,6 @@ const TenantsProvider = ({ children }: Props) => {
   );
 
   return <TenantsContext.Provider value={memorizedContext}>{children}</TenantsContext.Provider>;
-};
+}
 
 export default TenantsProvider;

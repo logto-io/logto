@@ -16,13 +16,13 @@ type Props = {
   size?: ButtonProps['size'];
 };
 
-const ToggleUiThemeButton = ({
+function ToggleUiThemeButton({
   value,
   onToggle,
   className,
   iconClassName,
   size = 'medium',
-}: Props) => {
+}: Props) {
   const ThemeIcon = value === Theme.Light ? Sun : Moon;
 
   return (
@@ -37,6 +37,6 @@ const ToggleUiThemeButton = ({
       />
     </div>
   );
-};
+}
 
 export default ToggleUiThemeButton;

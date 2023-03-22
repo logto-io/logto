@@ -13,12 +13,14 @@ type Props = {
   onChange: (value: User[]) => void;
 };
 
-const RoleUsersTransfer = ({ roleId, value, onChange }: Props) => (
-  <div className={classNames(transferLayout.container, styles.roleUsersTransfer)}>
-    <SourceUsersBox roleId={roleId} selectedUsers={value} onChange={onChange} />
-    <div className={transferLayout.verticalBar} />
-    <TargetUsersBox selectedUsers={value} onChange={onChange} />
-  </div>
-);
+function RoleUsersTransfer({ roleId, value, onChange }: Props) {
+  return (
+    <div className={classNames(transferLayout.container, styles.roleUsersTransfer)}>
+      <SourceUsersBox roleId={roleId} selectedUsers={value} onChange={onChange} />
+      <div className={transferLayout.verticalBar} />
+      <TargetUsersBox selectedUsers={value} onChange={onChange} />
+    </div>
+  );
+}
 
 export default RoleUsersTransfer;

@@ -36,7 +36,6 @@ const tickFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
 });
 
-// eslint-disable-next-line react/function-component-definition
 function Dashboard() {
   const [date, setDate] = useState<string>(format(Date.now(), 'yyyy-MM-dd'));
   const { data: totalData, error: totalError } = useSWR<TotalUsersResponse, RequestError>(

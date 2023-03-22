@@ -15,7 +15,7 @@ type Props = {
   onInspired: (template: OnboardingSieConfig) => void;
 };
 
-const InspireMe = ({ onInspired }: Props) => {
+function InspireMe({ onInspired }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isButtonHover, setIsButtonHover] = useState(false);
   const BulbIcon = isButtonHover ? LightBulb : Bulb;
@@ -57,6 +57,6 @@ const InspireMe = ({ onInspired }: Props) => {
       />
     </div>
   );
-};
+}
 
 export default InspireMe;

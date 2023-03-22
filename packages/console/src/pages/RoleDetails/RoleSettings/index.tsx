@@ -13,7 +13,7 @@ import useApi from '@/hooks/use-api';
 
 import type { RoleDetailsOutletContext } from '../types';
 
-const RoleSettings = () => {
+function RoleSettings() {
   const { role, isDeleting, onRoleUpdated } = useOutletContext<RoleDetailsOutletContext>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
@@ -65,6 +65,6 @@ const RoleSettings = () => {
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </>
   );
-};
+}
 
 export default RoleSettings;

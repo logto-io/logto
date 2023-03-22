@@ -26,14 +26,14 @@ type Props = {
   onToggle?: () => void;
 };
 
-const SdkSelector = ({
+function SdkSelector({
   className,
   sdks,
   selectedSdk,
   isCompact = false,
   onChange,
   onToggle,
-}: Props) => {
+}: Props) {
   const [isFolded, setIsFolded] = useState(isCompact);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
@@ -94,6 +94,6 @@ const SdkSelector = ({
       </div>
     </Card>
   );
-};
+}
 
 export default SdkSelector;

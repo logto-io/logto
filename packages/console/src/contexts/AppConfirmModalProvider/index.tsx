@@ -46,7 +46,7 @@ const defaultModalState: ConfirmModalState = {
   ModalContent: () => null,
 };
 
-const AppConfirmModalProvider = ({ children }: Props) => {
+function AppConfirmModalProvider({ children }: Props) {
   const [modalState, setModalState] = useState<ConfirmModalState>(defaultModalState);
 
   const resolver = useRef<(value: [result: boolean, data?: unknown]) => void>();
@@ -111,6 +111,6 @@ const AppConfirmModalProvider = ({ children }: Props) => {
       </ConfirmModal>
     </AppConfirmModalContext.Provider>
   );
-};
+}
 
 export default AppConfirmModalProvider;

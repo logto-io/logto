@@ -25,14 +25,14 @@ export type Props = {
   content?: ((closeTip: () => void) => ReactNode) | ReactNode;
 };
 
-const ToggleTip = ({
+function ToggleTip({
   children,
   className,
   anchorClassName,
   placement = 'top',
   horizontalAlign = 'center',
   content,
-}: Props) => {
+}: Props) {
   const tipBubbleRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
 
@@ -95,6 +95,6 @@ const ToggleTip = ({
       </ReactModal>
     </>
   );
-};
+}
 
 export default ToggleTip;

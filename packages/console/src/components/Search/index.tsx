@@ -17,14 +17,14 @@ type Props = {
   onClearSearch?: () => void;
 };
 
-const Search = ({
+function Search({
   defaultValue = '',
   isClearable = false,
   placeholder,
   inputClassName,
   onSearch,
   onClearSearch,
-}: Props) => {
+}: Props) {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -58,6 +58,6 @@ const Search = ({
       )}
     </div>
   );
-};
+}
 
 export default Search;

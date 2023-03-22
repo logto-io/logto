@@ -13,7 +13,7 @@ type Props = {
   children?: ReactNode[] | ReactNode;
 };
 
-const DetailsSummary = ({ children }: Props) => {
+function DetailsSummary({ children }: Props) {
   const [summary, details] = Array.isArray(children) ? children : [children];
   const [isExpanded, setIsExpanded] = useState(false);
   const [height, setHeight] = useState<Height>(0);
@@ -47,6 +47,6 @@ const DetailsSummary = ({ children }: Props) => {
       </AnimateHeight>
     </div>
   );
-};
+}
 
 export default DetailsSummary;

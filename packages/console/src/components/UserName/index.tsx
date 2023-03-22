@@ -13,7 +13,7 @@ type Props = {
   isLink?: boolean;
 };
 
-const UserName = ({ userId, isLink = false }: Props) => {
+function UserName({ userId, isLink = false }: Props) {
   const { data, error } = useSWR<User, RequestError>(`api/users/${userId}`);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -36,6 +36,6 @@ const UserName = ({ userId, isLink = false }: Props) => {
       <div className={styles.id}>{userId}</div>
     </div>
   );
-};
+}
 
 export default UserName;

@@ -14,7 +14,7 @@ type Props = {
   onConnectorIdChange: (value: string) => void;
 };
 
-const PlatformSelector = ({ connectorGroup, connectorId, onConnectorIdChange }: Props) => {
+function PlatformSelector({ connectorGroup, connectorId, onConnectorIdChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   if (connectorGroup.connectors.length <= 1) {
@@ -42,6 +42,6 @@ const PlatformSelector = ({ connectorGroup, connectorId, onConnectorIdChange }: 
       </RadioGroup>
     </div>
   );
-};
+}
 
 export default PlatformSelector;

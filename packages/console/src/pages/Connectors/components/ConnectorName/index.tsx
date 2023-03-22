@@ -24,7 +24,7 @@ type Props = {
   isDemo?: boolean;
 };
 
-const ConnectorName = ({ connectorGroup, isDemo = false }: Props) => {
+function ConnectorName({ connectorGroup, isDemo = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { type, connectors } = connectorGroup;
   const connector = connectors[0];
@@ -93,6 +93,6 @@ const ConnectorName = ({ connectorGroup, isDemo = false }: Props) => {
       {isDemo && <DemoTag connectorType={connector.type} />}
     </div>
   );
-};
+}
 
 export default ConnectorName;

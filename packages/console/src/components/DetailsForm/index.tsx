@@ -13,14 +13,14 @@ type Props = {
   children: ReactNode;
 };
 
-const DetailsForm = ({
+function DetailsForm({
   autoComplete,
   isDirty,
   isSubmitting,
   onSubmit,
   onDiscard,
   children,
-}: Props) => {
+}: Props) {
   return (
     <form
       className={classNames(styles.container, isDirty && styles.withSubmitActionBar)}
@@ -35,6 +35,6 @@ const DetailsForm = ({
       />
     </form>
   );
-};
+}
 
 export default DetailsForm;

@@ -8,7 +8,7 @@ type Props = {
   children: ReactNode;
 };
 
-const AppBoundary = ({ children }: Props) => {
+function AppBoundary({ children }: Props) {
   const {
     data: { language },
   } = useUserPreferences();
@@ -21,6 +21,6 @@ const AppBoundary = ({ children }: Props) => {
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{children}</>;
-};
+}
 
 export default AppBoundary;

@@ -41,7 +41,7 @@ import type { AppContentOutletContext } from '../AppContent/types';
 import Sidebar from './Sidebar';
 import * as styles from './index.module.scss';
 
-const ConsoleContent = () => {
+function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
 
   return (
@@ -117,6 +117,6 @@ const ConsoleContent = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ConsoleContent;

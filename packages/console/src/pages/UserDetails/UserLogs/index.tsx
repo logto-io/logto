@@ -5,12 +5,12 @@ import AuditLogTable from '@/components/AuditLogTable';
 import type { UserDetailsOutletContext } from '../types';
 import * as styles from './index.module.scss';
 
-const UserLogs = () => {
+function UserLogs() {
   const {
     user: { id },
   } = useOutletContext<UserDetailsOutletContext>();
 
   return <AuditLogTable userId={id} className={styles.logs} />;
-};
+}
 
 export default UserLogs;

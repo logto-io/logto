@@ -8,7 +8,7 @@ type Props = {
   platform: ConnectorPlatform;
 };
 
-const ConnectorPlatformIcon = ({ platform }: Props) => {
+function ConnectorPlatformIcon({ platform }: Props) {
   if (platform === ConnectorPlatform.Native) {
     return <Native />;
   }
@@ -18,6 +18,6 @@ const ConnectorPlatformIcon = ({ platform }: Props) => {
   }
 
   return <Universal />;
-};
+}
 
 export default ConnectorPlatformIcon;
