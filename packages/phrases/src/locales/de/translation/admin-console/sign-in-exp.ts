@@ -95,7 +95,7 @@ const sign_in_exp = {
     favicon_error: 'Favicon: {{error}}', // UNTRANSLATED
   },
   custom_css: {
-    title: 'Personalize UI with Custom CSS', // UNTRANSLATED
+    title: 'Custom CSS', // UNTRANSLATED
     css_code_editor_title: 'Personalize your UI with Custom CSS', // UNTRANSLATED
     css_code_editor_description1: 'See the example of Custom CSS.', // UNTRANSLATED
     css_code_editor_description2: '<a>{{link}}</a>', // UNTRANSLATED

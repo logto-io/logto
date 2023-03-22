@@ -36,7 +36,7 @@ const sign_in_exp = {
     favicon_error: 'Favicon：{{error}}',
   },
   custom_css: {
-    title: '自定义 CSS 个性化用户界面',
+    title: '自定义 CSS',
     css_code_editor_title: '自定义 CSS 个性化你的用户界面',
     css_code_editor_description1: '查看自定义 CSS 的例子。',
     css_code_editor_description2: '<a>{{link}}</a>',
