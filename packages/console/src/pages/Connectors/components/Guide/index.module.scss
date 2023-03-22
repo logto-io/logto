@@ -52,6 +52,7 @@
       border: 1.5px solid var(--color-focused-variant);
       border-radius: 16px;
       margin: 0 _.unit(6) _.unit(6) 0;
+      overflow-y: auto;
 
       .readmeTitle {
         font: var(--font-title-2);
@@ -61,9 +62,7 @@
 
       .readmeContent {
         flex: 1;
-        padding: 0 _.unit(6);
-        overflow-y: auto;
-        padding-bottom: _.unit(4);
+        padding: 0 _.unit(6) _.unit(4);
       }
     }
 

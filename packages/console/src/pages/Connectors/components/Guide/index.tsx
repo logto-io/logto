@@ -18,6 +18,7 @@ import CardTitle from '@/components/CardTitle';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Markdown from '@/components/Markdown';
+import OverlayScrollbar from '@/components/OverlayScrollbar';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
@@ -48,7 +49,6 @@ const Guide = ({ connector, onClose }: Props) => {
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { type: connectorType, formItems, target, isStandard, configTemplate } = connector ?? {};
-
   const { language } = i18next;
 
   const isSocialConnector =
@@ -181,10 +181,10 @@ const Guide = ({ connector, onClose }: Props) => {
           />
         </div>
         <div className={styles.content}>
-          <div className={styles.readme}>
+          <OverlayScrollbar className={styles.readme}>
             <div className={styles.readmeTitle}>README: {title}</div>
             <Markdown className={styles.readmeContent}>{content}</Markdown>
-          </div>
+          </OverlayScrollbar>
           <div className={styles.setup}>
             <FormProvider {...methods}>
               <form autoComplete="off" onSubmit={onSubmit}>
