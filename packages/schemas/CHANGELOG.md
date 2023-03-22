@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.1
+
+### Patch Changes
+
+- 621b09ba1: force version bump
+
 ## 1.0.0
 
 ### Major Changes
