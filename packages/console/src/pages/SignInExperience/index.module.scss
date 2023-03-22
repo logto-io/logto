@@ -26,25 +26,21 @@
       display: flex;
       flex: 1;
       margin-bottom: _.unit(6);
-      justify-content: center;
-      min-width: min-content;
 
       &.withSubmitActionBar {
         margin-bottom: _.unit(3);
       }
 
       > * {
-        max-width: 800px;
+        flex: 1;
+        min-width: 540px;
       }
 
       .form {
-        flex: 1;
         margin-right: _.unit(6);
-        min-width: 535px;
       }
 
       .preview {
-        flex: 1;
         position: sticky;
         top: _.unit(4);
         align-self: flex-start;
