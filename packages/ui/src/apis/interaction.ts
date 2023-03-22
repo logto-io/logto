@@ -186,6 +186,12 @@ export const registerWithVerifiedSocial = async (connectorId: string) => {
 };
 
 export const bindSocialRelatedUser = async (payload: SocialEmailPayload | SocialPhonePayload) => {
+  await api.put(`${interactionPrefix}/event`, {
+    json: {
+      event: InteractionEvent.SignIn,
+    },
+  });
+
   await api.patch(`${interactionPrefix}/identifiers`, {
     json: payload,
   });
