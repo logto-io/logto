@@ -183,7 +183,7 @@ function Connectors() {
                 title="connectors.placeholder_title"
                 description="connectors.placeholder_description"
                 learnMoreLink={getDocumentationUrl(
-                  '/docs/recipes/customize-sie/configure-sign-in-methods/#social-sign-in'
+                  '/docs/recipes/configure-connectors/configure-social-connector'
                 )}
                 action={
                   <Button
