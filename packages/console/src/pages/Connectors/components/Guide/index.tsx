@@ -3,10 +3,8 @@ import { isLanguageTag } from '@logto/language-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse, RequestErrorBody } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import classNames from 'classnames';
 import i18next from 'i18next';
 import { HTTPError } from 'ky';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -20,6 +18,7 @@ import CardTitle from '@/components/CardTitle';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Markdown from '@/components/Markdown';
+import OverlayScrollbar from '@/components/OverlayScrollbar';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
@@ -51,11 +50,6 @@ const Guide = ({ connector, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { type: connectorType, formItems, target, isStandard, configTemplate } = connector ?? {};
   const { language } = i18next;
-
-  const readmeTitleRef = useRef<HTMLDivElement>(null);
-  const [contentScrollTop, setContentScrollTop] = useState(0);
-  const isReadmeTitleInVisible =
-    readmeTitleRef.current && contentScrollTop > Number(readmeTitleRef.current.clientHeight);
 
   const isSocialConnector =
     connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
@@ -187,28 +181,10 @@ const Guide = ({ connector, onClose }: Props) => {
           />
         </div>
         <div className={styles.content}>
-          <div className={styles.readme}>
-            <div
-              ref={readmeTitleRef}
-              className={classNames(styles.readmeTitle, isReadmeTitleInVisible && styles.invisible)}
-            >
-              README: {title}
-            </div>
-            <OverlayScrollbarsComponent
-              options={{ scrollbars: { autoHide: 'leave', autoHideDelay: 0 } }}
-              className={styles.readmeContent}
-              events={{
-                scroll: (instance) => {
-                  const {
-                    viewport: { scrollTop },
-                  } = instance.elements();
-                  setContentScrollTop(scrollTop);
-                },
-              }}
-            >
-              <Markdown>{content}</Markdown>
-            </OverlayScrollbarsComponent>
-          </div>
+          <OverlayScrollbar className={styles.readme}>
+            <div className={styles.readmeTitle}>README: {title}</div>
+            <Markdown className={styles.readmeContent}>{content}</Markdown>
+          </OverlayScrollbar>
           <div className={styles.setup}>
             <FormProvider {...methods}>
               <form autoComplete="off" onSubmit={onSubmit}>

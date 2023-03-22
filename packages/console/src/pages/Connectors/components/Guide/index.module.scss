@@ -52,21 +52,17 @@
       border: 1.5px solid var(--color-focused-variant);
       border-radius: 16px;
       margin: 0 _.unit(6) _.unit(6) 0;
+      overflow-y: auto;
 
       .readmeTitle {
         font: var(--font-title-2);
         padding: _.unit(5) _.unit(6) _.unit(4);
         border-bottom: 1px solid var(--color-focused-variant);
-
-        &.invisible {
-          display: none;
-        }
       }
 
       .readmeContent {
         flex: 1;
         padding: 0 _.unit(6) _.unit(4);
-        overflow-y: auto;
       }
     }
 
