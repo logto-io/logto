@@ -49,9 +49,7 @@ function AuditLogDetails() {
       backLinkTitle={<DangerousRaw>{backLinkTitle}</DangerousRaw>}
       isLoading={isLoading}
       error={error}
-      onRetry={() => {
-        void mutate();
-      }}
+      onRetry={mutate}
     >
       {data && (
         <>

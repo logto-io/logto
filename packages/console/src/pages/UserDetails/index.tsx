@@ -72,9 +72,7 @@ function UserDetails() {
       isLoading={isLoading}
       error={error}
       className={classNames(isPageHasTable && styles.resourceLayout)}
-      onRetry={() => {
-        void mutate();
-      }}
+      onRetry={mutate}
     >
       {data && (
         <>

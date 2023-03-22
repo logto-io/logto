@@ -69,9 +69,7 @@ function RoleDetails() {
       isLoading={isLoading}
       error={error}
       className={classNames(isPageHasTable && styles.withTable)}
-      onRetry={() => {
-        void mutate();
-      }}
+      onRetry={mutate}
     >
       {data && (
         <>

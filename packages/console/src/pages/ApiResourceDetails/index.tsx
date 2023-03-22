@@ -72,9 +72,7 @@ function ApiResourceDetails() {
       isLoading={isLoading}
       error={error}
       className={classNames(isOnPermissionPage && styles.permissionPage)}
-      onRetry={() => {
-        void mutate();
-      }}
+      onRetry={mutate}
     >
       {data && (
         <>
