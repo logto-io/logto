@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [621b09ba1]
+  - @logto/schemas@1.0.1
+  - @logto/cli@1.0.2
+  - @logto/shared@1.0.1
+
 ## 1.0.1
 
 ### Patch Changes
