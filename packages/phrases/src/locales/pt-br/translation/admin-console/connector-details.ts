@@ -27,6 +27,8 @@ const connector_details = {
     'Este conector está em uso em sua experiência de entrada. Ao excluir, a experiência de login <name/> será excluída nas configurações da experiência de login.',
   in_used_passwordless_deletion_description:
     'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict.', // UNTRANSLATED
+  deletion_description:
+    'You are removing this connector. It cannot be undone, and you will need to configure it manually if you decide to add it back.', // UNTRANSLATED
 };
 
 export default connector_details;

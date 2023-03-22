@@ -27,6 +27,8 @@ const connector_details = {
     'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.',
   in_used_passwordless_deletion_description:
     'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict.',
+  deletion_description:
+    'You are removing this connector. It cannot be undone, and you will need to configure it manually if you decide to add it back.',
 };
 
 export default connector_details;

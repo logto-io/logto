@@ -27,6 +27,7 @@ const connector_details = {
     '你的登录体验正在使用这个连接器。删除后，<name/> 登录体验将在登录体验设置中被删除。',
   in_used_passwordless_deletion_description:
     '你的登录体验正在使用 {{name}} 连接器。删除后，你的登录体验将无法正常工作，直到你解决冲突。',
+  deletion_description: '你将删除此连接器。此操作不可撤销，再次添加时需要重新配置。',
 };
 
 export default connector_details;

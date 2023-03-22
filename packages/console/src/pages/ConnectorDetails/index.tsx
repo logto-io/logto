@@ -185,7 +185,13 @@ function ConnectorDetails() {
                     )}
                   </ActionMenuItem>
                 )}
-                <ActionMenuItem icon={<Delete />} type="danger" onClick={onDeleteClick}>
+                <ActionMenuItem
+                  icon={<Delete />}
+                  type="danger"
+                  onClick={() => {
+                    setIsDeleteAlertOpen(true);
+                  }}
+                >
                   {t('general.delete')}
                 </ActionMenuItem>
               </ActionMenu>
@@ -216,6 +222,7 @@ function ConnectorDetails() {
           />
           <DeleteConnectorConfirmModal
             data={data}
+            isInUse={inUse}
             isOpen={isDeleteAlertOpen}
             onCancel={() => {
               setIsDeleteAlertOpen(false);
