@@ -1,6 +1,5 @@
 import type { User, Log } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas';
-import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -15,7 +14,6 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
 import type { RequestError } from '@/hooks/use-api';
-import * as detailsStyles from '@/scss/details.module.scss';
 import { withAppInsights } from '@/utils/app-insights';
 
 import EventIcon from './components/EventIcon';
@@ -111,7 +109,7 @@ function AuditLogDetails() {
               {t('log_details.tab_details')}
             </TabNavItem>
           </TabNav>
-          <Card className={classNames(styles.body, detailsStyles.body)}>
+          <Card className={styles.body}>
             <div className={styles.main}>
               <FormField title="log_details.raw_data">
                 <CodeEditor language="json" value={JSON.stringify(data.payload, null, 2)} />

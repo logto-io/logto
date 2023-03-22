@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import Back from '@/assets/images/back.svg';
 import type { RequestError } from '@/hooks/use-api';
-import * as detailsStyles from '@/scss/details.module.scss';
 
 import type DangerousRaw from '../DangerousRaw';
 import DetailsSkeleton from '../DetailsSkeleton';
@@ -23,7 +22,7 @@ type Props = {
   className?: string;
 };
 
-const DetailsPage = ({
+function DetailsPage({
   backLink,
   backLinkTitle,
   isLoading,
@@ -31,11 +30,11 @@ const DetailsPage = ({
   onRetry,
   children,
   className,
-}: Props) => {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
-    <div className={classNames(detailsStyles.container, className)}>
+    <div className={classNames(styles.container, className)}>
       <TextLink to={backLink} icon={<Back />} className={styles.backLink}>
         {typeof backLinkTitle === 'string' ? t(backLinkTitle) : backLinkTitle}
       </TextLink>
@@ -48,6 +47,6 @@ const DetailsPage = ({
       )}
     </div>
   );
-};
+}
 
 export default DetailsPage;
