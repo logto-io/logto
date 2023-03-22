@@ -3,7 +3,7 @@ import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import * as sieLayout from '../../index.module.scss';
 import * as styles from './index.module.scss';
 
-const Skeleton = () => {
+function Skeleton() {
   return (
     <div className={pageLayout.page}>
       <div className={pageLayout.contentContainer}>
@@ -39,6 +39,6 @@ const Skeleton = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Skeleton;
