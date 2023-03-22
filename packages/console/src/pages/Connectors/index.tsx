@@ -205,9 +205,7 @@ function Connectors() {
       <CreateForm
         isOpen={Boolean(createConnectorType)}
         type={createConnectorType}
-        onClose={async (id) => {
-          await mutate();
-
+        onClose={(id) => {
           if (createConnectorType && id) {
             navigate(buildGuidePathname(createConnectorType, id), { replace: true });
 
