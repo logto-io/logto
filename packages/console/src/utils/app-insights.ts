@@ -9,6 +9,8 @@ import { isCloud } from '@/consts/cloud';
 let reactPlugin: Optional<ReactPlugin>;
 let appInsights: Optional<ApplicationInsights>;
 
+export const getAppInsights = () => appInsights;
+
 const initAppInsights = () => {
   // The string needs to be normalized since it may contain '"'
   const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING?.replace(
