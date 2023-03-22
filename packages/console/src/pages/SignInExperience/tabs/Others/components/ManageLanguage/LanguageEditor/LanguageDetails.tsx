@@ -134,7 +134,6 @@ function LanguageDetails() {
   }, [api, globalMutate, isDefaultLanguage, languages, selectedLanguage, setSelectedLanguage]);
 
   const onSubmit = handleSubmit(async (formData: Translation) => {
-    console.log(formData);
     const updatedCustomPhrase = await upsertCustomPhrase(selectedLanguage, formData);
     void mutate(updatedCustomPhrase);
     toast.success(t('general.saved'));
