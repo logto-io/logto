@@ -37,12 +37,8 @@ export default async function initApp(app: Koa): Promise<void> {
     }
 
     const tenant = await trySafe(tenantPool.get(tenantId), (error) => {
-      if (error instanceof TenantNotFoundError) {
-        ctx.status = 404;
-      } else {
-        ctx.status = 500;
-        appInsights.trackException(error);
-      }
+      ctx.status = error instanceof TenantNotFoundError ? 404 : 500;
+      appInsights.trackException(error);
     });
 
     if (!tenant) {
