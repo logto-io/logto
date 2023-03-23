@@ -45,8 +45,8 @@ class ErrorBoundary extends Component<Props, State> {
     const { error } = this.state;
 
     if (error) {
-      if (error instanceof HTTPError && error.response.status === 401) {
-        return <SessionExpired error={error} />;
+      if (error instanceof HTTPError) {
+        return error.response.status === 401 ? <SessionExpired error={error} /> : children;
       }
 
       const callStack = conditional(

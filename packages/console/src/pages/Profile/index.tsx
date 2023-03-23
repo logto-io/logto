@@ -40,10 +40,15 @@ function Profile() {
 
     (async () => {
       setIsLoadingConnectors(true);
-      const connectorResponse = await api.get('me/social/connectors').json<ConnectorResponse[]>();
 
-      setConnectors(connectorResponse);
-      setIsLoadingConnectors(false);
+      try {
+        const connectorResponse = await api.get('me/social/connectors').json<ConnectorResponse[]>();
+        setConnectors(connectorResponse);
+      } catch {
+        throw new Error('Load Connectors Error');
+      } finally {
+        setIsLoadingConnectors(false);
+      }
     })();
   }, [api, reload]);
 
