@@ -14,6 +14,7 @@ import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import koaOIDCErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
+import koaSecurityHeaders from '#src/middleware/koa-security-headers.js';
 import koaSlonikErrorHandler from '#src/middleware/koa-slonik-error-handler.js';
 import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
 import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
@@ -69,6 +70,7 @@ export default class Tenant implements TenantContext {
     app.use(koaConnectorErrorHandler());
     app.use(koaI18next());
     app.use(koaCompress());
+    app.use(koaSecurityHeaders());
 
     // Mount OIDC
     const provider = initOidc(id, envSet, queries, libraries);
