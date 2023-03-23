@@ -398,6 +398,7 @@ importers:
       koa-body: ^5.0.0
       koa-compose: ^4.1.0
       koa-compress: ^5.1.0
+      koa-helmet: ^7.0.1
       koa-logger: ^3.2.1
       koa-mount: ^4.0.0
       koa-proxies: ^0.12.1
@@ -457,6 +458,7 @@ importers:
       koa-body: 5.0.0
       koa-compose: 4.1.0
       koa-compress: 5.1.0
+      koa-helmet: 7.0.1
       koa-logger: 3.2.1
       koa-mount: 4.0.0
       koa-proxies: 0.12.1_koa@2.13.4
@@ -8070,6 +8072,11 @@ packages:
       space-separated-tokens: 1.1.5
     dev: true
 
+  /helmet/6.0.1:
+    resolution: {integrity: sha512-8wo+VdQhTMVBMCITYZaGTbE4lvlthelPYSvoyNvk4RECTmrVjMerp9RfUOQXZWLvCcAn1pKj7ZRxK4lI9Alrcw==}
+    engines: {node: '>=14.0.0'}
+    dev: false
+
   /hexoid/1.0.0:
     resolution: {integrity: sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==}
     engines: {node: '>=8'}
@@ -9879,6 +9886,13 @@ packages:
     dependencies:
       co: 4.6.0
       koa-compose: 4.1.0
+    dev: false
+
+  /koa-helmet/7.0.1:
+    resolution: {integrity: sha512-C7HNgiakdoVbHKBOp59yeEb/BuYq31nm7PtjMjSYVk9t5oW6gJHWOmUyEU1Qo1QfQCj8U8wCtn98FU7lizJrqg==}
+    engines: {node: '>= 14.0.0'}
+    dependencies:
+      helmet: 6.0.1
     dev: false
 
   /koa-is-json/1.0.0:

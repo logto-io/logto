@@ -43,7 +43,9 @@ const Consent = () => {
   return (
     <div className={styles.viewBox}>
       <div className={styles.container}>
-        {brandingLogo && <img alt="logo" className={styles.img} src={brandingLogo} />}
+        {brandingLogo && (
+          <img alt="logo" className={styles.img} src={brandingLogo} crossOrigin="anonymous" />
+        )}
         <div className={styles.loadingWrapper}>{loading && <LoadingIcon />}</div>
       </div>
     </div>
