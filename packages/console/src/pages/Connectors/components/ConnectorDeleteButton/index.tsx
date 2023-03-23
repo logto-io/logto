@@ -29,16 +29,6 @@ function ConnectorDeleteButton({ connectorGroup }: Props) {
 
   const api = useApi();
 
-  const onDeleteClick = async () => {
-    if (!inUse) {
-      await handleDelete();
-
-      return;
-    }
-
-    setIsDeleteAlertOpen(true);
-  };
-
   const handleDelete = async () => {
     if (!firstConnector) {
       return;
@@ -63,12 +53,17 @@ function ConnectorDeleteButton({ connectorGroup }: Props) {
   return (
     <>
       <Tooltip content={<div>{t('general.delete')}</div>}>
-        <IconButton onClick={onDeleteClick}>
+        <IconButton
+          onClick={() => {
+            setIsDeleteAlertOpen(true);
+          }}
+        >
           <Delete />
         </IconButton>
       </Tooltip>
       <DeleteConnectorConfirmModal
         data={firstConnector}
+        isInUse={inUse}
         isOpen={isDeleteAlertOpen}
         onCancel={() => {
           setIsDeleteAlertOpen(false);
