@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { promisify } from 'util';
 
-import { assert, conditionalString, trySafe } from '@silverhand/essentials';
+import { assert, conditionalArray, conditionalString, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { got } from 'got';
 import inquirer from 'inquirer';
@@ -211,7 +211,7 @@ const fetchOfficialConnectorList = async (includingCloudConnectors = false) => {
     // eslint-disable-next-line no-await-in-loop
     const { objects } = await fetchList(page * 20, 20);
 
-    const excludeList = ['mock', 'kit', ...(includingCloudConnectors ? [] : ['logto'])];
+    const excludeList = ['mock', 'kit', ...conditionalArray(!includingCloudConnectors && 'logto')];
 
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     packages.push(
