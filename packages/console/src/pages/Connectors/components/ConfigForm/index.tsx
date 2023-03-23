@@ -136,6 +136,8 @@ function ConfigForm({ formItems }: Props) {
         <FormField
           key={item.key}
           isRequired={item.required}
+          // Tooltip is currently string and does not support i18n.
+          tip={item.tooltip}
           title={
             <DangerousRaw>
               {item.type !== ConnectorConfigFormItemType.Switch && item.label}
