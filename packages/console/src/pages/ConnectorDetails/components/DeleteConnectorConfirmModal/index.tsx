@@ -24,25 +24,23 @@ function DeleteConnectorConfirmModal({ data, isOpen, isInUse, onCancel, onConfir
       onCancel={onCancel}
       onConfirm={onConfirm}
     >
-      {isInUse ? (
-        isSocial ? (
-          <Trans
-            t={t}
-            i18nKey="connector_details.in_used_social_deletion_description"
-            components={{ name: <UnnamedTrans resource={data.name} /> }}
-          />
-        ) : (
-          t('connector_details.in_used_passwordless_deletion_description', {
-            name: t(
-              data.type === ConnectorType.Email
-                ? 'connector_details.type_email'
-                : 'connector_details.type_sms'
-            ),
-          })
-        )
-      ) : (
-        t('connector_details.deletion_description')
+      {!isInUse && t('connector_details.deletion_description')}
+      {isInUse && isSocial && (
+        <Trans
+          t={t}
+          i18nKey="connector_details.in_used_social_deletion_description"
+          components={{ name: <UnnamedTrans resource={data.name} /> }}
+        />
       )}
+      {isInUse &&
+        !isSocial &&
+        t('connector_details.in_used_passwordless_deletion_description', {
+          name: t(
+            data.type === ConnectorType.Email
+              ? 'connector_details.type_email'
+              : 'connector_details.type_sms'
+          ),
+        })}
     </ConfirmModal>
   );
 }
