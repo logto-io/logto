@@ -36,7 +36,7 @@
     overflow-x: auto;
     justify-content: center;
     min-width: min-content;
-    padding-top: _.unit(2);
+    padding: _.unit(2) _.unit(6);
 
     > * {
       flex: 1;
