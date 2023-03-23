@@ -24,9 +24,9 @@ const connector_details = {
   type_sms: 'SMS connector',
   type_social: 'Social connector',
   in_used_social_deletion_description:
-    'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings.',
+    'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings. You will need to reconfigure it if you decide to add it back.',
   in_used_passwordless_deletion_description:
-    'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict.',
+    'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict. You will need to reconfigure it if you decide to add it back.',
   deletion_description:
     'You are removing this connector. It cannot be undone, and you will need to configure it manually if you decide to add it back.',
 };
