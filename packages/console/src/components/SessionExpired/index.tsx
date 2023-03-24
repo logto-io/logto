@@ -11,7 +11,7 @@ type Props = {
 };
 
 function SessionExpired({ callbackHref = '/callback', error }: Props) {
-  const { signIn, signOut } = useLogto();
+  const { signIn } = useLogto();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (

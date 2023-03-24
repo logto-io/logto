@@ -19,7 +19,11 @@ function Tenants({ data, onAdd }: Props) {
   const { navigate } = useContext(TenantsContext);
 
   const createTenant = useCallback(async () => {
-    onAdd(await api.post('api/tenants').json<TenantInfo>());
+    try {
+      onAdd(await api.post('api/tenants').json<TenantInfo>());
+    } catch {
+      throw new Error('Failed to create tenant.');
+    }
   }, [api, onAdd]);
 
   useEffect(() => {

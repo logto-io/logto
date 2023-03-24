@@ -18,8 +18,12 @@ function Protected() {
 
   useEffect(() => {
     const loadTenants = async () => {
-      const data = await api.get('/api/tenants').json<TenantInfo[]>();
-      setTenants(data);
+      try {
+        const data = await api.get('/api/tenants').json<TenantInfo[]>();
+        setTenants(data);
+      } catch {
+        throw new Error('Failed to load tenants.');
+      }
     };
 
     if (!tenants) {
