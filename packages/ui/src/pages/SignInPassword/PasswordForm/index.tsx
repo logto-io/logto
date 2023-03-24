@@ -11,8 +11,8 @@ import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
 
-import * as styles from '../index.module.scss';
 import VerificationCodeLink from './VerificationCodeLink';
+import * as styles from '../index.module.scss';
 
 type Props = {
   className?: string;

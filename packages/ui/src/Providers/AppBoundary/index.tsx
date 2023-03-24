@@ -6,10 +6,10 @@ import useColorTheme from '@/hooks/use-color-theme';
 import { PageContext } from '@/hooks/use-page-context';
 import useTheme from '@/hooks/use-theme';
 
+import * as styles from './index.module.scss';
 import ConfirmModalProvider from '../ConfirmModalProvider';
 import IframeModalProvider from '../IframeModalProvider';
 import ToastProvider from '../ToastProvider';
-import * as styles from './index.module.scss';
 
 type Props = {
   children: ReactNode;

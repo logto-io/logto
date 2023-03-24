@@ -6,10 +6,10 @@ import { act } from 'react-dom/test-utils';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { sendVerificationCodeApi } from '@/apis/utils';
-import { UserFlow, VerificationCodeIdentifier } from '@/types';
+import { UserFlow, type VerificationCodeIdentifier } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
-import SetEmailOrPhone, { VerificationCodeProfileType, pageContent } from '.';
+import SetEmailOrPhone, { type VerificationCodeProfileType, pageContent } from '.';
 
 const mockedNavigate = jest.fn();
 

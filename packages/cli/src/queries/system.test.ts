@@ -3,9 +3,9 @@ import { convertToIdentifiers } from '@logto/shared';
 import { DatabaseError } from 'pg-protocol';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
+import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './system.js';
 import type { QueryType } from '../test-utils.js';
 import { expectSqlAssert } from '../test-utils.js';
-import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './system.js';
 
 const { jest } = import.meta;
 

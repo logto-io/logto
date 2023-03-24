@@ -4,15 +4,15 @@ import chalk from 'chalk';
 import type { DatabasePool } from 'slonik';
 import type { CommandModule } from 'yargs';
 
+import type { AlterationFile } from './type.js';
+import { getAlterationFiles, getTimestampFromFilename } from './utils.js';
+import { chooseAlterationsByVersion, chooseRevertAlterationsByVersion } from './version.js';
 import { createPoolFromConfig } from '../../../database.js';
 import {
   getCurrentDatabaseAlterationTimestamp,
   updateDatabaseTimestamp,
 } from '../../../queries/system.js';
 import { log } from '../../../utils.js';
-import type { AlterationFile } from './type.js';
-import { getAlterationFiles, getTimestampFromFilename } from './utils.js';
-import { chooseAlterationsByVersion, chooseRevertAlterationsByVersion } from './version.js';
 
 const importAlterationScript = async (filePath: string): Promise<AlterationScript> => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

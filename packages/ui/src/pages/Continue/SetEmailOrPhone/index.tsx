@@ -7,8 +7,8 @@ import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
 
-import IdentifierProfileForm from '../IdentifierProfileForm';
 import SocialIdentityNotification from './SocialIdentityNotification';
+import IdentifierProfileForm from '../IdentifierProfileForm';
 
 export type VerificationCodeProfileType = Exclude<MissingProfile, 'username' | 'password'>;
 
@@ -59,7 +59,7 @@ const formSettings: Record<
 const SetEmailOrPhone = ({ missingProfile, notification }: Props) => {
   const { onSubmit, errorMessage, clearErrorMessage } = useSendVerificationCode(UserFlow.continue);
 
-  const handleSubmit = (identifier: SignInIdentifier, value: string) => {
+  const handleSubmit = async (identifier: SignInIdentifier, value: string) => {
     // Only handles email and phone
     if (identifier === SignInIdentifier.Username) {
       return;
