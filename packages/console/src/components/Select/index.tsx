@@ -7,9 +7,9 @@ import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/images/keyboard-arrow-up.svg';
 import { onKeyDownHandler } from '@/utils/a11y';
 
+import * as styles from './index.module.scss';
 import Dropdown, { DropdownItem } from '../Dropdown';
 import IconButton from '../IconButton';
-import * as styles from './index.module.scss';
 
 export type Option<T> = {
   value: T;

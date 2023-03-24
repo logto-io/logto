@@ -1,9 +1,9 @@
 import { useLogto } from '@logto/react';
 import { useTranslation } from 'react-i18next';
 
+import * as styles from './index.module.scss';
 import AppError from '../AppError';
 import Button from '../Button';
-import * as styles from './index.module.scss';
 
 type Props = {
   error: Error;

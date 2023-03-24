@@ -14,9 +14,9 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { uriValidator } from '@/utils/validator';
 
+import * as styles from './BasicForm.module.scss';
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
-import * as styles from './BasicForm.module.scss';
 
 type Props = {
   isAllowEditTarget?: boolean;

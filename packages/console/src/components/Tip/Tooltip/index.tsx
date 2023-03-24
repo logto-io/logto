@@ -6,6 +6,7 @@ import { createPortal } from 'react-dom';
 import usePosition from '@/hooks/use-position';
 import type { HorizontalAlignment } from '@/types/positioning';
 
+import * as styles from './index.module.scss';
 import TipBubble from '../TipBubble';
 import type { TipBubblePlacement } from '../TipBubble';
 import {
@@ -14,7 +15,6 @@ import {
   getVerticalOffset,
   getHorizontalOffset,
 } from '../TipBubble/utils';
-import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;

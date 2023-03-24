@@ -1,6 +1,5 @@
 import en from '@logto/phrases-ui/lib/locales/en.js';
-import { CustomPhrase } from '@logto/schemas';
-import type { SignInExperience } from '@logto/schemas';
+import { type CustomPhrase, type SignInExperience } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockZhCnCustomPhrase, trTrTag, zhCnTag } from '#src/__mocks__/custom-phrase.js';

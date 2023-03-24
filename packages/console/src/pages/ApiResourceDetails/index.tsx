@@ -24,7 +24,7 @@ import useTheme from '@/hooks/use-theme';
 import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
-import { ApiResourceDetailsOutletContext } from './types';
+import { type ApiResourceDetailsOutletContext } from './types';
 
 function ApiResourceDetails() {
   const { pathname } = useLocation();

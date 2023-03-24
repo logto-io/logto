@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 
-import type { MultiCardSelectorOption } from '../types';
 import CardItem from './CardItem';
 import * as styles from './index.module.scss';
+import type { MultiCardSelectorOption } from '../types';
 
 type Props = {
   options: MultiCardSelectorOption[];

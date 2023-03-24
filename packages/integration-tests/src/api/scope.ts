@@ -5,10 +5,10 @@ import { generateScopeName } from '#src/utils.js';
 
 import { authedAdminApi } from './api.js';
 
-export const getScopes = (resourceId: string, options?: OptionsOfTextResponseBody) =>
+export const getScopes = async (resourceId: string, options?: OptionsOfTextResponseBody) =>
   authedAdminApi.get(`resources/${resourceId}/scopes`, options).json<Scope[]>();
 
-export const createScope = (resourceId: string, name?: string) => {
+export const createScope = async (resourceId: string, name?: string) => {
   const scopeName = name ?? generateScopeName();
 
   return authedAdminApi
@@ -21,7 +21,7 @@ export const createScope = (resourceId: string, name?: string) => {
     .json<Scope>();
 };
 
-export const updateScope = (
+export const updateScope = async (
   resourceId: string,
   scopeId: string,
   payload: Partial<Omit<CreateScope, 'id' | 'resourceId'>>
@@ -34,5 +34,5 @@ export const updateScope = (
     })
     .json<Scope>();
 
-export const deleteScope = (resourceId: string, scopeId: string) =>
+export const deleteScope = async (resourceId: string, scopeId: string) =>
   authedAdminApi.delete(`resources/${resourceId}/scopes/${scopeId}`);

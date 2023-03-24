@@ -4,7 +4,7 @@ import { generateRoleName } from '#src/utils.js';
 
 import { authedAdminApi } from './api.js';
 
-export const createRole = (name?: string, description?: string, scopeIds?: string[]) =>
+export const createRole = async (name?: string, description?: string, scopeIds?: string[]) =>
   authedAdminApi
     .post('roles', {
       json: {
@@ -15,11 +15,11 @@ export const createRole = (name?: string, description?: string, scopeIds?: strin
     })
     .json<Role>();
 
-export const getRoles = () => authedAdminApi.get('roles').json<Role[]>();
+export const getRoles = async () => authedAdminApi.get('roles').json<Role[]>();
 
-export const getRole = (roleId: string) => authedAdminApi.get(`roles/${roleId}`).json<Role>();
+export const getRole = async (roleId: string) => authedAdminApi.get(`roles/${roleId}`).json<Role>();
 
-export const updateRole = (roleId: string, payload: Partial<Omit<CreateRole, 'id'>>) =>
+export const updateRole = async (roleId: string, payload: Partial<Omit<CreateRole, 'id'>>) =>
   authedAdminApi
     .patch(`roles/${roleId}`, {
       json: {
@@ -28,28 +28,28 @@ export const updateRole = (roleId: string, payload: Partial<Omit<CreateRole, 'id
     })
     .json<Role>();
 
-export const deleteRole = (roleId: string) => authedAdminApi.delete(`roles/${roleId}`);
+export const deleteRole = async (roleId: string) => authedAdminApi.delete(`roles/${roleId}`);
 
-export const getRoleScopes = (roleId: string) =>
+export const getRoleScopes = async (roleId: string) =>
   authedAdminApi.get(`roles/${roleId}/scopes`).json<Scope[]>();
 
-export const assignScopesToRole = (scopeIds: string[], roleId: string) =>
+export const assignScopesToRole = async (scopeIds: string[], roleId: string) =>
   authedAdminApi
     .post(`roles/${roleId}/scopes`, {
       json: { scopeIds },
     })
     .json<Scope[]>();
 
-export const deleteScopeFromRole = (scopeId: string, roleId: string) =>
+export const deleteScopeFromRole = async (scopeId: string, roleId: string) =>
   authedAdminApi.delete(`roles/${roleId}/scopes/${scopeId}`);
 
-export const getRoleUsers = (roleId: string) =>
+export const getRoleUsers = async (roleId: string) =>
   authedAdminApi.get(`roles/${roleId}/users`).json<User[]>();
 
-export const assignUsersToRole = (userIds: string[], roleId: string) =>
+export const assignUsersToRole = async (userIds: string[], roleId: string) =>
   authedAdminApi.post(`roles/${roleId}/users`, {
     json: { userIds },
   });
 
-export const deleteUserFromRole = (userId: string, roleId: string) =>
+export const deleteUserFromRole = async (userId: string, roleId: string) =>
   authedAdminApi.delete(`roles/${roleId}/users/${userId}`);

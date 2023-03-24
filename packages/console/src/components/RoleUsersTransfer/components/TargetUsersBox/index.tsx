@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 
 import * as transferLayout from '@/scss/transfer.module.scss';
 
-import TargetUserItem from '../TargetUserItem';
 import * as styles from './index.module.scss';
+import TargetUserItem from '../TargetUserItem';
 
 type Props = {
   selectedUsers: User[];

@@ -17,10 +17,10 @@ import { Tooltip } from '@/components/Tip';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
+import * as styles from './index.module.scss';
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 import type { Props as PaginationProps } from '../Pagination';
 import TablePlaceholder from '../Table/TablePlaceholder';
-import * as styles from './index.module.scss';
 
 type SearchProps = {
   keyword: string;

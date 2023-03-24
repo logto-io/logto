@@ -26,11 +26,11 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { withAppInsights } from '@/utils/app-insights';
 
-import Guide from '../Applications/components/Guide';
-import GuideModal from '../Applications/components/Guide/GuideModal';
 import AdvancedSettings from './components/AdvancedSettings';
 import Settings from './components/Settings';
 import * as styles from './index.module.scss';
+import Guide from '../Applications/components/Guide';
+import GuideModal from '../Applications/components/Guide/GuideModal';
 
 const mapToUriFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(uri));

@@ -8,8 +8,8 @@ import { isCloud } from '@/consts/cloud';
 import EarlyBirdGift from '@/onboarding/components/EarlyBirdGift';
 import GetStartedProgress from '@/pages/GetStarted/components/GetStartedProgress';
 
-import UserInfo from '../UserInfo';
 import * as styles from './index.module.scss';
+import UserInfo from '../UserInfo';
 
 type Props = {
   className?: string;

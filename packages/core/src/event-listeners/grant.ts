@@ -3,9 +3,9 @@ import type { errors, KoaContextWithOIDC } from 'oidc-provider';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 
+import { extractInteractionContext } from './utils.js';
 import { stringifyError } from '../utils/format.js';
 import { isEnum } from '../utils/type.js';
-import { extractInteractionContext } from './utils.js';
 
 /**
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/lib/actions/token.js#L71 Success event emission}

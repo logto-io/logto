@@ -3,7 +3,7 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockRole } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import Libraries from '#src/tenants/Libraries.js';
+import type Libraries from '#src/tenants/Libraries.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 

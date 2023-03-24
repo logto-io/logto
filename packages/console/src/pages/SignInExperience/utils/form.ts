@@ -3,6 +3,7 @@ import { SignInMode, SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { DeepRequired, FieldErrorsImpl } from 'react-hook-form';
 
+import { mapIdentifiersToSignUpIdentifier } from './identifier';
 import {
   hasSignInMethodsChanged,
   hasSignUpSettingsChanged,
@@ -11,7 +12,6 @@ import {
 import { signUpIdentifiersMapping } from '../constants';
 import { SignUpIdentifier } from '../types';
 import type { SignInExperienceForm, SignUpForm } from '../types';
-import { mapIdentifiersToSignUpIdentifier } from './identifier';
 
 export const signInExperienceParser = {
   toLocalSignUp: (signUp: SignUp): SignUpForm => {

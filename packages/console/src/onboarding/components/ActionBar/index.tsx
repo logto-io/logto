@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
-import ProgressBar from '../ProgressBar';
 import * as styles from './index.module.scss';
+import ProgressBar from '../ProgressBar';
 
 type Props = {
   step: number;

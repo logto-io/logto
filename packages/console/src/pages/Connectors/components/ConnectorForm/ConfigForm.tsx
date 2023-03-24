@@ -10,9 +10,9 @@ import FormField from '@/components/FormField';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import { jsonValidator } from '@/utils/validator';
 
+import * as styles from './ConfigForm.module.scss';
 import type { ConnectorFormType } from '../../types';
 import ConfigFormItems from '../ConfigForm';
-import * as styles from './ConfigForm.module.scss';
 
 type Props = {
   formItems?: ConnectorConfigFormItem[];

@@ -7,9 +7,9 @@ import RequestErrorImage from '@/assets/images/request-error.svg';
 import type { RequestError } from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
 
+import * as styles from './index.module.scss';
 import Button from '../Button';
 import Card from '../Card';
-import * as styles from './index.module.scss';
 
 type Props = {
   error: RequestError;

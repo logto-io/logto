@@ -5,7 +5,7 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
 import { wellKnownCache } from '#src/caches/well-known.js';
-import Queries from '#src/tenants/Queries.js';
+import type Queries from '#src/tenants/Queries.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 

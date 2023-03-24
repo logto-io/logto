@@ -4,14 +4,6 @@ export class TtlCache<Key, Value> {
 
   constructor(public readonly ttl = Number.POSITIVE_INFINITY) {}
 
-  #purge(key: Key) {
-    const expiration = this.expiration.get(key);
-
-    if (expiration !== undefined && expiration < Date.now()) {
-      this.delete(key);
-    }
-  }
-
   set(key: Key, value: Value, ttl = this.ttl) {
     if (value === undefined) {
       throw new TypeError('Value cannot be undefined');
@@ -42,5 +34,13 @@ export class TtlCache<Key, Value> {
   clear() {
     this.expiration.clear();
     this.data.clear();
+  }
+
+  #purge(key: Key) {
+    const expiration = this.expiration.get(key);
+
+    if (expiration !== undefined && expiration < Date.now()) {
+      this.delete(key);
+    }
   }
 }

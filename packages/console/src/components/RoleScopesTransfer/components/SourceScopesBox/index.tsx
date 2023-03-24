@@ -14,8 +14,8 @@ import TextInput from '@/components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import * as transferLayout from '@/scss/transfer.module.scss';
 
-import ResourceItem from '../ResourceItem';
 import * as styles from './index.module.scss';
+import ResourceItem from '../ResourceItem';
 
 type Props = {
   roleId?: string;

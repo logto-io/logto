@@ -1,4 +1,4 @@
-import type { SchemaLike, GeneratedSchema } from '@logto/schemas';
+import type { SchemaLike, GeneratedSchema, SchemaValue } from '@logto/schemas';
 import { convertToIdentifiers, convertToPrimitiveOrSql, conditionalSql } from '@logto/shared';
 import type { UpdateWhereData } from '@logto/shared';
 import type { Truthy } from '@silverhand/essentials';
@@ -30,7 +30,7 @@ export const buildUpdateWhereWithPool =
     const { table, fields } = convertToIdentifiers(schema);
     const isKeyOfSchema = isKeyOf(schema);
     const connectKeyValueWithEqualSign = (data: Partial<Schema>, jsonbMode: 'replace' | 'merge') =>
-      Object.entries(data)
+      Object.entries<SchemaValue>(data)
         .map(([key, value]) => {
           if (!isKeyOfSchema(key)) {
             return;

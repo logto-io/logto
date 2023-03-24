@@ -14,9 +14,9 @@ import { ImageUploaderField } from '@/components/Uploader';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { uriValidator } from '@/utils/validator';
 
+import LogoAndFaviconUploader from './components/LogoAndFaviconUploader';
 import type { SignInExperienceForm } from '../../types';
 import * as styles from '../index.module.scss';
-import LogoAndFaviconUploader from './components/LogoAndFaviconUploader';
 
 function BrandingForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

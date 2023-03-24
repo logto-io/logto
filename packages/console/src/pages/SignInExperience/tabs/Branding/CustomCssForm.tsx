@@ -7,9 +7,9 @@ import FormField from '@/components/FormField';
 import TextLink from '@/components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
+import * as brandingStyles from './CustomCssForm.module.scss';
 import type { SignInExperienceForm } from '../../types';
 import * as tabsStyles from '../index.module.scss';
-import * as brandingStyles from './CustomCssForm.module.scss';
 
 function CustomCssForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

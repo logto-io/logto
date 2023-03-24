@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 
 import { convertToFileExtensionArray } from '@/utils/uploader';
 
+import * as styles from './index.module.scss';
 import ImageUploader, { maxImageSizeLimit, allowedImageMimeTypes } from '../ImageUploader';
 import type { Props as ImageUploaderProps } from '../ImageUploader';
-import * as styles from './index.module.scss';
 
 type Props = Pick<ImageUploaderProps, 'name' | 'value' | 'actionDescription'> & {
   onChange: (value: string) => void;

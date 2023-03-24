@@ -1,8 +1,8 @@
 import { generateStandardId } from '@logto/core-kit';
 
+import { adminTenantId, defaultTenantId } from './tenant.js';
 import type { CreateResource, CreateRole, CreateScope } from '../db-entries/index.js';
 import { PredefinedScope, InternalRole, AdminTenantRole } from '../types/index.js';
-import { adminTenantId, defaultTenantId } from './tenant.js';
 
 export type AdminData = {
   resource: CreateResource;

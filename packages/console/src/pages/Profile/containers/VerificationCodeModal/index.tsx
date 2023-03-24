@@ -13,9 +13,9 @@ import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentUser from '@/hooks/use-current-user';
 
+import * as styles from './index.module.scss';
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { checkLocationState, handleError } from '../../utils';
-import * as styles from './index.module.scss';
 
 export const resendTimeout = 59;
 

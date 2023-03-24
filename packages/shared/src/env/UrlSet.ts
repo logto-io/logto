@@ -6,10 +6,10 @@ import { deduplicate, getEnv, trySafe, yes } from '@silverhand/essentials';
  * It's useful for aggregating URLs for the same purpose, e.g. to serve the core service.
  */
 export default class UrlSet {
+  public readonly isLocalhostDisabled = yes(getEnv(this.envPrefix + 'DISABLE_LOCALHOST'));
+
   readonly #port = Number(getEnv(this.envPrefix + 'PORT') || this.defaultPort);
   readonly #endpoint = getEnv(this.envPrefix + 'ENDPOINT');
-
-  public readonly isLocalhostDisabled = yes(getEnv(this.envPrefix + 'DISABLE_LOCALHOST'));
 
   /**
    * Construct a new UrlSet instance by reading the following env variables:

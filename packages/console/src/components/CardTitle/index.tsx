@@ -3,9 +3,9 @@ import classNames from 'classnames';
 import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import * as styles from './index.module.scss';
 import type DangerousRaw from '../DangerousRaw';
 import TextLink from '../TextLink';
-import * as styles from './index.module.scss';
 
 export type Props = {
   title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;

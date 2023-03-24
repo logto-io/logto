@@ -177,6 +177,8 @@ export const zodTypeToSwagger = (
   if (config instanceof ZodNativeEnum || config instanceof ZodEnum) {
     return {
       type: 'string',
+      // Type from Zod is any
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       enum: Object.values(config.enum),
     };
   }
@@ -198,6 +200,8 @@ export const zodTypeToSwagger = (
   }
 
   if (config instanceof ZodObject) {
+    // Type from Zod is any
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const entries = Object.entries(config.shape);
     const required = entries
       .filter(([, value]) => !(value instanceof ZodOptional))

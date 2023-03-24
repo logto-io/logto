@@ -4,8 +4,8 @@ import ReactModal from 'react-modal';
 import ModalLayout from '@/components/ModalLayout';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import Reservation from '../../Reservation';
 import * as styles from './index.module.scss';
+import Reservation from '../../Reservation';
 
 type Props = {
   isOpen: boolean;

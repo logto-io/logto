@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next';
 import Back from '@/assets/images/back.svg';
 import type { RequestError } from '@/hooks/use-api';
 
+import * as styles from './index.module.scss';
 import type DangerousRaw from '../DangerousRaw';
 import DetailsSkeleton from '../DetailsSkeleton';
 import RequestDataError from '../RequestDataError';
 import TextLink from '../TextLink';
-import * as styles from './index.module.scss';
 
 type Props = {
   backLink: string;

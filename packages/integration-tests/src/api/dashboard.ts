@@ -21,11 +21,11 @@ export type ActiveUserStatistics = {
   mau: StatisticsData;
 };
 
-export const getTotalUsersCount = () =>
+export const getTotalUsersCount = async () =>
   authedAdminApi.get('dashboard/users/total').json<TotalUserCountData>();
 
-export const getNewUsersData = () =>
+export const getNewUsersData = async () =>
   authedAdminApi.get('dashboard/users/new').json<NewUserStatistics>();
 
-export const getActiveUsersData = () =>
+export const getActiveUsersData = async () =>
   authedAdminApi.get('dashboard/users/active').json<ActiveUserStatistics>();

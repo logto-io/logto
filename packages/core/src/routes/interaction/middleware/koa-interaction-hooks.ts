@@ -4,8 +4,8 @@ import type { IRouterParamContext } from 'koa-router';
 
 import type TenantContext from '#src/tenants/TenantContext.js';
 
-import { getInteractionStorage } from '../utils/interaction.js';
 import type { WithInteractionDetailsContext } from './koa-interaction-details.js';
+import { getInteractionStorage } from '../utils/interaction.js';
 
 export default function koaInteractionHooks<
   StateT,

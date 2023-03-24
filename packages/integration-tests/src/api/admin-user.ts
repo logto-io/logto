@@ -11,27 +11,27 @@ type CreateUserPayload = Partial<{
   isAdmin: boolean;
 }>;
 
-export const createUser = (payload: CreateUserPayload) =>
+export const createUser = async (payload: CreateUserPayload) =>
   authedAdminApi
     .post('users', {
       json: payload,
     })
     .json<User>();
 
-export const getUser = (userId: string) => authedAdminApi.get(`users/${userId}`).json<User>();
+export const getUser = async (userId: string) => authedAdminApi.get(`users/${userId}`).json<User>();
 
-export const getUsers = () => authedAdminApi.get('users').json<User[]>();
+export const getUsers = async () => authedAdminApi.get('users').json<User[]>();
 
-export const updateUser = (userId: string, payload: Partial<User>) =>
+export const updateUser = async (userId: string, payload: Partial<User>) =>
   authedAdminApi
     .patch(`users/${userId}`, {
       json: payload,
     })
     .json<User>();
 
-export const deleteUser = (userId: string) => authedAdminApi.delete(`users/${userId}`);
+export const deleteUser = async (userId: string) => authedAdminApi.delete(`users/${userId}`);
 
-export const updateUserPassword = (userId: string, password: string) =>
+export const updateUserPassword = async (userId: string, password: string) =>
   authedAdminApi
     .patch(`users/${userId}/password`, {
       json: {
@@ -40,14 +40,14 @@ export const updateUserPassword = (userId: string, password: string) =>
     })
     .json<User>();
 
-export const deleteUserIdentity = (userId: string, connectorTarget: string) =>
+export const deleteUserIdentity = async (userId: string, connectorTarget: string) =>
   authedAdminApi.delete(`users/${userId}/identities/${connectorTarget}`);
 
-export const assignRolesToUser = (userId: string, roleIds: string[]) =>
+export const assignRolesToUser = async (userId: string, roleIds: string[]) =>
   authedAdminApi.post(`users/${userId}/roles`, { json: { roleIds } });
 
-export const getUserRoles = (userId: string) =>
+export const getUserRoles = async (userId: string) =>
   authedAdminApi.get(`users/${userId}/roles`).json<Role[]>();
 
-export const deleteRoleFromUser = (userId: string, roleId: string) =>
+export const deleteRoleFromUser = async (userId: string, roleId: string) =>
   authedAdminApi.delete(`users/${userId}/roles/${roleId}`);

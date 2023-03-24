@@ -1,7 +1,6 @@
 import { emailRegEx, phoneRegEx, usernameRegEx, passwordRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
-import { arbitraryObjectGuard } from '../foundations/index.js';
 import type {
   EmailVerificationCodePayload,
   PhoneVerificationCodePayload,
@@ -10,6 +9,7 @@ import {
   emailVerificationCodePayloadGuard,
   phoneVerificationCodePayloadGuard,
 } from './verification-code.js';
+import { arbitraryObjectGuard } from '../foundations/index.js';
 
 /**
  * Detailed Identifier Methods guard

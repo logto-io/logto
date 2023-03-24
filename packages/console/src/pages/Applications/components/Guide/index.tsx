@@ -13,10 +13,10 @@ import DetailsSummary from '@/mdx-components/DetailsSummary';
 import type { SupportedSdk } from '@/types/applications';
 import { applicationTypeAndSdkTypeMappings } from '@/types/applications';
 
+import * as styles from './index.module.scss';
 import GuideHeader from '../GuideHeader';
 import SdkSelector from '../SdkSelector';
 import StepsSkeleton from '../StepsSkeleton';
-import * as styles from './index.module.scss';
 
 type Props = {
   app?: Application;
@@ -90,7 +90,7 @@ function Guide({ app, isCompact, onClose }: Props) {
         <MDXProvider
           components={{
             code: ({ className, children }) => {
-              const [, language] = /language-(\w+)/.exec(className ?? '') ?? [];
+              const [, language] = /language-(\w+)/.exec(String(className ?? '')) ?? [];
 
               return language ? (
                 <CodeEditor isReadonly language={language} value={String(children)} />

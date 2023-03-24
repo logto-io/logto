@@ -9,9 +9,9 @@ import EyeClosed from '@/assets/images/eye-closed.svg';
 import Eye from '@/assets/images/eye.svg';
 import { onKeyDownHandler } from '@/utils/a11y';
 
+import * as styles from './index.module.scss';
 import IconButton from '../IconButton';
 import { Tooltip } from '../Tip';
-import * as styles from './index.module.scss';
 
 type Props = {
   value: string;

@@ -6,6 +6,7 @@ import usePosition from '@/hooks/use-position';
 import type { HorizontalAlignment } from '@/types/positioning';
 import { onKeyDownHandler } from '@/utils/a11y';
 
+import * as styles from './index.module.scss';
 import type { TipBubblePlacement } from '../TipBubble';
 import TipBubble from '../TipBubble';
 import {
@@ -14,7 +15,6 @@ import {
   getVerticalOffset,
   getHorizontalOffset,
 } from '../TipBubble/utils';
-import * as styles from './index.module.scss';
 
 export type Props = {
   children: ReactNode;

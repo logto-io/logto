@@ -38,7 +38,7 @@ describe('admin console user search params', () => {
 
     // eslint-disable-next-line @silverhand/fp/no-mutation
     users = await Promise.all(
-      rawNames.map((raw, index) => {
+      rawNames.map(async (raw, index) => {
         const username = raw.split(' ').join('_');
         const name = raw
           .split(' ')
@@ -62,7 +62,7 @@ describe('admin console user search params', () => {
   });
 
   afterAll(async () => {
-    await Promise.all(users.map(({ id }) => deleteUser(id)));
+    await Promise.all(users.map(async ({ id }) => deleteUser(id)));
   });
 
   it('should return all users if nothing specified', async () => {

@@ -37,7 +37,7 @@ export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
 
 export const convertToPrimitiveOrSql = (
   key: string,
-  value: NonNullable<SchemaValue> | null
+  value: SchemaValue
 ): NonNullable<SchemaValuePrimitive> | SqlToken | null => {
   if (value === null) {
     return null;

@@ -9,8 +9,8 @@ import { encryptUserPassword, verifyUserPassword } from '#src/libraries/user.js'
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { RouterInitArgs } from '../routes/types.js';
 import type { AuthedMeRouter } from './types.js';
+import type { RouterInitArgs } from '../routes/types.js';
 
 export default function userRoutes<T extends AuthedMeRouter>(
   ...[router, tenant]: RouterInitArgs<T>

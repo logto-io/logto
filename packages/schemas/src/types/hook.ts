@@ -1,6 +1,6 @@
+import type { userInfoSelectFields } from './user.js';
 import type { Application, User } from '../db-entries/index.js';
 import type { HookEvent } from '../foundations/index.js';
-import type { userInfoSelectFields } from './user.js';
 
 export type HookEventPayload = {
   hookId: string;

@@ -9,9 +9,9 @@ import Checkbox from '@/components/Checkbox';
 import IconButton from '@/components/IconButton';
 import { onKeyDownHandler } from '@/utils/a11y';
 
+import * as styles from './index.module.scss';
 import type { DetailedResourceResponse } from '../../types';
 import SourceScopeItem from '../SourceScopeItem';
-import * as styles from './index.module.scss';
 
 type Props = {
   resource: DetailedResourceResponse;

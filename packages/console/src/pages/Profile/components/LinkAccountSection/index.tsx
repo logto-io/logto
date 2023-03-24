@@ -19,11 +19,11 @@ import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTheme from '@/hooks/use-theme';
 
+import * as styles from './index.module.scss';
 import { popupWindow } from '../../utils';
 import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 import NotSet from '../NotSet';
-import * as styles from './index.module.scss';
 
 type Props = {
   user: UserInfo;

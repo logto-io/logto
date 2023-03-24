@@ -16,9 +16,9 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { safeParseJson } from '@/utils/json';
 import { uriValidator } from '@/utils/validator';
 
+import UserSocialIdentities from './components/UserSocialIdentities';
 import type { UserDetailsForm, UserDetailsOutletContext } from '../types';
 import { userDetailsParser } from '../utils';
-import UserSocialIdentities from './components/UserSocialIdentities';
 
 function UserSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

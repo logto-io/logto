@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import Card from '@/components/Card';
 import FormField from '@/components/FormField';
 
-import * as styles from '../index.module.scss';
 import SignInMethodEditBox from './components/SignInMethodEditBox';
+import * as styles from '../index.module.scss';
 
 function SignInForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

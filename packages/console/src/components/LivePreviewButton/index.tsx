@@ -7,10 +7,10 @@ import ExternalLinkIcon from '@/assets/images/external-link.svg';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import useConfigs from '@/hooks/use-configs';
 
+import * as styles from './index.module.scss';
 import type { Props as ButtonProps, ButtonType } from '../Button';
 import Button from '../Button';
 import { Tooltip } from '../Tip';
-import * as styles from './index.module.scss';
 
 type Props = {
   size?: ButtonProps['size'];

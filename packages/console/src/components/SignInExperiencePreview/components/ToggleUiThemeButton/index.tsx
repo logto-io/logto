@@ -4,9 +4,9 @@ import classNames from 'classnames';
 import Moon from '@/assets/images/moon.svg';
 import Sun from '@/assets/images/sun.svg';
 
+import * as styles from './index.module.scss';
 import type { Props as ButtonProps } from '../../../Button';
 import Button from '../../../Button';
-import * as styles from './index.module.scss';
 
 type Props = {
   value: Theme;

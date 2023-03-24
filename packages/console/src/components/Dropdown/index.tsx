@@ -13,8 +13,8 @@ import usePosition from '@/hooks/use-position';
 import type { HorizontalAlignment } from '@/types/positioning';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import OverlayScrollbar from '../OverlayScrollbar';
 import * as styles from './index.module.scss';
+import OverlayScrollbar from '../OverlayScrollbar';
 
 export { default as DropdownItem } from './DropdownItem';
 

@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 
-import NotSet from '../NotSet';
 import * as styles from './index.module.scss';
+import NotSet from '../NotSet';
 
 export type Action = {
   name: AdminConsoleKey;

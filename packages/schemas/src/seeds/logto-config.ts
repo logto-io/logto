@@ -1,4 +1,4 @@
-import { CreateLogtoConfig } from '../db-entries/index.js';
+import { type CreateLogtoConfig } from '../db-entries/index.js';
 import type { AdminConsoleData } from '../types/index.js';
 import { LogtoTenantConfigKey } from '../types/index.js';
 

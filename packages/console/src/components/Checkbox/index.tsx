@@ -4,8 +4,8 @@ import { useLayoutEffect, useState } from 'react';
 
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import { Tooltip } from '../Tip';
 import * as styles from './index.module.scss';
+import { Tooltip } from '../Tip';
 
 type Props = {
   /* eslint-disable react/boolean-prop-naming */

@@ -1,5 +1,5 @@
-import type { Identifier } from '../types/index.js';
 import { mergeIdentifiers, categorizeIdentifiers } from './interaction.js';
+import type { Identifier } from '../types/index.js';
 
 describe('interaction utils', () => {
   const usernameIdentifier: Identifier = { key: 'accountId', value: 'foo' };

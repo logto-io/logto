@@ -1,14 +1,13 @@
 import assert from 'node:assert';
 
 import { generateStandardId } from '@logto/core-kit';
-import type { AdminData, TenantModel } from '@logto/schemas';
 import {
   adminConsoleApplicationId,
   adminTenantId,
   getManagementApiResourceIndicator,
   PredefinedScope,
-  CreateRolesScope,
 } from '@logto/schemas';
+import type { AdminData, TenantModel, CreateRolesScope } from '@logto/schemas';
 import type { PostgreSql } from '@withtyped/postgres';
 import { jsonb, dangerousRaw, id, sql } from '@withtyped/postgres';
 import type { Queryable } from '@withtyped/server';

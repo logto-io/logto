@@ -18,8 +18,8 @@ import koaSlonikErrorHandler from '#src/middleware/koa-slonik-error-handler.js';
 import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
 import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
 import initOidc from '#src/oidc/init.js';
-import initMeApis from '#src/routes-me/init.js';
 import initApis from '#src/routes/init.js';
+import initMeApis from '#src/routes-me/init.js';
 
 import Libraries from './Libraries.js';
 import Queries from './Queries.js';
@@ -35,13 +35,13 @@ export default class Tenant implements TenantContext {
     return new Tenant(envSet, id);
   }
 
-  #requestCount = 0;
-  #onRequestEmpty?: () => Promise<void>;
-
   public readonly provider: Provider;
   public readonly run: MiddlewareType;
 
   private readonly app: Koa;
+
+  #requestCount = 0;
+  #onRequestEmpty?: () => Promise<void>;
 
   // eslint-disable-next-line max-params
   private constructor(

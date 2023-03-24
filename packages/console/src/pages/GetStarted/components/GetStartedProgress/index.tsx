@@ -11,8 +11,8 @@ import useTheme from '@/hooks/use-theme';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import useGetStartedMetadata from '../../hook';
 import * as styles from './index.module.scss';
+import useGetStartedMetadata from '../../hook';
 
 function GetStartedProgress() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

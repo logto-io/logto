@@ -20,7 +20,7 @@ import useApi from '@/hooks/use-api';
 import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
-import { RoleDetailsOutletContext } from './types';
+import { type RoleDetailsOutletContext } from './types';
 
 function RoleDetails() {
   const { pathname } = useLocation();

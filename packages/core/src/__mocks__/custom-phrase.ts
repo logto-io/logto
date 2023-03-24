@@ -1,5 +1,5 @@
 import en from '@logto/phrases-ui/lib/locales/en.js';
-import { CustomPhrase } from '@logto/schemas';
+import { type CustomPhrase } from '@logto/schemas';
 
 import { mockId } from '#src/test-utils/nanoid.js';
 

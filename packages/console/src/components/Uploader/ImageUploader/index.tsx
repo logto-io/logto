@@ -2,10 +2,10 @@ import type { AllowedUploadMimeType } from '@logto/schemas';
 
 import Delete from '@/assets/images/delete.svg';
 
+import * as styles from './index.module.scss';
 import IconButton from '../../IconButton';
 import FileUploader from '../FileUploader';
 import type { Props as FileUploaderProps } from '../FileUploader';
-import * as styles from './index.module.scss';
 
 export const maxImageSizeLimit = 500 * 1024; // 500 KB
 

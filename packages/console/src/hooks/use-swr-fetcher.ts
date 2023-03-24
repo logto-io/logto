@@ -1,4 +1,4 @@
-import { HTTPError } from 'ky';
+import { HTTPError, type Options } from 'ky';
 import type { KyInstance } from 'ky/distribution/types/ky';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ const useSwrFetcher: useSwrFetcherHook = <T>(api: KyInstance) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const fetcher = useCallback<BareFetcher<T | WithTotalNumber<T>>>(
-    async (resource, init) => {
+    async (resource: string | URL, init: Options) => {
       try {
         const response = await api.get(resource, init);
         const data = await response.json<T>();
