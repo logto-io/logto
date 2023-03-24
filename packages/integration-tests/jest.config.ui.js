@@ -5,7 +5,6 @@ const config = {
   setupFilesAfterEnv: ['./jest.setup.js'],
   moduleNameMapper: {
     '^#src/(.*)\\.js(x)?$': '<rootDir>/lib/$1',
-    '^(chalk|inquirer)$': '<rootDir>/../shared/lib/esm/module-proxy.js',
   },
 };
 
