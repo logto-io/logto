@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import AppError from '../AppError';
 import Button from '../Button';
+
 import * as styles from './index.module.scss';
 
 type Props = {

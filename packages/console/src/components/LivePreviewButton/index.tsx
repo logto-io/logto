@@ -10,6 +10,7 @@ import useConfigs from '@/hooks/use-configs';
 import type { Props as ButtonProps, ButtonType } from '../Button';
 import Button from '../Button';
 import { Tooltip } from '../Tip';
+
 import * as styles from './index.module.scss';
 
 type Props = {

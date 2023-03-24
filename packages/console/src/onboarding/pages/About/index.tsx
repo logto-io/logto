@@ -18,6 +18,7 @@ import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
 import { OnboardingPage } from '../../types';
 import { getOnboardingPage } from '../../utils';
+
 import * as styles from './index.module.scss';
 import { titleOptions, companySizeOptions, reasonOptions } from './options';
 

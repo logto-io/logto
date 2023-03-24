@@ -5,7 +5,7 @@ import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
 
 import { authedAdminApi } from './api.js';
 
-export const createResource = (name?: string, indicator?: string) =>
+export const createResource = async (name?: string, indicator?: string) =>
   authedAdminApi
     .post('resources', {
       json: {
@@ -15,10 +15,10 @@ export const createResource = (name?: string, indicator?: string) =>
     })
     .json<Resource>();
 
-export const getResource = (resourceId: string, options?: OptionsOfTextResponseBody) =>
+export const getResource = async (resourceId: string, options?: OptionsOfTextResponseBody) =>
   authedAdminApi.get(`resources/${resourceId}`, options).json<Resource>();
 
-export const updateResource = (
+export const updateResource = async (
   resourceId: string,
   payload: Partial<Omit<CreateResource, 'id' | 'indicator'>>
 ) =>
@@ -30,5 +30,5 @@ export const updateResource = (
     })
     .json<Resource>();
 
-export const deleteResource = (resourceId: string) =>
+export const deleteResource = async (resourceId: string) =>
   authedAdminApi.delete(`resources/${resourceId}`);

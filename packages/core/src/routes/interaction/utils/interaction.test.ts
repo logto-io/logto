@@ -1,4 +1,5 @@
 import type { Identifier } from '../types/index.js';
+
 import { mergeIdentifiers, categorizeIdentifiers } from './interaction.js';
 
 describe('interaction utils', () => {

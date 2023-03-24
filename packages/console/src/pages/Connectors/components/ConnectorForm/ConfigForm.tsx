@@ -12,6 +12,7 @@ import { jsonValidator } from '@/utils/validator';
 
 import type { ConnectorFormType } from '../../types';
 import ConfigFormItems from '../ConfigForm';
+
 import * as styles from './ConfigForm.module.scss';
 
 type Props = {

@@ -17,6 +17,7 @@ import { withAppInsights } from '@/utils/app-insights';
 import type { Questionnaire } from '../../types';
 import { OnboardingPage } from '../../types';
 import { getOnboardingPage } from '../../utils';
+
 import * as styles from './index.module.scss';
 import { deploymentTypeOptions, projectOptions } from './options';
 

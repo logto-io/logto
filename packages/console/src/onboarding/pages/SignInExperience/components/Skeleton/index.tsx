@@ -1,6 +1,7 @@
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 
 import * as sieLayout from '../../index.module.scss';
+
 import * as styles from './index.module.scss';
 
 function Skeleton() {

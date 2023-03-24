@@ -6,6 +6,7 @@ import { Tooltip } from '@/components/Tip';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import type { MultiCardSelectorOption } from '../types';
+
 import * as styles from './CardItem.module.scss';
 
 type Props = {

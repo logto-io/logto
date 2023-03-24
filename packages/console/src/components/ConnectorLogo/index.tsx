@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import useTheme from '@/hooks/use-theme';
 
 import ImageWithErrorFallback from '../ImageWithErrorFallback';
+
 import * as styles from './index.module.scss';
 
 type Props = {

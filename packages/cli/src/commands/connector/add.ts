@@ -1,6 +1,7 @@
 import type { CommandModule } from 'yargs';
 
 import { log } from '../../utils.js';
+
 import { addConnectors, addOfficialConnectors, inquireInstancePath } from './utils.js';
 
 const add: CommandModule<

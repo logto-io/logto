@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 
 import type { MultiCardSelectorOption } from '../types';
+
 import CardItem from './CardItem';
 import * as styles from './index.module.scss';
 

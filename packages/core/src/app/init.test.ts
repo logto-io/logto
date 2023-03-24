@@ -1,4 +1,4 @@
-import { createServer } from 'http';
+import { createServer } from 'node:http';
 
 import { pickDefault } from '@logto/shared/esm';
 import Koa from 'koa';

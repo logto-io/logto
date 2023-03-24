@@ -26,6 +26,7 @@ import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import type { RoleDetailsOutletContext } from '../types';
+
 import AssignUsersModal from './components/AssignUsersModal';
 import * as styles from './index.module.scss';
 

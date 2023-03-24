@@ -27,6 +27,7 @@ import useConnectorInUse from '@/hooks/use-connector-in-use';
 import { withAppInsights } from '@/utils/app-insights';
 
 import CreateForm from '../Connectors/components/CreateForm';
+
 import ConnectorContent from './components/ConnectorContent';
 import ConnectorTabs from './components/ConnectorTabs';
 import ConnectorTypeName from './components/ConnectorTypeName';

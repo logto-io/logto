@@ -1,12 +1,12 @@
 /* istanbul ignore file */
 
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 
 import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';
 import { CustomClientMetadataKey, demoAppApplicationId } from '@logto/schemas';
 import i18next from 'i18next';
-import Provider, { errors, ResourceServer } from 'oidc-provider';
+import Provider, { errors, type ResourceServer } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
 import type { EnvSet } from '#src/env-set/index.js';

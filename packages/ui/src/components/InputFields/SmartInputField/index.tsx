@@ -8,6 +8,7 @@ import ClearIcon from '@/assets/icons/clear-icon.svg';
 import IconButton from '@/components/Button/IconButton';
 
 import InputField from '../InputField';
+
 import AnimatedPrefix from './AnimatedPrefix';
 import CountryCodeSelector from './CountryCodeSelector';
 import type { IdentifierInputType, IdentifierInputValue } from './use-smart-input-field';

@@ -9,6 +9,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import Dropdown, { DropdownItem } from '../Dropdown';
 import IconButton from '../IconButton';
+
 import * as styles from './index.module.scss';
 
 export type Option<T> = {

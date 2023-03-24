@@ -6,6 +6,7 @@ import type {
   CreateApplicationsRole,
 } from '../db-entries/index.js';
 import { ApplicationType } from '../db-entries/index.js';
+
 import { adminTenantId } from './tenant.js';
 
 /**

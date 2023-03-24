@@ -20,7 +20,7 @@ import {
   updateConnectorConfig,
 } from '#src/api/connector.js';
 
-const connectorIdMap = new Map();
+const connectorIdMap = new Map<string, string>();
 
 /*
  * We'd better only use mock connectors in integration tests.
@@ -62,11 +62,11 @@ test('connector set-up flow', async () => {
    * We will test updating to the invalid connector config, that is the case not covered above.
    */
   await expect(
-    updateConnectorConfig(connectorIdMap.get(mockSocialConnectorId), mockSmsConnectorConfig)
+    updateConnectorConfig(connectorIdMap.get(mockSocialConnectorId)!, mockSmsConnectorConfig)
   ).rejects.toThrow(HTTPError);
   // To confirm the failed updating request above did not modify the original config,
   // we check: the mock connector config should stay the same.
-  const mockSocialConnector = await getConnector(connectorIdMap.get(mockSocialConnectorId));
+  const mockSocialConnector = await getConnector(connectorIdMap.get(mockSocialConnectorId)!);
   expect(mockSocialConnector.config).toEqual(mockSocialConnectorConfig);
 
   /*
@@ -94,7 +94,7 @@ test('connector set-up flow', async () => {
    * Delete (i.e. disable) a connector
    */
   await expect(
-    deleteConnectorById(connectorIdMap.get(mockStandardEmailConnectorId))
+    deleteConnectorById(connectorIdMap.get(mockStandardEmailConnectorId)!)
   ).resolves.not.toThrow();
   connectorIdMap.delete(mockStandardEmailConnectorId);
 
@@ -105,13 +105,11 @@ test('connector set-up flow', async () => {
   expect(await listConnectors()).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         id: connectorIdMap.get(mockSmsConnectorId),
         connectorId: mockSmsConnectorId,
         config: mockSmsConnectorConfig,
       }),
       expect.objectContaining({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         id: connectorIdMap.get(mockSocialConnectorId),
         connectorId: mockSocialConnectorId,
         config: mockSocialConnectorConfig,

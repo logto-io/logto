@@ -16,6 +16,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousRouter, RouterInitArgs } from '../types.js';
+
 import submitInteraction from './actions/submit-interaction.js';
 import consentRoutes from './consent.js';
 import { interactionPrefix, verificationPath } from './const.js';

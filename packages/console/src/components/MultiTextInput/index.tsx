@@ -12,6 +12,7 @@ import Button from '../Button';
 import ConfirmModal from '../ConfirmModal';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
+
 import * as styles from './index.module.scss';
 import type { MultiTextInputError } from './types';
 

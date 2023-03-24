@@ -14,6 +14,7 @@ import { signInIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignInMethod } from '@/pages/SignInExperience/types';
 
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
+
 import * as styles from './index.module.scss';
 
 type Props = {

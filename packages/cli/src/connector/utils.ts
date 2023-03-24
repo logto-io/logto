@@ -1,6 +1,6 @@
-import { existsSync } from 'fs';
-import { readFile } from 'fs/promises';
-import path from 'path';
+import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 
 import type {
   AllConnector,

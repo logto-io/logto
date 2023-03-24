@@ -24,6 +24,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import SubMenu from '../SubMenu';
 import UserInfoSkeleton from '../UserInfoSkeleton';
+
 import * as styles from './index.module.scss';
 
 function UserInfo() {

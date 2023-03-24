@@ -122,7 +122,7 @@ function Dashboard() {
                     axisLine={false}
                     tickLine={false}
                     tick={tickStyle}
-                    tickFormatter={(tick) => tickFormatter.format(tick).toLowerCase()}
+                    tickFormatter={(tick) => tickFormatter.format(Number(tick)).toLowerCase()}
                   />
                   <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'var(--color-primary' }} />
                 </AreaChart>

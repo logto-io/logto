@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { getPath } from '../../utils';
+
 import * as styles from './index.module.scss';
 
 type Props = {

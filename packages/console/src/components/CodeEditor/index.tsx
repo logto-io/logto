@@ -6,6 +6,7 @@ import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark as a11yDarkTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import CopyToClipboard from '../CopyToClipboard';
+
 import * as styles from './index.module.scss';
 import { lineNumberContainerStyle, lineNumberStyle, customStyle } from './utils';
 

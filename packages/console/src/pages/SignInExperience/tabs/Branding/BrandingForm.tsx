@@ -16,6 +16,7 @@ import { uriValidator } from '@/utils/validator';
 
 import type { SignInExperienceForm } from '../../types';
 import * as styles from '../index.module.scss';
+
 import LogoAndFaviconUploader from './components/LogoAndFaviconUploader';
 
 function BrandingForm() {

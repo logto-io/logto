@@ -6,6 +6,7 @@ import type { HorizontalAlignment } from '@/types/positioning';
 
 import type { Props as ButtonProps } from '../Button';
 import Dropdown from '../Dropdown';
+
 import ActionMenuButton from './ActionMenuButton';
 import * as styles from './index.module.scss';
 

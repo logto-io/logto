@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
 import type { ConnectorPackage } from '../../utils.js';
+
 import { getConnectorPackagesFrom, isOfficialConnector } from './utils.js';
 
 const logConnectorNames = (type: string, packages: ConnectorPackage[]) => {

@@ -7,6 +7,7 @@ import { doesConfigsTableExist } from '../../../queries/logto-config.js';
 import { log, oraPromise } from '../../../utils.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
+
 import { createTables, seedCloud, seedTables } from './tables.js';
 
 export const seedByPool = async (pool: DatabasePool, cloud = false) => {

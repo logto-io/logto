@@ -16,6 +16,7 @@ import { useStaticApi } from '@/hooks/use-api';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { checkLocationState, handleError } from '../../utils';
+
 import * as styles from './index.module.scss';
 
 type FormFields = {

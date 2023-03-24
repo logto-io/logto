@@ -10,6 +10,7 @@ import type {
   AccountVerifiedInteractionResult,
 } from '../types/index.js';
 import { storeInteractionResult } from '../utils/interaction.js';
+
 import verifyUserAccount from './user-identity-verification.js';
 
 type InteractionResult =

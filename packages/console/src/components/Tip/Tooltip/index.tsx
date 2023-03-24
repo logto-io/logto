@@ -14,6 +14,7 @@ import {
   getVerticalOffset,
   getHorizontalOffset,
 } from '../TipBubble/utils';
+
 import * as styles from './index.module.scss';
 
 type Props = {

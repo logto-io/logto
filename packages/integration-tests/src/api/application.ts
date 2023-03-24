@@ -7,7 +7,7 @@ import type {
 
 import { authedAdminApi } from './api.js';
 
-export const createApplication = (name: string, type: ApplicationType) =>
+export const createApplication = async (name: string, type: ApplicationType) =>
   authedAdminApi
     .post('applications', {
       json: {
@@ -17,10 +17,10 @@ export const createApplication = (name: string, type: ApplicationType) =>
     })
     .json<Application>();
 
-export const getApplication = (applicationId: string) =>
+export const getApplication = async (applicationId: string) =>
   authedAdminApi.get(`applications/${applicationId}`).json<Application>();
 
-export const updateApplication = (
+export const updateApplication = async (
   applicationId: string,
   payload: Partial<
     Omit<CreateApplication, 'id' | 'created_at' | 'oidcClientMetadata'> & {
@@ -36,5 +36,5 @@ export const updateApplication = (
     })
     .json<Application>();
 
-export const deleteApplication = (applicationId: string) =>
+export const deleteApplication = async (applicationId: string) =>
   authedAdminApi.delete(`applications/${applicationId}`);

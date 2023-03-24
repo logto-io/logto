@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises';
+import { readFile } from 'node:fs/promises';
 
 import type { LogtoOidcConfigType } from '@logto/schemas';
 import { LogtoOidcConfigKey, logtoConfigGuards } from '@logto/schemas';

@@ -9,6 +9,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { transpileLogtoConnector } from '#src/utils/connectors/index.js';
 
 import type { RouterInitArgs } from '../routes/types.js';
+
 import type { AuthedMeRouter } from './types.js';
 
 /**

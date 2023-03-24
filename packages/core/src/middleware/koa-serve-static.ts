@@ -1,6 +1,6 @@
 // Modified from https://github.com/koajs/static/blob/7f0ed88c8902e441da4e30b42f108617d8dff9ec/index.js
 
-import path from 'path';
+import path from 'node:path';
 
 import type { MiddlewareType } from 'koa';
 import send from 'koa-send';

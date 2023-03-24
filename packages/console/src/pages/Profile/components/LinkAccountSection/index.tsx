@@ -23,6 +23,7 @@ import { popupWindow } from '../../utils';
 import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 import NotSet from '../NotSet';
+
 import * as styles from './index.module.scss';
 
 type Props = {

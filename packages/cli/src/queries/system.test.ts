@@ -5,6 +5,7 @@ import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import type { QueryType } from '../test-utils.js';
 import { expectSqlAssert } from '../test-utils.js';
+
 import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './system.js';
 
 const { jest } = import.meta;

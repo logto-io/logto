@@ -2,6 +2,7 @@ import { emailRegEx, phoneRegEx, usernameRegEx, passwordRegEx } from '@logto/cor
 import { z } from 'zod';
 
 import { arbitraryObjectGuard } from '../foundations/index.js';
+
 import type {
   EmailVerificationCodePayload,
   PhoneVerificationCodePayload,

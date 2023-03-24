@@ -16,6 +16,7 @@ import { uriValidator } from '@/utils/validator';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
+
 import * as styles from './BasicForm.module.scss';
 
 type Props = {

@@ -1,4 +1,4 @@
-import type { IncomingHttpHeaders } from 'http';
+import type { IncomingHttpHeaders } from 'node:http';
 
 import type { Optional } from '@silverhand/essentials';
 import { normalizeValueToStringArray } from '@silverhand/essentials';

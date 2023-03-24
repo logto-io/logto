@@ -18,6 +18,7 @@ import { uriValidator } from '@/utils/validator';
 
 import type { UserDetailsForm, UserDetailsOutletContext } from '../types';
 import { userDetailsParser } from '../utils';
+
 import UserSocialIdentities from './components/UserSocialIdentities';
 
 function UserSettings() {

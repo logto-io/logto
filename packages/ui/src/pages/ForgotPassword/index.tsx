@@ -10,6 +10,7 @@ import { passwordIdentifierStateGuard } from '@/types/guard';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
 import ErrorPage from '../ErrorPage';
+
 import ForgotPasswordForm from './ForgotPasswordForm';
 
 const ForgotPassword = () => {

@@ -9,6 +9,7 @@ import useConnectorGroups from '@/hooks/use-connector-groups';
 import type { OnboardingSieConfig } from '@/onboarding/types';
 
 import { randomSieConfigTemplate } from '../../sie-config-templates';
+
 import * as styles from './index.module.scss';
 
 type Props = {

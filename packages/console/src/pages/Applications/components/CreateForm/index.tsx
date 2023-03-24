@@ -16,6 +16,7 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import TypeDescription from '../TypeDescription';
+
 import * as styles from './index.module.scss';
 
 type FormData = {

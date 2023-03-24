@@ -24,9 +24,10 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import { withAppInsights } from '@/utils/app-insights';
 
 import UserAccountInformation from '../../components/UserAccountInformation';
+
 import ResetPasswordForm from './components/ResetPasswordForm';
 import * as styles from './index.module.scss';
-import { UserDetailsOutletContext } from './types';
+import { type UserDetailsOutletContext } from './types';
 
 function UserDetails() {
   const { pathname } = useLocation();

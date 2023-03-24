@@ -6,6 +6,7 @@ import Sun from '@/assets/images/sun.svg';
 
 import type { Props as ButtonProps } from '../../../Button';
 import Button from '../../../Button';
+
 import * as styles from './index.module.scss';
 
 type Props = {

@@ -1,7 +1,7 @@
 import { generateStandardId } from '@logto/core-kit';
 import {
   HookEvent,
-  HookEventPayload,
+  type HookEventPayload,
   InteractionEvent,
   LogResult,
   userInfoSelectFields,

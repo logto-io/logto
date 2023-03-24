@@ -11,6 +11,7 @@ import {
 import { signUpIdentifiersMapping } from '../constants';
 import { SignUpIdentifier } from '../types';
 import type { SignInExperienceForm, SignUpForm } from '../types';
+
 import { mapIdentifiersToSignUpIdentifier } from './identifier';
 
 export const signInExperienceParser = {

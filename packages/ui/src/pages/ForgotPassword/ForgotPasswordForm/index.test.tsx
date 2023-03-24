@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { putInteraction, sendVerificationCode } from '@/apis/interaction';
-import { UserFlow, VerificationCodeIdentifier } from '@/types';
+import { UserFlow, type VerificationCodeIdentifier } from '@/types';
 
 import ForgotPasswordForm from '.';
 

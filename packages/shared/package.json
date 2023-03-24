@@ -36,8 +36,8 @@
   },
   "devDependencies": {
     "@logto/connector-kit": "workspace:^",
-    "@silverhand/eslint-config": "2.0.1",
-    "@silverhand/ts-config": "2.0.3",
+    "@silverhand/eslint-config": "3.0.0",
+    "@silverhand/ts-config": "3.0.0",
     "@types/jest": "^29.4.0",
     "@types/node": "^18.11.18",
     "eslint": "^8.34.0",

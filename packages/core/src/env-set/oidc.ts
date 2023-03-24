@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 import type { LogtoOidcConfigType } from '@logto/schemas';
 import { LogtoOidcConfigKey } from '@logto/schemas';

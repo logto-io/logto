@@ -5,6 +5,7 @@ import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 
 import { stringifyError } from '../utils/format.js';
 import { isEnum } from '../utils/type.js';
+
 import { extractInteractionContext } from './utils.js';
 
 /**

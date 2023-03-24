@@ -62,6 +62,7 @@ describe('GET /swagger.json', () => {
 
   it('should contain the specific paths', async () => {
     const response = await mockSwaggerRequest.get('/swagger.json');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     expect(Object.entries(response.body.paths)).toHaveLength(2);
     expect(response.body.paths).toMatchObject({
       /* eslint-disable @typescript-eslint/no-unsafe-assignment */

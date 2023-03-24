@@ -20,6 +20,7 @@ import {
   isVerificationRequiredSignUpIdentifiers,
 } from '../../utils/identifier';
 import * as styles from '../index.module.scss';
+
 import ConnectorSetupWarning from './components/ConnectorSetupWarning';
 import {
   createSignInMethod,

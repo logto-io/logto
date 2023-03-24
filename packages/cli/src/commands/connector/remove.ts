@@ -1,9 +1,10 @@
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
 import { log } from '../../utils.js';
+
 import { getConnectorPackagesFrom } from './utils.js';
 
 const remove: CommandModule<{ path?: string }, { path?: string; packages?: string[] }> = {

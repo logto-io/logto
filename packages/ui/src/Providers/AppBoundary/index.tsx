@@ -9,6 +9,7 @@ import useTheme from '@/hooks/use-theme';
 import ConfirmModalProvider from '../ConfirmModalProvider';
 import IframeModalProvider from '../IframeModalProvider';
 import ToastProvider from '../ToastProvider';
+
 import * as styles from './index.module.scss';
 
 type Props = {

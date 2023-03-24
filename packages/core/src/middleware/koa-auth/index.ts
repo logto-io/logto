@@ -1,4 +1,4 @@
-import type { IncomingHttpHeaders } from 'http';
+import type { IncomingHttpHeaders } from 'node:http';
 
 import { adminTenantId, defaultManagementApi, PredefinedScope } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';

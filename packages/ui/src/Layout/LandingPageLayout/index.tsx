@@ -9,6 +9,7 @@ import { layoutClassNames } from '@/utils/consts';
 import { getBrandingLogoUrl } from '@/utils/logo';
 
 import AppNotification from '../../containers/AppNotification';
+
 import * as styles from './index.module.scss';
 
 type Props = {

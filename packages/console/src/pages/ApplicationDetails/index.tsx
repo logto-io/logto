@@ -28,6 +28,7 @@ import { withAppInsights } from '@/utils/app-insights';
 
 import Guide from '../Applications/components/Guide';
 import GuideModal from '../Applications/components/Guide/GuideModal';
+
 import AdvancedSettings from './components/AdvancedSettings';
 import Settings from './components/Settings';
 import * as styles from './index.module.scss';

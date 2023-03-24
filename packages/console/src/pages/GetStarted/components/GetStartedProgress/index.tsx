@@ -12,6 +12,7 @@ import useUserPreferences from '@/hooks/use-user-preferences';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import useGetStartedMetadata from '../../hook';
+
 import * as styles from './index.module.scss';
 
 function GetStartedProgress() {

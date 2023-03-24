@@ -15,6 +15,7 @@ import useCurrentUser from '@/hooks/use-current-user';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { checkLocationState, handleError } from '../../utils';
+
 import * as styles from './index.module.scss';
 
 export const resendTimeout = 59;

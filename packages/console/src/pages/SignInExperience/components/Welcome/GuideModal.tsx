@@ -23,6 +23,7 @@ import TermsForm from '../../tabs/Others/TermsForm';
 import type { SignInExperienceForm } from '../../types';
 import { signInExperienceParser } from '../../utils/form';
 import Preview from '../Preview';
+
 import * as styles from './GuideModal.module.scss';
 
 type Props = {

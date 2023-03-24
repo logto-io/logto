@@ -38,6 +38,7 @@ import UserSettings from '@/pages/UserDetails/UserSettings';
 import Users from '@/pages/Users';
 
 import type { AppContentOutletContext } from '../AppContent/types';
+
 import Sidebar from './Sidebar';
 import * as styles from './index.module.scss';
 

@@ -10,6 +10,7 @@ import useApi from '@/hooks/use-api';
 import { convertToFileExtensionArray } from '@/utils/uploader';
 
 import { Ring } from '../../Spinner';
+
 import * as styles from './index.module.scss';
 
 export type Props = {

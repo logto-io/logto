@@ -48,10 +48,10 @@
   },
   "devDependencies": {
     "@jest/types": "^29.0.3",
-    "@silverhand/eslint-config": "2.0.1",
-    "@silverhand/eslint-config-react": "2.0.1",
+    "@silverhand/eslint-config": "3.0.0",
+    "@silverhand/ts-config-react": "3.0.0",
     "@silverhand/essentials": "^2.5.0",
-    "@silverhand/ts-config": "2.0.3",
+    "@silverhand/ts-config": "3.0.0",
     "@types/color": "^3.0.3",
     "@types/jest": "^29.4.0",
     "@types/node": "^18.11.18",

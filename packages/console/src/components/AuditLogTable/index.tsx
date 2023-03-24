@@ -15,6 +15,7 @@ import { buildUrl } from '@/utils/url';
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 import Table from '../Table';
 import type { Column } from '../Table/types';
+
 import ApplicationSelector from './components/ApplicationSelector';
 import EventName from './components/EventName';
 import EventSelector from './components/EventSelector';

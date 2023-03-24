@@ -11,6 +11,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import type { DetailedResourceResponse } from '../../types';
 import SourceScopeItem from '../SourceScopeItem';
+
 import * as styles from './index.module.scss';
 
 type Props = {

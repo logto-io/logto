@@ -6,6 +6,7 @@ import SearchIcon from '@/assets/images/search.svg';
 
 import Button from '../Button';
 import TextInput from '../TextInput';
+
 import * as styles from './index.module.scss';
 
 type Props = {

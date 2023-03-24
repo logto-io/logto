@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import Card from '../Card';
 import TextLink from '../TextLink';
+
 import * as styles from './index.module.scss';
 
 type Props = {

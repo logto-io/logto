@@ -17,6 +17,7 @@ import * as transferLayout from '@/scss/transfer.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import SourceUserItem from '../SourceUserItem';
+
 import * as styles from './index.module.scss';
 
 type Props = {

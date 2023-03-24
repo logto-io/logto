@@ -9,6 +9,7 @@ import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
 import { useSieMethods } from '@/hooks/use-sie';
 
 import ErrorPage from '../ErrorPage';
+
 import Main from './Main';
 import * as styles from './index.module.scss';
 

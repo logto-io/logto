@@ -2,8 +2,8 @@ import type { RequestVerificationCodePayload, VerifyVerificationCodePayload } fr
 
 import { authedAdminApi } from './api.js';
 
-export const requestVerificationCode = (payload: RequestVerificationCodePayload) =>
+export const requestVerificationCode = async (payload: RequestVerificationCodePayload) =>
   authedAdminApi.post('verification-codes', { json: payload });
 
-export const verifyVerificationCode = (payload: VerifyVerificationCodePayload) =>
+export const verifyVerificationCode = async (payload: VerifyVerificationCodePayload) =>
   authedAdminApi.post('verification-codes/verify', { json: payload });

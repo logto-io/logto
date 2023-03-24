@@ -12,6 +12,7 @@ import type { CommandModule } from 'yargs';
 import { createPoolFromConfig } from '../../database.js';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config.js';
 import { log } from '../../utils.js';
+
 import { generateOidcCookieKey, generateOidcPrivateKey } from './utils.js';
 
 const validKeysDisplay = chalk.green(logtoConfigKeys.join(', '));

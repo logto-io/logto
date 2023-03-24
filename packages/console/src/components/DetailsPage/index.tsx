@@ -10,6 +10,7 @@ import type DangerousRaw from '../DangerousRaw';
 import DetailsSkeleton from '../DetailsSkeleton';
 import RequestDataError from '../RequestDataError';
 import TextLink from '../TextLink';
+
 import * as styles from './index.module.scss';
 
 type Props = {

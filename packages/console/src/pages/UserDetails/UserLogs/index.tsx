@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import AuditLogTable from '@/components/AuditLogTable';
 
 import type { UserDetailsOutletContext } from '../types';
+
 import * as styles from './index.module.scss';
 
 function UserLogs() {

@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises';
+import { readFile } from 'node:fs/promises';
 
 import { toTitle } from '@silverhand/essentials';
 import { load } from 'js-yaml';
@@ -59,6 +59,8 @@ const buildParameters = (
 
   assertThat(zodParameters instanceof ZodObject, 'swagger.not_supported_zod_type_for_params');
 
+  // Type from Zod is any
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   return Object.entries(zodParameters.shape).map(([key, value]) => ({
     name: key,
     in: inWhere,

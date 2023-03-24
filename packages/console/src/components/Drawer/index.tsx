@@ -6,6 +6,7 @@ import Close from '@/assets/images/close.svg';
 import CardTitle from '../CardTitle';
 import IconButton from '../IconButton';
 import Spacer from '../Spacer';
+
 import * as styles from './index.module.scss';
 
 type Props = {

@@ -6,6 +6,7 @@ import RequestErrorImage from '@/assets/images/request-error.svg';
 import useTheme from '@/hooks/use-theme';
 
 import Button from '../Button';
+
 import * as styles from './TableError.module.scss';
 
 type Props = {

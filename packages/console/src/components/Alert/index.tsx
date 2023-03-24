@@ -7,6 +7,7 @@ import Info from '@/assets/images/info.svg';
 
 import Button from '../Button';
 import TextLink from '../TextLink';
+
 import * as styles from './index.module.scss';
 
 type Props = {

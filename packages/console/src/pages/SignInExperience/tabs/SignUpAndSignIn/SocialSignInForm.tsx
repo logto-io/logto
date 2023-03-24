@@ -6,6 +6,7 @@ import FormField from '@/components/FormField';
 
 import type { SignInExperienceForm } from '../../types';
 import * as styles from '../index.module.scss';
+
 import SocialConnectorEditBox from './components/SocialConnectorEditBox';
 
 function SocialSignInForm() {

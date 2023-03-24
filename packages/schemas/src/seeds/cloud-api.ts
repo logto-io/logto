@@ -2,6 +2,7 @@ import { generateStandardId } from '@logto/core-kit';
 
 import type { CreateScope, Role } from '../index.js';
 import { AdminTenantRole } from '../types/index.js';
+
 import type { UpdateAdminData } from './management-api.js';
 import { adminTenantId } from './tenant.js';
 

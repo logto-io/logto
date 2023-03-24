@@ -9,9 +9,9 @@ import {
   mockUserListResponse,
   mockUserResponse,
 } from '#src/__mocks__/index.js';
-import Libraries from '#src/tenants/Libraries.js';
-import Queries from '#src/tenants/Queries.js';
-import { MockTenant, Partial2 } from '#src/test-utils/tenant.js';
+import type Libraries from '#src/tenants/Libraries.js';
+import type Queries from '#src/tenants/Queries.js';
+import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;

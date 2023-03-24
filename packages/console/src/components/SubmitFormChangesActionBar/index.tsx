@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 
 import Button from '../Button';
+
 import * as styles from './index.module.scss';
 
 type Props = {

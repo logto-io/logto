@@ -1,5 +1,5 @@
-import { generateKeyPair } from 'crypto';
-import { promisify } from 'util';
+import { generateKeyPair } from 'node:crypto';
+import { promisify } from 'node:util';
 
 import { generateStandardId } from '@logto/core-kit';
 
