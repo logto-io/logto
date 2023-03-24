@@ -22,6 +22,7 @@ function Tenants({ data, onAdd }: Props) {
     try {
       onAdd(await api.post('api/tenants').json<TenantInfo>());
     } catch {
+      // Note: this is intended to cause the app to crash.
       throw new Error('Failed to create tenant.');
     }
   }, [api, onAdd]);

@@ -22,6 +22,7 @@ function Protected() {
         const data = await api.get('/api/tenants').json<TenantInfo[]>();
         setTenants(data);
       } catch {
+        // Note: this is intended to cause the app to crash.
         throw new Error('Failed to load tenants.');
       }
     };
