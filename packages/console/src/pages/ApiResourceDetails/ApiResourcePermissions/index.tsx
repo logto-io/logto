@@ -14,8 +14,9 @@ import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import CreatePermissionModal from './components/CreatePermissionModal';
 import type { ApiResourceDetailsOutletContext } from '../types';
+
+import CreatePermissionModal from './components/CreatePermissionModal';
 
 const pageSize = defaultPageSize;
 

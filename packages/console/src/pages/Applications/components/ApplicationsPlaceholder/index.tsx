@@ -9,8 +9,9 @@ import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import { applicationTypeI18nKey } from '@/types/applications';
 
-import * as styles from './index.module.scss';
 import TypeDescription from '../TypeDescription';
+
+import * as styles from './index.module.scss';
 
 const defaultAppName = 'My App';
 

@@ -3,7 +3,7 @@
  * - [initialize_keystore.js](https://github.com/panva/node-oidc-provider/blob/9da61e9c9dc6152cd1140d42ea06abe1d812c286/lib/helpers/initialize_keystore.js#L13-L36)
  */
 
-import { createHash } from 'crypto';
+import { createHash } from 'node:crypto';
 
 import type { JWK, KeyLike } from 'jose';
 import { exportJWK as joseExportJWK } from 'jose';

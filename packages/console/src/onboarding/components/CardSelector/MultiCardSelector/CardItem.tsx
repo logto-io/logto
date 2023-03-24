@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { Tooltip } from '@/components/Tip';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './CardItem.module.scss';
 import type { MultiCardSelectorOption } from '../types';
+
+import * as styles from './CardItem.module.scss';
 
 type Props = {
   option: MultiCardSelectorOption;

@@ -3,8 +3,9 @@ import classNames from 'classnames';
 import CardTitle from '@/components/CardTitle';
 import Spacer from '@/components/Spacer';
 
-import * as styles from './index.module.scss';
 import * as pageStyles from '../../index.module.scss';
+
+import * as styles from './index.module.scss';
 
 function Skeleton() {
   return (

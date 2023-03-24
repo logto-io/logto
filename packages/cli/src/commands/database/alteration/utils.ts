@@ -1,12 +1,13 @@
-import { existsSync } from 'fs';
-import fs from 'fs/promises';
+import { existsSync } from 'node:fs';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import path from 'path';
 
 import { findPackage } from '@logto/shared';
 
-import type { AlterationFile } from './type.js';
 import { getPathInModule } from '../../../utils.js';
+
+import type { AlterationFile } from './type.js';
 
 const currentDirname = path.dirname(fileURLToPath(import.meta.url));
 const alterationFilenameRegex = /-([\d.]+)-?.*\.js$/;

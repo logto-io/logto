@@ -3,7 +3,6 @@ import { conditionalString } from '@silverhand/essentials';
 
 import { authedAdminApi } from './api.js';
 
-// eslint-disable-next-line unicorn/prevent-abbreviations
 export const getLogs = async (params?: URLSearchParams) =>
   authedAdminApi.get('logs?' + conditionalString(params?.toString())).json<Log[]>();
 

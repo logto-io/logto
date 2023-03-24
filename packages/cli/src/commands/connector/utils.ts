@@ -1,8 +1,8 @@
-import { exec } from 'child_process';
-import { existsSync } from 'fs';
-import fs from 'fs/promises';
-import path from 'path';
-import { promisify } from 'util';
+import { exec } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { promisify } from 'node:util';
 
 import { assert, conditionalString, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';

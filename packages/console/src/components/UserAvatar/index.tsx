@@ -4,8 +4,9 @@ import classNames from 'classnames';
 
 import DefaultAvatar from '@/assets/images/default-avatar.svg';
 
-import * as styles from './index.module.scss';
 import ImageWithErrorFallback from '../ImageWithErrorFallback';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;

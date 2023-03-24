@@ -1,8 +1,8 @@
-import { execSync } from 'child_process';
-import { createWriteStream, existsSync } from 'fs';
-import { readdir, readFile } from 'fs/promises';
-import { createRequire } from 'module';
-import path from 'path';
+import { execSync } from 'node:child_process';
+import { createWriteStream, existsSync } from 'node:fs';
+import { readdir, readFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
+import path from 'node:path';
 
 import type { Optional } from '@silverhand/essentials';
 import { conditionalString } from '@silverhand/essentials';

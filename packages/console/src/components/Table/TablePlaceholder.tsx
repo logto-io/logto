@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 import useTheme from '@/hooks/use-theme';
 
-import * as styles from './TablePlaceholder.module.scss';
 import TextLink from '../TextLink';
+
+import * as styles from './TablePlaceholder.module.scss';
 
 type Props = {
   image: ReactNode;

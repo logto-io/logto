@@ -3,11 +3,12 @@ import type { ReactNode } from 'react';
 
 import Close from '@/assets/images/close.svg';
 
-import * as styles from './index.module.scss';
 import Card from '../Card';
 import type { Props as CardTitleProps } from '../CardTitle';
 import CardTitle from '../CardTitle';
 import IconButton from '../IconButton';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   children: ReactNode;

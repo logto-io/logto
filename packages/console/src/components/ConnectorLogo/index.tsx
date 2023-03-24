@@ -4,8 +4,9 @@ import classNames from 'classnames';
 
 import useTheme from '@/hooks/use-theme';
 
-import * as styles from './index.module.scss';
 import ImageWithErrorFallback from '../ImageWithErrorFallback';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;

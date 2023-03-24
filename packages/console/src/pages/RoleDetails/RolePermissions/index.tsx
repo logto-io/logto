@@ -14,8 +14,9 @@ import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import AssignPermissionsModal from './components/AssignPermissionsModal';
 import type { RoleDetailsOutletContext } from '../types';
+
+import AssignPermissionsModal from './components/AssignPermissionsModal';
 
 const pageSize = defaultPageSize;
 

@@ -13,8 +13,9 @@ import TextInput from '@/components/TextInput';
 import Textarea from '@/components/Textarea';
 import { jsonValidator } from '@/utils/validator';
 
-import * as styles from './ConfigForm.module.scss';
 import type { ConnectorFormType } from '../../types';
+
+import * as styles from './ConfigForm.module.scss';
 
 type Props = {
   formItems: ConnectorConfigFormItem[];

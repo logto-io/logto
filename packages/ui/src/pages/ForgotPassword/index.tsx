@@ -9,8 +9,9 @@ import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import { passwordIdentifierStateGuard } from '@/types/guard';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
-import ForgotPasswordForm from './ForgotPasswordForm';
 import ErrorPage from '../ErrorPage';
+
+import ForgotPasswordForm from './ForgotPasswordForm';
 
 const ForgotPassword = () => {
   const { isForgotPasswordEnabled, enabledMethodSet } = useForgotPasswordSettings();

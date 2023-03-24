@@ -4,8 +4,9 @@ import type { TFuncKey } from 'react-i18next';
 import NavBar from '@/components/NavBar';
 import usePlatform from '@/hooks/use-platform';
 
-import * as styles from './index.module.scss';
 import { InlineNotification } from '../../components/Notification';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   title?: TFuncKey;

@@ -7,6 +7,8 @@ import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaCors from '#src/middleware/koa-cors.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
+import koaAuth from '../middleware/koa-auth/index.js';
+
 import adminUserRoleRoutes from './admin-user-role.js';
 import adminUserRoutes from './admin-user.js';
 import applicationRoutes from './application.js';
@@ -28,7 +30,6 @@ import type { AnonymousRouter, AuthedRouter } from './types.js';
 import userAssetsRoutes from './user-assets.js';
 import verificationCodeRoutes from './verification-code.js';
 import wellKnownRoutes from './well-known.js';
-import koaAuth from '../middleware/koa-auth/index.js';
 
 const createRouters = (tenant: TenantContext) => {
   const interactionRouter: AnonymousRouter = new Router();

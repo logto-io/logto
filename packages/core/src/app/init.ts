@@ -1,5 +1,5 @@
-import fs from 'fs/promises';
-import http2 from 'http2';
+import fs from 'node:fs/promises';
+import http2 from 'node:http2';
 
 import { appInsights } from '@logto/shared/app-insights';
 import { toTitle, trySafe } from '@silverhand/essentials';

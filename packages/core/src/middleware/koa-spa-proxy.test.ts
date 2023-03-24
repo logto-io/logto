@@ -12,7 +12,7 @@ const mockProxyMiddleware = jest.fn();
 const mockStaticMiddleware = jest.fn();
 const mountedApps = Object.values(UserApps);
 
-mockEsmDefault('fs/promises', () => ({
+mockEsmDefault('node:fs/promises', () => ({
   readdir: jest.fn().mockResolvedValue(['sign-in']),
 }));
 

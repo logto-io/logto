@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 
 import { Ring as Spinner } from '@/components/Spinner';
 
-import * as styles from './index.module.scss';
 import type DangerousRaw from '../DangerousRaw';
+
+import * as styles from './index.module.scss';
 
 export type ButtonType =
   | 'primary'

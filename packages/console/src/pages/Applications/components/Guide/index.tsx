@@ -13,10 +13,11 @@ import DetailsSummary from '@/mdx-components/DetailsSummary';
 import type { SupportedSdk } from '@/types/applications';
 import { applicationTypeAndSdkTypeMappings } from '@/types/applications';
 
-import * as styles from './index.module.scss';
 import GuideHeader from '../GuideHeader';
 import SdkSelector from '../SdkSelector';
 import StepsSkeleton from '../StepsSkeleton';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   app?: Application;

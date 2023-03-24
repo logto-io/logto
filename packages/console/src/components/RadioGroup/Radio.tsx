@@ -4,8 +4,9 @@ import type { KeyboardEventHandler, ReactElement, ReactNode } from 'react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import * as styles from './Radio.module.scss';
 import type DangerousRaw from '../DangerousRaw';
+
+import * as styles from './Radio.module.scss';
 
 function Check() {
   return (

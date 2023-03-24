@@ -5,8 +5,9 @@ import SetPassword from '@/containers/SetPassword';
 import { useSieMethods } from '@/hooks/use-sie';
 import { passwordMinLength } from '@/utils/form';
 
-import useUsernamePasswordRegister from './use-username-password-register';
 import ErrorPage from '../ErrorPage';
+
+import useUsernamePasswordRegister from './use-username-password-register';
 
 const RegisterPassword = () => {
   const { signUpMethods } = useSieMethods();

@@ -3,8 +3,9 @@ import type { TFuncKey } from 'react-i18next';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 
-import useSetUsername from './use-set-username';
 import IdentifierProfileForm from '../IdentifierProfileForm';
+
+import useSetUsername from './use-set-username';
 
 type Props = {
   notification?: TFuncKey;

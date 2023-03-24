@@ -1,5 +1,5 @@
-import { lstat } from 'fs/promises';
-import path from 'path';
+import { lstat } from 'node:fs/promises';
+import path from 'node:path';
 
 import { conditional } from '@silverhand/essentials';
 import { findUp, pathExists } from 'find-up';

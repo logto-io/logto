@@ -13,11 +13,12 @@ import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import Broadcast from '@/onboarding/components/Broadcast';
 
+import { getPath } from '../ConsoleContent/Sidebar';
+import { useSidebarMenuItems } from '../ConsoleContent/Sidebar/hook';
+
 import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
 import { type AppContentOutletContext } from './types';
-import { getPath } from '../ConsoleContent/Sidebar';
-import { useSidebarMenuItems } from '../ConsoleContent/Sidebar/hook';
 
 function AppContent() {
   const { isAuthenticated, isLoading: isLogtoLoading, error, signIn } = useLogto();

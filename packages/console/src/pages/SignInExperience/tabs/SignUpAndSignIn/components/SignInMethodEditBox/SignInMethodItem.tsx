@@ -13,8 +13,9 @@ import { Tooltip } from '@/components/Tip';
 import { signInIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignInMethod } from '@/pages/SignInExperience/types';
 
-import * as styles from './index.module.scss';
 import ConnectorSetupWarning from '../ConnectorSetupWarning';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   signInMethod: SignInMethod;

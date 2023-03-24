@@ -1,8 +1,9 @@
+import TabWrapper from '../../components/TabWrapper';
+import * as styles from '../index.module.scss';
+
 import AuthenticationForm from './AuthenticationForm';
 import LanguagesForm from './LanguagesForm';
 import TermsForm from './TermsForm';
-import TabWrapper from '../../components/TabWrapper';
-import * as styles from '../index.module.scss';
 
 type Props = {
   isActive: boolean;

@@ -1,5 +1,5 @@
-import { readdir, readFile } from 'fs/promises';
-import path from 'path';
+import { readdir, readFile } from 'node:fs/promises';
+import path from 'node:path';
 
 import {
   createDefaultAdminConsoleConfig,
@@ -22,13 +22,14 @@ import type { DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
 import { raw } from 'slonik-sql-tag-raw';
 
-import { appendAdminConsoleRedirectUris } from './cloud.js';
-import { seedOidcConfigs } from './oidc-config.js';
-import { assignScopesToRole, createTenant, seedAdminData } from './tenant.js';
 import { insertInto } from '../../../database.js';
 import { getDatabaseName } from '../../../queries/database.js';
 import { updateDatabaseTimestamp } from '../../../queries/system.js';
 import { getPathInModule, log } from '../../../utils.js';
+
+import { appendAdminConsoleRedirectUris } from './cloud.js';
+import { seedOidcConfigs } from './oidc-config.js';
+import { assignScopesToRole, createTenant, seedAdminData } from './tenant.js';
 
 const getExplicitOrder = (query: string) => {
   const matched = /\/\*\s*init_order\s*=\s*([\d.]+)\s*\*\//.exec(query)?.[1];

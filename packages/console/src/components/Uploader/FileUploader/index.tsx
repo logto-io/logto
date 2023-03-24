@@ -9,8 +9,9 @@ import UploaderIcon from '@/assets/images/upload.svg';
 import useApi from '@/hooks/use-api';
 import { convertToFileExtensionArray } from '@/utils/uploader';
 
-import * as styles from './index.module.scss';
 import { Ring } from '../../Spinner';
+
+import * as styles from './index.module.scss';
 
 export type Props = {
   maxSize: number; // In bytes

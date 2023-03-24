@@ -22,9 +22,10 @@ import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
+import type { UserDetailsOutletContext } from '../types';
+
 import AssignRolesModal from './components/AssignRolesModal';
 import * as styles from './index.module.scss';
-import type { UserDetailsOutletContext } from '../types';
 
 const pageSize = defaultPageSize;
 

@@ -3,7 +3,6 @@ import type { Context } from 'koa';
 
 import type TenantContext from '#src/tenants/TenantContext.js';
 
-import verifyUserAccount from './user-identity-verification.js';
 import type {
   RegisterInteractionResult,
   SignInInteractionResult,
@@ -11,6 +10,8 @@ import type {
   AccountVerifiedInteractionResult,
 } from '../types/index.js';
 import { storeInteractionResult } from '../utils/interaction.js';
+
+import verifyUserAccount from './user-identity-verification.js';
 
 type InteractionResult =
   | RegisterInteractionResult

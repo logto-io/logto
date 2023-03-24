@@ -1,9 +1,10 @@
 import { generateDarkColor } from '@logto/core-kit';
 
-import { adminTenantId, defaultTenantId } from './tenant.js';
 import type { CreateSignInExperience } from '../db-entries/index.js';
 import { SignInMode } from '../db-entries/index.js';
 import { SignInIdentifier } from '../foundations/index.js';
+
+import { adminTenantId, defaultTenantId } from './tenant.js';
 
 const defaultPrimaryColor = '#6139F6';
 

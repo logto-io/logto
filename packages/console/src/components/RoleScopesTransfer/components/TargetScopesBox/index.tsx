@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 
 import * as transferLayout from '@/scss/transfer.module.scss';
 
-import * as styles from './index.module.scss';
 import TargetScopeItem from '../TargetScopeItem';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   selectedScopes: ScopeResponse[];

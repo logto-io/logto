@@ -8,8 +8,9 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { transpileLogtoConnector } from '#src/utils/connectors/index.js';
 
-import type { AuthedMeRouter } from './types.js';
 import type { RouterInitArgs } from '../routes/types.js';
+
+import type { AuthedMeRouter } from './types.js';
 
 /**
  * This social API route is meant for linking social accounts in Logto Cloud AC.

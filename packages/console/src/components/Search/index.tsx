@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 import SearchIcon from '@/assets/images/search.svg';
 
-import * as styles from './index.module.scss';
 import Button from '../Button';
 import TextInput from '../TextInput';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   defaultValue?: string;

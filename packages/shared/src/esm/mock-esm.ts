@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 export type WithEsmMock = {
   // Copied from `@jest/globals`

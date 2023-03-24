@@ -3,9 +3,10 @@ import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
 
+import * as modalStyles from '../../scss/modal.module.scss';
+
 import * as styles from './MobileModal.module.scss';
 import type { ModalProps } from './type';
-import * as modalStyles from '../../scss/modal.module.scss';
 
 const MobileModal = ({
   className,

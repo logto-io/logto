@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 import Card from '@/components/Card';
 import FormField from '@/components/FormField';
 
-import SocialConnectorEditBox from './components/SocialConnectorEditBox';
 import type { SignInExperienceForm } from '../../types';
 import * as styles from '../index.module.scss';
+
+import SocialConnectorEditBox from './components/SocialConnectorEditBox';
 
 function SocialSignInForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

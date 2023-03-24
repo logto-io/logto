@@ -1,6 +1,6 @@
-import fs from 'fs/promises';
-import { createServer } from 'http';
-import path from 'path';
+import fs from 'node:fs/promises';
+import { createServer } from 'node:http';
+import path from 'node:path';
 
 import { mockSmsVerificationCodeFileName } from '@logto/connector-kit';
 import { RequestError } from 'got';

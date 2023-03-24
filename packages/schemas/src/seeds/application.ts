@@ -1,12 +1,13 @@
 import { generateStandardId } from '@logto/core-kit';
 
-import { adminTenantId } from './tenant.js';
 import type {
   Application,
   CreateApplication,
   CreateApplicationsRole,
 } from '../db-entries/index.js';
 import { ApplicationType } from '../db-entries/index.js';
+
+import { adminTenantId } from './tenant.js';
 
 /**
  * The fixed application ID for Admin Console.

@@ -7,12 +7,13 @@ import { useEffect, useImperativeHandle, useRef, forwardRef } from 'react';
 import ClearIcon from '@/assets/icons/clear-icon.svg';
 import IconButton from '@/components/Button/IconButton';
 
+import InputField from '../InputField';
+
 import AnimatedPrefix from './AnimatedPrefix';
 import CountryCodeSelector from './CountryCodeSelector';
 import type { IdentifierInputType, IdentifierInputValue } from './use-smart-input-field';
 import useSmartInputField from './use-smart-input-field';
 import { getInputHtmlProps } from './utils';
-import InputField from '../InputField';
 
 export type { IdentifierInputType, IdentifierInputValue } from './use-smart-input-field';
 

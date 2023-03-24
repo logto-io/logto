@@ -14,9 +14,10 @@ import TextLink from '@/components/TextLink';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
 
-import * as styles from './index.module.scss';
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { checkLocationState, handleError } from '../../utils';
+
+import * as styles from './index.module.scss';
 
 type FormFields = {
   password: string;

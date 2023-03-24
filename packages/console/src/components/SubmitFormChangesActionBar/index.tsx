@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 
-import * as styles from './index.module.scss';
 import Button from '../Button';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   isOpen: boolean;

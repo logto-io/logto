@@ -3,8 +3,9 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { SemVer, compare, eq, gt } from 'semver';
 
-import type { AlterationFile } from './type.js';
 import { findLastIndex, isTty, log } from '../../../utils.js';
+
+import type { AlterationFile } from './type.js';
 
 const getVersionStringFromFilename = (filename: string) =>
   filename.split('-')[0]?.replaceAll('_', '-') ?? 'unknown';

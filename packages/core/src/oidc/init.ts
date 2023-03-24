@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 
 import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';

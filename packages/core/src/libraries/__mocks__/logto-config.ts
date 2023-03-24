@@ -1,4 +1,4 @@
-import { generateKeyPairSync } from 'crypto';
+import { generateKeyPairSync } from 'node:crypto';
 
 import type { LogtoOidcConfigType } from '@logto/schemas';
 import { LogtoOidcConfigKey } from '@logto/schemas';

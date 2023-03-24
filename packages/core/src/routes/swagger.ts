@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises';
+import { readFile } from 'node:fs/promises';
 
 import { toTitle } from '@silverhand/essentials';
 import { load } from 'js-yaml';

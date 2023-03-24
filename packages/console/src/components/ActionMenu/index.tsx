@@ -4,10 +4,11 @@ import { useRef, useState } from 'react';
 
 import type { HorizontalAlignment } from '@/types/positioning';
 
-import ActionMenuButton from './ActionMenuButton';
-import * as styles from './index.module.scss';
 import type { Props as ButtonProps } from '../Button';
 import Dropdown from '../Dropdown';
+
+import ActionMenuButton from './ActionMenuButton';
+import * as styles from './index.module.scss';
 
 export { default as ActionMenuItem } from '../Dropdown/DropdownItem';
 

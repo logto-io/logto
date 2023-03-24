@@ -7,8 +7,9 @@ import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
 
-import SocialIdentityNotification from './SocialIdentityNotification';
 import IdentifierProfileForm from '../IdentifierProfileForm';
+
+import SocialIdentityNotification from './SocialIdentityNotification';
 
 export type VerificationCodeProfileType = Exclude<MissingProfile, 'username' | 'password'>;
 

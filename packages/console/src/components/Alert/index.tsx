@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import Info from '@/assets/images/info.svg';
 
-import * as styles from './index.module.scss';
 import Button from '../Button';
 import TextLink from '../TextLink';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   severity?: 'info';

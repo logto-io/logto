@@ -23,10 +23,11 @@ import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { withAppInsights } from '@/utils/app-insights';
 
+import UserAccountInformation from '../../components/UserAccountInformation';
+
 import ResetPasswordForm from './components/ResetPasswordForm';
 import * as styles from './index.module.scss';
 import { type UserDetailsOutletContext } from './types';
-import UserAccountInformation from '../../components/UserAccountInformation';
 
 function UserDetails() {
   const { pathname } = useLocation();

@@ -9,10 +9,11 @@ import { deduplicate, noop } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
-import { generateOidcCookieKey, generateOidcPrivateKey } from './utils.js';
 import { createPoolFromConfig } from '../../database.js';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config.js';
 import { log } from '../../utils.js';
+
+import { generateOidcCookieKey, generateOidcPrivateKey } from './utils.js';
 
 const validKeysDisplay = chalk.green(logtoConfigKeys.join(', '));
 

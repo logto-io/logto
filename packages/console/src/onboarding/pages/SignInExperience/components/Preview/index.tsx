@@ -7,8 +7,9 @@ import LivePreviewButton from '@/components/LivePreviewButton';
 import SignInExperiencePreview from '@/components/SignInExperiencePreview';
 import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 
-import * as styles from './index.module.scss';
 import PlatformTabs from '../PlatformTabs';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   signInExperience?: SignInExperience;

@@ -3,8 +3,9 @@ import type { User } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import * as styles from './index.module.scss';
 import UserAvatar from '../UserAvatar';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;

@@ -8,12 +8,6 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
-import ConnectorSetupWarning from './components/ConnectorSetupWarning';
-import {
-  createSignInMethod,
-  getSignInMethodPasswordCheckState,
-  getSignInMethodVerificationCodeCheckState,
-} from './utils';
 import {
   signUpIdentifierPhrase,
   signUpIdentifiers,
@@ -26,6 +20,13 @@ import {
   isVerificationRequiredSignUpIdentifiers,
 } from '../../utils/identifier';
 import * as styles from '../index.module.scss';
+
+import ConnectorSetupWarning from './components/ConnectorSetupWarning';
+import {
+  createSignInMethod,
+  getSignInMethodPasswordCheckState,
+  getSignInMethodVerificationCodeCheckState,
+} from './utils';
 
 function SignUpForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

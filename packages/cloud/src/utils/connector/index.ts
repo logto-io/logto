@@ -1,6 +1,6 @@
-import { existsSync } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { loadConnectorFactories as _loadConnectorFactories } from '@logto/cli/lib/connector/index.js';
 import { connectorDirectory } from '@logto/cli/lib/constants.js';

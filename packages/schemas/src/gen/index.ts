@@ -1,9 +1,9 @@
 // LOG-88: Refactor '@logto/schemas' type gen
 // Consider add the better assert into `essentials` package
-// eslint-disable-next-line no-restricted-imports
-import assert from 'assert';
-import fs from 'fs/promises';
-import path from 'path';
+
+import assert from 'node:assert';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 import { conditionalString, deduplicate } from '@silverhand/essentials';
 import camelcase from 'camelcase';

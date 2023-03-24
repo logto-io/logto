@@ -5,8 +5,9 @@ import RequestErrorDarkImage from '@/assets/images/request-error-dark.svg';
 import RequestErrorImage from '@/assets/images/request-error.svg';
 import useTheme from '@/hooks/use-theme';
 
-import * as styles from './TableError.module.scss';
 import Button from '../Button';
+
+import * as styles from './TableError.module.scss';
 
 type Props = {
   title?: string;

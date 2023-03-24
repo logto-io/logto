@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 import type { AllConnector, CreateConnector } from '@logto/connector-kit';
 import connectorKitMeta from '@logto/connector-kit/package.json' assert { type: 'json' };

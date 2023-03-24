@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 import { fetchTokenByRefreshToken } from '@logto/js';
 import { defaultManagementApi, InteractionEvent } from '@logto/schemas';

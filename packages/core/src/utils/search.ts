@@ -116,12 +116,10 @@ const getSearchMetadata = (searchParameters: URLSearchParams, allowedFields?: st
   return { joint, matchMode, matchValues, isCaseSensitive };
 };
 
-/* eslint-disable unicorn/prevent-abbreviations */
 export const parseSearchParamsForSearch = (
   searchParams: URLSearchParams,
   allowedFields?: string[]
 ): Search => {
-  /* eslint-enable unicorn/prevent-abbreviations */
   const { matchMode, matchValues, ...rest } = getSearchMetadata(searchParams, allowedFields);
 
   // Validate and generate result

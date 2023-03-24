@@ -2,9 +2,10 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import * as styles from './index.module.scss';
 import Card from '../Card';
 import TextLink from '../TextLink';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   title: AdminConsoleKey;

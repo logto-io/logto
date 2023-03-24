@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 import { adminTenantId } from '@logto/schemas';
 import type { GlobalValues } from '@logto/shared';

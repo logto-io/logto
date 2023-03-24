@@ -25,7 +25,6 @@ import useConfigs from '@/hooks/use-configs';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import * as styles from './index.module.scss';
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
 import { splitMarkdownByTitle } from '../../utils';
@@ -33,6 +32,8 @@ import BasicForm from '../ConnectorForm/BasicForm';
 import ConfigForm from '../ConnectorForm/ConfigForm';
 import { useConnectorFormConfigParser } from '../ConnectorForm/hooks';
 import { initFormData } from '../ConnectorForm/utils';
+
+import * as styles from './index.module.scss';
 
 const targetErrorCode = 'connector.multiple_target_with_same_platform';
 

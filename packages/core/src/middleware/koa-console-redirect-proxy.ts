@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 import { ossConsolePath } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';

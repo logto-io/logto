@@ -26,12 +26,13 @@ import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 import { withAppInsights } from '@/utils/app-insights';
 
+import CreateForm from '../Connectors/components/CreateForm';
+
 import ConnectorContent from './components/ConnectorContent';
 import ConnectorTabs from './components/ConnectorTabs';
 import ConnectorTypeName from './components/ConnectorTypeName';
 import DeleteConnectorConfirmModal from './components/DeleteConnectorConfirmModal';
 import * as styles from './index.module.scss';
-import CreateForm from '../Connectors/components/CreateForm';
 
 // TODO: refactor path-related operation utils in both Connectors and ConnectorDetails page
 const getConnectorsPathname = (isSocial: boolean) =>

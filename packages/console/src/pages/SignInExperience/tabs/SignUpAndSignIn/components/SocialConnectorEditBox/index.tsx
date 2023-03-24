@@ -6,10 +6,11 @@ import TextLink from '@/components/TextLink';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import type { ConnectorGroup } from '@/types/connector';
 
+import ConnectorSetupWarning from '../ConnectorSetupWarning';
+
 import AddButton from './AddButton';
 import SelectedConnectorItem from './SelectedConnectorItem';
 import * as styles from './index.module.scss';
-import ConnectorSetupWarning from '../ConnectorSetupWarning';
 
 type Props = {
   value: string[];

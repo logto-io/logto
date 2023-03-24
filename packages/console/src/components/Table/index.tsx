@@ -7,12 +7,13 @@ import type { FieldPath, FieldValues } from 'react-hook-form';
 import type { Props as PaginationProps } from '@/components/Pagination';
 import Pagination from '@/components/Pagination';
 
+import OverlayScrollbar from '../OverlayScrollbar';
+
 import TableEmptyWrapper from './TableEmptyWrapper';
 import TableError from './TableError';
 import TableLoading from './TableLoading';
 import * as styles from './index.module.scss';
 import type { Column, RowGroup } from './types';
-import OverlayScrollbar from '../OverlayScrollbar';
 
 type Props<
   TFieldValues extends FieldValues = FieldValues,

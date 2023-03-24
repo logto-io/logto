@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { argon2i } from 'hash-wasm';

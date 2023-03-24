@@ -8,8 +8,9 @@
 import type { Nullable } from '@silverhand/essentials';
 import { useState, isValidElement, type ReactElement, cloneElement, useRef, Children } from 'react';
 
-import * as styles from './index.module.scss';
 import type { Props as TabItemProps } from '../TabItem';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;

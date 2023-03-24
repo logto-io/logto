@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
 
-import * as styles from './index.module.scss';
 import SubmitFormChangesActionBar from '../SubmitFormChangesActionBar';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   autoComplete?: string;

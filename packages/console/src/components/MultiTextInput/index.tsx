@@ -8,12 +8,13 @@ import { useTranslation } from 'react-i18next';
 import CirclePlus from '@/assets/images/circle-plus.svg';
 import Minus from '@/assets/images/minus.svg';
 
-import * as styles from './index.module.scss';
-import type { MultiTextInputError } from './types';
 import Button from '../Button';
 import ConfirmModal from '../ConfirmModal';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
+
+import * as styles from './index.module.scss';
+import type { MultiTextInputError } from './types';
 
 export type Props = {
   title: AdminConsoleKey;
