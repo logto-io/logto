@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
  */
 enum DocumentationLanguage {
   English = 'en',
-  Chinese = 'zh-CN',
 }
 
 const documentationSiteRoot = 'https://docs.logto.io';
