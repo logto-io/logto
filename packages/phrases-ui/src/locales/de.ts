@@ -43,7 +43,7 @@ const translation = {
   description: {
     email: 'Email',
     phone_number: 'Telefonnummer',
-    username: 'benutzername',
+    username: 'Benutzername',
     reminder: 'Erinnerung',
     not_found: '404 Nicht gefunden',
     agree_with_terms: 'Ich akzeptiere die ',
