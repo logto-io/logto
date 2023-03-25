@@ -596,7 +596,7 @@ importers:
       eslint: ^8.34.0
       got: ^12.5.3
       jest: ^29.5.0
-      jest-puppeteer: ^8.0.0
+      jest-puppeteer: ^8.0.6
       node-fetch: ^3.3.0
       openapi-schema-validator: ^12.0.0
       openapi-types: ^12.0.0
@@ -624,7 +624,7 @@ importers:
       eslint: 8.34.0
       got: 12.5.3
       jest: 29.5.0_@types+node@18.11.18
-      jest-puppeteer: 8.0.5_puppeteer@19.2.2
+      jest-puppeteer: 8.0.6_puppeteer@19.2.2
       node-fetch: 3.3.0
       openapi-schema-validator: 12.0.0
       openapi-types: 12.0.0
@@ -9086,8 +9086,8 @@ packages:
       jest-util: 29.5.0
     dev: true
 
-  /jest-environment-puppeteer/8.0.5:
-    resolution: {integrity: sha512-2wE5PRBoROY/8tYeRwU/FENhFANUPmnYyk3Z5Jp09DUQTJdNqqZRc/hifNbb5dg+HhmhCRor5Y1avnxPwYfufg==}
+  /jest-environment-puppeteer/8.0.6:
+    resolution: {integrity: sha512-mhmpVMK9Mnzr4DVAGhGA5yQGmlLv7ty5JW/A8jSz0Dlpbk0sGoyOzwjzgd/4wUAuOx2B3o7BLHbKYpzmGS4UIA==}
     engines: {node: '>=14.0.0'}
     dependencies:
       chalk: 4.1.2
@@ -9214,14 +9214,14 @@ packages:
       jest-resolve: 29.5.0
     dev: true
 
-  /jest-puppeteer/8.0.5_puppeteer@19.2.2:
-    resolution: {integrity: sha512-q6UEat2F0kWksRUrO/ei7WDPA2Xev1j9ndrE+C8b2cb5yBgRZUmpdj5D0rUAkdlXs1viogO8j6KHTB4Fw39QVA==}
+  /jest-puppeteer/8.0.6_puppeteer@19.2.2:
+    resolution: {integrity: sha512-3ZakfoyYfTEtHRWWXZGi14706LGxtP0nVVvoPGry3x4YEV+tyaspGJ295JSgaE3Abxub0p2F1OKVxVo9Oy0fMA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       puppeteer: '>=19'
     dependencies:
       expect-puppeteer: 8.0.5
-      jest-environment-puppeteer: 8.0.5
+      jest-environment-puppeteer: 8.0.6
       puppeteer: 19.2.2
     transitivePeerDependencies:
       - debug
