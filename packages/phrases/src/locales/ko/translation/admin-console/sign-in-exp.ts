@@ -19,7 +19,7 @@ const sign_in_exp = {
     dark_primary_color: '브랜드 색상 (다크 모드)',
     dark_mode: '다크 모드 활성화',
     dark_mode_description: 'Logto가 브랜드 색상에 알맞게 자동으로 다크 모드 테마를 생성해요.',
-    dark_mode_reset_tip: '브랜드 색상에 알맞게 다크 모드 색상 재생성',
+    dark_mode_reset_tip: '브랜드 색상에 알맞게 다크 모드 색상',
     reset: '재생성',
   },
   branding: {
@@ -37,7 +37,7 @@ const sign_in_exp = {
   },
   custom_css: {
     title: '사용자 정의 CSS',
-    css_code_editor_title: '사용자 정의 CSS로 UI를 개인화하세요',
+    css_code_editor_title: '사용자 정의 CSS로 UI 개인화',
     css_code_editor_description1: '사용자 정의 CSS의 예시를 확인하세요.',
     css_code_editor_description2: '<a>{{link}}</a>',
 
@@ -79,12 +79,12 @@ const sign_in_exp = {
       title: '소셜 로그인',
       social_sign_in: '소셜 로그인',
       description:
-        '설정된 필수 ID에 따라서, 사용자가 소셜 연동을 통해 회원가입, 로그인을 할 수 있어요.',
+        '설정된 필수 ID에 따라서 사용자가 소셜 연동을 통해 회원가입, 로그인을 할 수 있어요.',
       add_social_connector: '소셜 연동으로',
       set_up_hint: {
         not_in_list: '리스트에 없나요?',
-        set_up_more: '설정하기',
-        go_to: '다른 소셜 연동으로',
+        set_up_more: '다른 소셜 연동',
+        go_to: '을 설정해 보세요.',
       },
     },
     tip: {
@@ -145,13 +145,13 @@ const sign_in_exp = {
   },
   setup_warning: {
     no_connector_sms:
-      'SMS 연동 설정이 아직 없어요. 이 구성을 완료하기 전에는 사용자가이 로그인 방식으로 로그인 할 수 없습니다. <a>{{link}}</a> "연동"으로',
+      'SMS 연동 설정이 아직 없어요. 이 구성을 완료하기 전에는 사용자가 이 로그인 방식으로 로그인 할 수 없어요. <a>연동 설정</a>에서 설정하세요.',
     no_connector_email:
-      '이메일 연동 설정이 아직 없어요. 이 구성을 완료하기 전에는 사용자가이 로그인 방식으로 로그인 할 수 없습니다. <a>{{link}}</a> "연동"으로',
+      '이메일 연동 설정이 아직 없어요. 이 구성을 완료하기 전에는 사용자가 이 로그인 방식으로 로그인 할 수 없어요. <a>연동 설정</a>에서 설정하세요.',
     no_connector_social:
-      '소셜 연동 설정이 아직 없어요. 이 구성을 완료하기 전에는 사용자가이 로그인 방식으로 로그인 할 수 없습니다. <a>{{link}}</a> "연동"으로',
+      '소셜 연동 설정이 아직 없어요. 이 구성을 완료하기 전에는 사용자가 이 로그인 방식으로 로그인 할 수 없어요. <a>연동 설정</a>에서 설정하세요.',
     no_added_social_connector:
-      '보다 많은 소셜 연동들을 설정하여, 고객에게 보다 나은 경험을 제공해보세요.',
+      '보다 많은 소셜 연동들을 설정하여 고객에게 보다 나은 경험을 제공해보세요.',
     setup_link: '설정',
   },
   save_alert: {
