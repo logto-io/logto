@@ -1,7 +1,7 @@
 const applications = {
   title: '어플리케이션',
   subtitle:
-    '인증에 Logto를 사용할 모바일, 단일 페이지, machine to machine 또는 기존 어플리케이션을 설정할 수 있어요.',
+    '인증에 Logto를 사용할 모바일, 단일 페이지, Machine to Machine 또는 기존 어플리케이션을 설정할 수 있어요.',
   create: '어플리케이션 생성',
   application_name: '어플리케이션 이름',
   application_name_placeholder: '나의 앱',
@@ -42,9 +42,9 @@ const applications = {
     subtitle: '앱 설정을 마치기 위해 아래 단계를 따라주세요. SDK 종류를 선택해 주세요.',
     description_by_sdk: '아래 과정을 따라서 Logto를 {{sdk}} 앱과 빠르게 연동해 보세요.',
   },
-  placeholder_title: 'Select an application type to continue', // UNTRANSLATED
+  placeholder_title: '애플리케이션 유형을 선택하여 계속하세요',
   placeholder_description:
-    'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.', // UNTRANSLATED
+    'Logto는 OIDC용 애플리케이션 엔티티를 사용하여 앱 식별, 로그인 관리 및 감사 로그 생성과 같은 작업을 지원합니다.',
 };
 
 export default applications;

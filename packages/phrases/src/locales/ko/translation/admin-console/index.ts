@@ -27,7 +27,7 @@ import users from './users.js';
 import welcome from './welcome.js';
 
 const admin_console = {
-  title: '관리자 Console',
+  title: '관리자 콘솔',
   admin_user: '관리자',
   system_app: '시스템',
   menu,

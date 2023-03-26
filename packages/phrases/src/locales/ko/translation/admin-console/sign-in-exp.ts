@@ -1,15 +1,15 @@
 const sign_in_exp = {
   title: '로그인 경험',
-  description: '로그인 화면을 브랜드에 맞게 커스터마이징하고 실시간으로 확인해 보세요.',
+  description: '로그인 화면을 브랜드에 맞게 사용자화하고 실시간으로 확인해 보세요.',
   tabs: {
     branding: '브랜딩',
     sign_up_and_sign_in: '회원가입/로그인',
     others: '기타',
   },
   welcome: {
-    title: 'Customize sign-in experience', // UNTRANSLATED
+    title: '로그인 경험 사용자화',
     description:
-      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.', // UNTRANSLATED
+      '첫 로그인 설정으로 빠르게 시작하세요. 이 가이드가 필요한 모든 설정에 대해 안내할 거예요.',
     get_started: '시작하기',
     apply_remind: '이 계정이 관리하는 모든 앱의 로그인 경험이 수정되는 것을 주의해 주세요.',
   },
@@ -25,25 +25,25 @@ const sign_in_exp = {
   branding: {
     title: '브랜딩 영역',
     ui_style: '스타일',
-    favicon: 'Favicon', // UNTRANSLATED
+    favicon: '파비콘',
     logo_image_url: '앱 로고 이미지 URL',
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: '앱 로고 이미지 URL (다크 모드)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'App logo', // UNTRANSLATED
-    dark_logo_image: 'App logo (Dark)', // UNTRANSLATED
-    logo_image_error: 'App logo: {{error}}', // UNTRANSLATED
-    favicon_error: 'Favicon: {{error}}', // UNTRANSLATED
+    logo_image: '앱 로고',
+    dark_logo_image: '앱 로고 (다크 모드)',
+    logo_image_error: '앱 로고: {{error}}',
+    favicon_error: '파비콘: {{error}}',
   },
   custom_css: {
-    title: 'Custom CSS', // UNTRANSLATED
-    css_code_editor_title: 'Personalize your UI with Custom CSS', // UNTRANSLATED
-    css_code_editor_description1: 'See the example of Custom CSS.', // UNTRANSLATED
-    css_code_editor_description2: '<a>{{link}}</a>', // UNTRANSLATED
+    title: '사용자 정의 CSS',
+    css_code_editor_title: '사용자 정의 CSS로 UI를 개인화하세요',
+    css_code_editor_description1: '사용자 정의 CSS의 예시를 확인하세요.',
+    css_code_editor_description2: '<a>{{link}}</a>',
 
-    css_code_editor_description_link_content: 'Learn more', // UNTRANSLATED
+    css_code_editor_description_link_content: '더 알아보기',
     css_code_editor_content_placeholder:
-      'Enter your custom CSS to tailor the styles of anything to your exact specifications. Express your creativity and make your UI stand out.', // UNTRANSLATED
+      '사용자 정의 CSS를 입력하여 원하는 대로 스타일을 조정할 수 있어요. 창의성을 표현하고 UI를 돋보이게 만드세요.',
   },
   sign_up_and_sign_in: {
     identifiers_email: '이메일 주소',
@@ -59,7 +59,7 @@ const sign_in_exp = {
       identifier_description:
         '회원가입 ID는 계정을 생성하기 위해 필수이며, 회원가입 화면에서 반드시 포함되어야 해요.',
       sign_up_authentication: '회원가입 인증 설정',
-      authentication_description: '선택된 모든 작업들은 사용자가 모두 마무리 해야 해요.',
+      authentication_description: '선택된 모든 작업들은 사용자가 모두 마무리해야 해요.',
       set_a_password_option: '비밀번호 생성',
       verify_at_sign_up_option: '회원가입 인증',
       social_only_creation_description: '(이것은 소셜 전용 계정 생성에 적용돼요.)',
@@ -165,11 +165,11 @@ const sign_in_exp = {
   },
   preview: {
     title: '로그인 화면 미리보기',
-    live_preview: 'Live preview', // UNTRANSLATED
-    live_preview_tip: 'Save to preview changes', // UNTRANSLATED
-    native: 'Native',
-    desktop_web: 'Desktop 웹',
-    mobile_web: 'Mobile 웹',
+    live_preview: 'Live Preview',
+    live_preview_tip: '저장하여 변경 사항 미리보기',
+    native: '네이티브',
+    desktop_web: '데스크톱 웹',
+    mobile_web: '모바일 웹',
   },
 };
 

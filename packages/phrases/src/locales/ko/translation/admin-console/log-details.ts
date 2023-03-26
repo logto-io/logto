@@ -1,5 +1,5 @@
 const log_details = {
-  back_to_logs: 'Audit 기록으로 돌아가기',
+  back_to_logs: '감사 기록으로 돌아가기',
   back_to_user: '{{name}}으로 돌아가기',
   success: '성공',
   failed: '실패',

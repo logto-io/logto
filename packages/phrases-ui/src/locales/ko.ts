@@ -94,12 +94,12 @@ const translation = {
       '더 나은 보안을 위해 이메일 또는 휴대전화번호를 연동해 주세요.',
     continue_with_more_information: '더 나은 보안을 위해 아래 자세한 내용을 따라 주세요.',
     create_your_account: '계정 생성하기',
-    sign_in_to_your_account: '계정에 로그인해봐',
+    sign_in_to_your_account: '계정에 로그인하세요',
     no_region_code_found: '지역 코드를 찾을 수 없습니다.',
   },
   error: {
-    general_required: `{{types, list(type: disjunction;)}} 필수예요.`,
-    general_invalid: `{{types, list(type: disjunction;)}} 유효하지 않아요.`,
+    general_required: `{{types, list(type: disjunction;)}}은/는 필수예요.`,
+    general_invalid: `{{types, list(type: disjunction;)}}은/는 유효하지 않아요.`,
     username_required: '사용자 이름은 필수예요.',
     password_required: '비밀번호는 필수예요.',
     username_exists: '사용자 이름이 이미 존재해요.',
@@ -109,7 +109,7 @@ const translation = {
     invalid_phone: '휴대전화번호가 유효하지 않아요.',
     password_min_length: '비밀번호는 최소 {{min}} 자리로 이루어져야 해요.',
     passwords_do_not_match: '비밀번호가 일치하지 않아요.',
-    invalid_password: '비밀번호는 최소 {{min}}자 이상이며 문자, 숫자 및 기호의 조합이 필요합니다.',
+    invalid_password: '비밀번호는 최소 {{min}}자 이상이며 문자, 숫자 및 기호의 조합이어야 해요.',
     invalid_passcode: '비밀번호가 유효하지 않아요.',
     invalid_connector_auth: '인증이 유효하지 않아요.',
     invalid_connector_request: '연동 정보가 유효하지 않아요.',
@@ -118,7 +118,7 @@ const translation = {
     timeout: '요청 시간이 초과되었어요. 잠시 후에 다시 시도해 주세요.',
   },
   demo_app: {
-    notification: '알림:로그인 경험을 테스트하기 위해 먼저 계정을 만드는 것이 좋습니다.',
+    notification: '알림:로그인 경험을 테스트하기 위해 먼저 계정을 만드는 것이 좋아요.',
   },
 };
 

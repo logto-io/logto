@@ -1,13 +1,13 @@
 const components = {
   uploader: {
-    action_description: 'Drag and drop or browse', // UNTRANSLATED
-    uploading: 'Uploading...', // UNTRANSLATED
+    action_description: '드래그 앤 드롭 또는 탐색하기',
+    uploading: '업로드 중...',
     image_limit:
-      'Upload image under {{size, number}}KB, {{extensions, list(style: narrow; type: conjunction;)}} only.', // UNTRANSLATED
-    error_upload: 'Something went wrong. File upload failed.', // UNTRANSLATED
-    error_file_size: 'File size is too large. Please upload a file under {{size, number}}KB.', // UNTRANSLATED
+      '{{size, number}}KB 미만의 {{extensions, list(style: narrow; type: conjunction;)}} 파일만 업로드하세요.',
+    error_upload: '오류가 발생했습니다. 파일 업로드에 실패하였습니다.',
+    error_file_size: '파일 크기가 너무 커요. {{size, number}}KB 미만의 파일을 업로드해 주세요.',
     error_file_type:
-      'File type is not supported. {{extensions, list(style: narrow; type: conjunction;)}} only.', // UNTRANSLATED
+      '지원되지 않는 파일 유형이에요. {{extensions, list(style: narrow; type: conjunction;)}} 파일만 사용 가능해요.',
   },
 };
 

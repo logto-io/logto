@@ -9,9 +9,9 @@ const connectors = {
   tab_social: '소셜 연동',
   connector_name: '연동 이름',
   demo_tip:
-    'The maximum number of messages allowed for this demo connector is limited to 100 and is not recommended for deployment in a production environment.', // UNTRANSLATED
+    '이 데모 연동에 허용되는 최대 메시지 수는 100개로 제한되며 실제 운영 환경에서의 배포에는 권장되지 않아요.',
   social_demo_tip:
-    'The demo connector is designed exclusively for demonstration purposes and is not recommended for deployment in a production environment.', // UNTRANSLATED
+    '데모 연동은 데모 전용으로 설계되었으며 실제 운영 환경에 배포하는 것은 권장되지 않습니다.',
   connector_type: '종류',
   connector_status: '로그인 경험',
   connector_status_in_use: '사용 중',
@@ -21,9 +21,9 @@ const connectors = {
       '사용 중이 아님은 로그인 환경에서 이 로그인 방법을 사용하지 않았음을 의미해요. <a>{{link}}</a> 이 로그인 방법을 추가해주세요.',
     go_to_sie: '로그인 경험으로 가서',
   },
-  placeholder_title: 'Social connector', // UNTRANSLATED
+  placeholder_title: '소셜 연동',
   placeholder_description:
-    'Logto has provided many widely used social sign-in connectors meantime you can create your own with standard protocols.', // UNTRANSLATED
+    'Logto는 널리 사용되는 다양한 소셜 로그인 커넥터를 제공하고 있으며, 표준 프로토콜을 사용하여 자신만의 커넥터를 만들 수도 있어요.',
   save_and_done: '저장 및 완료',
   type: {
     email: '이메일 연동',
@@ -36,42 +36,41 @@ const connectors = {
     social: '소셜 연동 추가 및 설정',
   },
   guide: {
-    subtitle: '단계별 가이드를 따라, 연동해 주세요.',
-    general_setting: 'General settings', // UNTRANSLATED
-    parameter_configuration: 'Parameter configuration', // UNTRANSLATED
-    test_connection: 'Test connection', // UNTRANSLATED
-    name: 'Name for social sign-in button', // UNTRANSLATED
-    name_placeholder: 'Enter name for social sign-in button', // UNTRANSLATED
+    subtitle: '단계별 가이드를 따라 연동해 주세요.',
+    general_setting: '일반 설정',
+    parameter_configuration: '매개변수 설정',
+    test_connection: '연결 테스트',
+    name: '소셜 로그인 버튼 이름',
+    name_placeholder: '소셜 로그인 버튼 이름을 입력하세요',
     name_tip: '다음과 같이 연동 이름이 출력돼요. "{{name}}으로 계속하기".',
     logo: '연동 로고 URL',
     logo_placeholder: 'https://your.cdn.domain/logo.png',
     logo_tip: '이 이미지는 연동 버튼에 보여질 거에요.',
-    logo_dark: 'Logo URL for social sign-in button (Dark mode)', // UNTRANSLATED
+    logo_dark: '소셜 로그인에 사용될 로고 URL (다크 모드)',
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
     logo_dark_tip:
-      'Admin Console의 로그인 경험에서 다크 모드를 위한 로고를 활성화한 후 다크 모드용 연동 로고를 설정해 주세요.',
+      '관리자 콘솔의 로그인 경험에서 다크 모드를 위한 로고를 활성화한 후 다크 모드용 연동 로고를 설정해 주세요.',
     logo_dark_collapse: '최소화',
     logo_dark_show: '다크 모드를 위한 로고 설정 보이기',
-    target: '연동 ID 대상',
-    target_placeholder: 'Enter connector identity provider name', // UNTRANSLATED
+    target: '연동 ID 공급자',
+    target_placeholder: '연동 ID 공급자 이름을 입력하세요',
     target_tip:
-      'The value of “IdP name” can be a unique identifier string to distinguish your social identifies. This setting cannot be changed after the connector is built.', // UNTRANSLATED
+      '"IdP 이름"의 값은 소셜 식별자를 구분하기 위한 고유 식별자 문자열이 될 수 있어요. 이 설정은 연동이 만들어진 후에는 변경할 수 없어요.',
     target_tooltip:
-      'Logto의 소셜 연동에서의 "목표"는 소셜 정보의 원천을 뜻해요. Logto의 디자인은 충돌을 피하기 위해서 같은 "목표"를 허용하지 않아요. 연동을 추가한 후에는 값을 변경할 수 없으므로 주의해주세요. <a>자세히 알아보기</a>',
+      'Logto의 소셜 연동에서의 "공급자"는 소셜 정보의 원천을 뜻해요. Logto의 디자인은 충돌을 피하기 위해서 같은 "공급자"를 허용하지 않아요. 연동을 추가한 후에는 값을 변경할 수 없으므로 주의해주세요. <a>자세히 알아보기</a>',
     target_conflict:
-      'The IdP name entered matches the existing <span>name</span>. Using the same idp name may cause unexpected sign-in behavior where users may access the same account through two different connectors.', // UNTRANSLATED
+      '입력한 IdP 이름이 기존 <span>name</span>과 일치해요. 동일한 IdP 이름을 사용하면 사용자가 두 개의 다른 커넥터를 통해 동일한 계정에 액세스할 수 있는 예기치 않은 로그인 동작이 발생할 수 있어요.',
     target_conflict_line2:
-      'If you\'d like to replace the current connector with the same identity provider and allow previous users to sign in without registering again, please delete the <span>name</span> connector and create a new one with the same "IdP name".', // UNTRANSLATED
-    target_conflict_line3:
-      'If you\'d like to connect to a different identity provider, please modify the "IdP name" and proceed.', // UNTRANSLATED
+      '현재 연동을 동일한 ID 공급자로 바꾸고 이전 사용자가 다시 등록하지 않고도 로그인할 수 있도록 하려면 <span>name</span> 커넥터를 삭제하고 동일한 "IdP 이름"으로 새 커넥터를 만드세요.',
+    target_conflict_line3: '다른 ID 공급자에 연결하려면 "IdP 이름"을 수정한 후 계속 진행하세요.',
     config: '여기에 JSON을 입력',
     sync_profile: '프로필 정보 동기화',
     sync_profile_only_at_sign_up: '회원가입할 때 동기화',
     sync_profile_each_sign_in: '로그인할 때마다 동기화',
     sync_profile_tip: '이름과 아바타와 같은 기본적인 사용자 프로필을 동기화해요.',
-    callback_uri: 'Callback URI', // UNTRANSLATED
+    callback_uri: 'Callback URI',
     callback_uri_description:
-      "Also called redirect URI, is the URI in Logto where users will be sent back after social authorization, copy and paste to the social provider's config page.", // UNTRANSLATED
+      '리다이렉트 URI라고도 불려요. 사용자의 소셜 인증 이후 되돌아올 Logto URI예요. 소셜 공급자의 설정 페이지에 붙여넣으세요.',
   },
   platform: {
     universal: 'Universal',

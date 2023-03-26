@@ -2,7 +2,7 @@ const general = {
   placeholder: '플레이스홀더',
   skip: '건너뛰기',
   next: '다음',
-  back: 'Back', // UNTRANSLATED
+  back: '뒤로',
   retry: '재시도',
   done: '완료',
   search: '검색',
@@ -13,7 +13,7 @@ const general = {
   saved: '저장됨!',
   discard: '취소',
   loading: '로딩 중...',
-  redirecting: '리다이렉팅 중...',
+  redirecting: '리다이렉트 중...',
   add: '추가',
   added: '추가됨',
   cancel: '취소',
@@ -21,7 +21,7 @@ const general = {
   check_out: '확인하기',
   create: '생성',
   set_up: '설정',
-  customize: '커스터마이즈',
+  customize: '사용자화',
   enable: '활성화',
   reminder: '리마인더',
   delete: '삭제',
@@ -39,17 +39,17 @@ const general = {
   stay_on_page: '페이지 유지하기',
   type_to_search: '검색어 입력',
   got_it: '알겠어요',
-  continue: 'Continue', // UNTRANSLATED
+  continue: '계속하기',
   page_info: '{{min, number}}-{{max, number}} / {{total, number}}',
   learn_more: '더 알아보기',
   tab_errors: '{{count, number}} 오류',
   skip_for_now: '지금은 건너뛰기',
   remove: '삭제',
-  visit: 'Visit', // UNTRANSLATED
-  join: 'Join', // UNTRANSLATED
-  try_now: 'Try Now', // UNTRANSLATED
-  multiple_form_field: '(Multiple)', // UNTRANSLATED
-  demo: 'Demo', // UNTRANSLATED
+  visit: '방문하기',
+  join: '참여하기',
+  try_now: '지금 시도하기',
+  multiple_form_field: '(복수 선택)',
+  demo: '데모',
 };
 
 export default general;
