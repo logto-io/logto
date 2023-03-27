@@ -4,11 +4,18 @@ import { CloudRoute } from '@/cloud/types';
 
 import { isCloud } from './cloud';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const getAdminTenantEndpoint = () => {
+  // Allow endpoint override for dev or testing
+  if (process.env.ADMIN_ENDPOINT) {
+    return new URL(process.env.ADMIN_ENDPOINT);
+  }
 
-export const adminTenantEndpoint = new URL(
-  process.env.ADMIN_ENDPOINT ?? (isProduction ? window.location.origin : 'http://localhost:3002')
-);
+  return new URL(
+    isCloud ? window.location.origin.replace('cloud.', 'auth.') : window.location.origin
+  );
+};
+
+export const adminTenantEndpoint = getAdminTenantEndpoint();
 
 export const getUserTenantId = () => {
   if (isCloud) {
