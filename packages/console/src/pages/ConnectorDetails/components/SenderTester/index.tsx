@@ -63,12 +63,8 @@ function SenderTester({ connectorFactoryId, connectorType, className, parse }: P
         : { email: sendTo }),
     };
 
-    try {
-      await api.post(`api/connectors/${connectorFactoryId}/test`, { json: data }).json();
-      setShowTooltip(true);
-    } catch (error: unknown) {
-      console.error(error);
-    }
+    await api.post(`api/connectors/${connectorFactoryId}/test`, { json: data }).json();
+    setShowTooltip(true);
   });
 
   return (

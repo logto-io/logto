@@ -1,11 +1,14 @@
 import { useLogto } from '@logto/react';
 import type { TenantInfo } from '@logto/schemas';
 import { conditional, yes } from '@silverhand/essentials';
-import { useContext, useEffect } from 'react';
+import { HTTPError } from 'ky';
+import { useContext, useEffect, useState } from 'react';
 import { useHref, useSearchParams } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
+import SessionExpired from '@/components/SessionExpired';
 import { searchKeys } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
@@ -15,17 +18,32 @@ import Tenants from './Tenants';
 function Protected() {
   const api = useCloudApi();
   const { tenants, setTenants, currentTenantId } = useContext(TenantsContext);
+  const [error, setError] = useState<Error>();
 
   useEffect(() => {
     const loadTenants = async () => {
-      const data = await api.get('/api/tenants').json<TenantInfo[]>();
-      setTenants(data);
+      setError(undefined);
+
+      try {
+        const data = await api.get('/api/tenants').json<TenantInfo[]>();
+        setTenants(data);
+      } catch (error: unknown) {
+        setError(error instanceof Error ? error : new Error(String(error)));
+      }
     };
 
     if (!tenants) {
       void loadTenants();
     }
   }, [api, setTenants, tenants]);
+
+  if (error) {
+    if (error instanceof HTTPError && error.response.status === 401) {
+      return <SessionExpired error={error} />;
+    }
+
+    return <AppError errorMessage={error.message} callStack={error.stack} />;
+  }
 
   if (tenants) {
     if (currentTenantId) {
