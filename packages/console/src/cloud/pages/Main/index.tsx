@@ -1,6 +1,7 @@
 import { useLogto } from '@logto/react';
 import type { TenantInfo } from '@logto/schemas';
 import { conditional, yes } from '@silverhand/essentials';
+import { HTTPError } from 'ky';
 import { useContext, useEffect } from 'react';
 import { useHref, useSearchParams } from 'react-router-dom';
 
@@ -18,8 +19,15 @@ function Protected() {
 
   useEffect(() => {
     const loadTenants = async () => {
-      const data = await api.get('/api/tenants').json<TenantInfo[]>();
-      setTenants(data);
+      try {
+        const data = await api.get('/api/tenants').json<TenantInfo[]>();
+        setTenants(data);
+      } catch (error: unknown) {
+        if (error instanceof HTTPError && error.response.status === 401) {
+          throw error;
+        }
+        throw new Error('Fail to load tenants', { cause: error });
+      }
     };
 
     if (!tenants) {
