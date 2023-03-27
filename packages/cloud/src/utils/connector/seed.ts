@@ -1,6 +1,7 @@
 import { generateStandardId } from '@logto/core-kit';
 import { cloudApiIndicator } from '@logto/schemas';
 import { GlobalValues } from '@logto/shared';
+import { appendPath } from '@silverhand/essentials';
 
 export const createCloudServiceConnector = (data: {
   tenantId: string;
@@ -19,8 +20,8 @@ export const createCloudServiceConnector = (data: {
     config: {
       appId,
       appSecret,
-      tokenEndpoint: `${adminUrlSet.endpoint.toString()}oidc/token`,
-      endpoint: `${cloudUrlSet.endpoint.toString()}api`,
+      tokenEndpoint: appendPath(adminUrlSet.endpoint, 'oidc/token').toString(),
+      endpoint: appendPath(cloudUrlSet.endpoint, 'api').toString(),
       resource: cloudApiIndicator,
     },
   };

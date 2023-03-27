@@ -132,7 +132,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            admin_endpoint=https://auth.logto.${{ inputs.target == 'prod' && 'io' || 'dev' }}/
             applicationinsights_connection_string=${{ (inputs.target || 'dev') == 'dev' && secrets.APPLICATIONINSIGHTS_CONNECTION_STRING || secrets.APPLICATIONINSIGHTS_CONNECTION_STRING_PROD }}
 
   deploy-core:
