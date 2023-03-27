@@ -11,9 +11,9 @@ const users = {
   unnamed: '이름없음',
   search: '이름, 이메일, 전화번호, ID로 검색',
   check_user_detail: '사용자 상세정보 확인',
-  placeholder_title: 'User management', // UNTRANSLATED
+  placeholder_title: '사용자 관리',
   placeholder_description:
-    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
+    '각 사용자에게는 모든 사용자 정보가 포함된 프로필이 있어요. 프로필은 기본 데이터, 소셜 인증, 사용자 지정 데이터로 구성돼요.',
 };
 
 export default users;
