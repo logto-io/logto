@@ -40,18 +40,15 @@
 .logo {
   width: 40px;
   height: 40px;
-  border-radius: 8px;
   flex-shrink: 0;
 
   &.large {
     width: 60px;
     height: 60px;
-    border-radius: 12px;
   }
 
   &.small {
     width: 20px;
     height: 20px;
-    border-radius: 6px;
   }
 }

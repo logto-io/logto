@@ -31,7 +31,9 @@ function ImageWithErrorFallback({
     return fallbackElement ? (
       cloneElement(fallbackElement, { className })
     ) : (
-      <DefaultFallback className={className} />
+      <div className={containerClassName}>
+        <DefaultFallback className={className} />
+      </div>
     );
   }
 
