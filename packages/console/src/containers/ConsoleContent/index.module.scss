@@ -14,4 +14,9 @@
   > * {
     @include _.main-content-width;
   }
+
+  // App Insights Wrapper on cloud env prevent the CSS assignment to direct children
+  .appInsightsWrapper > * {
+    @include _.main-content-width;
+  }
 }
