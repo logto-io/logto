@@ -136,6 +136,7 @@ function UserSocialIdentities({ userId, identities, onDelete }: Props) {
       )}
       <DeleteConfirmModal
         isOpen={deletingConnector !== undefined}
+        isLoading={isSubmitting}
         onCancel={() => {
           setDeletingConnector(undefined);
         }}

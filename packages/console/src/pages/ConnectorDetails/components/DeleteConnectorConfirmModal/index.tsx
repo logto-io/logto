@@ -9,11 +9,19 @@ type Props = {
   data: ConnectorResponse;
   isOpen: boolean;
   isInUse: boolean;
+  isLoading: boolean;
   onCancel: () => void;
   onConfirm: () => void;
 };
 
-function DeleteConnectorConfirmModal({ data, isOpen, isInUse, onCancel, onConfirm }: Props) {
+function DeleteConnectorConfirmModal({
+  data,
+  isOpen,
+  isInUse,
+  isLoading,
+  onCancel,
+  onConfirm,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const isSocial = data.type === ConnectorType.Social;
 
@@ -21,6 +29,7 @@ function DeleteConnectorConfirmModal({ data, isOpen, isInUse, onCancel, onConfir
     <ConfirmModal
       isOpen={isOpen}
       confirmButtonText="general.delete"
+      isLoading={isLoading}
       onCancel={onCancel}
       onConfirm={onConfirm}
     >
