@@ -236,7 +236,7 @@ function SignInExperience() {
             onClick={async () => {
               await handleSubmit(
                 submit(() => {
-                  navigate(getOnboardingPage(OnboardingPage.Congrats), { replace: true });
+                  navigate(getOnboardingPage(OnboardingPage.Congrats));
                 })
               )();
             }}
@@ -246,7 +246,7 @@ function SignInExperience() {
           title="general.back"
           disabled={isSubmitting}
           onClick={() => {
-            navigate(getOnboardingPage(OnboardingPage.AboutUser), { replace: true });
+            navigate(getOnboardingPage(OnboardingPage.AboutUser));
           }}
         />
       </ActionBar>
