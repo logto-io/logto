@@ -1,6 +1,5 @@
 import { usernameRegEx } from '@logto/core-kit';
 import type { User } from '@logto/schemas';
-import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +13,8 @@ import TextInput from '@/components/TextInput';
 import UserAccountInformation from '@/components/UserAccountInformation';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+
+import { createPassword } from './utils';
 
 type FormData = {
   username: string;
@@ -49,7 +50,7 @@ function CreateForm({ onClose, onCreate }: Props) {
       return;
     }
 
-    const password = nanoid(8);
+    const password = createPassword();
 
     const createdUser = await api.post('api/users', { json: { ...data, password } }).json<User>();
 
