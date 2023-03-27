@@ -26,6 +26,7 @@ function Protected() {
         if (error instanceof HTTPError && error.response.status === 401) {
           throw error;
         }
+        // Note: this is intended to cause the app to crash.
         throw new Error('Fail to load tenants', { cause: error });
       }
     };
