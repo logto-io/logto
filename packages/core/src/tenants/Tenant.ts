@@ -11,6 +11,7 @@ import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
+import koaCspHeaders from '#src/middleware/koa-csp-headers.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import koaOIDCErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
@@ -122,7 +123,13 @@ export default class Tenant implements TenantContext {
     }
 
     // Mount UI
-    app.use(compose([koaSpaSessionGuard(provider, queries), koaSpaProxy(mountedApps)]));
+    app.use(
+      compose([
+        koaSpaSessionGuard(provider, queries),
+        koaCspHeaders(mountedApps),
+        koaSpaProxy(mountedApps),
+      ])
+    );
 
     this.app = app;
     this.provider = provider;
