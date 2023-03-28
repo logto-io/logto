@@ -73,7 +73,8 @@ function ConfigForm({ formItems }: Props) {
         name={item.key}
         control={control}
         rules={{
-          required: item.required,
+          // For switch, "false" will be treated as an empty value, so we need to set required to false.
+          required: item.type === ConnectorConfigFormItemType.Switch ? false : item.required,
           validate:
             item.type === ConnectorConfigFormItemType.Json
               ? (value) =>
