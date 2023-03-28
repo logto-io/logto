@@ -12,9 +12,9 @@ import ptBR from './locales/pt-br/index.js';
 import ptPT from './locales/pt-pt/index.js';
 import trTR from './locales/tr-tr/index.js';
 import zhCN from './locales/zh-cn/index.js';
-import type { LocalPhrase } from './types.js';
+import type { LocalePhrase } from './types.js';
 
-export type { LocalPhrase } from './types.js';
+export type { LocalePhrase } from './types.js';
 
 export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 
@@ -51,7 +51,7 @@ export const getDefaultLanguageTag = (languages: string): LanguageTag =>
 export const isBuiltInLanguageTag = (language: string): language is BuiltInLanguageTag =>
   builtInLanguageTagGuard.safeParse(language).success;
 
-export type Resource = Record<BuiltInLanguageTag, LocalPhrase>;
+export type Resource = Record<BuiltInLanguageTag, LocalePhrase>;
 
 const resource: Resource = {
   de,

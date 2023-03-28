@@ -1,4 +1,4 @@
-import en from '@logto/phrases-ui/lib/locales/en.js';
+import en from '@logto/phrases-ui/lib/locales/en/index.js';
 import fr from '@logto/phrases-ui/lib/locales/fr.js';
 
 import { isStrictlyPartial } from '#src/utils/translation.js';
