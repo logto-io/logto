@@ -1,4 +1,5 @@
 const sign_in_exp = {
+  page_title: 'Experiência de login',
   title: 'Experiência de login',
   description:
     'Personalize a interface do usuário de login para corresponder à sua marca e visualize em tempo real',

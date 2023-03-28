@@ -1,4 +1,5 @@
 const api_resources = {
+  page_title: 'API 리소스',
   title: 'API 리소스',
   subtitle: '인증된 어플리케이션에서 사용될 API를 정의해주세요.',
   create: 'API 리소스 생성',

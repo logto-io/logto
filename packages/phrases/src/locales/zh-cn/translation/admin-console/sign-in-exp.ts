@@ -1,4 +1,5 @@
 const sign_in_exp = {
+  page_title: '登录体验',
   title: '登录体验',
   description: '自定义登录界面，并实时预览真实效果',
   tabs: {

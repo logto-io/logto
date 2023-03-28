@@ -1,5 +1,6 @@
 const cloud = {
   welcome: {
+    page_title: 'Welcome', // UNTRANSLATED
     title: 'Welcome and let’s create your own Logto Cloud Preview', // UNTRANSLATED
     description:
       'Whether you’re an open-source or cloud user, take a tour of the showcase and experience the full value of Logto. Cloud preview also serves as a preliminary version of Logto Cloud.', // UNTRANSLATED
@@ -15,6 +16,7 @@ const cloud = {
     },
   },
   about: {
+    page_title: 'A bit about you', // UNTRANSLATED
     title: 'A little bit about you', // UNTRANSLATED
     description:
       'Let‘s make your Logto experience unique to you by getting to know you better. Your information is safe with us.', // UNTRANSLATED
@@ -48,6 +50,7 @@ const cloud = {
     },
   },
   congrats: {
+    page_title: 'Earn early credits', // UNTRANSLATED
     title: 'Great news! You are qualified to earn Logto Cloud early credit!', // UNTRANSLATED
     description:
       'Don’t miss out on a chance to enjoy a free <strong>60 days</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.', // UNTRANSLATED
@@ -67,6 +70,7 @@ const cloud = {
     book_button: 'Book', // UNTRANSLATED
   },
   sie: {
+    page_title: 'Customize sign-in experience', // UNTRANSLATED
     title: 'Let’s first customize your sign-in experience with ease', // UNTRANSLATED
     inspire: {
       title: 'Create compelling examples', // UNTRANSLATED

@@ -8,6 +8,7 @@ import Case from '@/assets/images/case.svg';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
+import PageMeta from '@/components/PageMeta';
 import TextInput from '@/components/TextInput';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
@@ -55,6 +56,7 @@ function About() {
 
   return (
     <div className={pageLayout.page}>
+      <PageMeta titleKey="cloud.about.page_title" />
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={pageLayout.content}>
           <Case />

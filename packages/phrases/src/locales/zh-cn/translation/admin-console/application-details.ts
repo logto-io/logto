@@ -1,4 +1,5 @@
 const application_details = {
+  page_title: '应用详情',
   back_to_applications: '返回全部应用',
   check_guide: '查看指南',
   settings: '设置',

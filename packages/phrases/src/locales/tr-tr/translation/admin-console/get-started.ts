@@ -1,4 +1,5 @@
 const get_started = {
+  page_title: 'Get Started', // UNTRANSLATED
   progress: 'Başlangıç Kılavuzu: {{completed}}/{{total}}',
   progress_dropdown_title: 'Yapabileceğiniz bazı şeyler...',
   title: 'Something to explore to help you succeed', // UNTRANSLATED

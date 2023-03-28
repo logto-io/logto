@@ -1,5 +1,6 @@
 const cloud = {
   welcome: {
+    page_title: '환영합니다',
     title: '환영합니다. 당신 만의 Logto Cloud Preview를 만들어 보세요',
     description:
       '오픈 소스 사용자든 클라우드 사용자든, 쇼케이스를 둘러보고 Logto의 모든 가치를 경험해 보세요. 클라우드 미리 보기는 Logto Cloud의 미리 보기 버전으로도 제공돼요.',
@@ -15,6 +16,7 @@ const cloud = {
     },
   },
   about: {
+    page_title: '본인에 대해 간략히 소개하기',
     title: '당신에 관하여',
     description:
       '당신에 대해 더 잘 파악하여 Logto 경험을 특별하게 만들어 드릴게요. 정보는 저희가 안전하게 관리해요.',
@@ -48,6 +50,7 @@ const cloud = {
     },
   },
   congrats: {
+    page_title: '조기 선물 획득하기',
     title: '좋은 소식입니다! Logto Cloud 조기 크레딧을 받을 자격이 있습니다!',
     description:
       '공식 출시 후 Logto Cloud를 <strong>60일</strong> 동안 무료로 구독할 수 있는 기회를 놓치지 마세요! 지금 Logto 팀에 문의하여 자세히 알아보세요.',
@@ -67,6 +70,7 @@ const cloud = {
     book_button: '예약하기',
   },
   sie: {
+    page_title: '로그인 환경 변경하기',
     title: '먼저 로그인 환경을 간편하게 사용자화해 보세요.',
     inspire: {
       title: '흥미로운 예시 만들기',

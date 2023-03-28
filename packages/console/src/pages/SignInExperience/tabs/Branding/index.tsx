@@ -1,3 +1,5 @@
+import PageMeta from '@/components/PageMeta';
+
 import TabWrapper from '../../components/TabWrapper';
 import * as styles from '../index.module.scss';
 
@@ -11,6 +13,7 @@ type Props = {
 function Branding({ isActive }: Props) {
   return (
     <TabWrapper isActive={isActive} className={styles.tabContent}>
+      {isActive && <PageMeta titleKey={['sign_in_exp.tabs.branding', 'sign_in_exp.page_title']} />}
       <BrandingForm />
       <CustomCssForm />
     </TabWrapper>

@@ -1,4 +1,5 @@
 const api_resource_details = {
+  page_title: 'API 资源详情',
   back_to_api_resources: '返回 API 资源',
   settings_tab: '设置',
   permissions_tab: '权限',

@@ -1,4 +1,5 @@
 const connector_details = {
+  page_title: 'Connector details', // UNTRANSLATED
   back_to_connectors: 'Connectorlara dön',
   check_readme: 'READMEye göz at',
   settings: 'General settings', // UNTRANSLATED

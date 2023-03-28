@@ -1,4 +1,5 @@
 const connector_details = {
+  page_title: 'Connector details', // UNTRANSLATED
   back_to_connectors: '연동으로 돌아가기',
   check_readme: 'README 확인',
   settings: '일반 설정',

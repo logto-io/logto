@@ -12,6 +12,7 @@ import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import DateTime from '@/components/DateTime';
 import ItemPreview from '@/components/ItemPreview';
+import PageMeta from '@/components/PageMeta';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
@@ -55,6 +56,7 @@ function Users() {
 
   return (
     <div className={resourcesStyles.container}>
+      <PageMeta titleKey="users.page_title" />
       <div className={resourcesStyles.headline}>
         <CardTitle title="users.title" subtitle="users.subtitle" />
         <Button

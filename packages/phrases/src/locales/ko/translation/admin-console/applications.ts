@@ -1,4 +1,5 @@
 const applications = {
+  page_title: '어플리케이션',
   title: '어플리케이션',
   subtitle:
     '인증에 Logto를 사용할 모바일, 단일 페이지, Machine to Machine 또는 기존 어플리케이션을 설정할 수 있어요.',

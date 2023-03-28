@@ -1,4 +1,5 @@
 const user_details = {
+  page_title: '用户详情',
   back_to_users: '返回用户管理',
   created_title: '用户创建成功',
   created_guide: '你可以将以下登录信息发送给用户',

@@ -14,6 +14,7 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import PageMeta from '@/components/PageMeta';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import { defaultPageSize } from '@/consts';
@@ -60,6 +61,7 @@ function ApiResources() {
 
   return (
     <div className={resourcesStyles.container}>
+      <PageMeta titleKey="api_resources.page_title" />
       <div className={resourcesStyles.headline}>
         <CardTitle title="api_resources.title" subtitle="api_resources.subtitle" />
         <Button

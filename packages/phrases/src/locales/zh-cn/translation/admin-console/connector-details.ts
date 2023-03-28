@@ -1,4 +1,5 @@
 const connector_details = {
+  page_title: '连接器详情',
   back_to_connectors: '返回连接器',
   check_readme: '查看 README',
   settings: '通用设置',

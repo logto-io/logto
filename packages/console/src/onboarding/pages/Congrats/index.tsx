@@ -7,6 +7,7 @@ import CongratsImage from '@/assets/images/congrats.svg';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
+import PageMeta from '@/components/PageMeta';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Reservation from '@/onboarding/components/Reservation';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
@@ -28,6 +29,7 @@ function Congrats() {
 
   return (
     <div className={pageLayout.page}>
+      <PageMeta titleKey="cloud.congrats.page_title" />
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={classNames(pageLayout.content, styles.content)}>
           <CongratsImage className={styles.congratsImage} />

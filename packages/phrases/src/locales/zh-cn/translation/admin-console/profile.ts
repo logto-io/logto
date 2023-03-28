@@ -1,4 +1,5 @@
 const profile = {
+  page_title: '账户管理',
   title: '账户管理',
   description: '在这里，你可以修改账户设置和管理个人信息，以确保账户安全。',
   settings: {

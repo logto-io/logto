@@ -12,6 +12,7 @@ import Button from '@/components/Button';
 import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
+import PageMeta from '@/components/PageMeta';
 import TextInput from '@/components/TextInput';
 import { ImageUploaderField } from '@/components/Uploader';
 import useApi from '@/hooks/use-api';
@@ -106,6 +107,7 @@ function SignInExperience() {
 
   return (
     <div className={pageLayout.page}>
+      <PageMeta titleKey="cloud.sie.page_title" />
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={styles.content}>
           <div className={styles.config}>

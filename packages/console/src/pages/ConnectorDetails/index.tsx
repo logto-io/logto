@@ -17,6 +17,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
 import Markdown from '@/components/Markdown';
+import PageMeta from '@/components/PageMeta';
 import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnnamedTrans from '@/components/UnnamedTrans';
@@ -115,6 +116,7 @@ function ConnectorDetails() {
         void mutateConnectorFactory();
       }}
     >
+      <PageMeta titleKey="connector_details.page_title" />
       {isSocial && <ConnectorTabs target={data.target} connectorId={data.id} />}
       {data && (
         <>

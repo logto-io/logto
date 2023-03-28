@@ -1,4 +1,5 @@
 const get_started = {
+  page_title: 'Get Started', // UNTRANSLATED
   progress: '시작 가이드: {{completed}}/{{total}}',
   progress_dropdown_title: '해야 할 것들...',
   title: '성공하는 데 도움이 될 탐색 항목',

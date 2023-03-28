@@ -1,4 +1,5 @@
 const api_resource_details = {
+  page_title: 'API Resource details', // UNTRANSLATED
   back_to_api_resources: 'Voltar para os recursos da API',
   settings_tab: 'Settings', // UNTRANSLATED
   permissions_tab: 'Permissions', // UNTRANSLATED

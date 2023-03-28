@@ -1,4 +1,5 @@
 const application_details = {
+  page_title: 'Application details', // UNTRANSLATED
   back_to_applications: 'Uygulamalara geri dön',
   check_guide: 'Kılavuza Göz At',
   settings: 'Settings', // UNTRANSLATED

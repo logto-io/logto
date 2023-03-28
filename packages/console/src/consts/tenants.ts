@@ -17,6 +17,8 @@ const getAdminTenantEndpoint = () => {
 
 export const adminTenantEndpoint = getAdminTenantEndpoint();
 
+export const mainTitle = isCloud ? 'Logto Cloud' : 'Logto Console';
+
 export const getUserTenantId = () => {
   if (isCloud) {
     const segment = window.location.pathname.split('/')[1];

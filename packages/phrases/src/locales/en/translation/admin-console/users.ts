@@ -1,4 +1,5 @@
 const users = {
+  page_title: 'User Management',
   title: 'User Management',
   subtitle:
     'Manage user identities including creating users, editing user information, viewing user logs, password resets and deleting users',

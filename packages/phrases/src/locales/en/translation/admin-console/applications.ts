@@ -1,4 +1,5 @@
 const applications = {
+  page_title: 'Applications',
   title: 'Applications',
   subtitle:
     'Set up Logto authentication for your native, single page, machine to machine, or traditional application',

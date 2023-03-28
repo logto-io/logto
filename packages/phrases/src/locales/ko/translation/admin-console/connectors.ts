@@ -1,4 +1,5 @@
 const connectors = {
+  page_title: '연동',
   title: '연동',
   subtitle: '연동을 통해 비밀번호 없는 로그인이나 소셜 로그인을 제공해 보세요.',
   create: '소셜 연동 추가',

@@ -1,4 +1,5 @@
 const get_started = {
+  page_title: 'Get Started', // UNTRANSLATED
   progress: 'Guia de primeiros passos: {{completed}}/{{total}}',
   progress_dropdown_title: 'Algumas coisas que pode fazer...',
   title: 'Something to explore to help you succeed', // UNTRANSLATED

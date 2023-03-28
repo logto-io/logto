@@ -1,4 +1,5 @@
 const user_details = {
+  page_title: 'User details', // UNTRANSLATED
   back_to_users: 'Retour à la gestion des utilisateurs',
   created_title: 'Cet utilisateur a été créé avec succès',
   created_guide: "Vous pouvez envoyer à l'utilisateur les informations de connexion suivantes",

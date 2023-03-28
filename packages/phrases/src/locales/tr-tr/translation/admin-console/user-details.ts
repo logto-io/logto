@@ -1,4 +1,5 @@
 const user_details = {
+  page_title: 'User details', // UNTRANSLATED
   back_to_users: 'Kullanıcı Yönetimine Geri Dön',
   created_title: 'Bu kullanıcı başarıyla oluşturuldu',
   created_guide: 'Kullanıcıya aşağıdaki oturum açma bilgilerini gönderebilirsiniz',

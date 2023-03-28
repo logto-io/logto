@@ -28,7 +28,7 @@ const initAppInsights = () => {
     appInsights = new ApplicationInsights({
       config: {
         connectionString,
-        enableAutoRouteTracking: true,
+        enableAutoRouteTracking: false,
         extensions: [reactPlugin],
       },
     });

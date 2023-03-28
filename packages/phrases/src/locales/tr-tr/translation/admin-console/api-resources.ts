@@ -1,4 +1,5 @@
 const api_resources = {
+  page_title: 'API Kaynakları',
   title: 'API Kaynakları',
   subtitle: 'Yetkili uygulamalarınızdan kullanabileceğiniz APIleri tanımlayınız',
   create: 'API Kaynağı oluştur',

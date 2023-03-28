@@ -1,4 +1,5 @@
 const logs = {
+  page_title: '审计日志',
   title: '审计日志',
   subtitle: '查看用户行为和事件',
   event: '事件',

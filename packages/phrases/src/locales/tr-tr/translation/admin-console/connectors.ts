@@ -1,4 +1,5 @@
 const connectors = {
+  page_title: 'Connectorlar',
   title: 'Connectorlar',
   subtitle:
     'Şifresiz ve sosyal oturum açma deneyimini etkinleştirmek için connectorları ayarlayınız.',

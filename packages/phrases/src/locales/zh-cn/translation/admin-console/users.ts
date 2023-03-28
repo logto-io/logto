@@ -1,4 +1,5 @@
 const users = {
+  page_title: '用户管理',
   title: '用户管理',
   subtitle: '管理你的用户，包括创建新用户，编辑用户资料，查看用户日志，以及重新设置密码和删除用户',
   create: '添加用户',

@@ -1,4 +1,5 @@
 const log_details = {
+  page_title: 'Audit Log details', // UNTRANSLATED
   back_to_logs: '감사 기록으로 돌아가기',
   back_to_user: '{{name}}으로 돌아가기',
   success: '성공',

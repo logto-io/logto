@@ -1,4 +1,5 @@
 const users = {
+  page_title: 'Gestão de utilizadores',
   title: 'Gestão de utilizadores',
   subtitle:
     'Gerencie os utilizadores, incluindo a criação, edição de informações, visualização de logs, recuperações de password e exclusões',

@@ -1,4 +1,5 @@
 const log_details = {
+  page_title: 'Audit Log details', // UNTRANSLATED
   back_to_logs: 'Denetim kaydına geri dön',
   back_to_user: '{{name}}e geri dön',
   success: 'Başarılı',

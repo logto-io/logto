@@ -1,4 +1,5 @@
 const roles = {
+  page_title: 'Roles',
   title: 'Roles',
   subtitle:
     'Roles include permissions that determine what a user can do. RBAC uses roles to give users access to resources for specific actions.',

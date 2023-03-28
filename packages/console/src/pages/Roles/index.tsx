@@ -10,6 +10,7 @@ import RolesEmpty from '@/assets/images/roles-empty.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import ItemPreview from '@/components/ItemPreview';
+import PageMeta from '@/components/PageMeta';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
@@ -57,6 +58,7 @@ function Roles() {
 
   return (
     <div className={pageStyles.container}>
+      <PageMeta titleKey="roles.page_title" />
       <div className={pageStyles.headline}>
         <CardTitle
           title="roles.title"

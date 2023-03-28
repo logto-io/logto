@@ -1,4 +1,5 @@
 const connector_details = {
+  page_title: 'Connector details', // UNTRANSLATED
   back_to_connectors: 'Retour à Connecteurs',
   check_readme: 'Vérifier le README',
   settings: 'General settings', // UNTRANSLATED

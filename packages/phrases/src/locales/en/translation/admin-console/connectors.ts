@@ -1,4 +1,5 @@
 const connectors = {
+  page_title: 'Connectors',
   title: 'Connectors',
   subtitle: 'Set up connectors to enable passwordless and social sign in experience',
   create: 'Add Social Connector',
