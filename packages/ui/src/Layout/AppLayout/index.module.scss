@@ -71,4 +71,11 @@
     // Have to use padding instead of margin. Overflow margin spacing will be ignored by the browser.
     padding-bottom: _.unit(7);
   }
+
+  @media only screen and (max-width: 580px) {
+    .main {
+      align-self: stretch;
+      width: auto;
+    }
+  }
 }

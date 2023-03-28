@@ -9,7 +9,7 @@
   box-shadow: var(--color-shadow-1);
   border-radius: var(--radius);
   @include _.flex_row;
-  z-index: 100;
+  z-index: 50;
 
   .icon {
     width: 20px;
