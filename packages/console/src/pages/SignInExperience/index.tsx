@@ -65,6 +65,7 @@ function SignInExperience() {
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('api/sign-in-exp');
   const isLoadingSignInExperience = !data && !error;
   const { isLoading: isUserAssetsServiceLoading } = useUserAssetsService();
+  const [isSaving, setIsSaving] = useState(false);
 
   const {
     configs,
@@ -93,7 +94,7 @@ function SignInExperience() {
     handleSubmit,
     getValues,
     watch,
-    formState: { isSubmitting, isDirty, errors },
+    formState: { isDirty, errors },
   } = methods;
   const api = useApi();
   const formData = watch();
@@ -115,19 +116,25 @@ function SignInExperience() {
   }, [reset, defaultFormData]);
 
   const saveData = async () => {
-    const updatedData = await api
-      .patch('api/sign-in-exp', {
-        json: signInExperienceParser.toRemoteModel(getValues()),
-      })
-      .json<SignInExperienceType>();
-    void mutate(updatedData);
-    setDataToCompare(undefined);
-    await updateConfigs({ signInExperienceCustomized: true });
-    toast.success(t('general.saved'));
+    setIsSaving(true);
+
+    try {
+      const updatedData = await api
+        .patch('api/sign-in-exp', {
+          json: signInExperienceParser.toRemoteModel(getValues()),
+        })
+        .json<SignInExperienceType>();
+      void mutate(updatedData);
+      setDataToCompare(undefined);
+      await updateConfigs({ signInExperienceCustomized: true });
+      toast.success(t('general.saved'));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const onSubmit = handleSubmit(async (formData: SignInExperienceForm) => {
-    if (!data || isSubmitting) {
+    if (!data || isSaving) {
       return;
     }
 
@@ -217,7 +224,7 @@ function SignInExperience() {
           </div>
           <SubmitFormChangesActionBar
             isOpen={isDirty}
-            isSubmitting={isSubmitting}
+            isSubmitting={isSaving}
             onDiscard={reset}
             onSubmit={onSubmit}
           />
@@ -226,6 +233,7 @@ function SignInExperience() {
       {data && (
         <ConfirmModal
           isOpen={Boolean(dataToCompare)}
+          isLoading={isSaving}
           onCancel={() => {
             setDataToCompare(undefined);
           }}

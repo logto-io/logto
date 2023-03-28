@@ -68,36 +68,32 @@ function ConnectorDetails() {
   const navigate = useNavigate();
   const isSocial = data?.type === ConnectorType.Social;
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     setIsDeleteAlertOpen(false);
   }, [pathname]);
 
-  const onDeleteClick = async () => {
-    if (!inUse) {
-      await handleDelete();
-
-      return;
-    }
-
-    setIsDeleteAlertOpen(true);
-  };
-
   const handleDelete = async () => {
-    if (!connectorId) {
+    if (!connectorId || isDeleting) {
       return;
     }
+    setIsDeleting(true);
 
-    await api.delete(`api/connectors/${connectorId}`).json<ConnectorResponse>();
+    try {
+      await api.delete(`api/connectors/${connectorId}`).json<ConnectorResponse>();
 
-    setIsDeleted(true);
+      setIsDeleted(true);
 
-    toast.success(t('connector_details.connector_deleted'));
-    await mutateGlobal('api/connectors');
+      toast.success(t('connector_details.connector_deleted'));
+      await mutateGlobal('api/connectors');
 
-    navigate(getConnectorsPathname(isSocial), {
-      replace: true,
-    });
+      navigate(getConnectorsPathname(isSocial), {
+        replace: true,
+      });
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   if (!connectorId) {
@@ -225,6 +221,7 @@ function ConnectorDetails() {
             data={data}
             isInUse={inUse}
             isOpen={isDeleteAlertOpen}
+            isLoading={isDeleting}
             onCancel={() => {
               setIsDeleteAlertOpen(false);
             }}

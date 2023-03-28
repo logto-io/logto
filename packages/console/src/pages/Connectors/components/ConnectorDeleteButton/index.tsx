@@ -26,24 +26,30 @@ function ConnectorDeleteButton({ connectorGroup }: Props) {
   const inUse = isConnectorInUse(firstConnector);
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const api = useApi();
 
   const handleDelete = async () => {
-    if (!firstConnector) {
+    if (!firstConnector || isDeleting) {
       return;
     }
+    setIsDeleting(true);
 
     const { connectors } = connectorGroup;
 
-    await Promise.all(
-      connectors.map(async (connector) => {
-        await api.delete(`api/connectors/${connector.id}`).json<ConnectorResponse>();
-      })
-    );
+    try {
+      await Promise.all(
+        connectors.map(async (connector) => {
+          await api.delete(`api/connectors/${connector.id}`).json<ConnectorResponse>();
+        })
+      );
 
-    toast.success(t('connector_details.connector_deleted'));
-    await mutateGlobal('api/connectors');
+      toast.success(t('connector_details.connector_deleted'));
+      await mutateGlobal('api/connectors');
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   if (!firstConnector) {
@@ -65,6 +71,7 @@ function ConnectorDeleteButton({ connectorGroup }: Props) {
         data={firstConnector}
         isInUse={inUse}
         isOpen={isDeleteAlertOpen}
+        isLoading={isDeleting}
         onCancel={() => {
           setIsDeleteAlertOpen(false);
         }}

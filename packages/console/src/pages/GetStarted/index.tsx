@@ -20,11 +20,21 @@ function GetStarted() {
   const { data, isLoading } = useGetStartedMetadata();
   const { update } = useUserPreferences();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const hideGetStarted = () => {
-    void update({ getStartedHidden: true });
-    // Navigate to next menu item
-    navigate('/dashboard');
+  const hideGetStarted = async () => {
+    if (isUpdating) {
+      return;
+    }
+    setIsUpdating(true);
+
+    try {
+      await update({ getStartedHidden: true });
+      // Navigate to next menu item
+      navigate('/dashboard');
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const showConfirmModalHandler = () => {
@@ -77,6 +87,7 @@ function GetStarted() {
         isOpen={showConfirmModal}
         confirmButtonType="primary"
         confirmButtonText="get_started.hide_this"
+        isLoading={isUpdating}
         onConfirm={hideGetStarted}
         onCancel={hideConfirmModalHandler}
       >
