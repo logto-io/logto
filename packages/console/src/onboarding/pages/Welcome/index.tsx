@@ -8,6 +8,7 @@ import WelcomeImage from '@/assets/images/sign-in-experience-welcome.svg';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
+import PageMeta from '@/components/PageMeta';
 import ActionBar from '@/onboarding/components/ActionBar';
 import { CardSelector } from '@/onboarding/components/CardSelector';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
@@ -52,6 +53,7 @@ function Welcome() {
 
   return (
     <div className={pageLayout.page}>
+      <PageMeta titleKey="cloud.welcome.page_title" />
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={classNames(pageLayout.content, styles.content)}>
           <WelcomeImage className={styles.congrats} />

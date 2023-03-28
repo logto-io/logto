@@ -1,4 +1,5 @@
 const log_details = {
+  page_title: 'Audit Log details', // UNTRANSLATED
   back_to_logs: 'Voltar aos logs',
   back_to_user: 'Voltar para {{name}}',
   success: 'Sucesso',

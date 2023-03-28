@@ -1,4 +1,5 @@
 const user_details = {
+  page_title: 'User details', // UNTRANSLATED
   back_to_users: '사용자 관리로 돌아가기',
   created_title: '새로운 사용자가 생성되었어요.',
   created_guide: '생성된 정보를 해당 사용자에게 알려주세요.',

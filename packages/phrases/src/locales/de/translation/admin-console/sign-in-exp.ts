@@ -1,11 +1,12 @@
 const sign_in_exp = {
+  page_title: 'Anmeldeoberfläche',
   title: 'Anmeldeoberfläche',
   description:
     'Passe die Benutzeroberfläche für die Anmeldung an deine Marke an und zeige eine Vorschau in Echtzeit an',
   tabs: {
     branding: 'Branding',
     methods: 'Anmeldemethoden',
-    sign_up_and_sign_in: 'Sign up and Sign in', // UNTRANSLATED
+    sign_up_and_sign_in: 'Sign-up and Sign-in', // UNTRANSLATED
     others: 'Andere',
   },
   welcome: {
@@ -25,7 +26,7 @@ const sign_in_exp = {
     and: 'and', // UNTRANSLATED
     or: 'or', // UNTRANSLATED
     sign_up: {
-      title: 'SIGN UP', // UNTRANSLATED
+      title: 'SIGN-UP', // UNTRANSLATED
       sign_up_identifier: 'Sign-up identifier', // UNTRANSLATED
       identifier_description:
         'The sign-up identifier is required for account creation and must be included in your sign-in screen.', // UNTRANSLATED
@@ -37,7 +38,7 @@ const sign_in_exp = {
       social_only_creation_description: '(This apply to social only account creation)', // UNTRANSLATED
     },
     sign_in: {
-      title: 'SIGN IN', // UNTRANSLATED
+      title: 'SIGN-IN', // UNTRANSLATED
       sign_in_identifier_and_auth: 'Identifier and authentication settings for sign-in', // UNTRANSLATED
       description:
         'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.', // UNTRANSLATED

@@ -16,6 +16,7 @@ import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsPage from '@/components/DetailsPage';
+import PageMeta from '@/components/PageMeta';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
@@ -74,6 +75,7 @@ function ApiResourceDetails() {
       className={classNames(isOnPermissionPage && styles.permissionPage)}
       onRetry={mutate}
     >
+      <PageMeta titleKey="api_resource_details.page_title" />
       {data && (
         <>
           <Card className={styles.header}>

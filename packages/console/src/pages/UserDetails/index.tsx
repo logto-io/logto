@@ -15,6 +15,7 @@ import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsPage from '@/components/DetailsPage';
+import PageMeta from '@/components/PageMeta';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UserAvatar from '@/components/UserAvatar';
 import { UserDetailsTabs } from '@/consts/page-tabs';
@@ -75,6 +76,7 @@ function UserDetails() {
       className={classNames(isPageHasTable && styles.resourceLayout)}
       onRetry={mutate}
     >
+      <PageMeta titleKey="user_details.page_title" />
       {data && (
         <>
           <Card className={styles.header}>

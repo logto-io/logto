@@ -1,4 +1,5 @@
 const users = {
+  page_title: 'Benutzerverwaltung',
   title: 'Benutzerverwaltung',
   subtitle:
     'Verwalten von Benutzeridentitäten, einschließlich des Anlegens von Benutzern, Bearbeiten von Benutzerinformationen, Anzeigen von Benutzer-Logs, Zurücksetzen von Passwörtern und Löschen von Benutzern',

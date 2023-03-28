@@ -1,4 +1,5 @@
 const applications = {
+  page_title: '全部应用',
   title: '全部应用',
   subtitle: '创建一个移动、单页、machine to machine 或传统 web 应用程序，并通过 Logto 进行身份验证',
   create: '创建应用',

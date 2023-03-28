@@ -1,4 +1,5 @@
 const dashboard = {
+  page_title: 'Painel',
   title: 'Painel',
   description: 'Obtenha uma visão geral sobre o desempenho da sua aplicação',
   total_users: 'Utilizadores totais',

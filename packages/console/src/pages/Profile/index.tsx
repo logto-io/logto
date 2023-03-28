@@ -7,6 +7,7 @@ import useSWRImmutable from 'swr/immutable';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import FormCard from '@/components/FormCard';
+import PageMeta from '@/components/PageMeta';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { isCloud } from '@/consts/cloud';
 import type { RequestError } from '@/hooks/use-api';
@@ -43,6 +44,7 @@ function Profile() {
 
   return (
     <div className={resourcesStyles.container}>
+      <PageMeta titleKey="profile.page_title" />
       <div className={resourcesStyles.headline}>
         <CardTitle title="profile.title" subtitle="profile.description" />
       </div>

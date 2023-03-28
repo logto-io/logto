@@ -12,6 +12,7 @@ import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dar
 import SocialConnectorEmpty from '@/assets/images/social-connector-empty.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
+import PageMeta from '@/components/PageMeta';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import Table from '@/components/Table';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
@@ -102,6 +103,7 @@ function Connectors() {
 
   return (
     <>
+      <PageMeta titleKey="connectors.page_title" />
       <div className={classNames(resourcesStyles.container, styles.container)}>
         <div className={resourcesStyles.headline}>
           <CardTitle title="connectors.title" subtitle="connectors.subtitle" />

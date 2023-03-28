@@ -1,4 +1,5 @@
 const dashboard = {
+  page_title: '대시보드',
   title: '대시보드',
   description: '앱 사용자에 대한 개요를 볼 수 있어요.',
   total_users: '전체 사용자',

@@ -1,4 +1,5 @@
 const sign_in_exp = {
+  page_title: '로그인 경험',
   title: '로그인 경험',
   description: '로그인 화면을 브랜드에 맞게 사용자화하고 실시간으로 확인해 보세요.',
   tabs: {

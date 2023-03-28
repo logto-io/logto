@@ -1,4 +1,5 @@
 const get_started = {
+  page_title: 'Get Started',
   progress: 'Get started guide: {{completed}}/{{total}}',
   progress_dropdown_title: 'A few things you can do...',
   title: 'Something to explore to help you succeed',

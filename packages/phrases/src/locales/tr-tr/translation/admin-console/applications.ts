@@ -1,4 +1,5 @@
 const applications = {
+  page_title: 'Uygulamalar',
   title: 'Uygulamalar',
   subtitle:
     'Kimlik doğrulaması için Logtoyu kullanmak üzere mobil, tek sayfa, machine to machine veya geleneksel bir uygulama ayarlayınız',

@@ -1,4 +1,5 @@
 const api_resources = {
+  page_title: 'API 资源',
   title: 'API 资源',
   subtitle: '定义可以从已授权的应用程序中使用的 API',
   create: '创建 API 资源',

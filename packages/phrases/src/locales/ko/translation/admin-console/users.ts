@@ -1,4 +1,5 @@
 const users = {
+  page_title: '사용자 관리',
   title: '사용자 관리',
   subtitle: '사용자의 신원을 추가, 삭제, 수정, 조회하여 관리해보세요.',
   create: '사용자 추가',

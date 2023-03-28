@@ -1,4 +1,5 @@
 const profile = {
+  page_title: '계정 설정',
   title: '계정 설정',
   description: '계정 보안을 위해 여기에서 계정 설정을 변경하고 개인 정보를 관리하세요.',
   settings: {

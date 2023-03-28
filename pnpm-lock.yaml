@@ -209,6 +209,7 @@ importers:
       '@types/mdx-js__react': ^1.5.5
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
+      '@types/react-helmet': ^6.1.6
       '@types/react-modal': ^3.13.1
       '@types/react-syntax-highlighter': ^15.5.1
       buffer: ^5.7.1
@@ -243,6 +244,7 @@ importers:
       react-dnd-html5-backend: ^16.0.0
       react-dom: ^18.0.0
       react-dropzone: ^14.2.3
+      react-helmet: ^6.1.0
       react-hook-form: ^7.34.0
       react-hot-toast: ^2.2.0
       react-i18next: ^11.18.3
@@ -289,6 +291,7 @@ importers:
       '@types/mdx-js__react': 1.5.5
       '@types/react': 18.0.15
       '@types/react-dom': 18.0.6
+      '@types/react-helmet': 6.1.6
       '@types/react-modal': 3.13.1
       '@types/react-syntax-highlighter': 15.5.1
       buffer: 5.7.1
@@ -323,6 +326,7 @@ importers:
       react-dnd-html5-backend: 16.0.0
       react-dom: 18.2.0_react@18.2.0
       react-dropzone: 14.2.3_react@18.2.0
+      react-helmet: 6.1.0_react@18.2.0
       react-hook-form: 7.34.0_react@18.2.0
       react-hot-toast: 2.2.0_npw22p3c4ehm7n7vxn2gqac44u
       react-i18next: 11.18.3_shxxmfhtk2bc4pbx5cyq3uoph4
@@ -4540,6 +4544,12 @@ packages:
     resolution: {integrity: sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==}
     dependencies:
       '@types/react': 18.0.15
+    dev: true
+
+  /@types/react-helmet/6.1.6:
+    resolution: {integrity: sha512-ZKcoOdW/Tg+kiUbkFCBtvDw0k3nD4HJ/h/B9yWxN4uDO8OkRksWTO+EL+z/Qu3aHTeTll3Ro0Cc/8UhwBCMG5A==}
+    dependencies:
+      '@types/react': 18.0.26
     dev: true
 
   /@types/react-modal/3.13.1:
@@ -12418,6 +12428,22 @@ packages:
     resolution: {integrity: sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==}
     dev: true
 
+  /react-fast-compare/3.2.1:
+    resolution: {integrity: sha512-xTYf9zFim2pEif/Fw16dBiXpe0hoy5PxcD8+OwBnTtNLfIm3g6WxhKNurY+6OmdH1u6Ta/W/Vl6vjbYP1MFnDg==}
+    dev: true
+
+  /react-helmet/6.1.0_react@18.2.0:
+    resolution: {integrity: sha512-4uMzEY9nlDlgxr61NL3XbKRy1hEkXmKNXhjbAIOVw5vcFrsdYbH2FEwcNyWvWinl103nXgzYNlns9ca+8kFiWw==}
+    peerDependencies:
+      react: '>=16.3.0 || ^18.0.0'
+    dependencies:
+      object-assign: 4.1.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-fast-compare: 3.2.1
+      react-side-effect: 2.1.2_react@18.2.0
+    dev: true
+
   /react-hook-form/7.34.0_react@18.2.0:
     resolution: {integrity: sha512-s0/TJ09NVlEk2JPp3yit1WnMuPNBXFmUKEQPulgDi9pYBw/ZmmAFHe6AXWq73Y+kp8ye4OcMf0Jv+i/qLPektg==}
     engines: {node: '>=12.22.0'}
@@ -12582,6 +12608,14 @@ packages:
       react: '>=16.8 || ^18.0.0'
     dependencies:
       history: 5.3.0
+      react: 18.2.0
+    dev: true
+
+  /react-side-effect/2.1.2_react@18.2.0:
+    resolution: {integrity: sha512-PVjOcvVOyIILrYoyGEpDN3vmYNLdy1CajSFNt4TDsVQC5KpTijDvWVoR+/7Rz2xT978D8/ZtFceXxzsPwZEDvw==}
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.0 || ^18.0.0
+    dependencies:
       react: 18.2.0
     dev: true
 

@@ -1,5 +1,6 @@
 const cloud = {
   welcome: {
+    page_title: '欢迎',
     title: '欢迎来到 Logto Cloud（预览版），让我们一起创建独属于你的体验',
     description:
       '无论你是开源用户还是云用户，都可以在展示中了解 Logto 的全部价值。Cloud 预览版也是 Logto Cloud 的初步版本。',
@@ -15,6 +16,7 @@ const cloud = {
     },
   },
   about: {
+    page_title: '关于你',
     title: '关于你的一些信息',
     description: '通过更好地了解你，我们可以使你的 Logto 体验更加个性化。你的信息是安全的。',
     title_field: '你的头衔',
@@ -47,6 +49,7 @@ const cloud = {
     },
   },
   congrats: {
+    page_title: '获得早鸟惊喜',
     title: '好消息！你有资格获得 Logto Cloud 的早鸟惊喜。',
     description:
       '别错过：立即联系 Logto 团队，了解更多信息，获得 Logto Cloud 正式版 <strong>60 天</strong> 的免费试用机会！',
@@ -66,6 +69,7 @@ const cloud = {
     book_button: '预定',
   },
   sie: {
+    page_title: '定制登录体验',
     title: '让我们轻松定制你的登录体验',
     inspire: {
       title: '创建引人入胜的示例',

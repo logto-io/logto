@@ -1,4 +1,5 @@
 const logs = {
+  page_title: "Journaux d'audit",
   title: "Journaux d'audit",
   subtitle:
     "Visualisez les données du journal des événements d'authentification effectués par votre administrateur et vos utilisateurs.",

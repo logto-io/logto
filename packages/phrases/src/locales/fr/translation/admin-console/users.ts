@@ -1,4 +1,5 @@
 const users = {
+  page_title: 'Gestion des utilisateurs',
   title: 'Gestion des utilisateurs',
   subtitle:
     "Gérer les identités des utilisateurs, y compris la création d'utilisateurs, la modification des informations sur les utilisateurs, la consultation des journaux des utilisateurs, la réinitialisation des mots de passe et la suppression des utilisateurs.",

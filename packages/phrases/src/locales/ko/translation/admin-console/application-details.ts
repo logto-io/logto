@@ -1,4 +1,5 @@
 const application_details = {
+  page_title: 'Application details', // UNTRANSLATED
   back_to_applications: '어플리케이션으로 돌아가기',
   check_guide: '가이드 확인',
   settings: '설정',

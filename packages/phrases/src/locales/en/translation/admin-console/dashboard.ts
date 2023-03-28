@@ -1,4 +1,5 @@
 const dashboard = {
+  page_title: 'Dashboard',
   title: 'Dashboard',
   description: 'Get an overview about your app performance',
   total_users: 'Total users',

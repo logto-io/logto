@@ -15,6 +15,7 @@ import useSWR from 'swr';
 
 import AppError from '@/components/AppError';
 import Card from '@/components/Card';
+import PageMeta from '@/components/PageMeta';
 import TextInput from '@/components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import { withAppInsights } from '@/utils/app-insights';
@@ -59,6 +60,7 @@ function Dashboard() {
 
   return (
     <div className={styles.container}>
+      <PageMeta titleKey="dashboard.title" />
       <div className={styles.header}>
         <div className={styles.title}>{t('dashboard.title')}</div>
         <div className={styles.subtitle}>{t('dashboard.description')}</div>

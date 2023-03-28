@@ -1,4 +1,5 @@
 const logs = {
+  page_title: '감사 기록',
   title: '감사 기록',
   subtitle: '관리자나 사용자의 인증 기록을 확인해 보세요.',
   event: '활동',

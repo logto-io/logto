@@ -1,4 +1,5 @@
 const connectors = {
+  page_title: 'Connecteurs',
   title: 'Connecteurs',
   subtitle:
     'Configurez des connecteurs pour permettre une expérience de connexion sans mot de passe et sociale.',

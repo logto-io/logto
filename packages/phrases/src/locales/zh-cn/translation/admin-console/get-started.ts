@@ -1,4 +1,5 @@
 const get_started = {
+  page_title: '开始上手',
   progress: '开始上手: {{completed}}/{{total}}',
   progress_dropdown_title: '一些快速上手的操作',
   title: '成功开发身份方案，我们先来探索一番',

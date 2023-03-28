@@ -1,4 +1,5 @@
 const connectors = {
+  page_title: 'Connectoren',
   title: 'Connectoren',
   subtitle: 'Richte Connectoren ein um passwortlose und Social Anmeldung zu aktivieren',
   create: 'Social Connector erstellen',

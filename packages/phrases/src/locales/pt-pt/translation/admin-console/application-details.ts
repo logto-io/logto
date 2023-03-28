@@ -1,4 +1,5 @@
 const application_details = {
+  page_title: 'Application details', // UNTRANSLATED
   back_to_applications: 'Voltar para aplicações',
   check_guide: 'Guia de verificação',
   settings: 'Settings', // UNTRANSLATED

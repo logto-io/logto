@@ -10,6 +10,7 @@ import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
+import PageMeta from '@/components/PageMeta';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import { defaultPageSize } from '@/consts';
@@ -63,6 +64,7 @@ function Applications() {
 
   return (
     <div className={resourcesStyles.container}>
+      <PageMeta titleKey="applications.title" />
       <div className={resourcesStyles.headline}>
         <CardTitle title="applications.title" subtitle="applications.subtitle" />
         <Button

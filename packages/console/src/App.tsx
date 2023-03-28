@@ -3,6 +3,7 @@ import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, PredefinedScope } from '@logto/schemas';
 import { conditionalArray, deduplicate } from '@silverhand/essentials';
 import { useContext } from 'react';
+import { Helmet } from 'react-helmet';
 
 import 'overlayscrollbars/styles/overlayscrollbars.css';
 import './scss/normalized.scss';
@@ -15,7 +16,7 @@ import CloudApp from '@/cloud/App';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
 import initI18n from '@/i18n/init';
 
-import { adminTenantEndpoint } from './consts';
+import { adminTenantEndpoint, mainTitle } from './consts';
 import { isCloud } from './consts/cloud';
 import ErrorBoundary from './containers/ErrorBoundary';
 import TenantAppContainer from './containers/TenantAppContainer';
@@ -23,10 +24,8 @@ import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppEndpointsProvider from './contexts/AppEndpointsProvider';
 import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
-import setTitle from './utils/set-title';
 
 void initI18n();
-setTitle();
 
 function Content() {
   const { tenants, isSettle, currentTenantId } = useContext(TenantsContext);
@@ -64,6 +63,7 @@ function Content() {
       }}
     >
       <AppThemeProvider>
+        <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
         <ErrorBoundary>
           {!isCloud || isSettle ? (
             <AppEndpointsProvider>

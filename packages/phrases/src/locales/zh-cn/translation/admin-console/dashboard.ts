@@ -1,4 +1,5 @@
 const dashboard = {
+  page_title: '仪表盘',
   title: '仪表盘',
   description: '查看所有应用的数据概况',
   total_users: '总用户',

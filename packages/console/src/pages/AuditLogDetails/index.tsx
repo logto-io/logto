@@ -10,6 +10,7 @@ import CodeEditor from '@/components/CodeEditor';
 import DangerousRaw from '@/components/DangerousRaw';
 import DetailsPage from '@/components/DetailsPage';
 import FormField from '@/components/FormField';
+import PageMeta from '@/components/PageMeta';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
@@ -51,6 +52,7 @@ function AuditLogDetails() {
       error={error}
       onRetry={mutate}
     >
+      <PageMeta titleKey="log_details.page_title" />
       {data && (
         <>
           <Card className={styles.header}>

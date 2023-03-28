@@ -1,4 +1,5 @@
 const connectors = {
+  page_title: '连接器',
   title: '连接器',
   subtitle: '设置连接器，开启无密码和社交登录',
   create: '添加社交连接器',

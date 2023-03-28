@@ -18,6 +18,7 @@ import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsForm from '@/components/DetailsForm';
 import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
+import PageMeta from '@/components/PageMeta';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
@@ -138,6 +139,7 @@ function ApplicationDetails() {
         void mutateOidcConfig();
       }}
     >
+      <PageMeta titleKey="application_details.page_title" />
       {data && oidcConfig && (
         <>
           <Card className={styles.header}>

@@ -1,4 +1,5 @@
 const connectors = {
+  page_title: 'Conectores',
   title: 'Conectores',
   subtitle: 'Configure conectores para habilitar a experiência de login social e sem senha',
   create: 'Adicionar conector social',

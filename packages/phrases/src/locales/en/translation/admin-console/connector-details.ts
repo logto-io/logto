@@ -1,4 +1,5 @@
 const connector_details = {
+  page_title: 'Connector details',
   back_to_connectors: 'Back to Connectors',
   check_readme: 'Check README',
   settings: 'General settings',

@@ -1,4 +1,5 @@
 const api_resources = {
+  page_title: 'Recursos da API',
   title: 'Recursos da API',
   subtitle: 'Defina APIs que você pode consumir de seus aplicativos autorizados',
   create: 'Criar recurso de API',

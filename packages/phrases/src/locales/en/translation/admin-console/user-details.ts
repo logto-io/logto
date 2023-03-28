@@ -1,4 +1,5 @@
 const user_details = {
+  page_title: 'User details',
   back_to_users: 'Back to User Management',
   created_title: 'This user has been successfully created',
   created_guide: 'You can send the following log in information to the user',

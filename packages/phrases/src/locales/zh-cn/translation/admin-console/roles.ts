@@ -1,4 +1,5 @@
 const roles = {
+  page_title: '角色',
   title: '角色',
   subtitle:
     'RBAC 是一种访问控制方法，它使用角色来决定用户可以做什么事情，包括授予用户访问特定资源的权限。',

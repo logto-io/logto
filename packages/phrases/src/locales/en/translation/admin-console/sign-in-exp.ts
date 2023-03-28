@@ -1,9 +1,10 @@
 const sign_in_exp = {
+  page_title: 'Sign-in experience',
   title: 'Sign-in experience',
   description: 'Customize the sign in UI to match your brand and view in real time',
   tabs: {
     branding: 'Branding',
-    sign_up_and_sign_in: 'Sign up and Sign in',
+    sign_up_and_sign_in: 'Sign-up and Sign-in',
     others: 'Others',
   },
   welcome: {
@@ -55,7 +56,7 @@ const sign_in_exp = {
     and: 'and',
     or: 'or',
     sign_up: {
-      title: 'SIGN UP',
+      title: 'SIGN-UP',
       sign_up_identifier: 'Sign-up identifier',
       identifier_description:
         'The sign-up identifier is required for account creation and must be included in your sign-in screen.',
@@ -67,7 +68,7 @@ const sign_in_exp = {
       social_only_creation_description: '(This apply to social only account creation)',
     },
     sign_in: {
-      title: 'SIGN IN',
+      title: 'SIGN-IN',
       sign_in_identifier_and_auth: 'Identifier and authentication settings for sign-in',
       description:
         'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.',

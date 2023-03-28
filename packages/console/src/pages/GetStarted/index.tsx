@@ -6,6 +6,7 @@ import CompleteIndicator from '@/assets/images/task-complete.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';
+import PageMeta from '@/components/PageMeta';
 import Spacer from '@/components/Spacer';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { withAppInsights } from '@/utils/app-insights';
@@ -47,6 +48,7 @@ function GetStarted() {
 
   return (
     <div className={styles.container}>
+      <PageMeta titleKey="get_started.page_title" />
       <div className={styles.header}>
         <div className={styles.title}>{t('get_started.title')}</div>
         <div className={styles.subtitle}>
