@@ -1,3 +1,3 @@
-import type en from './locales/en.js';
+import type en from './locales/en/index.js';
 
 export type LocalePhrase = typeof en;

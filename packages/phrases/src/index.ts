@@ -6,6 +6,7 @@ import { z } from 'zod';
 import de from './locales/de/index.js';
 import en from './locales/en/index.js';
 import fr from './locales/fr/index.js';
+import ja from './locales/ja/index.js';
 import ko from './locales/ko/index.js';
 import ptBR from './locales/pt-br/index.js';
 import ptPT from './locales/pt-pt/index.js';
@@ -26,6 +27,7 @@ export const builtInLanguages = [
   'pt-BR',
   'tr-TR',
   'zh-CN',
+  'ja',
 ] as const;
 
 export const builtInLanguageOptions = builtInLanguages.map((languageTag) => ({
@@ -60,6 +62,7 @@ const resource: Resource = {
   'pt-BR': ptBR,
   'tr-TR': trTR,
   'zh-CN': zhCN,
+  ja,
 };
 
 export default resource;
