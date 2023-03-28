@@ -17,4 +17,5 @@ const sign_in_experiences = {
   unsupported_default_language: 'Bu dil - {{language}}, şu anda desteklenmemektedir.',
   at_least_one_authentication_factor: 'En az bir doğrulama faktörü seçmelisiniz.',
 };
+
 export default sign_in_experiences;

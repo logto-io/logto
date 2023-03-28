@@ -5,4 +5,5 @@ const guard = {
   file_size_exceeded: 'Tamanho do arquivo excedido.',
   mime_type_not_allowed: 'Tipo MIME não permitido.',
 };
+
 export default guard;

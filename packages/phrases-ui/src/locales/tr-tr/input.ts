@@ -6,4 +6,5 @@ const input = {
   confirm_password: 'Şifreyi Doğrula',
   search_region_code: 'Bölge kodunu ara',
 };
+
 export default input;

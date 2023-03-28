@@ -8,4 +8,5 @@ const auth = {
   jwt_sub_missing: '`sub` ausente no JWT.',
   require_re_authentication: 'A reautenticação é necessária para executar uma ação protegida.',
 };
+
 export default auth;

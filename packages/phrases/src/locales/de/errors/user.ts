@@ -33,4 +33,5 @@ const user = {
   missing_profile: 'Sie müssen zusätzliche Informationen angeben, bevor Sie sich anmelden können.',
   role_exists: 'Die Rollen-ID {{roleId}} wurde diesem Benutzer bereits hinzugefügt.',
 };
+
 export default user;

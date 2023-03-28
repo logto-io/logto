@@ -44,4 +44,5 @@ const others = {
       'Habilitar ou desabilitar o registro do usuário. Depois de desativados, os usuários ainda podem ser adicionados no Admin Console, mas os usuários não podem mais estabelecer contas por meio da interface do usuário de login.',
   },
 };
+
 export default others;

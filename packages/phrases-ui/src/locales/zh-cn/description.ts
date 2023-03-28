@@ -50,4 +50,5 @@ const description = {
   sign_in_to_your_account: '登录你的账号',
   no_region_code_found: '没有找到区域码',
 };
+
 export default description;

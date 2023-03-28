@@ -21,4 +21,5 @@ const session = {
   interaction_not_found:
     'Etkileşim oturumu bulunamadı. Lütfen geri gidin ve oturumu yeniden başlatın.',
 };
+
 export default session;

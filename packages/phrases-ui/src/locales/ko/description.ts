@@ -54,4 +54,5 @@ const description = {
   sign_in_to_your_account: '계정에 로그인하세요',
   no_region_code_found: '지역 코드를 찾을 수 없습니다.',
 };
+
 export default description;

@@ -33,4 +33,5 @@ const connector = {
   cannot_overwrite_metadata_for_non_standard_connector:
     "Bu bağlayıcının 'metadata'sı üzerine yazılamaz.",
 };
+
 export default connector;

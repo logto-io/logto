@@ -21,4 +21,5 @@ const error = {
   invalid_session: 'Session non trouvée. Veuillez revenir en arrière et vous connecter à nouveau.',
   timeout: 'Request timeout. Please try again later.',
 };
+
 export default error;

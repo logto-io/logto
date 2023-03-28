@@ -18,4 +18,5 @@ const error = {
   invalid_session: '세션을 찾을 수 없어요. 다시 로그인해 주세요.',
   timeout: '요청 시간이 초과되었어요. 잠시 후에 다시 시도해 주세요.',
 };
+
 export default error;

@@ -19,4 +19,5 @@ const sign_in_experiences = {
   unsupported_default_language: 'Este idioma - {{language}} não é suportado no momento.',
   at_least_one_authentication_factor: 'Você deve selecionar pelo menos um fator de autenticação.',
 };
+
 export default sign_in_experiences;

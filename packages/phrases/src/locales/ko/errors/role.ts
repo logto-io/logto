@@ -7,4 +7,5 @@ const role = {
   internal_role_violation:
     '내부 역할 위반: Logto에서 금지되는 내부 역할을 업데이트하거나 삭제하려고 할 수 있습니다. 새 역할을 만드는 경우 "#internal:"으로 시작하지 않는 다른 이름을 시도해보세요.',
 };
+
 export default role;

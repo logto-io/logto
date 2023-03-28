@@ -8,4 +8,5 @@ const auth = {
   require_re_authentication:
     'Korumalı bir işlem gerçekleştirmek için yeniden doğrulama gereklidir.',
 };
+
 export default auth;

@@ -3,4 +3,5 @@ const password = {
   pepper_not_found:
     'Mot de passe pepper non trouvé. Veuillez vérifier votre environnement de base.',
 };
+
 export default password;

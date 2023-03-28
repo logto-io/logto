@@ -24,4 +24,5 @@ const session = {
   interaction_not_found:
     "Session d'interaction introuvable. Veuillez retourner en arrière et recommencer la session.",
 };
+
 export default session;

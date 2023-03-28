@@ -9,4 +9,5 @@ const verification_code = {
   exceed_max_try:
     'La limite de tentatives de code de vérification a été dépassée. Veuillez demander un nouveau code de vérification.',
 };
+
 export default verification_code;

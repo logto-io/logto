@@ -4,4 +4,5 @@ const localization = {
   invalid_translation_structure:
     'Esquemas de dados inválidos. Verifique sua entrada e tente novamente.',
 };
+
 export default localization;

@@ -25,4 +25,5 @@ const action = {
   link_another_email_or_phone: 'Vincular outro email ou telefone',
   show_password: 'Mostrar palavra-passe',
 };
+
 export default action;

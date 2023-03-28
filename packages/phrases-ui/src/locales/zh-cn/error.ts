@@ -18,4 +18,5 @@ const error = {
   invalid_session: '未找到会话，请返回并重新登录。',
   timeout: '请求超时，请稍后重试。',
 };
+
 export default error;

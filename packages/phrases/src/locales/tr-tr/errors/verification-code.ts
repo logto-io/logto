@@ -7,4 +7,5 @@ const verification_code = {
   expired: 'Doğrulama kodu süresi dolmuştur. Lütfen yeni bir doğrulama kodu isteyin.',
   exceed_max_try: 'Doğrulama kodu deneme sınırı aşıldı. Lütfen yeni bir doğrulama kodu isteyin.',
 };
+
 export default verification_code;

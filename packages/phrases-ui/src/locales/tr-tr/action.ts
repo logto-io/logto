@@ -25,4 +25,5 @@ const action = {
   link_another_email_or_phone: 'Başka bir e-posta veya telefon bağlayın',
   show_password: 'Şifreyi göster',
 };
+
 export default action;

@@ -61,4 +61,5 @@ const description = {
   sign_in_to_your_account: 'Melde dich in deinem Konto an',
   no_region_code_found: 'Kein Regionencode gefunden',
 };
+
 export default description;

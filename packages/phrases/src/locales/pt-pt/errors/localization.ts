@@ -3,4 +3,5 @@ const localization = {
   invalid_translation_structure:
     'Estrutura de dados inválida. Verifique sua entrada e tente novamente.',
 };
+
 export default localization;

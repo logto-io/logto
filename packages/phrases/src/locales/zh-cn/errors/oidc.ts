@@ -15,4 +15,5 @@ const oidc = {
   unsupported_response_type: '不支持的 response_type',
   provider_error: 'OIDC 内部错误: {{message}}',
 };
+
 export default oidc;

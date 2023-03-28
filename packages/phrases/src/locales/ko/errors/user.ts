@@ -28,4 +28,5 @@ const user = {
   missing_profile: '로그인 전에 추가 정보를 제공해야 해요.',
   role_exists: '역할 ID {{roleId}}은/는 이미 이 사용자에게 할당되어 있어요.',
 };
+
 export default user;

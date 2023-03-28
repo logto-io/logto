@@ -3,4 +3,5 @@ const storage = {
   missing_parameter: 'Faltando o parâmetro {{parameter}} para o provedor de armazenamento.',
   upload_error: 'Falha ao enviar o arquivo para o provedor de armazenamento.',
 };
+
 export default storage;

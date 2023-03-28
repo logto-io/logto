@@ -29,4 +29,5 @@ const connector = {
   multiple_target_with_same_platform: '같은 목표와 플랫폼에 여러 소셜 연동을 가질 수 없어요.',
   cannot_overwrite_metadata_for_non_standard_connector: '이 연동의 메타데이터를 덮어쓸 수 없어요.',
 };
+
 export default connector;

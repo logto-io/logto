@@ -4,4 +4,5 @@ const entity = {
   not_exists_with_id: ' `{{id}}` id kimliğine sahip {{name}} mevcut değil.',
   not_found: 'Kaynak mevcut değil.',
 };
+
 export default entity;

@@ -8,4 +8,5 @@ const auth = {
   jwt_sub_missing: 'JWT에서 `sub`를 찾을 수 없어요.',
   require_re_authentication: '보호된 작업을 수행하려면 재인증이 필요해요.',
 };
+
 export default auth;

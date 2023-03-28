@@ -5,4 +5,5 @@ const guard = {
   file_size_exceeded: '파일 크기가 초과되었습니다.',
   mime_type_not_allowed: 'MIME 타입이 허용되지 않습니다.',
 };
+
 export default guard;

@@ -7,4 +7,5 @@ const role = {
   internal_role_violation:
     'Logto tarafından yasaklanan dahili bir rolü güncelleme veya silmeye çalışıyor olabilirsiniz. Yeni bir rol oluşturuyorsanız, "#internal:" ile başlamayan başka bir isim deneyin.',
 };
+
 export default role;

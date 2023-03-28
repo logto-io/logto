@@ -11,4 +11,5 @@ const sign_in_experiences = {
   unsupported_default_language: '{{language}} 无法选择为默认语言。',
   at_least_one_authentication_factor: '至少要选择一个登录要素',
 };
+
 export default sign_in_experiences;

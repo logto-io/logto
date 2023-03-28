@@ -16,4 +16,5 @@ const oidc = {
   unsupported_response_type: 'Nicht unterstützter `response_type` angefragt.',
   provider_error: 'OIDC interner Fehler: {{message}}.',
 };
+
 export default oidc;

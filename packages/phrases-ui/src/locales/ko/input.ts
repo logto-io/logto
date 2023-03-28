@@ -6,4 +6,5 @@ const input = {
   confirm_password: '비밀번호 확인',
   search_region_code: '지역 코드 검색',
 };
+
 export default input;

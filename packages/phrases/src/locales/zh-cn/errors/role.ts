@@ -6,4 +6,5 @@ const role = {
   internal_role_violation:
     '你可能正在尝试更新或删除 Logto 禁止的内部角色。如果你要创建新角色，请尝试使用不以“#internal:”开头的名称。',
 };
+
 export default role;

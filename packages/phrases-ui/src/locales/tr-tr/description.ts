@@ -57,4 +57,5 @@ const description = {
   sign_in_to_your_account: 'Hesabına giriş yap',
   no_region_code_found: 'Bölge kodu bulunamadı',
 };
+
 export default description;

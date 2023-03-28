@@ -7,4 +7,5 @@ const role = {
   internal_role_violation:
     'Você pode estar tentando atualizar ou excluir uma função interna que é proibida pelo Logto. Se você estiver criando uma nova função, tente outro nome que não comece com "#internal:". ',
 };
+
 export default role;

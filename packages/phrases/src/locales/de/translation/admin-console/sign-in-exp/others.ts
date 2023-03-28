@@ -47,4 +47,5 @@ const others = {
       'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
   },
 };
+
 export default others;

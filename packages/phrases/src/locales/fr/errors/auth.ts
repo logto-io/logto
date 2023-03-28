@@ -9,4 +9,5 @@ const auth = {
   require_re_authentication:
     'La ré-authentification est requise pour effectuer une action protégée.',
 };
+
 export default auth;

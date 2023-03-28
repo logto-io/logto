@@ -15,4 +15,5 @@ const oidc = {
   unsupported_response_type: '지원하지 않은 `response_type` 요청이에요.',
   provider_error: 'OIDC 내부 오류: {{message}}.',
 };
+
 export default oidc;

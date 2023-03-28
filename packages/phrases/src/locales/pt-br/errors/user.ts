@@ -29,4 +29,5 @@ const user = {
   missing_profile: 'Você precisa fornecer informações adicionais antes de fazer login.',
   role_exists: 'O id da função {{roleId}} já foi adicionado a este usuário',
 };
+
 export default user;

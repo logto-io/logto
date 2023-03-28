@@ -7,4 +7,5 @@ const auth = {
   jwt_sub_missing: 'JWT 缺失 `sub`',
   require_re_authentication: '需要重新认证以进行受保护操作。',
 };
+
 export default auth;

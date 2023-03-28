@@ -35,4 +35,5 @@ const connector = {
   cannot_overwrite_metadata_for_non_standard_connector:
     'Os metadados deste conector não podem ser sobrescritos.',
 };
+
 export default connector;

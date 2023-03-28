@@ -4,4 +4,5 @@ const localization = {
   invalid_translation_structure:
     'Geçersiz veri şemaları. Lütfen girdilerinizi kontrol edin ve tekrar deneyin.',
 };
+
 export default localization;

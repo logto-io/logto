@@ -22,4 +22,5 @@ const session = {
   interaction_not_found:
     'Interaktionssitzung nicht gefunden. Bitte gehen Sie zurück und starten Sie die Sitzung erneut.',
 };
+
 export default session;

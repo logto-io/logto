@@ -3,4 +3,5 @@ const storage = {
   missing_parameter: 'Depolama sağlayıcısı için eksik parametre {{parameter}}.',
   upload_error: 'Dosya yüklenemedi.',
 };
+
 export default storage;

@@ -25,4 +25,5 @@ const action = {
   link_another_email_or_phone: 'Andere Email oder Telefonnummer verknüpfen',
   show_password: 'Passwort anzeigen',
 };
+
 export default action;

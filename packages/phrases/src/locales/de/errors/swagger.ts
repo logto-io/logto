@@ -3,4 +3,5 @@ const swagger = {
   not_supported_zod_type_for_params:
     'Nicht unterstützter Zod Typ für diese Parameter. Überprüfe deine route guard Konfiguration.',
 };
+
 export default swagger;

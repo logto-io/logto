@@ -25,4 +25,5 @@ const action = {
   link_another_email_or_phone: '다른 이메일 또는 전화번호 연동',
   show_password: '비밀번호 보기',
 };
+
 export default action;

@@ -3,4 +3,5 @@ const storage = {
   missing_parameter: 'Fehlender Parameter {{parameter}} für den Storage-Anbieter.',
   upload_error: 'Das Hochladen der Datei zum Storage-Anbieter ist fehlgeschlagen.',
 };
+
 export default storage;

@@ -53,4 +53,5 @@ const sign_up_and_sign_in = {
       'Isso é essencial, pois você selecionou {{identifier}} como um identificador obrigatório.',
   },
 };
+
 export default sign_up_and_sign_in;

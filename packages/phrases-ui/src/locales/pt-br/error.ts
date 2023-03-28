@@ -19,4 +19,5 @@ const error = {
   invalid_session: 'Sessão não encontrada. Volte e faça login novamente.',
   timeout: 'Tempo limite excedido. Por favor, tente novamente mais tarde.',
 };
+
 export default error;

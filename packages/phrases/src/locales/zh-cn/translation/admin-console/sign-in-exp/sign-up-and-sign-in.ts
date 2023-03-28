@@ -48,4 +48,5 @@ const sign_up_and_sign_in = {
       '因注册设置里你启用了{{identifier}}标识。这些信息在用户登录时，属于必选项。',
   },
 };
+
 export default sign_up_and_sign_in;

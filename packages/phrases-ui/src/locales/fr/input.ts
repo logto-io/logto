@@ -6,4 +6,5 @@ const input = {
   confirm_password: 'Confirmer le mot de passe',
   search_region_code: 'Rechercher le code de région',
 };
+
 export default input;

@@ -16,4 +16,5 @@ const session = {
   identifier_not_found: '找不到用户标识符。请返回并重新登录。',
   interaction_not_found: '找不到交互会话。请返回并重新开始会话。',
 };
+
 export default session;

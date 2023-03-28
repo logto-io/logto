@@ -20,4 +20,5 @@ const sign_in_experiences = {
   at_least_one_authentication_factor:
     'Sie müssen mindestens einen Authentifizierungsfaktor auswählen.',
 };
+
 export default sign_in_experiences;

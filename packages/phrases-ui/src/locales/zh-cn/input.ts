@@ -6,4 +6,5 @@ const input = {
   confirm_password: '确认密码',
   search_region_code: '搜索区域码',
 };
+
 export default input;

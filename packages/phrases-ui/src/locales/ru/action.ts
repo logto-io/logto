@@ -25,4 +25,5 @@ const action = {
   link_another_email_or_phone: 'Привязать другую почту или номер',
   show_password: 'Показать пароль',
 };
+
 export default action;

@@ -28,4 +28,5 @@ const connector = {
   multiple_target_with_same_platform: '同一平台上，多个社交连接器不能重复使用相同的 “Target”。',
   cannot_overwrite_metadata_for_non_standard_connector: '不可覆盖该连接器的 metadata 参数。',
 };
+
 export default connector;

@@ -51,4 +51,5 @@ const sign_up_and_sign_in = {
     delete_sign_in_method: '{{identifier}}를 필수 ID로 설정했기 때문에 이 옵션은 필수예요.',
   },
 };
+
 export default sign_up_and_sign_in;

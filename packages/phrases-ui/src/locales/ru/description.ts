@@ -60,4 +60,5 @@ const description = {
   sign_in_to_your_account: 'Войди в свой аккаунт',
   no_region_code_found: 'Не удалось определить код региона',
 };
+
 export default description;

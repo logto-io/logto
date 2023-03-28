@@ -16,4 +16,5 @@ const sign_in_experiences = {
   unsupported_default_language: '{{language}} 언어는 아직 지원하지 않아요.',
   at_least_one_authentication_factor: '최소한 하나의 인증 방법을 선택해야 해요.',
 };
+
 export default sign_in_experiences;

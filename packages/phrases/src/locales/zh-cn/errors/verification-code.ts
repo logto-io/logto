@@ -7,4 +7,5 @@ const verification_code = {
   expired: '验证码已过期，请尝试请求新的验证码。',
   exceed_max_try: '超过最大验证次数，请尝试请求新的验证码。',
 };
+
 export default verification_code;

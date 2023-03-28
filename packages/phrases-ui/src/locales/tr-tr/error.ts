@@ -19,4 +19,5 @@ const error = {
   invalid_session: 'Oturum bulunamadı. Lütfen geri dönüp tekrar giriş yapınız.',
   timeout: 'Oturum zaman aşımına uğradı. Lütfen geri dönüp tekrar giriş yapınız.',
 };
+
 export default error;

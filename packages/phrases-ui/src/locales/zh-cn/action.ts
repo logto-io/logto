@@ -25,4 +25,5 @@ const action = {
   link_another_email_or_phone: '绑定邮箱或手机号',
   show_password: '显示密码',
 };
+
 export default action;

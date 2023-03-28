@@ -7,4 +7,5 @@ const verification_code = {
   expired: '인증 코드가 만료되었어요. 새 인증 코드를 요청해 주세요.',
   exceed_max_try: '인증 코드 재시도 한도에 도달했어요. 새 인증 코드를 요청해 주세요.',
 };
+
 export default verification_code;

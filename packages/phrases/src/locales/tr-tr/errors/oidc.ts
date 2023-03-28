@@ -16,4 +16,5 @@ const oidc = {
   unsupported_response_type: 'Desteklenmeyen `response_type` istendi.',
   provider_error: 'Dahili OIDC Hatası: {{message}}.',
 };
+
 export default oidc;

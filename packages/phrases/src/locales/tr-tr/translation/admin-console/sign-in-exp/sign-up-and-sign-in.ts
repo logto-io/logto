@@ -53,4 +53,5 @@ const sign_up_and_sign_in = {
       'This is essential as you have selected {{identifier}} as a required identifier.',
   },
 };
+
 export default sign_up_and_sign_in;

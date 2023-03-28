@@ -20,4 +20,5 @@ const error = {
   invalid_session: 'Sessão não encontrada. Volte e faça login novamente.',
   timeout: 'Tempo limite de sessão. Volte e faça login novamente.',
 };
+
 export default error;
