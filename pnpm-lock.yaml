@@ -29,7 +29,7 @@ importers:
     specifiers:
       '@logto/connector-kit': workspace:^
       '@logto/core-kit': workspace:^
-      '@logto/language-kit': workspace:^1.0.0
+      '@logto/language-kit': workspace:^
       '@logto/phrases': workspace:^
       '@logto/phrases-ui': workspace:^
       '@logto/schemas': workspace:^
