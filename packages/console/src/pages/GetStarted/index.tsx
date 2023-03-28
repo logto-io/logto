@@ -22,14 +22,14 @@ function GetStarted() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const hideGetStarted = () => {
+  const hideGetStarted = async () => {
     if (isUpdating) {
       return;
     }
     setIsUpdating(true);
 
     try {
-      void update({ getStartedHidden: true });
+      await update({ getStartedHidden: true });
       // Navigate to next menu item
       navigate('/dashboard');
     } finally {
