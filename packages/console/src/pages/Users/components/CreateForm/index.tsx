@@ -14,7 +14,7 @@ import UserAccountInformation from '@/components/UserAccountInformation';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import { createPassword } from './utils';
+import { createInitialPassword } from './utils';
 
 type FormData = {
   username: string;
@@ -50,7 +50,7 @@ function CreateForm({ onClose, onCreate }: Props) {
       return;
     }
 
-    const password = createPassword();
+    const password = createInitialPassword();
 
     const createdUser = await api.post('api/users', { json: { ...data, password } }).json<User>();
 
