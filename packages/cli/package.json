@@ -45,6 +45,9 @@
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
     "@logto/core-kit": "workspace:^",
+    "@logto/language-kit": "workspace:^",
+    "@logto/phrases": "workspace:^",
+    "@logto/phrases-ui": "workspace:^",
     "@logto/schemas": "workspace:^",
     "@logto/shared": "workspace:^",
     "@silverhand/essentials": "^2.5.0",

@@ -29,6 +29,9 @@ importers:
     specifiers:
       '@logto/connector-kit': workspace:^
       '@logto/core-kit': workspace:^
+      '@logto/language-kit': workspace:^1.0.0
+      '@logto/phrases': workspace:^
+      '@logto/phrases-ui': workspace:^
       '@logto/schemas': workspace:^
       '@logto/shared': workspace:^
       '@silverhand/eslint-config': 3.0.0
@@ -69,6 +72,9 @@ importers:
     dependencies:
       '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
+      '@logto/language-kit': link:../toolkit/language-kit
+      '@logto/phrases': link:../phrases
+      '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 2.5.0

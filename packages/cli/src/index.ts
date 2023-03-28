@@ -6,6 +6,7 @@ import { hideBin } from 'yargs/helpers';
 import connector from './commands/connector/index.js';
 import database from './commands/database/index.js';
 import install from './commands/install/index.js';
+import translate from './commands/translate/index.js';
 import { packageJson } from './package-json.js';
 import { cliConfig, ConfigKey } from './utils.js';
 
@@ -46,6 +47,7 @@ void yargs(hideBin(process.argv))
   .command(install)
   .command(database)
   .command(connector)
+  .command(translate)
   .demandCommand(1)
   .showHelpOnFail(false, `Specify ${chalk.green('--help')} for available options`)
   .strict()

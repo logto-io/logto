@@ -45,10 +45,15 @@ export const log: Log = Object.freeze({
   },
 });
 
-export const downloadFile = async (url: string, destination: string) => {
+export const getProxy = () => {
   const { HTTPS_PROXY, HTTP_PROXY, https_proxy, http_proxy } = process.env;
+
+  return HTTPS_PROXY ?? https_proxy ?? HTTP_PROXY ?? http_proxy;
+};
+
+export const downloadFile = async (url: string, destination: string) => {
   const file = createWriteStream(destination);
-  const proxy = HTTPS_PROXY ?? https_proxy ?? HTTP_PROXY ?? http_proxy;
+  const proxy = getProxy();
   const stream = got.stream(url, {
     ...(proxy && { agent: { https: new HttpsProxyAgent({ proxy }) } }),
   });
