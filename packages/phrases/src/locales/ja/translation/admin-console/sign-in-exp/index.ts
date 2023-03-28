@@ -79,6 +79,8 @@ const sign_in_exp = {
     native: 'ネイティブ',
     desktop_web: 'デスクトップWeb',
     mobile_web: 'モバイルWeb',
+    desktop: 'Desktop', // UNTRANSLATED
+    mobile: 'Mobile', // UNTRANSLATED
   },
 };
 

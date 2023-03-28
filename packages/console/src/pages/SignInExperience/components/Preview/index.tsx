@@ -1,7 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
-import type { SignInExperience } from '@logto/schemas';
-import { Theme } from '@logto/schemas';
+import { type SignInExperience, Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,7 @@ import Select from '@/components/Select';
 import SignInExperiencePreview, { ToggleUiThemeButton } from '@/components/SignInExperiencePreview';
 import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import useConnectorGroups from '@/hooks/use-connector-groups';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
 import * as styles from './index.module.scss';
@@ -29,6 +29,7 @@ function Preview({
   className,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { hasSupportNativePlatformTarget: isNativeTabEnabled } = useConnectorGroups();
   const [language, setLanguage] = useState<LanguageTag>('en');
   const [mode, setMode] = useState<Theme>(Theme.Light);
   const [platform, setPlatform] = useState<PreviewPlatform>(PreviewPlatform.DesktopWeb);
@@ -95,7 +96,9 @@ function Preview({
             setPlatform(PreviewPlatform.DesktopWeb);
           }}
         >
-          {t('sign_in_exp.preview.desktop_web')}
+          {t(
+            isNativeTabEnabled ? 'sign_in_exp.preview.desktop_web' : 'sign_in_exp.preview.desktop'
+          )}
         </TabNavItem>
         <TabNavItem
           isActive={platform === PreviewPlatform.MobileWeb}
@@ -103,16 +106,18 @@ function Preview({
             setPlatform(PreviewPlatform.MobileWeb);
           }}
         >
-          {t('sign_in_exp.preview.mobile_web')}
+          {t(isNativeTabEnabled ? 'sign_in_exp.preview.mobile_web' : 'sign_in_exp.preview.mobile')}
         </TabNavItem>
-        <TabNavItem
-          isActive={platform === PreviewPlatform.Mobile}
-          onClick={() => {
-            setPlatform(PreviewPlatform.Mobile);
-          }}
-        >
-          {t('sign_in_exp.preview.native')}
-        </TabNavItem>
+        {isNativeTabEnabled && (
+          <TabNavItem
+            isActive={platform === PreviewPlatform.Mobile}
+            onClick={() => {
+              setPlatform(PreviewPlatform.Mobile);
+            }}
+          >
+            {t('sign_in_exp.preview.native')}
+          </TabNavItem>
+        )}
       </TabNav>
       <SignInExperiencePreview
         platform={platform}

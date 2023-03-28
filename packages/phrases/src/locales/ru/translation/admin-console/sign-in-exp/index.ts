@@ -81,6 +81,8 @@ const sign_in_exp = {
     native: 'Нативный',
     desktop_web: 'Веб на рабочем столе',
     mobile_web: 'Мобильный веб',
+    desktop: 'Desktop', // UNTRANSLATED
+    mobile: 'Mobile', // UNTRANSLATED
   },
 };
 

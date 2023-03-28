@@ -78,6 +78,8 @@ const sign_in_exp = {
     native: 'Doğal',
     desktop_web: 'Masaüstü Web',
     mobile_web: 'Mobil Web',
+    desktop: 'Desktop', // UNTRANSLATED
+    mobile: 'Mobile', // UNTRANSLATED
   },
   others,
   sign_up_and_sign_in,

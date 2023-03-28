@@ -74,6 +74,8 @@ const sign_in_exp = {
     native: '移动原生',
     desktop_web: '桌面网页',
     mobile_web: '移动网页',
+    desktop: 'Desktop', // UNTRANSLATED
+    mobile: 'Mobile', // UNTRANSLATED
   },
   others,
   sign_up_and_sign_in,

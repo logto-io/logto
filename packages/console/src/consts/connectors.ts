@@ -55,3 +55,5 @@ export const defaultEmailConnectorGroup: ConnectorGroup = {
   logoDark: null,
   target: '',
 };
+
+export const supportNativePlatformTargets = ['wechat', 'alipay'];
