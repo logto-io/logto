@@ -1,12 +1,13 @@
 import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { PasswordInputField } from '@/components/InputFields';
+import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
@@ -25,6 +26,7 @@ type Props = {
 };
 
 type FormState = {
+  identifier: IdentifierInputValue;
   password: string;
 };
 
@@ -42,10 +44,17 @@ const PasswordForm = ({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isValid },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
-    defaultValues: { password: '' },
+    defaultValues: {
+      identifier: {
+        type: identifier,
+        value,
+      },
+      password: '',
+    },
   });
 
   useEffect(() => {
@@ -58,20 +67,33 @@ const PasswordForm = ({
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ password }, event) => {
-        event?.preventDefault();
+      void handleSubmit(async ({ identifier: { type, value }, password }) => {
+        if (!type) {
+          return;
+        }
 
         await onSubmit({
-          [identifier]: value,
+          [type]: value,
           password,
         });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit, identifier, value]
+    [clearErrorMessage, handleSubmit, onSubmit]
   );
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
+      <Controller
+        control={control}
+        name="identifier"
+        render={({
+          field: {
+            name,
+            value: { type, value },
+          },
+        }) => <input readOnly hidden name={name} value={value} autoComplete={type} />}
+      />
+
       <PasswordInputField
         autoFocus={autoFocus}
         className={styles.inputField}
