@@ -24,11 +24,11 @@ export const readLocaleFiles = async (directory: string): Promise<string[]> => {
 };
 
 export const readBaseLocaleFiles = async (directory: string): Promise<string[]> => {
-  const enDirectory = path.join(directory, baseLanguage);
+  const enDirectory = path.join(directory, baseLanguage.toLowerCase());
   const stat = await fs.stat(enDirectory);
 
   if (!stat.isDirectory()) {
-    log.error(directory, 'has no `' + baseLanguage + '` directory');
+    log.error(directory, 'has no `' + baseLanguage.toLowerCase() + '` directory');
   }
 
   return readLocaleFiles(enDirectory);
