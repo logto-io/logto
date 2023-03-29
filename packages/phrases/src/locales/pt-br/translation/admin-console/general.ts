@@ -2,7 +2,7 @@ const general = {
   placeholder: 'Placeholder',
   skip: 'Pular',
   next: 'Próximo',
-  back: 'Back', // UNTRANSLATED
+  back: 'Back',
   retry: 'Tente novamente',
   done: 'Feito',
   search: 'Buscar',
@@ -40,17 +40,17 @@ const general = {
   stay_on_page: 'Ficar na página',
   type_to_search: 'Digite para pesquisar',
   got_it: 'Entendi',
-  continue: 'Continue', // UNTRANSLATED
+  continue: 'Continue',
   page_info: '{{min, number}}-{{max, number}} de {{total, number}}',
   learn_more: 'Saber mais',
   tab_errors: '{{count, number}} erros',
-  skip_for_now: 'Skip for now', // UNTRANSLATED
-  remove: 'Remove', // UNTRANSLATED
-  visit: 'Visit', // UNTRANSLATED
-  join: 'Join', // UNTRANSLATED
-  try_now: 'Try Now', // UNTRANSLATED
-  multiple_form_field: '(Multiple)', // UNTRANSLATED
-  demo: 'Demo', // UNTRANSLATED
+  skip_for_now: 'Skip for now',
+  remove: 'Remove',
+  visit: 'Visit',
+  join: 'Join',
+  try_now: 'Try Now',
+  multiple_form_field: '(Multiple)',
+  demo: 'Demo',
 };
 
 export default general;

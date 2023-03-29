@@ -1,82 +1,83 @@
 const profile = {
-  page_title: 'Account Settings', // UNTRANSLATED
-  title: 'Account Settings', // UNTRANSLATED
+  page_title: 'Hesap Ayarları',
+  title: 'Hesap Ayarları',
   description:
-    'Change your account settings and manage your personal information here to ensure your account security.', // UNTRANSLATED
+    'Hesap güvenliğinizi sağlamak için hesap ayarlarınızı değiştirin ve kişisel bilgilerinizi yönetin.',
   settings: {
-    title: 'PROFILE SETTINGS', // UNTRANSLATED
-    profile_information: 'Profile information', // UNTRANSLATED
-    avatar: 'Avatar', // UNTRANSLATED
-    name: 'Name', // UNTRANSLATED
-    username: 'Username', // UNTRANSLATED
+    title: 'PROFİL AYARLARI',
+    profile_information: 'Profil bilgisi',
+    avatar: 'Avatar',
+    name: 'İsim',
+    username: 'Kullanıcı adı',
   },
   link_account: {
-    title: 'LINK ACCOUNT', // UNTRANSLATED
-    email_sign_in: 'Email sign-In', // UNTRANSLATED
-    email: 'Email', // UNTRANSLATED
-    social_sign_in: 'Social sign-In', // UNTRANSLATED
-    link_email: 'Link email', // UNTRANSLATED
-    link_email_subtitle: 'Link your email to sign in or help with account recovery.', // UNTRANSLATED
-    email_required: 'Email is required', // UNTRANSLATED
-    invalid_email: 'Invalid email address', // UNTRANSLATED
-    identical_email_address: 'The input email address is identical to the current one', // UNTRANSLATED
-    anonymous: 'Anonymous', // UNTRANSLATED
+    title: 'HESABI BAĞLA',
+    email_sign_in: 'E-posta ile giriş',
+    email: 'E-posta',
+    social_sign_in: 'Sosyal medya hesabıyla giriş',
+    link_email: 'E-postayı bağla',
+    link_email_subtitle:
+      'Giriş yapmak veya hesap kurtarımında yardımcı olmak için e-postanızı bağlayın.',
+    email_required: 'E-posta gerekli',
+    invalid_email: 'Geçersiz e-posta adresi',
+    identical_email_address: 'Girilen e-posta adresi mevcut olanla aynı',
+    anonymous: 'Anonim',
   },
   password: {
-    title: 'PASSWORD & SECURITY', // UNTRANSLATED
-    password: 'Password', // UNTRANSLATED
-    password_setting: 'Password setting', // UNTRANSLATED
-    new_password: 'New password', // UNTRANSLATED
-    confirm_password: 'Confirm password', // UNTRANSLATED
-    enter_password: 'Enter password', // UNTRANSLATED
-    enter_password_subtitle: 'Verify it’s you to protect your account security.', // UNTRANSLATED
-    set_password: 'Set password', // UNTRANSLATED
-    verify_via_password: 'Verify via password', // UNTRANSLATED
-    show_password: 'Show password', // UNTRANSLATED
-    required: 'Password is required', // UNTRANSLATED
-    min_length: 'Password requires a minimum of {{min}} characters', // UNTRANSLATED
-    do_not_match: 'Passwords do not match. Please try again.', // UNTRANSLATED
+    title: 'ŞİFRE VE GÜVENLİK',
+    password: 'Şifre',
+    password_setting: 'Şifre ayarları',
+    new_password: 'Yeni şifre',
+    confirm_password: 'Şifreyi onayla',
+    enter_password: 'Şifre girin',
+    enter_password_subtitle: 'Hesap güvenliğinizi korumak için siz olduğunuzu doğrulayın.',
+    set_password: 'Şifre oluştur',
+    verify_via_password: 'Şifre ile doğrula',
+    show_password: 'Şifreyi göster',
+    required: 'Şifre gerekli',
+    min_length: 'Şifre en az {{min}} karakterden oluşmalıdır',
+    do_not_match: 'Şifreler eşleşmiyor. Tekrar deneyin.',
   },
   code: {
-    enter_verification_code: 'Enter verification code', // UNTRANSLATED
+    enter_verification_code: 'Doğrulama kodu girin',
     enter_verification_code_subtitle:
-      'The verification code has been sent to <strong>{{target}}</strong>', // UNTRANSLATED
-    verify_via_code: 'Verify via verification code', // UNTRANSLATED
-    resend: 'Resend verification code', // UNTRANSLATED
-    resend_countdown: 'Resend in {{countdown}} seconds', // UNTRANSLATED
+      'Doğrulama kodu, <strong>{{target}}</strong> adresine gönderildi.',
+    verify_via_code: 'Doğrulama kodu ile doğrula',
+    resend: 'Doğrulama kodunu tekrar gönder',
+    resend_countdown: '{{countdown}} saniye içinde tekrar gönder',
   },
   delete_account: {
-    title: 'DELETE ACCOUNT', // UNTRANSLATED
-    label: 'Delete account', // UNTRANSLATED
+    title: 'HESABI SİL',
+    label: 'Hesabı sil',
     description:
-      'Deleting your account will remove all of your personal information, user data, and configuration. This action cannot be undone.', // UNTRANSLATED
-    button: 'Delete account', // UNTRANSLATED
+      'Hesabınızın tüm kişisel bilgileri, kullanıcı verileri ve yapılandırması silinecektir. Bu işlem geri alınamaz.',
+    button: 'Hesabı sil',
     dialog_paragraph_1:
-      "We're sorry to hear that you want to delete your account. Deleting your account will permanently remove all data, including user information, logs, and settings, and this action cannot be undone. So please make sure to backup any important data before proceeding.", // UNTRANSLATED
+      'Hesabınızı silmek istediğinize üzgünüz. Hesabınız kalıcı olarak tüm verileri, kullanıcı bilgileri, kayıtlar ve ayarlar dahil olmak üzere silinecektir ve bu işlem geri alınamaz. Bu nedenle, devam etmeden önce önemli verilerinizi yedeklediğinizden emin olun.',
     dialog_paragraph_2:
-      'To proceed with the account deletion process, please email our support team at <a>mail</a> with the subject “Account Deletion Request”. We will assist you and ensure that all of your data is properly deleted from our system.', // UNTRANSLATED
+      'Hesap silme işlemine devam etmek için, lütfen destek ekibimize, <a>mail</a> adresine “Hesap Silme İsteği” konulu e-posta gönderin. Size yardımcı olacağız ve tüm verilerinizin sistemimizden uygun şekilde silineceğinden emin olacağız.',
     dialog_paragraph_3:
-      'Thank you for choosing Logto Cloud. If you have any further questions or concerns, please do not hesitate to reach out to us.', // UNTRANSLATED
+      'Logto Cloud’u tercih ettiğiniz için teşekkür ederiz. Herhangi bir sorunuz veya endişeniz varsa, bizimle iletişime geçmekten çekinmeyin.',
   },
-  set: 'Set', // UNTRANSLATED
-  change: 'Change', // UNTRANSLATED
-  link: 'Link', // UNTRANSLATED
-  unlink: 'Unlink', // UNTRANSLATED
-  not_set: 'Not set', // UNTRANSLATED
-  change_avatar: 'Change avatar', // UNTRANSLATED
-  change_name: 'Change name', // UNTRANSLATED
-  change_username: 'Change username', // UNTRANSLATED
-  set_name: 'Set name', // UNTRANSLATED
-  email_changed: 'Email changed!', // UNTRANSLATED
-  password_changed: 'Password changed!', // UNTRANSLATED
-  updated: '{{target}} updated!', // UNTRANSLATED
-  linked: '{{target}} linked!', // UNTRANSLATED
-  unlinked: '{{target}} unlinked!', // UNTRANSLATED
+  set: 'Ayarla',
+  change: 'Değiştir',
+  link: 'Bağla',
+  unlink: 'Bağlantıyı kes',
+  not_set: 'Belirtilmemiş',
+  change_avatar: 'Avatarı değiştir',
+  change_name: 'İsmi değiştir',
+  change_username: 'Kullanıcı adını değiştir',
+  set_name: 'İsmi ayarla',
+  email_changed: 'E-posta değiştirildi!',
+  password_changed: 'Şifre değiştirildi!',
+  updated: '{{target}} güncellendi!',
+  linked: '{{target}} bağlandı!',
+  unlinked: '{{target}} bağlantısı kesildi!',
   email_exists_reminder:
-    'This email {{email}} is associated with an existing account. Link another email here.', // UNTRANSLATED
-  unlink_confirm_text: 'Yes, unlink', // UNTRANSLATED
+    'Bu e-posta {{email}}, mevcut bir hesapla ilişkilendirilmiştir. Başka bir e-posta bağlayın.',
+  unlink_confirm_text: 'Evet, bağlantıyı kes',
   unlink_reminder:
-    'Users will not be able to sign in with the <span></span> account if you unlink it. Are you sure to proceed?', // UNTRANSLATED
+    'Bağlantıyı keserseniz, kullanıcılar <span></span> hesabıyla giriş yapamazlar. Devam etmek istediğinizden emin misiniz?',
 };
 
 export default profile;

@@ -1,57 +1,56 @@
-// UNTRANSLATED
 const sign_up_and_sign_in = {
-  identifiers_email: 'Email address',
-  identifiers_phone: 'Phone number',
-  identifiers_username: 'Username',
-  identifiers_email_or_sms: 'Email address or phone number',
-  identifiers_none: 'Not applicable',
-  and: 'and',
-  or: 'or',
+  identifiers_email: 'E-posta adresi',
+  identifiers_phone: 'Telefon numarası',
+  identifiers_username: 'Kullanıcı adı',
+  identifiers_email_or_sms: 'E-posta adresi veya telefon numarası',
+  identifiers_none: 'Geçersiz',
+  and: 've',
+  or: 'veya',
   sign_up: {
-    title: 'SIGN UP',
-    sign_up_identifier: 'Sign-up identifier',
+    title: 'KAYDOL',
+    sign_up_identifier: 'Kayıt tanımlayıcı',
     identifier_description:
-      'The sign-up identifier is required for account creation and must be included in your sign-in screen.',
-    sign_up_authentication: 'Authentication setting for sign-up',
+      'Hesap oluşturmak için kayıt tanımlayıcı gereklidir ve giriş ekranınıza dahil edilmelidir.',
+    sign_up_authentication: 'Kaydolma doğrulama ayarları',
     authentication_description:
-      'All selected actions will be obligatory for users to complete the flow.',
-    set_a_password_option: 'Create your password',
-    verify_at_sign_up_option: 'Verify at sign-up',
-    social_only_creation_description: '(This apply to social only account creation)',
+      'Seçilen tüm işlemler, kullanıcıların akışı tamamlamaları zorunlu olacaktır.',
+    set_a_password_option: 'Şifrenizi oluşturun',
+    verify_at_sign_up_option: 'Kaydolduğunuzda doğrulayın',
+    social_only_creation_description: '(Bu sadece sosyal hesap yaratımı için geçerlidir)',
   },
   sign_in: {
-    title: 'SIGN IN',
-    sign_in_identifier_and_auth: 'Identifier and authentication settings for sign-in',
+    title: 'OTURUM AÇIN',
+    sign_in_identifier_and_auth: 'Oturum açma tanımlayıcısı ve doğrulama ayarları',
     description:
-      'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.',
-    add_sign_in_method: 'Add Sign-in Method',
-    password_auth: 'Password',
-    verification_code_auth: 'Verification code',
-    auth_swap_tip: 'Swap the options below to determine which appears first in the flow.',
-    require_auth_factor: 'You have to select at least one authentication factor.',
+      'Kullanıcılar mevcut seçeneklerden herhangi biriyle oturum açabilir. Aşağıdaki seçenekleri sürükleyip bırakarak düzenleyin.',
+    add_sign_in_method: 'Oturum açma yöntemi ekle',
+    password_auth: 'Şifre',
+    verification_code_auth: 'Doğrulama kodu',
+    auth_swap_tip:
+      'Akışta ilk olarak hangisinin göründüğünü belirlemek için seçeneklerin yerlerini değiştirin.',
+    require_auth_factor: 'En az bir doğrulama faktörü seçmeniz gerekiyor.',
   },
   social_sign_in: {
-    title: 'SOCIAL SIGN-IN',
-    social_sign_in: 'Social sign-in',
+    title: 'SOSYAL MEDYA İLE OTURUM AÇIN',
+    social_sign_in: 'Sosyal medya ile oturum açın',
     description:
-      'Depending on the mandatory identifier you set up, your user may be asked to provide an identifier when signing up via social connector.',
-    add_social_connector: 'Add Social Connector',
+      'Kullanıcı, sosyal bağlantı noktası aracılığıyla kaydolurken belirlediğiniz zorunlu tanımlayıcıya bağlı olarak bir tanımlayıcı sağlaması istenebilir.',
+    add_social_connector: 'Sosyal Bağlantı Noktası Ekle',
     set_up_hint: {
-      not_in_list: 'Not in the list?',
-      set_up_more: 'Set up',
-      go_to: 'other social connectors now.',
+      not_in_list: 'Listede değil mi?',
+      set_up_more: 'Daha fazlasını kur',
+      go_to: 'şimdi farklı sosyal bağlantı noktalarına.',
     },
   },
   tip: {
-    set_a_password: 'A unique set of a password to your username is a must.',
+    set_a_password: 'Kullanıcı adınıza benzersiz bir şifre belirlemek şarttır.',
     verify_at_sign_up:
-      'We currently only support verified email. Your user base may contain a large number of poor-quality email addresses if no validation.',
+      'Şu anda yalnızca doğrulanmış e-postayı destekliyoruz. Doğrulama yapılmazsa kullanıcı kitleniz düşük kaliteli e-posta adreslerini içerebilir.',
     password_auth:
-      'This is essential as you have enabled the option to set a password during the sign-up process.',
+      'Bu, kaydolma işlemi sırasında bir şifre belirleme seçeneğini etkinleştirdiğiniz için önemlidir.',
     verification_code_auth:
-      'This is essential as you have only enabled the option to provide verification code when signing up. You’re free to uncheck the box when password set-up is allowed at the sign-up process.',
-    delete_sign_in_method:
-      'This is essential as you have selected {{identifier}} as a required identifier.',
+      'Bu, yalnızca doğrulama kodu sağlama seçeneğini etkinleştirdiğiniz için önemlidir. Kayıt işlemi sırasında şifre oluşturma izni verildiğinde kutuyu kaldırabilirsiniz.',
+    delete_sign_in_method: 'Bu, {{identifier}} gerekliliğini belirlediğiniz için önemlidir.',
   },
 };
 

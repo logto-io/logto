@@ -26,15 +26,14 @@ const applications = {
       description: 'Örneğin, React DOM uygulaması, Vue uygulaması',
     },
     traditional: {
-      title: 'Traditional Web',
+      title: 'Geleneksel Web',
       subtitle: 'Sayfaları yalnızca web sunucusu tarafından işleyen ve güncelleyen bir uygulama',
       description: 'Örneğin, JSP, PHP',
     },
-    // UNTRANSLATED
     machine_to_machine: {
-      title: 'Machine-to-Machine',
-      subtitle: 'An app (usually a service) that directly talks to resources',
-      description: 'E.g., Backend service',
+      title: 'Makineyle Makineye',
+      subtitle: 'Kaynaklarla doğrudan iletişim kuran bir uygulama (genellikle bir servis)',
+      description: 'Örneğin, Backend servisi',
     },
   },
   guide: {
@@ -47,9 +46,9 @@ const applications = {
     description_by_sdk:
       'Bu hızlı başlangıç kılavuzu, Logtoyu {{sdk}} uygulamasına nasıl entegre edeceğinizi gösterir',
   },
-  placeholder_title: 'Select an application type to continue', // UNTRANSLATED
+  placeholder_title: 'Devam etmek için bir uygulama tipi seçin',
   placeholder_description:
-    'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.', // UNTRANSLATED
+    'Logto, uygulamanızı tanımlamaya, oturum açmayı yönetmeye ve denetim kayıtları oluşturmaya yardımcı olmak için OIDC için bir uygulama varlığı kullanır.',
 };
 
 export default applications;

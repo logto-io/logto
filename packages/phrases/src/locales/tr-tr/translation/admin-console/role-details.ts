@@ -1,49 +1,48 @@
 const role_details = {
-  back_to_roles: 'Back to Roles', // UNTRANSLATED
-  identifier: 'Identifier', // UNTRANSLATED
+  back_to_roles: 'Rollere Dön',
+  identifier: 'Tanımlayıcı',
   delete_description:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the mapping between roles, users, and permissions.', // UNTRANSLATED
-  role_deleted: '{{name}} was successfully deleted!', // UNTRANSLATED
-  settings_tab: 'Settings', // UNTRANSLATED
-  users_tab: 'Users', // UNTRANSLATED
-  permissions_tab: 'Permissions', // UNTRANSLATED
-  settings: 'Settings', // UNTRANSLATED
+    'Bunu yapmak, rolle ilişkili izinleri etkilenen kullanıcılardan kaldırır ve roller, kullanıcılar ve izinler arasındaki eşleştirmeyi siler.',
+  role_deleted: '{{name}} başarıyla silindi!',
+  settings_tab: 'Ayarlar',
+  users_tab: 'Kullanıcılar',
+  permissions_tab: 'İzinler',
+  settings: 'Ayarlar',
   settings_description:
-    'Roles are a grouping of permissions that can be assigned to users. They also provide a way to aggregate permissions defined for different APIs, making it more efficient to add, remove, or adjust permissions compared to assigning them individually to users.', // UNTRANSLATED
-  field_name: 'Name', // UNTRANSLATED
-  field_description: 'Description', // UNTRANSLATED
+    "Roller, kullanıcılara atanabilen izinlerin bir gruplamasıdır. Ayrıca, farklı API'ler için tanımlanan izinleri biriktirmek için bir yol sağladıkları için, izinleri kullanıcılara bireysel olarak atamaktan daha verimli bir şekilde eklemek, kaldırmak veya ayarlamak için bir yoldur.",
+  field_name: 'Adı',
+  field_description: 'Açıklama',
   permission: {
-    assign_button: 'Assign Permissions', // UNTRANSLATED
-    assign_title: 'Assign permissions', // UNTRANSLATED
+    assign_button: 'İzinleri Ata',
+    assign_title: 'İzinleri Ata',
     assign_subtitle:
-      'Assign permissions to this role. The role will gain the added permissions, and users with this role will inherit these permissions.', // UNTRANSLATED
-    assign_form_field: 'Assign permissions', // UNTRANSLATED
-    added_text_one: '{{count, number}} permission added', // UNTRANSLATED
-    added_text_other: '{{count, number}} permissions added', // UNTRANSLATED
-    api_permission_count_one: '{{count, number}} permission', // UNTRANSLATED
-    api_permission_count_other: '{{count, number}} permissions', // UNTRANSLATED
-    confirm_assign: 'Assign Permissions', // UNTRANSLATED
-    permission_assigned: 'The selected permissions were successfully assigned to this role', // UNTRANSLATED
+      'Bu role izinler atanır. Rol, eklenen izinleri alır ve bu role sahip kullanıcılar bu izinleri devralır.',
+    assign_form_field: 'İzinleri Ata',
+    added_text_one: '{{count, number}} izin eklendi',
+    added_text_other: '{{count, number}} izinler eklendi',
+    api_permission_count_one: '{{count, number}} izin',
+    api_permission_count_other: '{{count, number}} izinler',
+    confirm_assign: 'İzinleri Ata',
+    permission_assigned: 'Seçilen izinler bu role başarıyla atandı',
     deletion_description:
-      'If this permission is removed, the affected user with this role will lose the access granted by this permission.', // UNTRANSLATED
-    permission_deleted: 'The permission "{{name}}" was successfully removed from this role', // UNTRANSLATED
-    empty: 'No permission available', // UNTRANSLATED
+      'Bu izin kaldırılırsa, bu role sahip etkilenen kullanıcı sahip olduğu erişimi kaybeder.',
+    permission_deleted: 'İzin "{{name}}" bu rol için başarıyla kaldırıldı',
+    empty: 'Mevcut izin yok',
   },
   users: {
-    assign_button: 'Assign Users', // UNTRANSLATED
-    name_column: 'User', // UNTRANSLATED
-    app_column: 'App', // UNTRANSLATED
-    latest_sign_in_column: 'Latest sign in', // UNTRANSLATED
-    delete_description:
-      'It will remain in your user pool but lose the authorization for this role.', // UNTRANSLATED
-    deleted: '{{name}} was successfully removed from this role', // UNTRANSLATED
-    assign_title: 'Assign users', // UNTRANSLATED
+    assign_button: 'Kullanıcıları Ata',
+    name_column: 'Kullanıcı',
+    app_column: 'Uygulama',
+    latest_sign_in_column: 'Son giriş',
+    delete_description: 'Bu rol için yetkilendirme kaybeder ancak kullanıcı havuzunuzda kalır.',
+    deleted: '{{name}} bu rolden başarıyla kaldırıldı',
+    assign_title: 'Kullanıcılar Ata',
     assign_subtitle:
-      'Assign users to this role. Find appropriate users by searching name, email, phone, or user ID.', // UNTRANSLATED
-    assign_users_field: 'Assign users', // UNTRANSLATED
-    confirm_assign: 'Assign users', // UNTRANSLATED
-    users_assigned: 'The selected users were successfully assigned to this role', // UNTRANSLATED
-    empty: 'No user available', // UNTRANSLATED
+      'Kullanıcıları bu role atayın. İsim, e-posta, telefon veya kullanıcı kimliği arayarak uygun kullanıcıları bulun.',
+    assign_users_field: 'Kullanıcıları Ata',
+    confirm_assign: 'Kullanıcıları Ata',
+    users_assigned: 'Seçilen kullanıcılar bu role başarıyla atandı',
+    empty: 'Mevcut kullanıcı yok',
   },
 };
 

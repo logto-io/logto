@@ -1,13 +1,14 @@
 const components = {
   uploader: {
-    action_description: 'Drag and drop or browse', // UNTRANSLATED
-    uploading: 'Uploading...', // UNTRANSLATED
+    action_description: 'Sürükle ve bırak veya gözat',
+    uploading: 'Yükleniyor...',
     image_limit:
-      'Upload image under {{size, number}}KB, {{extensions, list(style: narrow; type: conjunction;)}} only.', // UNTRANSLATED
-    error_upload: 'Something went wrong. File upload failed.', // UNTRANSLATED
-    error_file_size: 'File size is too large. Please upload a file under {{size, number}}KB.', // UNTRANSLATED
+      '{{size, number}}KB altındaki resimleri yükleyin, yalnızca {{extensions, list(style: narrow; type: conjunction;)}} dosyaları kabul edilir.',
+    error_upload: 'Bir şeyler yanlış gitti. Dosya yüklenemedi.',
+    error_file_size:
+      'Dosya boyutu çok büyük. Lütfen {{size, number}}KB altında bir dosya yükleyin.',
     error_file_type:
-      'File type is not supported. {{extensions, list(style: narrow; type: conjunction;)}} only.', // UNTRANSLATED
+      'Dosya türü desteklenmiyor. Yalnızca {{extensions, list(style: narrow; type: conjunction;)}} dosyaları kabul edilir.',
   },
 };
 

@@ -1,33 +1,34 @@
 const get_started = {
-  page_title: 'Get Started', // UNTRANSLATED
+  page_title: 'Começar',
   progress: 'Guia de primeiros passos: {{completed}}/{{total}}',
   progress_dropdown_title: 'Algumas coisas que pode fazer...',
-  title: 'Something to explore to help you succeed', // UNTRANSLATED
+  title: 'Algo para explorar para o ajudar a ter sucesso',
   subtitle_part1: 'Algumas coisas que pode fazer para obter rapidamente o valor do Logto',
   subtitle_part2: 'Acabei com esta configuração. ',
   hide_this: 'Ocultar isto',
   confirm_message: 'Tem a certeza que deseja ocultar esta página? Esta ação não pode ser desfeita.',
-  check_preview_title: 'Check the live preview', // UNTRANSLATED
+  check_preview_title: 'Ver a pré-visualização ao vivo',
   check_preview_subtitle:
     'Experimente a experiência de login do Logto agora para ver como funciona',
-  integration_title: 'Create and integrate your application', // UNTRANSLATED
+  integration_title: 'Crie e integre a sua aplicação',
   integration_subtitle:
-    'Set up Logto authentication for your native, single page, machine to machine, or traditional application', // UNTRANSLATED
-  custom_sie_title: 'Customize sign-in experience', // UNTRANSLATED
-  custom_sie_subtitle: 'Unlock a vast range of scenarios with advanced settings', // UNTRANSLATED
-  passwordless_title: 'Scale passwordless sign in by adding your own connectors', // UNTRANSLATED
+    'Configure a autenticação do Logto para a sua aplicação nativa, single page, machine to machine ou tradicional',
+  custom_sie_title: 'Personalize a experiência de login',
+  custom_sie_subtitle: 'Desbloqueie uma vasta gama de cenários com definições avançadas',
+  passwordless_title:
+    'Aumente a escalabilidade do login sem senha adicionando os seus próprios conectores',
   passwordless_subtitle:
-    'Try passwordless sign in and enable a secure and frictionless experience for your customer', // UNTRANSLATED
-  community_title: 'Join our discord community', // UNTRANSLATED
-  community_subtitle: 'Join our public channel to chat with other developers', // UNTRANSLATED
-  management_api_title: 'Interact with Management API', // UNTRANSLATED
-  management_api_subtitle: 'Directly connect your authentication system to our management API', // UNTRANSLATED
-  further_readings_title: 'Further readings', // UNTRANSLATED
+    'Experimente o login sem senha e ative uma experiência segura e sem fricção para os seus clientes',
+  community_title: 'Junte-se à nossa comunidade no Discord',
+  community_subtitle: 'Junte-se ao nosso canal público para conversar com outros programadores',
+  management_api_title: 'Interaja com a Management API',
+  management_api_subtitle: 'Ligue diretamente o seu sistema de autenticação à nossa Management API',
+  further_readings_title: 'Leituras adicionais',
   further_readings_subtitle:
-    'Check out our step-by-step, scenario-based docs without tedious concepts', // UNTRANSLATED
-  add_rbac_title: 'Add role-based access control to protect your resources', // UNTRANSLATED
+    'Confira os nossos documentos passo a passo e baseados em cenários, sem conceitos tediosos',
+  add_rbac_title: 'Adicione controlo de acesso baseado em funções para proteger seus recursos',
   add_rbac_subtitle:
-    'Control your resource through scalable role authorization for diverse use cases.', // UNTRANSLATED
+    'Controle seus recursos através de uma autorização de funções escalável para diversos casos de uso.',
 };
 
 export default get_started;

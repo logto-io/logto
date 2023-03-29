@@ -1,35 +1,35 @@
 const connector_details = {
-  page_title: 'Connector details', // UNTRANSLATED
+  page_title: 'Detalhes do conector',
   back_to_connectors: 'Voltar para Conectores',
   check_readme: 'Verifique o README',
-  settings: 'General settings', // UNTRANSLATED
+  settings: 'Configurações gerais',
   settings_description:
-    'Connectors play a critical role in Logto. With their help, Logto enables end-users to use passwordless registration or sign-in and the capabilities of signing in with social accounts.', // UNTRANSLATED
-  parameter_configuration: 'Parameter configuration', // UNTRANSLATED
-  test_connection: 'Test connection', // UNTRANSLATED
+    'Os conectores desempenham um papel crítico no Logto. Com a sua ajuda, o Logto permite aos utilizadores finais utilizar o registo ou o início de sessão sem palavra-passe e as capacidades de iniciar sessão com contas sociais.',
+  parameter_configuration: 'Configuração de parâmetros',
+  test_connection: 'Testar ligação',
   save_error_empty_config: 'Por favor, insira a configuração',
   send: 'Enviar',
   send_error_invalid_format: 'Entrada inválida',
   edit_config_label: 'Introduza o JSON aqui',
-  test_email_sender: 'Teste o conector de email',
-  test_sms_sender: 'Teste o conector de SMS',
+  test_email_sender: 'Testar o conector de e-mail',
+  test_sms_sender: 'Testar o conector de SMS',
   test_email_placeholder: 'john.doe@example.com',
   test_sms_placeholder: '+351 912 345 678',
   test_message_sent: 'Mensagem de teste enviada',
   test_sender_description:
-    'O Logto utiliza o modelo "Generic" para testes. Receberás uma mensagem se o teu conector estiver configurado corretamente.',
-  options_change_email: 'Alterar conector de email',
+    'O Logto utiliza o modelo "Genérico" para os testes. Você receberá uma mensagem se o seu conector estiver configurado corretamente.',
+  options_change_email: 'Alterar conector de e-mail',
   options_change_sms: 'Alterar conector de SMS',
   connector_deleted: 'O conector foi removido com sucesso',
-  type_email: 'Conector de Email',
+  type_email: 'Conector de E-mail',
   type_sms: 'Conector de SMS',
   type_social: 'Conector Social',
   in_used_social_deletion_description:
-    'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings. You will need to reconfigure it if you decide to add it back.', // UNTRANSLATED
+    'Este conector está em uso na sua experiência de início de sessão. Ao excluir, a experiência de início de sessão <name/> será excluída nas configurações da experiência de início de sessão. Você precisará reconfigurá-lo se decidir adicioná-lo de volta.',
   in_used_passwordless_deletion_description:
-    'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict. You will need to reconfigure it if you decide to add it back.', // UNTRANSLATED
+    'Este {{name}} está em uso na sua experiência de início de sessão. Ao excluir, sua experiência de início de sessão não funcionará corretamente até que você resolva o conflito. Você precisará reconfigurá-lo se decidir adicioná-lo de volta.',
   deletion_description:
-    'You are removing this connector. It cannot be undone, and you will need to reconfigure it if you decide to add it back.', // UNTRANSLATED
+    'Você está removendo este conector. Isso não pode ser desfeito, e você precisará reconfigurá-lo se decidir adicioná-lo de volta.',
 };
 
 export default connector_details;

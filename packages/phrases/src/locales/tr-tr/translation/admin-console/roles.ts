@@ -1,24 +1,24 @@
 const roles = {
-  page_title: 'Roles', // UNTRANSLATED
-  title: 'Roles', // UNTRANSLATED
+  page_title: 'Roller',
+  title: 'Roller',
   subtitle:
-    'Roles include permissions that determine what a user can do. RBAC uses roles to give users access to resources for specific actions.', // UNTRANSLATED
-  create: 'Create Role', // UNTRANSLATED
-  role_name: 'Role', // UNTRANSLATED
-  role_description: 'Description', // UNTRANSLATED
-  role_name_placeholder: 'Enter your role name', // UNTRANSLATED
-  role_description_placeholder: 'Enter your role description', // UNTRANSLATED
-  assigned_users: 'Assigned users', // UNTRANSLATED
-  assign_permissions: 'Assign permissions', // UNTRANSLATED
-  create_role_title: 'Create Role', // UNTRANSLATED
+    'Roller, bir kullanıcının ne yapabileceğini belirleyen izinleri içerir. RBAC, kullanıcılara belirli işlemler için kaynaklara erişim vermek için roller kullanır.',
+  create: 'Rol Oluştur',
+  role_name: 'Rol Adı',
+  role_description: 'Açıklama',
+  role_name_placeholder: 'Rol adınızı girin',
+  role_description_placeholder: 'Rol açıklamanızı girin',
+  assigned_users: 'Atanmış kullanıcılar',
+  assign_permissions: 'İzinleri Ata',
+  create_role_title: 'Rol Oluştur',
   create_role_description:
-    'Create and manage roles for your applications. Roles contain collections of permissions and can be assigned to users.', // UNTRANSLATED
-  create_role_button: 'Create Role', // UNTRANSLATED
-  role_created: 'The role {{name}} has been successfully created!', // UNTRANSLATED
-  search: 'Search by role name, description or ID', // UNTRANSLATED
-  placeholder_title: 'Roles', // UNTRANSLATED
+    'Uygulamalarınız için rolleri oluşturun ve yönetin. Roller, izin koleksiyonlarını içerir ve kullanıcılara atanabilir.',
+  create_role_button: 'Rol Oluştur',
+  role_created: '{{name}} rolü başarıyla oluşturuldu!',
+  search: 'Rol adı, açıklama veya kimlik numarasına göre arama yapın',
+  placeholder_title: 'Roller',
   placeholder_description:
-    'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.', // UNTRANSLATED
+    'Roller, kullanıcılara atanabilecek izinlerin gruplandırmasıdır. Rolleri oluşturmadan önce izin eklediğinizden emin olun.',
 };
 
 export default roles;

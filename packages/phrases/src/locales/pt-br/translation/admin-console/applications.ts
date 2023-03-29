@@ -15,25 +15,25 @@ const applications = {
   app_id: 'ID do aplicativo',
   type: {
     native: {
-      title: 'Native App',
+      title: 'Aplicativo Nativo',
       subtitle: 'Um aplicativo executado em um ambiente nativo',
-      description: 'Ex: iOS app, Android app',
+      description: 'Ex: aplicativo iOS, aplicativo Android',
     },
     spa: {
-      title: 'Single Page App',
+      title: 'Aplicativo de Página Única',
       subtitle:
         'Um aplicativo que é executado em um navegador da Web e atualiza dinamicamente os dados no local',
-      description: 'Ex: React DOM app, Vue app',
+      description: 'Ex: aplicativo React DOM, aplicativo Vue',
     },
     traditional: {
-      title: 'Traditional Web',
+      title: 'Web Tradicional',
       subtitle: 'Um aplicativo que renderiza e atualiza páginas apenas pelo servidor da web',
-      description: 'Ex: Next.js, PHP',
+      description: 'Ex: aplicativo Next.js, PHP',
     },
     machine_to_machine: {
-      title: 'Machine-to-Machine',
+      title: 'Máquina-a-Máquina',
       subtitle: 'Um aplicativo (geralmente um serviço) que fala diretamente com os recursos',
-      description: 'Ex: Backend service',
+      description: 'Ex: serviço de backend',
     },
   },
   guide: {
@@ -46,9 +46,9 @@ const applications = {
     description_by_sdk:
       'Este guia de início rápido demonstra como integrar o Logto ao aplicativo {{sdk}}',
   },
-  placeholder_title: 'Select an application type to continue', // UNTRANSLATED
+  placeholder_title: 'Selecione um tipo de aplicativo para continuar',
   placeholder_description:
-    'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.', // UNTRANSLATED
+    'O Logto usa uma entidade de aplicativo para OIDC para ajudar nas tarefas, como identificar seus aplicativos, gerenciar o login e criar logs de auditoria.',
 };
 
 export default applications;

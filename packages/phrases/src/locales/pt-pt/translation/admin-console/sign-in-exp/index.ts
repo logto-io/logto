@@ -1,7 +1,6 @@
 import others from './others.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
-// UNTRANSLATED
 const sign_in_exp = {
   page_title: 'Experiência de login',
   title: 'Experiência de login',
@@ -9,13 +8,13 @@ const sign_in_exp = {
     'Personalize a interface de login para corresponder a sua marca e visualize em tempo real',
   tabs: {
     branding: 'Marca',
-    sign_up_and_sign_in: 'Sign-up and Sign-in',
+    sign_up_and_sign_in: 'Registo e login',
     others: 'Outros',
   },
   welcome: {
-    title: 'Customize sign-in experience',
+    title: 'Personalize a experiência de início de sessão',
     description:
-      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.',
+      'Comece rapidamente com a configuração do seu primeiro início de sessão. Este guia orienta-o através de todas as definições necessárias.',
     get_started: 'Começar',
     apply_remind: 'Observe que a experiência de login será aplicada a todos os apps nesta conta.',
   },
@@ -37,47 +36,47 @@ const sign_in_exp = {
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'URL do logotipo da app (tema escuro)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'App logo',
-    dark_logo_image: 'App logo (Dark)',
-    logo_image_error: 'App logo: {{error}}',
+    logo_image: 'Logótipo da aplicação',
+    dark_logo_image: 'Logótipo da aplicação (escuro)',
+    logo_image_error: 'Logótipo da aplicação: {{error}}',
     favicon_error: 'Favicon: {{error}}',
   },
   custom_css: {
-    title: 'Custom CSS',
-    css_code_editor_title: 'Personalize your UI with Custom CSS',
-    css_code_editor_description1: 'See the example of Custom CSS.',
+    title: 'CSS Personalizado',
+    css_code_editor_title: 'Personalize a sua IU com CSS personalizado',
+    css_code_editor_description1: 'Veja o exemplo de CSS personalizado.',
     css_code_editor_description2: '<a>{{link}}</a>',
-    css_code_editor_description_link_content: 'Learn more',
+    css_code_editor_description_link_content: 'Saiba mais',
     css_code_editor_content_placeholder:
-      'Enter your custom CSS to tailor the styles of anything to your exact specifications. Express your creativity and make your UI stand out.',
+      'Insira o seu CSS personalizado para personalizar os estilos de qualquer elemento para as suas especificações exatas. Expresse a sua criatividade e faça a sua interface destacar-se.',
   },
   setup_warning: {
     no_connector_sms:
-      'No SMS connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
+      'Ainda não foi configurado nenhum conector SMS. Antes de concluir a configuração, os utilizadores não poderão iniciar sessão com este método. <a>{{link}}</a> em "Conectores"',
     no_connector_email:
-      'No email connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
+      'Ainda não foi configurado qualquer conector de email. Antes de concluir a configuração, os utilizadores não poderão iniciar sessão com este método. <a>{{link}}</a> em "Conectores"',
     no_connector_social:
-      'No social connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
+      'Ainda não foi configurado nenhum conector social. Antes de concluir a configuração, os utilizadores não poderão iniciar sessão com este método. <a>{{link}}</a> em "Conectores"',
     no_added_social_connector:
       'Configurou alguns conectores sociais agora. Certifique-se de adicionar alguns a experiência de login.',
-    setup_link: 'Set up',
+    setup_link: 'Configurar',
   },
   save_alert: {
     description:
-      'You are implementing new sign-in and sign-up procedures. All of your users may be affected by the new set-up. Are you sure to commit to the change?',
+      'Está a implementar novos procedimentos de início de sessão e registo. Todos os seus utilizadores podem ser afetados pela nova configuração. Tem a certeza de que quer confirmar a alteração?',
     before: 'Antes',
     after: 'Depois',
-    sign_up: 'Sign-up',
-    sign_in: 'Sign-in',
+    sign_up: 'Registo',
+    sign_in: 'Iniciar sessão',
     social: 'Social',
   },
   preview: {
-    title: 'Pre-visualização do login',
-    live_preview: 'Live preview',
-    live_preview_tip: 'Save to preview changes',
-    native: 'Nativo',
-    desktop_web: 'Web computador',
-    mobile_web: 'Web móvel',
+    title: 'Visualização prévia do login',
+    live_preview: 'Visualização ao vivo',
+    live_preview_tip: 'Guardar para visualizar as alterações',
+    native: 'App nativa',
+    desktop_web: 'Web no computador',
+    mobile_web: 'Web no telemóvel',
   },
   others,
   sign_up_and_sign_in,

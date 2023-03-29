@@ -1,8 +1,8 @@
 const general = {
-  placeholder: 'Placeholder',
-  skip: 'Geç',
+  placeholder: 'Yer tutucu',
+  skip: 'Atla',
   next: 'Sonraki',
-  back: 'Back', // UNTRANSLATED
+  back: 'Geri',
   retry: 'Tekrar Deneyin',
   done: 'Bitti',
   search: 'Ara',
@@ -11,7 +11,7 @@ const general = {
   save: 'Kaydet',
   save_changes: 'Değişiklikleri Kaydet',
   saved: 'Kaydedildi!',
-  discard: 'Discard', // UNTRANSLATED
+  discard: 'At',
   loading: 'Yükleniyor...',
   redirecting: 'Yönlendiriliyor...',
   add: 'Ekle',
@@ -38,19 +38,19 @@ const general = {
     'Bazı değişiklikler yaptınız. Bu sayfadan ayrılmak istediğine emin misin?',
   leave_page: 'Sayfayı terk et',
   stay_on_page: 'Bu sayfada kal',
-  type_to_search: 'Type to search', // UNTRANSLATED
+  type_to_search: 'Aramak için yazın',
   got_it: 'Anladım',
-  continue: 'Continue', // UNTRANSLATED
-  page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
-  learn_more: 'Learn more', // UNTRANSLATED
-  tab_errors: '{{count, number}} errors', // UNTRANSLATED
-  skip_for_now: 'Skip for now', // UNTRANSLATED
-  remove: 'Remove', // UNTRANSLATED
-  visit: 'Visit', // UNTRANSLATED
-  join: 'Join', // UNTRANSLATED
-  try_now: 'Try Now', // UNTRANSLATED
-  multiple_form_field: '(Multiple)', // UNTRANSLATED
-  demo: 'Demo', // UNTRANSLATED
+  continue: 'Devam et',
+  page_info: '{{min, number}}-{{max, number}} / {{total, number}}',
+  learn_more: 'Daha fazla bilgi edinin',
+  tab_errors: '{{count, number}} hata',
+  skip_for_now: 'Şimdilik atla',
+  remove: 'Kaldır',
+  visit: 'Ziyaret et',
+  join: 'Katıl',
+  try_now: 'Şimdi dene',
+  multiple_form_field: '(Çoklu)',
+  demo: 'Demo',
 };
 
 export default general;

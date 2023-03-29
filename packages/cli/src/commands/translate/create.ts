@@ -42,7 +42,7 @@ const createFullTranslation = async (
   /* eslint-disable no-await-in-loop */
   for (const file of files) {
     const relativePath = path.relative(path.join(directory, baseLanguage), file);
-    const targetPath = path.join(directory, languageTag, relativePath);
+    const targetPath = path.join(directory, languageTag.toLowerCase(), relativePath);
 
     const getTranslationPath = async () => {
       if (existsSync(targetPath)) {

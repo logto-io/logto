@@ -40,7 +40,7 @@ export const translate = async (api: Got, languageTag: LanguageTag, filePath: st
           messages: [
             {
               role: 'user',
-              content: `Only translate object values to ${languages[languageTag]} in the following code snippet, output ts code only: \n \`\`\`ts\n${fileContent}\n\`\`\``,
+              content: `Given the following code snippet, only translate object values to ${languages[languageTag]}, keep all object keys original, output ts code only: \n \`\`\`ts\n${fileContent}\n\`\`\``,
             },
           ],
         },

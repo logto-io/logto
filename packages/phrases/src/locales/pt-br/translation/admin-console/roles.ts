@@ -1,24 +1,24 @@
 const roles = {
-  page_title: 'Roles', // UNTRANSLATED
-  title: 'Roles', // UNTRANSLATED
+  page_title: 'Títulos das funções',
+  title: 'Funções',
   subtitle:
-    'Roles include permissions that determine what a user can do. RBAC uses roles to give users access to resources for specific actions.', // UNTRANSLATED
-  create: 'Create Role', // UNTRANSLATED
-  role_name: 'Role', // UNTRANSLATED
-  role_description: 'Description', // UNTRANSLATED
-  role_name_placeholder: 'Enter your role name', // UNTRANSLATED
-  role_description_placeholder: 'Enter your role description', // UNTRANSLATED
-  assigned_users: 'Assigned users', // UNTRANSLATED
-  assign_permissions: 'Assign permissions', // UNTRANSLATED
-  create_role_title: 'Create Role', // UNTRANSLATED
+    'As funções incluem permissões que determinam o que um usuário pode fazer. O RBAC usa funções para dar aos usuários acesso a recursos para ações específicas.',
+  create: 'Criar função',
+  role_name: 'Função',
+  role_description: 'Descrição',
+  role_name_placeholder: 'Insira o nome da sua função',
+  role_description_placeholder: 'Insira a descrição da sua função',
+  assigned_users: 'Usuários atribuídos',
+  assign_permissions: 'Atribuir permissões',
+  create_role_title: 'Criar função',
   create_role_description:
-    'Create and manage roles for your applications. Roles contain collections of permissions and can be assigned to users.', // UNTRANSLATED
-  create_role_button: 'Create Role', // UNTRANSLATED
-  role_created: 'The role {{name}} has been successfully created!', // UNTRANSLATED
-  search: 'Search by role name, description or ID', // UNTRANSLATED
-  placeholder_title: 'Roles', // UNTRANSLATED
+    'Crie e gerencie funções para suas aplicações. As funções contêm coleções de permissões e podem ser atribuídas a usuários.',
+  create_role_button: 'Criar função',
+  role_created: 'A função {{name}} foi criada com sucesso!',
+  search: 'Pesquisar pelo nome, descrição ou ID da função',
+  placeholder_title: 'Funções',
   placeholder_description:
-    'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.', // UNTRANSLATED
+    'As funções são um agrupamento de permissões que podem ser atribuídas a usuários. Certifique-se de adicionar as permissões antes de criar funções.',
 };
 
 export default roles;
