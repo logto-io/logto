@@ -52,7 +52,7 @@ function Profile() {
       {user && !showLoadingSkeleton && (
         <div className={styles.content}>
           <BasicUserInfoSection user={user} onUpdate={reload} />
-          <LinkAccountSection user={user} connectors={connectors} onUpdate={reload} />
+          {isCloud && <LinkAccountSection user={user} connectors={connectors} onUpdate={reload} />}
           <FormCard title="profile.password.title">
             <CardContent
               title="profile.password.password_setting"
