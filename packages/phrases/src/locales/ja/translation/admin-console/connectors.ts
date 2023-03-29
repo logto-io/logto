@@ -1,4 +1,5 @@
 const connectors = {
+  page_title: 'コネクタ',
   title: 'コネクタ',
   subtitle: 'コネクタを設定して、パスワードレスおよびソーシャルサインイン体験を有効にします',
   create: 'ソーシャルコネクタを追加',

@@ -1,5 +1,6 @@
 const cloud = {
   welcome: {
+    page_title: 'Welcome', // UNTRANSLATED
     title: 'ようこそ、あなたのLogto Cloud Previewを作成しましょう',
     description:
       'オープンソースユーザーでもクラウドユーザーでも、ショーケースを見て、Logtoのすべての価値を体験してください。Cloud PreviewはLogto Cloudの予備バージョンでもあります。',
@@ -15,6 +16,7 @@ const cloud = {
     },
   },
   about: {
+    page_title: 'A bit about you', // UNTRANSLATED
     title: 'あなたについて少し教えてください',
     description:
       'あなたの情報を知ることで、あなたにユニークなLogtoエクスペリエンスを提供します。あなたの情報は安全に保管されます。',
@@ -48,6 +50,7 @@ const cloud = {
     },
   },
   congrats: {
+    page_title: 'Earn early credits', // UNTRANSLATED
     title: '素晴らしい！あなたはLogto Cloudの早期クレジットを獲得する資格があります！',
     description:
       'Logto Cloudの正式開始後、無料で60日間のサブスクリプションを楽しむチャンスを逃さないでください！ 詳しくは今すぐLogtoチームにお問い合わせください。',
@@ -68,6 +71,7 @@ const cloud = {
     book_button: '予約する',
   },
   sie: {
+    page_title: 'Customize sign-in experience', // UNTRANSLATED
     title: 'まずは簡単にサインインエクスペリエンスをカスタマイズしましょう',
     inspire: {
       title: '魅力的な例を作成',

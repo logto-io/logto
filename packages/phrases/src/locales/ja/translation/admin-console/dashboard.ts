@@ -1,4 +1,5 @@
 const dashboard = {
+  page_title: 'ダッシュボード',
   title: 'ダッシュボード',
   description: 'アプリのパフォーマンスについての概要を取得',
   total_users: '合計ユーザー数',

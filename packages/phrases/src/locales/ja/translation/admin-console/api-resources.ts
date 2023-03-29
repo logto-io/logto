@@ -1,4 +1,5 @@
 const api_resources = {
+  page_title: 'APIリソース',
   title: 'APIリソース',
   subtitle: '承認されたアプリケーションが利用できるAPIを定義',
   create: 'APIリソースを作成',

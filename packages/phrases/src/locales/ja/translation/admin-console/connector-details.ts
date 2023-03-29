@@ -1,4 +1,5 @@
 const connector_details = {
+  page_title: 'Connector details', // UNTRANSLATED
   back_to_connectors: 'コネクタに戻る',
   check_readme: 'READMEを確認する',
   settings: '一般設定',

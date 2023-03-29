@@ -1,4 +1,5 @@
 const api_resource_details = {
+  page_title: 'API Resource details', // UNTRANSLATED
   back_to_api_resources: 'APIリソースに戻る',
   settings_tab: '設定',
   permissions_tab: '権限',

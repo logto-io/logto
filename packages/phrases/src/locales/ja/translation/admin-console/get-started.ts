@@ -1,4 +1,5 @@
 const get_started = {
+  page_title: 'Get Started', // UNTRANSLATED
   progress: 'はじめにガイド：{{completed}}/{{total}}',
   progress_dropdown_title: 'できることは何かあるかな？',
   title: 'あなたの成功を手助けする探索',

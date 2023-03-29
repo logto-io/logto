@@ -2,6 +2,7 @@ import others from './others.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
+  page_title: 'Sign-in experience',
   title: 'Sign-in experience',
   description: 'Customize the sign in UI to match your brand and view in real time',
   tabs: {

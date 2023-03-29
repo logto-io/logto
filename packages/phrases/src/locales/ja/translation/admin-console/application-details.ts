@@ -1,4 +1,5 @@
 const application_details = {
+  page_title: 'Application details', // UNTRANSLATED
   back_to_applications: 'アプリケーションに戻る',
   check_guide: 'ガイドを確認',
   settings: '設定',
