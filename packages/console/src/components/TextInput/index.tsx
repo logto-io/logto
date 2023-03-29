@@ -38,11 +38,25 @@ function TextInput(
   useImperativeHandle(reference, () => innerRef.current);
 
   useEffect(() => {
-    if (type === 'number') {
-      innerRef.current?.addEventListener('wheel', (event) => {
-        event.preventDefault();
-      });
+    if (type !== 'number') {
+      return;
     }
+
+    const input = innerRef.current;
+
+    if (!input) {
+      return;
+    }
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+    };
+
+    input.addEventListener('wheel', handleWheel);
+
+    return () => {
+      input.removeEventListener('wheel', handleWheel);
+    };
   }, [type]);
 
   return (
