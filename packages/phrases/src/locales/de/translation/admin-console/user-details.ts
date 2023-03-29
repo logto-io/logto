@@ -1,5 +1,5 @@
 const user_details = {
-  page_title: 'User details', // UNTRANSLATED
+  page_title: 'Benutzerdetails',
   back_to_users: 'Zurück zur Benutzerverwaltung',
   created_title: 'Der Benutzer wurde erfolgreich erstellt',
   created_guide: 'Sende dem Benutzer folgende Anmeldeinformationen',
@@ -17,12 +17,12 @@ const user_details = {
     congratulations: 'Der Benutzer wurde erfolgreich zurückgesetzt',
     new_password: 'Neues Passwort:',
   },
-  tab_settings: 'Settings', // UNTRANSLATED
-  tab_roles: 'Roles', // UNTRANSLATED
+  tab_settings: 'Einstellungen',
+  tab_roles: 'Rollen',
   tab_logs: 'Benutzer-Logs',
-  settings: 'Settings', // UNTRANSLATED
+  settings: 'Einstellungen',
   settings_description:
-    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
+    'Jeder Benutzer hat ein Profil mit allen Benutzerinformationen. Es besteht aus Basisdaten, sozialen Identitäten und benutzerdefinierten Daten.',
   field_email: 'Primäre E-Mail',
   field_phone: 'Primäre Telefonnummer',
   field_username: 'Benutzername',
@@ -42,24 +42,24 @@ const user_details = {
     deletion_confirmation:
       'Du entfernst die bestehende <name/> Identität. Bist du sicher, dass du das tun willst?',
   },
-  suspended: 'Suspended', // UNTRANSLATED
+  suspended: 'Gesperrt',
   roles: {
-    name_column: 'Role', // UNTRANSLATED
-    description_column: 'Description', // UNTRANSLATED
-    assign_button: 'Assign Roles', // UNTRANSLATED
+    name_column: 'Rolle',
+    description_column: 'Beschreibung',
+    assign_button: 'Rollen zuweisen',
     delete_description:
-      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.', // UNTRANSLATED
-    deleted: '{{name}} was successfully removed from this user.', // UNTRANSLATED
-    assign_title: 'Assign roles to {{name}}', // UNTRANSLATED
-    assign_subtitle: 'Authorize {{name}} one or more roles', // UNTRANSLATED
-    assign_role_field: 'Assign roles', // UNTRANSLATED
-    role_search_placeholder: 'Search by role name', // UNTRANSLATED
-    added_text: '{{value, number}} added', // UNTRANSLATED
-    assigned_user_count: '{{value, number}} users', // UNTRANSLATED
-    confirm_assign: 'Assign roles', // UNTRANSLATED
-    role_assigned: 'Successfully assigned role(s)', // UNTRANSLATED
-    search: 'Search by role name, description or ID', // UNTRANSLATED
-    empty: 'No role available', // UNTRANSLATED
+      'Diese Aktion entfernt diese Rolle von diesem Benutzer. Die Rolle selbst bleibt erhalten, aber sie wird nicht mehr mit diesem Benutzer verknüpft sein.',
+    deleted: '{{name}} wurde erfolgreich von diesem Benutzer entfernt.',
+    assign_title: 'Rollen an {{name}} zuweisen',
+    assign_subtitle: '{{name}} eine oder mehrere Rollen zuweisen',
+    assign_role_field: 'Rollen zuweisen',
+    role_search_placeholder: 'Nach Rollennamen suchen',
+    added_text: '{{value, number}} hinzugefügt',
+    assigned_user_count: '{{value, number}} Benutzer',
+    confirm_assign: 'Rollen zuweisen',
+    role_assigned: 'Rolle(n) erfolgreich zugewiesen',
+    search: 'Nach Rollennamen, Beschreibung oder ID suchen',
+    empty: 'Keine Rolle verfügbar',
   },
 };
 

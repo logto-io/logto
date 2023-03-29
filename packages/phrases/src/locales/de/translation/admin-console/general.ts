@@ -2,7 +2,7 @@ const general = {
   placeholder: 'Platzhalter',
   skip: 'Überspringen',
   next: 'Weiter',
-  back: 'Back', // UNTRANSLATED
+  back: 'Zurück',
   retry: 'Erneut versuchen',
   done: 'Fertig',
   search: 'Suche',
@@ -11,7 +11,7 @@ const general = {
   save: 'Speichern',
   save_changes: 'Änderungen speichern',
   saved: 'Gespeichert!',
-  discard: 'Discard', // UNTRANSLATED
+  discard: 'Verwerfen',
   loading: 'Lade...',
   redirecting: 'Weiterleiten...',
   add: 'Hinzufügen',
@@ -40,17 +40,17 @@ const general = {
   stay_on_page: 'Auf Seite bleiben',
   type_to_search: 'Tippe um zu suchen',
   got_it: 'Alles klar',
-  continue: 'Continue', // UNTRANSLATED
-  page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
-  learn_more: 'Learn more', // UNTRANSLATED
-  tab_errors: '{{count, number}} errors', // UNTRANSLATED
-  skip_for_now: 'Skip for now', // UNTRANSLATED
-  remove: 'Remove', // UNTRANSLATED
-  visit: 'Visit', // UNTRANSLATED
-  join: 'Join', // UNTRANSLATED
-  try_now: 'Try Now', // UNTRANSLATED
-  multiple_form_field: '(Multiple)', // UNTRANSLATED
-  demo: 'Demo', // UNTRANSLATED
+  continue: 'Fortsetzen',
+  page_info: '{{min, number}}-{{max, number}} von {{total, number}}',
+  learn_more: 'Mehr erfahren',
+  tab_errors: '{{count, number}} Fehler',
+  skip_for_now: 'Jetzt überspringen',
+  remove: 'Entfernen',
+  visit: 'Besuchen',
+  join: 'Beitreten',
+  try_now: 'Jetzt ausprobieren',
+  multiple_form_field: '(Mehrere)',
+  demo: 'Demo',
 };
 
 export default general;

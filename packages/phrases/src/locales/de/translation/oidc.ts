@@ -1,5 +1,5 @@
 const oidc = {
-  logout_success: 'You have successfully signed out.', // UNTRANSLATED
+  logout_success: 'Sie haben sich erfolgreich abgemeldet.',
 };
 
 export default oidc;

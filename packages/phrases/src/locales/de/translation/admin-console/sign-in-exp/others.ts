@@ -1,6 +1,6 @@
 const others = {
   terms_of_use: {
-    title: 'Terms',
+    title: 'Nutzungsbedingungen',
     terms_of_use: 'URL zu den Nutzungsbedingungen',
     terms_of_use_placeholder: 'https://beispiel.de/nutzungsbedingungen',
     privacy_policy: 'URL zu den Datenschutzrichtlinien',
@@ -42,9 +42,9 @@ const others = {
     enable_create_account: 'Aktiviere Registrierung',
     enable_create_account_description:
       'Aktiviere oder deaktiviere Konto Registrierung. Wenn diese Funktion deaktiviert ist, können deine Kunden keine Konten über die Anmeldeoberfläche erstellen, aber du kannst immer noch Benutzer in der Admin Konsole hinzufügen.',
-    enable_user_registration: 'Enable user registration', // UNTRANSLATED
+    enable_user_registration: 'Benutzerregistrierung aktivieren',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.', // UNTRANSLATED
+      'Aktiviere oder deaktiviere die Benutzerregistrierung. Sobald sie deaktiviert ist, können Benutzer immer noch in der Admin-Konsole hinzugefügt werden, aber Benutzer können keine Konten mehr über die Anmeldeoberfläche erstellen.',
   },
 };
 
