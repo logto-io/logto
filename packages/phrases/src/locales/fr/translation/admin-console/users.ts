@@ -11,11 +11,11 @@ const users = {
   create_form_password: 'Mot de passe',
   create_form_name: 'Nom complet',
   unnamed: 'Sans nom',
-  search: 'Search by name, email, phone or username', // UNTRANSLATED
-  check_user_detail: 'Check user detail', // UNTRANSLATED
-  placeholder_title: 'User management', // UNTRANSLATED
+  search: "Rechercher par nom, email, téléphone ou nom d'utilisateur",
+  check_user_detail: "Vérifier les détails de l'utilisateur",
+  placeholder_title: 'Gestion des utilisateurs',
   placeholder_description:
-    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
+    "Chaque utilisateur a un profil contenant toutes les informations sur l'utilisateur. Il est composé de données de base, d'identités sociales et de données personnalisées.",
 };
 
 export default users;

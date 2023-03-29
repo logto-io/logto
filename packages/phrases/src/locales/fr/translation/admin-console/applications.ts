@@ -17,24 +17,24 @@ const applications = {
     native: {
       title: 'Application native',
       subtitle: 'Une application qui fonctionne dans un environnement natif',
-      description: 'Exemple: iOS app, Android app',
+      description: 'Exemple: application iOS, application Android',
     },
     spa: {
-      title: 'Single Page App',
+      title: 'Application à page unique',
       subtitle:
         "Une application qui s'exécute dans un navigateur web et met dynamiquement à jour les données sur place.",
-      description: 'Exemple: React app, Vue app',
+      description: 'Exemple: application React, application Vue',
     },
     traditional: {
-      title: 'Web Traditionnel',
+      title: 'Web traditionnel',
       subtitle: 'Une application qui met à jour les pages par le seul serveur web.',
       description: 'Exemple: Next.js, PHP',
     },
-    // UNTRANSLATED
     machine_to_machine: {
-      title: 'Machine to Machine',
-      subtitle: 'An app (usually a service) that directly talks to resources',
-      description: 'E.g., Backend service',
+      title: 'Machine-to-Machine',
+      subtitle:
+        'Une application (généralement un service) qui communique directement avec les ressources',
+      description: 'Par exemple, un service backend',
     },
   },
   guide: {
@@ -47,9 +47,9 @@ const applications = {
     description_by_sdk:
       "Ce guide de démarrage rapide montre comment intégrer Logto dans l'application {{sdk}}.",
   },
-  placeholder_title: 'Select an application type to continue', // UNTRANSLATED
+  placeholder_title: "Sélectionnez un type d'application pour continuer",
   placeholder_description:
-    'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.', // UNTRANSLATED
+    "Logto utilise une entité d'application pour OIDC pour aider aux tâches telles que l'identification de vos applications, la gestion de la connexion et la création de journaux d'audit.",
 };
 
 export default applications;

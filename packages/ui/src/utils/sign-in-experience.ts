@@ -5,7 +5,6 @@
 
 import { SignInIdentifier } from '@logto/schemas';
 import i18next from 'i18next';
-import type { TFuncKey } from 'react-i18next';
 
 import { getSignInExperience } from '@/apis/settings';
 import defaultAppleTouchLogo from '@/assets/apple-touch-icon.png';
@@ -36,16 +35,17 @@ export const isEmailOrPhoneMethod = (
   [SignInIdentifier.Email, SignInIdentifier.Phone].includes(method);
 
 export const parseHtmlTitle = (path: string) => {
+  // Will update soon, remove generic of `.t()` to unblock
   if (path.startsWith('/sign-in') || path.startsWith('/callback') || path.startsWith('/consent')) {
-    return i18next.t<'translation', TFuncKey>('description.sign_in');
+    return i18next.t('description.sign_in');
   }
 
   if (path.startsWith('/register') || path.startsWith('/social/link')) {
-    return i18next.t<'translation', TFuncKey>('description.create_account');
+    return i18next.t('description.create_account');
   }
 
   if (path.startsWith('/forgot-password')) {
-    return i18next.t<'translation', TFuncKey>('description.reset_password');
+    return i18next.t('description.reset_password');
   }
 
   // Return undefined for all continue flow pages to keep title remain the same as the previous page

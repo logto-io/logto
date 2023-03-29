@@ -17,12 +17,12 @@ const user_details = {
     congratulations: 'Cet utilisateur a été réinitialisé',
     new_password: 'Nouveau mot de passe :',
   },
-  tab_settings: 'Settings', // UNTRANSLATED
-  tab_roles: 'Roles', // UNTRANSLATED
+  tab_settings: 'Paramètres',
+  tab_roles: 'Rôles',
   tab_logs: "Journaux de l'utilisateur",
-  settings: 'Settings', // UNTRANSLATED
+  settings: 'Paramètres',
   settings_description:
-    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
+    "Chaque utilisateur possède un profil contenant toutes les informations le concernant. Il se compose de données de base, d'identités sociales et de données personnalisées.",
   field_email: 'Email principale',
   field_phone: 'Téléphone principal',
   field_username: "Nom d'utilisateur",
@@ -42,24 +42,24 @@ const user_details = {
     deletion_confirmation:
       "Vous supprimez l'identité existante <nom/>. Etes-vous sûr de vouloir faire ça ?",
   },
-  suspended: 'Suspended', // UNTRANSLATED
+  suspended: 'Suspendu',
   roles: {
-    name_column: 'Role', // UNTRANSLATED
-    description_column: 'Description', // UNTRANSLATED
-    assign_button: 'Assign Roles', // UNTRANSLATED
+    name_column: 'Rôle',
+    description_column: 'Description',
+    assign_button: 'Attribuer des rôles',
     delete_description:
-      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.', // UNTRANSLATED
-    deleted: '{{name}} was successfully removed from this user.', // UNTRANSLATED
-    assign_title: 'Assign roles to {{name}}', // UNTRANSLATED
-    assign_subtitle: 'Authorize {{name}} one or more roles', // UNTRANSLATED
-    assign_role_field: 'Assign roles', // UNTRANSLATED
-    role_search_placeholder: 'Search by role name', // UNTRANSLATED
-    added_text: '{{value, number}} added', // UNTRANSLATED
-    assigned_user_count: '{{value, number}} users', // UNTRANSLATED
-    confirm_assign: 'Assign roles', // UNTRANSLATED
-    role_assigned: 'Successfully assigned role(s)', // UNTRANSLATED
-    search: 'Search by role name, description or ID', // UNTRANSLATED
-    empty: 'No role available', // UNTRANSLATED
+      'Cette action supprimera ce rôle de cet utilisateur. Le rôle lui-même existera toujours, mais il ne sera plus associé à cet utilisateur.',
+    deleted: '{{name}} a été retiré de cet utilisateur.',
+    assign_title: 'Attribuer des rôles à {{name}}',
+    assign_subtitle: 'Autoriser {{name}} un ou plusieurs rôles',
+    assign_role_field: 'Attribuer des rôles',
+    role_search_placeholder: 'Recherche par nom de rôle',
+    added_text: '{{value, number}} ajouté',
+    assigned_user_count: '{{value, number}} utilisateurs',
+    confirm_assign: 'Attribuer des rôles',
+    role_assigned: 'Rôle(s) attribué(s) avec succès',
+    search: 'Recherche par nom de rôle, description ou ID',
+    empty: 'Aucun rôle disponible',
   },
 };
 

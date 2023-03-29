@@ -1,3 +1,4 @@
+// UNTRANSLATED
 const others = {
   terms_of_use: {
     title: 'KULLANIM KOŞULLARI',

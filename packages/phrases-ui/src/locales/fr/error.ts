@@ -19,7 +19,7 @@ const error = {
   invalid_connector_request: 'Les données du connecteur ne sont pas valides',
   unknown: 'Erreur inconnue. Veuillez réessayer plus tard.',
   invalid_session: 'Session non trouvée. Veuillez revenir en arrière et vous connecter à nouveau.',
-  timeout: 'Request timeout. Please try again later.',
+  timeout: "Délai d'attente de la requête dépassé. Veuillez réessayer plus tard.",
 };
 
 export default error;

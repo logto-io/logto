@@ -14,12 +14,12 @@ const errors = {
   username_pattern_error:
     "Le nom d'utilisateur ne doit contenir que des lettres, des chiffres ou des traits de soulignement et ne doit pas commencer par un chiffre.",
   password_pattern_error:
-    'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
+    'Le mot de passe nécessite un minimum de {{min}} caractères et contient un mélange de lettres, de chiffres et de symboles.',
   insecure_contexts: 'Les contextes non sécurisés (non HTTPS) ne sont pas pris en charge.',
   unexpected_error: "Une erreur inattendue s'est produite",
-  not_found: '404 not found', // UNTRANSLATED
+  not_found: '404 non trouvé',
   create_internal_role_violation:
-    'You are creating a new internal role which is forbidden by Logto. Try another name that does not start with "#internal:".', // UNTRANSLATED
+    'Vous créez un nouveau rôle interne qui est interdit par Logto. Essayez un autre nom qui ne commence pas par "#internal:".',
 };
 
 export default errors;

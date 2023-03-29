@@ -31,7 +31,7 @@ const applications = {
       description: 'Ex: Next.js, PHP',
     },
     machine_to_machine: {
-      title: 'Machine to Machine',
+      title: 'Machine-to-Machine',
       subtitle: 'Um aplicativo (geralmente um serviço) que fala diretamente com os recursos',
       description: 'Ex: Backend service',
     },

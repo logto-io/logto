@@ -1,12 +1,12 @@
 const demo_app = {
-  title: "You've successfully signed in the live preview!", // UNTRANSLATED
+  title: "Vous vous êtes connecté avec succès à l'aperçu en direct !",
   subtitle: 'Voici vos informations de connexion :',
-  username: "Nom d'utilisateur : ",
+  username: "Nom d'utilisateur :",
   user_id: "ID de l'utilisateur :",
-  sign_out: 'Sign Out the Live Preview', // UNTRANSLATED
+  sign_out: "Se déconnecter de l'aperçu en direct",
   continue_explore: 'Ou continuer à explorer',
   customize_sign_in_experience: "Personnaliser l'expérience de connexion",
-  enable_passwordless: 'Activer la fonction sans mot de passe',
+  enable_passwordless: 'Activer la connexion sans mot de passe',
   add_social_connector: 'Ajouter un connecteur social',
 };
 

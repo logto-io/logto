@@ -1,3 +1,4 @@
+// UNTRANSLATED
 const sign_up_and_sign_in = {
   identifiers_email: 'Email address',
   identifiers_phone: 'Phone number',

@@ -11,7 +11,7 @@ const get_started = {
   check_preview_subtitle: 'Logto 로그인 경험을 체험해 보세요.',
   integration_title: '애플리케이션 생성하고 통합하기',
   integration_subtitle:
-    '당신의 네이티브, 싱글 페이지, Machine to Machine, 또는 정적 애플리케이션에 Logto 인증을 설정하세요',
+    '당신의 네이티브, 싱글 페이지, Machine-to-Machine, 또는 정적 애플리케이션에 Logto 인증을 설정하세요',
   custom_sie_title: '로그인 경험 사용자화',
   custom_sie_subtitle: '고급 설정으로 다양한 시나리오를 잠금 해제하세요',
   passwordless_title: '자체 연동을 추가하여 비밀번호 없는 로그인 구축하기',
