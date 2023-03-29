@@ -1,6 +1,7 @@
 import others from './others.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
+// UNTRANSLATED
 const sign_in_exp = {
   page_title: 'Experiência de login',
   title: 'Experiência de login',
@@ -8,7 +9,7 @@ const sign_in_exp = {
     'Personalize a interface de login para corresponder a sua marca e visualize em tempo real',
   tabs: {
     branding: 'Marca',
-    sign_up_and_sign_in: 'Sign up and Sign in',
+    sign_up_and_sign_in: 'Sign-up and Sign-in',
     others: 'Outros',
   },
   welcome: {

@@ -1,47 +1,48 @@
 const others = {
   terms_of_use: {
     title: "CONDITIONS D'UTILISATION",
-    terms_of_use: "Conditions d'utilisation URL",
+    terms_of_use: "URL des conditions d'utilisation",
     terms_of_use_placeholder: 'https://vos.conditions.utilisation/',
-    privacy_policy: 'Politique de confidentialité URL',
+    privacy_policy: 'URL de la politique de confidentialité',
     privacy_policy_placeholder: 'https://votre.politique.confidentialite/',
   },
   languages: {
-    title: 'LANGAGES',
-    enable_auto_detect: 'Enable auto-detect',
+    title: 'LANGUES',
+    enable_auto_detect: 'Activer la détection automatique',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
+      'Votre logiciel détecte les paramètres régionaux de l’utilisateur et passe à la langue locale. Vous pouvez ajouter de nouvelles langues en traduisant l’IU de l’anglais à une autre langue.',
+    manage_language: 'Gérer la langue',
+    default_language: 'Langue par défaut',
     default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      'La langue par défaut sera utilisée lorsque la langue détectée de l’utilisateur ne figure pas dans la bibliothèque de langues actuelle.',
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      "Lorsque la détection automatique est désactivée, la langue par défaut est la seule langue que votre logiciel affichera. Activez la détection automatique pour l'extension de la langue.",
   },
   manage_language: {
-    title: 'Manage language',
+    title: 'Gérer la langue',
     subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_tip: 'Delete the language',
-    deletion_title: 'Do you want to delete the added language?',
+      'Localisez l’expérience produit en ajoutant des langues et des traductions. Votre contribution peut être définie comme langue par défaut.',
+    add_language: 'Ajouter une langue',
+    logto_provided: 'Logto fourni',
+    key: 'Clé',
+    logto_source_values: 'Logto des valeurs source',
+    custom_values: 'Valeurs personnalisées',
+    clear_all_tip: 'Supprimer toutes les valeurs',
+    unsaved_description:
+      'Les modifications ne seront pas enregistrées si vous quittez cette page sans enregistrer.',
+    deletion_tip: 'Supprimer la langue',
+    deletion_title: 'Voulez-vous supprimer la langue ajoutée ?',
     deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
+      'Après suppression, vos utilisateurs ne pourront plus naviguer dans cette langue.',
+    default_language_deletion_title: 'La langue par défaut ne peut pas être supprimée.',
     default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+      '{{language}} est défini comme votre langue par défaut et ne peut pas être supprimé.',
   },
   advanced_options: {
     title: 'OPTIONS AVANCÉES',
-    enable_user_registration: 'Enable user registration',
+    enable_user_registration: 'Activer l’enregistrement des utilisateurs',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      'Autoriser ou interdire l’enregistrement des utilisateurs. Une fois désactivé, les utilisateurs peuvent toujours être ajoutés dans la console d’administration mais les utilisateurs ne peuvent plus établir de comptes via l’IU de connexion.',
   },
 };
 

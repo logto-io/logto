@@ -32,7 +32,7 @@ const applications = {
     },
     // UNTRANSLATED
     machine_to_machine: {
-      title: 'Machine to Machine',
+      title: 'Machine-to-Machine',
       subtitle: 'An app (usually a service) that directly talks to resources',
       description: 'E.g., Backend service',
     },

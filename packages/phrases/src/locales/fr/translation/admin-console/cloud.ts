@@ -3,113 +3,117 @@ const cloud = {
     page_title: 'Welcome', // UNTRANSLATED
     title: 'Welcome and let’s create your own Logto Cloud Preview', // UNTRANSLATED
     description:
-      'Whether you’re an open-source or cloud user, take a tour of the showcase and experience the full value of Logto. Cloud preview also serves as a preliminary version of Logto Cloud.', // UNTRANSLATED
-    project_field: 'I’m using Logto for', // UNTRANSLATED
+      'Que vous soyez un utilisateur open-source ou cloud, faites une visite de la vitrine et découvrez la valeur totale de Logto. Le Cloud Preview sert également de version préliminaire de Logto Cloud.',
+    project_field: 'J’utilise Logto pour',
     project_options: {
-      personal: 'Personal project', // UNTRANSLATED
-      company: 'Company project', // UNTRANSLATED
+      personal: 'Projet personnel',
+      company: "Projet d'entreprise",
     },
-    deployment_type_field: 'Prefer open-source or cloud?', // UNTRANSLATED
+    deployment_type_field: 'Vous préférez open-source ou cloud?',
     deployment_type_options: {
-      open_source: 'Open-Source', // UNTRANSLATED
-      cloud: 'Cloud', // UNTRANSLATED
+      open_source: 'Open-Source',
+      cloud: 'Cloud',
     },
   },
   about: {
     page_title: 'A bit about you', // UNTRANSLATED
     title: 'A little bit about you', // UNTRANSLATED
     description:
-      'Let‘s make your Logto experience unique to you by getting to know you better. Your information is safe with us.', // UNTRANSLATED
-    title_field: 'Your title', // UNTRANSLATED
+      'Personnalisons votre expérience Logto en vous connaissant mieux. Vos informations sont en sécurité avec nous.',
+    title_field: 'Votre titre',
     title_options: {
-      developer: 'Developer', // UNTRANSLATED
-      team_lead: 'Team Lead', // UNTRANSLATED
-      ceo: 'CEO', // UNTRANSLATED
-      cto: 'CTO', // UNTRANSLATED
-      product: 'Product', // UNTRANSLATED
-      others: 'Others', // UNTRANSLATED
+      developer: 'Développeur',
+      team_lead: "Chef d'équipe",
+      ceo: 'PDG',
+      cto: 'CTO',
+      product: 'Produit',
+      others: 'Autres',
     },
-    company_name_field: 'Company name', // UNTRANSLATED
-    company_name_placeholder: 'Acme.co', // UNTRANSLATED
-    company_size_field: 'How’s your company size?', // UNTRANSLATED
+    company_name_field: "Nom de l'entreprise",
+    company_name_placeholder: 'Acme.co',
+    company_size_field: 'Taille de votre entreprise',
     company_options: {
-      size_1: '1', // UNTRANSLATED
-      size_2_49: '2-49', // UNTRANSLATED
-      size_50_199: '50-199', // UNTRANSLATED
-      size_200_999: '200-999', // UNTRANSLATED
-      size_1000_plus: '1000+', // UNTRANSLATED
+      size_1: '1',
+      size_2_49: '2-49',
+      size_50_199: '50-199',
+      size_200_999: '200-999',
+      size_1000_plus: '1000+',
     },
-    reason_field: 'I’m signing up because', // UNTRANSLATED
+    reason_field: "Je m'inscris parce que",
     reason_options: {
-      passwordless: 'Finding passwordless authentication and UI kit', // UNTRANSLATED
-      efficiency: 'Finding out-of-the-box identity infrastructure', // UNTRANSLATED
-      access_control: 'Controlling user access based on roles and responsibilities', // UNTRANSLATED
-      multi_tenancy: 'Seeking strategies for a multi-tenancy product', // UNTRANSLATED
-      enterprise: 'Finding SSO solutions for enterprise readiness', // UNTRANSLATED
-      others: 'Others', // UNTRANSLATED
+      passwordless:
+        "Je cherche une authentification sans mot de passe et une trousse d'interface utilisateur",
+      efficiency: "Je cherche une infrastructure d'identité clé en main",
+      access_control:
+        "Je cherche à contrôler l'accès utilisateur en fonction des rôles et des responsabilités",
+      multi_tenancy: 'Je cherche des stratégies pour un produit multi-tenant',
+      enterprise: "Je cherche des solutions SSO pour une gestion de l'entreprise",
+      others: 'Autres',
     },
   },
   congrats: {
     page_title: 'Earn early credits', // UNTRANSLATED
     title: 'Great news! You are qualified to earn Logto Cloud early credit!', // UNTRANSLATED
     description:
-      'Don’t miss out on a chance to enjoy a free <strong>60 days</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.', // UNTRANSLATED
-    check_out_button: 'Check out the live preview', // UNTRANSLATED
-    reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
-    reserve_description: 'Credit is only eligible once upon validation.', // UNTRANSLATED
-    book_button: 'Schedule now', // UNTRANSLATED
-    join_description: 'Join our public <a>{{link}}</a> to connect and chat with other developers.', // UNTRANSLATED
-    discord_link: 'discord channel', // UNTRANSLATED
-    enter_admin_console: 'Enter Logto Cloud Preview', // UNTRANSLATED
+      "Ne manquez pas l'occasion de profiter d'un abonnement gratuit de <strong>60 jours</strong> pour Logto Cloud après son lancement officiel! Contactez l'équipe Logto dès maintenant pour en savoir plus.",
+    check_out_button: "Découvrez l'aperçu en direct",
+    reserve_title: "Réservez votre temps avec l'équipe Logto",
+    reserve_description: "Le crédit n'est éligible qu'après validation.",
+    book_button: 'Planifier maintenant',
+    join_description:
+      "Rejoignez notre <a>{{link}}</a> public pour vous connecter et discuter avec d'autres développeurs.",
+    discord_link: 'canal Discord',
+    enter_admin_console: 'Accédez à Logto Cloud Preview',
   },
   gift: {
-    title: 'Use Logto Cloud free for 60 days. Join the front-runners now!', // UNTRANSLATED
-    description: 'Book a one-on-one session with our team for early credit.', // UNTRANSLATED
-    reserve_title: 'Reserve your time with Logto team', // UNTRANSLATED
-    reserve_description: 'Credit is only eligible once upon evaluation.', // UNTRANSLATED
-    book_button: 'Book', // UNTRANSLATED
+    title:
+      'Utilisez Logto Cloud gratuitement pendant 60 jours. Joignez-vous aux pionniers dès maintenant!',
+    description: 'Réservez une session individuelle avec notre équipe pour un crédit préalable.',
+    reserve_title: "Réservez votre temps avec l'équipe Logto",
+    reserve_description: "Le crédit n'est éligible qu'après évaluation.",
+    book_button: 'Réserver',
   },
   sie: {
     page_title: 'Customize sign-in experience', // UNTRANSLATED
     title: 'Let’s first customize your sign-in experience with ease', // UNTRANSLATED
     inspire: {
-      title: 'Create compelling examples', // UNTRANSLATED
+      title: 'Créez des exemples convaincants',
       description:
-        'Feeling unsure about sign in experience? Just click the "Inspire Me" and let the magic happen!', // UNTRANSLATED
-      inspire_me: 'Inspire me', // UNTRANSLATED
+        'Vous vous sentez incertain de l\'expérience de connexion? Cliquez simplement sur "Inspirez-moi" et laissez la magie opérer!',
+      inspire_me: 'Inspirez-moi',
     },
-    logo_field: 'App Logo', // UNTRANSLATED
-    color_field: 'Brand color', // UNTRANSLATED
-    identifier_field: 'Identifier', // UNTRANSLATED
+    logo_field: "Logo de l'application",
+    color_field: 'Couleur de la marque',
+    identifier_field: 'Identifiant',
     identifier_options: {
-      email: 'Email', // UNTRANSLATED
-      phone: 'Phone', // UNTRANSLATED
-      user_name: 'Username', // UNTRANSLATED
+      email: 'Email',
+      phone: 'Téléphone',
+      user_name: "Nom d'utilisateur",
     },
-    authn_field: 'Authentication', // UNTRANSLATED
+    authn_field: 'Authentification',
     authn_options: {
-      password: 'Password', // UNTRANSLATED
-      verification_code: 'Verification code', // UNTRANSLATED
+      password: 'Mot de passe',
+      verification_code: 'Code de vérification',
     },
-    social_field: 'Social sign in', // UNTRANSLATED
-    finish_and_done: 'Finish and done', // UNTRANSLATED
+    social_field: 'Connexion sociale',
+    finish_and_done: 'Terminer et terminé',
     preview: {
-      mobile_tab: 'Mobile', // UNTRANSLATED
-      web_tab: 'Web', // UNTRANSLATED
+      mobile_tab: 'Mobile',
+      web_tab: 'Web',
     },
     connectors: {
-      unlocked_later: 'Unlocked later', // UNTRANSLATED
+      unlocked_later: 'Débloqué ultérieurement',
       unlocked_later_tip:
-        'Once you have completed the onboarding process and entered the product, you will have access to even more social sign-in methods.', // UNTRANSLATED
+        "Une fois que vous avez terminé le processus d'inscription et que vous êtes entré dans le produit, vous aurez accès à encore plus de méthodes de connexion sociale.",
       notice:
-        'Please avoid using the demo connector for production purposes. Once you’ve completed testing, kindly delete the demo connector and set up your own connector with your credentials.', // UNTRANSLATED
+        "Veuillez éviter d'utiliser le connecteur de démonstration à des fins de production. Lorsque vous avez terminé les tests, veuillez supprimer le connecteur de démonstration et mettre en place votre propre connecteur avec vos informations d'identification.",
     },
   },
-  broadcast: '📣 You are in Logto Cloud (Preview)', // UNTRANSLATED
+  broadcast: '📣 Vous êtes dans Logto Cloud (aperçu)',
   socialCallback: {
-    title: "You've successfully signed in", // UNTRANSLATED
+    title: 'Connexion réussie',
     description:
-      'You have successfully signed in using your social account. To ensure seamless integration and access to all the features of Logto, we recommend that you proceed to configure your own social connector.', // UNTRANSLATED
+      'Vous vous êtes connecté avec succès en utilisant votre compte social. Pour assurer une intégration fluide et accéder à toutes les fonctionnalités de Logto, nous vous recommandons de configurer votre propre connecteur social.',
   },
 };
 

@@ -2,34 +2,36 @@ const get_started = {
   page_title: 'Get Started', // UNTRANSLATED
   progress: 'Guide de démarrage : {{completed}}/{{total}}',
   progress_dropdown_title: 'Il y a quelques choses que vous pouvez faire...',
-  title: 'Something to explore to help you succeed', // UNTRANSLATED
+  title: 'Quelque chose à explorer pour vous aider à réussir',
   subtitle_part1:
     'Voici quelques mesures que vous pouvez prendre pour tirer rapidement profit de Logto',
   subtitle_part2: "J'en ai fini avec cette installation. ",
   hide_this: 'Cacher cela',
   confirm_message:
     'Êtes-vous sûr de vouloir masquer cette page ? Cette action ne peut être annulée.',
-  check_preview_title: 'Check the live preview', // UNTRANSLATED
+  check_preview_title: "Vérifiez l'aperçu en direct",
   check_preview_subtitle:
     "Essayez maintenant l'expérience de connexion Logto pour voir comment elle fonctionne.",
-  integration_title: 'Create and integrate your application', // UNTRANSLATED
+  integration_title: 'Créez et intégrez votre application',
   integration_subtitle:
-    'Set up Logto authentication for your native, single page, machine to machine, or traditional application', // UNTRANSLATED
-  custom_sie_title: 'Customize sign-in experience', // UNTRANSLATED
-  custom_sie_subtitle: 'Unlock a vast range of scenarios with advanced settings', // UNTRANSLATED
-  passwordless_title: 'Scale passwordless sign in by adding your own connectors', // UNTRANSLATED
+    "Configurez l'authentification Logto pour votre application native, à page unique, machine à machine ou traditionnelle",
+  custom_sie_title: "Personnalisez l'expérience de connexion",
+  custom_sie_subtitle: 'Déverrouillez une grande variété de scénarios avec des paramètres avancés',
+  passwordless_title:
+    'Évolutivité de la connexion sans mot de passe en ajoutant vos propres connecteurs',
   passwordless_subtitle:
-    'Try passwordless sign in and enable a secure and frictionless experience for your customer', // UNTRANSLATED
-  community_title: 'Join our discord community', // UNTRANSLATED
-  community_subtitle: 'Join our public channel to chat with other developers', // UNTRANSLATED
-  management_api_title: 'Interact with Management API', // UNTRANSLATED
-  management_api_subtitle: 'Directly connect your authentication system to our management API', // UNTRANSLATED
-  further_readings_title: 'Further readings', // UNTRANSLATED
+    'Essayez la connexion sans mot de passe et offrez à vos clients une expérience sécurisée et sans friction',
+  community_title: 'Rejoignez notre communauté discord',
+  community_subtitle: "Rejoignez notre chaîne publique pour discuter avec d'autres développeurs",
+  management_api_title: 'Interagissez avec Management API',
+  management_api_subtitle:
+    "Connectez directement votre système d'authentification à notre Management API",
+  further_readings_title: 'Lectures complémentaires',
   further_readings_subtitle:
-    'Check out our step-by-step, scenario-based docs without tedious concepts', // UNTRANSLATED
-  add_rbac_title: 'Add role-based access control to protect your resources', // UNTRANSLATED
+    'Consultez nos documents étape par étape et basés sur des scénarios, sans concepts fastidieux',
+  add_rbac_title: "Ajoutez un contrôle d'accès basé sur les rôles pour protéger vos ressources",
   add_rbac_subtitle:
-    'Control your resource through scalable role authorization for diverse use cases.', // UNTRANSLATED
+    "Contrôlez vos ressources par l autorisation de rôle évolutive pour divers cas d'utilisation.",
 };
 
 export default get_started;

@@ -30,7 +30,7 @@ const applications = {
       description: '例：Next.js、PHP',
     },
     machine_to_machine: {
-      title: 'Machine to Machine',
+      title: 'Machine-to-Machine',
       subtitle: 'リソースに直接アクセスするアプリケーション（通常はサービス）',
       description: '例：バックエンドサービス',
     },

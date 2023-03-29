@@ -4,7 +4,7 @@ const log_details = {
   back_to_user: 'Retour à {{name}}',
   success: 'Succès',
   failed: 'Échoué',
-  event_key: 'Event Key', // UNTRANSLATED
+  event_key: "Clé d'événement",
   application: 'Application',
   ip_address: 'Addresse IP',
   user: 'Utilisateur',

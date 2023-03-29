@@ -44,16 +44,33 @@ const createFullTranslation = async (
     const relativePath = path.relative(path.join(directory, baseLanguage), file);
     const targetPath = path.join(directory, languageTag, relativePath);
 
-    if (existsSync(targetPath)) {
-      log.info(`Target path ${targetPath} exists, skipping`);
+    const getTranslationPath = async () => {
+      if (existsSync(targetPath)) {
+        const currentContent = await fs.readFile(targetPath, 'utf8');
+
+        if (currentContent.includes('// UNTRANSLATED')) {
+          return targetPath;
+        }
+
+        log.info(`Target path ${targetPath} exists and has no untranslated mark, skipping`);
+
+        return;
+      }
+
+      return file;
+    };
+
+    const translationPath = await getTranslationPath();
+
+    if (!translationPath) {
       continue;
     }
 
-    log.info(`Translating ${file}`);
-    const result = await translate(openai, languageTag, file);
+    log.info(`Translating ${translationPath}`);
+    const result = await translate(openai, languageTag, translationPath);
 
     if (!result) {
-      log.error(`Unable to translate ${file}`);
+      log.error(`Unable to translate ${translationPath}`);
     }
 
     await fs.mkdir(path.parse(targetPath).dir, { recursive: true });
@@ -78,16 +95,14 @@ const create: CommandModule<{ path?: string }, { path?: string; 'language-tag': 
     }
 
     if (isPhrasesBuiltInLanguageTag(languageTag)) {
-      log.info(languageTag + ' is a built-in tag of phrases, skipping');
-    } else {
-      await createFullTranslation(inputPath, 'phrases', languageTag);
+      log.info(languageTag + ' is a built-in tag of phrases, updating untranslated phrases');
     }
+    await createFullTranslation(inputPath, 'phrases', languageTag);
 
     if (isPhrasesUiBuiltInLanguageTag(languageTag)) {
-      log.info(languageTag + ' is a built-in tag of phrases-ui, skipping');
-    } else {
-      await createFullTranslation(inputPath, 'phrases-ui', languageTag);
+      log.info(languageTag + ' is a built-in tag of phrases-ui, updating untranslated phrases');
     }
+    await createFullTranslation(inputPath, 'phrases-ui', languageTag);
   },
 };
 

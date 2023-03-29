@@ -1,17 +1,17 @@
 const general = {
-  placeholder: 'Placeholder',
+  placeholder: 'Emplacement',
   skip: 'Passer',
   next: 'Suivant',
-  back: 'Back', // UNTRANSLATED
+  back: 'Retourner',
   retry: 'Essayez à nouveau',
   done: 'Terminé',
-  search: 'Rechercher',
-  search_placeholder: 'Rechercher...',
+  search: 'Recherche',
+  search_placeholder: 'Recherche...',
   clear_result: 'Effacer les résultats',
   save: 'Sauvegarder',
   save_changes: 'Sauvegarder les modifications',
   saved: 'Sauvegardé !',
-  discard: 'Discard', // UNTRANSLATED
+  discard: 'Abandonner',
   loading: 'Chargement...',
   redirecting: 'Redirection...',
   add: 'Ajouter',
@@ -21,9 +21,9 @@ const general = {
   check_out: 'Vérifier',
   create: 'Créer',
   set_up: 'Configurer',
-  customize: 'Customiser',
+  customize: 'Personnaliser',
   enable: 'Activer',
-  reminder: 'Rappeler',
+  reminder: 'Rappel',
   delete: 'Supprimer',
   more_options: "PLUS D'OPTIONS",
   close: 'Fermer',
@@ -38,19 +38,19 @@ const general = {
     'Vous avez effectué des changements. Êtes-vous sûr de vouloir quitter cette page ?',
   leave_page: 'Quittez la page',
   stay_on_page: 'Rester sur la page',
-  type_to_search: 'Type to search', // UNTRANSLATED
+  type_to_search: 'Tapez pour rechercher',
   got_it: 'Compris.',
-  continue: 'Continue', // UNTRANSLATED
-  page_info: '{{min, number}}-{{max, number}} of {{total, number}}', // UNTRANSLATED
-  learn_more: 'Learn more', // UNTRANSLATED
-  tab_errors: '{{count, number}} errors', // UNTRANSLATED
-  skip_for_now: 'Skip for now', // UNTRANSLATED
-  remove: 'Remove', // UNTRANSLATED
-  visit: 'Visit', // UNTRANSLATED
-  join: 'Join', // UNTRANSLATED
-  try_now: 'Try Now', // UNTRANSLATED
-  multiple_form_field: '(Multiple)', // UNTRANSLATED
-  demo: 'Demo', // UNTRANSLATED
+  continue: 'Continuez',
+  page_info: '{{min, number}}-{{max, number}} de {{total, number}}',
+  learn_more: 'En savoir plus',
+  tab_errors: '{{count, number}} erreurs',
+  skip_for_now: "Passer pour l'instant",
+  remove: 'Supprimer',
+  visit: 'Visiter',
+  join: 'Rejoindre',
+  try_now: 'Essayez maintenant',
+  multiple_form_field: '(Multiple)',
+  demo: 'Démo',
 };
 
 export default general;

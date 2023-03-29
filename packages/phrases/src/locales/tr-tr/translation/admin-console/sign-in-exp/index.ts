@@ -8,7 +8,7 @@ const sign_in_exp = {
     'Oturum açma kullanıcı arayüzünü markanıza uyacak şekilde özelleştirin ve gerçek zamanlı olarak görüntüleyin',
   tabs: {
     branding: 'Markalaşma',
-    sign_up_and_sign_in: 'Sign up and Sign in',
+    sign_up_and_sign_in: 'Sign-up and Sign-in',
     others: 'Diğerleri',
   },
   welcome: {
