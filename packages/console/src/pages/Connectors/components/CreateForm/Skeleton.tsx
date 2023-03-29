@@ -11,10 +11,8 @@ function Skeleton() {
         <div key={index} className={classNames(layout.connector, styles.connector)}>
           <div className={styles.logo} />
           <div className={layout.content}>
-            <div className={layout.name}>
-              <div className={styles.name} />
-            </div>
-            <div className={layout.description}>
+            <div className={styles.name} />
+            <div>
               <div className={styles.description} />
               <div className={classNames(styles.description, styles.shortDescription)} />
             </div>
