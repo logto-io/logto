@@ -2,6 +2,7 @@ import others from './others.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
+  page_title: 'Expérience de connexion',
   title: 'Expérience de connexion',
   description:
     "Personnalisez l'interface utilisateur pour qu'elle corresponde à votre marque et consultez-la en temps réel.",
