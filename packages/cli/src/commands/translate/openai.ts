@@ -16,8 +16,8 @@ export const createOpenaiApi = () => {
     headers: {
       Authorization: `Bearer ${process.env.OPENAI_API_KEY ?? ''}`,
     },
-    timeout: { request: 120_000 },
-    ...(proxy && { agent: { https: new HttpsProxyAgent({ proxy, timeout: 120_000 }) } }),
+    timeout: { request: 300_000 },
+    ...(proxy && { agent: { https: new HttpsProxyAgent({ proxy, timeout: 300_000 }) } }),
   });
 };
 

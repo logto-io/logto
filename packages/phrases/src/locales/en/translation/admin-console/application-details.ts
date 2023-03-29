@@ -1,5 +1,5 @@
 const application_details = {
-  page_title: 'Application details', // UNTRANSLATED
+  page_title: 'Application details',
   back_to_applications: 'Back to Applications',
   check_guide: 'Check Guide',
   settings: 'Settings',

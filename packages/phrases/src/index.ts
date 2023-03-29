@@ -6,14 +6,15 @@ import { z } from 'zod';
 import de from './locales/de/index.js';
 import en from './locales/en/index.js';
 import fr from './locales/fr/index.js';
+import ja from './locales/ja/index.js';
 import ko from './locales/ko/index.js';
 import ptBR from './locales/pt-br/index.js';
 import ptPT from './locales/pt-pt/index.js';
 import trTR from './locales/tr-tr/index.js';
 import zhCN from './locales/zh-cn/index.js';
-import type { LocalPhrase } from './types.js';
+import type { LocalePhrase } from './types.js';
 
-export type { LocalPhrase } from './types.js';
+export type { LocalePhrase } from './types.js';
 
 export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 
@@ -26,6 +27,7 @@ export const builtInLanguages = [
   'pt-BR',
   'tr-TR',
   'zh-CN',
+  'ja',
 ] as const;
 
 export const builtInLanguageOptions = builtInLanguages.map((languageTag) => ({
@@ -49,7 +51,7 @@ export const getDefaultLanguageTag = (languages: string): LanguageTag =>
 export const isBuiltInLanguageTag = (language: string): language is BuiltInLanguageTag =>
   builtInLanguageTagGuard.safeParse(language).success;
 
-export type Resource = Record<BuiltInLanguageTag, LocalPhrase>;
+export type Resource = Record<BuiltInLanguageTag, LocalePhrase>;
 
 const resource: Resource = {
   de,
@@ -60,6 +62,7 @@ const resource: Resource = {
   'pt-BR': ptBR,
   'tr-TR': trTR,
   'zh-CN': zhCN,
+  ja,
 };
 
 export default resource;

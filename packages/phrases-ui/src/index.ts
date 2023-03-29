@@ -4,8 +4,9 @@ import type { NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import de from './locales/de.js';
-import en from './locales/en.js';
+import en from './locales/en/index.js';
 import fr from './locales/fr.js';
+import ja from './locales/ja/index.js';
 import ko from './locales/ko.js';
 import ptBR from './locales/pt-br.js';
 import ptPT from './locales/pt-pt.js';
@@ -28,6 +29,7 @@ export const builtInLanguages = [
   'ru',
   'tr-TR',
   'zh-CN',
+  'ja',
 ] as const;
 
 export const builtInLanguageOptions = builtInLanguages.map((languageTag) => ({
@@ -51,6 +53,7 @@ const resource: Resource = {
   ru,
   'tr-TR': trTR,
   'zh-CN': zhCN,
+  ja,
 };
 
 export const getDefaultLanguageTag = (language: string): LanguageTag =>

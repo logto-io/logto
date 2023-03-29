@@ -1,4 +1,4 @@
-import en from '@logto/phrases-ui/lib/locales/en.js';
+import en from '@logto/phrases-ui/lib/locales/en/index.js';
 import type { SignInExperience } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
