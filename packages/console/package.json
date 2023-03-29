@@ -28,8 +28,6 @@
     "@logto/react": "1.1.0",
     "@logto/schemas": "workspace:^",
     "@mdx-js/react": "^1.6.22",
-    "@microsoft/applicationinsights-react-js": "^3.4.1",
-    "@microsoft/applicationinsights-web": "^2.8.11",
     "@parcel/compressor-brotli": "2.8.3",
     "@parcel/compressor-gzip": "2.8.3",
     "@parcel/core": "2.8.3",

@@ -29,13 +29,10 @@
     "prepack": "pnpm build"
   },
   "devDependencies": {
-    "@microsoft/applicationinsights-react-js": "^3.4.1",
-    "@microsoft/applicationinsights-web": "^2.8.11",
     "@silverhand/eslint-config": "3.0.0",
     "@silverhand/ts-config": "3.0.0",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.31",
-    "applicationinsights": "^2.5.0",
     "eslint": "^8.34.0",
     "history": "^5.3.0",
     "lint-staged": "^13.0.0",
@@ -52,26 +49,17 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@silverhand/essentials": "^2.5.0"
-  },
-  "peerDependencies": {
     "@microsoft/applicationinsights-react-js": "^3.4.1",
     "@microsoft/applicationinsights-web": "^2.8.11",
-    "applicationinsights": "^2.5.0",
+    "@silverhand/essentials": "^2.5.0",
+    "applicationinsights": "^2.5.0"
+  },
+  "peerDependencies": {
     "history": "^5.3.0",
     "react": "^18.0.0",
     "tslib": "^2.4.1"
   },
   "peerDependenciesMeta": {
-    "@microsoft/applicationinsights-react-js": {
-      "optional": true
-    },
-    "@microsoft/applicationinsights-web": {
-      "optional": true
-    },
-    "applicationinsights": {
-      "optional": true
-    },
     "history": {
       "optional": true
     },
