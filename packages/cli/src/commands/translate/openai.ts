@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 
-import { type LanguageTag } from '@logto/language-kit';
+import { languages, type LanguageTag } from '@logto/language-kit';
 import { trySafe } from '@silverhand/essentials';
 import { type Got, got, HTTPError } from 'got';
 import { HttpsProxyAgent } from 'hpagent';
@@ -40,7 +40,7 @@ export const translate = async (api: Got, languageTag: LanguageTag, filePath: st
           messages: [
             {
               role: 'user',
-              content: `Translate the following code snippet to ${languageTag}, output ts code only: \n \`\`\`ts\n${fileContent}\n\`\`\``,
+              content: `Only translate object values to ${languages[languageTag]} in the following code snippet, output ts code only: \n \`\`\`ts\n${fileContent}\n\`\`\``,
             },
           ],
         },

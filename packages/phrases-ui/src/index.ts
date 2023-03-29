@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import de from './locales/de/index.js';
 import en from './locales/en/index.js';
+import es from './locales/es/index.js';
 import fr from './locales/fr/index.js';
 import ja from './locales/ja/index.js';
 import ko from './locales/ko/index.js';
@@ -22,14 +23,15 @@ export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 export const builtInLanguages = [
   'de',
   'en',
+  'es',
   'fr',
+  'ja',
   'ko',
   'pt-PT',
   'pt-BR',
   'ru',
   'tr-TR',
   'zh-CN',
-  'ja',
 ] as const;
 
 export const builtInLanguageOptions = builtInLanguages.map((languageTag) => ({
@@ -46,14 +48,15 @@ export type Resource = Record<BuiltInLanguageTag, LocalePhrase>;
 const resource: Resource = {
   de,
   en,
+  es,
   fr,
+  ja,
   ko,
   'pt-PT': ptPT,
   'pt-BR': ptBR,
   ru,
   'tr-TR': trTR,
   'zh-CN': zhCN,
-  ja,
 };
 
 export const getDefaultLanguageTag = (language: string): LanguageTag =>
