@@ -14,6 +14,8 @@ import ptPT from './locales/pt-pt/index.js';
 import ru from './locales/ru/index.js';
 import trTR from './locales/tr-tr/index.js';
 import zhCN from './locales/zh-cn/index.js';
+import zhHK from './locales/zh-hk/index.js';
+import zhTW from './locales/zh-tw/index.js';
 import type { LocalePhrase } from './types.js';
 
 export type { LocalePhrase } from './types.js';
@@ -32,6 +34,8 @@ export const builtInLanguages = [
   'ru',
   'tr-TR',
   'zh-CN',
+  'zh-HK',
+  'zh-TW',
 ] as const;
 
 export const builtInLanguageOptions = builtInLanguages.map((languageTag) => ({
@@ -62,13 +66,15 @@ const resource: Resource = {
   en,
   es,
   fr,
+  ja,
   ko,
   'pt-BR': ptBR,
   'pt-PT': ptPT,
   ru,
   'tr-TR': trTR,
   'zh-CN': zhCN,
-  ja,
+  'zh-HK': zhHK,
+  'zh-TW': zhTW,
 };
 
 export default resource;
