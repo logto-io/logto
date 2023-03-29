@@ -7,6 +7,7 @@ const digits = '0123456789';
 export const createInitialPassword = () => {
   const randomAlphabet = customAlphabet(alphabet);
   const randomDigit = customAlphabet(digits);
+  const randomAlphabetOrDigit = customAlphabet(alphabet + digits);
 
-  return `${randomAlphabet(1)}${randomDigit(1)}${randomAlphabet(6)}`;
+  return `${randomAlphabet(1)}${randomDigit(1)}${randomAlphabetOrDigit(6)}`;
 };
