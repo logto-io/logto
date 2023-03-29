@@ -25,7 +25,7 @@ export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
 function ImageUploader({ name, value, onDelete, ...rest }: Props) {
   return value ? (
     <div className={styles.imageUploader}>
-      <img alt={name} src={value} />
+      <img alt={name} src={value} crossOrigin="anonymous" />
       <IconButton
         className={styles.delete}
         onClick={() => {

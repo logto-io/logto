@@ -11,7 +11,6 @@ import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
-import koaCspHeaders from '#src/middleware/koa-csp-headers.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import koaOIDCErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
@@ -71,7 +70,7 @@ export default class Tenant implements TenantContext {
     app.use(koaConnectorErrorHandler());
     app.use(koaI18next());
     app.use(koaCompress());
-    app.use(koaSecurityHeaders());
+    app.use(koaSecurityHeaders(mountedApps));
 
     // Mount OIDC
     const provider = initOidc(id, envSet, queries, libraries);
@@ -85,6 +84,7 @@ export default class Tenant implements TenantContext {
       libraries,
       envSet,
     };
+
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
 
@@ -123,18 +123,13 @@ export default class Tenant implements TenantContext {
     }
 
     // Mount UI
-    app.use(
-      compose([
-        koaSpaSessionGuard(provider, queries),
-        koaCspHeaders(mountedApps),
-        koaSpaProxy(mountedApps),
-      ])
-    );
+    app.use(compose([koaSpaSessionGuard(provider, queries), koaSpaProxy(mountedApps)]));
 
     this.app = app;
     this.provider = provider;
 
     const { isPathBasedMultiTenancy, adminUrlSet } = EnvSet.values;
+
     this.run =
       isPathBasedMultiTenancy &&
       // If admin URL Set is specified, consider that URL first

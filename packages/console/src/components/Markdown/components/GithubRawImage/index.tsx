@@ -27,6 +27,7 @@ function GithubRawImage({ src, alt }: HTMLProps<HTMLImageElement>) {
       src={`${githubRawUrlPrefix}${src}`}
       alt={alt}
       width={`${width}px`}
+      crossOrigin="anonymous"
       onLoad={onLoad}
     />
   );
