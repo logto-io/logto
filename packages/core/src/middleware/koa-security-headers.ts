@@ -27,7 +27,10 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(): M
     helmet.permittedCrossDomainPolicies(),
 
     // Referrer-Policy https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#referrer-policy
-    helmet.referrerPolicy(),
+    // @ts-expect-error broken type definition, koaHelmet types definitions remain 6.* for now broken
+    helmet.referrerPolicy({
+      policy: 'strict-origin-when-cross-origin',
+    }),
 
     // X-XSS-Protection https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-xss-protection
     helmet.xssFilter(),
