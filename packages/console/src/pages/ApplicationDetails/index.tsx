@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { Application, ApplicationResponse, SnakeCaseOidcConfig } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { useEffect, useState } from 'react';
@@ -25,7 +26,6 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { applicationTypeI18nKey } from '@/types/applications';
-import { withAppInsights } from '@/utils/app-insights';
 
 import Guide from '../Applications/components/Guide';
 import GuideModal from '../Applications/components/Guide/GuideModal';
@@ -235,4 +235,4 @@ function ApplicationDetails() {
   );
 }
 
-export default withAppInsights(ApplicationDetails);
+export default appInsightsReact.withAppInsights(ApplicationDetails);

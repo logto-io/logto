@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { Resource } from '@logto/schemas';
 import { isManagementApi, Theme } from '@logto/schemas';
 import classNames from 'classnames';
@@ -22,7 +23,6 @@ import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
-import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
 import { type ApiResourceDetailsOutletContext } from './types';
@@ -148,4 +148,4 @@ function ApiResourceDetails() {
   );
 }
 
-export default withAppInsights(ApiResourceDetails);
+export default appInsightsReact.withAppInsights(ApiResourceDetails);

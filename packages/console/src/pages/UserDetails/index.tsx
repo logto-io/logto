@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { User } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
@@ -22,7 +23,6 @@ import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { withAppInsights } from '@/utils/app-insights';
 
 import UserAccountInformation from '../../components/UserAccountInformation';
 
@@ -192,4 +192,4 @@ function UserDetails() {
   );
 }
 
-export default withAppInsights(UserDetails);
+export default appInsightsReact.withAppInsights(UserDetails);

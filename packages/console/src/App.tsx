@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import { UserScope } from '@logto/core-kit';
 import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, PredefinedScope } from '@logto/schemas';
@@ -25,6 +26,9 @@ import AppEndpointsProvider from './contexts/AppEndpointsProvider';
 import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 
+if (appInsightsReact.setup()) {
+  console.debug('Initialized ApplicationInsights');
+}
 void initI18n();
 
 function Content() {

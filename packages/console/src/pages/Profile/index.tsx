@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { ConnectorResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +17,6 @@ import useCurrentUser from '@/hooks/use-current-user';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import { withAppInsights } from '@/utils/app-insights';
 
 import BasicUserInfoSection from './components/BasicUserInfoSection';
 import CardContent from './components/CardContent';
@@ -99,4 +99,4 @@ function Profile() {
   );
 }
 
-export default withAppInsights(Profile);
+export default appInsightsReact.withAppInsights(Profile);

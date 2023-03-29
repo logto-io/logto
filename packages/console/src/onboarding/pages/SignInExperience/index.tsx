@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -24,7 +25,6 @@ import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import type { OnboardingSieConfig } from '@/onboarding/types';
 import { Authentication, OnboardingPage } from '@/onboarding/types';
 import { getOnboardingPage } from '@/onboarding/utils';
-import { withAppInsights } from '@/utils/app-insights';
 import { buildUrl } from '@/utils/url';
 import { uriValidator } from '@/utils/validator';
 
@@ -256,4 +256,4 @@ function SignInExperience() {
   );
 }
 
-export default withAppInsights(SignInExperience);
+export default appInsightsReact.withAppInsights(SignInExperience);

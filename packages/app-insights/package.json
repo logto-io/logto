@@ -1,0 +1,85 @@
+{
+  "name": "@logto/app-insights",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "license": "MPL-2.0",
+  "type": "module",
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    ".": {
+      "import": "./lib/index.js"
+    },
+    "./*": {
+      "import": "./lib/*"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "build:test": "pnpm build",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "prepack": "pnpm build"
+  },
+  "devDependencies": {
+    "@microsoft/applicationinsights-react-js": "^3.4.1",
+    "@microsoft/applicationinsights-web": "^2.8.11",
+    "@silverhand/eslint-config": "3.0.0",
+    "@silverhand/ts-config": "3.0.0",
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.31",
+    "applicationinsights": "^2.5.0",
+    "eslint": "^8.34.0",
+    "history": "^5.3.0",
+    "lint-staged": "^13.0.0",
+    "prettier": "^2.8.2",
+    "react": "^18.0.0",
+    "tslib": "^2.4.1",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": "^18.12.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "dependencies": {
+    "@silverhand/essentials": "^2.5.0"
+  },
+  "peerDependencies": {
+    "@microsoft/applicationinsights-react-js": "^3.4.1",
+    "@microsoft/applicationinsights-web": "^2.8.11",
+    "applicationinsights": "^2.5.0",
+    "history": "^5.3.0",
+    "react": "^18.0.0",
+    "tslib": "^2.4.1"
+  },
+  "peerDependenciesMeta": {
+    "@microsoft/applicationinsights-react-js": {
+      "optional": true
+    },
+    "@microsoft/applicationinsights-web": {
+      "optional": true
+    },
+    "applicationinsights": {
+      "optional": true
+    },
+    "history": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "tslib": {
+      "optional": true
+    }
+  }
+}

@@ -23,6 +23,7 @@
     "test:ci": "pnpm test:only --coverage --silent"
   },
   "dependencies": {
+    "@logto/app-insights": "workspace:^",
     "@logto/cli": "workspace:^",
     "@logto/connector-kit": "workspace:^",
     "@logto/core-kit": "workspace:^",

@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import { conditional } from '@silverhand/essentials';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,7 +13,6 @@ import PageMeta from '@/components/PageMeta';
 import TextInput from '@/components/TextInput';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
-import { withAppInsights } from '@/utils/app-insights';
 
 import ActionBar from '../../components/ActionBar';
 import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
@@ -144,4 +144,4 @@ function About() {
   );
 }
 
-export default withAppInsights(About);
+export default appInsightsReact.withAppInsights(About);

@@ -1,8 +1,7 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import { useLogto } from '@logto/react';
 import { trySafe } from '@silverhand/essentials';
 import { useEffect } from 'react';
-
-import { getAppInsights } from '@/utils/app-insights';
 
 class NoIdTokenClaimsError extends Error {
   name = 'NoIdTokenClaimsError';
@@ -14,7 +13,7 @@ const useTrackUserId = () => {
 
   useEffect(() => {
     const setUserId = async () => {
-      const appInsights = getAppInsights();
+      const { instance: appInsights } = appInsightsReact;
 
       if (!appInsights) {
         return;

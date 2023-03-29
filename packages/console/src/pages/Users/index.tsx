@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +23,6 @@ import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import { withAppInsights } from '@/utils/app-insights';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import CreateForm from './components/CreateForm';
@@ -177,4 +177,4 @@ function Users() {
   );
 }
 
-export default withAppInsights(Users);
+export default appInsightsReact.withAppInsights(Users);

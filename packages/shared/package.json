@@ -14,9 +14,6 @@
     },
     "./esm": {
       "import": "./lib/esm/index.js"
-    },
-    "./app-insights": {
-      "import": "./lib/app-insights/index.js"
     }
   },
   "publishConfig": {
@@ -64,8 +61,5 @@
     "find-up": "^6.3.0",
     "nanoid": "^4.0.0",
     "slonik": "^30.0.0"
-  },
-  "optionalDependencies": {
-    "applicationinsights": "^2.5.0"
   }
 }

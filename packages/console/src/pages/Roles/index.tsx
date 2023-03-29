@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { RoleResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +20,6 @@ import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as pageStyles from '@/scss/resources.module.scss';
-import { withAppInsights } from '@/utils/app-insights';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import AssignedUsers from './components/AssignedUsers';
@@ -163,4 +163,4 @@ function Roles() {
   );
 }
 
-export default withAppInsights(Roles);
+export default appInsightsReact.withAppInsights(Roles);

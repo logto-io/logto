@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { User, Log } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +16,6 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
 import type { RequestError } from '@/hooks/use-api';
-import { withAppInsights } from '@/utils/app-insights';
 
 import EventIcon from './components/EventIcon';
 import * as styles from './index.module.scss';
@@ -122,4 +122,4 @@ function AuditLogDetails() {
   );
 }
 
-export default withAppInsights(AuditLogDetails);
+export default appInsightsReact.withAppInsights(AuditLogDetails);

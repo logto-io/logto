@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import classNames from 'classnames';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -13,7 +14,6 @@ import ActionBar from '@/onboarding/components/ActionBar';
 import { CardSelector } from '@/onboarding/components/CardSelector';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
-import { withAppInsights } from '@/utils/app-insights';
 
 import type { Questionnaire } from '../../types';
 import { OnboardingPage } from '../../types';
@@ -111,4 +111,4 @@ function Welcome() {
   );
 }
 
-export default withAppInsights(Welcome);
+export default appInsightsReact.withAppInsights(Welcome);

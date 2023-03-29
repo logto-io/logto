@@ -27,6 +27,7 @@
   "dependencies": {
     "@azure/storage-blob": "^12.13.0",
     "@koa/cors": "^4.0.0",
+    "@logto/app-insights": "workspace:^",
     "@logto/cli": "workspace:^",
     "@logto/connector-kit": "workspace:^",
     "@logto/core-kit": "workspace:^",

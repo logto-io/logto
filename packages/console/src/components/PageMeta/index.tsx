@@ -1,9 +1,10 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { AdminConsoleKey } from '@logto/phrases';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 
-import { getAppInsights } from '@/utils/app-insights';
+import { mainTitle } from '@/consts/tenants';
 
 type Props = {
   titleKey: AdminConsoleKey | AdminConsoleKey[];
@@ -21,7 +22,7 @@ function PageMeta({ titleKey, trackPageView = true }: Props) {
   useEffect(() => {
     // Only track once for the same page
     if (trackPageView && !pageViewTracked) {
-      getAppInsights()?.trackPageView({ name: rawTitle });
+      appInsightsReact.trackPageView?.({ name: [rawTitle, mainTitle].join(' - ') });
       setPageViewTracked(true);
     }
   }, [pageViewTracked, rawTitle, trackPageView]);
