@@ -104,6 +104,7 @@ function CodeEditor({
             autoComplete="off"
             autoCorrect="off"
             data-gramm="false"
+            wrap="false"
             readOnly={isReadonly}
             spellCheck="false"
             value={value}
