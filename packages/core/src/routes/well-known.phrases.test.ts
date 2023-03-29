@@ -1,4 +1,4 @@
-import zhCN from '@logto/phrases-ui/lib/locales/zh-cn.js';
+import zhCN from '@logto/phrases-ui/lib/locales/zh-cn/index.js';
 import type { CustomPhrase, SignInExperience } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
