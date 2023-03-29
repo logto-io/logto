@@ -398,7 +398,7 @@ importers:
       koa-body: ^5.0.0
       koa-compose: ^4.1.0
       koa-compress: ^5.1.0
-      koa-helmet: ^7.0.1
+      koa-helmet: ^7.0.2
       koa-logger: ^3.2.1
       koa-mount: ^4.0.0
       koa-proxies: ^0.12.1
@@ -458,7 +458,7 @@ importers:
       koa-body: 5.0.0
       koa-compose: 4.1.0
       koa-compress: 5.1.0
-      koa-helmet: 7.0.1
+      koa-helmet: 7.0.2
       koa-logger: 3.2.1
       koa-mount: 4.0.0
       koa-proxies: 0.12.1_koa@2.13.4
@@ -9888,8 +9888,8 @@ packages:
       koa-compose: 4.1.0
     dev: false
 
-  /koa-helmet/7.0.1:
-    resolution: {integrity: sha512-C7HNgiakdoVbHKBOp59yeEb/BuYq31nm7PtjMjSYVk9t5oW6gJHWOmUyEU1Qo1QfQCj8U8wCtn98FU7lizJrqg==}
+  /koa-helmet/7.0.2:
+    resolution: {integrity: sha512-AvzS6VuEfFgbAm0mTUnkk/BpMarMcs5A56g+f0sfrJ6m63wII48d2GDrnUQGp0Nj+RR950vNtgqXm9UJSe7GOg==}
     engines: {node: '>= 14.0.0'}
     dependencies:
       helmet: 6.0.1
