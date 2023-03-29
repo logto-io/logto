@@ -1,4 +1,5 @@
 const users = {
+  page_title: 'Gestión de usuarios',
   title: 'Gestión de usuarios',
   subtitle:
     'Administrar identidades de usuario, incluyendo la creación de usuarios, la edición de información de usuario, la visualización de registros de usuario, la restablecimiento de contraseña y la eliminación de usuarios',

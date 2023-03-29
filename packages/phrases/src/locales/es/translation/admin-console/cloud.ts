@@ -1,5 +1,6 @@
 const cloud = {
   welcome: {
+    page_title: 'Welcome', // UNTRANSLATED
     title: 'Bienvenido y creemos su propia vista previa de Logto Cloud',
     description:
       'Ya sea que sea un usuario de código abierto o en la nube, realice un recorrido por la vitrina y experimente el valor completo de Logto. La vista previa en la nube también sirve como una versión preliminar de Logto Cloud.',
@@ -15,6 +16,7 @@ const cloud = {
     },
   },
   about: {
+    page_title: 'A bit about you', // UNTRANSLATED
     title: 'Un poco sobre ti',
     description:
       'Hagamos que su experiencia de Logto sea única para usted al conocerlo mejor. Su información está segura con nosotros.',
@@ -48,6 +50,7 @@ const cloud = {
     },
   },
   congrats: {
+    page_title: 'Earn early credits', // UNTRANSLATED
     title: '¡Excelentes noticias! ¡Está calificado para ganar crédito anticipado de Logto Cloud!',
     description:
       '¡No pierda la oportunidad de disfrutar de una suscripción gratuita de <strong>60 días</strong> a Logto Cloud después de su lanzamiento oficial! Comuníquese con el equipo de Logto ahora para obtener más información.',
@@ -69,6 +72,7 @@ const cloud = {
     book_button: 'Reservar',
   },
   sie: {
+    page_title: 'Customize sign-in experience', // UNTRANSLATED
     title: 'Primero personalicemos su experiencia de inicio de sesión con facilidad',
     inspire: {
       title: 'Crear ejemplos convincentes',

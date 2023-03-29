@@ -1,4 +1,5 @@
 const logs = {
+  page_title: 'Registros de auditoría',
   title: 'Registros de auditoría',
   subtitle: 'Ver datos de registro de eventos de autenticación realizados por sus usuarios.',
   event: 'Evento',

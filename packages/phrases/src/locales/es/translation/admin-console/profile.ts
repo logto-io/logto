@@ -1,4 +1,5 @@
 const profile = {
+  page_title: 'Configuración de cuenta',
   title: 'Configuración de cuenta',
   description:
     'Cambie su configuración de cuenta y administre su información personal aquí para garantizar la seguridad de su cuenta.',

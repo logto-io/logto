@@ -1,4 +1,5 @@
 const connectors = {
+  page_title: 'Conectores',
   title: 'Conectores',
   subtitle:
     'Configure conectores para habilitar la experiencia de inicio de sesión sin contraseña y con redes sociales',
