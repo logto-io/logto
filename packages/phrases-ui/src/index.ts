@@ -3,16 +3,16 @@ import { languages, fallback } from '@logto/language-kit';
 import type { NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import de from './locales/de.js';
+import de from './locales/de/index.js';
 import en from './locales/en/index.js';
-import fr from './locales/fr.js';
+import fr from './locales/fr/index.js';
 import ja from './locales/ja/index.js';
-import ko from './locales/ko.js';
-import ptBR from './locales/pt-br.js';
-import ptPT from './locales/pt-pt.js';
-import ru from './locales/ru.js';
-import trTR from './locales/tr-tr.js';
-import zhCN from './locales/zh-cn.js';
+import ko from './locales/ko/index.js';
+import ptBR from './locales/pt-br/index.js';
+import ptPT from './locales/pt-pt/index.js';
+import ru from './locales/ru/index.js';
+import trTR from './locales/tr-tr/index.js';
+import zhCN from './locales/zh-cn/index.js';
 import type { LocalePhrase } from './types.js';
 
 export type { LocalePhrase } from './types.js';
