@@ -52,7 +52,7 @@ function TextInput(
       event.preventDefault();
     };
 
-    input.addEventListener('wheel', handleWheel);
+    input.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
       input.removeEventListener('wheel', handleWheel);
