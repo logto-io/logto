@@ -68,7 +68,11 @@ function ApiResourceSettings() {
           </FormField>
           <FormField isRequired title="api_resource_details.token_expiration_time_in_seconds">
             <TextInput
-              {...register('accessTokenTtl', { required: true, valueAsNumber: true })}
+              {...register('accessTokenTtl', {
+                required: true,
+                valueAsNumber: true,
+              })}
+              type="number"
               hasError={Boolean(errors.accessTokenTtl)}
               placeholder={t('api_resource_details.token_expiration_time_in_seconds_placeholder')}
             />

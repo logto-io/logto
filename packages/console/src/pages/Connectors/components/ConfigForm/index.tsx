@@ -51,7 +51,10 @@ function ConfigForm({ formItems }: Props) {
     const errorMessage = errors[item.key]?.message;
 
     const buildCommonProperties = () => ({
-      ...register(item.key, { required: item.required }),
+      ...register(item.key, {
+        required: item.required,
+        valueAsNumber: item.type === ConnectorConfigFormItemType.Number,
+      }),
       placeholder: item.placeholder,
       hasError,
     });

@@ -1,6 +1,15 @@
+import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import type { HTMLProps, ForwardedRef, ReactElement } from 'react';
-import { cloneElement, forwardRef } from 'react';
+import {
+  type HTMLProps,
+  type ReactElement,
+  useImperativeHandle,
+  useRef,
+  cloneElement,
+  forwardRef,
+  type Ref,
+  useEffect,
+} from 'react';
 
 import * as styles from './index.module.scss';
 
@@ -20,10 +29,36 @@ function TextInput(
     disabled,
     className,
     readOnly,
+    type = 'text',
     ...rest
   }: Props,
-  reference: ForwardedRef<HTMLInputElement>
+  reference: Ref<Nullable<HTMLInputElement>>
 ) {
+  const innerRef = useRef<HTMLInputElement>(null);
+  useImperativeHandle(reference, () => innerRef.current);
+
+  useEffect(() => {
+    if (type !== 'number') {
+      return;
+    }
+
+    const input = innerRef.current;
+
+    if (!input) {
+      return;
+    }
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+    };
+
+    input.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      input.removeEventListener('wheel', handleWheel);
+    };
+  }, [type]);
+
   return (
     <div className={className}>
       <div
@@ -36,7 +71,7 @@ function TextInput(
         )}
       >
         {icon && <span className={styles.icon}>{icon}</span>}
-        <input type="text" {...rest} ref={reference} disabled={disabled} readOnly={readOnly} />
+        <input type={type} {...rest} ref={innerRef} disabled={disabled} readOnly={readOnly} />
         {suffix &&
           cloneElement(suffix, {
             className: classNames([suffix.props.className, styles.suffix]),
