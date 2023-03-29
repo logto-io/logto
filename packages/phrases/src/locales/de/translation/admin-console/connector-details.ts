@@ -1,13 +1,13 @@
 const connector_details = {
-  page_title: 'Connector details', // UNTRANSLATED
+  page_title: 'Verbindungsdetails',
   back_to_connectors: 'Zurück zu Connectoren',
   check_readme: 'Zur README',
-  settings: 'General settings', // UNTRANSLATED
+  settings: 'Allgemeine Einstellungen',
   settings_description:
-    'Connectors play a critical role in Logto. With their help, Logto enables end-users to use passwordless registration or sign-in and the capabilities of signing in with social accounts.', // UNTRANSLATED
+    'Connectoren spielen eine wichtige Rolle in Logto. Mit ihrer Hilfe ermöglicht Logto Endbenutzern eine passwortlose Registrierung oder Anmeldung sowie die Möglichkeit, sich mit Social Accounts anzumelden.',
   save_error_empty_config: 'Bitte fülle die Konfiguration aus',
-  parameter_configuration: 'Parameter configuration', // UNTRANSLATED
-  test_connection: 'Test connection', // UNTRANSLATED
+  parameter_configuration: 'Parameter-Konfiguration',
+  test_connection: 'Verbindung testen',
   send: 'Senden',
   send_error_invalid_format: 'Ungültige Eingabe',
   edit_config_label: 'Gib deine JSON-Konfiguration ein',
@@ -21,15 +21,15 @@ const connector_details = {
   options_change_email: 'E-Mail Connector bearbeiten',
   options_change_sms: 'SMS Connector bearbeiten',
   connector_deleted: 'Der Connector wurde erfolgreich gelöscht',
-  type_email: 'E-Mail connector',
-  type_sms: 'SMS connector',
-  type_social: 'Social connector',
+  type_email: 'E-Mail Connector',
+  type_sms: 'SMS Connector',
+  type_social: 'Social Connector',
   in_used_social_deletion_description:
-    'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings. You will need to reconfigure it if you decide to add it back.', // UNTRANSLATED
+    'Dieser Connector wird in Ihrem Anmeldeerlebnis verwendet. Durch das Löschen wird das Anmeldeerlebnis in den Anmeldeerlebniseinstellungen gelöscht. Wenn Sie ihn wieder hinzufügen möchten, müssen Sie ihn erneut konfigurieren.',
   in_used_passwordless_deletion_description:
-    'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict. You will need to reconfigure it if you decide to add it back.', // UNTRANSLATED
+    'Dieser {{name}} wird in Ihrem Anmeldeerlebnis verwendet. Wenn Sie ihn löschen, funktioniert Ihr Anmeldeerlebnis nicht ordnungsgemäß, bis Sie das Problem gelöst haben. Wenn Sie ihn wieder hinzufügen möchten, müssen Sie ihn erneut konfigurieren.',
   deletion_description:
-    'You are removing this connector. It cannot be undone, and you will need to reconfigure it if you decide to add it back.', // UNTRANSLATED
+    'Sie entfernen diesen Connector. Dies kann nicht rückgängig gemacht werden, und Sie müssen ihn erneut konfigurieren, wenn Sie ihn wieder hinzufügen möchten.',
 };
 
 export default connector_details;

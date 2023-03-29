@@ -1,9 +1,9 @@
 const demo_app = {
-  title: "You've successfully signed in the live preview!", // UNTRANSLATED
-  subtitle: 'Here is your log in information:',
+  title: 'Sie haben sich erfolgreich bei der Live-Vorschau angemeldet!',
+  subtitle: 'Hier sind Ihre Anmeldeinformationen:',
   username: 'Benutzername: ',
   user_id: 'Benutzer ID: ',
-  sign_out: 'Sign Out the Live Preview', // UNTRANSLATED
+  sign_out: 'Abmeldung von der Live-Vorschau',
   continue_explore: 'Oder weiter zum Entdecken',
   customize_sign_in_experience: 'Anmeldeoberfläche anpassen',
   enable_passwordless: 'Passwordless einschalten',

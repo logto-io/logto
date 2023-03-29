@@ -1,24 +1,24 @@
 const roles = {
-  page_title: 'Roles', // UNTRANSLATED
-  title: 'Roles', // UNTRANSLATED
+  page_title: 'Rollen',
+  title: 'Rollen',
   subtitle:
-    'Roles include permissions that determine what a user can do. RBAC uses roles to give users access to resources for specific actions.', // UNTRANSLATED
-  create: 'Create Role', // UNTRANSLATED
-  role_name: 'Role', // UNTRANSLATED
-  role_description: 'Description', // UNTRANSLATED
-  role_name_placeholder: 'Enter your role name', // UNTRANSLATED
-  role_description_placeholder: 'Enter your role description', // UNTRANSLATED
-  assigned_users: 'Assigned users', // UNTRANSLATED
-  assign_permissions: 'Assign permissions', // UNTRANSLATED
-  create_role_title: 'Create Role', // UNTRANSLATED
+    'Rollen beinhalten Berechtigungen, die bestimmen, was ein Benutzer tun kann. RBAC verwendet Rollen, um Benutzern Zugriff auf Ressourcen für bestimmte Aktionen zu geben.',
+  create: 'Rolle erstellen',
+  role_name: 'Rolle',
+  role_description: 'Beschreibung',
+  role_name_placeholder: 'Geben Sie Ihren Rollennamen ein',
+  role_description_placeholder: 'Geben Sie Ihre Rollenbeschreibung ein',
+  assigned_users: 'Zugeordnete Benutzer',
+  assign_permissions: 'Berechtigungen zuweisen',
+  create_role_title: 'Rolle erstellen',
   create_role_description:
-    'Create and manage roles for your applications. Roles contain collections of permissions and can be assigned to users.', // UNTRANSLATED
-  create_role_button: 'Create Role', // UNTRANSLATED
-  role_created: 'The role {{name}} has been successfully created!', // UNTRANSLATED
-  search: 'Search by role name, description or ID', // UNTRANSLATED
-  placeholder_title: 'Roles', // UNTRANSLATED
+    'Erstellen und verwalten Sie Rollen für Ihre Anwendungen. Rollen enthalten Sammlungen von Berechtigungen und können Benutzern zugewiesen werden.',
+  create_role_button: 'Rolle erstellen',
+  role_created: 'Die Rolle {{name}} wurde erfolgreich erstellt!',
+  search: 'Nach Rollennamen, Beschreibung oder ID suchen',
+  placeholder_title: 'Rollen',
   placeholder_description:
-    'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.', // UNTRANSLATED
+    'Rollen sind eine Gruppierung von Berechtigungen, die Benutzern zugewiesen werden können. Stellen Sie sicher, dass Sie zuerst Berechtigungen hinzufügen, bevor Sie Rollen erstellen.',
 };
 
 export default roles;

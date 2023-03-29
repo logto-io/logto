@@ -1,49 +1,50 @@
 const role_details = {
-  back_to_roles: 'Back to Roles', // UNTRANSLATED
-  identifier: 'Identifier', // UNTRANSLATED
+  back_to_roles: 'Zurück zu Rollen',
+  identifier: 'Identifikator',
   delete_description:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the mapping between roles, users, and permissions.', // UNTRANSLATED
-  role_deleted: '{{name}} was successfully deleted!', // UNTRANSLATED
-  settings_tab: 'Settings', // UNTRANSLATED
-  users_tab: 'Users', // UNTRANSLATED
-  permissions_tab: 'Permissions', // UNTRANSLATED
-  settings: 'Settings', // UNTRANSLATED
+    'Dadurch werden die mit dieser Rolle verbundenen Berechtigungen von den betroffenen Benutzern entfernt und die Zuordnung zwischen Rollen, Benutzern und Berechtigungen gelöscht.',
+  role_deleted: '{{name}} wurde erfolgreich gelöscht!',
+  settings_tab: 'Einstellungen',
+  users_tab: 'Benutzer',
+  permissions_tab: 'Berechtigungen',
+  settings: 'Einstellungen',
   settings_description:
-    'Roles are a grouping of permissions that can be assigned to users. They also provide a way to aggregate permissions defined for different APIs, making it more efficient to add, remove, or adjust permissions compared to assigning them individually to users.', // UNTRANSLATED
-  field_name: 'Name', // UNTRANSLATED
-  field_description: 'Description', // UNTRANSLATED
+    'Rollen sind eine Gruppierung von Berechtigungen, die Benutzern zugewiesen werden können. Sie ermöglichen auch eine Zusammenfassung von Berechtigungen, die für verschiedene APIs definiert wurden, was es effizienter macht, Berechtigungen im Vergleich zur individuellen Zuweisung an Benutzer hinzuzufügen, zu entfernen oder zu ändern.',
+  field_name: 'Name',
+  field_description: 'Beschreibung',
   permission: {
-    assign_button: 'Assign Permissions', // UNTRANSLATED
-    assign_title: 'Assign permissions', // UNTRANSLATED
+    assign_button: 'Berechtigungen zuweisen',
+    assign_title: 'Berechtigungen zuweisen',
     assign_subtitle:
-      'Assign permissions to this role. The role will gain the added permissions, and users with this role will inherit these permissions.', // UNTRANSLATED
-    assign_form_field: 'Assign permissions', // UNTRANSLATED
-    added_text_one: '{{count, number}} permission added', // UNTRANSLATED
-    added_text_other: '{{count, number}} permissions added', // UNTRANSLATED
-    api_permission_count_one: '{{count, number}} permission', // UNTRANSLATED
-    api_permission_count_other: '{{count, number}} permissions', // UNTRANSLATED
-    confirm_assign: 'Assign Permissions', // UNTRANSLATED
-    permission_assigned: 'The selected permissions were successfully assigned to this role', // UNTRANSLATED
+      'Weisen Sie dieser Rolle Berechtigungen zu. Die Rolle erhält die hinzugefügten Berechtigungen, und Benutzer mit dieser Rolle erben diese Berechtigungen.',
+    assign_form_field: 'Berechtigungen zuweisen',
+    added_text_one: '{{count, number}} Berechtigung hinzugefügt',
+    added_text_other: '{{count, number}} Berechtigungen hinzugefügt',
+    api_permission_count_one: '{{count, number}} Berechtigung',
+    api_permission_count_other: '{{count, number}} Berechtigungen',
+    confirm_assign: 'Berechtigungen zuweisen',
+    permission_assigned:
+      'Die ausgewählten Berechtigungen wurden dieser Rolle erfolgreich zugewiesen',
     deletion_description:
-      'If this permission is removed, the affected user with this role will lose the access granted by this permission.', // UNTRANSLATED
-    permission_deleted: 'The permission "{{name}}" was successfully removed from this role', // UNTRANSLATED
-    empty: 'No permission available', // UNTRANSLATED
+      'Wenn diese Berechtigung entfernt wird, verliert der betroffene Benutzer mit dieser Rolle den Zugriff, der durch diese Berechtigung gewährt wurde.',
+    permission_deleted: 'Die Berechtigung "{{name}}" wurde erfolgreich von dieser Rolle entfernt',
+    empty: 'Keine Berechtigung verfügbar',
   },
   users: {
-    assign_button: 'Assign Users', // UNTRANSLATED
-    name_column: 'User', // UNTRANSLATED
-    app_column: 'App', // UNTRANSLATED
-    latest_sign_in_column: 'Latest sign in', // UNTRANSLATED
+    assign_button: 'Benutzer zuweisen',
+    name_column: 'Benutzer',
+    app_column: 'App',
+    latest_sign_in_column: 'Letzte Anmeldung',
     delete_description:
-      'It will remain in your user pool but lose the authorization for this role.', // UNTRANSLATED
-    deleted: '{{name}} was successfully removed from this role', // UNTRANSLATED
-    assign_title: 'Assign users', // UNTRANSLATED
+      'Es bleibt in Ihrer Benutzergruppe, aber verliert die Autorisierung für diese Rolle.',
+    deleted: '{{name}} wurde erfolgreich von dieser Rolle entfernt',
+    assign_title: 'Benutzer zuweisen',
     assign_subtitle:
-      'Assign users to this role. Find appropriate users by searching name, email, phone, or user ID.', // UNTRANSLATED
-    assign_users_field: 'Assign users', // UNTRANSLATED
-    confirm_assign: 'Assign users', // UNTRANSLATED
-    users_assigned: 'The selected users were successfully assigned to this role', // UNTRANSLATED
-    empty: 'No user available', // UNTRANSLATED
+      'Weisen Sie Benutzer dieser Rolle zu. Finden Sie geeignete Benutzer, indem Sie nach Name, E-Mail, Telefon oder Benutzer-ID suchen.',
+    assign_users_field: 'Benutzer zuweisen',
+    confirm_assign: 'Benutzer zuweisen',
+    users_assigned: 'Die ausgewählten Benutzer wurden dieser Rolle erfolgreich zugewiesen',
+    empty: 'Kein Benutzer verfügbar',
   },
 };
 

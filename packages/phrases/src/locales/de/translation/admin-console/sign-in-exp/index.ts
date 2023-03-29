@@ -1,7 +1,7 @@
 import others from './others.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
-// UNTRANSLATED
+// TRANSLATED
 const sign_in_exp = {
   page_title: 'Anmeldeoberfläche',
   title: 'Anmeldeoberfläche',
@@ -10,13 +10,13 @@ const sign_in_exp = {
   tabs: {
     branding: 'Branding',
     methods: 'Anmeldemethoden',
-    sign_up_and_sign_in: 'Sign-up and Sign-in',
+    sign_up_and_sign_in: 'Anmeldung und Registrierung',
     others: 'Andere',
   },
   welcome: {
-    title: 'Customize sign-in experience',
+    title: 'Anmeldungs-Erlebnis anpassen',
     description:
-      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.',
+      'Setze schnell deine erste Anmeldung ein. Dieser Leitfaden führt dich durch alle notwendigen Einstellungen.',
     get_started: 'Erste Schritte',
     apply_remind:
       'Bitte beachte, dass die Anmeldeoberfläche für alle Anwendungen unter diesem Konto gilt.',
@@ -35,51 +35,51 @@ const sign_in_exp = {
     title: 'BRANDING',
     ui_style: 'Stil',
     favicon: 'Favicon',
-    logo_image_url: 'App logo URL',
+    logo_image_url: 'App Logo-URL',
     logo_image_url_placeholder: 'https://dein.cdn.domain/logo.png',
-    dark_logo_image_url: 'App logo URL (Dunkler Modus)',
+    dark_logo_image_url: 'App Logo-URL (Dunkler Modus)',
     dark_logo_image_url_placeholder: 'https://dein.cdn.domain/logo-dark.png',
-    logo_image: 'App logo',
-    dark_logo_image: 'App logo (Dunkler Modus)',
-    logo_image_error: 'App logo: {{error}}',
+    logo_image: 'App-Logo',
+    dark_logo_image: 'App-Logo (Dunkler Modus)',
+    logo_image_error: 'App-Logo: {{error}}',
     favicon_error: 'Favicon: {{error}}',
   },
   custom_css: {
-    title: 'Custom CSS',
-    css_code_editor_title: 'Personalize your UI with Custom CSS',
-    css_code_editor_description1: 'See the example of Custom CSS.',
-    css_code_editor_description2: '<a>{{link}}</a>',
-    css_code_editor_description_link_content: 'Learn more',
+    title: 'Benutzerdefiniertes CSS',
+    css_code_editor_title: 'Personalisiere dein UI mit Benutzerdefiniertem CSS',
+    css_code_editor_description1: 'Beispiele für benutzerdefiniertes CSS anzeigen.',
+    css_code_editor_description2: '<a>{{link}}</a>.',
+    css_code_editor_description_link_content: 'Erfahre mehr',
     css_code_editor_content_placeholder:
-      'Enter your custom CSS to tailor the styles of anything to your exact specifications. Express your creativity and make your UI stand out.',
+      'Gib dein benutzerdefiniertes CSS ein, um den Stil von allem genau nach deinen Vorgaben zu gestalten. Gib deiner Kreativität Ausdruck und hebe dein UI hervor.',
   },
   setup_warning: {
     no_connector_sms:
-      'No SMS connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
+      'Es wurde noch kein SMS-Konnektor eingerichtet. Bevor die Konfiguration abgeschlossen werden kann, können sich Benutzer nicht mit dieser Methode anmelden. <a>{{link}}</a> in "Connectors"',
     no_connector_email:
-      'No email connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
+      'Es wurde noch kein E-Mail-Konnektor eingerichtet. Bevor die Konfiguration abgeschlossen werden kann, können sich Benutzer nicht mit dieser Methode anmelden. <a>{{link}}</a> in "Connectors"',
     no_connector_social:
-      'No social connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
+      'Es wurde noch kein Sozial-Konnektor eingerichtet. Bevor die Konfiguration abgeschlossen werden kann, können sich Benutzer nicht mit dieser Methode anmelden. <a>{{link}}</a> in "Connectors"',
     no_added_social_connector:
-      'Du hast jetzt ein paar Social Connectoren eingerichtet. Füge jetzt einige zu deinem Anmeldeerlebnis hinzu.',
-    setup_link: 'Set up',
+      'Du hast jetzt ein paar Soziale Konnektoren eingerichtet. Füge jetzt einige zu deinem Anmeldeerlebnis hinzu.',
+    setup_link: 'Einrichtung',
   },
   save_alert: {
     description:
-      'You are implementing new sign-in and sign-up procedures. All of your users may be affected by the new set-up. Are you sure to commit to the change?',
+      'Du implementierst neue Anmelde- und Registrierungsverfahren. Alle deine Benutzer können von der neuen Einrichtung betroffen sein. Bist du sicher, dass du die Änderung abschließen möchtest?',
     before: 'Vorher',
     after: 'Nachher',
-    sign_up: 'Sign-up',
-    sign_in: 'Sign-in',
-    social: 'Social',
+    sign_up: 'Registrierung',
+    sign_in: 'Anmeldung',
+    social: 'Sozial',
   },
   preview: {
     title: 'Vorschau',
-    live_preview: 'Live preview',
-    live_preview_tip: 'Save to preview changes',
-    native: 'Nativ',
-    desktop_web: 'Desktop Web',
-    mobile_web: 'Mobil Web',
+    live_preview: 'Live-Vorschau',
+    live_preview_tip: 'Speichern, um Änderungen anzuzeigen',
+    native: 'Native',
+    desktop_web: 'Desktop-Web',
+    mobile_web: 'Mobile-Web',
   },
   others,
   sign_up_and_sign_in,

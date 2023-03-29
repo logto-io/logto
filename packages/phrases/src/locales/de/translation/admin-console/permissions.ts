@@ -1,12 +1,12 @@
 const permissions = {
-  search_placeholder: 'Search by API or permission name', // UNTRANSLATED
-  search_placeholder_without_api: 'Search by permission name', // UNTRANSLATED
-  name_column: 'Permission', // UNTRANSLATED
-  description_column: 'Description', // UNTRANSLATED
-  api_column: 'API', // UNTRANSLATED
-  placeholder_title: 'Permission', // UNTRANSLATED
+  search_placeholder: 'Nach API oder Berechtigungsname suchen',
+  search_placeholder_without_api: 'Nach Berechtigungsname suchen',
+  name_column: 'Berechtigung',
+  description_column: 'Beschreibung',
+  api_column: 'API',
+  placeholder_title: 'Berechtigung',
   placeholder_description:
-    'Permission refers to the authorization to access a resource (we call it API resource).', // UNTRANSLATED
+    'Berechtigung bezieht sich auf die Autorisierung zum Zugriff auf eine Ressource (wir nennen sie API-Ressource).',
 };
 
 export default permissions;
