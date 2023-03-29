@@ -14,17 +14,17 @@ const application_details = {
   description_placeholder: 'Entrez la description de votre application',
   authorization_endpoint: "Point de terminaison d'autorisation",
   authorization_endpoint_tip:
-    "Le point de terminaison pour effectuer l'authentification et l'autorisation. Il est utilisé pour l'authentification OpenID Connect.",
+    "Le point de terminaison pour effectuer l'authentification et l'autorisation. Il est utilisé pour <a>l'authentification</a> OpenID Connect.",
   application_id: "ID de l'application",
   application_id_tip:
-    "L'identifiant d'application unique généralement généré par Logto. Il signifie également « client_id » dans OpenID Connect.",
+    "L'identifiant d'application unique généralement généré par Logto. Il signifie également <a>client_id</a> dans OpenID Connect.",
   application_secret: "Secret de l'application",
   redirect_uri: 'URI de redirection',
   redirect_uris: 'URIs de redirection',
   redirect_uri_placeholder: 'https://votre.site.com/app',
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
-    "L'URI de redirection après la connexion d'un utilisateur (qu'elle soit réussie ou non). Voir OpenID Connect AuthRequest pour plus d'informations.",
+    "L'URI de redirection après la connexion d'un utilisateur (qu'elle soit réussie ou non). Voir OpenID Connect <a>AuthRequest</a> pour plus d'informations.",
   post_sign_out_redirect_uri: 'URI de redirection post-signature',
   post_sign_out_redirect_uris: 'URI de redirection après la signature',
   post_sign_out_redirect_uri_placeholder: 'https://votre.site.com/home',
@@ -33,7 +33,7 @@ const application_details = {
   cors_allowed_origins: 'Origines CORS autorisées',
   cors_allowed_origins_placeholder: 'https://votre.site.com',
   cors_allowed_origins_tip:
-    "Par défaut, toutes les origines des URI de redirection seront autorisées. En général, aucune action n'est requise pour ce champ. See the MDN doc pour plus d'informations.",
+    "Par défaut, toutes les origines des URI de redirection seront autorisées. En général, aucune action n'est requise pour ce champ. Consultez la documentation <a>MDN</a> pour des informations détaillées.",
   id_token_expiration: "Expiration de l'ID du jeton",
   refresh_token_expiration: 'Expiration de rafraîchissement du jeton',
   token_endpoint: "Point d'extrémité du jeton",
