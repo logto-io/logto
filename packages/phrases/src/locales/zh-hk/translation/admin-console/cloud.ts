@@ -54,9 +54,9 @@ const cloud = {
     description:
       '別錯過：立即聯繫 Logto 團隊，了解更多信息，獲得 Logto Cloud 正式版 <strong>60 天</strong> 的免費試用機會！',
     check_out_button: '查看實時預覽',
-    reserve_title: '與 Logto 團隊預定時間',
-    reserve_description: '驗證後僅有一次領取資格。',
-    book_button: '現在預定',
+    email_us_title: '電郵聯絡我們以獲取特別優惠和價格詳情',
+    email_us_description: '獲取獨家優惠價格以節省金錢',
+    email_us_button: '發送電郵',
     join_description: '加入我們的公開<a>{{link}}</a>，與其他開發人員連接和聊天。',
     discord_link: 'Discord 頻道',
     enter_admin_console: '進入 Logto Cloud 預覽',
@@ -67,6 +67,9 @@ const cloud = {
     reserve_title: '與 Logto 團隊預定時間',
     reserve_description: '評估後僅有一次領取資格。',
     book_button: '預定',
+    email_us_title: '傳送郵件給我們',
+    email_us_description: '聯繫我們以獲得特別優惠及價格詳情。',
+    email_us_button: '傳送',
   },
   sie: {
     page_title: '定制登錄體驗',

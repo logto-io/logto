@@ -58,6 +58,9 @@ const cloud = {
     reserve_title: 'Reserve su tiempo con el equipo de Logto',
     reserve_description: 'El crédito solo es elegible una vez validado.',
     book_button: 'Programar ahora',
+    email_us_title: 'Envíanos un correo electrónico para una oferta especial y detalles del precio',
+    email_us_description: 'Obtén precios exclusivos para ahorrar dinero',
+    email_us_button: 'Enviar correo electrónico',
     join_description:
       'Únase a nuestro <a>{{link}}</a> público para conectarse y charlar con otros desarrolladores.',
     discord_link: 'canal de discordia',
@@ -70,6 +73,9 @@ const cloud = {
     reserve_title: 'Reserve su tiempo con el equipo de Logto',
     reserve_description: 'El crédito solo es elegible una vez evaluado.',
     book_button: 'Reservar',
+    email_us_title: 'Envíanos un correo electrónico',
+    email_us_description: 'Contáctanos para una oferta especial y detalles de precios.',
+    email_us_button: 'Enviar',
   },
   sie: {
     page_title: 'Personalización de la experiencia de inicio de sesión',

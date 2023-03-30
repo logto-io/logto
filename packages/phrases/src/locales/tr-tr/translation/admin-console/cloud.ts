@@ -55,9 +55,9 @@ const cloud = {
     description:
       "Resmi lansmanından sonra Logto Cloud'da ücretsiz <strong>60 gün</strong> aboneliğin tadını çıkarma şansını kaçırmayın! Daha fazla bilgi için hemen Logto ekibiyle iletişime geçin.",
     check_out_button: 'Canlı önizlemeyi kontrol et',
-    reserve_title: 'Logto ekibi ile zaman ayırın',
-    reserve_description: 'Kredi, değerlendirmeye dayanarak yalnızca bir kez geçerlidir.',
-    book_button: 'Şimdi programa al',
+    email_us_title: 'Özel teklif ve fiyat detayları için bize e-posta gönderin',
+    email_us_description: 'Para kazanmak için özel fiyatlar alın',
+    email_us_button: 'E-posta gönderin',
     join_description:
       "Diğer geliştiricilerle bağlantı kurmak ve sohbet etmek için genel <a>{{link}}</a>'a katılın.",
     discord_link: 'discord kanalı',
@@ -69,6 +69,9 @@ const cloud = {
     reserve_title: 'Logto ekibiyle zaman ayırın',
     reserve_description: 'Kredi, değerlendirmeye dayanarak yalnızca bir kez geçerlidir.',
     book_button: 'Programa al',
+    email_us_title: 'Bize bir e-posta gönderin',
+    email_us_description: 'Özel teklif ve fiyat detayları için bizimle iletişime geçin.',
+    email_us_button: 'Gönder',
   },
   sie: {
     page_title: 'Oturum açma deneyimini özelleştirin',

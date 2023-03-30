@@ -59,6 +59,9 @@ const cloud = {
     reserve_title: 'Reservieren Sie Ihre Zeit beim Logto-Team',
     reserve_description: 'Das Guthaben ist nur einmal nach Validierung berechtigt.',
     book_button: 'Jetzt buchen',
+    email_us_title: 'Schreiben Sie uns eine E-Mail für ein spezielles Angebot und Preise',
+    email_us_description: 'Erhalten Sie exklusive Preise, um Geld zu sparen',
+    email_us_button: 'E-Mail senden',
     join_description:
       'Treten Sie unserem öffentlichen <a>{{link}}</a> bei, um sich mit anderen Entwicklern zu verbinden und zu chatten.',
     discord_link: 'Discord-Kanal',
@@ -70,6 +73,9 @@ const cloud = {
     reserve_title: 'Reservieren Sie Ihre Zeit beim Logto-Team',
     reserve_description: 'Das Guthaben ist nur einmal nach Bewertung berechtigt.',
     book_button: 'Buch',
+    email_us_title: 'Senden Sie uns eine E-Mail',
+    email_us_description: 'Kontaktieren Sie uns für ein spezielles Angebot und Preisdetails.',
+    email_us_button: 'Senden',
   },
   sie: {
     page_title: 'Meldeeinrichtung anpassen',

@@ -55,9 +55,9 @@ const cloud = {
     description:
       'Don’t miss out on a chance to enjoy a free <strong>60 days</strong> subscription to Logto Cloud after its official launch! Contact the Logto team now to learn more.',
     check_out_button: 'Check out the live preview',
-    reserve_title: 'Reserve your time with Logto team',
-    reserve_description: 'Credit is only eligible once upon validation.',
-    book_button: 'Schedule now',
+    email_us_title: 'Email us for a special offer and pricing details',
+    email_us_description: 'Get exclusive pricing to save money',
+    email_us_button: 'Send email',
     join_description: 'Join our public <a>{{link}}</a> to connect and chat with other developers.',
     discord_link: 'discord channel',
     enter_admin_console: 'Enter Logto Cloud Preview',
@@ -68,6 +68,9 @@ const cloud = {
     reserve_title: 'Reserve your time with Logto team',
     reserve_description: 'Credit is only eligible once upon evaluation.',
     book_button: 'Book',
+    email_us_title: 'Send us an email',
+    email_us_description: 'Contact us for a special offer and pricing detail.',
+    email_us_button: 'Send',
   },
   sie: {
     page_title: 'Customize sign-in experience',

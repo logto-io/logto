@@ -57,9 +57,9 @@ const cloud = {
     description:
       "Ne manquez pas l'occasion de profiter d'un abonnement gratuit de <strong>60 jours</strong> pour Logto Cloud après son lancement officiel! Contactez l'équipe Logto dès maintenant pour en savoir plus.",
     check_out_button: "Découvrez l'aperçu en direct",
-    reserve_title: "Réservez votre temps avec l'équipe Logto",
-    reserve_description: "Le crédit n'est éligible qu'après validation.",
-    book_button: 'Planifier maintenant',
+    email_us_title: 'Envoyez-nous un e-mail pour une offre spéciale et des détails de prix',
+    email_us_description: "Obtenez des tarifs exclusifs pour économiser de l'argent",
+    email_us_button: 'Envoyer un e-mail',
     join_description:
       "Rejoignez notre <a>{{link}}</a> public pour vous connecter et discuter avec d'autres développeurs.",
     discord_link: 'canal Discord',
@@ -72,6 +72,9 @@ const cloud = {
     reserve_title: "Réservez votre temps avec l'équipe Logto",
     reserve_description: "Le crédit n'est éligible qu'après évaluation.",
     book_button: 'Réserver',
+    email_us_title: 'Envoyez-nous un e-mail',
+    email_us_description: 'Contactez-nous pour une offre spéciale et des détails de prix.',
+    email_us_button: 'Envoyer',
   },
   sie: {
     page_title: "Personnalisez l'expérience de connexion",
