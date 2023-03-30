@@ -59,3 +59,9 @@
     margin-right: _.unit(3);
   }
 }
+
+@media only screen and (max-width: 640px) {
+  .modal {
+    width: calc(100% - 40px);
+  }
+}

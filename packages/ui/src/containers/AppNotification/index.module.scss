@@ -19,5 +19,6 @@
     left: 50%;
     transform: translate(-50%);
     width: max-content;
+    max-width: calc(100% - 40px);
   }
 }
