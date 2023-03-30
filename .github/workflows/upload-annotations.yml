@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        uses: silverhand-io/actions-node-pnpm-run-steps@v3
 
       - name: Prepack
         run: pnpm prepack
