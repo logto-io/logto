@@ -29,7 +29,6 @@ cache
 .gitignore
 
 .changeset
-.changeset-staged
 .devcontainer
 .github
 .husky
