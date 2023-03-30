@@ -75,6 +75,8 @@ const sign_in_exp = {
     native: '네이티브',
     desktop_web: '데스크톱 웹',
     mobile_web: '모바일 웹',
+    desktop: '데스크톱',
+    mobile: '모바일',
   },
   others,
   sign_up_and_sign_in,

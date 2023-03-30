@@ -74,6 +74,8 @@ const sign_in_exp = {
     native: '移動原生',
     desktop_web: '桌面網頁',
     mobile_web: '移動網頁',
+    desktop: '桌面網頁',
+    mobile: '行動裝置',
   },
   others,
   sign_up_and_sign_in,
