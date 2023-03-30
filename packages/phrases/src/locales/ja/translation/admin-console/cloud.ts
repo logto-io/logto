@@ -55,9 +55,9 @@ const cloud = {
     description:
       'Logto Cloudの正式開始後、無料で60日間のサブスクリプションを楽しむチャンスを逃さないでください！ 詳しくは今すぐLogtoチームにお問い合わせください。',
     check_out_button: 'ライブプレビューをチェックアウト',
-    reserve_title: 'Logtoチームとの会議を予約',
-    reserve_description: 'クレジットは承認された時点でのみ有効です。',
-    book_button: '今すぐスケジュール',
+    email_us_title: '特別オファーや価格詳細のためにメールを送信してください',
+    email_us_description: 'お金を節約するために独占的な価格を手に入れる',
+    email_us_button: 'メールを送信する',
     join_description:
       '他の開発者と接続してチャットできるパブリック<a>{{link}}</a>に参加してください。',
     discord_link: 'discordチャンネル',
@@ -69,6 +69,9 @@ const cloud = {
     reserve_title: 'Logtoチームとの会議を予約',
     reserve_description: 'クレジットは審査後にのみ有効になります。',
     book_button: '予約する',
+    email_us_title: 'メールでお問い合わせ',
+    email_us_description: '特別オファーや価格の詳細についてお問い合わせください。',
+    email_us_button: '送信する',
   },
   sie: {
     page_title: 'サインインエクスペリエンスのカスタマイズ',

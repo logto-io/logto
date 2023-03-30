@@ -3,14 +3,16 @@ import classNames from 'classnames';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import CalendarOutline from '@/assets/images/calendar-outline.svg';
 import CongratsImage from '@/assets/images/congrats.svg';
+import EmailUsIcon from '@/assets/images/email-us.svg';
+import Email from '@/assets/images/email.svg';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import PageMeta from '@/components/PageMeta';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import Reservation from '@/onboarding/components/Reservation';
+import ReachLogto from '@/onboarding/components/ReachLogto';
+import { emailUsLink } from '@/onboarding/constants';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 
@@ -39,12 +41,14 @@ function Congrats() {
               {t('cloud.congrats.description')}
             </Trans>
           </div>
-          <Reservation
-            title="cloud.congrats.reserve_title"
-            description="cloud.congrats.reserve_description"
-            reservationButtonTitle="cloud.congrats.book_button"
-            reservationButtonIcon={<CalendarOutline />}
-            className={styles.reservation}
+          <ReachLogto
+            title="cloud.congrats.email_us_title"
+            description="cloud.congrats.email_us_description"
+            buttonTitle="cloud.congrats.email_us_button"
+            buttonIcon={<EmailUsIcon />}
+            icon={<Email />}
+            link={emailUsLink}
+            className={styles.emailUs}
           />
           <Divider className={styles.divider} />
           <Button

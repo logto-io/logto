@@ -10,7 +10,9 @@
   .description {
     font: var(--font-body-2);
     color: var(--color-text-secondary);
-    margin-bottom: _.unit(6);
+  }
+
+  > :not(:first-child) {
+    margin-top: _.unit(6);
   }
 }
-

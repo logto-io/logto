@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.reservation {
+.reachLogto {
   width: 100%;
   padding: _.unit(3) _.unit(4);
   border: 1px solid var(--color-divider);
@@ -9,20 +9,22 @@
   align-items: center;
   justify-content: space-between;
 
-  .reservationInfo {
+  .reachLogtoInfo {
     display: flex;
     align-items: center;
 
-    .reservationIcon {
+    .reachLogtoIcon {
+      width: 36px;
+      height: 36px;
       margin-right: _.unit(4);
       flex-shrink: 0;
     }
 
-    .reservationTitle {
+    .reachLogtoTitle {
       font: var(--font-title-3);
     }
 
-    .reservationDescription {
+    .reachLogtoDescription {
       font: var(--font-body-2);
       color: var(--color-text-secondary);
       padding-right: _.unit(4);
