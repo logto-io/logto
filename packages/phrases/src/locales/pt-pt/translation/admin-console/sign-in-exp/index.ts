@@ -77,8 +77,8 @@ const sign_in_exp = {
     native: 'App nativa',
     desktop_web: 'Web no computador',
     mobile_web: 'Web no telemóvel',
-    desktop: 'Desktop', // UNTRANSLATED
-    mobile: 'Mobile', // UNTRANSLATED
+    desktop: 'Ambiente de trabalho',
+    mobile: 'Móvel',
   },
   others,
   sign_up_and_sign_in,

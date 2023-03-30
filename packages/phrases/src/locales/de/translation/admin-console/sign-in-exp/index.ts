@@ -80,8 +80,8 @@ const sign_in_exp = {
     native: 'Native',
     desktop_web: 'Desktop-Web',
     mobile_web: 'Mobile-Web',
-    desktop: 'Desktop', // UNTRANSLATED
-    mobile: 'Mobile', // UNTRANSLATED
+    desktop: 'Desktop',
+    mobile: 'Mobilgerät',
   },
   others,
   sign_up_and_sign_in,

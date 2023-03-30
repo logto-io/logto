@@ -81,8 +81,8 @@ const sign_in_exp = {
     native: 'Nativo',
     desktop_web: 'Web de escritorio',
     mobile_web: 'Web móvil',
-    desktop: 'Desktop', // UNTRANSLATED
-    mobile: 'Mobile', // UNTRANSLATED
+    desktop: 'Escritorio',
+    mobile: 'Móvil',
   },
 };
 

@@ -79,8 +79,8 @@ const sign_in_exp = {
     native: 'Natif',
     desktop_web: 'Site web pour ordinateur de bureau',
     mobile_web: 'Site web mobile',
-    desktop: 'Desktop', // UNTRANSLATED
-    mobile: 'Mobile', // UNTRANSLATED
+    desktop: 'Bureau',
+    mobile: 'Mobile',
   },
   others,
   sign_up_and_sign_in,

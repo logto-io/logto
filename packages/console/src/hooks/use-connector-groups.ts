@@ -19,10 +19,7 @@ const useConnectorGroups = () => {
   }, [data]);
 
   const hasSupportNativePlatformTarget = useMemo(
-    () =>
-      groups?.some(({ connectors }) =>
-        connectors.some(({ target }) => supportNativePlatformTargets.includes(target))
-      ) ?? false,
+    () => groups?.some(({ target }) => supportNativePlatformTargets.includes(target)) ?? false,
     [groups]
   );
 
