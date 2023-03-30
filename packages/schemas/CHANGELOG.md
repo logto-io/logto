@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.1.0
+
+### Patch Changes
+
+- Updated dependencies [f9ca7cc49]
+- Updated dependencies [37714d153]
+- Updated dependencies [f3d60a516]
+- Updated dependencies [5c50957a9]
+- Updated dependencies [e9e8a6e11]
+  - @logto/phrases@1.1.0
+  - @logto/phrases-ui@1.1.0
+
 ## 1.0.7
 
 ### Patch Changes

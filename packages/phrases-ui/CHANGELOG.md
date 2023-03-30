@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.1.0
+
+### Minor Changes
+
+- 37714d153: add ja language
+- f3d60a516: add es transaltion
+- 5c50957a9: add zh-HK and zh-TW translation
+
+### Patch Changes
+
+- e9e8a6e11: update fr translation
+
 ## 1.0.0
 
 ### Major Changes
