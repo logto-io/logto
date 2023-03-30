@@ -80,7 +80,7 @@ export const translate = async (api: Got, languageTag: LanguageTag, filePath: st
   }
 
   const { content } = entity.message;
-  const matched = /```ts\n(.*)```/s.exec(content)?.[1];
+  const matched = /```(?:ts)?\n(.*)```/s.exec(content)?.[1];
 
   if (!matched) {
     // Treat as pure code

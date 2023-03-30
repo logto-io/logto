@@ -11,6 +11,7 @@ import ja from './locales/ja/index.js';
 import ko from './locales/ko/index.js';
 import ptBR from './locales/pt-br/index.js';
 import ptPT from './locales/pt-pt/index.js';
+import ru from './locales/ru/index.js';
 import trTR from './locales/tr-tr/index.js';
 import zhCN from './locales/zh-cn/index.js';
 import type { LocalePhrase } from './types.js';
@@ -26,8 +27,9 @@ export const builtInLanguages = [
   'fr',
   'ja',
   'ko',
-  'pt-PT',
   'pt-BR',
+  'pt-PT',
+  'ru',
   'tr-TR',
   'zh-CN',
 ] as const;
@@ -61,8 +63,9 @@ const resource: Resource = {
   es,
   fr,
   ko,
-  'pt-PT': ptPT,
   'pt-BR': ptBR,
+  'pt-PT': ptPT,
+  ru,
   'tr-TR': trTR,
   'zh-CN': zhCN,
   ja,
