@@ -9,7 +9,7 @@ import {
   mockZhHkCustomPhrase,
   trTrTag,
   zhCnTag,
-  zhHkTag,
+  mockTag,
 } from '#src/__mocks__/custom-phrase.js';
 import { wellKnownCache } from '#src/caches/well-known.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -19,7 +19,7 @@ const { jest } = import.meta;
 
 const englishBuiltInPhrase = resource[enTag];
 
-const customOnlyLanguage = zhHkTag;
+const customOnlyLanguage = mockTag;
 const customOnlyCustomPhrase = mockZhHkCustomPhrase;
 
 const customizedLanguage = zhCnTag;

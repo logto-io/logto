@@ -2,7 +2,7 @@ import en from '@logto/phrases-ui/lib/locales/en/index.js';
 import type { SignInExperience } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { trTrTag, zhCnTag, zhHkTag } from '#src/__mocks__/custom-phrase.js';
+import { trTrTag, zhCnTag, mockTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
 import { wellKnownCache } from '#src/caches/well-known.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -58,7 +58,7 @@ describe('when auto-detect is not enabled', () => {
     });
     const response = await phraseRequest
       .get('/.well-known/phrases')
-      .set('Accept-Language', `${zhCnTag},${zhHkTag}`);
+      .set('Accept-Language', `${zhCnTag},${mockTag}`);
     expect(response.headers['content-language']).toEqual('en');
   });
 
@@ -81,7 +81,7 @@ describe('when auto-detect is not enabled', () => {
     it('when there are detected languages', async () => {
       const response = await phraseRequest
         .get('/.well-known/phrases')
-        .set('Accept-Language', `${zhCnTag},${zhHkTag}`);
+        .set('Accept-Language', `${zhCnTag},${mockTag}`);
       expect(response.headers['content-language']).toEqual(fallbackLanguage);
     });
   });
@@ -135,7 +135,7 @@ describe('when auto-detect is enabled', () => {
         const firstSupportedLanguage = zhCnTag;
         const response = await phraseRequest
           .get('/.well-known/phrases')
-          .set('Accept-Language', `${unsupportedLanguageX},${firstSupportedLanguage},${zhHkTag}`);
+          .set('Accept-Language', `${unsupportedLanguageX},${firstSupportedLanguage},${mockTag}`);
         expect(response.headers['content-language']).toEqual(firstSupportedLanguage);
       });
     });
