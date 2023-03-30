@@ -1,5 +1,7 @@
 import { Theme } from '@logto/schemas';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 
 import CongratsDark from '@/assets/images/congrats-dark.svg';
 import Congrats from '@/assets/images/congrats.svg';
@@ -11,6 +13,14 @@ import * as styles from './index.module.scss';
 function SocialDemoCallback() {
   const theme = useTheme();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    // Social callback will have "code" in query params
+    if (searchParams.get('code')) {
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   return (
     <div className={styles.container}>
