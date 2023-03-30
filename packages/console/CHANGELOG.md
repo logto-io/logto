@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.0
+
+### Patch Changes
+
+- 484f08523: Fix connector config form's validation for "switch" field.
+
 ## 1.0.3
 
 ## 1.0.2

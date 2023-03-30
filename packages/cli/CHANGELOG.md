@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.1.0
+
+### Minor Changes
+
+- e2ec1f93e: add `translate create` and `translate list-tags` commands
+
+### Patch Changes
+
+- Updated dependencies [f9ca7cc49]
+- Updated dependencies [37714d153]
+- Updated dependencies [f3d60a516]
+- Updated dependencies [5c50957a9]
+- Updated dependencies [e9e8a6e11]
+  - @logto/phrases@1.1.0
+  - @logto/phrases-ui@1.1.0
+  - @logto/schemas@1.1.0
+  - @logto/shared@1.0.3
+
 ## 1.0.3
 
 ### Patch Changes
