@@ -6,7 +6,7 @@ import { mockId } from '#src/test-utils/nanoid.js';
 export const enTag = 'en';
 export const trTrTag = 'tr-TR';
 export const zhCnTag = 'zh-CN';
-export const zhHkTag = 'zh-HK';
+export const mockTag = 'fo-BA';
 
 export const mockEnCustomPhrase = {
   tenantId: 'fake_tenant',
@@ -66,7 +66,7 @@ export const mockZhCnCustomPhrase = {
 export const mockZhHkCustomPhrase = {
   tenantId: 'fake_tenant',
   id: mockId,
-  languageTag: zhHkTag,
+  languageTag: mockTag,
   translation: {
     input: {
       email: '郵箱 1',
