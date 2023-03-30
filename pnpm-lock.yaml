@@ -236,8 +236,8 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
       '@withtyped/postgres':
-        specifier: ^0.8.1
-        version: 0.8.1(@withtyped/server@0.8.1)
+        specifier: ^0.9.0
+        version: 0.9.0(@withtyped/server@0.8.1)
       '@withtyped/server':
         specifier: ^0.8.1
         version: 0.8.1
@@ -5312,10 +5312,10 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@withtyped/postgres@0.8.1(@withtyped/server@0.8.1):
-    resolution: {integrity: sha512-BkX1SPDV8bZFn1LEI6jzTes+y/4BGuPEBOi8p6jH9ZBySTuaW0/JqgEb1aKk5GtJ0aFGXhgq4Fk+JkLOc6zehA==}
+  /@withtyped/postgres@0.9.0(@withtyped/server@0.8.1):
+    resolution: {integrity: sha512-SaT/btAaglb/FZ7/iSBMfA6z6XCNgJpkDD5V5lKh4HSoxl6vjgcJaX0oTidQgEs5pjCo2pyQqoZZVsXZKBofhQ==}
     peerDependencies:
-      '@withtyped/server': ^0.8.0
+      '@withtyped/server': ^0.9.0
     dependencies:
       '@types/pg': 8.6.6
       '@withtyped/server': 0.8.1
