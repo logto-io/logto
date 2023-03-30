@@ -79,7 +79,7 @@ npm init @logto
 ## Language support
 
 ```ts
-const languages = ['Deutsch', 'English', 'Français', 'Português', '简体中文', 'Türkçe', '한국어'];
+const languages = ['Deutsch', 'English', 'Español', 'Français', '日本語', '한국어', 'Português', 'Русский', 'Türkçe', '简体中文', '繁體中文'];
 ```
 
 ## Web compatibility
