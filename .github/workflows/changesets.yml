@@ -37,7 +37,7 @@ jobs:
           token: ${{ secrets.BOT_PAT }}
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        uses: silverhand-io/actions-node-pnpm-run-steps@v3
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v5

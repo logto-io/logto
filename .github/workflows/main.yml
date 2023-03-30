@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        uses: silverhand-io/actions-node-pnpm-run-steps@v3
 
       - name: Build
         run: pnpm ci:build
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        uses: silverhand-io/actions-node-pnpm-run-steps@v3
 
       - name: Prepack
         run: pnpm prepack
@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        uses: silverhand-io/actions-node-pnpm-run-steps@v3
 
       - name: Build for test
         run: pnpm -r build:test
@@ -118,7 +118,7 @@ jobs:
         run: cp ./fresh/pnpm-lock.yaml ./
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v2
+        uses: silverhand-io/actions-node-pnpm-run-steps@v3
         with:
           run-install: false
 
