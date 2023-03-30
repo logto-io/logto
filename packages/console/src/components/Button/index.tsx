@@ -26,7 +26,7 @@ type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> &
   isLoading?: boolean;
   loadingDelay?: number;
   trailingIcon?: ReactNode;
-  previewLink?: string;
+  to?: string;
 };
 
 type TitleButtonProps = BaseProps & {
@@ -52,7 +52,7 @@ function Button({
   loadingDelay = 500,
   onClick,
   trailingIcon,
-  previewLink,
+  to,
   ...rest
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -85,7 +85,7 @@ function Button({
         className
       )}
       type={htmlType}
-      title={previewLink}
+      title={to}
       onClick={(event) => {
         if (isLoading) {
           return false;
