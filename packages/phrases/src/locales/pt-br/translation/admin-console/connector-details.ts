@@ -1,18 +1,18 @@
 const connector_details = {
-  page_title: 'Connector details', // UNTRANSLATED
+  page_title: 'Detalhes do conector',
   back_to_connectors: 'Voltar para Conectores',
   check_readme: 'Visualize o README',
-  settings: 'General settings', // UNTRANSLATED
+  settings: 'Configurações gerais',
   settings_description:
     'Os conectores desempenham um papel crítico no Logto. Com a ajuda deles, a Logto permite que os usuários finais usem o registro ou login sem senha e os recursos de login com contas sociais.',
-  parameter_configuration: 'Parameter configuration', // UNTRANSLATED
-  test_connection: 'Test connection', // UNTRANSLATED
+  parameter_configuration: 'Configuração de parâmetros',
+  test_connection: 'Testar conexão',
   save_error_empty_config: 'Por favor insira a configuração',
   send: 'Enviar',
   send_error_invalid_format: 'Campo inválido',
   edit_config_label: 'Digite seu json aqui',
-  test_email_sender: 'Teste seu conector de e-mail',
-  test_sms_sender: 'Teste seu conector SMS',
+  test_email_sender: 'Testar conexão de e-mail',
+  test_sms_sender: 'Testar conexão SMS',
   test_email_placeholder: 'john.doe@example.com',
   test_sms_placeholder: '+55 11 9 1234-5678',
   test_message_sent: 'Mensagem de teste enviada',
@@ -25,11 +25,11 @@ const connector_details = {
   type_sms: 'Conector de SMS',
   type_social: 'Conector social',
   in_used_social_deletion_description:
-    'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings. You will need to reconfigure it if you decide to add it back.', // UNTRANSLATED
+    'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings. You will need to reconfigure it if you decide to add it back.',
   in_used_passwordless_deletion_description:
-    'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict. You will need to reconfigure it if you decide to add it back.', // UNTRANSLATED
+    'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict. You will need to reconfigure it if you decide to add it back.',
   deletion_description:
-    'You are removing this connector. It cannot be undone, and you will need to reconfigure it if you decide to add it back.', // UNTRANSLATED
+    'You are removing this connector. It cannot be undone, and you will need to reconfigure it if you decide to add it back.',
 };
 
 export default connector_details;

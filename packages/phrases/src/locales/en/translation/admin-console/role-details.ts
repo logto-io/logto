@@ -1,17 +1,17 @@
 const role_details = {
-  back_to_roles: 'Back to Roles', // UNTRANSLATED
-  identifier: 'Identifier', // UNTRANSLATED
+  back_to_roles: 'Back to Roles',
+  identifier: 'Identifier',
   delete_description:
     'Doing so will remove the permissions associated with this role from the affected users and delete the mapping between roles, users, and permissions.',
   role_deleted: '{{name}} was successfully deleted!',
-  settings_tab: 'Settings', // UNTRANSLATED
-  users_tab: 'Users', // UNTRANSLATED
-  permissions_tab: 'Permissions', // UNTRANSLATED
-  settings: 'Settings', // UNTRANSLATED
+  settings_tab: 'Settings',
+  users_tab: 'Users',
+  permissions_tab: 'Permissions',
+  settings: 'Settings',
   settings_description:
     'Roles are a grouping of permissions that can be assigned to users. They also provide a way to aggregate permissions defined for different APIs, making it more efficient to add, remove, or adjust permissions compared to assigning them individually to users.',
-  field_name: 'Name', // UNTRANSLATED
-  field_description: 'Description', // UNTRANSLATED
+  field_name: 'Name',
+  field_description: 'Description',
   permission: {
     assign_button: 'Assign Permissions',
     assign_title: 'Assign permissions',
@@ -36,7 +36,7 @@ const role_details = {
     latest_sign_in_column: 'Latest sign in',
     delete_description:
       'It will remain in your user pool but lose the authorization for this role.',
-    deleted: '{{name}} was successfully removed from this role', // UNTRANSLATED
+    deleted: '{{name}} was successfully removed from this role',
     assign_title: 'Assign users',
     assign_subtitle:
       'Assign users to this role. Find appropriate users by searching name, email, phone, or user ID.',

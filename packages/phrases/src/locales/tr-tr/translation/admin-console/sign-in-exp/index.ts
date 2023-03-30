@@ -8,16 +8,16 @@ const sign_in_exp = {
     'Oturum açma kullanıcı arayüzünü markanıza uyacak şekilde özelleştirin ve gerçek zamanlı olarak görüntüleyin',
   tabs: {
     branding: 'Markalaşma',
-    sign_up_and_sign_in: 'Sign-up and Sign-in',
+    sign_up_and_sign_in: 'Kaydol ve Oturum Aç',
     others: 'Diğerleri',
   },
   welcome: {
-    title: 'Customize sign-in experience',
+    title: 'Oturum açma deneyimini özelleştirin',
     description:
-      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.',
+      'İlk oturum açma işleminizi hızlı bir şekilde başlatın. Bu kılavuz, tüm gerekli ayarları size anlatır.',
     get_started: 'Başla',
     apply_remind:
-      'Lütfen oturum açma deneyiminin bu hesap altındaki tüm uygulamalar için geçerli olacağını unutmayınız.',
+      'Lütfen unutmayın ki, oturum açma deneyimi bu hesap altındaki tüm uygulamalar için geçerli olacaktır.',
   },
   color: {
     title: 'RENK',
@@ -37,44 +37,44 @@ const sign_in_exp = {
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'Uygulama logosu resim URLi (Koyu)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'App logo',
-    dark_logo_image: 'App logo (Dark)',
-    logo_image_error: 'App logo: {{error}}',
+    logo_image: 'Uygulama logosu',
+    dark_logo_image: 'Uygulama logosu (Koyu)',
+    logo_image_error: 'Uygulama logosu: {{error}}',
     favicon_error: 'Favicon: {{error}}',
   },
   custom_css: {
-    title: 'Custom CSS',
-    css_code_editor_title: 'Personalize your UI with Custom CSS',
-    css_code_editor_description1: 'See the example of Custom CSS.',
-    css_code_editor_description2: '<a>{{link}}</a>',
-    css_code_editor_description_link_content: 'Learn more',
+    title: 'Özel CSS',
+    css_code_editor_title: "UI'ınızı Özel CSS ile kişiselleştirin",
+    css_code_editor_description1: 'Özel CSS örneğini görüntüleyin.',
+    css_code_editor_description2: '<a>{{link}}</a>.',
+    css_code_editor_description_link_content: 'Daha fazlası için buraya tıklayın',
     css_code_editor_content_placeholder:
-      'Enter your custom CSS to tailor the styles of anything to your exact specifications. Express your creativity and make your UI stand out.',
+      "Tam olarak istediğiniz gibi o herhangi bir şeyin stilini kişiselleştirmek için özel CSS'nizi girin. Yaratıcılığınızı ifade edin ve UI'ınızın dikkat çekmesini sağlayın.",
   },
   setup_warning: {
     no_connector_sms:
-      'No SMS connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
+      'Henüz SMS konektörü kurulmadı. Yapılandırmayı tamamlamadan önce, kullanıcılar bu yöntemle oturum açamazlar. "Konektörler"deki <a>{{link}}</a>',
     no_connector_email:
-      'No email connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
+      'Henüz e-posta konektörü kurulmadı. Yapılandırmayı tamamlamadan önce, kullanıcılar bu yöntemle oturum açamazlar. "Konektörler"deki <a>{{link}}</a>',
     no_connector_social:
-      'No social connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
+      'Henüz sosyal konektör kurulmadı. Yapılandırmayı tamamlamadan önce, kullanıcılar bu yöntemle oturum açamazlar. "Konektörler"deki <a>{{link}}</a>',
     no_added_social_connector:
-      'Şimdi birkaç social connector kurdunuz. Oturum açma deneyiminize bazı şeyler eklediğinizden emin olun.',
-    setup_link: 'Set up',
+      'Şimdi birkaç sosyal konektör eklediniz. Oturum açma deneyiminize bazı şeyler eklediğinizden emin olun.',
+    setup_link: 'Kurulum yapın',
   },
   save_alert: {
     description:
-      'You are implementing new sign-in and sign-up procedures. All of your users may be affected by the new set-up. Are you sure to commit to the change?',
+      'Yeni oturum açma ve kaydolma prosedürlerini uygulamaktasınız. Tüm kullanıcılarınız yeni kurulumdan etkilenebilirler. Değişikliği gerçekleştirmek istediğinize emin misiniz?',
     before: 'Önce',
     after: 'Sonra',
-    sign_up: 'Sign-up',
-    sign_in: 'Sign-in',
-    social: 'Social',
+    sign_up: 'Kaydolma',
+    sign_in: 'Oturum Açma',
+    social: 'Sosyal',
   },
   preview: {
     title: 'Oturum Açma Önizlemesi',
-    live_preview: 'Live preview',
-    live_preview_tip: 'Save to preview changes',
+    live_preview: 'Canlı önizleme',
+    live_preview_tip: 'Değişiklikleri görmek için kaydedin',
     native: 'Doğal',
     desktop_web: 'Masaüstü Web',
     mobile_web: 'Mobil Web',

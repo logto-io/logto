@@ -1,5 +1,5 @@
 const user_details = {
-  page_title: 'User details', // UNTRANSLATED
+  page_title: 'Detalhes do usuário',
   back_to_users: 'Voltar para gerenciamento de usuários',
   created_title: 'Este usuário foi criado com sucesso',
   created_guide: 'Você pode enviar as seguintes informações de login para o usuário',
@@ -15,9 +15,9 @@ const user_details = {
     congratulations: 'Este usuário foi redefinido',
     new_password: 'Nova senha:',
   },
-  tab_settings: 'Settings', // UNTRANSLATED
-  tab_roles: 'Roles', // UNTRANSLATED
-  tab_logs: 'Logs',
+  tab_settings: 'Configurações',
+  tab_roles: 'Funções',
+  tab_logs: 'Registros',
   settings: 'Configurações',
   settings_description:
     'Cada usuário tem um perfil contendo todas as informações do usuário. Consiste em dados básicos, identidades sociais e dados personalizados.',
@@ -42,22 +42,22 @@ const user_details = {
   },
   suspended: 'Suspenso',
   roles: {
-    name_column: 'Role', // UNTRANSLATED
-    description_column: 'Description', // UNTRANSLATED
-    assign_button: 'Assign Roles', // UNTRANSLATED
+    name_column: 'Função',
+    description_column: 'Descrição',
+    assign_button: 'Atribuir funções',
     delete_description:
-      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.', // UNTRANSLATED
-    deleted: '{{name}} was successfully removed from this user.', // UNTRANSLATED
-    assign_title: 'Assign roles to {{name}}', // UNTRANSLATED
-    assign_subtitle: 'Authorize {{name}} one or more roles', // UNTRANSLATED
-    assign_role_field: 'Assign roles', // UNTRANSLATED
-    role_search_placeholder: 'Search by role name', // UNTRANSLATED
-    added_text: '{{value, number}} added', // UNTRANSLATED
-    assigned_user_count: '{{value, number}} users', // UNTRANSLATED
-    confirm_assign: 'Assign roles', // UNTRANSLATED
-    role_assigned: 'Successfully assigned role(s)', // UNTRANSLATED
-    search: 'Search by role name, description or ID', // UNTRANSLATED
-    empty: 'No role available', // UNTRANSLATED
+      'Esta ação removerá esta função deste usuário. A função em si ainda existirá, mas não estará mais associada a este usuário.',
+    deleted: '{{name}} foi removido com sucesso deste usuário.',
+    assign_title: 'Atribuir funções para {{name}}',
+    assign_subtitle: 'Autorizar {{name}} uma ou mais funções',
+    assign_role_field: 'Atribuir funções',
+    role_search_placeholder: 'Pesquisar por nome de função',
+    added_text: '{{value, number}} adicionado(s)',
+    assigned_user_count: '{{value, number}} usuários',
+    confirm_assign: 'Atribuir funções',
+    role_assigned: 'Função(ões) atribuída(s) com sucesso',
+    search: 'Pesquisar por nome de função, descrição ou ID',
+    empty: 'Nenhuma função disponível',
   },
 };
 

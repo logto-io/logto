@@ -1,12 +1,12 @@
 const permissions = {
-  search_placeholder: 'Search by API or permission name', // UNTRANSLATED
-  search_placeholder_without_api: 'Search by permission name', // UNTRANSLATED
-  name_column: 'Permission', // UNTRANSLATED
-  description_column: 'Description', // UNTRANSLATED
-  api_column: 'API', // UNTRANSLATED
-  placeholder_title: 'Permission', // UNTRANSLATED
+  search_placeholder: 'API veya izin adına göre ara',
+  search_placeholder_without_api: 'İzin adına göre ara',
+  name_column: 'İzin',
+  description_column: 'Açıklama',
+  api_column: 'API',
+  placeholder_title: 'İzin',
   placeholder_description:
-    'Permission refers to the authorization to access a resource (we call it API resource).', // UNTRANSLATED
+    'İzin, bir kaynağa erişmek için yetki verme durumunu ifade eder (biz buna API kaynağı diyoruz).',
 };
 
 export default permissions;

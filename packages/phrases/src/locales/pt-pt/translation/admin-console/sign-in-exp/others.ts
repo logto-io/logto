@@ -1,48 +1,47 @@
-// UNTRANSLATED
 const others = {
   terms_of_use: {
     title: 'TERMOS DE USO',
     terms_of_use: 'URL dos termos de uso',
-    terms_of_use_placeholder: 'https://your.terms.of.use/',
+    terms_of_use_placeholder: 'https://seus.termos.de.uso/',
     privacy_policy: 'URL da política de privacidade',
-    privacy_policy_placeholder: 'https://your.privacy.policy/',
+    privacy_policy_placeholder: 'https://sua.politica.de.privacidade/',
   },
   languages: {
     title: 'LÍNGUAS',
-    enable_auto_detect: 'Enable auto-detect',
+    enable_auto_detect: 'Ativar deteção automática',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
+      'O seu software deteta as definições de localização do utilizador e alterna para a língua local. Pode adicionar novas línguas através da tradução da UI do Inglês para outra língua.',
+    manage_language: 'Gerir língua',
+    default_language: 'Língua predefinida',
     default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      'A língua predefinida será utilizada quando a língua detetada do utilizador não estiver abrangida na biblioteca de línguas atual.',
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      'Quando a deteção automática está inativa, a língua predefinida é a única língua que o seu software apresentará. Ative a deteção automática para extensão de língua.',
   },
   manage_language: {
-    title: 'Manage language',
+    title: 'Gerir língua',
     subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_tip: 'Delete the language',
-    deletion_title: 'Do you want to delete the added language?',
+      'Localize a experiência de produto adicionando línguas e traduções. A sua contribuição pode ser definida como a língua predefinida.',
+    add_language: 'Adicionar Língua',
+    logto_provided: 'Logto fornecido',
+    key: 'Chave',
+    logto_source_values: 'Logto valores de origem',
+    custom_values: 'Valores personalizados',
+    clear_all_tip: 'Limpar todos os valores',
+    unsaved_description: 'As alterações não serão guardadas se sair desta página sem guardar.',
+    deletion_tip: 'Eliminar a língua',
+    deletion_title: 'Deseja eliminar a língua adicionada?',
     deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
+      'Após a eliminação, os seus utilizadores já não poderão navegar nessa língua novamente.',
+    default_language_deletion_title: 'A língua predefinida não pode ser eliminada.',
     default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+      '{{language}} está definida como a sua língua predefinida e não pode ser eliminada. ',
   },
   advanced_options: {
     title: 'OPÇÕES AVANÇADAS',
-    enable_user_registration: 'Enable user registration',
+    enable_user_registration: 'Ativar registo de utilizador',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      'Autorizar ou proibir o registo de utilizadores. Depois de desativado, os utilizadores ainda podem ser adicionados na consola de administração, mas os utilizadores já não podem estabelecer contas através da UI de início de sessão.',
   },
 };
 

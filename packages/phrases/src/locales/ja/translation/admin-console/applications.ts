@@ -1,6 +1,6 @@
 const applications = {
-  page_title: 'Applications', // UNTRANSLATED
-  title: 'Applications', // UNTRANSLATED
+  page_title: 'アプリケーション ',
+  title: 'アプリケーション ',
   subtitle:
     'ネイティブ、シングルページ、マシン・トゥ・マシン、または従来のアプリケーションにLogto認証を設定する',
   create: 'アプリケーションを作成する',

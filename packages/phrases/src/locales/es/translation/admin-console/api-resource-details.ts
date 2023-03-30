@@ -1,5 +1,5 @@
 const api_resource_details = {
-  page_title: 'API Resource details', // UNTRANSLATED
+  page_title: 'Detalles del recurso API',
   back_to_api_resources: 'Volver a los recursos de API',
   settings_tab: 'Configuración',
   permissions_tab: 'Permisos',
@@ -11,7 +11,7 @@ const api_resource_details = {
   delete_description:
     'Esta acción no se puede deshacer. Eliminará permanentemente el recurso de API. Por favor, ingrese el nombre del recurso de api <span>{{name}}</span> para confirmar.',
   enter_your_api_resource_name: 'Ingrese el nombre de su recurso de API',
-  api_resource_deleted: 'El recurso de API {{name}} ha sido eliminado con éxito',
+  api_resource_deleted: 'El recurso de API {{name}} ha sido eliminado exitosamente',
   permission: {
     create_button: 'Crear permiso',
     create_title: 'Crear permiso',

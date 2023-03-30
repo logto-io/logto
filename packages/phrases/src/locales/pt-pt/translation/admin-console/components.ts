@@ -1,13 +1,14 @@
 const components = {
   uploader: {
-    action_description: 'Drag and drop or browse', // UNTRANSLATED
-    uploading: 'Uploading...', // UNTRANSLATED
+    action_description: 'Arraste e solte ou navegue',
+    uploading: 'A enviar...',
     image_limit:
-      'Upload image under {{size, number}}KB, {{extensions, list(style: narrow; type: conjunction;)}} only.', // UNTRANSLATED
-    error_upload: 'Something went wrong. File upload failed.', // UNTRANSLATED
-    error_file_size: 'File size is too large. Please upload a file under {{size, number}}KB.', // UNTRANSLATED
+      'Carregue imagens com menos de {{size, number}}KB, só {{extensions, list(style: narrow; type: conjunction;)}}.',
+    error_upload: 'Algo correu mal. O carregamento do ficheiro falhou.',
+    error_file_size:
+      'O ficheiro é demasiado grande. Por favor carregue um ficheiro com menos de {{size, number}}KB.',
     error_file_type:
-      'File type is not supported. {{extensions, list(style: narrow; type: conjunction;)}} only.', // UNTRANSLATED
+      'O tipo de ficheiro não é suportado. Apenas {{extensions, list(style: narrow; type: conjunction;)}}.',
   },
 };
 

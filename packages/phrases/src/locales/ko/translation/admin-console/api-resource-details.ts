@@ -1,5 +1,5 @@
 const api_resource_details = {
-  page_title: 'API Resource details', // UNTRANSLATED
+  page_title: 'API 리소스 세부 정보',
   back_to_api_resources: 'API 리소스로 돌아가기',
   settings_tab: '설정',
   permissions_tab: '권한',

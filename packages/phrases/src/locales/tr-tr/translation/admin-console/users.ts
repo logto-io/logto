@@ -11,11 +11,11 @@ const users = {
   create_form_password: 'Şifre',
   create_form_name: 'Ad Soyad',
   unnamed: 'İsimsiz',
-  search: 'Search by name, email, phone or username', // UNTRANSLATED
-  check_user_detail: 'Check user detail', // UNTRANSLATED
-  placeholder_title: 'User management', // UNTRANSLATED
+  search: 'İsim, email, telefon veya kullanıcı adına göre arama',
+  check_user_detail: 'Kullanıcı detaylarını kontrol et',
+  placeholder_title: 'Kullanıcı yönetimi',
   placeholder_description:
-    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
+    'Her kullanıcının temel verileri, sosyal kimlikleri ve özel verilerini içeren bir profil vardır.',
 };
 
 export default users;

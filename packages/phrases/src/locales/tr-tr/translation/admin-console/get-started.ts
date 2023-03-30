@@ -1,33 +1,32 @@
 const get_started = {
-  page_title: 'Get Started', // UNTRANSLATED
+  page_title: 'Başlangıca Başlayın',
   progress: 'Başlangıç Kılavuzu: {{completed}}/{{total}}',
-  progress_dropdown_title: 'Yapabileceğiniz bazı şeyler...',
-  title: 'Something to explore to help you succeed', // UNTRANSLATED
-  subtitle_part1: 'Logto değerini hızlı bir şekilde elde etmek için yapabileceğiniz birkaç şey',
-  subtitle_part2: 'Bu kurulumla işim bitti. ',
-  hide_this: 'Bunu gizle',
-  confirm_message: 'Bu sayfayı gizlemek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
-  check_preview_title: 'Check the live preview', // UNTRANSLATED
-  check_preview_subtitle:
-    'Nasıl çalıştığını görmek için şimdi Logto oturum açma deneyimini deneyiniz',
-  integration_title: 'Create and integrate your application', // UNTRANSLATED
+  progress_dropdown_title: 'Yapabileceğiniz Bazı Şeyler...',
+  title: 'Başarınızı Desteklemek İçin Keşfedilecek Bir Şey',
+  subtitle_part1: 'Logto Değerini Hızlı Bir Şekilde Elde Etmek İçin Yapabileceğiniz Birkaç Şey',
+  subtitle_part2: 'Bu Kurulumla İşim Bitti.',
+  hide_this: 'Bunu Gizle',
+  confirm_message: 'Bu Sayfayı Gizlemek İstediğinizden Emin Misiniz? Bu İşlem Geri Alınamaz.',
+  check_preview_title: 'Canlı Önizlemeyi Kontrol Edin',
+  check_preview_subtitle: 'Logto Oturum Açma Deneyimini Denemek İçin Şimdi Deneyin',
+  integration_title: 'Uygulamanızı Oluşturun ve Entegre Edin',
   integration_subtitle:
-    'Set up Logto authentication for your native, single page, machine to machine, or traditional application', // UNTRANSLATED
-  custom_sie_title: 'Customize sign-in experience', // UNTRANSLATED
-  custom_sie_subtitle: 'Unlock a vast range of scenarios with advanced settings', // UNTRANSLATED
-  passwordless_title: 'Scale passwordless sign in by adding your own connectors', // UNTRANSLATED
+    'Doğal, tek sayfa, makineye makineye veya geleneksel bir uygulama için Logto kimlik doğrulamasını ayarlayın',
+  custom_sie_title: 'Oturum Açma Deneyimini Özelleştirin',
+  custom_sie_subtitle: 'Gelişmiş ayarlarla geniş bir senaryo yelpazesini açın',
+  passwordless_title: 'Kendi Bağlayıcılarınızı Ekleyerek Şifresiz Oturum Açmayı Ölçeklendirin',
   passwordless_subtitle:
-    'Try passwordless sign in and enable a secure and frictionless experience for your customer', // UNTRANSLATED
-  community_title: 'Join our discord community', // UNTRANSLATED
-  community_subtitle: 'Join our public channel to chat with other developers', // UNTRANSLATED
-  management_api_title: 'Interact with Management API', // UNTRANSLATED
-  management_api_subtitle: 'Directly connect your authentication system to our management API', // UNTRANSLATED
-  further_readings_title: 'Further readings', // UNTRANSLATED
+    'Deneyin ve Müşteriniz İçin Güvenli ve Sürtünmesiz Bir Deneyim Sağlayarak Şifresiz Oturum Açmayı Etkinleştirin',
+  community_title: 'Discord Topluluğumuza Katılın',
+  community_subtitle: 'Diğer Geliştiricilerle Sohbet Etmek İçin Kamu Kanalımıza Katılın',
+  management_api_title: 'Yönetim API İle Etkileşim Sağlayın',
+  management_api_subtitle: "Kimlik doğrulama sisteminizi doğrudan yönetim API'mize bağlayın",
+  further_readings_title: 'Daha Fazla Okuma',
   further_readings_subtitle:
-    'Check out our step-by-step, scenario-based docs without tedious concepts', // UNTRANSLATED
-  add_rbac_title: 'Add role-based access control to protect your resources', // UNTRANSLATED
+    'Kavramlarla Uğraştırmayan Adım Adım Senaryo Temelli Belgelerimize Göz Atın',
+  add_rbac_title: 'Kaynaklarınızı Korumak İçin Rol Tabanlı Erişim Kontrolü Ekleyin',
   add_rbac_subtitle:
-    'Control your resource through scalable role authorization for diverse use cases.', // UNTRANSLATED
+    'Farklı kullanım durumları için ölçeklenebilir rol yetkilendirmesi ile kaynaklarınızı kontrol edin.',
 };
 
 export default get_started;

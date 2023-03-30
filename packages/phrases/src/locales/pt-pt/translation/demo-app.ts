@@ -1,12 +1,12 @@
 const demo_app = {
-  title: "You've successfully signed in the live preview!", // UNTRANSLATED
+  title: 'Iniciou sessão com sucesso na pré-visualização ao vivo!',
   subtitle: 'Aqui estão as suas informações de login:',
   username: 'Utilizador: ',
   user_id: 'ID de utilizador: ',
-  sign_out: 'Sign Out the Live Preview', // UNTRANSLATED
+  sign_out: 'Terminar sessão na visualização ao vivo',
   continue_explore: 'Ou continue a explorar',
   customize_sign_in_experience: 'Personalizar a experiência de login',
-  enable_passwordless: 'Ativar login sem passsword (passwordless)',
+  enable_passwordless: 'Ativar o login sem password (passwordless)',
   add_social_connector: 'Adicionar conector social',
 };
 

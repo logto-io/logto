@@ -1,5 +1,5 @@
 const connector_details = {
-  page_title: 'Connector details', // UNTRANSLATED
+  page_title: 'Détails du connecteur',
   back_to_connectors: 'Retour à Connecteurs',
   check_readme: 'Vérifier le README',
   settings: 'Paramètres généraux',
@@ -25,9 +25,9 @@ const connector_details = {
   type_sms: 'Connecteur SMS',
   type_social: 'Connecteur Social',
   in_used_social_deletion_description:
-    'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings. You will need to reconfigure it if you decide to add it back.',
+    'Ce connecteur est utilisé dans votre expérience de connexion. En le supprimant, l’expérience de connexion de <name/> sera supprimée dans les paramètres de l’expérience de connexion. Vous devrez le reconfigurer si vous décidez de l’ajouter à nouveau.',
   in_used_passwordless_deletion_description:
-    'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict. You will need to reconfigure it if you decide to add it back.',
+    'Cet {{name}} est utilisé dans votre expérience de connexion. En le supprimant, votre expérience de connexion ne fonctionnera pas correctement tant que vous n’aurez pas résolu le conflit. Vous devrez le reconfigurer si vous décidez de l’ajouter à nouveau.',
   deletion_description:
     "Vous supprimez ce connecteur. Il ne peut pas être annulé et vous devrez le reconfigurer si vous décidez de l'ajouter à nouveau.",
 };

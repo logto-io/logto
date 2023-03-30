@@ -1,57 +1,56 @@
-// UNTRANSLATED
 const sign_up_and_sign_in = {
-  identifiers_email: 'Email address',
-  identifiers_phone: 'Phone number',
-  identifiers_username: 'Username',
-  identifiers_email_or_sms: 'Email address or phone number',
-  identifiers_none: 'Not applicable',
-  and: 'and',
-  or: 'or',
+  identifiers_email: 'Endereço de email',
+  identifiers_phone: 'Número de telefone',
+  identifiers_username: 'Nome de utilizador',
+  identifiers_email_or_sms: 'Endereço de email ou número de telefone',
+  identifiers_none: 'Não aplicável',
+  and: 'e',
+  or: 'ou',
   sign_up: {
-    title: 'SIGN UP',
-    sign_up_identifier: 'Sign-up identifier',
+    title: 'REGISTO',
+    sign_up_identifier: 'Identificador de registo',
     identifier_description:
-      'The sign-up identifier is required for account creation and must be included in your sign-in screen.',
-    sign_up_authentication: 'Authentication setting for sign-up',
+      'O identificador de registo é necessário para a criação de conta e deve ser incluído no ecrã de início de sessão.',
+    sign_up_authentication: 'Definição de autenticação para registo',
     authentication_description:
-      'All selected actions will be obligatory for users to complete the flow.',
-    set_a_password_option: 'Create your password',
-    verify_at_sign_up_option: 'Verify at sign-up',
-    social_only_creation_description: '(This apply to social only account creation)',
+      'Todas as ações selecionadas serão obrigatórias para os utilizadores concluir o processo de registo.',
+    set_a_password_option: 'Criar uma senha',
+    verify_at_sign_up_option: 'Verificar durante o registo',
+    social_only_creation_description: '(Aplica-se apenas à criação de contas sociais)',
   },
   sign_in: {
-    title: 'SIGN IN',
-    sign_in_identifier_and_auth: 'Identifier and authentication settings for sign-in',
+    title: 'INICIAR SESSÃO',
+    sign_in_identifier_and_auth: 'Identificador e definições de autenticação para início de sessão',
     description:
-      'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.',
-    add_sign_in_method: 'Add Sign-in Method',
-    password_auth: 'Password',
-    verification_code_auth: 'Verification code',
-    auth_swap_tip: 'Swap the options below to determine which appears first in the flow.',
-    require_auth_factor: 'You have to select at least one authentication factor.',
+      'Os utilizadores podem iniciar sessão usando qualquer uma das opções disponíveis. Ajuste a disposição arrastando e soltando as opções abaixo.',
+    add_sign_in_method: 'Adicionar Método de Início de Sessão',
+    password_auth: 'Senha',
+    verification_code_auth: 'Código de verificação',
+    auth_swap_tip: 'Alterne as opções abaixo para determinar qual aparece primeiro no processo.',
+    require_auth_factor: 'Tem de selecionar pelo menos um fator de autenticação.',
   },
   social_sign_in: {
-    title: 'SOCIAL SIGN-IN',
-    social_sign_in: 'Social sign-in',
+    title: 'INÍCIO DE SESSÃO SOCIAL',
+    social_sign_in: 'Início de sessão social',
     description:
-      'Depending on the mandatory identifier you set up, your user may be asked to provide an identifier when signing up via social connector.',
+      'Dependendo do identificador obrigatório que configurou, o utilizador pode ser solicitado a fornecer um identificador ao registar-se através do conector social.',
     add_social_connector: 'Adicionar Conector Social',
     set_up_hint: {
-      not_in_list: 'Not in the list?',
-      set_up_more: 'Set up',
-      go_to: 'other social connectors now.',
+      not_in_list: 'Não está na lista?',
+      set_up_more: 'Configurar',
+      go_to: 'outros conectores sociais agora.',
     },
   },
   tip: {
-    set_a_password: 'A unique set of a password to your username is a must.',
+    set_a_password: 'Um conjunto único de uma senha para o seu nome de utilizador é obrigatório.',
     verify_at_sign_up:
-      'We currently only support verified email. Your user base may contain a large number of poor-quality email addresses if no validation.',
+      'Atualmente, apenas suportamos email verificado. A sua base de utilizadores pode conter um grande número de endereços de email de má qualidade se não houver validação.',
     password_auth:
-      'This is essential as you have enabled the option to set a password during the sign-up process.',
+      'Isto é essencial uma vez que ativou a opção de criar uma senha durante o processo de registo.',
     verification_code_auth:
-      'This is essential as you have only enabled the option to provide verification code when signing up. You’re free to uncheck the box when password set-up is allowed at the sign-up process.',
+      'Isto é essencial uma vez que apenas ativou a opção de fornecer um código de verificação ao registar-se. É livre de desmarcar a caixa quando a configuração da senha é permitida durante o processo de registo.',
     delete_sign_in_method:
-      'This is essential as you have selected {{identifier}} as a required identifier.',
+      'Isto é essencial uma vez que selecionou {{identifier}} como um identificador obrigatório.',
   },
 };
 

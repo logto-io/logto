@@ -1,49 +1,49 @@
 const role_details = {
-  back_to_roles: 'Back to Roles', // UNTRANSLATED
-  identifier: 'Identifier', // UNTRANSLATED
+  back_to_roles: 'Voltar para Funções',
+  identifier: 'Identificador',
   delete_description:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the mapping between roles, users, and permissions.', // UNTRANSLATED
-  role_deleted: '{{name}} was successfully deleted!', // UNTRANSLATED
-  settings_tab: 'Settings', // UNTRANSLATED
-  users_tab: 'Users', // UNTRANSLATED
-  permissions_tab: 'Permissions', // UNTRANSLATED
-  settings: 'Settings', // UNTRANSLATED
+    'Ao fazê-lo, serão removidas as permissões associadas a esta função dos utilizadores afetados e eliminado o mapeamento entre funções, utilizadores e permissões.',
+  role_deleted: '{{name}} foi eliminada com sucesso!',
+  settings_tab: 'Definições',
+  users_tab: 'Utilizadores',
+  permissions_tab: 'Permissões',
+  settings: 'Definições',
   settings_description:
-    'Roles are a grouping of permissions that can be assigned to users. They also provide a way to aggregate permissions defined for different APIs, making it more efficient to add, remove, or adjust permissions compared to assigning them individually to users.', // UNTRANSLATED
-  field_name: 'Name', // UNTRANSLATED
-  field_description: 'Description', // UNTRANSLATED
+    'As funções são um agrupamento de permissões que podem ser atribuídas aos utilizadores. Elas também proporcionam uma forma de agregar permissões definidas para diferentes APIs, tornando mais eficiente adicionar, remover ou ajustar permissões comparativamente à sua atribuição individual a utilizadores.',
+  field_name: 'Nome',
+  field_description: 'Descrição',
   permission: {
-    assign_button: 'Assign Permissions', // UNTRANSLATED
-    assign_title: 'Assign permissions', // UNTRANSLATED
+    assign_button: 'Atribuir Permissões',
+    assign_title: 'Atribuir permissões',
     assign_subtitle:
-      'Assign permissions to this role. The role will gain the added permissions, and users with this role will inherit these permissions.', // UNTRANSLATED
-    assign_form_field: 'Assign permissions', // UNTRANSLATED
-    added_text_one: '{{count, number}} permission added', // UNTRANSLATED
-    added_text_other: '{{count, number}} permissions added', // UNTRANSLATED
-    api_permission_count_one: '{{count, number}} permission', // UNTRANSLATED
-    api_permission_count_other: '{{count, number}} permissions', // UNTRANSLATED
-    confirm_assign: 'Assign Permissions', // UNTRANSLATED
-    permission_assigned: 'The selected permissions were successfully assigned to this role', // UNTRANSLATED
+      'Atribua permissões a esta função. A função irá obter as permissões adicionadas e os utilizadores com esta função herdarão essas permissões.',
+    assign_form_field: 'Atribuir permissões',
+    added_text_one: '{{count, number}} permissão adicionada',
+    added_text_other: '{{count, number}} permissões adicionadas',
+    api_permission_count_one: '{{count, number}} permissão',
+    api_permission_count_other: '{{count, number}} permissões',
+    confirm_assign: 'Atribuir Permissões',
+    permission_assigned: 'As permissões selecionadas foram atribuídas com sucesso a esta função',
     deletion_description:
-      'If this permission is removed, the affected user with this role will lose the access granted by this permission.', // UNTRANSLATED
-    permission_deleted: 'The permission "{{name}}" was successfully removed from this role', // UNTRANSLATED
-    empty: 'No permission available', // UNTRANSLATED
+      'Se esta permissão for removida, o utilizador afetado com esta função perderá o acesso concedido por esta permissão.',
+    permission_deleted: 'A permissão "{{name}}" foi removida com sucesso desta função',
+    empty: 'Nenhuma permissão disponível',
   },
   users: {
-    assign_button: 'Assign Users', // UNTRANSLATED
-    name_column: 'User', // UNTRANSLATED
-    app_column: 'App', // UNTRANSLATED
-    latest_sign_in_column: 'Latest sign in', // UNTRANSLATED
+    assign_button: 'Atribuir Utilizadores',
+    name_column: 'Utilizador',
+    app_column: 'Aplicação',
+    latest_sign_in_column: 'Última sessão iniciada',
     delete_description:
-      'It will remain in your user pool but lose the authorization for this role.', // UNTRANSLATED
-    deleted: '{{name}} was successfully removed from this role', // UNTRANSLATED
-    assign_title: 'Assign users', // UNTRANSLATED
+      'Permanecerá no seu conjunto de utilizadores, mas perderá a autorização para esta função.',
+    deleted: '{{name}} foi removido com sucesso desta função',
+    assign_title: 'Atribuir utilizadores',
     assign_subtitle:
-      'Assign users to this role. Find appropriate users by searching name, email, phone, or user ID.', // UNTRANSLATED
-    assign_users_field: 'Assign users', // UNTRANSLATED
-    confirm_assign: 'Assign users', // UNTRANSLATED
-    users_assigned: 'The selected users were successfully assigned to this role', // UNTRANSLATED
-    empty: 'No user available', // UNTRANSLATED
+      'Atribua utilizadores a esta função. Encontre utilizadores apropriados pesquisando pelo nome, e-mail, telefone ou ID de utilizador.',
+    assign_users_field: 'Atribuir utilizadores',
+    confirm_assign: 'Atribuir utilizadores',
+    users_assigned: 'Os utilizadores selecionados foram atribuídos com sucesso a esta função',
+    empty: 'Nenhum utilizador disponível',
   },
 };
 

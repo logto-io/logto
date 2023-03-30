@@ -6,13 +6,13 @@ const connectors = {
   config_sie_notice:
     'Você configurou os conectores. Certifique-se de configurá-lo em <a>{{link}}</a>.',
   config_sie_link_text: 'experiência de login',
-  tab_email_sms: 'Conectores de e-mail e SMS',
+  tab_email_sms: 'Conectores de Email e SMS',
   tab_social: 'Conectores sociais',
   connector_name: 'Nome do conector',
   demo_tip:
-    'The maximum number of messages allowed for this demo connector is limited to 100 and is not recommended for deployment in a production environment.', // UNTRANSLATED
+    'O número máximo de mensagens permitidas para este conector de demonstração é limitado a 100 e não é recomendado para implantação em um ambiente de produção.',
   social_demo_tip:
-    'The demo connector is designed exclusively for demonstration purposes and is not recommended for deployment in a production environment.', // UNTRANSLATED
+    'O conector de demonstração é projetado exclusivamente para fins de demonstração e não é recomendado para implantação em um ambiente de produção.',
   connector_type: 'Tipo',
   connector_status: 'Experiência de login',
   connector_status_in_use: 'Em uso',
@@ -22,9 +22,9 @@ const connectors = {
       'Fora de uso significa que sua experiência de login não usou esse método de login. <a>{{link}}</a> para adicionar este método de login. ',
     go_to_sie: 'Vá para a experiência de login',
   },
-  placeholder_title: 'Social connector', // UNTRANSLATED
+  placeholder_title: 'Social connector',
   placeholder_description:
-    'Logto has provided many widely used social sign-in connectors meantime you can create your own with standard protocols.', // UNTRANSLATED
+    'Logto tem fornecido muitos conectores de login social amplamente utilizados enquanto você pode criar o seu próprio com padrões padrão.',
   save_and_done: 'Salvar e completar',
   type: {
     email: 'Conector de e-mail',
@@ -38,52 +38,52 @@ const connectors = {
   },
   guide: {
     subtitle: 'Um guia passo a passo para configurar seu conector',
-    general_setting: 'General settings', // UNTRANSLATED
-    parameter_configuration: 'Parameter configuration', // UNTRANSLATED
-    test_connection: 'Test connection', // UNTRANSLATED
-    name: 'Name for social sign-in button', // UNTRANSLATED
-    name_placeholder: 'Enter name for social sign-in button', // UNTRANSLATED
-    name_tip: 'O nome do botão do conector será exibido como "Continue com {{Connector Name}}".',
-    logo: 'Logo URL for social sign-in button', // UNTRANSLATED
+    general_setting: 'Configurações gerais',
+    parameter_configuration: 'Configuração de parâmetros',
+    test_connection: 'Teste de conexão',
+    name: 'Nome do botão de login social',
+    name_placeholder: 'Insira o nome do botão de login social',
+    name_tip: 'O nome do botão do conector será exibido como "Continue com {{Nome do Conector}}".',
+    logo: 'URL do logo para o botão de login social',
     logo_placeholder: 'https://your.cdn.domain/logo.png',
     logo_tip: 'A imagem do logotipo também será exibida no botão do conector.',
-    logo_dark: 'Logo URL for social sign-in button (Dark mode)', // UNTRANSLATED
+    logo_dark: 'URL do logo para o botão de login social (modo escuro)',
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
     logo_dark_tip:
-      'Set your connector’s logo for dark mode after enabling it in the Sign-in Experience of Admin Console.', // UNTRANSLATED
-    logo_dark_collapse: 'Collapse',
-    logo_dark_show: 'Show logo setting for dark mode', // UNTRANSLATED
-    target: 'Identity provider name', // UNTRANSLATED
-    target_placeholder: 'Enter connector identity provider name', // UNTRANSLATED
+      'Defina o logotipo do seu conector para o modo escuro depois de ativá-lo na Experiência de login do Console de Administração.',
+    logo_dark_collapse: 'Expandir',
+    logo_dark_show: 'Mostrar configuração de logotipo para modo escuro',
+    target: 'Nome do fornecedor de identidade',
+    target_placeholder: 'Insira o nome do fornecedor de identidade do conector',
     target_tip:
-      'The value of “IdP name” can be a unique identifier string to distinguish your social identifies. This setting cannot be changed after the connector is built.', // UNTRANSLATED
+      'O valor de "Nome do fornecedor de identidade" pode ser uma string de identificador exclusiva para distinguir suas identidades sociais. Essa configuração não pode ser alterada após a criação do conector.',
     target_tooltip:
-      '"Target" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "target" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>', // UNTRANSLATED
+      '"Target" nos conectores sociais Logto refere-se à "origem" de suas identidades sociais. No design do Logto, não aceitamos o mesmo "target" de uma plataforma específica para evitar conflitos. Você deve tomar muito cuidado antes de adicionar um conector, pois NÃO PODE mudar seu valor depois de criá-lo. <a>Saiba mais.</a>',
     target_conflict:
-      'The IdP name entered matches the existing <span>name</span>. Using the same idp name may cause unexpected sign-in behavior where users may access the same account through two different connectors.', // UNTRANSLATED
+      'O nome de IdP inserido corresponde ao <span>nome</span> existente. Usar o mesmo nome do IDP pode causar comportamento inesperado ao entrar onde os usuários podem acessar a mesma conta por meio de dois conectores diferentes.',
     target_conflict_line2:
-      'If you\'d like to replace the current connector with the same identity provider and allow previous users to sign in without registering again, please delete the <span>name</span> connector and create a new one with the same "IdP name".', // UNTRANSLATED
+      'Se você deseja substituir o conector atual pelo mesmo fornecedor de identidade e permitir que usuários antigos façam login sem se registrar novamente, exclua o conector <span>nome</span> e crie um novo com o mesmo "Nome do fornecedor de identidade".',
     target_conflict_line3:
-      'If you\'d like to connect to a different identity provider, please modify the "IdP name" and proceed.', // UNTRANSLATED
+      'Se você deseja se conectar a um provedor de identidade diferente, modifique o "Nome do fornecedor de identidade" e prossiga.',
     config: 'Digite seu JSON aqui',
     sync_profile: 'Sincronizar informações de perfil',
     sync_profile_only_at_sign_up: 'Sincronizar apenas no registro',
     sync_profile_each_sign_in: 'Sempre sincronizar a cada login',
     sync_profile_tip:
-      "Sync the basic profile from the social provider, such as users' names and their avatars.", // UNTRANSLATED
-    callback_uri: 'Callback URI', // UNTRANSLATED
+      'Sincronize o perfil básico do provedor social, como os nomes dos usuários e seus avatares.',
+    callback_uri: 'URI de retorno do chamado',
     callback_uri_description:
-      "Also called redirect URI, is the URI in Logto where users will be sent back after social authorization, copy and paste to the social provider's config page.", // UNTRANSLATED
+      'Também chamado de URI de redirecionamento, é a URI no Logto para a qual os usuários serão enviados de volta após a autorização social; copie e cole na página de configuração do provedor social.',
   },
   platform: {
     universal: 'Universal',
     web: 'Web',
-    native: 'Native',
+    native: 'Nat',
   },
-  add_multi_platform: ' suporta várias plataformas, selecione uma plataforma para continuar',
+  add_multi_platform: 'suporta várias plataformas, selecione uma plataforma para continuar',
   drawer_title: 'Guia do Conector',
   drawer_subtitle: 'Siga as instruções para integrar seu conector',
-  unknown: 'Unknown Connector', // UNTRANSLATED
+  unknown: 'Conector desconhecido',
 };
 
 export default connectors;

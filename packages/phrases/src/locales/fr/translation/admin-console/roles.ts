@@ -1,6 +1,6 @@
 const roles = {
-  page_title: 'Roles', // UNTRANSLATED
-  title: 'Roles', // UNTRANSLATED
+  page_title: 'Rôles',
+  title: 'Rôles',
   subtitle:
     "Les rôles incluent des autorisations qui déterminent ce qu'un utilisateur peut faire. RBAC utilise des rôles pour donner aux utilisateurs accès à des ressources pour des actions spécifiques.",
   create: 'Créer un rôle',

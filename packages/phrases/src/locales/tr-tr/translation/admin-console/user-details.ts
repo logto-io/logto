@@ -1,5 +1,5 @@
 const user_details = {
-  page_title: 'User details', // UNTRANSLATED
+  page_title: 'Kullanıcı detayları',
   back_to_users: 'Kullanıcı Yönetimine Geri Dön',
   created_title: 'Bu kullanıcı başarıyla oluşturuldu',
   created_guide: 'Kullanıcıya aşağıdaki oturum açma bilgilerini gönderebilirsiniz',
@@ -15,12 +15,12 @@ const user_details = {
     congratulations: 'Bu kullanıcı sıfırlandı',
     new_password: 'Yeni şifre:',
   },
-  tab_settings: 'Settings', // UNTRANSLATED
-  tab_roles: 'Roles', // UNTRANSLATED
+  tab_settings: 'Ayarlar',
+  tab_roles: 'Roller',
   tab_logs: 'Kullanıcı kayıtları',
-  settings: 'Settings', // UNTRANSLATED
+  settings: 'Ayarlar',
   settings_description:
-    'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.', // UNTRANSLATED
+    'Her kullanıcının, temel veriler, sosyal kimlikler ve özel verilerden oluşan tüm kullanıcı bilgilerini içeren bir profil vardır.',
   field_email: 'Öncelikli e-posta adresi',
   field_phone: 'Öncelikli telefon',
   field_username: 'Kullanıcı Adı',
@@ -30,34 +30,34 @@ const user_details = {
   field_custom_data: 'Özel veriler',
   field_custom_data_tip:
     'Kullanıcı tarafından tercih edilen renk ve dil gibi önceden tanımlanmış kullanıcı özelliklerinde listelenmeyen ek kullanıcı bilgileri.',
-  field_connectors: 'Social connectors',
+  field_connectors: 'Sosyal bağlayıcılar',
   custom_data_invalid: 'Özel veriler geçerli bir JSON nesnesi olmalıdır',
   connectors: {
-    connectors: 'Connectors',
+    connectors: 'Bağlayıcılar',
     user_id: 'Kullanıcı IDsi',
     remove: 'Kaldır',
-    not_connected: 'Kullanıcı herhangi bir social connectora bağlı değil',
+    not_connected: 'Kullanıcı herhangi bir sosyal bağlayıcıya bağlı değil',
     deletion_confirmation:
       'Mevcut <name/> kimliğini kaldırıyorsunuz. Bunu yapmak istediğinizden emin misiniz?',
   },
-  suspended: 'Suspended', // UNTRANSLATED
+  suspended: 'Askıya alınmış',
   roles: {
-    name_column: 'Role', // UNTRANSLATED
-    description_column: 'Description', // UNTRANSLATED
-    assign_button: 'Assign Roles', // UNTRANSLATED
+    name_column: 'Rol',
+    description_column: 'Açıklama',
+    assign_button: 'Rolleri Ata',
     delete_description:
-      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.', // UNTRANSLATED
-    deleted: '{{name}} was successfully removed from this user.', // UNTRANSLATED
-    assign_title: 'Assign roles to {{name}}', // UNTRANSLATED
-    assign_subtitle: 'Authorize {{name}} one or more roles', // UNTRANSLATED
-    assign_role_field: 'Assign roles', // UNTRANSLATED
-    role_search_placeholder: 'Search by role name', // UNTRANSLATED
-    added_text: '{{value, number}} added', // UNTRANSLATED
-    assigned_user_count: '{{value, number}} users', // UNTRANSLATED
-    confirm_assign: 'Assign roles', // UNTRANSLATED
-    role_assigned: 'Successfully assigned role(s)', // UNTRANSLATED
-    search: 'Search by role name, description or ID', // UNTRANSLATED
-    empty: 'No role available', // UNTRANSLATED
+      'Bu işlem, bu rolü bu kullanıcıdan kaldıracaktır. Rol kendisi hala var olacaktır, ancak artık bu kullanıcıyla ilişkili olmayacaktır.',
+    deleted: '{{name}} bu kullanıcıdan başarıyla kaldırıldı.',
+    assign_title: '{{name}} kullanıcısına roller atayın',
+    assign_subtitle: '{{name}} bir veya daha fazla rolü yetkilendirin',
+    assign_role_field: 'Rolleri ata',
+    role_search_placeholder: 'Rol adına göre arama yapın',
+    added_text: '{{value, number}} eklendi',
+    assigned_user_count: '{{value, number}} kullanıcı',
+    confirm_assign: 'Rolleri ata',
+    role_assigned: 'Rol(ler) başarıyla atandı',
+    search: 'Rol adına, açıklamasına veya Kimliğine göre arama yapın',
+    empty: 'Uygun rol yok',
   },
 };
 

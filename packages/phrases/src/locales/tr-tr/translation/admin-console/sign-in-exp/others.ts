@@ -1,48 +1,46 @@
-// UNTRANSLATED
 const others = {
   terms_of_use: {
     title: 'KULLANIM KOŞULLARI',
     terms_of_use: 'Kullanım koşulları URLi',
-    terms_of_use_placeholder: 'https://your.terms.of.use/',
+    terms_of_use_placeholder: 'https://kullanım.koşulları/',
     privacy_policy: 'Gizlilik politikası URLi',
-    privacy_policy_placeholder: 'https://your.privacy.policy/',
+    privacy_policy_placeholder: 'https://gizlilik.politikası/',
   },
   languages: {
     title: 'DİLLER',
-    enable_auto_detect: 'Enable auto-detect',
+    enable_auto_detect: 'Otomatik algılamayı etkinleştir',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
+      'Yazılımınız kullanıcının yerel ayarını algılar ve yerel dile geçer. İngilizceden diğer bir dile UI çevirerek yeni diller ekleyebilirsiniz.',
+    manage_language: 'Dili yönetin',
+    default_language: 'Varsayılan dil',
     default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      'Algılanan kullanıcı diline karşı geçerli diller kitaplığında listelenmeyen dil durumunda varsayılan dil kullanılır.',
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      'Otomatik algılamayı kapattığınızda varsayılan dil yazılımınızın göstereceği tek dil olacaktır. Dil uzantısı için otomatik algılamayı açın.',
   },
   manage_language: {
-    title: 'Manage language',
+    title: 'Dili Yönetin',
     subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_title: 'Do you want to delete the added language?',
-    deletion_tip: 'Delete the language',
-    deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
+      'Dilleri ve çevirileri ekleyerek ürün deneyimini yerelleştirin. Katkınız varsayılan dil olarak ayarlanabilir.',
+    add_language: 'Dil ekle',
+    logto_provided: 'Logto sağlandı',
+    key: 'Anahtar',
+    logto_source_values: 'Logto kaynak değerleri',
+    custom_values: 'Özel değerler',
+    clear_all_tip: 'Tüm değerleri temizle',
+    unsaved_description: 'Sayfadan kaydedilmeyen değişiklikler kaybolabilir.',
+    deletion_title: 'Eklenen dili silmek istediğinizden emin misiniz?',
+    deletion_tip: 'Dili sil',
+    deletion_description: 'Silmeden sonra, kullanıcılar artık o dille tarama yapamazlar.',
+    default_language_deletion_title: 'Varsayılan dil silinemez.',
     default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+      '{{language}} varsayılan dil olarak ayarlanmıştır ve silinemez.',
   },
   advanced_options: {
     title: 'GELİŞMİŞ OPSİYONLAR',
-    enable_user_registration: 'Enable user registration',
+    enable_user_registration: 'Kullanıcı kaydını etkinleştir',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      'Kullanıcı kaydını etkinleştirin veya devre dışı bırakın. Devre dışı bırakıldıktan sonra, kullanıcılar yönetici konsolunda eklenebilir, ancak kullanıcılar artık oturum açma arayüzü üzerinden hesap oluşturamazlar.',
   },
 };
 

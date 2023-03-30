@@ -1,49 +1,49 @@
 const role_details = {
-  back_to_roles: 'Back to Roles', // UNTRANSLATED
-  identifier: 'Identifier', // UNTRANSLATED
+  back_to_roles: 'Voltar para os Papéis',
+  identifier: 'Identificador',
   delete_description:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the mapping between roles, users, and permissions.', // UNTRANSLATED
-  role_deleted: '{{name}} was successfully deleted!', // UNTRANSLATED
-  settings_tab: 'Settings', // UNTRANSLATED
-  users_tab: 'Users', // UNTRANSLATED
-  permissions_tab: 'Permissions', // UNTRANSLATED
-  settings: 'Settings', // UNTRANSLATED
+    'Fazê-lo removerá as permissões associadas a este papel dos usuários afetados e excluirá o mapeamento entre papéis, usuários e permissões.',
+  role_deleted: '{{name}} foi excluído com sucesso!',
+  settings_tab: 'Configurações',
+  users_tab: 'Usuários',
+  permissions_tab: 'Permissões',
+  settings: 'Configurações',
   settings_description:
-    'Roles are a grouping of permissions that can be assigned to users. They also provide a way to aggregate permissions defined for different APIs, making it more efficient to add, remove, or adjust permissions compared to assigning them individually to users.', // UNTRANSLATED
-  field_name: 'Name', // UNTRANSLATED
-  field_description: 'Description', // UNTRANSLATED
+    'Os papéis são um agrupamento de permissões que podem ser atribuídas a usuários. Eles também fornecem uma maneira de agregar permissões definidas para diferentes APIs, tornando mais eficiente a adição, remoção ou ajuste de permissões em comparação com a atribuição individual a usuários.',
+  field_name: 'Nome',
+  field_description: 'Descrição',
   permission: {
-    assign_button: 'Assign Permissions', // UNTRANSLATED
-    assign_title: 'Assign permissions', // UNTRANSLATED
+    assign_button: 'Atribuir permissões',
+    assign_title: 'Atribuir permissões',
     assign_subtitle:
-      'Assign permissions to this role. The role will gain the added permissions, and users with this role will inherit these permissions.', // UNTRANSLATED
-    assign_form_field: 'Assign permissions', // UNTRANSLATED
-    added_text_one: '{{count, number}} permission added', // UNTRANSLATED
-    added_text_other: '{{count, number}} permissions added', // UNTRANSLATED
-    api_permission_count_one: '{{count, number}} permission', // UNTRANSLATED
-    api_permission_count_other: '{{count, number}} permissions', // UNTRANSLATED
-    confirm_assign: 'Assign Permissions', // UNTRANSLATED
-    permission_assigned: 'The selected permissions were successfully assigned to this role', // UNTRANSLATED
+      'Atribua permissões a este papel. O papel adquirirá as permissões adicionadas e os usuários com este papel herdarão essas permissões.',
+    assign_form_field: 'Atribuir permissões',
+    added_text_one: '{{count, number}} permissão adicionada',
+    added_text_other: '{{count, number}} permissões adicionadas',
+    api_permission_count_one: '{{count, number}} permissão',
+    api_permission_count_other: '{{count, number}} permissões',
+    confirm_assign: 'Atribuir permissões',
+    permission_assigned: 'As permissões selecionadas foram atribuídas com sucesso a este papel',
     deletion_description:
-      'If this permission is removed, the affected user with this role will lose the access granted by this permission.', // UNTRANSLATED
-    permission_deleted: 'The permission "{{name}}" was successfully removed from this role', // UNTRANSLATED
-    empty: 'No permission available', // UNTRANSLATED
+      'Se esta permissão for removida, o usuário afetado com este papel perderá o acesso concedido por esta permissão.',
+    permission_deleted: 'A permissão "{{name}}" foi removida com sucesso deste papel',
+    empty: 'Nenhuma permissão disponível',
   },
   users: {
-    assign_button: 'Assign Users', // UNTRANSLATED
-    name_column: 'User', // UNTRANSLATED
-    app_column: 'App', // UNTRANSLATED
-    latest_sign_in_column: 'Latest sign in', // UNTRANSLATED
+    assign_button: 'Atribuir usuários',
+    name_column: 'Usuário',
+    app_column: 'Aplicativo',
+    latest_sign_in_column: 'Último acesso',
     delete_description:
-      'It will remain in your user pool but lose the authorization for this role.', // UNTRANSLATED
-    deleted: '{{name}} was successfully removed from this role', // UNTRANSLATED
-    assign_title: 'Assign users', // UNTRANSLATED
+      'Ele permanecerá no seu pool de usuários, mas perderá a autorização para este papel.',
+    deleted: '{{name}} foi removido com sucesso deste papel',
+    assign_title: 'Atribuir usuários',
     assign_subtitle:
-      'Assign users to this role. Find appropriate users by searching name, email, phone, or user ID.', // UNTRANSLATED
-    assign_users_field: 'Assign users', // UNTRANSLATED
-    confirm_assign: 'Assign users', // UNTRANSLATED
-    users_assigned: 'The selected users were successfully assigned to this role', // UNTRANSLATED
-    empty: 'No user available', // UNTRANSLATED
+      'Atribuir usuários a este papel. Encontre usuários adequados pesquisando nome, e-mail, telefone ou ID do usuário.',
+    assign_users_field: 'Atribuir usuários',
+    confirm_assign: 'Atribuir usuários',
+    users_assigned: 'Os usuários selecionados foram atribuídos com sucesso a este papel',
+    empty: 'Nenhum usuário disponível',
   },
 };
 

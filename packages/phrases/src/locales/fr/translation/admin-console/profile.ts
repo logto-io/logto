@@ -1,17 +1,17 @@
 const profile = {
-  page_title: 'Account Settings', // UNTRANSLATED
-  title: 'Account Settings', // UNTRANSLATED
+  page_title: 'Paramètres du compte',
+  title: 'Paramètres du compte',
   description:
     'Modifiez les paramètres de votre compte et gérez vos informations personnelles ici pour garantir la sécurité de votre compte.',
   settings: {
-    title: 'PARAMÈTRES DE PROFIL',
-    profile_information: 'Informations de profil',
+    title: 'Paramètres du profil',
+    profile_information: 'Informations du profil',
     avatar: 'Avatar',
     name: 'Nom',
     username: "Nom d'utilisateur",
   },
   link_account: {
-    title: 'LIEN DE COMPTE',
+    title: 'Lien de compte',
     email_sign_in: 'Connexion par e-mail',
     email: 'Email',
     social_sign_in: 'Connexion sociale',
@@ -24,7 +24,7 @@ const profile = {
     anonymous: 'Anonyme',
   },
   password: {
-    title: 'MOT DE PASSE & SÉCURITÉ',
+    title: 'Mot de passe et sécurité',
     password: 'Mot de passe',
     password_setting: 'Paramètres de mot de passe',
     new_password: 'Nouveau mot de passe',
@@ -47,7 +47,7 @@ const profile = {
     resend_countdown: 'Renvojer dans {{countdown}} secondes',
   },
   delete_account: {
-    title: 'SUPPRIMER LE COMPTE',
+    title: 'Supprimer le compte',
     label: 'Supprimer le compte',
     description:
       "La suppression de votre compte supprimera toutes vos informations personnelles, vos données d'utilisateur et votre configuration. Cette action ne peut pas être annulée.",

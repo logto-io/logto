@@ -1,5 +1,5 @@
 const api_resource_details = {
-  page_title: 'API Resource details', // UNTRANSLATED
+  page_title: 'Détails de la ressource API',
   back_to_api_resources: 'Retour aux ressources API',
   settings_tab: 'Paramètres',
   permissions_tab: 'Autorisations',
@@ -18,7 +18,7 @@ const api_resource_details = {
     create_subtitle: 'Définir les autorisations (scopes) requises pour cette API.',
     confirm_create: 'Créer une autorisation',
     name: "Nom de l'autorisation",
-    name_placeholder: 'read:resource',
+    name_placeholder: 'lecture:ressource',
     forbidden_space_in_name: "Le nom de l'autorisation ne doit pas contenir d'espaces.",
     description: 'Description',
     description_placeholder: 'Capable de lire les ressources',

@@ -1,7 +1,7 @@
 const cloud = {
   welcome: {
-    page_title: 'Welcome', // UNTRANSLATED
-    title: 'Welcome and let’s create your own Logto Cloud Preview', // UNTRANSLATED
+    page_title: 'Bienvenue',
+    title: 'Bienvenue et créons votre propre aperçu cloud de Logto',
     description:
       'Que vous soyez un utilisateur open-source ou cloud, faites une visite de la vitrine et découvrez la valeur totale de Logto. Le Cloud Preview sert également de version préliminaire de Logto Cloud.',
     project_field: 'J’utilise Logto pour',
@@ -16,8 +16,8 @@ const cloud = {
     },
   },
   about: {
-    page_title: 'A bit about you', // UNTRANSLATED
-    title: 'A little bit about you', // UNTRANSLATED
+    page_title: 'Un peu à propos de vous',
+    title: 'Un peu à propos de vous',
     description:
       'Personnalisons votre expérience Logto en vous connaissant mieux. Vos informations sont en sécurité avec nous.',
     title_field: 'Votre titre',
@@ -52,8 +52,8 @@ const cloud = {
     },
   },
   congrats: {
-    page_title: 'Earn early credits', // UNTRANSLATED
-    title: 'Great news! You are qualified to earn Logto Cloud early credit!', // UNTRANSLATED
+    page_title: 'Gagnez des crédits tôt',
+    title: 'Bonne nouvelle! Vous êtes éligible pour gagner des crédits anticipés de Logto Cloud!',
     description:
       "Ne manquez pas l'occasion de profiter d'un abonnement gratuit de <strong>60 jours</strong> pour Logto Cloud après son lancement officiel! Contactez l'équipe Logto dès maintenant pour en savoir plus.",
     check_out_button: "Découvrez l'aperçu en direct",
@@ -74,8 +74,8 @@ const cloud = {
     book_button: 'Réserver',
   },
   sie: {
-    page_title: 'Customize sign-in experience', // UNTRANSLATED
-    title: 'Let’s first customize your sign-in experience with ease', // UNTRANSLATED
+    page_title: "Personnalisez l'expérience de connexion",
+    title: "Personnalisons d'abord votre expérience de connexion en toute simplicité",
     inspire: {
       title: 'Créez des exemples convaincants',
       description:

@@ -1,5 +1,5 @@
 const user_details = {
-  page_title: 'User details', // UNTRANSLATED
+  page_title: 'ユーザーの詳細',
   back_to_users: 'ユーザー管理に戻る',
   created_title: 'このユーザーは正常に作成されました',
   created_guide: '以下のログイン情報をユーザーに送信できます',

@@ -1,31 +1,31 @@
 const api_resource_details = {
-  page_title: 'API Resource details', // UNTRANSLATED
-  back_to_api_resources: 'Voltar aos recursos API',
-  settings_tab: 'Settings', // UNTRANSLATED
-  permissions_tab: 'Permissions', // UNTRANSLATED
-  settings: 'Settings', // UNTRANSLATED
+  page_title: 'Detalhes do recurso da API',
+  back_to_api_resources: 'Voltar aos recursos da API',
+  settings_tab: 'Configurações',
+  permissions_tab: 'Permissões',
+  settings: 'Configurações',
   settings_description:
-    'API resources, a.k.a. Resource Indicators, indicate the target services or resources to be requested, usually, a URI format variable representing the resource‘s identity.', // UNTRANSLATED
+    'Recursos da API, também conhecidos como indicadores de recursos, indicam os serviços ou recursos de destino a serem solicitados, geralmente uma variável de formato URI que representa a identidade do recurso.',
   token_expiration_time_in_seconds: 'Tempo de expiração do token (em segundos)',
   token_expiration_time_in_seconds_placeholder: 'Insira o tempo de expiração do token',
   delete_description:
-    'Esta ação não pode ser desfeita. Isso ira eliminar permanentemente o recurso API. Insira o nome do recurso <span>{{name}}</span> para confirmar.',
-  enter_your_api_resource_name: 'Digite o nome do recurso API',
-  api_resource_deleted: 'O recurso API {{name}} foi eliminado com sucesso',
+    'Esta ação não pode ser desfeita. Isso irá eliminar permanentemente o recurso de API. Insira o nome do recurso <span>{{name}}</span> para confirmar.',
+  enter_your_api_resource_name: 'Digite o nome do recurso da API',
+  api_resource_deleted: 'O recurso da API {{name}} foi eliminado com sucesso',
   permission: {
-    create_button: 'Create Permission', // UNTRANSLATED
-    create_title: 'Create permission', // UNTRANSLATED
-    create_subtitle: 'Define the permissions (scopes) needed by this API.', // UNTRANSLATED
-    confirm_create: 'Create permission', // UNTRANSLATED
-    name: 'Permission name', // UNTRANSLATED
-    name_placeholder: 'read:resource', // UNTRANSLATED
-    forbidden_space_in_name: 'The permission name must not contain any spaces.', // UNTRANSLATED
-    description: 'Description', // UNTRANSLATED
-    description_placeholder: 'Able to read the resources', // UNTRANSLATED
-    permission_created: 'The permission {{name}} has been successfully created', // UNTRANSLATED
+    create_button: 'Criar permissão',
+    create_title: 'Criar permissão',
+    create_subtitle: 'Define as permissões (escopos) necessárias para essa API.',
+    confirm_create: 'Criar permissão',
+    name: 'Nome da permissão',
+    name_placeholder: 'leitura:recurso',
+    forbidden_space_in_name: 'O nome da permissão não pode conter espaços.',
+    description: 'Descrição',
+    description_placeholder: 'Capaz de ler os recursos',
+    permission_created: 'A permissão {{name}} foi criada com sucesso',
     delete_description:
-      'If this permission is deleted, the user who had this permission will lose the access granted by it.', // UNTRANSLATED
-    deleted: 'The permission "{{name}}" was successfully deleted!', // UNTRANSLATED
+      'Se esta permissão for excluída, o usuário que tinha esta permissão perderá o acesso concedido por ela.',
+    deleted: 'A permissão "{{name}}" foi excluída com sucesso!',
   },
 };
 

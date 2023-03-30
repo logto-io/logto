@@ -1,7 +1,6 @@
 import others from './others.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
-// UNTRANSLATED
 const sign_in_exp = {
   page_title: 'Experiência de login',
   title: 'Experiência de login',
@@ -13,10 +12,10 @@ const sign_in_exp = {
     others: 'Outros',
   },
   welcome: {
-    title: 'Customize sign-in experience',
+    title: 'Personalize a experiência de login',
     description:
-      'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.',
-    get_started: 'Iniciar',
+      'Comece rapidamente com a configuração do seu primeiro login. Este guia o acompanhará em todas as configurações necessárias.',
+    get_started: 'Começar',
     apply_remind:
       'Observe que a experiência de login será aplicada a todos os aplicativos nesta conta.',
   },
@@ -38,27 +37,27 @@ const sign_in_exp = {
     logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
     dark_logo_image_url: 'URL da imagem do logotipo do aplicativo (Escuro)',
     dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'App logo',
-    dark_logo_image: 'App logo (Dark)',
-    logo_image_error: 'App logo: {{error}}',
+    logo_image: 'Logotipo do aplicativo',
+    dark_logo_image: 'Logotipo do aplicativo (Escuro)',
+    logo_image_error: 'Logotipo do aplicativo: {{error}}',
     favicon_error: 'Favicon: {{error}}',
   },
   custom_css: {
-    title: 'Custom CSS',
-    css_code_editor_title: 'Personalize your UI with Custom CSS',
-    css_code_editor_description1: 'See the example of Custom CSS.',
+    title: 'CSS personalizado',
+    css_code_editor_title: 'Personalize sua UI com CSS personalizado',
+    css_code_editor_description1: 'Veja o exemplo de CSS personalizado.',
     css_code_editor_description2: '<a>{{link}}</a>',
-    css_code_editor_description_link_content: 'Learn more',
+    css_code_editor_description_link_content: 'Saiba mais',
     css_code_editor_content_placeholder:
-      'Enter your custom CSS to tailor the styles of anything to your exact specifications. Express your creativity and make your UI stand out.',
+      'Digite seu CSS personalizado para personalizar os estilos de qualquer coisa de acordo com suas especificações exatas. Expresse sua criatividade e faça sua IU se destacar.',
   },
   setup_warning: {
     no_connector_sms:
-      'Nenhum conector SMS configurado ainda. Até terminar de configurar seu conector SMS, seus usuários não poderá fazer login. <a>{{link}}</a> em "Conectores"',
+      'Nenhum conector SMS configurado ainda. Até terminar de configurar seu conector SMS, seus usuários não poderão fazer login. <a>{{link}}</a> em "Conectores"',
     no_connector_email:
-      'Nenhum conector e-mail configurado ainda. Até terminar de configurar seu conector SMS, seus usuários não poderá fazer login. <a>{{link}}</a> em "Conectores"',
+      'Nenhum conector de e-mail configurado ainda. Até terminar de configurar seu conector de e-mail, seus usuários não poderão fazer login. <a>{{link}}</a> em "Conectores"',
     no_connector_social:
-      'Nenhum conector social configurado ainda. Até terminar de configurar seu conector SMS, seus usuários não poderá fazer login. <a>{{link}}</a> em "Conectores"',
+      'Nenhum conector social configurado ainda. Até terminar de configurar seu conector social, seus usuários não poderão fazer login. <a>{{link}}</a> em "Conectores"',
     no_added_social_connector:
       'Você configurou alguns conectores sociais agora. Certifique-se de adicionar alguns à sua experiência de login.',
     setup_link: 'Configurar',
@@ -74,11 +73,11 @@ const sign_in_exp = {
   },
   preview: {
     title: 'Visualização de login',
-    live_preview: 'Live preview',
-    live_preview_tip: 'Save to preview changes',
-    native: 'Native',
-    desktop_web: 'Desktop Web',
-    mobile_web: 'Mobile Web',
+    live_preview: 'Visualização em tempo real',
+    live_preview_tip: 'Salve para visualizar as alterações',
+    native: 'Nativo',
+    desktop_web: 'Web Desktop',
+    mobile_web: 'Web Mobile',
   },
   others,
   sign_up_and_sign_in,

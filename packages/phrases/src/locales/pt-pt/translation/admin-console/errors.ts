@@ -7,19 +7,19 @@ const errors = {
   invalid_uri_format: 'Formato de URI inválido',
   invalid_origin_format: 'Formato de origem de URI inválido',
   invalid_json_format: 'Formato JSON inválido',
-  invalid_error_message_format: 'The error message format is invalid.',
+  invalid_error_message_format: 'O formato da mensagem de erro é inválido.',
   required_field_missing: 'Por favor, introduza {{field}}',
   required_field_missing_plural: 'Deve inserir pelo menos um {{field}}',
   more_details: 'Mais detalhes',
   username_pattern_error:
     'O nome de utilizador deve conter apenas letras, números ou underscores e não deve começar com um número.',
   password_pattern_error:
-    'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.', // UNTRANSLATED
+    'A password deve conter pelo menos {{min}} caracteres e ter uma combinação de letras, números e símbolos.',
   insecure_contexts: 'Contextos inseguros (não HTTPS) não são compatíveis.',
-  unexpected_error: 'Um erro inesperado ocorreu',
-  not_found: '404 not found', // UNTRANSLATED
+  unexpected_error: 'Ocorreu um erro inesperado',
+  not_found: '404 not found',
   create_internal_role_violation:
-    'You are creating a new internal role which is forbidden by Logto. Try another name that does not start with "#internal:".', // UNTRANSLATED
+    'Está a criar uma nova função interna que é proibida pelo Logto. Tente outro nome que não comece com "#internal:".',
 };
 
 export default errors;

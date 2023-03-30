@@ -1,82 +1,82 @@
 const profile = {
-  page_title: 'Account Settings', // UNTRANSLATED
-  title: 'Account Settings', // UNTRANSLATED
+  page_title: 'Configurações da conta',
+  title: 'Configurações da conta',
   description:
-    'Change your account settings and manage your personal information here to ensure your account security.', // UNTRANSLATED
+    'Altere suas configurações de conta e gerencie suas informações pessoais aqui para garantir a segurança da sua conta.',
   settings: {
-    title: 'PROFILE SETTINGS', // UNTRANSLATED
-    profile_information: 'Profile information', // UNTRANSLATED
-    avatar: 'Avatar', // UNTRANSLATED
-    name: 'Name', // UNTRANSLATED
-    username: 'Username', // UNTRANSLATED
+    title: 'CONFIGURAÇÕES DO PERFIL',
+    profile_information: 'Informações do perfil',
+    avatar: 'Avatar',
+    name: 'Nome',
+    username: 'Nome de usuário',
   },
   link_account: {
-    title: 'LINK ACCOUNT', // UNTRANSLATED
-    email_sign_in: 'Email sign-In', // UNTRANSLATED
-    email: 'Email', // UNTRANSLATED
-    social_sign_in: 'Social sign-In', // UNTRANSLATED
-    link_email: 'Link email', // UNTRANSLATED
-    link_email_subtitle: 'Link your email to sign in or help with account recovery.', // UNTRANSLATED
-    email_required: 'Email is required', // UNTRANSLATED
-    invalid_email: 'Invalid email address', // UNTRANSLATED
-    identical_email_address: 'The input email address is identical to the current one', // UNTRANSLATED
-    anonymous: 'Anonymous', // UNTRANSLATED
+    title: 'LINKAR CONTA',
+    email_sign_in: 'Login por e-mail',
+    email: 'E-mail',
+    social_sign_in: 'Login social',
+    link_email: 'Vincular e-mail',
+    link_email_subtitle: 'Vincule seu e-mail para fazer login ou ajudar na recuperação da conta.',
+    email_required: 'E-mail obrigatório',
+    invalid_email: 'Endereço de e-mail inválido',
+    identical_email_address: 'O endereço de e-mail inserido é idêntico ao atual',
+    anonymous: 'Anônimo',
   },
   password: {
-    title: 'PASSWORD & SECURITY', // UNTRANSLATED
-    password: 'Password', // UNTRANSLATED
-    password_setting: 'Password setting', // UNTRANSLATED
-    new_password: 'New password', // UNTRANSLATED
-    confirm_password: 'Confirm password', // UNTRANSLATED
-    enter_password: 'Enter password', // UNTRANSLATED
-    enter_password_subtitle: 'Verify it’s you to protect your account security.', // UNTRANSLATED
-    set_password: 'Set password', // UNTRANSLATED
-    verify_via_password: 'Verify via password', // UNTRANSLATED
-    show_password: 'Show password', // UNTRANSLATED
-    required: 'Password is required', // UNTRANSLATED
-    min_length: 'Password requires a minimum of {{min}} characters', // UNTRANSLATED
-    do_not_match: 'Passwords do not match. Please try again.', // UNTRANSLATED
+    title: 'SENHA E SEGURANÇA',
+    password: 'Senha',
+    password_setting: 'Configuração de senha',
+    new_password: 'Nova senha',
+    confirm_password: 'Confirme a senha',
+    enter_password: 'Insira a senha',
+    enter_password_subtitle: 'Verifique se é você para proteger a segurança da sua conta.',
+    set_password: 'Definir senha',
+    verify_via_password: 'Verificar via senha',
+    show_password: 'Mostrar senha',
+    required: 'Senha obrigatória',
+    min_length: 'A senha requer um mínimo de {{min}} caracteres',
+    do_not_match: 'As senhas não coincidem. Tente novamente.',
   },
   code: {
-    enter_verification_code: 'Enter verification code', // UNTRANSLATED
+    enter_verification_code: 'Digite o código de verificação',
     enter_verification_code_subtitle:
-      'The verification code has been sent to <strong>{{target}}</strong>', // UNTRANSLATED
-    verify_via_code: 'Verify via verification code', // UNTRANSLATED
-    resend: 'Resend verification code', // UNTRANSLATED
-    resend_countdown: 'Resend in {{countdown}} seconds', // UNTRANSLATED
+      'O código de verificação foi enviado para <strong>{{target}}</strong>',
+    verify_via_code: 'Verificar via código de verificação',
+    resend: 'Reenviar código de verificação',
+    resend_countdown: 'Reenviar em {{countdown}} segundos',
   },
   delete_account: {
-    title: 'DELETE ACCOUNT', // UNTRANSLATED
-    label: 'Delete account', // UNTRANSLATED
+    title: 'EXCLUIR CONTA',
+    label: 'Excluir conta',
     description:
-      'Deleting your account will remove all of your personal information, user data, and configuration. This action cannot be undone.', // UNTRANSLATED
-    button: 'Delete account', // UNTRANSLATED
+      'Excluir sua conta removerá todas as suas informações pessoais, dados do usuário e configurações. Essa ação não pode ser desfeita.',
+    button: 'Excluir conta',
     dialog_paragraph_1:
-      "We're sorry to hear that you want to delete your account. Deleting your account will permanently remove all data, including user information, logs, and settings, and this action cannot be undone. So please make sure to backup any important data before proceeding.", // UNTRANSLATED
+      'Lamentamos saber que você deseja excluir sua conta. A exclusão de sua conta removerá permanentemente todos os dados, incluindo informações do usuário, logs e configurações, e essa ação não pode ser desfeita. Portanto, certifique-se de fazer backup de qualquer dado importante antes de prosseguir.',
     dialog_paragraph_2:
-      'To proceed with the account deletion process, please email our support team at <a>mail</a> with the subject “Account Deletion Request”. We will assist you and ensure that all of your data is properly deleted from our system.', // UNTRANSLATED
+      'Para prosseguir com o processo de exclusão de conta, envie um e-mail para nossa equipe de suporte em <a>mail</a> com o assunto "Pedido de exclusão de conta". Nós o ajudaremos e garantiremos que todos os seus dados sejam excluídos corretamente de nosso sistema.',
     dialog_paragraph_3:
-      'Thank you for choosing Logto Cloud. If you have any further questions or concerns, please do not hesitate to reach out to us.', // UNTRANSLATED
+      'Agradecemos por escolher o Logto Cloud. Se você tiver outras dúvidas ou preocupações, não hesite em nos contatar.',
   },
-  set: 'Set', // UNTRANSLATED
-  change: 'Change', // UNTRANSLATED
-  link: 'Link', // UNTRANSLATED
-  unlink: 'Unlink', // UNTRANSLATED
-  not_set: 'Not set', // UNTRANSLATED
-  change_avatar: 'Change avatar', // UNTRANSLATED
-  change_name: 'Change name', // UNTRANSLATED
-  change_username: 'Change username', // UNTRANSLATED
-  set_name: 'Set name', // UNTRANSLATED
-  email_changed: 'Email changed!', // UNTRANSLATED
-  password_changed: 'Password changed!', // UNTRANSLATED
-  updated: '{{target}} updated!', // UNTRANSLATED
-  linked: '{{target}} linked!', // UNTRANSLATED
-  unlinked: '{{target}} unlinked!', // UNTRANSLATED
+  set: 'Configurar',
+  change: 'Alterar',
+  link: 'Linkar',
+  unlink: 'Deslinkar',
+  not_set: 'Não definido',
+  change_avatar: 'Alterar avatar',
+  change_name: 'Alterar nome',
+  change_username: 'Alterar nome de usuário',
+  set_name: 'Definir nome',
+  email_changed: 'E-mail alterado!',
+  password_changed: 'Senha alterada!',
+  updated: '{{target}} atualizado!',
+  linked: '{{target}} conectada!',
+  unlinked: '{{target}} desconectada!',
   email_exists_reminder:
-    'This email {{email}} is associated with an existing account. Link another email here.', // UNTRANSLATED
-  unlink_confirm_text: 'Yes, unlink', // UNTRANSLATED
+    'Este e-mail {{email}} está associado a uma conta existente. Vincule outro e-mail aqui.',
+  unlink_confirm_text: 'Sim, deslinkar',
   unlink_reminder:
-    'Users will not be able to sign in with the <span></span> account if you unlink it. Are you sure to proceed?', // UNTRANSLATED
+    'Os usuários não poderão fazer login com a conta <span></span> se você deslinká-la. Tem certeza de que deseja prosseguir?',
 };
 
 export default profile;
