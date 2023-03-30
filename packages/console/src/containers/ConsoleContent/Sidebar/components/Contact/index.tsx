@@ -40,6 +40,7 @@ function Contact({ isOpen, onCancel }: Props) {
                 <Button
                   type="outline"
                   title={label}
+                  to={link}
                   className={styles.button}
                   onClick={() => window.open(link)}
                 />
